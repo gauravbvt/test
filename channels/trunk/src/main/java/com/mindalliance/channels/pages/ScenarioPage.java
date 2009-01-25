@@ -6,6 +6,7 @@ import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.DiagramException;
@@ -36,7 +37,9 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.util.string.StringValueConversionException;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,10 +73,10 @@ public final class ScenarioPage extends WebPage {
      */
     private static final Logger LOG = LoggerFactory.getLogger( ScenarioPage.class );
 
-    /**
+    /*
      * Name property name...
      */
-    private static final String NAME_PROPERTY = "name";                                   // NON-NLS
+//    private static final String NAME_PROPERTY = "name";                                   // NON-NLS
 
     /**
      * Description property name.
@@ -84,6 +87,16 @@ public final class ScenarioPage extends WebPage {
      * Specialty field name.
      */
     private static final String SPECIALTY_FIELD = "specialty";                            // NON-NLS
+
+    /**
+     * Length a node title is abbreviated to
+     */
+    private static final int NODE_TITLE_MAX_LENGTH = 23;
+
+    /**
+     * Length a scenario title is abbreviated to
+     */
+    private static final int SCENARIO_TITLE_MAX_LENGTH = 30;
 
     /**
      * Id of components that are expanded.
@@ -265,7 +278,7 @@ public final class ScenarioPage extends WebPage {
         return getParameters( scenario, node, expansions );
     }
 
-    private void init( Scenario scenario, Node n, Set<Long> expanded ) {
+    private void init( final Scenario scenario, Node n, Set<Long> expanded ) {
         node = n;
         expansions = expanded;
 
@@ -356,8 +369,16 @@ public final class ScenarioPage extends WebPage {
         private ScenarioForm( String id, Scenario scenario, final Node node ) {
             super( id, new Model<Scenario>( scenario ) );
             target = scenario;
+/*
             add( new Label( "node-title",                                                 // NON-NLS
                     new PropertyModel<String>( node, "title" ) ) );               // NON-NLS
+*/
+            add( new Label( "node-title",                                                 // NON-NLS
+                    new AbstractReadOnlyModel<String>() {
+                        public String getObject() {
+                            return StringUtils.abbreviate( node.getTitle(), NODE_TITLE_MAX_LENGTH );
+                        }
+                    } ) );               // NON-NLS
             add( new TextArea<String>( "description",                                     // NON-NLS
                     new PropertyModel<String>( node, DESC_PROPERTY ) ) );
             add( new CheckBox( "node-del",                                                // NON-NLS
@@ -373,7 +394,16 @@ public final class ScenarioPage extends WebPage {
             add( new ExternalLink( "profile", MessageFormat.format(                       // NON-NLS
                     "resource.html?scenario={0}&part={1}",                                // NON-NLS
                     scenario.getId(), node.getId() ) ) );
+            add( new Link( "add-part-issue" ) {                                                 // NON-NLS
 
+                @Override
+                public void onClick() {
+                    final UserIssue newIssue = new UserIssue( node );
+                    Project.dao().addUserIssue( newIssue );
+                    expansions.add( newIssue.getId() );
+                    redirectHere();
+                }
+            } );
             add( new AttachmentPanel( "attachments", node ) );                            // NON-NLS
 
             add( new IssuesPanel( "issues", new Model<ModelObject>( node ), ScenarioPage.this.getPageParameters() ) );
@@ -440,6 +470,20 @@ public final class ScenarioPage extends WebPage {
                 }
             } );
 
+            add( new Link( "add-issue" ) {                                                 // NON-NLS
+
+                @Override
+                public void onClick() {
+                    final UserIssue newIssue = new UserIssue( scenario );
+                    Project.dao().addUserIssue( newIssue );
+                    expansions.add( newIssue.getId() );
+                    if ( !expansions.contains( scenario.getId() ) ) {
+                        expansions.add( scenario.getId() );
+                    }
+                    redirectHere();
+                }
+            } );
+
             if ( expansions.contains( scenario.getId() ) ) {
                 add( new BookmarkablePageLink<Scenario>(
                         "sc-edit", ScenarioPage.class,                                        // NON-NLS
@@ -467,10 +511,16 @@ public final class ScenarioPage extends WebPage {
         }
 
         //------------------------------
-        private void addHeader( Scenario scenario ) {
+        private void addHeader( final Scenario scenario ) {
             final Label header = new Label(
                     "header",                                                             // NON-NLS
-                    new PropertyModel<String>( scenario, NAME_PROPERTY ) );
+                    /* new PropertyModel<String>( scenario, NAME_PROPERTY ) ); */
+                    new AbstractReadOnlyModel() {
+                        public Object getObject() {
+                            return StringUtils.abbreviate( scenario.getName(), SCENARIO_TITLE_MAX_LENGTH );
+                        }
+                    }
+            );
 
             // Add style mods from scenario analyst.
             final Analyst analyst = ( (Project) getApplication() ).getAnalyst();

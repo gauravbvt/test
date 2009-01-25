@@ -1,11 +1,14 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -19,13 +22,17 @@ import java.text.MessageFormat;
  */
 public class CollapsedFlowPanel extends Panel implements DeletableFlow {
 
-    /** True when flow should be deleted. */
+    /**
+     * True when flow should be deleted.
+     */
     private boolean markedForDeletion;
 
-    /** The underlying flow. */
+    /**
+     * The underlying flow.
+     */
     private Flow flow;
 
-    public CollapsedFlowPanel( String id, Flow flow, boolean outcome ) {
+    public CollapsedFlowPanel( String id, final Flow flow, final boolean outcome ) {
         super( id );
         this.flow = flow;
 
@@ -35,10 +42,11 @@ public class CollapsedFlowPanel extends Panel implements DeletableFlow {
 
         final String c = flow.getChannel();
         final Label channel = new Label( "channel", new AbstractReadOnlyModel() {         // NON-NLS
+
             @Override
             public Object getObject() {
                 return c != null && c.isEmpty() ? ""
-                                   : MessageFormat.format( "({0})", c );
+                        : MessageFormat.format( "({0})", c );
             }
         } );
         channel.setVisible( c != null && !c.isEmpty() );
@@ -50,26 +58,41 @@ public class CollapsedFlowPanel extends Panel implements DeletableFlow {
                 flow, Analyst.INCLUDE_PROPERTY_SPECIFIC );
         if ( !issue.isEmpty() ) {
             label.add(
-                new AttributeModifier( "class", true, new Model<String>( "error" ) ) );   // NON-NLS
+                    new AttributeModifier( "class", true, new Model<String>( "error" ) ) );   // NON-NLS
             label.add(
-                new AttributeModifier( "title", true, new Model<String>( issue ) ) );     // NON-NLS
+                    new AttributeModifier( "title", true, new Model<String>( issue ) ) );     // NON-NLS
         }
 
         add( label );
 
         // TODO replace expansion links by ajaxfallbacklinks
         add( new ExternalLink( "expand", getRequest().getURL() + "&expand=" + flow.getId() ) );
+        add( new Link( "add-issue" ) {                                                 // NON-NLS
 
+            @Override
+            public void onClick() {
+                final UserIssue newIssue = new UserIssue( flow );
+                Project.dao().addUserIssue( newIssue );
+                PageParameters parameters = getWebPage().getPageParameters();
+                parameters.add( Project.EXPAND_PARM, String.valueOf(newIssue.getId()) );
+                parameters.add( Project.EXPAND_PARM, String.valueOf(flow.getId()) );
+                this.setResponsePage( getWebPage().getClass(), parameters );
+            }
+        } );
         add( new CheckBox( "delete",                                                      // NON-NLS
-                           new PropertyModel<Boolean>( this, "markedForDeletion" ) ) );   // NON-NLS
+                new PropertyModel<Boolean>( this, "markedForDeletion" ) ) );   // NON-NLS
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean isMarkedForDeletion() {
         return markedForDeletion;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setMarkedForDeletion( boolean delete ) {
         markedForDeletion = delete;
     }

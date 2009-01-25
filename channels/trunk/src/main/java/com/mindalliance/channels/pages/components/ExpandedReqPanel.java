@@ -1,14 +1,17 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Flow;
+import org.apache.wicket.PageParameters;
+
+import java.util.Set;
 
 /**
  * Details of an expanded requirement.
  */
 public class ExpandedReqPanel extends ExpandedFlowPanel {
 
-    public ExpandedReqPanel( String id, Flow flow ) {
-        super( id, flow, false );
+    public ExpandedReqPanel( String id, Flow flow, Set<Long> expansions ) {
+        super( id, flow, false, expansions );
     }
 
     /** {@inheritDoc} */

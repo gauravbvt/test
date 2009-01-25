@@ -2,13 +2,15 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Flow;
 
+import java.util.Set;
+
 /**
  * An expanded outcome flow.
  */
 public class ExpandedOutPanel extends ExpandedFlowPanel {
 
-    public ExpandedOutPanel( String id, Flow flow ) {
-        super( id, flow, true );
+    public ExpandedOutPanel( String id, Flow flow, Set<Long> expansions ) {
+        super( id, flow, true, expansions );
     }
 
     /** {@inheritDoc} */

@@ -66,8 +66,8 @@ public class FlowListPanel extends Panel {
             final Panel panel;
             if ( expansions.contains( flowId ) ) {
                 final ExpandedFlowPanel flowPanel = outcomes ?
-                        new ExpandedOutPanel( Long.toString( flowId ), flow )
-                      : new ExpandedReqPanel( Long.toString( flowId ), flow );
+                        new ExpandedOutPanel( Long.toString( flowId ), flow, expansions )
+                      : new ExpandedReqPanel( Long.toString( flowId ), flow, expansions );
                 panel = flowPanel;
                 deletableFlows.add( flowPanel );
             }

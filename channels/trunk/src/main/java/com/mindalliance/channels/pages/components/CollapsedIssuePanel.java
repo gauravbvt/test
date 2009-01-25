@@ -21,8 +21,6 @@ public class CollapsedIssuePanel extends Panel {
 
     private Issue issue;
 
-    private boolean markedForDeletion = false;
-
     public CollapsedIssuePanel( String id, Issue issue ) {
         super( id );
         this.issue = issue;

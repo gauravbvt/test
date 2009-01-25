@@ -11,8 +11,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -34,16 +32,28 @@ public class IssuesPanel extends Panel {
      * The model object possibly with issues.
      */
     private ModelObject modelObject;
+    /**
+     * Expansions from request parameters
+     */
+    private Set<Long> expansions;
 
     public IssuesPanel( String id, IModel<ModelObject> model, PageParameters parameters ) {
         super( id, model );
         modelObject = model.getObject();
-        init( parameters );
+        expansions = Project.findExpansions( parameters );
+        init( );
     }
 
-    private void init( PageParameters parameters ) {
+    public IssuesPanel( String id, IModel<ModelObject> model, Set<Long> expansions ) {
+        super( id, model );
+        modelObject = model.getObject();
+        this.expansions = expansions;
+        init( );
+    }
+
+
+    private void init( ) {
         setRenderBodyOnly( true );
-        final Set<Long> expansions = Project.findExpansions( parameters );
         final Link<String> newIssueLink = new Link<String>( "new-issue",                  // NON-NLS
                 new Model<String>( "New" ) ) {
             @Override
@@ -51,8 +61,6 @@ public class IssuesPanel extends Panel {
                 final UserIssue userIssue = new UserIssue( modelObject );
                 userIssue.setReportedBy( Project.getUserName() );
                 Project.dao().addUserIssue( userIssue );
-                final Set<Long> newExpansions = new HashSet<Long>( expansions );
-                newExpansions.add( userIssue.getId() );
                 final PageParameters params = getWebPage().getPageParameters();
                 params.add( Project.EXPAND_PARM, Long.toString( userIssue.getId() ) );
                 setResponsePage( getWebPage().getClass(), params );

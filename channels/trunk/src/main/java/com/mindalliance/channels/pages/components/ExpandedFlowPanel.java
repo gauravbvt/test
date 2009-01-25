@@ -7,14 +7,19 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ScenarioPage;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.pages.RedirectPage;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -42,19 +47,27 @@ import java.util.TreeSet;
  */
 public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
 
-    /** The flow edited by this panel. */
+    /**
+     * The flow edited by this panel.
+     */
     private Flow flow;
 
-    /** True if outcome, otherwise a requirement. */
+    /**
+     * True if outcome, otherwise a requirement.
+     */
     private boolean outcome;
 
-    /** True if this flow is marked for deletion. */
+    /**
+     * True if this flow is marked for deletion.
+     */
     private boolean markedForDeletion;
 
-    /** The channel field. */
+    /**
+     * The channel field.
+     */
     private WebMarkupContainer channelRow;
 
-    protected ExpandedFlowPanel( String id, Flow flow, boolean outcome ) {
+    protected ExpandedFlowPanel( String id, Flow flow, boolean outcome, Set<Long> expansions ) {
         super( id );
 
         setOutputMarkupId( true );
@@ -84,14 +97,15 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         addChannelRow();
         addLabeled( "maxDelay-label", new TextField<String>( "maxDelay" ) );              // NON-NLS
         add( new AttachmentPanel( "attachments", flow ) );                                // NON-NLS
+        add( new IssuesPanel( "issues", new Model<ModelObject>( flow ), expansions ) );
     }
 
     private void addChecks() {
         final RadioGroup<Boolean> askedFor = new RadioGroup<Boolean>( "askedFor" );       // NON-NLS
         askedFor.add( new Radio<Boolean>( "askedForTrue",                                 // NON-NLS
-                                          new Model<Boolean>( true ) ) );
+                new Model<Boolean>( true ) ) );
         askedFor.add( new Radio<Boolean>( "askedForFalse",                                // NON-NLS
-                                          new Model<Boolean>( false ) ) );
+                new Model<Boolean>( false ) ) );
         askedFor.add( new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
@@ -114,14 +128,25 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
                     @Override
                     public String getObject() {
                         return outcome ? getFlow().getOutcomeTitle()
-                                       : getFlow().getRequirementTitle();
+                                : getFlow().getRequirementTitle();
                     }
                 } ) );
 
         // TODO don't collapse everything on hide
         add( new ScenarioLink( "hide", new PropertyModel<Node>( this, "node" ) ) );       // NON-NLS
+        add( new Link( "add-issue" ) {                                                 // NON-NLS
+
+            @Override
+            public void onClick() {
+                final UserIssue newIssue = new UserIssue( flow );
+                Project.dao().addUserIssue( newIssue );
+                PageParameters parameters = getWebPage().getPageParameters();
+                parameters.add( Project.EXPAND_PARM, String.valueOf(newIssue.getId()) );
+                this.setResponsePage( getWebPage().getClass(), parameters );
+            }
+        } );
         add( new CheckBox( "delete",                                                      // NON-NLS
-                        new PropertyModel<Boolean>( this, "markedForDeletion" ) ) );      // NON-NLS
+                new PropertyModel<Boolean>( this, "markedForDeletion" ) ) );      // NON-NLS
     }
 
     private void addAllField() {
@@ -134,7 +159,8 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
 
     /**
      * Add a component with an attached label.
-     * @param id the id. Label is "id-label".
+     *
+     * @param id        the id. Label is "id-label".
      * @param component the component
      * @return the label component
      */
@@ -148,15 +174,16 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
 
     /**
      * Add issues annotations to a component.
+     *
      * @param component the component
-     * @param object the object of the issues
-     * @param property the property of concern. If null, get issues of object
+     * @param object    the object of the issues
+     * @param property  the property of concern. If null, get issues of object
      */
     protected void addIssues( FormComponent<?> component, ModelObject object, String property ) {
         final Analyst analyst = ( (Project) getApplication() ).getAnalyst();
         final String issue = property == null ?
-                             analyst.getIssuesSummary( object, false ) :
-                             analyst.getIssuesSummary( object, property );
+                analyst.getIssuesSummary( object, false ) :
+                analyst.getIssuesSummary( object, property );
         if ( !issue.isEmpty() ) {
             component.add(
                     new AttributeModifier(
@@ -190,6 +217,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
                 } );
 
         other.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {                  // NON-NLS
+
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 target.addComponent( ExpandedFlowPanel.this );
@@ -199,8 +227,8 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
 
         // TODO fix flow expansion of target when other has changed
         final ScenarioLink details = new ScenarioLink( "other-details",                   // NON-NLS
-                    new PropertyModel<Node>( this, "other" ),                             // NON-NLS
-                    getFlow() );
+                new PropertyModel<Node>( this, "other" ),                             // NON-NLS
+                getFlow() );
         details.add(
                 new Label( "type",                                                        // NON-NLS
                         new Model<String>( isOutcome() ? "To" : "From" ) ) );
@@ -217,7 +245,8 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
 
     /**
      * Set the flow for this panel. Also sets the default model.
-     * @param flow  the new flow
+     *
+     * @param flow the new flow
      */
     public final void setFlow( Flow flow ) {
         this.flow = flow;
@@ -242,17 +271,19 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
     /**
      * Get the node at the other side of this flow: the source if requirement, the target if
      * outcome.
+     *
      * @return the other side of this flow.
      */
     public final Node getOther() {
         final Flow f = getFlow();
         return f.isInternal() ?
-               isOutcome() ? f.getTarget() : f.getSource() :
-               ( (ExternalFlow) f ).getConnector();
+                isOutcome() ? f.getTarget() : f.getSource() :
+                ( (ExternalFlow) f ).getConnector();
     }
 
     /**
      * Set the node at the other side of this flow
+     *
      * @param other the new source or target
      */
     public void setOther( Node other ) {
@@ -284,6 +315,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         channelRow.add( textField );
         addIssues( textField, getFlow(), textField.getId() );
         label.add( new Label( "channel-title", new AbstractReadOnlyModel<String>() {      // NON-NLS
+
             @Override
             public String getObject() {
                 return getFlow().isAskedFor() ? "Sender channel:" : "Receiver channel:";
@@ -296,6 +328,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
 
     /**
      * Figure out if channel field is relevant.
+     *
      * @param f the flow being displayed
      * @return true if field should be visible
      */
@@ -303,6 +336,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
 
     /**
      * Figure out if channel field is editable.
+     *
      * @param f the flow being displayed
      * @return true if field can be edited by the user on this side
      */
@@ -310,6 +344,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
 
     /**
      * Get list of potential source/targets for this flow.
+     *
      * @return the list of nodes
      */
     public List<? extends Node> getOtherNodes() {
@@ -324,7 +359,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
             final Node n = nodes.next();
             if ( !node.equals( n ) && (
                     other.equals( n )
-                    || !n.isConnector() && !node.isConnectedTo( outcome, n ) ) )
+                            || !n.isConnector() && !node.isConnectedTo( outcome, n ) ) )
                 result.add( n );
         }
 
@@ -344,12 +379,16 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         return new ArrayList<Node>( result );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean isMarkedForDeletion() {
         return markedForDeletion;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setMarkedForDeletion( boolean delete ) {
         markedForDeletion = delete;
     }
