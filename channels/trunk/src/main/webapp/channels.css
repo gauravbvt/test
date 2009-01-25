@@ -236,6 +236,7 @@ td, th {
 th.area {
     vertical-align: top;
     padding-top: 1px;
+    white-space: normal;
 }
 div.section td, div.section th {
     padding-right: 2em;
@@ -333,6 +334,9 @@ ul.attach, ul.call-list {
     padding: 5px 0 0 1em;
     list-style: outside;
     line-height: 1.5em;
+}
+ul.call-list {
+    padding-bottom: 5px;
 }
 ul.attach li {
     position: relative;
@@ -486,7 +490,7 @@ li.doc_PolicyCant {
     filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0);
 }
 
-.SI-FILES-STYLIZED label span {
+.SI-FILES-STYLIZED label.import-ctl span, .SI-FILES-STYLIZED label.attach-ctl span {
     display: none;
 }
 .SI-FILES-STYLIZED label.attach-ctl {
