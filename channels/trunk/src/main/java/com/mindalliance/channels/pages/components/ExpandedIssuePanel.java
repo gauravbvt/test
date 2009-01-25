@@ -16,7 +16,7 @@ import com.mindalliance.channels.ModelObject;
  * Date: Jan 23, 2009
  * Time: 7:51:38 PM
  */
-public class ExpandedIssuePanel extends Panel implements DeletableIssue {
+public class ExpandedIssuePanel extends Panel {
 
     private Issue issue;
 
@@ -34,25 +34,11 @@ public class ExpandedIssuePanel extends Panel implements DeletableIssue {
         ExternalLink expandLink = new ExternalLink( "hide", url );
         add( expandLink );
         add( new CheckBox( "delete",                                                      // NON-NLS
-                new PropertyModel<Boolean>( this, "markedForDeletion" ) ) );      // NON-NLS
+                new PropertyModel<Boolean>( new IssuesPanel.DeletableWrapper( issue ), "markedForDeletion" ) ) );      // NON-NLS
         add( new TextArea<String>( "description", new PropertyModel<String>( issue, "description" ) ) );
         add( new TextArea<String>( "remediation", new PropertyModel<String>( issue, "remediation" ) ) );
         add( new AttachmentPanel( "attachments", (ModelObject) issue ) );                                // NON-NLS
         add( new Label( "reported-by", new PropertyModel<String>( issue, "reportedBy" ) ) );
     }
 
-    /**
-     * @return the underlying issue
-     */
-    public Issue getIssue() {
-        return issue;
-    }
-
-    public boolean isMarkedForDeletion() {
-        return markedForDeletion;
-    }
-
-    public void setMarkedForDeletion( boolean markedForDeletion ) {
-        this.markedForDeletion = markedForDeletion;
-    }
 }

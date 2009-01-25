@@ -17,7 +17,7 @@ import com.mindalliance.channels.Issue;
  * Date: Jan 23, 2009
  * Time: 7:52:29 PM
  */
-public class CollapsedIssuePanel extends Panel implements DeletableIssue {
+public class CollapsedIssuePanel extends Panel {
 
     private Issue issue;
 
@@ -56,24 +56,9 @@ public class CollapsedIssuePanel extends Panel implements DeletableIssue {
         ExternalLink expandLink = new ExternalLink( "expand", getRequest().getURL() + "&expand=" + issue.getId() );
         menu.add( expandLink );
         CheckBox deleteCheckBox = new CheckBox( "delete",
-                new PropertyModel<Boolean>( this, "markedForDeletion" ) );
+                new PropertyModel<Boolean>( new IssuesPanel.DeletableWrapper( issue ), "markedForDeletion" ) );
         menu.add( deleteCheckBox );
         menu.setVisible( !issue.isDetected() );
-    }
-
-    /**
-     * @return the underlying issue
-     */
-    public Issue getIssue() {
-        return issue;
-    }
-
-    public boolean isMarkedForDeletion() {
-        return markedForDeletion;
-    }
-
-    public void setMarkedForDeletion( boolean markedForDeletion ) {
-        this.markedForDeletion = markedForDeletion;
     }
 
 }

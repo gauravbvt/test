@@ -53,7 +53,7 @@ import java.util.Set;
 /**
  * The scenario editor page.
  */
-public final class ScenarioPage extends WebPage implements Submitter {
+public final class ScenarioPage extends WebPage {
 
     /**
      * The 'scenario' parameter in the URL.
@@ -100,7 +100,6 @@ public final class ScenarioPage extends WebPage implements Submitter {
      */
     private ScenarioForm form;
 
-    private Set<Submitable> submitables = new HashSet<Submitable>();
 
     /**
      * Used when page is called without parameters.
@@ -304,13 +303,6 @@ public final class ScenarioPage extends WebPage implements Submitter {
      */
     public MarkupContainer getGraph() {
         return form.getGraph();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void register( Submitable submitable ) {
-        submitables.add( submitable );
     }
 
     //==============================================================
@@ -570,9 +562,6 @@ public final class ScenarioPage extends WebPage implements Submitter {
                     redirectHere();
                 else
                     redirectTo( t );
-            }
-            for (Submitable submitable : submitables) {
-                submitable.onSubmit( expansions );
             }
 
         }
