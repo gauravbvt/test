@@ -9,7 +9,7 @@ package com.mindalliance.channels;
  * Date: Jan 12, 2009
  * Time: 7:56:21 PM
  */
-public interface Entity {
+public interface Entity extends Identifiable {
     /**
      * Get name
      *
@@ -38,9 +38,4 @@ public interface Entity {
      */
     void setDescription( String description );
 
-    /**
-     * Get id
-     * @return a long
-     */
-    long getId();
 }

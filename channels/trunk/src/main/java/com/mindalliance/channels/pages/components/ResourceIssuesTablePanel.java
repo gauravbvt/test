@@ -40,6 +40,7 @@ public class ResourceIssuesTablePanel extends AbstractTablePanel {
         columns.add( new PropertyColumn<String>(
                 new Model<String>("Type"), "type", "type"));
         columns.add( makeColumn("Remediation", "remediation", "remediation", EMPTY));
+        columns.add( makeColumn("Reported by", "reportedBy", "reportedBy", EMPTY));
         // provider and table
         List<Issue> issues = Project.analyst().findAllIssuesFor( resourceSpec );
         add( new AjaxFallbackDefaultDataTable<Issue>(

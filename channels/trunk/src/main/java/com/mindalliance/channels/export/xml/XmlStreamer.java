@@ -10,6 +10,7 @@ import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Place;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.UserIssue;
 import com.thoughtworks.xstream.XStream;
 
 import java.io.InputStream;
@@ -17,6 +18,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.io.ObjectOutputStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * XML scenario importer.
@@ -27,6 +31,12 @@ import java.io.ObjectOutputStream;
  * Time: 9:12:25 PM
  */
 public class XmlStreamer implements Importer, Exporter {
+
+    /**
+     * Class logger.
+     */
+    public static final Logger LOG = LoggerFactory.getLogger( XmlStreamer.class );
+
     /**
      * Holder of a configured XStream instance.
      */
@@ -57,6 +67,7 @@ public class XmlStreamer implements Importer, Exporter {
             xstream.alias( "part", Part.class );
             xstream.alias( "role", Role.class );
             xstream.alias( "resource", ResourceSpec.class);
+            xstream.alias( "issue", UserIssue.class );
             xstream.aliasType( "scenario", Scenario.class );
             xstream.registerConverter( new ScenarioConverter() );
             xstream.registerConverter( new PartConverter() );
@@ -66,6 +77,7 @@ public class XmlStreamer implements Importer, Exporter {
             xstream.registerConverter( new OrganizationConverter() );
             xstream.registerConverter( new PlaceConverter() );
             xstream.registerConverter( new ResourceSpecConverter() );
+            xstream.registerConverter( new UserIssueConverter() );
         }
 
         /**

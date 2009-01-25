@@ -13,23 +13,21 @@ import com.mindalliance.channels.pages.entities.RolePage;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.userdetails.UserDetails;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.target.coding.MixedParamUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.value.ValueMap;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.WebPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-import java.util.Set;
+import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Arrays;
-import java.text.MessageFormat;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Application object for Channels.

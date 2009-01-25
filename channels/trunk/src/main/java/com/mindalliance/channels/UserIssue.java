@@ -10,15 +10,15 @@ import org.apache.commons.lang.StringUtils;
  * Date: Jan 23, 2009
  * Time: 11:57:45 AM
  */
-public class UserIssue extends ModelObject implements Issue, Deletable {
+public class UserIssue extends ModelObject implements Issue {
     /**
      * Max length of name
      */
     private static int MAX_LENGTH = 40;
     /**
-     * The model object the issue is about
+     * The identifiable object the issue is about
      */
-    private ModelObject about;
+    private Identifiable about;
     /**
      * Remediation
      */
@@ -26,23 +26,19 @@ public class UserIssue extends ModelObject implements Issue, Deletable {
     /**
      * Name of user who created or last modified the issue
      */
-    private String reportedBy;
-    /**
-     * Whether marked for deletion
-     */
-    private boolean markedForDeletion;
+    private String reportedBy = "";
 
     /**
      * Create a user issue
      * @param about a model object
      */
-    public UserIssue( ModelObject about ) {
+    public UserIssue( Identifiable about ) {
         super();
         this.about = about;
         setDescription("(No description)");
     }
 
-    public ModelObject getAbout() {
+    public Identifiable getAbout() {
         return about;
     }
 
@@ -62,14 +58,6 @@ public class UserIssue extends ModelObject implements Issue, Deletable {
         this.reportedBy = reportedBy;
     }
 
-    public boolean isMarkedForDeletion() {
-        return markedForDeletion;
-    }
-
-    public void setMarkedForDeletion( boolean markedForDeletion ) {
-        this.markedForDeletion = markedForDeletion;
-    }
-
     public String getType() {
         return "User";
     }
@@ -82,7 +70,7 @@ public class UserIssue extends ModelObject implements Issue, Deletable {
      * {@inheritDoc}
      */
     public String getLabel(int maxLength) {
-        return StringUtils.abbreviate( getDescription()  + " --" + getReportedBy(), maxLength );
+        return StringUtils.abbreviate( getDescription(), maxLength );
     }
 
     /**

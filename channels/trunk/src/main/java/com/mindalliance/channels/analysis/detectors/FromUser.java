@@ -3,6 +3,7 @@ package com.mindalliance.channels.analysis.detectors;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Issue;
+import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.pages.Project;
 
 import java.util.List;

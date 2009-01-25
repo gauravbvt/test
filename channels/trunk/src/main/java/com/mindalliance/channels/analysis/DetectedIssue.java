@@ -110,6 +110,15 @@ public class DetectedIssue extends AnalysisObject implements Issue {
         return "Channels";
     }
 
+    /**
+     * Set name of user who reported the issue
+     *
+     * @param reportedBy a user name
+     */
+    public void setReportedBy( String reportedBy ) {
+        throw new IllegalStateException( "Can't set the reporter of a detected issue ");
+    }
+
     public void setRemediation( String remediation ) {
         this.remediation = remediation;
     }

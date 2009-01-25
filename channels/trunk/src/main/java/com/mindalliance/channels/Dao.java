@@ -279,10 +279,10 @@ public interface Dao extends Serializable {
 
     /**
      * Find all user issues about a model object
-     * @param modelObject the model object
+     * @param identifiable an object with an id
      * @return list of issues
      */
-    List<Issue> findAllUserIssues( ModelObject modelObject );
+    List<Issue> findAllUserIssues( Identifiable identifiable );
 
     /**
      * Add a user issue
@@ -295,4 +295,5 @@ public interface Dao extends Serializable {
      * @param userIssue a user issue
      */
     void removeUserIssue( UserIssue userIssue );
+
 }

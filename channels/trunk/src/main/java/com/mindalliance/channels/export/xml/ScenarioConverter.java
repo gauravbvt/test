@@ -11,12 +11,15 @@ import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.pages.Project;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Date;
+import java.util.List;
 import java.text.SimpleDateFormat;
 
 /**
@@ -47,6 +50,7 @@ public class ScenarioConverter implements Converter {
                          MarshallingContext context ) {
         Scenario scenario = (Scenario) object;
         Project project = Project.getProject();
+        Dao dao = project.getDao();
         context.put( "scenario", scenario );
         writer.addAttribute( "project", project.getUri() );
         writer.addAttribute( "version", project.getExporter().getVersion() );
@@ -56,16 +60,21 @@ public class ScenarioConverter implements Converter {
         writer.startNode( "description" );
         writer.setValue( scenario.getDescription() );
         writer.endNode();
-        Iterator<ResourceSpec> resourceSpecs = project.getDao().permanentResourceSpecs();
-        if ( resourceSpecs.hasNext() ) {
-            writer.startNode( "resources" );
-            while ( resourceSpecs.hasNext() ) {
-                writer.startNode( "resource" );
-                context.convertAnother( resourceSpecs.next() );
-                writer.endNode();
-            }
+        // Permanent resource specifications
+        Iterator<ResourceSpec> resourceSpecs = dao.permanentResourceSpecs();
+        while ( resourceSpecs.hasNext() ) {
+            writer.startNode( "resource" );
+            context.convertAnother( resourceSpecs.next() );
             writer.endNode();
         }
+        // Scenario user issues
+        List<Issue> issues = dao.findAllUserIssues( scenario );
+        for ( Issue issue : issues ) {
+            writer.startNode( "issue" );
+            context.convertAnother( issue );
+            writer.endNode();
+        }
+        // Parts
         Iterator<Part> parts = scenario.parts();
         while ( parts.hasNext() ) {
             writer.startNode( "part" );
@@ -101,17 +110,10 @@ public class ScenarioConverter implements Converter {
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "description" ) ) {
                 scenario.setDescription( reader.getValue() );
-            } else if ( nodeName.equals( "resources" ) ) {
-                reader.moveDown();
-                while ( reader.hasMoreChildren() ) {
-                    nodeName = reader.getNodeName();
-                    if ( nodeName.equals( "resource" ) ) {
-                        context.convertAnother( scenario, ResourceSpec.class );
-                    } else {
-                        throw new ConversionException( "Unknown element " + nodeName );
-                    }
-                }
-                reader.moveUp();
+            } else if ( nodeName.equals( "resource" ) ) {
+                context.convertAnother( scenario, ResourceSpec.class );
+            } else if ( nodeName.equals( "issue" ) ) {
+                context.convertAnother( scenario, UserIssue.class );
             } else if ( nodeName.equals( "part" ) ) {
                 context.convertAnother( scenario, Part.class );
             } else if ( nodeName.equals( "flow" ) ) {

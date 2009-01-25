@@ -9,14 +9,13 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Place;
+import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.Place;
 import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.Issue;
-import com.mindalliance.channels.analysis.DetectedIssue;
-import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.util.Play;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.commons.collections.Predicate;
@@ -341,14 +340,28 @@ public final class Memory implements Dao {
 
     /**
      * Find a model object given its id.
+     *
      * @param id the id
-     * @return  the object
+     * @return the object
      * @throws NotFoundException when not found
      */
     public ModelObject find( long id ) throws NotFoundException {
-        final ModelObject result = idIndex.get( id );
-        if ( result == null )
-            throw new NotFoundException();
+        ModelObject result = idIndex.get( id );
+        if ( result == null ) {
+            Iterator<Scenario> iterator = scenarios();
+            while ( result == null && iterator.hasNext() ) {
+                Scenario scenario = iterator.next();
+                result = scenario.getNode( id );
+                if ( result == null ) {
+                    Iterator<Flow> flows = scenario.flows();
+                    while ( result == null && flows.hasNext() ) {
+                        Flow flow = flows.next();
+                        if ( flow.getId() == id ) result = flow;
+                    }
+                }
+            }
+        }
+        if ( result == null ) throw new NotFoundException();
         return result;
     }
 
@@ -528,10 +541,10 @@ public final class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> findAllUserIssues( ModelObject modelObject ) {
+    public List<Issue> findAllUserIssues( Identifiable identifiable ) {
         List<Issue> foundIssues = new ArrayList<Issue>();
         for ( UserIssue userIssue : userIssues ) {
-            if ( userIssue.getAbout() == modelObject ) foundIssues.add( userIssue );
+            if ( userIssue.getAbout() == identifiable ) foundIssues.add( userIssue );
         }
         return foundIssues;
     }

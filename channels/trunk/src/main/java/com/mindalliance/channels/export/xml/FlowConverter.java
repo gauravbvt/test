@@ -14,6 +14,8 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.util.SemMatch;
 import com.mindalliance.channels.pages.Project;
 

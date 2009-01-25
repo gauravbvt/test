@@ -12,10 +12,10 @@ import java.io.Serializable;
  */
 public interface Issue extends Identifiable, Serializable {
     /**
-     * The model object the issue is about
+     * The identifiable object the issue is about
      * @return a ModelObject
      */
-    ModelObject getAbout();
+    Identifiable getAbout();
 
     /**
      * The type of issue
@@ -30,16 +30,34 @@ public interface Issue extends Identifiable, Serializable {
     String getDescription();
 
     /**
+     * Set description
+     * @param description a String
+     */
+    void setDescription( String description );
+
+    /**
      * How to remediate the issue
      * @return a String
      */
     String getRemediation();
 
     /**
+     * Set remediation
+     * @param remediation a String
+     */
+    void setRemediation( String remediation );
+
+    /**
      * The name of who reported or last modified the issue
      * @return a String
      */
     String getReportedBy();
+
+    /**
+     * Set name of user who reported the issue
+     * @param reportedBy a user name
+     */
+    void setReportedBy( String reportedBy );
 
     /**
      * Get a string of maximum length describing the issue

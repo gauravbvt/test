@@ -1,12 +1,17 @@
 package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.Entity;
+import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.Issue;
+import com.mindalliance.channels.pages.Project;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+
+import java.util.List;
 
 /**
  * Abstract XStream converter for Entities
@@ -36,6 +41,13 @@ public abstract class EntityConverter implements Converter {
         writer.startNode( "description" );
         writer.setValue( entity.getDescription() == null ? "" : entity.getDescription() );
         writer.endNode();
+        // User issues
+        List<Issue> issues = Project.dao().findAllUserIssues( entity );
+        for ( Issue issue : issues ) {
+            writer.startNode( "issue" );
+            context.convertAnother( issue );
+            writer.endNode();
+        }
     }
 
     /**

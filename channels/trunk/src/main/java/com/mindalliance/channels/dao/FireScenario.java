@@ -6,6 +6,7 @@ import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.UserIssue;
 
 /**
  * The fire in the building scenario...
@@ -33,6 +34,11 @@ public class FireScenario extends Scenario {
 
         final Actor system = dao.findOrMakeActor( "Fire Alarm" );
         final Part alarm = createPart( system, "ringing" );
+        UserIssue issue = new UserIssue( alarm );
+        issue.setDescription( "Hearing-challenged tenants may not hear the alarm.");
+        issue.setRemediation( "Add flashing light signal.");
+        issue.setReportedBy( "jdoe" );
+        dao.addUserIssue( issue );
         alarm.setRole( dao.findOrMakeRole( "System" ) );
 
         final Part fd = createPart();
