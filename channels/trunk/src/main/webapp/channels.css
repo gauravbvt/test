@@ -24,8 +24,9 @@ body.profile {
 #sc-details {
     z-index: 1;
     position: absolute;
-    right: 12px;
+    right: 2em;
     top: 6em;
+    padding: 5px;
 }
 
 #contents {
@@ -149,31 +150,38 @@ input[type='text'], textarea {
 }
 
 div.issues {
-    background: bisque  url('images/warning.png') no-repeat 6px 6px;
+    position: relative;
     border: 1px inset #d11212;
-    margin-top: 0.4em;
-    padding: 6px;
+    padding: 5px 5px 0 5px;
+    margin-top: 5px;
 }
-div.issues ol {
-    margin: 0;
-    padding: 0 0 0 4em;
+#part div.issues {
+    margin-right: 7px;
+}
+div.issues h4 {
+    background: transparent url('images/warning.png') no-repeat 0 0;
+    padding-left: 20px;
+    border-bottom: 1px solid #730A0A;
+}
+div.issues li {
+    line-height: 1.25em;
+    margin-bottom: 0.5em;
+}
+div.issue-details {
+    margin-top: 5px;
+}
+div.issue-details table {
 }
 
-div.issues a {
-    margin: 0;
-    padding: 0 0 0 3em;
-    font-size: 8pt;
-}
-
-input.error {
+input.error, div.issues {
     background-color: bisque;
 }
 span.error, li.error {
-    background: transparent url('images/warning.png') no-repeat 100% 50%;
+    background: transparent url('images/warning.png') no-repeat 100% 0;
     padding-right: 20px;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4 {
     margin: 0 0 0.4em 0;
     padding-right: 4em;
 }
@@ -299,7 +307,7 @@ ul.menu li:before {
     content: " \2015  ";
   }
 
-#part ul.menu li:first-child:before {
+#part ul.menu li:first-child:before, #sc-details ul.menu li:first-child:before {
     content: " ";
   }
 div.section-title ul.menu {
@@ -331,7 +339,7 @@ ol > li > ul.menu {
 
 ul.attach, ul.call-list {
     margin: 0;
-    padding: 5px 0 0 1em;
+    padding: 0 0 0 1em;
     list-style: outside;
     line-height: 1.5em;
 }
@@ -343,9 +351,7 @@ ul.attach li {
 }
 
 span.suggest {
-    padding-left: 4em;
     font-style: italic;
-    display: block;
 }
 
 div.picture {
@@ -395,16 +401,14 @@ html, #sc-details {
     border: 1px outset #6fafaf;
 }
 
-#part-header, #reqs, #outcomes, div.section, div.section-title ul.menu {
-    background: #f6f6f6;
-}
 #part-header, #reqs, #outcomes, div.section {
+    background: #f6f6f6;
     padding: 5px;
 }
 #graph {
     background: white;
 }
-#part-header, #reqs, #outcomes, #graph, div.section {
+#part-header, #reqs, #outcomes, div.section, #graph {
     border: 1px inset #c3dede;
 }
 #sc-details {

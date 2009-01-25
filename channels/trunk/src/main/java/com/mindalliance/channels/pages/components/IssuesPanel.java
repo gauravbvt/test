@@ -12,7 +12,6 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -29,7 +28,7 @@ public class IssuesPanel extends Panel {
     /**
      * Maximum length of string displayed
      */
-    public static int MAX_LENGTH = 80;
+    public static final int MAX_LENGTH = 80;
 
     /**
      * The model object possibly with issues.
@@ -43,15 +42,18 @@ public class IssuesPanel extends Panel {
     }
 
     private void init( PageParameters parameters ) {
+        setRenderBodyOnly( true );
         final Set<Long> expansions = Project.findExpansions( parameters );
-        Link<String> newIssueLink = new Link<String>( "new-issue", new Model<String>( "New" ) ) {
+        final Link<String> newIssueLink = new Link<String>( "new-issue",                  // NON-NLS
+                new Model<String>( "New" ) ) {
+            @Override
             public void onClick() {
-                UserIssue userIssue = new UserIssue( modelObject );
+                final UserIssue userIssue = new UserIssue( modelObject );
                 userIssue.setReportedBy( Project.getUserName() );
                 Project.dao().addUserIssue( userIssue );
                 final Set<Long> newExpansions = new HashSet<Long>( expansions );
                 newExpansions.add( userIssue.getId() );
-                PageParameters params = getWebPage().getPageParameters();
+                final PageParameters params = getWebPage().getPageParameters();
                 params.add( Project.EXPAND_PARM, Long.toString( userIssue.getId() ) );
                 setResponsePage( getWebPage().getClass(), params );
             }
@@ -63,17 +65,16 @@ public class IssuesPanel extends Panel {
 
 
     private RepeatingView createIssuePanels( Set<Long> expansions ) {
-        final RepeatingView issuesList = new RepeatingView( "issues" );
-        Iterator<Issue> issues = Project.analyst().findIssues( modelObject, false );
+        final RepeatingView issuesList = new RepeatingView( "issues" );                   // NON-NLS
+        final Iterator<Issue> issues = Project.analyst().findIssues( modelObject, false );
         while ( issues.hasNext() ) {
             final Issue issue = issues.next();
+            final long id = issue.getId();
             final Panel issuePanel;
-            long id = issue.getId();
-            if ( expansions.contains( id ) ) {
-                 issuePanel = new ExpandedIssuePanel( Long.toString(id), issue );
-            } else {
-                issuePanel = new CollapsedIssuePanel( Long.toString(id), issue );
-            }
+            if ( expansions.contains( id ) )
+                issuePanel = new ExpandedIssuePanel( Long.toString( id ), issue );
+            else
+                issuePanel = new CollapsedIssuePanel( Long.toString( id ), issue );
             issuesList.add( issuePanel );
         }
         return issuesList;
@@ -82,7 +83,7 @@ public class IssuesPanel extends Panel {
 
       //==================================================
     /** A wrapper to keep track of the deletion state of an attachment. */
-    public static class DeletableWrapper implements Deletable, Serializable {
+    public static class DeletableWrapper implements Deletable {
 
         /** The underlying attachment. */
         private Issue issue;
@@ -98,10 +99,10 @@ public class IssuesPanel extends Panel {
             return markedForDeletion;
         }
 
-        public void setMarkedForDeletion( boolean markedForDeletion ) {
-            this.markedForDeletion = markedForDeletion;
-            if ( markedForDeletion && !issue.isDetected() ) {
-                Project.dao().removeUserIssue( (UserIssue)issue );
+        public void setMarkedForDeletion( boolean delete ) {
+            markedForDeletion = delete;
+            if ( delete && !issue.isDetected() ) {
+                Project.dao().removeUserIssue( (UserIssue) issue );
             }
         }
 
