@@ -41,18 +41,18 @@ public class IssuesPanel extends Panel {
         super( id, model );
         modelObject = model.getObject();
         expansions = Project.findExpansions( parameters );
-        init( );
+        init();
     }
 
     public IssuesPanel( String id, IModel<ModelObject> model, Set<Long> expansions ) {
         super( id, model );
         modelObject = model.getObject();
         this.expansions = expansions;
-        init( );
+        init();
     }
 
 
-    private void init( ) {
+    private void init() {
         setRenderBodyOnly( true );
         final Link<String> newIssueLink = new Link<String>( "new-issue",                  // NON-NLS
                 new Model<String>( "New" ) ) {
@@ -107,6 +107,9 @@ public class IssuesPanel extends Panel {
             return markedForDeletion;
         }
 
+          /**
+           * {@inheritDoc}
+           */
         public void setMarkedForDeletion( boolean delete ) {
             markedForDeletion = delete;
             if ( delete && !issue.isDetected() ) {

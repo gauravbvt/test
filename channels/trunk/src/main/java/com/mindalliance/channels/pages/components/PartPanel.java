@@ -100,7 +100,9 @@ public class PartPanel extends Panel {
                 new PropertyModel<Entity>( part, LOCATION_PROPERTY ), "Location" ) );
     }
 
-    private ProfileLink makeProfileLink( String id, final IModel<Entity> model, final String label ) {
+    private ProfileLink makeProfileLink( String id,
+                                         final IModel<Entity> model,
+                                         final String label ) {
         return new ProfileLink( id,
                 new AbstractReadOnlyModel<ResourceSpec>() {
                     public ResourceSpec getObject() {
@@ -123,9 +125,11 @@ public class PartPanel extends Panel {
         final String issue = analyst.getIssuesSummary( getPart(), property );
         if ( !issue.isEmpty() ) {
             field.add(
-                    new AttributeModifier( "class", true, new Model<String>( "error" ) ) );   // NON-NLS
+                    new AttributeModifier( "class", true,
+                            new Model<String>( "error" ) ) );   // NON-NLS
             field.add(
-                    new AttributeModifier( "title", true, new Model<String>( issue ) ) );     // NON-NLS
+                    new AttributeModifier( "title", true,
+                            new Model<String>( issue ) ) );     // NON-NLS
         }
         add( field );
     }

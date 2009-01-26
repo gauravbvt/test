@@ -17,8 +17,10 @@ import java.util.List;
  * Time: 12:32:23 PM
  */
 public class ScenariosPanel extends AbstractTablePanel {
-
-    private ArrayList<Scenario> scenarios;
+    /**
+     * Scenarios shown in panel
+     */
+    private List<Scenario> scenarios;
 
     public ScenariosPanel( String s, IModel<ArrayList<Scenario>> model ) {
         super( s, model );
@@ -30,7 +32,7 @@ public class ScenariosPanel extends AbstractTablePanel {
         final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
         // columns
         columns.add( makeLinkColumn( "Name", "", "name", "(No name)" ) );
-        columns.add( makeColumn("Description", "description", EMPTY));
+        columns.add( makeColumn( "Description", "description", EMPTY ) );
         // table and providers of resources specified resources need to kwno how to contact
         add( new AjaxFallbackDefaultDataTable<Scenario>(
                 "scenarios",

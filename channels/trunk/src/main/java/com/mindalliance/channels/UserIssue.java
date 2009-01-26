@@ -30,12 +30,13 @@ public class UserIssue extends ModelObject implements Issue {
 
     /**
      * Create a user issue
+     *
      * @param about a model object
      */
     public UserIssue( Identifiable about ) {
         super();
         this.about = about;
-        setDescription("(No description)");
+        setDescription( "(No description)" );
     }
 
     public Identifiable getAbout() {
@@ -69,7 +70,7 @@ public class UserIssue extends ModelObject implements Issue {
     /**
      * {@inheritDoc}
      */
-    public String getLabel(int maxLength) {
+    public String getLabel( int maxLength ) {
         return StringUtils.abbreviate( getDescription(), maxLength );
     }
 

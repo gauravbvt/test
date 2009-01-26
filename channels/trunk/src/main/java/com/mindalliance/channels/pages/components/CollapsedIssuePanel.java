@@ -18,7 +18,9 @@ import com.mindalliance.channels.Issue;
  * Time: 7:52:29 PM
  */
 public class CollapsedIssuePanel extends Panel {
-
+    /**
+     * Issue in panel
+     */
     private Issue issue;
 
     public CollapsedIssuePanel( String id, Issue issue ) {

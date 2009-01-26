@@ -37,7 +37,7 @@ public class ConnectedFlowList extends Panel {
     /**
      * View list for external connections.
      */
-    private static class ConnectionView extends RefreshingView<ExternalFlow> {
+    private static final class ConnectionView extends RefreshingView<ExternalFlow> {
 
         /** The connector to follow. */
         private final Connector connector;

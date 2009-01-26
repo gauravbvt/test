@@ -17,10 +17,10 @@ import com.mindalliance.channels.ModelObject;
  * Time: 7:51:38 PM
  */
 public class ExpandedIssuePanel extends Panel {
-
+    /**
+     * Issue shown in panel
+     */
     private Issue issue;
-
-    private boolean markedForDeletion = false;
 
     public ExpandedIssuePanel( String id, Issue issue ) {
         super( id );
@@ -33,12 +33,18 @@ public class ExpandedIssuePanel extends Panel {
         String url = getRequest().getURL().replaceAll( "&expand=" + issue.getId(), "" );
         ExternalLink expandLink = new ExternalLink( "hide", url );
         add( expandLink );
-        add( new CheckBox( "delete",                                                      // NON-NLS
-                new PropertyModel<Boolean>( new IssuesPanel.DeletableWrapper( issue ), "markedForDeletion" ) ) );      // NON-NLS
-        add( new TextArea<String>( "description", new PropertyModel<String>( issue, "description" ) ) );
-        add( new TextArea<String>( "remediation", new PropertyModel<String>( issue, "remediation" ) ) );
-        add( new AttachmentPanel( "attachments", (ModelObject) issue ) );                                // NON-NLS
-        add( new Label( "reported-by", new PropertyModel<String>( issue, "reportedBy" ) ) );
+        add( new CheckBox( "delete",                              // NON-NLS
+                new PropertyModel<Boolean>(
+                        new IssuesPanel.DeletableWrapper( issue ),
+                        "markedForDeletion" ) ) );      // NON-NLS
+        add( new TextArea<String>( "description",
+                new PropertyModel<String>( issue, "description" ) ) );
+        add( new TextArea<String>( "remediation",
+                new PropertyModel<String>( issue, "remediation" ) ) );
+        add( new AttachmentPanel( "attachments",
+                (ModelObject) issue ) );                                // NON-NLS
+        add( new Label( "reported-by",
+                new PropertyModel<String>( issue, "reportedBy" ) ) );
     }
 
 }

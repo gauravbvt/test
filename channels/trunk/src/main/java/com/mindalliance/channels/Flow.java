@@ -70,8 +70,8 @@ public abstract class Flow extends ModelObject {
         String content = getName();
         if ( content == null || content.trim().isEmpty() )
             content = "something";
-        return MessageFormat.format( isAskedFor() ? "{2} asking {1} about {0}"
-                                                  : "{1} notifying {2} of {0}",
+        return MessageFormat.format( isAskedFor() ? "{2} ask {1} about {0}"
+                                                  : "{1} notify {2} of {0}",
 
             content, getShortName( getSource() ), getShortName( getTarget() ) );
     }
@@ -98,9 +98,9 @@ public abstract class Flow extends ModelObject {
     public String getRequirementTitle() {
         final boolean noName = getName() == null || getName().trim().isEmpty();
         return MessageFormat.format(
-                 noName       ? isAskedFor() ? "Obtaining something from {1}, when needed"
+                 noName       ? isAskedFor() ? "Ask {1} for something"
                                              : "Notified of something by {1}"
-               : isAskedFor() ? "Obtaining {0} from {1}, when needed"
+               : isAskedFor() ? "Ask {1} for {0}"
                               : "Notified of {0} by {1}",
                 getName(), getShortName( getSource() ) );
     }
@@ -112,10 +112,10 @@ public abstract class Flow extends ModelObject {
     public String getOutcomeTitle() {
         final boolean noName = getName() == null || getName().trim().isEmpty();
         return MessageFormat.format(
-                noName       ? isAskedFor() ? "Providing {1} with something, when asked"
-                                            : "Notifying {1} of something"
-              : isAskedFor() ? "Providing {1} with {0}, when asked"
-                             : "Notifying {1} of {0}",
+                noName       ? isAskedFor() ? "Answer {1} with something"
+                                            : "Notify {1} of something"
+              : isAskedFor() ? "Answer {1} with {0}"
+                             : "Notify {1} of {0}",
                 getName(), getShortName( getTarget() ) );
     }
 

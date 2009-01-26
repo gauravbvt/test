@@ -15,7 +15,9 @@ import org.apache.wicket.PageParameters;
  */
 public class ScenarioEditPanel extends Panel {
 
-    public ScenarioEditPanel( String id, final Scenario scenario, final PageParameters parameters ) {
+    public ScenarioEditPanel( String id,
+                              final Scenario scenario,
+                              final PageParameters parameters ) {
         super( id, new CompoundPropertyModel<Scenario>( scenario ) );
 
         final TextField<String> name = new TextField<String>( "name" );                   // NON-NLS
@@ -25,6 +27,6 @@ public class ScenarioEditPanel extends Panel {
         final TextArea<String> desc = new TextArea<String>( "description" );              // NON-NLS
         add( new FormComponentLabel( "description-label", desc ) );                       // NON-NLS
         add( desc );
-        add (new IssuesPanel( "issues", new Model<ModelObject>(scenario), parameters));
+        add( new IssuesPanel( "issues", new Model<ModelObject>( scenario ), parameters ) );
     }
 }

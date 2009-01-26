@@ -20,6 +20,10 @@ import java.util.Iterator;
  * Time: 3:41:22 PM
  */
 public class FlowViolatesPolicy extends AbstractIssueDetector {
+
+    public FlowViolatesPolicy() {
+    }
+
     /**
      * Find all flows with attachement(s) indicating policy violations
      *

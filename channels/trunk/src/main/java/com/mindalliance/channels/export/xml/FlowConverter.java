@@ -14,8 +14,8 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.Issue;
+import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.util.SemMatch;
 import com.mindalliance.channels.pages.Project;
 
@@ -36,6 +36,10 @@ import org.apache.commons.collections.Predicate;
  * Time: 3:28:38 PM
  */
 public class FlowConverter implements Converter {
+    /**
+     * The exported-imported id map
+     */
+    private Map<String, Long> idMap;
 
     public FlowConverter() {
     }
@@ -80,6 +84,15 @@ public class FlowConverter implements Converter {
             writer.startNode( "maxDelay" );
             writer.setValue( flow.getMaxDelay() );
             writer.endNode();
+        }
+        // Flow user issues (exported only if an internal flow)
+        if ( flow.isInternal() ) {
+            List<Issue> issues = Project.dao().findAllUserIssues( flow );
+            for ( Issue issue : issues ) {
+                writer.startNode( "issue" );
+                context.convertAnother( issue );
+                writer.endNode();
+            }
         }
     }
 
@@ -128,7 +141,6 @@ public class FlowConverter implements Converter {
                                  Scenario currentScenario ) {
         writer.startNode( "connector" );
         if ( connector.getScenario() != currentScenario ) {
-            // writer.addAttribute( "external", "false" );
             writer.addAttribute( "scenario", connector.getScenario().getName() );
             Flow innerFlow = connector.getInnerFlow();
             writer.startNode( "flow" );
@@ -175,9 +187,10 @@ public class FlowConverter implements Converter {
      */
     @SuppressWarnings( "unchecked" )
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
-        Map<String, Long> idMap = (Map<String, Long>) context.get( "idMap" );
+        idMap = (Map<String, Long>) context.get( "idMap" );
         Scenario scenario = (Scenario) context.get( "scenario" );
         String flowName = reader.getAttribute( "name" );
+        String idValue = reader.getAttribute( "id" );
         reader.moveDown();
         assert reader.getNodeName().equals( "source" );
         List<Node> sources = resolveNodes( reader, scenario, idMap, true );
@@ -187,7 +200,7 @@ public class FlowConverter implements Converter {
         // If a node is a "connector specification", multiple actual connectors might match
         List<Node> targets = resolveNodes( reader, scenario, idMap, false );
         reader.moveUp();
-        List<Flow> flows = makeFlows( scenario, sources, targets );
+        List<Flow> flows = makeFlows( scenario, sources, targets, idValue );
         while ( reader.hasMoreChildren() ) {
             for ( Flow flow : flows ) flow.setName( flowName );
             reader.moveDown();
@@ -210,6 +223,8 @@ public class FlowConverter implements Converter {
             } else if ( nodeName.equals( "all" ) ) {
                 boolean all = reader.getValue().equals( "true" );
                 for ( Flow flow : flows ) flow.setCritical( all );
+            } else if ( nodeName.equals( "issue" ) ) {
+                context.convertAnother( scenario, UserIssue.class );
             } else {
                 throw new ConversionException( "Unknown element " + nodeName );
             }
@@ -218,11 +233,18 @@ public class FlowConverter implements Converter {
         return flows;
     }
 
-    private List<Flow> makeFlows( Scenario scenario, List<Node> sources, List<Node> targets ) {
+    private List<Flow> makeFlows( Scenario scenario, List<Node> sources, List<Node> targets, String idValue ) {
         List<Flow> flows = new ArrayList<Flow>();
         for ( Node source : sources ) {
             for ( Node target : targets ) {
-                flows.add( scenario.connect( source, target ) );
+                Flow flow = scenario.connect( source, target );
+                flows.add( flow );
+                // Register flow id if internal because it is guaranteed to be the exported flow
+                if ( flow.isInternal() ) {
+                    // at most one internal flow per exported flow
+                    assert idMap.get(  idValue ) == null;
+                    idMap.put( idValue, flow.getId() );
+                }
             }
         }
         return flows;
@@ -424,3 +446,4 @@ public class FlowConverter implements Converter {
     }
 
 }
+

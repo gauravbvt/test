@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Flow;
-import org.apache.wicket.PageParameters;
 
 import java.util.Set;
 

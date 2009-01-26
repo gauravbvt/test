@@ -78,7 +78,6 @@ public class PartConverter implements Converter {
             context.convertAnother( part.getJurisdiction() );
             writer.endNode();
         }
-        // TODO - remove when persistence works
         // Part user issues
         List<Issue> issues = Project.dao().findAllUserIssues( part );
         for ( Issue issue : issues ) {
@@ -122,7 +121,6 @@ public class PartConverter implements Converter {
                 part.setJurisdiction( jurisdiction );
             } else if ( nodeName.equals( "flow" ) ) {
                 context.convertAnother( scenario, Flow.class );
-                // TODO - remove when persistence works
             } else if ( nodeName.equals( "issue" ) ) {
                 context.convertAnother( scenario, UserIssue.class );
             } else {

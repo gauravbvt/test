@@ -28,7 +28,8 @@ public class DeletePanel extends Panel {
     }
 
     private void init() {
-        CheckBox checkBox = new CheckBox( "check", new PropertyModel<Boolean>( deletable, "markedForDeletion" ));
+        CheckBox checkBox = new CheckBox( "check",
+                new PropertyModel<Boolean>( deletable, "markedForDeletion" ) );
         add( checkBox );
     }
 

@@ -38,7 +38,7 @@ public class CollapsedFlowPanel extends Panel implements DeletableFlow {
 
         final Label label = new Label( "title",                                           // NON-NLS
                 new PropertyModel( flow,
-                                   outcome ? "outcomeTitle" : "requirementTitle" ) );     // NON-NLS
+                        outcome ? "outcomeTitle" : "requirementTitle" ) );     // NON-NLS
 
         final String c = flow.getChannel();
         final Label channel = new Label( "channel", new AbstractReadOnlyModel() {         // NON-NLS
@@ -74,8 +74,8 @@ public class CollapsedFlowPanel extends Panel implements DeletableFlow {
                 final UserIssue newIssue = new UserIssue( flow );
                 Project.dao().addUserIssue( newIssue );
                 PageParameters parameters = getWebPage().getPageParameters();
-                parameters.add( Project.EXPAND_PARM, String.valueOf(newIssue.getId()) );
-                parameters.add( Project.EXPAND_PARM, String.valueOf(flow.getId()) );
+                parameters.add( Project.EXPAND_PARM, String.valueOf( newIssue.getId() ) );
+                parameters.add( Project.EXPAND_PARM, String.valueOf( flow.getId() ) );
                 this.setResponsePage( getWebPage().getClass(), parameters );
             }
         } );

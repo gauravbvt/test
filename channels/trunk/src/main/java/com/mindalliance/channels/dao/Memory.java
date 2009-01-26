@@ -38,9 +38,13 @@ public final class Memory implements Dao {
      * The sorted scenarios.
      */
     private Set<Scenario> scenarios = new HashSet<Scenario>();
-
+    /**
+     * Permanet resource specifications
+     */
     private Set<ResourceSpec> resourceSpecs = new HashSet<ResourceSpec>();
-
+    /**
+     * User issues
+     */
     private List<UserIssue> userIssues = new ArrayList<UserIssue>();
 
     /**
@@ -195,7 +199,7 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     // TODO - Inefficient
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public Iterator<Role> roles() {
         return new FilterIterator( idIndex.values().iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {
@@ -208,7 +212,7 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     // TODO - Inefficient
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public Iterator<Actor> actors() {
         return new FilterIterator( idIndex.values().iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {
@@ -220,7 +224,7 @@ public final class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public Iterator<Organization> organizations() {
         return new FilterIterator( idIndex.values().iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {
@@ -232,7 +236,7 @@ public final class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public Iterator<Place> places() {
         return new FilterIterator( idIndex.values().iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {

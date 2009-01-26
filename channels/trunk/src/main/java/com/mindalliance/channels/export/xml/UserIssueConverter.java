@@ -12,6 +12,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * An XStream converter for UserIssue
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -21,6 +24,14 @@ import java.util.Map;
  * Time: 9:37:40 AM
  */
 public class UserIssueConverter implements Converter {
+
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( UserIssueConverter.class );
+
+    public UserIssueConverter() {
+    }
 
     /**
      * {@inheritDoc}
@@ -52,27 +63,32 @@ public class UserIssueConverter implements Converter {
     @SuppressWarnings( "unchecked" )
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
         Map<String, Long> idMap = (Map<String, Long>) context.get( "idMap" );
-        UserIssue issue;
+        UserIssue issue = null;
         try {
             String idString = reader.getAttribute( "about" );
-            long id = idMap.get( idString );
-            ModelObject about = Project.dao().find( id );
-            issue = new UserIssue( about );
-            while ( reader.hasMoreChildren() ) {
-                reader.moveDown();
-                String nodeName = reader.getNodeName();
-                if ( nodeName.equals( "description" ) ) {
-                    issue.setDescription( reader.getValue() );
+            Long id = idMap.get( idString );
+            if ( id != null ) {
+                ModelObject about = Project.dao().find( id );
+                issue = new UserIssue( about );
+                while ( reader.hasMoreChildren() ) {
+                    reader.moveDown();
+                    String nodeName = reader.getNodeName();
+                    if ( nodeName.equals( "description" ) ) {
+                        issue.setDescription( reader.getValue() );
+                    }
+                    if ( nodeName.equals( "remediation" ) ) {
+                        issue.setRemediation( reader.getValue() );
+                    }
+                    if ( nodeName.equals( "reportedBy" ) ) {
+                        issue.setReportedBy( reader.getValue() );
+                    }
+                    reader.moveUp();
                 }
-                if ( nodeName.equals( "remediation" ) ) {
-                    issue.setRemediation( reader.getValue() );
-                }
-                if ( nodeName.equals( "reportedBy" ) ) {
-                    issue.setReportedBy( reader.getValue() );
-                }
-                reader.moveUp();
+                Project.dao().addUserIssue( issue );
             }
-            Project.dao().addUserIssue( issue );
+            else {
+                LOG.warn( "Issue's model object not found at " + id );
+            }
         } catch ( NotFoundException e ) {
             XmlStreamer.LOG.warn( "Obsolete issue", e );
             issue = null;

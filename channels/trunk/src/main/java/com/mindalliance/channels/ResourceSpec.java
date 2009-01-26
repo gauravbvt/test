@@ -19,7 +19,7 @@ import java.util.Collections;
  * Date: Jan 8, 2009
  * Time: 8:26:05 PM
  */
-public class ResourceSpec implements Serializable, Deletable {
+public class ResourceSpec implements Serializable {
 
     /**
      * Used in calculating hashCode
@@ -47,8 +47,6 @@ public class ResourceSpec implements Serializable, Deletable {
      * Channels used to reach actor
      */
     private List<String> channels = new ArrayList<String>();
-
-    private boolean markedForDeletion = false;
 
     public ResourceSpec() {
     }
@@ -312,10 +310,11 @@ public class ResourceSpec implements Serializable, Deletable {
      */
     public String getName() {
         StringBuilder sb = new StringBuilder();
-        sb.append( isAnyActor() ? "Anyone" : actor.getName() );
         if ( !isAnyRole() ) {
-            sb.append( " as " );
+            sb.append( isAnyActor() ? "Any " : actor.getName() + " as " );
             sb.append( role.getName() );
+        } else {
+            sb.append( isAnyActor() ? "Anyone" : actor.getName() );
         }
         if ( !isAnyOrganization() ) {
             sb.append( " for " );
@@ -375,14 +374,6 @@ public class ResourceSpec implements Serializable, Deletable {
         }
     }
 
-    public boolean isMarkedForDeletion() {
-        return markedForDeletion;
-    }
-
-    public void setMarkedForDeletion( boolean delete ) {
-        markedForDeletion = delete;
-    }
-
     /**
      * Return most specific entity composing this resource specification
      *
@@ -404,15 +395,16 @@ public class ResourceSpec implements Serializable, Deletable {
      */
     public boolean isEntityOnly() {
         int count = 0;
-        if (actor != null) count++;
-        if (role != null) count++;
-        if (organization != null) count++;
-        if (jurisdiction != null) count++;
+        if ( actor != null ) count++;
+        if ( role != null ) count++;
+        if ( organization != null ) count++;
+        if ( jurisdiction != null ) count++;
         return count == 1;
     }
 
     /**
      * Whether the resource spec is not solely implied by one or more parts
+     *
      * @return a boolean
      */
     public boolean isPredefined() {
@@ -421,6 +413,7 @@ public class ResourceSpec implements Serializable, Deletable {
 
     /**
      * Whether the resource spec exists independently of parts
+     *
      * @return a boolean
      */
     public boolean isPermanent() {
@@ -429,6 +422,7 @@ public class ResourceSpec implements Serializable, Deletable {
 
     /**
      * String describing the resource spec's origin
+     *
      * @return either "a priori" or "from tasks"
      */
     public String getKind() {

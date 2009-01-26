@@ -1,26 +1,22 @@
 package com.mindalliance.channels.pages;
 
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
-import org.slf4j.LoggerFactory;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Dao;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Dao;
+import com.mindalliance.channels.Node;
+import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Organization;
-import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Place;
+import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.pages.components.ResourceProfilePanel;
 import com.mindalliance.channels.pages.components.ResourceSpecPanel;
-import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.pages.ModelObjectLink;
+import org.apache.wicket.PageParameters;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.Model;
+import org.slf4j.LoggerFactory;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -98,7 +94,8 @@ public class ProfilePage extends WebPage {
                 resourceSpec.setRole( role );
             }
             if ( params.containsKey( ORGANIZATION_PARM ) ) {
-                Organization organization = dao.findOrganization( params.getLong( ORGANIZATION_PARM ) );
+                Organization organization = dao.findOrganization(
+                        params.getLong( ORGANIZATION_PARM ) );
                 resourceSpec.setOrganization( organization );
             }
             if ( params.containsKey( JURISDICTION_PARM ) ) {

@@ -17,9 +17,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.pages.RedirectPage;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -30,11 +27,12 @@ import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.CompoundPropertyModel;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -141,7 +139,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
                 final UserIssue newIssue = new UserIssue( flow );
                 Project.dao().addUserIssue( newIssue );
                 PageParameters parameters = getWebPage().getPageParameters();
-                parameters.add( Project.EXPAND_PARM, String.valueOf(newIssue.getId()) );
+                parameters.add( Project.EXPAND_PARM, String.valueOf( newIssue.getId() ) );
                 this.setResponsePage( getWebPage().getClass(), parameters );
             }
         } );

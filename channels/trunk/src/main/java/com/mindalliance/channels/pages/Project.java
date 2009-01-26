@@ -226,14 +226,18 @@ public final class Project extends WebApplication {
 
     /**
      * Get project's attachment manager
-     * @return  an attachment manager
+     *
+     * @return an attachment manager
      */
     public static AttachmentManager attachmentManager() {
         return getProject().getAttachmentManager();
     }
 
     //=========================================================================
-    private static class CodingStrategy extends MixedParamUrlCodingStrategy {
+    /**
+     * URL coding strategy
+     */
+    private static final class CodingStrategy extends MixedParamUrlCodingStrategy {
 
         /**
          * The suffix for the link.
@@ -283,11 +287,12 @@ public final class Project extends WebApplication {
 
     /**
      * Find expansions in page parameters
-     * @param parameters  page parameters
+     *
+     * @param parameters page parameters
      * @return set of ids
      */
     public static Set<Long> findExpansions( PageParameters parameters ) {
-        if (parameters == null) return new HashSet<Long>();
+        if ( parameters == null ) return new HashSet<Long>();
         final Set<Long> result = new HashSet<Long>( parameters.size() );
         if ( parameters.containsKey( Project.EXPAND_PARM ) ) {
             final List<String> stringList =
