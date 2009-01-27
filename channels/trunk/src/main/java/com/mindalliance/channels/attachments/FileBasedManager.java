@@ -13,7 +13,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * An attachment manager that keeps uploaded files in a directory.
@@ -65,17 +67,25 @@ public class FileBasedManager implements AttachmentManager {
                         return name.startsWith( prefix );
                     }
                 } );
-        return (Iterator<Attachment>) new TransformIterator(
-                Arrays.asList( files ).iterator(),
-                new Transformer() {
+        final Iterator<Attachment> result;
+        if ( files == null ) {
+            final List<Attachment> attachmentList = Collections.emptyList();
+            result = attachmentList.iterator();
+        } else {
+            result = (Iterator<Attachment>) new TransformIterator(
+                    Arrays.asList( files ).iterator(),
+                    new Transformer() {
                     public Object transform( Object o ) {
-                        File file = (File) o;
+                        final File file = (File) o;
                         final FileAttachment fa = new FileAttachment( object, file );
-                        fa.setLink( MessageFormat.format( "{0}/{1}",                      // NON-NLS
-                                                          getPath(), file.getName() ) );
+                        fa.setLink(
+                                MessageFormat.format( "{0}/{1}",                          // NON-NLS
+                                        getPath(), file.getName() ) );
                         return fa;
                     }
                 } );
+        }
+        return result;
     }
 
     /** {@inheritDoc} */
@@ -125,6 +135,11 @@ public class FileBasedManager implements AttachmentManager {
         return directory;
     }
 
+    /**
+     * Set the directory where files will be stored.
+     * Files in the directory can be removed independently.
+     * @param directory a directory
+     */
     public void setDirectory( File directory ) {
         LOG.info( MessageFormat.format( "Upload directory: {0}", directory.getAbsolutePath() ) );
         this.directory = directory;
