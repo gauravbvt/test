@@ -85,6 +85,7 @@ public class DefaultFlowDiagram implements FlowDiagram {
         graphRenderer.resetHighlight();
         graphRenderer.highlightVertex( selectedNode );
         render( graph, PNG, scenario, analyst, pngOut );
+        // System.out.println("*** PNG generated");
     }
 
     /**
@@ -118,6 +119,7 @@ public class DefaultFlowDiagram implements FlowDiagram {
         Graph<Node, Flow> graph = Project.graphBuilder().buildDirectedGraph( scenario );
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         render( graph, IMAGE_MAP, scenario, analyst, new BufferedOutputStream( baos ) );
+        // System.out.println("*** Image map generated");
         return baos.toString();
     }
 

@@ -25,6 +25,9 @@ import java.io.IOException;
  * @param <V> A Class for vertices
  */
 public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
+
+    private static int MAXBYTES = 1024;
+
     /**
      * The path to the dot executable
      */
@@ -95,10 +98,10 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
     }
 
     /**
-     * @param graph  -- a Graph
+     * @param graph       -- a Graph
      * @param dotExporter - a StyledDOTExporter
-     * @param format -- an output format (png, svg, imap etc.)
-     * @param output the rendered graph
+     * @param format      -- an output format (png, svg, imap etc.)
+     * @param output      the rendered graph
      * @throws DiagramException -- if generation fails
      */
     public void render( Graph<V, E> graph,
@@ -120,7 +123,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
      * @param output the rendered graph
      * @throws DiagramException if generation fails
      */
-    private void doRender( String dot, String format, 
+    private void doRender( String dot, String format,
                            OutputStream output ) throws DiagramException {
         String command = getDotPath() + "/" + algo + " -T" + format;
         Process p = null;
@@ -139,8 +142,17 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
             input.flush();
             input.close();
             // will interrupt this thread if external process does not terminate before timeout
-            timer.schedule( new InterruptScheduler( Thread.currentThread() ), this.timeout );
+ //           timer.schedule( new InterruptScheduler( Thread.currentThread() ), this.timeout );
             // wait for process to complete
+            // transfer from process input stream to output stream
+            BufferedInputStream in = new BufferedInputStream( p.getInputStream(), MAXBYTES );
+            int count;
+            do {
+                byte[] bytes = new byte[MAXBYTES];
+                count = in.read( bytes );
+                if ( count > 0 )
+                    output.write( bytes, 0, count );
+            } while ( count >= 0 );
             exitValue = p.waitFor();
             // Stop the timer
             timer.cancel();
@@ -154,15 +166,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
                 String errorMessage = buffer.toString().trim();
                 throw new DiagramException( errorMessage );
             }
-            // transfer from process input stream to output stream
-            BufferedInputStream in = new BufferedInputStream( p.getInputStream() );
-            int count;
-            while ( ( count = in.available() ) != 0 ) {
-                byte[] bytes = new byte[count];
-                int readCount = in.read( bytes );
-                assert readCount == count;
-                output.write( bytes );
-            }
+
             output.flush();
         } catch ( IOException e ) {
             throw new DiagramException( "Diagram generation failed", e );
