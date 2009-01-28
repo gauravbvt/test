@@ -5,7 +5,7 @@ import com.mindalliance.channels.pages.Project;
 /**
  * A company, agency, social club, etc.
  */
-public class Organization extends ModelObject implements Entity {
+public class Organization extends ModelObject implements ModelEntity {
 
     public Organization() {
     }

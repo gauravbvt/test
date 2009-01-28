@@ -5,7 +5,7 @@ import com.mindalliance.channels.pages.Project;
 /**
  * A location or jurisdiction.
  */
-public class Place extends ModelObject implements Entity {
+public class Place extends ModelObject implements ModelEntity {
 
     public Place() {
     }

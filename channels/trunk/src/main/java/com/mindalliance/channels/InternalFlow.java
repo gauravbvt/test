@@ -7,7 +7,7 @@ import javax.persistence.ManyToOne;
 /**
  * A flow between nodes within one scenario.
  */
-@Entity
+// @Entity
 public class InternalFlow extends Flow {
 
     /** The source of the flow. */

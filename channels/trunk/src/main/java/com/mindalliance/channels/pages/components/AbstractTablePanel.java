@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.Entity;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.ProfileLink;
 import org.apache.commons.beanutils.PropertyUtils;

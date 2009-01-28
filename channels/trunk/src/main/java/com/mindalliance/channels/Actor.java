@@ -5,7 +5,7 @@ import com.mindalliance.channels.pages.Project;
 /**
  * Someone or something playing a part in a scenario.
  */
-public class Actor extends ModelObject implements Entity {
+public class Actor extends ModelObject implements ModelEntity {
 
     public Actor() {
     }

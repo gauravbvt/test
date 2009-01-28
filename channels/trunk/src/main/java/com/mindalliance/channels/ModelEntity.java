@@ -9,7 +9,7 @@ package com.mindalliance.channels;
  * Date: Jan 12, 2009
  * Time: 7:56:21 PM
  */
-public interface Entity extends Identifiable {
+public interface ModelEntity extends Identifiable {
     /**
      * Get name
      *

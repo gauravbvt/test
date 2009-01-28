@@ -109,8 +109,8 @@ public final class Project extends WebApplication {
     }
 
     @Override
-    public Class<IndexPage> getHomePage() {
-        return IndexPage.class;
+    public Class<ScenarioPage> getHomePage() {
+        return ScenarioPage.class;
     }
 
     /**

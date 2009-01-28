@@ -5,12 +5,10 @@ import com.mindalliance.channels.Place;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Role;
-import com.mindalliance.channels.Entity;
-import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.ModelEntity;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.pages.ProfileLink;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.form.TextField;
@@ -19,7 +17,6 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 
 import java.text.Collator;
 
@@ -87,23 +84,23 @@ public class PartPanel extends Panel {
         addField( TASK_PROPERTY );
         addField( ACTOR_PROPERTY );
         add( makeLink( "actor-link",                                           // NON-NLS
-                new PropertyModel<Entity>( part, ACTOR_PROPERTY ) ) );
+                new PropertyModel<ModelEntity>( part, ACTOR_PROPERTY ) ) );
         addField( ROLE_PROPERTY );
         add( makeLink( "role-link",                                            // NON-NLS
-                new PropertyModel<Entity>( part, ROLE_PROPERTY ) ) );
+                new PropertyModel<ModelEntity>( part, ROLE_PROPERTY ) ) );
         addField( ORG_PROPERTY );
         add( makeLink( "org-link",                                             // NON-NLS
-                new PropertyModel<Entity>( part, ORG_PROPERTY ) ) );
+                new PropertyModel<ModelEntity>( part, ORG_PROPERTY ) ) );
         addField( JURISDICTION_PROPERTY );
         add( makeLink( "juris-link",                                           // NON-NLS
-                new PropertyModel<Entity>( part, JURISDICTION_PROPERTY ) ) );
+                new PropertyModel<ModelEntity>( part, JURISDICTION_PROPERTY ) ) );
         addField( LOCATION_PROPERTY );
         add( makeLink( "loc-link",                                             // NON-NLS
-                new PropertyModel<Entity>( part, LOCATION_PROPERTY ) ) );
+                new PropertyModel<ModelEntity>( part, LOCATION_PROPERTY ) ) );
     }
 
     private ModelObjectLink makeLink( String id,
-                                         final IModel<Entity> model ) {
+                                         final IModel<ModelEntity> model ) {
         return new ModelObjectLink( id, new Model<ModelObject> ((ModelObject)model.getObject()) );
     }
 

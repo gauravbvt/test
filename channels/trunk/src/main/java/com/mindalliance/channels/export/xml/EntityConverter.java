@@ -1,7 +1,6 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.Entity;
-import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.ModelEntity;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.pages.Project;
 import com.thoughtworks.xstream.converters.ConversionException;
@@ -33,7 +32,7 @@ public abstract class EntityConverter implements Converter {
     public void marshal( Object object,
                          HierarchicalStreamWriter writer,
                          MarshallingContext context ) {
-        Entity entity = (Entity) object;
+        ModelEntity entity = (ModelEntity) object;
         writer.addAttribute( "id", String.valueOf( entity.getId() ) );
         writer.startNode( "name" );
         writer.setValue( entity.getName() == null ? "" : entity.getName() );
@@ -55,7 +54,7 @@ public abstract class EntityConverter implements Converter {
      */
     public Object unmarshal( HierarchicalStreamReader reader,
                              UnmarshallingContext context ) {
-        Entity entity;
+        ModelEntity entity;
         // String id = reader.getAttribute( "id" );
         // do nothing for now with id -- will use it to disambiguate homonymous entities
         String name = "";
@@ -83,6 +82,6 @@ public abstract class EntityConverter implements Converter {
      * @param name entity's name
      * @return an entity
      */
-    abstract Entity findOrMakeEntity( String name );
+    abstract ModelEntity findOrMakeEntity( String name );
 
 }

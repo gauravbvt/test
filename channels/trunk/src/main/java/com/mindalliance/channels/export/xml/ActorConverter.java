@@ -1,7 +1,7 @@
 package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Entity;
+import com.mindalliance.channels.ModelEntity;
 import com.mindalliance.channels.pages.Project;
 
 /**
@@ -27,7 +27,7 @@ public class ActorConverter extends EntityConverter {
     /**
      * {@inheritDoc}
      */
-    Entity findOrMakeEntity( String name ) {
+    ModelEntity findOrMakeEntity( String name ) {
         return Project.dao().findOrMakeActor( name );
     }
 }

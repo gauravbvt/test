@@ -5,7 +5,7 @@ import com.mindalliance.channels.pages.Project;
 /**
  * A generic role.
  */
-public class Role extends ModelObject implements Entity {
+public class Role extends ModelObject implements ModelEntity {
 
     public Role() {
     }

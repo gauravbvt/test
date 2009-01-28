@@ -72,7 +72,7 @@ public class ResourceSpec implements Serializable {
      * @param entity an entity
      * @return a new resource spec
      */
-    public static ResourceSpec with( Entity entity ) {
+    public static ResourceSpec with( ModelEntity entity ) {
         ResourceSpec resourceSpec = new ResourceSpec();
         if ( entity instanceof Actor )
             resourceSpec.setActor( (Actor) entity );
@@ -379,8 +379,8 @@ public class ResourceSpec implements Serializable {
      *
      * @return an entity
      */
-    public Entity mostSpecificEntity() {
-        Entity mostSpecific = null;
+    public ModelEntity mostSpecificEntity() {
+        ModelEntity mostSpecific = null;
         if ( actor != null ) mostSpecific = actor;
         else if ( jurisdiction != null ) mostSpecific = jurisdiction;
         else if ( role != null ) mostSpecific = role;
