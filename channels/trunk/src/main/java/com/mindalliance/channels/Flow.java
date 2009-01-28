@@ -83,7 +83,7 @@ public abstract class Flow extends ModelObject {
             final String sourceName = node.getName();
             if ( sourceName != null && !sourceName.trim().isEmpty() ) {
                 result = sourceName;
-                if ( node.isPart() && ( (Part) node ).isRole() )
+                if ( node.isPart() && ( (Part) node ).isOnlyRole() )
                     result = MessageFormat.format( isAll() ? "every {0}" : "any {0}", result );
             }
         }

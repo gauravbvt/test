@@ -124,7 +124,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         channelField.setEnabled( isChannelEditable( f ) );
 
         channelRow.setVisible( isChannelRelevant( f ) );
-        allField.setVisible( getOther().isPart() && ( (Part) getOther() ).isRole() );
+        allField.setVisible( getOther().isPart() && ( (Part) getOther() ).isOnlyRole() );
     }
 
     private void addChecks() {

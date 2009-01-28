@@ -7,9 +7,11 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Entity;
 import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ProfileLink;
+import com.mindalliance.channels.pages.ModelObjectLink;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -84,37 +86,25 @@ public class PartPanel extends Panel {
 
         addField( TASK_PROPERTY );
         addField( ACTOR_PROPERTY );
-        add( makeProfileLink( "actor-link",                                           // NON-NLS
-                new PropertyModel<Entity>( part, ACTOR_PROPERTY ), "Actor" ) );
+        add( makeLink( "actor-link",                                           // NON-NLS
+                new PropertyModel<Entity>( part, ACTOR_PROPERTY ) ) );
         addField( ROLE_PROPERTY );
-        add( makeProfileLink( "role-link",                                            // NON-NLS
-                new PropertyModel<Entity>( part, ROLE_PROPERTY ), "Role" ) );
+        add( makeLink( "role-link",                                            // NON-NLS
+                new PropertyModel<Entity>( part, ROLE_PROPERTY ) ) );
         addField( ORG_PROPERTY );
-        add( makeProfileLink( "org-link",                                             // NON-NLS
-                new PropertyModel<Entity>( part, ORG_PROPERTY ), "Organization" ) );
+        add( makeLink( "org-link",                                             // NON-NLS
+                new PropertyModel<Entity>( part, ORG_PROPERTY ) ) );
         addField( JURISDICTION_PROPERTY );
-        add( makeProfileLink( "juris-link",                                           // NON-NLS
-                new PropertyModel<Entity>( part, JURISDICTION_PROPERTY ), "Jurisdiction" ) );
+        add( makeLink( "juris-link",                                           // NON-NLS
+                new PropertyModel<Entity>( part, JURISDICTION_PROPERTY ) ) );
         addField( LOCATION_PROPERTY );
-        add( makeProfileLink( "loc-link",                                             // NON-NLS
-                new PropertyModel<Entity>( part, LOCATION_PROPERTY ), "Location" ) );
+        add( makeLink( "loc-link",                                             // NON-NLS
+                new PropertyModel<Entity>( part, LOCATION_PROPERTY ) ) );
     }
 
-    private ProfileLink makeProfileLink( String id,
-                                         final IModel<Entity> model,
-                                         final String label ) {
-        return new ProfileLink( id,
-                new AbstractReadOnlyModel<ResourceSpec>() {
-                    public ResourceSpec getObject() {
-                        return ResourceSpec.with( model.getObject() );
-                    }
-                },
-                new AbstractReadOnlyModel<String>() {
-                    public String getObject() {
-                        return label;
-                    }
-                }
-        );
+    private ModelObjectLink makeLink( String id,
+                                         final IModel<Entity> model ) {
+        return new ModelObjectLink( id, new Model<ModelObject> ((ModelObject)model.getObject()) );
     }
 
     private void addField( String property ) {

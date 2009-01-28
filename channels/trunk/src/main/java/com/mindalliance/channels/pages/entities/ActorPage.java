@@ -9,6 +9,7 @@ import com.mindalliance.channels.pages.ProfileLink;
 import com.mindalliance.channels.pages.components.ModelObjectPanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -45,6 +46,7 @@ public class ActorPage extends WebPage {
         assert actor != null;
         add( new Label( "title", new Model<String>( "Actor: " + actor.getName() ) ) );
         add( new Label( "header-title", new PropertyModel<String>( actor, "name" ) ) );
+        add ( new ExternalLink("index", "index.html"));
         add( new ModelObjectPanel( "actor-form", new Model<Actor>( actor ) ) );
         add( new ProfileLink( "profile-link",
                         new AbstractReadOnlyModel<ResourceSpec>() {

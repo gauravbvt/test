@@ -503,9 +503,9 @@ public final class ScenarioPage extends WebPage {
             deleteScenario = new DeleteBox( "sc-del" );                                   // NON-NLS
             add( deleteScenario );
             add( createSelectScenario( "sc-sel" ) );                                      // NON-NLS
-
             scenarioImport = new FileUploadField( "sc-import", new Model<FileUpload>() ); // NON-NLS
             add( scenarioImport );
+            add ( new ExternalLink ("index", "index.html"));
 
             add( new Label( "user", Project.getUserName() ) );                            // NON-NLS
         }

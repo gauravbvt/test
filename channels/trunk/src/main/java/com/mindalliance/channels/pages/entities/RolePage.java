@@ -9,6 +9,7 @@ import com.mindalliance.channels.pages.ProfileLink;
 import com.mindalliance.channels.pages.components.ModelObjectPanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -46,6 +47,7 @@ public class RolePage extends WebPage {
         assert role != null;
         add( new Label( "title", new Model<String>( "Role: " + role.getName() ) ) );
         add( new Label( "header-title", new PropertyModel<String>( role, "name" ) ) );
+        add ( new ExternalLink("index", "index.html"));
         add( new ModelObjectPanel( "role-form", new Model<Role>( role ) ) );
         add( new ProfileLink( "profile-link",
                         new AbstractReadOnlyModel<ResourceSpec>() {

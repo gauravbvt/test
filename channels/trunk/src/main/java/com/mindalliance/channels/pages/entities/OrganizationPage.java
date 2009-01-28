@@ -9,6 +9,7 @@ import com.mindalliance.channels.pages.ProfileLink;
 import com.mindalliance.channels.pages.components.ModelObjectPanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -45,6 +46,7 @@ public class OrganizationPage extends WebPage {
         assert organization != null;
         add( new Label( "title", new Model<String>( "Actor: " + organization.getName() ) ) );
         add( new Label( "header-title", new PropertyModel<String>( organization, "name" ) ) );
+        add ( new ExternalLink("index", "index.html"));
         add( new ModelObjectPanel( "organization-form", new Model<Organization>( organization ) ) );
         add( new ProfileLink( "profile-link",
                         new AbstractReadOnlyModel<ResourceSpec>() {

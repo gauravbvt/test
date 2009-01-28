@@ -14,6 +14,7 @@ import com.mindalliance.channels.pages.components.ResourceProfilePanel;
 import com.mindalliance.channels.pages.components.ResourceSpecPanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.slf4j.LoggerFactory;
@@ -70,6 +71,7 @@ public class ProfilePage extends WebPage {
     private void init( PageParameters params ) throws NotFoundException {
         ResourceSpec resourceSpec = makeResource( params );
         add( new Label( "title", new Model<String>( "Profile: " + resourceSpec.getName() ) ) );
+        add ( new ExternalLink("index", "index.html"));
         add( new Label( "resourceSpec-name", new Model<String>( resourceSpec.getName() ) ) );
         add( new ResourceSpecPanel( "resourceSpec", new Model<ResourceSpec>( resourceSpec ) ) );
         add( new ResourceProfilePanel( "profile", new Model<ResourceSpec>( resourceSpec ) ) );

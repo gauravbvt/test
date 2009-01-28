@@ -64,7 +64,7 @@ public class DirectoryPanel extends AbstractTablePanel<ResourceSpec> {
                             },
                             new AbstractReadOnlyModel<String>() {
                                 public String getObject() {
-                                    return "(view " + model.getObject().toString() + ")";
+                                    return "(profile)";
                                 }
                             }
                     ) );

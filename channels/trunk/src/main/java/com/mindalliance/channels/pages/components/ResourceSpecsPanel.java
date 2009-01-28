@@ -52,25 +52,21 @@ public class ResourceSpecsPanel extends AbstractTablePanel {
                                       final String id,
                                       final IModel<ResourceSpec> model ) {
                 final ResourceSpec resourceSpec = model.getObject();
-                if ( !resourceSpec.isEntityOnly() ) {
-                    cellItem.add( new ProfileLink( id,
-                            new AbstractReadOnlyModel<ResourceSpec>() {
-                                public ResourceSpec getObject() {
-                                    return resourceSpec;
-                                }
-                            },
-                            new AbstractReadOnlyModel<String>() {
-                                public String getObject() {
-                                    return "(view " + resourceSpec.toString() + ")";
-                                }
+                cellItem.add( new ProfileLink( id,
+                        new AbstractReadOnlyModel<ResourceSpec>() {
+                            public ResourceSpec getObject() {
+                                return resourceSpec;
                             }
-                    ) );
-                    cellItem.add( new AttributeModifier( "class",
-                                                            true,
-                                                            new Model<String>( "link" ) ) );
-                } else {
-                    cellItem.add( new Label( id, new Model<String>( "" ) ) );
-                }
+                        },
+                        new AbstractReadOnlyModel<String>() {
+                            public String getObject() {
+                                return "(profile)";
+                            }
+                        }
+                ) );
+                cellItem.add( new AttributeModifier( "class",
+                        true,
+                        new Model<String>( "link" ) ) );
             }
         } );
         // delete column
@@ -80,8 +76,8 @@ public class ResourceSpecsPanel extends AbstractTablePanel {
                                       final IModel<ResourceSpec> model ) {
                 cellItem.add(
                         new DeletePanel( id,
-                                         new Model<Deletable>(
-                                                 new DeletableWrapper( model.getObject() ) ) ) );
+                                new Model<Deletable>(
+                                        new DeletableWrapper( model.getObject() ) ) ) );
             }
         } );
         // table and providers of resources specified resources need to kwno how to contact

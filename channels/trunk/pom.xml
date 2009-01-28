@@ -12,6 +12,14 @@
         <name>Mind-Alliance Systems LLC</name>
         <url>http://www.mind-alliance.com</url>
     </organization>
+    <repositories>
+        <repository>
+            <id>org.wicketstuff</id>
+            <name>Wicket Stuff Repository</name>
+            <url>http://wicketstuff.org/maven/repository</url>
+        </repository>
+    </repositories>
+
 
     <developers>
         <developer>
@@ -162,6 +170,7 @@
             <artifactId>wicket-extensions</artifactId>
             <version>${wicket.version}</version>
         </dependency>
+
 
         <!-- UTILS -->
         <dependency>

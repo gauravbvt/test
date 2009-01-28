@@ -168,7 +168,7 @@ public class Part extends Node {
     /**
      * @return true if part is only specified by a role.
      */
-    public boolean isRole() {
+    public boolean isOnlyRole() {
         return role != null && actor == null;
     }
 
