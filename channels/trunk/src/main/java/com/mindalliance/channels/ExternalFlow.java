@@ -165,23 +165,21 @@ public class ExternalFlow extends Flow {
 
     @Override
     public String getChannel() {
-        final Connector c = getConnector();
-        final boolean connectorBased = c != null
-                                       && ( c.isInput()
-                                            || getConnectorFlow().isAskedFor() );
-        return connectorBased ? getConnectorFlow().getChannel() : super.getChannel();
+        return isConnectorBased() ? getConnectorFlow().getChannel() : super.getChannel();
     }
 
     @Override
     public void setChannel( String channel ) {
-        final Connector c = getConnector();
-        final boolean connectorBased = c != null
-                                       && ( c.isInput()
-                                            || getConnectorFlow().isAskedFor() );
-        if ( connectorBased )
+        if ( isConnectorBased() )
             getConnectorFlow().setChannel( channel );
         else
             super.setChannel( channel );
+    }
+
+    private boolean isConnectorBased() {
+        final Connector c = getConnector();
+        return c != null
+            && ( c.isInput() || getConnectorFlow().isAskedFor() );
     }
 
     @Override
@@ -196,6 +194,11 @@ public class ExternalFlow extends Flow {
             super.setCritical( critical );
     }
 
+    /**
+     * True if the flow is critical.
+     * Local for notifications on input connectors.
+     * @return
+     */
     @Override
     public boolean isCritical() {
         final Connector c = getConnector();
@@ -203,5 +206,10 @@ public class ExternalFlow extends Flow {
                                        && c.isInput()
                                        && !getConnectorFlow().isAskedFor();
         return connectorBased ? getConnectorFlow().isCritical() : super.isCritical();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void initFrom( Flow flow ) {
     }
 }

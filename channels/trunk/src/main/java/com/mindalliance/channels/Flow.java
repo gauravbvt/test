@@ -169,13 +169,5 @@ public abstract class Flow extends ModelObject {
      * Initialize relevant properties from another flow.
      * @param flow the other flow
      */
-    public void initFrom( Flow flow ) {
-        setName( flow.getName() );
-        setDescription( flow.getDescription() );
-        setMaxDelay( flow.getMaxDelay() );
-        setAskedFor( flow.isAskedFor() );
-        setChannel( flow.getChannel() );
-        setCritical( flow.isCritical() );
-
-    }
+    public abstract void initFrom( Flow flow );
 }

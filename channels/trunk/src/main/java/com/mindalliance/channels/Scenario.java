@@ -232,20 +232,16 @@ public class Scenario extends ModelObject {
         return result;
     }
 
-    private boolean isInternal( Node source, Node target ) {
+    private static boolean isInternal( Node source, Node target ) {
         final Scenario scenario = source.getScenario();
-        return equals( scenario )
-            && scenario.equals( target.getScenario() );
+        return scenario != null && scenario.equals( target.getScenario() );
     }
 
-    private boolean isExternal( Node source, Node target ) {
-        final boolean targetIsConnector = equals( source.getScenario() )
-                                          && !equals( target.getScenario() )
-                                          && target.isConnector();
-        final boolean sourceIsConnector = !equals( source.getScenario() )
-                                          && equals( target.getScenario() )
-                                          && source.isConnector();
-        return targetIsConnector || sourceIsConnector;
+    private static boolean isExternal( Node source, Node target ) {
+        final Scenario scenario = source.getScenario();
+        return scenario != null
+            && !scenario.equals( target.getScenario() )
+            && ( target.isConnector() || source.isConnector() );
     }
 
     /**

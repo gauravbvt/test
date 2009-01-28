@@ -65,21 +65,34 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
      */
     private WebMarkupContainer channelRow;
 
+    /** The name field. */
+    private TextField<String> nameField;
+
+    /** The description field. */
+    private TextArea<String> descriptionField;
+
+    /** The askedFor buttons. */
+    private RadioGroup<Boolean> askedForButtons;
+
+    /** The critical checkbox. */
+    private CheckBox criticalCheck;
+    private FormComponent<?> channelField;
+    private FormComponentLabel allField;
+
     protected ExpandedFlowPanel( String id, Flow flow, boolean outcome, Set<Long> expansions ) {
         super( id );
+        setDefaultModel( new CompoundPropertyModel<Flow>(
+                new PropertyModel<Flow>( this, "flow" ) ) );                              // NON-NLS
 
         setOutputMarkupId( true );
         setFlow( flow );
         setOutcome( outcome );
 
         addHeader();
-        final TextField<String> nameField = new TextField<String>( "name" );              // NON-NLS
-        nameField.setEnabled( flow.isInternal() );
+        nameField = new TextField<String>( "name" );                                      // NON-NLS
         addLabeled( "name-label", nameField );                                            // NON-NLS
-
-        final TextArea<String> description = new TextArea<String>( "description" );       // NON-NLS
-        description.setEnabled( flow.isInternal() );
-        addLabeled( "description-label", description );                                   // NON-NLS
+        descriptionField = new TextArea<String>( "description" );                         // NON-NLS
+        addLabeled( "description-label", descriptionField );                              // NON-NLS
         addChecks();
 
         addOtherField();
@@ -95,29 +108,44 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         addChannelRow();
         addLabeled( "maxDelay-label", new TextField<String>( "maxDelay" ) );              // NON-NLS
         add( new AttachmentPanel( "attachments", flow ) );                                // NON-NLS
-        add( new IssuesPanel( "issues", new Model<ModelObject>( flow ), expansions ) );
+        add( new IssuesPanel( "issues", new Model<ModelObject>( flow ), expansions ) );   // NON-NLS
+        adjustFields( flow );
+    }
+
+    /**
+     * Show/hide/enable/disable parts of the panel given the state of the flow.
+     * @param f the flow
+     */
+    private void adjustFields( Flow f ) {
+        nameField.setEnabled( f.isInternal() );
+        descriptionField.setEnabled( f.isInternal() );
+        askedForButtons.setEnabled( f.isInternal() );
+        criticalCheck.setEnabled( f.isInternal() );
+        channelField.setEnabled( isChannelEditable( f ) );
+
+        channelRow.setVisible( isChannelRelevant( f ) );
+        allField.setVisible( getOther().isPart() && ( (Part) getOther() ).isRole() );
     }
 
     private void addChecks() {
-        final RadioGroup<Boolean> askedFor = new RadioGroup<Boolean>( "askedFor" );       // NON-NLS
-        askedFor.add( new Radio<Boolean>( "askedForTrue",                                 // NON-NLS
+        askedForButtons = new RadioGroup<Boolean>( "askedFor" );                          // NON-NLS
+        askedForButtons.add( new Radio<Boolean>( "askedForTrue",                          // NON-NLS
                 new Model<Boolean>( true ) ) );
-        askedFor.add( new Radio<Boolean>( "askedForFalse",                                // NON-NLS
+        askedForButtons.add( new Radio<Boolean>( "askedForFalse",                         // NON-NLS
                 new Model<Boolean>( false ) ) );
-        askedFor.add( new AjaxFormChoiceComponentUpdatingBehavior() {
+        askedForButtons.add( new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 channelRow.setVisible( isChannelRelevant( flow ) );
+                adjustFields( flow );
                 target.addComponent( ExpandedFlowPanel.this );
                 target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
             }
         } );
 
-        askedFor.setEnabled( flow.isInternal() );
-        add( askedFor );
-        final CheckBox critical = new CheckBox( "critical" );                             // NON-NLS
-        critical.setEnabled( flow.isInternal() );
-        add( critical );
+        add( askedForButtons );
+        criticalCheck = new CheckBox( "critical" );                                       // NON-NLS
+        add( criticalCheck );
     }
 
     private void addHeader() {
@@ -132,27 +160,26 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
 
         // TODO don't collapse everything on hide
         add( new ScenarioLink( "hide", new PropertyModel<Node>( this, "node" ) ) );       // NON-NLS
-        add( new Link( "add-issue" ) {                                                 // NON-NLS
+        add( new Link( "add-issue" ) {                                                    // NON-NLS
 
             @Override
             public void onClick() {
                 final UserIssue newIssue = new UserIssue( flow );
                 Project.dao().addUserIssue( newIssue );
-                PageParameters parameters = getWebPage().getPageParameters();
+                final PageParameters parameters = getWebPage().getPageParameters();
                 parameters.add( Project.EXPAND_PARM, String.valueOf( newIssue.getId() ) );
-                this.setResponsePage( getWebPage().getClass(), parameters );
+                setResponsePage( getWebPage().getClass(), parameters );
             }
         } );
         add( new CheckBox( "delete",                                                      // NON-NLS
-                new PropertyModel<Boolean>( this, "markedForDeletion" ) ) );      // NON-NLS
+                new PropertyModel<Boolean>( this, "markedForDeletion" ) ) );              // NON-NLS
     }
 
     private void addAllField() {
         final CheckBox checkBox = new CheckBox( "all" );                                  // NON-NLS
-        final FormComponentLabel label = new FormComponentLabel( "all-label", checkBox ); // NON-NLS
-        label.add( checkBox );
-        add( label );
-        label.setVisible( getOther().isPart() && ( (Part) getOther() ).isRole() );
+        allField = new FormComponentLabel( "all-label", checkBox );
+        allField.add( checkBox );
+        add( allField );                                                                  // NON-NLS
     }
 
     /**
@@ -218,6 +245,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
 
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
+                adjustFields( flow );
                 target.addComponent( ExpandedFlowPanel.this );
                 target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
             }
@@ -225,7 +253,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
 
         // TODO fix flow expansion of target when other has changed
         final ScenarioLink details = new ScenarioLink( "other-details",                   // NON-NLS
-                new PropertyModel<Node>( this, "other" ),                             // NON-NLS
+                new PropertyModel<Node>( this, "other" ),                                 // NON-NLS
                 getFlow() );
         details.add(
                 new Label( "type",                                                        // NON-NLS
@@ -241,14 +269,8 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         return flow;
     }
 
-    /**
-     * Set the flow for this panel. Also sets the default model.
-     *
-     * @param flow the new flow
-     */
     public final void setFlow( Flow flow ) {
         this.flow = flow;
-        setDefaultModel( new CompoundPropertyModel<Flow>( flow ) );
     }
 
     public final boolean isOutcome() {
@@ -286,32 +308,24 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
      */
     public void setOther( Node other ) {
         final Flow oldFlow = getFlow();
-        final Flow newFlow;
-        final Scenario s = oldFlow.getSource().getScenario();
-        if ( isOutcome() ) {
-            final Node source = oldFlow.getSource();
-            oldFlow.disconnect();
-            newFlow = s.connect( source, other );
-        } else {
-            final Node target = oldFlow.getTarget();
-            oldFlow.disconnect();
-            newFlow = s.connect( other, target );
-        }
+        final Scenario s = other.getScenario();
+        final Flow newFlow = isOutcome() ?
+                             s.connect( oldFlow.getSource(), other ) :
+                             s.connect( other, oldFlow.getTarget() );
         newFlow.initFrom( oldFlow );
+        oldFlow.disconnect();
         setFlow( newFlow );
     }
 
     private void addChannelRow() {
         channelRow = new WebMarkupContainer( "channel-row" );                             // NON-NLS
         channelRow.setOutputMarkupPlaceholderTag( true );
-
-        final FormComponent<?> textField = new TextField<String>( "channel" );            // NON-NLS
-        textField.setEnabled( isChannelEditable( flow ) );
+        channelField = new TextField<String>( "channel" );                                // NON-NLS
         final FormComponentLabel label =
-                new FormComponentLabel( "channel-label", textField );                     // NON-NLS
+                new FormComponentLabel( "channel-label", channelField );                  // NON-NLS
         channelRow.add( label );
-        channelRow.add( textField );
-        addIssues( textField, getFlow(), textField.getId() );
+        channelRow.add( channelField );
+        addIssues( channelField, getFlow(), channelField.getId() );
         label.add( new Label( "channel-title", new AbstractReadOnlyModel<String>() {      // NON-NLS
 
             @Override
@@ -320,7 +334,6 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
             }
         } ) );
 
-        channelRow.setVisible( isChannelRelevant( getFlow() ) );
         add( channelRow );
     }
 
