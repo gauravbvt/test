@@ -174,11 +174,26 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
     private String getNodeLabel( Node node ) {
         if ( node.isPart() ) {
             Part part = (Part) node;
+            String label = "";
+            if (part.getActor() != null) label += part.getActor().toString();
+            if (part.getRole() != null) {
+                if (!label.isEmpty()) label += "|as ";
+                label += part.getRole();
+            }
+            if (part.getOrganization() != null) {
+                if (!label.isEmpty()) label += "|in ";
+                label += part.getOrganization();
+            }
+            if (!label.isEmpty()) label += "|";
+            label += part.getTask();
+/*
             final String actorString = part.getActor() != null ? part.getActor().toString()
                     : part.getRole() != null ? part.getRole().toString()
                     : part.getOrganization() != null ? part.getOrganization().toString()
                     : getDefaultActor();
             return MessageFormat.format( "{0}|{1}", actorString, part.getTask() );
+*/
+            return label;
         } else {
             return node.getName();
         }
@@ -298,7 +313,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
         else {
             String label = getNodeLabel( node );
             String[] lines = label.split( "\\|" );
-            numLines = Math.min( lines.length, 2 );
+            numLines = Math.min( lines.length, 3 );
             Part part = (Part) node;
             if ( part.getActor() != null ) {
                 iconName = part.isSystem() ? "system" : "person";

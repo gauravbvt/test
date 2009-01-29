@@ -63,13 +63,13 @@ public class ScenarioDOTExporter implements StyledDOTExporter<Node, Flow> {
      */
     public void export( Writer writer, Graph<Node, Flow> g ) {
         PrintWriter out = new PrintWriter( writer );
-        String connector;
+        String arrow;
         // Graph declaration
         if ( g instanceof DirectedGraph ) {
-            connector = " -> ";
+            arrow = " -> ";
             out.println( "digraph G {" );
         } else {
-            connector = " -- ";
+            arrow = " -- ";
             out.println( "graph G {" );
         }
         if ( metaProvider.getDOTAttributeProvider() != null ) {
@@ -80,7 +80,7 @@ public class ScenarioDOTExporter implements StyledDOTExporter<Node, Flow> {
         exportVertices( out, g );
 
         // Edges
-        exportEdges( out, g, connector );
+        exportEdges( out, g, arrow );
         // Close graph
         out.println( "}" );
         out.flush();
@@ -149,7 +149,7 @@ public class ScenarioDOTExporter implements StyledDOTExporter<Node, Flow> {
         }
     }
 
-    private void exportEdges( PrintWriter out, Graph<Node, Flow> g, String connector ) {
+    private void exportEdges( PrintWriter out, Graph<Node, Flow> g, String arrow ) {
         for ( Flow e : g.edgeSet() ) {
             List<DOTAttribute> attributes = DOTAttribute.emptyList();
             if ( metaProvider.getEdgeLabelProvider() != null ) {
@@ -166,7 +166,7 @@ public class ScenarioDOTExporter implements StyledDOTExporter<Node, Flow> {
             }
             String source = getVertexID( g.getEdgeSource( e ) );
             String target = getVertexID( g.getEdgeTarget( e ) );
-            out.print( INDENT + source + connector + target );
+            out.print( INDENT + source + arrow + target );
             out.print( "[" );
             if ( !attributes.isEmpty() ) {
                 out.print( asElementAttributes( attributes ) );
