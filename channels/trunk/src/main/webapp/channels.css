@@ -145,6 +145,10 @@ input[type='text'], textarea {
     width: 99%;
 }
 
+input[type="text"].no-expand  {
+    width: 5em;
+}
+
 .float {
     float: right;
 }
