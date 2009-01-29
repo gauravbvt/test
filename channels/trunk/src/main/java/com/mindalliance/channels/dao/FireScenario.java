@@ -7,6 +7,7 @@ import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.Delay;
 
 /**
  * The fire in the building scenario...
@@ -50,19 +51,17 @@ public class FireScenario extends Scenario {
         f1.setName( "location" );
         f1.setAskedFor( true );
         f1.setChannel( "wall panel" );
-        f1.setMaxDelay( "0min" );
         f1.setDescription( "The fire location reported by the system" );
 
         final Flow f2 = connect( js1, chief );
         f2.setName( "fire location" );
         f2.setAskedFor( true );
         f2.setCritical( true );
-        f2.setMaxDelay( "0min" );
         f2.setDescription( "Communicate the location of the fire" );
 
         final Flow f3 = connect( chief, js1 );
         f3.setName( "stairways safe" );
-        f3.setMaxDelay( "10min" );
+        f3.setMaxDelay( new Delay(10, Delay.Unit.minutes) );
         f3.setCritical( true );
         f3.setChannel( "Radio" );
         f3.setDescription( "Confirms that stairways are safe for evacuation" );

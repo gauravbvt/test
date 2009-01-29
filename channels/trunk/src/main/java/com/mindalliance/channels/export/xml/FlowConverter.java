@@ -17,6 +17,7 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.util.SemMatch;
+import com.mindalliance.channels.Delay;
 import com.mindalliance.channels.pages.Project;
 
 import java.util.Map;
@@ -82,7 +83,7 @@ public class FlowConverter implements Converter {
         writer.endNode();
         if ( flow.getMaxDelay() != null ) {
             writer.startNode( "maxDelay" );
-            writer.setValue( flow.getMaxDelay() );
+            writer.setValue( flow.getMaxDelay().toString() );
             writer.endNode();
         }
         // Flow user issues (exported only if an internal flow)
@@ -213,7 +214,7 @@ public class FlowConverter implements Converter {
                 for ( Flow flow : flows ) flow.setChannel( channel );
             } else if ( nodeName.equals( "maxDelay" ) ) {
                 String maxDelay = reader.getValue();
-                for ( Flow flow : flows ) flow.setMaxDelay( maxDelay );
+                for ( Flow flow : flows ) flow.setMaxDelay( Delay.parse(maxDelay) );
             } else if ( nodeName.equals( "askedFor" ) ) {
                 boolean askedFor = reader.getValue().equals( "true" );
                 for ( Flow flow : flows ) flow.setAskedFor( askedFor );

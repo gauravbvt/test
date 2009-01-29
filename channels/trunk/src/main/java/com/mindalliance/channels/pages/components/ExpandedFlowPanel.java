@@ -8,6 +8,7 @@ import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.Delay;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ScenarioPage;
@@ -65,18 +66,32 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
      */
     private WebMarkupContainer channelRow;
 
-    /** The name field. */
+    /**
+     * The name field.
+     */
     private TextField<String> nameField;
 
-    /** The description field. */
+    /**
+     * The description field.
+     */
     private TextArea<String> descriptionField;
 
-    /** The askedFor buttons. */
+    /**
+     * The askedFor buttons.
+     */
     private RadioGroup<Boolean> askedForButtons;
 
-    /** The critical checkbox. */
+    /**
+     * The critical checkbox.
+     */
     private CheckBox criticalCheck;
+    /**
+     * The channels field
+     */
     private FormComponent<?> channelField;
+    /**
+     * The "all" field
+     */
     private FormComponentLabel allField;
 
     protected ExpandedFlowPanel( String id, Flow flow, boolean outcome, Set<Long> expansions ) {
@@ -106,7 +121,8 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         }
 
         addChannelRow();
-        addLabeled( "maxDelay-label", new TextField<String>( "maxDelay" ) );              // NON-NLS
+        addMaxDelayFields();
+        // addLabeled( "maxDelay-label", new TextField<String>( "maxDelay" ) );              // NON-NLS
         add( new AttachmentPanel( "attachments", flow ) );                                // NON-NLS
         add( new IssuesPanel( "issues", new Model<ModelObject>( flow ), expansions ) );   // NON-NLS
         adjustFields( flow );
@@ -114,6 +130,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
 
     /**
      * Show/hide/enable/disable parts of the panel given the state of the flow.
+     *
      * @param f the flow
      */
     private void adjustFields( Flow f ) {
@@ -265,6 +282,28 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         add( other );
     }
 
+    /**
+     * Add input fields for max delay
+     */
+    protected final void addMaxDelayFields() {
+        add( new TextField<String>( "delay-amount", new PropertyModel<String>( flow, "maxDelay.amountString" ) ) );
+        add( new DropDownChoice<Delay.Unit>(
+                "delay-unit",
+                new PropertyModel<Delay.Unit>( flow, "maxDelay.unit" ),
+                new PropertyModel<List<? extends Delay.Unit>>( flow, "maxDelay.units" ),
+                new IChoiceRenderer<Delay.Unit>() {
+                    public Object getDisplayValue( Delay.Unit unit ) {
+                        return unit.toString();
+                    }
+
+                    public String getIdValue( Delay.Unit unit, int i ) {
+                        return unit.toString();
+                    }
+                }
+        ) {
+        } );
+    }
+
     public final Flow getFlow() {
         return flow;
     }
@@ -310,8 +349,8 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         final Flow oldFlow = getFlow();
         final Scenario s = other.getScenario();
         final Flow newFlow = isOutcome() ?
-                             s.connect( oldFlow.getSource(), other ) :
-                             s.connect( other, oldFlow.getTarget() );
+                s.connect( oldFlow.getSource(), other ) :
+                s.connect( other, oldFlow.getTarget() );
         newFlow.initFrom( oldFlow );
         oldFlow.disconnect();
         setFlow( newFlow );

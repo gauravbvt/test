@@ -1,5 +1,7 @@
 package com.mindalliance.channels;
 
+import com.mindalliance.channels.Delay;
+
 import java.text.MessageFormat;
 
 /**
@@ -17,8 +19,8 @@ public abstract class Flow extends ModelObject {
     /** If this flow only happens on request from either the source or target. */
     private boolean askedFor;
 
-    /** A string describing how much lag time is expected for this flow. */
-    private String maxDelay;
+    /** How much lag time is expected for this flow. */
+    private Delay maxDelay = new Delay();
 
     /** If flow applies to all potential sources/targets. */
     private boolean all;
@@ -54,12 +56,20 @@ public abstract class Flow extends ModelObject {
         this.critical = critical;
     }
 
-    public String getMaxDelay() {
+    public Delay getMaxDelay() {
         return maxDelay;
     }
 
-    public void setMaxDelay( String maxDelay ) {
+    public void setMaxDelay( Delay maxDelay ) {
         this.maxDelay = maxDelay;
+    }
+
+    /**
+     * Set max delay from string
+     * @param s a string parseable to a Delay
+     */
+    public void setMaxDelay( String s ) {
+        maxDelay = Delay.parse( s );
     }
 
     /**
