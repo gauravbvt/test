@@ -5,7 +5,7 @@ import com.mindalliance.channels.pages.Project;
 /**
  * A location or jurisdiction.
  */
-public class Place extends ModelObject implements ModelEntity {
+public class Place extends ModelObject {
 
     public Place() {
     }
@@ -26,5 +26,12 @@ public class Place extends ModelObject implements ModelEntity {
          Dao dao = Project.dao();
          return dao.findOrMakePlace( name );
      }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isEntity() {
+        return true;
+    }
 
 }

@@ -174,23 +174,6 @@ public abstract class AbstractTablePanel<T> extends Panel {
         if ( mo != null ) {
             String text = (String) evaluate( bean, labelProperty, defaultText );
             labelText = ( text == null || text.isEmpty() ) ? ( defaultText == null ? "" : defaultText ) : text;
-/*
-            if ( mo instanceof Entity ) {
-                final Entity entity = (Entity) mo;
-                return new ProfileLink( id,
-                        new AbstractReadOnlyModel<ResourceSpec>() {
-                            public ResourceSpec getObject() {
-                                return ResourceSpec.with( entity );
-                            }
-                        },
-                        new AbstractReadOnlyModel<String>() {
-                            public String getObject() {
-                                return labelText;
-                            }
-                        }
-                );
-            } else {
-*/
                 return new ModelObjectLink( id,
                         new AbstractReadOnlyModel<ModelObject>() {
                             @Override

@@ -13,4 +13,16 @@ public interface Identifiable {
      * @return an id
      */
     long getId();
+
+    /**
+     * A short description
+     * @return a String
+     */
+    String getDescription();
+
+    /**
+     * A name
+     * @return a String
+     */
+    String getName();
 }

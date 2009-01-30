@@ -14,7 +14,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class DetectedIssue extends AnalysisObject implements Issue {
 
-    private static long NEGATIVE_COUNTER = -1;
+    private static long NEGATIVE_COUNTER = Long.MAX_VALUE;
     /**
      * Type of issue
      */
@@ -63,17 +63,6 @@ public class DetectedIssue extends AnalysisObject implements Issue {
      */
     public String toString() {
         StringBuilder sb = new StringBuilder();
-/*
-        sb.append( type );
-        sb.append( " issue on " );
-        sb.append( getAbout().getClass().getSimpleName() );
-        sb.append( " " );
-        sb.append( getAbout().getName() );
-        sb.append( "(" );
-        sb.append( getAbout().getId() );
-        sb.append( ")" );
-        sb.append( ": " );
-*/
         sb.append( getDescription() );
         if ( remediation != null ) {
             sb.append( " (" );
@@ -128,5 +117,13 @@ public class DetectedIssue extends AnalysisObject implements Issue {
      */
     public long getId() {
         return NEGATIVE_COUNTER--;
+    }
+
+    /**
+     * Return a name
+     * @return a String
+     */
+    public String getName() {
+        return getLabel( Integer.MAX_VALUE );
     }
 }

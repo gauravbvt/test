@@ -60,7 +60,7 @@ public class UserIssue extends ModelObject implements Issue {
     }
 
     public String getType() {
-        return "User";
+        return "From user";
     }
 
     public String getName() {

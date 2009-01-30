@@ -5,7 +5,7 @@ import com.mindalliance.channels.pages.Project;
 /**
  * Someone or something playing a part in a scenario.
  */
-public class Actor extends ModelObject implements ModelEntity {
+public class Actor extends ModelObject {
 
     public Actor() {
     }
@@ -30,5 +30,13 @@ public class Actor extends ModelObject implements ModelEntity {
         Dao dao = Project.dao();
         return dao.findOrMakeActor( name );
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isEntity() {
+        return true;
+    }
+
 
 }

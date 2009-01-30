@@ -1,7 +1,7 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.ModelEntity;
 import com.mindalliance.channels.Place;
+import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.pages.Project;
 
 /**
@@ -27,7 +27,7 @@ public class PlaceConverter extends EntityConverter {
     /**
      * {@inheritDoc}
      */
-    ModelEntity findOrMakeEntity( String name ) {
+    ModelObject findOrMakeEntity( String name ) {
         return Project.dao().findOrMakePlace( name );
     }
 

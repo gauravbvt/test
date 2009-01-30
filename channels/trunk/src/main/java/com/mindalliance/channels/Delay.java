@@ -3,6 +3,7 @@ package com.mindalliance.channels;
 import java.util.List;
 import java.util.Arrays;
 import java.io.Serializable;
+import java.lang.reflect.Array;
 
 /**
  * A duration
@@ -38,6 +39,13 @@ public class Delay implements Comparable, Serializable {
          */
         weeks
     }
+
+    private static String[] numbers = {
+            "zero","one","two","three","four","five","six",
+            "seven","eight","nine","ten","eleven","twelve",
+            "thirteen","fourteen","fifteen","sixteen","seventeen",
+            "eighteen","nineteen","twenty"
+    };
 
     /**
      * Amount of a unit of time
@@ -124,8 +132,12 @@ public class Delay implements Comparable, Serializable {
         try {
             amount = Integer.parseInt( value );
         } catch ( NumberFormatException e ) {
-            amount = 0;
+            amount = translateAmount( value );
         }
+    }
+
+    private int translateAmount( String s ) {
+        return Math.max(0, Arrays.asList( numbers ).indexOf( s.trim().toLowerCase() ));
     }
 
 

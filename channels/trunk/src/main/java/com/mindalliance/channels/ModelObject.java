@@ -119,4 +119,12 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
         return getName();
     }
 
+    /**
+     * Whether the model object is an entity
+     * @return a boolean
+     */
+    public boolean isEntity() {
+        return false;
+    }
+
 }

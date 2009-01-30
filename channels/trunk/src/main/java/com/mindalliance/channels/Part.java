@@ -197,7 +197,7 @@ public class Part extends Node {
     public void removeResourceSpec( ResourceSpec resourceSpec ) {
         ResourceSpec partResourceSpec = resourceSpec();
         while ( partResourceSpec.narrowsOrEquals( resourceSpec )) {
-            ModelEntity entity = partResourceSpec.mostSpecificEntity();
+            ModelObject entity = partResourceSpec.mostSpecificEntity();
             if (entity instanceof Actor) setActor(null);
             else if (entity instanceof Role) setRole(null);
             else if (entity instanceof Organization) setOrganization(null);

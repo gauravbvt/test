@@ -37,10 +37,10 @@ public class TestFlow extends TestCase {
     }
 
     public void testMaxDelay() {
-        assertNull( flow.getMaxDelay() );
+        assertEquals( flow.getMaxDelay().getSeconds(), 0 );
         final String s = "10 minutes";
         flow.setMaxDelay( s );
-        assertSame( s, flow.getMaxDelay() );
+        assertTrue( s.equals(flow.getMaxDelay().toString()) );
     }
 
     public void testIsness() {

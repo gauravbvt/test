@@ -5,7 +5,6 @@ import com.mindalliance.channels.Place;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Role;
-import com.mindalliance.channels.ModelEntity;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
@@ -84,24 +83,24 @@ public class PartPanel extends Panel {
         addField( TASK_PROPERTY );
         addField( ACTOR_PROPERTY );
         add( makeLink( "actor-link",                                           // NON-NLS
-                new PropertyModel<ModelEntity>( part, ACTOR_PROPERTY ) ) );
+                new PropertyModel<ModelObject>( part, ACTOR_PROPERTY ) ) );
         addField( ROLE_PROPERTY );
         add( makeLink( "role-link",                                            // NON-NLS
-                new PropertyModel<ModelEntity>( part, ROLE_PROPERTY ) ) );
+                new PropertyModel<ModelObject>( part, ROLE_PROPERTY ) ) );
         addField( ORG_PROPERTY );
         add( makeLink( "org-link",                                             // NON-NLS
-                new PropertyModel<ModelEntity>( part, ORG_PROPERTY ) ) );
+                new PropertyModel<ModelObject>( part, ORG_PROPERTY ) ) );
         addField( JURISDICTION_PROPERTY );
         add( makeLink( "juris-link",                                           // NON-NLS
-                new PropertyModel<ModelEntity>( part, JURISDICTION_PROPERTY ) ) );
+                new PropertyModel<ModelObject>( part, JURISDICTION_PROPERTY ) ) );
         addField( LOCATION_PROPERTY );
         add( makeLink( "loc-link",                                             // NON-NLS
-                new PropertyModel<ModelEntity>( part, LOCATION_PROPERTY ) ) );
+                new PropertyModel<ModelObject>( part, LOCATION_PROPERTY ) ) );
     }
 
     private ModelObjectLink makeLink( String id,
-                                         final IModel<ModelEntity> model ) {
-        return new ModelObjectLink( id, new Model<ModelObject> ((ModelObject)model.getObject()) );
+                                         final IModel<ModelObject> model ) {
+        return new ModelObjectLink( id, new Model<ModelObject> (model.getObject()) );
     }
 
     private void addField( String property ) {

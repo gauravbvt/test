@@ -1,7 +1,5 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.Delay;
-
 import java.text.MessageFormat;
 
 /**

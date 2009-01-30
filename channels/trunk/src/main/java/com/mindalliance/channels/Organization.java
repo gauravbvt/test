@@ -5,7 +5,7 @@ import com.mindalliance.channels.pages.Project;
 /**
  * A company, agency, social club, etc.
  */
-public class Organization extends ModelObject implements ModelEntity {
+public class Organization extends ModelObject {
 
     public Organization() {
     }
@@ -33,5 +33,11 @@ public class Organization extends ModelObject implements ModelEntity {
         return dao.findOrMakeOrganization( name );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isEntity() {
+        return true;
+    }
 
  }

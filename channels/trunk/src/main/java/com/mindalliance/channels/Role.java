@@ -5,7 +5,7 @@ import com.mindalliance.channels.pages.Project;
 /**
  * A generic role.
  */
-public class Role extends ModelObject implements ModelEntity {
+public class Role extends ModelObject {
 
     public Role() {
     }
@@ -29,6 +29,13 @@ public class Role extends ModelObject implements ModelEntity {
         if ( name == null || name.isEmpty() ) return null;
         Dao dao = Project.dao();
         return dao.findOrMakeRole( name );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isEntity() {
+        return true;
     }
 
 }
