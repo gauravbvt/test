@@ -18,7 +18,7 @@ public class UserIssue extends ModelObject implements Issue {
     /**
      * The identifiable object the issue is about
      */
-    private Identifiable about;
+    private ModelObject about;
     /**
      * Remediation
      */
@@ -33,13 +33,13 @@ public class UserIssue extends ModelObject implements Issue {
      *
      * @param about a model object
      */
-    public UserIssue( Identifiable about ) {
+    public UserIssue( ModelObject about ) {
         super();
         this.about = about;
         setDescription( "(No description)" );
     }
 
-    public Identifiable getAbout() {
+    public ModelObject getAbout() {
         return about;
     }
 
