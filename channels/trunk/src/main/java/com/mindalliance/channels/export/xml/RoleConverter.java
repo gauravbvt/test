@@ -14,12 +14,9 @@ import com.mindalliance.channels.pages.Project;
  */
 public class RoleConverter extends EntityConverter {
 
-    public RoleConverter() {        
+    public RoleConverter() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public boolean canConvert( Class aClass ) {
         return Role.class.isAssignableFrom( aClass );
     }
@@ -27,7 +24,8 @@ public class RoleConverter extends EntityConverter {
     /**
      * {@inheritDoc}
      */
+    @Override
     ModelObject findOrMakeEntity( String name ) {
-        return Project.dao().findOrMakeRole( name );
+        return Project.service().findOrCreate( Role.class, name );
     }
 }

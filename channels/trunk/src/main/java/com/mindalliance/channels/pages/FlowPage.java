@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.Dao;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.analysis.Analyst;
@@ -34,11 +34,11 @@ public class FlowPage extends WebPage {
     public FlowPage( PageParameters parameters ) {
         super( parameters );
 
-        final Dao dao = getScenarioDao();
-        scenario = ScenarioPage.findScenario( dao, parameters );
+        final Service service = getService();
+        scenario = ScenarioPage.findScenario( service, parameters );
 
         if ( scenario == null )
-            redirectTo( dao.getDefaultScenario() );
+            redirectTo( service.getDefaultScenario() );
 
         else {
             node = ScenarioPage.findNode( scenario, parameters );
@@ -79,8 +79,8 @@ public class FlowPage extends WebPage {
         return ( (Project) getApplication() ).getAnalyst();
     }
 
-    private Dao getScenarioDao() {
-        return ( (Project) getApplication() ).getDao();
+    private Service getService() {
+        return ( (Project) getApplication() ).getService();
     }
 
     private void redirectTo( Scenario s ) {

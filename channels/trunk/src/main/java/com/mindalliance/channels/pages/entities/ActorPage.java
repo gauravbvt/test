@@ -1,18 +1,18 @@
 package com.mindalliance.channels.pages.entities;
 
 import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.pages.ProfileLink;
+import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.components.ModelObjectPanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.slf4j.LoggerFactory;
 
@@ -65,9 +65,14 @@ public class ActorPage extends WebPage {
     private Actor findActor( PageParameters parameters ) throws NotFoundException {
         Actor actor = null;
         if ( parameters.containsKey( ID_PARM ) ) {
-            Dao dao = Project.dao();
-            actor = dao.findActor( parameters.getLong( ID_PARM ) );
+            actor = getService().find( Actor.class, parameters.getLong( ID_PARM ) );
         }
         return actor;
     }
+
+    private Service getService() {
+        return ( (Project) getApplication() ).getService();
+    }
+
+
 }

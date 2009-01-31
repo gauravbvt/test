@@ -17,9 +17,6 @@ public class ActorConverter extends EntityConverter {
     public ActorConverter() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public boolean canConvert( Class aClass ) {
         return Actor.class.isAssignableFrom( aClass );
     }
@@ -27,7 +24,8 @@ public class ActorConverter extends EntityConverter {
     /**
      * {@inheritDoc}
      */
+    @Override
     ModelObject findOrMakeEntity( String name ) {
-        return Project.dao().findOrMakeActor( name );
+        return Project.service().findOrCreate( Actor.class, name );
     }
 }

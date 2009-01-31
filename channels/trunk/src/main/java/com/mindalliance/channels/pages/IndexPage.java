@@ -1,17 +1,17 @@
 package com.mindalliance.channels.pages;
 
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.pages.RedirectPage;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.model.Model;
+import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.pages.components.ResourceSpecPanel;
 import com.mindalliance.channels.pages.components.ResourceSpecsPanel;
 import com.mindalliance.channels.pages.components.ScenariosPanel;
-import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.Dao;
-import com.mindalliance.channels.Scenario;
+import org.apache.wicket.PageParameters;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.pages.RedirectPage;
+import org.apache.wicket.model.Model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,30 +25,26 @@ import java.util.List;
  * Time: 10:12:52 AM
  */
 public class IndexPage extends WebPage {
+
     /**
      * Resource Specifications shown
      */
     private List<ResourceSpec> resourceSpecs = new ArrayList<ResourceSpec>();
-    /**
-     * Dao
-     */
-    private final Dao dao;
 
     public IndexPage( PageParameters parameters ) {
         super( parameters );
-        dao = Project.dao();
-        Iterator<ResourceSpec> allResourceSpecs = dao.resourceSpecs();
-        // Take a local copy of all known resource specs
-        while ( allResourceSpecs.hasNext() )
-            resourceSpecs.add( new ResourceSpec( allResourceSpecs.next() ) );
-        init();
+
+        final Service service = ( (Project) getApplication() ).getService();
+        resourceSpecs = new ArrayList<ResourceSpec>( service.getAllResourceSpecs() );
+        init( service );
     }
 
     @SuppressWarnings( { "unchecked" } )
-    private void init() {
+    private void init( Service service ) {
         add( new Label( "title", "Index" ) );
+
         List<Scenario> scenarios = new ArrayList<Scenario>();
-        Iterator<Scenario> iterator = dao.scenarios();
+        Iterator<Scenario> iterator = service.iterate( Scenario.class );
         while ( iterator.hasNext() ) scenarios.add( iterator.next() );
         add( new ScenariosPanel( "all-scenarios",
                                   new Model<ArrayList<Scenario>>( (ArrayList)scenarios ) ) );

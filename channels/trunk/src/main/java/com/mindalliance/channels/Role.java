@@ -2,9 +2,13 @@ package com.mindalliance.channels;
 
 import com.mindalliance.channels.pages.Project;
 
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+
 /**
  * A generic role.
  */
+@Entity
 public class Role extends ModelObject {
 
     public Role() {
@@ -27,13 +31,13 @@ public class Role extends ModelObject {
      */
     public static Role named( String name ) {
         if ( name == null || name.isEmpty() ) return null;
-        Dao dao = Project.dao();
-        return dao.findOrMakeRole( name );
+        return Project.service().findOrCreate( Role.class, name );
     }
 
     /**
      * {@inheritDoc}
      */
+    @Transient @Override
     public boolean isEntity() {
         return true;
     }

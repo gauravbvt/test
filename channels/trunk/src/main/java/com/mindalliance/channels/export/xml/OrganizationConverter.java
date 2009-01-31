@@ -28,6 +28,6 @@ public class OrganizationConverter extends EntityConverter {
      * {@inheritDoc}
      */
     ModelObject findOrMakeEntity( String name ) {
-        return Project.dao().findOrMakeOrganization( name );
+        return Project.service().findOrCreate( Organization.class, name );
     }
 }

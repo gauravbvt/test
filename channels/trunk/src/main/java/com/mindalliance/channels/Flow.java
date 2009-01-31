@@ -1,10 +1,16 @@
 package com.mindalliance.channels;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Transient;
 import java.text.MessageFormat;
 
 /**
  * An arrow between two nodes in the information flow graph.
  */
+@Entity @Inheritance( strategy = InheritanceType.SINGLE_TABLE )
 public abstract class Flow extends ModelObject {
 
     // TODO Should we annotate a flow as primary vs seconday (when multiple flows are mutually redundant)?
@@ -74,6 +80,7 @@ public abstract class Flow extends ModelObject {
      * Provide a out-of-context description of the flow.
      * @return the description
      */
+    @Transient
     public String getTitle() {
         String content = getName();
         if ( content == null || content.trim().isEmpty() )
@@ -103,6 +110,7 @@ public abstract class Flow extends ModelObject {
      * Provide a description of the flow, when viewed as a requirement.
      * @return the description
      */
+    @Transient
     public String getRequirementTitle() {
         final boolean noName = getName() == null || getName().trim().isEmpty();
         return MessageFormat.format(
@@ -117,6 +125,7 @@ public abstract class Flow extends ModelObject {
      * Provide a description of the flow, when viewed as an outcome.
      * @return the description
      */
+    @Transient
     public String getOutcomeTitle() {
         final boolean noName = getName() == null || getName().trim().isEmpty();
         return MessageFormat.format(
@@ -134,9 +143,11 @@ public abstract class Flow extends ModelObject {
     }
 
     /** @return Get the source of this flow. */
+    @Transient
     public abstract Node getSource();
 
     /** @return the target of this flow. */
+    @Transient
     public abstract Node getTarget();
 
     /**
@@ -163,8 +174,10 @@ public abstract class Flow extends ModelObject {
     /**
      * @return true for internal flows; false for external flows.
      */
+    @Transient
     public abstract boolean isInternal();
 
+    @Column( name = "ISALL" )
     public boolean isAll() {
         return all;
     }

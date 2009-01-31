@@ -1,8 +1,10 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ScenarioPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -42,8 +44,8 @@ public class FlowListPanel extends Panel {
             @Override
             public void onClick() {
                 final Node n = getNode();
-                final Flow f = isOutcomes() ? n.createOutcome()
-                                            : n.createRequirement();
+                final Flow f = isOutcomes() ? n.createOutcome( getService() )
+                                            : n.createRequirement( getService() );
                 final Scenario s = n.getScenario();
                 final Set<Long> newExpansions = new HashSet<Long>( expansions );
                 newExpansions.add( f.getId() );
@@ -80,6 +82,10 @@ public class FlowListPanel extends Panel {
             flowList.add( panel );
         }
         return flowList;
+    }
+
+    private Service getService() {
+        return ( (Project) getApplication() ).getService();
     }
 
     /**

@@ -25,7 +25,7 @@ public abstract class AbstractIssueDetector implements IssueDetector {
      * {@inheritDoc}
      */
     public List<Issue> detectIssues( ModelObject modelObject ) {
-        List<Issue> issues = cache.get( modelObject, modelObject.lastModified() );
+        List<Issue> issues = cache.get( modelObject, modelObject.getLastModified() );
         if ( issues == null ) {
             issues = doDetectIssues( modelObject );
             cache.put( modelObject, issues  );

@@ -28,7 +28,7 @@ public class PlaceConverter extends EntityConverter {
      * {@inheritDoc}
      */
     ModelObject findOrMakeEntity( String name ) {
-        return Project.dao().findOrMakePlace( name );
+        return Project.service().findOrCreate( Place.class, name );
     }
 
 }

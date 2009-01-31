@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages;
 
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
@@ -17,6 +18,7 @@ import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.PartPanel;
 import com.mindalliance.channels.pages.components.ScenarioEditPanel;
 import com.mindalliance.channels.pages.components.ScenarioLink;
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -35,11 +37,10 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.pages.RedirectPage;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.util.string.StringValueConversionException;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -126,11 +127,11 @@ public final class ScenarioPage extends WebPage {
         // Call super to remember parameters in links
         super( parameters );
 
-        final Dao dao = getScenarioDao();
-        final Scenario scenario = findScenario( dao, parameters );
+        final Service service = getService();
+        final Scenario scenario = findScenario( service, parameters );
 
         if ( scenario == null )
-            redirectTo( dao.getDefaultScenario() );
+            redirectTo( service.getDefaultScenario() );
 
         else {
             final Node n = findNode( scenario, parameters );
@@ -176,14 +177,14 @@ public final class ScenarioPage extends WebPage {
     /**
      * Find scenario specified in parameters.
      *
-     * @param dao        the scenario container
+     * @param service        the scenario container
      * @param parameters the page parameters
      * @return a scenario, or null if not found
      */
-    static Scenario findScenario( Dao dao, PageParameters parameters ) {
+    static Scenario findScenario( Service service, PageParameters parameters ) {
         if ( parameters.containsKey( SCENARIO_PARM ) )
             try {
-                return dao.findScenario( parameters.getLong( SCENARIO_PARM ) );
+                return service.find( Scenario.class, parameters.getLong( SCENARIO_PARM ) );
             } catch ( StringValueConversionException ignored ) {
                 LOG.warn( "Invalid scenario specified in parameters. Using default." );
             } catch ( NotFoundException ignored ) {
@@ -278,7 +279,7 @@ public final class ScenarioPage extends WebPage {
         return getParameters( scenario, node, expansions );
     }
 
-    private void init( final Scenario scenario, Node n, Set<Long> expanded ) {
+    private void init( Scenario scenario, Node n, Set<Long> expanded ) {
         node = n;
         expansions = expanded;
 
@@ -293,12 +294,12 @@ public final class ScenarioPage extends WebPage {
     }
 
     /**
-     * Get the scenario manager from project via the application context.
+     * Get the channels service from project via the application context.
      *
-     * @return the scenario DAO
+     * @return the service
      */
-    private Dao getScenarioDao() {
-        return getProject().getDao();
+    private Service getService() {
+        return getProject().getService();
     }
 
     private Project getProject() {
@@ -371,10 +372,11 @@ public final class ScenarioPage extends WebPage {
             target = scenario;
 /*
             add( new Label( "node-title",                                                 // NON-NLS
-                    new PropertyModel<String>( node, "title" ) ) );               // NON-NLS
+                    new PropertyModel<String>( node, "title" ) ) );                       // NON-NLS
 */
             add( new Label( "node-title",                                                 // NON-NLS
                     new AbstractReadOnlyModel<String>() {
+                        @Override
                         public String getObject() {
                             return StringUtils.abbreviate( node.getTitle(), NODE_TITLE_MAX_LENGTH );
                         }
@@ -394,19 +396,20 @@ public final class ScenarioPage extends WebPage {
             add( new ExternalLink( "profile", MessageFormat.format(                       // NON-NLS
                     "resource.html?scenario={0}&part={1}",                                // NON-NLS
                     scenario.getId(), node.getId() ) ) );
-            add( new Link( "add-part-issue" ) {                                                 // NON-NLS
+            add( new Link( "add-part-issue" ) {                                           // NON-NLS
 
                 @Override
                 public void onClick() {
                     final UserIssue newIssue = new UserIssue( node );
-                    Project.dao().addUserIssue( newIssue );
+                    getService().add( newIssue );
                     expansions.add( newIssue.getId() );
                     redirectHere();
                 }
             } );
             add( new AttachmentPanel( "attachments", node ) );                            // NON-NLS
 
-            add( new IssuesPanel( "issues", new Model<ModelObject>( node ), ScenarioPage.this.getPageParameters() ) );
+            add( new IssuesPanel( "issues",                                               // NON-NLS
+                                  new Model<ModelObject>( node ), getPageParameters() ) );
             addScenarioFields( scenario );
             reqs = new FlowListPanel( "reqs", node, false, expansions );                  // NON-NLS
             add( reqs );
@@ -422,11 +425,11 @@ public final class ScenarioPage extends WebPage {
                 protected void onComponentTag( ComponentTag tag ) {
                     super.onComponentTag( tag );
                     tag.put( "src",                                                       // NON-NLS
-                            MessageFormat.format(
-                                    "scenario.png?scenario={0}&amp;node={1}&amp;time={2}",   // NON-NLS
-                                    scenario.getId(),
-                                    n.getId(),
-                                    System.currentTimeMillis() ) );
+                        MessageFormat.format(
+                            "scenario.png?scenario={0}&amp;node={1}&amp;time={2,number,0}", // NON-NLS
+                            scenario.getId(),
+                            n.getId(),
+                            System.currentTimeMillis() ) );
                 }
 
                 @Override
@@ -465,7 +468,7 @@ public final class ScenarioPage extends WebPage {
 
                 @Override
                 public void onClick() {
-                    final Part newPart = scenario.createPart();
+                    final Part newPart = getService().createPart( scenario );
                     redirectTo( newPart );
                 }
             } );
@@ -475,7 +478,7 @@ public final class ScenarioPage extends WebPage {
                 @Override
                 public void onClick() {
                     final UserIssue newIssue = new UserIssue( scenario );
-                    Project.dao().addUserIssue( newIssue );
+                    getService().add( newIssue );
                     expansions.add( newIssue.getId() );
                     if ( !expansions.contains( scenario.getId() ) ) {
                         expansions.add( scenario.getId() );
@@ -541,7 +544,7 @@ public final class ScenarioPage extends WebPage {
             final List<Scenario> scenarios =
                     new ArrayList<Scenario>( Dao.INITIAL_CAPACITY );
 
-            final Iterator<Scenario> iterator = getScenarioDao().scenarios();
+            final Iterator<Scenario> iterator = getService().iterate( Scenario.class );
             while ( iterator.hasNext() )
                 scenarios.add( iterator.next() );
 
@@ -592,14 +595,14 @@ public final class ScenarioPage extends WebPage {
             importScenario();
 
             if ( deleteScenario.isSelected() ) {
-                final Dao dao = getScenarioDao();
+                final Service service = getService();
                 final Scenario scenario = getScenario();
-                dao.removeScenario( scenario );
+                service.remove( scenario );
                 if ( LOG.isInfoEnabled() )
                     LOG.info( MessageFormat.format(
                             "Deleted scenario {0} - {1}",
                             scenario.getId(), scenario.getName() ) );
-                setTarget( dao.getDefaultScenario() );
+                setTarget( service.getDefaultScenario() );
             }
 
             if ( isNodeDeleted() ) {
@@ -655,7 +658,7 @@ public final class ScenarioPage extends WebPage {
 
         @Override
         public void onClick() {
-            final Scenario newScenario = getScenarioDao().createScenario();
+            final Scenario newScenario = getService().createScenario();
             LOG.info( "Created new scenario" );
             redirectTo( newScenario );
         }

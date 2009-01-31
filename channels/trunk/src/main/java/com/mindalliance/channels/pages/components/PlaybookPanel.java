@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.util.Play;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.Project;
@@ -53,11 +54,17 @@ public class PlaybookPanel extends AbstractTablePanel<Play> {
                 new Model<String>( "Priority" ),
                 "criticality", "criticality" ) );                                 // NON-NLS
         // provider and table
-        List<Play> plays = Project.dao().findAllPlays( player );
+        List<Play> plays = getService().findAllPlays( player );
         add( new AjaxFallbackDefaultDataTable<Play>(
                 "playbook",
                 columns,
                 new SortableBeanProvider<Play>( plays, "part.scenario.name" ),
                 getPageSize() ) );
     }
+
+    private Service getService() {
+        return ( (Project) getApplication() ).getService();
+    }
+
+
 }

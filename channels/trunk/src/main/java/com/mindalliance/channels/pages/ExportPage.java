@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.Dao;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.export.Exporter;
@@ -27,27 +27,27 @@ public class ExportPage extends WebPage {
     public ExportPage( PageParameters parameters ) {
         super( parameters );
 
-        final Dao dao = getScenarioDao();
+        final Service service = getService();
         if ( parameters.containsKey( ScenarioPage.SCENARIO_PARM ) )
             try {
-                scenario = dao.findScenario(
+                scenario = service.find( Scenario.class,
                         parameters.getLong( ScenarioPage.SCENARIO_PARM ) );
 
             } catch ( StringValueConversionException ignored ) {
                 LOG.warn( "Bad scenario specified. Exporting default scenario.", ignored );
-                scenario = dao.getDefaultScenario();
+                scenario = service.getDefaultScenario();
             } catch ( NotFoundException ignored ) {
                 LOG.warn( "Unknown scenario specified. Exporting default scenario.", ignored );
-                scenario = dao.getDefaultScenario();
+                scenario = service.getDefaultScenario();
             }
         else {
             LOG.warn( "No scenario specified. Exporting default scenario." );
-            scenario = dao.getDefaultScenario();
+            scenario = service.getDefaultScenario();
         }
     }
 
-    private Dao getScenarioDao() {
-        return ( (Project) getApplication() ).getDao();
+    private Service getService() {
+        return ( (Project) getApplication() ).getService();
     }
 
     private Exporter getExporter() {
@@ -56,7 +56,7 @@ public class ExportPage extends WebPage {
 
     @Override
     public String getMarkupType() {
-        return getExporter().getMimeType();                                                
+        return getExporter().getMimeType();
     }
 
     /**

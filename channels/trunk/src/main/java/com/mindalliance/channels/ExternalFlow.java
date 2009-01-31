@@ -1,11 +1,15 @@
 package com.mindalliance.channels;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import java.util.Iterator;
 
 /**
  * A flow from one Part in this scenario to/from a connector in another scenario.
  * Direction of flow matches other connector's only flow.
  */
+@Entity
 public class ExternalFlow extends Flow {
 
     /** The connector. */
@@ -42,7 +46,7 @@ public class ExternalFlow extends Flow {
      *
      * @see Flow#getSource()
      */
-    @Override
+    @Override @Transient
     public Node getSource() {
         if ( connector == null )
             return null;
@@ -58,7 +62,7 @@ public class ExternalFlow extends Flow {
      *
      * @see Flow#getTarget()
      */
-    @Override
+    @Override @Transient
     public Node getTarget() {
         if ( connector == null )
             return null;
@@ -94,24 +98,26 @@ public class ExternalFlow extends Flow {
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Transient
     public boolean isInternal() {
         return false;
     }
 
-    public final Part getPart() {
+    @ManyToOne
+    public Part getPart() {
         return part;
     }
 
-    public final void setPart( Part part ) {
+    public void setPart( Part part ) {
         this.part = part;
     }
 
-    public final Connector getConnector() {
+    @ManyToOne
+    public Connector getConnector() {
         return connector;
     }
 
-    public final void setConnector( Connector connector ) {
+    public void setConnector( Connector connector ) {
         this.connector = connector;
     }
 
@@ -124,6 +130,7 @@ public class ExternalFlow extends Flow {
             getConnectorFlow().setName( name );
     }
 
+    @Transient
     private Flow getConnectorFlow() {
         return isInput() ? getConnector().requirements().next()
                          : getConnector().outcomes().next();
@@ -141,7 +148,7 @@ public class ExternalFlow extends Flow {
         return input;
     }
 
-    public final void setInput( boolean input ) {
+    public void setInput( boolean input ) {
         this.input = input;
     }
 
@@ -176,6 +183,7 @@ public class ExternalFlow extends Flow {
             super.setChannel( channel );
     }
 
+    @Transient
     private boolean isConnectorBased() {
         final Connector c = getConnector();
         return c != null

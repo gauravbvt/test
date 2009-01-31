@@ -1,6 +1,6 @@
 package com.mindalliance.channels.attachments;
 
-import com.mindalliance.channels.Dao;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.NotFoundException;
 
@@ -47,8 +47,8 @@ public class FileAttachment implements Attachment {
         this( object, typeFrom( file ), file );
     }
 
-    public FileAttachment( Dao dao, File file ) throws NotFoundException {
-        this( objectFrom( dao, file ), file );
+    public FileAttachment( Service service, File file ) throws NotFoundException {
+        this( objectFrom( service, file ), file );
     }
 
     /**
@@ -97,14 +97,15 @@ public class FileAttachment implements Attachment {
 
     /**
      * Find the object encoded in a given file's name.
-     * @param dao where to look for objects.
+     * @param service where to look for objects.
      * @param file the file
      * @return a model object
      * @throws NotFoundException when no corresponding object was found
      */
-    static ModelObject objectFrom( Dao dao, File file ) throws NotFoundException {
+    static ModelObject objectFrom( Service service, File file ) throws NotFoundException {
         final String fileName = file.getName();
-        return dao.find( Long.parseLong( fileName.substring( 1, fileName.indexOf( SEPARATOR ) ) ) );
+        return service.find( ModelObject.class,
+                         Long.parseLong( fileName.substring( 1, fileName.indexOf( SEPARATOR ) ) ) );
     }
 
     /**

@@ -2,9 +2,13 @@ package com.mindalliance.channels;
 
 import com.mindalliance.channels.pages.Project;
 
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+
 /**
  * A company, agency, social club, etc.
  */
+@Entity
 public class Organization extends ModelObject {
 
     public Organization() {
@@ -29,15 +33,16 @@ public class Organization extends ModelObject {
      */
     public static Organization named( String name ) {
         if ( name == null || name.isEmpty() ) return null;
-        Dao dao = Project.dao();
-        return dao.findOrMakeOrganization( name );
+        return Project.service().findOrCreate( Organization.class, name );
     }
 
     /**
      * {@inheritDoc}
      */
+    @Transient @Override
     public boolean isEntity() {
         return true;
     }
 
- }
+}
+

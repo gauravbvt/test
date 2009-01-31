@@ -1,5 +1,6 @@
 package com.mindalliance.channels;
 
+import com.mindalliance.channels.service.ChannelsServiceImpl;
 import com.mindalliance.channels.dao.Memory;
 import junit.framework.TestCase;
 
@@ -16,7 +17,7 @@ public class TestScenario extends TestCase {
 
     /** The scenario being tested. */
     private Scenario scenario;
-    private Dao dao;
+    private Service service;
 
     public TestScenario() {
     }
@@ -24,8 +25,8 @@ public class TestScenario extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        dao = new Memory();
-        scenario = dao.createScenario();
+        service = new ChannelsServiceImpl( new Memory() );
+        scenario = service.createScenario();
     }
 
     public void testDescription() {
@@ -52,19 +53,19 @@ public class TestScenario extends TestCase {
     public void testEquals() {
         assertEquals( scenario, scenario );
         assertFalse( scenario.equals( null ) );
-        assertFalse( scenario.equals( dao.createScenario() ) );
+        assertFalse( scenario.equals( service.createScenario() ) );
     }
 
     public void testHashCode() {
-        assertNotSame( scenario.hashCode(), dao.createScenario().hashCode() );
+        assertNotSame( scenario.hashCode(), service.createScenario().hashCode() );
     }
 
     public void testNodes() {
         assertEquals( 1, scenario.getNodeCount() );
 
         final Node p1 = scenario.getDefaultPart();
-        final Part p2 = scenario.createPart();
-        final Part p3 = scenario.createPart();
+        final Part p2 = service.createPart( scenario );
+        final Part p3 = service.createPart( scenario );
 
         assertSame( p1, scenario.getNode( p1.getId() ) );
         assertSame( p2, scenario.getNode( p2.getId() ) );
@@ -132,9 +133,8 @@ public class TestScenario extends TestCase {
             scenario.connect( p1, p2 );
             fail();
         } catch ( IllegalArgumentException ignored ) {}
-
-        final Part p3 = scenario.createPart();
-        final Part p4 = scenario.createPart();
+        final Part p3 = service.createPart( scenario );
+        final Part p4 = service.createPart( scenario );
 
         final Flow f = scenario.connect( p3, p4 );
         assertSame( p3, f.getSource() );
@@ -151,8 +151,8 @@ public class TestScenario extends TestCase {
     }
 
     public void testDisconnect() {
-        final Part p1 = scenario.createPart();
-        final Part p2 = scenario.createPart();
+        final Part p1 = service.createPart( scenario );
+        final Part p2 = service.createPart( scenario );
 
         final Flow f = scenario.connect( p1, p2 );
 
@@ -164,9 +164,9 @@ public class TestScenario extends TestCase {
     }
 
     public void testFlows() {
-        final Part bob = scenario.createPart();
-        final Part sue = scenario.createPart();
-        final Part joe = scenario.createPart();
+        final Part bob = service.createPart( scenario );
+        final Part sue = service.createPart( scenario );
+        final Part joe = service.createPart( scenario );
 
         final Flow f1 = scenario.connect( bob, sue );
         final Flow f2 = scenario.connect( bob, joe );
@@ -211,17 +211,16 @@ public class TestScenario extends TestCase {
         assertSame( dp, nodes2.next() );
         assertFalse( nodes2.hasNext() );
 
-        final Flow out = dp.createOutcome();
+        final Flow out = dp.createOutcome( service );
         final Connector c1 = (Connector) out.getTarget();
-        final Flow in  = dp.createRequirement();
+        final Flow in  = dp.createRequirement( service );
         final Connector c2 = (Connector) in.getSource();
         scenario.removeNode( dp );
 
         assertSame( dp, scenario.getNode( dp.getId() ) );
         assertSame( c1, scenario.getNode( c1.getId() ) );
         assertSame( c2, scenario.getNode( c2.getId() ) );
-
-        final Part p2 = scenario.createPart();
+        final Part p2 = service.createPart( scenario );
         scenario.removeNode( dp );
         assertSame( p2, scenario.getNode( p2.getId() ) );
         assertNull( scenario.getNode( dp.getId() ) );

@@ -1,33 +1,33 @@
 package com.mindalliance.channels;
 
-import junit.framework.TestCase;
-import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.dao.Memory;
-import com.mindalliance.channels.graph.DefaultGraphBuilder;
-import com.mindalliance.channels.graph.GraphvizRenderer;
-import com.mindalliance.channels.graph.DefaultFlowDiagram;
 import com.mindalliance.channels.analysis.DefaultAnalyst;
 import com.mindalliance.channels.analysis.IssueDetector;
-import com.mindalliance.channels.analysis.detectors.FlowWithoutChannel;
+import com.mindalliance.channels.analysis.detectors.FlowViolatesPolicy;
 import com.mindalliance.channels.analysis.detectors.FlowWithUndefinedSource;
 import com.mindalliance.channels.analysis.detectors.FlowWithUndefinedTarget;
-import com.mindalliance.channels.analysis.detectors.UnnamedFlow;
-import com.mindalliance.channels.analysis.detectors.PartWithoutTask;
-import com.mindalliance.channels.analysis.detectors.PartWithoutRole;
-import com.mindalliance.channels.analysis.detectors.PotentialDeadlock;
-import com.mindalliance.channels.analysis.detectors.UnconnectedConnector;
+import com.mindalliance.channels.analysis.detectors.FlowWithoutChannel;
+import com.mindalliance.channels.analysis.detectors.FromUser;
 import com.mindalliance.channels.analysis.detectors.NoRedundancy;
 import com.mindalliance.channels.analysis.detectors.OrphanedPart;
-import com.mindalliance.channels.analysis.detectors.FromUser;
-import com.mindalliance.channels.analysis.detectors.FlowViolatesPolicy;
-import com.mindalliance.channels.export.xml.XmlStreamer;
+import com.mindalliance.channels.analysis.detectors.PartWithoutRole;
+import com.mindalliance.channels.analysis.detectors.PartWithoutTask;
+import com.mindalliance.channels.analysis.detectors.PotentialDeadlock;
+import com.mindalliance.channels.analysis.detectors.UnconnectedConnector;
+import com.mindalliance.channels.analysis.detectors.UnnamedFlow;
 import com.mindalliance.channels.attachments.FileBasedManager;
-
-import java.util.List;
-import java.util.ArrayList;
-
-import org.apache.wicket.util.tester.WicketTester;
+import com.mindalliance.channels.service.ChannelsServiceImpl;
+import com.mindalliance.channels.dao.Memory;
+import com.mindalliance.channels.export.xml.XmlStreamer;
+import com.mindalliance.channels.graph.DefaultFlowDiagram;
+import com.mindalliance.channels.graph.DefaultGraphBuilder;
+import com.mindalliance.channels.graph.GraphvizRenderer;
+import com.mindalliance.channels.pages.Project;
+import junit.framework.TestCase;
 import org.apache.wicket.util.file.File;
+import org.apache.wicket.util.tester.WicketTester;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -46,8 +46,11 @@ public class AbstractChannelsTest extends TestCase {
         XmlStreamer xmlStreamer = new XmlStreamer();
         project = new Project();
         project.setUri( "mindalliance.com/channels/demo" );
+
         Dao dao = new Memory();
-        project.setDao( dao );
+        ChannelsServiceImpl channels = new ChannelsServiceImpl( dao );
+
+        project.setService( channels );
         project.setExporter( xmlStreamer );
         project.setImporter( xmlStreamer );
         project.setGraphBuilder( new DefaultGraphBuilder() );

@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.AttributeModifier;
@@ -72,7 +73,7 @@ public class CollapsedFlowPanel extends Panel implements DeletableFlow {
             @Override
             public void onClick() {
                 final UserIssue newIssue = new UserIssue( flow );
-                Project.dao().addUserIssue( newIssue );
+                getService().add( newIssue );
                 PageParameters parameters = getWebPage().getPageParameters();
                 parameters.add( Project.EXPAND_PARM, String.valueOf( newIssue.getId() ) );
                 parameters.add( Project.EXPAND_PARM, String.valueOf( flow.getId() ) );
@@ -81,6 +82,10 @@ public class CollapsedFlowPanel extends Panel implements DeletableFlow {
         } );
         add( new CheckBox( "delete",                                                      // NON-NLS
                 new PropertyModel<Boolean>( this, "markedForDeletion" ) ) );   // NON-NLS
+    }
+
+    private Service getService() {
+        return ( (Project) getApplication() ).getService();
     }
 
     /**

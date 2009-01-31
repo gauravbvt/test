@@ -2,9 +2,13 @@ package com.mindalliance.channels;
 
 import com.mindalliance.channels.pages.Project;
 
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+
 /**
  * Someone or something playing a part in a scenario.
  */
+@Entity
 public class Actor extends ModelObject {
 
     public Actor() {
@@ -27,13 +31,13 @@ public class Actor extends ModelObject {
      */
     public static Actor named( String name ) {
         if ( name == null || name.isEmpty() ) return null;
-        Dao dao = Project.dao();
-        return dao.findOrMakeActor( name );
+        return Project.service().findOrCreate( Actor.class, name );
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override @Transient
     public boolean isEntity() {
         return true;
     }

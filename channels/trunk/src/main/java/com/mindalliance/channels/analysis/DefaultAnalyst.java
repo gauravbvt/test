@@ -153,7 +153,7 @@ public class DefaultAnalyst implements Analyst {
      */
     private List<Issue> findAllIssuesInPlays( ResourceSpec resource ) {
         List<Issue> issues = new ArrayList<Issue>();
-        List<Play> plays = Project.dao().findAllPlays( resource );
+        List<Play> plays = Project.service().findAllPlays( resource );
         Set<Part> parts = new HashSet<Part>();
         for ( Play play : plays ) {
             parts.add( play.getPart() );

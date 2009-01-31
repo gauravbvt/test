@@ -96,7 +96,7 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
     }
 
     private Iterator<Node> getCutpoints( Scenario scenario ) {
-        Set<Node> cutpoints = cachedCutpoints.get( scenario, scenario.lastModified() );
+        Set<Node> cutpoints = cachedCutpoints.get( scenario, scenario.getLastModified() );
         if ( cutpoints == null ) {
             cutpoints = detectSignificantCutpoints( scenario );
             cachedCutpoints.put( scenario, cutpoints );

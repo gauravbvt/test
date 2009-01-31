@@ -2,9 +2,13 @@ package com.mindalliance.channels;
 
 import com.mindalliance.channels.pages.Project;
 
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+
 /**
  * A location or jurisdiction.
  */
+@Entity
 public class Place extends ModelObject {
 
     public Place() {
@@ -23,13 +27,13 @@ public class Place extends ModelObject {
       */
      public static Place named( String name ) {
         if ( name == null || name.isEmpty() ) return null;
-         Dao dao = Project.dao();
-         return dao.findOrMakePlace( name );
+        return Project.service().findOrCreate( Place.class, name );
      }
 
     /**
      * {@inheritDoc}
      */
+    @Transient @Override
     public boolean isEntity() {
         return true;
     }

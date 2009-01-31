@@ -2,7 +2,14 @@ package com.mindalliance.channels;
 
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
+import org.hibernate.annotations.Cascade;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+import javax.persistence.InheritanceType;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -10,11 +17,11 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
-
 /**
  * A scenario in the project.
  * Provides an iterator on its nodes.
  */
+@Entity @Inheritance( strategy = InheritanceType.SINGLE_TABLE )
 public class Scenario extends ModelObject {
 
     // TODO - Add location (as in area) of the scenario (where the scenario applies - e.g. avian flu case in New Jersey)
@@ -34,9 +41,6 @@ public class Scenario extends ModelObject {
     /** Nodes, indexed by id. */
     private Map<Long,Node> nodeIndex;
 
-    /** The dao responsible for this scenario. */
-    private Dao dao;
-
     public Scenario() {
         initializeScenario( this );
     }
@@ -55,6 +59,8 @@ public class Scenario extends ModelObject {
         scenario.setNodes( nodes );
     }
 
+    @OneToMany( cascade = CascadeType.ALL )
+    @Cascade( org.hibernate.annotations.CascadeType.DELETE_ORPHAN )
     private Set<Node> getNodes() {
         return nodes;
     }
@@ -64,7 +70,7 @@ public class Scenario extends ModelObject {
      * @param nodes the nodes
      * @throws IllegalArgumentException when list is empty
      */
-    protected final void setNodes( Set<Node> nodes ) {
+    protected void setNodes( Set<Node> nodes ) {
         if ( nodes.isEmpty() )
             throw new IllegalArgumentException();
 
@@ -88,63 +94,46 @@ public class Scenario extends ModelObject {
     /**
      * @return the number of nodes in this scenario
      */
+    @Transient
     public int getNodeCount() {
         return getNodes().size();
     }
 
     /**
-     * Create and add a new part to this scenario.
-     * @return the new part
-     */
-    public Part createPart() {
-        final Part node = getDao().createPart();
-        addNode( node );
-        return node;
-    }
-
-    /**
      * Convenience accessor for tests.
+     * @param service the underlying store
      * @param actor the actor for the new part
      * @param task the task of the new part
      * @return the new part
      */
-    public Part createPart( Actor actor, String task ) {
-        final Part result = createPart();
+    public Part createPart( Service service, Actor actor, String task ) {
+        final Part result = service.createPart( this );
         result.setActor( actor );
         result.setTask( task );
-
+        addNode( result );
         return result;
     }
 
     /**
      * Convenience accessor for tests.
+     * @param service the underlying store
      * @param role the role for the new part
      * @param task the task of the new part
      * @return the new part
      */
-    public Part createPart( Role role, String task ) {
-        final Part result = createPart();
+    public Part createPart( Service service, Role role, String task ) {
+        final Part result = service.createPart( this );
         result.setRole( role );
         result.setTask( task );
-
+        addNode( result );
         return result;
-    }
-
-    /**
-     * Create and add a new connector to this scenario.
-     * @return the new connector
-     */
-    public Connector createConnector() {
-        final Connector node = getDao().createConnector();
-        addNode( node );
-        return node;
     }
 
     /**
      * Add a new node to this scenario.
      * @param node the new node
      */
-    protected void addNode( Node node ) {
+    public void addNode( Node node ) {
         getNodes().add( node );
         nodeIndex.put( node.getId(), node );
         node.setScenario( this );
@@ -157,7 +146,6 @@ public class Scenario extends ModelObject {
      */
     public void removeNode( Node node ) {
         if ( getNodes().contains( node ) && ( node.isConnector() || hasMoreThanOnePart() ) ) {
-            // TODO move to dao?
             getNodes().remove( node );
             nodeIndex.remove( node.getId() );
 
@@ -314,16 +302,9 @@ public class Scenario extends ModelObject {
      * Find node to display when none was specified.
      * @return the first part in this scenario
      */
+    @Transient
     public Part getDefaultPart() {
         return parts().next();
-    }
-
-    public final Dao getDao() {
-        return dao;
-    }
-
-    public final void setDao( Dao dao ) {
-        this.dao = dao;
     }
 
     //=================================================

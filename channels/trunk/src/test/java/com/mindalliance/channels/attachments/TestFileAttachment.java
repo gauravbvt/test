@@ -1,8 +1,9 @@
 package com.mindalliance.channels.attachments;
 
-import com.mindalliance.channels.Dao;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.service.ChannelsServiceImpl;
 import com.mindalliance.channels.dao.Memory;
 import junit.framework.TestCase;
 
@@ -13,7 +14,7 @@ import java.io.File;
  */
 public class TestFileAttachment extends TestCase {
 
-    private Dao dao;
+    private Service service;
     private ModelObject object;
 
     public TestFileAttachment() {
@@ -25,8 +26,8 @@ public class TestFileAttachment extends TestCase {
      */
     @Override
     protected void setUp() throws Exception {
-        dao = new Memory();
-        object = dao.createScenario();
+        service = new ChannelsServiceImpl( new Memory() );
+        object = service.createScenario();
     }
 
     public void testCreateFileName() throws NotFoundException {
@@ -36,7 +37,7 @@ public class TestFileAttachment extends TestCase {
             final File f = new File( FileAttachment.createFileName( object, type, label ) );
             assertSame( type, FileAttachment.typeFrom( f ) );
             assertEquals( label, FileAttachment.labelFrom( f ) );
-            assertSame( object, FileAttachment.objectFrom( dao, f ) );
+            assertSame( object, FileAttachment.objectFrom( service, f ) );
         }
     }
 
@@ -45,7 +46,7 @@ public class TestFileAttachment extends TestCase {
         final String label = "a problem description.doc";
         final File f = new File( FileAttachment.createFileName( object, type, label ) );
 
-        final FileAttachment fa = new FileAttachment( dao, f );
+        final FileAttachment fa = new FileAttachment( service, f );
 
         assertSame( f, fa.getFile() );
         assertSame( type, fa.getType() );

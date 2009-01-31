@@ -3,11 +3,12 @@ package com.mindalliance.channels;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.util.SemMatch;
 
-import java.io.Serializable;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Collections;
 
 /**
  * A Resource is an actor in a role for an organization with a jurisdiction.
@@ -19,7 +20,7 @@ import java.util.Collections;
  * Date: Jan 8, 2009
  * Time: 8:26:05 PM
  */
-public class ResourceSpec implements Serializable {
+public class ResourceSpec extends ModelObject {
 
     /**
      * Used in calculating hashCode
@@ -30,14 +31,17 @@ public class ResourceSpec implements Serializable {
      * The resource spec's actor
      */
     private Actor actor;
+
     /**
      * Role played
      */
     private Role role;
+
     /**
      * With organization
      */
     private Organization organization;
+
     // TODO -- should be a Jurisdiction, not a String
     /**
      * In jurisdiction
@@ -86,6 +90,7 @@ public class ResourceSpec implements Serializable {
         return resourceSpec;
     }
 
+    @ManyToOne
     public Actor getActor() {
         return actor;
     }
@@ -94,6 +99,7 @@ public class ResourceSpec implements Serializable {
         this.actor = actor;
     }
 
+    @ManyToOne
     public Role getRole() {
         return role;
     }
@@ -102,6 +108,7 @@ public class ResourceSpec implements Serializable {
         this.role = role;
     }
 
+    @ManyToOne
     public Organization getOrganization() {
         return organization;
     }
@@ -110,6 +117,7 @@ public class ResourceSpec implements Serializable {
         this.organization = organization;
     }
 
+    @ManyToOne
     public Place getJurisdiction() {
         return jurisdiction;
     }
@@ -131,6 +139,7 @@ public class ResourceSpec implements Serializable {
      *
      * @return channels as string
      */
+    @Transient
     public String getChannelsString() {
         if ( channels.isEmpty() ) {
             return "(No channel)";
@@ -201,6 +210,7 @@ public class ResourceSpec implements Serializable {
      *
      * @return a string
      */
+    @Transient
     public String getActorName() {
         return ( actor == null ) ? "" : actor.getName();
     }
@@ -210,6 +220,7 @@ public class ResourceSpec implements Serializable {
      *
      * @return a string
      */
+    @Transient
     public String getOrganizationName() {
         return ( organization == null ) ? "" : organization.getName();
     }
@@ -219,6 +230,7 @@ public class ResourceSpec implements Serializable {
      *
      * @return a string
      */
+    @Transient
     public String getJurisdictionName() {
         return ( jurisdiction == null ) ? "" : jurisdiction.getName();
     }
@@ -228,6 +240,7 @@ public class ResourceSpec implements Serializable {
      *
      * @return a boolean
      */
+    @Transient
     public boolean isActorOnly() {
         return actor != null && role == null && organization == null && jurisdiction == null;
     }
@@ -237,6 +250,7 @@ public class ResourceSpec implements Serializable {
      *
      * @return a boolean
      */
+    @Transient
     public boolean isRoleOnly() {
         return actor == null && role != null && organization == null && jurisdiction == null;
     }
@@ -246,6 +260,7 @@ public class ResourceSpec implements Serializable {
      *
      * @return a boolean
      */
+    @Transient
     public boolean isOrganizationOnly() {
         return actor == null && role == null && organization != null && jurisdiction == null;
     }
@@ -255,6 +270,7 @@ public class ResourceSpec implements Serializable {
      *
      * @return a boolean
      */
+    @Transient
     public boolean isJurisdictionOnly() {
         return actor == null && role == null && organization == null && jurisdiction != null;
     }
@@ -264,6 +280,7 @@ public class ResourceSpec implements Serializable {
      *
      * @return a boolean
      */
+    @Transient
     public boolean isAnyActor() {
         return actor == null;
     }
@@ -273,6 +290,7 @@ public class ResourceSpec implements Serializable {
      *
      * @return a boolean
      */
+    @Transient
     public boolean isAnyOrganization() {
         return organization == null;
     }
@@ -282,6 +300,7 @@ public class ResourceSpec implements Serializable {
      *
      * @return a boolean
      */
+    @Transient
     public boolean isAnyRole() {
         return role == null;
     }
@@ -291,6 +310,7 @@ public class ResourceSpec implements Serializable {
      *
      * @return a boolean
      */
+    @Transient
     public boolean isAnyJurisdiction() {
         return jurisdiction == null;
     }
@@ -300,6 +320,7 @@ public class ResourceSpec implements Serializable {
      *
      * @return a boolean
      */
+    @Transient
     public boolean isEmpty() {
         return isAnyActor() && isAnyRole() && isAnyOrganization() && isAnyJurisdiction();
     }
@@ -309,6 +330,7 @@ public class ResourceSpec implements Serializable {
      *
      * @return a string
      */
+    @Transient
     public String getName() {
         StringBuilder sb = new StringBuilder();
         if ( !isAnyRole() ) {
@@ -368,9 +390,9 @@ public class ResourceSpec implements Serializable {
             return true;
         } else {
             // Try expensive test
-            Dao dao = Project.dao();
-            List<ResourceSpec> resources = dao.findAllResourcesNarrowingOrEqualTo( this );
-            List<ResourceSpec> others = dao.findAllResourcesNarrowingOrEqualTo( other );
+            Service service = Project.service();
+            List<ResourceSpec> resources = service.findAllResourcesNarrowingOrEqualTo( this );
+            List<ResourceSpec> others = service.findAllResourcesNarrowingOrEqualTo( other );
             return !Collections.disjoint( resources, others );
         }
     }
@@ -394,6 +416,7 @@ public class ResourceSpec implements Serializable {
      *
      * @return a boolean
      */
+    @Transient
     public boolean isEntityOnly() {
         int count = 0;
         if ( actor != null ) count++;
@@ -408,6 +431,7 @@ public class ResourceSpec implements Serializable {
      *
      * @return a boolean
      */
+    @Transient
     public boolean isPredefined() {
         return isEntityOnly() || isPermanent();
     }
@@ -417,8 +441,9 @@ public class ResourceSpec implements Serializable {
      *
      * @return a boolean
      */
+    @Transient
     public boolean isPermanent() {
-        return Project.dao().isPermanent( this );
+        return Project.service().isPermanent( this );
     }
 
     /**
@@ -426,6 +451,7 @@ public class ResourceSpec implements Serializable {
      *
      * @return either "a priori" or "from tasks"
      */
+    @Transient
     public String getKind() {
         return isPredefined() ? "added" : "from tasks";
     }

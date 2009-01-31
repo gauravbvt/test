@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Actor;
+import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Organization;
@@ -8,9 +9,9 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Place;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.attachments.BitBucket;
+import com.mindalliance.channels.service.ChannelsServiceImpl;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.graph.FlowDiagram;
 import com.mindalliance.channels.pages.Project;
@@ -20,13 +21,12 @@ import junit.framework.TestCase;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
-import org.apache.wicket.PageParameters;
 import static org.easymock.EasyMock.*;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Test behavoir of a part panel.
@@ -47,7 +47,11 @@ public class TestPartPanel extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         project = new Project();
-        project.setDao( new Memory() );
+        final ChannelsServiceImpl service = new ChannelsServiceImpl();
+        service.setAddingSamples( true );
+        service.setDao( new Memory() );
+
+        project.setService( service );
         project.setAttachmentManager( new BitBucket() );
         final FlowDiagram fd = createMock( FlowDiagram.class );
         expect( fd.getImageMap( (Scenario) anyObject(), (Analyst) anyObject() ) )
@@ -68,7 +72,7 @@ public class TestPartPanel extends TestCase {
         tester.setParametersForNextRequest( new HashMap<String,String[]>() );
 
         // Find first part in scenario
-        scenario = project.getDao().getDefaultScenario();
+        scenario = project.getService().getDefaultScenario();
         final Iterator<Node> nodes = scenario.nodes();
         part = null;
         while ( part == null && nodes.hasNext() ) {

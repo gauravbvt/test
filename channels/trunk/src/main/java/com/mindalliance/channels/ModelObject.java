@@ -1,5 +1,12 @@
 package com.mindalliance.channels;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.text.Collator;
 import java.util.Date;
@@ -7,6 +14,7 @@ import java.util.Date;
 /**
  * An object with name, id and description, comparable by its toString() values.
  */
+@Entity @Inheritance( strategy = InheritanceType.JOINED )
 public abstract class ModelObject implements Serializable, Comparable<ModelObject>, Identifiable {
 
     /** Cheap way of creating unique default ids. Overloaded by hibernate eventually. */
@@ -20,6 +28,9 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
 
     /** The description. */
     private String description = "";
+
+    /** Time the object was last modified. Set by aspect. */
+    private Date lastModified;
 
     //=============================
     protected ModelObject() {
@@ -35,11 +46,13 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
         setName( name );
     }
 
+    @Id
+    @GeneratedValue( strategy = GenerationType.AUTO )
     public long getId() {
         return id;
     }
 
-    public void setId( long id ) {
+    public final void setId( long id ) {
         this.id = id;
     }
 
@@ -106,8 +119,9 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
         return name;
     }
 
-    // TODO -- Implement this
-    public Date lastModified() {
+    @Transient
+    public Date getLastModified() {
+        // TODO implement last modified with aspect
         return new Date();
     }
 
@@ -115,6 +129,7 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
      * Get a label
      * @return a string
      */
+    @Transient
     public String getLabel() {
         return getName();
     }
@@ -123,6 +138,7 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
      * Whether the model object is an entity
      * @return a boolean
      */
+    @Transient
     public boolean isEntity() {
         return false;
     }

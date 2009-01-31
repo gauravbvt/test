@@ -9,20 +9,22 @@
 
     <context:annotation-config/>
 
-<!--    <bean id="serializer" class="com.mindalliance.channels.export.Serializer"/> -->
     <bean id="serializer" class="com.mindalliance.channels.export.xml.XmlStreamer"/>
-    <bean id="memoryDao" class="com.mindalliance.channels.dao.Memory"/>
     <bean id="attachmentManager" class="com.mindalliance.channels.attachments.FileBasedManager">
         <property name="directory" value="target/channels-1.0-SNAPSHOT/uploads"/>
         <property name="path" value="uploads"/>
     </bean>
     <bean id="graphBuilder" class="com.mindalliance.channels.graph.DefaultGraphBuilder"/>
 
+    <bean id="channels" class="com.mindalliance.channels.service.ChannelsServiceImpl">
+        <property name="addingSamples" value="true"/>
+        <property name="dao" ref="dao"/>
+    </bean>
 
     <!-- setup wicket application -->
     <bean id="wicketApplication" class="com.mindalliance.channels.pages.Project">
         <property name="uri" value="mindalliance.com/channels/demo"/>
-        <property name="dao" ref="memoryDao"/>
+        <property name="service" ref="channels"/>
         <property name="graphBuilder" ref="graphBuilder"/>
         <property name="flowDiagram" ref="flowDiagram"/>
         <property name="attachmentManager" ref="attachmentManager"/>

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.Dao;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.export.Exporter;
@@ -36,23 +36,23 @@ import java.util.Set;
 public final class Project extends WebApplication {
 
     /**
+     * The 'expand' parameter in the URL.
+     */
+    public static final String EXPAND_PARM = "expand";                                    // NON-NLS
+
+    /**
      * Class logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( Project.class );
-    /**
-     * The 'expand' parameter in the URL.
-     */
-    public static final String EXPAND_PARM = "expand";                               // NON-NLS
 
     /**
      * The project's unique identifier
      */
     private String uri;
 
-    /**
-     * The manipulator of scenarios.
-     */
-    private Dao dao;
+    /** The underlying service. */
+    private Service service;
+
     /**
      * The builder of graphs (as data)
      */
@@ -136,12 +136,12 @@ public final class Project extends WebApplication {
         this.uri = uri;
     }
 
-    public Dao getDao() {
-        return dao;
+    public Service getService() {
+        return service;
     }
 
-    public void setDao( Dao dao ) {
-        this.dao = dao;
+    public void setService( Service service ) {
+        this.service = service;
     }
 
     public FlowDiagram getFlowDiagram() {
@@ -211,8 +211,8 @@ public final class Project extends WebApplication {
      *
      * @return a Dao
      */
-    public static Dao dao() {
-        return getProject().getDao();
+    public static Service service() {
+        return getProject().getService();
     }
 
     /**

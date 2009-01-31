@@ -9,11 +9,10 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
  * An XStream converter for UserIssue
@@ -68,7 +67,7 @@ public class UserIssueConverter implements Converter {
             String idString = reader.getAttribute( "about" );
             Long id = idMap.get( idString );
             if ( id != null ) {
-                ModelObject about = Project.dao().find( id );
+                ModelObject about = Project.service().find( ModelObject.class, id );
                 issue = new UserIssue( about );
                 while ( reader.hasMoreChildren() ) {
                     reader.moveDown();
@@ -84,7 +83,7 @@ public class UserIssueConverter implements Converter {
                     }
                     reader.moveUp();
                 }
-                Project.dao().addUserIssue( issue );
+                Project.service().add( issue );
             }
             else {
                 LOG.warn( "Issue's model object not found at " + id );

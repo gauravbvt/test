@@ -1,26 +1,26 @@
 package com.mindalliance.channels.export.xml;
 
+import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.Issue;
+import com.mindalliance.channels.Part;
+import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Service;
+import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.pages.Project;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Dao;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.UserIssue;
-import com.mindalliance.channels.Issue;
-import com.mindalliance.channels.pages.Project;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Date;
-import java.util.List;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * XStream scenario converter.
@@ -50,7 +50,7 @@ public class ScenarioConverter implements Converter {
                          MarshallingContext context ) {
         Scenario scenario = (Scenario) object;
         Project project = Project.getProject();
-        Dao dao = project.getDao();
+        Service service = project.getService();
         context.put( "scenario", scenario );
         writer.addAttribute( "project", project.getUri() );
         writer.addAttribute( "version", project.getExporter().getVersion() );
@@ -61,14 +61,14 @@ public class ScenarioConverter implements Converter {
         writer.setValue( scenario.getDescription() );
         writer.endNode();
         // Permanent resource specifications
-        Iterator<ResourceSpec> resourceSpecs = dao.permanentResourceSpecs();
+        Iterator<ResourceSpec> resourceSpecs = service.iterate( ResourceSpec.class );
         while ( resourceSpecs.hasNext() ) {
             writer.startNode( "resource" );
             context.convertAnother( resourceSpecs.next() );
             writer.endNode();
         }
         // Scenario user issues
-        List<Issue> issues = dao.findAllUserIssues( scenario );
+        List<Issue> issues = service.findAllUserIssues( scenario );
         for ( Issue issue : issues ) {
             writer.startNode( "issue" );
             context.convertAnother( issue );
@@ -98,8 +98,7 @@ public class ScenarioConverter implements Converter {
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
         Map<String, Long> idMap = new HashMap<String, Long>();
         context.put( "idMap", idMap );
-        Dao dao = Project.dao();
-        Scenario scenario = dao.createScenario();
+        Scenario scenario = Project.service().createScenario();
         Part defaultPart = scenario.getDefaultPart();
         context.put( "scenario", scenario );
         scenario.setName( reader.getAttribute( "name" ) );

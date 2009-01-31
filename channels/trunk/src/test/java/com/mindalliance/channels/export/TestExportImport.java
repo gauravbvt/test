@@ -1,7 +1,7 @@
 package com.mindalliance.channels.export;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.Dao;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.Scenario;
 
 import java.io.BufferedReader;
@@ -25,14 +25,14 @@ import java.util.Map;
 public class TestExportImport extends AbstractChannelsTest {
 
     private List<String> scenarioNames;
-    private Dao dao;
+    private Service service;
 
 
     protected void setUp() {
         super.setUp();
-        dao = project.getDao();
+        service = project.getService();
         scenarioNames = new ArrayList<String>();
-        Iterator<Scenario> scenarios = project.getDao().scenarios();
+        Iterator<Scenario> scenarios = project.getService().iterate( Scenario.class );
         while ( scenarios.hasNext() ) {
             scenarioNames.add( scenarios.next().getName() );
         }
@@ -43,7 +43,7 @@ public class TestExportImport extends AbstractChannelsTest {
         Map<String,String> exported1 = new HashMap<String,String>();
         Map<String,String> exported2 = new HashMap<String,String>();
         // allow removal of all named scenarios by creating an empty one
-        dao.createScenario();
+        service.createScenario();
         // Export all named scenarios
         try {
             exportAll(exported0);
@@ -86,7 +86,7 @@ public class TestExportImport extends AbstractChannelsTest {
     private void exportAll(Map<String,String> exported) throws Exception {
         for ( String name : scenarioNames ) {
             ByteArrayOutputStream out;
-            Scenario scenario = dao.findScenario( name );
+            Scenario scenario = service.findScenario( name );
             out = new ByteArrayOutputStream();
             project.getExporter().exportScenario( scenario, out );
             String xml = out.toString();
@@ -98,8 +98,7 @@ public class TestExportImport extends AbstractChannelsTest {
 
     private void removeAll() throws Exception {
         for ( String name : scenarioNames ) {
-            Scenario scenario = dao.findScenario( name );
-            dao.removeScenario( scenario );
+            service.remove( service.findScenario( name ) );
         }
     }
 

@@ -1,5 +1,6 @@
 package com.mindalliance.channels;
 
+import com.mindalliance.channels.service.ChannelsServiceImpl;
 import com.mindalliance.channels.dao.Memory;
 import junit.framework.TestCase;
 
@@ -18,6 +19,7 @@ public class TestNode extends TestCase {
     private Part p1;
     private Part p2;
     private Scenario scenario;
+    private ChannelsServiceImpl service;
 
     public TestNode() {
     }
@@ -25,17 +27,16 @@ public class TestNode extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        scenario = new Memory().createScenario();
-
-        p1 = scenario.createPart();
+        service = new ChannelsServiceImpl( new Memory() );
+        scenario = service.createScenario();
+        p1 = service.createPart( scenario );
             p1.setActor( new Actor( "p1" ) );
-
-        p2 = scenario.createPart();
+        p2 = service.createPart( scenario );
             p2.setActor( new Actor( "p2" ) );
 
-        f1 = p1.createOutcome();
+        f1 = p1.createOutcome( service );
                 f1.setName( "A" );
-        f2 = p2.createRequirement();
+        f2 = p2.createRequirement( service );
                 f2.setName( "B" );
         f3 = scenario.connect( p1, p2 );
                 f3.setName( "message" );
@@ -96,11 +97,10 @@ public class TestNode extends TestCase {
     }
 
     public void testIsness() {
-        final Part part = scenario.createPart();
+        final Part part = service.createPart( scenario );
         assertTrue( part.isPart() );
         assertFalse( part.isConnector() );
-
-        final Connector c = scenario.createConnector();
+        final Connector c = service.createConnector( scenario );
         assertFalse( c.isPart() );
         assertTrue( c.isConnector() );
     }

@@ -11,7 +11,6 @@ import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulato
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -122,7 +121,7 @@ public class ResourceSpecsPanel extends AbstractTablePanel {
         public void setMarkedForDeletion( boolean delete ) {
             markedForDeletion = delete;
             if ( delete ) {
-                Project.dao().removeResourceSpec( resourceSpec );
+                Project.service().remove( resourceSpec );
             }
         }
 

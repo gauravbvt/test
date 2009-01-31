@@ -2,6 +2,10 @@ package com.mindalliance.channels;
 
 import org.apache.commons.lang.StringUtils;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+
 /**
  * A user provided issue
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -10,6 +14,7 @@ import org.apache.commons.lang.StringUtils;
  * Date: Jan 23, 2009
  * Time: 11:57:45 AM
  */
+@Entity
 public class UserIssue extends ModelObject implements Issue {
     /**
      * Max length of name
@@ -39,8 +44,13 @@ public class UserIssue extends ModelObject implements Issue {
         setDescription( "(No description)" );
     }
 
+    @ManyToOne
     public ModelObject getAbout() {
         return about;
+    }
+
+    void setAbout( ModelObject about ) {
+        this.about = about;
     }
 
     public String getRemediation() {
@@ -59,10 +69,12 @@ public class UserIssue extends ModelObject implements Issue {
         this.reportedBy = reportedBy;
     }
 
+    @Transient
     public String getType() {
         return "From user";
     }
 
+    @Transient
     public String getName() {
         return getLabel( MAX_LENGTH );
     }
@@ -77,6 +89,7 @@ public class UserIssue extends ModelObject implements Issue {
     /**
      * {@inheritDoc}
      */
+    @Transient
     public boolean isDetected() {
         return false;
     }

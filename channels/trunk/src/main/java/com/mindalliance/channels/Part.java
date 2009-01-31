@@ -1,10 +1,14 @@
 package com.mindalliance.channels;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import java.text.MessageFormat;
 
 /**
  * A part in a scenario.
  */
+@Entity
 public class Part extends Node {
 
     // TODO Should describe severity level of failure
@@ -48,6 +52,7 @@ public class Part extends Node {
      * The jurisdiction (optional).
      */
     private Place jurisdiction;
+
     private ResourceSpec resourceSpec;
 
     public Part() {
@@ -57,16 +62,16 @@ public class Part extends Node {
     /**
      * {@inheritDoc}
      */
-    @Override
+    @Override @Transient
     public String getTitle() {
         return MessageFormat.format( "{0} {1}", getName(), getTask() );
     }
 
-    public final String getTask() {
+    public String getTask() {
         return task;
     }
 
-    public final void setTask( String task ) {
+    public void setTask( String task ) {
         this.task = task == null || task.length() == 0 ? DEFAULT_TASK
                 : task;
     }
@@ -82,7 +87,8 @@ public class Part extends Node {
             setName( DEFAULT_ACTOR );
     }
 
-    public final Actor getActor() {
+    @ManyToOne
+    public Actor getActor() {
         return actor;
     }
 
@@ -91,11 +97,12 @@ public class Part extends Node {
      *
      * @param actor the new actor.
      */
-    public final void setActor( Actor actor ) {
+    public void setActor( Actor actor ) {
         this.actor = actor;
         adjustName();
     }
 
+    @ManyToOne
     public Place getJurisdiction() {
         return jurisdiction;
     }
@@ -104,6 +111,7 @@ public class Part extends Node {
         this.jurisdiction = jurisdiction;
     }
 
+    @ManyToOne
     public Place getLocation() {
         return location;
     }
@@ -112,6 +120,7 @@ public class Part extends Node {
         this.location = location;
     }
 
+    @ManyToOne
     public Organization getOrganization() {
         return organization;
     }
@@ -126,7 +135,8 @@ public class Part extends Node {
         adjustName();
     }
 
-    public final Role getRole() {
+    @ManyToOne
+    public Role getRole() {
         return role;
     }
 
@@ -135,16 +145,17 @@ public class Part extends Node {
      *
      * @param role the new role.
      */
-    public final void setRole( Role role ) {
+    public void setRole( Role role ) {
         this.role = role;
         adjustName();
     }
 
-    @Override
+    @Override @Transient
     public boolean isPart() {
         return true;
     }
 
+    @Transient
     public boolean isUndefined() {
         return actor == null && role == null && organization == null;
     }
@@ -159,6 +170,7 @@ public class Part extends Node {
     /**
      * @return true if role contains "system"
      */
+    @Transient
     public boolean isSystem() {
         final Role r = getRole();
         return r != null
@@ -168,6 +180,7 @@ public class Part extends Node {
     /**
      * @return true if part is only specified by a role.
      */
+    @Transient
     public boolean isOnlyRole() {
         return role != null && actor == null;
     }

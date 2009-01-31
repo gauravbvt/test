@@ -42,7 +42,7 @@ public abstract class EntityConverter implements Converter {
         writer.setValue( entity.getDescription() == null ? "" : entity.getDescription() );
         writer.endNode();
         // User issues
-        List<Issue> issues = Project.dao().findAllUserIssues( entity );
+        List<Issue> issues = Project.service().findAllUserIssues( entity );
         for ( Issue issue : issues ) {
             writer.startNode( "issue" );
             context.convertAnother( issue );

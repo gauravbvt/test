@@ -1,12 +1,13 @@
 package com.mindalliance.channels.pages;
 
+import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.attachments.BitBucket;
+import com.mindalliance.channels.service.ChannelsServiceImpl;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.FlowDiagram;
@@ -20,12 +21,12 @@ import static org.easymock.EasyMock.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Simple test using the WicketTester.
@@ -47,7 +48,11 @@ public class TestScenarioPage extends TestCase {
 
         dao = new Memory();
         project = new Project();
-        project.setDao( dao );
+        final ChannelsServiceImpl service = new ChannelsServiceImpl();
+        service.setAddingSamples( true );
+        service.setDao( dao );
+
+        project.setService( service );
         project.setAttachmentManager( new BitBucket() );
         final FlowDiagram fd = createMock( FlowDiagram.class );
         expect( fd.getImageMap( (Scenario) anyObject(), (Analyst) anyObject() ) )
@@ -65,7 +70,7 @@ public class TestScenarioPage extends TestCase {
         replay( sa );
         project.setAnalyst( sa );
 
-        scenario = project.getDao().getDefaultScenario();
+        scenario = project.getService().getDefaultScenario();
         tester = new WicketTester( project );
         tester.setParametersForNextRequest( new HashMap<String,String[]>() );
     }
@@ -82,7 +87,7 @@ public class TestScenarioPage extends TestCase {
 
         final Importer importer = createMock( Importer.class );
         expect( importer.importScenario( (InputStream) notNull() ) )
-                .andReturn( project.getDao().createScenario() );
+                .andReturn( project.getService().createScenario() );
 
         replay( importer );
         project.setImporter( importer );
@@ -247,7 +252,7 @@ public class TestScenarioPage extends TestCase {
 
     public void testDeleteScenario() throws IOException, NotFoundException {
         assertEquals( 2, dao.getScenarioCount() );
-        final Scenario sc2 = dao.createScenario();
+        final Scenario sc2 = project.getService().createScenario();
         sc2.setName( "Test" );
         assertEquals( 3, dao.getScenarioCount() );
 
@@ -263,7 +268,7 @@ public class TestScenarioPage extends TestCase {
 
         ft.submit();
         try {
-            assertNull( dao.findScenario( scenario.getId() ) );
+            assertNull( dao.find( Scenario.class, scenario.getId() ) );
             fail();
         } catch ( NotFoundException ignored ) {}
 

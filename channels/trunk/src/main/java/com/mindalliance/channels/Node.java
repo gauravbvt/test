@@ -1,5 +1,11 @@
 package com.mindalliance.channels;
 
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -9,6 +15,7 @@ import java.util.Set;
 /**
  * A node in the flow graph
  */
+@Entity @Inheritance( strategy = InheritanceType.SINGLE_TABLE )
 public abstract class Node extends ModelObject {
 
     /** Initial capacity of outcome and requirement flows. */
@@ -38,6 +45,7 @@ public abstract class Node extends ModelObject {
      * Get a long string that can be used as a title for this node.
      * @return a generated short description
      */
+    @Transient
     public abstract String getTitle();
 
     /**
@@ -53,6 +61,7 @@ public abstract class Node extends ModelObject {
         return result;
     }
 
+    @OneToMany
     private Set<Flow> getOutcomes() {
         return outcomes;
     }
@@ -62,7 +71,7 @@ public abstract class Node extends ModelObject {
      * Package-visible for tests.
      * @param outcomes the new outcomes
      */
-    final void setOutcomes( Set<Flow> outcomes ) {
+    void setOutcomes( Set<Flow> outcomes ) {
         if ( this.outcomes != null )
             for ( Flow f: new HashSet<Flow>( this.outcomes ) )
                 removeOutcome( f );
@@ -82,10 +91,11 @@ public abstract class Node extends ModelObject {
 
     /**
      * Create a new outcome for this node.
+     * @param service the underlying store
      * @return an internal flow to a new connector
      */
-    public Flow createOutcome() {
-        final Flow flow = getScenario().connect( this, getScenario().createConnector() );
+    public Flow createOutcome( Service service ) {
+        final Flow flow = getScenario().connect( this, service.createConnector( getScenario() ) );
         addOutcome( flow );
         return flow;
     }
@@ -119,7 +129,7 @@ public abstract class Node extends ModelObject {
             flow.disconnect();
     }
 
-
+    @OneToMany
     private Set<Flow> getRequirements() {
         return requirements;
     }
@@ -129,7 +139,7 @@ public abstract class Node extends ModelObject {
      * Package-visible for tests.
      * @param requirements the new requirements
      */
-    final void setRequirements( Set<Flow> requirements ) {
+    void setRequirements( Set<Flow> requirements ) {
         if ( this.requirements != null )
             for ( Flow f: new HashSet<Flow>( this.requirements ) )
                 removeRequirement( f );
@@ -149,10 +159,11 @@ public abstract class Node extends ModelObject {
 
     /**
      * Create and add a new requirement.
+     * @param service the underyling store
      * @return a flow from a new connector to this node
      */
-    public Flow createRequirement() {
-        final Flow flow = getScenario().connect( getScenario().createConnector(), this );
+    public Flow createRequirement( Service service ) {
+        final Flow flow = getScenario().connect( service.createConnector( getScenario() ), this );
         addRequirement( flow );
         return flow;
     }
@@ -186,14 +197,17 @@ public abstract class Node extends ModelObject {
             flow.disconnect();
     }
 
+    @Transient
     public boolean isPart() {
         return false;
     }
 
+    @Transient
     public boolean isConnector() {
         return false;
     }
 
+    @ManyToOne
     public Scenario getScenario() {
         return scenario;
     }
@@ -209,7 +223,7 @@ public abstract class Node extends ModelObject {
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Transient
     public String getLabel() {
         return getTitle();
     }

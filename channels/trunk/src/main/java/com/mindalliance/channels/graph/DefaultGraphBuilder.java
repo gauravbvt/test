@@ -40,7 +40,7 @@ public class DefaultGraphBuilder implements GraphBuilder {
      * @return a DirectedGraph
      */
     public DirectedGraph<Node, Flow> buildDirectedGraph( Scenario scenario ) {
-        DirectedGraph<Node, Flow> digraph = digraphs.get( scenario, scenario.lastModified() );
+        DirectedGraph<Node, Flow> digraph = digraphs.get( scenario, scenario.getLastModified() );
         if ( digraph == null ) {
             digraph = new DefaultDirectedGraph<Node, Flow>(
                     new FlowFactory() );

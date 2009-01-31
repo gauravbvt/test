@@ -1,19 +1,19 @@
 package com.mindalliance.channels.pages.entities;
 
-import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Role;
 import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.pages.ProfileLink;
+import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.components.ModelObjectPanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -66,9 +66,14 @@ public class RolePage extends WebPage {
     private Role findRole( PageParameters parameters ) throws NotFoundException {
         Role role = null;
         if ( parameters.containsKey( ID_PARM ) ) {
-            Dao dao = Project.dao();
-            role = dao.findRole( parameters.getLong( ID_PARM ) );
+            role = getService().find( Role.class, parameters.getLong( ID_PARM ) );
         }
         return role;
     }
+
+    private Service getService() {
+        return ( (Project) getApplication() ).getService();
+    }
+
+
 }

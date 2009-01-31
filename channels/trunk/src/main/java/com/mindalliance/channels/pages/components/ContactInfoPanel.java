@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.ProfileLink;
 import com.mindalliance.channels.pages.Project;
@@ -79,12 +80,17 @@ public class ContactInfoPanel extends AbstractTablePanel<ResourceSpec> {
             }
         } );
         // table with provider of resources here specified
-        List<ResourceSpec> resourceSpecs = Project.dao().findAllContacts( resourceSpec, true );
+        List<ResourceSpec> resourceSpecs = getService().findAllContacts( resourceSpec, true );
         add( new AjaxFallbackDefaultDataTable<ResourceSpec>(
                 "contactInfo",
                 columns,
                 new SortableBeanProvider<ResourceSpec>( resourceSpecs, "name" ),
                 getPageSize() ) );
     }
+
+    private Service getService() {
+        return ( (Project) getApplication() ).getService();
+    }
+
 
 }

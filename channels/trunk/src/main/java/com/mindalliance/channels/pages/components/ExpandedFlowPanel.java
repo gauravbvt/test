@@ -9,6 +9,7 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.Delay;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ScenarioPage;
@@ -182,7 +183,8 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
             @Override
             public void onClick() {
                 final UserIssue newIssue = new UserIssue( flow );
-                Project.dao().addUserIssue( newIssue );
+                final Service service = ( (Project) getApplication() ).getService();                
+                service.add( newIssue );
                 final PageParameters parameters = getWebPage().getPageParameters();
                 parameters.add( Project.EXPAND_PARM, String.valueOf( newIssue.getId() ) );
                 setResponsePage( getWebPage().getClass(), parameters );
@@ -414,7 +416,8 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         }
 
         // Add inputs/outputs of other scenarios
-        final Iterator<Scenario> scenarios = scenario.getDao().scenarios();
+        final Service service = ( (Project) getApplication() ).getService();
+        final Iterator<Scenario> scenarios = service.iterate( Scenario.class );
         while ( scenarios.hasNext() ) {
             final Scenario s = scenarios.next();
             if ( !scenario.equals( s ) ) {

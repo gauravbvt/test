@@ -5,6 +5,7 @@ import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Place;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ProfileLink;
@@ -64,7 +65,7 @@ public class ResourceSpecPanel extends Panel {
                 newResourceSpec.setJurisdiction( Place.named(
                         jurNameField.getDefaultModelObjectAsString().trim() ) );
                 if ( !newResourceSpec.isEmpty() ) {
-                    Project.dao().addResourceSpec( newResourceSpec );
+                    getService().add( newResourceSpec );
                     setResponsePage(
                             new RedirectPage( ProfileLink.linkFor( newResourceSpec ) ) );
                 } else {
@@ -100,5 +101,11 @@ public class ResourceSpecPanel extends Panel {
                 new Model<String>( jurName ) );
         resourceSpecForm.add( jurNameField );
     }
+
+    private Service getService() {
+        return ( (Project) getApplication() ).getService();
+    }
+
+
 
 }

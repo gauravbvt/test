@@ -1,13 +1,18 @@
 package com.mindalliance.channels;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.text.MessageFormat;
 
 /**
  * A connector to unspecified node(s) outside of the scenario.
  */
+@Entity
 public class Connector extends Node {
 
     /** The connections from external scenarios. */
@@ -17,13 +22,13 @@ public class Connector extends Node {
         setExternalFlows( new HashSet<ExternalFlow>() );
     }
 
-    @Override
+    @Override @Transient
     public boolean isConnector() {
         return true;
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Transient
     public String getTitle() {
         final boolean isInput = isInput();
         final Flow inner = getInnerFlow();
@@ -38,6 +43,7 @@ public class Connector extends Node {
      * Is the connector a source (true) or target (false)?
      * @return -- whether source or target
      */
+    @Transient
     public boolean isInput() {
         Iterator<Flow> outs = outcomes();
         return outs.hasNext();
@@ -47,6 +53,7 @@ public class Connector extends Node {
      * Gets the inner flow between part and connector
      * @return -- the connector's inner flow
      */
+    @Transient
     public Flow getInnerFlow() {
         return isInput() ? outcomes().next() : requirements().next();
     }
@@ -55,10 +62,12 @@ public class Connector extends Node {
      * Are there external flows to or from this connector?
      * @return -- boolean
      */
+    @Transient
     public boolean isConnected() {
         return !getExternalFlows().isEmpty();
     }
 
+    @OneToMany( cascade = CascadeType.ALL )
     private Set<ExternalFlow> getExternalFlows() {
         return externalFlows;
     }

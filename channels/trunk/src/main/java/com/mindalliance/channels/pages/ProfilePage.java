@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Organization;
@@ -10,12 +9,13 @@ import com.mindalliance.channels.Place;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.pages.components.ResourceProfilePanel;
 import com.mindalliance.channels.pages.components.ResourceSpecPanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.Model;
 import org.slf4j.LoggerFactory;
 
@@ -77,31 +77,36 @@ public class ProfilePage extends WebPage {
         add( new ResourceProfilePanel( "profile", new Model<ResourceSpec>( resourceSpec ) ) );
     }
 
+    private Service getService() {
+        return ( (Project) getApplication() ).getService();
+    }
+
     private ResourceSpec makeResource( PageParameters params ) throws NotFoundException {
         ResourceSpec resourceSpec;
-        Dao dao = Project.dao();
+        Service service = getService();
         if ( params.containsKey( SCENARIO_PARM ) && params.containsKey( PART_PARM ) ) {
-            Scenario scenario = dao.findScenario( params.getLong( SCENARIO_PARM ) );
+            Scenario scenario = service.find( Scenario.class, params.getLong( SCENARIO_PARM ) );
             Node node = scenario.getNode( params.getLong( PART_PARM ) );
             if ( !node.isPart() ) throw new NotFoundException();
             resourceSpec = ( (Part) node ).resourceSpec();
         } else {
             resourceSpec = new ResourceSpec();
             if ( params.containsKey( ACTOR_PARM ) ) {
-                Actor actor = dao.findActor( params.getLong( ACTOR_PARM ) );
+                Actor actor = service.find( Actor.class, params.getLong( ACTOR_PARM ) );
                 resourceSpec.setActor( actor );
             }
             if ( params.containsKey( ROLE_PARM ) ) {
-                Role role = dao.findRole( params.getLong( ROLE_PARM ) );
+                Role role = service.find( Role.class, params.getLong( ROLE_PARM ) );
                 resourceSpec.setRole( role );
             }
             if ( params.containsKey( ORGANIZATION_PARM ) ) {
-                Organization organization = dao.findOrganization(
+                Organization organization = service.find(
+                        Organization.class,
                         params.getLong( ORGANIZATION_PARM ) );
                 resourceSpec.setOrganization( organization );
             }
             if ( params.containsKey( JURISDICTION_PARM ) ) {
-                Place jurisdiction = dao.findPlace( params.getLong( JURISDICTION_PARM ) );
+                Place jurisdiction = service.find( Place.class, params.getLong( JURISDICTION_PARM ) );
                 resourceSpec.setJurisdiction( jurisdiction );
             }
             if ( resourceSpec.isEmpty() ) throw new NotFoundException();

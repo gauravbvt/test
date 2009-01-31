@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.Deletable;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.PageParameters;
@@ -11,6 +12,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+
 import java.util.Iterator;
 import java.util.Set;
 
@@ -60,7 +62,7 @@ public class IssuesPanel extends Panel {
             public void onClick() {
                 final UserIssue userIssue = new UserIssue( modelObject );
                 userIssue.setReportedBy( Project.getUserName() );
-                Project.dao().addUserIssue( userIssue );
+                getService().add( userIssue );
                 final PageParameters params = getWebPage().getPageParameters();
                 params.add( Project.EXPAND_PARM, Long.toString( userIssue.getId() ) );
                 setResponsePage( getWebPage().getClass(), params );
@@ -71,6 +73,9 @@ public class IssuesPanel extends Panel {
         setVisible( Project.analyst().hasIssues( modelObject, false ) );
     }
 
+    private Service getService() {
+        return ( (Project) getApplication() ).getService();
+    }
 
     private RepeatingView createIssuePanels( Set<Long> expansions ) {
         final RepeatingView issuesList = new RepeatingView( "issues" );                   // NON-NLS
@@ -89,14 +94,14 @@ public class IssuesPanel extends Panel {
     }
 
 
-      //==================================================
+    //==================================================
     /** A wrapper to keep track of the deletion state of an attachment. */
     public static class DeletableWrapper implements Deletable {
 
-        /** The underlying attachment. */
+        /** The underlying issue. */
         private Issue issue;
 
-        /** True if user marked item for deletion. */
+       /** True if user marked item for deletion. */
         private boolean markedForDeletion;
 
         public DeletableWrapper( Issue issue ) {
@@ -113,7 +118,7 @@ public class IssuesPanel extends Panel {
         public void setMarkedForDeletion( boolean delete ) {
             markedForDeletion = delete;
             if ( delete && !issue.isDetected() ) {
-                Project.dao().removeUserIssue( (UserIssue) issue );
+                Project.service().remove( (ModelObject) issue );
             }
         }
 

@@ -3,11 +3,12 @@ package com.mindalliance.channels;
 import org.hibernate.annotations.Entity;
 
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 /**
  * A flow between nodes within one scenario.
  */
-// @Entity
+@Entity
 public class InternalFlow extends Flow {
 
     /** The source of the flow. */
@@ -63,7 +64,7 @@ public class InternalFlow extends Flow {
         target = null;
     }
 
-    @Override
+    @Override @Transient
     public boolean isInternal() {
         return true;
     }

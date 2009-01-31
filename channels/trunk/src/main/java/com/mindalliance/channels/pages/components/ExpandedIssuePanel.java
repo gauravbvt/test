@@ -1,13 +1,15 @@
 package com.mindalliance.channels.pages.components;
 
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.PropertyModel;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Service;
+import com.mindalliance.channels.pages.Project;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.PropertyModel;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -33,18 +35,21 @@ public class ExpandedIssuePanel extends Panel {
         String url = getRequest().getURL().replaceAll( "&expand=" + issue.getId(), "" );
         ExternalLink expandLink = new ExternalLink( "hide", url );
         add( expandLink );
-        add( new CheckBox( "delete",                              // NON-NLS
+        add( new CheckBox( "delete",                                                      // NON-NLS
                 new PropertyModel<Boolean>(
                         new IssuesPanel.DeletableWrapper( issue ),
-                        "markedForDeletion" ) ) );      // NON-NLS
+                        "markedForDeletion" ) ) );                                        // NON-NLS
         add( new TextArea<String>( "description",
                 new PropertyModel<String>( issue, "description" ) ) );
         add( new TextArea<String>( "remediation",
                 new PropertyModel<String>( issue, "remediation" ) ) );
-        add( new AttachmentPanel( "attachments",
-                (ModelObject) issue ) );                                // NON-NLS
+        add( new AttachmentPanel( "attachments", (ModelObject) issue ) );                 // NON-NLS
         add( new Label( "reported-by",
                 new PropertyModel<String>( issue, "reportedBy" ) ) );
+    }
+
+    private Service getService() {
+        return ( (Project) getApplication() ).getService();
     }
 
 }

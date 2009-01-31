@@ -1,32 +1,31 @@
 package com.mindalliance.channels.export.xml;
 
+import com.mindalliance.channels.Connector;
+import com.mindalliance.channels.Delay;
+import com.mindalliance.channels.ExternalFlow;
+import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.InternalFlow;
+import com.mindalliance.channels.Issue;
+import com.mindalliance.channels.Node;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.util.SemMatch;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.ExternalFlow;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.InternalFlow;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Connector;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Issue;
-import com.mindalliance.channels.UserIssue;
-import com.mindalliance.channels.util.SemMatch;
-import com.mindalliance.channels.Delay;
-import com.mindalliance.channels.pages.Project;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.iterators.FilterIterator;
 
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
-
-import org.apache.commons.collections.iterators.FilterIterator;
-import org.apache.commons.collections.Predicate;
+import java.util.Map;
 
 /**
  * An XStream Flow converter.
@@ -88,8 +87,7 @@ public class FlowConverter implements Converter {
         }
         // Flow user issues (exported only if an internal flow)
         if ( flow.isInternal() ) {
-            List<Issue> issues = Project.dao().findAllUserIssues( flow );
-            for ( Issue issue : issues ) {
+            for ( Issue issue : Project.service().findAllUserIssues( flow ) ) {
                 writer.startNode( "issue" );
                 context.convertAnother( issue );
                 writer.endNode();
@@ -282,7 +280,7 @@ public class FlowConverter implements Converter {
         List<Connector> connectors = new ArrayList<Connector>();
         String externalScenarioName = reader.getAttribute( "scenario" );
         if ( externalScenarioName == null ) {
-            Connector connector = scenario.createConnector();
+            Connector connector = Project.service().createConnector( scenario );
             connectors.add( connector );
             // try to connect external part that match specifications
             connectMatchingExternalParts( connector, reader, isSource );
@@ -323,8 +321,7 @@ public class FlowConverter implements Converter {
             assert reader.getNodeName().equals( "connected-to" );
             String scenarioName = reader.getAttribute( "scenario" );
             try {
-                Scenario externalScenario = Project.dao().
-                        findScenario( scenarioName );
+                Scenario externalScenario = Project.service().findScenario( scenarioName );
                 String roleName = null;
                 String organizationName = null;
                 String task = null;
@@ -389,7 +386,7 @@ public class FlowConverter implements Converter {
                                                     final boolean isSource ) {
         List<Connector> connectors = new ArrayList<Connector>();
         try {
-            Scenario scenario = Project.dao().findScenario( scenarioName );
+            Scenario scenario = Project.service().findScenario( scenarioName );
             Iterator<Connector> iterator =
                     (Iterator<Connector>) new FilterIterator( scenario.nodes(), new Predicate() {
                         public boolean evaluate( Object obj ) {

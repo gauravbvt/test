@@ -1,5 +1,6 @@
 package com.mindalliance.channels;
 
+import com.mindalliance.channels.service.ChannelsServiceImpl;
 import com.mindalliance.channels.dao.Memory;
 import junit.framework.TestCase;
 
@@ -8,7 +9,7 @@ import junit.framework.TestCase;
  */
 public class TestExternalFlow extends TestCase {
 
-    private Dao dao;
+    private Service service;
     private Scenario s1;
     private Scenario s2;
 
@@ -22,20 +23,20 @@ public class TestExternalFlow extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        dao = new Memory();
-        s1 = dao.createScenario();
+        service = new ChannelsServiceImpl( new Memory() );
+        s1 = service.createScenario();
         s1p1 = s1.getDefaultPart();
         s1p1.setActor( new Actor( "p1" ) );
-        s1p2 = s1.createPart();
+        s1p2 = service.createPart( s1 );
         s1p2.setActor( new Actor( "p2" ) );
 
-        s2 = dao.createScenario();
+        s2 = service.createScenario();
 
         // S2 "included" in S1
         final Part s2Part = s2.getDefaultPart();
         s2Part.setActor( new Actor( "p3" ) );
-        s2Part.createOutcome();
-        s2Part.createRequirement();
+        s2Part.createOutcome( service );
+        s2Part.createRequirement( service );
 
         s1.connect( s1p1, s2.inputs().next() );
         s1.connect( s2.outputs().next(), s1p2 );

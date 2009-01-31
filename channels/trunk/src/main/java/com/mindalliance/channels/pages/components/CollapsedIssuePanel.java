@@ -1,14 +1,14 @@
 package com.mindalliance.channels.pages.components;
 
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.commons.lang.StringUtils;
 import com.mindalliance.channels.Issue;
+import org.apache.commons.lang.StringUtils;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.PropertyModel;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -60,5 +60,4 @@ public class CollapsedIssuePanel extends Panel {
         menu.add( deleteCheckBox );
         menu.setVisible( !issue.isDetected() );
     }
-
 }
