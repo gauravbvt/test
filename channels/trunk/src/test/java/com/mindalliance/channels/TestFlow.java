@@ -1,9 +1,9 @@
 package com.mindalliance.channels;
 
-import junit.framework.TestCase;
+import com.mindalliance.channels.pages.Project;
 
 @SuppressWarnings( { "HardCodedStringLiteral" } )
-public class TestFlow extends TestCase {
+public class TestFlow extends AbstractChannelsTest {
 
     private Flow flow;
 
@@ -11,7 +11,7 @@ public class TestFlow extends TestCase {
     }
 
     @Override
-    protected void setUp() throws Exception {
+    protected void setUp() {
         super.setUp();
         flow = new InternalFlow();
     }
@@ -30,10 +30,16 @@ public class TestFlow extends TestCase {
     }
 
     public void testChannel() {
-        assertNull( flow.getChannel() );
-        final String s = "Bla";
-        flow.setChannel( s );
-        assertSame( s, flow.getChannel() );
+        Channel channel = null;
+        assert( flow.getChannels().isEmpty() );
+        try {
+            channel = new Channel( Project.service().mediumNamed("Phone"), "800-123-4567" );
+        } catch ( NotFoundException e ) {
+            fail();
+        }
+        flow.addChannel( channel );
+        assertTrue( channel.isValid() );
+        assertFalse(flow.getChannels().isEmpty() );
     }
 
     public void testMaxDelay() {

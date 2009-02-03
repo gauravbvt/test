@@ -10,6 +10,8 @@ import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.Channel;
+import com.mindalliance.channels.NotFoundException;
 
 import javax.persistence.Entity;
 
@@ -24,7 +26,7 @@ public class FireScenario extends Scenario {
     public FireScenario() {
     }
 
-    public FireScenario( Service service, EvacuationScenario evac ) {
+    public FireScenario( Service service, EvacuationScenario evac ) throws NotFoundException {
 
         setName( "Fire in the building" );
         setDescription( "A fire happens" );
@@ -43,8 +45,8 @@ public class FireScenario extends Scenario {
         final Actor system = service.findOrCreate( Actor.class, "Fire Alarm" );
         final Part alarm = createPart( service, system, "ringing" );
         UserIssue issue = new UserIssue( alarm );
-        issue.setDescription( "Hearing-challenged tenants may not hear the alarm.");
-        issue.setRemediation( "Add flashing light signal.");
+        issue.setDescription( "Hearing-challenged tenants may not hear the alarm." );
+        issue.setRemediation( "Add flashing light signal." );
         issue.setReportedBy( "jdoe" );
         service.add( issue );
         alarm.setRole( service.findOrCreate( Role.class, "System" ) );
@@ -56,7 +58,7 @@ public class FireScenario extends Scenario {
         final Flow f1 = connect( alarm, js1 );
         f1.setName( "location" );
         f1.setAskedFor( true );
-        f1.setChannel( "wall panel" );
+        f1.addChannel( new Channel( service.mediumNamed("Other"), "wall panel" ) );
         f1.setDescription( "The fire location reported by the system" );
 
         final Flow f2 = connect( js1, chief );
@@ -67,9 +69,9 @@ public class FireScenario extends Scenario {
 
         final Flow f3 = connect( chief, js1 );
         f3.setName( "stairways safe" );
-        f3.setMaxDelay( new Delay(10, Delay.Unit.minutes) );
+        f3.setMaxDelay( new Delay( 10, Delay.Unit.minutes ) );
         f3.setCritical( true );
-        f3.setChannel( "Radio" );
+        f3.addChannel( new Channel( service.mediumNamed("Radio"), "band 3" ) );
         f3.setDescription( "Confirms that stairways are safe for evacuation" );
 
         final Flow f4 = connect( js2, chief );

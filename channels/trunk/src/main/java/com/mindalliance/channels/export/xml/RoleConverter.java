@@ -3,6 +3,8 @@ package com.mindalliance.channels.export.xml;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.pages.Project;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
 
 /**
  * XStream Role converter
@@ -27,5 +29,21 @@ public class RoleConverter extends EntityConverter {
     @Override
     ModelObject findOrMakeEntity( String name ) {
         return Project.service().findOrCreate( Role.class, name );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void writeSpecifics( ModelObject entity,
+                                   HierarchicalStreamWriter writer,
+                                   MarshallingContext context ) {
+       // Do nothing
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void setSpecific( ModelObject entity, String nodeName, String value ) {
+       // Do nothing
     }
 }

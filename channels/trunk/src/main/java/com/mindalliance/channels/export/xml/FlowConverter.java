@@ -11,6 +11,7 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.util.SemMatch;
 import com.thoughtworks.xstream.converters.ConversionException;
@@ -66,9 +67,10 @@ public class FlowConverter implements Converter {
         writer.startNode( "description" );
         writer.setValue( flow.getDescription() );
         writer.endNode();
-        if ( flow.getChannel() != null ) {
+        // channels
+        for ( Channel channel : flow.getChannels() ) {
             writer.startNode( "channel" );
-            writer.setValue( flow.getChannel() );
+            context.convertAnother( channel );
             writer.endNode();
         }
         writer.startNode( "all" );
@@ -208,8 +210,8 @@ public class FlowConverter implements Converter {
                 String description = reader.getValue();
                 for ( Flow flow : flows ) flow.setDescription( description );
             } else if ( nodeName.equals( "channel" ) ) {
-                String channel = reader.getValue();
-                for ( Flow flow : flows ) flow.setChannel( channel );
+                Channel channel = (Channel)context.convertAnother( scenario, Channel.class );
+                for ( Flow flow : flows ) flow.addChannel( channel );
             } else if ( nodeName.equals( "maxDelay" ) ) {
                 String maxDelay = reader.getValue();
                 for ( Flow flow : flows ) flow.setMaxDelay( Delay.parse(maxDelay) );

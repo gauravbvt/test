@@ -4,6 +4,7 @@ import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.ExternalFlow;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
+import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
 import org.apache.commons.collections.Transformer;
@@ -39,10 +40,14 @@ public class ConnectedFlowList extends Panel {
      */
     private static final class ConnectionView extends RefreshingView<ExternalFlow> {
 
-        /** The connector to follow. */
+        /**
+         * The connector to follow.
+         */
         private final Connector connector;
 
-        /** True if connector is an imput connector. */
+        /**
+         * True if connector is an imput connector.
+         */
         private final boolean input;
 
         private ConnectionView( String id, Connector connector, boolean input ) {
@@ -52,14 +57,14 @@ public class ConnectedFlowList extends Panel {
         }                                  // NON-NLS
 
         @Override
-        @SuppressWarnings( { "unchecked" } )
+        @SuppressWarnings( {"unchecked"} )
         protected Iterator<IModel<ExternalFlow>> getItemModels() {
             return new TransformIterator( connector.externalFlows(),
-                new Transformer() {
-                    public Object transform( Object o ) {
-                        return new Model<ExternalFlow>( (ExternalFlow) o );
-                    }
-                } );
+                    new Transformer() {
+                        public Object transform( Object o ) {
+                            return new Model<ExternalFlow>( (ExternalFlow) o );
+                        }
+                    } );
         }
 
         @Override
@@ -67,14 +72,14 @@ public class ConnectedFlowList extends Panel {
             final ExternalFlow flow = item.getModelObject();
             final Node target = input ? flow.getSource() : flow.getTarget();
             final ScenarioLink link = new ScenarioLink( "part",                           // NON-NLS
-                                                        new Model<Node>( target ), flow );           
+                    new Model<Node>( target ), flow );
             link.add( new Label( "part-label", target.getName() ) );                      // NON-NLS
             item.add( link );
             item.add( new Label( "scenario", target.getScenario().getName() ) );          // NON-NLS
 
-            String c = flow.getChannel();
+            String c = Channel.toString( flow.getChannels() );
             final boolean needsChannel = input && flow.isAskedFor()
-                                      || !input && !flow.isAskedFor();
+                    || !input && !flow.isAskedFor();
             if ( c != null && needsChannel ) {
                 c = MessageFormat.format( "- {0}", c );
             } else {
@@ -86,16 +91,17 @@ public class ConnectedFlowList extends Panel {
 
         /**
          * Add issues annotations to a component.
-         * @todo refactor this here and there
+         *
          * @param component the component
-         * @param object the object of the issues
-         * @param property the property of concern. If null, get issues of object
+         * @param object    the object of the issues
+         * @param property  the property of concern. If null, get issues of object
+         * @todo refactor this here and there
          */
         protected void addIssues( Component component, ModelObject object, String property ) {
 
             final Analyst analyst = Project.analyst();
             final String issue = property == null ? analyst.getIssuesSummary( object, false )
-                                                  : analyst.getIssuesSummary( object, property );
+                    : analyst.getIssuesSummary( object, property );
             if ( !issue.isEmpty() ) {
                 component.add( new AttributeModifier(
                         "class", true, new Model<String>( "error" ) ) );                  // NON-NLS

@@ -9,15 +9,16 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Place;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.attachments.BitBucket;
 import com.mindalliance.channels.service.ChannelsServiceImpl;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.graph.FlowDiagram;
+import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ScenarioPage;
 import com.mindalliance.channels.pages.TestScenarioPage;
-import junit.framework.TestCase;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
@@ -32,7 +33,7 @@ import java.util.Iterator;
  * Test behavoir of a part panel.
  */
 @SuppressWarnings( { "HardCodedStringLiteral", "OverlyLongMethod" } )
-public class TestPartPanel extends TestCase {
+public class TestPartPanel extends AbstractChannelsTest {
 
     private PartPanel panel;
     private Part part;
@@ -44,18 +45,22 @@ public class TestPartPanel extends TestCase {
     }
 
     @Override
-    protected void setUp() throws Exception {
+    protected void setUp() {
         super.setUp();
         project = new Project();
         final ChannelsServiceImpl service = new ChannelsServiceImpl();
+        ChannelsServiceImpl.registerDefaultMedia( service );
         service.setAddingSamples( true );
         service.setDao( new Memory() );
-
         project.setService( service );
         project.setAttachmentManager( new BitBucket() );
         final FlowDiagram fd = createMock( FlowDiagram.class );
-        expect( fd.getImageMap( (Scenario) anyObject(), (Analyst) anyObject() ) )
-                .andReturn( "" ).anyTimes();
+        try {
+            expect( fd.getImageMap( (Scenario) anyObject(), (Analyst) anyObject() ) )
+                    .andReturn( "" ).anyTimes();
+        } catch ( DiagramException e ) {
+            fail();
+        }
         replay( fd );
         project.setFlowDiagram( fd );
 

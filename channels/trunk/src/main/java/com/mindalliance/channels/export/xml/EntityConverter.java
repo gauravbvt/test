@@ -3,7 +3,6 @@ package com.mindalliance.channels.export.xml;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.pages.Project;
-import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -35,12 +34,12 @@ public abstract class EntityConverter implements Converter {
         ModelObject entity = (ModelObject) object;
         assert entity.isEntity();
         writer.addAttribute( "id", String.valueOf( entity.getId() ) );
-        writer.startNode( "name" );
-        writer.setValue( entity.getName() == null ? "" : entity.getName() );
-        writer.endNode();
+        String name = entity.getName() == null ? "" : entity.getName();
+        writer.addAttribute( "name", name );
         writer.startNode( "description" );
         writer.setValue( entity.getDescription() == null ? "" : entity.getDescription() );
         writer.endNode();
+        writeSpecifics( entity, writer, context );
         // User issues
         List<Issue> issues = Project.service().findAllUserIssues( entity );
         for ( Issue issue : issues ) {
@@ -51,31 +50,46 @@ public abstract class EntityConverter implements Converter {
     }
 
     /**
+     * Write specific properties to xml stream
+     * @param entity the entity model object being converted
+     * @param writer the xml stream
+     * @param context a context
+     */
+    abstract protected void writeSpecifics( ModelObject entity,
+                                            HierarchicalStreamWriter writer,
+                                            MarshallingContext context );
+
+    /**
      * {@inheritDoc}
      */
     public Object unmarshal( HierarchicalStreamReader reader,
                              UnmarshallingContext context ) {
-        ModelObject entity;
         // String id = reader.getAttribute( "id" );
         // do nothing for now with id -- will use it to disambiguate homonymous entities
-        String name = "";
-        String description = "";
-        while ( reader.hasMoreChildren() ) {
-            reader.moveDown();
-            String nodeName = reader.getNodeName();
-            if ( nodeName.equals( "name" ) ) {
-                name = reader.getValue();
-            } else if ( nodeName.equals( "description" ) ) {
-                description = reader.getValue();
-            } else {
-                throw new ConversionException( "Unknown element " + nodeName );
+        String name = reader.getAttribute( "name" );
+        ModelObject entity = findOrMakeEntity( name );
+        if ( entity != null ) {
+            while ( reader.hasMoreChildren() ) {
+                reader.moveDown();
+                String nodeName = reader.getNodeName();
+                if ( nodeName.equals( "description" ) ) {
+                    entity.setDescription(reader.getValue());
+                } else {
+                    setSpecific( entity, nodeName, reader.getValue() );
+                }
+                reader.moveUp();
             }
-            reader.moveUp();
         }
-        entity = findOrMakeEntity( name );
-        entity.setDescription( description );
         return entity;
     }
+
+    /**
+     * Set an entity model object's specific property from xml
+     * @param entity the entity
+     * @param nodeName the name of the property
+     * @param value the proeprty's value as string
+     */
+    abstract protected void setSpecific( ModelObject entity, String nodeName, String value );
 
     /**
      * Find or make an entity

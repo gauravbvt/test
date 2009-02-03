@@ -1,14 +1,16 @@
 package com.mindalliance.channels;
 
 import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.components.Channelable;
 import com.mindalliance.channels.util.SemMatch;
 
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A Resource is an actor in a role for an organization with a jurisdiction.
@@ -20,7 +22,7 @@ import java.util.List;
  * Date: Jan 8, 2009
  * Time: 8:26:05 PM
  */
-public class ResourceSpec extends ModelObject {
+public class ResourceSpec extends ModelObject  implements Channelable {
 
     /**
      * Used in calculating hashCode
@@ -50,7 +52,7 @@ public class ResourceSpec extends ModelObject {
     /**
      * Channels used to reach actor
      */
-    private List<String> channels = new ArrayList<String>();
+    private Set<Channel> channels = new HashSet<Channel>();
 
     public ResourceSpec() {
     }
@@ -67,7 +69,7 @@ public class ResourceSpec extends ModelObject {
         role = part.getRole();
         organization = part.getOrganization();
         jurisdiction = part.getJurisdiction();
-        channels = new ArrayList<String>();
+        channels = new HashSet<Channel>();
     }
 
     /**
@@ -126,12 +128,16 @@ public class ResourceSpec extends ModelObject {
         this.jurisdiction = jurisdiction;
     }
 
-    public List<String> getChannels() {
+    public Set<Channel> getChannels() {
         return channels;
     }
 
-    public void setChannels( List<String> channels ) {
+    public void setChannels( Set<Channel> channels ) {
         this.channels = channels;
+    }
+
+    public void addChannels( Collection<Channel> channels ) {
+        this.channels.addAll( channels );
     }
 
     /**
@@ -141,18 +147,7 @@ public class ResourceSpec extends ModelObject {
      */
     @Transient
     public String getChannelsString() {
-        if ( channels.isEmpty() ) {
-            return "(No channel)";
-        } else {
-            StringBuilder sb = new StringBuilder();
-            Iterator<String> iter = channels.iterator();
-            while ( iter.hasNext() ) {
-                String channel = iter.next();
-                sb.append( channel );
-                if ( iter.hasNext() ) sb.append( ", " );
-            }
-            return sb.toString();
-        }
+        return Channel.toString( channels );
     }
 
     /**
@@ -182,14 +177,17 @@ public class ResourceSpec extends ModelObject {
     /**
      * Add channel to list if not redundant
      *
-     * @param ch string channel to add
+     * @param channel channel to add
      */
-    public void addChannel( String ch ) {
-        boolean contained = false;
-        for ( String channel : channels ) {
-            if ( SemMatch.same( channel, ch ) ) contained = true;
-        }
-        if ( !contained ) channels.add( ch );
+    public void addChannel( Channel channel ) {
+       channels.add( channel );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void removeChannel( Channel channel ) {
+        channels.remove( channel );
     }
 
     /**

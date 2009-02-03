@@ -38,6 +38,13 @@ public interface Service {
     <T extends ModelObject> Iterator<T> iterate( Class<T> clazz );
 
     /**
+     * Iterate on ModelObject that are entities.
+     * @return an iterator on ModelObjects that are entities
+     */
+    Iterator<ModelObject> iterateEntities(  );
+
+
+    /**
      * Add a model object to the persistence store.
      * @param object the model object.
      */
@@ -54,6 +61,26 @@ public interface Service {
      * @return a default scenario
      */
     Scenario getDefaultScenario();
+
+    /**
+     * Return list of all registered media
+     * @return a list of media (Medium)
+     */
+    List<Medium> getMedia();
+
+    /**
+     * Return registered medium given its name
+     * @param name the medium's name
+     * @return a medium
+     * @throws NotFoundException if none registered under name
+     */
+    Medium mediumNamed( String name ) throws NotFoundException;
+
+    /**
+     * Register a medium
+     * @param medium a Medium
+     */
+    void addMedium( Medium medium );
 
     /**
      * Find a model object by given name. If none, create it.

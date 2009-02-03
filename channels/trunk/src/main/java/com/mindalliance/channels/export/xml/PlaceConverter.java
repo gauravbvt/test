@@ -3,6 +3,8 @@ package com.mindalliance.channels.export.xml;
 import com.mindalliance.channels.Place;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.pages.Project;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
 
 /**
  * XStream place converter
@@ -29,6 +31,22 @@ public class PlaceConverter extends EntityConverter {
      */
     ModelObject findOrMakeEntity( String name ) {
         return Project.service().findOrCreate( Place.class, name );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void writeSpecifics( ModelObject entity,
+                                   HierarchicalStreamWriter writer,
+                                   MarshallingContext context ) {
+       // Do nothing
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void setSpecific( ModelObject entity, String nodeName, String value ) {
+       // Do nothing
     }
 
 }

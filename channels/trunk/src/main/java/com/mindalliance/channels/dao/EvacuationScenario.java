@@ -5,6 +5,8 @@ import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
+import com.mindalliance.channels.Channel;
+import com.mindalliance.channels.NotFoundException;
 
 import javax.persistence.Entity;
 
@@ -17,7 +19,7 @@ public class EvacuationScenario extends Scenario {
     public EvacuationScenario() {
     }
 
-    public EvacuationScenario( Service service ) {
+    public EvacuationScenario( Service service ) throws NotFoundException {
         setName( "Building Evacuation" );
 
         final Part p = getDefaultPart();
@@ -27,7 +29,7 @@ public class EvacuationScenario extends Scenario {
         final Flow goAhead = p.createRequirement( service );
         goAhead.setName( "go-ahead" );
         goAhead.setCritical( true );
-        goAhead.setChannel( "phone: 555-4433" );
+        goAhead.addChannel( new Channel(service.mediumNamed("Phone"), "800-555-4433" ) );
 
         final Flow end = p.createOutcome( service );
         end.setName( "end" );

@@ -89,7 +89,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
     /**
      * The channels field
      */
-    private FormComponent<?> channelField;
+    private ChannelListPanel channelListPanel;
     /**
      * The "all" field
      */
@@ -139,7 +139,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         descriptionField.setEnabled( f.isInternal() );
         askedForButtons.setEnabled( f.isInternal() );
         criticalCheck.setEnabled( f.isInternal() );
-        channelField.setEnabled( isChannelEditable( f ) );
+        channelListPanel.setEnabled( isChannelEditable( f ) );
 
         channelRow.setVisible( isChannelRelevant( f ) );
         allField.setVisible( getOther().isPart() && ( (Part) getOther() ).isOnlyRole() );
@@ -361,20 +361,16 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
     private void addChannelRow() {
         channelRow = new WebMarkupContainer( "channel-row" );                             // NON-NLS
         channelRow.setOutputMarkupPlaceholderTag( true );
-        channelField = new TextField<String>( "channel" );                                // NON-NLS
-        final FormComponentLabel label =
-                new FormComponentLabel( "channel-label", channelField );                  // NON-NLS
-        channelRow.add( label );
-        channelRow.add( channelField );
-        addIssues( channelField, getFlow(), channelField.getId() );
-        label.add( new Label( "channel-title", new AbstractReadOnlyModel<String>() {      // NON-NLS
+        channelRow.add( new Label( "channel-title", new AbstractReadOnlyModel<String>() {      // NON-NLS
 
             @Override
             public String getObject() {
-                return getFlow().isAskedFor() ? "Sender channel:" : "Receiver channel:";
+                return getFlow().isAskedFor() ? "Sender channels:" : "Receiver channels:";
             }
         } ) );
 
+        channelListPanel = new ChannelListPanel( "channels", new Model<Channelable>( getFlow()) );                                // NON-NLS
+        channelRow.add( channelListPanel );
         add( channelRow );
     }
 

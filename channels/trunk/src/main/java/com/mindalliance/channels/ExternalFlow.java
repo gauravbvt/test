@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A flow from one Part in this scenario to/from a connector in another scenario.
@@ -171,16 +173,16 @@ public class ExternalFlow extends Flow {
     }
 
     @Override
-    public String getChannel() {
-        return isConnectorBased() ? getConnectorFlow().getChannel() : super.getChannel();
+    public Set<Channel> getChannels() {
+        return isConnectorBased() ? getConnectorFlow().getChannels() : super.getChannels();
     }
 
     @Override
-    public void setChannel( String channel ) {
+    public void setChannels( Set<Channel> channels ) {
         if ( isConnectorBased() )
-            getConnectorFlow().setChannel( channel );
+            getConnectorFlow().setChannels( channels );
         else
-            super.setChannel( channel );
+            super.setChannels( channels );
     }
 
     @Transient
@@ -205,7 +207,7 @@ public class ExternalFlow extends Flow {
     /**
      * True if the flow is critical.
      * Local for notifications on input connectors.
-     * @return
+     * @return a boolean
      */
     @Override
     public boolean isCritical() {

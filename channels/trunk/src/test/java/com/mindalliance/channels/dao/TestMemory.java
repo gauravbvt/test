@@ -20,6 +20,7 @@ public class TestMemory extends TestCase {
         super.setUp();
         memory = new Memory();
         service = new ChannelsServiceImpl();
+        ChannelsServiceImpl.registerDefaultMedia( service );
         service.setAddingSamples( true );
         service.setDao( memory );
     }

@@ -76,7 +76,7 @@ public class InternalFlow extends Flow {
         setDescription( flow.getDescription() );
         setMaxDelay( flow.getMaxDelay() );
         setAskedFor( flow.isAskedFor() );
-        setChannel( flow.getChannel() );
+        setChannels( flow.getChannels() );
         setCritical( flow.isCritical() );
     }
 }

@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.Service;
+import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.AttributeModifier;
@@ -41,7 +42,7 @@ public class CollapsedFlowPanel extends Panel implements DeletableFlow {
                 new PropertyModel( flow,
                         outcome ? "outcomeTitle" : "requirementTitle" ) );     // NON-NLS
 
-        final String c = flow.getChannel();
+        final String c = Channel.toString( flow.getChannels() );
         final Label channel = new Label( "channel", new AbstractReadOnlyModel() {         // NON-NLS
 
             @Override

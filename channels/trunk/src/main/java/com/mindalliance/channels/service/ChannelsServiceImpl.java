@@ -14,12 +14,15 @@ import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.Medium;
 import com.mindalliance.channels.dao.EvacuationScenario;
 import com.mindalliance.channels.dao.FireScenario;
 import com.mindalliance.channels.util.Play;
 import com.mindalliance.channels.util.SemMatch;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
+import org.apache.commons.collections.iterators.FilterIterator;
+import org.apache.commons.collections.Predicate;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,10 +37,19 @@ import java.util.Set;
  */
 public class ChannelsServiceImpl implements Service {
 
-    /** The implementation dao. */
+    /**
+     * The implementation dao.
+     */
     private Dao dao;
 
-    /** True if defaults scenarios will be added when dao is set. */
+    /**
+     * Channel media registered at startup
+     */
+    private List<Medium> media = new ArrayList<Medium>();
+
+    /**
+     * True if defaults scenarios will be added when dao is set.
+     */
     private boolean addingSamples;
 
     public ChannelsServiceImpl() {
@@ -48,7 +60,9 @@ public class ChannelsServiceImpl implements Service {
         setDao( dao );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Scenario createScenario() {
         final Scenario result = new Scenario();
         Scenario.initializeScenario( result );
@@ -56,21 +70,27 @@ public class ChannelsServiceImpl implements Service {
         return result;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Connector createConnector( Scenario scenario ) {
         final Connector result = dao.createConnector();
         scenario.addNode( result );
         return result;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Part createPart( Scenario scenario ) {
         final Part result = dao.createPart();
         scenario.addNode( result );
         return result;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Scenario findScenario( String name ) throws NotFoundException {
         for ( Iterator<Scenario> it = dao.iterate( Scenario.class ); it.hasNext(); ) {
             final Scenario s = it.next();
@@ -81,27 +101,49 @@ public class ChannelsServiceImpl implements Service {
         throw new NotFoundException();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException {
         return dao.find( clazz, id );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public <T extends ModelObject> Iterator<T> iterate( Class<T> clazz ) {
         return dao.iterate( clazz );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( {"unchecked"} )
+    public Iterator<ModelObject> iterateEntities() {
+        return new FilterIterator( dao.iterate( ModelObject.class ), new Predicate() {
+            public boolean evaluate( Object obj ) {
+                return ( (ModelObject) obj ).isEntity();
+            }
+        } );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public void add( ModelObject object ) {
         dao.add( object );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void remove( ModelObject object ) {
         dao.remove( object );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Scenario getDefaultScenario() {
         return dao.iterate( Scenario.class ).next();
     }
@@ -112,6 +154,7 @@ public class ChannelsServiceImpl implements Service {
 
     /**
      * Use a specific dao. If 'addingSamples', add Fire and Evacuation scenarios.
+     *
      * @param dao the dao
      */
     @Transactional
@@ -121,9 +164,13 @@ public class ChannelsServiceImpl implements Service {
             LoggerFactory.getLogger( getClass() ).info( "Adding sample models" );
             // TODO initialize memory to default scenario instead of test scenario
             // dao.add( Scenario.createDefault() );
-            final EvacuationScenario evac = new EvacuationScenario( this );
-            dao.add( evac );
-            dao.add( new FireScenario( this, evac ) );
+            try {
+                final EvacuationScenario evac = new EvacuationScenario( this );
+                dao.add( evac );
+                dao.add( new FireScenario( this, evac ) );
+            } catch ( NotFoundException e ) {
+                throw new RuntimeException( e );
+            }
 
         }
     }
@@ -136,7 +183,35 @@ public class ChannelsServiceImpl implements Service {
         this.addingSamples = addingSamples;
     }
 
+    public List<Medium> getMedia() {
+        return media;
+    }
+
+    public void setMedia( List<Medium> media ) {
+        this.media = media;
+    }
+
+    /** {@inheritDoc}*/
+    public void addMedium( Medium medium ) {
+        media.add( medium );
+    }
+
     /** {@inheritDoc} */
+    public Medium mediumNamed( String name ) throws NotFoundException {
+        Medium medium = null;
+        for (Medium m: media) {
+            if (m.getName().equalsIgnoreCase(name)) {
+                medium = m;
+                break;
+            }
+        }
+        if (medium == null) throw new NotFoundException();
+        return medium;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public <T extends ModelObject> T findOrCreate( Class<T> clazz, String name ) {
         T result = null;
         final Iterator<T> objects = dao.iterate( clazz );
@@ -158,7 +233,9 @@ public class ChannelsServiceImpl implements Service {
         return result;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Set<ResourceSpec> getAllResourceSpecs() {
         final Set<ResourceSpec> result = new HashSet<ResourceSpec>();
 
@@ -186,12 +263,12 @@ public class ChannelsServiceImpl implements Service {
                 Iterator<Flow> flows = scenario.flows();
                 while ( flows.hasNext() ) {
                     Flow flow = flows.next();
-                    if ( flow.getChannel() != null && !flow.getChannel().isEmpty() ) {
+                    if ( !flow.getChannels().isEmpty() ) {
                         if ( flow.getTarget() == part && !flow.isAskedFor() ) {
-                            partResourceSpec.addChannel( flow.getChannel() );
+                            partResourceSpec.addChannels( flow.getChannels() );
                         }
                         if ( flow.getSource() == part && flow.isAskedFor() ) {
-                            partResourceSpec.addChannel( flow.getChannel() );
+                            partResourceSpec.addChannels( flow.getChannels() );
                         }
                     }
                 }
@@ -202,7 +279,9 @@ public class ChannelsServiceImpl implements Service {
         return result;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public List<ResourceSpec> findAllResourcesNarrowingOrEqualTo( ResourceSpec resourceSpec ) {
         final List<ResourceSpec> list = new ArrayList<ResourceSpec>();
         for ( ResourceSpec spec : getAllResourceSpecs() ) {
@@ -212,7 +291,9 @@ public class ChannelsServiceImpl implements Service {
         return list;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public List<ResourceSpec> findAllContacts( ResourceSpec resourceSpec, boolean isSelf ) {
         final Set<ResourceSpec> contacts = new HashSet<ResourceSpec>();
         if ( isSelf ) {
@@ -227,7 +308,9 @@ public class ChannelsServiceImpl implements Service {
         return new ArrayList<ResourceSpec>( contacts );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public List<Play> findAllPlays( ResourceSpec resourceSpec ) {
         final Set<Play> plays = new HashSet<Play>();
         final Iterator<Scenario> allScenarios = iterate( Scenario.class );
@@ -238,15 +321,13 @@ public class ChannelsServiceImpl implements Service {
                 final Flow flow = flows.next();
                 if ( Play.hasPlay( flow ) ) {
                     if ( flow.getSource().isPart()
-                         && ( (Part) flow.getSource() ).involves( resourceSpec ) )
-                    {
+                            && ( (Part) flow.getSource() ).involves( resourceSpec ) ) {
                         // role sends
                         final Play play = new Play( (Part) flow.getSource(), flow, true );
                         plays.add( play );
                     }
                     if ( flow.getTarget().isPart()
-                         && ( (Part) flow.getTarget() ).involves( resourceSpec ) )
-                    {
+                            && ( (Part) flow.getTarget() ).involves( resourceSpec ) ) {
                         // role receives
                         final Play play = new Play( (Part) flow.getTarget(), flow, false );
                         plays.add( play );
@@ -257,12 +338,16 @@ public class ChannelsServiceImpl implements Service {
         return new ArrayList<Play>( plays );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean isPermanent( ResourceSpec resourceSpec ) {
         return dao.isPermanent( resourceSpec );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public List<Issue> findAllUserIssues( ModelObject identifiable ) {
         final List<Issue> foundIssues = new ArrayList<Issue>();
         for ( Iterator<UserIssue> it = iterate( UserIssue.class ); it.hasNext(); ) {
@@ -272,5 +357,25 @@ public class ChannelsServiceImpl implements Service {
         }
         return foundIssues;
     }
+
+    /**
+     * Register default media - used in test setups
+     * @param service a service
+     */
+    public static void registerDefaultMedia(Service service) {
+        service.addMedium(new Medium("Phone", "\\d{3}-\\d{3}-\\d{4}"));
+        service.addMedium(new Medium("Fax", "\\d{3}-\\d{3}-\\d{4}"));
+        service.addMedium(new Medium("Cell", "\\d{3}-\\d{3}-\\d{4}"));
+        service.addMedium(new Medium("Email", "[^@\\s]+@[^@\\s]+\\.\\w+"));
+        service.addMedium(new Medium("IM", ".+"));
+        service.addMedium(new Medium("Radio", ".+"));
+        service.addMedium(new Medium("Television", ".+"));
+        service.addMedium(new Medium("Courier", ".+"));
+        service.addMedium(new Medium("Face-to-face", ".*"));
+        service.addMedium(new Medium("SendWordNow", ".+"));
+        service.addMedium(new Medium("Other", ".+"));
+
+    }
+
 
 }

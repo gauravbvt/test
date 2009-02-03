@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+<div>
+    <table>
+        <tr wicket:id="channels">
+            <td>
+                <select wicket:id="medium">
+               <option>[medium]</option>
+           </select>
+            </td>
+            <td><input  class="no-expand" wicket:id="address" type="text" size="20"/></td>
+            <td><span wicket:id="deleteSpan"><input wicket:id="delete" type="checkbox" alt="Delete this channel"/> Delete </span></td>
+        </tr>
+    </table>
+</div>
+</wicket:panel>
+</body>
+</html>

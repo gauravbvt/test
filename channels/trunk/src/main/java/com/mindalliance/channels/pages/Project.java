@@ -1,6 +1,8 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.Service;
+import com.mindalliance.channels.Medium;
+import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.export.Exporter;
@@ -28,6 +30,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.ArrayList;
 
 /**
  * Application object for Channels.

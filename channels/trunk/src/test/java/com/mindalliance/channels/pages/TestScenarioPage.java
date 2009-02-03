@@ -11,7 +11,7 @@ import com.mindalliance.channels.service.ChannelsServiceImpl;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.FlowDiagram;
-import junit.framework.TestCase;
+import com.mindalliance.channels.graph.DiagramException;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.util.file.File;
@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import junit.framework.TestCase;
 
 /**
  * Simple test using the WicketTester.
@@ -49,14 +51,18 @@ public class TestScenarioPage extends TestCase {
         dao = new Memory();
         project = new Project();
         final ChannelsServiceImpl service = new ChannelsServiceImpl();
+        ChannelsServiceImpl.registerDefaultMedia( service );
         service.setAddingSamples( true );
         service.setDao( dao );
-
         project.setService( service );
         project.setAttachmentManager( new BitBucket() );
         final FlowDiagram fd = createMock( FlowDiagram.class );
-        expect( fd.getImageMap( (Scenario) anyObject(), (Analyst) anyObject() ) )
-                .andReturn( "" ).anyTimes();
+        try {
+            expect( fd.getImageMap( (Scenario) anyObject(), (Analyst) anyObject() ) )
+                    .andReturn( "" ).anyTimes();
+        } catch ( DiagramException e ) {
+            fail();
+        }
         replay( fd );
         project.setFlowDiagram( fd );
 

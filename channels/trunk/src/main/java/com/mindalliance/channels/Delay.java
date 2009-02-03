@@ -3,7 +3,6 @@ package com.mindalliance.channels;
 import java.util.List;
 import java.util.Arrays;
 import java.io.Serializable;
-import java.lang.reflect.Array;
 
 /**
  * A duration
