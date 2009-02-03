@@ -1,15 +1,13 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.pages.components.Channelable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Transient;
 import java.text.MessageFormat;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An arrow between two nodes in the information flow graph.
@@ -22,7 +20,7 @@ public abstract class Flow extends ModelObject implements Channelable {
     /**
      * A list of alternate communication channels for the flow
      */
-    private Set<Channel> channels = new HashSet<Channel>();
+    private List<Channel> channels = new ArrayList<Channel>();
 
     /**
      * If this flow is critical to either source or target.
@@ -60,20 +58,26 @@ public abstract class Flow extends ModelObject implements Channelable {
         this.askedFor = askedFor;
     }
 
-    public Set<Channel> getChannels() {
+    public List<Channel> getChannels() {
         return channels;
     }
 
-    public void setChannels( Set<Channel> channels ) {
+    public void setChannels( List<Channel> channels ) {
         this.channels = channels;
     }
 
     public void addChannel( Channel channel ) {
-        channels.add( channel );
+        addChannelIfUnique( channel );
     }
 
     public void addChannel( Medium medium, String address ) {
-        channels.add( new Channel(medium, address) );
+        addChannelIfUnique( new Channel( medium, address ) );
+    }
+
+    private void addChannelIfUnique( Channel channel ) {
+        boolean found = false;
+        for ( Channel c : channels ) if ( c.sameAs( channel ) ) found = true;
+        if ( !found ) channels.add( channel );
     }
 
     public void removeChannel( Channel channel ) {

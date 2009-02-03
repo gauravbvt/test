@@ -149,6 +149,16 @@ input[type="text"].no-expand  {
     width: 5em;
 }
 
+input[type="text"].address  {
+    width: 12em;
+}
+
+input[type="text"].invalid-address {
+    width: 12em;
+    background-color: bisque;
+}
+
+
 .float {
     float: right;
 }

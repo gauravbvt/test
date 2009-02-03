@@ -1,7 +1,7 @@
 package com.mindalliance.channels;
 
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 import java.io.Serializable;
 
 /**
@@ -48,34 +48,22 @@ public class Channel implements Serializable {
     }
 
     /**
-     * {@inheritDoc}
+     * Compares channels for equality
+     * @param channel another Channel
+     * @return if the same
      */
-    public boolean equals( Object o ) {
-        if ( this == o ) return true;
-        if ( o == null || getClass() != o.getClass() ) return false;
-        Channel channel = (Channel) o;
-        if ( !address.equals( channel.address ) ) return false;
-        if ( medium == null || !medium.equals( channel.medium ) ) return false;
+    public boolean sameAs ( Channel channel ) {
+        if ( !address.equals( channel.getAddress() ) ) return false;
+        if ( medium != channel.getMedium() ) return false;
         return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public int hashCode() {
-        int result;
-        result = medium != null ? medium.hashCode() : 1;
-        result = 31 * result + address.hashCode();
-        return result;
     }
     
     /** {@inheritDoc} */
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append( medium.getName() );
-        sb.append( "(" );
+        sb.append( medium == null ? "NO MEDIUM" : medium.getName() );
+        sb.append( ": " );
         sb.append( address.isEmpty() ? "NO ADDRESS" : address );
-        sb.append( ")" );
         return sb.toString();
     }
 
@@ -85,7 +73,7 @@ public class Channel implements Serializable {
      * @param channels a set of channels
      * @return channels as string
      */
-    public static String toString( Set<Channel>channels ) {
+    public static String toString( List<Channel> channels ) {
         if ( channels.isEmpty() ) {
             return "(No channel)";
         } else {

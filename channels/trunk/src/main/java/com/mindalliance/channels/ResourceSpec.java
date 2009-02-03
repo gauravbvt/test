@@ -1,7 +1,7 @@
 package com.mindalliance.channels;
 
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.pages.components.Channelable;
+import com.mindalliance.channels.Channelable;
 import com.mindalliance.channels.util.SemMatch;
 
 import javax.persistence.ManyToOne;
@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.ArrayList;
 
 /**
  * A Resource is an actor in a role for an organization with a jurisdiction.
@@ -52,7 +53,7 @@ public class ResourceSpec extends ModelObject  implements Channelable {
     /**
      * Channels used to reach actor
      */
-    private Set<Channel> channels = new HashSet<Channel>();
+    private List<Channel> channels = new ArrayList<Channel>();
 
     public ResourceSpec() {
     }
@@ -69,7 +70,7 @@ public class ResourceSpec extends ModelObject  implements Channelable {
         role = part.getRole();
         organization = part.getOrganization();
         jurisdiction = part.getJurisdiction();
-        channels = new HashSet<Channel>();
+        channels = new ArrayList<Channel>();
     }
 
     /**
@@ -128,11 +129,11 @@ public class ResourceSpec extends ModelObject  implements Channelable {
         this.jurisdiction = jurisdiction;
     }
 
-    public Set<Channel> getChannels() {
+    public List<Channel> getChannels() {
         return channels;
     }
 
-    public void setChannels( Set<Channel> channels ) {
+    public void setChannels( List<Channel> channels ) {
         this.channels = channels;
     }
 

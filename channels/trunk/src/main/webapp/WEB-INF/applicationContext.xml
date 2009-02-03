@@ -21,10 +21,6 @@
         <property name="media">
             <list value-type="java.util.ArrayList">
                 <bean class="com.mindalliance.channels.Medium">
-                    <property name="name" value=""/>
-                    <property name="addressPattern" value=""/>
-                </bean>
-                <bean class="com.mindalliance.channels.Medium">
                     <property name="name" value="Phone"/>
                     <property name="addressPattern" value="\d{3}-\d{3}-\d{4}"/>
                 </bean>

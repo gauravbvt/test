@@ -5,7 +5,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 /**
  * A flow from one Part in this scenario to/from a connector in another scenario.
@@ -173,12 +172,12 @@ public class ExternalFlow extends Flow {
     }
 
     @Override
-    public Set<Channel> getChannels() {
+    public List<Channel> getChannels() {
         return isConnectorBased() ? getConnectorFlow().getChannels() : super.getChannels();
     }
 
     @Override
-    public void setChannels( Set<Channel> channels ) {
+    public void setChannels( List<Channel> channels ) {
         if ( isConnectorBased() )
             getConnectorFlow().setChannels( channels );
         else

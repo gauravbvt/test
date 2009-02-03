@@ -10,6 +10,7 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.Delay;
 import com.mindalliance.channels.Service;
+import com.mindalliance.channels.Channelable;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ScenarioPage;

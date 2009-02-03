@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.Medium;
+import com.mindalliance.channels.Channelable;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -77,12 +78,12 @@ public class ChannelListPanel extends Panel {
         list.add( new Wrapper() );
         return list;
     }
-
+   // Test for duplicate channels?
     private void flagIfInvalid( TextField<String> addressField, Wrapper wrapper ) {
         if ( !wrapper.isMarkedForAddition() && !wrapper.getChannel().isValid() ) {
             addressField.add(
                     new AttributeModifier(
-                            "class", true, new Model<String>( "error" ) ) );              // NON-NLS
+                            "class", true, new Model<String>( "invalid-address" ) ) );              // NON-NLS
             addressField.add(
                     new AttributeModifier(
                             "title", true, new Model<String>( "Not valid" ) ) );                // NON-NLS
@@ -143,8 +144,12 @@ public class ChannelListPanel extends Panel {
 
         public void setMedium( Medium medium ) {
             channel.setMedium( medium );
-            if ( medium != null && markedForAddition ) {
-                channelable.addChannel( channel );
+            if ( markedForAddition ) {
+                if ( medium != null ) {
+                    channelable.addChannel( channel );
+                }
+            } else {
+                if ( medium == null ) channelable.removeChannel( channel );
             }
         }
 
@@ -153,8 +158,9 @@ public class ChannelListPanel extends Panel {
         }
 
         public void setAddress( String address ) {
-            channel.setAddress( address.trim() );
+            if ( channel != null ) {
+                channel.setAddress( address == null ? "" : address.trim() );
+            }
         }
-
     }
 }

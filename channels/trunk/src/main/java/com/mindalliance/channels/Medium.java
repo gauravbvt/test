@@ -31,6 +31,10 @@ public class Medium implements Serializable {
     public Medium() {
     }
 
+    public Medium( String name ) {
+        this(name, ".*");
+    }
+
     public Medium( String name, String addressPattern ) {
         this.name = name;
         this.addressPattern = addressPattern;
@@ -42,13 +46,6 @@ public class Medium implements Serializable {
 
     public void setName( String name ) {
         this.name = name;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isEntity() {
-        return true;
     }
 
     public String getAddressPattern() {
@@ -80,5 +77,12 @@ public class Medium implements Serializable {
         Pattern p = getCompiledPattern();
         Matcher m = p.matcher( address );
         return m.matches();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        return name;
     }
 }
