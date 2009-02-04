@@ -7,17 +7,27 @@
         lang="en">
 <body>
 <wicket:panel>
-<div>
-    <ul>
-        <li wicket:id="channels">
-            <select wicket:id="medium">
-               <option>[medium]</option>
-           </select>
-            <input  class="address" wicket:id="address" type="text" size="20"/>
-            <span wicket:id="deleteSpan"><input wicket:id="delete" type="checkbox" alt="Delete this channel"/> Delete </span>
-        </li>
-    </ul>
-</div>
+    <div>
+        <span wicket:id="candidates-span">
+        <ul>
+            <li wicket:id="candidates">
+                <input wicket:id="include-candidate" type="checkbox" alt="Include this candidate channel"/>
+                <span wicket:id="candidate">[candidate channel string]</span>
+            </li>
+        </ul>
+        </span>
+        <ul>
+            <li wicket:id="channels">
+                <span wicket:id="include-span"><input wicket:id="include" type="checkbox"
+                                                      alt="Include this channel"/></span>
+                <select wicket:id="medium">
+                    <option>[medium]</option>
+                </select>
+                <input class="address" wicket:id="address" type="text" size="20"/>
+            </li>
+        </ul>
+        <span wicket:id="instructions" class="suggest">Check to include channel. Uncheck to exclude.</span>
+    </div>
 </wicket:panel>
 </body>
 </html>

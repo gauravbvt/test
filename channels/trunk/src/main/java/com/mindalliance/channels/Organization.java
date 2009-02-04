@@ -14,7 +14,7 @@ public class Organization extends ModelObject {
     public Organization() {
     }
 
-    // TODO Add properties: mission, parent
+    // TODO Add property: parent
 
     /**
      * Utility constructor for tests.
