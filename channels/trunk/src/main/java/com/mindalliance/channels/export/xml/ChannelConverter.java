@@ -19,24 +19,35 @@ import com.mindalliance.channels.pages.Project;
  */
 public class ChannelConverter implements Converter {
 
-    /** {@inheritDoc} */
+    public ChannelConverter() {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public boolean canConvert( Class aClass ) {
         return Channel.class.isAssignableFrom( aClass );
     }
 
-    /** {@inheritDoc} */
-    public void marshal( Object object, HierarchicalStreamWriter writer, MarshallingContext context ) {
-        Channel channel = (Channel)object;
-        writer.startNode("medium");
+    /**
+     * {@inheritDoc}
+     */
+    public void marshal( Object object,
+                         HierarchicalStreamWriter writer,
+                         MarshallingContext context ) {
+        Channel channel = (Channel) object;
+        writer.startNode( "medium" );
         writer.setValue( channel.getMedium().getName() );
         writer.endNode();
-        writer.startNode("address");
+        writer.startNode( "address" );
         writer.setValue( channel.getAddress() );
         writer.endNode();
 
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
         Channel channel;
         channel = new Channel();
@@ -45,9 +56,9 @@ public class ChannelConverter implements Converter {
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "medium" ) ) {
                 try {
-                    channel.setMedium( Project.service().mediumNamed(reader.getValue()));
+                    channel.setMedium( Project.service().mediumNamed( reader.getValue() ) );
                 } catch ( NotFoundException e ) {
-                    throw new ConversionException(e);
+                    throw new ConversionException( e );
                 }
             } else if ( nodeName.equals( "address" ) ) {
                 channel.setAddress( reader.getValue() );

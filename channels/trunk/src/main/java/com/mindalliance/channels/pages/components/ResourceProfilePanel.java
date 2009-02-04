@@ -17,18 +17,18 @@ public class ResourceProfilePanel extends Panel {
     /**
      * Resource profiled
      */
-    private ResourceSpec resource;
+    private ResourceSpec resourceSpec;
 
     public ResourceProfilePanel( String id, IModel<ResourceSpec> model ) {
         super( id, model );
-        resource = model.getObject();
+        resourceSpec = model.getObject();
         init();
     }
 
     private void init() {
-        add( new ContactInfoPanel( "contact-info", new Model<ResourceSpec>( resource ) ) );
-        add( new ResourceIssuesTablePanel( "issues", new Model<ResourceSpec>( resource ) ) );
-        add( new PlaybookPanel( "playbook", new Model<ResourceSpec>( resource ) ) );
-        add( new DirectoryPanel( "directory", new Model<ResourceSpec>( resource ) ) );
+        add( new ContactInfoPanel( "contact-info", new Model<ResourceSpec>( resourceSpec ) ) );
+        add( new ResourceIssuesTablePanel( "issues", new Model<ResourceSpec>( resourceSpec ) ) );
+        add( new PlaybookPanel( "playbook", new Model<ResourceSpec>( resourceSpec ) ) );
+        add( new DirectoryPanel( "directory", new Model<ResourceSpec>( resourceSpec ) ) );
     }
 }

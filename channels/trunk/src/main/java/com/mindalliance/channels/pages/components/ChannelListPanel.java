@@ -30,7 +30,9 @@ import java.util.List;
  * Time: 7:25:50 PM
  */
 public class ChannelListPanel extends Panel {
-
+    /**
+     * The object which list of channels is being edited
+     */
     private final Channelable channelable;
 
     public ChannelListPanel( String id, IModel<Channelable> model ) {
@@ -78,15 +80,36 @@ public class ChannelListPanel extends Panel {
         list.add( new Wrapper() );
         return list;
     }
-   // Test for duplicate channels?
+
+    // Test for duplicate channels?
     private void flagIfInvalid( TextField<String> addressField, Wrapper wrapper ) {
-        if ( !wrapper.isMarkedForAddition() && !wrapper.getChannel().isValid() ) {
-            addressField.add(
-                    new AttributeModifier(
-                            "class", true, new Model<String>( "invalid-address" ) ) );              // NON-NLS
-            addressField.add(
-                    new AttributeModifier(
-                            "title", true, new Model<String>( "Not valid" ) ) );                // NON-NLS
+        if ( !wrapper.isMarkedForAddition() ) {
+            Channel channel = wrapper.getChannel();
+            boolean ok = true;
+            String problem = "";
+            if ( !channel.isValid() ) {
+                ok = false;
+                problem = "Not valid";
+            } else {
+                for ( Channel c : channelable.getChannels() ) {
+                    if ( c != channel && c.sameAs( channel ) ) {
+                        ok = false;
+                        problem = "Repeated";
+                    }
+                }
+            }
+            if ( !ok ) {
+                addressField.add(
+                        new AttributeModifier(
+                                "class",
+                                true,
+                                new Model<String>( "invalid-address" ) ) );      // NON-NLS
+                addressField.add(
+                        new AttributeModifier(
+                                "title",
+                                true,
+                                new Model<String>( problem ) ) );             // NON-NLS
+            }
         }
     }
 
@@ -104,11 +127,11 @@ public class ChannelListPanel extends Panel {
         /**
          * True if user marked item for deletion.
          */
-        private boolean markedForDeletion = false;
+        private boolean markedForDeletion;
         /**
          * True when is to be added
          */
-        private boolean markedForAddition = false;
+        private boolean markedForAddition;
 
         private Wrapper( Channel channel ) {
             this.channel = channel;

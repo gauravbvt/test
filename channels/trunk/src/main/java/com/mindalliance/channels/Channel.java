@@ -49,16 +49,19 @@ public class Channel implements Serializable {
 
     /**
      * Compares channels for equality
+     *
      * @param channel another Channel
      * @return if the same
      */
-    public boolean sameAs ( Channel channel ) {
+    public boolean sameAs( Channel channel ) {
         if ( !address.equals( channel.getAddress() ) ) return false;
         if ( medium != channel.getMedium() ) return false;
         return true;
     }
-    
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     */
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append( medium == null ? "NO MEDIUM" : medium.getName() );
@@ -75,7 +78,7 @@ public class Channel implements Serializable {
      */
     public static String toString( List<Channel> channels ) {
         if ( channels.isEmpty() ) {
-            return "(No channel)";
+            return "No channel";
         } else {
             StringBuilder sb = new StringBuilder();
             Iterator<Channel> iter = channels.iterator();
@@ -90,6 +93,7 @@ public class Channel implements Serializable {
 
     /**
      * Tests if address is valid for the medium
+     *
      * @return a boolean
      */
     public boolean isValid() {

@@ -6,6 +6,7 @@ import com.mindalliance.channels.Place;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Service;
+import com.mindalliance.channels.Channelable;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ProfileLink;
@@ -45,6 +46,10 @@ public class ResourceSpecPanel extends Panel {
      * Textfield
      */
     private TextField jurNameField;
+    /**
+     * Channel list panel
+     */
+    private ChannelListPanel channelsPanel;
 
     public ResourceSpecPanel( String s, IModel<ResourceSpec> model ) {
         super( s, model );
@@ -64,8 +69,9 @@ public class ResourceSpecPanel extends Panel {
                         orgNameField.getDefaultModelObjectAsString().trim() ) );
                 newResourceSpec.setJurisdiction( Place.named(
                         jurNameField.getDefaultModelObjectAsString().trim() ) );
+                newResourceSpec.setChannels( ( (Channelable) channelsPanel.getDefaultModelObject() ).getChannels() );
                 if ( !newResourceSpec.isEmpty() ) {
-                    getService().add( newResourceSpec );
+                    getService().addOrUpdate( newResourceSpec );
                     setResponsePage(
                             new RedirectPage( ProfileLink.linkFor( newResourceSpec ) ) );
                 } else {
@@ -100,12 +106,13 @@ public class ResourceSpecPanel extends Panel {
         jurNameField = new TextField<String>( "jur-name",
                 new Model<String>( jurName ) );
         resourceSpecForm.add( jurNameField );
+        channelsPanel = new ChannelListPanel( "channels", new Model<Channelable>( resourceSpec ) );
+        resourceSpecForm.add( channelsPanel );
     }
 
     private Service getService() {
         return ( (Project) getApplication() ).getService();
     }
-
 
 
 }

@@ -30,7 +30,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
         Flow flow = (Flow) modelObject;
         if ( flow.getChannels().isEmpty() ) {
             if ( !( flow.getTarget().isConnector() && !flow.isAskedFor() ) ) {
-                DetectedIssue issue = new DetectedIssue( DetectedIssue.DEFINITION, modelObject, "channel" );
+                DetectedIssue issue = new DetectedIssue( DetectedIssue.DEFINITION, modelObject );
                 issue.setDescription( "Flow without channels." );
                 issue.setRemediation( "Provide at least one channel." );
                 issues.add( issue );

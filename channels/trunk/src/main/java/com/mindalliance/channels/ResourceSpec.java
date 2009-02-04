@@ -1,17 +1,14 @@
 package com.mindalliance.channels;
 
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.Channelable;
 import com.mindalliance.channels.util.SemMatch;
 
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.ArrayList;
 
 /**
  * A Resource is an actor in a role for an organization with a jurisdiction.
@@ -23,12 +20,7 @@ import java.util.ArrayList;
  * Date: Jan 8, 2009
  * Time: 8:26:05 PM
  */
-public class ResourceSpec extends ModelObject  implements Channelable {
-
-    /**
-     * Used in calculating hashCode
-     */
-    private static int SEED = 31;
+public class ResourceSpec extends ModelObject implements Channelable {
 
     /**
      * The resource spec's actor
@@ -137,15 +129,16 @@ public class ResourceSpec extends ModelObject  implements Channelable {
         this.channels = channels;
     }
 
+    /**
+     * Add a channel to the contact info
+     *
+     * @param channels a Channel
+     */
     public void addChannels( Collection<Channel> channels ) {
         this.channels.addAll( channels );
     }
 
-    /**
-     * Get string collating channels
-     *
-     * @return channels as string
-     */
+    /** {@inheritDoc */
     @Transient
     public String getChannelsString() {
         return Channel.toString( channels );
@@ -168,10 +161,10 @@ public class ResourceSpec extends ModelObject  implements Channelable {
      */
     public int hashCode() {
         int hash = 1;
-        if ( actor != null ) hash = hash * SEED + actor.hashCode();
-        if ( role != null ) hash = hash * SEED + role.hashCode();
-        if ( organization != null ) hash = hash * SEED + organization.hashCode();
-        if ( jurisdiction != null ) hash = hash * SEED + jurisdiction.hashCode();
+        if ( actor != null ) hash = hash * 31 + actor.hashCode();
+        if ( role != null ) hash = hash * 31 + role.hashCode();
+        if ( organization != null ) hash = hash * 31 + organization.hashCode();
+        if ( jurisdiction != null ) hash = hash * 31 + jurisdiction.hashCode();
         return hash;
     }
 
@@ -181,7 +174,7 @@ public class ResourceSpec extends ModelObject  implements Channelable {
      * @param channel channel to add
      */
     public void addChannel( Channel channel ) {
-       channels.add( channel );
+        channels.add( channel );
     }
 
     /**
@@ -321,7 +314,7 @@ public class ResourceSpec extends ModelObject  implements Channelable {
      */
     @Transient
     public boolean isEmpty() {
-        return isAnyActor() && isAnyRole() && isAnyOrganization() && isAnyJurisdiction();
+        return isAnyActor() && isAnyRole() && isAnyOrganization() && isAnyJurisdiction() && channels.isEmpty();
     }
 
     /**

@@ -11,6 +11,8 @@ import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Place;
+import com.mindalliance.channels.Channel;
+import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.pages.Project;
 
 /**
@@ -29,8 +31,8 @@ public class ResourceSpecConverter implements Converter {
     }
 
     /**
-      * {@inheritDoc}
-      */
+     * {@inheritDoc}
+     */
     public void marshal( Object object, HierarchicalStreamWriter writer, MarshallingContext context ) {
         ResourceSpec resourceSpec = (ResourceSpec) object;
         if ( !resourceSpec.isAnyActor() ) {
@@ -53,29 +55,35 @@ public class ResourceSpecConverter implements Converter {
             writer.setValue( resourceSpec.getJurisdiction().getName() );
             writer.endNode();
         }
+        // channels
+        for ( Channel channel : resourceSpec.getChannels() ) {
+            writer.startNode( "channel" );
+            context.convertAnother( channel );
+            writer.endNode();
+        }
     }
 
     /**
-      * {@inheritDoc}
-      */
+     * {@inheritDoc}
+     */
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
         ResourceSpec resourceSpec = new ResourceSpec();
+        Scenario scenario = (Scenario) context.get( "scenario" );
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "actor" ) ) {
                 resourceSpec.setActor( Actor.named( reader.getValue() ) );
-            }
-            else if ( nodeName.equals( "role" ) ) {
+            } else if ( nodeName.equals( "role" ) ) {
                 resourceSpec.setRole( Role.named( reader.getValue() ) );
-            }
-            else if ( nodeName.equals( "organization" ) ) {
+            } else if ( nodeName.equals( "organization" ) ) {
                 resourceSpec.setOrganization( Organization.named( reader.getValue() ) );
-            }
-            else if ( nodeName.equals( "jurisdiction" ) ) {
+            } else if ( nodeName.equals( "jurisdiction" ) ) {
                 resourceSpec.setJurisdiction( Place.named( reader.getValue() ) );
-            }
-            else {
+            } else if ( nodeName.equals( "channel" ) ) {
+                Channel channel = (Channel) context.convertAnother( scenario, Channel.class );
+                resourceSpec.addChannel( channel );
+            } else {
                 throw new ConversionException( "Unknown element " + nodeName );
             }
             reader.moveUp();

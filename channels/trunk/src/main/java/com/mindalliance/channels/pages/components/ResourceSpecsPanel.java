@@ -37,6 +37,12 @@ public class ResourceSpecsPanel extends AbstractTablePanel {
         init();
     }
 
+    public ResourceSpecsPanel( String id, IModel<ArrayList<ResourceSpec>> model, int pageSize ) {
+        super( id, model, pageSize );
+        resourceSpecs = model.getObject();
+        init();
+    }
+
     private void init() {
         final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
         // columns

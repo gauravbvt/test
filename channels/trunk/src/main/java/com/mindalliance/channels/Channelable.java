@@ -1,8 +1,5 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.Channel;
-
-import java.util.Set;
 import java.util.List;
 import java.io.Serializable;
 
@@ -33,4 +30,9 @@ public interface Channelable extends Serializable {
      */
     void removeChannel( Channel channel );
 
+    /**
+     * Produces a summary string of the channels
+     * @return a String
+     */
+    String getChannelsString();
 }

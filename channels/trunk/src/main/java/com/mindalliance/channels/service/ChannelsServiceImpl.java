@@ -191,21 +191,25 @@ public class ChannelsServiceImpl implements Service {
         this.media = media;
     }
 
-    /** {@inheritDoc}*/
+    /**
+     * {@inheritDoc}
+     */
     public void addMedium( Medium medium ) {
         media.add( medium );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Medium mediumNamed( String name ) throws NotFoundException {
         Medium medium = null;
-        for (Medium m: media) {
-            if (m.getName().equalsIgnoreCase(name)) {
+        for ( Medium m : media ) {
+            if ( m.getName().equalsIgnoreCase( name ) ) {
                 medium = m;
                 break;
             }
         }
-        if (medium == null) throw new NotFoundException();
+        if ( medium == null ) throw new NotFoundException();
         return medium;
     }
 
@@ -359,21 +363,49 @@ public class ChannelsServiceImpl implements Service {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public ResourceSpec findPermanentResourceSpec( ResourceSpec resourceSpec ) {
+        ResourceSpec permanent = null;
+        Iterator<ResourceSpec> iterator = iterate( ResourceSpec.class );
+        while (permanent == null && iterator.hasNext()) {
+            ResourceSpec rs = iterator.next();
+            if (rs.equals( resourceSpec ))
+                permanent = rs;
+        }
+        return permanent;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void addOrUpdate( ResourceSpec resourceSpec ) {
+       ResourceSpec permanent = findPermanentResourceSpec( resourceSpec );
+        if (permanent == null) {
+            add( resourceSpec );
+        }
+        else {
+            permanent.setChannels( resourceSpec.getChannels() );
+        }
+    }
+
+    /**
      * Register default media - used in test setups
+     *
      * @param service a service
      */
-    public static void registerDefaultMedia(Service service) {
-        service.addMedium(new Medium("Phone", "\\d{3}-\\d{3}-\\d{4}"));
-        service.addMedium(new Medium("Fax", "\\d{3}-\\d{3}-\\d{4}"));
-        service.addMedium(new Medium("Cell", "\\d{3}-\\d{3}-\\d{4}"));
-        service.addMedium(new Medium("Email", "[^@\\s]+@[^@\\s]+\\.\\w+"));
-        service.addMedium(new Medium("IM", ".+"));
-        service.addMedium(new Medium("Radio", ".+"));
-        service.addMedium(new Medium("Television", ".+"));
-        service.addMedium(new Medium("Courier", ".+"));
-        service.addMedium(new Medium("Face-to-face", ".*"));
-        service.addMedium(new Medium("SendWordNow", ".+"));
-        service.addMedium(new Medium("Other", ".+"));
+    public static void registerDefaultMedia( Service service ) {
+        service.addMedium( new Medium( "Phone", "\\d{3}-\\d{3}-\\d{4}" ) );
+        service.addMedium( new Medium( "Fax", "\\d{3}-\\d{3}-\\d{4}" ) );
+        service.addMedium( new Medium( "Cell", "\\d{3}-\\d{3}-\\d{4}" ) );
+        service.addMedium( new Medium( "Email", "[^@\\s]+@[^@\\s]+\\.\\w+" ) );
+        service.addMedium( new Medium( "IM", ".+" ) );
+        service.addMedium( new Medium( "Radio", ".+" ) );
+        service.addMedium( new Medium( "Television", ".+" ) );
+        service.addMedium( new Medium( "Courier", ".+" ) );
+        service.addMedium( new Medium( "Face-to-face", ".*" ) );
+        service.addMedium( new Medium( "SendWordNow", ".+" ) );
+        service.addMedium( new Medium( "Other", ".+" ) );
 
     }
 

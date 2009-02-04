@@ -16,7 +16,8 @@ import java.util.List;
 @Inheritance( strategy = InheritanceType.SINGLE_TABLE )
 public abstract class Flow extends ModelObject implements Channelable {
 
-    // TODO Should we annotate a flow as primary vs seconday (when multiple flows are mutually redundant)?
+    // TODO Should we annotate a flow as primary vs seconday
+    // (when multiple flows are mutually redundant)?
     /**
      * A list of alternate communication channels for the flow
      */
@@ -66,22 +67,42 @@ public abstract class Flow extends ModelObject implements Channelable {
         this.channels = channels;
     }
 
+    /**
+     * Add an alternate channel for the flow
+     * @param channel a Channel
+     */
     public void addChannel( Channel channel ) {
         addChannelIfUnique( channel );
     }
 
+    /**
+     * Add an alternate channel for the flow
+     * @param medium a communication medium
+     * @param address an address on the medium
+     */
     public void addChannel( Medium medium, String address ) {
         addChannelIfUnique( new Channel( medium, address ) );
     }
 
     private void addChannelIfUnique( Channel channel ) {
         boolean found = false;
-        for ( Channel c : channels ) if ( c.sameAs( channel ) ) found = true;
+        for ( Channel c : channels )
+            if ( c.sameAs( channel ) ) found = true;
         if ( !found ) channels.add( channel );
     }
 
+    /**
+     * Remove a channel from the list of alternate channels
+     * @param channel a Channel
+     */
     public void removeChannel( Channel channel ) {
         channels.remove( channel );
+    }
+
+    /** {@inheritDoc */
+    @Transient
+    public String getChannelsString() {
+        return Channel.toString( channels );
     }
 
     public boolean isCritical() {

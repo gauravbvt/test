@@ -25,6 +25,10 @@ import java.util.List;
  * Time: 10:12:52 AM
  */
 public class IndexPage extends WebPage {
+    /**
+     * Maximum number of resource specs to show in table before paging.
+     */
+    private static final int PAGE_SIZE = 20;
 
     /**
      * Resource Specifications shown
@@ -39,7 +43,7 @@ public class IndexPage extends WebPage {
         init( service );
     }
 
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     private void init( Service service ) {
         add( new Label( "title", "Index" ) );
 
@@ -47,18 +51,18 @@ public class IndexPage extends WebPage {
         Iterator<Scenario> iterator = service.iterate( Scenario.class );
         while ( iterator.hasNext() ) scenarios.add( iterator.next() );
         add( new ScenariosPanel( "all-scenarios",
-                                  new Model<ArrayList<Scenario>>( (ArrayList)scenarios ) ) );
+                new Model<ArrayList<Scenario>>( (ArrayList) scenarios ) ) );
         Form form = new Form( "resourceSpecs-form" ) {
             protected void onSubmit() {
                 setResponsePage( new RedirectPage( "index.html" ) );
             }
         };
-        form.add(
-                new ResourceSpecsPanel( "all-resourceSpecs",
-                                        new Model<ArrayList<ResourceSpec>>(
-                                              (ArrayList) resourceSpecs ) ) );
+        form.add( new ResourceSpecsPanel( "all-resourceSpecs",
+                new Model<ArrayList<ResourceSpec>>(
+                        (ArrayList) resourceSpecs ),
+                PAGE_SIZE ) );
         add( form );
         add( new ResourceSpecPanel( "new-resourceSpec",
-                                     new Model<ResourceSpec>( new ResourceSpec() ) ) );
+                new Model<ResourceSpec>( new ResourceSpec() ) ) );
     }
 }

@@ -43,12 +43,13 @@ public abstract class AbstractTablePanel<T> extends Panel {
         super( s, iModel );
     }
 
-    public int getPageSize() {
-        return pageSize;
+    public AbstractTablePanel( String s, IModel<?> iModel, int pageSize ) {
+        super( s, iModel );
+        this.pageSize = pageSize;
     }
 
-    public void setPageSize( int pageSize ) {
-        this.pageSize = pageSize;
+    public int getPageSize() {
+        return pageSize;
     }
 
     /**

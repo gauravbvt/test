@@ -109,8 +109,9 @@ public class ProfilePage extends WebPage {
                 Place jurisdiction = service.find( Place.class, params.getLong( JURISDICTION_PARM ) );
                 resourceSpec.setJurisdiction( jurisdiction );
             }
-            if ( resourceSpec.isEmpty() ) throw new NotFoundException();
         }
-        return resourceSpec;
+        if ( resourceSpec.isEmpty() ) throw new NotFoundException();
+        ResourceSpec permanentResourceSpec = service.findPermanentResourceSpec( resourceSpec );
+        return permanentResourceSpec != null ? permanentResourceSpec : resourceSpec;
     }
 }

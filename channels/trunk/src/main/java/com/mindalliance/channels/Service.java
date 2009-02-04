@@ -156,4 +156,17 @@ public interface Service {
      */
     List<Issue> findAllUserIssues( ModelObject identifiable );
 
+    /**
+     * Find permanent resource spec matching given one
+     * @param resourceSpec a ResourceSpec to match against
+     * @return a permanent resource spec or null if none found
+     */
+    ResourceSpec findPermanentResourceSpec( ResourceSpec resourceSpec );
+
+    /**
+     * Add resource spec if equivalent not permanent yet,
+     * else already permament resource from given resource spec
+     * @param resourceSpec resource spec to add or update from
+     */
+    void addOrUpdate( ResourceSpec resourceSpec );
 }

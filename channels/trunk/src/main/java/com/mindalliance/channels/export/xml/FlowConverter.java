@@ -210,11 +210,11 @@ public class FlowConverter implements Converter {
                 String description = reader.getValue();
                 for ( Flow flow : flows ) flow.setDescription( description );
             } else if ( nodeName.equals( "channel" ) ) {
-                Channel channel = (Channel)context.convertAnother( scenario, Channel.class );
+                Channel channel = (Channel) context.convertAnother( scenario, Channel.class );
                 for ( Flow flow : flows ) flow.addChannel( channel );
             } else if ( nodeName.equals( "maxDelay" ) ) {
                 String maxDelay = reader.getValue();
-                for ( Flow flow : flows ) flow.setMaxDelay( Delay.parse(maxDelay) );
+                for ( Flow flow : flows ) flow.setMaxDelay( Delay.parse( maxDelay ) );
             } else if ( nodeName.equals( "askedFor" ) ) {
                 boolean askedFor = reader.getValue().equals( "true" );
                 for ( Flow flow : flows ) flow.setAskedFor( askedFor );
@@ -243,7 +243,7 @@ public class FlowConverter implements Converter {
                 // Register flow id if internal because it is guaranteed to be the exported flow
                 if ( flow.isInternal() ) {
                     // at most one internal flow per exported flow
-                    assert idMap.get(  idValue ) == null;
+                    assert idMap.get( idValue ) == null;
                     idMap.put( idValue, flow.getId() );
                 }
             }

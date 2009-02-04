@@ -85,8 +85,7 @@ public class ConnectedFlowList extends Panel {
             } else {
                 c = "";
             }
-            item.add( new Label( "channel", c ) );                                        // NON-NLS
-            addIssues( item, flow, "channel" );                                           // NON-NLS
+            item.add( new Label( "channels", c ) );                                        // NON-NLS
         }
 
         /**
