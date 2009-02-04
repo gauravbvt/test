@@ -7,6 +7,7 @@ import com.mindalliance.channels.util.SimpleCache;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.DirectedMultigraph;
 
 import java.util.Iterator;
 
@@ -42,7 +43,7 @@ public class DefaultGraphBuilder implements GraphBuilder {
     public DirectedGraph<Node, Flow> buildDirectedGraph( Scenario scenario ) {
         DirectedGraph<Node, Flow> digraph = digraphs.get( scenario, scenario.getLastModified() );
         if ( digraph == null ) {
-            digraph = new DefaultDirectedGraph<Node, Flow>(
+            digraph = new DirectedMultigraph<Node, Flow>(
                     new FlowFactory() );
             populateGraph( digraph, scenario );
             digraphs.put( scenario, digraph );

@@ -112,6 +112,7 @@ public class ChannelListPanel extends Panel {
         List<Channel> candidates = new ArrayList<Channel>();
         List<Channelable> channelables = findRelatedChannelables( model.getObject() );
         List<Channel> alreadySetChannels = model.getObject().getChannels();
+        // Get all non-redundant, valid candidate channels
         for ( Channelable aChannelable : channelables ) {
             for ( Channel channel : aChannelable.getChannels() ) {
                 if ( !containsChannel( alreadySetChannels, channel )
@@ -122,6 +123,7 @@ public class ChannelListPanel extends Panel {
                 }
             }
         }
+        // Wrap them as not marked for inclusion
         List<Wrapper> wrappers = new ArrayList<Wrapper>();
         for ( Channel candidate : candidates ) {
             wrappers.add(
@@ -138,6 +140,11 @@ public class ChannelListPanel extends Panel {
         return found;
     }
 
+    /**
+     * Find channelables that have candidate channels for a given channelable
+     * @param channelable the given channelable
+     * @return a list of Channelables
+     */
     private List<Channelable> findRelatedChannelables( Channelable channelable ) {
         List<Channelable> relatedChannelables = new ArrayList<Channelable>();
         if ( channelable instanceof Flow ) {
@@ -157,7 +164,6 @@ public class ChannelListPanel extends Panel {
         return relatedChannelables;
     }
 
-    // Test for duplicate channels?
     private void flagIfInvalid( TextField<String> addressField, Wrapper wrapper ) {
         if ( !wrapper.isMarkedForCreation() ) {
             Channel channel = wrapper.getChannel();
