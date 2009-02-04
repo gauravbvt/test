@@ -1,16 +1,16 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.Channelable;
 import com.mindalliance.channels.Connector;
+import com.mindalliance.channels.Delay;
 import com.mindalliance.channels.ExternalFlow;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.UserIssue;
-import com.mindalliance.channels.Delay;
 import com.mindalliance.channels.Service;
-import com.mindalliance.channels.Channelable;
+import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ScenarioPage;
@@ -87,10 +87,12 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
      * The critical checkbox.
      */
     private CheckBox criticalCheck;
+
     /**
      * The channels field
      */
     private ChannelListPanel channelListPanel;
+
     /**
      * The "all" field
      */
@@ -124,7 +126,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
 
         addChannelRow();
         addMaxDelayFields();
-        // addLabeled( "maxDelay-label", new TextField<String>( "maxDelay" ) );              // NON-NLS
+        // addLabeled( "maxDelay-label", new TextField<String>( "maxDelay" ) );           // NON-NLS
         add( new AttachmentPanel( "attachments", flow ) );                                // NON-NLS
         add( new IssuesPanel( "issues", new Model<ModelObject>( flow ), expansions ) );   // NON-NLS
         adjustFields( flow );
@@ -173,7 +175,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
                     @Override
                     public String getObject() {
                         return outcome ? getFlow().getOutcomeTitle()
-                                : getFlow().getRequirementTitle();
+                                       : getFlow().getRequirementTitle();
                     }
                 } ) );
 
@@ -184,8 +186,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
             @Override
             public void onClick() {
                 final UserIssue newIssue = new UserIssue( flow );
-                final Service service = ( (Project) getApplication() ).getService();                
-                service.add( newIssue );
+                getService().add( newIssue );
                 final PageParameters parameters = getWebPage().getPageParameters();
                 parameters.add( Project.EXPAND_PARM, String.valueOf( newIssue.getId() ) );
                 setResponsePage( getWebPage().getClass(), parameters );
@@ -197,9 +198,13 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
 
     private void addAllField() {
         final CheckBox checkBox = new CheckBox( "all" );                                  // NON-NLS
-        allField = new FormComponentLabel( "all-label", checkBox );
+        allField = new FormComponentLabel( "all-label", checkBox );                       // NON-NLS
         allField.add( checkBox );
-        add( allField );                                                                  // NON-NLS
+        add( allField );
+    }
+
+    private Service getService() {
+        return ( (Project) getApplication() ).getService();
     }
 
     /**
@@ -289,7 +294,8 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
      * Add input fields for max delay
      */
     protected final void addMaxDelayFields() {
-        add( new TextField<String>( "delay-amount", new PropertyModel<String>( flow, "maxDelay.amountString" ) ) );
+        add( new TextField<String>( "delay-amount",
+                                    new PropertyModel<String>( flow, "maxDelay.amountString" ) ) );
         add( new DropDownChoice<Delay.Unit>(
                 "delay-unit",
                 new PropertyModel<Delay.Unit>( flow, "maxDelay.unit" ),
@@ -350,10 +356,10 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
      */
     public void setOther( Node other ) {
         final Flow oldFlow = getFlow();
-        final Scenario s = other.getScenario();
         final Flow newFlow = isOutcome() ?
-                s.connect( oldFlow.getSource(), other ) :
-                s.connect( other, oldFlow.getTarget() );
+                getService().connect( oldFlow.getSource(), other, oldFlow.getName() ) :
+                getService().connect( other, oldFlow.getTarget(), oldFlow.getName() );
+
         newFlow.initFrom( oldFlow );
         oldFlow.disconnect();
         setFlow( newFlow );
@@ -397,31 +403,32 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
      * @return the list of nodes
      */
     public List<? extends Node> getOtherNodes() {
-        final Node node = getNode();
-        final Node other = getOther();
-        final Scenario scenario = node.getScenario();
-        final Set<Node> result = new TreeSet<Node>();
+        Node node = getNode();
+        Node other = getOther();
+        Scenario scenario = node.getScenario();
+        Set<Node> result = new TreeSet<Node>();
 
         // Add other parts of this scenario
-        final Iterator<Node> nodes = scenario.nodes();
+        Iterator<Node> nodes = scenario.nodes();
         while ( nodes.hasNext() ) {
-            final Node n = nodes.next();
+            Node n = nodes.next();
             if ( !node.equals( n ) && (
                     other.equals( n )
-                            || !n.isConnector() && !node.isConnectedTo( outcome, n ) ) )
+                        || !n.isConnector() && !node.isConnectedTo( outcome, n, flow.getName() ) ) )
                 result.add( n );
         }
 
         // Add inputs/outputs of other scenarios
-        final Service service = ( (Project) getApplication() ).getService();
-        final Iterator<Scenario> scenarios = service.iterate( Scenario.class );
+        Service service = ( (Project) getApplication() ).getService();
+        Iterator<Scenario> scenarios = service.iterate( Scenario.class );
         while ( scenarios.hasNext() ) {
-            final Scenario s = scenarios.next();
+            Scenario s = scenarios.next();
             if ( !scenario.equals( s ) ) {
-                final Iterator<Connector> c = isOutcome() ? s.inputs() : s.outputs();
+                Iterator<Connector> c = isOutcome() ? s.inputs() : s.outputs();
                 while ( c.hasNext() ) {
-                    final Connector connector = c.next();
-                    if ( other.equals( connector ) || !node.isConnectedTo( outcome, connector ) )
+                    Connector connector = c.next();
+                    if ( other.equals( connector )
+                         || !node.isConnectedTo( outcome, connector, flow.getName() ) )
                         result.add( connector );
                 }
             }

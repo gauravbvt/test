@@ -11,6 +11,7 @@ import java.util.Set;
 /**
  * Test generic node functionality
  */
+@SuppressWarnings( { "HardCodedStringLiteral" } )
 public class TestNode extends TestCase {
 
     private Flow f1;
@@ -30,16 +31,15 @@ public class TestNode extends TestCase {
         service = new ChannelsServiceImpl( new Memory() );
         scenario = service.createScenario();
         p1 = service.createPart( scenario );
-            p1.setActor( new Actor( "p1" ) );
+            p1.setActor( service.findOrCreate( Actor.class, "p1" ) );
         p2 = service.createPart( scenario );
-            p2.setActor( new Actor( "p2" ) );
+            p2.setActor( service.findOrCreate( Actor.class, "p2" ) );
 
         f1 = p1.createOutcome( service );
                 f1.setName( "A" );
         f2 = p2.createRequirement( service );
                 f2.setName( "B" );
-        f3 = scenario.connect( p1, p2 );
-                f3.setName( "message" );
+        f3 = service.connect( p1, p2, "message" );
     }
 
     public void testSetOutcomes() {
@@ -48,7 +48,7 @@ public class TestNode extends TestCase {
         assertNull( f1.getSource() );
         assertNull( f3.getSource() );
 
-        final Set<Flow> flows = new HashSet<Flow>(4);
+        Set<Flow> flows = new HashSet<Flow>(4);
         flows.add( f1 );
         flows.add( f2 );
         p1.setOutcomes( flows );
@@ -65,7 +65,7 @@ public class TestNode extends TestCase {
         assertNull( f2.getTarget() );
         assertNull( f3.getTarget() );
 
-        final Set<Flow> flows = new HashSet<Flow>(4);
+        Set<Flow> flows = new HashSet<Flow>(4);
         flows.add( f1 );
         flows.add( f2 );
         p2.setRequirements( flows );
@@ -77,7 +77,7 @@ public class TestNode extends TestCase {
     }
 
     public void testOutcomes() {
-        final Iterator<Flow> iterator1 = p1.outcomes();
+        Iterator<Flow> iterator1 = p1.outcomes();
         assertTrue( iterator1.hasNext() );
         iterator1.next();
         iterator1.next();
@@ -87,7 +87,7 @@ public class TestNode extends TestCase {
     }
 
     public void testRequirements() {
-        final Iterator<Flow> iterator1 = p2.requirements();
+        Iterator<Flow> iterator1 = p2.requirements();
         assertTrue( iterator1.hasNext() );
         iterator1.next();
         iterator1.next();
@@ -97,10 +97,10 @@ public class TestNode extends TestCase {
     }
 
     public void testIsness() {
-        final Part part = service.createPart( scenario );
+        Part part = service.createPart( scenario );
         assertTrue( part.isPart() );
         assertFalse( part.isConnector() );
-        final Connector c = service.createConnector( scenario );
+        Connector c = service.createConnector( scenario );
         assertFalse( c.isPart() );
         assertTrue( c.isConnector() );
     }

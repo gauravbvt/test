@@ -25,7 +25,8 @@ public class ExternalFlow extends Flow {
     public ExternalFlow() {
     }
 
-    public ExternalFlow( Node source, Node target ) {
+    public ExternalFlow( Node source, Node target, String name ) {
+        setName( name );
         if ( source.isConnector() && target.isPart() ) {
             setConnector( (Connector) source );
             setPart( (Part) target );
@@ -52,7 +53,7 @@ public class ExternalFlow extends Flow {
         if ( connector == null )
             return null;
         else {
-            final Iterator<Flow> iterator = connector.requirements();
+            Iterator<Flow> iterator = connector.requirements();
             return iterator.hasNext() ? iterator.next().getSource() : part;
         }
     }
@@ -68,7 +69,7 @@ public class ExternalFlow extends Flow {
         if ( connector == null )
             return null;
         else {
-            final Iterator<Flow> iterator = connector.outcomes();
+            Iterator<Flow> iterator = connector.outcomes();
             return iterator.hasNext() ? iterator.next().getTarget() : part ;
         }
     }
@@ -88,12 +89,12 @@ public class ExternalFlow extends Flow {
     /** {@inheritDoc} */
     @Override
     public void disconnect() {
-        final Part p = part;
+        Part p = part;
         p.removeOutcome( this );
         p.removeRequirement( this );
         part = null;
 
-        final Connector c = connector;
+        Connector c = connector;
         c.removeExternalFlow( this );
         connector = null;
     }
@@ -140,7 +141,7 @@ public class ExternalFlow extends Flow {
     /**
      * @return the name of the flow
      */
-    @Override
+    @Override @Transient
     public String getName() {
         return getConnector() == null ? super.getName() : getConnectorFlow().getName();
     }
@@ -153,7 +154,7 @@ public class ExternalFlow extends Flow {
         this.input = input;
     }
 
-    @Override
+    @Override @Transient
     public boolean isAskedFor() {
         return getConnector() == null ? super.isAskedFor() : getConnectorFlow().isAskedFor();
     }
@@ -171,7 +172,7 @@ public class ExternalFlow extends Flow {
             getConnectorFlow().setAskedFor( askedFor );
     }
 
-    @Override
+    @Override @Transient
     public List<Channel> getChannels() {
         return isConnectorBased() ? getConnectorFlow().getChannels() : super.getChannels();
     }
@@ -186,32 +187,34 @@ public class ExternalFlow extends Flow {
 
     @Transient
     private boolean isConnectorBased() {
-        final Connector c = getConnector();
+        Connector c = getConnector();
         return c != null
             && ( c.isInput() || getConnectorFlow().isAskedFor() );
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public boolean isConnectedTo( boolean outcome, Node node ) {
+        return super.isConnectedTo( outcome, node ) || node.equals( getConnector() );
+    }
+
     @Override
     public void setCritical( boolean critical ) {
-        final Connector c = getConnector();
-        final boolean connectorBased = c != null
-                                       && c.isInput()
-                                       && !getConnectorFlow().isAskedFor();
+        Connector c = getConnector();
+        boolean connectorBased = c != null
+                              && c.isInput()
+                              && !getConnectorFlow().isAskedFor();
         if ( connectorBased )
             getConnectorFlow().setCritical( critical );
         else
             super.setCritical( critical );
     }
 
-    /**
-     * True if the flow is critical.
-     * Local for notifications on input connectors.
-     * @return a boolean
-     */
-    @Override
+    /** {@inheritDoc} */
+    @Override  @Transient
     public boolean isCritical() {
-        final Connector c = getConnector();
-        final boolean connectorBased = c != null
+        Connector c = getConnector();
+        boolean connectorBased = c != null
                                        && c.isInput()
                                        && !getConnectorFlow().isAskedFor();
         return connectorBased ? getConnectorFlow().isCritical() : super.isCritical();

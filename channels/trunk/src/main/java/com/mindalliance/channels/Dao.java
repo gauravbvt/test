@@ -30,6 +30,24 @@ public interface Dao {
     Connector createConnector();
 
     /**
+     * Create a new internal flow.
+     * @param source the source
+     * @param target the target
+     * @param name the name of the flow
+     * @return a new flow.
+     */
+    InternalFlow createInternalFlow( Node source, Node target, String name );
+
+    /**
+     * Create a new external flow.
+     * @param source the source
+     * @param target the target
+     * @param name the name of the flow
+     * @return a new flow.
+     */
+    ExternalFlow createExternalFlow( Node source, Node target, String name );
+
+    /**
      * Find a model object given its id.
      * @param clazz the subclass of modelobject
      * @param id the id

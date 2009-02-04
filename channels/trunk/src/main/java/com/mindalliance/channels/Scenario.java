@@ -6,10 +6,8 @@ import org.hibernate.annotations.Cascade;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
-import javax.persistence.InheritanceType;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -21,42 +19,27 @@ import java.util.TreeSet;
  * A scenario in the project.
  * Provides an iterator on its nodes.
  */
-@Entity @Inheritance( strategy = InheritanceType.SINGLE_TABLE )
+@Entity
 public class Scenario extends ModelObject {
 
     // TODO - Add location (as in area) of the scenario (where the scenario applies - e.g. avian flu case in New Jersey)
 
     /** The default name for new scenarios. */
-    static final String DEFAULT_NAME = "Untitled";
+    public static final String DEFAULT_NAME = "Untitled";
 
     /** The default description for new scenarios. */
-    static final String DEFAULT_DESCRIPTION = "A scenario";
+    public static final String DEFAULT_DESCRIPTION = "A scenario";
 
     /** Initial node capacity. */
     private static final int INITIAL_CAPACITY = 20;
 
     /** Nodes in the flow graph. */
-    private Set<Node> nodes;
+    private Set<Node> nodes = new HashSet<Node>( INITIAL_CAPACITY );
 
     /** Nodes, indexed by id. */
-    private Map<Long,Node> nodeIndex;
+    private Map<Long,Node> nodeIndex = new HashMap<Long,Node>( INITIAL_CAPACITY );
 
     public Scenario() {
-        initializeScenario( this );
-    }
-
-    /**
-     * Initialize a scenario to default project settings.
-     * @param scenario the scenario to initialize
-     */
-    public static void initializeScenario( Scenario scenario ) {
-        scenario.setName( DEFAULT_NAME );
-        scenario.setDescription( DEFAULT_DESCRIPTION );
-
-        final Set<Node> nodes = new HashSet<Node>( INITIAL_CAPACITY );
-
-        nodes.add( new Part() );
-        scenario.setNodes( nodes );
     }
 
     @OneToMany( cascade = CascadeType.ALL )
@@ -73,6 +56,9 @@ public class Scenario extends ModelObject {
     protected void setNodes( Set<Node> nodes ) {
         if ( nodes.isEmpty() )
             throw new IllegalArgumentException();
+
+        for ( Node node : getNodes() )
+            node.setScenario( null );
 
         this.nodes = new HashSet<Node>( nodes );
         nodeIndex = new HashMap<Long,Node>( INITIAL_CAPACITY );
@@ -182,70 +168,6 @@ public class Scenario extends ModelObject {
      */
     public Node getNode( long id ) {
         return nodeIndex.get( id );
-    }
-
-    /**
-     * Create a flow between two nodes in this scenario, or between a node in this scenario and a
-     * connector in another scenario.
-     * @param source the source node.
-     * @param target the target node.
-     * @return a new flow.
-     * @throws IllegalArgumentException when nodes are already connected or nodes are not both
-     * in this scenario, or one of the node isn't a connector in a different scenario.
-     */
-    public Flow connect( Node source, Node target ) {
-        final Flow result;
-
-        if ( isInternal( source, target ) ) {
-            if ( getFlow( source, target ) != null )
-                    throw new IllegalArgumentException();
-
-            result = new InternalFlow( source, target );
-            source.addOutcome( result );
-            target.addRequirement( result );
-
-        } else if ( isExternal( source, target ) ) {
-            result = new ExternalFlow( source, target );
-            if ( source.isConnector() ) {
-                target.addRequirement( result );
-                ( (Connector) source ).addExternalFlow( (ExternalFlow) result );
-            } else {
-                source.addOutcome( result );
-                ( (Connector) target ).addExternalFlow( (ExternalFlow) result );
-            }
-
-        } else
-            throw new IllegalArgumentException();
-
-        return result;
-    }
-
-    private static boolean isInternal( Node source, Node target ) {
-        final Scenario scenario = source.getScenario();
-        return scenario != null && scenario.equals( target.getScenario() );
-    }
-
-    private static boolean isExternal( Node source, Node target ) {
-        final Scenario scenario = source.getScenario();
-        return scenario != null
-            && !scenario.equals( target.getScenario() )
-            && ( target.isConnector() || source.isConnector() );
-    }
-
-    /**
-     * Find flow between a source and a target.
-     * @param source the source
-     * @param target the target
-     * @return the connecting flow, or null if none
-     */
-    private static Flow getFlow( Node source, Node target ) {
-        for ( Iterator<Flow> flows = source.outcomes(); flows.hasNext(); ) {
-            final Flow f = flows.next();
-            if ( target.equals( f.getTarget() ) )
-                return f;
-        }
-
-        return null;
     }
 
     /**

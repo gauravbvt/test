@@ -15,6 +15,9 @@ import com.mindalliance.channels.InternalFlow;
  */
 public class FlowFactory implements EdgeFactory<Node, Flow> {
 
+    /** Separate id generator for diagram-based flows. */
+    private static long IdCounter = 1L;
+
     /**
      * Constructor
      */
@@ -24,11 +27,13 @@ public class FlowFactory implements EdgeFactory<Node, Flow> {
     /**
      * Creates a new flow for purposes of analytics.
      *
-     * @param source a Node
-     * @param target a Node
+     * @param sourceVertex a Node
+     * @param targetVertex a Node
      * @return a Flow
      */
-    public Flow createEdge( Node source, Node target ) {
-        return new InternalFlow( source, target );
+    public Flow createEdge( Node sourceVertex, Node targetVertex ) {
+        InternalFlow flow = new InternalFlow( sourceVertex, targetVertex, "" );
+        flow.setId( IdCounter++  );
+        return flow;
     }
 }

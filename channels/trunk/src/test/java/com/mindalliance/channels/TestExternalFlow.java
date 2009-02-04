@@ -7,6 +7,7 @@ import junit.framework.TestCase;
 /**
  * ...
  */
+@SuppressWarnings( { "HardCodedStringLiteral" } )
 public class TestExternalFlow extends TestCase {
 
     private Service service;
@@ -33,36 +34,36 @@ public class TestExternalFlow extends TestCase {
         s2 = service.createScenario();
 
         // S2 "included" in S1
-        final Part s2Part = s2.getDefaultPart();
+        Part s2Part = s2.getDefaultPart();
         s2Part.setActor( new Actor( "p3" ) );
         s2Part.createOutcome( service );
         s2Part.createRequirement( service );
 
-        s1.connect( s1p1, s2.inputs().next() );
-        s1.connect( s2.outputs().next(), s1p2 );
+        service.connect( s1p1, s2.inputs().next(), "" );
+        service.connect( s2.outputs().next(), s1p2, "" );
     }
 
     public void testConstructor() {
         // test degenerate cases
         try {
-            final Part p = s2.getDefaultPart();
-            new ExternalFlow( p, p.outcomes().next().getTarget() );
+            Part p = s2.getDefaultPart();
+            new ExternalFlow( p, p.outcomes().next().getTarget(), "" );
             fail();
         } catch ( IllegalArgumentException ignored ) {}
 
         try {
-            new ExternalFlow( s1p1, s1p2 );
+            new ExternalFlow( s1p1, s1p2, "" );
             fail();
         } catch ( IllegalArgumentException ignored ) {}
     }
 
     public void testInitial() {
-        final Flow f1 = s1p1.outcomes().next();
+        Flow f1 = s1p1.outcomes().next();
         assertFalse( f1.isInternal() );
         assertEquals( "p1 notify p3 of something", f1.toString() );
         assertTrue( s2.inputs().next().externalFlows().hasNext() );
 
-        final Flow f2 = s1p2.requirements().next();
+        Flow f2 = s1p2.requirements().next();
         assertFalse( f2.isInternal() );
         assertEquals( "p3 notify p2 of something", f2.toString() );
         assertTrue( s2.outputs().next().externalFlows().hasNext() );
@@ -73,7 +74,7 @@ public class TestExternalFlow extends TestCase {
      */
     public void testRemove1() {
         // output
-        final Flow f = s1p1.outcomes().next();
+        Flow f = s1p1.outcomes().next();
         f.disconnect();
 
         assertNull( f.getSource() );
@@ -82,7 +83,7 @@ public class TestExternalFlow extends TestCase {
         assertFalse( s2.inputs().next().externalFlows().hasNext() );
 
         // input
-        final Flow f2 = s1p2.requirements().next();
+        Flow f2 = s1p2.requirements().next();
         f2.disconnect();
 
         assertNull( f2.getSource() );
@@ -95,9 +96,9 @@ public class TestExternalFlow extends TestCase {
      * Remove a connected connector.
      */
     public void testRemove2() {
-        final Part p3 = s2.getDefaultPart();
-        final Flow f1 = p3.outcomes().next();
-        final Connector c1 = (Connector) f1.getTarget();
+        Part p3 = s2.getDefaultPart();
+        Flow f1 = p3.outcomes().next();
+        Connector c1 = (Connector) f1.getTarget();
 
         f1.disconnect();
 
@@ -105,8 +106,8 @@ public class TestExternalFlow extends TestCase {
         assertFalse( c1.externalFlows().hasNext() );
         assertFalse( s1p2.requirements().hasNext() );
 
-        final Flow f2 = p3.requirements().next();
-        final Connector c2 = (Connector) f2.getSource();
+        Flow f2 = p3.requirements().next();
+        Connector c2 = (Connector) f2.getSource();
 
         f2.disconnect();
 

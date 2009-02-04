@@ -71,10 +71,9 @@ public interface Service {
     /**
      * Return registered medium given its name
      * @param name the medium's name
-     * @return a medium
-     * @throws NotFoundException if none registered under name
+     * @return a medium or "Other" if not found
      */
-    Medium mediumNamed( String name ) throws NotFoundException;
+    Medium mediumNamed( String name );
 
     /**
      * Register a medium
@@ -104,6 +103,19 @@ public interface Service {
      * @return a new default part.
      */
     Part createPart( Scenario scenario );
+
+
+    /**
+     * Create a flow between two nodes in this scenario, or between a node in this scenario and a
+     * connector in another scenario.
+     * @param source the source node.
+     * @param target the target node.
+     * @param name the name of the flow, possibly empty
+     * @return a new flow.
+     * @throws IllegalArgumentException when nodes are already connected or nodes are not both
+     * in this scenario, or one of the node isn't a connector in a different scenario.
+     */
+    public Flow connect( Node source, Node target, String name );
 
     /**
      * Create a new scenario.

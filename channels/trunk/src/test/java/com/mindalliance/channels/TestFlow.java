@@ -30,23 +30,18 @@ public class TestFlow extends AbstractChannelsTest {
     }
 
     public void testChannel() {
-        Channel channel = null;
-        assert( flow.getChannels().isEmpty() );
-        try {
-            channel = new Channel( Project.service().mediumNamed("Phone"), "800-123-4567" );
-        } catch ( NotFoundException e ) {
-            fail();
-        }
+        assertTrue( flow.getChannels().isEmpty() );
+        Channel channel = new Channel( Project.service().mediumNamed( "Phone" ), "800-123-4567" );
         flow.addChannel( channel );
         assertTrue( channel.isValid() );
         assertFalse(flow.getChannels().isEmpty() );
     }
 
     public void testMaxDelay() {
-        assertEquals( flow.getMaxDelay().getSeconds(), 0 );
-        final String s = "10 minutes";
+        assertEquals( 0, flow.getMaxDelay().getSeconds() );
+        String s = "10 minutes";
         flow.setMaxDelay( s );
-        assertTrue( s.equals(flow.getMaxDelay().toString()) );
+        assertEquals( s, flow.getMaxDelay().toString() );
     }
 
     public void testIsness() {
@@ -56,7 +51,7 @@ public class TestFlow extends AbstractChannelsTest {
 
     public void testGetTitle() {
         // just to make sure no NPE...
-        final String s = "somebody notify somebody of something";
+        String s = "somebody notify somebody of something";
         assertEquals( s, flow.toString() );
 
         flow.setName( null );

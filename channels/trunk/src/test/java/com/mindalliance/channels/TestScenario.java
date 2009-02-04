@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * Test a scenario in isolation.
  */
-@SuppressWarnings( { "OverlyLongMethod" } )
+@SuppressWarnings( { "OverlyLongMethod", "HardCodedStringLiteral" } )
 public class TestScenario extends TestCase {
 
     /** The scenario being tested. */
@@ -34,7 +34,7 @@ public class TestScenario extends TestCase {
         scenario.setDescription( null );
         assertEquals( "", scenario.getDescription() );
 
-        final String s = "Bla";
+        String s = "Bla";
         scenario.setDescription( s );
         assertSame( s, scenario.getDescription() );
     }
@@ -45,7 +45,7 @@ public class TestScenario extends TestCase {
         scenario.setName( null );
         assertEquals( "", scenario.getName() );
 
-        final String s = "Bla";
+        String s = "Bla";
         scenario.setName( s );
         assertSame( s, scenario.getName() );
     }
@@ -63,16 +63,16 @@ public class TestScenario extends TestCase {
     public void testNodes() {
         assertEquals( 1, scenario.getNodeCount() );
 
-        final Node p1 = scenario.getDefaultPart();
-        final Part p2 = service.createPart( scenario );
-        final Part p3 = service.createPart( scenario );
+        Node p1 = scenario.getDefaultPart();
+        Part p2 = service.createPart( scenario );
+        Part p3 = service.createPart( scenario );
 
         assertSame( p1, scenario.getNode( p1.getId() ) );
         assertSame( p2, scenario.getNode( p2.getId() ) );
         assertSame( p3, scenario.getNode( p3.getId() ) );
 
-        final Flow f1 = scenario.connect( p1, p2 );
-        final Flow f2 = scenario.connect( p2, p3 );
+        Flow f1 = service.connect( p1, p2, "" );
+        Flow f2 = service.connect( p2, p3, "" );
 
         assertEquals( 3, scenario.getNodeCount() );
         assertSame( f1, p1.getFlow( f1.getId() ) );
@@ -101,9 +101,9 @@ public class TestScenario extends TestCase {
     }
 
     public void testRemoveOnly() {
-        final Iterator<Node> nodes = scenario.nodes();
+        Iterator<Node> nodes = scenario.nodes();
         assertTrue( nodes.hasNext() );
-        final Node initial = nodes.next();
+        Node initial = nodes.next();
         assertSame( initial, scenario.getNode( initial.getId() ) );
 
         scenario.removeNode( initial );
@@ -111,32 +111,35 @@ public class TestScenario extends TestCase {
     }
 
     public void testSetNodes() {
-        final Set<Node> ps = new HashSet<Node>( 2 );
-        final Part p1 = new Part();
+        Set<Node> ps = new HashSet<Node>( 2 );
+        Part p1 = service.createPart( scenario );
         ps.add( p1 );
-        final Node p2 = new Part();
+        Node p2 = service.createPart( scenario );
         ps.add( p2 );
-        assertNull( p1.getScenario() );
-        assertNull( p2.getScenario() );
         scenario.setNodes( ps );
         assertSame( p1, scenario.getNode( p1.getId() ) );
         assertSame( p2, scenario.getNode( p2.getId() ) );
         assertSame( scenario, p1.getScenario() );
         assertSame( scenario, p2.getScenario() );
+
+        Set<Node> ps2 = new HashSet<Node>();
+        ps2.add( service.createPart( scenario ) );
+        scenario.setNodes( ps2 );
+        assertNull( scenario.getNode( p1.getId() ) );
+        assertNull( scenario.getNode( p2.getId() ) );
+        assertNull( p1.getScenario() );
+        assertNull( p2.getScenario() );
     }
 
     public void testConnect() {
-        final Part p1 = new Part();
-        final Part p2 = new Part();
+        Part p1 = service.createPart( scenario );
+        Part p2 = service.createPart( scenario );
 
-        try {
-            scenario.connect( p1, p2 );
-            fail();
-        } catch ( IllegalArgumentException ignored ) {}
-        final Part p3 = service.createPart( scenario );
-        final Part p4 = service.createPart( scenario );
+        service.connect( p1, p2, "" );
+        Part p3 = service.createPart( scenario );
+        Part p4 = service.createPart( scenario );
 
-        final Flow f = scenario.connect( p3, p4 );
+        Flow f = service.connect( p3, p4, "" );
         assertSame( p3, f.getSource() );
         assertSame( p4, f.getTarget() );
         assertSame( f, p3.getFlow( f.getId() ) );
@@ -145,16 +148,16 @@ public class TestScenario extends TestCase {
         assertSame( f, p4.requirements().next() );
 
         try {
-            scenario.connect( p3, p4 );
+            service.connect( p3, p4, "" );
             fail();
         } catch ( IllegalArgumentException ignored ) {}
     }
 
     public void testDisconnect() {
-        final Part p1 = service.createPart( scenario );
-        final Part p2 = service.createPart( scenario );
+        Part p1 = service.createPart( scenario );
+        Part p2 = service.createPart( scenario );
 
-        final Flow f = scenario.connect( p1, p2 );
+        Flow f = service.connect( p1, p2, "" );
 
         assertSame( f, p1.getFlow( f.getId() ) );
         assertSame( f, p2.getFlow( f.getId() ) );
@@ -164,22 +167,22 @@ public class TestScenario extends TestCase {
     }
 
     public void testFlows() {
-        final Part bob = service.createPart( scenario );
-        final Part sue = service.createPart( scenario );
-        final Part joe = service.createPart( scenario );
+        Part bob = service.createPart( scenario );
+        Part sue = service.createPart( scenario );
+        Part joe = service.createPart( scenario );
 
-        final Flow f1 = scenario.connect( bob, sue );
-        final Flow f2 = scenario.connect( bob, joe );
-        final Flow f3 = scenario.connect( sue, joe );
-        final Flow f4 = scenario.connect( joe, bob );
+        Flow f1 = service.connect( bob, sue, "" );
+        Flow f2 = service.connect( bob, joe, "" );
+        Flow f3 = service.connect( sue, joe, "" );
+        Flow f4 = service.connect( joe, bob, "" );
 
-        final Set<Flow> fs = new HashSet<Flow>();
+        Set<Flow> fs = new HashSet<Flow>();
         fs.add( f1 );
         fs.add( f2 );
         fs.add( f3 );
         fs.add( f4 );
 
-        final Iterator<Flow> flows = scenario.flows();
+        Iterator<Flow> flows = scenario.flows();
         assertTrue( flows.hasNext() );
         assertTrue( fs.contains( flows.next() ) );
         assertTrue( fs.contains( flows.next() ) );
@@ -200,27 +203,27 @@ public class TestScenario extends TestCase {
     }
 
     public void testDeleteLast() {
-        final Part dp = scenario.getDefaultPart();
+        Part dp = scenario.getDefaultPart();
 
-        final Iterator<Node> nodes = scenario.nodes();
+        Iterator<Node> nodes = scenario.nodes();
         assertSame( dp, nodes.next() );
         assertFalse( nodes.hasNext() );
 
         scenario.removeNode( dp );
-        final Iterator<Node> nodes2 = scenario.nodes();
+        Iterator<Node> nodes2 = scenario.nodes();
         assertSame( dp, nodes2.next() );
         assertFalse( nodes2.hasNext() );
 
-        final Flow out = dp.createOutcome( service );
-        final Connector c1 = (Connector) out.getTarget();
-        final Flow in  = dp.createRequirement( service );
-        final Connector c2 = (Connector) in.getSource();
+        Flow out = dp.createOutcome( service );
+        Connector c1 = (Connector) out.getTarget();
+        Flow in  = dp.createRequirement( service );
+        Connector c2 = (Connector) in.getSource();
         scenario.removeNode( dp );
 
         assertSame( dp, scenario.getNode( dp.getId() ) );
         assertSame( c1, scenario.getNode( c1.getId() ) );
         assertSame( c2, scenario.getNode( c2.getId() ) );
-        final Part p2 = service.createPart( scenario );
+        Part p2 = service.createPart( scenario );
         scenario.removeNode( dp );
         assertSame( p2, scenario.getNode( p2.getId() ) );
         assertNull( scenario.getNode( dp.getId() ) );

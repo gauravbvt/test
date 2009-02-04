@@ -1,8 +1,6 @@
 package com.mindalliance.channels;
 
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
@@ -15,11 +13,14 @@ import java.util.Set;
 /**
  * A node in the flow graph
  */
-@Entity @Inheritance( strategy = InheritanceType.SINGLE_TABLE )
+@Entity
 public abstract class Node extends ModelObject {
 
     /** Initial capacity of outcome and requirement flows. */
     private static final int INITIAL_CAPACITY = 5;
+
+    /** The name for new flows. */
+    private static final String DEFAULT_FLOW_NAME = "";
 
     /** The incoming arrows. */
     private Set<Flow> requirements;
@@ -95,16 +96,14 @@ public abstract class Node extends ModelObject {
      * @return an internal flow to a new connector
      */
     public Flow createOutcome( Service service ) {
-        final Flow flow = getScenario().connect( this, service.createConnector( getScenario() ) );
-        addOutcome( flow );
-        return flow;
+        return service.connect( this, service.createConnector( getScenario() ), DEFAULT_FLOW_NAME );
     }
 
     /**
      * Add an outcome to this node.
      * @param outcome the outcome
      */
-    void addOutcome( Flow outcome ) {
+    public void addOutcome( Flow outcome ) {
         getOutcomes().add( outcome );
         outIndex.put( outcome.getId(), outcome );
         outcome.setSource( this );
@@ -163,16 +162,14 @@ public abstract class Node extends ModelObject {
      * @return a flow from a new connector to this node
      */
     public Flow createRequirement( Service service ) {
-        final Flow flow = getScenario().connect( service.createConnector( getScenario() ), this );
-        addRequirement( flow );
-        return flow;
+        return service.connect( service.createConnector( getScenario() ), this, DEFAULT_FLOW_NAME );
     }
 
     /**
      * Add a requirement to this node.
      * @param requirement the requirement
      */
-    void addRequirement( Flow requirement ) {
+    public void addRequirement( Flow requirement ) {
         getRequirements().add( requirement );
         reqIndex.put( requirement.getId(), requirement );
         requirement.setTarget( this );
@@ -229,22 +226,18 @@ public abstract class Node extends ModelObject {
     }
 
     /**
-     * Test if this node is connected to another node.
-     * @param outcome test if node is an outcome, otherwise a requirement
-     * @param node the other node
-     * @return true if connected.
-     */
-    public boolean isConnectedTo( boolean outcome, Node node ) {
+      * Test if this node is connected to another node by a flow of a given name.
+      * @param outcome test if node is an outcome, otherwise a requirement
+      * @param node the other node
+      * @param name the name of the flow
+      * @return true if connected.
+      */
+    public boolean isConnectedTo( boolean outcome, Node node, String name ) {
         boolean result = false;
-        final Set<Flow> flows = outcome ? outcomes : requirements;
+        Set<Flow> flows = outcome ? outcomes : requirements;
         for ( Iterator<Flow> it = flows.iterator(); !result && it.hasNext(); ) {
-            final Flow f = it.next();
-            if ( outcome && f.getTarget().equals( node ) )
-                result = true;
-            else if ( !outcome && f.getSource().equals( node ) )
-                result = true;
-            else if ( !f.isInternal() && node.equals( ( (ExternalFlow) f ).getConnector() ) )
-                result = true;
+            Flow f = it.next();
+            result = name.equals( f.getName() ) && f.isConnectedTo( outcome, node );
         }
 
         return result;

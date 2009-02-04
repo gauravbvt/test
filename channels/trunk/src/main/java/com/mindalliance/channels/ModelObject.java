@@ -6,7 +6,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
 import java.text.Collator;
 import java.util.Date;
@@ -15,10 +17,8 @@ import java.util.Date;
  * An object with name, id and description, comparable by its toString() values.
  */
 @Entity @Inheritance( strategy = InheritanceType.JOINED )
+@Table( uniqueConstraints = @UniqueConstraint( columnNames = { "id" } ) )
 public abstract class ModelObject implements Serializable, Comparable<ModelObject>, Identifiable {
-
-    /** Cheap way of creating unique default ids. Overloaded by hibernate eventually. */
-    private static long Counter = 1L ;
 
     /** Unique id of this object. */
     private long id;
@@ -34,7 +34,6 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
 
     //=============================
     protected ModelObject() {
-        setId( Counter++ );
     }
 
     /**

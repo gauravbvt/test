@@ -9,6 +9,9 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.ExternalFlow;
+import com.mindalliance.channels.Node;
+import com.mindalliance.channels.InternalFlow;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 
@@ -24,6 +27,9 @@ import java.util.Set;
  * An in-memory, no-transactions implementation of a store.
  */
 public final class Memory implements Dao {
+
+    /** Counter for generated modelobjects id. */
+    private long idCounter = 1L;
 
     /** The scenarios, for convenience... */
     private Set<Scenario> scenarios = new HashSet<Scenario>();
@@ -49,15 +55,15 @@ public final class Memory implements Dao {
     /** {@inheritDoc} */
     public void add( ModelObject object ) {
         if ( object instanceof ResourceSpec ) {
-            final ResourceSpec resourceSpec = (ResourceSpec) object;
+            ResourceSpec resourceSpec = (ResourceSpec) object;
             if ( resourceSpec.isEmpty()/* || resourceSpec.isEntityOnly()*/ )
                 return;
         }
-
-        final long id = object.getId();
-        if ( idIndex.containsKey( id ) )
+        if ( idIndex.containsKey( object.getId() ) )
             throw new DuplicateKeyException();
-        idIndex.put( id, object );
+
+        object.setId( newId() );
+        idIndex.put( object.getId(), object );
 
         if ( object instanceof Scenario )
             scenarios.add( (Scenario) object );
@@ -71,12 +77,34 @@ public final class Memory implements Dao {
 
     /** {@inheritDoc} */
     public Part createPart() {
-        return new Part();
+        Part part = new Part();
+        part.setId( newId() );
+        return part;
     }
 
     /** {@inheritDoc} */
     public Connector createConnector() {
-        return new Connector();
+        Connector connector = new Connector();
+        connector.setId( newId() );
+        return connector;
+    }
+
+    /** {@inheritDoc} */
+    public ExternalFlow createExternalFlow( Node source, Node target, String name ) {
+        ExternalFlow externalFlow = new ExternalFlow( source, target, name );
+        externalFlow.setId( newId() );
+        return externalFlow;
+    }
+
+    /** {@inheritDoc} */
+    public InternalFlow createInternalFlow( Node source, Node target, String name ) {
+        InternalFlow internalFlow = new InternalFlow( source, target, name );
+        internalFlow.setId( newId() );
+        return internalFlow;
+    }
+
+    private long newId() {
+        return idCounter++;
     }
 
     /** {@inheritDoc} */
@@ -100,9 +128,9 @@ public final class Memory implements Dao {
             scenarios.remove( scenario );
             idIndex.remove( scenario.getId() );
 
-            final Iterator<Part> parts = scenario.parts();
+            Iterator<Part> parts = scenario.parts();
             while ( parts.hasNext() ) {
-                final Part p = parts.next();
+                Part p = parts.next();
                 p.removeAllOutcomes();
                 p.removeAllRequirements();
             }
@@ -111,10 +139,10 @@ public final class Memory implements Dao {
 
     private void remove( ResourceSpec resourceSpec ) {
         //  Remove all permanent specs equal or narrowing resourceSpec
-        final List<ResourceSpec> toDelete = new ArrayList<ResourceSpec>();
-        final Iterator<ResourceSpec> resourceSpecs = iterate( ResourceSpec.class );
+        List<ResourceSpec> toDelete = new ArrayList<ResourceSpec>();
+        Iterator<ResourceSpec> resourceSpecs = iterate( ResourceSpec.class );
         while ( resourceSpecs.hasNext() ) {
-            final ResourceSpec spec = resourceSpecs.next();
+            ResourceSpec spec = resourceSpecs.next();
             if ( spec.narrowsOrEquals( resourceSpec ) ) toDelete.add( spec );
         }
         for ( ResourceSpec spec : toDelete ) {
@@ -129,14 +157,14 @@ public final class Memory implements Dao {
     private ModelObject find( long id ) throws NotFoundException {
         ModelObject result = idIndex.get( id );
         if ( result == null ) {
-            final Iterator<Scenario> iterator = iterate( Scenario.class );
+            Iterator<Scenario> iterator = iterate( Scenario.class );
             while ( result == null && iterator.hasNext() ) {
-                final Scenario scenario = iterator.next();
+                Scenario scenario = iterator.next();
                 result = scenario.getNode( id );
                 if ( result == null ) {
-                    final Iterator<Flow> flows = scenario.flows();
+                    Iterator<Flow> flows = scenario.flows();
                     while ( result == null && flows.hasNext() ) {
-                        final Flow flow = flows.next();
+                        Flow flow = flows.next();
                         if ( flow.getId() == id ) result = flow;
                     }
                 }
@@ -176,12 +204,12 @@ public final class Memory implements Dao {
      * @param resourceSpec a resource specification being deleted
      */
     private void cascadeDeleteResourceSpecToParts( ResourceSpec resourceSpec ) {
-        final Iterator<Scenario> allScenarios = iterate( Scenario.class );
+        Iterator<Scenario> allScenarios = iterate( Scenario.class );
         while ( allScenarios.hasNext() ) {
-            final Scenario scenario = allScenarios.next();
-            final Iterator<Part> parts = scenario.parts();
+            Scenario scenario = allScenarios.next();
+            Iterator<Part> parts = scenario.parts();
             while ( parts.hasNext() ) {
-                final Part part = parts.next();
+                Part part = parts.next();
                 part.removeResourceSpec( resourceSpec );
             }
         }

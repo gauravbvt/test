@@ -19,19 +19,17 @@ public class EvacuationScenario extends Scenario {
     public EvacuationScenario() {
     }
 
-    public EvacuationScenario( Service service ) throws NotFoundException {
+    public EvacuationScenario( Service service ) {
         setName( "Building Evacuation" );
 
-        final Part p = getDefaultPart();
+        Part p = service.createPart( this );
         p.setActor( service.findOrCreate( Actor.class, "Sam Adams" ) );
         p.setTask( "supervising evacuation" );
-
-        final Flow goAhead = p.createRequirement( service );
+        Flow goAhead = p.createRequirement( service );
         goAhead.setName( "go-ahead" );
         goAhead.setCritical( true );
-        goAhead.addChannel( new Channel(service.mediumNamed("Phone"), "800-555-4433" ) );
-
-        final Flow end = p.createOutcome( service );
+        goAhead.addChannel( new Channel( service.mediumNamed( "Phone" ), "800-555-4433" ) );
+        Flow end = p.createOutcome( service );
         end.setName( "end" );
     }
 }

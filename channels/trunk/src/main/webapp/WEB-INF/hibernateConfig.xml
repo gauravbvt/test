@@ -21,12 +21,14 @@
       <!--<property name="dataSource" ref="db"/>-->
       <!--<property name="packagesToScan"><list>-->
           <!--<value>com.mindalliance.channels</value>-->
+          <!--<value>com.mindalliance.channels.dao</value>-->
       <!--</list></property>-->
       <!--<property name="hibernateProperties">-->
         <!--<value>-->
           <!--hibernate.dialect=org.hibernate.dialect.HSQLDialect-->
           <!--hibernate.hbm2ddl.auto=create-drop-->
           <!--hibernate.show_sql=true-->
+          <!--hibernate.connection.release_mode=on_close-->
         <!--</value>-->
       <!--</property>-->
     <!--</bean>-->

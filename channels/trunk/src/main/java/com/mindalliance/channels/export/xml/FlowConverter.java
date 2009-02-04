@@ -10,6 +10,7 @@ import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.pages.Project;
@@ -22,11 +23,13 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.text.MessageFormat;
 
 /**
  * An XStream Flow converter.
@@ -234,11 +237,15 @@ public class FlowConverter implements Converter {
         return flows;
     }
 
-    private List<Flow> makeFlows( Scenario scenario, List<Node> sources, List<Node> targets, String idValue ) {
+    private List<Flow> makeFlows(
+            Scenario scenario, List<Node> sources, List<Node> targets, String idValue ) {
+
         List<Flow> flows = new ArrayList<Flow>();
+        Service service = Project.service();
         for ( Node source : sources ) {
             for ( Node target : targets ) {
-                Flow flow = scenario.connect( source, target );
+                // TODO JF - Figure out what to pass as flow name
+                Flow flow = service.connect( source, target, "" );
                 flows.add( flow );
                 // Register flow id if internal because it is guaranteed to be the exported flow
                 if ( flow.isInternal() ) {
@@ -323,7 +330,8 @@ public class FlowConverter implements Converter {
             assert reader.getNodeName().equals( "connected-to" );
             String scenarioName = reader.getAttribute( "scenario" );
             try {
-                Scenario externalScenario = Project.service().findScenario( scenarioName );
+                Service service = Project.service();
+                Scenario externalScenario = service.findScenario( scenarioName );
                 String roleName = null;
                 String organizationName = null;
                 String task = null;
@@ -345,16 +353,19 @@ public class FlowConverter implements Converter {
                         organizationName,
                         task );
                 for ( Part externalPart : externalParts ) {
+                    // TODO JF - figure out flow names
+                    String flowName = "";
                     if ( isSource ) {
-                        externalScenario.connect( externalPart, connector );
+                        service.connect( externalPart, connector, flowName );
                     } else {
-                        externalScenario.connect( connector, externalPart );
+                        service.connect( connector, externalPart, flowName );
                     }
                 }
             }
-            catch ( NotFoundException e ) {
+            catch ( NotFoundException ignored ) {
                 // TODO - replace by logging
-                System.out.println( "scenario " + scenarioName + " not found" );
+                LoggerFactory.getLogger( getClass() ).warn( MessageFormat.format(
+                        "scenario {0} not found", scenarioName ) );
             }
             reader.moveUp();
         }

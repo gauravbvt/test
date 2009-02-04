@@ -14,13 +14,13 @@ public class TestConfig extends AbstractChannelsTest {
     }
 
     public void testContext() {
-        final MockServletContext context = new MockServletContext();
+        MockServletContext context = new MockServletContext();
         context.addInitParameter(
                 ContextLoader.CONFIG_LOCATION_PARAM,
                 "WEB-INF/applicationContext.xml WEB-INF/hibernateConfig.xml" );           // NON-NLS
-        final ApplicationContext ctx = new ContextLoader().initWebApplicationContext( context );
+        ApplicationContext ctx = new ContextLoader().initWebApplicationContext( context );
 
-        final Project p = (Project) ctx.getBean( "wicketApplication" );                   // NON-NLS
+        Project p = (Project) ctx.getBean( "wicketApplication" );                         // NON-NLS
         assertNotNull( p );
     }
 }

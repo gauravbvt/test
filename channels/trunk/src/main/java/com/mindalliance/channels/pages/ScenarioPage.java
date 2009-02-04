@@ -189,6 +189,8 @@ public final class ScenarioPage extends WebPage {
                 LOG.warn( "Invalid scenario specified in parameters. Using default." );
             } catch ( NotFoundException ignored ) {
                 LOG.warn( "Unknown scenario specified in parameters. Using default." );
+            } catch ( ClassCastException ignored ) {
+                LOG.warn( "Other object specified as scenario in parameters. Using default." );
             }
         return null;
     }

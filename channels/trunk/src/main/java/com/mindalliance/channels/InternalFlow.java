@@ -20,7 +20,8 @@ public class InternalFlow extends Flow {
     public InternalFlow() {
     }
 
-    public InternalFlow( Node source, Node target ) {
+    public InternalFlow( Node source, Node target, String name ) {
+        setName( name );
         this.source = source;
         this.target = target;
     }
@@ -50,13 +51,13 @@ public class InternalFlow extends Flow {
     /** {@inheritDoc} */
     @Override
     public void disconnect() {
-        final Node s = source;
+        Node s = source;
         s.removeOutcome( this );
         if ( s.isConnector() )
             s.getScenario().removeNode( s );
         source = null;
 
-        final Node t = target;
+        Node t = target;
         t.removeRequirement( this );
         if ( t.isConnector() ) {
             t.getScenario().removeNode( t );

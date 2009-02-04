@@ -33,6 +33,9 @@ public class UserIssue extends ModelObject implements Issue {
      */
     private String reportedBy = "";
 
+    public UserIssue() {
+    }
+
     /**
      * Create a user issue
      *
