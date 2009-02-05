@@ -6,7 +6,7 @@ import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.pages.ProfileLink;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.pages.components.ModelObjectPanel;
+import com.mindalliance.channels.pages.components.OrganizationPanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -47,7 +47,7 @@ public class OrganizationPage extends WebPage {
         add( new Label( "title", new Model<String>( "Actor: " + organization.getName() ) ) );
         add( new Label( "header-title", new PropertyModel<String>( organization, "name" ) ) );
         add ( new ExternalLink("index", "index.html"));
-        add( new ModelObjectPanel( "organization-form", new Model<Organization>( organization ) ) );
+        add( new OrganizationPanel( "organization-form", new Model<Organization>( organization ) ) );
         add( new ProfileLink( "profile-link",
                         new AbstractReadOnlyModel<ResourceSpec>() {
                             public ResourceSpec getObject() {

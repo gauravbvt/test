@@ -362,6 +362,12 @@ public class ResourceSpec extends ModelObject implements Channelable {
         if ( role != other.getRole() && !other.isAnyRole() )
             return false;
         // Todo compare inclusion
+        /*
+        if ( !other.isAnyOrganization()
+                && ( organization == null || !organization.isSameOrWithin( other.getOrganization() ) ) )
+            return false;
+        
+         */
         if ( organization != other.getOrganization() && !other.isAnyOrganization() )
             return false;
         // Todo compare inclusion, not equality

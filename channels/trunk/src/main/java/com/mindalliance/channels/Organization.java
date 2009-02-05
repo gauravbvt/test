@@ -11,6 +11,8 @@ import javax.persistence.Transient;
 @Entity
 public class Organization extends ModelObject {
 
+    private Organization parent;
+
     public Organization() {
     }
 
@@ -44,5 +46,34 @@ public class Organization extends ModelObject {
         return true;
     }
 
+    public Organization getParent() {
+        return parent;
+    }
+
+    public void setParent( Organization parent ) {
+        this.parent = parent;
+    }
+
+    /**
+     * Whether this organization has for parent a given organization (transitive)
+     * @param organization an organization
+     * @return a boolean
+     */
+    public boolean isWithin( Organization organization ) {
+        if ( parent == null )
+            return false;
+        else
+            return parent == organization || parent.isWithin( organization );
+
+    }
+
+    /**
+     * Whether this is the same or within a given organization
+     * @param organization an organization
+     * @return a boolean
+     */
+    public boolean isSameOrWithin( Organization organization ) {
+        return this == organization || isWithin( organization );
+    }
 }
 

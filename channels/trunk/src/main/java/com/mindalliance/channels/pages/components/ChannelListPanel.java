@@ -117,8 +117,7 @@ public class ChannelListPanel extends Panel {
             for ( Channel channel : aChannelable.getChannels() ) {
                 if ( !containsChannel( alreadySetChannels, channel )
                         && !containsChannel( candidates, channel )
-                        && channel.isValid() )
-                {
+                        && channel.isValid() ) {
                     candidates.add( channel );
                 }
             }
@@ -142,6 +141,7 @@ public class ChannelListPanel extends Panel {
 
     /**
      * Find channelables that have candidate channels for a given channelable
+     *
      * @param channelable the given channelable
      * @return a list of Channelables
      */
@@ -157,9 +157,11 @@ public class ChannelListPanel extends Panel {
                                 part.resourceSpec() ) );
             }
         } else {
-            relatedChannelables.addAll(
-                    Project.service().findAllResourcesNarrowingOrEqualTo(
-                            (ResourceSpec) channelable ) );
+            ResourceSpec resourceSpec = (ResourceSpec) channelable;
+            if ( !resourceSpec.isEmpty() ) {
+                relatedChannelables.addAll(
+                        Project.service().findAllResourcesNarrowingOrEqualTo( resourceSpec ) );
+            }
         }
         return relatedChannelables;
     }

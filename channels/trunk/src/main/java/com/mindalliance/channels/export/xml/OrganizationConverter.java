@@ -5,6 +5,7 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.pages.Project;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.ConversionException;
 
 /**
  * XStream organization converter
@@ -39,13 +40,25 @@ public class OrganizationConverter extends EntityConverter {
     protected void writeSpecifics( ModelObject entity,
                                    HierarchicalStreamWriter writer,
                                    MarshallingContext context ) {
-       // Do nothing
+        Organization org = (Organization) entity;
+        Organization parent = org.getParent();
+        if (parent != null && !parent.getName().trim().isEmpty()) {
+            writer.startNode( "parent" );
+            writer.setValue( parent.getName() );
+            writer.endNode();
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     protected void setSpecific( ModelObject entity, String nodeName, String value ) {
-       // Do nothing
+        if (nodeName.equals("parent")) {
+            Organization org = (Organization)entity;
+            org.setParent( Organization.named(value));
+        }
+        else {
+            throw new ConversionException( "Unknown element " + nodeName );
+        }
     }
 }

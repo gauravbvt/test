@@ -7,7 +7,12 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.AttributeModifier;
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.pages.ModelObjectLink;
+import com.mindalliance.channels.pages.Project;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -20,7 +25,7 @@ public class ModelObjectPanel extends Panel {
     /**
      * The model object being edited
      */
-    private ModelObject mo;
+    protected ModelObject mo;
 
     public ModelObjectPanel( String id, IModel<? extends ModelObject> model ) {
         super( id, model );
@@ -39,8 +44,14 @@ public class ModelObjectPanel extends Panel {
         moDetailsDiv.add(
                 new TextArea<String>( "description",                                      // NON-NLS
                         new PropertyModel<String>( mo, "description" ) ) );
+        addSpecifics( moDetailsDiv );
         moDetailsDiv.add( new AttachmentPanel( "attachments", mo ) );
 
     }
+
+    protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
+        // do nothing
+    }
+    
 
 }

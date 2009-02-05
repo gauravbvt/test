@@ -12,6 +12,7 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ExternalFlow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.InternalFlow;
+import com.mindalliance.channels.Organization;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 
@@ -193,8 +194,25 @@ public final class Memory implements Dao {
             remove( resourceSpec.getRole() );
         } else if ( resourceSpec.isOrganizationOnly() ) {
             remove( resourceSpec.getOrganization() );
+            cascadeDeleteOrganizationToEntities(resourceSpec.getOrganization());
         } else if ( resourceSpec.isJurisdictionOnly() ) {
             remove( resourceSpec.getJurisdiction() );
+        }
+    }
+
+    /**
+     * Remove the deleted organization from entity definitions
+     * @param organization the deleted organization
+     */
+    private void cascadeDeleteOrganizationToEntities( Organization organization ) {
+        Iterator<Organization> organizations = iterate(Organization.class);
+        while (organizations.hasNext()) {
+            Organization org = organizations.next();
+            Organization parent = org.getParent();
+            if (parent != null && parent == organization) {
+                // replace deleted parent by parent's parent (could be null)
+                org.setParent( parent.getParent() );
+            }
         }
     }
 
