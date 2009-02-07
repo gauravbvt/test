@@ -75,5 +75,16 @@ public class Organization extends ModelObject {
     public boolean isSameOrWithin( Organization organization ) {
         return this == organization || isWithin( organization );
     }
+
+    /**
+     * A string that shows line of parent organizations
+     * @return a String
+     */
+    public String parentage() {
+        String parentage = (parent == null) ?
+                "" : parent.getName() + "," + parent.parentage();
+        return (parentage.endsWith( "," )) ?
+                parentage.substring( 0, parentage.length() - 1 ) : parentage;
+    }
 }
 

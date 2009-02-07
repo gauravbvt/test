@@ -30,12 +30,19 @@ public interface Service {
     <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException;
 
     /**
-     * Iterate on objects of the given class.
+     * Iterate on model objects of the given class.
      * @param clazz the given subclass of model object.
      * @param <T> a subclass of model object.
      * @return an iterator
      */
     <T extends ModelObject> Iterator<T> iterate( Class<T> clazz );
+
+    /**
+     * List all model objects of the given class
+     * @param clazz the given subclass of model object.
+     * @return a list
+     */
+    <T extends ModelObject> List<T> list( Class<T> clazz );
 
     /**
      * Iterate on ModelObject that are entities.
@@ -181,4 +188,11 @@ public interface Service {
      * @param resourceSpec resource spec to add or update from
      */
     void addOrUpdate( ResourceSpec resourceSpec );
+
+    /**
+     * Find all known actors that belong to a resource spec
+     * @param resourceSpec a resource spec
+     * @return a list of actors
+     */
+    List<Actor> findAllActors( ResourceSpec resourceSpec );
 }

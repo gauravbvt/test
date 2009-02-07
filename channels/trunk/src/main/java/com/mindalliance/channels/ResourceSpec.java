@@ -8,6 +8,7 @@ import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -138,7 +139,9 @@ public class ResourceSpec extends ModelObject implements Channelable {
         this.channels.addAll( channels );
     }
 
-    /** {@inheritDoc */
+    /**
+     * {@inheritDoc
+     */
     @Transient
     public String getChannelsString() {
         return Channel.toString( channels );
@@ -454,4 +457,29 @@ public class ResourceSpec extends ModelObject implements Channelable {
         return isPredefined() ? "added" : "from tasks";
     }
 
+    /**
+     * Get all explicit and implied channels
+     *
+     * @return list of channels
+     */
+    public List<Channel> allChannels() {
+        List<Channel> allChannels = new ArrayList<Channel>();
+        // To prevent duplicates. Did not implement equal/hashCode on Channel because of UI constraints.
+        List<String> channelStrings = new ArrayList<String>();
+        Iterator<ResourceSpec> resourceSpecs = Project.service().iterate( ResourceSpec.class );
+        while ( resourceSpecs.hasNext() ) {
+            ResourceSpec rs = resourceSpecs.next();
+            if ( this.narrowsOrEquals( rs ) ) {
+                List<Channel> resourceChannels = rs.getChannels();
+                for ( Channel resourceChannel : resourceChannels ) {
+                    String channelString = resourceChannel.toString();
+                    if ( !channelStrings.contains( channelString ) ) {
+                        channelStrings.add( channelString );
+                        allChannels.add( resourceChannel );
+                    }
+                }
+            }
+        }
+        return allChannels;
+    }
 }

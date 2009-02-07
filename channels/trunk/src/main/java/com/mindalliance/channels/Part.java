@@ -1,9 +1,14 @@
 package com.mindalliance.channels;
 
+import org.apache.wicket.model.IModel;
+
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import java.text.MessageFormat;
+import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 /**
  * A part in a scenario.

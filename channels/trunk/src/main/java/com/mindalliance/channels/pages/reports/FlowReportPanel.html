@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div wicket:id="flow"> <!-- class="send-notification | send-answer | receive-notification | receive-answer" -->
+        <span wicket:id="information">information</span> <!-- class= "information" or "critical-information" -->
+        <!-- receiving from or sending to -->
+        <span class="other-part">
+            <span class="resource" wicket:id="resource">resource</span>
+        </span>
+        <span class="urgency">max delay</span>
+        <span class="section">Channels</span>
+        <span wicket:id="channels">channels pannel</span>
+        <span class="section">Actors</span>
+        <div wicket:id="actors"> <!-- class="any-actor | all-actors" -->
+             <span wicket:id="actor">actor at the other end of flow</span>
+        </div>
+        <span class="section">Issues</span>
+        <span wicket:id="issues">issues panel</span>
+    </div>
+</wicket:panel>
+</body>
+</html>

@@ -86,6 +86,12 @@ public final class Project extends WebApplication {
      */
     private Analyst analyst;
 
+    private String projectName = "Untitled";
+
+    private String client = "Unnamed";
+
+    private String description = "";
+
     /**
      * Default Constructor.
      */
@@ -193,6 +199,30 @@ public final class Project extends WebApplication {
 
     public void setAnalyst( Analyst analyst ) {
         this.analyst = analyst;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName( String name ) {
+        this.projectName = name;
+    }
+
+    public String getClient() {
+        return client;
+    }
+
+    public void setClient( String client ) {
+        this.client = client;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription( String description ) {
+        this.description = description;
     }
 
     /**

@@ -242,4 +242,8 @@ public abstract class Flow extends ModelObject implements Channelable {
         return outcome && getTarget().equals( node )
             || !outcome && getSource().equals( node );
     }
+    /** {@inheritDoc } */
+    public List<Channel> allChannels() {
+        return channels;
+    }
 }

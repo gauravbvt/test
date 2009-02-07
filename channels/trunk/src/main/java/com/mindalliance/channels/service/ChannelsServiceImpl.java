@@ -170,6 +170,14 @@ public class ChannelsServiceImpl implements Service {
         return dao.iterate( clazz );
     }
 
+    /** {@inheritDoc} */
+    public <T extends ModelObject> List<T> list( Class<T> clazz ) {
+        List<T> list = new ArrayList<T>();
+        Iterator<T> iterator = iterate( clazz );
+        while( iterator.hasNext() ) list.add( iterator.next() );
+        return list;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -421,6 +429,29 @@ public class ChannelsServiceImpl implements Service {
         else {
             permanent.setChannels( resourceSpec.getChannels() );
         }
+    }
+
+    /** {@inheritDoc}
+     */
+    @SuppressWarnings( { "unchecked" } )
+    public List<Actor> findAllActors( ResourceSpec resourceSpec ) {
+        Set<Actor> actors = new HashSet<Actor>();
+        Iterator<ResourceSpec> actorResourceSpecs = new FilterIterator(
+                iterate( ResourceSpec.class ),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return ((ResourceSpec)object).getActor() != null;
+                    }
+                });
+        while( actorResourceSpecs.hasNext() ) {
+            ResourceSpec actorResourceSpec = actorResourceSpecs.next();
+            if (actorResourceSpec.narrowsOrEquals( resourceSpec )) {
+                actors.add(actorResourceSpec.getActor());
+            }
+        }
+        List<Actor> results = new ArrayList<Actor>();
+        results.addAll(actors);
+        return results;
     }
 
     /**

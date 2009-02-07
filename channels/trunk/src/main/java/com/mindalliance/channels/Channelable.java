@@ -35,4 +35,10 @@ public interface Channelable extends Serializable {
      * @return a String
      */
     String getChannelsString();
+
+    /**
+     * Get all explicit and implied channels
+     * @return list of channels
+     */
+    List<Channel> allChannels();
 }

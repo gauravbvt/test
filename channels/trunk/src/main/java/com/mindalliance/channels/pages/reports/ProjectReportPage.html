@@ -1,0 +1,24 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html
+        xmlns:wicket="http://wicket.apache.org/"
+        lang="en">
+<head>
+    <title wicket:id="title">[Title]</title>
+    <link rel="stylesheet" href="report.css" type="text/css">
+</head>
+
+<body class="report">
+    <div id="project-header">
+        <span class="name" wicket:id="project-name">project name</span>
+        <span class="date" wicket:id="date">date</span>
+        <span class="client" wicket:id="project-client">client</span>
+        <span class="description" wicket:id="project-description">description</span>
+    </div>
+    <span class="section">Scenarios</span>
+    <div id="scenarios">
+       <div wicket:id="scenarios"><span wicket:id="scenario">[scenario report panel]</span></div>
+    </div>
+<!-- TODO - add directory of actors, organizations and places -->
+</body>
+</html>

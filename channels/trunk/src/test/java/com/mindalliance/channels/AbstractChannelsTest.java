@@ -54,6 +54,9 @@ public class AbstractChannelsTest extends TestCase {
         project.setExporter( xmlStreamer );
         project.setImporter( xmlStreamer );
         project.setGraphBuilder( new DefaultGraphBuilder() );
+        project.setProjectName("Test");
+        project.setClient("Mind-Alliance");
+        project.setDescription("This is a test project");
         FileBasedManager attachmentManager = new FileBasedManager();
         /*  <bean id="attachmentManager" class="com.mindalliance.channels.attachments.FileBasedManager">
             <property name="directory" value="target/channels-1.0-SNAPSHOT/uploads"/>

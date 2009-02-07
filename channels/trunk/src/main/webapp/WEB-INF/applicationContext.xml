@@ -79,6 +79,9 @@
         <property name="importer" ref="serializer"/>
         <property name="exporter" ref="serializer"/>
         <property name="analyst" ref="analyst"/>
+        <property name="projectName" value="Test project"/>
+        <property name="client" value="Mind-Alliance"/>
+        <property name="description" value="This is a test project"/>
     </bean>
 
     <!-- Flow diagram -->
