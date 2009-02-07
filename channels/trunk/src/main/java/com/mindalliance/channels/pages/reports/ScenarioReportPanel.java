@@ -44,37 +44,39 @@ public class ScenarioReportPanel extends Panel {
         add( new Label( "name", scenario.getName() ) );
         add( new Label( "description", scenario.getDescription() ) );
         List<Organization> organizations = findTopOrganizationsInScenario();
-        add (new ListView<Organization>("organizations", organizations){
+        add( new ListView<Organization>( "organizations", organizations ) {
             protected void populateItem( ListItem<Organization> item ) {
                 Organization organization = item.getModelObject();
                 item.add( new OrganizationReportPanel(
                         "organization",
-                        new Model<Organization>(organization),
-                        scenario));
+                        new Model<Organization>( organization ),
+                        scenario ) );
             }
-        });
-        add( new IssuesReportPanel("issues", new Model<ModelObject>(scenario)));
+        } );
+        add( new IssuesReportPanel( "issues", new Model<ModelObject>( scenario ) ) );
     }
 
     /**
      * Find organizations involved in scenario but without parent organizations
+     *
      * @return a list of organizations
      */
     private List<Organization> findTopOrganizationsInScenario() {
         Set<Organization> organizations = new HashSet<Organization>();
         Iterator<Part> parts = scenario.parts();
-        while(parts.hasNext()) {
+        while ( parts.hasNext() ) {
             Part part = parts.next();
-            if (part.getOrganization() != null) {
-                organizations.add(part.getOrganization());
+            Organization organization = part.getOrganization();
+            if ( organization != null && organization.getParent() == null ) {
+                organizations.add( part.getOrganization() );
             }
         }
         List<Organization> results = new ArrayList<Organization>();
-        results.addAll(organizations);
-        Collections.sort(results, new Comparator<Organization>() {
+        results.addAll( organizations );
+        Collections.sort( results, new Comparator<Organization>() {
             /** {@inheritDoc} */
             public int compare( Organization org1, Organization org2 ) {
-                return Collator.getInstance().compare(org1.getName(), org2.getName());
+                return Collator.getInstance().compare( org1.getName(), org2.getName() );
             }
         } );
         return results;

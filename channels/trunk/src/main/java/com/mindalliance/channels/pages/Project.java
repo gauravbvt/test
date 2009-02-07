@@ -12,6 +12,7 @@ import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.pages.entities.ActorPage;
 import com.mindalliance.channels.pages.entities.OrganizationPage;
 import com.mindalliance.channels.pages.entities.RolePage;
+import com.mindalliance.channels.pages.reports.ProjectReportPage;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.userdetails.UserDetails;
@@ -108,7 +109,8 @@ public final class Project extends WebApplication {
         getMarkupSettings().setStripWicketTags( true );
 //        getRequestCycleSettings().setRenderStrategy( IRequestCycleSettings.REDIRECT_TO_RENDER );
         mount( new QueryStringUrlCodingStrategy( "index.html", IndexPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "node.html", ScenarioPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "report.html", ProjectReportPage.class ) );
+         mount( new QueryStringUrlCodingStrategy( "node.html", ScenarioPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.xml", ExportPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.png", FlowPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "role.html", RolePage.class ) );

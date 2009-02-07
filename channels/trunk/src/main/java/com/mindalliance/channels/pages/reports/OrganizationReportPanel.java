@@ -47,13 +47,13 @@ public class OrganizationReportPanel extends Panel {
     }
 
     private void init() {
-        WebMarkupContainer orgDiv = new WebMarkupContainer("organizationDiv");
-        add (orgDiv);
+        WebMarkupContainer orgDiv = new WebMarkupContainer( "organizationDiv" );
+        add( orgDiv );
         String styleClass = organization.getParent() == null ? "top-organization" : "sub-organization";
-        orgDiv.add (new AttributeModifier("class", true, new Model<String>(styleClass)) );
-        orgDiv.add( new Label("name", organization.getName()));
-        orgDiv.add( new Label("description", organization.getDescription()));
-        orgDiv.add( new Label("parentage", organization.parentage()));
+        orgDiv.add( new AttributeModifier( "class", true, new Model<String>( styleClass ) ) );
+        orgDiv.add( new Label( "name", organization.getName() ) );
+        orgDiv.add( new Label( "description", organization.getDescription() ) );
+        orgDiv.add( new Label( "parentage", organization.parentage() ) );
         List<Role> roles = findRolesInScenario();
         Collections.sort( roles, new Comparator<Role>() {
             /** {@inheritDoc} */
@@ -68,32 +68,33 @@ public class OrganizationReportPanel extends Panel {
             }
         } );
         List<Organization> subOrganizations = findSubOrganizationsInScenario();
-        orgDiv.add( new ListView<Organization>("sub-organizations", subOrganizations) {
+        orgDiv.add( new ListView<Organization>( "sub-organizations", subOrganizations ) {
             protected void populateItem( ListItem<Organization> item ) {
                 Organization subOrganization = item.getModelObject();
                 item.add( new OrganizationReportPanel(
                         "sub-organization",
-                        new Model<Organization>(subOrganization),
-                        scenario));
+                        new Model<Organization>( subOrganization ),
+                        scenario ) );
             }
         } );
     }
+
     // TODO - inefficient, C&P from ScenarioReportPanel:findOrganizationsInScenario
     private List<Organization> findSubOrganizationsInScenario() {
         Set<Organization> organizations = new HashSet<Organization>();
         Iterator<Part> parts = scenario.parts();
-        while(parts.hasNext()) {
+        while ( parts.hasNext() ) {
             Part part = parts.next();
-            if (part.getOrganization() != null && part.getOrganization().getParent() == organization) {
-                organizations.add(part.getOrganization());
+            if ( part.getOrganization() != null && part.getOrganization().getParent() == organization ) {
+                organizations.add( part.getOrganization() );
             }
         }
         List<Organization> results = new ArrayList<Organization>();
-        results.addAll(organizations);
-        Collections.sort(results, new Comparator<Organization>() {
+        results.addAll( organizations );
+        Collections.sort( results, new Comparator<Organization>() {
             /** {@inheritDoc} */
             public int compare( Organization org1, Organization org2 ) {
-                return Collator.getInstance().compare(org1.getName(), org2.getName());
+                return Collator.getInstance().compare( org1.getName(), org2.getName() );
             }
         } );
         return results;

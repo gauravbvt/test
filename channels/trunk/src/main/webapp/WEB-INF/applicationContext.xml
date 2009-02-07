@@ -57,10 +57,6 @@
                     <property name="addressPattern" value=".*"/>
                 </bean>
                 <bean class="com.mindalliance.channels.Medium">
-                     <property name="name" value="SendWordNow"/>
-                     <property name="addressPattern" value=".+"/>
-                 </bean>
-                <bean class="com.mindalliance.channels.Medium">
                      <property name="name" value="Other"/>
                      <property name="addressPattern" value=".+"/>
                  </bean>

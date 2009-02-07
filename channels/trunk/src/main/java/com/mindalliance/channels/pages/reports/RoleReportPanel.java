@@ -6,7 +6,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.IModel;
 import com.mindalliance.channels.Role;
-import com.mindalliance.channels.Service;
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Part;
@@ -19,6 +18,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 import java.text.Collator;
 
 /**
@@ -40,13 +41,13 @@ public class RoleReportPanel extends Panel {
         super( id, model );
         role = model.getObject();
         this.scenario = scenario;
-        init( Project.service());
+        init();
     }
 
-    private void init( Service service ) {
+    private void init() {
         add (new Label("name", role.getName()) );
         add (new Label("description", role.getDescription()) );
-        List<Actor> actors = findActorsInRole( role, service );
+        List<Actor> actors = findActorsInRole( role );
         Collections.sort( actors, new Comparator<Actor>() {
             /** {@inheritDoc} */
             public int compare( Actor actor1, Actor actor2 ) {
@@ -77,16 +78,15 @@ public class RoleReportPanel extends Panel {
         return partsForRole;
     }
 
-    private List<Actor> findActorsInRole( Role role, Service service ) {
-        Iterator<ResourceSpec> resourceSpecs = service.iterate( ResourceSpec.class );
-        List<Actor> actorsInRole = new ArrayList<Actor>();
-        while( resourceSpecs.hasNext() ) {
-            ResourceSpec resourceSpec = resourceSpecs.next();
+    private List<Actor> findActorsInRole( Role role ) {
+        List<ResourceSpec> resourceSpecs = Project.service().allResourceSpecs();
+        Set<Actor> actorsInRole = new HashSet<Actor>();
+        for( ResourceSpec resourceSpec : resourceSpecs ) {
             Actor actor = resourceSpec.getActor();
             if ( actor != null && resourceSpec.getRole() != null && SemMatch.sameAs( resourceSpec.getRole(), role) ) {
                 actorsInRole.add( actor );
             }
         }
-        return actorsInRole;
+        return new ArrayList<Actor>(actorsInRole);
     }
 }

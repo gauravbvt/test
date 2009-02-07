@@ -6,7 +6,6 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.util.SimpleCache;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
-import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DirectedMultigraph;
 
 import java.util.Iterator;

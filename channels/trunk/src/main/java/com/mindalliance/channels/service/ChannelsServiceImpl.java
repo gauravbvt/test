@@ -292,7 +292,7 @@ public class ChannelsServiceImpl implements Service {
     }
 
     /** {@inheritDoc} */
-    public Set<ResourceSpec> getAllResourceSpecs() {
+    public List<ResourceSpec> allResourceSpecs() {
         Set<ResourceSpec> result = new HashSet<ResourceSpec>();
 
         addSpecs( result, ResourceSpec.class );
@@ -325,7 +325,7 @@ public class ChannelsServiceImpl implements Service {
             }
         }
 
-        return result;
+        return new ArrayList<ResourceSpec>(result);
     }
 
     private void addSpecs( Set<ResourceSpec> result, Class<? extends ModelObject> clazz ) {
@@ -336,7 +336,7 @@ public class ChannelsServiceImpl implements Service {
     /** {@inheritDoc} */
     public List<ResourceSpec> findAllResourcesNarrowingOrEqualTo( ResourceSpec resourceSpec ) {
         List<ResourceSpec> list = new ArrayList<ResourceSpec>();
-        for ( ResourceSpec spec : getAllResourceSpecs() ) {
+        for ( ResourceSpec spec : allResourceSpecs() ) {
             if ( spec.narrowsOrEquals( resourceSpec ) )
                 list.add( spec );
         }
@@ -470,7 +470,6 @@ public class ChannelsServiceImpl implements Service {
         service.addMedium( new Medium( "Television", ".+" ) );
         service.addMedium( new Medium( "Courier", ".+" ) );
         service.addMedium( new Medium( "Face-to-face", ".*" ) );
-        service.addMedium( new Medium( "SendWordNow", ".+" ) );
         service.addMedium( new Medium( OTHER_MEDIUM, ".+" ) );
 
     }

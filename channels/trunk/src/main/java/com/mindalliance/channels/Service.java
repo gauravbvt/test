@@ -134,7 +134,7 @@ public interface Service {
      * Get all resource specs, user-entered or not.
      * @return a new list of resource spec
      */
-    Set<ResourceSpec> getAllResourceSpecs();
+    List<ResourceSpec> allResourceSpecs();
 
     /**
      * Find all resources that equal or narrow given resource

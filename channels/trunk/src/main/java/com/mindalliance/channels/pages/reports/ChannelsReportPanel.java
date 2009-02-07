@@ -1,22 +1,19 @@
 package com.mindalliance.channels.pages.reports;
 
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.AttributeModifier;
-import com.mindalliance.channels.Service;
 import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.Channelable;
-import com.mindalliance.channels.pages.Project;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.text.Collator;
 import java.util.Collections;
 import java.util.Comparator;
-import java.text.Collator;
+import java.util.List;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

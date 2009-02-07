@@ -511,7 +511,7 @@ public final class ScenarioPage extends WebPage {
             scenarioImport = new FileUploadField( "sc-import", new Model<FileUpload>() ); // NON-NLS
             add( scenarioImport );
             add ( new ExternalLink ("index", "index.html"));
-
+            add ( new ExternalLink ("report", "report.html"));
             add( new Label( "user", Project.getUserName() ) );                            // NON-NLS
         }
 

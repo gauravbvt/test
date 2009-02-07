@@ -28,6 +28,7 @@ import org.apache.wicket.util.tester.WicketTester;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -99,6 +100,7 @@ public class AbstractChannelsTest extends TestCase {
         // Register media
         ChannelsServiceImpl.registerDefaultMedia( channels );
         tester = new WicketTester( project );
+        tester.setParametersForNextRequest( new HashMap<String,String[]>() );
     }
 
     public void testNothing() {
