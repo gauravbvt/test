@@ -64,7 +64,7 @@ public class OrganizationReportPanel extends Panel {
         orgDiv.add( new ListView<Role>( "roles", roles ) {
             protected void populateItem( ListItem<Role> item ) {
                 Role role = item.getModelObject();
-                item.add( new RoleReportPanel( "role", new Model<Role>( role ), scenario ) );
+                item.add( new RoleReportPanel( "role", new Model<Role>( role ), scenario, organization ) );
             }
         } );
         List<Organization> subOrganizations = findSubOrganizationsInScenario();

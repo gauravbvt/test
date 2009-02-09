@@ -437,7 +437,7 @@ public class ChannelsServiceImpl implements Service {
     public List<Actor> findAllActors( ResourceSpec resourceSpec ) {
         Set<Actor> actors = new HashSet<Actor>();
         Iterator<ResourceSpec> actorResourceSpecs = new FilterIterator(
-                iterate( ResourceSpec.class ),
+                allResourceSpecs().iterator(),
                 new Predicate() {
                     public boolean evaluate( Object object ) {
                         return ((ResourceSpec)object).getActor() != null;
@@ -449,9 +449,7 @@ public class ChannelsServiceImpl implements Service {
                 actors.add(actorResourceSpec.getActor());
             }
         }
-        List<Actor> results = new ArrayList<Actor>();
-        results.addAll(actors);
-        return results;
+        return new ArrayList<Actor>( actors );
     }
 
     /**

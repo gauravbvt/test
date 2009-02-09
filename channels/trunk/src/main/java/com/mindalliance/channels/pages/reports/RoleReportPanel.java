@@ -10,6 +10,7 @@ import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.util.SemMatch;
 import com.mindalliance.channels.pages.Project;
 
@@ -18,8 +19,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
 import java.text.Collator;
 
 /**
@@ -36,18 +35,23 @@ public class RoleReportPanel extends Panel {
      */
     private Role role;
     private Scenario scenario;
+    private Organization organization;
 
-    public RoleReportPanel( String id, IModel<Role> model, Scenario scenario ) {
+    public RoleReportPanel( String id, IModel<Role> model, Scenario scenario, Organization organization ) {
         super( id, model );
         role = model.getObject();
         this.scenario = scenario;
+        this.organization = organization;
         init();
     }
 
     private void init() {
         add (new Label("name", role.getName()) );
         add (new Label("description", role.getDescription()) );
-        List<Actor> actors = findActorsInRole( role );
+        ResourceSpec resourceSpec = ResourceSpec.with(role);
+        resourceSpec.setOrganization( organization );
+        // Find all actors in role for organization
+        List<Actor> actors = Project.service().findAllActors( resourceSpec );
         Collections.sort( actors, new Comparator<Actor>() {
             /** {@inheritDoc} */
             public int compare( Actor actor1, Actor actor2 ) {
@@ -78,15 +82,4 @@ public class RoleReportPanel extends Panel {
         return partsForRole;
     }
 
-    private List<Actor> findActorsInRole( Role role ) {
-        List<ResourceSpec> resourceSpecs = Project.service().allResourceSpecs();
-        Set<Actor> actorsInRole = new HashSet<Actor>();
-        for( ResourceSpec resourceSpec : resourceSpecs ) {
-            Actor actor = resourceSpec.getActor();
-            if ( actor != null && resourceSpec.getRole() != null && SemMatch.sameAs( resourceSpec.getRole(), role) ) {
-                actorsInRole.add( actor );
-            }
-        }
-        return new ArrayList<Actor>(actorsInRole);
-    }
 }

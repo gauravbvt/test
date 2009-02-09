@@ -9,16 +9,20 @@
 </head>
 
 <body class="report">
-    <div id="project">
-        <span class="name" wicket:id="project-name">project name</span>
-        <span class="date" wicket:id="date">date</span>
-        <span class="client" wicket:id="project-client">client</span>
-        <span class="description" wicket:id="project-description">description</span>
-    </div>
-    <span class="section">Scenarios</span>
-    <div id="scenarios">
-       <div wicket:id="scenarios"><span wicket:id="scenario">[scenario report panel]</span></div>
-    </div>
-<!-- TODO - add directory of actors, organizations and places -->
+<div id="project">
+    <span class="name" wicket:id="project-name">project name</span>
+    <span class="date" wicket:id="date">date</span>
+    <span class="client" wicket:id="project-client">client</span>
+    <span class="description" wicket:id="project-description">description</span>
+</div>
+<span class="section">Scenarios</span>
+
+<div id="scenarios">
+    <div wicket:id="scenarios"><span wicket:id="scenario">[scenario report panel]</span></div>
+</div>
+<div id="directory">
+    <span class="section">Directory</span>
+    <span wicket:id="directory">[Directory report panel]</span>
+</div>
 </body>
 </html>
