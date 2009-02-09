@@ -24,6 +24,10 @@ public class DetectedIssue extends AnalysisObject implements Issue {
      * How to resolve the issue
      */
     private String remediation;
+    /**
+     * The issue's severity
+     */
+    private Issue.Level severity = Issue.Level.Minor;
 
     /**
      * Constructor
@@ -96,11 +100,15 @@ public class DetectedIssue extends AnalysisObject implements Issue {
         this.remediation = remediation;
     }
 
+    public String getLabel() {
+       return "(" + severity +") " + getDescription();
+    }
+
     /**
      * {@inheritDoc}
      */
     public String getLabel(int maxLength) {
-        return StringUtils.abbreviate( getDescription(), maxLength );
+        return StringUtils.abbreviate( getLabel(), maxLength );
     }
 
     /**
@@ -125,5 +133,13 @@ public class DetectedIssue extends AnalysisObject implements Issue {
      */
     public String getName() {
         return getLabel( Integer.MAX_VALUE );
+    }
+
+    public Level getSeverity() {
+        return severity;
+    }
+
+    public void setSeverity( Level severity ) {
+        this.severity = severity;
     }
 }

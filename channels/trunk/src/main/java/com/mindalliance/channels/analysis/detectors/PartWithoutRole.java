@@ -27,6 +27,7 @@ public class PartWithoutRole extends AbstractIssueDetector {
             DetectedIssue issue = new DetectedIssue( DetectedIssue.DEFINITION, modelObject, getTestedProperty() );
             issue.setDescription( "The role is missing." );
             issue.setRemediation( "Name a role." );
+            issue.setSeverity( Issue.Level.Minor );
             issues.add( issue );
         }
         return issues;

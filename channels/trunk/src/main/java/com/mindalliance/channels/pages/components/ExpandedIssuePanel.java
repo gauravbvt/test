@@ -7,11 +7,17 @@ import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
+ * Editable (user) issue
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -41,6 +47,10 @@ public class ExpandedIssuePanel extends Panel {
                         "markedForDeletion" ) ) );                                        // NON-NLS
         add( new TextArea<String>( "description",
                 new PropertyModel<String>( issue, "description" ) ) );
+        add( new DropDownChoice<Issue.Level>(
+                "severity",
+                new PropertyModel<Issue.Level>( issue, "severity" ),
+                Arrays.asList( Issue.Level.values() ) ) );
         add( new TextArea<String>( "remediation",
                 new PropertyModel<String>( issue, "remediation" ) ) );
         add( new AttachmentPanel( "attachments", (ModelObject) issue ) );                 // NON-NLS
@@ -48,8 +58,5 @@ public class ExpandedIssuePanel extends Panel {
                 new PropertyModel<String>( issue, "reportedBy" ) ) );
     }
 
-    private Service getService() {
-        return ( (Project) getApplication() ).getService();
-    }
 
 }

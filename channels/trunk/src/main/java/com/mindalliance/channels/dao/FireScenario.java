@@ -11,6 +11,7 @@ import com.mindalliance.channels.Service;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.Issue;
 
 import javax.persistence.Entity;
 
@@ -52,6 +53,7 @@ public class FireScenario extends Scenario {
         issue.setDescription( "Hearing-challenged tenants may not hear the alarm." );
         issue.setRemediation( "Add flashing light signal." );
         issue.setReportedBy( "jdoe" );
+        issue.setSeverity( Issue.Level.Major );
         service.add( issue );
 
         Part fd = service.createPart( this );

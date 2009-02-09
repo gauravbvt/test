@@ -62,6 +62,7 @@ public class UnconnectedConnector extends AbstractIssueDetector {
                     + flowName 
                     + "- is never used." );
             issue.setRemediation( "Consider removing it." );
+            issue.setSeverity( Issue.Level.Minor );
             issues.add( issue );
         }
         return issues;

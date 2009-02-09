@@ -33,7 +33,7 @@ public class CollapsedIssuePanel extends Panel {
         Label label;
         Label suggestion;
         if ( issue.isDetected() ) {
-            label = new Label( "issue-label", new PropertyModel( issue, "description" ) );
+            label = new Label( "issue-label", new PropertyModel( issue, "label" ) );
             suggestion = new Label( "issue-suggestion", new PropertyModel( issue, "remediation" ) );
         } else {
             label = new Label( "issue-label", new AbstractReadOnlyModel() {

@@ -3,6 +3,7 @@ package com.mindalliance.channels.export.xml;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.pages.Project;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -48,6 +49,9 @@ public class UserIssueConverter implements Converter {
         writer.startNode( "description" );
         writer.setValue( issue.getDescription() );
         writer.endNode();
+        writer.startNode( "severity" );
+        writer.setValue( issue.getSeverity().toString() );
+        writer.endNode();
         writer.startNode( "remediation" );
         writer.setValue( issue.getRemediation() );
         writer.endNode();
@@ -74,18 +78,17 @@ public class UserIssueConverter implements Converter {
                     String nodeName = reader.getNodeName();
                     if ( nodeName.equals( "description" ) ) {
                         issue.setDescription( reader.getValue() );
-                    }
-                    if ( nodeName.equals( "remediation" ) ) {
+                    } else if ( nodeName.equals( "severity" ) ) {
+                        issue.setSeverity( Issue.Level.valueOf( reader.getValue() ) );
+                    } else if ( nodeName.equals( "remediation" ) ) {
                         issue.setRemediation( reader.getValue() );
-                    }
-                    if ( nodeName.equals( "reportedBy" ) ) {
+                    } else if ( nodeName.equals( "reportedBy" ) ) {
                         issue.setReportedBy( reader.getValue() );
                     }
                     reader.moveUp();
                 }
                 Project.service().add( issue );
-            }
-            else {
+            } else {
                 LOG.warn( "Issue's model object not found at " + id );
             }
         } catch ( NotFoundException e ) {

@@ -16,22 +16,30 @@
     Reported by <span wicket:id="reported-by"> Joe</span>:
 
 
-<div class="issue-details">
-    <table summary="Issue details">
-        <tr>
-            <th class="area" align="right"><label>Issue:</label></th>
-            <td><textarea wicket:id="description" cols="30" rows="3">SOmething's wrong</textarea></td>
-        </tr>
-        <tr>
-            <th class="area" align="right" valign="top"><label>Suggestion:</label></th>
-            <td><textarea wicket:id="remediation" cols="30" rows="3">Duck</textarea></td>
-        </tr>
-        <tr wicket:id="attachments">
-            <th align="right" valign="top">Attachments:</th>
-            <td>&nbsp;</td>
-        </tr>
-    </table>
-</div>
+    <div class="issue-details">
+        <table summary="Issue details">
+            <tr>
+                <th class="area" align="right"><label>Issue:</label></th>
+                <td><textarea wicket:id="description" cols="30" rows="3">Sky is falling</textarea></td>
+            </tr>
+            <tr>
+                <th class="area" align="right"><label>Severity:</label></th>
+                <td><select wicket:id="severity">
+                    <option>Minor</option>
+                    <option>Major</option>
+                    <option>Severe</option>
+                </select></td>
+            </tr>
+            <tr>
+                <th class="area" align="right" valign="top"><label>Suggestion:</label></th>
+                <td><textarea wicket:id="remediation" cols="30" rows="3">Run!</textarea></td>
+            </tr>
+            <tr wicket:id="attachments">
+                <th align="right" valign="top">Attachments:</th>
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+    </div>
 </wicket:panel>
 </body>
 </html>

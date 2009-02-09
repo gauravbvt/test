@@ -26,6 +26,7 @@ public class PartWithoutTask extends AbstractIssueDetector {
             DetectedIssue issue = new DetectedIssue( DetectedIssue.DEFINITION, modelObject, getTestedProperty() );
             issue.setDescription( "The task is missing," );
             issue.setRemediation( "Provide a task." );
+            issue.setSeverity( Issue.Level.Minor );
             issues.add( issue );
         }
         return issues;

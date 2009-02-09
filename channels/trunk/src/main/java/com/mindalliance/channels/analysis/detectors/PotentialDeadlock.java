@@ -81,6 +81,7 @@ public class PotentialDeadlock extends AbstractIssueDetector {
                                 + getRequirementDescriptions( criticalRequirementsInCycle )
                                 + " fails." );
                         issue.setRemediation( "Provide redundancy for at least one of these critical flows." );
+                        issue.setSeverity( Issue.Level.Major );
                         issues.add( issue );
                     }
                 }

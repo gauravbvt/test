@@ -11,6 +11,38 @@ import java.io.Serializable;
  * Time: 11:48:27 AM
  */
 public interface Issue extends Identifiable, Serializable {
+
+    public enum Level {
+        /**
+         * A minor issue
+         */
+        Minor,
+        /**
+         * A major issue
+         */
+        Major,
+        /**
+         * A severe issue
+         */
+        Severe;
+
+        /**
+         * A string represneting the severity level
+         * @return a String
+         */
+        public String getLabel() {
+            return this.toString();
+        }
+
+        /**
+         * A sortable value
+         * @return an int
+         */
+        public int getOrdinal() {
+            return this.ordinal();
+        }
+    }
+
     /**
      * Type of issue having to do with the definition of a model object
      */
@@ -98,5 +130,19 @@ public interface Issue extends Identifiable, Serializable {
      * @return a boolean
      */
     boolean isDetected();
+
+    /**
+     * Get the issue's severity
+     *
+     * @return a Level (Low, Medium or High)
+     */
+    Level getSeverity();
+
+    /**
+     * Set the issue's severity
+     *
+     * @param severity the severity level
+     */
+    void setSeverity( Level severity );
 
 }

@@ -35,6 +35,7 @@ public class FlowWithUndefinedTarget extends AbstractIssueDetector {
             DetectedIssue issue = new DetectedIssue( DetectedIssue.DEFINITION, modelObject, "target" );
             issue.setDescription( "The target is not defined." );
             issue.setRemediation( "Name the actor, role or organization of the target." );
+            issue.setSeverity( Issue.Level.Major );
             issues.add( issue );
         }
         return issues;

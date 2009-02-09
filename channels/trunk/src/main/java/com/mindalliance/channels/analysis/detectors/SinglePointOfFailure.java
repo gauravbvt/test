@@ -76,6 +76,7 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
             DetectedIssue issue = new DetectedIssue( DetectedIssue.STRUCTURAL, node );
             issue.setDescription( "Single point of failure." );
             issue.setRemediation( "Delegate responsibilities or add redundancy." );
+            issue.setSeverity( Issue.Level.Major );
             issues.add( issue );
         }
         return issues;

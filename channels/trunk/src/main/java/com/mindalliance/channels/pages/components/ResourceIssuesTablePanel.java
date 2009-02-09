@@ -41,6 +41,8 @@ public class ResourceIssuesTablePanel extends AbstractTablePanel {
         columns.add( makeLinkColumn( "About", "about", "about.label", "(no name)" ) );
         columns.add( new PropertyColumn<String>(
                 new Model<String>( "Type" ), "type", "type" ) );
+        columns.add( new PropertyColumn<String>(
+                new Model<String>( "Severity" ), "severity.ordinal", "severity.label" ) );
         columns.add( makeColumn( "Remediation", "remediation", "remediation", EMPTY ) );
         columns.add( makeColumn( "Reported by", "reportedBy", "reportedBy", EMPTY ) );
         // provider and table

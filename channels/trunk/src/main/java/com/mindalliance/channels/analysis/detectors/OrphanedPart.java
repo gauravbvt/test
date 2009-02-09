@@ -46,6 +46,7 @@ public class OrphanedPart extends AbstractIssueDetector {
             DetectedIssue issue = new DetectedIssue( DetectedIssue.STRUCTURAL, part );
             issue.setDescription( "Does not produce or need information." );
             issue.setRemediation( "Add sent or received information." );
+            issue.setSeverity( Issue.Level.Minor );
             issues.add( issue );
         }
         return issues;

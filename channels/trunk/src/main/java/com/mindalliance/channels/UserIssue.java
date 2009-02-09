@@ -32,6 +32,10 @@ public class UserIssue extends ModelObject implements Issue {
      * Name of user who created or last modified the issue
      */
     private String reportedBy = "";
+    /**
+     * The issue's severity
+     */
+    private Issue.Level severity = Issue.Level.Minor;
 
     public UserIssue() {
     }
@@ -86,7 +90,7 @@ public class UserIssue extends ModelObject implements Issue {
      * {@inheritDoc}
      */
     public String getLabel( int maxLength ) {
-        return StringUtils.abbreviate( getDescription(), maxLength );
+        return StringUtils.abbreviate( "(" + severity + ") " + getDescription(), maxLength );
     }
 
     /**
@@ -95,5 +99,13 @@ public class UserIssue extends ModelObject implements Issue {
     @Transient
     public boolean isDetected() {
         return false;
+    }
+
+    public Level getSeverity() {
+        return severity;
+    }
+
+    public void setSeverity( Level severity ) {
+        this.severity = severity;
     }
 }

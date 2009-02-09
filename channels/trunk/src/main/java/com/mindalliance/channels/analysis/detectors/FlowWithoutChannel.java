@@ -33,6 +33,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
                 DetectedIssue issue = new DetectedIssue( DetectedIssue.DEFINITION, modelObject );
                 issue.setDescription( "Flow without channels." );
                 issue.setRemediation( "Provide at least one channel." );
+                issue.setSeverity( Issue.Level.Severe );
                 issues.add( issue );
             }
         }

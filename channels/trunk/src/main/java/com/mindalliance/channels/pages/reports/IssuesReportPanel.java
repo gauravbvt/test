@@ -4,7 +4,10 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.AttributeModifier;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.analysis.Analyst;
@@ -36,9 +39,13 @@ public class IssuesReportPanel extends Panel {
         add( new ListView<Issue>("issues", issues) {
             protected void populateItem( ListItem<Issue> item ) {
                 Issue issue = item.getModelObject();
-                item.add( new Label("reported-by", issue.getReportedBy()) );
-                item.add( new Label("description", issue.getDescription()) );
-                item.add( new Label("suggestion", issue.getRemediation()) );
+                WebMarkupContainer issueDiv = new WebMarkupContainer("issueDiv");
+                item.add(issueDiv);
+                issueDiv.add( new Label("reported-by", issue.getReportedBy()) );
+                issueDiv.add( new Label("description", issue.getDescription()) );
+                issueDiv.add( new Label("suggestion", issue.getRemediation()) );
+                String styleClass = issue.getSeverity().toString().toLowerCase();
+                issueDiv.add( new AttributeModifier("class", true, new Model<String>(styleClass) ) );
             }
         } );
     }
