@@ -25,6 +25,8 @@ import org.apache.wicket.model.PropertyModel;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * An editable list of channels
@@ -109,14 +111,13 @@ public class ChannelListPanel extends Panel {
     }
 
     private List<Wrapper> getWrappedCandidateChannels( IModel<Channelable> model ) {
-        List<Channel> candidates = new ArrayList<Channel>();
+        Set<Channel> candidates = new HashSet<Channel>();
         List<Channelable> channelables = findRelatedChannelables( model.getObject() );
         List<Channel> alreadySetChannels = model.getObject().getChannels();
         // Get all non-redundant, valid candidate channels
         for ( Channelable aChannelable : channelables ) {
             for ( Channel channel : aChannelable.getChannels() ) {
-                if ( !containsChannel( alreadySetChannels, channel )
-                        && !containsChannel( candidates, channel )
+                if ( !alreadySetChannels.contains( channel )
                         && channel.isValid() ) {
                     candidates.add( channel );
                 }
@@ -131,14 +132,7 @@ public class ChannelListPanel extends Panel {
         }
         return wrappers;
     }
-
-    private boolean containsChannel( List<Channel> list, Channel channel ) {
-        boolean found = false;
-        for ( Channel c : list )
-            if ( c.sameAs( channel ) ) found = true;
-        return found;
-    }
-
+    
     /**
      * Find channelables that have candidate channels for a given channelable
      *
@@ -158,7 +152,7 @@ public class ChannelListPanel extends Panel {
             }
         } else {
             ResourceSpec resourceSpec = (ResourceSpec) channelable;
-            if ( !resourceSpec.isEmpty() ) {
+            if ( !resourceSpec.isAnyone() ) {
                 relatedChannelables.addAll(
                         Project.service().findAllResourcesNarrowingOrEqualTo( resourceSpec ) );
             }
@@ -176,7 +170,7 @@ public class ChannelListPanel extends Panel {
                 problem = "Not valid";
             } else {
                 for ( Channel c : channelable.getChannels() ) {
-                    if ( c != channel && c.sameAs( channel ) ) {
+                    if ( c != channel && c.equals( channel ) ) {
                         ok = false;
                         problem = "Repeated";
                     }

@@ -10,6 +10,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * A Resource is an actor in a role for an organization with a jurisdiction.
@@ -133,10 +135,12 @@ public class ResourceSpec extends ModelObject implements Channelable {
     /**
      * Add a channel to the contact info
      *
-     * @param channels a Channel
+     * @param addedChannels a Channel
      */
-    public void addChannels( Collection<Channel> channels ) {
-        this.channels.addAll( channels );
+    public void addChannels( Collection<Channel> addedChannels ) {
+        for (Channel c : addedChannels) {
+            if (!channels.contains( c )) channels.add ( c );
+        }
     }
 
     /**
@@ -311,13 +315,13 @@ public class ResourceSpec extends ModelObject implements Channelable {
     }
 
     /**
-     * Resource is qualified by an actor, role, organization or jurisdiction?
+     * Resource is anyone?
      *
      * @return a boolean
      */
     @Transient
-    public boolean isEmpty() {
-        return isAnyActor() && isAnyRole() && isAnyOrganization() && isAnyJurisdiction() && channels.isEmpty();
+    public boolean isAnyone() {
+        return isAnyActor() && isAnyRole() && isAnyOrganization() && isAnyJurisdiction();
     }
 
     /**
@@ -374,9 +378,7 @@ public class ResourceSpec extends ModelObject implements Channelable {
         if ( organization != other.getOrganization() && !other.isAnyOrganization() )
             return false;
         // Todo compare inclusion, not equality
-        if ( jurisdiction != other.getJurisdiction() && !other.isAnyJurisdiction() )
-            return false;
-        return true;
+        return !( jurisdiction != other.getJurisdiction() && !other.isAnyJurisdiction() );
     }
 
     /**
@@ -463,23 +465,17 @@ public class ResourceSpec extends ModelObject implements Channelable {
      * @return list of channels
      */
     public List<Channel> allChannels() {
-        List<Channel> allChannels = new ArrayList<Channel>();
-        // To prevent duplicates. Did not implement equal/hashCode on Channel because of UI constraints.
-        List<String> channelStrings = new ArrayList<String>();
+        Set<Channel> allChannels = new HashSet<Channel>();
         Iterator<ResourceSpec> resourceSpecs = Project.service().iterate( ResourceSpec.class );
         while ( resourceSpecs.hasNext() ) {
             ResourceSpec rs = resourceSpecs.next();
             if ( this.narrowsOrEquals( rs ) ) {
                 List<Channel> resourceChannels = rs.getChannels();
                 for ( Channel resourceChannel : resourceChannels ) {
-                    String channelString = resourceChannel.toString();
-                    if ( !channelStrings.contains( channelString ) ) {
-                        channelStrings.add( channelString );
-                        allChannels.add( resourceChannel );
-                    }
+                    allChannels.add( resourceChannel );
                 }
             }
         }
-        return allChannels;
+        return new ArrayList<Channel>( allChannels );
     }
 }

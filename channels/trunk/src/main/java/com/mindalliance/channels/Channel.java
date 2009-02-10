@@ -28,7 +28,7 @@ public class Channel implements Serializable {
 
     public Channel( Medium medium, String address ) {
         this.medium = medium;
-        this.address = address;
+        this.address = address == null ? "" : address;
     }
 
     public Medium getMedium() {
@@ -44,19 +44,30 @@ public class Channel implements Serializable {
     }
 
     public void setAddress( String address ) {
-        this.address = address;
+        this.address = address == null ? "" : address;
     }
 
     /**
-     * Compares channels for equality
-     *
-     * @param channel another Channel
-     * @return if the same
+     * {@inheritDoc}
      */
-    public boolean sameAs( Channel channel ) {
-        if ( !address.equals( channel.getAddress() ) ) return false;
-        if ( medium != channel.getMedium() ) return false;
-        return true;
+    public boolean equals( Object obj ) {
+        if (obj instanceof Channel) {
+            Channel channel = (Channel) obj;
+            return address.equals( channel.getAddress() ) && medium == channel.getMedium();
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public int hashCode() {
+        int hash = 1;
+        if ( medium != null ) hash = hash * 31 + medium.hashCode();
+        if ( address != null ) hash = hash * 31 + address.hashCode();
+        return hash;
     }
 
     /**
@@ -66,7 +77,7 @@ public class Channel implements Serializable {
         StringBuilder sb = new StringBuilder();
         sb.append( medium == null ? "NO MEDIUM" : medium.getName() );
         sb.append( ": " );
-        sb.append( address.isEmpty() ? "NO ADDRESS" : address );
+        sb.append( address.isEmpty() ? "UNKNOWN" : address );
         return sb.toString();
     }
 

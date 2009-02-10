@@ -57,7 +57,7 @@ public final class Memory implements Dao {
     public void add( ModelObject object ) {
         if ( object instanceof ResourceSpec ) {
             ResourceSpec resourceSpec = (ResourceSpec) object;
-            if ( resourceSpec.isEmpty()/* || resourceSpec.isEntityOnly()*/ )
+            if ( resourceSpec.isAnyone()/* || resourceSpec.isEntityOnly()*/ )
                 return;
         }
         if ( idIndex.containsKey( object.getId() ) )

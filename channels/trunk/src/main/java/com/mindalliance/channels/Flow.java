@@ -72,10 +72,7 @@ public abstract class Flow extends ModelObject implements Channelable {
     }
 
     private void addChannelIfUnique( Channel channel ) {
-        boolean found = false;
-        for ( Channel c : channels )
-            if ( c.sameAs( channel ) ) found = true;
-        if ( !found ) channels.add( channel );
+        if ( !channels.contains(channel) ) channels.add( channel );
     }
 
     /**

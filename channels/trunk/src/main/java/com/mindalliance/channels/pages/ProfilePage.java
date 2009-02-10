@@ -110,7 +110,7 @@ public class ProfilePage extends WebPage {
                 resourceSpec.setJurisdiction( jurisdiction );
             }
         }
-        if ( resourceSpec.isEmpty() ) throw new NotFoundException();
+        if ( resourceSpec.isAnyone() ) throw new NotFoundException();
         ResourceSpec permanentResourceSpec = service.findPermanentResourceSpec( resourceSpec );
         return permanentResourceSpec != null ? permanentResourceSpec : resourceSpec;
     }

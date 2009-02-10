@@ -17,20 +17,20 @@
     <bean id="graphBuilder" class="com.mindalliance.channels.graph.DefaultGraphBuilder"/>
 
     <bean id="channels" class="com.mindalliance.channels.service.ChannelsServiceImpl">
-        <property name="addingSamples" value="true"/>
+        <property name="addingSamples" value="false"/>
         <property name="media">
             <list value-type="java.util.ArrayList">
                 <bean class="com.mindalliance.channels.Medium">
                     <property name="name" value="Phone"/>
-                    <property name="addressPattern" value="\d{3}-\d{3}-\d{4}"/>
+                    <property name="addressPattern" value="(\d*\D*\d{3}\D*\d{3}\D*\d{4})|(\d{3})"/>
                 </bean>
                 <bean class="com.mindalliance.channels.Medium">
                     <property name="name" value="Fax"/>
-                    <property name="addressPattern" value="\d{3}-\d{3}-\d{4}"/>
+                    <property name="addressPattern" value="\d*\D*\d{3}\D*\d{3}\D*\d{4}"/>
                 </bean>
                 <bean class="com.mindalliance.channels.Medium">
                     <property name="name" value="Cell"/>
-                    <property name="addressPattern" value="\d{3}-\d{3}-\d{4}"/>
+                    <property name="addressPattern" value="(\d*\D*\d{3}\D*\d{3}\D*\d{4})|(\d{3})"/>
                 </bean>
                 <bean class="com.mindalliance.channels.Medium">
                     <property name="name" value="Email"/>

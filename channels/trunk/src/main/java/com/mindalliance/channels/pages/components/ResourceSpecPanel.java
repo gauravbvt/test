@@ -70,14 +70,14 @@ public class ResourceSpecPanel extends Panel {
                 newResourceSpec.setJurisdiction( Place.named(
                         jurNameField.getDefaultModelObjectAsString().trim() ) );
                 newResourceSpec.setChannels( ( (Channelable) channelsPanel.getDefaultModelObject() ).getChannels() );
-                if ( !newResourceSpec.isEmpty() ) {
+                if ( !newResourceSpec.isAnyone() ) {
                     getService().addOrUpdate( newResourceSpec );
                     setResponsePage(
                             new RedirectPage( ProfileLink.linkFor( newResourceSpec ) ) );
-                } else {
+                }/* else {
                     setResponsePage(
                             new RedirectPage( ProfileLink.linkFor( resourceSpec ) ) );
-                }
+                }*/
             }
         };
         add( resourceSpecForm );

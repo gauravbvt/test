@@ -100,6 +100,10 @@ public final class ScenarioPage extends WebPage {
     private static final int SCENARIO_TITLE_MAX_LENGTH = 30;
 
     /**
+     * Length a scenario title is abbreviated to
+     */
+    private static final int SCENARIO_DESCRIPTION_MAX_LENGTH = 120;
+    /**
      * Id of components that are expanded.
      */
     private Set<Long> expansions;
@@ -463,8 +467,25 @@ public final class ScenarioPage extends WebPage {
          */
         private void addScenarioFields( final Scenario scenario ) {
             addHeader( scenario );
+            /*
+           add( new Label( "node-title",                                                 // NON-NLS
+                    new AbstractReadOnlyModel<String>() {
+                        @Override
+                        public String getObject() {
+                            return StringUtils.abbreviate( node.getTitle(), NODE_TITLE_MAX_LENGTH );
+                        }
+                    } ) );               // NON-NLS
+
+             */
             add( new Label( "sc-desc",                                                    // NON-NLS
-                    new PropertyModel<String>( scenario, DESC_PROPERTY ) ) );
+                  //  new PropertyModel<String>( scenario, DESC_PROPERTY )
+                    new AbstractReadOnlyModel<String>() {
+                        @Override
+                        public String getObject() {
+                            return StringUtils.abbreviate( scenario.getDescription(), SCENARIO_DESCRIPTION_MAX_LENGTH );
+                        }
+                    }
+            ) );
 
             add( new Link( "add-part" ) {                                                 // NON-NLS
 

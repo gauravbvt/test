@@ -213,6 +213,7 @@ public class ChannelsServiceImpl implements Service {
 
     /**
      * Use a specific dao. If 'addingSamples', add Fire and Evacuation scenarios.
+     * Else create initial scenario.
      * @param dao the dao
      */
     @Transactional
@@ -226,6 +227,9 @@ public class ChannelsServiceImpl implements Service {
             dao.add( evac );
             dao.add( new FireScenario( this, evac ) );
 
+        }
+        else {
+            createScenario();
         }
     }
 
@@ -330,7 +334,18 @@ public class ChannelsServiceImpl implements Service {
 
     private void addSpecs( Set<ResourceSpec> result, Class<? extends ModelObject> clazz ) {
         Iterator<? extends ModelObject> specs = iterate( clazz );
-        while ( specs.hasNext() ) result.add( ResourceSpec.with( specs.next() ) );
+        while ( specs.hasNext() ) {
+            ModelObject mo = specs.next();
+            if (mo instanceof ResourceSpec) {
+                result.add( (ResourceSpec) mo);
+            }
+            else if (mo.isEntity()) {
+                result.add( ResourceSpec.with( mo ) );
+            }
+            else {
+                throw new IllegalArgumentException("Can't be a ResourceSpec " + mo);
+            }
+        }
     }
 
     /** {@inheritDoc} */
@@ -459,9 +474,9 @@ public class ChannelsServiceImpl implements Service {
      */
     public static void registerDefaultMedia( Service service ) {
 
-        service.addMedium( new Medium( "Phone", "\\d{3}-\\d{3}-\\d{4}" ) );
-        service.addMedium( new Medium( "Fax", "\\d{3}-\\d{3}-\\d{4}" ) );
-        service.addMedium( new Medium( "Cell", "\\d{3}-\\d{3}-\\d{4}" ) );
+        service.addMedium( new Medium( "Phone", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}" ) );
+        service.addMedium( new Medium( "Fax", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}" ) );
+        service.addMedium( new Medium( "Cell", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}" ) );
         service.addMedium( new Medium( "Email", "[^@\\s]+@[^@\\s]+\\.\\w+" ) );
         service.addMedium( new Medium( "IM", ".+" ) );
         service.addMedium( new Medium( "Radio", ".+" ) );
