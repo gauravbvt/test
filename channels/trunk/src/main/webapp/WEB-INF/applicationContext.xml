@@ -17,7 +17,7 @@
     <bean id="graphBuilder" class="com.mindalliance.channels.graph.DefaultGraphBuilder"/>
 
     <bean id="channels" class="com.mindalliance.channels.service.ChannelsServiceImpl">
-        <property name="addingSamples" value="false"/>
+        <property name="addingSamples" value="true"/>
         <property name="media">
             <list value-type="java.util.ArrayList">
                 <bean class="com.mindalliance.channels.Medium">
