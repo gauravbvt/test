@@ -48,13 +48,13 @@ public class TestPartPanel extends AbstractChannelsTest {
     protected void setUp() {
         super.setUp();
         project = new Project();
-        final ChannelsServiceImpl service = new ChannelsServiceImpl();
-        ChannelsServiceImpl.registerDefaultMedia( service );
+        ChannelsServiceImpl service = new ChannelsServiceImpl();
+
         service.setAddingSamples( true );
         service.setDao( new Memory() );
         project.setService( service );
         project.setAttachmentManager( new BitBucket() );
-        final FlowDiagram fd = createMock( FlowDiagram.class );
+        FlowDiagram fd = createMock( FlowDiagram.class );
         try {
             expect( fd.getImageMap( (Scenario) anyObject(), (Analyst) anyObject() ) )
                     .andReturn( "" ).anyTimes();
@@ -64,7 +64,7 @@ public class TestPartPanel extends AbstractChannelsTest {
         replay( fd );
         project.setFlowDiagram( fd );
 
-        final Analyst sa = createNiceMock( Analyst.class );
+        Analyst sa = createNiceMock( Analyst.class );
         expect( sa.getIssuesSummary( (ModelObject) anyObject(), anyBoolean()) ).andReturn( "" ).anyTimes();
         expect( sa.getIssuesSummary( (ModelObject) anyObject(), (String) anyObject() ) )
                 .andReturn( "" ).anyTimes();
@@ -78,7 +78,7 @@ public class TestPartPanel extends AbstractChannelsTest {
 
         // Find first part in scenario
         scenario = project.getService().getDefaultScenario();
-        final Iterator<Node> nodes = scenario.nodes();
+        Iterator<Node> nodes = scenario.nodes();
         part = null;
         while ( part == null && nodes.hasNext() ) {
             Node n = nodes.next();
@@ -92,7 +92,7 @@ public class TestPartPanel extends AbstractChannelsTest {
 
     public void testJurisdiction() {
         part.setJurisdiction( new Place() );
-        final String s = "A";
+        String s = "A";
         part.getJurisdiction().setName( s );
         assertSame( s, panel.getJurisdiction() );
 
@@ -100,10 +100,10 @@ public class TestPartPanel extends AbstractChannelsTest {
         assertSame( s, panel.getJurisdiction() );
 
         part.setJurisdiction( null );
-        final String actual = panel.getJurisdiction();
+        String actual = panel.getJurisdiction();
         assertEquals( "", actual );
 
-        final String s1 = "B";
+        String s1 = "B";
         panel.setJurisdiction( s1 );
         assertNotSame( actual, part.getJurisdiction() );
         assertSame( s1, part.getJurisdiction().getName() );
@@ -123,7 +123,7 @@ public class TestPartPanel extends AbstractChannelsTest {
 
     public void testLocation() {
         part.setLocation( new Place() );
-        final String s = "A";
+        String s = "A";
         part.getLocation().setName( s );
         assertSame( s, panel.getLocation() );
 
@@ -131,10 +131,10 @@ public class TestPartPanel extends AbstractChannelsTest {
         assertSame( s, panel.getLocation() );
 
         part.setLocation( null );
-        final String actual = panel.getLocation();
+        String actual = panel.getLocation();
         assertEquals( "", actual );
 
-        final String s1 = "B";
+        String s1 = "B";
         panel.setLocation( s1 );
         assertNotSame( actual, part.getLocation() );
         assertSame( s1, part.getLocation().getName() );
@@ -154,7 +154,7 @@ public class TestPartPanel extends AbstractChannelsTest {
 
     public void testActor() {
         part.setActor( new Actor() );
-        final String s = "A";
+        String s = "A";
         part.getActor().setName( s );
         assertSame( s, panel.getActor() );
 
@@ -162,10 +162,10 @@ public class TestPartPanel extends AbstractChannelsTest {
         assertSame( s, panel.getActor() );
 
         part.setActor( null );
-        final String actual = panel.getActor();
+        String actual = panel.getActor();
         assertEquals( "", actual );
 
-        final String s1 = "B";
+        String s1 = "B";
         panel.setActor( s1 );
         assertNotSame( actual, part.getActor() );
         assertSame( s1, part.getActor().getName() );
@@ -185,7 +185,7 @@ public class TestPartPanel extends AbstractChannelsTest {
 
     public void testOrganization() {
         part.setOrganization( new Organization() );
-        final String s = "A";
+        String s = "A";
         part.getOrganization().setName( s );
         assertSame( s, panel.getOrganization() );
 
@@ -193,10 +193,10 @@ public class TestPartPanel extends AbstractChannelsTest {
         assertSame( s, panel.getOrganization() );
 
         part.setOrganization( null );
-        final String actual = panel.getOrganization();
+        String actual = panel.getOrganization();
         assertEquals( "", actual );
 
-        final String s1 = "B";
+        String s1 = "B";
         panel.setOrganization( s1 );
         assertNotSame( actual, part.getOrganization() );
         assertSame( s1, part.getOrganization().getName() );
@@ -216,7 +216,7 @@ public class TestPartPanel extends AbstractChannelsTest {
 
     public void testRole() {
         part.setRole( new Role() );
-        final String s = "A";
+        String s = "A";
         part.getRole().setName( s );
         assertSame( s, panel.getRole() );
 
@@ -224,10 +224,10 @@ public class TestPartPanel extends AbstractChannelsTest {
         assertSame( s, panel.getRole() );
 
         part.setRole( null );
-        final String actual = panel.getRole();
+        String actual = panel.getRole();
         assertEquals( "", actual );
 
-        final String s1 = "B";
+        String s1 = "B";
         panel.setRole( s1 );
         assertNotSame( actual, part.getRole() );
         assertSame( s1, part.getRole().getName() );
@@ -246,11 +246,11 @@ public class TestPartPanel extends AbstractChannelsTest {
     }
 
     public void testTask() {
-        final String s = "A";
+        String s = "A";
         panel.setTask( s );
         assertSame( s, part.getTask() );
 
-        final String s1 = "B";
+        String s1 = "B";
         part.setTask( s1 );
         assertSame( s1, panel.getTask() );
     }
@@ -264,7 +264,7 @@ public class TestPartPanel extends AbstractChannelsTest {
         tester.assertRenderedPage( ScenarioPage.class );
         tester.assertNoErrorMessage();
 
-        final FormTester ft = tester.newFormTester( "big-form" );
+        FormTester ft = tester.newFormTester( "big-form" );
         TestScenarioPage.setFiles( ft, project );
         ft.setValue( "description", "some description" );
         ft.setValue( "specialty:task", "multitasking" );

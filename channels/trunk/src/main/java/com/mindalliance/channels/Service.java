@@ -1,14 +1,15 @@
 package com.mindalliance.channels;
 
 import com.mindalliance.channels.util.Play;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 /**
  * External service interface.
  */
+@Transactional
 public interface Service {
 
     /**
@@ -17,6 +18,7 @@ public interface Service {
      * @return the aptly named scenario
      * @throws NotFoundException when not found
      */
+    @Transactional( readOnly = true )
     Scenario findScenario( String name ) throws NotFoundException;
 
     /**
@@ -27,28 +29,24 @@ public interface Service {
      * @return the object
      * @throws NotFoundException when not found
      */
+    @Transactional( readOnly = true )
     <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException;
 
     /**
-     * Iterate on model objects of the given class.
+     * Get all objects of the given class.
      * @param clazz the given subclass of model object.
      * @param <T> a subclass of model object.
      * @return an iterator
      */
-    <T extends ModelObject> Iterator<T> iterate( Class<T> clazz );
-
-    /**
-     * List all model objects of the given class
-     * @param clazz the given subclass of model object.
-     * @return a list
-     */
+    @Transactional( readOnly = true )
     <T extends ModelObject> List<T> list( Class<T> clazz );
 
     /**
      * Iterate on ModelObject that are entities.
      * @return an iterator on ModelObjects that are entities
      */
-    Iterator<ModelObject> iterateEntities(  );
+    @Transactional( readOnly = true )
+    Iterator<ModelObject> iterateEntities();
 
 
     /**
@@ -67,26 +65,8 @@ public interface Service {
     /**
      * @return a default scenario
      */
+    @Transactional( readOnly = true )
     Scenario getDefaultScenario();
-
-    /**
-     * Return list of all registered media
-     * @return a list of media (Medium)
-     */
-    List<Medium> getMedia();
-
-    /**
-     * Return registered medium given its name
-     * @param name the medium's name
-     * @return a medium or "Other" if not found
-     */
-    Medium mediumNamed( String name );
-
-    /**
-     * Register a medium
-     * @param medium a Medium
-     */
-    void addMedium( Medium medium );
 
     /**
      * Find a model object by given name. If none, create it.
@@ -122,7 +102,7 @@ public interface Service {
      * @throws IllegalArgumentException when nodes are already connected or nodes are not both
      * in this scenario, or one of the node isn't a connector in a different scenario.
      */
-    public Flow connect( Node source, Node target, String name );
+    Flow connect( Node source, Node target, String name );
 
     /**
      * Create a new scenario.
@@ -134,7 +114,8 @@ public interface Service {
      * Get all resource specs, user-entered or not.
      * @return a new list of resource spec
      */
-    List<ResourceSpec> allResourceSpecs();
+    @Transactional( readOnly = true )
+    List<ResourceSpec> getAllResourceSpecs();
 
     /**
      * Find all resources that equal or narrow given resource
@@ -142,6 +123,7 @@ public interface Service {
      * @param resourceSpec a resource
      * @return a list of implied resources
      */
+    @Transactional( readOnly = true )
     List<ResourceSpec> findAllResourcesNarrowingOrEqualTo( ResourceSpec resourceSpec );
 
 
@@ -151,6 +133,7 @@ public interface Service {
      * @param resourceSpec a resource
      * @return a list of plays
      */
+    @Transactional( readOnly = true )
     List<Play> findAllPlays( ResourceSpec resourceSpec );
 
     /**
@@ -159,6 +142,7 @@ public interface Service {
      * @param isSelf find resources specified by spec, or else who specified resources need to know
      * @return a list of ResourceSpec's
      */
+    @Transactional( readOnly = true )
     List<ResourceSpec> findAllContacts( ResourceSpec resourceSpec, boolean isSelf );
 
     /**
@@ -166,6 +150,7 @@ public interface Service {
      * @param resourceSpec the resource spec
      * @return a boolean
      */
+    @Transactional( readOnly = true )
     boolean isPermanent( ResourceSpec resourceSpec );
 
     /**
@@ -173,6 +158,7 @@ public interface Service {
      * @param identifiable an object with an id
      * @return list of issues
      */
+    @Transactional( readOnly = true )
     List<Issue> findAllUserIssues( ModelObject identifiable );
 
     /**
@@ -180,6 +166,7 @@ public interface Service {
      * @param resourceSpec a ResourceSpec to match against
      * @return a permanent resource spec or null if none found
      */
+    @Transactional( readOnly = true )
     ResourceSpec findPermanentResourceSpec( ResourceSpec resourceSpec );
 
     /**
@@ -187,7 +174,14 @@ public interface Service {
      * else already permament resource from given resource spec
      * @param resourceSpec resource spec to add or update from
      */
+    @Transactional
     void addOrUpdate( ResourceSpec resourceSpec );
+
+    /**
+     * Add some default scenarios, if needed.
+     */
+    @Transactional
+    void initialize();
 
     /**
      * Find all known actors that belong to a resource spec
@@ -195,4 +189,5 @@ public interface Service {
      * @return a list of actors
      */
     List<Actor> findAllActors( ResourceSpec resourceSpec );
+
 }

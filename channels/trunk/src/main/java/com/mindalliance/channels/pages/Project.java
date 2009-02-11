@@ -1,8 +1,6 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.Service;
-import com.mindalliance.channels.Medium;
-import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.export.Exporter;
@@ -31,7 +29,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.ArrayList;
 
 /**
  * Application object for Channels.
@@ -106,6 +103,9 @@ public final class Project extends WebApplication {
     protected void init() {
         super.init();
 
+// TODO enable @Javabean in wicket components
+//        addComponentInstantiationListener( new SpringComponentInjector( this ) );
+
         getMarkupSettings().setStripWicketTags( true );
 //        getRequestCycleSettings().setRenderStrategy( IRequestCycleSettings.REDIRECT_TO_RENDER );
         mount( new QueryStringUrlCodingStrategy( "index.html", IndexPage.class ) );
@@ -117,6 +117,8 @@ public final class Project extends WebApplication {
         mount( new QueryStringUrlCodingStrategy( "actor.html", ActorPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "organization.html", OrganizationPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "resource.html", ProfilePage.class ) );
+
+        service.initialize();
     }
 
     @Override

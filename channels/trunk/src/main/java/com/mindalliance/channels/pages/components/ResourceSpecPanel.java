@@ -69,7 +69,7 @@ public class ResourceSpecPanel extends Panel {
                         orgNameField.getDefaultModelObjectAsString().trim() ) );
                 newResourceSpec.setJurisdiction( Place.named(
                         jurNameField.getDefaultModelObjectAsString().trim() ) );
-                newResourceSpec.setChannels( ( (Channelable) channelsPanel.getDefaultModelObject() ).getChannels() );
+                newResourceSpec.setChannels( ( (Channelable) channelsPanel.getDefaultModelObject() ).getEffectiveChannels() );
                 if ( !newResourceSpec.isAnyone() ) {
                     getService().addOrUpdate( newResourceSpec );
                     setResponsePage(

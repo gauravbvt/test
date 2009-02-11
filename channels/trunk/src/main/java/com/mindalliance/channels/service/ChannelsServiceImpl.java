@@ -16,22 +16,19 @@ import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.UserIssue;
-import com.mindalliance.channels.Medium;
 import com.mindalliance.channels.dao.EvacuationScenario;
 import com.mindalliance.channels.dao.FireScenario;
 import com.mindalliance.channels.util.Play;
 import com.mindalliance.channels.util.SemMatch;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
-import org.apache.commons.collections.iterators.FilterIterator;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.iterators.FilterIterator;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.text.MessageFormat;
 
 /**
  * Utility class for common functionality for all Dao implementations.
@@ -40,22 +37,13 @@ import java.text.MessageFormat;
  */
 public class ChannelsServiceImpl implements Service {
 
-    /** Name of the default medium. */
-    private static final String OTHER_MEDIUM = "Other";
-
     /** The implementation dao. */
     private Dao dao;
-
-    /**
-     * Channel media registered at startup
-     */
-    private List<Medium> media = new ArrayList<Medium>();
 
     /**
      * True if defaults scenarios will be added when dao is set.
      */
     private boolean addingSamples;
-
 
     public ChannelsServiceImpl() {
     }
@@ -68,26 +56,25 @@ public class ChannelsServiceImpl implements Service {
     /** {@inheritDoc} */
     public Scenario createScenario() {
         Scenario result = new Scenario();
+        dao.add( result );
 
         result.setName( Scenario.DEFAULT_NAME );
         result.setDescription( Scenario.DEFAULT_DESCRIPTION );
-
         createPart( result );
 
-        dao.add( result );
         return result;
     }
 
     /** {@inheritDoc} */
     public Connector createConnector( Scenario scenario ) {
-        Connector result = dao.createConnector();
+        Connector result = dao.createConnector( scenario );
         scenario.addNode( result );
         return result;
     }
 
     /** {@inheritDoc} */
     public Part createPart( Scenario scenario ) {
-        Part result = dao.createPart();
+        Part result = dao.createPart( scenario );
         scenario.addNode( result );
         return result;
     }
@@ -151,8 +138,7 @@ public class ChannelsServiceImpl implements Service {
 
     /** {@inheritDoc} */
     public Scenario findScenario( String name ) throws NotFoundException {
-        for ( Iterator<Scenario> it = dao.iterate( Scenario.class ); it.hasNext(); ) {
-            Scenario s = it.next();
+        for ( Scenario s : dao.getAll( Scenario.class ) ) {
             if ( name.equals( s.getName() ) )
                 return s;
         }
@@ -166,16 +152,8 @@ public class ChannelsServiceImpl implements Service {
     }
 
     /** {@inheritDoc} */
-    public <T extends ModelObject> Iterator<T> iterate( Class<T> clazz ) {
-        return dao.iterate( clazz );
-    }
-
-    /** {@inheritDoc} */
     public <T extends ModelObject> List<T> list( Class<T> clazz ) {
-        List<T> list = new ArrayList<T>();
-        Iterator<T> iterator = iterate( clazz );
-        while( iterator.hasNext() ) list.add( iterator.next() );
-        return list;
+        return dao.getAll( clazz );
     }
 
     /**
@@ -183,7 +161,7 @@ public class ChannelsServiceImpl implements Service {
      */
     @SuppressWarnings( { "unchecked" } )
     public Iterator<ModelObject> iterateEntities() {
-        return new FilterIterator( dao.iterate( ModelObject.class ), new Predicate() {
+        return new FilterIterator( dao.getAll( ModelObject.class ).iterator(), new Predicate() {
             public boolean evaluate( Object object ) {
                 return ( (ModelObject) object ).isEntity();
             }
@@ -204,7 +182,7 @@ public class ChannelsServiceImpl implements Service {
 
     /** {@inheritDoc} */
     public Scenario getDefaultScenario() {
-        return dao.iterate( Scenario.class ).next();
+        return dao.getAll( Scenario.class ).iterator().next();
     }
 
     public Dao getDao() {
@@ -212,24 +190,24 @@ public class ChannelsServiceImpl implements Service {
     }
 
     /**
-     * Use a specific dao. If 'addingSamples', add Fire and Evacuation scenarios.
-     * Else create initial scenario.
+     * Use a specific dao.
      * @param dao the dao
      */
-    @Transactional
-    public final void setDao( Dao dao ) {
+    public void setDao( Dao dao ) {
         this.dao = dao;
-        if ( addingSamples ) {
-            LoggerFactory.getLogger( getClass() ).info( "Adding sample models" );
-            // TODO initialize memory to default scenario instead of test scenario
-            // dao.add( Scenario.createDefault() );
-            EvacuationScenario evac = new EvacuationScenario( this );
-            dao.add( evac );
-            dao.add( new FireScenario( this, evac ) );
+    }
 
-        }
-        else {
-            createScenario();
+    /** {@inheritDoc} */
+    public void initialize() {
+        if ( !dao.getAll( Scenario.class ).iterator().hasNext() ) {
+            if ( addingSamples ) {
+                LoggerFactory.getLogger( getClass() ).info( "Adding sample models" );
+                Scenario evac = createScenario();
+                EvacuationScenario.initialize( evac, this );
+                Scenario fireScenario = createScenario();
+                FireScenario.initialize( fireScenario, this, evac );
+            } else
+                createScenario();
         }
     }
 
@@ -237,38 +215,8 @@ public class ChannelsServiceImpl implements Service {
         return addingSamples;
     }
 
-    public final void setAddingSamples( boolean addingSamples ) {
+    public void setAddingSamples( boolean addingSamples ) {
         this.addingSamples = addingSamples;
-    }
-
-    public List<Medium> getMedia() {
-        return media;
-    }
-
-    public void setMedia( List<Medium> media ) {
-        this.media = media;
-    }
-
-    /** {@inheritDoc} */
-    public void addMedium( Medium medium ) {
-        media.add( medium );
-    }
-
-    /** {@inheritDoc} */
-    public Medium mediumNamed( String name ) {
-        Medium medium = null;
-        for ( Medium m : media ) {
-            if ( m.getName().equalsIgnoreCase( name ) ) {
-                medium = m;
-                break;
-            }
-        }
-        if ( medium == null ) {
-            LoggerFactory.getLogger( getClass() ).warn( MessageFormat.format(
-                    "Unknown medium {0}. Using ''{1}''.", name, OTHER_MEDIUM ) );
-            medium = mediumNamed( OTHER_MEDIUM );
-        }
-        return medium;
     }
 
     /**
@@ -276,7 +224,7 @@ public class ChannelsServiceImpl implements Service {
      */
     public <T extends ModelObject> T findOrCreate( Class<T> clazz, String name ) {
         T result = null;
-        Iterator<T> objects = dao.iterate( clazz );
+        Iterator<T> objects = dao.getAll( clazz ).iterator();
         while ( result == null && objects.hasNext() ) {
             T object = objects.next();
             if ( SemMatch.same( object.getName(), name ) ) result = object;
@@ -296,7 +244,7 @@ public class ChannelsServiceImpl implements Service {
     }
 
     /** {@inheritDoc} */
-    public List<ResourceSpec> allResourceSpecs() {
+    public List<ResourceSpec> getAllResourceSpecs() {
         Set<ResourceSpec> result = new HashSet<ResourceSpec>();
 
         addSpecs( result, ResourceSpec.class );
@@ -305,9 +253,7 @@ public class ChannelsServiceImpl implements Service {
         addSpecs( result, Organization.class );
 
         // Transient specs from scenario parts
-        Iterator<Scenario> allScenarios = iterate( Scenario.class );
-        while ( allScenarios.hasNext() ) {
-            Scenario scenario = allScenarios.next();
+        for ( Scenario scenario : list( Scenario.class ) ) {
             Iterator<Part> parts = scenario.parts();
             while ( parts.hasNext() ) {
                 Part part = parts.next();
@@ -333,25 +279,14 @@ public class ChannelsServiceImpl implements Service {
     }
 
     private void addSpecs( Set<ResourceSpec> result, Class<? extends ModelObject> clazz ) {
-        Iterator<? extends ModelObject> specs = iterate( clazz );
-        while ( specs.hasNext() ) {
-            ModelObject mo = specs.next();
-            if (mo instanceof ResourceSpec) {
-                result.add( (ResourceSpec) mo);
-            }
-            else if (mo.isEntity()) {
-                result.add( ResourceSpec.with( mo ) );
-            }
-            else {
-                throw new IllegalArgumentException("Can't be a ResourceSpec " + mo);
-            }
-        }
+        for ( ModelObject modelObject : list( clazz ) )
+            result.add( ResourceSpec.with( modelObject ) );
     }
 
     /** {@inheritDoc} */
     public List<ResourceSpec> findAllResourcesNarrowingOrEqualTo( ResourceSpec resourceSpec ) {
         List<ResourceSpec> list = new ArrayList<ResourceSpec>();
-        for ( ResourceSpec spec : allResourceSpecs() ) {
+        for ( ResourceSpec spec : getAllResourceSpecs() ) {
             if ( spec.narrowsOrEquals( resourceSpec ) )
                 list.add( spec );
         }
@@ -376,9 +311,7 @@ public class ChannelsServiceImpl implements Service {
     /** {@inheritDoc} */
     public List<Play> findAllPlays( ResourceSpec resourceSpec ) {
         Set<Play> plays = new HashSet<Play>();
-        Iterator<Scenario> allScenarios = iterate( Scenario.class );
-        while ( allScenarios.hasNext() ) {
-            Scenario scenario = allScenarios.next();
+        for ( Scenario scenario : list( Scenario.class ) ) {
             Iterator<Flow> flows = scenario.flows();
             while ( flows.hasNext() ) {
                 Flow flow = flows.next();
@@ -411,8 +344,7 @@ public class ChannelsServiceImpl implements Service {
     /** {@inheritDoc} */
     public List<Issue> findAllUserIssues( ModelObject identifiable ) {
         List<Issue> foundIssues = new ArrayList<Issue>();
-        for ( Iterator<UserIssue> it = iterate( UserIssue.class ); it.hasNext(); ) {
-            UserIssue userIssue = it.next();
+        for ( UserIssue userIssue : list( UserIssue.class ) ) {
             if ( userIssue.getAbout().equals( identifiable ) )
                 foundIssues.add( userIssue );
         }
@@ -424,7 +356,7 @@ public class ChannelsServiceImpl implements Service {
      */
     public ResourceSpec findPermanentResourceSpec( ResourceSpec resourceSpec ) {
         ResourceSpec permanent = null;
-        Iterator<ResourceSpec> iterator = iterate( ResourceSpec.class );
+        Iterator<ResourceSpec> iterator = list( ResourceSpec.class ).iterator();
         while ( permanent == null && iterator.hasNext() ) {
             ResourceSpec rs = iterator.next();
             if ( rs.equals( resourceSpec ) )
@@ -452,7 +384,7 @@ public class ChannelsServiceImpl implements Service {
     public List<Actor> findAllActors( ResourceSpec resourceSpec ) {
         Set<Actor> actors = new HashSet<Actor>();
         Iterator<ResourceSpec> actorResourceSpecs = new FilterIterator(
-                allResourceSpecs().iterator(),
+                getAllResourceSpecs().iterator(),
                 new Predicate() {
                     public boolean evaluate( Object object ) {
                         return ((ResourceSpec)object).getActor() != null;
@@ -466,26 +398,4 @@ public class ChannelsServiceImpl implements Service {
         }
         return new ArrayList<Actor>( actors );
     }
-
-    /**
-     * Register default media - used in test setups
-     *
-     * @param service a service
-     */
-    public static void registerDefaultMedia( Service service ) {
-
-        service.addMedium( new Medium( "Phone", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}" ) );
-        service.addMedium( new Medium( "Fax", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}" ) );
-        service.addMedium( new Medium( "Cell", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}" ) );
-        service.addMedium( new Medium( "Email", "[^@\\s]+@[^@\\s]+\\.\\w+" ) );
-        service.addMedium( new Medium( "IM", ".+" ) );
-        service.addMedium( new Medium( "Radio", ".+" ) );
-        service.addMedium( new Medium( "Television", ".+" ) );
-        service.addMedium( new Medium( "Courier", ".+" ) );
-        service.addMedium( new Medium( "Face-to-face", ".*" ) );
-        service.addMedium( new Medium( OTHER_MEDIUM, ".+" ) );
-
-    }
-
-
 }

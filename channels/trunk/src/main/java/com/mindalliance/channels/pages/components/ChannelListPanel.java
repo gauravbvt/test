@@ -1,14 +1,16 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Channel;
-import com.mindalliance.channels.Medium;
 import com.mindalliance.channels.Channelable;
 import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.Medium;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
@@ -16,20 +18,19 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 
 /**
- * An editable list of channels
+ * An editable list of channels.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -49,8 +50,9 @@ public class ChannelListPanel extends Panel {
         WebMarkupContainer candidatesSpan = new WebMarkupContainer( "candidates-span" );
         add( candidatesSpan );
         ListView<Wrapper> candidatesList = new ListView<Wrapper>( "candidates", candidates ) {
+            @Override
             protected void populateItem( ListItem<Wrapper> item ) {
-                final Wrapper wrapper = item.getModelObject();
+                Wrapper wrapper = item.getModelObject();
                 item.add( new CheckBox(
                         "include-candidate",
                         new PropertyModel<Boolean>( wrapper, "markedForInclusion" ) ) );
@@ -61,6 +63,7 @@ public class ChannelListPanel extends Panel {
         candidatesSpan.setVisible( !candidates.isEmpty() );
         final List<Wrapper> setChannels = getWrappedChannels( model );
         add( new ListView<Wrapper>( "channels", setChannels ) {
+            @Override
             protected void populateItem( ListItem<Wrapper> item ) {
                 final Wrapper wrapper = item.getModelObject();
                 WebMarkupContainer includeSpan = new WebMarkupContainer( "include-span" );
@@ -73,7 +76,7 @@ public class ChannelListPanel extends Panel {
                 item.add( new DropDownChoice<Medium>(
                         "medium",
                         new PropertyModel<Medium>( wrapper, "medium" ),
-                        Project.service().getMedia(),
+                        Arrays.asList( Medium.values() ),
                         new IChoiceRenderer<Medium>() {
                             public Object getDisplayValue( Medium medium ) {
                                 return medium == null ? "Select a medium" : medium.getName();
@@ -100,7 +103,7 @@ public class ChannelListPanel extends Panel {
 
     private List<Wrapper> getWrappedChannels( IModel<Channelable> model ) {
         final List<Wrapper> list = new ArrayList<Wrapper>();
-        List<Channel> setChannels = model.getObject().getChannels();
+        List<Channel> setChannels = model.getObject().getEffectiveChannels();
         for ( Channel channel : setChannels ) {
             // wrap channel as already included
             list.add( new Wrapper( channel, true ) );
@@ -113,10 +116,10 @@ public class ChannelListPanel extends Panel {
     private List<Wrapper> getWrappedCandidateChannels( IModel<Channelable> model ) {
         Set<Channel> candidates = new HashSet<Channel>();
         List<Channelable> channelables = findRelatedChannelables( model.getObject() );
-        List<Channel> alreadySetChannels = model.getObject().getChannels();
+        List<Channel> alreadySetChannels = model.getObject().getEffectiveChannels();
         // Get all non-redundant, valid candidate channels
         for ( Channelable aChannelable : channelables ) {
-            for ( Channel channel : aChannelable.getChannels() ) {
+            for ( Channel channel : aChannelable.getEffectiveChannels() ) {
                 if ( !alreadySetChannels.contains( channel )
                         && channel.isValid() ) {
                     candidates.add( channel );
@@ -132,7 +135,7 @@ public class ChannelListPanel extends Panel {
         }
         return wrappers;
     }
-    
+
     /**
      * Find channelables that have candidate channels for a given channelable
      *
@@ -169,7 +172,7 @@ public class ChannelListPanel extends Panel {
                 ok = false;
                 problem = "Not valid";
             } else {
-                for ( Channel c : channelable.getChannels() ) {
+                for ( Channel c : channelable.getEffectiveChannels() ) {
                     if ( c != channel && c.equals( channel ) ) {
                         ok = false;
                         problem = "Repeated";

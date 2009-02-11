@@ -26,9 +26,7 @@
       <!--<property name="hibernateProperties">-->
         <!--<value>-->
           <!--hibernate.dialect=org.hibernate.dialect.HSQLDialect-->
-          <!--hibernate.hbm2ddl.auto=create-drop-->
-          <!--hibernate.show_sql=true-->
-          <!--hibernate.connection.release_mode=on_close-->
+          <!--hibernate.hbm2ddl.auto=create-->
         <!--</value>-->
       <!--</property>-->
     <!--</bean>-->
@@ -39,6 +37,19 @@
 
     <!--<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">-->
       <!--<property name="sessionFactory" ref="sessionFactory"/>-->
+      <!--<property name="earlyFlushBeforeCommit" value="true"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="txPerRequest" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">-->
+        <!--<property name="target">-->
+            <!--<bean class="org.springframework.orm.hibernate3.support.OpenSessionInViewFilter">-->
+                <!--<property name="flushMode" value="AUTO"/>-->
+            <!--</bean>-->
+        <!--</property>-->
+        <!--<property name="transactionManager" ref="txManager"/>-->
+        <!--<property name="transactionAttributes"><value>-->
+            <!--doFilter=PROPAGATION_REQUIRED-->
+        <!--</value></property>-->
     <!--</bean>-->
 
     <bean id="dao" class="com.mindalliance.channels.dao.Memory"/>

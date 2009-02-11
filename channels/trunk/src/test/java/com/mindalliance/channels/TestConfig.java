@@ -23,4 +23,11 @@ public class TestConfig extends AbstractChannelsTest {
         Project p = (Project) ctx.getBean( "wicketApplication" );                         // NON-NLS
         assertNotNull( p );
     }
+
+    /**
+ * ...
+     */
+    public static class TestConnector {
+
+    }
 }

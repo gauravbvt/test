@@ -1,14 +1,10 @@
 package com.mindalliance.channels;
 
-import org.apache.wicket.model.IModel;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import java.text.MessageFormat;
-import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
 
 /**
  * A part in a scenario.
@@ -58,8 +54,6 @@ public class Part extends Node {
      */
     private Place jurisdiction;
 
-    private ResourceSpec resourceSpec;
-
     public Part() {
         adjustName();
     }
@@ -92,7 +86,7 @@ public class Part extends Node {
             setName( DEFAULT_ACTOR );
     }
 
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.PERSIST )
     public Actor getActor() {
         return actor;
     }
@@ -107,7 +101,7 @@ public class Part extends Node {
         adjustName();
     }
 
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.PERSIST )
     public Place getJurisdiction() {
         return jurisdiction;
     }
@@ -116,7 +110,7 @@ public class Part extends Node {
         this.jurisdiction = jurisdiction;
     }
 
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.PERSIST )
     public Place getLocation() {
         return location;
     }
@@ -125,7 +119,7 @@ public class Part extends Node {
         this.location = location;
     }
 
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.PERSIST )
     public Organization getOrganization() {
         return organization;
     }
@@ -140,7 +134,7 @@ public class Part extends Node {
         adjustName();
     }
 
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.ALL )
     public Role getRole() {
         return role;
     }
@@ -177,7 +171,7 @@ public class Part extends Node {
      */
     @Transient
     public boolean isSystem() {
-        final Role r = getRole();
+        Role r = getRole();
         return r != null
                 && r.getName().toLowerCase().contains( "system" );
     }
@@ -205,7 +199,7 @@ public class Part extends Node {
      * @return a boolean
      */
     public boolean involves( ResourceSpec resourceSpec ) {
-        return resourceSpec.intersects( this.resourceSpec() );
+        return resourceSpec.intersects( resourceSpec() );
     }
 
     /**
@@ -214,12 +208,12 @@ public class Part extends Node {
      */
     public void removeResourceSpec( ResourceSpec resourceSpec ) {
         ResourceSpec partResourceSpec = resourceSpec();
-        while ( partResourceSpec.narrowsOrEquals( resourceSpec )) {
+        while ( partResourceSpec.narrowsOrEquals( resourceSpec ) ) {
             ModelObject entity = partResourceSpec.mostSpecificEntity();
-            if (entity instanceof Actor) setActor(null);
-            else if (entity instanceof Role) setRole(null);
-            else if (entity instanceof Organization) setOrganization(null);
-            else if (entity instanceof Place) setJurisdiction(null);
+            if ( entity instanceof Actor ) setActor( null );
+            else if ( entity instanceof Role ) setRole( null );
+            else if ( entity instanceof Organization ) setOrganization( null );
+            else if ( entity instanceof Place ) setJurisdiction( null );
             else throw new IllegalArgumentException( "Can't unset entity " + entity);
             partResourceSpec = resourceSpec();
         }

@@ -1,26 +1,25 @@
 package com.mindalliance.channels.pages.reports;
 
-import org.apache.wicket.markup.html.panel.Panel;
+import com.mindalliance.channels.Organization;
+import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.Role;
+import com.mindalliance.channels.pages.Project;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.AttributeModifier;
-import com.mindalliance.channels.Organization;
-import com.mindalliance.channels.Role;
-import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.pages.Project;
 
-import java.util.List;
+import java.text.Collator;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Set;
 import java.util.HashSet;
-import java.text.Collator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Organization directory panel
@@ -78,11 +77,9 @@ public class OrganizationDirectoryPanel extends Panel {
 
     private List<Organization> findSubOrganizations() {
         List<Organization> subOrgs = new ArrayList<Organization>();
-        Iterator<Organization> orgs = Project.service().iterate( Organization.class );
-        while ( orgs.hasNext() ) {
-            Organization org = orgs.next();
-            if ( org.getParent() == organization ) {
-                subOrgs.add( org );
+        for ( Organization organization : Project.service().list( Organization.class ) ) {
+            if ( organization.getParent() == this.organization ) {
+                subOrgs.add( organization );
             }
         }
         return subOrgs;
@@ -90,7 +87,7 @@ public class OrganizationDirectoryPanel extends Panel {
 
     private List<Role> findRolesInOrganization() {
         Set<Role> rolesInOrganization = new HashSet<Role>();
-        List<ResourceSpec> allResourceSpecs = Project.service().allResourceSpecs();
+        List<ResourceSpec> allResourceSpecs = Project.service().getAllResourceSpecs();
         for ( ResourceSpec resourceSpec : allResourceSpecs ) {
             if ( resourceSpec.getOrganization() == organization ) {
                 Role role = resourceSpec.getRole();

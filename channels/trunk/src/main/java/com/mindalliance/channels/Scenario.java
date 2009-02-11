@@ -8,13 +8,11 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+import javax.persistence.FetchType;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.TreeSet;
 /**
  * A scenario in the project.
  * Provides an iterator on its nodes.
@@ -22,7 +20,8 @@ import java.util.TreeSet;
 @Entity
 public class Scenario extends ModelObject {
 
-    // TODO - Add location (as in area) of the scenario (where the scenario applies - e.g. avian flu case in New Jersey)
+    // TODO - Add location (as in area) of the scenario (where the scenario applies
+    //  - e.g. avian flu case in New Jersey)
 
     /** The default name for new scenarios. */
     public static final String DEFAULT_NAME = "Untitled";
@@ -33,38 +32,20 @@ public class Scenario extends ModelObject {
     /** Initial node capacity. */
     private static final int INITIAL_CAPACITY = 20;
 
-    /** Nodes in the flow graph. */
-    private Set<Node> nodes = new HashSet<Node>( INITIAL_CAPACITY );
-
     /** Nodes, indexed by id. */
     private Map<Long,Node> nodeIndex = new HashMap<Long,Node>( INITIAL_CAPACITY );
 
     public Scenario() {
     }
 
-    @OneToMany( cascade = CascadeType.ALL )
+    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     @Cascade( org.hibernate.annotations.CascadeType.DELETE_ORPHAN )
-    private Set<Node> getNodes() {
-        return nodes;
+    Map<Long, Node> getNodeIndex() {
+        return nodeIndex;
     }
 
-    /**
-     * Set the nodes in this scenario.
-     * @param nodes the nodes
-     * @throws IllegalArgumentException when list is empty
-     */
-    protected void setNodes( Set<Node> nodes ) {
-        if ( nodes.isEmpty() )
-            throw new IllegalArgumentException();
-
-        for ( Node node : getNodes() )
-            node.setScenario( null );
-
-        this.nodes = new HashSet<Node>( nodes );
-        nodeIndex = new HashMap<Long,Node>( INITIAL_CAPACITY );
-        for ( Node node: nodes ) {
-            addNode( node );
-        }
+    void setNodeIndex( Map<Long, Node> nodeIndex ) {
+        this.nodeIndex = nodeIndex;
     }
 
     /**
@@ -74,7 +55,7 @@ public class Scenario extends ModelObject {
      * */
     public Iterator<Node> nodes() {
         // TODO should nodes be sorted here?
-        return new TreeSet<Node>( getNodes() ).iterator();
+        return getNodeIndex().values().iterator();
     }
 
     /**
@@ -82,7 +63,7 @@ public class Scenario extends ModelObject {
      */
     @Transient
     public int getNodeCount() {
-        return getNodes().size();
+        return getNodeIndex().size();
     }
 
     /**
@@ -93,7 +74,7 @@ public class Scenario extends ModelObject {
      * @return the new part
      */
     public Part createPart( Service service, Actor actor, String task ) {
-        final Part result = service.createPart( this );
+        Part result = service.createPart( this );
         result.setActor( actor );
         result.setTask( task );
         addNode( result );
@@ -108,7 +89,7 @@ public class Scenario extends ModelObject {
      * @return the new part
      */
     public Part createPart( Service service, Role role, String task ) {
-        final Part result = service.createPart( this );
+        Part result = service.createPart( this );
         result.setRole( role );
         result.setTask( task );
         addNode( result );
@@ -120,7 +101,6 @@ public class Scenario extends ModelObject {
      * @param node the new node
      */
     public void addNode( Node node ) {
-        getNodes().add( node );
         nodeIndex.put( node.getId(), node );
         node.setScenario( this );
     }
@@ -131,20 +111,21 @@ public class Scenario extends ModelObject {
      * @param node the node to remove.
      */
     public void removeNode( Node node ) {
-        if ( getNodes().contains( node ) && ( node.isConnector() || hasMoreThanOnePart() ) ) {
-            getNodes().remove( node );
+        if ( getNodeIndex().containsKey( node.getId() )
+             && ( node.isConnector() || hasMoreThanOnePart() ) )
+        {
             nodeIndex.remove( node.getId() );
 
-            final Iterator<Flow> ins = node.requirements();
+            Iterator<Flow> ins = node.requirements();
             while ( ins.hasNext() )
                 ins.next().disconnect();
 
-            final Iterator<Flow> outs = node.outcomes();
+            Iterator<Flow> outs = node.outcomes();
             while ( outs.hasNext() )
                 outs.next().disconnect();
 
             if ( node.isConnector() ) {
-                final Iterator<ExternalFlow> xf = ( (Connector) node ).externalFlows();
+                Iterator<ExternalFlow> xf = ( (Connector) node ).externalFlows();
                 while ( xf.hasNext() ) {
                     xf.next().disconnect();
                 }
@@ -155,7 +136,7 @@ public class Scenario extends ModelObject {
     }
 
     private boolean hasMoreThanOnePart() {
-        final Iterator<Part> parts = parts();
+        Iterator<Part> parts = parts();
         parts.next();
         // Note: scenario always has at least one part
         return parts.hasNext();
@@ -171,14 +152,26 @@ public class Scenario extends ModelObject {
     }
 
     /**
+     * Remove any connections to the outside world
+     * (essentially, anything connected to an input or output connector).
+     */
+    public void disconnect() {
+        for ( Node n : nodeIndex.values() ) {
+            if ( n.isConnector() )
+                ( (Connector) n ).disconnect();
+        }
+
+    }
+
+    /**
      * Iterates over inputs of this scenario.
      * @return an iterator on connectors having outcomes
      */
     @SuppressWarnings( { "unchecked" } )
     public Iterator<Connector> inputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
-            public boolean evaluate( Object o ) {
-                final Node n = (Node) o;
+            public boolean evaluate( Object object ) {
+                Node n = (Node) object;
                 return n.isConnector() && n.outcomes().hasNext();
             }
         } );
@@ -191,8 +184,8 @@ public class Scenario extends ModelObject {
     @SuppressWarnings( { "unchecked" } )
     public Iterator<Part> parts() {
         return (Iterator<Part>) new FilterIterator( nodes(), new Predicate() {
-            public boolean evaluate( Object o ) {
-                final Node n = (Node) o;
+            public boolean evaluate( Object object ) {
+                Node n = (Node) object;
                 return n.isPart();
             }
         } );
@@ -205,8 +198,8 @@ public class Scenario extends ModelObject {
     @SuppressWarnings( { "unchecked" } )
     public Iterator<Connector> outputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
-            public boolean evaluate( Object o ) {
-                final Node n = (Node) o;
+            public boolean evaluate( Object object ) {
+                Node n = (Node) object;
                 return n.isConnector() && n.requirements().hasNext();
             }
         } );
@@ -257,8 +250,8 @@ public class Scenario extends ModelObject {
             reqIterator = (Iterator<Flow>) new FilterIterator(
                     node.requirements(),
                     new Predicate() {
-                        public boolean evaluate( Object o ) {
-                            return !( (Flow) o ).isInternal();
+                        public boolean evaluate( Object object ) {
+                            return !( (Flow) object ).isInternal();
                         }
                     } );
         }

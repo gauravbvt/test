@@ -3,15 +3,15 @@ package com.mindalliance.channels;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.util.SemMatch;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
 
 /**
  * A Resource is an actor in a role for an organization with a jurisdiction.
@@ -88,7 +88,7 @@ public class ResourceSpec extends ModelObject implements Channelable {
         return resourceSpec;
     }
 
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.PERSIST )
     public Actor getActor() {
         return actor;
     }
@@ -97,7 +97,7 @@ public class ResourceSpec extends ModelObject implements Channelable {
         this.actor = actor;
     }
 
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.PERSIST )
     public Role getRole() {
         return role;
     }
@@ -106,7 +106,7 @@ public class ResourceSpec extends ModelObject implements Channelable {
         this.role = role;
     }
 
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.PERSIST )
     public Organization getOrganization() {
         return organization;
     }
@@ -115,7 +115,7 @@ public class ResourceSpec extends ModelObject implements Channelable {
         this.organization = organization;
     }
 
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.PERSIST )
     public Place getJurisdiction() {
         return jurisdiction;
     }
@@ -132,6 +132,10 @@ public class ResourceSpec extends ModelObject implements Channelable {
         this.channels = channels;
     }
 
+    public List<Channel> getEffectiveChannels() {
+        return getChannels();
+    }
+
     /**
      * Add a channel to the contact info
      *
@@ -143,9 +147,7 @@ public class ResourceSpec extends ModelObject implements Channelable {
         }
     }
 
-    /**
-     * {@inheritDoc
-     */
+    /** {@inheritDoc */
     @Transient
     public String getChannelsString() {
         return Channel.toString( channels );
@@ -154,6 +156,7 @@ public class ResourceSpec extends ModelObject implements Channelable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean equals( Object obj ) {
         if ( !( obj instanceof ResourceSpec ) ) return false;
         ResourceSpec resourceSpec = (ResourceSpec) obj;
@@ -163,9 +166,8 @@ public class ResourceSpec extends ModelObject implements Channelable {
                 && SemMatch.samePlace( jurisdiction, resourceSpec.getJurisdiction() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
+    @Override
     public int hashCode() {
         int hash = 1;
         if ( actor != null ) hash = hash * 31 + actor.hashCode();
@@ -175,11 +177,7 @@ public class ResourceSpec extends ModelObject implements Channelable {
         return hash;
     }
 
-    /**
-     * Add channel to list if not redundant
-     *
-     * @param channel channel to add
-     */
+    /** {@inheritDoc} */
     public void addChannel( Channel channel ) {
         channels.add( channel );
     }
@@ -211,7 +209,7 @@ public class ResourceSpec extends ModelObject implements Channelable {
      */
     @Transient
     public String getActorName() {
-        return ( actor == null ) ? "" : actor.getName();
+        return actor == null ? "" : actor.getName();
     }
 
     /**
@@ -221,7 +219,7 @@ public class ResourceSpec extends ModelObject implements Channelable {
      */
     @Transient
     public String getOrganizationName() {
-        return ( organization == null ) ? "" : organization.getName();
+        return organization == null ? "" : organization.getName();
     }
 
     /**
@@ -231,7 +229,7 @@ public class ResourceSpec extends ModelObject implements Channelable {
      */
     @Transient
     public String getJurisdictionName() {
-        return ( jurisdiction == null ) ? "" : jurisdiction.getName();
+        return jurisdiction == null ? "" : jurisdiction.getName();
     }
 
     /**
@@ -352,6 +350,7 @@ public class ResourceSpec extends ModelObject implements Channelable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String toString() {
         return getName();
     }
@@ -373,7 +372,7 @@ public class ResourceSpec extends ModelObject implements Channelable {
         if ( !other.isAnyOrganization()
                 && ( organization == null || !organization.isSameOrWithin( other.getOrganization() ) ) )
             return false;
-        
+
          */
         if ( organization != other.getOrganization() && !other.isAnyOrganization() )
             return false;
@@ -459,18 +458,12 @@ public class ResourceSpec extends ModelObject implements Channelable {
         return isPredefined() ? "added" : "from tasks";
     }
 
-    /**
-     * Get all explicit and implied channels
-     *
-     * @return list of channels
-     */
+    /** {@inheritDoc} */
     public List<Channel> allChannels() {
         Set<Channel> allChannels = new HashSet<Channel>();
-        Iterator<ResourceSpec> resourceSpecs = Project.service().iterate( ResourceSpec.class );
-        while ( resourceSpecs.hasNext() ) {
-            ResourceSpec rs = resourceSpecs.next();
-            if ( this.narrowsOrEquals( rs ) ) {
-                List<Channel> resourceChannels = rs.getChannels();
+        for ( ResourceSpec resourceSpec : Project.service().list( ResourceSpec.class ) ) {
+            if ( narrowsOrEquals( resourceSpec ) ) {
+                List<Channel> resourceChannels = resourceSpec.getChannels();
                 for ( Channel resourceChannel : resourceChannels ) {
                     allChannels.add( resourceChannel );
                 }

@@ -93,11 +93,6 @@ public class TestScenario extends TestCase {
         assertNull( f2.getSource() );
         assertNull( f1.getTarget() );
         assertNull( f2.getTarget() );
-
-        try {
-            scenario.setNodes( new HashSet<Node>(0) );
-            fail();
-        } catch ( IllegalArgumentException ignored ) {}
     }
 
     public void testRemoveOnly() {
@@ -108,27 +103,6 @@ public class TestScenario extends TestCase {
 
         scenario.removeNode( initial );
         assertSame( initial, scenario.getNode( initial.getId() ) );
-    }
-
-    public void testSetNodes() {
-        Set<Node> ps = new HashSet<Node>( 2 );
-        Part p1 = service.createPart( scenario );
-        ps.add( p1 );
-        Node p2 = service.createPart( scenario );
-        ps.add( p2 );
-        scenario.setNodes( ps );
-        assertSame( p1, scenario.getNode( p1.getId() ) );
-        assertSame( p2, scenario.getNode( p2.getId() ) );
-        assertSame( scenario, p1.getScenario() );
-        assertSame( scenario, p2.getScenario() );
-
-        Set<Node> ps2 = new HashSet<Node>();
-        ps2.add( service.createPart( scenario ) );
-        scenario.setNodes( ps2 );
-        assertNull( scenario.getNode( p1.getId() ) );
-        assertNull( scenario.getNode( p2.getId() ) );
-        assertNull( p1.getScenario() );
-        assertNull( p2.getScenario() );
     }
 
     public void testConnect() {

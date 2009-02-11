@@ -1,7 +1,5 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.pages.Project;
-
 @SuppressWarnings( { "HardCodedStringLiteral" } )
 public class TestFlow extends AbstractChannelsTest {
 
@@ -31,7 +29,7 @@ public class TestFlow extends AbstractChannelsTest {
 
     public void testChannel() {
         assertTrue( flow.getChannels().isEmpty() );
-        Channel channel = new Channel( Project.service().mediumNamed( "Phone" ), "800-123-4567" );
+        Channel channel = new Channel( Medium.Phone, "800-123-4567" );
         flow.addChannel( channel );
         assertTrue( channel.isValid() );
         assertFalse(flow.getChannels().isEmpty() );

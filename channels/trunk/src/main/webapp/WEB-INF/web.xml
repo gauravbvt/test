@@ -7,6 +7,22 @@
     <display-name>channels</display-name>
 
     <filter>
+        <filter-name>Request Log</filter-name>
+        <filter-class>org.springframework.web.filter.Log4jNestedDiagnosticContextFilter</filter-class>
+        <init-param>
+            <param-name>includeClientInfo</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <!--<filter>-->
+        <!--<filter-name>Transactional Requests</filter-name>-->
+        <!--<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>-->
+        <!--<init-param>-->
+            <!--<param-name>targetBeanName</param-name>-->
+            <!--<param-value>txPerRequest</param-value>-->
+        <!--</init-param>-->
+    <!--</filter>-->
+    <filter>
         <filter-name>Acegi HTTP Request Security Filter</filter-name>
         <filter-class>org.acegisecurity.util.FilterToBeanProxy</filter-class>
         <init-param>
@@ -15,7 +31,7 @@
         </init-param>
     </filter>
     <filter>
-        <filter-name>wicket.channels</filter-name>
+        <filter-name>Wicket</filter-name>
         <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
         <init-param>
             <param-name>applicationFactoryClassName</param-name>
@@ -24,24 +40,32 @@
     </filter>
 
     <filter-mapping>
+        <filter-name>Request Log</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <!--<filter-mapping>-->
+        <!--<filter-name>Transactional Requests</filter-name>-->
+        <!--<url-pattern>/*</url-pattern>-->
+    <!--</filter-mapping>-->
+    <filter-mapping>
         <filter-name>Acegi HTTP Request Security Filter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     <filter-mapping>
-        <filter-name>wicket.channels</filter-name>
+        <filter-name>Wicket</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/applicationContext.xml /WEB-INF/hibernateConfig.xml</param-value>
+        <param-value>/WEB-INF/applicationContext.xml /WEB-INF/*Config.xml</param-value>
     </context-param>
 
     <context-param>
         <param-name>configuration</param-name>
         <param-value>deployment</param-value>
     </context-param>
-   
+
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>

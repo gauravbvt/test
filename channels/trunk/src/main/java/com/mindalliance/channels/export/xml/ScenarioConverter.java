@@ -73,11 +73,11 @@ public class ScenarioConverter implements Converter {
              context.convertAnother( entity );
              writer.endNode();
          }
+
         // Permanent resource specifications
-        Iterator<ResourceSpec> resourceSpecs = service.iterate( ResourceSpec.class );
-        while ( resourceSpecs.hasNext() ) {
+        for ( ResourceSpec resourceSpec : service.list( ResourceSpec.class ) ) {
             writer.startNode( "resource" );
-            context.convertAnother( resourceSpecs.next() );
+            context.convertAnother( resourceSpec );
             writer.endNode();
         }
         // Scenario user issues

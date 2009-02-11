@@ -14,7 +14,6 @@ import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.model.Model;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -39,7 +38,7 @@ public class IndexPage extends WebPage {
         super( parameters );
 
         final Service service = ( (Project) getApplication() ).getService();
-        resourceSpecs = service.allResourceSpecs();
+        resourceSpecs = service.getAllResourceSpecs();
         init( service );
     }
 
@@ -47,9 +46,8 @@ public class IndexPage extends WebPage {
     private void init( Service service ) {
         add( new Label( "title", "Index" ) );
 
-        List<Scenario> scenarios = new ArrayList<Scenario>();
-        Iterator<Scenario> iterator = service.iterate( Scenario.class );
-        while ( iterator.hasNext() ) scenarios.add( iterator.next() );
+        List<Scenario> scenarios = service.list( Scenario.class );
+
         add( new ScenariosPanel( "all-scenarios",
                 new Model<ArrayList<Scenario>>( (ArrayList) scenarios ) ) );
         Form form = new Form( "resourceSpecs-form" ) {

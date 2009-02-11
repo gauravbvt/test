@@ -1,7 +1,7 @@
 package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.Channel;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.Medium;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -43,7 +43,7 @@ public class ChannelConverter implements Converter {
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "medium" ) ) {
-                channel.setMedium( Project.service().mediumNamed( reader.getValue() ) );
+                channel.setMedium( Medium.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "address" ) ) {
                 channel.setAddress( reader.getValue() );
             }

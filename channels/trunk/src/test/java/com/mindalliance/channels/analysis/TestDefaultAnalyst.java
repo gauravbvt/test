@@ -26,7 +26,7 @@ public class TestDefaultAnalyst extends AbstractChannelsTest {
     @Override
     protected void setUp() {
         super.setUp();
-        scenarios = project.getService().iterate( Scenario.class );
+        scenarios = project.getService().list( Scenario.class ).iterator();
         analyst = project.getAnalyst();
     }
 

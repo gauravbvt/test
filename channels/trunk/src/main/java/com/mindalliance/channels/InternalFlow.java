@@ -1,9 +1,10 @@
 package com.mindalliance.channels;
 
-import org.hibernate.annotations.Entity;
-
+import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
+import javax.persistence.CascadeType;
+import java.util.List;
 
 /**
  * A flow between nodes within one scenario.
@@ -27,13 +28,13 @@ public class InternalFlow extends Flow {
     }
 
     @Override
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.ALL )
     public Node getSource() {
         return source;
     }
 
     @Override
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.ALL )
     public Node getTarget() {
         return target;
     }
@@ -46,6 +47,17 @@ public class InternalFlow extends Flow {
     @Override
     public void setTarget( Node target ) {
         this.target = target;
+    }
+
+    @Override @Transient
+    public List<Channel> getEffectiveChannels() {
+        return getChannels();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setEffectiveChannels( List<Channel> channels ) {
+        setChannels( channels );
     }
 
     /** {@inheritDoc} */

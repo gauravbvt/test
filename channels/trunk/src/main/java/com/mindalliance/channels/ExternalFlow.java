@@ -3,6 +3,7 @@ package com.mindalliance.channels;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
+import javax.persistence.CascadeType;
 import java.util.Iterator;
 import java.util.List;
 
@@ -105,7 +106,7 @@ public class ExternalFlow extends Flow {
         return false;
     }
 
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.ALL )
     public Part getPart() {
         return part;
     }
@@ -114,7 +115,7 @@ public class ExternalFlow extends Flow {
         this.part = part;
     }
 
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.ALL )
     public Connector getConnector() {
         return connector;
     }
@@ -173,12 +174,13 @@ public class ExternalFlow extends Flow {
     }
 
     @Override @Transient
-    public List<Channel> getChannels() {
+    public List<Channel> getEffectiveChannels() {
         return isConnectorBased() ? getConnectorFlow().getChannels() : super.getChannels();
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void setChannels( List<Channel> channels ) {
+    public void setEffectiveChannels( List<Channel> channels ) {
         if ( isConnectorBased() )
             getConnectorFlow().setChannels( channels );
         else

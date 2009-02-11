@@ -25,7 +25,7 @@ public class TestDefaultFlowDiagram extends AbstractChannelsTest {
     @Override
     protected void setUp() {
         super.setUp();
-        scenarios = project.getService().iterate( Scenario.class );
+        scenarios = project.getService().list( Scenario.class ).iterator();
     }
 
     public void testGetSVG() {

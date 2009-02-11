@@ -1,8 +1,8 @@
 package com.mindalliance.channels.export;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.Service;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Service;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -11,7 +11,6 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -28,13 +27,13 @@ public class TestExportImport extends AbstractChannelsTest {
     private Service service;
 
 
+    @Override
     protected void setUp() {
         super.setUp();
         service = project.getService();
         scenarioNames = new ArrayList<String>();
-        Iterator<Scenario> scenarios = project.getService().iterate( Scenario.class );
-        while ( scenarios.hasNext() ) {
-            scenarioNames.add( scenarios.next().getName() );
+        for ( Scenario scenario : project.getService().list( Scenario.class ) ) {
+            scenarioNames.add( scenario.getName() );
         }
     }
 

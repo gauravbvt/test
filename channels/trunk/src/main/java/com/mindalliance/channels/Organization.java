@@ -3,7 +3,9 @@ package com.mindalliance.channels;
 import com.mindalliance.channels.pages.Project;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
+import javax.persistence.CascadeType;
 
 /**
  * A company, agency, social club, etc.
@@ -11,12 +13,11 @@ import javax.persistence.Transient;
 @Entity
 public class Organization extends ModelObject {
 
+    /** Parent organization. May be null. */
     private Organization parent;
 
     public Organization() {
     }
-
-    // TODO Add property: parent
 
     /**
      * Utility constructor for tests.
@@ -46,6 +47,7 @@ public class Organization extends ModelObject {
         return true;
     }
 
+    @ManyToOne( cascade = CascadeType.PERSIST )
     public Organization getParent() {
         return parent;
     }

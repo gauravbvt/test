@@ -1,9 +1,14 @@
 package com.mindalliance.channels;
 
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Transient;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
-import java.io.Serializable;
-
 /**
  * A communication channel
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -12,7 +17,9 @@ import java.io.Serializable;
  * Date: Jan 30, 2009
  * Time: 2:06:19 PM
  */
+@Entity
 public class Channel implements Serializable {
+
     /**
      * The medium of communication
      */
@@ -23,6 +30,9 @@ public class Channel implements Serializable {
      */
     private String address = "";
 
+    /** An identifier for persistence. */
+    private long id;
+
     public Channel() {
     }
 
@@ -31,6 +41,7 @@ public class Channel implements Serializable {
         this.address = address == null ? "" : address;
     }
 
+    @Enumerated( value = EnumType.STRING )
     public Medium getMedium() {
         return medium;
     }
@@ -47,11 +58,24 @@ public class Channel implements Serializable {
         this.address = address == null ? "" : address;
     }
 
+    @Id
+    @GeneratedValue
+    public long getId() {
+        return id;
+    }
+
+    public void setId( long id ) {
+        this.id = id;
+    }
+
     /**
-     * {@inheritDoc}
+     * Compares channels for equality.
+     * @param obj the object
+     * @return if the same
      */
+    @Override
     public boolean equals( Object obj ) {
-        if (obj instanceof Channel) {
+        if ( obj instanceof Channel ) {
             Channel channel = (Channel) obj;
             return address.equals( channel.getAddress() ) && medium == channel.getMedium();
         }
@@ -60,19 +84,7 @@ public class Channel implements Serializable {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public int hashCode() {
-        int hash = 1;
-        if ( medium != null ) hash = hash * 31 + medium.hashCode();
-        if ( address != null ) hash = hash * 31 + address.hashCode();
-        return hash;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append( medium == null ? "NO MEDIUM" : medium.getName() );
@@ -107,8 +119,8 @@ public class Channel implements Serializable {
      *
      * @return a boolean
      */
+    @Transient
     public boolean isValid() {
         return medium != null && medium.isAddressValid( address );
     }
-
 }

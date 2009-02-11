@@ -1,7 +1,12 @@
 package com.mindalliance.channels;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -10,7 +15,7 @@ import java.util.List;
 /**
  * An arrow between two nodes in the information flow graph.
  */
-@Entity
+@Entity @Inheritance( strategy = InheritanceType.SINGLE_TABLE )
 public abstract class Flow extends ModelObject implements Channelable {
 
     // TODO Should we annotate a flow as primary vs seconday
@@ -46,6 +51,7 @@ public abstract class Flow extends ModelObject implements Channelable {
         this.askedFor = askedFor;
     }
 
+    @OneToMany( cascade = CascadeType.ALL )
     public List<Channel> getChannels() {
         return channels;
     }
@@ -53,6 +59,17 @@ public abstract class Flow extends ModelObject implements Channelable {
     public void setChannels( List<Channel> channels ) {
         this.channels = channels;
     }
+
+    /** Get the channels that are in effect.
+     * @return the effective channels
+     */
+    @Transient
+    public abstract List<Channel> getEffectiveChannels();
+
+    /** Set the channels that are in effect.
+     * @param channels the channels
+     */
+    public abstract void setEffectiveChannels( List<Channel> channels );
 
     /**
      * Add an alternate channel for the flow
@@ -72,21 +89,18 @@ public abstract class Flow extends ModelObject implements Channelable {
     }
 
     private void addChannelIfUnique( Channel channel ) {
-        if ( !channels.contains(channel) ) channels.add( channel );
+        if ( !getEffectiveChannels().contains(channel) ) channels.add( channel );
     }
 
-    /**
-     * Remove a channel from the list of alternate channels
-     * @param channel a Channel
-     */
+    /** {@inheritDoc} */
     public void removeChannel( Channel channel ) {
-        channels.remove( channel );
+        getEffectiveChannels().remove( channel );
     }
 
     /** {@inheritDoc */
     @Transient
     public String getChannelsString() {
-        return Channel.toString( channels );
+        return Channel.toString( getEffectiveChannels() );
     }
 
     public boolean isCritical() {
@@ -97,6 +111,7 @@ public abstract class Flow extends ModelObject implements Channelable {
         this.critical = critical;
     }
 
+    @Embedded
     public Delay getMaxDelay() {
         return maxDelay;
     }
@@ -214,7 +229,7 @@ public abstract class Flow extends ModelObject implements Channelable {
     @Transient
     public abstract boolean isInternal();
 
-    @Column( name = "ISALL" )
+    @Column( name = "isAll" )
     public boolean isAll() {
         return all;
     }
@@ -239,8 +254,9 @@ public abstract class Flow extends ModelObject implements Channelable {
         return outcome && getTarget().equals( node )
             || !outcome && getSource().equals( node );
     }
+
     /** {@inheritDoc } */
     public List<Channel> allChannels() {
-        return channels;
+        return getEffectiveChannels();
     }
 }

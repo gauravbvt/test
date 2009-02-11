@@ -117,7 +117,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         addOtherField();
         addAllField();
 
-        final Node node = getOther();
+        Node node = getOther();
         if ( node.isConnector() && node.getScenario().equals( getNode().getScenario() ) ) {
             add( new ConnectedFlowList( "others", (Connector) node ) );                   // NON-NLS
         } else {
@@ -185,9 +185,9 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
 
             @Override
             public void onClick() {
-                final UserIssue newIssue = new UserIssue( flow );
+                UserIssue newIssue = new UserIssue( flow );
                 getService().add( newIssue );
-                final PageParameters parameters = getWebPage().getPageParameters();
+                PageParameters parameters = getWebPage().getPageParameters();
                 parameters.add( Project.EXPAND_PARM, String.valueOf( newIssue.getId() ) );
                 setResponsePage( getWebPage().getClass(), parameters );
             }
@@ -197,7 +197,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
     }
 
     private void addAllField() {
-        final CheckBox checkBox = new CheckBox( "all" );                                  // NON-NLS
+        CheckBox checkBox = new CheckBox( "all" );                                        // NON-NLS
         allField = new FormComponentLabel( "all-label", checkBox );                       // NON-NLS
         allField.add( checkBox );
         add( allField );
@@ -215,7 +215,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
      * @return the label component
      */
     protected final FormComponentLabel addLabeled( String id, FormComponent<?> component ) {
-        final FormComponentLabel result = new FormComponentLabel( id, component );
+        FormComponentLabel result = new FormComponentLabel( id, component );
         add( result );
         add( component );
         addIssues( component, getFlow(), component.getId() );
@@ -230,8 +230,8 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
      * @param property  the property of concern. If null, get issues of object
      */
     protected void addIssues( FormComponent<?> component, ModelObject object, String property ) {
-        final Analyst analyst = ( (Project) getApplication() ).getAnalyst();
-        final String issue = property == null ?
+        Analyst analyst = ( (Project) getApplication() ).getAnalyst();
+        String issue = property == null ?
                 analyst.getIssuesSummary( object, false ) :
                 analyst.getIssuesSummary( object, property );
         if ( !issue.isEmpty() ) {
@@ -248,14 +248,14 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
      * Add the target/source dropdown. Fill with getOtherNodes(); select with getOther().
      */
     protected final void addOtherField() {
-        final DropDownChoice<Node> other = new DropDownChoice<Node>(
+        DropDownChoice<Node> other = new DropDownChoice<Node>(
                 "other",                                                                  // NON-NLS
                 new PropertyModel<Node>( this, "other" ),                                 // NON-NLS
                 new PropertyModel<List<? extends Node>>( this, "otherNodes" ),            // NON-NLS
                 new IChoiceRenderer<Node>() {
                     public Object getDisplayValue( Node object ) {
-                        final Node o = getOther();
-                        final boolean outside =
+                        Node o = getOther();
+                        boolean outside =
                                 object.equals( o ) && o.isConnector() && o.getScenario().equals(
                                         getNode().getScenario() );
                         return outside ? "* outside scenario *" : object.toString();
@@ -277,13 +277,13 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         } );
 
         // TODO fix flow expansion of target when other has changed
-        final ScenarioLink details = new ScenarioLink( "other-details",                   // NON-NLS
+        ScenarioLink details = new ScenarioLink( "other-details",                         // NON-NLS
                 new PropertyModel<Node>( this, "other" ),                                 // NON-NLS
                 getFlow() );
         details.add(
                 new Label( "type",                                                        // NON-NLS
                         new Model<String>( isOutcome() ? "To" : "From" ) ) );
-        final FormComponentLabel otherLabel =
+        FormComponentLabel otherLabel =
                 new FormComponentLabel( "other-label", other );                           // NON-NLS
         otherLabel.add( details );
         add( otherLabel );
@@ -301,12 +301,12 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
                 new PropertyModel<Delay.Unit>( flow, "maxDelay.unit" ),
                 new PropertyModel<List<? extends Delay.Unit>>( flow, "maxDelay.units" ),
                 new IChoiceRenderer<Delay.Unit>() {
-                    public Object getDisplayValue( Delay.Unit unit ) {
-                        return unit.toString();
+                    public Object getDisplayValue( Delay.Unit object ) {
+                        return object.toString();
                     }
 
-                    public String getIdValue( Delay.Unit unit, int i ) {
-                        return unit.toString();
+                    public String getIdValue( Delay.Unit object, int index ) {
+                        return object.toString();
                     }
                 }
         ) {
@@ -343,7 +343,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
      * @return the other side of this flow.
      */
     public final Node getOther() {
-        final Flow f = getFlow();
+        Flow f = getFlow();
         return f.isInternal() ?
                 isOutcome() ? f.getTarget() : f.getSource() :
                 ( (ExternalFlow) f ).getConnector();
@@ -355,8 +355,8 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
      * @param other the new source or target
      */
     public void setOther( Node other ) {
-        final Flow oldFlow = getFlow();
-        final Flow newFlow = isOutcome() ?
+        Flow oldFlow = getFlow();
+        Flow newFlow = isOutcome() ?
                 getService().connect( oldFlow.getSource(), other, oldFlow.getName() ) :
                 getService().connect( other, oldFlow.getTarget(), oldFlow.getName() );
 
@@ -368,7 +368,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
     private void addChannelRow() {
         channelRow = new WebMarkupContainer( "channel-row" );                             // NON-NLS
         channelRow.setOutputMarkupPlaceholderTag( true );
-        channelRow.add( new Label( "channel-title", new AbstractReadOnlyModel<String>() {      // NON-NLS
+        channelRow.add( new Label( "channel-title", new AbstractReadOnlyModel<String>() { // NON-NLS
 
             @Override
             public String getObject() {
@@ -376,7 +376,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
             }
         } ) );
 
-        channelListPanel = new ChannelListPanel( "channels", new Model<Channelable>( getFlow()) );                                // NON-NLS
+        channelListPanel = new ChannelListPanel( "channels", new Model<Channelable>( getFlow() ) );                                // NON-NLS
         channelRow.add( channelListPanel );
         add( channelRow );
     }
@@ -420,15 +420,13 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
 
         // Add inputs/outputs of other scenarios
         Service service = ( (Project) getApplication() ).getService();
-        Iterator<Scenario> scenarios = service.iterate( Scenario.class );
-        while ( scenarios.hasNext() ) {
-            Scenario s = scenarios.next();
+        for ( Scenario s : service.list( Scenario.class ) ) {
             if ( !scenario.equals( s ) ) {
                 Iterator<Connector> c = isOutcome() ? s.inputs() : s.outputs();
                 while ( c.hasNext() ) {
                     Connector connector = c.next();
-                    if ( other.equals( connector )
-                         || !node.isConnectedTo( outcome, connector, flow.getName() ) )
+                    if ( other.equals( connector ) || !node.isConnectedTo(
+                            outcome, connector, flow.getName() ) )
                         result.add( connector );
                 }
             }

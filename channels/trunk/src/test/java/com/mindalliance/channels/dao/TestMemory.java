@@ -20,14 +20,14 @@ public class TestMemory extends TestCase {
         super.setUp();
         memory = new Memory();
         service = new ChannelsServiceImpl();
-        ChannelsServiceImpl.registerDefaultMedia( service );
         service.setAddingSamples( true );
         service.setDao( memory );
+        service.initialize();
     }
 
     public void testInitial() {
         assertEquals( 2, memory.getScenarioCount() );
-        assertTrue( memory.iterate( Scenario.class ).hasNext() );
+        assertTrue( memory.getAll( Scenario.class ).iterator().hasNext() );
         try {
             service.findScenario( "bla" );
             fail();
@@ -41,12 +41,12 @@ public class TestMemory extends TestCase {
     }
 
     public void testAddDelete() throws DuplicateKeyException, NotFoundException {
-        final int size = memory.getScenarioCount();
+        long size = memory.getScenarioCount();
 
-        final Scenario s = service.createScenario();
+        Scenario s = service.createScenario();
         s.setName( "Bogus" );
 
-        assertEquals( size+1, memory.getScenarioCount() );
+        assertEquals( size + 1, memory.getScenarioCount() );
 
         assertSame( s, service.findScenario( s.getName() ) );
         assertSame( s, service.find( Scenario.class, s.getId() ) );
@@ -61,14 +61,14 @@ public class TestMemory extends TestCase {
             fail();
         } catch ( NotFoundException ignored ) {}
 
-        for ( int i = size; i > 0 ; i-- )
+        for ( long i = size; i > 0 ; i-- )
             memory.remove( service.getDefaultScenario() );
         assertEquals( 1, memory.getScenarioCount() );
         // last one not deleted
     }
 
     public void testAddTwice() throws DuplicateKeyException {
-        final Scenario a = new Scenario();
+        Scenario a = new Scenario();
         a.setName( "Bogus" );
         memory.add( a );
         try {

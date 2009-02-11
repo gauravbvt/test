@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
+import javax.persistence.CascadeType;
 
 /**
  * A user provided issue
@@ -51,7 +52,7 @@ public class UserIssue extends ModelObject implements Issue {
         setDescription( "(No description)" );
     }
 
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.PERSIST )
     public ModelObject getAbout() {
         return about;
     }

@@ -97,8 +97,7 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new FlowViolatesPolicy() );
         analyst.setIssueDetectors( detectors );
         project.setAnalyst( analyst );
-        // Register media
-        ChannelsServiceImpl.registerDefaultMedia( channels );
+
         tester = new WicketTester( project );
         tester.setParametersForNextRequest( new HashMap<String,String[]>() );
     }

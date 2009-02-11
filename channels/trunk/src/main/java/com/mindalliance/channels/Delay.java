@@ -1,8 +1,12 @@
 package com.mindalliance.channels;
 
-import java.util.List;
-import java.util.Arrays;
+import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Transient;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A duration
@@ -12,7 +16,9 @@ import java.io.Serializable;
  * Date: Jan 29, 2009
  * Time: 1:59:28 PM
  */
+@Embeddable
 public class Delay implements Comparable, Serializable {
+
     /**
      * Time units
      */
@@ -47,13 +53,14 @@ public class Delay implements Comparable, Serializable {
     };
 
     /**
-     * Amount of a unit of time
-     */
-    private int amount;
-    /**
      * Time unit
      */
     private Unit unit = Unit.seconds;
+
+    /**
+     * Amount of a unit of time
+     */
+    private int amount;
 
     public Delay() {
     }
@@ -63,11 +70,29 @@ public class Delay implements Comparable, Serializable {
         this.unit = unit;
     }
 
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount( int amount ) {
+        this.amount = Math.max( 0, amount );
+    }
+
+    @Enumerated( EnumType.STRING )
+    public Unit getUnit() {
+        return unit;
+    }
+
+    public void setUnit( Unit unit ) {
+        this.unit = unit;
+    }
+
     /**
      * List of time units as strings
      *
      * @return list of strings
      */
+    @Transient
     public List<Unit> getUnits() {
         return Arrays.asList( Unit.values() );
     }
@@ -77,6 +102,7 @@ public class Delay implements Comparable, Serializable {
      *
      * @return an int
      */
+    @Transient
     public int getSeconds() {
         int factor;
         switch ( unit ) {
@@ -101,25 +127,15 @@ public class Delay implements Comparable, Serializable {
         return amount * factor;
     }
 
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount( int amount ) {
-        this.amount = Math.max( 0, amount );
-    }
-
-
     /**
      * Getting the amount as string
      *
      * @return a string
      */
-
+    @Transient
     public String getAmountString() {
         return "" + amount;
     }
-
 
     /**
      * Setting the amount from string

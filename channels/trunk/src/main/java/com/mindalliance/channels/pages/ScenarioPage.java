@@ -1,12 +1,11 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.Service;
-import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.export.Importer;
@@ -47,11 +46,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -77,7 +73,7 @@ public final class ScenarioPage extends WebPage {
     /*
      * Name property name...
      */
-//    private static final String NAME_PROPERTY = "name";                                   // NON-NLS
+//    private static final String NAME_PROPERTY = "name";                                 // NON-NLS
 
     /**
      * Description property name.
@@ -131,14 +127,14 @@ public final class ScenarioPage extends WebPage {
         // Call super to remember parameters in links
         super( parameters );
 
-        final Service service = getService();
-        final Scenario scenario = findScenario( service, parameters );
+        Service service = getService();
+        Scenario scenario = findScenario( service, parameters );
 
         if ( scenario == null )
             redirectTo( service.getDefaultScenario() );
 
         else {
-            final Node n = findNode( scenario, parameters );
+            Node n = findNode( scenario, parameters );
             if ( n != null )
                 init( scenario, n, Project.findExpansions( parameters ) );
             else
@@ -162,7 +158,7 @@ public final class ScenarioPage extends WebPage {
      * @param node     a node in the scenario
      */
     public ScenarioPage( Scenario scenario, Node node ) {
-        final Set<Long> expanded = Collections.emptySet();
+        Set<Long> expanded = Collections.emptySet();
         init( scenario, node, expanded );
     }
 
@@ -173,7 +169,7 @@ public final class ScenarioPage extends WebPage {
      * @param id   a section to expand
      */
     public ScenarioPage( Node node, long id ) {
-        final Set<Long> expanded = new HashSet<Long>();
+        Set<Long> expanded = new HashSet<Long>();
         expanded.add( id );
         init( node.getScenario(), node, expanded );
     }
@@ -221,14 +217,14 @@ public final class ScenarioPage extends WebPage {
     }
 
     private void redirectTo( Node n ) {
-        final Set<Long> ids = Collections.emptySet();
+        Set<Long> ids = Collections.emptySet();
         setResponsePage( new RedirectPage( ScenarioLink.linkStringFor( n, ids ) ) );
     }
 
     private void redirectHere() {
-        final long sid = node.getScenario().getId();
-        final long nid = node.getId();
-        final StringBuffer exps = new StringBuffer( 128 );
+        long sid = node.getScenario().getId();
+        long nid = node.getId();
+        StringBuffer exps = new StringBuffer( 128 );
         for ( long id : expansions ) {
             exps.append( "&expand=" );                                                    // NON-NLS
             exps.append( Long.toString( id ) );
@@ -249,7 +245,7 @@ public final class ScenarioPage extends WebPage {
     public static PageParameters getParameters(
             Scenario scenario, Node node, Set<Long> expanded ) {
 
-        final PageParameters result = new PageParameters();
+        PageParameters result = new PageParameters();
         result.put( SCENARIO_PARM, Long.toString( scenario.getId() ) );
         if ( node != null ) {
             result.put( NODE_PARM, Long.toString( node.getId() ) );
@@ -267,7 +263,7 @@ public final class ScenarioPage extends WebPage {
      * @return page parameters to use in links, etc.
      */
     public static PageParameters getParameters( Scenario scenario, Node node ) {
-        final Set<Long> expansions = Collections.emptySet();
+        Set<Long> expansions = Collections.emptySet();
         return getParameters( scenario, node, expansions );
     }
 
@@ -280,7 +276,7 @@ public final class ScenarioPage extends WebPage {
      * @return page parameters to use in links, etc.
      */
     public static PageParameters getParameters( Scenario scenario, Node node, long id ) {
-        final Set<Long> expansions = new HashSet<Long>( 1 );
+        Set<Long> expansions = new HashSet<Long>( 1 );
         expansions.add( id );
         return getParameters( scenario, node, expansions );
     }
@@ -392,7 +388,7 @@ public final class ScenarioPage extends WebPage {
             add( new CheckBox( "node-del",                                                // NON-NLS
                     new PropertyModel<Boolean>( this, NODE_DELETED_PROPERTY ) ) );
             addGraph( scenario, node );
-            final Component panel = node.isPart() ?
+            Component panel = node.isPart() ?
                     new PartPanel( SPECIALTY_FIELD, (Part) node )
                     : new Label( SPECIALTY_FIELD, "" );
             panel.setRenderBodyOnly( true );
@@ -406,7 +402,7 @@ public final class ScenarioPage extends WebPage {
 
                 @Override
                 public void onClick() {
-                    final UserIssue newIssue = new UserIssue( node );
+                    UserIssue newIssue = new UserIssue( node );
                     getService().add( newIssue );
                     expansions.add( newIssue.getId() );
                     redirectHere();
@@ -442,8 +438,8 @@ public final class ScenarioPage extends WebPage {
                 protected void onRender( MarkupStream markupStream ) {
                     super.onRender( markupStream );
                     try {
-                        final Analyst analyst = getProject().getAnalyst();
-                        final FlowDiagram diagram = getProject().getFlowDiagram();
+                        Analyst analyst = getProject().getAnalyst();
+                        FlowDiagram diagram = getProject().getFlowDiagram();
                         getResponse().write( diagram.getImageMap( scenario, analyst ) );
                     } catch ( DiagramException e ) {
                         LOG.error( "Can't generate image map", e );
@@ -491,16 +487,16 @@ public final class ScenarioPage extends WebPage {
 
                 @Override
                 public void onClick() {
-                    final Part newPart = getService().createPart( scenario );
+                    Part newPart = getService().createPart( scenario );
                     redirectTo( newPart );
                 }
             } );
 
-            add( new Link( "add-issue" ) {                                                 // NON-NLS
+            add( new Link( "add-issue" ) {                                                // NON-NLS
 
                 @Override
                 public void onClick() {
-                    final UserIssue newIssue = new UserIssue( scenario );
+                    UserIssue newIssue = new UserIssue( scenario );
                     getService().add( newIssue );
                     expansions.add( newIssue.getId() );
                     if ( !expansions.contains( scenario.getId() ) ) {
@@ -512,10 +508,11 @@ public final class ScenarioPage extends WebPage {
 
             if ( expansions.contains( scenario.getId() ) ) {
                 add( new BookmarkablePageLink<Scenario>(
-                        "sc-edit", ScenarioPage.class,                                        // NON-NLS
+                        "sc-edit", ScenarioPage.class,                                    // NON-NLS
                         getParameters( scenario, node ) ) );
 
-                add( new ScenarioEditPanel( "sc-editor", scenario, ScenarioPage.this.getPageParameters() ) );                    // NON-NLS
+                add( new ScenarioEditPanel( "sc-editor",                                  // NON-NLS
+                                            scenario, getPageParameters() ) );
 
             } else {
                 add( new BookmarkablePageLink<Scenario>( "sc-edit", ScenarioPage.class,   // NON-NLS
@@ -531,26 +528,28 @@ public final class ScenarioPage extends WebPage {
             add( createSelectScenario( "sc-sel" ) );                                      // NON-NLS
             scenarioImport = new FileUploadField( "sc-import", new Model<FileUpload>() ); // NON-NLS
             add( scenarioImport );
-            add ( new ExternalLink ("index", "index.html"));
+            add ( new ExternalLink ("index", "index.html") );
             add ( new ExternalLink ("report", "report.html"));
             add( new Label( "user", Project.getUserName() ) );                            // NON-NLS
         }
 
         //------------------------------
         private void addHeader( final Scenario scenario ) {
-            final Label header = new Label(
+            Label header = new Label(
                     "header",                                                             // NON-NLS
                     /* new PropertyModel<String>( scenario, NAME_PROPERTY ) ); */
                     new AbstractReadOnlyModel() {
+                        @Override
                         public Object getObject() {
-                            return StringUtils.abbreviate( scenario.getName(), SCENARIO_TITLE_MAX_LENGTH );
+                            return StringUtils.abbreviate(
+                                    scenario.getName(), SCENARIO_TITLE_MAX_LENGTH );
                         }
                     }
             );
 
             // Add style mods from scenario analyst.
-            final Analyst analyst = ( (Project) getApplication() ).getAnalyst();
-            final String issue = analyst.getIssuesSummary(
+            Analyst analyst = ( (Project) getApplication() ).getAnalyst();
+            String issue = analyst.getIssuesSummary(
                     scenario, Analyst.INCLUDE_PROPERTY_SPECIFIC );
             if ( !issue.isEmpty() ) {
                 header.add( new AttributeModifier(
@@ -564,15 +563,9 @@ public final class ScenarioPage extends WebPage {
 
         //------------------------------
         private DropDownChoice<Scenario> createSelectScenario( String id ) {
-            final List<Scenario> scenarios =
-                    new ArrayList<Scenario>( Dao.INITIAL_CAPACITY );
-
-            final Iterator<Scenario> iterator = getService().iterate( Scenario.class );
-            while ( iterator.hasNext() )
-                scenarios.add( iterator.next() );
-
-            final DropDownChoice<Scenario> dropDown = new DropDownChoice<Scenario>(
-                    id, new PropertyModel<Scenario>( this, "target" ), scenarios ) {      // NON-NLS
+            DropDownChoice<Scenario> dropDown = new DropDownChoice<Scenario>(
+                    id, new PropertyModel<Scenario>( this, "target" ),                    // NON-NLS
+                    getService().list( Scenario.class ) ) {
 
                 @Override
                 protected boolean wantOnSelectionChangedNotifications() {
@@ -618,8 +611,8 @@ public final class ScenarioPage extends WebPage {
             importScenario();
 
             if ( deleteScenario.isSelected() ) {
-                final Service service = getService();
-                final Scenario scenario = getScenario();
+                Service service = getService();
+                Scenario scenario = getScenario();
                 service.remove( scenario );
                 if ( LOG.isInfoEnabled() )
                     LOG.info( MessageFormat.format(
@@ -633,7 +626,7 @@ public final class ScenarioPage extends WebPage {
                 redirectTo( getScenario() );
 
             } else {
-                final Scenario t = getTarget();
+                Scenario t = getTarget();
                 if ( t.getId() == getScenario().getId() )
                     redirectHere();
                 else
@@ -643,17 +636,17 @@ public final class ScenarioPage extends WebPage {
         }
 
         private void importScenario() {
-            final FileUpload fileUpload = scenarioImport.getFileUpload();
+            FileUpload fileUpload = scenarioImport.getFileUpload();
             if ( fileUpload != null ) {
                 // Import and switch to scenario
-                final Importer importer = getProject().getImporter();
+                Importer importer = getProject().getImporter();
                 try {
-                    final InputStream inputStream = fileUpload.getInputStream();
-                    final Scenario imported = importer.importScenario( inputStream );
+                    InputStream inputStream = fileUpload.getInputStream();
+                    Scenario imported = importer.importScenario( inputStream );
                     setTarget( imported );
                 } catch ( IOException e ) {
                     // TODO redirect to a proper error screen... user has to know...
-                    final String s = "Import error";
+                    String s = "Import error";
                     LOG.error( s, e );
                     throw new RuntimeException( s, e );
                 }
@@ -681,7 +674,7 @@ public final class ScenarioPage extends WebPage {
 
         @Override
         public void onClick() {
-            final Scenario newScenario = getService().createScenario();
+            Scenario newScenario = getService().createScenario();
             LOG.info( "Created new scenario" );
             redirectTo( newScenario );
         }

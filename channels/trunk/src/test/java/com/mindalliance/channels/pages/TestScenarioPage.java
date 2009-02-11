@@ -7,11 +7,12 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.attachments.BitBucket;
-import com.mindalliance.channels.service.ChannelsServiceImpl;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.export.Importer;
-import com.mindalliance.channels.graph.FlowDiagram;
 import com.mindalliance.channels.graph.DiagramException;
+import com.mindalliance.channels.graph.FlowDiagram;
+import com.mindalliance.channels.service.ChannelsServiceImpl;
+import junit.framework.TestCase;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.util.file.File;
@@ -27,8 +28,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
-import junit.framework.TestCase;
 
 /**
  * Simple test using the WicketTester.
@@ -50,13 +49,14 @@ public class TestScenarioPage extends TestCase {
 
         dao = new Memory();
         project = new Project();
-        final ChannelsServiceImpl service = new ChannelsServiceImpl();
-        ChannelsServiceImpl.registerDefaultMedia( service );
+        ChannelsServiceImpl service = new ChannelsServiceImpl();
         service.setAddingSamples( true );
         service.setDao( dao );
+        service.initialize();
+
         project.setService( service );
         project.setAttachmentManager( new BitBucket() );
-        final FlowDiagram fd = createMock( FlowDiagram.class );
+        FlowDiagram fd = createMock( FlowDiagram.class );
         try {
             expect( fd.getImageMap( (Scenario) anyObject(), (Analyst) anyObject() ) )
                     .andReturn( "" ).anyTimes();
@@ -66,7 +66,7 @@ public class TestScenarioPage extends TestCase {
         replay( fd );
         project.setFlowDiagram( fd );
 
-        final Analyst sa = createNiceMock( Analyst.class );
+        Analyst sa = createNiceMock( Analyst.class );
         expect( sa.getIssuesSummary( (ModelObject) anyObject(), anyBoolean() ) )
                 .andReturn( "" ).anyTimes();
         expect( sa.getIssuesSummary( (ModelObject) anyObject(), (String) anyObject() ) )
@@ -91,14 +91,14 @@ public class TestScenarioPage extends TestCase {
      */
     public static void setFiles( FormTester ft, Project project ) throws IOException {
 
-        final Importer importer = createMock( Importer.class );
+        Importer importer = createMock( Importer.class );
         expect( importer.importScenario( (InputStream) notNull() ) )
                 .andReturn( project.getService().createScenario() );
 
         replay( importer );
         project.setImporter( importer );
 
-        final File file = new File( TestScenarioPage.class.getResource( "test.txt" ).getFile() );
+        File file = new File( TestScenarioPage.class.getResource( "test.txt" ).getFile() );
         assertTrue( "Can't find " + file.getAbsolutePath(), file.exists() );
         ft.setFile( "sc-import", file, "text/plain" );
         ft.setFile( "attachments:upload", file, "text/plain" );
@@ -117,7 +117,7 @@ public class TestScenarioPage extends TestCase {
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
-        final PageParameters parms = new PageParameters();
+        PageParameters parms = new PageParameters();
         parms.put( ScenarioPage.SCENARIO_PARM, scenario.getId() );
 
         tester.startPage( ScenarioPage.class, parms );
@@ -163,7 +163,7 @@ public class TestScenarioPage extends TestCase {
 
     /** Test all nodes pages in default scenario. */
     public void testNodes() {
-        final Iterator<Node> nodes = scenario.nodes();
+        Iterator<Node> nodes = scenario.nodes();
         while ( nodes.hasNext() ) {
             tester.startPage( new ScenarioPage( scenario, nodes.next() ) );
             tester.assertRenderedPage( ScenarioPage.class );
@@ -174,16 +174,16 @@ public class TestScenarioPage extends TestCase {
     public void testNewScenario() throws NotFoundException {
         tester.startPage( new ScenarioPage( scenario ) );
 
-        final int size = dao.getScenarioCount();
+        long size = dao.getScenarioCount();
         tester.clickLink( "big-form:sc-new" );
-        assertEquals( size+1, dao.getScenarioCount() );
+        assertEquals( size + 1, dao.getScenarioCount() );
 
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
         tester.startPage( new ScenarioPage( scenario ) );
         tester.clickLink( "big-form:sc-new" );
-        assertEquals( size+2, dao.getScenarioCount() );
+        assertEquals( size + 2, dao.getScenarioCount() );
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
     }
@@ -191,14 +191,14 @@ public class TestScenarioPage extends TestCase {
     /** Test submit with part modifications.
      * @throws NotFoundException on error */
     public void testEmptySubmit() throws NotFoundException, IOException {
-        final Node node = scenario.getDefaultPart();
+        Node node = scenario.getDefaultPart();
 
         tester.startPage( new ScenarioPage( scenario, node ) );
         tester.setupRequestAndResponse();
         tester.assertRenderedPage( ScenarioPage.class );
         tester.assertNoErrorMessage();
 
-        final FormTester ft = tester.newFormTester( "big-form" );
+        FormTester ft = tester.newFormTester( "big-form" );
         setFiles( ft, project );
         ft.submit();
 
@@ -210,7 +210,7 @@ public class TestScenarioPage extends TestCase {
     /** Test submit with part modifications.
      * @throws NotFoundException on error */
     public void testDescriptionSubmit1() throws NotFoundException, IOException {
-        final Node node = scenario.getDefaultPart();
+        Node node = scenario.getDefaultPart();
         node.setDescription( "" );
         assertEquals( "", node.getDescription() );
 
@@ -219,8 +219,8 @@ public class TestScenarioPage extends TestCase {
         tester.assertRenderedPage( ScenarioPage.class );
         tester.assertNoErrorMessage();
 
-        final FormTester ft = tester.newFormTester( "big-form" );
-        final String desc = "New value";
+        FormTester ft = tester.newFormTester( "big-form" );
+        String desc = "New value";
         ft.setValue( "description", desc );
         setFiles( ft, project );
         ft.submit();
@@ -235,7 +235,7 @@ public class TestScenarioPage extends TestCase {
     /** Test submit with part modifications.
      * @throws NotFoundException on error */
     public void testDescriptionSubmit2() throws NotFoundException, IOException {
-        final Node node = scenario.getDefaultPart();
+        Node node = scenario.getDefaultPart();
         node.setDescription( "something" );
 
         tester.startPage( new ScenarioPage( scenario, node ) );
@@ -243,8 +243,8 @@ public class TestScenarioPage extends TestCase {
         tester.assertRenderedPage( ScenarioPage.class );
         tester.assertNoErrorMessage();
 
-        final FormTester ft = tester.newFormTester( "big-form" );
-        final String desc = "";
+        FormTester ft = tester.newFormTester( "big-form" );
+        String desc = "";
         ft.setValue( "description", desc );
         setFiles( ft, project );
         ft.submit();
@@ -258,7 +258,7 @@ public class TestScenarioPage extends TestCase {
 
     public void testDeleteScenario() throws IOException, NotFoundException {
         assertEquals( 2, dao.getScenarioCount() );
-        final Scenario sc2 = project.getService().createScenario();
+        Scenario sc2 = project.getService().createScenario();
         sc2.setName( "Test" );
         assertEquals( 3, dao.getScenarioCount() );
 
@@ -268,7 +268,7 @@ public class TestScenarioPage extends TestCase {
         tester.assertNoErrorMessage();
         assertEquals( 3, dao.getScenarioCount() );
 
-        final FormTester ft = tester.newFormTester( "big-form" );
+        FormTester ft = tester.newFormTester( "big-form" );
         setFiles( ft, project );
         ft.setValue( "sc-del", "true" );
 
@@ -284,23 +284,23 @@ public class TestScenarioPage extends TestCase {
     }
 
     public void testGetParameters1() {
-        final Node node = scenario.getDefaultPart();
-        final PageParameters parms = ScenarioPage.getParameters( scenario, node );
+        Node node = scenario.getDefaultPart();
+        PageParameters parms = ScenarioPage.getParameters( scenario, node );
 
         assertEquals( scenario.getId(), (long) parms.getAsLong( "scenario" ) );
         assertEquals( node.getId(), (long) parms.getAsLong( "node" ) );
     }
 
     public void testGetParameters2() {
-        final Node node = scenario.getDefaultPart();
+        Node node = scenario.getDefaultPart();
 
-        final Set<Long> expand = new HashSet<Long>( Arrays.asList( 1L, 2L ) );
-        final PageParameters parms = ScenarioPage.getParameters( scenario, node, expand );
+        Set<Long> expand = new HashSet<Long>( Arrays.asList( 1L, 2L ) );
+        PageParameters parms = ScenarioPage.getParameters( scenario, node, expand );
 
         assertEquals( scenario.getId(), (long) parms.getAsLong( "scenario" ) );
         assertEquals( node.getId(), (long) parms.getAsLong( "node" ) );
 
-        final Set<String> results = new HashSet<String>(
+        Set<String> results = new HashSet<String>(
                 Arrays.asList( parms.getStringArray( "expand" ) ) );
 
         assertEquals( 2, results.size() );

@@ -27,19 +27,23 @@ public class ProjectReportPage extends WebPage {
     }
 
     private void init() {
-        add( new Label( "title", "Report: " + Project.getProject().getProjectName() ) );
-        add( new Label( "project-name", Project.getProject().getProjectName() ) );
-        add( new Label( "project-client", Project.getProject().getClient() ) );
-        add( new Label( "project-description", Project.getProject().getDescription() ) );
+        Project project = Project.getProject();
+
+        add( new Label( "title", "Report: " + project.getProjectName() ) );
+        add( new Label( "project-name", project.getProjectName() ) );
+        add( new Label( "project-client", project.getClient() ) );
+        add( new Label( "project-description", project.getDescription() ) );
         add( new Label( "date", DateFormat.getDateTimeInstance(
-            DateFormat.LONG, DateFormat.LONG).format( new Date() ) ) );
+            DateFormat.LONG, DateFormat.LONG ).format( new Date() ) ) );
+
         List<Scenario> scenarios = Project.service().list( Scenario.class );
         add( new ListView<Scenario>( "scenarios", scenarios ) {
+            @Override
             protected void populateItem( ListItem<Scenario> item ) {
                 item.add( new ScenarioReportPanel( "scenario", item.getModel() ) );
             }
         } );
-        add (new ProjectDirectoryPanel("directory"));
+        add( new ProjectDirectoryPanel( "directory" ) );
     }
 
 }

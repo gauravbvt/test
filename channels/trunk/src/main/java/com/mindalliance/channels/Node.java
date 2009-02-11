@@ -1,14 +1,16 @@
 package com.mindalliance.channels;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * A node in the flow graph
@@ -22,24 +24,18 @@ public abstract class Node extends ModelObject {
     /** The name for new flows. */
     private static final String DEFAULT_FLOW_NAME = "";
 
-    /** The incoming arrows. */
-    private Set<Flow> requirements;
-
-    /** The outgoing arrows. */
-    private Set<Flow> outcomes;
-
     /** All requirements, indexed by id. */
-    private Map<Long,Flow> reqIndex;
+    private Map<Long,Flow> requirements;
 
     /** All outcomes, indexed by id. */
-    private Map<Long,Flow> outIndex;
+    private Map<Long,Flow> outcomes;
 
     /** The unique scenario containing this node. */
     private Scenario scenario;
 
     protected Node() {
-        setOutcomes( new HashSet<Flow>() );
-        setRequirements( new HashSet<Flow>() );
+        setOutcomes( new HashMap<Long,Flow>() );
+        setRequirements( new HashMap<Long,Flow>() );
     }
 
     /**
@@ -55,15 +51,16 @@ public abstract class Node extends ModelObject {
      * @return a flow or null
      */
     public Flow getFlow( long id ) {
-        Flow result = reqIndex.get( id );
+        Flow result = requirements.get( id );
         if ( result == null )
-            result = outIndex.get( id );
+            result = outcomes.get( id );
 
         return result;
     }
 
-    @OneToMany
-    private Set<Flow> getOutcomes() {
+    @OneToMany( cascade = CascadeType.ALL )
+    @JoinTable( name = "Node_Outs" ) @MapKey( name = "id" )
+    private Map<Long,Flow> getOutcomes() {
         return outcomes;
     }
 
@@ -72,14 +69,13 @@ public abstract class Node extends ModelObject {
      * Package-visible for tests.
      * @param outcomes the new outcomes
      */
-    void setOutcomes( Set<Flow> outcomes ) {
+    void setOutcomes( Map<Long,Flow> outcomes ) {
         if ( this.outcomes != null )
-            for ( Flow f: new HashSet<Flow>( this.outcomes ) )
+            for ( Flow f: new HashSet<Flow>( this.outcomes.values() ) )
                 removeOutcome( f );
-        this.outcomes = new HashSet<Flow>( outcomes.size() );
-        outIndex = new HashMap<Long,Flow>( INITIAL_CAPACITY );
-        for ( Flow f: outcomes )
-            addOutcome( f );
+        this.outcomes = outcomes;
+        for ( Flow f: outcomes.values() )
+            f.setSource( this );
     }
 
     /**
@@ -87,7 +83,7 @@ public abstract class Node extends ModelObject {
      * @return a flow iterator
      */
     public Iterator<Flow> outcomes() {
-        return getOutcomes().iterator();
+        return getOutcomes().values().iterator();
     }
 
     /**
@@ -104,8 +100,7 @@ public abstract class Node extends ModelObject {
      * @param outcome the outcome
      */
     public void addOutcome( Flow outcome ) {
-        getOutcomes().add( outcome );
-        outIndex.put( outcome.getId(), outcome );
+        outcomes.put( outcome.getId(), outcome );
         outcome.setSource( this );
     }
 
@@ -115,21 +110,13 @@ public abstract class Node extends ModelObject {
      * @param outcome the outcome
      */
     void removeOutcome( Flow outcome ) {
-        getOutcomes().remove( outcome );
-        outIndex.remove( outcome.getId() );
+        outcomes.remove( outcome.getId() );
         outcome.setSource( null );
     }
 
-    /**
-     * Disconnect all outcomes from this node.
-     */
-    public void removeAllOutcomes() {
-        for ( Flow flow : new HashSet<Flow>( getOutcomes() ) )
-            flow.disconnect();
-    }
-
-    @OneToMany
-    private Set<Flow> getRequirements() {
+    @OneToMany( cascade = CascadeType.ALL )
+    @JoinTable( name = "Node_Reqs" ) @MapKey( name = "id" )
+    private Map<Long,Flow> getRequirements() {
         return requirements;
     }
 
@@ -138,14 +125,13 @@ public abstract class Node extends ModelObject {
      * Package-visible for tests.
      * @param requirements the new requirements
      */
-    void setRequirements( Set<Flow> requirements ) {
+    void setRequirements( Map<Long,Flow> requirements ) {
         if ( this.requirements != null )
-            for ( Flow f: new HashSet<Flow>( this.requirements ) )
+            for ( Flow f: new HashSet<Flow>( this.requirements.values() ) )
                 removeRequirement( f );
-        this.requirements = new HashSet<Flow>( requirements.size() );
-        reqIndex = new HashMap<Long,Flow>( INITIAL_CAPACITY );
-        for ( Flow f: requirements )
-            addRequirement( f );
+        this.requirements = requirements;
+        for ( Flow f: requirements.values() )
+            f.setTarget( this );
     }
 
     /**
@@ -153,7 +139,7 @@ public abstract class Node extends ModelObject {
      * @return a flow iterator
      */
     public Iterator<Flow> requirements() {
-        return getRequirements().iterator();
+        return getRequirements().values().iterator();
     }
 
     /**
@@ -170,8 +156,7 @@ public abstract class Node extends ModelObject {
      * @param requirement the requirement
      */
     public void addRequirement( Flow requirement ) {
-        getRequirements().add( requirement );
-        reqIndex.put( requirement.getId(), requirement );
+        requirements.put( requirement.getId(), requirement );
         requirement.setTarget( this );
     }
 
@@ -181,17 +166,8 @@ public abstract class Node extends ModelObject {
      * @param requirement the requirement
      */
     void removeRequirement( Flow requirement ) {
-        getRequirements().remove( requirement );
-        reqIndex.remove( requirement.getId() );
+        requirements.remove( requirement.getId() );
         requirement.setTarget( null );
-    }
-
-    /**
-     * Disconnect all requirements from this node.
-     */
-    public void removeAllRequirements() {
-        for ( Flow flow : new HashSet<Flow>( getRequirements() ) )
-            flow.disconnect();
     }
 
     @Transient
@@ -204,7 +180,7 @@ public abstract class Node extends ModelObject {
         return false;
     }
 
-    @ManyToOne
+    @ManyToOne( optional = false )
     public Scenario getScenario() {
         return scenario;
     }
@@ -219,12 +195,6 @@ public abstract class Node extends ModelObject {
         return getTitle();
     }
 
-    /** {@inheritDoc} */
-    @Override @Transient
-    public String getLabel() {
-        return getTitle();
-    }
-
     /**
       * Test if this node is connected to another node by a flow of a given name.
       * @param outcome test if node is an outcome, otherwise a requirement
@@ -234,8 +204,8 @@ public abstract class Node extends ModelObject {
       */
     public boolean isConnectedTo( boolean outcome, Node node, String name ) {
         boolean result = false;
-        Set<Flow> flows = outcome ? outcomes : requirements;
-        for ( Iterator<Flow> it = flows.iterator(); !result && it.hasNext(); ) {
+        Map<Long,Flow> flows = outcome ? outcomes : requirements;
+        for ( Iterator<Flow> it = flows.values().iterator(); !result && it.hasNext(); ) {
             Flow f = it.next();
             result = name.equals( f.getName() ) && f.isConnectedTo( outcome, node );
         }

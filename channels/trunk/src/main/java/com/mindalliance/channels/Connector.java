@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -30,13 +31,16 @@ public class Connector extends Node {
     /** {@inheritDoc} */
     @Override @Transient
     public String getTitle() {
-        final boolean isInput = isInput();
-        final Flow inner = getInnerFlow();
-        final Part part  = (Part) ( isInput ? inner.getTarget() :  inner.getSource() );
-        return MessageFormat.format( isInput ? "{0} to {1} (in {2})" : "{0} from {1} (in {2})",
-                                     inner.getName(),
-                                     part.getName(),
-                                     part.getScenario() );
+        boolean isInput = isInput();
+        if ( hasInnerFlow() ) {
+            Flow inner = getInnerFlow();
+            Part part  = (Part) ( isInput ? inner.getTarget() :  inner.getSource() );
+            return MessageFormat.format( isInput ? "{0} to {1} (in {2})" : "{0} from {1} (in {2})",
+                                         inner.getName(),
+                                         part.getName(),
+                                         part.getScenario() );
+        } else
+            return "(Not connected)";
     }
 
     /**
@@ -56,6 +60,10 @@ public class Connector extends Node {
     @Transient
     public Flow getInnerFlow() {
         return isInput() ? outcomes().next() : requirements().next();
+    }
+
+    private boolean hasInnerFlow() {
+        return outcomes().hasNext() || requirements().hasNext();
     }
 
     /**
@@ -97,5 +105,14 @@ public class Connector extends Node {
      */
     public void removeExternalFlow( ExternalFlow externalFlow ) {
         getExternalFlows().remove( externalFlow );
+    }
+
+    /**
+     * Remove all external connectors.
+     */
+    public void disconnect() {
+        Collection<ExternalFlow> flows = new HashSet<ExternalFlow>( getExternalFlows() );
+        for ( ExternalFlow flow : flows )
+            flow.disconnect();
     }
 }

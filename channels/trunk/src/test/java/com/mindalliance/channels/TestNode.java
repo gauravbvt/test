@@ -1,12 +1,12 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.service.ChannelsServiceImpl;
 import com.mindalliance.channels.dao.Memory;
+import com.mindalliance.channels.service.ChannelsServiceImpl;
 import junit.framework.TestCase;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * Test generic node functionality
@@ -43,14 +43,14 @@ public class TestNode extends TestCase {
     }
 
     public void testSetOutcomes() {
-        p1.setOutcomes( new HashSet<Flow>() );
+        p1.setOutcomes( new HashMap<Long,Flow>() );
         assertFalse( p1.outcomes().hasNext() );
         assertNull( f1.getSource() );
         assertNull( f3.getSource() );
 
-        Set<Flow> flows = new HashSet<Flow>(4);
-        flows.add( f1 );
-        flows.add( f2 );
+        Map<Long,Flow> flows = new HashMap<Long,Flow>();
+        flows.put( f1.getId(), f1 );
+        flows.put( f2.getId(), f2 );
         p1.setOutcomes( flows );
         assertSame( f1, p1.getFlow( f1.getId() ) );
         assertSame( p1, f1.getSource() );
@@ -60,14 +60,14 @@ public class TestNode extends TestCase {
     }
 
     public void testSetRequirements() {
-        p2.setRequirements( new HashSet<Flow>() );
+        p2.setRequirements( new HashMap<Long,Flow>() );
         assertFalse( p2.requirements().hasNext() );
         assertNull( f2.getTarget() );
         assertNull( f3.getTarget() );
 
-        Set<Flow> flows = new HashSet<Flow>(4);
-        flows.add( f1 );
-        flows.add( f2 );
+        Map<Long,Flow> flows = new HashMap<Long,Flow>();
+        flows.put( f1.getId(), f1 );
+        flows.put( f2.getId(), f2 );
         p2.setRequirements( flows );
         assertSame( f1, p2.getFlow( f1.getId() ) );
         assertSame( p2, f1.getTarget() );

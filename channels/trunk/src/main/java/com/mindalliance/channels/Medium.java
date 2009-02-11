@@ -1,77 +1,61 @@
 package com.mindalliance.channels;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import java.io.Serializable;
+import java.util.regex.Pattern;
 
 /**
- * A communication medium
+ * A communication medium.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: Jan 30, 2009
  * Time: 7:14:12 AM
  */
-public class Medium implements Serializable {
 
-    /**
-     * Class logger.
-     */
-    public static final Logger LOG = LoggerFactory.getLogger( Medium.class );
+public enum Medium  {
+
+    Phone      ( "Phone",        "\\d{3}-\\d{3}-\\d{4}" ),
+    Fax        ( "Fax",          "\\d{3}-\\d{3}-\\d{4}" ),
+    Cell       ( "Cell",         "\\d{3}-\\d{3}-\\d{4}" ),
+    Email      ( "Email",        "[^@\\s]+@[^@\\s]+\\.\\w+" ),
+    IM         ( "IM",           ".+" ),
+    Radio      ( "Radio",        ".+" ),
+    TV         ( "Television",   ".+" ),
+    Courier    ( "Courier",      ".+" ),
+    F2F        ( "Face-to-face", ".*" ),
+    SendWordNow( "SendWordNow",  ".+" ),
+    Other      ( "Other",        ".+" );
+
 
     private String name = "";
 
     private String addressPattern = "";
 
-    transient Pattern compiledPattern;
+    private Pattern compiledPattern;
 
-    public Medium() {
-    }
-
-    public Medium( String name ) {
-        this(name, ".*");
-    }
-
-    public Medium( String name, String addressPattern ) {
+    Medium( String name, String addressPattern ) {
         this.name = name;
         this.addressPattern = addressPattern;
+        compiledPattern = Pattern.compile( addressPattern );
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName( String name ) {
-        this.name = name;
-    }
-
     public String getAddressPattern() {
         return addressPattern;
     }
 
-    public void setAddressPattern( String addressPattern ) {
-        this.addressPattern = addressPattern;
-        compiledPattern = Pattern.compile( addressPattern );
-    }
-
     private Pattern getCompiledPattern() {
-        if ( compiledPattern == null ) {
-            try {
-                compiledPattern = Pattern.compile( addressPattern );
-            } catch ( Exception e ) {
-                LOG.warn( "Invalid addressPattern " + addressPattern, e );
-            }
-        }
         return compiledPattern;
     }
 
-    public boolean isPatternValid() {
-        return getCompiledPattern() != null;
-    }
-
+    /**
+     * Check if an address is valid.
+     * @param address the address
+     * @return true if valid
+     */
     public boolean isAddressValid( String address ) {
         if ( addressPattern.isEmpty() ) return true;
         Pattern p = getCompiledPattern();
@@ -79,9 +63,7 @@ public class Medium implements Serializable {
         return m.matches();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String toString() {
         return name;
     }

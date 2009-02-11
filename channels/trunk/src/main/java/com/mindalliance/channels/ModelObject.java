@@ -1,14 +1,12 @@
 package com.mindalliance.channels;
 
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
 import java.text.Collator;
 import java.util.Date;
@@ -16,8 +14,7 @@ import java.util.Date;
 /**
  * An object with name, id and description, comparable by its toString() values.
  */
-@Entity @Inheritance( strategy = InheritanceType.JOINED )
-@Table( uniqueConstraints = @UniqueConstraint( columnNames = { "id" } ) )
+@Entity @Inheritance( strategy = InheritanceType.JOINED ) @DiscriminatorColumn( name = "bla" )
 public abstract class ModelObject implements Serializable, Comparable<ModelObject>, Identifiable {
 
     /** Unique id of this object. */
@@ -45,8 +42,7 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
         setName( name );
     }
 
-    @Id
-    @GeneratedValue( strategy = GenerationType.AUTO )
+    @Id @GeneratedValue
     public long getId() {
         return id;
     }

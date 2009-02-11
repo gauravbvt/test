@@ -1,6 +1,6 @@
 package com.mindalliance.channels;
 
-import java.util.Iterator;
+import java.util.List;
 
 /**
  * Protocol for manipulating objects.
@@ -17,17 +17,19 @@ public interface Dao {
     /**
      * @return the total number of scenarios.
      */
-    int getScenarioCount();
+    long getScenarioCount();
 
     /**
+     * @param scenario the scenario that will contain this part
      * @return a new default part.
      */
-    Part createPart();
+    Part createPart( Scenario scenario );
 
     /**
+     * @param scenario the scenario that will contain this connector
      * @return a new connector.
      */
-    Connector createConnector();
+    Connector createConnector( Scenario scenario );
 
     /**
      * Create a new internal flow.
@@ -58,12 +60,12 @@ public interface Dao {
      <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException;
 
     /**
-     * Iterate on objects of the given class.
+     * Get all objects of the given class.
      * @param clazz the given subclass of model object.
      * @param <T> a subclass of model object.
-     * @return an iterator
+     * @return a collection
      */
-    <T extends ModelObject> Iterator<T> iterate( Class<T> clazz );
+    <T extends ModelObject> List<T> getAll( Class<T> clazz );
 
     /**
      * Add a model object.
