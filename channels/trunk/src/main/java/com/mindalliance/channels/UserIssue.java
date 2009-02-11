@@ -65,7 +65,7 @@ public class UserIssue extends ModelObject implements Issue {
     }
 
     public void setRemediation( String remediation ) {
-        this.remediation = remediation;
+        this.remediation = remediation == null ? "" : remediation;
     }
 
     public String getReportedBy() {
