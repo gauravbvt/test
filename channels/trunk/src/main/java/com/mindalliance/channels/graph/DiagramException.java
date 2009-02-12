@@ -7,7 +7,7 @@ package com.mindalliance.channels.graph;
  * Date: Nov 19, 2008
  * Time: 3:06:23 PM
  */
-public class DiagramException extends Exception {
+public class DiagramException extends RuntimeException {
 
     public DiagramException() {
         super();

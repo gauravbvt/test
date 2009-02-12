@@ -3,8 +3,8 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.graph.DiagramException;
+import com.mindalliance.channels.graph.DiagramMaker;
 import com.mindalliance.channels.graph.FlowDiagram;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Response;
@@ -25,17 +25,16 @@ public class FlowPage extends WebPage {
     /** The log. */
     private static final Logger LOG = LoggerFactory.getLogger( ExportPage.class );
 
-    /** The scenario being graphed. */
-    private Scenario scenario;
-
     /** The selected node. */
     private Node node;
+
+    FlowDiagram flowDiagram;
 
     public FlowPage( PageParameters parameters ) {
         super( parameters );
 
         final Service service = getService();
-        scenario = ScenarioPage.findScenario( service, parameters );
+        Scenario scenario = ScenarioPage.findScenario( service, parameters );
 
         if ( scenario == null )
             redirectTo( service.getDefaultScenario() );
@@ -45,6 +44,23 @@ public class FlowPage extends WebPage {
             if ( node == null )
                 redirectTo( scenario );
         }
+        flowDiagram = Project.diagramMaker().newFlowDiagram(scenario, node);
+        if (parameters.containsKey( "size" )) {
+            double[] size = convertSize( parameters.getString( "size" ));
+            flowDiagram.setDiagramSize( size[0], size[1] );
+        }
+        if (parameters.containsKey( "orientation" )) {
+           flowDiagram.setOrientation( parameters.getString( "orientation" ));
+        }
+    }
+
+    private double[] convertSize( String s ) {
+        String[] sizes = s.split( "," );
+        assert sizes.length == 2;
+        double size[] = new double[2];
+        size[0] = Double.parseDouble(sizes[0]);
+        size[1] = Double.parseDouble(sizes[1]);
+        return size;
     }
 
     @Override
@@ -63,20 +79,12 @@ public class FlowPage extends WebPage {
             if ( resp instanceof WebResponse )
                 setHeaders( (WebResponse) resp );
 
-            getFlowDiagram().getPNG(
-                    scenario, node, getAnalyst(), getResponse().getOutputStream() );
+            flowDiagram.render(
+                    DiagramMaker.PNG, getResponse().getOutputStream() );
         } catch ( DiagramException e ) {
             LOG.error( "Error while generating diagram", e );
             // Don't do anuything else --> empty png
         }
-    }
-
-    private FlowDiagram getFlowDiagram() {
-        return ( (Project) getApplication() ).getFlowDiagram();
-    }
-
-    private Analyst getAnalyst() {
-        return ( (Project) getApplication() ).getAnalyst();
     }
 
     private Service getService() {

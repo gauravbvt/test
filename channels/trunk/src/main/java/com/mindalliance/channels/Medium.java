@@ -12,31 +12,84 @@ import java.util.regex.Pattern;
  * Time: 7:14:12 AM
  */
 
-public enum Medium  {
+public enum Medium {
+    /**
+     * Telephone
+     */
+    Phone( "Phone", "(\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4})|(\\d{3})" ),
+    /**
+     * Fax
+     */
+    Fax( "Fax", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}" ),
+    /**
+     * Cell phone
+     */
+    Cell( "Cell", "(\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4})|(\\d{3})" ),
+    /**
+     * Email
+     */
+    Email( "Email", "[^@\\s]+@[^@\\s]+\\.\\w+" ),
+    /**
+     * Instant messaging
+     */
+    IM( "IM", ".+" ),
+    /**
+     * Radio
+     */
+    Radio( "Radio", ".+" ),
+    /**
+     * Television
+     */
+    TV( "Television", ".+" ),
+    /**
+     * Courier, like Fedex or UPS
+     */
+    Courier( "Courier", ".+" ),
+    /**
+     * In person
+     */
+    F2F( "Face-to-face", ".*" ),
+    /**
+     * SendWordNow
+     */
+    SendWordNow( "SendWordNow", ".+" ),
+    /**
+     * Miscellaneous
+     */
+    Other( "Other", ".+" );
 
-    Phone      ( "Phone",        "\\d{3}-\\d{3}-\\d{4}" ),
-    Fax        ( "Fax",          "\\d{3}-\\d{3}-\\d{4}" ),
-    Cell       ( "Cell",         "\\d{3}-\\d{3}-\\d{4}" ),
-    Email      ( "Email",        "[^@\\s]+@[^@\\s]+\\.\\w+" ),
-    IM         ( "IM",           ".+" ),
-    Radio      ( "Radio",        ".+" ),
-    TV         ( "Television",   ".+" ),
-    Courier    ( "Courier",      ".+" ),
-    F2F        ( "Face-to-face", ".*" ),
-    SendWordNow( "SendWordNow",  ".+" ),
-    Other      ( "Other",        ".+" );
-
-
+    /**
+     * The medium's name
+     */
     private String name = "";
-
+    /**
+     * A pattern for validation
+     */
     private String addressPattern = "";
-
+    /**
+     * The compiled pattern
+     */
     private Pattern compiledPattern;
 
     Medium( String name, String addressPattern ) {
         this.name = name;
         this.addressPattern = addressPattern;
         compiledPattern = Pattern.compile( addressPattern );
+    }
+
+    /**
+     * Get Medium by name.
+     * Return Other if none found.
+     *
+     * @param name a String
+     * @return a Medium
+     */
+    public static Medium named( String name ) {
+        for ( Medium m : Medium.values() ) {
+            if ( m.getName().equals( name ) )
+                return m;
+        }
+        return Other;
     }
 
     public String getName() {
@@ -53,6 +106,7 @@ public enum Medium  {
 
     /**
      * Check if an address is valid.
+     *
      * @param address the address
      * @return true if valid
      */
@@ -63,6 +117,9 @@ public enum Medium  {
         return m.matches();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return name;

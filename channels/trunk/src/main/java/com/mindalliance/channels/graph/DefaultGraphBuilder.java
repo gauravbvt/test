@@ -24,8 +24,8 @@ public class DefaultGraphBuilder implements GraphBuilder {
     /**
      * Cached directed graphs
      */
-    private SimpleCache<Scenario,DirectedGraph<Node,Flow>> digraphs =
-            new SimpleCache<Scenario,DirectedGraph<Node,Flow>>();
+    private SimpleCache<Scenario, DirectedGraph<Node, Flow>> digraphs =
+            new SimpleCache<Scenario, DirectedGraph<Node, Flow>>();
 
     /**
      * Constructor

@@ -5,14 +5,13 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.service.ChannelsServiceImpl;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.attachments.BitBucket;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.export.Importer;
-import com.mindalliance.channels.graph.DiagramException;
+import com.mindalliance.channels.graph.DiagramMaker;
 import com.mindalliance.channels.graph.FlowDiagram;
-import com.mindalliance.channels.service.ChannelsServiceImpl;
-import junit.framework.TestCase;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.util.file.File;
@@ -22,12 +21,15 @@ import static org.easymock.EasyMock.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import junit.framework.TestCase;
 
 /**
  * Simple test using the WicketTester.
@@ -56,15 +58,14 @@ public class TestScenarioPage extends TestCase {
 
         project.setService( service );
         project.setAttachmentManager( new BitBucket() );
-        FlowDiagram fd = createMock( FlowDiagram.class );
-        try {
-            expect( fd.getImageMap( (Scenario) anyObject(), (Analyst) anyObject() ) )
-                    .andReturn( "" ).anyTimes();
-        } catch ( DiagramException e ) {
-            fail();
-        }
+        DiagramMaker dm = createMock( DiagramMaker.class );
+        FlowDiagram fd = createMock(  FlowDiagram.class);
+        expect( fd.makeImageMap( ) ).andReturn( "" ).anyTimes();
+        expect( dm.newFlowDiagram( (Scenario) anyObject() ) )
+                    .andReturn( fd ).anyTimes();
+        replay( dm );
         replay( fd );
-        project.setFlowDiagram( fd );
+        project.setDiagramMaker( dm );
 
         Analyst sa = createNiceMock( Analyst.class );
         expect( sa.getIssuesSummary( (ModelObject) anyObject(), anyBoolean() ) )
@@ -88,6 +89,7 @@ public class TestScenarioPage extends TestCase {
      * @param project
      * @see {https://issues.apache.org/jira/browse/WICKET-1931}
      * @todo remove when moving to Wickets 1.4-RC2
+     * @throws java.io.IOException
      */
     public static void setFiles( FormTester ft, Project project ) throws IOException {
 
@@ -105,7 +107,7 @@ public class TestScenarioPage extends TestCase {
     }
 
     /**
-     * @param project
+     * @param project a Project
      * @todo remove when moving to Wickets 1.4-RC2
      */
     public static void checkFiles( Project project ) {

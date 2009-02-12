@@ -43,7 +43,7 @@ public class ChannelConverter implements Converter {
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "medium" ) ) {
-                channel.setMedium( Medium.valueOf( reader.getValue() ) );
+                channel.setMedium( Medium.named( reader.getValue() ) );
             } else if ( nodeName.equals( "address" ) ) {
                 channel.setAddress( reader.getValue() );
             }

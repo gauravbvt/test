@@ -1,74 +1,44 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.analysis.Analyst;
-
 import java.io.OutputStream;
 
 /**
- * Information flow diagram generator interface.
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: Feb 11, 2009
+ * Time: 4:30:22 PM
  */
 public interface FlowDiagram {
-
     /**
-     * The PNG format
-     */
-    String PNG = "png";
-    /**
-     * The SVG format
-     */
-    String SVG = "svg";
-    /**
-     * The image map format
-     */
-    String IMAGE_MAP = "cmapx";
-
-    /**
-     * Set image directory
-     * @param imageDirectory -- where to find images
-     */
-    void setImageDirectory( String imageDirectory );
-
-    /**
-     * Produces the PNG stream of a directed graph diagram of the scenario.
+     * Constrain size of diagram.
      *
-     * @param scenario     A scenario
-     * @param selectedNode The scenario node currently selected
-     * @param analyst      The scenario analyst used to detect issues
-     * @param png          Output stream contaiing the diagram as PNG
-     * @throws com.mindalliance.channels.graph.DiagramException
-     *          when diagram generation fails
+     * @param width  in inches
+     * @param height in inches
      */
-    void getPNG( Scenario scenario,
-                 Node selectedNode,
-                 Analyst analyst,
-                 OutputStream png ) throws DiagramException;
+    void setDiagramSize( double width, double height );
 
     /**
-     * Produces the SVG stream of a directed graph diagram of the scenario.
+     * Set orientation of the diagram
      *
-     * @param scenario     A scenario
-     * @param selectedNode The scenario node currently selected
-     * @param analyst      The scenario analyst used to detect issues
-     * @param svg          Output stream contaiing the diagram as SVG
-     * @throws com.mindalliance.channels.graph.DiagramException
-     *          when diagram generation fails
+     * @param orientation a String
      */
-    void getSVG( Scenario scenario,
-                 Node selectedNode,
-                 Analyst analyst,
-                 OutputStream svg ) throws DiagramException;
+    void setOrientation( String orientation );
 
     /**
-     * Gets an image map component for a directed graph diagram of the scenario
+     * Render the diagram on output stream in given format.
      *
-     * @param scenario     A scenario
-     * @param analyst      The scenario analyst used to detect issues
+     * @param outputFormat the name of the format
+     * @param outputStream the output stream
+     * @throws DiagramException raised if diagram generation fails
+     */
+    void render( String outputFormat, OutputStream outputStream );
+
+    /**
+     * Produce image map
+     *
      * @return a String
-     * @throws com.mindalliance.channels.graph.DiagramException
-     *          when diagram generation fails
+     * @throws DiagramException if fails
      */
-    String getImageMap( Scenario scenario, Analyst analyst ) throws DiagramException;
-
+    String makeImageMap();
 }

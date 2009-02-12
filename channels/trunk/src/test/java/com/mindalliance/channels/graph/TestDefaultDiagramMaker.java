@@ -1,40 +1,44 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Node;
+import com.mindalliance.channels.AbstractChannelsTest;
+import com.mindalliance.channels.pages.Project;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
+import java.io.ByteArrayOutputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: Nov 21, 2008
- * Time: 8:57:25 AM
+ * Date: Feb 11, 2009
+ * Time: 4:20:19 PM
  */
-public class TestDefaultFlowDiagram extends AbstractChannelsTest {
+public class TestDefaultDiagramMaker extends AbstractChannelsTest {
 
-    Iterator<Scenario> scenarios;
+    private List<Scenario> scenarios;
 
     @Override
     protected void setUp() {
         super.setUp();
-        scenarios = project.getService().list( Scenario.class ).iterator();
+        scenarios = Project.service().list( Scenario.class );
+
     }
 
     public void testGetSVG() {
-        while ( scenarios.hasNext() ) {
-            Scenario scenario = scenarios.next();
+        for ( Scenario scenario : scenarios ) {
             Node selectedNode = findSelected( scenario );
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                project.getFlowDiagram().getSVG( scenario, selectedNode, project.getAnalyst(), new BufferedOutputStream( baos ) );
+                DiagramMaker diagramMaker = project.getDiagramMaker();
+                FlowDiagram flowDiagram = diagramMaker.newFlowDiagram(scenario, selectedNode);
+                flowDiagram.render( DiagramMaker.SVG, new BufferedOutputStream( baos ) );
                 String svg = baos.toString();
                 assertFalse( svg.isEmpty() );
                 assertTrue( svg.startsWith( "<?xml" ) );
@@ -46,12 +50,13 @@ public class TestDefaultFlowDiagram extends AbstractChannelsTest {
     }
 
     public void testGetPNG() {
-        while ( scenarios.hasNext() ) {
-            Scenario scenario = scenarios.next();
+        for ( Scenario scenario : scenarios )  {
             Node selectedNode = findSelected( scenario );
             try {
                 FileOutputStream fileOut = new FileOutputStream( "target/" + scenario.getName() + ".png" );
-                project.getFlowDiagram().getPNG( scenario, selectedNode, project.getAnalyst(), fileOut );
+                DiagramMaker diagramMaker = project.getDiagramMaker();
+                FlowDiagram flowDiagram = diagramMaker.newFlowDiagram(scenario, selectedNode);
+                flowDiagram.render( DiagramMaker.PNG, fileOut );
                 fileOut.flush();
                 fileOut.close();
                 assertTrue( new File( "target/" + scenario.getName() + ".png" ).length() > 0 );
@@ -65,10 +70,11 @@ public class TestDefaultFlowDiagram extends AbstractChannelsTest {
     }
 
     public void testGetImageMap() {
-        while ( scenarios.hasNext() ) {
-            Scenario scenario = scenarios.next();
+        for ( Scenario scenario : scenarios ) {
             try {
-                String map = project.getFlowDiagram().getImageMap( scenario, project.getAnalyst() );
+                DiagramMaker diagramMaker = project.getDiagramMaker();
+                FlowDiagram flowDiagram = diagramMaker.newFlowDiagram(scenario);
+                String map = flowDiagram.makeImageMap( );
                 System.out.print(map);
                 assertFalse( map.isEmpty() );
                 assertTrue( map.startsWith( "<map" ) );

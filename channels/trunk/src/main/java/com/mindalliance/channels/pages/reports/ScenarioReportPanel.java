@@ -4,6 +4,8 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.graph.DiagramMaker;
+import com.mindalliance.channels.pages.components.FlowDiagramPanel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -43,6 +45,13 @@ public class ScenarioReportPanel extends Panel {
     private void init() {
         add( new Label( "name", scenario.getName() ) );
         add( new Label( "description", scenario.getDescription() ) );
+        double[] size = {7.5, 10.0};
+        FlowDiagramPanel flowDiagramPanel = new FlowDiagramPanel(
+                "flowMap",
+                new Model<Scenario>(scenario),
+                size,
+                DiagramMaker.TOP_BOTTOM);
+        add( flowDiagramPanel );
         List<Organization> organizations = findTopOrganizationsInScenario();
         add( new ListView<Organization>( "organizations", organizations ) {
             protected void populateItem( ListItem<Organization> item ) {

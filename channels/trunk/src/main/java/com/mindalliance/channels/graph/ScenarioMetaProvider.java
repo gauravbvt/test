@@ -22,10 +22,6 @@ import java.util.List;
 public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
 
     /**
-     * Direction of graph layout
-     */
-    private static final String RANKDIR = "LR";
-    /**
      * Color used to indicate issues.
      */
     private static final String COLOR_ERROR = "red3";
@@ -77,6 +73,15 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
      * Relative path to icon directory
      */
     private String imageDirectory;
+    /**
+     * Diagram size constraint.
+     * Diagram takes natural size if null.
+     */
+    private double[] graphSize;
+    /**
+     * Whether the direction is LR or top-bottom
+     */
+    private String graphOrientation = "LR";
     /**
      * Scenario analyst in context
      */
@@ -175,16 +180,16 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
         if ( node.isPart() ) {
             Part part = (Part) node;
             String label = "";
-            if (part.getActor() != null) label += part.getActor().toString();
-            if (part.getRole() != null) {
-                if (!label.isEmpty()) label += "|as ";
+            if ( part.getActor() != null ) label += part.getActor().toString();
+            if ( part.getRole() != null ) {
+                if ( !label.isEmpty() ) label += "|as ";
                 label += part.getRole();
             }
-            if (part.getOrganization() != null) {
-                if (!label.isEmpty()) label += "|in ";
+            if ( part.getOrganization() != null ) {
+                if ( !label.isEmpty() ) label += "|in ";
                 label += part.getOrganization();
             }
-            if (!label.isEmpty()) label += "|";
+            if ( !label.isEmpty() ) label += "|";
             label += part.getTask();
 /*
             final String actorString = part.getActor() != null ? part.getActor().toString()
@@ -207,6 +212,18 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
         return new ScenarioDOTAttributeProvider();
     }
 
+    public void setGraphSize( double[] size ) {
+        this.graphSize = size;
+    }
+
+    /**
+     * Set graph orientation
+     * @param graphOrientation a String ("TB" or "LR")
+     */
+    public void setGraphOrientation( String graphOrientation ) {
+        if ( graphOrientation != null ) this.graphOrientation = graphOrientation;
+    }
+
     /**
      * A DOTAttributeProvider for scenarios.
      */
@@ -217,11 +234,23 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
 
         public List<DOTAttribute> getGraphAttributes() {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-            list.add( new DOTAttribute( "rankdir", RANKDIR ) );
+            list.add( new DOTAttribute( "rankdir", graphOrientation ) );
+            if ( graphSize != null ) {
+                list.add( new DOTAttribute( "size", getSizeString() ) );
+                list.add( new DOTAttribute( "ratio", "compress" ) );
+            }
             // list.add( new DOTAttribute( "overlap", "false" ) );
             // list.add( new DOTAttribute( "splines", "true" ) );
             // list.add( new DOTAttribute( "sep", ".1" ) );
             return list;
+        }
+
+        private String getSizeString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append( graphSize[0] );
+            sb.append( ',' );
+            sb.append( graphSize[1] );
+            return sb.toString();
         }
 
         /**
@@ -240,7 +269,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
 
         public List<DOTAttribute> getVertexAttributes( Node vertex, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-            if ( outputFormat.equalsIgnoreCase( FlowDiagram.SVG ) ) {
+            if ( outputFormat.equalsIgnoreCase( DiagramMaker.SVG ) ) {
                 if ( vertex.isPart() ) {
                     list.add( new DOTAttribute( "shape", "box" ) );
                 } else if ( vertex.isConnector() ) {

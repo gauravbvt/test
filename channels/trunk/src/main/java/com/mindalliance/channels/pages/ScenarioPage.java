@@ -10,6 +10,7 @@ import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.DiagramException;
+import com.mindalliance.channels.graph.DiagramMaker;
 import com.mindalliance.channels.graph.FlowDiagram;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.FlowListPanel;
@@ -438,9 +439,9 @@ public final class ScenarioPage extends WebPage {
                 protected void onRender( MarkupStream markupStream ) {
                     super.onRender( markupStream );
                     try {
-                        Analyst analyst = getProject().getAnalyst();
-                        FlowDiagram diagram = getProject().getFlowDiagram();
-                        getResponse().write( diagram.getImageMap( scenario, analyst ) );
+                        DiagramMaker diagramMaker = getProject().getDiagramMaker();
+                        FlowDiagram flowDiagram = diagramMaker.newFlowDiagram( scenario );
+                        getResponse().write( flowDiagram.makeImageMap( ) );
                     } catch ( DiagramException e ) {
                         LOG.error( "Can't generate image map", e );
                     }

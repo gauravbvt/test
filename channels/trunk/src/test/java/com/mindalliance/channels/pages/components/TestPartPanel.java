@@ -14,8 +14,8 @@ import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.attachments.BitBucket;
 import com.mindalliance.channels.service.ChannelsServiceImpl;
 import com.mindalliance.channels.dao.Memory;
+import com.mindalliance.channels.graph.DiagramMaker;
 import com.mindalliance.channels.graph.FlowDiagram;
-import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ScenarioPage;
 import com.mindalliance.channels.pages.TestScenarioPage;
@@ -54,15 +54,14 @@ public class TestPartPanel extends AbstractChannelsTest {
         service.setDao( new Memory() );
         project.setService( service );
         project.setAttachmentManager( new BitBucket() );
-        FlowDiagram fd = createMock( FlowDiagram.class );
-        try {
-            expect( fd.getImageMap( (Scenario) anyObject(), (Analyst) anyObject() ) )
-                    .andReturn( "" ).anyTimes();
-        } catch ( DiagramException e ) {
-            fail();
-        }
-        replay( fd );
-        project.setFlowDiagram( fd );
+        DiagramMaker dm = createMock( DiagramMaker.class );
+         FlowDiagram fd = createMock(  FlowDiagram.class);
+         expect( fd.makeImageMap( ) ).andReturn( "" ).anyTimes();
+         expect( dm.newFlowDiagram( (Scenario) anyObject() ) )
+                     .andReturn( fd ).anyTimes();
+         replay( dm );
+         replay( fd );
+         project.setDiagramMaker( dm );
 
         Analyst sa = createNiceMock( Analyst.class );
         expect( sa.getIssuesSummary( (ModelObject) anyObject(), anyBoolean()) ).andReturn( "" ).anyTimes();
@@ -257,6 +256,7 @@ public class TestPartPanel extends AbstractChannelsTest {
 
     /**
      * Test all fields in the form using page tester.
+     * @throws java.io.IOException if fails
      */
     public void testForm() throws IOException {
         ScenarioPage page = new ScenarioPage( scenario, part );
