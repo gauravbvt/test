@@ -100,7 +100,7 @@ public class FlowPage extends WebPage {
         final long nid = n.getId();
         setResponsePage(
                 new RedirectPage(
-                        MessageFormat.format( "?scenario={0}&node={1}", sid, nid ) ) );   // NON-NLS
+                        MessageFormat.format( "?scenario={0,number,0}&node={1,number,0}", sid, nid ) ) );   // NON-NLS
     }
 
 }

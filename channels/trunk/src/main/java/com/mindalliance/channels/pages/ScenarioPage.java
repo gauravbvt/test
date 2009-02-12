@@ -231,7 +231,7 @@ public final class ScenarioPage extends WebPage {
             exps.append( Long.toString( id ) );
         }
         setResponsePage(
-                new RedirectPage( MessageFormat.format( "?scenario={0}&node={1}{2}",      // NON-NLS
+                new RedirectPage( MessageFormat.format( "?scenario={0,number,0}&amp;node={1,number,0}{2}",      // NON-NLS
                         sid, nid, exps ) ) );
     }
 
@@ -397,7 +397,7 @@ public final class ScenarioPage extends WebPage {
 
             // TODO simplify whole page... only displays parts, now.
             add( new ExternalLink( "profile", MessageFormat.format(                       // NON-NLS
-                    "resource.html?scenario={0}&part={1}",                                // NON-NLS
+                    "resource.html?scenario={0,number,0}&amp;part={1,number,0}",                                // NON-NLS
                     scenario.getId(), node.getId() ) ) );
             add( new Link( "add-part-issue" ) {                                           // NON-NLS
 
@@ -429,7 +429,7 @@ public final class ScenarioPage extends WebPage {
                     super.onComponentTag( tag );
                     tag.put( "src",                                                       // NON-NLS
                         MessageFormat.format(
-                            "scenario.png?scenario={0}&amp;node={1}&amp;time={2,number,0}", // NON-NLS
+                            "scenario.png?scenario={0,number,0}&amp;node={1,number,0}&amp;time={2,number,0}", // NON-NLS
                             scenario.getId(),
                             n.getId(),
                             System.currentTimeMillis() ) );

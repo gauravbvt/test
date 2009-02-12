@@ -33,8 +33,8 @@ public class ModelObjectLink extends ExternalLink {
             new AbstractReadOnlyModel<String>() {
                 @Override
                 public String getObject() {
-                    final ModelObject obj = mo.getObject();
-                    final String result;
+                    ModelObject obj = mo.getObject();
+                    String result;
                     if ( obj instanceof Scenario )
                         result = linkFor( (Scenario) obj );
                     else if ( obj instanceof Role )
@@ -65,20 +65,20 @@ public class ModelObjectLink extends ExternalLink {
     }
 
     private static String linkFor( Role role ) {
-        return MessageFormat.format( "role.html?id={0}", role.getId() );                  // NON-NLS
+        return MessageFormat.format( "role.html?id={0,number,0}", role.getId() );                  // NON-NLS
     }
 
     private static String linkFor( Organization organization ) {
-        return MessageFormat.format( "organization.html?id={0}", organization.getId() );  // NON-NLS
+        return MessageFormat.format( "organization.html?id={0,number,0}", organization.getId() );  // NON-NLS
     }
 
     private static String linkFor( Actor actor ) {
-        return MessageFormat.format( "actor.html?id={0}", actor.getId() );                // NON-NLS
+        return MessageFormat.format( "actor.html?id={0,number,0}", actor.getId() );                // NON-NLS
     }
 
     private static String linkFor( Part part ) {
         return MessageFormat.format(
-                "node.html?scenario={0}&amp;node={1}",                                    // NON-NLS
+                "node.html?scenario={0,number,0}&amp;node={1,number,0}",                                    // NON-NLS
                 part.getScenario().getId(),
                 part.getId()
 
@@ -87,7 +87,7 @@ public class ModelObjectLink extends ExternalLink {
     private static String linkFor( InternalFlow flow ) {
         final Node source = flow.getSource();
         return MessageFormat.format(
-                "node.html?scenario={0}&amp;node={1}&expand={2}",                         // NON-NLS
+                "node.html?scenario={0,number,0}&amp;node={1,number,0}&amp;expand={2,number,0}",                         // NON-NLS
                 source.getScenario().getId(),
                 source.getId(),
                 flow.getId()

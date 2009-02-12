@@ -50,7 +50,7 @@ public class ScenarioLink extends ExternalLink {
      * @return a relative url
      */
     public static IModel<String> linkFor( IModel<Node> node, long expansion ) {
-        final Set<Long> set = new HashSet<Long>();
+        Set<Long> set = new HashSet<Long>();
         set.add( expansion );
         return linkFor( node, set );
     }
@@ -82,8 +82,8 @@ public class ScenarioLink extends ExternalLink {
         String exs = expandString( expansions );
         Node n = node;
         if ( n.isConnector() ) {
-            final Iterator<Flow> outs = n.outcomes();
-            final Flow f;
+            Iterator<Flow> outs = n.outcomes();
+            Flow f;
             if ( outs.hasNext() ) {
                 f = outs.next();
                 n = f.getTarget();
@@ -93,19 +93,19 @@ public class ScenarioLink extends ExternalLink {
             }
             exs = expandString( f.getId() );
         }
-        return MessageFormat.format( "?scenario={0}&node={1}{2}",                         // NON-NLS
+        return MessageFormat.format( "?scenario={0,number,0}&amp;node={1,number,0}{2}",       // NON-NLS
                                      n.getScenario().getId(),
                                      n.getId(), exs );
     }
 
     private static String expandString( long id ) {
-        final Set<Long> ids = new HashSet<Long>();
+        Set<Long> ids = new HashSet<Long>();
         ids.add( id );
         return expandString( ids );
     }
 
     private static String expandString( Set<Long> expansions ) {
-        final StringBuilder exps = new StringBuilder( BUFFER_SIZE );
+        StringBuilder exps = new StringBuilder( BUFFER_SIZE );
         for ( long id : expansions ) {
             exps.append( "&expand=" );                                                    // NON-NLS
             exps.append( Long.toString( id ) );

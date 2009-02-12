@@ -37,8 +37,8 @@
     <!-- Flow diagram -->
     <bean id="diagramMaker" class="com.mindalliance.channels.graph.DefaultDiagramMaker">
         <property name="graphRenderer" ref="graphRenderer"/>
-        <property name="urlFormat" value="?scenario={0}&amp;node={1}"/>
-        <property name="scenarioUrlFormat" value="?scenario={0}"/>
+        <property name="urlFormat" value="?scenario={0,number,0}&amp;node={1,number,0}"/>
+        <property name="scenarioUrlFormat" value="?scenario={0,number,0}"/>
         <property name="imageDirectory" value="src/site/resources/images"/>
     </bean>
 
