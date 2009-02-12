@@ -12,6 +12,7 @@ import java.text.MessageFormat;
 import java.util.List;
 
 /**
+ * Provider of providers for scenarios
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -53,6 +54,10 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
      * Font size for node labels
      */
     private static final String NODE_FONT_SIZE = "10";
+    /**
+     * Number of characters after which a long line is wrapped on separator.
+     */
+    private static final int LINE_WRAP_SIZE = 15;
     /**
      * Scenario in context
      */
@@ -146,7 +151,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
     public EdgeNameProvider<Flow> getEdgeLabelProvider() {
         return new EdgeNameProvider<Flow>() {
             public String getEdgeName( Flow flow ) {
-                String label = flow.getName().replaceAll( "\\s+", "\\\\n" );
+                String label = separate(flow.getName()).replaceAll( "\\|", "\\\\n" );
                 if ( flow.isAskedFor() && !label.endsWith( "?" ) ) {
                     label = label + "?";
                 }
@@ -162,6 +167,28 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
                 return sanitize( label );
             }
         };
+    }
+
+    /**
+     * Insert '|' at a space or after other separator at intervals of minimum size in a string
+     * @param s a String
+     * @return modified string
+     */
+    private String separate( String s ) {
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+        String separators = "  ,.-_?\"";
+        for ( char c : s.toCharArray() ) {
+            if ( count >= LINE_WRAP_SIZE && separators.indexOf( c ) >= 0 ) {
+                if ( c != ' ' ) sb.append( c );
+                sb.append( '|' );
+                count = 0;
+            } else {
+                sb.append( c );
+                count++;
+            }
+        }
+        return sb.toString();
     }
 
     public VertexNameProvider<Node> getVertexIDProvider() {
@@ -218,6 +245,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
 
     /**
      * Set graph orientation
+     *
      * @param graphOrientation a String ("TB" or "LR")
      */
     public void setGraphOrientation( String graphOrientation ) {
