@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Comparator;
 
 /**
  * A Resource is an actor in a role for an organization with a jurisdiction.
@@ -79,12 +80,15 @@ public class ResourceSpec extends ModelObject implements Channelable {
         ResourceSpec resourceSpec = new ResourceSpec();
         if ( entity instanceof Actor )
             resourceSpec.setActor( (Actor) entity );
-        if ( entity instanceof Organization )
+        else if ( entity instanceof Organization )
             resourceSpec.setOrganization( (Organization) entity );
-        if ( entity instanceof Role )
+        else if ( entity instanceof Role )
             resourceSpec.setRole( (Role) entity );
-        if ( entity instanceof Place )
+        else if ( entity instanceof Place )
             resourceSpec.setJurisdiction( (Place) entity );
+        else {
+            throw new IllegalArgumentException( "Not an entity: " + entity );
+        }
         return resourceSpec;
     }
 
@@ -142,12 +146,14 @@ public class ResourceSpec extends ModelObject implements Channelable {
      * @param addedChannels a Channel
      */
     public void addChannels( Collection<Channel> addedChannels ) {
-        for (Channel c : addedChannels) {
-            if (!channels.contains( c )) channels.add ( c );
+        for ( Channel c : addedChannels ) {
+            if ( !channels.contains( c ) ) channels.add( c );
         }
     }
 
-    /** {@inheritDoc */
+    /**
+     * {@inheritDoc
+     */
     @Transient
     public String getChannelsString() {
         return Channel.toString( allChannels() );
@@ -166,7 +172,9 @@ public class ResourceSpec extends ModelObject implements Channelable {
                 && SemMatch.samePlace( jurisdiction, resourceSpec.getJurisdiction() );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         int hash = 1;
@@ -177,7 +185,9 @@ public class ResourceSpec extends ModelObject implements Channelable {
         return hash;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void addChannel( Channel channel ) {
         channels.add( channel );
     }
@@ -458,17 +468,38 @@ public class ResourceSpec extends ModelObject implements Channelable {
         return isPredefined() ? "added" : "from tasks";
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public List<Channel> allChannels() {
-        Set<Channel> allChannels = new HashSet<Channel>();
-        for ( ResourceSpec resourceSpec : Project.service().list( ResourceSpec.class ) ) {
-            if ( narrowsOrEquals( resourceSpec ) ) {
-                List<Channel> resourceChannels = resourceSpec.getChannels();
-                for ( Channel resourceChannel : resourceChannels ) {
+        List<Channel> allChannels = new ArrayList<Channel>();
+        List<ResourceSpec> broaderOrEqual = Project.service().findAllResourcesBroadeningOrEqualTo( this );
+        Collections.sort( broaderOrEqual, new Comparator<ResourceSpec>() {
+            /**{@inheritDoc} */
+            public int compare( ResourceSpec rs1, ResourceSpec rs2 ) {
+                int val1 = rs1.specificity();
+                int val2 = rs2.specificity();
+                // put higher specificity first
+                return val1 == val2 ? 0 : ( val1 > val2 ? -1 : 1 );
+            }
+        } );
+        for ( ResourceSpec resourceSpec : broaderOrEqual ) {
+            List<Channel> resourceChannels = resourceSpec.getChannels();
+            for ( Channel resourceChannel : resourceChannels ) {
+                if ( !allChannels.contains( resourceChannel ) )
                     allChannels.add( resourceChannel );
-                }
             }
         }
-        return new ArrayList<Channel>( allChannels );
+        return allChannels;
+    }
+
+    // The higher the specificity, the higher the value
+    public int specificity() {
+        int val = 0;
+        if ( !isAnyActor() ) val += 100;
+        if ( !isAnyRole() ) val += 10;
+        if ( !isAnyJurisdiction() ) val += 5;
+        if ( !isAnyOrganization() ) val += 1;
+        return val;
     }
 }

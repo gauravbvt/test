@@ -87,7 +87,7 @@ public class OrganizationDirectoryPanel extends Panel {
 
     private List<Role> findRolesInOrganization() {
         Set<Role> rolesInOrganization = new HashSet<Role>();
-        List<ResourceSpec> allResourceSpecs = Project.service().getAllResourceSpecs();
+        List<ResourceSpec> allResourceSpecs = Project.service().findAllResourceSpecs();
         for ( ResourceSpec resourceSpec : allResourceSpecs ) {
             if ( resourceSpec.getOrganization() == organization ) {
                 Role role = resourceSpec.getRole();

@@ -38,7 +38,7 @@ public class IndexPage extends WebPage {
         super( parameters );
 
         final Service service = ( (Project) getApplication() ).getService();
-        resourceSpecs = service.getAllResourceSpecs();
+        resourceSpecs = service.findAllResourceSpecs();
         init( service );
     }
 

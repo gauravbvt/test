@@ -68,7 +68,7 @@ public class ProjectDirectoryPanel extends Panel {
 
     private List<Role> findRolesOutOfOrganization() {
         Set<Role> roles = new HashSet<Role>();
-        for ( ResourceSpec resourceSpec : Project.service().getAllResourceSpecs() ) {
+        for ( ResourceSpec resourceSpec : Project.service().findAllResourceSpecs() ) {
             if ( resourceSpec.getOrganization() == null ) {
                 Role role = resourceSpec.getRole();
                 if ( role != null ) roles.add( role );

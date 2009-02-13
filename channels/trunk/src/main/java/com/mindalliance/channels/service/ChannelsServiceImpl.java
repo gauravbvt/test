@@ -37,7 +37,9 @@ import java.util.Set;
  */
 public class ChannelsServiceImpl implements Service {
 
-    /** The implementation dao. */
+    /**
+     * The implementation dao.
+     */
     private Dao dao;
 
     /**
@@ -53,7 +55,9 @@ public class ChannelsServiceImpl implements Service {
         setDao( dao );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Scenario createScenario() {
         Scenario result = new Scenario();
         dao.add( result );
@@ -65,27 +69,33 @@ public class ChannelsServiceImpl implements Service {
         return result;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Connector createConnector( Scenario scenario ) {
         Connector result = dao.createConnector( scenario );
         scenario.addNode( result );
         return result;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Part createPart( Scenario scenario ) {
         Part result = dao.createPart( scenario );
         scenario.addNode( result );
         return result;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Flow connect( Node source, Node target, String name ) {
         Flow result;
 
         if ( isInternal( source, target ) ) {
             if ( getFlow( source, target, name ) != null )
-                    throw new IllegalArgumentException();
+                throw new IllegalArgumentException();
 
             result = dao.createInternalFlow( source, target, name );
             source.addOutcome( result );
@@ -115,15 +125,16 @@ public class ChannelsServiceImpl implements Service {
     private static boolean isExternal( Node source, Node target ) {
         Scenario scenario = source.getScenario();
         return scenario != null
-            && !scenario.equals( target.getScenario() )
-            && ( target.isConnector() || source.isConnector() );
+                && !scenario.equals( target.getScenario() )
+                && ( target.isConnector() || source.isConnector() );
     }
 
     /**
      * Find flow between a source and a target.
+     *
      * @param source the source
      * @param target the target
-     * @param name the name of the flow
+     * @param name   the name of the flow
      * @return the connecting flow, or null if none
      */
     private static Flow getFlow( Node source, Node target, String name ) {
@@ -136,7 +147,9 @@ public class ChannelsServiceImpl implements Service {
         return null;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Scenario findScenario( String name ) throws NotFoundException {
         for ( Scenario s : dao.getAll( Scenario.class ) ) {
             if ( name.equals( s.getName() ) )
@@ -146,12 +159,16 @@ public class ChannelsServiceImpl implements Service {
         throw new NotFoundException();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException {
         return dao.find( clazz, id );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public <T extends ModelObject> List<T> list( Class<T> clazz ) {
         return dao.getAll( clazz );
     }
@@ -159,7 +176,7 @@ public class ChannelsServiceImpl implements Service {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<ModelObject> iterateEntities() {
         return new FilterIterator( dao.getAll( ModelObject.class ).iterator(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -175,12 +192,16 @@ public class ChannelsServiceImpl implements Service {
         dao.add( object );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void remove( ModelObject object ) {
         dao.remove( object );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Scenario getDefaultScenario() {
         return dao.getAll( Scenario.class ).iterator().next();
     }
@@ -191,13 +212,16 @@ public class ChannelsServiceImpl implements Service {
 
     /**
      * Use a specific dao.
+     *
      * @param dao the dao
      */
     public void setDao( Dao dao ) {
         this.dao = dao;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void initialize() {
         if ( !dao.getAll( Scenario.class ).iterator().hasNext() ) {
             if ( addingSamples ) {
@@ -243,8 +267,10 @@ public class ChannelsServiceImpl implements Service {
         return result;
     }
 
-    /** {@inheritDoc} */
-    public List<ResourceSpec> getAllResourceSpecs() {
+    /**
+     * {@inheritDoc}
+     */
+    public List<ResourceSpec> findAllResourceSpecs() {
         Set<ResourceSpec> result = new HashSet<ResourceSpec>();
 
         addSpecs( result, ResourceSpec.class );
@@ -258,42 +284,63 @@ public class ChannelsServiceImpl implements Service {
             while ( parts.hasNext() ) {
                 Part part = parts.next();
                 ResourceSpec partResourceSpec = part.resourceSpec();
-                // Find all channels used to communicate with this part
-                Iterator<Flow> flows = scenario.flows();
-                while ( flows.hasNext() ) {
-                    Flow flow = flows.next();
-                    if ( !flow.getChannels().isEmpty() ) {
-                        if ( flow.getTarget() == part && !flow.isAskedFor() ) {
-                            partResourceSpec.addChannels( flow.getChannels() );
-                        }
-                        if ( flow.getSource() == part && flow.isAskedFor() ) {
-                            partResourceSpec.addChannels( flow.getChannels() );
+                if ( !partResourceSpec.isAnyone() ) {
+                    // Find all channels used to communicate with this part
+                    Iterator<Flow> flows = scenario.flows();
+                    while ( flows.hasNext() ) {
+                        Flow flow = flows.next();
+                        if ( !flow.getChannels().isEmpty() ) {
+                            if ( flow.getTarget() == part && !flow.isAskedFor() ) {
+                                partResourceSpec.addChannels( flow.getChannels() );
+                            }
+                            if ( flow.getSource() == part && flow.isAskedFor() ) {
+                                partResourceSpec.addChannels( flow.getChannels() );
+                            }
                         }
                     }
+                    result.add( partResourceSpec );
                 }
-                result.add( partResourceSpec );
             }
         }
 
-        return new ArrayList<ResourceSpec>(result);
+        return new ArrayList<ResourceSpec>( result );
     }
 
     private void addSpecs( Set<ResourceSpec> result, Class<? extends ModelObject> clazz ) {
         for ( ModelObject modelObject : list( clazz ) )
-            result.add( ResourceSpec.with( modelObject ) );
+            if ( modelObject instanceof ResourceSpec )
+                result.add( (ResourceSpec) modelObject );
+            else
+                result.add( ResourceSpec.with( modelObject ) );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public List<ResourceSpec> findAllResourcesNarrowingOrEqualTo( ResourceSpec resourceSpec ) {
         List<ResourceSpec> list = new ArrayList<ResourceSpec>();
-        for ( ResourceSpec spec : getAllResourceSpecs() ) {
+        for ( ResourceSpec spec : findAllResourceSpecs() ) {
             if ( spec.narrowsOrEquals( resourceSpec ) )
                 list.add( spec );
         }
         return list;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    public List<ResourceSpec> findAllResourcesBroadeningOrEqualTo( ResourceSpec resourceSpec ) {
+        List<ResourceSpec> list = new ArrayList<ResourceSpec>();
+        for ( ResourceSpec spec : findAllResourceSpecs() ) {
+            if ( resourceSpec.narrowsOrEquals( spec ) )
+                list.add( spec );
+        }
+        return list;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public List<ResourceSpec> findAllContacts( ResourceSpec resourceSpec, boolean isSelf ) {
         Set<ResourceSpec> contacts = new HashSet<ResourceSpec>();
         if ( isSelf ) {
@@ -301,14 +348,18 @@ public class ChannelsServiceImpl implements Service {
         } else {
             List<Play> plays = findAllPlays( resourceSpec );
             for ( Play play : plays ) {
-                contacts.add( play.getPart().resourceSpec() );
-                contacts.add( play.getOtherPart().resourceSpec() );
+                ResourceSpec partSpec = play.getPart().resourceSpec();
+                ResourceSpec otherPartSpec = play.getOtherPart().resourceSpec();
+                if (!partSpec.isAnyone()) contacts.add( partSpec );
+                if (!otherPartSpec.isAnyone()) contacts.add( otherPartSpec );
             }
         }
         return new ArrayList<ResourceSpec>( contacts );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public List<Play> findAllPlays( ResourceSpec resourceSpec ) {
         Set<Play> plays = new HashSet<Play>();
         for ( Scenario scenario : list( Scenario.class ) ) {
@@ -317,15 +368,13 @@ public class ChannelsServiceImpl implements Service {
                 Flow flow = flows.next();
                 if ( Play.hasPlay( flow ) ) {
                     if ( flow.getSource().isPart()
-                         && ( (Part) flow.getSource() ).involves( resourceSpec ) )
-                    {
+                            && ( (Part) flow.getSource() ).involves( resourceSpec ) ) {
                         // role sends
                         Play play = new Play( (Part) flow.getSource(), flow, true );
                         plays.add( play );
                     }
                     if ( flow.getTarget().isPart()
-                         && ( (Part) flow.getTarget() ).involves( resourceSpec ) )
-                    {
+                            && ( (Part) flow.getTarget() ).involves( resourceSpec ) ) {
                         // role receives
                         Play play = new Play( (Part) flow.getTarget(), flow, false );
                         plays.add( play );
@@ -336,12 +385,16 @@ public class ChannelsServiceImpl implements Service {
         return new ArrayList<Play>( plays );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean isPermanent( ResourceSpec resourceSpec ) {
         return dao.isPermanent( resourceSpec );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public List<Issue> findAllUserIssues( ModelObject identifiable ) {
         List<Issue> foundIssues = new ArrayList<Issue>();
         for ( UserIssue userIssue : list( UserIssue.class ) ) {
@@ -372,28 +425,28 @@ public class ChannelsServiceImpl implements Service {
         ResourceSpec permanent = findPermanentResourceSpec( resourceSpec );
         if ( permanent == null ) {
             add( resourceSpec );
-        }
-        else {
+        } else {
             permanent.setChannels( resourceSpec.getChannels() );
         }
     }
 
-    /** {@inheritDoc}
+    /**
+     * {@inheritDoc}
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public List<Actor> findAllActors( ResourceSpec resourceSpec ) {
         Set<Actor> actors = new HashSet<Actor>();
         Iterator<ResourceSpec> actorResourceSpecs = new FilterIterator(
-                getAllResourceSpecs().iterator(),
+                findAllResourceSpecs().iterator(),
                 new Predicate() {
                     public boolean evaluate( Object object ) {
-                        return ((ResourceSpec)object).getActor() != null;
+                        return ( (ResourceSpec) object ).getActor() != null;
                     }
-                });
-        while( actorResourceSpecs.hasNext() ) {
+                } );
+        while ( actorResourceSpecs.hasNext() ) {
             ResourceSpec actorResourceSpec = actorResourceSpecs.next();
-            if (actorResourceSpec.narrowsOrEquals( resourceSpec )) {
-                actors.add(actorResourceSpec.getActor());
+            if ( actorResourceSpec.narrowsOrEquals( resourceSpec ) ) {
+                actors.add( actorResourceSpec.getActor() );
             }
         }
         return new ArrayList<Actor>( actors );

@@ -111,11 +111,11 @@ public interface Service {
     Scenario createScenario();
 
     /**
-     * Get all resource specs, user-entered or not.
+     * Get all non-empty resource specs, user-entered or not.
      * @return a new list of resource spec
      */
     @Transactional( readOnly = true )
-    List<ResourceSpec> getAllResourceSpecs();
+    List<ResourceSpec> findAllResourceSpecs();
 
     /**
      * Find all resources that equal or narrow given resource
@@ -126,7 +126,14 @@ public interface Service {
     @Transactional( readOnly = true )
     List<ResourceSpec> findAllResourcesNarrowingOrEqualTo( ResourceSpec resourceSpec );
 
-
+    /**
+     * Find all non-empty resources that equal or broaden given resource
+     *
+     * @param resourceSpec a resource
+     * @return a list of implied resources
+     */
+    @Transactional( readOnly = true )
+    List<ResourceSpec> findAllResourcesBroadeningOrEqualTo( ResourceSpec resourceSpec );
     /**
      * Find all plays for the resource
      *
