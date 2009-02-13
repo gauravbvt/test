@@ -103,7 +103,7 @@ public class ScenarioDOTExporter implements StyledDOTExporter<Node, Flow> {
                         + scenario.getName().replaceAll( "[^a-zA-Z0-9_]", "_" )
                         + " {" );
                 List<DOTAttribute> attributes = new DOTAttribute( "label",
-                        scenario.getName() ).asList();
+                        "Scenario: " + scenario.getName() ).asList();
                 if ( metaProvider.getDOTAttributeProvider() != null ) {
                     attributes.addAll(
                             metaProvider.getDOTAttributeProvider().getSubgraphAttributes() );

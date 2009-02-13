@@ -397,7 +397,7 @@ public final class ScenarioPage extends WebPage {
 
             // TODO simplify whole page... only displays parts, now.
             add( new ExternalLink( "profile", MessageFormat.format(                       // NON-NLS
-                    "resource.html?scenario={0,number,0}&amp;part={1,number,0}",                                // NON-NLS
+                    "resource.html?scenario={0,number,0}&part={1,number,0}",                                // NON-NLS
                     scenario.getId(), node.getId() ) ) );
             add( new Link( "add-part-issue" ) {                                           // NON-NLS
 

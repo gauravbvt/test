@@ -150,7 +150,7 @@ public class ResourceSpec extends ModelObject implements Channelable {
     /** {@inheritDoc */
     @Transient
     public String getChannelsString() {
-        return Channel.toString( channels );
+        return Channel.toString( allChannels() );
     }
 
     /**
@@ -319,7 +319,7 @@ public class ResourceSpec extends ModelObject implements Channelable {
      */
     @Transient
     public boolean isAnyone() {
-        return isAnyActor() && isAnyRole() && isAnyOrganization() && isAnyJurisdiction();
+        return isAnyActor() && isAnyRole() && isAnyOrganization() /*&& isAnyJurisdiction()*/;
     }
 
     /**

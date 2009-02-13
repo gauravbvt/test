@@ -48,9 +48,12 @@ public class DirectoryPanel extends AbstractTablePanel<ResourceSpec> {
         columns.add( makeLinkColumn( "Role", "role", "role.name", EMPTY ) );
         columns.add( makeLinkColumn( "Organization", "organization", "organization.name", EMPTY ) );
         columns.add( makeLinkColumn( "Jurisdiction", "jurisdiction", "jurisdiction.name", EMPTY ) );
+        columns.add( makeColumn( "Channels", "channelsString", EMPTY ) );      // NON-NLS
+/*
         columns.add( new PropertyColumn<String>(
                 new Model<String>( "Channels" ),
                 "channelsString", "channelsString" ) );                           // NON-NLS
+*/
         // Column with link to profile for row's resourceSpec
         columns.add( new AbstractColumn<ResourceSpec>( new Model<String>( "" ) ) {
             public void populateItem( Item<ICellPopulator<ResourceSpec>> cellItem,

@@ -77,19 +77,32 @@ public class Channel implements Serializable {
     public boolean equals( Object obj ) {
         if ( obj instanceof Channel ) {
             Channel channel = (Channel) obj;
-            return address.equals( channel.getAddress() ) && medium == channel.getMedium();
+            if (medium == null || channel.getMedium() == null)
+                return false;
+            else
+                return address.equals( channel.getAddress() ) && medium == channel.getMedium();
         }
         else {
             return false;
         }
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode() {
+        int hash = 1;
+        if ( medium != null ) hash = hash * 31 + medium.hashCode();
+        if ( address != null ) hash = hash * 31 + address.hashCode();
+        return hash;
+    }
+
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append( medium == null ? "NO MEDIUM" : medium.getName() );
         sb.append( ": " );
-        sb.append( address.isEmpty() ? "UNKNOWN" : address );
+        sb.append( address.isEmpty() ? "?" : address );
         return sb.toString();
     }
 

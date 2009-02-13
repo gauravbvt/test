@@ -151,7 +151,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
     public EdgeNameProvider<Flow> getEdgeLabelProvider() {
         return new EdgeNameProvider<Flow>() {
             public String getEdgeName( Flow flow ) {
-                String label = separate(flow.getName()).replaceAll( "\\|", "\\\\n" );
+                String label = separate( flow.getName() ).replaceAll( "\\|", "\\\\n" );
                 if ( flow.isAskedFor() && !label.endsWith( "?" ) ) {
                     label = label + "?";
                 }
@@ -171,6 +171,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
 
     /**
      * Insert '|' at a space or after other separator at intervals of minimum size in a string
+     *
      * @param s a String
      * @return modified string
      */

@@ -156,7 +156,7 @@ public class Part extends Node {
 
     @Transient
     public boolean isUndefined() {
-        return actor == null && role == null && organization == null;
+        return actor == null && role == null && organization == null && location == null;
     }
 
     /**
@@ -199,7 +199,8 @@ public class Part extends Node {
      * @return a boolean
      */
     public boolean involves( ResourceSpec resourceSpec ) {
-        return resourceSpec.intersects( resourceSpec() );
+        ResourceSpec partResourceSpec = resourceSpec();
+        return !partResourceSpec.isAnyone() && resourceSpec.intersects( partResourceSpec );
     }
 
     /**
