@@ -7,19 +7,13 @@
         lang="en">
 <body>
 <wicket:panel>
-    <div class="scenario">
-        <span class="name" wicket:id="name">name</span>
-        <span class="description" wicket:id="description">description</span>
-        <div class="flow-map" wicket:id="flowMap">[flow diagram panel]</div>
-        <span class="section">Organizations</span>
-        <div class="organizations">
-            <div wicket:id="organizations">
-                <span wicket:id="organization">[organization report panel]</span>
-            </div>
-        </div>
-        <span class="section">Issues</span>
-        <span wicket:id="issues">[issues report panel]</span>
+    <h2 wicket:id="name">name</h2>
+    <p class="description" wicket:id="description">description</p>
+    <div class="flow-map" wicket:id="flowMap">[flow diagram panel]</div>
+    <div wicket:id="organizations">
+        <div wicket:id="organization">[organization report panel]</div>
     </div>
+    <div wicket:id="issues">[issues report panel]</div>
 </wicket:panel>
 </body>
 </html>

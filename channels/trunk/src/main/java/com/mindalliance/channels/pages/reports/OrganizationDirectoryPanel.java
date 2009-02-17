@@ -4,8 +4,6 @@ import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.pages.Project;
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -38,19 +36,17 @@ public class OrganizationDirectoryPanel extends Panel {
     public OrganizationDirectoryPanel( String id, IModel<Organization> model ) {
         super( id, model );
         organization = model.getObject();
+        setRenderBodyOnly( true );
         init();
     }
 
     private void init() {
-        WebMarkupContainer orgDiv = new WebMarkupContainer( "organizationDiv" );
-        add( orgDiv );
-        String styleClass = organization.getParent() == null
-                ? "top-organization"
-                : "sub-organization";
-        orgDiv.add( new AttributeModifier( "class", true, new Model<String>( styleClass ) ) );
-        orgDiv.add( new Label( "name", organization.getName() ) );
-        orgDiv.add( new Label( "description", organization.getDescription() ) );
-        orgDiv.add( new Label( "parentage", organization.parentage() ) );
+        add( new Label( "name", organization.getName() ) );
+        add( new Label( "description", organization.getDescription() ) );
+        Label parentage = new Label( "parentage", organization.parentage() );
+        if ( organization.getParent() == null )
+            parentage.setVisible( false );
+        add( parentage );
         List<Role> roles = findRolesInOrganization();
         Collections.sort( roles, new Comparator<Role>() {
             /** {@inheritDoc} */
@@ -58,14 +54,17 @@ public class OrganizationDirectoryPanel extends Panel {
                 return Collator.getInstance().compare( role1.getName(), role2.getName() );
             }
         } );
-        orgDiv.add( new ListView<Role>( "roles", roles ) {
+        add( new ListView<Role>( "roles", roles ) {
+            @Override
             protected void populateItem( ListItem<Role> item ) {
                 Role role = item.getModelObject();
                 item.add( new RoleDirectoryPanel( "role", new Model<Role>( role ), organization ) );
             }
         } );
+
         List<Organization> subOrganizations = findSubOrganizations();
-        orgDiv.add( new ListView<Organization>( "sub-organizations", subOrganizations ) {
+        add( new ListView<Organization>( "sub-organizations", subOrganizations ) {
+            @Override
             protected void populateItem( ListItem<Organization> item ) {
                 Organization subOrganization = item.getModelObject();
                 item.add( new OrganizationDirectoryPanel(

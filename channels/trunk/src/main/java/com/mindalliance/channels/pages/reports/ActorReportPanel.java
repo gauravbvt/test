@@ -17,21 +17,29 @@ import org.apache.wicket.model.Model;
  * Time: 9:05:57 PM
  */
 public class ActorReportPanel extends Panel {
+
     /**
-     * An actor
+     * An actor.
      */
     private Actor actor;
 
     public ActorReportPanel( String id, IModel<Actor> model ) {
         super( id, model );
+        setRenderBodyOnly( true );
         actor = model.getObject();
         init();
     }
 
     private void init() {
-        add( new Label( "name", actor.getName() ) );
-        add( new Label( "description", actor.getDescription() ) );
-        add( new ChannelsReportPanel( "channels", new Model<Channelable>( ResourceSpec.with( actor ) ) ) );
+        add( new Label( "name", actor.getName() ) );                                      // NON-NLS
+
+        String desc = actor.getDescription();
+        Label descLabel = new Label( "description", desc );                               // NON-NLS
+        descLabel.setVisible( desc != null && !desc.isEmpty() );
+        add( descLabel );
+
+        add( new ChannelsReportPanel( "channels",                                         // NON-NLS
+                                      new Model<Channelable>( ResourceSpec.with( actor ) ) ) );
     }
 
 }

@@ -1,17 +1,16 @@
 package com.mindalliance.channels.pages.reports;
 
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.AttributeModifier;
-import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Issue;
+import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 import java.util.List;
 
@@ -30,23 +29,27 @@ public class IssuesReportPanel extends Panel {
 
     public IssuesReportPanel( String id, IModel<ModelObject> model ) {
         super( id, model );
+        setRenderBodyOnly( true );
         modelObject = model.getObject();
-        init( Project.analyst());
+        init( Project.analyst() );
     }
 
     private void init( Analyst analyst ) {
         List<Issue> issues = analyst.listIssues( modelObject, true );
-        add( new ListView<Issue>("issues", issues) {
+        add( new ListView<Issue>( "issues", issues ) {
+            @Override
             protected void populateItem( ListItem<Issue> item ) {
                 Issue issue = item.getModelObject();
-                WebMarkupContainer issueDiv = new WebMarkupContainer("issueDiv");
-                item.add(issueDiv);
-                issueDiv.add( new Label("reported-by", issue.getReportedBy()) );
-                issueDiv.add( new Label("description", issue.getDescription()) );
-                issueDiv.add( new Label("suggestion", issue.getRemediation()) );
+                item.add( new Label( "reported-by", issue.getReportedBy() ) );
+                item.add( new Label( "description", issue.getDescription() ) );
+                item.add( new Label( "suggestion", issue.getRemediation() ) );
                 String styleClass = issue.getSeverity().toString().toLowerCase();
-                issueDiv.add( new AttributeModifier("class", true, new Model<String>(styleClass) ) );
+                item.add( new AttributeModifier( "class", true,
+                                                     new Model<String>( styleClass ) ) );
             }
         } );
+
+        if ( issues.isEmpty() )
+            setVisible( false );
     }
 }

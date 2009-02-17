@@ -8,14 +8,17 @@
 <body>
 <wicket:panel>
     <div id="organizations">
-        <span class="section">Organiztions</span>
-        <div wicket:id="organizations"><span wicket:id="organization">[organization directory panel]</span></div>
+        <h3>Organizations</h3>
+        <div wicket:id="organizations">
+            <div wicket:id="organization">[organization directory panel]</div>
+        </div>
     </div>
     <div id="roles-without-organization">
-        <span class="section">Roles outside of organizations</span>
-        <div wicket:id="roles"><span wicket:id="role">[role directory panel]</span></div>
+        <h3>Roles outside of organizations</h3>
+        <div class="role-directory" wicket:id="roles">
+            <div wicket:id="role">[role directory panel]</div>
+        </div>
     </div>
-
 </wicket:panel>
 </body>
 </html>

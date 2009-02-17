@@ -7,20 +7,19 @@
         lang="en">
 <body>
 <wicket:panel>
-    <div wicket:id="organizationDiv"> <!-- class= "top-organization" or "sub-organization" -->
-        <span class="name" wicket:id="name">name</span>
-        <span class="description" wicket:id="description">description</span>
-        <span class="parentage" wicket:id="parentage">parentage</span>
-        <span class="section">Roles</span>
-        <div class="roles">
-            <div wicket:id="roles">
-                <span wicket:id="role">[role directory panel]</span>
-            </div>
+    <!-- class= "top-organization" or "sub-organization" -->
+    <h4 wicket:id="name">name</h4>
+    <p class="description" wicket:id="description">description</p>
+    <p class="parentage" wicket:id="parentage">parentage</p>
+    <div class="roles">
+        <h5>Roles</h5>
+        <div wicket:id="roles">
+            <span wicket:id="role">[role directory panel]</span>
         </div>
-        <span class="section">Sub-organizations</span>
-         <div wicket:id="sub-organizations">
-            <div wicket:id="sub-organization">[(sub-)organization directory panel]</div>
-        </div>
+    </div>
+    <div wicket:id="sub-organizations">
+        <h5>Sub-organizations</h5>
+        <div wicket:id="sub-organization">[(sub-)organization directory panel]</div>
     </div>
 </wicket:panel>
 </body>

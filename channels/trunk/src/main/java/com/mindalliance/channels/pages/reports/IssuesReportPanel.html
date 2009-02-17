@@ -8,13 +8,14 @@
 <body>
 <wicket:panel>
     <div class="issues">
-        <div wicket:id="issues"> <!-- class = "minor" or "major" or "severe" -->
-            <div wicket:id="issueDiv">
-            <span id="reported-by" wicket:id="reported-by">reported by</span>
-            <span id="description" wicket:id="description">description</span>
-            <span id="suggestion" wicket:id="suggestion">suggestion</span>
-         </div>
-        </div>
+        <h3>Issues</h3>
+        <ul>
+            <li wicket:id="issues"> <!-- class = "minor" or "major" or "severe" -->
+                <span class="reported-by" wicket:id="reported-by">reported by</span>
+                <p class="description" wicket:id="description">description</p>
+                <p class="suggestion" wicket:id="suggestion">suggestion</p>
+            </li>
+        </ul>
     </div>
 </wicket:panel>
 </body>

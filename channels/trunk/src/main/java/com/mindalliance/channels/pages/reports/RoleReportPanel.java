@@ -37,8 +37,11 @@ public class RoleReportPanel extends Panel {
     private Scenario scenario;
     private Organization organization;
 
-    public RoleReportPanel( String id, IModel<Role> model, Scenario scenario, Organization organization ) {
+    public RoleReportPanel(
+            String id, IModel<Role> model, Scenario scenario, Organization organization ) {
+
         super( id, model );
+        setRenderBodyOnly( true );
         role = model.getObject();
         this.scenario = scenario;
         this.organization = organization;
@@ -46,37 +49,45 @@ public class RoleReportPanel extends Panel {
     }
 
     private void init() {
-        add (new Label("name", role.getName()) );
-        add (new Label("description", role.getDescription()) );
-        ResourceSpec resourceSpec = ResourceSpec.with(role);
+        add( new Label( "name", "Role: " + role.getName() ) );
+
+        String desc = role.getDescription();
+        Label descLabel = new Label( "description", desc );
+        descLabel.setVisible( desc != null && !desc.isEmpty() );
+        add( descLabel );
+
+        ResourceSpec resourceSpec = ResourceSpec.with( role );
         resourceSpec.setOrganization( organization );
         // Find all actors in role for organization
         List<Actor> actors = Project.service().findAllActors( resourceSpec );
         Collections.sort( actors, new Comparator<Actor>() {
             /** {@inheritDoc} */
-            public int compare( Actor actor1, Actor actor2 ) {
-                return Collator.getInstance().compare( actor1.getName(), actor2.getName() );
+            public int compare( Actor o1, Actor o2 ) {
+                return Collator.getInstance().compare( o1.getName(), o2.getName() );
             }
         } );
-        add( new ListView<Actor>("actors", actors) {
+        add( new ListView<Actor>( "actors", actors ) {
+            @Override
             protected void populateItem( ListItem<Actor> item ) {
-                item.add( new ActorReportPanel("actor", item.getModel()));
+                item.add( new ActorReportPanel( "actor", item.getModel() ) );
             }
         } );
+
         List<Part> parts = findPartsForRole( role, scenario );
-        add( new ListView<Part>("parts", parts) {
+        add( new ListView<Part>( "parts", parts ) {
+            @Override
             protected void populateItem( ListItem<Part> item ) {
-                 item.add (new PartReportPanel("part", item.getModel()));
+                 item.add( new PartReportPanel( "part", item.getModel() ) );
             }
-        });
+        } );
     }
 
     private List<Part> findPartsForRole( Role role, Scenario scenario ) {
         List<Part> partsForRole = new ArrayList<Part>();
         Iterator<Part> parts = scenario.parts();
-        while( parts.hasNext()) {
+        while ( parts.hasNext() ) {
             Part part = parts.next();
-            if (part.getRole() != null && SemMatch.sameAs( part.getRole(), role ))
+            if ( part.getRole() != null && SemMatch.sameAs( part.getRole(), role ) )
                 partsForRole.add( part );
         }
         return partsForRole;

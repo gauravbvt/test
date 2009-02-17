@@ -10,18 +10,18 @@
 
 <body class="report">
 <div id="project">
-    <span class="name" wicket:id="project-name">project name</span>
-    <span class="date" wicket:id="date">date</span>
-    <span class="client" wicket:id="project-client">client</span>
-    <span class="description" wicket:id="project-description">description</span>
+    <h1 wicket:id="project-name">project name</h1>
+    <p class="client" wicket:id="project-client">client</p>
+    <p class="description" wicket:id="project-description">description</p>
+    <p class="date" wicket:id="date">date</p>
 </div>
-<span class="section">Scenarios</span>
 
-<div id="scenarios">
-    <div wicket:id="scenarios"><span wicket:id="scenario">[scenario report panel]</span></div>
+<div class="scenario" wicket:id="scenarios">
+    <span wicket:id="scenario">[scenario report panel]</span>
 </div>
+
 <div id="directory">
-    <span class="section">Directory</span>
+    <h2>Directory</h2>
     <span wicket:id="directory">[Directory report panel]</span>
 </div>
 </body>

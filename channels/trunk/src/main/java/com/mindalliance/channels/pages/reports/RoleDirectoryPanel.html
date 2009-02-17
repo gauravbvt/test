@@ -7,15 +7,13 @@
         lang="en">
 <body>
 <wicket:panel>
-    <div class="role-directory">
-        <span wicket:id="name">name</span>
-        <span wicket:id="description">description</span>
+    <h4 wicket:id="name">name</h4>
+    <p wicket:id="description">description</p>
 
-        <div class="actors">
-            <span>Contacts</span>
-            <div wicket:id="actors">
-                <span wicket:id="actor">[actor report panel]</span>
-            </div>
+    <div class="actors">
+        <h5>Contacts</h5>
+        <div class="actor-report" wicket:id="actors">
+            <span wicket:id="actor">[actor report panel]</span>
         </div>
     </div>
 </wicket:panel>

@@ -1,26 +1,27 @@
 package com.mindalliance.channels.pages.reports;
 
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.list.ListItem;
+import com.mindalliance.channels.Organization;
+import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Scenario;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.AttributeModifier;
-import com.mindalliance.channels.Organization;
-import com.mindalliance.channels.Role;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Scenario;
 
-import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.text.Collator;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.text.Collator;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -41,42 +42,56 @@ public class OrganizationReportPanel extends Panel {
 
     public OrganizationReportPanel( String id, IModel<Organization> model, Scenario scenario ) {
         super( id, model );
+        setRenderBodyOnly( true );
         organization = model.getObject();
         this.scenario = scenario;
         init();
     }
 
     private void init() {
-        WebMarkupContainer orgDiv = new WebMarkupContainer( "organizationDiv" );
-        add( orgDiv );
-        String styleClass = organization.getParent() == null ? "top-organization" : "sub-organization";
-        orgDiv.add( new AttributeModifier( "class", true, new Model<String>( styleClass ) ) );
-        orgDiv.add( new Label( "name", organization.getName() ) );
-        orgDiv.add( new Label( "description", organization.getDescription() ) );
-        orgDiv.add( new Label( "parentage", organization.parentage() ) );
+        add( new Label( "name", MessageFormat.format(
+                "Organization: {0}", organization.getName() ) ) );
+        String desc = organization.getDescription();
+        Label descLabel = new Label( "description", desc );
+        descLabel.setVisible( desc != null && !desc.isEmpty() );
+        add( descLabel );
+
+        String parentage = organization.parentage();
+        Label parentageLabel = new Label( "parentage", parentage );
+        parentageLabel.setVisible( parentage != null && !parentage.isEmpty() );
+        add( parentageLabel );
+
         List<Role> roles = findRolesInScenario();
         Collections.sort( roles, new Comparator<Role>() {
             /** {@inheritDoc} */
-            public int compare( Role role1, Role role2 ) {
-                return Collator.getInstance().compare( role1.getName(), role2.getName() );
+            public int compare( Role o1, Role o2 ) {
+                return Collator.getInstance().compare( o1.getName(), o2.getName() );
             }
         } );
-        orgDiv.add( new ListView<Role>( "roles", roles ) {
+        add( new ListView<Role>( "roles", roles ) {
+            @Override
             protected void populateItem( ListItem<Role> item ) {
                 Role role = item.getModelObject();
-                item.add( new RoleReportPanel( "role", new Model<Role>( role ), scenario, organization ) );
+                item.add( new RoleReportPanel( "role",
+                                               new Model<Role>( role ), scenario, organization ) );
             }
         } );
         List<Organization> subOrganizations = findSubOrganizationsInScenario();
-        orgDiv.add( new ListView<Organization>( "sub-organizations", subOrganizations ) {
+        Component listView = new ListView<Organization>( "sub-organizations", subOrganizations ) {
+            @Override
             protected void populateItem( ListItem<Organization> item ) {
                 Organization subOrganization = item.getModelObject();
-                item.add( new OrganizationReportPanel(
-                        "sub-organization",
-                        new Model<Organization>( subOrganization ),
-                        scenario ) );
+                item.add(
+                        new OrganizationReportPanel(
+                                "sub-organization",
+                                new Model<Organization>( subOrganization ),
+                                scenario ) );
             }
-        } );
+        };
+        WebMarkupContainer wmc = new WebMarkupContainer( "sub-org-section" );
+        wmc.add( listView );
+        wmc.setVisible( !subOrganizations.isEmpty() );
+        add( wmc );
     }
 
     // TODO - inefficient, C&P from ScenarioReportPanel:findOrganizationsInScenario
@@ -85,7 +100,8 @@ public class OrganizationReportPanel extends Panel {
         Iterator<Part> parts = scenario.parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
-            if ( part.getOrganization() != null && part.getOrganization().getParent() == organization ) {
+            if ( part.getOrganization() != null
+                 && part.getOrganization().getParent() == organization ) {
                 organizations.add( part.getOrganization() );
             }
         }
@@ -105,7 +121,8 @@ public class OrganizationReportPanel extends Panel {
         Iterator<Part> parts = scenario.parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
-            if ( part.getRole() != null ) roles.add( part.getRole() );
+            if ( part.getRole() != null && organization.equals( part.getOrganization() ) ) 
+                roles.add( part.getRole() );
         }
         List<Role> list = new ArrayList<Role>();
         list.addAll( roles );

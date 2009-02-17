@@ -38,20 +38,21 @@ public class ChannelsReportPanel extends Panel {
         List<Channel> channels = channelable.allChannels();
         Collections.sort( channels, new Comparator<Channel>() {
             /** {@inheritDoc} */
-            public int compare( Channel channel1, Channel channel2 ) {
+            public int compare( Channel o1, Channel o2 ) {
                 int comp = Collator.getInstance().compare(
-                        channel1.getMedium().getName(),
-                        channel2.getMedium().getName() );
+                        o1.getMedium().getName(),
+                        o2.getMedium().getName() );
                 if ( comp == 0 ) {
                     return Collator.getInstance().compare(
-                            channel1.getAddress(),
-                            channel2.getAddress() );
+                            o1.getAddress(),
+                            o2.getAddress() );
                 } else {
                     return comp;
                 }
             }
         } );
         add( new ListView<Channel>( "channels", channels ) {
+            @Override
             protected void populateItem( ListItem<Channel> item ) {
                 Channel channel = item.getModelObject();
                 Label addressLabel = new Label( "address", channel.getAddress() );

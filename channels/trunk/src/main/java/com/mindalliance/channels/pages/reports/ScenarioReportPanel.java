@@ -12,6 +12,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.AttributeModifier;
 
 import java.util.List;
 import java.util.Set;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.text.Collator;
+import java.text.MessageFormat;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -38,24 +40,31 @@ public class ScenarioReportPanel extends Panel {
 
     public ScenarioReportPanel( String id, IModel<Scenario> model ) {
         super( id, model );
+        setRenderBodyOnly( true );
         scenario = model.getObject();
         init();
     }
 
     private void init() {
-        add( new Label( "name", scenario.getName() ) );
+        add( new Label( "name", MessageFormat.format(
+                        "Scenario: {0}", scenario.getName() ) ) );
         add( new Label( "description", scenario.getDescription() ) );
-        double[] size = {7.5, 10.0};
-        FlowDiagramPanel flowDiagramPanel = new FlowDiagramPanel(
-                "flowMap",
-                new Model<Scenario>(scenario),
-                size,
-                DiagramMaker.TOP_BOTTOM);
-        add( flowDiagramPanel );
+
+        double[] size = { 7.5, 10.0 };
+        add( new FlowDiagramPanel(
+                        "flowMap",
+                        new Model<Scenario>( scenario ),
+                        size,
+                        DiagramMaker.TOP_BOTTOM ) );
+
         List<Organization> organizations = findTopOrganizationsInScenario();
         add( new ListView<Organization>( "organizations", organizations ) {
+            @Override
             protected void populateItem( ListItem<Organization> item ) {
                 Organization organization = item.getModelObject();
+                item.add( new AttributeModifier( "class", true, new Model<String>(
+                        organization.getParent() == null ? "top-organization"
+                                                         : "sub-organization" ) ) );
                 item.add( new OrganizationReportPanel(
                         "organization",
                         new Model<Organization>( organization ),
@@ -66,7 +75,7 @@ public class ScenarioReportPanel extends Panel {
     }
 
     /**
-     * Find organizations involved in scenario but without parent organizations
+     * Find organizations involved in scenario but without parent organizations.
      *
      * @return a list of organizations
      */

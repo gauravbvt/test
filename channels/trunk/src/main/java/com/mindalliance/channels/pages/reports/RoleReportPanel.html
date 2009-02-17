@@ -7,18 +7,21 @@
         lang="en">
 <body>
 <wicket:panel>
-    <div class="scenario-role-report">
-        <span wicket:id="name">name</span>
-        <span wicket:id="description">description</span>
+    <h4 wicket:id="name">name</h4>
+    <p class="description" wicket:id="description">description</p>
 
-        <div class="actors">
-            <span>Contacts</span>
-            <div wicket:id="actors">
+    <div class="actors">
+        <h5>Contacts</h5>
+        <ul>
+            <li class="contact" wicket:id="actors">
                 <span wicket:id="actor">[actor report panel]</span>
-            </div>
-            <div wicket:id="parts">
-                <span wicket:id="part">[part report panel]</span>
-            </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="tasks">
+        <div wicket:id="parts">
+            <div wicket:id="part">[part report panel]</div>
         </div>
     </div>
 </wicket:panel>
