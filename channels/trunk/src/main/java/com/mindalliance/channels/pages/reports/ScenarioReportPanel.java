@@ -4,7 +4,7 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
-import com.mindalliance.channels.graph.DiagramMaker;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.pages.components.FlowDiagramPanel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -54,8 +54,12 @@ public class ScenarioReportPanel extends Panel {
         add( new FlowDiagramPanel(
                         "flowMap",
                         new Model<Scenario>( scenario ),
+                        // No node selected
+                        null,
                         size,
-                        DiagramMaker.TOP_BOTTOM ) );
+                        DiagramFactory.TOP_BOTTOM,
+                        // no image map
+                        false) );
 
         List<Organization> organizations = findTopOrganizationsInScenario();
         add( new ListView<Organization>( "organizations", organizations ) {

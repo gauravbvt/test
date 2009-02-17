@@ -10,7 +10,7 @@ import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.attachments.BitBucket;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.export.Importer;
-import com.mindalliance.channels.graph.DiagramMaker;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.FlowDiagram;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.pages.RedirectPage;
@@ -21,7 +21,6 @@ import static org.easymock.EasyMock.*;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -58,14 +57,14 @@ public class TestScenarioPage extends TestCase {
 
         project.setService( service );
         project.setAttachmentManager( new BitBucket() );
-        DiagramMaker dm = createMock( DiagramMaker.class );
+        DiagramFactory dm = createMock( DiagramFactory.class );
         FlowDiagram fd = createMock(  FlowDiagram.class);
         expect( fd.makeImageMap( ) ).andReturn( "" ).anyTimes();
         expect( dm.newFlowDiagram( (Scenario) anyObject() ) )
                     .andReturn( fd ).anyTimes();
         replay( dm );
         replay( fd );
-        project.setDiagramMaker( dm );
+        project.setDiagramFactory( dm );
 
         Analyst sa = createNiceMock( Analyst.class );
         expect( sa.getIssuesSummary( (ModelObject) anyObject(), anyBoolean() ) )

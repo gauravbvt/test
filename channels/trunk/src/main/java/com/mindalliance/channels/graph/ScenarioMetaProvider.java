@@ -214,18 +214,17 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
                 label += part.getRole();
             }
             if ( part.getOrganization() != null ) {
-                if ( !label.isEmpty() ) label += "|in ";
+                if ( !label.isEmpty() ) {
+                    if ( part.getActor() == null || part.getRole() == null ) {
+                        label += "|in ";
+                    } else {
+                        label += " in ";
+                    }
+                }
                 label += part.getOrganization();
             }
             if ( !label.isEmpty() ) label += "|";
             label += part.getTask();
-/*
-            final String actorString = part.getActor() != null ? part.getActor().toString()
-                    : part.getRole() != null ? part.getRole().toString()
-                    : part.getOrganization() != null ? part.getOrganization().toString()
-                    : getDefaultActor();
-            return MessageFormat.format( "{0}|{1}", actorString, part.getTask() );
-*/
             return label;
         } else {
             return node.getName();
@@ -298,7 +297,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
 
         public List<DOTAttribute> getVertexAttributes( Node vertex, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-            if ( outputFormat.equalsIgnoreCase( DiagramMaker.SVG ) ) {
+            if ( outputFormat.equalsIgnoreCase( DiagramFactory.SVG ) ) {
                 if ( vertex.isPart() ) {
                     list.add( new DOTAttribute( "shape", "box" ) );
                 } else if ( vertex.isConnector() ) {

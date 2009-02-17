@@ -6,7 +6,7 @@ import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.export.Exporter;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.GraphBuilder;
-import com.mindalliance.channels.graph.DiagramMaker;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.pages.entities.ActorPage;
 import com.mindalliance.channels.pages.entities.OrganizationPage;
 import com.mindalliance.channels.pages.entities.RolePage;
@@ -60,9 +60,9 @@ public final class Project extends WebApplication {
     private GraphBuilder graphBuilder;
 
     /**
-     * The creator of nifty diagrams.
+     * A diagram factory
      */
-    private DiagramMaker diagramMaker;
+    private DiagramFactory diagramFactory;
 
     /**
      * The official manager of attachements.
@@ -157,12 +157,12 @@ public final class Project extends WebApplication {
         this.service = service;
     }
 
-    public DiagramMaker getDiagramMaker() {
-        return diagramMaker;
+    public DiagramFactory getDiagramFactory() {
+        return diagramFactory;
     }
 
-    public void setDiagramMaker( DiagramMaker dm ) {
-        diagramMaker = dm;
+    public void setDiagramFactory( DiagramFactory dm ) {
+        diagramFactory = dm;
     }
 
     public GraphBuilder getGraphBuilder() {
@@ -263,10 +263,10 @@ public final class Project extends WebApplication {
 
     /**
      * Get current project's diagram maker.
-     * @return a DiagramMaker
+     * @return a DiagramFactory
      */
-    public static DiagramMaker diagramMaker() {
-        return getProject().getDiagramMaker();
+    public static DiagramFactory diagramFactory() {
+        return getProject().getDiagramFactory();
     }
 
     /**

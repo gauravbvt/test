@@ -37,7 +37,7 @@ public class DefaultFlowDiagram implements FlowDiagram {
     /**
      * The diagram's maker
      */
-    private DiagramMaker<Node, Flow> diagramMaker;
+    private DiagramFactory<Node, Flow> diagramFactory;
 
     /**
      * Whether the direction is LR or top-bottom
@@ -47,10 +47,10 @@ public class DefaultFlowDiagram implements FlowDiagram {
     public DefaultFlowDiagram(
             Scenario scenario,
             Node selectedNode,
-            DiagramMaker<Node, Flow> diagramMaker ) {
+            DiagramFactory<Node, Flow> diagramFactory ) {
         this.scenario = scenario;
         this.selectedNode = selectedNode;
-        this.diagramMaker = diagramMaker;
+        this.diagramFactory = diagramFactory;
     }
 
 
@@ -75,15 +75,17 @@ public class DefaultFlowDiagram implements FlowDiagram {
      */
     public void render( String outputFormat, OutputStream outputStream ) {
         Graph<Node, Flow> graph = Project.graphBuilder().buildDirectedGraph( scenario );
-        GraphRenderer<Node, Flow> graphRenderer = diagramMaker.getGraphRenderer();
+        GraphRenderer<Node, Flow> graphRenderer = diagramFactory.getGraphRenderer();
         graphRenderer.resetHighlight();
-        graphRenderer.highlightVertex( selectedNode );
+        if (selectedNode != null)  {
+            graphRenderer.highlightVertex( selectedNode );
+        }
         ScenarioMetaProvider metaProvider = new ScenarioMetaProvider(
                 scenario,
                 outputFormat,
-                diagramMaker.getUrlFormat(),
-                diagramMaker.getScenarioUrlFormat(),
-                diagramMaker.getImageDirectory(),
+                diagramFactory.getUrlFormat(),
+                diagramFactory.getScenarioUrlFormat(),
+                diagramFactory.getImageDirectory(),
                 Project.analyst() );
         if ( diagramSize != null ) {
             metaProvider.setGraphSize( diagramSize );
@@ -105,7 +107,7 @@ public class DefaultFlowDiagram implements FlowDiagram {
      */
     public String makeImageMap() {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        render( DiagramMaker.IMAGE_MAP, new BufferedOutputStream( baos ) );
+        render( DiagramFactory.IMAGE_MAP, new BufferedOutputStream( baos ) );
         // System.out.println("*** Image map generated");
         return baos.toString();
     }

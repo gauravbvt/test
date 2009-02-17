@@ -20,7 +20,7 @@ import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.export.xml.XmlStreamer;
 import com.mindalliance.channels.graph.DefaultGraphBuilder;
 import com.mindalliance.channels.graph.GraphvizRenderer;
-import com.mindalliance.channels.graph.DefaultDiagramMaker;
+import com.mindalliance.channels.graph.DefaultDiagramFactory;
 import com.mindalliance.channels.pages.Project;
 import junit.framework.TestCase;
 import org.apache.wicket.util.file.File;
@@ -73,12 +73,12 @@ public class AbstractChannelsTest extends TestCase {
         graphRenderer.setDotPath( "/usr/bin" );
         graphRenderer.setAlgo( "dot" );
         graphRenderer.setTimeout( 5000 );
-        DefaultDiagramMaker<Node,Flow> diagramMaker = new DefaultDiagramMaker<Node,Flow>();
-        diagramMaker.setGraphRenderer( graphRenderer );
-        diagramMaker.setUrlFormat( "?scenario={0}&amp;node={1}" );
-        diagramMaker.setScenarioUrlFormat( "?scenario={0}" );
-        diagramMaker.setImageDirectory( "src/site/resources/images" );
-        project.setDiagramMaker( diagramMaker );
+        DefaultDiagramFactory<Node,Flow> diagramFactory = new DefaultDiagramFactory<Node,Flow>();
+        diagramFactory.setGraphRenderer( graphRenderer );
+        diagramFactory.setUrlFormat( "?scenario={0}&amp;node={1}" );
+        diagramFactory.setScenarioUrlFormat( "?scenario={0}" );
+        diagramFactory.setImageDirectory( "src/site/resources/images" );
+        project.setDiagramFactory( diagramFactory );
         // Set scenario analyst
         // Initialize analyst
         DefaultAnalyst analyst = new DefaultAnalyst();

@@ -24,7 +24,7 @@
         <property name="uri" value="mindalliance.com/channels/demo"/>
         <property name="service" ref="channels"/>
         <property name="graphBuilder" ref="graphBuilder"/>
-        <property name="diagramMaker" ref="diagramMaker"/>
+        <property name="diagramFactory" ref="diagramFactory"/>
         <property name="attachmentManager" ref="attachmentManager"/>
         <property name="importer" ref="serializer"/>
         <property name="exporter" ref="serializer"/>
@@ -35,7 +35,7 @@
     </bean>
 
     <!-- Flow diagram -->
-    <bean id="diagramMaker" class="com.mindalliance.channels.graph.DefaultDiagramMaker">
+    <bean id="diagramFactory" class="com.mindalliance.channels.graph.DefaultDiagramFactory">
         <property name="graphRenderer" ref="graphRenderer"/>
         <property name="urlFormat" value="?scenario={0,number,0}&amp;node={1,number,0}"/>
         <property name="scenarioUrlFormat" value="?scenario={0,number,0}"/>

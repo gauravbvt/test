@@ -4,7 +4,7 @@ import com.mindalliance.channels.Service;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.graph.DiagramException;
-import com.mindalliance.channels.graph.DiagramMaker;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.FlowDiagram;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Response;
@@ -22,13 +22,19 @@ import java.text.MessageFormat;
  */
 public class FlowPage extends WebPage {
 
-    /** The log. */
+    /**
+     * The log.
+     */
     private static final Logger LOG = LoggerFactory.getLogger( ExportPage.class );
 
-    /** The selected node. */
+    /**
+     * The selected node.
+     */
     private Node node;
-
-    FlowDiagram flowDiagram;
+    /**
+     * The flow diagram displayed
+     */
+    private FlowDiagram flowDiagram;
 
     public FlowPage( PageParameters parameters ) {
         super( parameters );
@@ -40,26 +46,30 @@ public class FlowPage extends WebPage {
             redirectTo( service.getDefaultScenario() );
 
         else {
-            node = ScenarioPage.findNode( scenario, parameters );
-            if ( node == null )
-                redirectTo( scenario );
+            if ( parameters.containsKey( "node" ) && parameters.getString( "node" ).equals( "NONE" ) ) {
+                node = null;
+            } else {
+                node = ScenarioPage.findNode( scenario, parameters );
+                if ( node == null )
+                    redirectTo( scenario );
+            }
         }
-        flowDiagram = Project.diagramMaker().newFlowDiagram(scenario, node);
-        if (parameters.containsKey( "size" )) {
-            double[] size = convertSize( parameters.getString( "size" ));
+        flowDiagram = Project.diagramFactory().newFlowDiagram( scenario, node );
+        if ( parameters.containsKey( "size" ) ) {
+            double[] size = convertSize( parameters.getString( "size" ) );
             flowDiagram.setDiagramSize( size[0], size[1] );
         }
-        if (parameters.containsKey( "orientation" )) {
-           flowDiagram.setOrientation( parameters.getString( "orientation" ));
+        if ( parameters.containsKey( "orientation" ) ) {
+            flowDiagram.setOrientation( parameters.getString( "orientation" ) );
         }
     }
 
     private double[] convertSize( String s ) {
         String[] sizes = s.split( "," );
         assert sizes.length == 2;
-        double size[] = new double[2];
-        size[0] = Double.parseDouble(sizes[0]);
-        size[1] = Double.parseDouble(sizes[1]);
+        double[] size = new double[2];
+        size[0] = Double.parseDouble( sizes[0] );
+        size[1] = Double.parseDouble( sizes[1] );
         return size;
     }
 
@@ -70,6 +80,7 @@ public class FlowPage extends WebPage {
 
     /**
      * Directly render the bytes of this page.
+     *
      * @param markupStream ignored
      */
     @Override
@@ -80,7 +91,7 @@ public class FlowPage extends WebPage {
                 setHeaders( (WebResponse) resp );
 
             flowDiagram.render(
-                    DiagramMaker.PNG, getResponse().getOutputStream() );
+                    DiagramFactory.PNG, getResponse().getOutputStream() );
         } catch ( DiagramException e ) {
             LOG.error( "Error while generating diagram", e );
             // Don't do anuything else --> empty png
@@ -100,7 +111,10 @@ public class FlowPage extends WebPage {
         final long nid = n.getId();
         setResponsePage(
                 new RedirectPage(
-                        MessageFormat.format( "?scenario={0,number,0}&node={1,number,0}", sid, nid ) ) );   // NON-NLS
+                        MessageFormat.format(
+                                "?scenario={0,number,0}&node={1,number,0}",
+                                sid,
+                                nid ) ) );   // NON-NLS
     }
 
 }

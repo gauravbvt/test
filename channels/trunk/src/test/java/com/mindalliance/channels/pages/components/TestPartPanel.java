@@ -14,7 +14,7 @@ import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.attachments.BitBucket;
 import com.mindalliance.channels.service.ChannelsServiceImpl;
 import com.mindalliance.channels.dao.Memory;
-import com.mindalliance.channels.graph.DiagramMaker;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.FlowDiagram;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ScenarioPage;
@@ -54,14 +54,14 @@ public class TestPartPanel extends AbstractChannelsTest {
         service.setDao( new Memory() );
         project.setService( service );
         project.setAttachmentManager( new BitBucket() );
-        DiagramMaker dm = createMock( DiagramMaker.class );
+        DiagramFactory dm = createMock( DiagramFactory.class );
          FlowDiagram fd = createMock(  FlowDiagram.class);
          expect( fd.makeImageMap( ) ).andReturn( "" ).anyTimes();
          expect( dm.newFlowDiagram( (Scenario) anyObject() ) )
                      .andReturn( fd ).anyTimes();
          replay( dm );
          replay( fd );
-         project.setDiagramMaker( dm );
+         project.setDiagramFactory( dm );
 
         Analyst sa = createNiceMock( Analyst.class );
         expect( sa.getIssuesSummary( (ModelObject) anyObject(), anyBoolean()) ).andReturn( "" ).anyTimes();

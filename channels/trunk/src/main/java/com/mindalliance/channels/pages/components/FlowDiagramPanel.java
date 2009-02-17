@@ -11,7 +11,7 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.graph.DiagramException;
-import com.mindalliance.channels.graph.DiagramMaker;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.FlowDiagram;
 
 import java.text.MessageFormat;
@@ -34,52 +34,74 @@ public class FlowDiagramPanel extends Panel {
      */
     private Scenario scenario;
     /**
-     * Mximum size of graph
+     * Selected node. Null if none selected.
+     */
+    private Node selectedNode;
+    /**
+     * Maximum size of graph
      */
     private double[] diagramSize;
     /**
      * Graph orientation
      */
     private String orientation;
-
+    /**
+     * The flow diagram
+     */
     private FlowDiagram diagram;
+    /**
+     * Whether to add an image map
+     */
+    private boolean withImageMap;
 
     public FlowDiagramPanel( String id, IModel<Scenario> model ) {
-       this(id, model, null, null);
-    }    
+        this( id, model, null, null, null, true );
+    }
 
-    public FlowDiagramPanel( String id, IModel<Scenario> model, double[]diagramSize, String orientation ) {
+    public FlowDiagramPanel( String id,
+                             IModel<Scenario> model,
+                             Node selectedNode,
+                             double[] diagramSize,
+                             String orientation,
+                             boolean withImageMap ) {
         super( id, model );
         scenario = model.getObject();
+        this.selectedNode = selectedNode;
         this.diagramSize = diagramSize;
         this.orientation = orientation;
-        final DiagramMaker diagramMaker = Project.getProject().getDiagramMaker();
-        diagram = diagramMaker.newFlowDiagram(scenario);
-        if ( diagramSize != null) {
+        final DiagramFactory diagramFactory = Project.diagramFactory();
+        diagram = diagramFactory.newFlowDiagram( scenario );
+        if ( diagramSize != null ) {
             diagram.setDiagramSize( diagramSize[0], diagramSize[1] );
         }
-        if ( orientation != null) {
+        if ( orientation != null ) {
             diagram.setOrientation( orientation );
         }
+        this.withImageMap = withImageMap;
         init();
     }
 
     private void init() {
-        MarkupContainer graph = new MarkupContainer( "graph" ) {                                      // NON-NLS
+        MarkupContainer graph = new MarkupContainer( "graph" ) {                  // NON-NLS
 
             @Override
             protected void onComponentTag( ComponentTag tag ) {
                 super.onComponentTag( tag );
-                tag.put( "src", makeDiagramUrl());                                                      // NON-NLS
+                tag.put( "src", makeDiagramUrl() );                              // NON-NLS
+                if ( withImageMap ) {
+                    tag.put( "usemap", "#G" );
+                }
             }
 
             @Override
             protected void onRender( MarkupStream markupStream ) {
                 super.onRender( markupStream );
-                try {
-                    getResponse().write( diagram.makeImageMap( ) );
-                } catch ( DiagramException e ) {
-                    LOG.error( "Can't generate image map", e );
+                if ( withImageMap ) {
+                    try {
+                        getResponse().write( diagram.makeImageMap() );
+                    } catch ( DiagramException e ) {
+                        LOG.error( "Can't generate image map", e );
+                    }
                 }
             }
         };
@@ -90,29 +112,27 @@ public class FlowDiagramPanel extends Panel {
 
     private String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
-        Node n = scenario.getDefaultPart();
-        sb.append("scenario.png?scenario=");
-        sb.append(scenario.getId());
-        sb.append("&amp;node=");
-        sb.append(n.getId());
-        sb.append("&amp;time=");
-        sb.append(MessageFormat.format("{2,number,0}",System.currentTimeMillis()));
-        if (diagramSize != null) {
-            sb.append("&amp;size=");
-            sb.append(diagramSize[0]);
-            sb.append(",");
-            sb.append(diagramSize[1]);
+        sb.append( "scenario.png?scenario=" );
+        sb.append( scenario.getId() );
+        sb.append( "&amp;node=" );
+        if ( selectedNode != null ) {
+            sb.append( selectedNode.getId() );
+        } else {
+            sb.append( "NONE" );
         }
-        if ( orientation != null) {
-            sb.append("&amp;orientation=");
-            sb.append(orientation);
+        sb.append( "&amp;time=" );
+        sb.append( MessageFormat.format( "{2,number,0}", System.currentTimeMillis() ) );
+        if ( diagramSize != null ) {
+            sb.append( "&amp;size=" );
+            sb.append( diagramSize[0] );
+            sb.append( "," );
+            sb.append( diagramSize[1] );
+        }
+        if ( orientation != null ) {
+            sb.append( "&amp;orientation=" );
+            sb.append( orientation );
         }
         return sb.toString();
-        /*return MessageFormat.format(
-                                "scenario.png?scenario={0}&amp;node={1}&amp;time={2,number,0}", // NON-NLS
-                                scenario.getId(),
-                                n.getId(),
-                                System.currentTimeMillis() );*/
     }
 
 }
