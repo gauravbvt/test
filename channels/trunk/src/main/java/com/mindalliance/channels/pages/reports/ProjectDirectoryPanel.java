@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.reports;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -14,9 +15,8 @@ import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Project directory
@@ -50,7 +50,7 @@ public class ProjectDirectoryPanel extends Panel {
                                 new Model<Organization>( organization ) ) );
             }
         } );
-        
+
         List<Role> roles = findRolesOutOfOrganization();
         Collections.sort( roles, new Comparator<Role>() {
             /** {@inheritDoc} */
@@ -78,14 +78,23 @@ public class ProjectDirectoryPanel extends Panel {
     }
 
     private List<Role> findRolesOutOfOrganization() {
-        Set<Role> roles = new HashSet<Role>();
-        for ( ResourceSpec resourceSpec : Project.service().findAllResourceSpecs() ) {
-            if ( resourceSpec.getOrganization() == null ) {
-                Role role = resourceSpec.getRole();
-                if ( role != null ) roles.add( role );
+        Service service = Project.service();
+        List<Role> rolesWithoutOrg = new ArrayList<Role>();
+        for ( Role role : service.list( Role.class ) ) {
+            ResourceSpec roleSpec = ResourceSpec.with( role );
+            boolean inOrganization = false;
+            Iterator<ResourceSpec> roleSpecs = 
+                    service.findAllResourcesNarrowingOrEqualTo( roleSpec ).iterator();
+            while ( !inOrganization && roleSpecs.hasNext() ) {
+                if ( !roleSpecs.next().isAnyOrganization() ) {
+                    inOrganization = true;
+                }
+            }
+            if ( !inOrganization ) {
+                rolesWithoutOrg.add( role );
             }
         }
-        return new ArrayList<Role>( roles );
+        return rolesWithoutOrg;
     }
 
 }
