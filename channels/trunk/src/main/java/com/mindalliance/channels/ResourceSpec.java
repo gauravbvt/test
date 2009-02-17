@@ -470,9 +470,14 @@ public class ResourceSpec extends ModelObject implements Channelable {
      * {@inheritDoc}
      */
     public List<Channel> allChannels() {
+        Service service = Project.service();
         List<Channel> allChannels = new ArrayList<Channel>();
-        List<ResourceSpec> broaderOrEqual = Project.service().findAllResourcesBroadeningOrEqualTo( this );
-        Collections.sort( broaderOrEqual, new Comparator<ResourceSpec>() {
+        List<ResourceSpec> channelables = service.findAllResourcesBroadeningOrEqualTo( this );
+        // If resource spec has an actor, include the channel of the more specific resources as well
+        if (!isAnyActor()) {
+            channelables.addAll(service.findAllResourcesNarrowingOrEqualTo( this ));
+        }
+        Collections.sort( channelables, new Comparator<ResourceSpec>() {
             /**{@inheritDoc} */
             public int compare( ResourceSpec rs1, ResourceSpec rs2 ) {
                 int val1 = rs1.specificity();
@@ -481,7 +486,7 @@ public class ResourceSpec extends ModelObject implements Channelable {
                 return val1 == val2 ? 0 : ( val1 > val2 ? -1 : 1 );
             }
         } );
-        for ( ResourceSpec resourceSpec : broaderOrEqual ) {
+        for ( ResourceSpec resourceSpec : channelables ) {
             List<Channel> resourceChannels = resourceSpec.getChannels();
             for ( Channel resourceChannel : resourceChannels ) {
                 if ( !allChannels.contains( resourceChannel ) )
