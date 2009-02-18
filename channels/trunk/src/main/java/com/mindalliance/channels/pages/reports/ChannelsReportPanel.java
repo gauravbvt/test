@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.Channelable;
+import com.mindalliance.channels.Medium;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -55,12 +56,14 @@ public class ChannelsReportPanel extends Panel {
             @Override
             protected void populateItem( ListItem<Channel> item ) {
                 Channel channel = item.getModelObject();
+                Medium medium = channel.getMedium();
+                item.add( new Label( "medium", medium.toString() + ": " ) );
                 Label addressLabel = new Label( "address", channel.getAddress() );
-                item.add( addressLabel );
                 addressLabel.add( new AttributeModifier(
                         "class",
                         true,
-                        new Model<String>( channel.getMedium().getName() ) ) );
+                        new Model<String>( medium.getName() ) ) );
+                item.add( addressLabel );
             }
         } );
     }

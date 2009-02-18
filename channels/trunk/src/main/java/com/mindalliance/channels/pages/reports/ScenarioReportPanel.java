@@ -46,36 +46,33 @@ public class ScenarioReportPanel extends Panel {
     }
 
     private void init() {
-        add( new Label( "name", MessageFormat.format(
+        add( new Label( "name", MessageFormat.format(                                     // NON-NLS
                         "Scenario: {0}", scenario.getName() ) ) );
-        add( new Label( "description", scenario.getDescription() ) );
+        add( new Label( "description", scenario.getDescription() ) );                     // NON-NLS
 
         double[] size = { 7.5, 10.0 };
         add( new FlowDiagramPanel(
-                        "flowMap",
+                        "flowMap",                                                        // NON-NLS
                         new Model<Scenario>( scenario ),
-                        // No node selected
                         null,
                         size,
                         DiagramFactory.TOP_BOTTOM,
-                        // no image map
-                        false) );
-
-        List<Organization> organizations = findTopOrganizationsInScenario();
-        add( new ListView<Organization>( "organizations", organizations ) {
+                        false ) );
+        List<Organization> organizations = findOrganizationsInScenario();
+        add( new ListView<Organization>( "organizations", organizations ) {               // NON-NLS
             @Override
             protected void populateItem( ListItem<Organization> item ) {
                 Organization organization = item.getModelObject();
-                item.add( new AttributeModifier( "class", true, new Model<String>(
-                        organization.getParent() == null ? "top-organization"
-                                                         : "sub-organization" ) ) );
+                item.add( new AttributeModifier( "class", true, new Model<String>(        // NON-NLS
+                        organization.getParent() == null ? "top-organization"             // NON-NLS
+                                                         : "sub-organization" ) ) );      // NON-NLS
                 item.add( new OrganizationReportPanel(
-                        "organization",
+                        "organization",                                                   // NON-NLS
                         new Model<Organization>( organization ),
                         scenario ) );
             }
         } );
-        add( new IssuesReportPanel( "issues", new Model<ModelObject>( scenario ) ) );
+        add( new IssuesReportPanel( "issues", new Model<ModelObject>( scenario ) ) );     // NON-NLS
     }
 
     /**
@@ -83,13 +80,13 @@ public class ScenarioReportPanel extends Panel {
      *
      * @return a list of organizations
      */
-    private List<Organization> findTopOrganizationsInScenario() {
+    private List<Organization> findOrganizationsInScenario() {
         Set<Organization> organizations = new HashSet<Organization>();
         Iterator<Part> parts = scenario.parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
             Organization organization = part.getOrganization();
-            if ( organization != null && organization.getParent() == null ) {
+            if ( organization != null ) {
                 organizations.add( part.getOrganization() );
             }
         }
@@ -97,8 +94,8 @@ public class ScenarioReportPanel extends Panel {
         results.addAll( organizations );
         Collections.sort( results, new Comparator<Organization>() {
             /** {@inheritDoc} */
-            public int compare( Organization org1, Organization org2 ) {
-                return Collator.getInstance().compare( org1.getName(), org2.getName() );
+            public int compare( Organization o1, Organization o2 ) {
+                return Collator.getInstance().compare( o1.toString(), o2.toString() );
             }
         } );
         return results;

@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import javax.persistence.CascadeType;
+import java.text.MessageFormat;
 
 /**
  * A company, agency, social club, etc.
@@ -83,10 +84,16 @@ public class Organization extends ModelObject {
      * @return a String
      */
     public String parentage() {
-        String parentage = (parent == null) ?
-                "" : parent.getName() + "," + parent.parentage();
-        return (parentage.endsWith( "," )) ?
-                parentage.substring( 0, parentage.length() - 1 ) : parentage;
+        String parentage = parent == null ? "" : parent.getName() + "," + parent.parentage();
+        return parentage.endsWith( "," ) ? parentage.substring( 0, parentage.length() - 1 )
+                                         : parentage;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return parent == null ? getName()
+                              : MessageFormat.format( "{0} - {1}", parent.toString(), getName() );
     }
 }
 

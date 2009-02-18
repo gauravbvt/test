@@ -41,12 +41,9 @@ public class OrganizationDirectoryPanel extends Panel {
     }
 
     private void init() {
-        add( new Label( "name", "Organization: " + organization.getName() ) );
+        add( new Label( "name", "Organization: " + organization.toString() ) );
         add( new Label( "description", organization.getDescription() ) );
-        Label parentage = new Label( "parentage", organization.parentage() );
-        if ( organization.getParent() == null )
-            parentage.setVisible( false );
-        add( parentage );
+
         List<Role> roles = findRolesInOrganization();
         Collections.sort( roles, new Comparator<Role>() {
             /** {@inheritDoc} */
@@ -61,27 +58,6 @@ public class OrganizationDirectoryPanel extends Panel {
                 item.add( new RoleDirectoryPanel( "role", new Model<Role>( role ), organization ) );
             }
         } );
-
-        List<Organization> subOrganizations = findSubOrganizations();
-        add( new ListView<Organization>( "sub-organizations", subOrganizations ) {
-            @Override
-            protected void populateItem( ListItem<Organization> item ) {
-                Organization subOrganization = item.getModelObject();
-                item.add( new OrganizationDirectoryPanel(
-                        "sub-organization",
-                        new Model<Organization>( subOrganization ) ) );
-            }
-        } );
-    }
-
-    private List<Organization> findSubOrganizations() {
-        List<Organization> subOrgs = new ArrayList<Organization>();
-        for ( Organization organization : Project.service().list( Organization.class ) ) {
-            if ( organization.getParent() == this.organization ) {
-                subOrgs.add( organization );
-            }
-        }
-        return subOrgs;
     }
 
     private List<Role> findRolesInOrganization() {

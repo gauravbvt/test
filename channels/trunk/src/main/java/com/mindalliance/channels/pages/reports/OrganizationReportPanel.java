@@ -4,8 +4,6 @@ import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
-import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -49,17 +47,12 @@ public class OrganizationReportPanel extends Panel {
     }
 
     private void init() {
-        add( new Label( "name", MessageFormat.format(
-                "Organization: {0}", organization.getName() ) ) );
+        add( new Label( "name", MessageFormat.format(                                     // NON-NLS
+                "Organization: {0}", organization.toString() ) ) );
         String desc = organization.getDescription();
-        Label descLabel = new Label( "description", desc );
+        Label descLabel = new Label( "description", desc );                               // NON-NLS
         descLabel.setVisible( desc != null && !desc.isEmpty() );
         add( descLabel );
-
-        String parentage = organization.parentage();
-        Label parentageLabel = new Label( "parentage", parentage );
-        parentageLabel.setVisible( parentage != null && !parentage.isEmpty() );
-        add( parentageLabel );
 
         List<Role> roles = findRolesInScenario();
         Collections.sort( roles, new Comparator<Role>() {
@@ -68,52 +61,14 @@ public class OrganizationReportPanel extends Panel {
                 return Collator.getInstance().compare( o1.getName(), o2.getName() );
             }
         } );
-        add( new ListView<Role>( "roles", roles ) {
+        add( new ListView<Role>( "roles", roles ) {                                       // NON-NLS
             @Override
             protected void populateItem( ListItem<Role> item ) {
                 Role role = item.getModelObject();
-                item.add( new RoleReportPanel( "role",
+                item.add( new RoleReportPanel( "role",                                    // NON-NLS
                                                new Model<Role>( role ), scenario, organization ) );
             }
         } );
-        List<Organization> subOrganizations = findSubOrganizationsInScenario();
-        Component listView = new ListView<Organization>( "sub-organizations", subOrganizations ) {
-            @Override
-            protected void populateItem( ListItem<Organization> item ) {
-                Organization subOrganization = item.getModelObject();
-                item.add(
-                        new OrganizationReportPanel(
-                                "sub-organization",
-                                new Model<Organization>( subOrganization ),
-                                scenario ) );
-            }
-        };
-        WebMarkupContainer wmc = new WebMarkupContainer( "sub-org-section" );
-        wmc.add( listView );
-        wmc.setVisible( !subOrganizations.isEmpty() );
-        add( wmc );
-    }
-
-    // TODO - inefficient, C&P from ScenarioReportPanel:findOrganizationsInScenario
-    private List<Organization> findSubOrganizationsInScenario() {
-        Set<Organization> organizations = new HashSet<Organization>();
-        Iterator<Part> parts = scenario.parts();
-        while ( parts.hasNext() ) {
-            Part part = parts.next();
-            if ( part.getOrganization() != null
-                 && part.getOrganization().getParent() == organization ) {
-                organizations.add( part.getOrganization() );
-            }
-        }
-        List<Organization> results = new ArrayList<Organization>();
-        results.addAll( organizations );
-        Collections.sort( results, new Comparator<Organization>() {
-            /** {@inheritDoc} */
-            public int compare( Organization org1, Organization org2 ) {
-                return Collator.getInstance().compare( org1.getName(), org2.getName() );
-            }
-        } );
-        return results;
     }
 
     private List<Role> findRolesInScenario() {
@@ -121,7 +76,7 @@ public class OrganizationReportPanel extends Panel {
         Iterator<Part> parts = scenario.parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
-            if ( part.getRole() != null && organization.equals( part.getOrganization() ) ) 
+            if ( part.getRole() != null && organization.equals( part.getOrganization() ) )
                 roles.add( part.getRole() );
         }
         List<Role> list = new ArrayList<Role>();
