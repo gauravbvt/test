@@ -15,6 +15,7 @@ import com.mindalliance.channels.Place;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.Issue;
+import com.mindalliance.channels.Delay;
 import com.mindalliance.channels.pages.Project;
 
 import java.util.Map;
@@ -78,6 +79,16 @@ public class PartConverter implements Converter {
             context.convertAnother( part.getJurisdiction() );
             writer.endNode();
         }
+        if ( part.isSelfTerminating() ) {
+            writer.startNode( "completionTime" );
+            writer.setValue( part.getCompletionTime().toString() );
+            writer.endNode();
+        }
+        if ( part.isRepeating() ) {
+            writer.startNode( "repeatsEvery" );
+            writer.setValue( part.getRepeatsEvery().toString() );
+            writer.endNode();
+        }
         // Part user issues
         List<Issue> issues = Project.service().findAllUserIssues( part );
         for ( Issue issue : issues ) {
@@ -119,6 +130,10 @@ public class PartConverter implements Converter {
                 Place jurisdiction =
                         (Place) context.convertAnother( scenario, Place.class );
                 part.setJurisdiction( jurisdiction );
+            } else if ( nodeName.equals( "completionTime" ) ) {
+                part.setCompletionTime( Delay.parse(reader.getValue()) );
+            } else if ( nodeName.equals( "repeatsEvery" ) ) {
+                part.setRepeatsEvery( Delay.parse(reader.getValue()) );
             } else if ( nodeName.equals( "flow" ) ) {
                 context.convertAnother( scenario, Flow.class );
             } else if ( nodeName.equals( "issue" ) ) {

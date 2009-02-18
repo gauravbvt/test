@@ -44,7 +44,22 @@ public class PartReportPanel extends Panel {
         add( new Label( "description", part.getDescription() ) );
         Place location = part.getLocation();
         add( new Label( "location", location != null ? location.toString() : "Unspecified" ) );
-
+        Label completionTimeLabel;
+        if ( part.isSelfTerminating() ) {
+            completionTimeLabel = new Label( "completion-time", part.getCompletionTime().toString() );
+        } else {
+            completionTimeLabel = new Label( "completion-time", "" );
+            completionTimeLabel.setVisible( false );
+        }
+        add( completionTimeLabel );
+        Label repeatsEveryLabel;
+        if ( part.isRepeating() ) {
+            repeatsEveryLabel = new Label( "repeats-every", part.getRepeatsEvery().toString() );
+        } else {
+            repeatsEveryLabel = new Label( "repeats-every", "" );
+            repeatsEveryLabel.setVisible( false );
+        }
+        add( repeatsEveryLabel );
         Iterator<Flow> outcomes = part.outcomes();
         List<Flow> sends = new ArrayList<Flow>();
         while ( outcomes.hasNext() ) {

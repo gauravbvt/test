@@ -6,11 +6,13 @@ import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Delay;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
@@ -96,6 +98,7 @@ public class PartPanel extends Panel {
         addField( LOCATION_PROPERTY );
         add( makeLink( "loc-link",                                             // NON-NLS
                 new PropertyModel<ModelObject>( part, LOCATION_PROPERTY ) ) );
+        addTimingFields();
     }
 
     private ModelObjectLink makeLink( String id,
@@ -118,6 +121,21 @@ public class PartPanel extends Panel {
                             new Model<String>( issue ) ) );     // NON-NLS
         }
         add( field );
+    }
+
+    private void addTimingFields() {
+        add(new CheckBox("self-terminating", new PropertyModel<Boolean>(part, "selfTerminating")) );
+        DelayPanel completionTimePanel = new DelayPanel(
+                "completion-time",
+                new PropertyModel<Delay>(part, "completionTime"));
+        completionTimePanel.enable(part.isSelfTerminating());
+        add(completionTimePanel);
+        add(new CheckBox("repeating", new PropertyModel<Boolean>(part, "repeating")) );
+        DelayPanel repeatsEveryPanel = new DelayPanel(
+                "repeats-every",
+                new PropertyModel<Delay>(part, "repeatsEvery"));
+        repeatsEveryPanel.enable(part.isRepeating());
+        add(repeatsEveryPanel);        
     }
 
     /**

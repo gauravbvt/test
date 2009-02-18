@@ -53,6 +53,16 @@ public class Part extends Node {
      * The jurisdiction (optional).
      */
     private Place jurisdiction;
+    /**
+     * Usual time for the task to complete on its own.
+     * If null, the task must be terminated.
+     */
+    private Delay completionTime;
+    /**
+     * How long before the task is repeated.
+     * Not repeated if null.
+     */
+    private Delay repeatsEvery;
 
     public Part() {
         adjustName();
@@ -61,7 +71,8 @@ public class Part extends Node {
     /**
      * {@inheritDoc}
      */
-    @Override @Transient
+    @Override
+    @Transient
     public String getTitle() {
         return MessageFormat.format( "{0} {1}", getName(), getTask() );
     }
@@ -149,7 +160,24 @@ public class Part extends Node {
         adjustName();
     }
 
-    @Override @Transient
+    public Delay getCompletionTime() {
+        return completionTime;
+    }
+
+    public void setCompletionTime( Delay completionTime ) {
+        this.completionTime = completionTime;
+    }
+
+    public Delay getRepeatsEvery() {
+        return repeatsEvery;
+    }
+
+    public void setRepeatsEvery( Delay repeatsEvery ) {
+        this.repeatsEvery = repeatsEvery;
+    }
+
+    @Override
+    @Transient
     public boolean isPart() {
         return true;
     }
@@ -186,6 +214,7 @@ public class Part extends Node {
 
     /**
      * Gets the resourceSpec implied by the part
+     *
      * @return a ResourceSpec
      */
     public ResourceSpec resourceSpec() {
@@ -205,6 +234,7 @@ public class Part extends Node {
 
     /**
      * Adapt definition to retracted resourceSpec, if applicable.
+     *
      * @param resourceSpec a resourceSpec being retracted
      */
     public void removeResourceSpec( ResourceSpec resourceSpec ) {
@@ -215,8 +245,56 @@ public class Part extends Node {
             else if ( entity instanceof Role ) setRole( null );
             else if ( entity instanceof Organization ) setOrganization( null );
             else if ( entity instanceof Place ) setJurisdiction( null );
-            else throw new IllegalArgumentException( "Can't unset entity " + entity);
+            else throw new IllegalArgumentException( "Can't unset entity " + entity );
             partResourceSpec = resourceSpec();
+        }
+    }
+
+    /**
+     * Whether the part is self-repeating.
+     *
+     * @return a boolean
+     */
+    @Transient
+    public boolean isRepeating() {
+        return repeatsEvery != null && repeatsEvery.getAmount() > 0;
+    }
+
+    /**
+     * Sets repeating attribute.
+     *
+     * @param repeating a boolean
+     */
+    @Transient
+    public void setRepeating( boolean repeating ) {
+        if ( repeating ) {
+            if ( !isRepeating() ) repeatsEvery = new Delay( 1, Delay.Unit.days );
+        } else {
+            repeatsEvery = null;
+        }
+    }
+
+    /**
+     * Whether the part is self-terminating.
+     *
+     * @return a boolean
+     */
+    @Transient
+    public boolean isSelfTerminating() {
+        return completionTime != null;
+    }
+
+    /**
+     * Sets completion time attribute.
+     *
+     * @param selfTerminating a boolean
+     */
+    @Transient
+    public void setSelfTerminating( boolean selfTerminating ) {
+        if ( selfTerminating ) {
+            if ( !isSelfTerminating() ) completionTime = new Delay( 1, Delay.Unit.hours );
+        } else {
+            completionTime = null;
         }
     }
 }

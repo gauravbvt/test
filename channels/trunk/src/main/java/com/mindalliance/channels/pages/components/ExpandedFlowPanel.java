@@ -125,7 +125,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         }
 
         addChannelRow();
-        addMaxDelayFields();
+        add( new DelayPanel( "max-delay", new Model<Delay>( flow.getMaxDelay() ) ) );
         // addLabeled( "maxDelay-label", new TextField<String>( "maxDelay" ) );           // NON-NLS
         add( new AttachmentPanel( "attachments", flow ) );                                // NON-NLS
         add( new IssuesPanel( "issues", new Model<ModelObject>( flow ), expansions ) );   // NON-NLS
@@ -175,7 +175,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
                     @Override
                     public String getObject() {
                         return outcome ? getFlow().getOutcomeTitle()
-                                       : getFlow().getRequirementTitle();
+                                : getFlow().getRequirementTitle();
                     }
                 } ) );
 
@@ -290,29 +290,6 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         add( other );
     }
 
-    /**
-     * Add input fields for max delay
-     */
-    protected final void addMaxDelayFields() {
-        add( new TextField<String>( "delay-amount",
-                                    new PropertyModel<String>( flow, "maxDelay.amountString" ) ) );
-        add( new DropDownChoice<Delay.Unit>(
-                "delay-unit",
-                new PropertyModel<Delay.Unit>( flow, "maxDelay.unit" ),
-                new PropertyModel<List<? extends Delay.Unit>>( flow, "maxDelay.units" ),
-                new IChoiceRenderer<Delay.Unit>() {
-                    public Object getDisplayValue( Delay.Unit object ) {
-                        return object.toString();
-                    }
-
-                    public String getIdValue( Delay.Unit object, int index ) {
-                        return object.toString();
-                    }
-                }
-        ) {
-        } );
-    }
-
     public final Flow getFlow() {
         return flow;
     }
@@ -414,7 +391,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
             Node n = nodes.next();
             if ( !node.equals( n ) && (
                     other.equals( n )
-                        || !n.isConnector() && !node.isConnectedTo( outcome, n, flow.getName() ) ) )
+                            || !n.isConnector() && !node.isConnectedTo( outcome, n, flow.getName() ) ) )
                 result.add( n );
         }
 

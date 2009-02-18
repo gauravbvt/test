@@ -14,6 +14,7 @@ import com.mindalliance.channels.analysis.detectors.PartWithoutTask;
 import com.mindalliance.channels.analysis.detectors.PotentialDeadlock;
 import com.mindalliance.channels.analysis.detectors.UnconnectedConnector;
 import com.mindalliance.channels.analysis.detectors.UnnamedFlow;
+import com.mindalliance.channels.analysis.detectors.PartWithInvalidTiming;
 import com.mindalliance.channels.attachments.FileBasedManager;
 import com.mindalliance.channels.service.ChannelsServiceImpl;
 import com.mindalliance.channels.dao.Memory;
@@ -87,6 +88,7 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new FlowWithoutChannel() );
         detectors.add( new PartWithoutTask() );
         detectors.add( new PartWithoutRole() );
+        detectors.add( new PartWithInvalidTiming() );
         detectors.add( new UnnamedFlow() );
         detectors.add( new FlowWithUndefinedSource() );
         detectors.add( new FlowWithUndefinedTarget() );

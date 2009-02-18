@@ -225,6 +225,9 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
             }
             if ( !label.isEmpty() ) label += "|";
             label += part.getTask();
+            if (part.isRepeating()) {
+                label += " (every " + part.getRepeatsEvery().toString() + ")";
+            }
             return label;
         } else {
             return node.getName();
