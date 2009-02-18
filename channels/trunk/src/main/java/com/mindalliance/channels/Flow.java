@@ -89,7 +89,7 @@ public abstract class Flow extends ModelObject implements Channelable {
     }
 
     private void addChannelIfUnique( Channel channel ) {
-        if ( !getEffectiveChannels().contains(channel) ) channels.add( channel );
+        if ( !getEffectiveChannels().contains(channel) ) getEffectiveChannels().add( channel );
     }
 
     /** {@inheritDoc} */

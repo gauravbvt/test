@@ -42,7 +42,7 @@ public class CollapsedFlowPanel extends Panel implements DeletableFlow {
                 new PropertyModel( flow,
                         outcome ? "outcomeTitle" : "requirementTitle" ) );     // NON-NLS
 
-        final String c = Channel.toString( flow.getChannels() );
+        final String c = Channel.toString( flow.getEffectiveChannels() );
         final Label channel = new Label( "channels", new AbstractReadOnlyModel() {         // NON-NLS
 
             @Override
