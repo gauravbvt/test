@@ -7,30 +7,28 @@
         lang="en">
 <body>
 <wicket:panel>
-    <div class="part">
-        <span class="task" wicket:id="task">task</span>
-        <span class="description" wicket:id="description">description</span>
-        <span class="location" wicket:id="location">location</span>
-        <span class="resource" wicket:id="resource">resource</span>
-        <!-- actors playing part -->
-        <div class="actors" wicket:id="actors">
-             <span wicket:id="actor">[actor report panel]</span>
-        </div>
-        <span class="section">Sends</span>
-        <div class="sends">
-            <div wicket:id="sends">
-                <span wicket:id="send">[flow report panel]</span>
-            </div>
-        </div>
-        <span class="section">Receives</span>
-        <div class="receives">
-            <div wicket:id="receives">
-                <span wicket:id="receive">[flow report panel]</span>
-            </div>
-        </div>
-        <span class="section">Issues</span>
-        <span wicket:id="issues">[issues report panel]</span>
+    <p class="task-name" wicket:id="task">task</p>
+    <p class="description" wicket:id="description">description</p>
+    <p>Location: <span class="location" wicket:id="location">location</span></p>
+
+    <div class="sends">
+        <h6>Sends</h6>
+        <ul>
+            <li wicket:id="sends">
+                <div wicket:id="send">[flow report panel]</div>
+            </li>
+        </ul>
     </div>
+    <div class="receives">
+        <h6>Receives</h6>
+        <ul>
+            <li wicket:id="receives">
+                <div wicket:id="receive">[flow report panel]</div>
+            </li>
+        </ul>
+    </div>
+
+    <div wicket:id="issues">[issues report panel]</div>
 </wicket:panel>
 </body>
 </html>

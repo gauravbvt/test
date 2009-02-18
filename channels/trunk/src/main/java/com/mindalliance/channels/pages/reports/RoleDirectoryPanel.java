@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Collections;
 import java.util.Comparator;
 import java.text.Collator;
+import java.text.MessageFormat;
 
 /**
  * A role directory for an organization
@@ -46,7 +47,8 @@ public class RoleDirectoryPanel extends Panel {
     }
 
     private void init() {
-        add( new Label( "name", role.getName() ) );                                       // NON-NLS
+        add( new Label( "name", MessageFormat.format(                                     // NON-NLS
+                "Role: {0}", role.getName() ) ) );
 
         String desc = role.getDescription();
         Label descLabel = new Label( "description", desc );                               // NON-NLS

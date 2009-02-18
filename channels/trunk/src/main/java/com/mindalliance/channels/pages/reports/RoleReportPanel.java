@@ -20,9 +20,10 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.text.Collator;
+import java.text.MessageFormat;
 
 /**
- * Role report panel
+ * Role report panel.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -30,11 +31,14 @@ import java.text.Collator;
  * Time: 8:10:03 PM
  */
 public class RoleReportPanel extends Panel {
-    /**
-     * A role
-     */
+
+    /** A role. */
     private Role role;
+
+    /** The scenario. */
     private Scenario scenario;
+
+    /** The organization. */
     private Organization organization;
 
     public RoleReportPanel(
@@ -49,10 +53,11 @@ public class RoleReportPanel extends Panel {
     }
 
     private void init() {
-        add( new Label( "name", "Role: " + role.getName() ) );
+        add( new Label( "name", MessageFormat.format(                                     // NON-NLS
+                "Role: {0}", role.getName() ) ) );
 
         String desc = role.getDescription();
-        Label descLabel = new Label( "description", desc );
+        Label descLabel = new Label( "description", desc );                               // NON-NLS
         descLabel.setVisible( desc != null && !desc.isEmpty() );
         add( descLabel );
 
@@ -66,23 +71,25 @@ public class RoleReportPanel extends Panel {
                 return Collator.getInstance().compare( o1.getName(), o2.getName() );
             }
         } );
-        add( new ListView<Actor>( "actors", actors ) {
+        if ( actors.isEmpty() )
+            actors.add( new Actor( "(unknown)" ) );
+        add( new ListView<Actor>( "actors", actors ) {                                    // NON-NLS
             @Override
             protected void populateItem( ListItem<Actor> item ) {
-                item.add( new ActorReportPanel( "actor", item.getModel() ) );
+                item.add( new ActorReportPanel( "actor", item.getModel() ) );             // NON-NLS
             }
         } );
 
         List<Part> parts = findPartsForRole( role, scenario );
-        add( new ListView<Part>( "parts", parts ) {
+        add( new ListView<Part>( "parts", parts ) {                                       // NON-NLS
             @Override
             protected void populateItem( ListItem<Part> item ) {
-                 item.add( new PartReportPanel( "part", item.getModel() ) );
+                item.add( new PartReportPanel( "part", item.getModel() ) );               // NON-NLS
             }
         } );
     }
 
-    private List<Part> findPartsForRole( Role role, Scenario scenario ) {
+    private static List<Part> findPartsForRole( Role role, Scenario scenario ) {
         List<Part> partsForRole = new ArrayList<Part>();
         Iterator<Part> parts = scenario.parts();
         while ( parts.hasNext() ) {

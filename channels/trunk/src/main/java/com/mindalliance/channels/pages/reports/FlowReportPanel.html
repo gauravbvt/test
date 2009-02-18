@@ -7,23 +7,23 @@
         lang="en">
 <body>
 <wicket:panel>
-    <div wicket:id="flow"> <!-- class="send-notification | send-answer | receive-notification | receive-answer" -->
+    <!-- class="send-notification | send-answer | receive-notification | receive-answer" -->
+
+    <p>
         <span wicket:id="information">information</span> <!-- class= "information" or "critical-information" -->
-        <!-- receiving from or sending to -->
-        <span class="other-part">
-            <span class="resource" wicket:id="resource">resource</span>
-        </span>
-        <span class="urgency">max delay</span>
-        <span class="section">Channels</span>
-        <span wicket:id="channels">[channels report panel]</span>
-        <span class="section">Actors</span>
-        <!-- actors at the other end of flow -->
-        <div wicket:id="actors"> <!-- class="any-actor | all-actors" -->
-             <span wicket:id="actor">[actor report panel]</span>
-        </div>
-        <span class="section">Issues</span>
-        <span wicket:id="issues">[issues report panel]</span>
-    </div>
+        (<span wicket:id="urgency" class="urgency">(max delay)</span>).
+    </p>
+
+    <p wicket:id="description" class="description">(description)</p>
+
+    <ul class="channels" wicket:id="channels">[channels report panel]</ul>
+
+    <!-- actors at the other end of flow -->
+    <!--<div wicket:id="actors"> --><!-- class="any-actor | all-actors" -->
+         <!--<span wicket:id="actor">[actor report panel]</span>-->
+    <!--</div>-->
+
+    <div wicket:id="issues">[issues report panel]</div>
 </wicket:panel>
 </body>
 </html>

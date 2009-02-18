@@ -41,7 +41,7 @@ public class OrganizationDirectoryPanel extends Panel {
     }
 
     private void init() {
-        add( new Label( "name", organization.getName() ) );
+        add( new Label( "name", "Organization: " + organization.getName() ) );
         add( new Label( "description", organization.getDescription() ) );
         Label parentage = new Label( "parentage", organization.parentage() );
         if ( organization.getParent() == null )
