@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.text.MessageFormat;
 
 /**
  * An XStream Flow converter.
@@ -63,9 +62,9 @@ public class FlowConverter implements Converter {
         Flow flow = (Flow) object;
         Scenario currentScenario = (Scenario) context.get( "scenario" );
         if ( flow.isInternal() ) {
-            writeFlow( (InternalFlow) flow, writer, currentScenario );
+            writeFlowNodes( (InternalFlow) flow, writer, currentScenario );
         } else {
-            writeFlow( (ExternalFlow) flow, writer, currentScenario );
+            writeFlowNodes( (ExternalFlow) flow, writer, currentScenario );
         }
         writer.startNode( "description" );
         writer.setValue( flow.getDescription() );
@@ -100,9 +99,9 @@ public class FlowConverter implements Converter {
         }
     }
 
-    private void writeFlow( InternalFlow flow,
-                            HierarchicalStreamWriter writer,
-                            Scenario currentScenario ) {
+    private void writeFlowNodes( InternalFlow flow,
+                                 HierarchicalStreamWriter writer,
+                                 Scenario currentScenario ) {
         writer.startNode( "source" );
         writeNode( flow.getSource(), writer, currentScenario );
         writer.endNode();
@@ -111,13 +110,11 @@ public class FlowConverter implements Converter {
         writer.endNode();
     }
 
-    private void writeFlow( ExternalFlow flow,
-                            HierarchicalStreamWriter writer,
-                            Scenario currentScenario ) {
+    private void writeFlowNodes( ExternalFlow flow,
+                                 HierarchicalStreamWriter writer,
+                                 Scenario currentScenario ) {
         writer.startNode( "source" );
-        writeNode( !flow.isInput()
-                ? flow.getPart()
-                : flow.getConnector(), writer, currentScenario );
+        writeNode( ( flow.isInput() ? flow.getConnector() : flow.getPart() ), writer, currentScenario );
         writer.endNode();
         writer.startNode( "target" );
         writeNode( flow.isInput() ? flow.getPart() : flow.getConnector(), writer, currentScenario );
@@ -144,8 +141,12 @@ public class FlowConverter implements Converter {
                                  HierarchicalStreamWriter writer,
                                  Scenario currentScenario ) {
         writer.startNode( "connector" );
+        // Connector is in other scenario -- an external flow
         if ( connector.getScenario() != currentScenario ) {
             writer.addAttribute( "scenario", connector.getScenario().getName() );
+            writer.startNode( "scenario-description" );
+            writer.setValue( connector.getScenario().getDescription() );
+            writer.endNode();
             Flow innerFlow = connector.getInnerFlow();
             writer.startNode( "flow" );
             writer.addAttribute( "name", innerFlow.getName() );
@@ -154,13 +155,19 @@ public class FlowConverter implements Converter {
                     ? innerFlow.getTarget()
                     : innerFlow.getSource() );
             writePartSpecification( part, writer );
+            // Connector is in this scenario
         } else {
+            // keep specs of external flows it participates in
             Iterator<ExternalFlow> externalFlows = connector.externalFlows();
             while ( externalFlows.hasNext() ) {
                 ExternalFlow externalFlow = externalFlows.next();
                 Part externalPart = externalFlow.getPart();
                 writer.startNode( "connected-to" );
                 writer.addAttribute( "scenario", externalPart.getScenario().getName() );
+                writer.addAttribute( "flow", externalFlow.getName() );
+                writer.startNode( "scenario-description" );
+                writer.setValue( connector.getScenario().getDescription() );
+                writer.endNode();
                 writePartSpecification( externalPart, writer );
                 writer.endNode();
             }
@@ -204,9 +211,9 @@ public class FlowConverter implements Converter {
         // If a node is a "connector specification", multiple actual connectors might match
         List<Node> targets = resolveNodes( reader, scenario, idMap, false );
         reader.moveUp();
-        List<Flow> flows = makeFlows( scenario, sources, targets, idValue );
+        List<Flow> flows = makeFlows( sources, targets, flowName, idValue );
         while ( reader.hasMoreChildren() ) {
-            for ( Flow flow : flows ) flow.setName( flowName );
+            // for ( Flow flow : flows ) flow.setName( flowName );
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "description" ) ) {
@@ -238,14 +245,13 @@ public class FlowConverter implements Converter {
     }
 
     private List<Flow> makeFlows(
-            Scenario scenario, List<Node> sources, List<Node> targets, String idValue ) {
+            List<Node> sources, List<Node> targets, String name, String idValue ) {
 
         List<Flow> flows = new ArrayList<Flow>();
         Service service = Project.service();
         for ( Node source : sources ) {
             for ( Node target : targets ) {
-                // TODO JF - Figure out what to pass as flow name
-                Flow flow = service.connect( source, target, "" );
+                Flow flow = service.connect( source, target, name );
                 flows.add( flow );
                 // Register flow id if internal because it is guaranteed to be the exported flow
                 if ( flow.isInternal() ) {
@@ -285,16 +291,17 @@ public class FlowConverter implements Converter {
     private List<Connector> resolveConnectors( HierarchicalStreamReader reader,
                                                Scenario scenario,
                                                boolean isSource ) {
-        // TODO - shoudn't this be about the "type" of a scenario?
         List<Connector> connectors = new ArrayList<Connector>();
         String externalScenarioName = reader.getAttribute( "scenario" );
         if ( externalScenarioName == null ) {
+            // Connector is in same scenario
             Connector connector = Project.service().createConnector( scenario );
             connectors.add( connector );
             // try to connect external part that match specifications
             connectMatchingExternalParts( connector, reader, isSource );
         } else {
             // Find an unambiguously matching external connector, else create internal connector
+            String externalScenarioDescription = "";
             String flowName = null;
             String roleName = null;
             String organizationName = null;
@@ -302,20 +309,30 @@ public class FlowConverter implements Converter {
             while ( reader.hasMoreChildren() ) {
                 reader.moveDown();
                 String nodeName = reader.getNodeName();
-                String name = reader.getAttribute( "name" ).trim();
-                if ( nodeName.equals( "flow" ) ) {
-                    flowName = name;
-                } else if ( nodeName.equals( "part-role" ) ) {
-                    roleName = name;
-                } else if ( nodeName.equals( "part-task" ) ) {
-                    task = name;
-                } else if ( nodeName.equals( "part-organization" ) ) {
-                    organizationName = name;
+                if ( nodeName.equals( "scenario-description" ) ) {
+                    externalScenarioDescription = reader.getValue();
+                } else {
+                    String name = reader.getAttribute( "name" ).trim();
+                    if ( nodeName.equals( "flow" ) ) {
+                        flowName = name;
+                    } else if ( nodeName.equals( "part-role" ) ) {
+                        roleName = name;
+                    } else if ( nodeName.equals( "part-task" ) ) {
+                        task = name;
+                    } else if ( nodeName.equals( "part-organization" ) ) {
+                        organizationName = name;
+                    }
                 }
                 reader.moveUp();
             }
-            List<Connector> matchingConnectors = findMatchingConnectors( externalScenarioName,
-                    flowName, roleName, organizationName, task, isSource );
+            List<Connector> matchingConnectors = findMatchingConnectors(
+                    externalScenarioName,
+                    externalScenarioDescription,
+                    flowName,
+                    roleName,
+                    organizationName,
+                    task,
+                    isSource );
             connectors.addAll( matchingConnectors );
         }
         return connectors;
@@ -328,16 +345,19 @@ public class FlowConverter implements Converter {
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             assert reader.getNodeName().equals( "connected-to" );
-            String scenarioName = reader.getAttribute( "scenario" );
-            try {
-                Service service = Project.service();
-                Scenario externalScenario = service.findScenario( scenarioName );
-                String roleName = null;
-                String organizationName = null;
-                String task = null;
-                while ( reader.hasMoreChildren() ) {
-                    reader.moveDown();
-                    String nodeName = reader.getNodeName();
+            String externalScenarioName = reader.getAttribute( "scenario" );
+            String externalScenarioDescription = "";
+            String flowName = reader.getAttribute( "flow" );
+            Service service = Project.service();
+            String roleName = null;
+            String organizationName = null;
+            String task = null;
+            while ( reader.hasMoreChildren() ) {
+                reader.moveDown();
+                String nodeName = reader.getNodeName();
+                if ( nodeName.equals( "scenario-description" ) ) {
+                    externalScenarioDescription = reader.getValue();
+                } else {
                     String name = reader.getAttribute( "name" ).trim();
                     if ( nodeName.equals( "part-role" ) ) {
                         roleName = name;
@@ -346,26 +366,24 @@ public class FlowConverter implements Converter {
                     } else if ( nodeName.equals( "part-organization" ) ) {
                         organizationName = name;
                     }
-                    reader.moveUp();
                 }
+                reader.moveUp();
+            }
+            List<Scenario> externalScenarios = findMatchingScenarios(
+                    externalScenarioName,
+                    externalScenarioDescription );
+            for ( Scenario externalScenario : externalScenarios ) {
                 List<Part> externalParts = findMatchingExternalParts( externalScenario,
                         roleName,
                         organizationName,
                         task );
                 for ( Part externalPart : externalParts ) {
-                    // TODO JF - figure out flow names
-                    String flowName = "";
                     if ( isSource ) {
                         service.connect( externalPart, connector, flowName );
                     } else {
                         service.connect( connector, externalPart, flowName );
                     }
                 }
-            }
-            catch ( NotFoundException ignored ) {
-                // TODO - replace by logging
-                LoggerFactory.getLogger( getClass() ).warn( MessageFormat.format(
-                        "scenario {0} not found", scenarioName ) );
             }
             reader.moveUp();
         }
@@ -392,14 +410,15 @@ public class FlowConverter implements Converter {
 
     @SuppressWarnings( "unchecked" )
     private List<Connector> findMatchingConnectors( String scenarioName,
+                                                    String scenarioDescription,
                                                     final String flowName,
                                                     final String roleName,
                                                     final String organizationName,
                                                     final String task,
                                                     final boolean isSource ) {
         List<Connector> connectors = new ArrayList<Connector>();
-        try {
-            Scenario scenario = Project.service().findScenario( scenarioName );
+        List<Scenario> scenarios = findMatchingScenarios( scenarioName, scenarioDescription );
+        for ( Scenario scenario : scenarios ) {
             Iterator<Connector> iterator =
                     (Iterator<Connector>) new FilterIterator( scenario.nodes(), new Predicate() {
                         public boolean evaluate( Object obj ) {
@@ -415,10 +434,25 @@ public class FlowConverter implements Converter {
                     }
                     );
             while ( iterator.hasNext() ) connectors.add( iterator.next() );
-        } catch ( NotFoundException e ) {
-            return connectors;
         }
         return connectors;
+    }
+
+    // TODO do semantic match on scenario name and description
+    private List<Scenario> findMatchingScenarios( String scenarioName,
+                                                  String scenarioDescription ) {
+        List<Scenario> scenarios = new ArrayList<Scenario>();
+        try {
+            scenarios.add( Project.service().findScenario( scenarioName ) );
+        } catch ( NotFoundException e ) {
+            LoggerFactory.getLogger( FlowConverter.class ).info(
+                    "No scenario found matching name ["
+                            + scenarioName
+                            + "] and description ["
+                            + scenarioDescription
+                            + "]" );
+        }
+        return scenarios;
     }
 
     private boolean matches( Part part,
