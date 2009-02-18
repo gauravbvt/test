@@ -184,6 +184,7 @@ public class FlowConverter implements Converter {
         if ( part.getTask() != null ) {
             writer.startNode( "part-task" );
             writer.addAttribute( "name", part.getTask() );
+            writer.setValue( part.getDescription() );
             writer.endNode();
         }
         if ( part.getOrganization() != null ) {
@@ -306,6 +307,7 @@ public class FlowConverter implements Converter {
             String roleName = null;
             String organizationName = null;
             String task = null;
+            String taskDescription = "";
             while ( reader.hasMoreChildren() ) {
                 reader.moveDown();
                 String nodeName = reader.getNodeName();
@@ -319,6 +321,7 @@ public class FlowConverter implements Converter {
                         roleName = name;
                     } else if ( nodeName.equals( "part-task" ) ) {
                         task = name;
+                        taskDescription = reader.getValue();
                     } else if ( nodeName.equals( "part-organization" ) ) {
                         organizationName = name;
                     }
@@ -332,6 +335,7 @@ public class FlowConverter implements Converter {
                     roleName,
                     organizationName,
                     task,
+                    taskDescription,
                     isSource );
             connectors.addAll( matchingConnectors );
         }
@@ -352,6 +356,7 @@ public class FlowConverter implements Converter {
             String roleName = null;
             String organizationName = null;
             String task = null;
+            String taskDescription = "";
             while ( reader.hasMoreChildren() ) {
                 reader.moveDown();
                 String nodeName = reader.getNodeName();
@@ -363,6 +368,7 @@ public class FlowConverter implements Converter {
                         roleName = name;
                     } else if ( nodeName.equals( "part-task" ) ) {
                         task = name;
+                        taskDescription = reader.getValue();
                     } else if ( nodeName.equals( "part-organization" ) ) {
                         organizationName = name;
                     }
@@ -376,7 +382,8 @@ public class FlowConverter implements Converter {
                 List<Part> externalParts = findMatchingExternalParts( externalScenario,
                         roleName,
                         organizationName,
-                        task );
+                        task,
+                        taskDescription);
                 for ( Part externalPart : externalParts ) {
                     if ( isSource ) {
                         service.connect( externalPart, connector, flowName );
@@ -394,13 +401,14 @@ public class FlowConverter implements Converter {
     private List<Part> findMatchingExternalParts( Scenario scenario,
                                                   final String roleName,
                                                   final String organizationName,
-                                                  final String task ) {
+                                                  final String task,
+                                                  final String taskDescription) {
         List<Part> externalParts = new ArrayList<Part>();
         Iterator<Part> iterator =
                 (Iterator<Part>) new FilterIterator( scenario.parts(), new Predicate() {
                     public boolean evaluate( Object obj ) {
                         Part part = (Part) obj;
-                        return matches( part, roleName, organizationName, task );
+                        return partMatches( part, roleName, organizationName, task, taskDescription );
                     }
                 }
                 );
@@ -415,6 +423,7 @@ public class FlowConverter implements Converter {
                                                     final String roleName,
                                                     final String organizationName,
                                                     final String task,
+                                                    final String taskDescription,
                                                     final boolean isSource ) {
         List<Connector> connectors = new ArrayList<Connector>();
         List<Scenario> scenarios = findMatchingScenarios( scenarioName, scenarioDescription );
@@ -424,12 +433,13 @@ public class FlowConverter implements Converter {
                         public boolean evaluate( Object obj ) {
                             Node node = (Node) obj;
                             return node.isConnector() &&
-                                    matches( (Connector) node,
+                                    connectorMatches( (Connector) node,
                                             isSource,
                                             flowName,
                                             roleName,
                                             organizationName,
-                                            task );
+                                            task,
+                                            taskDescription);
                         }
                     }
                     );
@@ -455,10 +465,11 @@ public class FlowConverter implements Converter {
         return scenarios;
     }
 
-    private boolean matches( Part part,
+    private boolean partMatches( Part part,
                              String roleName,
                              String organizationName,
-                             String task ) {
+                             String task,
+                             String taskDescription) {
         if ( roleName != null ) {
             if ( part.getRole() == null
                     || !SemMatch.same( part.getRole().getName(), roleName ) ) return false;
@@ -470,24 +481,27 @@ public class FlowConverter implements Converter {
         }
         if ( task != null ) {
             if ( part.getTask() == null || !SemMatch.same( part.getTask(), task ) )
+                // TODO match task description
                 return false;
         }
         return true;
     }
 
-    private boolean matches( Connector connector,
+    private boolean connectorMatches( Connector connector,
                              boolean isSource,
                              String flowName,
                              String roleName,
                              String organizationName,
-                             String task ) {
+                             String task,
+                             String taskDescription) {
         // we are matching the part attached to the connector,
         // so it's input-edness is the reverse of that of the connector
         if ( connector.isInput() == isSource ) return false;
         Flow innerFlow = connector.getInnerFlow();
         Part part = (Part) ( isSource ? innerFlow.getSource() : innerFlow.getTarget() );
+        // TODO match task description
         return SemMatch.same( innerFlow.getName(), flowName )
-                && matches( part, roleName, organizationName, task );
+                && partMatches( part, roleName, organizationName, task, taskDescription );
     }
 
 }

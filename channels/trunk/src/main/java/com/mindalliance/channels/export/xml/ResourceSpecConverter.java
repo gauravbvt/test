@@ -13,7 +13,6 @@ import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Place;
 import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.pages.Project;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -87,9 +86,6 @@ public class ResourceSpecConverter implements Converter {
                 throw new ConversionException( "Unknown element " + nodeName );
             }
             reader.moveUp();
-        }
-        if ( !resourceSpec.isAnyone() ) {
-            Project.service().add( resourceSpec );
         }
         return resourceSpec;
     }

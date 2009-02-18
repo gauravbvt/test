@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * XStream scenario converter.
@@ -66,13 +68,13 @@ public class ScenarioConverter implements Converter {
         writer.setValue( scenario.getDescription() );
         writer.endNode();
         // All entities
-         Iterator<ModelObject> entities = service.iterateEntities();
-         while ( entities.hasNext() ) {
-             ModelObject entity = entities.next();
-             writer.startNode( entity.getClass().getSimpleName().toLowerCase() );
-             context.convertAnother( entity );
-             writer.endNode();
-         }
+        Iterator<ModelObject> entities = service.iterateEntities();
+        while ( entities.hasNext() ) {
+            ModelObject entity = entities.next();
+            writer.startNode( entity.getClass().getSimpleName().toLowerCase() );
+            context.convertAnother( entity );
+            writer.endNode();
+        }
 
         // Permanent resource specifications
         for ( ResourceSpec resourceSpec : service.list( ResourceSpec.class ) ) {
@@ -112,12 +114,13 @@ public class ScenarioConverter implements Converter {
         Map<String, Long> idMap = new HashMap<String, Long>();
         context.put( "idMap", idMap );
         Scenario scenario = Project.service().createScenario();
-        Project project = Project.getProject();
+        Service service = Project.service();
         Part defaultPart = scenario.getDefaultPart();
         context.put( "scenario", scenario );
         scenario.setName( reader.getAttribute( "name" ) );
         String oldId = reader.getAttribute( "id" );
         idMap.put( oldId, scenario.getId() );
+        Set<ResourceSpec> resourceSpecs = new HashSet<ResourceSpec>();
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
@@ -138,7 +141,8 @@ public class ScenarioConverter implements Converter {
 */
                 // Resources
             } else if ( nodeName.equals( "resource" ) ) {
-                context.convertAnother( scenario, ResourceSpec.class );
+                ResourceSpec resourceSpec = (ResourceSpec) context.convertAnother( scenario, ResourceSpec.class );
+                resourceSpecs.add( resourceSpec );
                 // Parts and flows
             } else if ( nodeName.equals( "part" ) ) {
                 context.convertAnother( scenario, Part.class );
@@ -154,6 +158,14 @@ public class ScenarioConverter implements Converter {
         }
         // Remove automatically created default part
         scenario.removeNode( defaultPart );
+        // Register unique resourceSpecs
+        Set<ResourceSpec> registeredResourceSpecs = new HashSet<ResourceSpec>();
+        registeredResourceSpecs.addAll( service.list( ResourceSpec.class ) );
+        for ( ResourceSpec resourceSpec : resourceSpecs ) {
+            if ( !resourceSpec.isAnyone() && !registeredResourceSpecs.contains( resourceSpec ) ) {
+                service.add( resourceSpec );
+            }
+        }
         return scenario;
     }
 
