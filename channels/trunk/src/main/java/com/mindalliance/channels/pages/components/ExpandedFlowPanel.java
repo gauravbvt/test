@@ -42,6 +42,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Arrays;
 
 /**
  * Details of an expanded flow.
@@ -168,7 +169,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         significanceChoice = new DropDownChoice<Flow.Significance>(
                 "significance",
                 new PropertyModel<Flow.Significance>(flow,"significance"),
-                new PropertyModel<List<? extends Flow.Significance>>(flow, "significance.choices"),
+                new PropertyModel<List<? extends Flow.Significance>>(this, "significanceChoices"),
                 new IChoiceRenderer<Flow.Significance>() {
 
                     public Object getDisplayValue( Flow.Significance significance ) {
@@ -181,6 +182,13 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
                 }
         );
         add(significanceChoice);
+    }
+
+    public List<Flow.Significance> getSignificanceChoices() {
+        List<Flow.Significance> significances = new ArrayList<Flow.Significance>();
+        significances.addAll(Arrays.asList(Flow.Significance.values()));
+        if (flow.isAskedFor()) significances.remove( Flow.Significance.Triggers );
+        return significances;
     }
 
     private void addHeader() {

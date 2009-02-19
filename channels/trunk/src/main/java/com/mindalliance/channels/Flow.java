@@ -62,6 +62,9 @@ public abstract class Flow extends ModelObject implements Channelable {
      */
     public void setAskedFor( boolean askedFor ) {
         this.askedFor = askedFor;
+        if ( askedFor && significance == Significance.Triggers ) {
+            setSignificance( Significance.Critical );
+        }
     }
 
     @OneToMany( cascade = CascadeType.ALL )
@@ -313,6 +316,7 @@ public abstract class Flow extends ModelObject implements Channelable {
 
     /**
      * Whether flow triggers its target
+     *
      * @return a boolean
      */
     @Transient
@@ -329,6 +333,7 @@ public abstract class Flow extends ModelObject implements Channelable {
 
     /**
      * Whether flow terminates its target
+     *
      * @return a boolean
      */
     @Transient
@@ -345,6 +350,7 @@ public abstract class Flow extends ModelObject implements Channelable {
 
     /**
      * Whether flow terminates its source
+     *
      * @return a boolean
      */
     @Transient
@@ -361,6 +367,7 @@ public abstract class Flow extends ModelObject implements Channelable {
 
     /**
      * Whether a flow is required (critical, triggering or terminating).
+     *
      * @return a boolean
      */
     @Transient
@@ -397,6 +404,7 @@ public abstract class Flow extends ModelObject implements Channelable {
 
         /**
          * Get name from point of view of sender or receiver of flow.
+         *
          * @param isSender a boolean
          * @return a string
          */
@@ -428,11 +436,11 @@ public abstract class Flow extends ModelObject implements Channelable {
         }
 
 /*        *//**
-         * Produce the list of names for all significances relative to sender or receiver of a flow.
-         *
-         * @param isSender a boolean
-         * @return a list of strings
-         *//*
+     * Produce the list of names for all significances relative to sender or receiver of a flow.
+     *
+     * @param isSender a boolean
+     * @return a list of strings
+     *//*
         public static List<String> choices( boolean isSender ) {
             List<String> choices = new ArrayList<String>();
             for ( Significance s : values() ) {
@@ -443,14 +451,17 @@ public abstract class Flow extends ModelObject implements Channelable {
 
         /**
          * Get list choice of Significances
+         *
          * @return a list of Significances
          */
         @Transient
         public List<Significance> getChoices() {
             return Arrays.asList( values() );
         }
-        
-        /** {@inheritDoc} */
+
+        /**
+         * {@inheritDoc}
+         */
         public String toString() {
             return name();
         }
