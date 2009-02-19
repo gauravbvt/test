@@ -1,21 +1,17 @@
 package com.mindalliance.channels.pages.reports;
 
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.model.IModel;
+import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Role;
-import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.pages.Project;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 
-import java.util.List;
-import java.util.Collections;
-import java.util.Comparator;
-import java.text.Collator;
 import java.text.MessageFormat;
+import java.util.List;
 
 /**
  * A role directory for an organization
@@ -56,17 +52,8 @@ public class RoleDirectoryPanel extends Panel {
             descLabel.setVisible( false );
         add( descLabel );
 
-        ResourceSpec resourceSpec = ResourceSpec.with( role );
-        resourceSpec.setOrganization( organization );
-
         // Find all actors in role for organization
-        List<Actor> actors = Project.service().findAllActors( resourceSpec );
-        Collections.sort( actors, new Comparator<Actor>() {
-            /** {@inheritDoc} */
-            public int compare( Actor o1, Actor o2 ) {
-                return Collator.getInstance().compare( o1.getName(), o2.getName() );
-            }
-        } );
+        List<Actor> actors = Project.getProject().findActors( organization, role );
         if ( actors.isEmpty() )
             actors.add( new Actor( "(unknown)" ) );
         add( new ListView<Actor>( "actors", actors ) {                                    // NON-NLS

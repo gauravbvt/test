@@ -9,10 +9,8 @@ import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.UserIssue;
@@ -274,9 +272,9 @@ public class ChannelsServiceImpl implements Service {
         Set<ResourceSpec> result = new HashSet<ResourceSpec>();
 
         addSpecs( result, ResourceSpec.class );
-        addSpecs( result, Actor.class );
-        addSpecs( result, Role.class );
-        addSpecs( result, Organization.class );
+//        addSpecs( result, Actor.class );
+//        addSpecs( result, Role.class );
+//        addSpecs( result, Organization.class );
 
         // Transient specs from scenario parts
         for ( Scenario scenario : list( Scenario.class ) ) {

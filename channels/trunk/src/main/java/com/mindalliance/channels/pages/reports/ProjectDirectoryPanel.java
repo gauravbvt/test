@@ -6,17 +6,12 @@ import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
-import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -37,7 +32,7 @@ public class ProjectDirectoryPanel extends Panel {
     }
 
     private void init() {
-        List<Organization> orgs = findOrganizations();
+        List<Organization> orgs = Project.getProject().findOrganizations();
         add( new ListView<Organization>( "organizations", orgs ) {                        // NON-NLS
             @Override
             protected void populateItem( ListItem<Organization> item ) {
@@ -52,39 +47,6 @@ public class ProjectDirectoryPanel extends Panel {
                                 new Model<Organization>( organization ) ) );
             }
         } );
-
-        List<Role> roles = findRolesOutOfOrganization();
-        Collections.sort( roles, new Comparator<Role>() {
-            /** {@inheritDoc} */
-            public int compare( Role o1, Role o2 ) {
-                return Collator.getInstance().compare( o1.getName(), o2.getName() );
-            }
-        } );
-        WebMarkupContainer wmc = new WebMarkupContainer( "no-org" );                      // NON-NLS
-        wmc.add( new ListView<Role>( "roles", roles ) {                                   // NON-NLS
-            @Override
-            protected void populateItem( ListItem<Role> item ) {
-                Role role = item.getModelObject();
-                item.add( new RoleDirectoryPanel( "role",                                 // NON-NLS
-                                                  new Model<Role>( role ), null ) );
-            }
-        } );
-        wmc.setVisible( !roles.isEmpty() );
-        add( wmc );
-    }
-
-    private static List<Organization> findOrganizations() {
-        List<Organization> orgs = new ArrayList<Organization>(
-                new HashSet<Organization>( Project.service().list( Organization.class ) ) );
-
-        Collections.sort( orgs, new Comparator<Organization>() {
-            /** {@inheritDoc} */
-            public int compare( Organization o1, Organization o2 ) {
-                return Collator.getInstance().compare( o1.toString(), o2.toString() );
-            }
-        } );
-
-        return orgs;
     }
 
     private static List<Role> findRolesOutOfOrganization() {
