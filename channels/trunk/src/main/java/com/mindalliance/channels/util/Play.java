@@ -102,8 +102,8 @@ public class Play implements Serializable {
      *
      * @return a string
      */
-    public String getCriticality() {
-        return flow.isCritical() ? "critical" : "";
+    public String getRequiredness() {
+        return flow.isRequired() ? "required" : "";
     }
 
     /**

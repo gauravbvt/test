@@ -41,7 +41,7 @@ public class FlowReportPanel extends Panel {
         Label informationLabel = new Label( "information",
                    partIsSource ? flow.getOutcomeTitle() : flow.getRequirementTitle() );
         informationLabel.add( new AttributeModifier( "class", true, new Model<String>(
-                flow.isCritical() ? "critical-information" : "information" ) ) );
+                flow.isRequired() ? "required-information" : "information" ) ) );
         add( informationLabel );
 
         add( new Label( "urgency", flow.getMaxDelay().toString() ) );

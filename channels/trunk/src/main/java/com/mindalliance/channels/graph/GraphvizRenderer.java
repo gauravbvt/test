@@ -142,7 +142,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
             input.flush();
             input.close();
             // will interrupt this thread if external process does not terminate before timeout
- //           timer.schedule( new InterruptScheduler( Thread.currentThread() ), this.timeout );
+            timer.schedule( new InterruptScheduler( Thread.currentThread() ), this.timeout );
             // wait for process to complete
             // transfer from process input stream to output stream
             BufferedInputStream in = new BufferedInputStream( p.getInputStream(), MAXBYTES );
@@ -196,15 +196,6 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
         dotExporter.export( writer, graph );
         return writer.toString();
     }
-
-    /*
-    public StyledDOTExporter( VertexNameProvider<V> vertexIDProvider,
-                              VertexNameProvider<V> vertexLabelProvider,
-                              EdgeNameProvider<E> edgeLabelProvider,
-                              DOTAttributeProvider<V, E> attributeProvider,
-                              URLProvider<V, E> urlProvider ) {
-
-     */
 
     /**
      * Task that interrupts a threads when run

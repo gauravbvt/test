@@ -48,12 +48,12 @@ public class DelayPanel extends Panel {
                 new PropertyModel<Delay.Unit>( delay, "unit" ),
                 new PropertyModel<List<? extends Delay.Unit>>( delay, "units" ),
                 new IChoiceRenderer<Delay.Unit>() {
-                    public Object getDisplayValue( Delay.Unit object ) {
-                        return object.toString();
+                    public Object getDisplayValue( Delay.Unit unit ) {
+                        return unit.toString();
                     }
 
-                    public String getIdValue( Delay.Unit object, int index ) {
-                        return object.toString();
+                    public String getIdValue( Delay.Unit unit, int index ) {
+                        return unit.toString();
                     }
                 }
         ) {

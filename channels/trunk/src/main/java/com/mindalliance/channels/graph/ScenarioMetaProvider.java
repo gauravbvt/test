@@ -59,6 +59,10 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
      */
     private static final int LINE_WRAP_SIZE = 15;
     /**
+     * Distance for edge head and tail labels
+     */
+    private static final String LABEL_DISTANCE = "1.5";
+    /**
      * Scenario in context
      */
     private Scenario scenario;
@@ -225,7 +229,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
             }
             if ( !label.isEmpty() ) label += "|";
             label += part.getTask();
-            if (part.isRepeating()) {
+            if ( part.isRepeating() ) {
                 label += " (every " + part.getRepeatsEvery().toString() + ")";
             }
             return label;
@@ -349,9 +353,32 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
                     list.add( new DOTAttribute( "fontcolor", "black" ) );
                 }
             }
+            // head and tail labels
+            String headLabel = null;
+            String tailLabel = null;
             if ( edge.isAll() ) {
-                list.add( new DOTAttribute( "headlabel", "(all)" ) );
+                if ( edge.isTerminating() )
+                    headLabel = "(stop all)";
+                else if ( edge.isTriggering() )
+                    headLabel = "(start all)";
+                else {
+                    headLabel = "(all)";
+                }
+            } else {
+                if ( edge.isTerminating() )
+                    headLabel = "(stop)";
+                else if ( edge.isTriggering() )
+                    headLabel = "(start)";
+
             }
+            if (edge.isSelfTerminating()) {
+                tailLabel = "(stop)";
+            }
+            if ( headLabel != null ) list.add( new DOTAttribute( "headlabel", headLabel ) );
+            if ( tailLabel != null ) list.add( new DOTAttribute( "taillabel", tailLabel ) );
+            if ( headLabel != null || tailLabel != null )
+                list.add( new DOTAttribute( "labeldistance", LABEL_DISTANCE ) );
+            // Issue coloring
             if ( analyst.hasIssues( edge, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );

@@ -78,8 +78,8 @@ public class FlowConverter implements Converter {
         writer.startNode( "all" );
         writer.setValue( String.valueOf( flow.isAll() ) );
         writer.endNode();
-        writer.startNode( "critical" );
-        writer.setValue( String.valueOf( flow.isCritical() ) );
+        writer.startNode( "significance" );
+        writer.setValue( String.valueOf( flow.getSignificance().name() ) );
         writer.endNode();
         writer.startNode( "askedFor" );
         writer.setValue( String.valueOf( flow.isAskedFor() ) );
@@ -229,12 +229,16 @@ public class FlowConverter implements Converter {
             } else if ( nodeName.equals( "askedFor" ) ) {
                 boolean askedFor = reader.getValue().equals( "true" );
                 for ( Flow flow : flows ) flow.setAskedFor( askedFor );
+            } else if ( nodeName.equals( "significance" ) ) {
+                Flow.Significance significance = Flow.Significance.valueOf( reader.getValue() );
+                for ( Flow flow : flows ) flow.setSignificance( significance );
+                // TODO - temporary
             } else if ( nodeName.equals( "critical" ) ) {
                 boolean critical = reader.getValue().equals( "true" );
-                for ( Flow flow : flows ) flow.setCritical( critical );
+                for ( Flow flow : flows ) if (critical)flow.becomeCritical();
             } else if ( nodeName.equals( "all" ) ) {
                 boolean all = reader.getValue().equals( "true" );
-                for ( Flow flow : flows ) flow.setCritical( all );
+                for ( Flow flow : flows ) flow.setAll( all );
             } else if ( nodeName.equals( "issue" ) ) {
                 context.convertAnother( scenario, UserIssue.class );
             } else {

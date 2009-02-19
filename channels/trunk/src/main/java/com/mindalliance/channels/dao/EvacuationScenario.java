@@ -33,7 +33,7 @@ public class EvacuationScenario extends Scenario {
         p.setTask( "supervising evacuation" );
         Flow goAhead = p.createRequirement( service );
         goAhead.setName( "go-ahead" );
-        goAhead.setCritical( true );
+        goAhead.becomeCritical( );
         goAhead.addChannel( new Channel( Medium.Phone, "800-555-4433" ) );
         Flow end = p.createOutcome( service );
         end.setName( "end" );

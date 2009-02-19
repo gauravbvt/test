@@ -84,9 +84,9 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
     private RadioGroup<Boolean> askedForButtons;
 
     /**
-     * The critical checkbox.
+     * The significance dropdown choice.
      */
-    private CheckBox criticalCheck;
+    private DropDownChoice significanceChoice;
 
     /**
      * The channels field
@@ -141,7 +141,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         nameField.setEnabled( f.isInternal() );
         descriptionField.setEnabled( f.isInternal() );
         askedForButtons.setEnabled( f.isInternal() );
-        criticalCheck.setEnabled( f.isInternal() );
+        significanceChoice.setEnabled( f.isInternal() );
         channelListPanel.setEnabled( isChannelEditable( f ) );
 
         channelRow.setVisible( isChannelRelevant( f ) );
@@ -165,8 +165,22 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         } );
 
         add( askedForButtons );
-        criticalCheck = new CheckBox( "critical" );                                       // NON-NLS
-        add( criticalCheck );
+        significanceChoice = new DropDownChoice<Flow.Significance>(
+                "significance",
+                new PropertyModel<Flow.Significance>(flow,"significance"),
+                new PropertyModel<List<? extends Flow.Significance>>(flow, "significance.choices"),
+                new IChoiceRenderer<Flow.Significance>() {
+
+                    public Object getDisplayValue( Flow.Significance significance ) {
+                        return significance.getName(outcome) ;
+                    }
+
+                    public String getIdValue( Flow.Significance significance, int i ) {
+                        return significance.toString();
+                    }
+                }
+        );
+        add(significanceChoice);
     }
 
     private void addHeader() {

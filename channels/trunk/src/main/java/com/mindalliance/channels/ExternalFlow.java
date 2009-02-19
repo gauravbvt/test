@@ -14,13 +14,19 @@ import java.util.List;
 @Entity
 public class ExternalFlow extends Flow {
 
-    /** The connector. */
+    /**
+     * The connector.
+     */
     private Connector connector;
 
-    /** True if an input flow, ie an output from a scenario. */
+    /**
+     * True if an input flow, ie an output from a scenario.
+     */
     private boolean input;
 
-    /** The part. */
+    /**
+     * The part.
+     */
     private Part part;
 
     public ExternalFlow() {
@@ -45,11 +51,12 @@ public class ExternalFlow extends Flow {
 
     /**
      * Return the source of this flow. Depends on the connector.
-     * @return the source of the first requirement of the connector, or the part if none
      *
+     * @return the source of the first requirement of the connector, or the part if none
      * @see Flow#getSource()
      */
-    @Override @Transient
+    @Override
+    @Transient
     public Node getSource() {
         if ( connector == null )
             return null;
@@ -61,33 +68,40 @@ public class ExternalFlow extends Flow {
 
     /**
      * Return the target of this flow. Depends on the connector.
-     * @return the target of the first outcome of the connector, or the part if none
      *
+     * @return the target of the first outcome of the connector, or the part if none
      * @see Flow#getTarget()
      */
-    @Override @Transient
+    @Override
+    @Transient
     public Node getTarget() {
         if ( connector == null )
             return null;
         else {
             Iterator<Flow> iterator = connector.outcomes();
-            return iterator.hasNext() ? iterator.next().getTarget() : part ;
+            return iterator.hasNext() ? iterator.next().getTarget() : part;
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     void setSource( Node source ) {
         setPart( (Part) source );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     void setTarget( Node target ) {
         setPart( (Part) target );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void disconnect() {
         Part p = part;
@@ -100,8 +114,11 @@ public class ExternalFlow extends Flow {
         connector = null;
     }
 
-    /** {@inheritDoc} */
-    @Override @Transient
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transient
     public boolean isInternal() {
         return false;
     }
@@ -124,7 +141,9 @@ public class ExternalFlow extends Flow {
         this.connector = connector;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setName( String name ) {
         if ( getConnector() == null )
@@ -136,13 +155,14 @@ public class ExternalFlow extends Flow {
     @Transient
     private Flow getConnectorFlow() {
         return isInput() ? getConnector().requirements().next()
-                         : getConnector().outcomes().next();
+                : getConnector().outcomes().next();
     }
 
     /**
      * @return the name of the flow
      */
-    @Override @Transient
+    @Override
+    @Transient
     public String getName() {
         return getConnector() == null ? super.getName() : getConnectorFlow().getName();
     }
@@ -155,13 +175,15 @@ public class ExternalFlow extends Flow {
         this.input = input;
     }
 
-    @Override @Transient
+    @Override
+    @Transient
     public boolean isAskedFor() {
         return getConnector() == null ? super.isAskedFor() : getConnectorFlow().isAskedFor();
     }
 
     /**
      * Delegate to connector flow.
+     *
      * @param askedFor the new value
      * @see Flow#setAskedFor(boolean)
      */
@@ -173,12 +195,15 @@ public class ExternalFlow extends Flow {
             getConnectorFlow().setAskedFor( askedFor );
     }
 
-    @Override @Transient
+    @Override
+    @Transient
     public List<Channel> getEffectiveChannels() {
         return isConnectorBased() ? getConnectorFlow().getChannels() : super.getChannels();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setEffectiveChannels( List<Channel> channels ) {
         if ( isConnectorBased() )
@@ -191,38 +216,84 @@ public class ExternalFlow extends Flow {
     private boolean isConnectorBased() {
         Connector c = getConnector();
         return c != null
-            && ( c.isInput() || getConnectorFlow().isAskedFor() );
+                && ( c.isInput() || getConnectorFlow().isAskedFor() );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isConnectedTo( boolean outcome, Node node ) {
         return super.isConnectedTo( outcome, node ) || node.equals( getConnector() );
     }
 
     @Override
-    public void setCritical( boolean critical ) {
+    public void setSignificance( Significance significance ) {
         Connector c = getConnector();
         boolean connectorBased = c != null
-                              && c.isInput()
-                              && !getConnectorFlow().isAskedFor();
+                && c.isInput()
+                && !getConnectorFlow().isAskedFor();
         if ( connectorBased )
-            getConnectorFlow().setCritical( critical );
+            getConnectorFlow().setSignificance( significance );
         else
-            super.setCritical( critical );
+            super.setSignificance( significance );
     }
 
-    /** {@inheritDoc} */
-    @Override  @Transient
+    @Override
+    public void becomeCritical() {
+        Connector c = getConnector();
+        boolean connectorBased = c != null
+                && c.isInput()
+                && !getConnectorFlow().isAskedFor();
+        if ( connectorBased )
+            getConnectorFlow().becomeCritical();
+        else
+            super.becomeCritical();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transient
     public boolean isCritical() {
         Connector c = getConnector();
         boolean connectorBased = c != null
-                                       && c.isInput()
-                                       && !getConnectorFlow().isAskedFor();
+                && c.isInput()
+                && !getConnectorFlow().isAskedFor();
         return connectorBased ? getConnectorFlow().isCritical() : super.isCritical();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transient
+    public boolean isRequired() {
+        Connector c = getConnector();
+        boolean connectorBased = c != null
+                && c.isInput()
+                && !getConnectorFlow().isAskedFor();
+        return connectorBased ? getConnectorFlow().isRequired() : super.isRequired();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transient
+    public Significance getSignificance() {
+        Connector c = getConnector();
+        boolean connectorBased = c != null
+                && c.isInput()
+                && !getConnectorFlow().isAskedFor();
+        return connectorBased ? getConnectorFlow().getSignificance() : super.getSignificance();
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void initFrom( Flow flow ) {
     }

@@ -17,7 +17,7 @@ public class TestFlow extends AbstractChannelsTest {
     // Bogus tests for coverage
     public void testCritical() {
         assertFalse( flow.isCritical() );
-        flow.setCritical( true );
+        flow.becomeCritical( );
         assertTrue( flow.isCritical() );
     }
 
