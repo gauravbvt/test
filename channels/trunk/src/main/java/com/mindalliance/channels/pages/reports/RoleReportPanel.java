@@ -1,26 +1,23 @@
 package com.mindalliance.channels.pages.reports;
 
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.model.IModel;
-import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Organization;
-import com.mindalliance.channels.util.SemMatch;
+import com.mindalliance.channels.Part;
+import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.pages.Project;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 
-import java.util.List;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.ArrayList;
 import java.text.Collator;
 import java.text.MessageFormat;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Role report panel.
@@ -60,7 +57,21 @@ public class RoleReportPanel extends Panel {
         Label descLabel = new Label( "description", desc );                               // NON-NLS
         descLabel.setVisible( desc != null && !desc.isEmpty() );
         add( descLabel );
+        add( new ListView<Actor>( "actors", findActors( organization, role ) ) {          // NON-NLS
+            @Override
+            protected void populateItem( ListItem<Actor> item ) {
+                item.add( new ActorReportPanel( "actor", item.getModel() ) );             // NON-NLS
+            }
+        } );
+        add( new ListView<Part>( "parts", scenario.findParts( organization, role ) ) {                                       // NON-NLS
+            @Override
+            protected void populateItem( ListItem<Part> item ) {
+                item.add( new PartReportPanel( "part", item.getModel() ) );               // NON-NLS
+            }
+        } );
+    }
 
+    private static List<Actor> findActors( Organization organization, Role role ) {
         ResourceSpec resourceSpec = ResourceSpec.with( role );
         resourceSpec.setOrganization( organization );
         // Find all actors in role for organization
@@ -73,31 +84,6 @@ public class RoleReportPanel extends Panel {
         } );
         if ( actors.isEmpty() )
             actors.add( new Actor( "(unknown)" ) );
-        add( new ListView<Actor>( "actors", actors ) {                                    // NON-NLS
-            @Override
-            protected void populateItem( ListItem<Actor> item ) {
-                item.add( new ActorReportPanel( "actor", item.getModel() ) );             // NON-NLS
-            }
-        } );
-
-        List<Part> parts = findPartsForRole( role, scenario );
-        add( new ListView<Part>( "parts", parts ) {                                       // NON-NLS
-            @Override
-            protected void populateItem( ListItem<Part> item ) {
-                item.add( new PartReportPanel( "part", item.getModel() ) );               // NON-NLS
-            }
-        } );
+        return actors;
     }
-
-    private static List<Part> findPartsForRole( Role role, Scenario scenario ) {
-        List<Part> partsForRole = new ArrayList<Part>();
-        Iterator<Part> parts = scenario.parts();
-        while ( parts.hasNext() ) {
-            Part part = parts.next();
-            if ( part.getRole() != null && SemMatch.sameAs( part.getRole(), role ) )
-                partsForRole.add( part );
-        }
-        return partsForRole;
-    }
-
 }

@@ -4,18 +4,19 @@ import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Place;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.AttributeModifier;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.text.MessageFormat;
 
 /**
  * Part report panel
@@ -60,15 +61,52 @@ public class PartReportPanel extends Panel {
             repeatsEveryLabel.setVisible( false );
         }
         add( repeatsEveryLabel );
-        Iterator<Flow> outcomes = part.outcomes();
+
+        addSends();
+        addReceives();
+        add( new IssuesReportPanel( "issues", new Model<ModelObject>( part ) ) );
+    }
+
+    private void addReceives() {
+        WebMarkupContainer wmc = new WebMarkupContainer( "receives-div" );
+
+        Iterator<Flow> requirements = part.requirements();
+        List<Flow> receives = new ArrayList<Flow>();
+        while ( requirements.hasNext() ) {
+            Flow requirement = requirements.next();
+            if ( !requirement.getSource().isConnector() ) {
+                receives.add( requirement );
+            }
+        }
+        wmc.add( new ListView<Flow>( "receives", receives ) {
+            @Override
+            protected void populateItem( ListItem<Flow> item ) {
+                Flow flow = item.getModelObject();
+                item.add( new AttributeModifier( "class", true, new Model<String>(
+                        MessageFormat.format( "{0}-{1}",
+                                "receive",
+                                flow.isAskedFor() ? "answer" : "notification" ) ) ) );
+                item.add( new FlowReportPanel( "receive", new Model<Flow>( flow ), part ) );
+            }
+        } );
+
+        if ( receives.isEmpty() )
+            wmc.setVisible( false );
+        add( wmc );
+    }
+
+    private void addSends() {
+        WebMarkupContainer wmc = new WebMarkupContainer( "sends-div" );
+
         List<Flow> sends = new ArrayList<Flow>();
+        Iterator<Flow> outcomes = part.outcomes();
         while ( outcomes.hasNext() ) {
             Flow outcome = outcomes.next();
             if ( !outcome.getTarget().isConnector() ) {
                 sends.add( outcome );
             }
         }
-        add( new ListView<Flow>( "sends", sends ) {
+        wmc.add( new ListView<Flow>( "sends", sends ) {
             @Override
             protected void populateItem( ListItem<Flow> item ) {
                 Flow flow = item.getModelObject();
@@ -81,27 +119,8 @@ public class PartReportPanel extends Panel {
             }
         } );
 
-        Iterator<Flow> requirements = part.requirements();
-        List<Flow> receives = new ArrayList<Flow>();
-        while ( requirements.hasNext() ) {
-            Flow requirement = requirements.next();
-            if ( !requirement.getSource().isConnector() ) {
-                receives.add( requirement );
-            }
-        }
-        add( new ListView<Flow>( "receives", receives ) {
-            @Override
-            protected void populateItem( ListItem<Flow> item ) {
-                Flow flow = item.getModelObject();
-                item.add( new AttributeModifier( "class", true, new Model<String>(
-                        MessageFormat.format( "{0}-{1}",
-                                "receive",
-                                flow.isAskedFor() ? "answer" : "notification" ) ) ) );
-                item.add( new FlowReportPanel( "receive", new Model<Flow>( flow ), part ) );
-            }
-        } );
-        add( new IssuesReportPanel( "issues", new Model<ModelObject>( part ) ) );
+        if ( sends.isEmpty() )
+            wmc.setVisible( false );
+        add( wmc );
     }
-
-
 }

@@ -14,6 +14,9 @@ import java.text.MessageFormat;
 @Entity
 public class Organization extends ModelObject {
 
+    /** The unknown organization. */
+    public static final Organization UNKNOWN = new Organization( "(unknown)" );
+
     /** Parent organization. May be null. */
     private Organization parent;
 

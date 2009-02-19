@@ -11,6 +11,9 @@ import javax.persistence.Transient;
 @Entity
 public class Role extends ModelObject {
 
+    /** The undefined role. */
+    public static final Role UNKNOWN = new Role( "(unknown)" );
+
     public Role() {
     }
 

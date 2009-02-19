@@ -297,4 +297,24 @@ public class Part extends Node {
             completionTime = null;
         }
     }
+
+    /**
+     * Test if this part is considered belonging to an organization.
+     * @param o the organization
+     * @return true if belonging
+     */
+    public boolean isIn( Organization o ) {
+        return organization == null ? Organization.UNKNOWN == o
+                                    : o.equals( organization );
+    }
+
+    /** 
+     * Test if this part is played by a given role.
+     * @param r the role
+     * @return true if played
+     */
+    public boolean isPlayedBy( Role r ) {
+        return role == null ? r == Role.UNKNOWN
+                            : role.equals( r );
+    }
 }

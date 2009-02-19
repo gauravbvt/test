@@ -13,6 +13,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Collections;
+import java.util.Comparator;
+import java.text.Collator;
+
 /**
  * A scenario in the project.
  * Provides an iterator on its nodes.
@@ -220,6 +228,56 @@ public class Scenario extends ModelObject {
     @Transient
     public Part getDefaultPart() {
         return parts().next();
+    }
+
+    /**
+     * Find parts played by a given role in a given organization.
+     * @param organization the organization, possibly Organization.UNKNOWN
+     * @param role the role, possibly Role.UNKNOWN
+     * @return the appropriate parts
+     */
+    public List<Part> findParts( Organization organization, Role role ) {
+
+        List<Part> partsForRole = new ArrayList<Part>();
+        Iterator<Part> parts = parts();
+        while ( parts.hasNext() ) {
+            Part part = parts.next();
+            if ( part.isIn( organization ) && part.isPlayedBy( role ) )
+                partsForRole.add( part );
+        }
+        return partsForRole;
+    }
+
+    /**
+     * Find roles in a given organization used in this scenario.
+     * @param organization the organization, possibly Organization.UNKNOWN
+     * @return the appropriate roles.
+     */
+    public List<Role> findRoles( Organization organization ) {
+        boolean hasUnknown = false;
+
+        Set<Role> roles = new HashSet<Role>();
+        Iterator<Part> parts = parts();
+        while ( parts.hasNext() ) {
+            Part part = parts.next();
+            if ( part.isIn( organization ) ) {
+                if ( part.getRole() != null )
+                    roles.add( part.getRole() );
+                else
+                    hasUnknown = true;
+            }
+        }
+
+        List<Role> list = new ArrayList<Role>( roles );
+        Collections.sort( list, new Comparator<Role>() {
+            /** {@inheritDoc} */
+            public int compare( Role o1, Role o2 ) {
+                return Collator.getInstance().compare( o1.getName(), o2.getName() );
+            }
+        } );
+        if ( hasUnknown )
+            list.add( Role.UNKNOWN );
+        return list;
     }
 
     //=================================================

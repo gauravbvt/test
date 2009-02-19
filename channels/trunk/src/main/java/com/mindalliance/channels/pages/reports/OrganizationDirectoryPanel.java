@@ -11,13 +11,13 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
-import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Collections;
+import java.util.Comparator;
+import java.text.Collator;
 
 /**
  * Organization directory panel
@@ -44,13 +44,7 @@ public class OrganizationDirectoryPanel extends Panel {
         add( new Label( "name", "Organization: " + organization.toString() ) );
         add( new Label( "description", organization.getDescription() ) );
 
-        List<Role> roles = findRolesInOrganization();
-        Collections.sort( roles, new Comparator<Role>() {
-            /** {@inheritDoc} */
-            public int compare( Role role1, Role role2 ) {
-                return Collator.getInstance().compare( role1.getName(), role2.getName() );
-            }
-        } );
+        List<Role> roles = findRolesInOrganization( organization );
         add( new ListView<Role>( "roles", roles ) {
             @Override
             protected void populateItem( ListItem<Role> item ) {
@@ -60,7 +54,7 @@ public class OrganizationDirectoryPanel extends Panel {
         } );
     }
 
-    private List<Role> findRolesInOrganization() {
+    private static List<Role> findRolesInOrganization( Organization organization ) {
         Set<Role> rolesInOrganization = new HashSet<Role>();
         List<ResourceSpec> allResourceSpecs = Project.service().findAllResourceSpecs();
         for ( ResourceSpec resourceSpec : allResourceSpecs ) {
@@ -69,6 +63,13 @@ public class OrganizationDirectoryPanel extends Panel {
                 if ( role != null ) rolesInOrganization.add( role );
             }
         }
-        return new ArrayList<Role>( rolesInOrganization );
+        List<Role> list = new ArrayList<Role>( rolesInOrganization );
+        Collections.sort( list, new Comparator<Role>() {
+            /** {@inheritDoc} */
+            public int compare( Role o1, Role o2 ) {
+                return Collator.getInstance().compare( o1.getName(), o2.getName() );
+            }
+        } );
+        return list;
     }
 }

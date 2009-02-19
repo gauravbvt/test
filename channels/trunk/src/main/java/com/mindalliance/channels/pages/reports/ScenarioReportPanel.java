@@ -58,6 +58,7 @@ public class ScenarioReportPanel extends Panel {
                         size,
                         DiagramFactory.TOP_BOTTOM,
                         false ) );
+
         List<Organization> organizations = findOrganizationsInScenario();
         add( new ListView<Organization>( "organizations", organizations ) {               // NON-NLS
             @Override
@@ -83,12 +84,15 @@ public class ScenarioReportPanel extends Panel {
     private List<Organization> findOrganizationsInScenario() {
         Set<Organization> organizations = new HashSet<Organization>();
         Iterator<Part> parts = scenario.parts();
+        boolean hasUnknown = false;
         while ( parts.hasNext() ) {
             Part part = parts.next();
             Organization organization = part.getOrganization();
-            if ( organization != null ) {
+            if ( organization != null )
                 organizations.add( part.getOrganization() );
-            }
+            else
+                hasUnknown = true;
+
         }
         List<Organization> results = new ArrayList<Organization>();
         results.addAll( organizations );
@@ -98,6 +102,9 @@ public class ScenarioReportPanel extends Panel {
                 return Collator.getInstance().compare( o1.toString(), o2.toString() );
             }
         } );
+
+        if ( hasUnknown )
+            results.add( Organization.UNKNOWN );
         return results;
     }
 
