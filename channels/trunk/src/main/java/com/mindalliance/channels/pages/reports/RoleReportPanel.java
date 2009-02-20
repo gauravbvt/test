@@ -12,8 +12,15 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
+import java.text.Collator;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Role report panel.
@@ -53,7 +60,7 @@ public class RoleReportPanel extends Panel {
         Label descLabel = new Label( "description", desc );                               // NON-NLS
         descLabel.setVisible( desc != null && !desc.isEmpty() );
         add( descLabel );
-        List<Actor> actors = Project.getProject().findActors( organization, role );
+        List<Actor> actors = findActors();
         if ( actors.isEmpty() )
             actors.add( Actor.UNKNOWN );
         add( new ListView<Actor>( "actors", actors ) {                                    // NON-NLS
@@ -62,11 +69,47 @@ public class RoleReportPanel extends Panel {
                 item.add( new ActorReportPanel( "actor", item.getModel() ) );             // NON-NLS
             }
         } );
-        add( new ListView<Part>( "parts", scenario.findParts( organization, role ) ) {                                       // NON-NLS
+        add( new ListView<Part>( "parts", scenario.findParts( organization, role ) ) {    // NON-NLS
             @Override
             protected void populateItem( ListItem<Part> item ) {
                 item.add( new PartReportPanel( "part", item.getModel() ) );               // NON-NLS
             }
         } );
+    }
+
+    private List<Actor> findActors() {
+        Set<Actor> actors = new HashSet<Actor>();
+        boolean noActorRoleFound = false;
+
+        Iterator<Part> parts = scenario.parts();
+        while ( parts.hasNext() ) {
+            Part part = parts.next();
+            boolean sameOrg = Organization.UNKNOWN.equals( organization ) ?
+                                part.getOrganization() == null
+                              : organization.equals( part.getOrganization() );
+            boolean sameRole = Role.UNKNOWN.equals( role ) ?
+                                part.getRole() == null
+                              : role.equals( part.getRole() );
+
+            if ( sameOrg && sameRole ) {
+                if ( part.getActor() != null )
+                    actors.add( part.getActor() );
+                else
+                    noActorRoleFound = true;
+            }
+        }
+
+        if ( noActorRoleFound )
+            return Project.getProject().findActors( organization, role );
+        else {
+            List<Actor> list = new ArrayList<Actor>( actors );
+            Collections.sort( list, new Comparator<Actor>() {
+                /** {@inheritDoc} */
+                public int compare( Actor o1, Actor o2 ) {
+                    return Collator.getInstance().compare( o1.getName(), o2.getName() );
+                }
+            } );
+            return list;
+        }
     }
 }

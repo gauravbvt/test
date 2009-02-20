@@ -6,6 +6,11 @@ import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
+import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.Node;
+import com.mindalliance.channels.ExternalFlow;
+import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.export.Exporter;
@@ -38,6 +43,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Iterator;
 
 /**
  * Application object for Channels.
@@ -141,11 +147,11 @@ public final class Project extends WebApplication {
      */
     public static String getUserName() {
         String result = "Anonymous";
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if ( authentication != null ) {
-            final Object obj = authentication.getPrincipal();
+            Object obj = authentication.getPrincipal();
             result = obj instanceof UserDetails ? ( (UserDetails) obj ).getUsername()
-                    : obj.toString();
+                                                : obj.toString();
         }
 
         return result;
@@ -220,7 +226,7 @@ public final class Project extends WebApplication {
     }
 
     public void setProjectName( String name ) {
-        this.projectName = name;
+        projectName = name;
     }
 
     public String getClient() {
@@ -371,6 +377,41 @@ public final class Project extends WebApplication {
         return orgs;
     }
 
+    /**
+     * Find actors that should be included in a flow of a part.
+     * @param part the part
+     * @param flow a flow of the part
+     * @return list of actors in project that applies
+     */
+    public List<Actor> findRelevantActors( Part part, Flow flow ) {
+        Set<Actor> actors = new HashSet<Actor>();
+
+        boolean partIsSource = flow.getSource().equals( part );
+        Node node = partIsSource ? flow.getTarget() : flow.getSource();
+        if ( node.isConnector() ) {
+            Iterator<ExternalFlow> xFlows = ( (Connector) node ).externalFlows();
+            while ( xFlows.hasNext() ) {
+                ExternalFlow xFlow = xFlows.next();
+                Part xPart = xFlow.getPart();
+                ResourceSpec spec = xPart.resourceSpec();
+                actors.addAll( getService().findAllActors( spec ) );
+            }
+        } else {
+            Part otherPart = (Part) node;
+            if ( otherPart.getActor() == null )
+                actors.addAll( getService().findAllActors( otherPart.resourceSpec() ) );
+        }
+
+        List<Actor> list = new ArrayList<Actor>( actors );
+        Collections.sort( list, new Comparator<Actor>() {
+            public int compare( Actor o1, Actor o2 ) {
+                return Collator.getInstance().compare( o1.getName(), o2.getName() );
+            }
+        } );
+
+        return list;
+    }
+
     //=========================================================================
     /**
      * URL coding strategy
@@ -405,18 +446,12 @@ public final class Project extends WebApplication {
             return path.substring( 0, path.length() - extension.length() );
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         protected void appendParameters( AppendingStringBuffer url, Map parameters ) {
             super.appendParameters( url, parameters );
             url.append( extension );
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         protected ValueMap decodeParameters( String urlFragment, Map urlParameters ) {
             return super.decodeParameters( trimmed( urlFragment ), urlParameters );
@@ -431,10 +466,9 @@ public final class Project extends WebApplication {
      */
     public static Set<Long> findExpansions( PageParameters parameters ) {
         if ( parameters == null ) return new HashSet<Long>();
-        final Set<Long> result = new HashSet<Long>( parameters.size() );
-        if ( parameters.containsKey( Project.EXPAND_PARM ) ) {
-            final List<String> stringList =
-                    Arrays.asList( parameters.getStringArray( Project.EXPAND_PARM ) );
+        Set<Long> result = new HashSet<Long>( parameters.size() );
+        if ( parameters.containsKey( EXPAND_PARM ) ) {
+            List<String> stringList = Arrays.asList( parameters.getStringArray( EXPAND_PARM ) );
             for ( String id : stringList )
                 try {
                     result.add( Long.valueOf( id ) );
@@ -445,11 +479,4 @@ public final class Project extends WebApplication {
 
         return result;
     }
-
-/*    public static PageParameters findPageParameters( Component component ) {
-        WebPage page = component.findParent( WebPage.class );
-        return ( page == null ) ? new PageParameters() : page.getPageParameters();
-    }*/
-
-
 }
