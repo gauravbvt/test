@@ -18,10 +18,12 @@
 
     <p wicket:id="description" class="description">(description)</p>
 
-    <!-- actors at the other end of flow -->
-    <!--<div wicket:id="actors"> --><!-- class="any-actor | all-actors" -->
-         <!--<span wicket:id="actor">[actor report panel]</span>-->
-    <!--</div>-->
+    <!-- actors at the other end of external flow -->
+    <ul wicket:id="actors-div">
+        <li wicket:id="actors">  <!-- class="any-actor | all-actors" -->
+             <span wicket:id="actor">[actor report panel]</span>
+        </li>        
+    </ul>
 
     <div wicket:id="issues">[issues report panel]</div>
 </wicket:panel>

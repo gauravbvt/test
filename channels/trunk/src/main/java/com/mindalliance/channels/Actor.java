@@ -11,6 +11,9 @@ import javax.persistence.Transient;
 @Entity
 public class Actor extends ModelObject {
 
+    /** Bogus actor used to signify that the actor is not known... */
+    public static final Actor UNKNOWN = new Actor( "(unknown)" );
+
     public Actor() {
     }
 

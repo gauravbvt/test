@@ -42,6 +42,7 @@ import java.util.Set;
 /**
  * Application object for Channels.
  * Initialized in /WEB-INF/applicationContext.xml.
+ * @TODO split into a bonified service-level object
  */
 public final class Project extends WebApplication {
 

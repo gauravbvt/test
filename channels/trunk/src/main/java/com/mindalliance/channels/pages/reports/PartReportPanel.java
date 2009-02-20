@@ -45,22 +45,28 @@ public class PartReportPanel extends Panel {
         add( new Label( "description", part.getDescription() ) );
         Place location = part.getLocation();
         add( new Label( "location", location != null ? location.toString() : "Unspecified" ) );
+
+        WebMarkupContainer completionDiv = new WebMarkupContainer( "delay-div" );
         Label completionTimeLabel;
         if ( part.isSelfTerminating() ) {
             completionTimeLabel = new Label( "completion-time", part.getCompletionTime().toString() );
         } else {
             completionTimeLabel = new Label( "completion-time", "" );
-            completionTimeLabel.setVisible( false );
+            completionDiv.setVisible( false );
         }
-        add( completionTimeLabel );
+        completionDiv.add( completionTimeLabel );
+        add( completionDiv );
+
+        WebMarkupContainer repeatsDiv = new WebMarkupContainer( "repeats-div" );
         Label repeatsEveryLabel;
         if ( part.isRepeating() ) {
             repeatsEveryLabel = new Label( "repeats-every", part.getRepeatsEvery().toString() );
         } else {
             repeatsEveryLabel = new Label( "repeats-every", "" );
-            repeatsEveryLabel.setVisible( false );
+            repeatsDiv.setVisible( false );
         }
-        add( repeatsEveryLabel );
+        repeatsDiv.add( repeatsEveryLabel );
+        add( repeatsDiv );
 
         addSends();
         addReceives();
@@ -72,12 +78,9 @@ public class PartReportPanel extends Panel {
 
         Iterator<Flow> requirements = part.requirements();
         List<Flow> receives = new ArrayList<Flow>();
-        while ( requirements.hasNext() ) {
-            Flow requirement = requirements.next();
-            if ( !requirement.getSource().isConnector() ) {
-                receives.add( requirement );
-            }
-        }
+        while ( requirements.hasNext() )
+            receives.add( requirements.next() );
+
         wmc.add( new ListView<Flow>( "receives", receives ) {
             @Override
             protected void populateItem( ListItem<Flow> item ) {
@@ -100,12 +103,9 @@ public class PartReportPanel extends Panel {
 
         List<Flow> sends = new ArrayList<Flow>();
         Iterator<Flow> outcomes = part.outcomes();
-        while ( outcomes.hasNext() ) {
-            Flow outcome = outcomes.next();
-            if ( !outcome.getTarget().isConnector() ) {
-                sends.add( outcome );
-            }
-        }
+        while ( outcomes.hasNext() )
+            sends.add( outcomes.next() );
+
         wmc.add( new ListView<Flow>( "sends", sends ) {
             @Override
             protected void populateItem( ListItem<Flow> item ) {

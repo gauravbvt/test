@@ -7,7 +7,11 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+
+import java.text.Collator;
 import java.text.DateFormat;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -37,6 +41,11 @@ public class ProjectReportPage extends WebPage {
             DateFormat.LONG, DateFormat.LONG ).format( new Date() ) ) );
 
         List<Scenario> scenarios = Project.service().list( Scenario.class );
+        Collections.sort( scenarios, new Comparator<Scenario>() {
+            public int compare( Scenario o1, Scenario o2 ) {
+                return Collator.getInstance().compare( o1.getName(), o2.getName() );
+            }
+        } );
         add( new ListView<Scenario>( "scenarios", scenarios ) {
             @Override
             protected void populateItem( ListItem<Scenario> item ) {
