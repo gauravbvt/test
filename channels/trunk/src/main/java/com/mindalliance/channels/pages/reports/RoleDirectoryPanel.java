@@ -59,7 +59,7 @@ public class RoleDirectoryPanel extends Panel {
         add( new ListView<Actor>( "actors", actors ) {                                    // NON-NLS
             @Override
             protected void populateItem( ListItem<Actor> item ) {
-                item.add( new ActorReportPanel( "actor", item.getModel() ) );             // NON-NLS
+                item.add( new ActorReportPanel( "actor", null, item.getModelObject() ) ); // NON-NLS
             }
         } );
     }

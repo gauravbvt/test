@@ -1,1 +1,11 @@
+@media print {
+
+    div.scenario, .scenario div.role, #directory {
+        page-break-before: always;
+    }
+
+}
+
+div.organization > h3, div.organization > p.description {
+    display: none;
 }

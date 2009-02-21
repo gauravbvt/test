@@ -1,28 +1,28 @@
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.pages.components.FlowDiagramPanel;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.AttributeModifier;
 
-import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.text.Collator;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.text.Collator;
-import java.text.MessageFormat;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -65,8 +65,8 @@ public class ScenarioReportPanel extends Panel {
             protected void populateItem( ListItem<Organization> item ) {
                 Organization organization = item.getModelObject();
                 item.add( new AttributeModifier( "class", true, new Model<String>(        // NON-NLS
-                        organization.getParent() == null ? "top-organization"             // NON-NLS
-                                                         : "sub-organization" ) ) );      // NON-NLS
+                        organization.getParent() == null ? "top organization"             // NON-NLS
+                                                         : "sub organization" ) ) );      // NON-NLS
                 item.add( new OrganizationReportPanel(
                         "organization",                                                   // NON-NLS
                         new Model<Organization>( organization ),

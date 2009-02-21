@@ -392,9 +392,7 @@ public final class Project extends WebApplication {
             Iterator<ExternalFlow> xFlows = ( (Connector) node ).externalFlows();
             while ( xFlows.hasNext() ) {
                 ExternalFlow xFlow = xFlows.next();
-                Part xPart = xFlow.getPart();
-                ResourceSpec spec = xPart.resourceSpec();
-                actors.addAll( getService().findAllActors( spec ) );
+                actors.addAll( getService().findAllActors( xFlow.getPart().resourceSpec() ) );
             }
         } else {
             Part otherPart = (Part) node;
@@ -410,6 +408,49 @@ public final class Project extends WebApplication {
         } );
 
         return list;
+    }
+
+    /**
+     * Find actors in given organization and role in a given scenario.
+     * @param organization the organization, possibly Organization.UNKNOWN
+     * @param role the role, possibly Role.UNKNOWN
+     * @param scenario the scenario
+     * @return a sorted list of actors
+     */
+    public List<Actor> findActors( Organization organization, Role role, Scenario scenario ) {
+        Set<Actor> actors = new HashSet<Actor>();
+        boolean noActorRoleFound = false;
+
+        Iterator<Part> parts = scenario.parts();
+        while ( parts.hasNext() ) {
+            Part part = parts.next();
+            boolean sameOrg = Organization.UNKNOWN.equals( organization ) ?
+                                part.getOrganization() == null
+                              : organization.equals( part.getOrganization() );
+            boolean sameRole = Role.UNKNOWN.equals( role ) ?
+                                part.getRole() == null
+                              : role.equals( part.getRole() );
+
+            if ( sameOrg && sameRole ) {
+                if ( part.getActor() != null )
+                    actors.add( part.getActor() );
+                else
+                    noActorRoleFound = true;
+            }
+        }
+
+        if ( noActorRoleFound )
+            return findActors( organization, role );
+        else {
+            List<Actor> list = new ArrayList<Actor>( actors );
+            Collections.sort( list, new Comparator<Actor>() {
+                /** {@inheritDoc} */
+                public int compare( Actor o1, Actor o2 ) {
+                    return Collator.getInstance().compare( o1.getName(), o2.getName() );
+                }
+            } );
+            return list;
+        }
     }
 
     //=========================================================================

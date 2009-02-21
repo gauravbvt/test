@@ -7,11 +7,22 @@
         lang="en">
 <body>
 <wicket:panel>
-    <h4 wicket:id="name">name</h4>
-    <p class="description" wicket:id="description">description</p>
+    <div class="header">
+        <h3 wicket:id="name">name</h3>
+        <ul>
+            <li wicket:id="org" class="organization">(organization)</li>
+            <li class="scenario-head">
+                <span class="name" wicket:id="sc-name">Scenario</span>.
+                <span class="description" wicket:id="sc-description">description</span>
+            </li>
+        </ul>
+
+        <p class="description" wicket:id="description">description</p>
+    </div>
 
     <div class="contacts">
-        <h5>Contacts</h5>
+        <h4>Contacts</h4>
+        <p class="description">In the above scenario, this role is executed by the following people:</p>
         <ul>
             <li class="contact" wicket:id="actors">
                 <span wicket:id="actor">[actor report panel]</span>
@@ -20,7 +31,7 @@
     </div>
 
     <div class="tasks">
-        <h5>Tasks</h5>
+        <h4>Tasks</h4>
         <ul>
             <li class="task" wicket:id="parts">
                 <div wicket:id="part">[part report panel]</div>

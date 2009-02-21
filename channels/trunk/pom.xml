@@ -337,10 +337,10 @@
                 <configuration>
                     <scanIntervalSeconds>5</scanIntervalSeconds>
                     <contextPath>/</contextPath>
-                    <webAppSourceDirectory>target/channels-1.0-SNAPSHOT</webAppSourceDirectory>
-                    <!--<scanTargets>-->
-                        <!--<scanTarget>src/main/webapp</scanTarget>-->
-                    <!--</scanTargets>-->
+                    <!--<webAppSourceDirectory>target/channels-1.0-SNAPSHOT</webAppSourceDirectory>-->
+                    <scanTargets>
+                        <scanTarget>src/main/webapp</scanTarget>
+                    </scanTargets>
                     <connectors>
                         <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
                             <port>8081</port>

@@ -39,8 +39,8 @@ public class ProjectDirectoryPanel extends Panel {
                 Organization organization = item.getModelObject();
                 item.add( new AttributeModifier( "class", true, new Model<String>(        // NON-NLS
                         organization.getParent() == null
-                                ? "top-organization"                                      // NON-NLS
-                                : "sub-organization" ) ) );                               // NON-NLS
+                                ? "top organization"                                      // NON-NLS
+                                : "sub organization" ) ) );                               // NON-NLS
                 item.add(
                         new OrganizationDirectoryPanel(
                                 "organization",                                           // NON-NLS
