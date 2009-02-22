@@ -12,10 +12,14 @@ import java.util.List;
 @Entity
 public class InternalFlow extends Flow {
 
-    /** The source of the flow. */
+    /**
+     * The source of the flow.
+     */
     private Node source;
 
-    /** The target of the flow. */
+    /**
+     * The target of the flow.
+     */
     private Node target;
 
     public InternalFlow() {
@@ -49,18 +53,25 @@ public class InternalFlow extends Flow {
         this.target = target;
     }
 
-    @Override @Transient
+    @Override
+    @Transient
     public List<Channel> getEffectiveChannels() {
         return getChannels();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
+    // TODO - SHOULD NEVER BE CALLED - always setChannels directly where it is allowed
     public void setEffectiveChannels( List<Channel> channels ) {
+        assert canSetChannels();
         setChannels( channels );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void disconnect() {
         Node s = source;
@@ -77,12 +88,15 @@ public class InternalFlow extends Flow {
         target = null;
     }
 
-    @Override @Transient
+    @Override
+    @Transient
     public boolean isInternal() {
         return true;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void initFrom( Flow flow ) {
         setName( flow.getName() );
@@ -90,6 +104,118 @@ public class InternalFlow extends Flow {
         setMaxDelay( flow.getMaxDelay() );
         setAskedFor( flow.isAskedFor() );
         setChannels( flow.getChannels() );
-        setSignificance( flow.getSignificance() );
+        setSignificanceToSource( flow.getSignificanceToSource() );
+        setSignificanceToTarget( flow.getSignificanceToTarget() );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canSetNameAndDescription() {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canSetMaxDelay() {
+        return !( source.isConnector() || target.isConnector() );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canSetChannels() {
+        return !( target.isConnector() && isNotification() )
+                && !( source.isConnector() && isAskedFor() );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canSetAskedFor() {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canGetMaxDelay() {
+        return !( source.isConnector() || target.isConnector() );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canGetChannels() {
+        return !( target.isConnector() && isNotification() )
+                && !( source.isConnector() && isAskedFor() );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canSetAll() {
+        return isNotification() && getTarget().isPart() && ( (Part) getTarget() ).isOnlyRole();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canGetAll() {
+        return canSetAll();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canGetSignificanceToTarget() {
+        return !target.isConnector();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canSetSignificanceToTarget() {
+        return !target.isConnector();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canGetSignificanceToSource() {
+        return !source.isConnector();
+    }
+
+    /**
+     * Flow could trigger the part
+     *
+     * @return a boolean
+     */
+    public boolean canGetTriggersSource() {
+        return !source.isConnector() && isAskedFor();
+    }
+
+    /**
+     * Flow could terminate the part
+     *
+     * @return a boolean
+     */
+    public boolean canGetTerminatesSource() {
+        return !source.isConnector();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canSetTriggersSource() {
+        return source.isPart() && isAskedFor();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canSetTerminatesSource() {
+        return !source.isConnector();
     }
 }

@@ -52,7 +52,7 @@ public class PlaybookPanel extends AbstractTablePanel<Play> {
                 "flow.maxDelay", "flow.maxDelay" ) );                                   // NON-NLS
         columns.add( new PropertyColumn<String>(
                 new Model<String>( "Importance" ),
-                "criticality", "criticality" ) );                                 // NON-NLS
+                "requiredness", "requiredness" ) );                                 // NON-NLS
         // provider and table
         List<Play> plays = getService().findAllPlays( player );
         add( new AjaxFallbackDefaultDataTable<Play>(

@@ -12,6 +12,7 @@ import com.mindalliance.channels.Delay;
 import java.util.List;
 
 /**
+ * Panel for editing a Delay.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -23,14 +24,10 @@ public class DelayPanel extends Panel {
      * A Delay.
      */
     private Delay delay;
-    /**
-     * A TextField with the amount.
-     */
-    private TextField amountField;
-    /**
-     * DropDownChoice with the units.
-     */
-    private DropDownChoice unitChoice;
+
+    DropDownChoice unitChoice;
+
+    TextField amountField;
 
     public DelayPanel( String id, IModel<Delay> model ) {
         super( id, model );
@@ -59,11 +56,10 @@ public class DelayPanel extends Panel {
         ) {
         };
         add( unitChoice );
-
     }
 
     /**
-     * Enables or disables the fields.
+     * Enable or disable fields.
      *
      * @param enabled a boolean
      */
@@ -71,4 +67,5 @@ public class DelayPanel extends Panel {
         amountField.setEnabled( enabled );
         unitChoice.setEnabled( enabled );
     }
+
 }

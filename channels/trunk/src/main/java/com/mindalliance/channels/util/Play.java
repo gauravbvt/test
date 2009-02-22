@@ -98,7 +98,7 @@ public class Play implements Serializable {
     }
 
     /**
-     * Get string indicator of criticality
+     * Get string indicator of "requiredness"
      *
      * @return a string
      */

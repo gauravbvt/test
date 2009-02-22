@@ -29,7 +29,7 @@ public class ConnectedFlowList extends Panel {
     public ConnectedFlowList( String id, Connector connector ) {
         super( id );
         setRenderBodyOnly( true );
-        final boolean input = connector.isInput();
+        final boolean input = connector.isSource();
         add( new Label( "label", "" ) );                                                  // NON-NLS
 
         add( new ConnectionView( "list", connector, input ) );                            // NON-NLS

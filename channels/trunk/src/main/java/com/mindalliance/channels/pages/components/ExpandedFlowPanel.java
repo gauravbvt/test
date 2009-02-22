@@ -7,7 +7,6 @@ import com.mindalliance.channels.ExternalFlow;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
-import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.UserIssue;
@@ -42,7 +41,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.Arrays;
 
 /**
  * Details of an expanded flow.
@@ -63,12 +61,6 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
      * True if this flow is marked for deletion.
      */
     private boolean markedForDeletion;
-
-    /**
-     * The channel field.
-     */
-    private WebMarkupContainer channelRow;
-
     /**
      * The name field.
      */
@@ -83,21 +75,53 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
      * The askedFor buttons.
      */
     private RadioGroup<Boolean> askedForButtons;
-
     /**
-     * The significance dropdown choice.
+     * The container for significance to target.
      */
-    private DropDownChoice significanceChoice;
-
+    private WebMarkupContainer significanceToTargetLabel;
     /**
-     * The channels field
+     * Choices of values for significance to target.
      */
-    private ChannelListPanel channelListPanel;
-
+    private DropDownChoice significanceToTargetChoice;
     /**
-     * The "all" field
+     * The "all" field.
      */
     private FormComponentLabel allField;
+
+    /**
+     * The channel field.
+     */
+    private WebMarkupContainer channelRow;
+
+    /**
+     * The max delay panel.
+     */
+    private DelayPanel delayPanel;
+    /**
+     * The row of max delay fields.
+     */
+    private WebMarkupContainer maxDelayRow;
+    /**
+     * The row of fields about significance to source
+     */
+    private WebMarkupContainer significanceToSourceRow;
+    /**
+     * Markup for source triggering.
+     */
+    private WebMarkupContainer triggersSourceContainer;
+    /**
+     *  Markup for source terminating.
+     */
+    private WebMarkupContainer terminatesSourceContainer;
+    /**
+     * The checkbox for setting Terminates significance to source
+     */
+    private CheckBox terminatesSourceCheckBox;
+
+    /**
+     * The checkbox for setting Triggers significance to source
+     */
+    private CheckBox triggersSourceCheckBox;
 
     protected ExpandedFlowPanel( String id, Flow flow, boolean outcome, Set<Long> expansions ) {
         super( id );
@@ -113,8 +137,8 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         addLabeled( "name-label", nameField );                                            // NON-NLS
         descriptionField = new TextArea<String>( "description" );                         // NON-NLS
         addLabeled( "description-label", descriptionField );                              // NON-NLS
-        addChecks();
-
+        addAskedForRadios();
+        addSignificanceToTarget();
         addOtherField();
         addAllField();
 
@@ -124,10 +148,11 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         } else {
             add( new Label( "others", "" ) );                                             // NON-NLS
         }
-
+        // ChannelListPanel configures itself according
+        // to the flow's canGetChannels() and canSetChannels() values
         addChannelRow();
-        add( new DelayPanel( "max-delay", new Model<Delay>( flow.getMaxDelay() ) ) );
-        // addLabeled( "maxDelay-label", new TextField<String>( "maxDelay" ) );           // NON-NLS
+        addMaxDelayRow();
+        addSignificanceToSource();
         add( new AttachmentPanel( "attachments", flow ) );                                // NON-NLS
         add( new IssuesPanel( "issues", new Model<ModelObject>( flow ), expansions ) );   // NON-NLS
         adjustFields( flow );
@@ -139,17 +164,24 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
      * @param f the flow
      */
     private void adjustFields( Flow f ) {
-        nameField.setEnabled( f.isInternal() );
-        descriptionField.setEnabled( f.isInternal() );
-        askedForButtons.setEnabled( f.isInternal() );
-        significanceChoice.setEnabled( f.isInternal() );
-        channelListPanel.setEnabled( isChannelEditable( f ) );
-
-        channelRow.setVisible( isChannelRelevant( f ) );
-        allField.setVisible( getOther().isPart() && ( (Part) getOther() ).isOnlyRole() );
+        nameField.setEnabled( f.canSetNameAndDescription() );
+        descriptionField.setEnabled( f.canSetNameAndDescription() );
+        askedForButtons.setEnabled( f.canSetAskedFor() );
+        allField.setVisible( outcome && f.canGetAll() );
+        allField.setEnabled( f.canSetAll() );
+        significanceToTargetLabel.setVisible( f.canGetSignificanceToTarget() );
+        significanceToTargetChoice.setEnabled( f.canSetSignificanceToTarget() );
+        channelRow.setVisible( f.canGetChannels() );
+        maxDelayRow.setVisible( f.canGetMaxDelay() );
+        delayPanel.enable( f.canSetMaxDelay() );
+        significanceToSourceRow.setVisible( f.canGetSignificanceToSource() );
+        triggersSourceContainer.setVisible( (!outcome || flow.isAskedFor()) && f.canGetTriggersSource() );
+        triggersSourceCheckBox.setEnabled( f.canSetTriggersSource() );
+        terminatesSourceContainer.setVisible( f.canGetTerminatesSource() );
+        terminatesSourceCheckBox.setEnabled( f.canSetTerminatesSource() );
     }
 
-    private void addChecks() {
+    private void addAskedForRadios() {
         askedForButtons = new RadioGroup<Boolean>( "askedFor" );                          // NON-NLS
         askedForButtons.add( new Radio<Boolean>( "askedForTrue",                          // NON-NLS
                 new Model<Boolean>( true ) ) );
@@ -166,14 +198,20 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         } );
 
         add( askedForButtons );
-        significanceChoice = new DropDownChoice<Flow.Significance>(
-                "significance",
-                new PropertyModel<Flow.Significance>(flow,"significance"),
-                new PropertyModel<List<? extends Flow.Significance>>(this, "significanceChoices"),
+    }
+
+    private void addSignificanceToTarget() {
+        significanceToTargetLabel = new WebMarkupContainer( "target-significance-label" );
+        add( significanceToTargetLabel );
+        significanceToTargetLabel.add( new Label( "target-label", outcome ? "the recipient's task" : "this task" ) );
+        significanceToTargetChoice = new DropDownChoice<Flow.Significance>(
+                "significance-to-target",
+                new PropertyModel<Flow.Significance>( flow, "significanceToTarget" ),
+                new PropertyModel<List<? extends Flow.Significance>>( this, "significanceToTargetChoices" ),
                 new IChoiceRenderer<Flow.Significance>() {
 
                     public Object getDisplayValue( Flow.Significance significance ) {
-                        return significance.getName(outcome) ;
+                        return significance.getLabel();
                     }
 
                     public String getIdValue( Flow.Significance significance, int i ) {
@@ -181,13 +219,85 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
                     }
                 }
         );
-        add(significanceChoice);
+        significanceToTargetLabel.add( significanceToTargetChoice );
     }
 
-    public List<Flow.Significance> getSignificanceChoices() {
+    private void addSignificanceToSource() {
+        significanceToSourceRow = new WebMarkupContainer( "significance-to-source" );
+        add( significanceToSourceRow );
+        significanceToSourceRow.add( new Label( "source-task", outcome ? "This task" : "Sender's task" ) );
+        triggersSourceContainer = new WebMarkupContainer("triggers-source-container");
+        significanceToSourceRow.add(triggersSourceContainer);
+        triggersSourceCheckBox = new CheckBox(
+                "triggers-source",
+                new PropertyModel<Boolean>( this, "triggeringToSource" ) );
+        triggersSourceContainer.add( triggersSourceCheckBox );
+        triggersSourceContainer.add( triggersSourceCheckBox );
+        terminatesSourceContainer = new WebMarkupContainer("terminates-source-container");
+        significanceToSourceRow.add(terminatesSourceContainer);
+        terminatesSourceCheckBox = new CheckBox(
+                "terminates-source",
+                new PropertyModel<Boolean>( this, "terminatingToSource" ) );
+        terminatesSourceContainer.add( terminatesSourceCheckBox );
+        terminatesSourceContainer.add(
+                new Label( "notifying-or-replying", flow.isAskedFor() ? "replying" : "notifying" ) );
+    }
+
+    /**
+     * Whether the flow triggers the source
+     *
+     * @return a boolean
+     */
+    public boolean isTriggeringToSource() {
+        return flow.getSignificanceToSource() == Flow.Significance.Triggers;
+    }
+
+    /**
+     * Set the triggering significance to the source
+     *
+     * @param triggers a boolean
+     */
+    public void setTriggeringToSource( boolean triggers ) {
+        if ( triggers ) {
+            flow.becomeTriggeringToSource();
+        } else {
+            flow.setSignificanceToSource( Flow.Significance.None );
+        }
+    }
+
+    /**
+     * Whether the flow terminates the source
+     *
+     * @return a boolean
+     */
+    public boolean isTerminatingToSource() {
+        return flow.getSignificanceToSource() == Flow.Significance.Terminates;
+    }
+
+    /**
+     * Set the terminating significance to the source
+     *
+     * @param terminates a boolean
+     */
+    public void setTerminatingToSource( boolean terminates ) {
+        if ( terminates ) {
+            flow.becomeTerminatingToSource();
+        } else {
+            flow.setSignificanceToSource( Flow.Significance.None );
+        }
+    }
+
+    /**
+     * Get the list of candidate significances to the target
+     *
+     * @return a list of significances
+     */
+    public List<Flow.Significance> getSignificanceToTargetChoices() {
         List<Flow.Significance> significances = new ArrayList<Flow.Significance>();
-        significances.addAll(Arrays.asList(Flow.Significance.values()));
-        if (flow.isAskedFor()) significances.remove( Flow.Significance.Triggers );
+        significances.add( Flow.Significance.Useful );
+        significances.add( Flow.Significance.Critical );
+        significances.add( Flow.Significance.Terminates );
+        if ( !flow.isAskedFor() ) significances.add( Flow.Significance.Triggers );
         return significances;
     }
 
@@ -371,13 +481,22 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
 
             @Override
             public String getObject() {
-                return getFlow().isAskedFor() ? "Sender channels:" : "Receiver channels:";
+                return getFlow().isAskedFor() ? "Sender's channels:" : "Receiver's channels:";
             }
         } ) );
 
-        channelListPanel = new ChannelListPanel( "channels", new Model<Channelable>( getFlow() ) );                                // NON-NLS
+        ChannelListPanel channelListPanel = new ChannelListPanel(
+                "channels",
+                new Model<Channelable>( flow ) );
         channelRow.add( channelListPanel );
         add( channelRow );
+    }
+
+    private void addMaxDelayRow() {
+        maxDelayRow = new WebMarkupContainer("max-delay-row");
+        add( maxDelayRow );
+        delayPanel = new DelayPanel( "max-delay", new Model<Delay>( flow.getMaxDelay() ) );
+        maxDelayRow.add( delayPanel );
     }
 
     /**

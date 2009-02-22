@@ -102,8 +102,8 @@ public class PartPanel extends Panel {
     }
 
     private ModelObjectLink makeLink( String id,
-                                         final IModel<ModelObject> model ) {
-        return new ModelObjectLink( id, new Model<ModelObject> (model.getObject()) );
+                                      final IModel<ModelObject> model ) {
+        return new ModelObjectLink( id, new Model<ModelObject>( model.getObject() ) );
     }
 
     private void addField( String property ) {
@@ -124,18 +124,18 @@ public class PartPanel extends Panel {
     }
 
     private void addTimingFields() {
-        add(new CheckBox("self-terminating", new PropertyModel<Boolean>(part, "selfTerminating")) );
+        add( new CheckBox( "self-terminating", new PropertyModel<Boolean>( part, "selfTerminating" ) ) );
         DelayPanel completionTimePanel = new DelayPanel(
                 "completion-time",
-                new PropertyModel<Delay>(part, "completionTime"));
-        completionTimePanel.enable(part.isSelfTerminating());
-        add(completionTimePanel);
-        add(new CheckBox("repeating", new PropertyModel<Boolean>(part, "repeating")) );
+                new PropertyModel<Delay>( part, "completionTime" ) );
+        completionTimePanel.enable( part.isSelfTerminating() );
+        add( completionTimePanel );
+        add( new CheckBox( "repeating", new PropertyModel<Boolean>( part, "repeating" ) ) );
         DelayPanel repeatsEveryPanel = new DelayPanel(
                 "repeats-every",
-                new PropertyModel<Delay>(part, "repeatsEvery"));
-        repeatsEveryPanel.enable(part.isRepeating());
-        add(repeatsEveryPanel);        
+                new PropertyModel<Delay>( part, "repeatsEvery" ) );
+        repeatsEveryPanel.enable( part.isRepeating() );
+        add( repeatsEveryPanel );
     }
 
     /**

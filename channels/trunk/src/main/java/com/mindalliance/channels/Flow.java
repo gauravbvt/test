@@ -29,9 +29,13 @@ public abstract class Flow extends ModelObject implements Channelable {
      */
     private List<Channel> channels = new ArrayList<Channel>();
     /**
-     * The flow's significance (critical, triggers a part, terminates a part, or just useful)
+     * The flow's significance to the source (none, triggers it, or terminates it)
      */
-    private Significance significance = Significance.Useful;
+    private Significance significanceToSource = Significance.None;
+    /**
+     * The flow's significance to the target (useful, critical, triggers it, or terminates it)
+     */
+    private Significance significanceToTarget = Significance.Useful;
 
     /**
      * If this flow only happens on request from either the source or target.
@@ -56,15 +60,22 @@ public abstract class Flow extends ModelObject implements Channelable {
     }
 
     /**
+     * Whether the flow is a notification
+     *
+     * @return a boolean
+     */
+    @Transient
+    public boolean isNotification() {
+        return !askedFor;
+    }
+
+    /**
      * Set if this flow is notified or asked for.
      *
      * @param askedFor true is information is asked for
      */
     public void setAskedFor( boolean askedFor ) {
         this.askedFor = askedFor;
-        if ( askedFor && significance == Significance.Triggers ) {
-            setSignificance( Significance.Critical );
-        }
     }
 
     @OneToMany( cascade = CascadeType.ALL )
@@ -147,12 +158,20 @@ public abstract class Flow extends ModelObject implements Channelable {
         maxDelay = Delay.parse( s );
     }
 
-    public Significance getSignificance() {
-        return significance;
+    public Significance getSignificanceToSource() {
+        return significanceToSource;
     }
 
-    public void setSignificance( Significance significance ) {
-        this.significance = significance;
+    public void setSignificanceToSource( Significance significance ) {
+        this.significanceToSource = significance;
+    }
+
+    public Significance getSignificanceToTarget() {
+        return significanceToTarget;
+    }
+
+    public void setSignificanceToTarget( Significance significanceToTarget ) {
+        this.significanceToTarget = significanceToTarget;
     }
 
     /**
@@ -304,14 +323,32 @@ public abstract class Flow extends ModelObject implements Channelable {
 
     @Transient
     public boolean isCritical() {
-        return significance == Significance.Critical;
+        return getSignificanceToTarget() == Significance.Critical;
     }
 
     /**
      * Change significance to critical
      */
     public void becomeCritical() {
-        significance = Significance.Critical;
+        setSignificanceToTarget( Significance.Critical );
+    }
+
+    /**
+     * Whether flow triggers its source
+     *
+     * @return a boolean
+     */
+    @Transient
+    public boolean isTriggeringToSource() {
+        return getSignificanceToSource() == Significance.Triggers;
+    }
+
+    /**
+     * Change significance to triggers source
+     */
+    @Transient
+    public void becomeTriggeringToSource() {
+        setSignificanceToSource( Significance.Triggers );
     }
 
     /**
@@ -320,32 +357,15 @@ public abstract class Flow extends ModelObject implements Channelable {
      * @return a boolean
      */
     @Transient
-    public boolean isTriggering() {
-        return significance == Significance.Triggers;
+    public boolean isTriggeringToTarget() {
+        return getSignificanceToTarget() == Significance.Triggers;
     }
 
     /**
-     * Change significance to triggers
+     * Change significance to triggers target
      */
-    public void becomeTriggering() {
-        significance = Significance.Triggers;
-    }
-
-    /**
-     * Whether flow terminates its target
-     *
-     * @return a boolean
-     */
-    @Transient
-    public boolean isTerminating() {
-        return significance == Significance.Terminates;
-    }
-
-    /**
-     * Change significance to terminates
-     */
-    public void becomeTerminating() {
-        significance = Significance.Terminates;
+    public void becomeTriggeringToTarget() {
+        setSignificanceToTarget( Significance.Triggers );
     }
 
     /**
@@ -354,15 +374,32 @@ public abstract class Flow extends ModelObject implements Channelable {
      * @return a boolean
      */
     @Transient
-    public boolean isSelfTerminating() {
-        return significance == Significance.SelfTerminates;
+    public boolean isTerminatingToSource() {
+        return getSignificanceToSource() == Significance.Terminates;
     }
 
     /**
-     * Change significance to self-terminates
+     * Change significance to terminates source
      */
-    public void becomeSelfTerminating() {
-        significance = Significance.SelfTerminates;
+    public void becomeTerminatingToSource() {
+        setSignificanceToSource( Significance.Terminates );
+    }
+
+    /**
+     * Whether flow terminates its target
+     *
+     * @return a boolean
+     */
+    @Transient
+    public boolean isTerminatingToTarget() {
+        return getSignificanceToTarget() == Significance.Terminates;
+    }
+
+    /**
+     * Change significance to terminates source
+     */
+    public void becomeTerminatingToTarget() {
+        setSignificanceToTarget( Significance.Terminates );
     }
 
     /**
@@ -372,82 +409,149 @@ public abstract class Flow extends ModelObject implements Channelable {
      */
     @Transient
     public boolean isRequired() {
-        return isCritical() || isTriggering() || isTerminating();
+        return isCritical() || isTriggeringToTarget() || isTerminatingToTarget();
     }
 
     /**
-     * The significance of a flow
+     * Whether the flow's name and description can be set.
+     *
+     * @return a boolean
+     */
+    public abstract boolean canSetNameAndDescription();
+
+    /**
+     * Whether the flow's max delay can be set.
+     *
+     * @return a boolean
+     */
+    public abstract boolean canSetMaxDelay();
+
+    /**
+     * Whether the flow's max delay property applies.
+     *
+     * @return a boolean
+     */
+    public abstract boolean canGetMaxDelay();
+
+    /**
+     * Whether the flow's channels can be set.
+     *
+     * @return a boolean
+     */
+    public abstract boolean canSetChannels();
+
+    /**
+     * Whether the flow's channels property applies.
+     *
+     * @return a boolean
+     */
+    public abstract boolean canGetChannels();
+
+    /**
+     * Whether the flow's notify vs. reply property can be set.
+     *
+     * @return a boolean
+     */
+    public abstract boolean canSetAskedFor();
+
+    /**
+     * Whether the flow's all (true or false) can be set.
+     *
+     * @return a boolean
+     */
+    public abstract boolean canSetAll();
+
+    /**
+     * Whether the flow's all (true or false) properties applies.
+     *
+     * @return a boolean
+     */
+    public abstract boolean canGetAll();
+
+    /**
+     * Whether the significance to target applies.
+     *
+     * @return a boolean
+     */
+    public abstract boolean canGetSignificanceToTarget();
+
+    /**
+     * Whether the significance to target can be set.
+     *
+     * @return a boolean
+     */
+    public abstract boolean canSetSignificanceToTarget();
+
+    /**
+     * Whether the significance to source applies.
+     *
+     * @return a boolean
+     */
+    public abstract boolean canGetSignificanceToSource();
+
+    /**
+     * Whether the significance to source can take value Triggers.
+     *
+     * @return a boolean
+     */
+    public abstract boolean canSetTriggersSource();
+
+    /**
+     * Whether the significance to source can take value Terminates.
+     *
+     * @return a boolean
+     */
+    public abstract boolean canSetTerminatesSource();
+
+    /**
+     * Flow could trigger the part
+     * @return a boolean
+     */
+    public abstract boolean canGetTriggersSource();
+
+    /**
+     * Flow could terminate the part
+     * @return a boolean
+     */
+    public abstract boolean canGetTerminatesSource();
+
+    /**
+     * The significance of a flow.
      */
     @Embeddable
     public enum Significance {
-        Useful( "is useful", "is useful" ),
-        Critical( "is critical", "is critical" ),
-        Triggers( "triggers recipient's task", "triggers this task" ),
-        SelfTerminates( "terminates this task", "terminates sender's task" ),
-        Terminates( "terminates recipient's task", "terminates this task" );
+        None( "none" ),
+        Useful( "is useful to" ),
+        Critical( "is critical to" ),
+        Triggers( "triggers" ),
+        Terminates( "terminates" );
 
-        private String senderName;
-        private String receiverName;
+        private String label;
 
-        Significance( String senderName, String receiverName ) {
-            this.senderName = senderName;
-            this.receiverName = receiverName;
+        Significance( String label ) {
+            this.label = label;
         }
 
-        public String getSenderName() {
-            return senderName;
+        public String getLabel() {
+            return label;
         }
 
-        public String getReceiverName() {
-            return receiverName;
-        }
 
         /**
-         * Get name from point of view of sender or receiver of flow.
+         * Instantiate a Significance from its label.
          *
-         * @param isSender a boolean
-         * @return a string
-         */
-        public String getName( boolean isSender ) {
-            return isSender ? getSenderName() : getReceiverName();
-        }
-
-        /**
-         * Instantiate a Significance from its name, relative to sender or receiver of a flow.
-         *
-         * @param name       a String
-         * @param fromSender a boolean
+         * @param label a String
          * @return a Significance
          */
-        public static Significance fromName( String name, boolean fromSender ) {
+        public static Significance fromLabel( String label ) {
             for ( Significance s : values() ) {
-                if ( fromSender ) {
-                    if ( s.senderName.equals( name ) ) {
-                        return s;
-                    }
-                } else {
-                    if ( s.receiverName.equals( name ) ) {
-                        return s;
-                    }
+                if ( s.getLabel().equals( label ) ) {
+                    return s;
                 }
-
             }
-            throw new IllegalArgumentException( "Unknown Significance name: " + name );
+            throw new IllegalArgumentException( "Unknown Significance label: " + label );
         }
 
-/*        *//**
-     * Produce the list of names for all significances relative to sender or receiver of a flow.
-     *
-     * @param isSender a boolean
-     * @return a list of strings
-     *//*
-        public static List<String> choices( boolean isSender ) {
-            List<String> choices = new ArrayList<String>();
-            for ( Significance s : values() ) {
-                choices.add( isSender ? s.getSenderName() : s.getReceiverName() );
-            }
-            return choices;
-        }*/
 
         /**
          * Get list choice of Significances

@@ -25,6 +25,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
+    // TODO -- not an issue when no channel in flow, not to actor and all actors matching resource spec have channels
     public List<Issue> doDetectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;

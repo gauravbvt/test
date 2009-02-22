@@ -78,8 +78,11 @@ public class FlowConverter implements Converter {
         writer.startNode( "all" );
         writer.setValue( String.valueOf( flow.isAll() ) );
         writer.endNode();
-        writer.startNode( "significance" );
-        writer.setValue( String.valueOf( flow.getSignificance().name() ) );
+        writer.startNode( "significanceToSource" );
+        writer.setValue( String.valueOf( flow.getSignificanceToSource().name() ) );
+        writer.endNode();
+        writer.startNode( "significanceToTarget" );
+        writer.setValue( String.valueOf( flow.getSignificanceToTarget().name() ) );
         writer.endNode();
         writer.startNode( "askedFor" );
         writer.setValue( String.valueOf( flow.isAskedFor() ) );
@@ -114,10 +117,10 @@ public class FlowConverter implements Converter {
                                  HierarchicalStreamWriter writer,
                                  Scenario currentScenario ) {
         writer.startNode( "source" );
-        writeNode( ( flow.isInput() ? flow.getConnector() : flow.getPart() ), writer, currentScenario );
+        writeNode( ( flow.isPartTargeted() ? flow.getConnector() : flow.getPart() ), writer, currentScenario );
         writer.endNode();
         writer.startNode( "target" );
-        writeNode( flow.isInput() ? flow.getPart() : flow.getConnector(), writer, currentScenario );
+        writeNode( flow.isPartTargeted() ? flow.getPart() : flow.getConnector(), writer, currentScenario );
         writer.endNode();
     }
 
@@ -151,7 +154,7 @@ public class FlowConverter implements Converter {
             writer.startNode( "flow" );
             writer.addAttribute( "name", innerFlow.getName() );
             writer.endNode();
-            Part part = (Part) ( connector.isInput()
+            Part part = (Part) ( connector.isSource()
                     ? innerFlow.getTarget()
                     : innerFlow.getSource() );
             writePartSpecification( part, writer );
@@ -229,9 +232,12 @@ public class FlowConverter implements Converter {
             } else if ( nodeName.equals( "askedFor" ) ) {
                 boolean askedFor = reader.getValue().equals( "true" );
                 for ( Flow flow : flows ) flow.setAskedFor( askedFor );
-            } else if ( nodeName.equals( "significance" ) ) {
+            } else if ( nodeName.equals( "significanceToSource" ) ) {
                 Flow.Significance significance = Flow.Significance.valueOf( reader.getValue() );
-                for ( Flow flow : flows ) flow.setSignificance( significance );
+                for ( Flow flow : flows ) flow.setSignificanceToSource( significance );
+            } else if ( nodeName.equals( "significanceToTarget" ) ) {
+                Flow.Significance significance = Flow.Significance.valueOf( reader.getValue() );
+                for ( Flow flow : flows ) flow.setSignificanceToTarget( significance );
                 // TODO - temporary
             } else if ( nodeName.equals( "critical" ) ) {
                 boolean critical = reader.getValue().equals( "true" );
@@ -500,7 +506,7 @@ public class FlowConverter implements Converter {
                              String taskDescription) {
         // we are matching the part attached to the connector,
         // so it's input-edness is the reverse of that of the connector
-        if ( connector.isInput() == isSource ) return false;
+        if ( connector.isSource() == isSource ) return false;
         Flow innerFlow = connector.getInnerFlow();
         Part part = (Part) ( isSource ? innerFlow.getSource() : innerFlow.getTarget() );
         // TODO match task description

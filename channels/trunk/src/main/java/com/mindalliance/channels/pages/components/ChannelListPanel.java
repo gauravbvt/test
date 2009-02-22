@@ -21,6 +21,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -39,16 +40,63 @@ import java.util.HashSet;
  */
 public class ChannelListPanel extends Panel {
     /**
-     * The object which list of channels is being edited
+     * The object which list of channels is being edited.
      */
     private final Channelable channelable;
+    /**
+     * List of wrapped, candidate channels
+     */
+    private List<Wrapper> candidates = new ArrayList<Wrapper>();
+    /**
+     * Markup for candidate channels.
+     */
+    private WebMarkupContainer candidateChannelsMarkup;
+    /**
+     * Markup for editable channels.
+     */
+    private WebMarkupContainer editableChannelsMarkup;
+    /**
+     * LIst of non-editable channels
+     */
+    List<Channel> channels;
+    /**
+     * Markup for non-editable channels
+     */
+    private WebMarkupContainer nonEditableChannelsMarkup;
+    /**
+     * No channel message
+     */
+    private Label noChannelLabel;
 
     public ChannelListPanel( String id, IModel<Channelable> model ) {
         super( id, model );
         this.channelable = model.getObject();
-        final List<Wrapper> candidates = getWrappedCandidateChannels( model );
-        WebMarkupContainer candidatesSpan = new WebMarkupContainer( "candidates-span" );
-        add( candidatesSpan );
+        init();
+    }
+
+    private void init() {
+        addCandidateChannels();
+        addEditableChannels();
+        addNonEditableChannels();
+        adjustFields();
+    }
+
+    private void adjustFields() {
+        if ( channelable instanceof Flow ) {
+            Flow flow = (Flow) channelable;
+            candidateChannelsMarkup.setVisible( !candidates.isEmpty() && flow.canSetChannels() );
+            editableChannelsMarkup.setVisible( flow.canSetChannels() );
+            nonEditableChannelsMarkup.setVisible( !flow.canSetChannels() && flow.canGetChannels() );
+            noChannelLabel.setVisible( channels.isEmpty() );
+        } else {
+            nonEditableChannelsMarkup.setVisible( false );
+        }
+    }
+
+    private void addCandidateChannels() {
+        candidateChannelsMarkup = new WebMarkupContainer( "candidates-container" );
+        add( candidateChannelsMarkup );
+        candidates = getWrappedCandidateChannels( channelable );
         ListView<Wrapper> candidatesList = new ListView<Wrapper>( "candidates", candidates ) {
             @Override
             protected void populateItem( ListItem<Wrapper> item ) {
@@ -59,10 +107,15 @@ public class ChannelListPanel extends Panel {
                 item.add( new Label( "candidate", wrapper.getChannel().toString() ) );
             }
         };
-        candidatesSpan.add( candidatesList );
-        candidatesSpan.setVisible( !candidates.isEmpty() );
-        final List<Wrapper> setChannels = getWrappedChannels( model );
-        add( new ListView<Wrapper>( "channels", setChannels ) {
+        candidateChannelsMarkup.add( candidatesList );
+        candidateChannelsMarkup.setVisible( !candidates.isEmpty() && this.isEnabled() );
+    }
+
+    private void addEditableChannels() {
+        editableChannelsMarkup = new WebMarkupContainer( "editable-container" );
+        add( editableChannelsMarkup );
+        final List<Wrapper> setChannels = getWrappedChannels( channelable );
+        editableChannelsMarkup.add( new ListView<Wrapper>( "editable-channels", setChannels ) {
             @Override
             protected void populateItem( ListItem<Wrapper> item ) {
                 final Wrapper wrapper = item.getModelObject();
@@ -71,9 +124,10 @@ public class ChannelListPanel extends Panel {
                         "include",
                         new PropertyModel<Boolean>( wrapper, "markedForInclusion" ) );
                 includeSpan.setVisible( !wrapper.isMarkedForCreation() );
+                includeCheckBox.setEnabled( this.isEnabled() );
                 includeSpan.add( includeCheckBox );
                 item.add( includeSpan );
-                item.add( new DropDownChoice<Medium>(
+                DropDownChoice<Medium> mediumChoices = new DropDownChoice<Medium>(
                         "medium",
                         new PropertyModel<Medium>( wrapper, "medium" ),
                         Arrays.asList( Medium.values() ),
@@ -86,24 +140,40 @@ public class ChannelListPanel extends Panel {
                                 return Integer.toString( index );
                             }
                         }
-                ) );
+                );
+                item.add( mediumChoices );
+                mediumChoices.setEnabled( this.isEnabled() );
                 TextField<String> addressField = new TextField<String>(
                         "address",
                         new PropertyModel<String>( wrapper, "address" ) );
                 item.add( addressField );
+                addressField.setEnabled( this.isEnabled() );
                 flagIfInvalid( addressField, wrapper );
             }
         } );
-        Label instructionsLabel = new Label(
-                "instructions",
-                "Check to include channel. Uncheck to exclude." );
-        add( instructionsLabel );
-        instructionsLabel.setVisible( !candidates.isEmpty() || setChannels.size() > 1 );
     }
 
-    private List<Wrapper> getWrappedChannels( IModel<Channelable> model ) {
+    private void addNonEditableChannels() {
+        nonEditableChannelsMarkup = new WebMarkupContainer( "non-editable-container" );
+        add( nonEditableChannelsMarkup );
+        channels = channelable.getEffectiveChannels();
+        noChannelLabel = new Label( "no-channel", "(No channel)" );
+        nonEditableChannelsMarkup.add( noChannelLabel );
+        nonEditableChannelsMarkup.add( new ListView<Channel>( "non-editable-channels", channels ) {
+            protected void populateItem( ListItem<Channel> item ) {
+                final Channel channel = item.getModelObject();
+                item.add( new Label( "channel-string", new AbstractReadOnlyModel<String>() {
+                    public String getObject() {
+                        return channel.toString();
+                    }
+                } ) );
+            }
+        } );
+    }
+
+    private List<Wrapper> getWrappedChannels( Channelable channelable ) {
         final List<Wrapper> list = new ArrayList<Wrapper>();
-        List<Channel> setChannels = model.getObject().getEffectiveChannels();
+        List<Channel> setChannels = channelable.getEffectiveChannels();
         for ( Channel channel : setChannels ) {
             // wrap channel as already included
             list.add( new Wrapper( channel, true ) );
@@ -113,10 +183,10 @@ public class ChannelListPanel extends Panel {
         return list;
     }
 
-    private List<Wrapper> getWrappedCandidateChannels( IModel<Channelable> model ) {
+    private List<Wrapper> getWrappedCandidateChannels( Channelable channelable ) {
         Set<Channel> candidates = new HashSet<Channel>();
-        List<Channelable> channelables = findRelatedChannelables( model.getObject() );
-        List<Channel> alreadySetChannels = model.getObject().getEffectiveChannels();
+        List<Channelable> channelables = findRelatedChannelables( channelable );
+        List<Channel> alreadySetChannels = channelable.getEffectiveChannels();
         // Get all non-redundant, valid candidate channels
         for ( Channelable aChannelable : channelables ) {
             for ( Channel channel : aChannelable.getEffectiveChannels() ) {
@@ -193,7 +263,6 @@ public class ChannelListPanel extends Panel {
             }
         }
     }
-
 
     /**
      * A wrapper to keep track of the deletion state of channel.

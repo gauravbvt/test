@@ -31,7 +31,7 @@ public class Connector extends Node {
     /** {@inheritDoc} */
     @Override @Transient
     public String getTitle() {
-        boolean isInput = isInput();
+        boolean isInput = isSource();
         if ( hasInnerFlow() ) {
             Flow inner = getInnerFlow();
             Part part  = (Part) ( isInput ? inner.getTarget() :  inner.getSource() );
@@ -45,12 +45,22 @@ public class Connector extends Node {
 
     /**
      * Is the connector a source (true) or target (false)?
-     * @return -- whether source or target
+     * @return -- whether a source
      */
     @Transient
-    public boolean isInput() {
+    public boolean isSource() {
         Iterator<Flow> outs = outcomes();
         return outs.hasNext();
+     }
+
+    /**
+     * Is the connector a target (true) or source (false)?
+     * @return -- whether a target
+     */
+    @Transient
+    public boolean isTarget() {
+        Iterator<Flow> reqs = requirements();
+        return reqs.hasNext();
      }
 
     /**
@@ -59,7 +69,7 @@ public class Connector extends Node {
      */
     @Transient
     public Flow getInnerFlow() {
-        return isInput() ? outcomes().next() : requirements().next();
+        return isSource() ? outcomes().next() : requirements().next();
     }
 
     private boolean hasInnerFlow() {

@@ -35,7 +35,7 @@
                     <label><input wicket:id="askedForFalse" type="radio"> Notification</label>
                     <label><input wicket:id="askedForTrue" type="radio"> Reply</label>
                 </span>&nbsp;
-                    <label>that <select wicket:id="significance"><option>is critical</option></select></label>
+                    <label wicket:id="target-significance-label">that <select wicket:id="significance-to-target"><option>is critical to</option></select> <span wicket:id="target-label">this task</span></label>
                 </td>
             </tr>
             <tr>
@@ -64,13 +64,22 @@
                 <th align="right"><span wicket:id="channel-title">Channels:</span></th>
                 <td><span wicket:id="channels">[channels panel]</span></td>
             </tr>
-
-            <tr>
+                                         
+            <tr wicket:id="max-delay-row">
                 <th align="right"><label>Max delay:</label></th>
                 <td>
                     <span wicket:id="max-delay">[delay panel]</span>
                 </td>
                 <!--<td><input wicket:id="maxDelay" type="text" value=""></td>-->
+            </tr>
+
+            <tr wicket:id="significance-to-source">
+                <th align="right"><span wicket:id="source-task">Sender task</span>:</th>
+                <td>
+                    <label wicket:id="triggers-source-container"><input wicket:id="triggers-source" type="checkbox"/> is triggered by the request</label>
+                    &nbsp;
+                    <label wicket:id="terminates-source-container"><input wicket:id="terminates-source" type="checkbox"/> terminates after <span wicket:id="notifying-or-replying">notifying</span></label>
+                </td>
             </tr>
 
             <tr wicket:id="attachments">

@@ -7,27 +7,32 @@
         lang="en">
 <body>
 <wicket:panel>
-    <div>
-        <span wicket:id="candidates-span">
+    <ul wicket:id="candidates-container">
+        <li wicket:id="candidates">
+            <input wicket:id="include-candidate" type="checkbox" alt="Include this candidate channel"/>
+            <span wicket:id="candidate">[candidate channel string]</span>
+        </li>
+    </ul>
+    <ul wicket:id="editable-container">
+        <li wicket:id="editable-channels">
+                    <span wicket:id="include-span"><input wicket:id="include" type="checkbox"
+                                                          alt="Include this channel"
+                                                          title="Check to include channel. Uncheck to exclude."/></span>
+            <select wicket:id="medium">
+                <option>[medium]</option>
+            </select>
+            <input class="address" wicket:id="address" type="text" size="20"/>
+        </li>
+    </ul>
+    <span wicket:id="non-editable-container">
+        <span wicket:id="no-channel">(No channel)</span>
         <ul>
-            <li wicket:id="candidates">
-                <input wicket:id="include-candidate" type="checkbox" alt="Include this candidate channel"/>
-                <span wicket:id="candidate">[candidate channel string]</span>
+            <li wicket:id="non-editable-channels">
+                <span wicket:id="channel-string">Phone: 800-328-7448</span>
             </li>
         </ul>
-        </span>
-        <ul>
-            <li wicket:id="channels">
-                <span wicket:id="include-span"><input wicket:id="include" type="checkbox"
-                                                      alt="Include this channel" title = "Check to include channel. Uncheck to exclude."/></span>
-                <select wicket:id="medium">
-                    <option>[medium]</option>
-                </select>
-                <input class="address" wicket:id="address" type="text" size="20"/>
-            </li>
-        </ul>
-       <!-- <span wicket:id="instructions" class="suggest">Check to include channel. Uncheck to exclude.</span>-->
-    </div>
+     </span>
+    <!-- <span wicket:id="instructions" class="suggest">Check to include channel. Uncheck to exclude.</span>-->
 </wicket:panel>
 </body>
 </html>

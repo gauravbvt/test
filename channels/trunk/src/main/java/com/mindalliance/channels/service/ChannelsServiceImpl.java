@@ -270,11 +270,11 @@ public class ChannelsServiceImpl implements Service {
      */
     public List<ResourceSpec> findAllResourceSpecs() {
         Set<ResourceSpec> result = new HashSet<ResourceSpec>();
-
+        // Permanent specs
         addSpecs( result, ResourceSpec.class );
-//        addSpecs( result, Actor.class );
-//        addSpecs( result, Role.class );
-//        addSpecs( result, Organization.class );
+        // addSpecs( result, Actor.class );
+        // addSpecs( result, Role.class );
+        // addSpecs( result, Organization.class );
 
         // Transient specs from scenario parts
         for ( Scenario scenario : list( Scenario.class ) ) {

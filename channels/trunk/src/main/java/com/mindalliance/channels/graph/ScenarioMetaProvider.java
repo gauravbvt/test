@@ -357,22 +357,24 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
             String headLabel = null;
             String tailLabel = null;
             if ( edge.isAll() ) {
-                if ( edge.isTerminating() )
+                if ( edge.isTerminatingToTarget() )
                     headLabel = "(stop all)";
-                else if ( edge.isTriggering() )
+                else if ( edge.isTriggeringToTarget() )
                     headLabel = "(start all)";
                 else {
                     headLabel = "(all)";
                 }
             } else {
-                if ( edge.isTerminating() )
+                if ( edge.isTerminatingToTarget() )
                     headLabel = "(stop)";
-                else if ( edge.isTriggering() )
+                else if ( edge.isTriggeringToTarget() )
                     headLabel = "(start)";
 
             }
-            if (edge.isSelfTerminating()) {
+            if ( edge.isTerminatingToSource() ) {
                 tailLabel = "(stop)";
+            } else if ( edge.isTriggeringToSource() ) {
+                tailLabel = "(start)";
             }
             if ( headLabel != null ) list.add( new DOTAttribute( "headlabel", headLabel ) );
             if ( tailLabel != null ) list.add( new DOTAttribute( "taillabel", tailLabel ) );
