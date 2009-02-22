@@ -156,7 +156,7 @@ public class InternalFlow extends Flow {
      * {@inheritDoc}
      */
     public boolean canSetAll() {
-        return isNotification() && getTarget().isPart() && ( (Part) getTarget() ).isOnlyRole();
+        return isNotification() && getSource().isPart() && getTarget().isPart() && ( (Part) getTarget() ).isOnlyRole();
     }
 
     /**

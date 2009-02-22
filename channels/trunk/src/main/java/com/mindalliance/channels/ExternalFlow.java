@@ -362,14 +362,18 @@ public class ExternalFlow extends Flow {
      * {@inheritDoc}
      */
     public boolean canSetAll() {
-        return isNotification() && getTarget().isPart() && ( (Part) getTarget() ).isOnlyRole();
+        // The role-based part in the connector flow is targeted by a notification
+        boolean canSetAll = isNotification()
+                && !isPartTargeted()
+                && ( (Part) getTarget() ).isOnlyRole();
+        return canSetAll;
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean canGetAll() {
-        return canSetAll() || getConnectorFlow().canGetAll();
+        return canSetAll();
     }
 
     /**

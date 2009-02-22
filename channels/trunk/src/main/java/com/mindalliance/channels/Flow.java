@@ -66,7 +66,7 @@ public abstract class Flow extends ModelObject implements Channelable {
      */
     @Transient
     public boolean isNotification() {
-        return !askedFor;
+        return !isAskedFor();
     }
 
     /**

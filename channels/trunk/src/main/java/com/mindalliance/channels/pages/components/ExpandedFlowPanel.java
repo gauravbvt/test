@@ -168,7 +168,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         descriptionField.setEnabled( f.canSetNameAndDescription() );
         askedForButtons.setEnabled( f.canSetAskedFor() );
         allField.setVisible( outcome && f.canGetAll() );
-        allField.setEnabled( f.canSetAll() );
+        allField.setEnabled( outcome && f.canSetAll() );
         significanceToTargetLabel.setVisible( f.canGetSignificanceToTarget() );
         significanceToTargetChoice.setEnabled( f.canSetSignificanceToTarget() );
         channelRow.setVisible( f.canGetChannels() );
