@@ -19,6 +19,10 @@ public class Organization extends ModelObject {
 
     /** Parent organization. May be null. */
     private Organization parent;
+    /**
+     * The primary location of the organization
+     */
+    private Place location;
 
     public Organization() {
     }
@@ -60,16 +64,22 @@ public class Organization extends ModelObject {
         this.parent = parent;
     }
 
+    @ManyToOne( cascade = CascadeType.PERSIST )
+    public Place getLocation() {
+        return location;
+    }
+
+    public void setLocation( Place location ) {
+        this.location = location;
+    }
+
     /**
      * Whether this organization has for parent a given organization (transitive)
      * @param organization an organization
      * @return a boolean
      */
     public boolean isWithin( Organization organization ) {
-        if ( parent == null )
-            return false;
-        else
-            return parent == organization || parent.isWithin( organization );
+        return parent != null && ( parent == organization || parent.isWithin( organization ) );
 
     }
 

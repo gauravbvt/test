@@ -76,7 +76,7 @@ public class AbstractChannelsTest extends TestCase {
         graphRenderer.setTimeout( 5000 );
         DefaultDiagramFactory<Node,Flow> diagramFactory = new DefaultDiagramFactory<Node,Flow>();
         diagramFactory.setGraphRenderer( graphRenderer );
-        diagramFactory.setUrlFormat( "?scenario={0}&amp;node={1}" );
+        diagramFactory.setUrlFormat( "?scenario={0}&node={1}" );
         diagramFactory.setScenarioUrlFormat( "?scenario={0}" );
         diagramFactory.setImageDirectory( "src/site/resources/images" );
         project.setDiagramFactory( diagramFactory );

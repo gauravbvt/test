@@ -78,7 +78,7 @@ public class ModelObjectLink extends ExternalLink {
 
     private static String linkFor( Part part ) {
         return MessageFormat.format(
-                "node.html?scenario={0,number,0}&amp;node={1,number,0}",                                    // NON-NLS
+                "node.html?scenario={0,number,0}&node={1,number,0}",                                    // NON-NLS
                 part.getScenario().getId(),
                 part.getId()
 
@@ -87,7 +87,7 @@ public class ModelObjectLink extends ExternalLink {
     private static String linkFor( InternalFlow flow ) {
         final Node source = flow.getSource();
         return MessageFormat.format(
-                "node.html?scenario={0,number,0}&amp;node={1,number,0}&amp;expand={2,number,0}",                         // NON-NLS
+                "node.html?scenario={0,number,0}&node={1,number,0}&expand={2,number,0}",                         // NON-NLS
                 source.getScenario().getId(),
                 source.getId(),
                 flow.getId()

@@ -231,7 +231,7 @@ public final class ScenarioPage extends WebPage {
             exps.append( Long.toString( id ) );
         }
         setResponsePage(
-                new RedirectPage( MessageFormat.format( "?scenario={0,number,0}&amp;node={1,number,0}{2}",      // NON-NLS
+                new RedirectPage( MessageFormat.format( "?scenario={0,number,0}&node={1,number,0}{2}",      // NON-NLS
                         sid, nid, exps ) ) );
     }
 
@@ -429,7 +429,7 @@ public final class ScenarioPage extends WebPage {
                     super.onComponentTag( tag );
                     tag.put( "src",                                                       // NON-NLS
                         MessageFormat.format(
-                            "scenario.png?scenario={0,number,0}&amp;node={1,number,0}&amp;time={2,number,0}", // NON-NLS
+                            "scenario.png?scenario={0,number,0}&node={1,number,0}&amp;time={2,number,0}", // NON-NLS
                             scenario.getId(),
                             n.getId(),
                             System.currentTimeMillis() ) );

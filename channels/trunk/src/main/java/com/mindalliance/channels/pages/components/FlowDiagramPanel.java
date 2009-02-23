@@ -114,22 +114,22 @@ public class FlowDiagramPanel extends Panel {
         StringBuilder sb = new StringBuilder();
         sb.append( "scenario.png?scenario=" );
         sb.append( scenario.getId() );
-        sb.append( "&amp;node=" );
+        sb.append( "&node=" );
         if ( selectedNode != null ) {
             sb.append( selectedNode.getId() );
         } else {
             sb.append( "NONE" );
         }
-        sb.append( "&amp;time=" );
+        sb.append( "&time=" );
         sb.append( MessageFormat.format( "{2,number,0}", System.currentTimeMillis() ) );
         if ( diagramSize != null ) {
-            sb.append( "&amp;size=" );
+            sb.append( "&size=" );
             sb.append( diagramSize[0] );
             sb.append( "," );
             sb.append( diagramSize[1] );
         }
         if ( orientation != null ) {
-            sb.append( "&amp;orientation=" );
+            sb.append( "&orientation=" );
             sb.append( orientation );
         }
         return sb.toString();

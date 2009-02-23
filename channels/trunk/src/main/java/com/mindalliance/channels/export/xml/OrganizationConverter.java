@@ -2,6 +2,7 @@ package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Place;
 import com.mindalliance.channels.pages.Project;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -47,6 +48,12 @@ public class OrganizationConverter extends EntityConverter {
             writer.setValue( parent.getName() );
             writer.endNode();
         }
+        Place location = org.getLocation();
+        if (location != null && !location.getName().trim().isEmpty()) {
+            writer.startNode( "location" );
+            writer.setValue( location.getName() );
+            writer.endNode();
+        }
     }
 
     /**
@@ -56,6 +63,10 @@ public class OrganizationConverter extends EntityConverter {
         if (nodeName.equals("parent")) {
             Organization org = (Organization)entity;
             org.setParent( Organization.named(value));
+        }
+        else if (nodeName.equals("location")) {
+            Organization org = (Organization)entity;
+            org.setLocation( Place.named(value));
         }
         else {
             throw new ConversionException( "Unknown element " + nodeName );

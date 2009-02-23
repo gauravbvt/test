@@ -93,7 +93,7 @@ public class ScenarioLink extends ExternalLink {
             }
             exs = expandString( f.getId() );
         }
-        return MessageFormat.format( "?scenario={0,number,0}&amp;node={1,number,0}{2}",       // NON-NLS
+        return MessageFormat.format( "?scenario={0,number,0}&node={1,number,0}{2}",       // NON-NLS
                                      n.getScenario().getId(),
                                      n.getId(), exs );
     }
