@@ -472,25 +472,28 @@ public class ResourceSpec extends ModelObject implements Channelable {
     public List<Channel> allChannels() {
         Service service = Project.service();
         List<Channel> allChannels = new ArrayList<Channel>();
-        List<ResourceSpec> channelables = service.findAllResourcesBroadeningOrEqualTo( this );
-        // If resource spec has an actor, include the channel of the more specific resources as well
-        if (!isAnyActor()) {
-            channelables.addAll(service.findAllResourcesNarrowingOrEqualTo( this ));
-        }
-        Collections.sort( channelables, new Comparator<ResourceSpec>() {
-            /**{@inheritDoc} */
-            public int compare( ResourceSpec rs1, ResourceSpec rs2 ) {
-                int val1 = rs1.specificity();
-                int val2 = rs2.specificity();
-                // put higher specificity first
-                return val1 == val2 ? 0 : ( val1 > val2 ? -1 : 1 );
+        // Unspecified resources have no channels
+        if ( !this.isAnyone() ) {
+            List<ResourceSpec> channelables = service.findAllResourcesBroadeningOrEqualTo( this );
+            // If resource spec has an actor, include the channel of the more specific resources as well
+            if ( !isAnyActor() ) {
+                channelables.addAll( service.findAllResourcesNarrowingOrEqualTo( this ) );
             }
-        } );
-        for ( ResourceSpec resourceSpec : channelables ) {
-            List<Channel> resourceChannels = resourceSpec.getChannels();
-            for ( Channel resourceChannel : resourceChannels ) {
-                if ( !allChannels.contains( resourceChannel ) )
-                    allChannels.add( resourceChannel );
+            Collections.sort( channelables, new Comparator<ResourceSpec>() {
+                /**{@inheritDoc} */
+                public int compare( ResourceSpec rs1, ResourceSpec rs2 ) {
+                    int val1 = rs1.specificity();
+                    int val2 = rs2.specificity();
+                    // put higher specificity first
+                    return val1 == val2 ? 0 : ( val1 > val2 ? -1 : 1 );
+                }
+            } );
+            for ( ResourceSpec resourceSpec : channelables ) {
+                List<Channel> resourceChannels = resourceSpec.getChannels();
+                for ( Channel resourceChannel : resourceChannels ) {
+                    if ( !allChannels.contains( resourceChannel ) )
+                        allChannels.add( resourceChannel );
+                }
             }
         }
         return allChannels;
