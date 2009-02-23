@@ -41,7 +41,7 @@ public class PartReportPanel extends Panel {
     }
 
     private void init() {
-        add( new Label( "task", part.getTask() ) );
+        add( new Label( "task", uppercasedName() ) );
         add( new Label( "description", part.getDescription() ) );
         Place location = part.getLocation();
         add( new Label( "location", location != null ? location.toString() : "Unspecified" ) );
@@ -71,6 +71,13 @@ public class PartReportPanel extends Panel {
         addSends();
         addReceives();
         add( new IssuesReportPanel( "issues", new Model<ModelObject>( part ) ) );
+    }
+
+    private String uppercasedName() {
+        String name = part.getTask();
+
+        return name.length() > 0 ? name.substring( 0,1 ).toUpperCase() + name.substring( 1 )
+                                 : name;
     }
 
     private void addReceives() {

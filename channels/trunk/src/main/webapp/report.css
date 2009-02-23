@@ -23,6 +23,11 @@
     }
 }
 
+div.flow-map {
+}
+
+div.flow-map img {
+}
 
 div.organization > h3, div.organization > p.description {
     display: none;
@@ -30,10 +35,16 @@ div.organization > h3, div.organization > p.description {
 
 .role table.header {
     width: 100%;
-    border-spacing: 0.5em;
+    border-collapse: collapse;
+    border-spacing: 0;
 }
 
-.role table.header td, table.tasks th, table.tasks td {
+.role ul.contacts {
+    background-color: #D0D0D0;
+    padding: 0.5em !important;
+}
+
+table.tasks th, table.tasks td {
     border: 1px solid lightgray;
 }
 
@@ -48,22 +59,27 @@ div.organization > h3, div.organization > p.description {
     margin: 0;
 }
 
+.role table.header td.scenario-head {
+}
+
+.role table.header td.role-head {
+}
+
 .role table.header td.scenario-head h3 {
     color: darkred;
 }
 
-.role table.header td.role-head p.description {
-    margin: 1em 0 0 0;
-}
-
-.role table.header p.description {
-    margin: 0;
+.role table.header * {
+    margin: 0.5em 0 0 0;
 }
 
 .role table.header td.role-head ul {
-    margin: 0;
     padding: 0;
     list-style: none;
+}
+
+.role table.header td.role-head ul li {
+    margin: 0;
 }
 
 .role table.header td.role-head ul li.organization {
@@ -77,51 +93,27 @@ div.organization > h3, div.organization > p.description {
     display: none;
 }
 
-.role div.contacts > ul {
-    background-color: #edfcfb;
-    padding: 0.5em;
-    margin: 0.5em 0 0;
-    list-style: none;
-}
-
-.role div.contacts > ul, .role div.contacts p.description {
-}
-
-.role div.contacts > ul li.contact {
-}
-
-.role div.contacts > ul li.contact p.name {
-    font-weight:bold;
-    margin:0 0 0 0.5em;
+.role ul.contacts li.contact p.name {
+    font-weight: bold;
+    margin: 0;
     float: left;
-    width: 2in;
+    width: 1.5in;
 }
 
-.role div.contacts p.description {
-    margin: 0.5em 0 0;
-    padding: 0 0.5em;
-}
-
-.role div.contacts ul.channels {
+.role ul.contacts ul.channels {
     list-style: none;
-    margin-left: 2in;
+    margin: 0;
 }
 
-.role div.contacts li.channel {
+.role ul.contacts li.channel {
     display: -moz-inline-box;
-    width: 2in;
+    width: 1.5in;
+    margin: 0;
 }
 
 table.tasks {
     width: 100%;
     border-spacing: 0.5em;
-}
-
-table.tasks ul {
-    margin: 0;
-}
-
-table.tasks tr {
 }
 
 table.tasks th, table.tasks td {
@@ -135,5 +127,19 @@ table.tasks th h4 {
     margin: 0;
 }
 
+p.task-name {
+    font-weight: bold;
+}
+
 table.tasks td {
+}
+
+h5 {
+    margin: 0 0 1em 0;
+}
+.tasks p, .tasks ul {
+    margin: 0 0 0.5em 0;
+}
+.tasks ul {
+    padding: 0 0 0 1em;
 }
