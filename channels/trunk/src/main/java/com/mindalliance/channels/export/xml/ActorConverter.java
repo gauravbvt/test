@@ -5,6 +5,7 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.pages.Project;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.ConversionException;
 
 /**
  * XStream Actor converter
@@ -37,14 +38,25 @@ public class ActorConverter extends EntityConverter {
     protected void writeSpecifics( ModelObject entity,
                                    HierarchicalStreamWriter writer,
                                    MarshallingContext context ) {
-       // Do nothing
+        Actor actor = (Actor) entity;
+        String jobTitle = actor.getJobTitle();
+        if ( jobTitle != null && !jobTitle.trim().isEmpty() ) {
+            writer.startNode( "jobTitle" );
+            writer.setValue( jobTitle );
+            writer.endNode();
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     protected void setSpecific( ModelObject entity, String nodeName, String value ) {
-       // Do nothing
+        Actor actor = (Actor) entity;
+        if ( nodeName.equals( "jobTitle" ) ) {
+            actor.setJobTitle( value );
+        } else {
+            throw new ConversionException( "Unknown element " + nodeName );
+        }
     }
 
-  }
+}

@@ -43,13 +43,13 @@ public class OrganizationConverter extends EntityConverter {
                                    MarshallingContext context ) {
         Organization org = (Organization) entity;
         Organization parent = org.getParent();
-        if (parent != null && !parent.getName().trim().isEmpty()) {
+        if ( parent != null && !parent.getName().trim().isEmpty() ) {
             writer.startNode( "parent" );
             writer.setValue( parent.getName() );
             writer.endNode();
         }
         Place location = org.getLocation();
-        if (location != null && !location.getName().trim().isEmpty()) {
+        if ( location != null && !location.getName().trim().isEmpty() ) {
             writer.startNode( "location" );
             writer.setValue( location.getName() );
             writer.endNode();
@@ -60,15 +60,13 @@ public class OrganizationConverter extends EntityConverter {
      * {@inheritDoc}
      */
     protected void setSpecific( ModelObject entity, String nodeName, String value ) {
-        if (nodeName.equals("parent")) {
-            Organization org = (Organization)entity;
-            org.setParent( Organization.named(value));
-        }
-        else if (nodeName.equals("location")) {
-            Organization org = (Organization)entity;
-            org.setLocation( Place.named(value));
-        }
-        else {
+        if ( nodeName.equals( "parent" ) ) {
+            Organization org = (Organization) entity;
+            org.setParent( Organization.named( value ) );
+        } else if ( nodeName.equals( "location" ) ) {
+            Organization org = (Organization) entity;
+            org.setLocation( Place.named( value ) );
+        } else {
             throw new ConversionException( "Unknown element " + nodeName );
         }
     }

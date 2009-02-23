@@ -13,6 +13,11 @@ public class Actor extends ModelObject {
 
     /** Bogus actor used to signify that the actor is not known... */
     public static final Actor UNKNOWN = new Actor( "(unknown)" );
+    /**
+     * The title of the actor.
+     * TODO: quickie -- assumes that an actor has at most one job title in at most one organization
+     */
+    private String jobTitle = "";
 
     public Actor() {
     }
@@ -24,6 +29,14 @@ public class Actor extends ModelObject {
      */
     public Actor( String name ) {
         super( name );
+    }
+
+    public String getJobTitle() {
+        return jobTitle;
+    }
+
+    public void setJobTitle( String jobTitle ) {
+        this.jobTitle = jobTitle;
     }
 
     /**

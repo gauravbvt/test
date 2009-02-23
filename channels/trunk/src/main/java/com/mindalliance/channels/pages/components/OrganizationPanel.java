@@ -30,18 +30,26 @@ public class OrganizationPanel extends ModelObjectPanel {
         super( id, model );
     }
 
+    /**
+     * {@inheritDoc }
+     */
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
-        moDetailsDiv.add( new ModelObjectLink("org-link", new PropertyModel<Organization>(mo, "parent")) );
+        moDetailsDiv.add( new ModelObjectLink( "org-link", new PropertyModel<Organization>( mo, "parent" ) ) );
         moDetailsDiv.add(
                 new TextField<String>( "parent",                                            // NON-NLS
                         new PropertyModel<String>( this, "parentOrganization" ) ) );
-        moDetailsDiv.add(new ModelObjectLink( "loc-link", new PropertyModel<Organization>(mo, "location")));
+        moDetailsDiv.add( new ModelObjectLink( "loc-link", new PropertyModel<Organization>( mo, "location" ) ) );
         moDetailsDiv.add(
                 new TextField<String>( "location",                                            // NON-NLS
                         new PropertyModel<String>( this, "locationName" ) ) );
 
     }
 
+    /**
+     * Set organization's parent from name if not null ir empty.
+     *
+     * @param name a String
+     */
     public void setParentOrganization( String name ) {
         Organization org = (Organization) mo;
         if ( name == null || name.trim().isEmpty() ) {
@@ -54,11 +62,21 @@ public class OrganizationPanel extends ModelObjectPanel {
         }
     }
 
+    /**
+     * Get organization's parent's name.
+     *
+     * @return a String
+     */
     public String getParentOrganization() {
-        Organization parent = ((Organization) mo).getParent();
+        Organization parent = ( (Organization) mo ).getParent();
         return parent == null ? "" : parent.getName();
     }
 
+    /**
+     * Set organization's location from name, if not null or empty.
+     *
+     * @param name a String
+     */
     public void setLocationName( String name ) {
         Organization org = (Organization) mo;
         if ( name == null || name.trim().isEmpty() ) {
@@ -72,8 +90,13 @@ public class OrganizationPanel extends ModelObjectPanel {
 
     }
 
+    /**
+     * Get organization's location's name.
+     *
+     * @return a String
+     */
     public String getLocationName() {
-        Place location = ((Organization) mo).getLocation();
+        Place location = ( (Organization) mo ).getLocation();
         return location == null ? "" : location.getName();
     }
 
