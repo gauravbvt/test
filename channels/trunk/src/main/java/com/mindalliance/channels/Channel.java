@@ -20,6 +20,9 @@ import java.util.List;
 @Entity
 public class Channel implements Serializable {
 
+    /** Bogus channels for reports. */
+    public static final Channel Unknown = new Channel( null, "(unknown channel)" );
+
     /**
      * The medium of communication
      */

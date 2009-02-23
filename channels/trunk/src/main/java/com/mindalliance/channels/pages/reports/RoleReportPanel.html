@@ -7,18 +7,20 @@
         lang="en">
 <body>
 <wicket:panel>
-    <div class="header">
-        <h3 wicket:id="name">name</h3>
-        <ul>
-            <li wicket:id="org" class="organization">(organization)</li>
-            <li class="scenario-head">
-                <span class="name" wicket:id="sc-name">Scenario</span>.
-                <span class="description" wicket:id="sc-description">description</span>
-            </li>
-        </ul>
+    <table class="header"><tr>
+        <td class="scenario-head">
+            <h3 wicket:id="sc-name">Scenario</h3>
+            <p class="description" wicket:id="sc-description">description</p>
+        </td>
+        <td class="role-head">
+            <h4 wicket:id="name">name</h4>
+            <ul>
+                <li wicket:id="org" class="organization">(organization)</li>
+            </ul>
 
-        <p class="description" wicket:id="description">description</p>
-    </div>
+            <p class="description" wicket:id="description">description</p>
+        </td>
+    </tr></table>
 
     <div class="contacts">
         <h4>Contacts</h4>
@@ -30,14 +32,13 @@
         </ul>
     </div>
 
-    <div class="tasks">
-        <h4>Tasks</h4>
-        <ul>
-            <li class="task" wicket:id="parts">
-                <div wicket:id="part">[part report panel]</div>
-            </li>
-        </ul>
-    </div>
+    <table class="tasks">
+        <tr><th><h4>Tasks</h4></th><th><h4>Communication Actions</h4></th></tr>
+        <tr class="task" wicket:id="parts">
+            <div wicket:id="part">[part report panel]</div>
+        </tr>
+
+    </table>
 </wicket:panel>
 </body>
 </html>

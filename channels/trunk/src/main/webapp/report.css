@@ -1,11 +1,139 @@
 @media print {
 
+    @page {
+        margin: 0;
+    }
     div.scenario, .scenario div.role, #directory {
         page-break-before: always;
     }
 
+    body {
+        margin: 0;
+        font-family: "Times New Roman",Times,serif;
+        font-size: 10pt;
+   }
 }
+
+@media screen {
+    body {
+        margin: 0;
+        padding: 5px;
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 14px;
+    }
+}
+
 
 div.organization > h3, div.organization > p.description {
     display: none;
+}
+
+.role table.header {
+    width: 100%;
+    border-spacing: 0.5em;
+}
+
+.role table.header td, table.tasks th, table.tasks td {
+    border: 1px solid lightgray;
+}
+
+.role table.header td {
+    padding: 0.5em;
+    vertical-align: top;
+    width: 50%;
+}
+
+.role table.header td.scenario-head h3, .role table.header td.role-head h4 {
+    font-size: 1.5em;
+    margin: 0;
+}
+
+.role table.header td.scenario-head h3 {
+    color: darkred;
+}
+
+.role table.header td.role-head p.description {
+    margin: 1em 0 0 0;
+}
+
+.role table.header p.description {
+    margin: 0;
+}
+
+.role table.header td.role-head ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.role table.header td.role-head ul li.organization {
+}
+
+.role div.contacts {
+    margin: 0 0.5em;
+}
+
+.role div.contacts h4 {
+    display: none;
+}
+
+.role div.contacts > ul {
+    background-color: #edfcfb;
+    padding: 0.5em;
+    margin: 0.5em 0 0;
+    list-style: none;
+}
+
+.role div.contacts > ul, .role div.contacts p.description {
+}
+
+.role div.contacts > ul li.contact {
+}
+
+.role div.contacts > ul li.contact p.name {
+    font-weight:bold;
+    margin:0 0 0 0.5em;
+    float: left;
+    width: 2in;
+}
+
+.role div.contacts p.description {
+    margin: 0.5em 0 0;
+    padding: 0 0.5em;
+}
+
+.role div.contacts ul.channels {
+    list-style: none;
+    margin-left: 2in;
+}
+
+.role div.contacts li.channel {
+    display: -moz-inline-box;
+    width: 2in;
+}
+
+table.tasks {
+    width: 100%;
+    border-spacing: 0.5em;
+}
+
+table.tasks ul {
+    margin: 0;
+}
+
+table.tasks tr {
+}
+
+table.tasks th, table.tasks td {
+    vertical-align: top;
+    text-align: left;
+    padding: 0.5em;
+    width: 50%;
+}
+
+table.tasks th h4 {
+    margin: 0;
+}
+
+table.tasks td {
 }
