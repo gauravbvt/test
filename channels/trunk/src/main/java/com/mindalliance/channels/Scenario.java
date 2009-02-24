@@ -127,7 +127,7 @@ public class Scenario extends ModelObject {
      * @param service the underlying store
      * @param actor   the actor for the new part
      * @param task    the task of the new part
-     * @return the new part
+     * @return the new part                                        he
      */
     public Part createPart( Service service, Actor actor, String task ) {
         Part result = service.createPart( this );
