@@ -9,6 +9,8 @@
 
     <bean id="channels" class="com.mindalliance.channels.service.ChannelsServiceImpl">
         <property name="addingSamples" value="true"/>
+        <property name="importingScenarios" value="false"/>
+        <property name="importDirectory" value="target/import"/>
         <property name="dao" ref="dao"/>
     </bean>
 

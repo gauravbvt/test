@@ -61,7 +61,8 @@ public class FireScenario extends Scenario {
         Part fd = service.createPart( scenario );
         fd.setOrganization( service.findOrCreate( Organization.class, "Fire Department" ) );
         fd.setTask( "responding" );
-        service.connect( tenant, alarm, "" );
+        Flow fire = service.connect( tenant, alarm, "fire!" );
+        fire.becomeTriggeringToTarget();
         Flow f1 = service.connect( alarm, js1, "location" );
         f1.setAskedFor( true );
         f1.addChannel( new Channel( Medium.Other, "wall panel" ) );
@@ -79,8 +80,9 @@ public class FireScenario extends Scenario {
         f4.setAskedFor( true );
         f4.becomeCritical();
         service.connect( js1, evac.inputs().next(), "" );
-        service.connect( evac.outputs().next(), js2, "" ).becomeCritical();
-        service.connect( alarm, fd, "address" );
+        service.connect( evac.outputs().next(), js2, "" ).becomeTerminatingToTarget();
+        Flow fireAddress = service.connect( alarm, fd, "address" );
+        fireAddress.becomeTriggeringToTarget();
         service.connect( fd, chief, "" );
         chief.createOutcome( service ).setName( "\"all-clear\"" );
     }

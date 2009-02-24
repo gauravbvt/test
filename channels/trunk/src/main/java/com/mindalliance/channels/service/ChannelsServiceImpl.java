@@ -14,6 +14,8 @@ import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.dao.EvacuationScenario;
 import com.mindalliance.channels.dao.FireScenario;
 import com.mindalliance.channels.util.Play;
@@ -27,6 +29,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 /**
  * Utility class for common functionality for all Dao implementations.
@@ -44,6 +50,14 @@ public class ChannelsServiceImpl implements Service {
      * True if defaults scenarios will be added when dao is set.
      */
     private boolean addingSamples;
+    /**
+     * True if exported scenarios are to be imported when dao is set.
+     */
+    private boolean importingScenarios;
+    /**
+     * Directory from which to import exported scenarios
+     */
+    private String importDirectory;
 
     public ChannelsServiceImpl() {
     }
@@ -228,8 +242,49 @@ public class ChannelsServiceImpl implements Service {
                 EvacuationScenario.initialize( evac, this );
                 Scenario fireScenario = createScenario();
                 FireScenario.initialize( fireScenario, this, evac );
-            } else
+            }
+            if ( importingScenarios ) {
+                LoggerFactory.getLogger( getClass() ).info( "Adding sample models" );
+                importScenarios();
+            }
+            // Make sure there is at least one scenario
+            if ( !dao.getAll( Scenario.class ).iterator().hasNext() ) {
                 createScenario();
+            }
+        }
+    }
+
+    private void importScenarios() {
+        if ( importDirectory != null ) {
+            File directory = new File( importDirectory );
+            if ( directory.exists() && directory.isDirectory() ) {
+                File[] files = directory.listFiles( new FilenameFilter() {
+                    /** {@inheritDoc} */
+                    public boolean accept( File dir, String name ) {
+                        return name.endsWith( ".xml" );
+                    }
+                } );
+                Importer importer = Project.getProject().getImporter();
+                for ( File file : files ) {
+                    try {
+                        Scenario scenario = importer.importScenario( new FileInputStream( file ) );
+                        LoggerFactory.getLogger( getClass() ).info(
+                                "Imported scenario "
+                                        + scenario.getName()
+                                        + " from "
+                                        + file.getPath());
+                    } catch ( IOException e ) {
+                        LoggerFactory.getLogger( getClass() ).warn( "Failed to import " + file.getPath(), e );
+                    }
+                }
+                /*
+                Scenario scenario = project.getImporter().importScenario( in );
+                 */
+            } else {
+                LoggerFactory.getLogger( getClass() ).warn( "Directory " + importDirectory + " does not exist." );
+            }
+        } else {
+            LoggerFactory.getLogger( getClass() ).warn( "Import directory is not set." );
         }
     }
 
@@ -348,8 +403,8 @@ public class ChannelsServiceImpl implements Service {
             for ( Play play : plays ) {
                 ResourceSpec partSpec = play.getPart().resourceSpec();
                 ResourceSpec otherPartSpec = play.getOtherPart().resourceSpec();
-                if (!partSpec.isAnyone()) contacts.add( partSpec );
-                if (!otherPartSpec.isAnyone()) contacts.add( otherPartSpec );
+                if ( !partSpec.isAnyone() ) contacts.add( partSpec );
+                if ( !otherPartSpec.isAnyone() ) contacts.add( otherPartSpec );
             }
         }
         return new ArrayList<ResourceSpec>( contacts );
@@ -431,7 +486,7 @@ public class ChannelsServiceImpl implements Service {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public List<Actor> findAllActors( ResourceSpec resourceSpec ) {
         Set<Actor> actors = new HashSet<Actor>();
         Iterator<ResourceSpec> actorResourceSpecs = new FilterIterator(
@@ -448,5 +503,21 @@ public class ChannelsServiceImpl implements Service {
             }
         }
         return new ArrayList<Actor>( actors );
+    }
+
+    public boolean isImportingScenarios() {
+        return importingScenarios;
+    }
+
+    public void setImportingScenarios( boolean importingScenarios ) {
+        this.importingScenarios = importingScenarios;
+    }
+
+    public String getImportDirectory() {
+        return importDirectory;
+    }
+
+    public void setImportDirectory( String importDirectory ) {
+        this.importDirectory = importDirectory;
     }
 }
