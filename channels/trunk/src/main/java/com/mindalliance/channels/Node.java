@@ -11,6 +11,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.ArrayList;
+import java.text.Collator;
 
 /**
  * A node in the flow graph
@@ -18,28 +23,39 @@ import java.util.Map;
 @Entity
 public abstract class Node extends ModelObject {
 
-    /** Initial capacity of outcome and requirement flows. */
+    /**
+     * Initial capacity of outcome and requirement flows.
+     */
     private static final int INITIAL_CAPACITY = 5;
 
-    /** The name for new flows. */
+    /**
+     * The name for new flows.
+     */
     private static final String DEFAULT_FLOW_NAME = "";
 
-    /** All requirements, indexed by id. */
-    private Map<Long,Flow> requirements;
+    /**
+     * All requirements, indexed by id.
+     */
+    private Map<Long, Flow> requirements;
 
-    /** All outcomes, indexed by id. */
-    private Map<Long,Flow> outcomes;
+    /**
+     * All outcomes, indexed by id.
+     */
+    private Map<Long, Flow> outcomes;
 
-    /** The unique scenario containing this node. */
+    /**
+     * The unique scenario containing this node.
+     */
     private Scenario scenario;
 
     protected Node() {
-        setOutcomes( new HashMap<Long,Flow>() );
-        setRequirements( new HashMap<Long,Flow>() );
+        setOutcomes( new HashMap<Long, Flow>() );
+        setRequirements( new HashMap<Long, Flow>() );
     }
 
     /**
      * Get a long string that can be used as a title for this node.
+     *
      * @return a generated short description
      */
     @Transient
@@ -47,6 +63,7 @@ public abstract class Node extends ModelObject {
 
     /**
      * Find a flow connected to this node, given its id.
+     *
      * @param id the id
      * @return a flow or null
      */
@@ -59,35 +76,62 @@ public abstract class Node extends ModelObject {
     }
 
     @OneToMany( cascade = CascadeType.ALL )
-    @JoinTable( name = "Node_Outs" ) @MapKey( name = "id" )
-    private Map<Long,Flow> getOutcomes() {
+    @JoinTable( name = "Node_Outs" )
+    @MapKey( name = "id" )
+    private Map<Long, Flow> getOutcomes() {
         return outcomes;
     }
 
     /**
      * Set outcomes, rebuilding the index.
      * Package-visible for tests.
+     *
      * @param outcomes the new outcomes
      */
-    void setOutcomes( Map<Long,Flow> outcomes ) {
+    void setOutcomes( Map<Long, Flow> outcomes ) {
         if ( this.outcomes != null )
-            for ( Flow f: new HashSet<Flow>( this.outcomes.values() ) )
+            for ( Flow f : new HashSet<Flow>( this.outcomes.values() ) )
                 removeOutcome( f );
         this.outcomes = outcomes;
-        for ( Flow f: outcomes.values() )
+        for ( Flow f : outcomes.values() )
             f.setSource( this );
     }
 
     /**
-     * Iterates over outcomes, alphabetically by print string.
+     * Iterates over sorted outcomes.
+     *
      * @return a flow iterator
      */
     public Iterator<Flow> outcomes() {
-        return getOutcomes().values().iterator();
+        List<Flow> flows = new ArrayList<Flow>();
+        flows.addAll( getOutcomes().values() );
+        Collections.sort( flows, new Comparator<Flow>() {
+            /**
+             * {@inheritDoc}
+             */
+            public int compare( Flow flow, Flow other ) {
+                // First, sort on significance to source
+                if ( flow.getSignificanceToSource().ordinal() == other.getSignificanceToSource().ordinal() ) {
+                    // if same significance to source, sort on whether required
+                    if ( flow.isRequired() == other.isRequired() ) {
+                        return Collator.getInstance().compare( flow.getName(), other.getName() );
+                    } else {
+                        // if both are required, sort on information
+                        return flow.isRequired() ? -1 : 1;
+                    }
+                } else {
+                    return flow.getSignificanceToSource().ordinal() < other.getSignificanceToSource().ordinal()
+                            ? -1
+                            : 1;
+                }
+            }
+        } );
+        return flows.iterator();
     }
 
     /**
      * Create a new outcome for this node.
+     *
      * @param service the underlying store
      * @return an internal flow to a new connector
      */
@@ -97,6 +141,7 @@ public abstract class Node extends ModelObject {
 
     /**
      * Add an outcome to this node.
+     *
      * @param outcome the outcome
      */
     public void addOutcome( Flow outcome ) {
@@ -107,6 +152,7 @@ public abstract class Node extends ModelObject {
     /**
      * Remove an outcome from this node.
      * Removes the source node if a connector.
+     *
      * @param outcome the outcome
      */
     void removeOutcome( Flow outcome ) {
@@ -115,35 +161,57 @@ public abstract class Node extends ModelObject {
     }
 
     @OneToMany( cascade = CascadeType.ALL )
-    @JoinTable( name = "Node_Reqs" ) @MapKey( name = "id" )
-    private Map<Long,Flow> getRequirements() {
+    @JoinTable( name = "Node_Reqs" )
+    @MapKey( name = "id" )
+    private Map<Long, Flow> getRequirements() {
         return requirements;
     }
 
     /**
      * Set requirements, rebuilding the index.
      * Package-visible for tests.
+     *
      * @param requirements the new requirements
      */
-    void setRequirements( Map<Long,Flow> requirements ) {
+    void setRequirements( Map<Long, Flow> requirements ) {
         if ( this.requirements != null )
-            for ( Flow f: new HashSet<Flow>( this.requirements.values() ) )
+            for ( Flow f : new HashSet<Flow>( this.requirements.values() ) )
                 removeRequirement( f );
         this.requirements = requirements;
-        for ( Flow f: requirements.values() )
+        for ( Flow f : requirements.values() )
             f.setTarget( this );
     }
 
     /**
-     * Iterates over requirements, alphabetically by print string.
+     * Iterates over sorted requirements.
+     *
      * @return a flow iterator
      */
     public Iterator<Flow> requirements() {
-        return getRequirements().values().iterator();
+        List<Flow> flows = new ArrayList<Flow>();
+        flows.addAll( getRequirements().values() );
+        Collections.sort( flows, new Comparator<Flow>() {
+            /**
+             * {@inheritDoc}
+             */
+            public int compare( Flow flow, Flow other ) {
+                // Sort on significance to target
+                if ( flow.getSignificanceToTarget().ordinal() == other.getSignificanceToTarget().ordinal() ) {
+                    // If same significance, sort on information
+                    return Collator.getInstance().compare( flow.getName(), other.getName() );
+                } else {
+                    return flow.getSignificanceToTarget().ordinal() < other.getSignificanceToTarget().ordinal()
+                            ? -1
+                            : 1;
+                }
+            }
+        } );
+        return flows.iterator();
     }
 
     /**
      * Create and add a new requirement.
+     *
      * @param service the underyling store
      * @return a flow from a new connector to this node
      */
@@ -153,6 +221,7 @@ public abstract class Node extends ModelObject {
 
     /**
      * Add a requirement to this node.
+     *
      * @param requirement the requirement
      */
     public void addRequirement( Flow requirement ) {
@@ -163,6 +232,7 @@ public abstract class Node extends ModelObject {
     /**
      * Remove a requirement from this node.
      * Removes the target node if a connector.
+     *
      * @param requirement the requirement
      */
     void removeRequirement( Flow requirement ) {
@@ -189,22 +259,25 @@ public abstract class Node extends ModelObject {
         this.scenario = scenario;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return getTitle();
     }
 
     /**
-      * Test if this node is connected to another node by a flow of a given name.
-      * @param outcome test if node is an outcome, otherwise a requirement
-      * @param node the other node
-      * @param name the name of the flow
-      * @return true if connected.
-      */
+     * Test if this node is connected to another node by a flow of a given name.
+     *
+     * @param outcome test if node is an outcome, otherwise a requirement
+     * @param node    the other node
+     * @param name    the name of the flow
+     * @return true if connected.
+     */
     public boolean isConnectedTo( boolean outcome, Node node, String name ) {
         boolean result = false;
-        Map<Long,Flow> flows = outcome ? outcomes : requirements;
+        Map<Long, Flow> flows = outcome ? outcomes : requirements;
         for ( Iterator<Flow> it = flows.values().iterator(); !result && it.hasNext(); ) {
             Flow f = it.next();
             result = name.equals( f.getName() ) && f.isConnectedTo( outcome, node );

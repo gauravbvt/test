@@ -412,6 +412,8 @@ public abstract class Flow extends ModelObject implements Channelable {
         return isCritical() || isTriggeringToTarget() || isTerminatingToTarget();
     }
 
+    // Abstract methods
+
     /**
      * Whether the flow's name and description can be set.
      *
@@ -520,10 +522,10 @@ public abstract class Flow extends ModelObject implements Channelable {
      */
     @Embeddable
     public enum Significance {
-        None( "none" ),
-        Useful( "is useful to" ),
-        Critical( "is critical to" ),
         Triggers( "triggers" ),
+        Critical( "is critical to" ),
+        Useful( "is useful to" ),
+        None( "none" ),
         Terminates( "terminates" );
 
         private String label;
@@ -569,7 +571,5 @@ public abstract class Flow extends ModelObject implements Channelable {
         public String toString() {
             return name();
         }
-
-
     }
 }

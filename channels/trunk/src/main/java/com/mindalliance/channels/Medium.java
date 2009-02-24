@@ -16,7 +16,11 @@ public enum Medium {
     /**
      * Telephone
      */
-    Phone( "Phone", "(\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4})|(\\d{3})" ),
+    Phone( "Work phone", "(\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}(\\s*((ext\\.?)|(x\\.?))\\s*\\d+)?)|(\\d{3})" ),
+    /**
+     * Telephone
+     */
+    HomePhone( "Home phone", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}" ),
     /**
      * Fax
      */
@@ -24,7 +28,7 @@ public enum Medium {
     /**
      * Cell phone
      */
-    Cell( "Cell", "(\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4})|(\\d{3})" ),
+    Cell( "Cell", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}" ),
     /**
      * Email
      */
@@ -49,10 +53,6 @@ public enum Medium {
      * In person
      */
     F2F( "Face-to-face", ".*" ),
-    /**
-     * SendWordNow
-     */
-    SendWordNow( "SendWordNow", ".+" ),
     /**
      * Miscellaneous
      */
