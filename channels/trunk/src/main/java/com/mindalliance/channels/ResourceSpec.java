@@ -473,7 +473,7 @@ public class ResourceSpec extends ModelObject implements Channelable {
         Service service = Project.service();
         List<Channel> allChannels = new ArrayList<Channel>();
         // Unspecified resources have no channels
-        if ( !this.isAnyActor() ) {
+        if ( !this.isAnyone() ) {
             List<ResourceSpec> channelables = service.findAllResourcesBroadeningOrEqualTo( this );
             // If resource spec has an actor, include the channel of the more specific resources as well
             // if ( !isAnyActor() ) {
