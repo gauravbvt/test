@@ -473,12 +473,12 @@ public class ResourceSpec extends ModelObject implements Channelable {
         Service service = Project.service();
         List<Channel> allChannels = new ArrayList<Channel>();
         // Unspecified resources have no channels
-        if ( !this.isAnyone() ) {
+        if ( !this.isAnyActor() ) {
             List<ResourceSpec> channelables = service.findAllResourcesBroadeningOrEqualTo( this );
             // If resource spec has an actor, include the channel of the more specific resources as well
-            if ( !isAnyActor() ) {
-                channelables.addAll( service.findAllResourcesNarrowingOrEqualTo( this ) );
-            }
+            // if ( !isAnyActor() ) {
+            channelables.addAll( service.findAllResourcesNarrowingOrEqualTo( this ) );
+            // }
             Collections.sort( channelables, new Comparator<ResourceSpec>() {
                 /**{@inheritDoc} */
                 public int compare( ResourceSpec rs1, ResourceSpec rs2 ) {
@@ -516,5 +516,5 @@ public class ResourceSpec extends ModelObject implements Channelable {
         channels.remove( channel );
         channels.add( 0, channel );
     }
-    
+
 }
