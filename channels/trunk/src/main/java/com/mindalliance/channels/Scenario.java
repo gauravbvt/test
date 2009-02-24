@@ -31,17 +31,25 @@ public class Scenario extends ModelObject {
     // TODO - Add location (as in area) of the scenario (where the scenario applies
     //  - e.g. avian flu case in New Jersey)
 
-    /** The default name for new scenarios. */
+    /**
+     * The default name for new scenarios.
+     */
     public static final String DEFAULT_NAME = "Untitled";
 
-    /** The default description for new scenarios. */
+    /**
+     * The default description for new scenarios.
+     */
     public static final String DEFAULT_DESCRIPTION = "A scenario";
 
-    /** Initial node capacity. */
+    /**
+     * Initial node capacity.
+     */
     private static final int INITIAL_CAPACITY = 20;
 
-    /** Nodes, indexed by id. */
-    private Map<Long,Node> nodeIndex = new HashMap<Long,Node>( INITIAL_CAPACITY );
+    /**
+     * Nodes, indexed by id.
+     */
+    private Map<Long, Node> nodeIndex = new HashMap<Long, Node>( INITIAL_CAPACITY );
 
     public Scenario() {
     }
@@ -59,11 +67,50 @@ public class Scenario extends ModelObject {
     /**
      * Iterate over the nodes in this scenario.
      * There should always be at least a node in the scenario.
-     * @return an iterator on nodes
-     * */
+     * The nodes are sorted as follows:
+     * 1- triggered nodes with fewer triggering in-scenario nodes leading up to them (smaller number first)
+     * 2- the number of required outcomes (larger number first)
+     * 3- their names (alphabetical) - connectors always come after parts
+     *
+     * @return an iterator on sorted nodes
+     */
     public Iterator<Node> nodes() {
-        // TODO should nodes be sorted here?
-        return getNodeIndex().values().iterator();
+        List<Node> nodes = new ArrayList<Node>();
+        nodes.addAll( getNodeIndex().values() );
+        Collections.sort( nodes, new Comparator<Node>() {
+            /**
+             * {@inheritDoc}
+             */
+            public int compare( Node node, Node other ) {
+                Collator collator = Collator.getInstance();
+                // compare on transitive trigger count
+                int nodeCount = node.transitiveTriggers().size();
+                int otherCount = other.transitiveTriggers().size();
+                int compTriggers = nodeCount == otherCount
+                        ? 0
+                        // fewer transitive triggers means comes before
+                        : (nodeCount < otherCount ? -1 : 1);
+                if ( compTriggers == 0 ) {
+                    // if same trigger count, sort on importance to other nodes
+                    nodeCount = node.requiredOutcomes().size();
+                    otherCount = other.requiredOutcomes().size();
+                    int compImportance = nodeCount == otherCount
+                            ? 0
+                            // more required outcomes means comes before
+                            : (nodeCount > otherCount ? -1 : 1);
+                    if ( compImportance == 0 ) {
+                        // if same, sort on node name (connectors always come last)
+                        return collator.compare(
+                                node.isConnector() ? "\uFF5A\uFF5A" : ((Part)node).getTask(),
+                                other.isConnector() ? "\uFF5A\uFF5A" : ((Part)other).getTask() );
+                    } else {
+                        return compImportance;
+                    }
+                } else
+                    return compTriggers;
+            }
+        } );
+        return nodes.iterator();
     }
 
     /**
@@ -76,9 +123,10 @@ public class Scenario extends ModelObject {
 
     /**
      * Convenience accessor for tests.
+     *
      * @param service the underlying store
-     * @param actor the actor for the new part
-     * @param task the task of the new part
+     * @param actor   the actor for the new part
+     * @param task    the task of the new part
      * @return the new part
      */
     public Part createPart( Service service, Actor actor, String task ) {
@@ -91,9 +139,10 @@ public class Scenario extends ModelObject {
 
     /**
      * Convenience accessor for tests.
+     *
      * @param service the underlying store
-     * @param role the role for the new part
-     * @param task the task of the new part
+     * @param role    the role for the new part
+     * @param task    the task of the new part
      * @return the new part
      */
     public Part createPart( Service service, Role role, String task ) {
@@ -106,6 +155,7 @@ public class Scenario extends ModelObject {
 
     /**
      * Add a new node to this scenario.
+     *
      * @param node the new node
      */
     public void addNode( Node node ) {
@@ -116,12 +166,12 @@ public class Scenario extends ModelObject {
     /**
      * Remove a node from this scenario.
      * Quietly succeeds if node is not part of the scenario
+     *
      * @param node the node to remove.
      */
     public void removeNode( Node node ) {
         if ( getNodeIndex().containsKey( node.getId() )
-             && ( node.isConnector() || hasMoreThanOnePart() ) )
-        {
+                && ( node.isConnector() || hasMoreThanOnePart() ) ) {
             nodeIndex.remove( node.getId() );
 
             Iterator<Flow> ins = node.requirements();
@@ -152,6 +202,7 @@ public class Scenario extends ModelObject {
 
     /**
      * Get a node, given its id.
+     *
      * @param id the id
      * @return the node, or null if not found
      */
@@ -173,9 +224,10 @@ public class Scenario extends ModelObject {
 
     /**
      * Iterates over inputs of this scenario.
+     *
      * @return an iterator on connectors having outcomes
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<Connector> inputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -187,9 +239,10 @@ public class Scenario extends ModelObject {
 
     /**
      * Iterates over the parts of this scenario.
+     *
      * @return an iterator on parts
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<Part> parts() {
         return (Iterator<Part>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -201,9 +254,10 @@ public class Scenario extends ModelObject {
 
     /**
      * Iterates over outputs of this scenario.
+     *
      * @return an iterator on connectors having requirements
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<Connector> outputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -215,6 +269,7 @@ public class Scenario extends ModelObject {
 
     /**
      * Get an iterator on the flows of the scenario, sorted alphabetically.
+     *
      * @return an iterator on unique nodes
      */
     public Iterator<Flow> flows() {
@@ -223,6 +278,7 @@ public class Scenario extends ModelObject {
 
     /**
      * Find node to display when none was specified.
+     *
      * @return the first part in this scenario
      */
     @Transient
@@ -232,8 +288,9 @@ public class Scenario extends ModelObject {
 
     /**
      * Find parts played by a given role in a given organization.
+     *
      * @param organization the organization, possibly Organization.UNKNOWN
-     * @param role the role, possibly Role.UNKNOWN
+     * @param role         the role, possibly Role.UNKNOWN
      * @return the appropriate parts
      */
     public List<Part> findParts( Organization organization, Role role ) {
@@ -250,6 +307,7 @@ public class Scenario extends ModelObject {
 
     /**
      * Find roles in a given organization used in this scenario.
+     *
      * @param organization the organization, possibly Organization.UNKNOWN
      * @return the appropriate roles.
      */
@@ -288,13 +346,19 @@ public class Scenario extends ModelObject {
      */
     private final class FlowIterator implements Iterator<Flow> {
 
-        /** Iterator on nodes. */
+        /**
+         * Iterator on nodes.
+         */
         private final Iterator<Node> nodeIterator;
 
-        /** Iterator on the outcomes of the current node. */
+        /**
+         * Iterator on the outcomes of the current node.
+         */
         private Iterator<Flow> outcomeIterator;
 
-        /** Iterator on the external requirements of the current node. */
+        /**
+         * Iterator on the external requirements of the current node.
+         */
         private Iterator<Flow> reqIterator;
 
         private FlowIterator() {
@@ -302,7 +366,7 @@ public class Scenario extends ModelObject {
             setIterators( nodeIterator.next() );
         }
 
-        @SuppressWarnings( { "unchecked" } )
+        @SuppressWarnings( {"unchecked"} )
         private void setIterators( Node node ) {
             outcomeIterator = node.outcomes();
             reqIterator = (Iterator<Flow>) new FilterIterator(
@@ -326,7 +390,7 @@ public class Scenario extends ModelObject {
             if ( !hasNext() )
                 throw new NoSuchElementException();
             return outcomeIterator.hasNext() ? outcomeIterator.next()
-                                             : reqIterator.next();
+                    : reqIterator.next();
         }
 
         public void remove() {

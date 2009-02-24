@@ -1,5 +1,7 @@
 package com.mindalliance.channels;
 
+import org.jgrapht.experimental.equivalence.EquivalenceSet;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
@@ -110,11 +112,18 @@ public abstract class Node extends ModelObject {
              * {@inheritDoc}
              */
             public int compare( Flow flow, Flow other ) {
-                // First, sort on significance to source
+                // Sort on significance to source
                 if ( flow.getSignificanceToSource().ordinal() == other.getSignificanceToSource().ordinal() ) {
-                    // if same significance to source, sort on whether required
+                    // if same, sort on whether required (triggers, iscritical to or terminates target)
                     if ( flow.isRequired() == other.isRequired() ) {
-                        return Collator.getInstance().compare( flow.getName(), other.getName() );
+                        // if same, sort on max delay
+                        int comp = flow.getMaxDelay().compareTo( other.getMaxDelay() );
+                        if ( comp == 0 ) {
+                            // if same, sort on name
+                            return Collator.getInstance().compare( flow.getName(), other.getName() );
+                        } else {
+                            return comp;
+                        }
                     } else {
                         // if both are required, sort on information
                         return flow.isRequired() ? -1 : 1;
@@ -284,5 +293,39 @@ public abstract class Node extends ModelObject {
         }
 
         return result;
+    }
+
+    /**
+     * Find all requirement flows that directly or indirectly can trigger this node.
+     * Don't traverse external flows.
+     *
+     * @return a list of flows
+     */
+    public List<Flow> transitiveTriggers() {
+        List<Flow> triggerFlows = new ArrayList<Flow>();
+        for ( Flow req : requirements.values() ) {
+            if ( req.isTriggeringToTarget() ) {
+                if ( req.isInternal() ) {
+                    triggerFlows.addAll( req.getSource().transitiveTriggers() );
+                }
+                triggerFlows.add( req );
+            }
+        }
+        return triggerFlows;
+    }
+
+    /**
+     * Find all outcome flows that are required.
+     *
+     * @return a list of flows
+     */
+    public List<Flow> requiredOutcomes() {
+        List<Flow> requiredFlows = new ArrayList<Flow>();
+        for ( Flow out : outcomes.values() ) {
+            if ( out.isRequired() ) {
+                requiredFlows.add( out );
+            }
+        }
+        return requiredFlows;
     }
 }
