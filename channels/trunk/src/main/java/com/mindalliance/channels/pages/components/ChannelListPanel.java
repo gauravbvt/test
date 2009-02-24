@@ -9,7 +9,9 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -149,6 +151,16 @@ public class ChannelListPanel extends Panel {
                 item.add( addressField );
                 addressField.setEnabled( this.isEnabled() );
                 flagIfInvalid( addressField, wrapper );
+                // TODO - use AjaxFallbackLink
+                Link moveToTopLink = new Link("move-to-top") {
+                    public void onClick( ) {
+                        wrapper.moveToFirst();
+                        PageParameters parameters = getWebPage().getPageParameters();
+                        this.setResponsePage( getWebPage().getClass(), parameters );
+                    }
+                } ;
+                item.add( moveToTopLink );
+                moveToTopLink.setVisible( wrapper != setChannels.get( 0 ) && !wrapper.isMarkedForCreation() );
             }
         } );
     }
@@ -340,6 +352,13 @@ public class ChannelListPanel extends Panel {
             if ( channel != null ) {
                 channel.setAddress( address == null ? "" : address.trim() );
             }
+        }
+
+        /**
+         * Make this channel the first one in the list
+         */
+        public void moveToFirst() {
+            channelable.moveToFirst( channel );
         }
     }
 }

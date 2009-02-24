@@ -508,4 +508,13 @@ public class ResourceSpec extends ModelObject implements Channelable {
         if ( !isAnyOrganization() ) val += 1;
         return val;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void moveToFirst( Channel channel ) {
+        channels.remove( channel );
+        channels.add( 0, channel );
+    }
+    
 }

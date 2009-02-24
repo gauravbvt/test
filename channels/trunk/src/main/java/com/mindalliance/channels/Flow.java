@@ -412,6 +412,14 @@ public abstract class Flow extends ModelObject implements Channelable {
         return isCritical() || isTriggeringToTarget() || isTerminatingToTarget();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void moveToFirst( Channel channel ) {
+        channels.remove( channel );
+        channels.add( 0, channel );
+    }
+
     // Abstract methods
 
     /**
