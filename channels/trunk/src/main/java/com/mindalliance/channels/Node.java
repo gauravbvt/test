@@ -1,7 +1,5 @@
 package com.mindalliance.channels;
 
-import org.jgrapht.experimental.equivalence.EquivalenceSet;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
@@ -9,15 +7,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.ArrayList;
-import java.text.Collator;
+import java.util.Map;
 
 /**
  * A node in the flow graph

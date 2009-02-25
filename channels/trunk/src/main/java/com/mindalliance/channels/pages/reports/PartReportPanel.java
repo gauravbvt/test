@@ -81,14 +81,12 @@ public class PartReportPanel extends Panel {
     }
 
     private void addReceives() {
-        WebMarkupContainer wmc = new WebMarkupContainer( "receives-div" );
-
         Iterator<Flow> requirements = part.requirements();
         List<Flow> receives = new ArrayList<Flow>();
         while ( requirements.hasNext() )
             receives.add( requirements.next() );
 
-        wmc.add( new ListView<Flow>( "receives", receives ) {
+        add( new ListView<Flow>( "receives", receives ) {
             @Override
             protected void populateItem( ListItem<Flow> item ) {
                 Flow flow = item.getModelObject();
@@ -99,21 +97,15 @@ public class PartReportPanel extends Panel {
                 item.add( new FlowReportPanel( "receive", new Model<Flow>( flow ), part ) );
             }
         } );
-
-        if ( receives.isEmpty() )
-            wmc.setVisible( false );
-        add( wmc );
     }
 
     private void addSends() {
-        WebMarkupContainer wmc = new WebMarkupContainer( "sends-div" );
-
         List<Flow> sends = new ArrayList<Flow>();
         Iterator<Flow> outcomes = part.outcomes();
         while ( outcomes.hasNext() )
             sends.add( outcomes.next() );
 
-        wmc.add( new ListView<Flow>( "sends", sends ) {
+        add( new ListView<Flow>( "sends", sends ) {
             @Override
             protected void populateItem( ListItem<Flow> item ) {
                 Flow flow = item.getModelObject();
@@ -125,9 +117,5 @@ public class PartReportPanel extends Panel {
                 item.add( new FlowReportPanel( "send", new Model<Flow>( flow ), part ) );
             }
         } );
-
-        if ( sends.isEmpty() )
-            wmc.setVisible( false );
-        add( wmc );
     }
 }

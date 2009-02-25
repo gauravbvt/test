@@ -35,7 +35,7 @@ public class ActorReportPanel extends Panel {
     }
 
     private void init() {
-        add( new Label( "name", actor.getName() ) );                                      // NON-NLS
+        add( new Label( "name", actor.getName() + ":" ) );                                // NON-NLS
         String scenarioString = scenario == null ?
                             ""  : MessageFormat.format( "({0})", scenario.getName() );
         Label scenarioLabel = new Label( "scenario", scenarioString );                    // NON-NLS

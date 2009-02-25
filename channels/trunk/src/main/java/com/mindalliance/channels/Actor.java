@@ -12,7 +12,7 @@ import javax.persistence.Transient;
 public class Actor extends ModelObject {
 
     /** Bogus actor used to signify that the actor is not known... */
-    public static final Actor UNKNOWN = new Actor( "(unknown)" );
+    public static final Actor UNKNOWN = new Actor( "(unknown contact)" );
     /**
      * The title of the actor.
      * TODO: quickie -- assumes that an actor has at most one job title in at most one organization

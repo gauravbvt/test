@@ -8,11 +8,14 @@
            http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
     <bean id="channels" class="com.mindalliance.channels.service.ChannelsServiceImpl">
-        <property name="addingSamples" value="true"/>
-        <property name="importingScenarios" value="false"/>
+        <property name="addingSamples" value="false"/>
+        <property name="importingScenarios" value="true"/>
         <property name="importDirectory" value="target/import"/>
         <property name="dao" ref="dao"/>
     </bean>
+
+
+    
 
     <bean id="serializer" class="com.mindalliance.channels.export.xml.XmlStreamer"/>
     <bean id="attachmentManager" class="com.mindalliance.channels.attachments.FileBasedManager">

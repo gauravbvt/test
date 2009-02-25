@@ -9,7 +9,8 @@
 
     body {
         margin: 0;
-        font-family: "Times New Roman",Times,serif;
+        padding: 0;
+        font-family: Arial,Helvetica,sans-serif;
         font-size: 10pt;
    }
 }
@@ -20,6 +21,12 @@
         padding: 5px;
         font-family: Arial,Helvetica,sans-serif;
         font-size: 14px;
+    }
+
+    div.scenario, .scenario div.role, #directory {
+        border-top: 1px dotted gray;
+        margin-top: 2em;
+        padding-top: 2em;
     }
 }
 
@@ -41,11 +48,14 @@ div.organization > h3, div.organization > p.description {
 
 .role ul.contacts {
     background-color: #D0D0D0;
-    padding: 0.5em !important;
+    padding: 0.5em 0.5em 0 0.5em !important;
+    width: 61.8%;
+    list-style: none;
+    margin: 0 auto;
 }
 
-table.tasks th, table.tasks td {
-    border: 1px solid lightgray;
+.role ul.contacts li.contact {
+    padding-bottom: 0.5em;
 }
 
 .role table.header td {
@@ -97,18 +107,24 @@ table.tasks th, table.tasks td {
     font-weight: bold;
     margin: 0;
     float: left;
-    width: 1.5in;
+    width: 1.4in;
 }
 
 .role ul.contacts ul.channels {
     list-style: none;
-    margin: 0;
+    margin: 0 0 0 1.4in;
 }
 
 .role ul.contacts li.channel {
     display: -moz-inline-box;
-    width: 1.5in;
+    min-width: 2.2in;
     margin: 0;
+    padding-right: 1em;
+}
+
+.task ul.details {
+    list-style: none;
+    padding: 0;
 }
 
 table.tasks {
@@ -120,7 +136,14 @@ table.tasks th, table.tasks td {
     vertical-align: top;
     text-align: left;
     padding: 0.5em;
-    width: 50%;
+}
+
+table.tasks th {
+    background: #f0f0f0;
+}
+
+table.tasks td {
+    border: 1px solid lightgray;
 }
 
 table.tasks th h4 {
@@ -131,15 +154,54 @@ p.task-name {
     font-weight: bold;
 }
 
-table.tasks td {
-}
-
-h5 {
-    margin: 0 0 1em 0;
-}
 .tasks p, .tasks ul {
     margin: 0 0 0.5em 0;
 }
 .tasks ul {
     padding: 0 0 0 1em;
+}
+
+.tasks td:first-child, .tasks th:first-child {
+    width: 38.2%;
+}
+
+.tasks td, table.tasks th {
+    width: 61.8%;
+}
+
+.task ul {
+}
+
+.task li {
+}
+
+.task h5 {
+    margin: 0 0 1em 0;
+}
+
+ul.flows {
+    list-style: none;
+    padding: 0;
+}
+
+ul.flows > li {
+    min-height: 48px;
+    padding: 15px 0 0 56px;
+}
+
+ul.flows li.receive-notification {
+    background: transparent url('images/arrow_left_blue1.png') no-repeat top left;
+}
+ul.flows li.receive-answer {
+    background: transparent url('images/arrow_left_blue1.png') no-repeat top left;
+}
+ul.flows li.send-notification {
+    background: transparent url('images/arrow_right_blue1.png') no-repeat top left;
+}
+ul.flows li.send-answer {
+    background: transparent url('images/arrow_right_blue1.png') no-repeat top left;
+}
+
+.urgency {
+    color: red;
 }

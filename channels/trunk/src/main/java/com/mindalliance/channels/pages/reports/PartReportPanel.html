@@ -8,7 +8,7 @@
 <body>
 <wicket:panel>
     <td>
-        <ul>
+        <ul class="details">
             <li>
                 <p class="task-name" wicket:id="task">task</p>
 
@@ -20,28 +20,20 @@
 
                 <p wicket:id="repeats-div">Repeats every <span class="delay" wicket:id="repeats-every">1 day</span></p>
 
-                <div wicket:id="issues">[issues report panel]</div>                
+                <div wicket:id="issues">[issues report panel]</div>
             </li>
         </ul>
     </td>
 
     <td>
-        <div class="sends" wicket:id="sends-div">
-            <h5>Sends</h5>
-            <ul>
-                <li wicket:id="sends">
-                    <div wicket:id="send">[flow report panel]</div>
-                </li>
-            </ul>
-        </div>
-        <div class="receives" wicket:id="receives-div">
-            <h5>Receives</h5>
-            <ul>
-                <li wicket:id="receives">
-                    <div wicket:id="receive">[flow report panel]</div>
-                </li>
-            </ul>
-        </div>
+        <ul class="flows">
+            <li wicket:id="sends">
+                <div wicket:id="send">[flow report panel]</div>
+            </li>
+            <li wicket:id="receives">
+                <div wicket:id="receive">[flow report panel]</div>
+            </li>
+        </ul>
     </td>
 
 </wicket:panel>
