@@ -62,6 +62,10 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
      */
     private boolean markedForDeletion;
     /**
+     * Flow's title label
+     */
+    private Label titleLabel;
+    /**
      * The name field.
      */
     private TextField<String> nameField;
@@ -133,9 +137,22 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         setOutcome( outcome );
 
         addHeader();
-        nameField = new TextField<String>( "name" );                                      // NON-NLS
+        nameField = new TextField<String>( "name" );
+        nameField.add( new AjaxFormComponentUpdatingBehavior("onchange") {                // NON-NLS
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addIssues( nameField, getFlow(), "name" );
+                target.addComponent( nameField );
+                target.addComponent( titleLabel );
+                target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
+            }
+        });
         addLabeled( "name-label", nameField );                                            // NON-NLS
         descriptionField = new TextArea<String>( "description" );                         // NON-NLS
+        descriptionField.add( new AjaxFormComponentUpdatingBehavior("onchange") {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                // Do nothing
+            }
+        });
         addLabeled( "description-label", descriptionField );                              // NON-NLS
         addAskedForRadios();
         addSignificanceToTarget();
@@ -219,6 +236,11 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
                     }
                 }
         );
+        significanceToTargetChoice.add(  new AjaxFormComponentUpdatingBehavior("onchange") {
+                    protected void onUpdate( AjaxRequestTarget target ) {
+                        target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
+                    }
+                });
         significanceToTargetLabel.add( significanceToTargetChoice );
     }
 
@@ -231,16 +253,33 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         triggersSourceCheckBox = new CheckBox(
                 "triggers-source",
                 new PropertyModel<Boolean>( this, "triggeringToSource" ) );
-        triggersSourceContainer.add( triggersSourceCheckBox );
+        triggersSourceCheckBox.add(  new AjaxFormComponentUpdatingBehavior("onchange") {
+                    protected void onUpdate( AjaxRequestTarget target ) {
+                        target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
+                    }
+                });
         triggersSourceContainer.add( triggersSourceCheckBox );
         terminatesSourceContainer = new WebMarkupContainer("terminates-source-container");
         significanceToSourceRow.add(terminatesSourceContainer);
         terminatesSourceCheckBox = new CheckBox(
                 "terminates-source",
                 new PropertyModel<Boolean>( this, "terminatingToSource" ) );
+        terminatesSourceCheckBox.add(  new AjaxFormComponentUpdatingBehavior("onchange") {
+                    protected void onUpdate( AjaxRequestTarget target ) {
+                        target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
+                    }
+                });
         terminatesSourceContainer.add( terminatesSourceCheckBox );
         terminatesSourceContainer.add(
-                new Label( "notifying-or-replying", flow.isAskedFor() ? "replying" : "notifying" ) );
+                new Label( "notifying-or-replying", new PropertyModel<String>( this, "replyingOrNotifying") ) );
+    }
+
+    /**
+     * Return label string according to type of flow.
+     * @return  a string
+     */
+    public String getReplyingOrNotifying() {
+       return flow.isAskedFor() ? "replying" : "notifying";
     }
 
     /**
@@ -302,14 +341,16 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
     }
 
     private void addHeader() {
-        add( new Label( "title",                                                          // NON-NLS
+        titleLabel = new Label( "title",                                                          // NON-NLS
                 new AbstractReadOnlyModel<String>() {
                     @Override
                     public String getObject() {
                         return outcome ? getFlow().getOutcomeTitle()
                                 : getFlow().getRequirementTitle();
                     }
-                } ) );
+                } ) ;
+        titleLabel.setOutputMarkupId( true );
+        add( titleLabel );
 
         // TODO don't collapse everything on hide
         add( new ScenarioLink( "hide", new PropertyModel<Node>( this, "node" ) ) );       // NON-NLS
@@ -347,6 +388,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
      * @return the label component
      */
     protected final FormComponentLabel addLabeled( String id, FormComponent<?> component ) {
+        component.setOutputMarkupId( true );
         FormComponentLabel result = new FormComponentLabel( id, component );
         add( result );
         add( component );

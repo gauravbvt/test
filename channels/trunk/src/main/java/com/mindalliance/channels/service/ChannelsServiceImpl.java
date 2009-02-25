@@ -272,7 +272,7 @@ public class ChannelsServiceImpl implements Service {
                                 "Imported scenario "
                                         + scenario.getName()
                                         + " from "
-                                        + file.getPath());
+                                        + file.getPath() );
                     } catch ( IOException e ) {
                         LoggerFactory.getLogger( getClass() ).warn( "Failed to import " + file.getPath(), e );
                     }
@@ -489,17 +489,21 @@ public class ChannelsServiceImpl implements Service {
     @SuppressWarnings( {"unchecked"} )
     public List<Actor> findAllActors( ResourceSpec resourceSpec ) {
         Set<Actor> actors = new HashSet<Actor>();
-        Iterator<ResourceSpec> actorResourceSpecs = new FilterIterator(
-                findAllResourceSpecs().iterator(),
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        return ( (ResourceSpec) object ).getActor() != null;
-                    }
-                } );
-        while ( actorResourceSpecs.hasNext() ) {
-            ResourceSpec actorResourceSpec = actorResourceSpecs.next();
-            if ( actorResourceSpec.narrowsOrEquals( resourceSpec ) ) {
-                actors.add( actorResourceSpec.getActor() );
+        // If the resource spec is anyone, then return no actor,
+        // else it would return every actor known to the project
+        if ( !resourceSpec.isAnyone() ) {
+            Iterator<ResourceSpec> actorResourceSpecs = new FilterIterator(
+                    findAllResourceSpecs().iterator(),
+                    new Predicate() {
+                        public boolean evaluate( Object object ) {
+                            return ( (ResourceSpec) object ).getActor() != null;
+                        }
+                    } );
+            while ( actorResourceSpecs.hasNext() ) {
+                ResourceSpec actorResourceSpec = actorResourceSpecs.next();
+                if ( actorResourceSpec.narrowsOrEquals( resourceSpec ) ) {
+                    actors.add( actorResourceSpec.getActor() );
+                }
             }
         }
         return new ArrayList<Actor>( actors );

@@ -7,6 +7,8 @@ import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import com.mindalliance.channels.Delay;
 
 import java.util.List;
@@ -39,6 +41,11 @@ public class DelayPanel extends Panel {
     private void init() {
         amountField = new TextField<String>( "delay-amount",
                 new PropertyModel<String>( delay, "amountString" ) );
+        amountField.add( new AjaxFormComponentUpdatingBehavior("onchange") {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                // Do nothing
+            }
+        });
         add( amountField );
         unitChoice = new DropDownChoice<Delay.Unit>(
                 "delay-unit",
@@ -55,6 +62,11 @@ public class DelayPanel extends Panel {
                 }
         ) {
         };
+        unitChoice.add( new AjaxFormComponentUpdatingBehavior("onchange") {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                // Do nothing
+            }
+        });
         add( unitChoice );
     }
 

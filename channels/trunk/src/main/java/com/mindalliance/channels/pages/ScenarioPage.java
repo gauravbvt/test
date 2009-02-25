@@ -114,6 +114,22 @@ public final class ScenarioPage extends WebPage {
      * The big form.
      */
     private ScenarioForm form;
+    /**
+     * The label showing node's title
+     */
+    private Label nodeTitle;
+    /**
+     * Scenario title label in header.
+     */
+    private Label scenarioNameLabel;
+    /**
+     * Scenario description label in header.
+     */
+    private Label scenarioDescriptionLabel;
+    /**
+     * Dropdown with scenario choides
+     */
+    private DropDownChoice<Scenario> scenarioDropDownChoice;
 
 
     /**
@@ -287,8 +303,7 @@ public final class ScenarioPage extends WebPage {
         expansions = expanded;
 
         setVersioned( false );
-        setStatelessHint( true );
-
+        setStatelessHint( true ); 
         add( new Label( "sc-title", new PropertyModel<String>( scenario, "name" ) ) );    // NON-NLS
         form = new ScenarioForm( "big-form", scenario, n );                               // NON-NLS
         add( form );
@@ -320,6 +335,26 @@ public final class ScenarioPage extends WebPage {
      */
     public MarkupContainer getGraph() {
         return form.getGraph();
+    }
+
+    /**
+     * Get the Label showing the node title
+     * @return a Label
+     */
+    public Label getNodeTitle() {
+        return nodeTitle;
+    }
+
+    public Label getScenarioNameLabel() {
+        return scenarioNameLabel;
+    }
+
+    public Label getScenarioDescriptionLabel() {
+        return scenarioDescriptionLabel;
+    }
+
+    public DropDownChoice<Scenario> getScenarioDropDownChoice() {
+        return scenarioDropDownChoice;
     }
 
     //==============================================================
@@ -376,14 +411,15 @@ public final class ScenarioPage extends WebPage {
 /*
             add( new Label( "node-title",                                                 // NON-NLS
                     new PropertyModel<String>( node, "title" ) ) );                       // NON-NLS
-*/
-            add( new Label( "node-title",                                                 // NON-NLS
+*/          nodeTitle = new Label( "node-title",                                                 // NON-NLS
                     new AbstractReadOnlyModel<String>() {
                         @Override
                         public String getObject() {
                             return StringUtils.abbreviate( node.getTitle(), NODE_TITLE_MAX_LENGTH );
                         }
-                    } ) );               // NON-NLS
+                    } );
+            nodeTitle.setOutputMarkupId( true );
+            add( nodeTitle );               // NON-NLS
             add( new TextArea<String>( "description",                                     // NON-NLS
                     new PropertyModel<String>( node, DESC_PROPERTY ) ) );
             add( new CheckBox( "node-del",                                                // NON-NLS
@@ -464,25 +500,6 @@ public final class ScenarioPage extends WebPage {
          */
         private void addScenarioFields( final Scenario scenario ) {
             addHeader( scenario );
-            /*
-           add( new Label( "node-title",                                                 // NON-NLS
-                    new AbstractReadOnlyModel<String>() {
-                        @Override
-                        public String getObject() {
-                            return StringUtils.abbreviate( node.getTitle(), NODE_TITLE_MAX_LENGTH );
-                        }
-                    } ) );               // NON-NLS
-
-             */
-            add( new Label( "sc-desc",                                                    // NON-NLS
-                  //  new PropertyModel<String>( scenario, DESC_PROPERTY )
-                    new AbstractReadOnlyModel<String>() {
-                        @Override
-                        public String getObject() {
-                            return StringUtils.abbreviate( scenario.getDescription(), SCENARIO_DESCRIPTION_MAX_LENGTH );
-                        }
-                    }
-            ) );
 
             add( new Link( "add-part" ) {                                                 // NON-NLS
 
@@ -508,16 +525,22 @@ public final class ScenarioPage extends WebPage {
             } );
 
             if ( expansions.contains( scenario.getId() ) ) {
-                add( new BookmarkablePageLink<Scenario>(
-                        "sc-edit", ScenarioPage.class,                                    // NON-NLS
-                        getParameters( scenario, node ) ) );
-
+                BookmarkablePageLink<Scenario> editLink  =
+                        new BookmarkablePageLink<Scenario>(
+                                "sc-edit", ScenarioPage.class,                                    // NON-NLS
+                                getParameters( scenario, node ) );
+                add( editLink );
+                editLink.add(  new Label("edit-or-hide", "Hide") );
                 add( new ScenarioEditPanel( "sc-editor",                                  // NON-NLS
                                             scenario, getPageParameters() ) );
 
             } else {
-                add( new BookmarkablePageLink<Scenario>( "sc-edit", ScenarioPage.class,   // NON-NLS
-                        getParameters( scenario, node, scenario.getId() ) ) );
+                BookmarkablePageLink<Scenario> editLink =
+                        new BookmarkablePageLink<Scenario>(
+                                "sc-edit", ScenarioPage.class,   // NON-NLS
+                                getParameters( scenario, node, scenario.getId() ) );
+                add( editLink );
+                editLink.add(  new Label("edit-or-hide", "Edit") );
                 add( new Label( "sc-editor" ) );                                          // NON-NLS
             }
 
@@ -536,7 +559,7 @@ public final class ScenarioPage extends WebPage {
 
         //------------------------------
         private void addHeader( final Scenario scenario ) {
-            Label header = new Label(
+            scenarioNameLabel = new Label(
                     "header",                                                             // NON-NLS
                     /* new PropertyModel<String>( scenario, NAME_PROPERTY ) ); */
                     new AbstractReadOnlyModel() {
@@ -547,24 +570,37 @@ public final class ScenarioPage extends WebPage {
                         }
                     }
             );
-
+            scenarioNameLabel.setOutputMarkupId( true );
             // Add style mods from scenario analyst.
             Analyst analyst = ( (Project) getApplication() ).getAnalyst();
             String issue = analyst.getIssuesSummary(
                     scenario, Analyst.INCLUDE_PROPERTY_SPECIFIC );
             if ( !issue.isEmpty() ) {
-                header.add( new AttributeModifier(
+                scenarioNameLabel.add( new AttributeModifier(
                         "class", true, new Model<String>( "error" ) ) );                  // NON-NLS
-                header.add( new AttributeModifier(
+                scenarioNameLabel.add( new AttributeModifier(
                         "title", true, new Model<String>( issue ) ) );                    // NON-NLS
             }
 
-            add( header );
+            add( scenarioNameLabel );
+            scenarioDescriptionLabel = new Label( "sc-desc",                                                    // NON-NLS
+                  //  new PropertyModel<String>( scenario, DESC_PROPERTY )
+                    new AbstractReadOnlyModel<String>() {
+                        @Override
+                        public String getObject() {
+                            return StringUtils.abbreviate(
+                                    scenario.getDescription(),
+                                    SCENARIO_DESCRIPTION_MAX_LENGTH );
+                        }
+                    }
+            );
+            scenarioDescriptionLabel.setOutputMarkupId( true );
+            add( scenarioDescriptionLabel );
         }
 
         //------------------------------
         private DropDownChoice<Scenario> createSelectScenario( String id ) {
-            DropDownChoice<Scenario> dropDown = new DropDownChoice<Scenario>(
+            scenarioDropDownChoice = new DropDownChoice<Scenario>(
                     id, new PropertyModel<Scenario>( this, "target" ),                    // NON-NLS
                     getService().list( Scenario.class ) ) {
 
@@ -578,9 +614,9 @@ public final class ScenarioPage extends WebPage {
                     redirectTo( newSelection );
                 }
             };
-            dropDown.setOutputMarkupId( true );
+            scenarioDropDownChoice.setOutputMarkupId( true );
 
-            return dropDown;
+            return scenarioDropDownChoice;
         }
 
         //------------------------------

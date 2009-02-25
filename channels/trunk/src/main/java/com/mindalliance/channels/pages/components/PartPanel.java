@@ -10,9 +10,13 @@ import com.mindalliance.channels.Delay;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ModelObjectLink;
+import com.mindalliance.channels.pages.ScenarioPage;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
@@ -106,36 +110,79 @@ public class PartPanel extends Panel {
         return new ModelObjectLink( id, new Model<ModelObject>( model.getObject() ) );
     }
 
-    private void addField( String property ) {
+    private void addField( final String property ) {
         final TextField<String> field = new TextField<String>( property );
+        field.setOutputMarkupId( true );
+        field.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addIssues( field, part, property );
+                target.addComponent( field );
+                target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
+                target.addComponent(( (ScenarioPage) getPage() ).getNodeTitle() );
+            }
+        } );
 
         // Add style mods from scenario analyst.
-        final Analyst analyst = ( (Project) getApplication() ).getAnalyst();
-        final String issue = analyst.getIssuesSummary( getPart(), property );
-        if ( !issue.isEmpty() ) {
-            field.add(
-                    new AttributeModifier( "class", true,
-                            new Model<String>( "error" ) ) );   // NON-NLS
-            field.add(
-                    new AttributeModifier( "title", true,
-                            new Model<String>( issue ) ) );     // NON-NLS
-        }
+        addIssues( field, part, property );
         add( field );
     }
 
+    /**
+     * Add issues annotations to a component.
+     *
+     * @param component the component
+     * @param object    the object of the issues
+     * @param property  the property of concern. If null, get issues of object
+     */
+    protected void addIssues( FormComponent<?> component, ModelObject object, String property ) {
+        Analyst analyst = ( (Project) getApplication() ).getAnalyst();
+        String issue = property == null ?
+                analyst.getIssuesSummary( object, false ) :
+                analyst.getIssuesSummary( object, property );
+        if ( !issue.isEmpty() ) {
+            component.add(
+                    new AttributeModifier(
+                            "class", true, new Model<String>( "error" ) ) );              // NON-NLS
+            component.add(
+                    new AttributeModifier(
+                            "title", true, new Model<String>( issue ) ) );                // NON-NLS
+        }
+    }
+
+
     private void addTimingFields() {
-        add( new CheckBox( "self-terminating", new PropertyModel<Boolean>( part, "selfTerminating" ) ) );
-        DelayPanel completionTimePanel = new DelayPanel(
+        final DelayPanel repeatsEveryPanel = new DelayPanel(
+                "repeats-every",
+                new PropertyModel<Delay>( part, "repeatsEvery" ) );
+        repeatsEveryPanel.setOutputMarkupId( true );
+        repeatsEveryPanel.enable( part.isRepeating() );
+        add( repeatsEveryPanel );
+        final DelayPanel completionTimePanel = new DelayPanel(
                 "completion-time",
                 new PropertyModel<Delay>( part, "completionTime" ) );
         completionTimePanel.enable( part.isSelfTerminating() );
+        completionTimePanel.setOutputMarkupId( true );
         add( completionTimePanel );
-        add( new CheckBox( "repeating", new PropertyModel<Boolean>( part, "repeating" ) ) );
-        DelayPanel repeatsEveryPanel = new DelayPanel(
-                "repeats-every",
-                new PropertyModel<Delay>( part, "repeatsEvery" ) );
-        repeatsEveryPanel.enable( part.isRepeating() );
-        add( repeatsEveryPanel );
+        CheckBox selfTerminatingCheckBox = new CheckBox(
+                "self-terminating",
+                new PropertyModel<Boolean>( part, "selfTerminating" ) );
+        selfTerminatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                completionTimePanel.enable( part.isSelfTerminating() );
+                target.addComponent( completionTimePanel );
+            }
+        } );
+        add( selfTerminatingCheckBox );
+        CheckBox repeatingCheckBox = new CheckBox(
+                "repeating",
+                new PropertyModel<Boolean>( part, "repeating" ) );
+        add( repeatingCheckBox );
+        repeatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                repeatsEveryPanel.enable( part.isRepeating() );
+                target.addComponent( repeatsEveryPanel );
+            }
+        } );
     }
 
     /**

@@ -9,9 +9,10 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.PageParameters;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -20,17 +21,19 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
+
+// TODO - Ajax - update display of flow issues when channels list is empty?
 
 /**
  * An editable list of channels.
@@ -46,10 +49,6 @@ public class ChannelListPanel extends Panel {
      */
     private final Channelable channelable;
     /**
-     * List of wrapped, candidate channels
-     */
-    private List<Wrapper> candidates = new ArrayList<Wrapper>();
-    /**
      * Markup for candidate channels.
      */
     private WebMarkupContainer candidateChannelsMarkup;
@@ -58,13 +57,17 @@ public class ChannelListPanel extends Panel {
      */
     private WebMarkupContainer editableChannelsMarkup;
     /**
-     * LIst of non-editable channels
+     * List of non-editable channels.
      */
     List<Channel> channels;
     /**
-     * Markup for non-editable channels
+     * Markup for non-editable channels.
      */
     private WebMarkupContainer nonEditableChannelsMarkup;
+    /**
+     * List view on wrapped candidate channels
+     */
+    private ListView<Wrapper> candidatesList;
     /**
      * No channel message
      */
@@ -86,7 +89,9 @@ public class ChannelListPanel extends Panel {
     private void adjustFields() {
         if ( channelable instanceof Flow ) {
             Flow flow = (Flow) channelable;
-            candidateChannelsMarkup.setVisible( !candidates.isEmpty() && flow.canSetChannels() );
+            candidateChannelsMarkup.setVisible(
+                    !candidatesList.getModelObject().isEmpty()
+                            && flow.canSetChannels() );
             editableChannelsMarkup.setVisible( flow.canSetChannels() );
             nonEditableChannelsMarkup.setVisible( !flow.canSetChannels() && flow.canGetChannels() );
             noChannelLabel.setVisible( channels.isEmpty() );
@@ -97,27 +102,42 @@ public class ChannelListPanel extends Panel {
 
     private void addCandidateChannels() {
         candidateChannelsMarkup = new WebMarkupContainer( "candidates-container" );
+        candidateChannelsMarkup.setOutputMarkupId( true );
         add( candidateChannelsMarkup );
-        candidates = getWrappedCandidateChannels( channelable );
-        ListView<Wrapper> candidatesList = new ListView<Wrapper>( "candidates", candidates ) {
+        candidatesList = new ListView<Wrapper>(
+                "candidates",
+                new PropertyModel<List<Wrapper>>( this, "wrappedCandidateChannels") ) {
             @Override
             protected void populateItem( ListItem<Wrapper> item ) {
                 Wrapper wrapper = item.getModelObject();
-                item.add( new CheckBox(
+                CheckBox candidateCheckBox = new CheckBox(
                         "include-candidate",
-                        new PropertyModel<Boolean>( wrapper, "markedForInclusion" ) ) );
+                        new PropertyModel<Boolean>( wrapper, "markedForInclusion" ) );
+                candidateCheckBox.add(  new AjaxFormComponentUpdatingBehavior("onchange") {
+                    protected void onUpdate( AjaxRequestTarget target ) {
+                        // adjustFields();
+                        target.addComponent( candidateChannelsMarkup );
+                        target.addComponent( editableChannelsMarkup );
+                    }
+                } );
+                item.add( candidateCheckBox );
                 item.add( new Label( "candidate", wrapper.getChannel().toString() ) );
             }
         };
         candidateChannelsMarkup.add( candidatesList );
-        candidateChannelsMarkup.setVisible( !candidates.isEmpty() && this.isEnabled() );
+        candidateChannelsMarkup.setVisible(
+                !candidatesList.getModelObject().isEmpty()
+                && this.isEnabled() );
     }
 
     private void addEditableChannels() {
         editableChannelsMarkup = new WebMarkupContainer( "editable-container" );
+        editableChannelsMarkup.setOutputMarkupId( true );
         add( editableChannelsMarkup );
-        final List<Wrapper> setChannels = getWrappedChannels( channelable );
-        editableChannelsMarkup.add( new ListView<Wrapper>( "editable-channels", setChannels ) {
+        // final List<Wrapper> setChannels = getWrappedChannels( channelable );
+        final ListView<Wrapper> editableChannelsList = new ListView<Wrapper>(
+                "editable-channels",
+                new PropertyModel<List<Wrapper>>(this, "wrappedChannels") ) {
             @Override
             protected void populateItem( ListItem<Wrapper> item ) {
                 final Wrapper wrapper = item.getModelObject();
@@ -127,6 +147,13 @@ public class ChannelListPanel extends Panel {
                         new PropertyModel<Boolean>( wrapper, "markedForInclusion" ) );
                 includeSpan.setVisible( !wrapper.isMarkedForCreation() );
                 includeCheckBox.setEnabled( this.isEnabled() );
+                includeCheckBox.add(  new AjaxFormComponentUpdatingBehavior("onchange") {
+                    protected void onUpdate( AjaxRequestTarget target ) {
+                        // adjustFields();
+                        target.addComponent( candidateChannelsMarkup );
+                        target.addComponent( editableChannelsMarkup );
+                    }
+                } );
                 includeSpan.add( includeCheckBox );
                 item.add( includeSpan );
                 DropDownChoice<Medium> mediumChoices = new DropDownChoice<Medium>(
@@ -143,26 +170,42 @@ public class ChannelListPanel extends Panel {
                             }
                         }
                 );
+                mediumChoices.add(  new AjaxFormComponentUpdatingBehavior("onchange") {
+                    protected void onUpdate( AjaxRequestTarget target ) {
+                        target.addComponent( editableChannelsMarkup );
+                    }
+                });
                 item.add( mediumChoices );
                 mediumChoices.setEnabled( this.isEnabled() );
                 TextField<String> addressField = new TextField<String>(
                         "address",
                         new PropertyModel<String>( wrapper, "address" ) );
+                addressField.add(  new AjaxFormComponentUpdatingBehavior("onchange") {
+                    protected void onUpdate( AjaxRequestTarget target ) {
+                        target.addComponent( editableChannelsMarkup );
+                    }
+                });
                 item.add( addressField );
                 addressField.setEnabled( this.isEnabled() );
                 flagIfInvalid( addressField, wrapper );
-                // TODO - use AjaxFallbackLink
-                Link moveToTopLink = new Link("move-to-top") {
-                    public void onClick( ) {
+                AjaxFallbackLink moveToTopLink = new AjaxFallbackLink("move-to-top") {
+                    public void onClick( AjaxRequestTarget target ) {
                         wrapper.moveToFirst();
+                        target.addComponent( editableChannelsMarkup );
+/*
                         PageParameters parameters = getWebPage().getPageParameters();
                         this.setResponsePage( getWebPage().getClass(), parameters );
+*/
                     }
                 } ;
                 item.add( moveToTopLink );
-                moveToTopLink.setVisible( wrapper != setChannels.get( 0 ) && !wrapper.isMarkedForCreation() );
+                moveToTopLink.setVisible(
+                        wrapper.getChannel() != channelable.getEffectiveChannels().get( 0 )
+                        && !wrapper.isMarkedForCreation() );
             }
-        } );
+        };
+        // editableChannelsList.setOutputMarkupId( true );
+        editableChannelsMarkup.add( editableChannelsList  );
     }
 
     private void addNonEditableChannels() {
@@ -183,7 +226,11 @@ public class ChannelListPanel extends Panel {
         } );
     }
 
-    private List<Wrapper> getWrappedChannels( Channelable channelable ) {
+    /**
+     * Get the channelable's effective channels, wrapped
+     * @return a list of Wrappers
+     */
+    public List<Wrapper> getWrappedChannels(  ) {
         final List<Wrapper> list = new ArrayList<Wrapper>();
         List<Channel> setChannels = channelable.getEffectiveChannels();
         for ( Channel channel : setChannels ) {
@@ -195,7 +242,7 @@ public class ChannelListPanel extends Panel {
         return list;
     }
 
-    private List<Wrapper> getWrappedCandidateChannels( Channelable channelable ) {
+    public List<Wrapper> getWrappedCandidateChannels( ) {
         Set<Channel> candidates = new HashSet<Channel>();
         List<Channelable> channelables = findRelatedChannelables( channelable );
         List<Channel> alreadySetChannels = channelable.getEffectiveChannels();
