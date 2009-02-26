@@ -428,6 +428,13 @@ public class ExternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
+    public void breakup() {
+        disconnect();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void initFrom( Flow flow ) {
     }

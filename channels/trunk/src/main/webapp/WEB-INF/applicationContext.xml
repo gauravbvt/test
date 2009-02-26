@@ -34,9 +34,9 @@
         <property name="importer" ref="serializer"/>
         <property name="exporter" ref="serializer"/>
         <property name="analyst" ref="analyst"/>
-        <property name="projectName" value="Test project"/>
-        <property name="client" value="Mind-Alliance"/>
-        <property name="description" value="This is a test project"/>
+        <property name="projectName" value="Emergency Communications Plan"/>
+        <property name="client" value="Strategic Content Imaging, Inc."/>
+        <property name="description" value="Communications planning for responding and recovering from business interruptions due fire and power outage."/>
     </bean>
 
     <!-- Flow diagram -->
@@ -61,6 +61,7 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.PartWithoutTask"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.PartWithoutRole"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowWithoutChannel"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.InvalidChannel"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.UnnamedFlow"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedSource"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedTarget"/>

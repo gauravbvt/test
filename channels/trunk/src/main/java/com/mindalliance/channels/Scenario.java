@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.text.Collator;
 
+import com.mindalliance.channels.pages.Project;
+
 /**
  * A scenario in the project.
  * Provides an iterator on its nodes.
@@ -89,7 +91,7 @@ public class Scenario extends ModelObject {
                 int compTriggers = nodeCount == otherCount
                         ? 0
                         // fewer transitive triggers means comes before
-                        : (nodeCount < otherCount ? -1 : 1);
+                        : ( nodeCount < otherCount ? -1 : 1 );
                 if ( compTriggers == 0 ) {
                     // if same trigger count, sort on importance to other nodes
                     nodeCount = node.requiredOutcomes().size();
@@ -97,12 +99,12 @@ public class Scenario extends ModelObject {
                     int compImportance = nodeCount == otherCount
                             ? 0
                             // more required outcomes means comes before
-                            : (nodeCount > otherCount ? -1 : 1);
+                            : ( nodeCount > otherCount ? -1 : 1 );
                     if ( compImportance == 0 ) {
                         // if same, sort on node name (connectors always come last)
                         return collator.compare(
-                                node.isConnector() ? "\uFF5A\uFF5A" : ((Part)node).getTask(),
-                                other.isConnector() ? "\uFF5A\uFF5A" : ((Part)other).getTask() );
+                                node.isConnector() ? "\uFF5A\uFF5A" : ( (Part) node ).getTask(),
+                                other.isConnector() ? "\uFF5A\uFF5A" : ( (Part) other ).getTask() );
                     } else {
                         return compImportance;
                     }
@@ -165,22 +167,40 @@ public class Scenario extends ModelObject {
 
     /**
      * Remove a node from this scenario.
+     * "Replace" remove node by connectors in flows to and from node.
      * Quietly succeeds if node is not part of the scenario
      *
      * @param node the node to remove.
      */
     public void removeNode( Node node ) {
+        Service service = Project.service();
         if ( getNodeIndex().containsKey( node.getId() )
                 && ( node.isConnector() || hasMoreThanOnePart() ) ) {
-            nodeIndex.remove( node.getId() );
 
             Iterator<Flow> ins = node.requirements();
-            while ( ins.hasNext() )
-                ins.next().disconnect();
+            while ( ins.hasNext() ) {
+                Flow in = ins.next();
+                // Preserve the outcome of the source the flow represents
+                if ( in.isInternal()
+                        && in.getSource().isPart()
+                        && !in.getSource().hasMultipleOutcomes( in.getName() ) ) {
+                    Flow flow = service.connect( in.getSource(), service.createConnector( this ), in.getName() );
+                    flow.initFrom( in );
+                }
+                in.disconnect();
+            }
 
             Iterator<Flow> outs = node.outcomes();
-            while ( outs.hasNext() )
-                outs.next().disconnect();
+            while ( outs.hasNext() ) {
+                Flow out = outs.next();
+                if ( out.isInternal()
+                        && out.getTarget().isPart()
+                        && !out.getSource().hasMultipleRequirements( out.getName() ) ) {
+                    Flow flow = service.connect( service.createConnector( this ), out.getTarget(), out.getName() );
+                    flow.initFrom( out );
+                }
+                out.disconnect();
+            }
 
             if ( node.isConnector() ) {
                 Iterator<ExternalFlow> xf = ( (Connector) node ).externalFlows();
@@ -190,6 +210,7 @@ public class Scenario extends ModelObject {
             }
 
             node.setScenario( null );
+            nodeIndex.remove( node.getId() );
         }
     }
 

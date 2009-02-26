@@ -120,7 +120,8 @@ public class FlowListPanel extends Panel {
             if ( p.isMarkedForDeletion() ) {
                 final Flow flow = p.getFlow();
                 expansions.remove( flow.getId() );
-                flow.disconnect();
+                flow.breakup();
+                // flow.disconnect();
             }
     }
 }

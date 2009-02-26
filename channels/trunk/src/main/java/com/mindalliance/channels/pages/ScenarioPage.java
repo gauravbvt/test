@@ -18,11 +18,13 @@ import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.PartPanel;
 import com.mindalliance.channels.pages.components.ScenarioEditPanel;
 import com.mindalliance.channels.pages.components.ScenarioLink;
+import com.mindalliance.channels.pages.components.Updatable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebPage;
@@ -54,7 +56,7 @@ import java.util.Set;
 /**
  * The scenario editor page.
  */
-public final class ScenarioPage extends WebPage {
+public final class ScenarioPage extends WebPage implements Updatable {
 
     /**
      * The 'scenario' parameter in the URL.
@@ -130,7 +132,10 @@ public final class ScenarioPage extends WebPage {
      * Dropdown with scenario choides
      */
     private DropDownChoice<Scenario> scenarioDropDownChoice;
-
+    /**
+     * Part issues panel.
+     */
+    private IssuesPanel partIssuesPanel;
 
     /**
      * Used when page is called without parameters.
@@ -357,6 +362,20 @@ public final class ScenarioPage extends WebPage {
         return scenarioDropDownChoice;
     }
 
+    public IssuesPanel getPartIssuesPanel() {
+        return partIssuesPanel;
+    }
+
+    /**
+     * A component was changed. An update signal is received.
+     *
+     * @param target the ajax target
+     */
+    public void update( AjaxRequestTarget target ) {
+        partIssuesPanel.modelChanged();
+        target.addComponent( partIssuesPanel );
+    }
+
     //==============================================================
     /**
      * The scenario form.
@@ -446,9 +465,10 @@ public final class ScenarioPage extends WebPage {
                 }
             } );
             add( new AttachmentPanel( "attachments", node ) );                            // NON-NLS
-
-            add( new IssuesPanel( "issues",                                               // NON-NLS
-                                  new Model<ModelObject>( node ), getPageParameters() ) );
+            partIssuesPanel = new IssuesPanel( "issues",                                               // NON-NLS
+                                  new Model<ModelObject>( node ), getPageParameters() );
+            partIssuesPanel.setOutputMarkupId( true );
+            add( partIssuesPanel );
             addScenarioFields( scenario );
             reqs = new FlowListPanel( "reqs", node, false, expansions );                  // NON-NLS
             add( reqs );

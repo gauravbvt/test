@@ -81,8 +81,8 @@ public class TestScenario extends TestCase {
         assertSame( f2, p3.getFlow( f2.getId() ) );
 
         scenario.removeNode( p2 );
-
-        assertEquals( 2, scenario.getNodeCount() );
+        // node replaced in flows by connectors
+        assertEquals( 4, scenario.getNodeCount() );
         assertSame( p1, scenario.getNode( p1.getId() ) );
         assertNull( scenario.getNode( p2.getId() ) );
         assertSame( p3, scenario.getNode( p3.getId() ) );

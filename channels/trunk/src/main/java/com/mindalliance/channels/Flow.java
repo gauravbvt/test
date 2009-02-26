@@ -1,5 +1,7 @@
 package com.mindalliance.channels;
 
+import org.hibernate.event.PostUpdateEvent;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -13,6 +15,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
+
+import com.mindalliance.channels.pages.Project;
 
 /**
  * An arrow between two nodes in the information flow graph.
@@ -197,8 +201,6 @@ public abstract class Flow extends ModelObject implements Channelable {
             String sourceName = node.getName();
             if ( sourceName != null && !sourceName.trim().isEmpty() ) {
                 result = sourceName;
-                if ( node.isPart() && ( (Part) node ).isOnlyRole() )
-                    result = MessageFormat.format( isAll() ? "every {0}" : "any {0}", result );
             }
         }
 
@@ -229,12 +231,20 @@ public abstract class Flow extends ModelObject implements Channelable {
     @Transient
     public String getOutcomeTitle() {
         boolean noName = getName() == null || getName().trim().isEmpty();
-        return MessageFormat.format(
-                noName ? isAskedFor() ? "Answer {1} with something"
-                        : "Notify {1} of something"
-                        : isAskedFor() ? "Answer {1} with {0}"
-                        : "Notify {1} of {0}",
-                getName(), getShortName( getTarget() ) );
+        Node node = getTarget();
+        String format;
+        String targetName;
+        if ( node.isPart() && ( (Part) node ).isOnlyRole() ) {
+            targetName = MessageFormat.format( isAll() ? "every {0}" : "any {0}", getShortName( node ) );
+        } else {
+            targetName = getShortName( node );
+        }
+        if ( noName ) {
+            format = ( isAskedFor() ? "Answer {1} with something" : "Notify {1} of something" );
+        } else {
+            format = ( isAskedFor() ? "Answer {1} with {0}" : "Notify {1} of {0}" );
+        }
+        return MessageFormat.format( format, getName(), targetName );
     }
 
     /**
@@ -515,15 +525,41 @@ public abstract class Flow extends ModelObject implements Channelable {
 
     /**
      * Flow could trigger the part
+     *
      * @return a boolean
      */
     public abstract boolean canGetTriggersSource();
 
     /**
      * Flow could terminate the part
+     *
      * @return a boolean
      */
     public abstract boolean canGetTerminatesSource();
+
+    /**
+     * Breakup a flow, possibly creating connector-based flows to preserve requirement and outcome.
+     *
+     */
+    public abstract void breakup();
+
+    /**
+     * Make a replicate of the flow
+     * @param isOutcome whether to replicate as outcome or requirement
+     * @return a created flow
+     */
+    public Flow replicate(boolean isOutcome) {
+        Flow flow;
+        Service service = Project.service();
+        if ( isOutcome ) {
+           flow = service.connect( getSource(), service.createConnector( getSource().getScenario() ), getName() );
+        }
+        else {
+            flow = service.connect( service.createConnector( getTarget().getScenario() ), getTarget(), getName() );
+        }
+        flow.initFrom( this );
+        return flow;
+    }
 
     /**
      * The significance of a flow.

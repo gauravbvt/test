@@ -351,6 +351,21 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
                 } ) ;
         titleLabel.setOutputMarkupId( true );
         add( titleLabel );
+        WebMarkupContainer replicateItem = new WebMarkupContainer( "replicate-item" );
+        add( replicateItem );
+        replicateItem.setVisible(
+                ( outcome && getFlow().getTarget().isPart() )
+                        || ( !outcome && getFlow().getSource().isPart() ) );
+        replicateItem.add( new Link( "replicate" ) {
+            @Override
+            public void onClick() {
+                Flow replica = flow.replicate( outcome );
+                PageParameters parameters = getWebPage().getPageParameters();
+                parameters.add( Project.EXPAND_PARM, String.valueOf( replica.getId() ) );
+                this.setResponsePage( getWebPage().getClass(), parameters );
+            }
+        } );
+
 
         // TODO don't collapse everything on hide
         add( new ScenarioLink( "hide", new PropertyModel<Node>( this, "node" ) ) );       // NON-NLS

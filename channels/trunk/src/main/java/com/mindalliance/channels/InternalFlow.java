@@ -1,5 +1,7 @@
 package com.mindalliance.channels;
 
+import com.mindalliance.channels.pages.Project;
+
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
@@ -88,6 +90,24 @@ public class InternalFlow extends Flow {
         target = null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void breakup() {
+        if ( !source.isConnector() && !target.isConnector() ) {
+            Service service = Project.service();
+            if ( !source.hasMultipleOutcomes( getName() ) ) {
+                Flow flow = service.connect( source, service.createConnector( source.getScenario() ), getName() );
+                flow.initFrom( this );
+            }
+            if ( !target.hasMultipleRequirements( getName() ) ) {
+                Flow flow = service.connect( service.createConnector( target.getScenario() ), target, getName() );
+                flow.initFrom( this );
+            }
+        }
+        disconnect();
+    }
+
     @Override
     @Transient
     public boolean isInternal() {
@@ -101,11 +121,15 @@ public class InternalFlow extends Flow {
     public void initFrom( Flow flow ) {
         setName( flow.getName() );
         setDescription( flow.getDescription() );
-        setMaxDelay( flow.getMaxDelay() );
+        if ( !hasConnector() ) setMaxDelay( flow.getMaxDelay() );
         setAskedFor( flow.isAskedFor() );
         setChannels( flow.getChannels() );
-        setSignificanceToSource( flow.getSignificanceToSource() );
-        setSignificanceToTarget( flow.getSignificanceToTarget() );
+        if ( !source.isConnector() ) setSignificanceToSource( flow.getSignificanceToSource() );
+        if ( !target.isConnector() ) setSignificanceToTarget( flow.getSignificanceToTarget() );
+    }
+
+    private boolean hasConnector() {
+        return source.isConnector() || target.isConnector();
     }
 
     /**
@@ -204,6 +228,7 @@ public class InternalFlow extends Flow {
     public boolean canGetTerminatesSource() {
         return !source.isConnector();
     }
+
 
     /**
      * {@inheritDoc}

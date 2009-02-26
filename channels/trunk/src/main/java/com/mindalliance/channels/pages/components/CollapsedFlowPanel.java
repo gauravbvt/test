@@ -13,6 +13,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -66,6 +67,20 @@ public class CollapsedFlowPanel extends Panel implements DeletableFlow {
         }
 
         add( label );
+        WebMarkupContainer replicateItem = new WebMarkupContainer( "replicate-item" );
+        add( replicateItem );
+        replicateItem.setVisible(
+                ( outcome && getFlow().getTarget().isPart() )
+                        || ( !outcome && getFlow().getSource().isPart() ) );
+        replicateItem.add( new Link( "replicate" ) {
+            @Override
+            public void onClick() {
+                Flow replica = flow.replicate( outcome );
+                PageParameters parameters = getWebPage().getPageParameters();
+                parameters.add( Project.EXPAND_PARM, String.valueOf( replica.getId() ) );
+                this.setResponsePage( getWebPage().getClass(), parameters );
+            }
+        } );
 
         // TODO replace expansion links by ajaxfallbacklinks
         add( new ExternalLink( "expand", getRequest().getURL() + "&expand=" + flow.getId() ) );

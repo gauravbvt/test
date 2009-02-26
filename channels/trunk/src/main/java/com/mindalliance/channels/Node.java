@@ -1,5 +1,7 @@
 package com.mindalliance.channels;
 
+import com.mindalliance.channels.util.SemMatch;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
@@ -326,4 +328,31 @@ public abstract class Node extends ModelObject {
         }
         return requiredFlows;
     }
+
+    /**
+     * Whether this node has more than one outcome of a given name
+     * @param name the name of a flow
+     * @return a boolean
+     */
+    public boolean hasMultipleOutcomes( String name ) {
+        int count = 0;
+        for (Flow outcome : outcomes.values()) {
+            if ( SemMatch.same(outcome.getName(), name)) count++;
+        }
+        return count > 1;
+    }
+
+    /**
+     * Whether this node has more than one requirement of a given name
+     * @param name the name of a flow
+     * @return a boolean
+     */
+    public boolean hasMultipleRequirements( String name ) {
+        int count = 0;
+        for (Flow req : requirements.values()) {
+            if ( SemMatch.same(req.getName(), name)) count++;
+        }
+        return count > 1;
+    }
+
 }

@@ -54,15 +54,23 @@ public class Part extends Node {
      */
     private Place jurisdiction;
     /**
+     * Whether the part's task completes on its own after some time.
+     */
+    private boolean selfTerminating;
+    /**
      * Usual time for the task to complete on its own.
      * If null, the task must be terminated.
      */
-    private Delay completionTime;
+    private Delay completionTime = new Delay();
+    /**
+     * Whether the part's task repeats (at fixed intervals).
+     */
+    private boolean repeating;
     /**
      * How long before the task is repeated.
      * Not repeated if null.
      */
-    private Delay repeatsEvery;
+    private Delay repeatsEvery = new Delay();
 
     public Part() {
         adjustName();
@@ -257,20 +265,20 @@ public class Part extends Node {
      */
     @Transient
     public boolean isRepeating() {
-        return repeatsEvery != null && repeatsEvery.getAmount() > 0;
+        return repeating;
     }
 
     /**
      * Sets repeating attribute.
      *
-     * @param repeating a boolean
+     * @param val a boolean
      */
     @Transient
-    public void setRepeating( boolean repeating ) {
-        if ( repeating ) {
-            if ( !isRepeating() ) repeatsEvery = new Delay( 1, Delay.Unit.days );
-        } else {
-            repeatsEvery = null;
+    public void setRepeating( boolean val ) {
+        repeating = val;
+        if ( val && repeatsEvery.getAmount() == 0 ) {
+            repeatsEvery.setAmount( 1 );
+            repeatsEvery.setUnit( Delay.Unit.days );
         }
     }
 
@@ -281,40 +289,42 @@ public class Part extends Node {
      */
     @Transient
     public boolean isSelfTerminating() {
-        return completionTime != null;
+        return selfTerminating;
     }
 
     /**
      * Sets completion time attribute.
      *
-     * @param selfTerminating a boolean
+     * @param val a boolean
      */
     @Transient
-    public void setSelfTerminating( boolean selfTerminating ) {
-        if ( selfTerminating ) {
-            if ( !isSelfTerminating() ) completionTime = new Delay( 1, Delay.Unit.hours );
-        } else {
-            completionTime = null;
+    public void setSelfTerminating( boolean val ) {
+        selfTerminating = val;
+        if ( val && completionTime.getAmount() == 0 ) {
+            completionTime.setAmount( 1 );
+            completionTime.setUnit( Delay.Unit.hours );
         }
     }
 
     /**
      * Test if this part is considered belonging to an organization.
+     *
      * @param o the organization
      * @return true if belonging
      */
     public boolean isIn( Organization o ) {
         return organization == null ? Organization.UNKNOWN == o
-                                    : o.equals( organization );
+                : o.equals( organization );
     }
 
-    /** 
+    /**
      * Test if this part is played by a given role.
+     *
      * @param r the role
      * @return true if played
      */
     public boolean isPlayedBy( Role r ) {
         return role == null ? r == Role.UNKNOWN
-                            : role.equals( r );
+                : role.equals( r );
     }
 }

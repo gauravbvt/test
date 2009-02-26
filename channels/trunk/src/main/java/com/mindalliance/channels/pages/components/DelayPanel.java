@@ -6,7 +6,6 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import com.mindalliance.channels.Delay;
@@ -34,18 +33,17 @@ public class DelayPanel extends Panel {
     public DelayPanel( String id, IModel<Delay> model ) {
         super( id, model );
         delay = model.getObject();
-        if ( delay == null ) delay = new Delay();
         init();
     }
 
     private void init() {
         amountField = new TextField<String>( "delay-amount",
                 new PropertyModel<String>( delay, "amountString" ) );
-        amountField.add( new AjaxFormComponentUpdatingBehavior("onchange") {
+        amountField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                // Do nothing
+                updateWith( target );
             }
-        });
+        } );
         add( amountField );
         unitChoice = new DropDownChoice<Delay.Unit>(
                 "delay-unit",
@@ -62,11 +60,11 @@ public class DelayPanel extends Panel {
                 }
         ) {
         };
-        unitChoice.add( new AjaxFormComponentUpdatingBehavior("onchange") {
+        unitChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                // Do nothing
+                updateWith( target );
             }
-        });
+        } );
         add( unitChoice );
     }
 
@@ -78,6 +76,11 @@ public class DelayPanel extends Panel {
     public void enable( boolean enabled ) {
         amountField.setEnabled( enabled );
         unitChoice.setEnabled( enabled );
+    }
+
+    private void updateWith( AjaxRequestTarget target ) {
+        Updatable updatableParent = findParent( Updatable.class );
+        if ( updatableParent != null ) updatableParent.update( target );
     }
 
 }

@@ -28,7 +28,7 @@ import java.text.Collator;
 /**
  * A view on a Part.
  */
-public class PartPanel extends Panel {
+public class PartPanel extends Panel implements Updatable {
 
     /**
      * The task property.
@@ -119,6 +119,7 @@ public class PartPanel extends Panel {
                 target.addComponent( field );
                 target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
                 target.addComponent(( (ScenarioPage) getPage() ).getNodeTitle() );
+                updateWith( target );
             }
         } );
 
@@ -170,6 +171,7 @@ public class PartPanel extends Panel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 completionTimePanel.enable( part.isSelfTerminating() );
                 target.addComponent( completionTimePanel );
+                updateWith( target );
             }
         } );
         add( selfTerminatingCheckBox );
@@ -181,8 +183,15 @@ public class PartPanel extends Panel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 repeatsEveryPanel.enable( part.isRepeating() );
                 target.addComponent( repeatsEveryPanel );
+                target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
+                updateWith( target );
             }
         } );
+    }
+
+    private void updateWith( AjaxRequestTarget target ) {
+        Updatable updatableParent = findParent( Updatable.class );
+        if ( updatableParent != null ) updatableParent.update( target );
     }
 
     /**
@@ -341,5 +350,13 @@ public class PartPanel extends Panel {
 
     public final void setPart( Part part ) {
         this.part = part;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void update( AjaxRequestTarget target ) {
+        target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
+        updateWith( target );
     }
 }

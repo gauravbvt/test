@@ -199,8 +199,10 @@ public class ChannelListPanel extends Panel {
                     }
                 } ;
                 item.add( moveToTopLink );
+                List<Channel> effectiveChannels = channelable.getEffectiveChannels();
                 moveToTopLink.setVisible(
-                        wrapper.getChannel() != channelable.getEffectiveChannels().get( 0 )
+                        !effectiveChannels.isEmpty() &&
+                        wrapper.getChannel() != effectiveChannels.get( 0 )
                         && !wrapper.isMarkedForCreation() );
             }
         };

@@ -61,7 +61,11 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
     /**
      * Distance for edge head and tail labels
      */
-    private static final String LABEL_DISTANCE = "1.5";
+    private static final String LABEL_DISTANCE = "1.0";
+    /**
+     * Distance for edge head and tail labels
+     */
+    private static final String LABEL_ANGLE = "45";
     /**
      * Scenario in context
      */
@@ -378,8 +382,10 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
             }
             if ( headLabel != null ) list.add( new DOTAttribute( "headlabel", headLabel ) );
             if ( tailLabel != null ) list.add( new DOTAttribute( "taillabel", tailLabel ) );
-            if ( headLabel != null || tailLabel != null )
+            if ( headLabel != null || tailLabel != null ) {
                 list.add( new DOTAttribute( "labeldistance", LABEL_DISTANCE ) );
+                list.add( new DOTAttribute( "labelangle", LABEL_ANGLE ) );
+            }
             // Issue coloring
             if ( analyst.hasIssues( edge, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
@@ -407,7 +413,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
             if ( part.getActor() != null ) {
                 iconName = part.isSystem() ? "system" : "person";
             } else if ( part.getRole() != null ) {
-                iconName = "role";
+                iconName = part.isSystem() ? "system" : "role";
             } else if ( part.getOrganization() != null ) {
                 iconName = "organization";
             } else {

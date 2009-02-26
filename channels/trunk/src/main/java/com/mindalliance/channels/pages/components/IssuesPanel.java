@@ -55,7 +55,7 @@ public class IssuesPanel extends Panel {
 
 
     private void init() {
-        setRenderBodyOnly( true );
+        // setRenderBodyOnly( true );
         final Link<String> newIssueLink = new Link<String>( "new-issue",                  // NON-NLS
                 new Model<String>( "New" ) ) {
             @Override
