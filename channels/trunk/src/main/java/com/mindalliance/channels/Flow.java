@@ -25,9 +25,6 @@ import com.mindalliance.channels.pages.Project;
 @Inheritance( strategy = InheritanceType.SINGLE_TABLE )
 public abstract class Flow extends ModelObject implements Channelable {
 
-    // TODO Should we annotate a flow as primary vs seconday
-    // (when multiple flows are mutually redundant)?
-
     /**
      * A list of alternate communication channels for the flow.
      */
@@ -578,6 +575,12 @@ public abstract class Flow extends ModelObject implements Channelable {
         flow.initFrom( this );
         return flow;
     }
+
+    /**
+     * Whether the flow has a connector as source or target
+     * @return a boolean
+     */
+    public abstract boolean hasConnector();
 
     /**
      * The significance of a flow.

@@ -7,6 +7,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import javax.persistence.CascadeType;
 import java.util.List;
+import java.util.Iterator;
 
 /**
  * A flow between nodes within one scenario.
@@ -128,7 +129,10 @@ public class InternalFlow extends Flow {
         if ( !target.isConnector() ) setSignificanceToTarget( flow.getSignificanceToTarget() );
     }
 
-    private boolean hasConnector() {
+    /**
+     * {@inheritDoc}
+     */
+    public boolean hasConnector() {
         return source.isConnector() || target.isConnector();
     }
 
@@ -138,6 +142,7 @@ public class InternalFlow extends Flow {
     public boolean canSetNameAndDescription() {
         return true;
     }
+
 
     /**
      * {@inheritDoc}

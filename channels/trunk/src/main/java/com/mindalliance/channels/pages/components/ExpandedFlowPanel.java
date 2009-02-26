@@ -10,6 +10,8 @@ import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.InternalFlow;
+import com.mindalliance.channels.util.SemMatch;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ScenarioPage;
@@ -114,7 +116,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
      */
     private WebMarkupContainer triggersSourceContainer;
     /**
-     *  Markup for source terminating.
+     * Markup for source terminating.
      */
     private WebMarkupContainer terminatesSourceContainer;
     /**
@@ -126,6 +128,10 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
      * The checkbox for setting Triggers significance to source
      */
     private CheckBox triggersSourceCheckBox;
+    /**
+     * Drop down of choice for the other end of the flow
+     */
+    DropDownChoice<Node> otherChoice;
 
     protected ExpandedFlowPanel( String id, Flow flow, boolean outcome, Set<Long> expansions ) {
         super( id );
@@ -138,21 +144,23 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
 
         addHeader();
         nameField = new TextField<String>( "name" );
-        nameField.add( new AjaxFormComponentUpdatingBehavior("onchange") {                // NON-NLS
+        nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {                // NON-NLS
+
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssues( nameField, getFlow(), "name" );
                 target.addComponent( nameField );
                 target.addComponent( titleLabel );
+                target.addComponent( otherChoice );
                 target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
             }
-        });
+        } );
         addLabeled( "name-label", nameField );                                            // NON-NLS
         descriptionField = new TextArea<String>( "description" );                         // NON-NLS
-        descriptionField.add( new AjaxFormComponentUpdatingBehavior("onchange") {
+        descriptionField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                // Do nothing
+                target.addComponent( ExpandedFlowPanel.this );
             }
-        });
+        } );
         addLabeled( "description-label", descriptionField );                              // NON-NLS
         addAskedForRadios();
         addSignificanceToTarget();
@@ -192,7 +200,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         maxDelayRow.setVisible( f.canGetMaxDelay() );
         delayPanel.enable( f.canSetMaxDelay() );
         significanceToSourceRow.setVisible( f.canGetSignificanceToSource() );
-        triggersSourceContainer.setVisible( (!outcome || flow.isAskedFor()) && f.canGetTriggersSource() );
+        triggersSourceContainer.setVisible( ( !outcome || flow.isAskedFor() ) && f.canGetTriggersSource() );
         triggersSourceCheckBox.setEnabled( f.canSetTriggersSource() );
         terminatesSourceContainer.setVisible( f.canGetTerminatesSource() );
         terminatesSourceCheckBox.setEnabled( f.canSetTerminatesSource() );
@@ -236,11 +244,12 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
                     }
                 }
         );
-        significanceToTargetChoice.add(  new AjaxFormComponentUpdatingBehavior("onchange") {
-                    protected void onUpdate( AjaxRequestTarget target ) {
-                        target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
-                    }
-                });
+        significanceToTargetChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                target.addComponent( titleLabel );
+                target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
+            }
+        } );
         significanceToTargetLabel.add( significanceToTargetChoice );
     }
 
@@ -248,38 +257,40 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         significanceToSourceRow = new WebMarkupContainer( "significance-to-source" );
         add( significanceToSourceRow );
         significanceToSourceRow.add( new Label( "source-task", outcome ? "This task" : "Sender's task" ) );
-        triggersSourceContainer = new WebMarkupContainer("triggers-source-container");
-        significanceToSourceRow.add(triggersSourceContainer);
+        triggersSourceContainer = new WebMarkupContainer( "triggers-source-container" );
+        significanceToSourceRow.add( triggersSourceContainer );
         triggersSourceCheckBox = new CheckBox(
                 "triggers-source",
                 new PropertyModel<Boolean>( this, "triggeringToSource" ) );
-        triggersSourceCheckBox.add(  new AjaxFormComponentUpdatingBehavior("onchange") {
-                    protected void onUpdate( AjaxRequestTarget target ) {
-                        target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
-                    }
-                });
+        triggersSourceCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                target.addComponent( titleLabel );
+                target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
+            }
+        } );
         triggersSourceContainer.add( triggersSourceCheckBox );
-        terminatesSourceContainer = new WebMarkupContainer("terminates-source-container");
-        significanceToSourceRow.add(terminatesSourceContainer);
+        terminatesSourceContainer = new WebMarkupContainer( "terminates-source-container" );
+        significanceToSourceRow.add( terminatesSourceContainer );
         terminatesSourceCheckBox = new CheckBox(
                 "terminates-source",
                 new PropertyModel<Boolean>( this, "terminatingToSource" ) );
-        terminatesSourceCheckBox.add(  new AjaxFormComponentUpdatingBehavior("onchange") {
-                    protected void onUpdate( AjaxRequestTarget target ) {
-                        target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
-                    }
-                });
+        terminatesSourceCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
+            }
+        } );
         terminatesSourceContainer.add( terminatesSourceCheckBox );
         terminatesSourceContainer.add(
-                new Label( "notifying-or-replying", new PropertyModel<String>( this, "replyingOrNotifying") ) );
+                new Label( "notifying-or-replying", new PropertyModel<String>( this, "replyingOrNotifying" ) ) );
     }
 
     /**
      * Return label string according to type of flow.
-     * @return  a string
+     *
+     * @return a string
      */
     public String getReplyingOrNotifying() {
-       return flow.isAskedFor() ? "replying" : "notifying";
+        return flow.isAskedFor() ? "replying" : "notifying";
     }
 
     /**
@@ -348,7 +359,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
                         return outcome ? getFlow().getOutcomeTitle()
                                 : getFlow().getRequirementTitle();
                     }
-                } ) ;
+                } );
         titleLabel.setOutputMarkupId( true );
         add( titleLabel );
         WebMarkupContainer replicateItem = new WebMarkupContainer( "replicate-item" );
@@ -365,7 +376,6 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
                 this.setResponsePage( getWebPage().getClass(), parameters );
             }
         } );
-
 
         // TODO don't collapse everything on hide
         add( new ScenarioLink( "hide", new PropertyModel<Node>( this, "node" ) ) );       // NON-NLS
@@ -437,17 +447,17 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
      * Add the target/source dropdown. Fill with getOtherNodes(); select with getOther().
      */
     protected final void addOtherField() {
-        DropDownChoice<Node> other = new DropDownChoice<Node>(
+        otherChoice = new DropDownChoice<Node>(
                 "other",                                                                  // NON-NLS
                 new PropertyModel<Node>( this, "other" ),                                 // NON-NLS
                 new PropertyModel<List<? extends Node>>( this, "otherNodes" ),            // NON-NLS
                 new IChoiceRenderer<Node>() {
                     public Object getDisplayValue( Node object ) {
                         Node o = getOther();
-                        boolean outside =
+                        boolean tbd =
                                 object.equals( o ) && o.isConnector() && o.getScenario().equals(
                                         getNode().getScenario() );
-                        return outside ? "* outside scenario *" : object.toString();
+                        return tbd ? "* to be determined *" : object.toString();
                     }
 
                     public String getIdValue( Node object, int index ) {
@@ -455,7 +465,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
                     }
                 } );
 
-        other.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {                  // NON-NLS
+        otherChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {                  // NON-NLS
 
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
@@ -473,10 +483,10 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
                 new Label( "type",                                                        // NON-NLS
                         new Model<String>( isOutcome() ? "To" : "From" ) ) );
         FormComponentLabel otherLabel =
-                new FormComponentLabel( "other-label", other );                           // NON-NLS
+                new FormComponentLabel( "other-label", otherChoice );                           // NON-NLS
         otherLabel.add( details );
         add( otherLabel );
-        add( other );
+        add( otherChoice );
     }
 
     public final Flow getFlow() {
@@ -502,35 +512,6 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         return isOutcome() ? getFlow().getSource() : getFlow().getTarget();
     }
 
-    /**
-     * Get the node at the other side of this flow: the source if requirement, the target if
-     * outcome.
-     *
-     * @return the other side of this flow.
-     */
-    public final Node getOther() {
-        Flow f = getFlow();
-        return f.isInternal() ?
-                isOutcome() ? f.getTarget() : f.getSource() :
-                ( (ExternalFlow) f ).getConnector();
-    }
-
-    /**
-     * Set the node at the other side of this flow
-     *
-     * @param other the new source or target
-     */
-    public void setOther( Node other ) {
-        Flow oldFlow = getFlow();
-        Flow newFlow = isOutcome() ?
-                getService().connect( oldFlow.getSource(), other, oldFlow.getName() ) :
-                getService().connect( other, oldFlow.getTarget(), oldFlow.getName() );
-
-        newFlow.initFrom( oldFlow );
-        oldFlow.disconnect();
-        setFlow( newFlow );
-    }
-
     private void addChannelRow() {
         channelRow = new WebMarkupContainer( "channel-row" );                             // NON-NLS
         channelRow.setOutputMarkupPlaceholderTag( true );
@@ -550,7 +531,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
     }
 
     private void addMaxDelayRow() {
-        maxDelayRow = new WebMarkupContainer("max-delay-row");
+        maxDelayRow = new WebMarkupContainer( "max-delay-row" );
         add( maxDelayRow );
         delayPanel = new DelayPanel( "max-delay", new Model<Delay>( flow.getMaxDelay() ) );
         maxDelayRow.add( delayPanel );
@@ -573,7 +554,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
     protected abstract boolean isChannelEditable( Flow f );
 
     /**
-     * Get list of potential source/targets for this flow.
+     * Get list of potential source/targets for this flow (the other node or connectors).
      *
      * @return the list of nodes
      */
@@ -587,21 +568,31 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         Iterator<Node> nodes = scenario.nodes();
         while ( nodes.hasNext() ) {
             Node n = nodes.next();
-
-            if ( !node.equals( n ) && (
-                    other.equals( n )
-                            || !n.isConnector() && !node.isConnectedTo( outcome, n, flow.getName() ) ) )
-            result.add( n );
-
-/*            if ( !node.equals( n )
-                    && n.isConnector()
-                    && (outcome 
-                        ? ((Connector)n).isTarget()
-                        : ((Connector)n).isSource())) {
-                result.add( n );
-            }*/
+            if ( !node.equals( n ) ) {
+                if ( n.equals( other ) ) {
+                    result.add( n );
+                } else if ( n.isConnector() ) {
+                    Connector connector = (Connector) n;
+                    Flow connectorFlow = connector.getInnerFlow();
+                    if ( getFlow().getName().isEmpty()
+                            || SemMatch.same( getFlow().getName(), connectorFlow.getName() ) ) {
+                        if ( isOutcome() ) {
+                            if ( connector.isSource() && !connectorFlow.getTarget().equals( node ) )
+                                result.add( connector );
+                        } else {
+                            if ( connector.isTarget() && !connectorFlow.getSource().equals( node ) )
+                                result.add( connector );
+                        }
+                    }
+                }
+            }
+            /* if ( !node.equals( n )
+              && ( other.equals( n )
+              || ( n.isConnector() && ( isOutcome()
+              ? ( (Connector) n ).isSource()
+              : ( (Connector) n ).isTarget() ) ) ) )
+          result.add( n );*/
         }
-
         // Add inputs/outputs of other scenarios
         Service service = ( (Project) getApplication() ).getService();
         for ( Scenario s : service.list( Scenario.class ) ) {
@@ -609,13 +600,76 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
                 Iterator<Connector> c = isOutcome() ? s.inputs() : s.outputs();
                 while ( c.hasNext() ) {
                     Connector connector = c.next();
-                    if ( other.equals( connector ) || !node.isConnectedTo(
-                            outcome, connector, flow.getName() ) )
-                        result.add( connector );
+                    Flow connectorFlow = connector.getInnerFlow();
+                    if ( getFlow().getName().isEmpty()
+                            || SemMatch.same( getFlow().getName(), connectorFlow.getName() ) ) {
+                        if ( other.equals( connector ) || !node.isConnectedTo(
+                                outcome, connector, flow.getName() ) )
+                            result.add( connector );
+                    }
                 }
             }
         }
         return new ArrayList<Node>( result );
+    }
+
+    /**
+     * Get the node at the other side of this flow: the source if requirement, the target if
+     * outcome.
+     *
+     * @return the other side of this flow.
+     */
+    public final Node getOther() {
+        Flow f = getFlow();
+        return f.isInternal() ?
+                isOutcome() ? f.getTarget() : f.getSource() :
+                ( (ExternalFlow) f ).getConnector();
+    }
+
+    /**
+     * Set the node at the other side of this flow
+     *
+     * @param other the new source or target
+     */
+    public void setOther( Node other ) {
+        if ( other.isConnector() ) {
+            // different other
+            Connector connector = (Connector) other;
+            Flow connectorFlow = connector.getInnerFlow();
+            Flow oldFlow = getFlow();
+            Flow newFlow;
+            if ( isOutcome() ) {
+                if ( connector.getScenario() != oldFlow.getSource().getScenario() ) {
+                    newFlow = getService().connect(
+                            oldFlow.getSource(),
+                            connector,
+                            connectorFlow.getName() );
+                    newFlow.initFrom( oldFlow );
+                } else {
+                    newFlow = getService().connect(
+                            oldFlow.getSource(),
+                            connectorFlow.getTarget(),
+                            connectorFlow.getName() );
+                    newFlow.initFrom( connectorFlow );
+                }
+            } else {
+                if ( connector.getScenario() != oldFlow.getTarget().getScenario() ) {
+                    newFlow = getService().connect(
+                            connector,
+                            oldFlow.getTarget(),
+                            connectorFlow.getName() );
+                    newFlow.initFrom( oldFlow );
+                } else {
+                    newFlow = getService().connect(
+                            connectorFlow.getSource(),
+                            oldFlow.getTarget(),
+                            connectorFlow.getName() );
+                    newFlow.initFrom( connectorFlow );
+                }
+            }
+            oldFlow.disconnect();
+            setFlow( newFlow );
+        }
     }
 
     /**

@@ -435,6 +435,13 @@ public class ExternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
+    public boolean hasConnector() {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void initFrom( Flow flow ) {
     }

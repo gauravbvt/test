@@ -1,10 +1,17 @@
 package com.mindalliance.channels;
 
+import org.apache.commons.collections.iterators.FilterIterator;
+import org.apache.commons.collections.Predicate;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import java.text.MessageFormat;
+import java.util.List;
+import java.util.Iterator;
+
+import com.mindalliance.channels.util.SemMatch;
 
 /**
  * A part in a scenario.
@@ -326,5 +333,35 @@ public class Part extends Node {
     public boolean isPlayedBy( Role r ) {
         return role == null ? r == Role.UNKNOWN
                 : role.equals( r );
+    }
+
+    /**
+     * Iterate over all outcomes of the part of a given name.
+     * @param name a flow name
+     * @return a boolean
+     */
+    @SuppressWarnings( "unchecked" )
+    public Iterator<Flow> outcomesNamed( final String name ) {
+        return new FilterIterator( outcomes(), new Predicate() {
+            public boolean evaluate( Object obj ) {
+                Flow flow = (Flow) obj;
+                return SemMatch.same( flow.getName(), name) ; 
+            }
+        } );
+    }
+
+    /**
+     * Iterate over all requirements of the part of a given name.
+     * @param name a flow name
+     * @return a boolean
+     */
+    @SuppressWarnings( "unchecked" )
+    public Iterator<Flow> requirementsNamed( final String name ) {
+        return new FilterIterator( requirements(), new Predicate() {
+            public boolean evaluate( Object obj ) {
+                Flow flow = (Flow) obj;
+                return SemMatch.same( flow.getName(), name) ;
+            }
+        } );
     }
 }
