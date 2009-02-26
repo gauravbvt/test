@@ -42,7 +42,12 @@ public class PartReportPanel extends Panel {
 
     private void init() {
         add( new Label( "task", uppercasedName() ) );
-        add( new Label( "description", part.getDescription() ) );
+
+        String desc = part.getDescription();
+        Label descLabel = new Label( "description", desc );
+        add( descLabel );
+        descLabel.setVisible( desc != null && !desc.isEmpty() );
+
         Place location = part.getLocation();
         add( new Label( "location", location != null ? location.toString() : "Unspecified" ) );
 

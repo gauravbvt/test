@@ -137,6 +137,10 @@ p.name span {
     white-space: nowrap;
 }
 
+p.description:before {
+    content: "Details: ";
+}
+
 .task ul.details {
     list-style: none;
     padding: 0;
