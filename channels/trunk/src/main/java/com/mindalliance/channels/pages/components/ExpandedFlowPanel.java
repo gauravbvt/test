@@ -587,10 +587,19 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         Iterator<Node> nodes = scenario.nodes();
         while ( nodes.hasNext() ) {
             Node n = nodes.next();
+
             if ( !node.equals( n ) && (
                     other.equals( n )
                             || !n.isConnector() && !node.isConnectedTo( outcome, n, flow.getName() ) ) )
+            result.add( n );
+
+/*            if ( !node.equals( n )
+                    && n.isConnector()
+                    && (outcome 
+                        ? ((Connector)n).isTarget()
+                        : ((Connector)n).isSource())) {
                 result.add( n );
+            }*/
         }
 
         // Add inputs/outputs of other scenarios

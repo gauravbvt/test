@@ -81,16 +81,17 @@ public class PartReportPanel extends Panel {
     private String uppercasedName() {
         String name = part.getTask();
 
-        return name.length() > 0 ? name.substring( 0,1 ).toUpperCase() + name.substring( 1 )
-                                 : name;
+        return name.length() > 0 ? name.substring( 0, 1 ).toUpperCase() + name.substring( 1 )
+                : name;
     }
 
     private void addReceives() {
         Iterator<Flow> requirements = part.requirements();
         List<Flow> receives = new ArrayList<Flow>();
-        while ( requirements.hasNext() )
-            receives.add( requirements.next() );
-
+        while ( requirements.hasNext() ) {
+            Flow req = requirements.next();
+            if ( !req.getSource().isConnector() ) receives.add( req );
+        }
         add( new ListView<Flow>( "receives", receives ) {
             @Override
             protected void populateItem( ListItem<Flow> item ) {
@@ -107,9 +108,10 @@ public class PartReportPanel extends Panel {
     private void addSends() {
         List<Flow> sends = new ArrayList<Flow>();
         Iterator<Flow> outcomes = part.outcomes();
-        while ( outcomes.hasNext() )
-            sends.add( outcomes.next() );
-
+        while ( outcomes.hasNext() ) {
+            Flow out = outcomes.next();
+            if ( !out.getTarget().isConnector() ) sends.add( out );
+        }
         add( new ListView<Flow>( "sends", sends ) {
             @Override
             protected void populateItem( ListItem<Flow> item ) {

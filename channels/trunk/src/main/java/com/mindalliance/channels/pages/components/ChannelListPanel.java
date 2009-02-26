@@ -278,7 +278,7 @@ public class ChannelListPanel extends Panel {
         if ( channelable instanceof Flow ) {
             Flow flow = (Flow) channelable;
             Node node = flow.isAskedFor() ? flow.getSource() : flow.getTarget();
-            if ( node.isPart() ) {
+            if ( node != null && node.isPart() ) {  // TODO - why can node be null (connecting to internal flow of an external flow)
                 Part part = (Part) node;
                 relatedChannelables.addAll(
                         Project.service().findAllResourcesNarrowingOrEqualTo(

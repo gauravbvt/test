@@ -217,5 +217,19 @@ ul.flows li.send-answer {
 }
 
 .urgency {
+    color: black;
+    font-weight: bold;
+}
+
+.issues .severe {
+    color: darkred;
+    font-weight: bold;
+}
+
+.issues .major {
     color: red;
+}
+
+.issues .minor {
+    color: gray;
 }

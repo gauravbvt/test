@@ -2,18 +2,16 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Service;
-import com.mindalliance.channels.pages.Project;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -44,15 +42,34 @@ public class ExpandedIssuePanel extends Panel {
         add( new CheckBox( "delete",                                                      // NON-NLS
                 new PropertyModel<Boolean>(
                         new IssuesPanel.DeletableWrapper( issue ),
-                        "markedForDeletion" ) ) );                                        // NON-NLS
-        add( new TextArea<String>( "description",
-                new PropertyModel<String>( issue, "description" ) ) );
-        add( new DropDownChoice<Issue.Level>(
+                        "markedForDeletion" ) ) );
+
+        TextArea<String> descriptionArea = new TextArea<String>( "description",                                      // NON-NLS
+                new PropertyModel<String>( issue, "description" ) );
+        descriptionArea.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                // do nothing
+            }
+        });
+        add( descriptionArea );
+        DropDownChoice<Issue.Level> levelChoice = new DropDownChoice<Issue.Level>(
                 "severity",
                 new PropertyModel<Issue.Level>( issue, "severity" ),
-                Arrays.asList( Issue.Level.values() ) ) );
-        add( new TextArea<String>( "remediation",
-                new PropertyModel<String>( issue, "remediation" ) ) );
+                Arrays.asList( Issue.Level.values() ) );
+        levelChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                // do nothing
+            }
+        });
+        add( levelChoice );
+        TextArea<String> remediationArea = new TextArea<String>( "remediation",
+                new PropertyModel<String>( issue, "remediation" ) );
+        remediationArea.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                // do nothing
+            }
+        });
+        add( remediationArea );
         add( new AttachmentPanel( "attachments", (ModelObject) issue ) );                 // NON-NLS
         add( new Label( "reported-by",
                 new PropertyModel<String>( issue, "reportedBy" ) ) );

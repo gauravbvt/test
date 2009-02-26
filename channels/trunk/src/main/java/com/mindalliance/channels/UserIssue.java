@@ -7,6 +7,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import javax.persistence.CascadeType;
 
+import com.mindalliance.channels.pages.Project;
+
 /**
  * A user provided issue
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -50,6 +52,7 @@ public class UserIssue extends ModelObject implements Issue {
         super();
         this.about = about;
         setDescription( "(No description)" );
+        setReportedBy(Project.getUserName());
     }
 
     @ManyToOne( cascade = CascadeType.PERSIST )

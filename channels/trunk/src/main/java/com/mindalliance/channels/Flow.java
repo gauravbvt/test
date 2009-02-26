@@ -215,12 +215,22 @@ public abstract class Flow extends ModelObject implements Channelable {
     @Transient
     public String getRequirementTitle() {
         boolean noName = getName() == null || getName().trim().isEmpty();
-        return MessageFormat.format(
-                noName ? isAskedFor() ? "Ask {1} for something"
-                        : "Notified of something by {1}"
-                        : isAskedFor() ? "Ask {1} for {0}"
-                        : "Notified of {0} by {1}",
-                getName(), getShortName( getSource() ) );
+        if ( getSource().isConnector() ) {
+            return MessageFormat.format(
+                    noName ? isAskedFor() ? "Needs to ask for something"
+                            : "Needs to be notified of something"
+                            : isAskedFor() ? "Needs to ask for {0}"
+                            : "Needs to be notified of {0}",
+                    getName() );
+
+        } else {
+            return MessageFormat.format(
+                    noName ? isAskedFor() ? "Ask {1} for something"
+                            : "Notified of something by {1}"
+                            : isAskedFor() ? "Ask {1} for {0}"
+                            : "Notified of {0} by {1}",
+                    getName(), getShortName( getSource() ) );
+        }
     }
 
     /**
@@ -234,17 +244,26 @@ public abstract class Flow extends ModelObject implements Channelable {
         Node node = getTarget();
         String format;
         String targetName;
-        if ( node.isPart() && ( (Part) node ).isOnlyRole() ) {
-            targetName = MessageFormat.format( isAll() ? "every {0}" : "any {0}", getShortName( node ) );
+        if ( node.isConnector() ) {
+            if ( noName ) {
+                format = ( isAskedFor() ? "Can answer with something" : "Can notify of something" );
+            } else {
+                format = ( isAskedFor() ? "Can answer with {0}" : "Can notify of {0}" );
+            }
+            return MessageFormat.format( format, getName() );
         } else {
-            targetName = getShortName( node );
+            if ( node.isPart() && ( (Part) node ).isOnlyRole() ) {
+                targetName = MessageFormat.format( isAll() ? "every {0}" : "any {0}", getShortName( node ) );
+            } else {
+                targetName = getShortName( node );
+            }
+            if ( noName ) {
+                format = ( isAskedFor() ? "Answer {1} with something" : "Notify {1} of something" );
+            } else {
+                format = ( isAskedFor() ? "Answer {1} with {0}" : "Notify {1} of {0}" );
+            }
+            return MessageFormat.format( format, getName(), targetName );
         }
-        if ( noName ) {
-            format = ( isAskedFor() ? "Answer {1} with something" : "Notify {1} of something" );
-        } else {
-            format = ( isAskedFor() ? "Answer {1} with {0}" : "Notify {1} of {0}" );
-        }
-        return MessageFormat.format( format, getName(), targetName );
     }
 
     /**
@@ -539,22 +558,21 @@ public abstract class Flow extends ModelObject implements Channelable {
 
     /**
      * Breakup a flow, possibly creating connector-based flows to preserve requirement and outcome.
-     *
      */
     public abstract void breakup();
 
     /**
      * Make a replicate of the flow
+     *
      * @param isOutcome whether to replicate as outcome or requirement
      * @return a created flow
      */
-    public Flow replicate(boolean isOutcome) {
+    public Flow replicate( boolean isOutcome ) {
         Flow flow;
         Service service = Project.service();
         if ( isOutcome ) {
-           flow = service.connect( getSource(), service.createConnector( getSource().getScenario() ), getName() );
-        }
-        else {
+            flow = service.connect( getSource(), service.createConnector( getSource().getScenario() ), getName() );
+        } else {
             flow = service.connect( service.createConnector( getTarget().getScenario() ), getTarget(), getName() );
         }
         flow.initFrom( this );
