@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Flow report panel
+ * Flow report panel.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -86,14 +86,14 @@ public class FlowReportPanel extends Panel {
                 LocalizedActor localizedActor = item.getModel().getObject();
                 Scenario scenario = localizedActor.getScenario();
                 item.add( new ActorReportPanel( "actor",
-                    part.getScenario().equals( scenario ) ? null : scenario, 
+                    part.getScenario().equals( scenario ) ? null : scenario,
                     localizedActor.getActor() ) );
             }
         };
         actorsList.add( new AttributeModifier( "class", true,
                 new Model<String>( flow.isAll() ? "all-actors" : "any-actor" ) ) );
         actorsDiv.add( actorsList );
-        actorsDiv.setVisible( !actors.isEmpty() );
+        actorsDiv.setVisible( showContact && !actors.isEmpty() );
         add( actorsDiv );
 
         add( new IssuesReportPanel( "issues", new Model<ModelObject>( flow ) ) );

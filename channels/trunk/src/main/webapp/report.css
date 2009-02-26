@@ -118,7 +118,12 @@ ul.channels {
 }
 
 ul.channels-only {
-    padding: 0;
+    padding: 0.5em 0.5em 0 0.5em;
+}
+
+ul.channels-only li.channel {
+    border-spacing: 0;
+    padding: 0 2em 0.5em 0;
 }
 
 ul.channels li.channel, ul.channels-only li.channel {
