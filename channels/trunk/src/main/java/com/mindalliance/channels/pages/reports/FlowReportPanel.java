@@ -84,14 +84,16 @@ public class FlowReportPanel extends Panel {
             @Override
             protected void populateItem( ListItem<LocalizedActor> item ) {
                 LocalizedActor localizedActor = item.getModel().getObject();
+                Scenario scenario = localizedActor.getScenario();
                 item.add( new ActorReportPanel( "actor",
-                    localizedActor.getScenario(), localizedActor.getActor() ) );
+                    part.getScenario().equals( scenario ) ? null : scenario, 
+                    localizedActor.getActor() ) );
             }
         };
         actorsList.add( new AttributeModifier( "class", true,
                 new Model<String>( flow.isAll() ? "all-actors" : "any-actor" ) ) );
         actorsDiv.add( actorsList );
-        actorsDiv.setVisible( showContact );
+        actorsDiv.setVisible( !actors.isEmpty() );
         add( actorsDiv );
 
         add( new IssuesReportPanel( "issues", new Model<ModelObject>( flow ) ) );

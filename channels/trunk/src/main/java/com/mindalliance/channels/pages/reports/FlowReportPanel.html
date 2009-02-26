@@ -14,13 +14,13 @@
         (<span wicket:id="urgency" class="urgency">(max delay)</span>).
     </p>
 
-    <ul class="channels" wicket:id="channels">[channels report panel]</ul>
-
     <p wicket:id="description" class="description">(description)</p>
 
+    <ul class="channels-only" wicket:id="channels">[channels report panel]</ul>
+
     <!-- actors at the other end of external flow -->
-    <ul wicket:id="actors-div">
-        <li wicket:id="actors">  <!-- class="any-actor | all-actors" -->
+    <ul class="contacts" wicket:id="actors-div">
+        <li class="contact" wicket:id="actors">  <!-- class="any-actor | all-actors" -->
              <span wicket:id="actor">[actor report panel]</span>
         </li>
     </ul>

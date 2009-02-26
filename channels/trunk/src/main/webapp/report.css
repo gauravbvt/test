@@ -46,18 +46,6 @@ div.organization > h3, div.organization > p.description {
     border-spacing: 0;
 }
 
-.role ul.contacts {
-    background-color: #D0D0D0;
-    padding: 0.5em 0.5em 0 0.5em !important;
-    width: 61.8%;
-    list-style: none;
-    margin: 0 auto;
-}
-
-.role ul.contacts li.contact {
-    padding-bottom: 0.5em;
-}
-
 .role table.header td {
     padding: 0.5em;
     vertical-align: top;
@@ -95,31 +83,58 @@ div.organization > h3, div.organization > p.description {
 .role table.header td.role-head ul li.organization {
 }
 
-.role div.contacts {
-    margin: 0 0.5em;
+ul.contacts, ul.channels-only {
+    background-color: #D0D0D0;
 }
 
-.role div.contacts h4 {
+ul.contacts {
+    list-style: none;
+    display:table;
+    border-spacing:0;
+    padding: 0.5em 0.5em 0 0.5em !important;
+}
+
+ul.contacts h4 {
     display: none;
 }
 
-.role ul.contacts li.contact p.name {
+ul.contacts li.contact {
+    display: table-row;
+    padding-bottom: 0.5em;
+}
+
+ul.contacts li.contact p.name {
+    display: table-cell;
     font-weight: bold;
     margin: 0;
-    float: left;
-    width: 1.4in;
+    padding-bottom: 0.5em;
 }
 
-.role ul.contacts ul.channels {
+ul.channels {
+    display: table-cell;
+    width: 100%;
     list-style: none;
-    margin: 0 0 0 1.4in;
+    padding: 0 0 0.5em 2em;
 }
 
-.role ul.contacts li.channel {
-    display: -moz-inline-box;
-    min-width: 2.2in;
+ul.channels-only {
+    padding: 0;
+}
+
+ul.channels li.channel, ul.channels-only li.channel {
+    display: inline-table;
+    min-width: 2.5in;
     margin: 0;
-    padding-right: 1em;
+    padding-right: 2em;
+}
+
+div.role > ul.contacts {
+    width: 61.8%;
+    margin: 0 auto;
+}
+
+p.name span {
+    white-space: nowrap;
 }
 
 .task ul.details {
@@ -154,11 +169,8 @@ p.task-name {
     font-weight: bold;
 }
 
-.tasks p, .tasks ul {
+.tasks p {
     margin: 0 0 0.5em 0;
-}
-.tasks ul {
-    padding: 0 0 0 1em;
 }
 
 .tasks td:first-child, .tasks th:first-child {
@@ -169,10 +181,8 @@ p.task-name {
     width: 61.8%;
 }
 
-.task ul {
-}
-
-.task li {
+.tasks td ul {
+    margin: 0;
 }
 
 .task h5 {
@@ -185,7 +195,7 @@ ul.flows {
 }
 
 ul.flows > li {
-    min-height: 48px;
+    min-height: 33px;
     padding: 15px 0 0 56px;
 }
 
