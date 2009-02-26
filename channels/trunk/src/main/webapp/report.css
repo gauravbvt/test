@@ -221,6 +221,10 @@ ul.flows li.send-answer {
     font-weight: bold;
 }
 
+.issues li {
+    margin-top: 0.5em;
+}
+
 .issues .severe {
     color: darkred;
     font-weight: bold;
@@ -233,3 +237,4 @@ ul.flows li.send-answer {
 .issues .minor {
     color: gray;
 }
+
