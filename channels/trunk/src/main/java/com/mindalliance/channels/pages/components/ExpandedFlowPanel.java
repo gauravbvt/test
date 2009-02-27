@@ -10,13 +10,13 @@ import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.UserIssue;
-import com.mindalliance.channels.InternalFlow;
 import com.mindalliance.channels.util.SemMatch;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ScenarioPage;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -43,6 +43,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.HashSet;
 
 /**
  * Details of an expanded flow.
@@ -143,17 +144,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         setOutcome( outcome );
 
         addHeader();
-        nameField = new TextField<String>( "name" );
-        nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {                // NON-NLS
-
-            protected void onUpdate( AjaxRequestTarget target ) {
-                addIssues( nameField, getFlow(), "name" );
-                target.addComponent( nameField );
-                target.addComponent( titleLabel );
-                target.addComponent( otherChoice );
-                target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
-            }
-        } );
+        addNameField();
         addLabeled( "name-label", nameField );                                            // NON-NLS
         descriptionField = new TextArea<String>( "description" );                         // NON-NLS
         descriptionField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
@@ -204,6 +195,72 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         triggersSourceCheckBox.setEnabled( f.canSetTriggersSource() );
         terminatesSourceContainer.setVisible( f.canGetTerminatesSource() );
         terminatesSourceCheckBox.setEnabled( f.canSetTerminatesSource() );
+    }
+
+    private void addNameField() {
+        nameField = new AutoCompleteTextField<String>( "name" ) {
+            protected Iterator<String> getChoices( String s ) {
+                return getFlowNameChoices( s );
+            }
+        };
+        nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {                // NON-NLS
+
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addIssues( nameField, getFlow(), "name" );
+                target.addComponent( nameField );
+                target.addComponent( titleLabel );
+                target.addComponent( otherChoice );
+                target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
+            }
+        } );
+    }
+
+    /**
+     * Find all candidate names for a flow given partial name.
+     * Look in sibling flows and all connector flows of the right "polarity".
+     *
+     * @param s partial name
+     * @return an iterator on strings
+     */
+    private Iterator<String> getFlowNameChoices( String s ) {
+        Set<String> choices = new HashSet<String>();
+        if ( s.length() > 1 ) {
+            Node node = getNode();
+            Iterator<Flow> nodeFlows = node.outcomes();
+            while ( nodeFlows.hasNext() ) {
+                String name = nodeFlows.next().getName();
+                if ( SemMatch.matches( s, name ) )
+                    choices.add( name );
+            }
+            nodeFlows = node.requirements();
+            while ( nodeFlows.hasNext() ) {
+                String name = nodeFlows.next().getName();
+                if ( SemMatch.matches( s, name ) )
+                    choices.add( name );
+            }
+            // all connectors of the right "polarity"
+            for ( Connector connector : findAllRelevantConnectors() ) {
+                String name = connector.getInnerFlow().getName();
+                if ( SemMatch.matches( s, name ) )
+                    choices.add( name );
+            }
+        }
+        return choices.iterator();
+    }
+
+
+    private void oldAddNameField() {
+        nameField = new TextField<String>( "name" );
+        nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {                // NON-NLS
+
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addIssues( nameField, getFlow(), "name" );
+                target.addComponent( nameField );
+                target.addComponent( titleLabel );
+                target.addComponent( otherChoice );
+                target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
+            }
+        } );
     }
 
     private void addAskedForRadios() {
@@ -586,12 +643,6 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
                     }
                 }
             }
-            /* if ( !node.equals( n )
-              && ( other.equals( n )
-              || ( n.isConnector() && ( isOutcome()
-              ? ( (Connector) n ).isSource()
-              : ( (Connector) n ).isTarget() ) ) ) )
-          result.add( n );*/
         }
         // Add inputs/outputs of other scenarios
         Service service = ( (Project) getApplication() ).getService();
@@ -611,6 +662,19 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
             }
         }
         return new ArrayList<Node>( result );
+    }
+
+    private List<Connector> findAllRelevantConnectors() {
+        List<Connector> result = new ArrayList<Connector>();
+        Service service = ( (Project) getApplication() ).getService();
+        for ( Scenario s : service.list( Scenario.class ) ) {
+            Iterator<Connector> connectorIterator = isOutcome()
+                    ? s.inputs()
+                    : s.outputs();
+            while ( connectorIterator.hasNext() )
+                result.add( connectorIterator.next() );
+        }
+        return result;
     }
 
     /**

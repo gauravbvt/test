@@ -4,6 +4,11 @@ import com.mindalliance.channels.Place;
 import com.mindalliance.channels.Role;
 
 import java.text.Collator;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * A matching utility
@@ -19,11 +24,28 @@ public class SemMatch {
      */
     private static final Collator COLLATOR = Collator.getInstance();
 
+    private static List<String> NOISE_WORDS;
+
+    private static final String SEPARATORS = " .,:;/\\|+-'\"()[]";
+
     protected SemMatch() {
     }
 
+    static {
+        String[] words = {
+                "a", "an", "the", "it", "they", "we",
+                "and", "or", "so", "then",
+                "of", "by", "from", "at", "in", "out", "into", "off",
+                "any", "all","some", "most", "many", "few", "both",
+                "for", "if", "then",
+                "after", "before", "during",
+                "first", "last"
+        };
+        NOISE_WORDS = Arrays.asList( words );
+    }
+
     /**
-     * Returns whether strings are the same (after trimming blanks and ignoring case)
+     * Returns whether strings are the same (after trimming blanks and ignoring case).
      *
      * @param string      -- a string
      * @param otherString -- another string
@@ -36,7 +58,7 @@ public class SemMatch {
     }
 
     /**
-     * Returns whether strings name the same locations
+     * Returns whether strings name the same locations.
      *
      * @param place -- a string
      * @param other -- another string
@@ -52,12 +74,42 @@ public class SemMatch {
     }
 
     /**
-     * Compares two roles for identity
+     * Compares two roles for identity.
+     *
      * @param role1 a Role
      * @param role2 another Role
      * @return a boolean
      */
     public static boolean sameAs( Role role1, Role role2 ) {
         return COLLATOR.compare( role1.getName(), role2.getName() ) == 0;
+    }
+
+    /**
+     * Whether two string seem semantically related.
+     *
+     * @param string a String
+     * @param other  a String
+     * @return a boolean
+     */
+    public static boolean matches( String string, String other ) {
+        // TODO - do something a wee bit smarter
+        String cleanString = removeNoise( string );
+        String cleanOther = removeNoise( other );
+        return cleanOther.startsWith( cleanString )
+                || StringUtils.countMatches( cleanString, cleanOther ) > 0;
+    }
+
+    /**
+     * Put string to lowercase and remove meaningless words.
+     *
+     * @param s a String
+     * @return a String
+     */
+    private static String removeNoise( String s ) {
+        // StringUtils.split( s.toLowerCase(), SEPARATORS );
+        List<String> words = new ArrayList<String>();
+        words.addAll( Arrays.asList( StringUtils.split( s.toLowerCase(), SEPARATORS ) ) );
+        words.removeAll( NOISE_WORDS );
+        return StringUtils.join( words, ' ' );
     }
 }
