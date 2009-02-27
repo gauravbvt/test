@@ -1,22 +1,20 @@
 package com.mindalliance.channels;
 
-import org.hibernate.event.PostUpdateEvent;
+import com.mindalliance.channels.pages.Project;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
-import javax.persistence.Embeddable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Arrays;
-
-import com.mindalliance.channels.pages.Project;
+import java.util.List;
 
 /**
  * An arrow between two nodes in the information flow graph.
@@ -103,11 +101,7 @@ public abstract class Flow extends ModelObject implements Channelable {
      */
     public abstract void setEffectiveChannels( List<Channel> channels );
 
-    /**
-     * Add an alternate channel for the flow
-     *
-     * @param channel a Channel
-     */
+    /** {@inheritDoc} */
     public void addChannel( Channel channel ) {
         addChannelIfUnique( channel );
     }
@@ -134,7 +128,7 @@ public abstract class Flow extends ModelObject implements Channelable {
     }
 
     /**
-     * {@inheritDoc
+     * {@inheritDoc}
      */
     @Transient
     public String getChannelsString() {
@@ -164,7 +158,7 @@ public abstract class Flow extends ModelObject implements Channelable {
     }
 
     public void setSignificanceToSource( Significance significance ) {
-        this.significanceToSource = significance;
+        significanceToSource = significance;
     }
 
     public Significance getSignificanceToTarget() {
@@ -175,23 +169,7 @@ public abstract class Flow extends ModelObject implements Channelable {
         this.significanceToTarget = significanceToTarget;
     }
 
-    /**
-     * Provide a out-of-context description of the flow.
-     *
-     * @return the description
-     */
-    @Transient
-    public String getTitle() {
-        String content = getName();
-        if ( content == null || content.trim().isEmpty() )
-            content = "something";
-        return MessageFormat.format( isAskedFor() ? "{2} ask {1} about {0}"
-                : "{1} notify {2} of {0}",
-
-                content, getShortName( getSource() ), getShortName( getTarget() ) );
-    }
-
-    private String getShortName( Node node ) {
+    private String getShortName( Node node, boolean qualified ) {
         String result = "somebody";
 
         if ( node != null ) {
@@ -199,9 +177,31 @@ public abstract class Flow extends ModelObject implements Channelable {
             if ( sourceName != null && !sourceName.trim().isEmpty() ) {
                 result = sourceName;
             }
+
+            if ( qualified && node.isPart() && ( (Part) node ).isOnlyRole() )
+                result = MessageFormat.format( isAll() ? "every {0}" : "any {0}", result );
         }
 
         return result;
+    }
+
+    /**
+     * Provide a out-of-context description of the flow.
+     *
+     * @return the description
+     */
+    @Transient
+    public String getTitle() {
+        String message = getName();
+        if ( message == null || message.trim().isEmpty() )
+            message = "something";
+
+        return MessageFormat.format(
+                isAskedFor() ? "{2} ask {1} about {0}"
+                             : isTriggeringToTarget() ? "{1} telling {2} to {0}"
+                                                      : "{1} notify {2} of {0}",
+
+                message, getShortName( getSource(), false ), getShortName( getTarget(), false ) );
     }
 
     /**
@@ -211,22 +211,23 @@ public abstract class Flow extends ModelObject implements Channelable {
      */
     @Transient
     public String getRequirementTitle() {
-        boolean noName = getName() == null || getName().trim().isEmpty();
+        String message = getName();
+        if ( message == null || message.trim().isEmpty() )
+            message = !isAskedFor() && isTriggeringToTarget() ? "do something" : "something";
+
         if ( getSource().isConnector() ) {
             return MessageFormat.format(
-                    noName ? isAskedFor() ? "Needs to ask for something"
-                            : "Needs to be notified of something"
-                            : isAskedFor() ? "Needs to ask for {0}"
-                            : "Needs to be notified of {0}",
-                    getName() );
+                    isAskedFor() ? "Needs to ask for {0}"
+                                 : isTriggeringToTarget() ? "Needs to be told to {0}"
+                                                          : "Needs to be notified of {0}",
+                    message.toLowerCase() );
 
         } else {
             return MessageFormat.format(
-                    noName ? isAskedFor() ? "Ask {1} for something"
-                            : "Notified of something by {1}"
-                            : isAskedFor() ? "Ask {1} for {0}"
-                            : "Notified of {0} by {1}",
-                    getName(), getShortName( getSource() ) );
+                    isAskedFor() ? "Ask {1} for {0}"
+                                 : isTriggeringToTarget() ? "Told to {0} by {1}"
+                                                          : "Notified of {0} by {1}",
+                    message.toLowerCase(), getShortName( getSource(), false ) );
         }
     }
 
@@ -237,29 +238,25 @@ public abstract class Flow extends ModelObject implements Channelable {
      */
     @Transient
     public String getOutcomeTitle() {
-        boolean noName = getName() == null || getName().trim().isEmpty();
+        String message = getName();
+        if ( message == null || message.trim().isEmpty() )
+            message = "something";
+
         Node node = getTarget();
-        String format;
-        String targetName;
         if ( node.isConnector() ) {
-            if ( noName ) {
-                format = ( isAskedFor() ? "Can answer with something" : "Can notify of something" );
-            } else {
-                format = ( isAskedFor() ? "Can answer with {0}" : "Can notify of {0}" );
-            }
-            return MessageFormat.format( format, getName() );
+            String format = isAskedFor() ? "Can answer with {0}"
+                                         : isTriggeringToTarget() ? "Can tell to {0}"
+                                                                  : "Can notify of {0}";
+
+            return MessageFormat.format( format, message.toLowerCase() );
+
         } else {
-            if ( node.isPart() && ( (Part) node ).isOnlyRole() ) {
-                targetName = MessageFormat.format( isAll() ? "every {0}" : "any {0}", getShortName( node ) );
-            } else {
-                targetName = getShortName( node );
-            }
-            if ( noName ) {
-                format = ( isAskedFor() ? "Answer {1} with something" : "Notify {1} of something" );
-            } else {
-                format = ( isAskedFor() ? "Answer {1} with {0}" : "Notify {1} of {0}" );
-            }
-            return MessageFormat.format( format, getName(), targetName );
+            String format = isAskedFor() ? "Answer {1} with {0}"
+                                         : isTriggeringToTarget() ? "Tell {1} to {0}"
+                                                                  : "Notify {1} of {0}" ;
+
+            return MessageFormat.format(
+                    format, message.toLowerCase(), getShortName( node, true ) );
         }
     }
 

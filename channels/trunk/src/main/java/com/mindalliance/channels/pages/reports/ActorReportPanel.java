@@ -26,10 +26,14 @@ public class ActorReportPanel extends Panel {
     /** An actor. */
     private Actor actor;
 
-    public ActorReportPanel( String id, Scenario scenario, Actor actor ) {
+    /** True if scenario should be displayed. */
+    private boolean showScenario;
+
+    public ActorReportPanel( String id, Scenario scenario, Actor actor, boolean showScenario ) {
         super( id );
         this.actor = actor;
         this.scenario = scenario;
+        this.showScenario = showScenario;
         setRenderBodyOnly( true );
         init();
     }
@@ -39,7 +43,7 @@ public class ActorReportPanel extends Panel {
         String scenarioString = scenario == null ?
                             ""  : MessageFormat.format( "({0})", scenario.getName() );
         Label scenarioLabel = new Label( "scenario", scenarioString );                    // NON-NLS
-        scenarioLabel.setVisible( scenario != null );
+        scenarioLabel.setVisible( showScenario && scenario != null );
         add( scenarioLabel );
 
         String desc = actor.getDescription();

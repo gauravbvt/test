@@ -87,7 +87,7 @@ public class FlowReportPanel extends Panel {
                 Scenario scenario = localizedActor.getScenario();
                 item.add( new ActorReportPanel( "actor",
                     part.getScenario().equals( scenario ) ? null : scenario,
-                    localizedActor.getActor() ) );
+                    localizedActor.getActor(), true ) );
             }
         };
         actorsList.add( new AttributeModifier( "class", true,
