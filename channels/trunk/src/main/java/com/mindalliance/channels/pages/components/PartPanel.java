@@ -7,11 +7,13 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Delay;
+import com.mindalliance.channels.util.SemMatch;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.ScenarioPage;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.TextField;
@@ -24,6 +26,12 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.IModel;
 
 import java.text.Collator;
+import java.util.List;
+import java.util.Iterator;
+import java.util.Collection;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.ArrayList;
 
 /**
  * A view on a Part.
@@ -86,23 +94,65 @@ public class PartPanel extends Panel implements Updatable {
         super.setOutputMarkupPlaceholderTag( false );
         setPart( part );
 
-        addField( TASK_PROPERTY );
-        addField( ACTOR_PROPERTY );
+        addField( TASK_PROPERTY, findAllTaskNames() );
+        addField( ACTOR_PROPERTY, findAllActorNames() );
         add( makeLink( "actor-link",                                           // NON-NLS
                 new PropertyModel<ModelObject>( part, ACTOR_PROPERTY ) ) );
-        addField( ROLE_PROPERTY );
+        addField( ROLE_PROPERTY, findAllRoleNames() );
         add( makeLink( "role-link",                                            // NON-NLS
                 new PropertyModel<ModelObject>( part, ROLE_PROPERTY ) ) );
-        addField( ORG_PROPERTY );
+        addField( ORG_PROPERTY, findAllOrganizationNames() );
         add( makeLink( "org-link",                                             // NON-NLS
                 new PropertyModel<ModelObject>( part, ORG_PROPERTY ) ) );
-        addField( JURISDICTION_PROPERTY );
+        addField( JURISDICTION_PROPERTY, findAllPaceNames() );
         add( makeLink( "juris-link",                                           // NON-NLS
                 new PropertyModel<ModelObject>( part, JURISDICTION_PROPERTY ) ) );
-        addField( LOCATION_PROPERTY );
+        addField( LOCATION_PROPERTY, findAllPaceNames() );
         add( makeLink( "loc-link",                                             // NON-NLS
                 new PropertyModel<ModelObject>( part, LOCATION_PROPERTY ) ) );
         addTimingFields();
+    }
+
+    private Set<String> findAllActorNames() {
+        Set<String> names = new HashSet<String>();
+        for ( Actor actor : Project.service().list( Actor.class ) )
+            names.add( actor.getName() );
+/*
+        for ( ResourceSpec rs : Project.service().findAllResourceSpecs() ) {
+            if ( !rs.isAnyActor() ) names.add( rs.getActorName() );
+        }
+*/
+        return names;
+    }
+
+    private Set<String> findAllRoleNames() {
+        Set<String> names = new HashSet<String>();
+        for ( Role actor : Project.service().list( Role.class ) )
+            names.add( actor.getName() );
+        return names;
+    }
+
+    private Set<String> findAllOrganizationNames() {
+        Set<String> names = new HashSet<String>();
+        for ( Organization actor : Project.service().list( Organization.class ) )
+            names.add( actor.getName() );
+        return names;
+    }
+
+    private Set<String> findAllPaceNames() {
+        Set<String> names = new HashSet<String>();
+        for ( Place actor : Project.service().list( Place.class ) )
+            names.add( actor.getName() );
+        return names;
+    }
+
+    private Set<String> findAllTaskNames() {
+        Set<String> names = new HashSet<String>();
+        Iterator<Part> allParts = part.getScenario().parts();
+        while ( allParts.hasNext() ) {
+            names.add( allParts.next().getTask() );
+        }
+        return names;
     }
 
     private ModelObjectLink makeLink( String id,
@@ -110,15 +160,28 @@ public class PartPanel extends Panel implements Updatable {
         return new ModelObjectLink( id, new Model<ModelObject>( model.getObject() ) );
     }
 
-    private void addField( final String property ) {
-        final TextField<String> field = new TextField<String>( property );
+    private void addField( final String property, final Collection<String> choices ) {
+        final TextField<String> field;
+        if ( choices == null ) {
+            field = new TextField<String>( property );
+        } else {
+            field = new AutoCompleteTextField<String>( property ) {
+                protected Iterator<String> getChoices( String s ) {
+                    List<String> candidates = new ArrayList<String>();
+                    for ( String choice : choices ) {
+                        if ( SemMatch.matches( s, choice ) ) candidates.add( choice );
+                    }
+                    return candidates.iterator();
+                }
+            };
+        }
         field.setOutputMarkupId( true );
         field.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssues( field, part, property );
                 target.addComponent( field );
                 target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
-                target.addComponent(( (ScenarioPage) getPage() ).getNodeTitle() );
+                target.addComponent( ( (ScenarioPage) getPage() ).getNodeTitle() );
                 updateWith( target );
             }
         } );
@@ -126,6 +189,11 @@ public class PartPanel extends Panel implements Updatable {
         // Add style mods from scenario analyst.
         addIssues( field, part, property );
         add( field );
+
+    }
+
+    private void addField( final String property ) {
+        addField( property, null );
     }
 
     /**

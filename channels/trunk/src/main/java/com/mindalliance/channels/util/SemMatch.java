@@ -7,8 +7,10 @@ import java.text.Collator;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.collections.CollectionUtils;
 
 /**
  * A matching utility
@@ -36,7 +38,7 @@ public class SemMatch {
                 "a", "an", "the", "it", "they", "we",
                 "and", "or", "so", "then",
                 "of", "by", "from", "at", "in", "out", "into", "off",
-                "any", "all","some", "most", "many", "few", "both",
+                "any", "all", "some", "most", "many", "few", "both",
                 "for", "if", "then",
                 "after", "before", "during",
                 "first", "last"
@@ -96,7 +98,13 @@ public class SemMatch {
         String cleanString = removeNoise( string );
         String cleanOther = removeNoise( other );
         return cleanOther.startsWith( cleanString )
-                || StringUtils.countMatches( cleanString, cleanOther ) > 0;
+                || commonWords( cleanString, cleanOther ) > 0;
+    }
+
+    private static int commonWords( String string, String other ) {
+        List<String> words = Arrays.asList( StringUtils.split( string.toLowerCase(), SEPARATORS ) );
+        List<String> otherWords = Arrays.asList( StringUtils.split( other.toLowerCase(), SEPARATORS ) );
+        return CollectionUtils.intersection( words, otherWords ).size();
     }
 
     /**
@@ -106,7 +114,6 @@ public class SemMatch {
      * @return a String
      */
     private static String removeNoise( String s ) {
-        // StringUtils.split( s.toLowerCase(), SEPARATORS );
         List<String> words = new ArrayList<String>();
         words.addAll( Arrays.asList( StringUtils.split( s.toLowerCase(), SEPARATORS ) ) );
         words.removeAll( NOISE_WORDS );
