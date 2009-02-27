@@ -532,3 +532,20 @@ input[type='submit'] {
     cursor: pointer;
     text-indent: -1000px;
 }
+
+div.wicket-aa-container {
+    background: white;
+    border: 1px solid #c3dede;
+    margin: 2px;
+    padding-left: 5px;
+}
+div.wicket-aa {
+}
+div.wicket-aa ul {
+    margin:5px;
+    padding:0 0 0 1em;
+}
+div.wicket-aa ul li {
+}
+div.wicket-aa ul li.selected {
+}
