@@ -151,12 +151,12 @@ public class TestScenarioPage extends TestCase {
         tester.assertRenderedPage( ScenarioPage.class );
         tester.assertNoErrorMessage();
 
-        parms.put( Project.EXPAND_PARM, "bla" );
+        parms.put( ScenarioPage.EXPAND_PARM, "bla" );
         tester.startPage( ScenarioPage.class, parms );
         tester.assertRenderedPage( ScenarioPage.class );
         tester.assertNoErrorMessage();
 
-        parms.add( Project.EXPAND_PARM, "burp" );
+        parms.add( ScenarioPage.EXPAND_PARM, "burp" );
         tester.startPage( ScenarioPage.class, parms );
         tester.assertRenderedPage( ScenarioPage.class );
         tester.assertNoErrorMessage();

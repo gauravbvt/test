@@ -19,7 +19,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -36,7 +35,7 @@ import java.util.ArrayList;
 /**
  * A view on a Part.
  */
-public class PartPanel extends Panel implements Updatable {
+public class PartPanel extends AbstractUpdatablePanel {
 
     /**
      * The task property.
@@ -255,11 +254,6 @@ public class PartPanel extends Panel implements Updatable {
                 updateWith( target );
             }
         } );
-    }
-
-    private void updateWith( AjaxRequestTarget target ) {
-        Updatable updatableParent = findParent( Updatable.class );
-        if ( updatableParent != null ) updatableParent.update( target );
     }
 
     /**

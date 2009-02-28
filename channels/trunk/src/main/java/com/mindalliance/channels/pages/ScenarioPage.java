@@ -52,6 +52,8 @@ import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
+import java.util.Arrays;
 
 /**
  * The scenario editor page.
@@ -67,6 +69,11 @@ public final class ScenarioPage extends WebPage implements Updatable {
      * The 'part' parameter in the URL.
      */
     static final String NODE_PARM = "node";                                               // NON-NLS
+
+    /**
+     * The 'expand' parameter in the URL.
+     */
+    public static final String EXPAND_PARM = "expand";                                    // NON-NLS
 
     /**
      * Class logger.
@@ -96,7 +103,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
     /**
      * Length a scenario title is abbreviated to
      */
-    private static final int SCENARIO_TITLE_MAX_LENGTH = 30;
+    private static final int SCENARIO_TITLE_MAX_LENGTH = 25;
 
     /**
      * Length a scenario title is abbreviated to
@@ -136,6 +143,10 @@ public final class ScenarioPage extends WebPage implements Updatable {
      * Part issues panel.
      */
     private IssuesPanel partIssuesPanel;
+    /**
+     * A scenario edit panel
+     */
+    private ScenarioEditPanel scenarioEditPanel;
 
     /**
      * Used when page is called without parameters.
@@ -158,7 +169,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
         else {
             Node n = findNode( scenario, parameters );
             if ( n != null )
-                init( scenario, n, Project.findExpansions( parameters ) );
+                init( scenario, n, findExpansions( parameters ) );
             else
                 redirectTo( scenario );
         }
@@ -199,7 +210,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
     /**
      * Find scenario specified in parameters.
      *
-     * @param service        the scenario container
+     * @param service    the scenario container
      * @param parameters the page parameters
      * @return a scenario, or null if not found
      */
@@ -272,7 +283,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
         if ( node != null ) {
             result.put( NODE_PARM, Long.toString( node.getId() ) );
             for ( long id : expanded )
-                result.add( Project.EXPAND_PARM, Long.toString( id ) );
+                result.add( EXPAND_PARM, Long.toString( id ) );
         }
         return result;
     }
@@ -308,12 +319,42 @@ public final class ScenarioPage extends WebPage implements Updatable {
         expansions = expanded;
 
         setVersioned( false );
-        setStatelessHint( true ); 
+        setStatelessHint( true );
         add( new Label( "sc-title", new PropertyModel<String>( scenario, "name" ) ) );    // NON-NLS
         form = new ScenarioForm( "big-form", scenario, n );                               // NON-NLS
         add( form );
 
         LOG.debug( "Scenario page generated" );
+    }
+
+    /**
+     * Find expansions in page parameters
+     *
+     * @return set of ids
+     */
+    public Set<Long> findExpansions() {
+        return findExpansions( getPageParameters() );
+    }
+
+    /**
+     * Find expansions in page parameters
+     *
+     * @param parameters page parameters
+     * @return set of ids
+     */
+    public Set<Long> findExpansions( PageParameters parameters ) {
+        if ( parameters == null ) return new HashSet<Long>();
+        Set<Long> result = new HashSet<Long>( parameters.size() );
+        if ( parameters.containsKey( EXPAND_PARM ) ) {
+            List<String> stringList = Arrays.asList( parameters.getStringArray( EXPAND_PARM ) );
+            for ( String id : stringList )
+                try {
+                    result.add( Long.valueOf( id ) );
+                } catch ( NumberFormatException ignored ) {
+                    LOG.warn( MessageFormat.format( "Invalid expansion parameter: {0}", id ) );
+                }
+        }
+        return result;
     }
 
     /**
@@ -344,6 +385,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
 
     /**
      * Get the Label showing the node title
+     *
      * @return a Label
      */
     public Label getNodeTitle() {
@@ -372,8 +414,8 @@ public final class ScenarioPage extends WebPage implements Updatable {
      * @param target the ajax target
      */
     public void update( AjaxRequestTarget target ) {
-        partIssuesPanel.modelChanged();
         target.addComponent( partIssuesPanel );
+        if ( scenarioEditPanel != null ) scenarioEditPanel.update( target );
     }
 
     //==============================================================
@@ -430,7 +472,8 @@ public final class ScenarioPage extends WebPage implements Updatable {
 /*
             add( new Label( "node-title",                                                 // NON-NLS
                     new PropertyModel<String>( node, "title" ) ) );                       // NON-NLS
-*/          nodeTitle = new Label( "node-title",                                                 // NON-NLS
+*/
+            nodeTitle = new Label( "node-title",                                                 // NON-NLS
                     new AbstractReadOnlyModel<String>() {
                         @Override
                         public String getObject() {
@@ -466,13 +509,13 @@ public final class ScenarioPage extends WebPage implements Updatable {
             } );
             add( new AttachmentPanel( "attachments", node ) );                            // NON-NLS
             partIssuesPanel = new IssuesPanel( "issues",                                               // NON-NLS
-                                  new Model<ModelObject>( node ), getPageParameters() );
+                    new Model<ModelObject>( node ) );
             partIssuesPanel.setOutputMarkupId( true );
             add( partIssuesPanel );
             addScenarioFields( scenario );
-            reqs = new FlowListPanel( "reqs", node, false, expansions );                  // NON-NLS
+            reqs = new FlowListPanel( "reqs", node, false );                  // NON-NLS
             add( reqs );
-            outcomes = new FlowListPanel( "outcomes", node, true, expansions );           // NON-NLS
+            outcomes = new FlowListPanel( "outcomes", node, true );           // NON-NLS
             add( outcomes );
         }
 
@@ -484,11 +527,11 @@ public final class ScenarioPage extends WebPage implements Updatable {
                 protected void onComponentTag( ComponentTag tag ) {
                     super.onComponentTag( tag );
                     tag.put( "src",                                                       // NON-NLS
-                        MessageFormat.format(
-                            "scenario.png?scenario={0,number,0}&node={1,number,0}&amp;time={2,number,0}", // NON-NLS
-                            scenario.getId(),
-                            n.getId(),
-                            System.currentTimeMillis() ) );
+                            MessageFormat.format(
+                                    "scenario.png?scenario={0,number,0}&node={1,number,0}&amp;time={2,number,0}", // NON-NLS
+                                    scenario.getId(),
+                                    n.getId(),
+                                    System.currentTimeMillis() ) );
                 }
 
                 @Override
@@ -497,7 +540,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
                     try {
                         DiagramFactory diagramFactory = Project.diagramFactory();
                         FlowDiagram flowDiagram = diagramFactory.newFlowDiagram( scenario );
-                        getResponse().write( flowDiagram.makeImageMap( ) );
+                        getResponse().write( flowDiagram.makeImageMap() );
                     } catch ( DiagramException e ) {
                         LOG.error( "Can't generate image map", e );
                     }
@@ -545,22 +588,22 @@ public final class ScenarioPage extends WebPage implements Updatable {
             } );
 
             if ( expansions.contains( scenario.getId() ) ) {
-                BookmarkablePageLink<Scenario> editLink  =
+                BookmarkablePageLink<Scenario> editLink =
                         new BookmarkablePageLink<Scenario>(
                                 "sc-edit", ScenarioPage.class,                                    // NON-NLS
-                                getParameters( scenario, node ) );
+                                getParametersCollapsing( scenario.getId() ) );
                 add( editLink );
-                editLink.add(  new Label("edit-or-hide", "Hide") );
-                add( new ScenarioEditPanel( "sc-editor",                                  // NON-NLS
-                                            scenario, getPageParameters() ) );
+                editLink.add( new Label( "edit-or-hide", "Hide" ) );
+                scenarioEditPanel = new ScenarioEditPanel( "sc-editor", scenario );
+                add( scenarioEditPanel );                         // NON-NLS
 
             } else {
                 BookmarkablePageLink<Scenario> editLink =
                         new BookmarkablePageLink<Scenario>(
                                 "sc-edit", ScenarioPage.class,   // NON-NLS
-                                getParameters( scenario, node, scenario.getId() ) );
+                                getParametersExpanding( scenario.getId() ) );
                 add( editLink );
-                editLink.add(  new Label("edit-or-hide", "Edit") );
+                editLink.add( new Label( "edit-or-hide", "Edit" ) );
                 add( new Label( "sc-editor" ) );                                          // NON-NLS
             }
 
@@ -572,8 +615,8 @@ public final class ScenarioPage extends WebPage implements Updatable {
             add( createSelectScenario( "sc-sel" ) );                                      // NON-NLS
             scenarioImport = new FileUploadField( "sc-import", new Model<FileUpload>() ); // NON-NLS
             add( scenarioImport );
-            add ( new ExternalLink ("index", "index.html") );
-            add ( new ExternalLink ("report", "report.html"));
+            add( new ExternalLink( "index", "index.html" ) );
+            add( new ExternalLink( "report", "report.html" ) );
             add( new Label( "user", Project.getUserName() ) );                            // NON-NLS
         }
 
@@ -604,7 +647,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
 
             add( scenarioNameLabel );
             scenarioDescriptionLabel = new Label( "sc-desc",                                                    // NON-NLS
-                  //  new PropertyModel<String>( scenario, DESC_PROPERTY )
+                    //  new PropertyModel<String>( scenario, DESC_PROPERTY )
                     new AbstractReadOnlyModel<String>() {
                         @Override
                         public String getObject() {
@@ -717,6 +760,47 @@ public final class ScenarioPage extends WebPage implements Updatable {
         public void setNodeDeleted( boolean nodeDeleted ) {
             this.nodeDeleted = nodeDeleted;
         }
+    }
+
+    /**
+     * Return page parameters with an added expand parameter.
+     *
+     * @param id a model object id
+     * @return page parameters
+     */
+    public PageParameters getParametersExpanding( long id ) {
+        PageParameters result = getPageParameters();
+        if ( !this.findExpansions().contains( id ) ) {
+            result.add( EXPAND_PARM, Long.toString( id ) );
+        }
+        return result;
+    }
+
+    /**
+     * To support tests.
+     *
+     * @return page parameters
+     */
+    public PageParameters getPageParameters() {
+        PageParameters params = super.getPageParameters();
+        if ( params == null ) params = new PageParameters();
+        return params;
+    }
+
+    /**
+     * Returns page parameters with an expand parameter removed.
+     *
+     * @param id a model object id
+     * @return page parameters
+     */
+    public PageParameters getParametersCollapsing( long id ) {
+        PageParameters result = getPageParameters();
+        String[] expanded = result.getStringArray( EXPAND_PARM );
+        String idString = Long.toString( id );
+        result.remove( EXPAND_PARM );
+        for ( String exp : expanded )
+            if ( !exp.equals( idString ) ) result.add( EXPAND_PARM, exp );
+        return result;
     }
 
     //==============================================================

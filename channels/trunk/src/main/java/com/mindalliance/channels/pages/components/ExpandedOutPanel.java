@@ -9,8 +9,8 @@ import java.util.Set;
  */
 public class ExpandedOutPanel extends ExpandedFlowPanel {
 
-    public ExpandedOutPanel( String id, Flow flow, Set<Long> expansions ) {
-        super( id, flow, true, expansions );
+    public ExpandedOutPanel( String id, Flow flow ) {
+        super( id, flow, true );
     }
 
     /** {@inheritDoc} */

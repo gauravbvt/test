@@ -20,7 +20,6 @@ import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -43,7 +42,7 @@ import java.util.Set;
  * Date: Feb 2, 2009
  * Time: 7:25:50 PM
  */
-public class ChannelListPanel extends Panel {
+public class ChannelListPanel extends AbstractUpdatablePanel {
     /**
      * The object which list of channels is being edited.
      */
@@ -118,6 +117,7 @@ public class ChannelListPanel extends Panel {
                         // adjustFields();
                         target.addComponent( candidateChannelsMarkup );
                         target.addComponent( editableChannelsMarkup );
+                        updateWith( target );
                     }
                 } );
                 item.add( candidateCheckBox );
@@ -152,6 +152,7 @@ public class ChannelListPanel extends Panel {
                         // adjustFields();
                         target.addComponent( candidateChannelsMarkup );
                         target.addComponent( editableChannelsMarkup );
+                        updateWith( target );
                     }
                 } );
                 includeSpan.add( includeCheckBox );
@@ -183,6 +184,7 @@ public class ChannelListPanel extends Panel {
                 addressField.add(  new AjaxFormComponentUpdatingBehavior("onchange") {
                     protected void onUpdate( AjaxRequestTarget target ) {
                         target.addComponent( editableChannelsMarkup );
+                        updateWith( target );
                     }
                 });
                 item.add( addressField );
@@ -192,10 +194,7 @@ public class ChannelListPanel extends Panel {
                     public void onClick( AjaxRequestTarget target ) {
                         wrapper.moveToFirst();
                         target.addComponent( editableChannelsMarkup );
-/*
-                        PageParameters parameters = getWebPage().getPageParameters();
-                        this.setResponsePage( getWebPage().getClass(), parameters );
-*/
+                        updateWith( target );
                     }
                 } ;
                 item.add( moveToTopLink );
@@ -324,6 +323,7 @@ public class ChannelListPanel extends Panel {
             }
         }
     }
+
 
     /**
      * A wrapper to keep track of the deletion state of channel.

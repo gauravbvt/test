@@ -1,19 +1,26 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Deletable;
+import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.ScenarioPage;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 
-import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -34,28 +41,16 @@ public class IssuesPanel extends Panel {
      * The model object possibly with issues.
      */
     private ModelObject modelObject;
-    /**
-     * Expansions from request parameters
-     */
-    private Set<Long> expansions;
 
-    public IssuesPanel( String id, IModel<ModelObject> model, PageParameters parameters ) {
+    public IssuesPanel( String id, IModel<ModelObject> model ) {
         super( id, model );
         modelObject = model.getObject();
-        expansions = Project.findExpansions( parameters );
         init();
     }
-
-    public IssuesPanel( String id, IModel<ModelObject> model, Set<Long> expansions ) {
-        super( id, model );
-        modelObject = model.getObject();
-        this.expansions = expansions;
-        init();
-    }
-
 
     private void init() {
-        // setRenderBodyOnly( true );
+        add( new Label( "kind", new PropertyModel<String>( this, "kind" ) ) );
+
         final Link<String> newIssueLink = new Link<String>( "new-issue",                  // NON-NLS
                 new Model<String>( "New" ) ) {
             @Override
@@ -64,44 +59,78 @@ public class IssuesPanel extends Panel {
                 userIssue.setReportedBy( Project.getUserName() );
                 getService().add( userIssue );
                 final PageParameters params = getWebPage().getPageParameters();
-                params.add( Project.EXPAND_PARM, Long.toString( userIssue.getId() ) );
+                params.add( ScenarioPage.EXPAND_PARM, Long.toString( userIssue.getId() ) );
                 setResponsePage( getWebPage().getClass(), params );
             }
         };
         add( newIssueLink );
-        add( createIssuePanels( expansions ) );
+
+    }
+
+    protected void onBeforeRender() {
+        super.onBeforeRender();
+        Set<Long> expansions = ( (ScenarioPage) getPage() ).findExpansions();
+        createIssuePanels( expansions );
         setVisible( Project.analyst().hasIssues( modelObject, false ) );
+    }
+
+
+    /**
+     * Return the kind of issue  -- scenario vs flow vs part (aka "task").
+     *
+     * @return a string
+     */
+    public String getKind() {
+        if ( modelObject instanceof Scenario ) return "Scenario";
+        else if ( modelObject instanceof Part ) return "Task";
+        else if ( modelObject instanceof Flow ) return "Flow";
+        else return modelObject.getClass().getSimpleName();
     }
 
     private Service getService() {
         return ( (Project) getApplication() ).getService();
     }
 
-    private RepeatingView createIssuePanels( Set<Long> expansions ) {
-        final RepeatingView issuesList = new RepeatingView( "issues" );                   // NON-NLS
-        final Iterator<Issue> issues = Project.analyst().findIssues( modelObject, false );
-        while ( issues.hasNext() ) {
-            final Issue issue = issues.next();
-            final long id = issue.getId();
-            final Panel issuePanel;
-            if ( expansions.contains( id ) )
-                issuePanel = new ExpandedIssuePanel( Long.toString( id ), issue );
-            else
-                issuePanel = new CollapsedIssuePanel( Long.toString( id ), issue );
-            issuesList.add( issuePanel );
-        }
-        return issuesList;
+    private void createIssuePanels( final Set<Long> expansions ) {
+        ListView issuesList = new ListView<Issue>( "issues", new PropertyModel<List<Issue>>(this, "modelObjectIssues")) {
+            protected void populateItem( ListItem<Issue> listItem ) {
+                Issue issue = listItem.getModelObject();
+                final long id = issue.getId();
+                final Panel issuePanel;
+                if ( expansions.contains( id ) )
+                    issuePanel = new ExpandedIssuePanel( "issue", new Model<Issue>(issue) );
+                else
+                    issuePanel = new CollapsedIssuePanel( "issue", new Model<Issue>(issue) );
+                
+                listItem.add( issuePanel );
+            }
+        };
+        addOrReplace( issuesList );
+    }
+
+    /**
+     * Find all issues of model object
+     * @return list of issues
+     */
+    public List<Issue> getModelObjectIssues() {
+        return Project.analyst().listIssues( modelObject, false );
     }
 
 
     //==================================================
-    /** A wrapper to keep track of the deletion state of an attachment. */
+    /**
+     * A wrapper to keep track of the deletion state of an attachment.
+     */
     public static class DeletableWrapper implements Deletable {
 
-        /** The underlying issue. */
+        /**
+         * The underlying issue.
+         */
         private Issue issue;
 
-       /** True if user marked item for deletion. */
+        /**
+         * True if user marked item for deletion.
+         */
         private boolean markedForDeletion;
 
         public DeletableWrapper( Issue issue ) {
@@ -112,9 +141,9 @@ public class IssuesPanel extends Panel {
             return markedForDeletion;
         }
 
-          /**
-           * {@inheritDoc}
-           */
+        /**
+         * {@inheritDoc}
+         */
         public void setMarkedForDeletion( boolean delete ) {
             markedForDeletion = delete;
             if ( delete && !issue.isDetected() ) {

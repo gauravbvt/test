@@ -1,16 +1,16 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.Actor;
+import com.mindalliance.channels.Connector;
+import com.mindalliance.channels.ExternalFlow;
+import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Organization;
+import com.mindalliance.channels.Part;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.ExternalFlow;
-import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.export.Exporter;
@@ -24,43 +24,28 @@ import com.mindalliance.channels.pages.reports.ProjectReportPage;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.userdetails.UserDetails;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.target.coding.MixedParamUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.value.ValueMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.Collator;
-import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Iterator;
 
 /**
  * Application object for Channels.
  * Initialized in /WEB-INF/applicationContext.xml.
  * @TODO split into a bonified service-level object
  */
-public final class Project extends WebApplication {
-
-    /**
-     * The 'expand' parameter in the URL.
-     */
-    public static final String EXPAND_PARM = "expand";                                    // NON-NLS
-
-    /**
-     * Class logger.
-     */
-    private static final Logger LOG = LoggerFactory.getLogger( Project.class );
+public final class Project extends WebApplication {                                   // NON-NLS
 
     /**
      * The project's unique identifier
@@ -499,25 +484,4 @@ public final class Project extends WebApplication {
         }
     }
 
-    /**
-     * Find expansions in page parameters
-     *
-     * @param parameters page parameters
-     * @return set of ids
-     */
-    public static Set<Long> findExpansions( PageParameters parameters ) {
-        if ( parameters == null ) return new HashSet<Long>();
-        Set<Long> result = new HashSet<Long>( parameters.size() );
-        if ( parameters.containsKey( EXPAND_PARM ) ) {
-            List<String> stringList = Arrays.asList( parameters.getStringArray( EXPAND_PARM ) );
-            for ( String id : stringList )
-                try {
-                    result.add( Long.valueOf( id ) );
-                } catch ( NumberFormatException ignored ) {
-                    LOG.warn( MessageFormat.format( "Invalid expansion parameter: {0}", id ) );
-                }
-        }
-
-        return result;
-    }
 }

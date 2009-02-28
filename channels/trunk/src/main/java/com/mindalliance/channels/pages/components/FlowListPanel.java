@@ -23,16 +23,22 @@ import java.util.Set;
  */
 public class FlowListPanel extends Panel {
 
-    /** The node for which flows are listed. */
+    /**
+     * The node for which flows are listed.
+     */
     private Node node;
 
-    /** True if outcomes are listed; false if requirements are listed. */
+    /**
+     * True if outcomes are listed; false if requirements are listed.
+     */
     private boolean outcomes;
 
-    /** Panels of expanded flows. */
+    /**
+     * Panels of expanded flows.
+     */
     private List<DeletableFlow> deletableFlows;
 
-    public FlowListPanel( String id, Node node, boolean outcomes, final Set<Long> expansions ) {
+    public FlowListPanel( String id, Node node, boolean outcomes ) {
         super( id );
         setNode( node );
         setOutcomes( outcomes );
@@ -41,23 +47,29 @@ public class FlowListPanel extends Panel {
         add( new Label( "title" ) );                                                      // NON-NLS
 
         add( new Link( "new" ) {                                                          // NON-NLS
+
             @Override
             public void onClick() {
                 final Node n = getNode();
                 final Flow f = isOutcomes() ? n.createOutcome( getService() )
-                                            : n.createRequirement( getService() );
+                        : n.createRequirement( getService() );
                 final Scenario s = n.getScenario();
-                final Set<Long> newExpansions = new HashSet<Long>( expansions );
+                final Set<Long> newExpansions = new HashSet<Long>( ( (ScenarioPage) getPage() ).findExpansions() );
                 newExpansions.add( f.getId() );
                 setResponsePage( ScenarioPage.class,
-                                 ScenarioPage.getParameters( s, n, newExpansions ) );
+                        ScenarioPage.getParameters( s, n, newExpansions ) );
             }
         } );
 
-        add( createFlowPanels( node, outcomes, expansions ) );
+        // add( createFlowPanels( node, outcomes ) );
     }
 
-    private RepeatingView createFlowPanels( Node node, boolean outcomes, Set<Long> expansions ) {
+    protected void onBeforeRender() {
+        super.onBeforeRender();
+        add( createFlowPanels( node, outcomes ) );
+    }
+
+    private RepeatingView createFlowPanels( Node node, boolean outcomes ) {
 
         final RepeatingView flowList = new RepeatingView( "flows" );                      // NON-NLS
         final Iterator<Flow> flows = outcomes ? node.outcomes() : node.requirements();
@@ -66,14 +78,14 @@ public class FlowListPanel extends Panel {
             final Flow flow = flows.next();
             final long flowId = flow.getId();
             final Panel panel;
+            Set<Long> expansions = ( (ScenarioPage) getPage() ).findExpansions();
             if ( expansions.contains( flowId ) ) {
                 final ExpandedFlowPanel flowPanel = outcomes ?
-                        new ExpandedOutPanel( Long.toString( flowId ), flow, expansions )
-                      : new ExpandedReqPanel( Long.toString( flowId ), flow, expansions );
+                        new ExpandedOutPanel( Long.toString( flowId ), flow )
+                        : new ExpandedReqPanel( Long.toString( flowId ), flow );
                 panel = flowPanel;
                 deletableFlows.add( flowPanel );
-            }
-            else {
+            } else {
                 final CollapsedFlowPanel dp =
                         new CollapsedFlowPanel( Long.toString( flowId ), flow, outcomes );
                 panel = dp;
@@ -92,7 +104,7 @@ public class FlowListPanel extends Panel {
      * @return the title of this panel.
      */
     public String getTitle() {
-        return isOutcomes() ?  "Send" : "Receive" ;
+        return isOutcomes() ? "Send" : "Receive";
     }
 
     public final Node getNode() {
@@ -113,6 +125,7 @@ public class FlowListPanel extends Panel {
 
     /**
      * Delete flows that are marked for deletion.
+     *
      * @param expansions the component expansion list to modify on deletions
      */
     public void deleteSelectedFlows( Set<Long> expansions ) {

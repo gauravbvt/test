@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.pages.ScenarioPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.basic.Label;
@@ -11,6 +12,7 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.IModel;
 
 import java.util.Arrays;
 
@@ -28,15 +30,17 @@ public class ExpandedIssuePanel extends Panel {
      */
     private Issue issue;
 
-    public ExpandedIssuePanel( String id, Issue issue ) {
+    public ExpandedIssuePanel( String id, IModel<Issue> model ) {
         super( id );
-        this.issue = issue;
+        this.issue = model.getObject();
         init();
     }
 
     private void init() {
         setOutputMarkupId( true );
-        String url = getRequest().getURL().replaceAll( "&expand=" + issue.getId(), "" );
+        // TODO - hack - adjust for Bookmarkable link
+        String url = getRequest().getURL()
+                .replaceAll( "&" + ScenarioPage.EXPAND_PARM + "=" + issue.getId(), "" );
         ExternalLink expandLink = new ExternalLink( "hide", url );
         add( expandLink );
         add( new CheckBox( "delete",                                                      // NON-NLS

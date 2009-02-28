@@ -32,7 +32,7 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
@@ -48,7 +48,7 @@ import java.util.HashSet;
 /**
  * Details of an expanded flow.
  */
-public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
+public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implements DeletableFlow {
 
     /**
      * The flow edited by this panel.
@@ -132,9 +132,13 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
     /**
      * Drop down of choice for the other end of the flow
      */
-    DropDownChoice<Node> otherChoice;
+    private DropDownChoice<Node> otherChoice;
+    /**
+     * A panel with issues on the flow.
+     */
+    private IssuesPanel flowIssuesPanel;
 
-    protected ExpandedFlowPanel( String id, Flow flow, boolean outcome, Set<Long> expansions ) {
+    protected ExpandedFlowPanel( String id, Flow flow, boolean outcome ) {
         super( id );
         setDefaultModel( new CompoundPropertyModel<Flow>(
                 new PropertyModel<Flow>( this, "flow" ) ) );                              // NON-NLS
@@ -169,8 +173,10 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         addChannelRow();
         addMaxDelayRow();
         addSignificanceToSource();
-        add( new AttachmentPanel( "attachments", flow ) );                                // NON-NLS
-        add( new IssuesPanel( "issues", new Model<ModelObject>( flow ), expansions ) );   // NON-NLS
+        add( new AttachmentPanel( "attachments", flow ) );
+        flowIssuesPanel = new IssuesPanel( "issues", new Model<ModelObject>( flow ) );
+        flowIssuesPanel.setOutputMarkupId( true );
+        add( flowIssuesPanel );
         adjustFields( flow );
     }
 
@@ -197,6 +203,11 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
         terminatesSourceCheckBox.setEnabled( f.canSetTerminatesSource() );
     }
 
+    public void update( AjaxRequestTarget target) {
+        super.update( target );
+        target.addComponent( flowIssuesPanel );
+    }
+
     private void addNameField() {
         nameField = new AutoCompleteTextField<String>( "name" ) {
             protected Iterator<String> getChoices( String s ) {
@@ -218,7 +229,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
     /**
      * Find all candidate names for a flow given partial name.
      * Look in sibling flows and all connector flows of the right "polarity".
-     *
+     * //TODO - inefficient
      * @param s partial name
      * @return an iterator on strings
      */
@@ -246,21 +257,6 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
             }
         }
         return choices.iterator();
-    }
-
-
-    private void oldAddNameField() {
-        nameField = new TextField<String>( "name" );
-        nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {                // NON-NLS
-
-            protected void onUpdate( AjaxRequestTarget target ) {
-                addIssues( nameField, getFlow(), "name" );
-                target.addComponent( nameField );
-                target.addComponent( titleLabel );
-                target.addComponent( otherChoice );
-                target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
-            }
-        } );
     }
 
     private void addAskedForRadios() {
@@ -429,13 +425,15 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
             public void onClick() {
                 Flow replica = flow.replicate( outcome );
                 PageParameters parameters = getWebPage().getPageParameters();
-                parameters.add( Project.EXPAND_PARM, String.valueOf( replica.getId() ) );
+                parameters.add( ScenarioPage.EXPAND_PARM, String.valueOf( replica.getId() ) );
                 this.setResponsePage( getWebPage().getClass(), parameters );
             }
         } );
-
-        // TODO don't collapse everything on hide
-        add( new ScenarioLink( "hide", new PropertyModel<Node>( this, "node" ) ) );       // NON-NLS
+        // add( new ScenarioLink( "hide", new PropertyModel<Node>( this, "node" ) ) );       // NON-NLS
+        // TODO - hack - adjust for Bookmarkable link
+        String url = getRequest().getURL().
+                replaceAll( "&" + ScenarioPage.EXPAND_PARM + "=" + flow.getId(), "" );
+        add( new ExternalLink( "hide", url ) );                                  // NON-NLS
         add( new Link( "add-issue" ) {                                                    // NON-NLS
 
             @Override
@@ -443,7 +441,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
                 UserIssue newIssue = new UserIssue( flow );
                 getService().add( newIssue );
                 PageParameters parameters = getWebPage().getPageParameters();
-                parameters.add( Project.EXPAND_PARM, String.valueOf( newIssue.getId() ) );
+                parameters.add( ScenarioPage.EXPAND_PARM, String.valueOf( newIssue.getId() ) );
                 setResponsePage( getWebPage().getClass(), parameters );
             }
         } );
@@ -632,7 +630,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
                     Connector connector = (Connector) n;
                     Flow connectorFlow = connector.getInnerFlow();
                     if ( getFlow().getName().isEmpty()
-                            || SemMatch.same( getFlow().getName(), connectorFlow.getName() ) ) {
+                            || SemMatch.matches( getFlow().getName(), connectorFlow.getName() ) ) {
                         if ( isOutcome() ) {
                             if ( connector.isSource() && !connectorFlow.getTarget().equals( node ) )
                                 result.add( connector );
@@ -653,7 +651,7 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
                     Connector connector = c.next();
                     Flow connectorFlow = connector.getInnerFlow();
                     if ( getFlow().getName().isEmpty()
-                            || SemMatch.same( getFlow().getName(), connectorFlow.getName() ) ) {
+                            || SemMatch.matches( getFlow().getName(), connectorFlow.getName() ) ) {
                         if ( other.equals( connector ) || !node.isConnectedTo(
                                 outcome, connector, flow.getName() ) )
                             result.add( connector );
@@ -749,4 +747,5 @@ public abstract class ExpandedFlowPanel extends Panel implements DeletableFlow {
     public void setMarkedForDeletion( boolean delete ) {
         markedForDeletion = delete;
     }
+
 }

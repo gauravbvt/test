@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.components;
 
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
@@ -20,7 +19,7 @@ import java.util.List;
  * Date: Feb 18, 2009
  * Time: 2:01:00 PM
  */
-public class DelayPanel extends Panel {
+public class DelayPanel extends AbstractUpdatablePanel {
     /**
      * A Delay.
      */
@@ -76,11 +75,6 @@ public class DelayPanel extends Panel {
     public void enable( boolean enabled ) {
         amountField.setEnabled( enabled );
         unitChoice.setEnabled( enabled );
-    }
-
-    private void updateWith( AjaxRequestTarget target ) {
-        Updatable updatableParent = findParent( Updatable.class );
-        if ( updatableParent != null ) updatableParent.update( target );
     }
 
 }

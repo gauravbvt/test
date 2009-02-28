@@ -6,6 +6,7 @@ import com.mindalliance.channels.Service;
 import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.ScenarioPage;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.basic.Label;
@@ -77,25 +78,13 @@ public class CollapsedFlowPanel extends Panel implements DeletableFlow {
             public void onClick() {
                 Flow replica = flow.replicate( outcome );
                 PageParameters parameters = getWebPage().getPageParameters();
-                parameters.add( Project.EXPAND_PARM, String.valueOf( replica.getId() ) );
+                parameters.add( ScenarioPage.EXPAND_PARM, String.valueOf( replica.getId() ) );
                 this.setResponsePage( getWebPage().getClass(), parameters );
             }
         } );
 
         // TODO replace expansion links by ajaxfallbacklinks
         add( new ExternalLink( "expand", getRequest().getURL() + "&expand=" + flow.getId() ) );
-        add( new Link( "add-issue" ) {                                                 // NON-NLS
-
-            @Override
-            public void onClick() {
-                final UserIssue newIssue = new UserIssue( flow );
-                getService().add( newIssue );
-                PageParameters parameters = getWebPage().getPageParameters();
-                parameters.add( Project.EXPAND_PARM, String.valueOf( newIssue.getId() ) );
-                parameters.add( Project.EXPAND_PARM, String.valueOf( flow.getId() ) );
-                this.setResponsePage( getWebPage().getClass(), parameters );
-            }
-        } );
         add( new CheckBox( "delete",                                                      // NON-NLS
                 new PropertyModel<Boolean>( this, "markedForDeletion" ) ) );   // NON-NLS
     }

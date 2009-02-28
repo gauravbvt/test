@@ -9,6 +9,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.IModel;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -23,9 +24,9 @@ public class CollapsedIssuePanel extends Panel {
      */
     private Issue issue;
 
-    public CollapsedIssuePanel( String id, Issue issue ) {
+    public CollapsedIssuePanel( String id, IModel<Issue> model ) {
         super( id );
-        this.issue = issue;
+        this.issue = model.getObject();
         init();
     }
 
