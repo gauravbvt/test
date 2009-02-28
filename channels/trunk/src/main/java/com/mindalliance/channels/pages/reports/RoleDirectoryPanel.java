@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Organization;
+import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.markup.html.basic.Label;
@@ -55,11 +56,12 @@ public class RoleDirectoryPanel extends Panel {
         // Find all actors in role for organization
         List<Actor> actors = Project.getProject().findActors( organization, role );
         if ( actors.isEmpty() )
-            actors.add( new Actor( "(unknown)" ) );
+            actors.add( Actor.UNKNOWN );
         add( new ListView<Actor>( "actors", actors ) {                                    // NON-NLS
             @Override
             protected void populateItem( ListItem<Actor> item ) {
-                item.add( new ActorReportPanel( "actor", null, item.getModelObject(), true ) ); // NON-NLS
+                item.add( new ActorReportPanel(
+                    "actor", null, ResourceSpec.with( item.getModelObject() ), false ) ); // NON-NLS
             }
         } );
     }

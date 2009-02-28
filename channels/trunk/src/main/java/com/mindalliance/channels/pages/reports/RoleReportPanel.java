@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.reports;
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.pages.Project;
@@ -46,9 +47,11 @@ public class RoleReportPanel extends Panel {
     }
 
     private void init() {
-        add( new Label( "sc-name", "Scenario: " + scenario.getName() ) );
-        add( new Label( "sc-description", scenario.getDescription() ) );
-        add( new Label( "org", "Organization: " + organization.getName() ) );
+        add( new Label( "sc-name",                                                        // NON-NLS
+                        MessageFormat.format( "Scenario: {0}", scenario.getName() ) ) );
+        add( new Label( "sc-description", scenario.getDescription() ) );                  // NON-NLS
+        add( new Label( "org",                                                            // NON-NLS
+                        MessageFormat.format( "Organization: {0}", organization.getName() ) ) );
 
         add( new Label( "name", MessageFormat.format(                                     // NON-NLS
                 "Role: {0}", role.getName() ) ) );
@@ -63,7 +66,14 @@ public class RoleReportPanel extends Panel {
         add( new ListView<Actor>( "actors", actors ) {                                    // NON-NLS
             @Override
             protected void populateItem( ListItem<Actor> item ) {
-                item.add( new ActorReportPanel( "actor", null, item.getModelObject(), true ) ); // NON-NLS
+                Actor actor = item.getModelObject();
+                ResourceSpec spec = new ResourceSpec();
+                if ( actor.equals( Actor.UNKNOWN ) ) {
+                    spec.setOrganization( organization );
+                    spec.setRole( role );
+                } else
+                    spec.setActor( actor );
+                item.add( new ActorReportPanel( "actor", scenario, spec, false ) );       // NON-NLS
             }
         } );
         add( new ListView<Part>( "parts", scenario.findParts( organization, role ) ) {    // NON-NLS

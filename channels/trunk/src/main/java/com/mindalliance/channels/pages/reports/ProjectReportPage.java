@@ -52,7 +52,6 @@ public class ProjectReportPage extends WebPage {
                 item.add( new ScenarioReportPanel( "scenario", item.getModel() ) );
             }
         } );
-        add( new ProjectDirectoryPanel( "directory" ) );
     }
 
 }

@@ -88,10 +88,9 @@ public class PartReportPanel extends Panel {
     private void addReceives() {
         Iterator<Flow> requirements = part.requirements();
         List<Flow> receives = new ArrayList<Flow>();
-        while ( requirements.hasNext() ) {
-            Flow req = requirements.next();
-            if ( !req.getSource().isConnector() ) receives.add( req );
-        }
+        while ( requirements.hasNext() )
+            receives.add( requirements.next() );
+
         add( new ListView<Flow>( "receives", receives ) {
             @Override
             protected void populateItem( ListItem<Flow> item ) {
@@ -108,10 +107,9 @@ public class PartReportPanel extends Panel {
     private void addSends() {
         List<Flow> sends = new ArrayList<Flow>();
         Iterator<Flow> outcomes = part.outcomes();
-        while ( outcomes.hasNext() ) {
-            Flow out = outcomes.next();
-            if ( !out.getTarget().isConnector() ) sends.add( out );
-        }
+        while ( outcomes.hasNext() )
+            sends.add( outcomes.next() );
+
         add( new ListView<Flow>( "sends", sends ) {
             @Override
             protected void populateItem( ListItem<Flow> item ) {

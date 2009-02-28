@@ -24,14 +24,16 @@ public class ActorReportPanel extends Panel {
     private Scenario scenario;
 
     /** An actor. */
-    private Actor actor;
+    private ResourceSpec spec;
 
     /** True if scenario should be displayed. */
     private boolean showScenario;
 
-    public ActorReportPanel( String id, Scenario scenario, Actor actor, boolean showScenario ) {
+    public ActorReportPanel(
+            String id, Scenario scenario, ResourceSpec spec, boolean showScenario ) {
+
         super( id );
-        this.actor = actor;
+        this.spec = spec;
         this.scenario = scenario;
         this.showScenario = showScenario;
         setRenderBodyOnly( true );
@@ -39,20 +41,23 @@ public class ActorReportPanel extends Panel {
     }
 
     private void init() {
-        add( new Label( "name", actor.getName() + ":" ) );                                // NON-NLS
-        String scenarioString = scenario == null ?
-                            ""  : MessageFormat.format( "({0})", scenario.getName() );
-        Label scenarioLabel = new Label( "scenario", scenarioString );                    // NON-NLS
-        scenarioLabel.setVisible( showScenario && scenario != null );
+        Actor actor = spec.getActor() == null ? Actor.UNKNOWN : spec.getActor();
+        add( new Label( "name",                                                           // NON-NLS
+                        MessageFormat.format( "{0}:", actor.getName() ) ) );
+
+        boolean canShowScenario = showScenario && scenario != null;
+        Label scenarioLabel = new Label( "scenario", canShowScenario ?                    // NON-NLS
+                                MessageFormat.format( "({0})", scenario.getName() ) : "" );
+        scenarioLabel.setVisible( canShowScenario );
         add( scenarioLabel );
 
-        String desc = actor.getDescription();
+        String desc = spec.getDescription();
         Label descLabel = new Label( "description", desc );                               // NON-NLS
         descLabel.setVisible( desc != null && !desc.isEmpty() );
         add( descLabel );
 
-        add( new ChannelsReportPanel( "channels",                                         // NON-NLS
-                                      new Model<Channelable>( ResourceSpec.with( actor ) ) ) );
+        add( new ChannelsReportPanel( "channels", new Model<Channelable>( spec ) ) );     // NON-NLS
+
     }
 
 }

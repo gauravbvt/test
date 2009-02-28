@@ -8,6 +8,7 @@ import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.AttributeModifier;
@@ -69,7 +70,7 @@ public class FlowReportPanel extends Panel {
         descLabel.setVisible( desc != null && !desc.isEmpty() );
         add( descLabel );
 
-        List<LocalizedActor> actors = findActors();
+        final List<LocalizedActor> actors = findActors();
 
         boolean showContact = !partIsSource &&  flow.isAskedFor()
                             || partIsSource && !flow.isAskedFor();
@@ -84,10 +85,19 @@ public class FlowReportPanel extends Panel {
             @Override
             protected void populateItem( ListItem<LocalizedActor> item ) {
                 LocalizedActor localizedActor = item.getModel().getObject();
-                Scenario scenario = localizedActor.getScenario();
-                item.add( new ActorReportPanel( "actor",
-                    part.getScenario().equals( scenario ) ? null : scenario,
-                    localizedActor.getActor(), true ) );
+                Scenario scenario = part.getScenario().equals( localizedActor.getScenario() ) ?
+                                    null : localizedActor.getScenario();
+
+                Actor actor = localizedActor.getActor();
+                ResourceSpec spec = new ResourceSpec();
+                if ( Actor.UNKNOWN.equals( actor ) ) {
+                    spec.setRole( part.getRole() );
+                    spec.setOrganization( part.getOrganization() );
+                } else {
+                    spec.setActor( actor );
+                }
+
+                item.add( new ActorReportPanel( "actor", scenario, spec, true ) );
             }
         };
         actorsList.add( new AttributeModifier( "class", true,
@@ -156,12 +166,12 @@ public class FlowReportPanel extends Panel {
         }
 
         @Override
-        public boolean equals( Object o ) {
-            if ( this == o )
+        public boolean equals( Object obj ) {
+            if ( this == obj )
                 return true;
-            if ( o == null || getClass() != o.getClass() )
+            if ( obj == null || getClass() != obj.getClass() )
                 return false;
-            LocalizedActor that = (LocalizedActor) o;
+            LocalizedActor that = (LocalizedActor) obj;
             if ( actor != null ? !actor.equals( that.actor ) : that.actor != null )
                 return false;
             if ( scenario != null ? !scenario.equals( that.scenario ) : that.scenario != null )
@@ -171,8 +181,7 @@ public class FlowReportPanel extends Panel {
 
         @Override
         public int hashCode() {
-            int result;
-            result = ( actor != null ? actor.hashCode() : 0 );
+            int result = actor != null ? actor.hashCode() : 0;
             result = 31 * result + ( scenario != null ? scenario.hashCode() : 0 );
             return result;
         }
