@@ -45,5 +45,35 @@ public class Lock {
         date = new Date();
     }
 
+    public boolean isWrite() {
+        return write;
+    }
 
+    public void setWrite( boolean write ) {
+        this.write = write;
+    }
+
+    public long getModelObjectId() {
+        return modelObjectId;
+    }
+
+    public void setModelObjectId( long modelObjectId ) {
+        this.modelObjectId = modelObjectId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName( String userName ) {
+        this.userName = userName;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate( Date date ) {
+        this.date = date;
+    }
 }

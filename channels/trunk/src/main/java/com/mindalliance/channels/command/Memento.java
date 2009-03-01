@@ -18,6 +18,12 @@ public class Memento {
      * The type of command execution.
      */
     private Type type;
+
+    /**
+     * The command.
+     */
+    private Command command;
+
     /**
      * The name of the user who executed the command.
      */
@@ -26,10 +32,6 @@ public class Memento {
      * When the command was executed.
      */
     private Date date;
-    /**
-     * The command.
-     */
-    private Command command;
     
     /**
      * The type of a memento.
@@ -56,5 +58,35 @@ public class Memento {
         date = new Date();
     }
 
+    public Type getType() {
+        return type;
+    }
 
+    public void setType( Type type ) {
+        this.type = type;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName( String userName ) {
+        this.userName = userName;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate( Date date ) {
+        this.date = date;
+    }
+
+    public Command getCommand() {
+        return command;
+    }
+
+    public void setCommand( Command command ) {
+        this.command = command;
+    }
 }

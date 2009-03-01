@@ -11,6 +11,25 @@ package com.mindalliance.channels.command;
  */
 public interface Commander {
     /**
+     * Whether the command can be executed.
+     * All required locks can be taken and the user is authorized.
+     *
+     * @param command a command
+     * @return a boolean
+     */
+    boolean canExecute( Command command );
+
+    /**
+     * Executes a command on behalf of the user.
+     * Locks are grabbed
+     *
+     * @param command a command
+     * @return an object
+     * @throws CommandException if execution could not proceeed or failed.
+     */
+    Object execute( Command command ) throws CommandException;
+
+    /**
      * Get the history of executed commands.
      *
      * @return a command history
@@ -30,24 +49,5 @@ public interface Commander {
      * @return a command or null
      */
     Command getRedo();
-
-    /**
-     * Whether the command can be executed.
-     * All required locks can be taken and the user is authorized.
-     *
-     * @param command a command
-     * @return a boolean
-     */
-    boolean canExecute( Command command );
-
-    /**
-     * Executes a command on behalf of the user.
-     * Locks are grabbed
-     *
-     * @param command a command
-     * @return an object
-     * @throws CommandException if execution could not proceeed or failed.
-     */
-    Object execute( Command command ) throws CommandException;
 
 }

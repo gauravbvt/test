@@ -23,17 +23,20 @@ public interface Command<T> {
 
     /**
      * Whether the user is allowed to execute this command.
+     * Based on the states of user, command and system.
      * @return a boolean
      */
-    boolean isExecutionAuthorized();
+    boolean isExecutionAllowed();
 
     /**
-     * Produces a command that, if successfully executed, would reverse the effect of the command.
-     * @return a command
+     * Execute the command given arguments.
+     * @param args Arguments in addition to the model objects that need locks
+     * @return an object of class T
+     * @throws CommandException if the execution failed
      */
-    Command makeUndoCommand();
+    T execute( Map<String, Object> args ) throws CommandException;
 
-    /**
+     /**
      * Get the list of all model object on which read locks
      * must be acquired for the command to execute.
      * @return a list of model objects
@@ -48,11 +51,9 @@ public interface Command<T> {
     List<ModelObject> getWritten();
 
     /**
-     * Execute the command given arguments.
-     * @param args Arguments in addition to the model objects that need locks
-     * @return an object of class T
-     * @throws CommandException if the execution failed
-     */
-    T execute( Map<String, Object> args ) throws CommandException;
-    
+      * Produces a command that, if successfully executed, would reverse the effect of the command.
+      * @return a command
+      */
+     Command makeUndoCommand();
+
 }

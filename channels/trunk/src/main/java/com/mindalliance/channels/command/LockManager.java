@@ -47,7 +47,7 @@ public interface LockManager {
      * @param modelObject a model object
      * @return a lock or null
      */
-    Lock getLock( ModelObject modelObject );
+    Lock getUserLock( ModelObject modelObject );
 
     /**
      * Get all locks on a model object from all users.
