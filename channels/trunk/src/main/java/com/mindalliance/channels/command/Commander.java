@@ -37,17 +37,27 @@ public interface Commander {
     History getHistory();
 
     /**
-     * Get undo command available to the user.
-     *
-     * @return a command or null
+     * Whether user can undo a previous command.
+     * @return a boolean
      */
-    Command getUndo();
+    boolean canUndo();
 
     /**
-     * Get redo command available to the user.
-     *
-     * @return a command or null
+     * Whether user can redo an undone command.
+     * @return a boolean
      */
-    Command getRedo();
+    boolean canRedo();
+
+    /**
+     * Undo user's previous command.
+     * @throws CommandException if undoing fails or is not allowed.
+     */
+    void undo() throws CommandException;
+
+    /**
+     * Redo user's previous undone command.
+     * @throws CommandException if redoing fails or is not allowed.
+     */
+    void redo() throws CommandException;
 
 }

@@ -20,6 +20,21 @@ public interface History {
     Memento remember( Command command );
 
     /**
+     * Get undo command available to the user.
+     *
+     * @return a command or null
+     */
+    Command getUndo();
+
+    /**
+     * Get redo command available to the user.
+     *
+     * @return a command or null
+     */
+    Command getRedo();
+    
+
+    /**
      * Get all mementoes for the current user since a given date.
      * @param date a date
      * @return a list of mementoes
@@ -33,4 +48,5 @@ public interface History {
      * @return a list of mementoes
      */
     List<Memento> getMementoesSince( String userName, Date date );
+
 }

@@ -34,7 +34,13 @@ public interface LockManager {
     void releaseLock( Lock lock );
 
     /**
-     * Whether a given lock in active.
+     * Release all locks held by named user.
+     * @param userName a user name
+     */
+    void releaseAllLocks( String userName );
+
+    /**
+     * Whether a given lock is active.
      *
      * @param lock a lock
      * @return a boolean
