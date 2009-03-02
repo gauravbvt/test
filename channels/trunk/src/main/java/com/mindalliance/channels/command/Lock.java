@@ -57,7 +57,7 @@ public class Lock {
         return userName;
     }
 
-  public Date getDate() {
+    public Date getDate() {
         return date;
     }
 

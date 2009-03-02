@@ -31,8 +31,7 @@ public interface History {
      *
      * @return a command or null
      */
-    Command getRedo();
-    
+    Command getRedo();    
 
     /**
      * Get all mementoes for the current user since a given date.

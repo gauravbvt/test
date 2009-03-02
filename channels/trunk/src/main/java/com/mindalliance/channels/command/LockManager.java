@@ -1,6 +1,6 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.NotFoundException;
 
 import java.util.List;
 
@@ -20,11 +20,12 @@ public interface LockManager {
      * Return a lock or throws an exception if it failed.
      *
      * @param isWrite     a boolean
-     * @param modelObject a model object
+     * @param id a model object id
      * @return a lock
      * @throws LockException if lock could not be grabbed
+     * @throws com.mindalliance.channels.NotFoundException if model object with id not found
      */
-    Lock grabLock( boolean isWrite, ModelObject modelObject ) throws LockException;
+    Lock grabLock( boolean isWrite, long id ) throws LockException, NotFoundException;
 
     /**
      * Release a lock.
@@ -37,11 +38,12 @@ public interface LockManager {
     /**
      * Grab locks on all of a list of model objects.
      * @param isWrite a boolean
-     * @param modelObjects a list of model objects
+     * @param ids a list of model object ids
      * @return a list of locks
      * @throws LockException if any of the locks could not be grabbed
+     * @throws com.mindalliance.channels.NotFoundException if model object with id not found
      */
-    List<Lock> grabLocks( boolean isWrite, List<ModelObject> modelObjects ) throws LockException;
+    List<Lock> grabLocks( boolean isWrite, List<Long> ids ) throws LockException, NotFoundException;
 
     /**
      * Release all listed locks, failing silently if a lock is not active.
@@ -51,17 +53,17 @@ public interface LockManager {
 
     /**
      * Whether user has read lock on a given model object.
-     * @param modelObject a model object
+     * @param id a model object id
      * @return a boolean
      */
-    boolean canRead( ModelObject modelObject );
+    boolean canRead( long id );
 
     /**
      * Whether user has write lock on a given model object.
-     * @param modelObject a model object
+     * @param id a model object id
      * @return a boolean
      */
-    boolean canWrite( ModelObject modelObject );
+    boolean canWrite( long id );
 
 
     /**
@@ -81,18 +83,18 @@ public interface LockManager {
     /**
      * Get the user's lock on a model object.
      *
-     * @param modelObject a model object
+     * @param id a model object id
      * @return a lock or null if none
      */
-    Lock getLock( ModelObject modelObject );
+    Lock getLock( long id );
 
     /**
      * Get all locks on a model object from all users.
      *
-     * @param modelObject a model object
+     * @param ids a list of model object ids
      * @return a list of locks, possibly empty
      */
-    List<Lock> getAllLocks( ModelObject modelObject );
+    List<Lock> getAllLocks( long ids );
 
     /**
      * Get all locks on all model objects for a user.

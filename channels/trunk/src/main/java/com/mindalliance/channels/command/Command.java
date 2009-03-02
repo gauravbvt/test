@@ -1,7 +1,5 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.ModelObject;
-
 import java.util.List;
 import java.util.Map;
 
@@ -37,18 +35,18 @@ public interface Command<T> {
     T execute( Map<String, Object> args ) throws CommandException;
 
      /**
-     * Get the list of all model object on which read locks
+     * Get the list of all ids of model object on which read locks
      * must be acquired for the command to execute.
      * @return a list of model objects
      */
-    List<ModelObject> getRead();
+    List<Long> getRead();
 
     /**
-     * Get the list of all model object on which write locks
+     * Get the list of all ids of model object on which write locks
      * must be acquired for the command to execute.
      * @return a list of model objects
      */
-    List<ModelObject> getWritten();
+    List<Long> getWritten();
 
     /**
       * Produces a command that, if successfully executed, would reverse the effect of the command.
