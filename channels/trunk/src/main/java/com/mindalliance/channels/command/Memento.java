@@ -32,7 +32,7 @@ public class Memento {
      * When the command was executed.
      */
     private Date date;
-    
+
     /**
      * The type of a memento.
      */
@@ -49,6 +49,9 @@ public class Memento {
          * Command was a redo.
          */
         Redo
+    }
+
+    public Memento() {
     }
 
     public Memento( Type type, Command command ) {
