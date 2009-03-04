@@ -8,8 +8,10 @@ import com.mindalliance.channels.Node;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.CommandException;
 
 /**
+ * Command to break up a given flow.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -18,10 +20,14 @@ import com.mindalliance.channels.command.Command;
  */
 public class BreakUpFlow extends AbstractCommand {
 
+    //TODO- restore full state of the flow on undo
+
     public BreakUpFlow( Flow flow ) {
         super();
-        addArgument( "flowState", flow.copy() );
+        addConflicting( flow );
+        addArgument( "state", flow.copy( ) );
         addArgument( "flow", flow.getId() );
+        addArgument( "name", flow.getName() );
         needLockOn( flow );
         if ( flow.isInternal() ) {
             addArgument( "source", flow.getSource().getId() );
@@ -77,26 +83,22 @@ public class BreakUpFlow extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    public Command makeUndoCommand() {
-        return new AbstractCommand() {
-            public String getName() {
-                return "Undo break up flow";
-            }
+    public boolean isUndoable() {
+        return true;
+    }
 
-            public Object execute() throws NotFoundException {
-                Flow oldFlow = (Flow)getArgument("flowState");
-                Scenario scenario = Project.service().find( Scenario.class, (Long)getArgument("scenario") );
-                Node source = scenario.getNode( (Long)getArgument("source") );
-                Node target = scenario.getNode( (Long)getArgument("target") );
-                String name = (String)getArgument("name");
-                Flow flow = Project.service().connect(source, target, name);
-                flow.initFrom( oldFlow );
-                return flow;
-            }
-
-            public Command makeUndoCommand() {
-                throw new RuntimeException("Already an undo command." );
-            }
-        };
+    /**
+     * {@inheritDoc}
+     */
+    public Command makeUndoCommand() throws CommandException {
+        try {
+            Scenario scenario = Project.service().find( Scenario.class, (Long) getArgument( "scenario" ) );
+            Node source = scenario.getNode( (Long) getArgument( "source" ) );
+            Node target = scenario.getNode( (Long) getArgument( "target" ) );
+            String name = (String) getArgument( "name" );
+            return new ConnectWithFlow( source, target, name );
+        } catch ( NotFoundException e ) {
+            throw new CommandException( "Can't undo" );
+        }
     }
 }

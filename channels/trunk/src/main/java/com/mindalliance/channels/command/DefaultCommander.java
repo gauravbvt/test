@@ -46,8 +46,8 @@ public class DefaultCommander implements Commander {
             catch ( LockingException e ) {
                 throw new CommandException( e.getMessage() );
             }
-            catch (Exception e) {
-                throw new CommandException( "Execution failed.", e );                
+            catch ( Exception e ) {
+                throw new CommandException( "Execution failed.", e );
             }
         } else {
             throw new CommandException( "You are not authorized." );
@@ -60,8 +60,19 @@ public class DefaultCommander implements Commander {
      */
     public boolean canUndo() {
         synchronized ( this ) {
+            boolean canUndo = false;
             Memento memento = history.getUndo();
-            return ( memento != null && canDo( memento.getCommand().makeUndoCommand() ) );
+            if ( memento != null ) {
+                Command command = memento.getCommand();
+                if ( command.isUndoable() )
+                    try {
+                        canUndo = canDo( command.makeUndoCommand() );
+                    } catch ( CommandException e ) {
+                        e.printStackTrace();
+                        canUndo = false;
+                    }
+            }
+            return canUndo;
         }
     }
 
@@ -93,6 +104,7 @@ public class DefaultCommander implements Commander {
     public void undo() throws CommandException, NotFoundException {
         synchronized ( this ) {
             Memento memento = history.getUndo();
+            if ( memento == null ) throw new CommandException( "Nothing can be undone right now." );
             execute( memento.getCommand().makeUndoCommand() );
             history.recordUndone( memento );
         }
@@ -104,6 +116,7 @@ public class DefaultCommander implements Commander {
     public void redo() throws CommandException, NotFoundException {
         synchronized ( this ) {
             Memento memento = history.getRedo();
+            if ( memento == null ) throw new CommandException( "Nothing can be redone right now." );
             execute( memento.getCommand() );
             history.recordRedone( memento );
         }

@@ -1,12 +1,14 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.pages.Project;
 
 import java.util.Map;
-import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
+import java.lang.reflect.InvocationTargetException;
+
+import org.apache.commons.beanutils.BeanUtils;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,6 +18,10 @@ import java.util.HashSet;
  * Time: 6:41:54 PM
  */
 public abstract class AbstractCommand implements Command {
+    /**
+     * User name
+     */
+    private String userName;
 
     /**
      * Arguments needed to execute (no model objects)
@@ -25,11 +31,25 @@ public abstract class AbstractCommand implements Command {
      * Ids of model objects that must be locked for the duration of the execution of the command.
      */
     private Set<Long> lockingSet = new HashSet<Long>();
+    /**
+     * The command's conflict set.
+     */
+    private Set<Long> conflictSet = new HashSet<Long>();
 
     public AbstractCommand() {
+        userName = Project.getUserName();
     }
 
     public abstract String getName();
+
+    public String getUserName() {
+        return userName;
+    }
+
+    // For testing only
+    public void setUserName( String userName ) {
+        this.userName = userName;
+    }
 
     public Map getArguments() {
         return arguments;
@@ -41,6 +61,7 @@ public abstract class AbstractCommand implements Command {
 
     /**
      * Add an argument.
+     *
      * @param key a string
      * @param val an object
      */
@@ -50,6 +71,7 @@ public abstract class AbstractCommand implements Command {
 
     /**
      * Get an argument by name.
+     *
      * @param key a string
      * @return an argument
      */
@@ -65,12 +87,25 @@ public abstract class AbstractCommand implements Command {
         this.lockingSet = lockingSet;
     }
 
+    public Set<Long> getConflictSet() {
+        return conflictSet;
+    }
+
+    public void setConflictSet( Set<Long> conflictSet ) {
+        this.conflictSet = conflictSet;
+    }
+
     /**
      * Add model object's id to locking set
+     *
      * @param mo a ModelObject
      */
     protected void needLockOn( ModelObject mo ) {
         lockingSet.add( mo.getId() );
+    }
+
+    protected void addConflicting( ModelObject mo ) {
+        conflictSet.add( mo.getId() );
     }
 
     public boolean isAuthorized() {
@@ -78,7 +113,47 @@ public abstract class AbstractCommand implements Command {
         return true;
     }
 
-    public abstract Object execute() throws NotFoundException;
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        return getName();
+    }
 
-    public abstract Command makeUndoCommand();
+    /**
+     * Get a model object's property value.
+     *
+     * @param mo       a model object
+     * @param property a property name
+     * @return an object
+     */
+    protected Object getProperty( ModelObject mo, String property ) {
+        try {
+            return BeanUtils.getProperty( mo, property );
+        } catch ( IllegalAccessException e ) {
+            throw new RuntimeException( e );
+        } catch ( InvocationTargetException e ) {
+            throw new RuntimeException( e );
+        } catch ( NoSuchMethodException e ) {
+            throw new RuntimeException( e );
+        }
+    }
+
+    /**
+     * Set a model object's property value.
+     *
+     * @param mo       a model object
+     * @param property a property name
+     * @param value an object
+     */
+    protected void setProperty( ModelObject mo, String property, Object value ) {
+        try {
+            BeanUtils.setProperty( mo, property, value );
+        } catch ( IllegalAccessException e ) {
+            throw new RuntimeException( e );
+        } catch ( InvocationTargetException e ) {
+            throw new RuntimeException( e );
+        }
+    }
+
 }

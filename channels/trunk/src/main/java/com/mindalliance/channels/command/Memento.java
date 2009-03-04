@@ -1,7 +1,5 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.pages.Project;
-
 import java.util.Date;
 
 /**
@@ -20,10 +18,6 @@ public class Memento {
     private Command command;
 
     /**
-     * The name of the user who executed the command.
-     */
-    private String userName;
-    /**
      * When the command was executed.
      */
     private Date date;
@@ -33,17 +27,12 @@ public class Memento {
 
     public Memento( Command command ) {
         this.command = command;
-        userName = Project.getUserName();
         date = new Date();
     }
 
 
     public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName( String userName ) {
-        this.userName = userName;
+        return command.getUserName();
     }
 
     public Date getDate() {
@@ -60,5 +49,20 @@ public class Memento {
 
     public void setCommand( Command command ) {
         this.command = command;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+       StringBuilder sb = new StringBuilder();
+        sb.append('[');
+        sb.append(command.getName());
+        sb.append(',');
+        sb.append(getUserName());
+        sb.append(',');
+        sb.append(date);
+        sb.append(']');
+        return sb.toString();
     }
 }

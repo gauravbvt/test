@@ -11,6 +11,8 @@ import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
+import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.export.Exporter;
@@ -84,6 +86,15 @@ public final class Project extends WebApplication {                             
      * Analyst
      */
     private Analyst analyst;
+
+    /**
+     * Commander
+     */
+    private Commander commander;
+    /**
+     * Lock manager
+     */
+    private LockManager lockManager;
 
     private String projectName = "Untitled";
 
@@ -206,6 +217,22 @@ public final class Project extends WebApplication {                             
         this.analyst = analyst;
     }
 
+    public Commander getCommander() {
+        return commander;
+    }
+
+    public void setCommander( Commander commander ) {
+        this.commander = commander;
+    }
+
+    public LockManager getLockManager() {
+        return lockManager;
+    }
+
+    public void setLockManager( LockManager lockManager ) {
+        this.lockManager = lockManager;
+    }
+
     public String getProjectName() {
         return projectName;
     }
@@ -277,6 +304,14 @@ public final class Project extends WebApplication {                             
      */
     public static AttachmentManager attachmentManager() {
         return getProject().getAttachmentManager();
+    }
+
+    /**
+     * Get the project's commander
+     * @return a commander
+     */
+    public static Commander commander() {
+        return getProject().getCommander();
     }
 
     /**

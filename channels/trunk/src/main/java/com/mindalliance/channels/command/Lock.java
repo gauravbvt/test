@@ -46,6 +46,11 @@ public class Lock {
     public String getUserName() {
         return userName;
     }
+    
+    // For debugging use only
+    public void setUserName( String userName ) {
+        this.userName = userName;
+    }
 
     public Date getDate() {
         return date;
@@ -54,10 +59,17 @@ public class Lock {
     /**
      * Is lock owned by user with given name?
      *
-     * @param userName a user name
+     * @param name a user name
      * @return a boolean
      */
-    public boolean isOwnedBy( String userName ) {
-        return userName.equals( userName );
+    public boolean isOwnedBy( String name ) {
+        return userName.equals( name );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        return "Lock: " + modelObjectId + "," + userName + "," + date;
     }
 }

@@ -125,13 +125,8 @@ public class DefaultLockManager implements LockManager {
      * {@inheritDoc}
      */
     public void releaseAllLocks( String userName ) {
-        try {
-            for ( Lock lock : getAllLocks( userName ) ) {
-                releaseLockOn( lock.getModelObjectId() );
-            }
-        } catch ( LockingException e ) {
-            // Should never happen
-            throw new RuntimeException( e );
+        for ( Lock lock : getAllLocks( userName ) ) {
+            locks.remove( lock.getModelObjectId() );
         }
     }
 
@@ -191,9 +186,9 @@ public class DefaultLockManager implements LockManager {
      */
     public boolean canGrabLocksOn( Collection<Long> ids ) {
         String userName = Project.getUserName();
-        for (long id : ids) {
+        for ( long id : ids ) {
             Lock lock = getLock( id );
-            if (lock != null && !lock.isOwnedBy( userName ))
+            if ( lock != null && !lock.isOwnedBy( userName ) )
                 return false;
         }
         return true;

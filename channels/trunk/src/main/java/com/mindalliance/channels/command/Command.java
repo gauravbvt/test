@@ -25,6 +25,12 @@ public interface Command<T> {
     String getName();
 
     /**
+     * Get name of user who will/did execute this command.
+     * @return a string
+     */
+    String getUserName();
+
+    /**
      * Get the command's arguments.
      * Arguments do not contain model objects that need locking.
      *
@@ -33,12 +39,19 @@ public interface Command<T> {
     Map<String, Object> getArguments();
 
     /**
-     * Calculate the list of all ids of model object on which write locks
+     * Get the ids of model objects on which locks
      * must be acquired for the command to execute.
      *
      * @return a set of model objects
      */
     Set<Long> getLockingSet();
+
+    /**
+     * Get the ids of model objects that would cause a conflict in undoing/redoing
+     * the command if a more recently executed command has an intersecting conflict set.
+     * @return a set of ids (long)
+     */
+    Set<Long> getConflictSet();
 
     /**
      * Whether the user is allowed to execute this command.
@@ -49,7 +62,7 @@ public interface Command<T> {
     boolean isAuthorized();
 
     /**
-     * Execute the command given arguments.
+     * Execute the command.
      *
      * @return an object of class T
      * @throws com.mindalliance.channels.NotFoundException if some expected model object disappeared
@@ -57,10 +70,17 @@ public interface Command<T> {
     T execute() throws NotFoundException;
 
     /**
+     * Whether the command can be undone.
+     * @return a boolean
+     */
+    boolean isUndoable();
+
+    /**
      * Produces a command that, if successfully executed, would reverse the effect of the command.
      *
      * @return a command
+     * @throws CommandException if undo command can not be made
      */
-    Command makeUndoCommand();
+    Command makeUndoCommand() throws CommandException;
 
 }

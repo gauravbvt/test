@@ -91,18 +91,18 @@ public class History {
     }
 
     /**
-     * A memento has conflicts if a more recent memento by anyone has the same locking set
+     * A memento has conflicts if a more recent memento by anyone has intersecting conflict set
      *
      * @param memento a memento
      * @return a boolean
      */
     private boolean hasConflict( Memento memento ) {
-        Iterator<Memento> moreRecent = findAllDoneBefore( memento.getDate() );
+        Iterator<Memento> moreRecent = findAllDoneAfter( memento.getDate() );
         while ( moreRecent.hasNext() ) {
             Memento other = moreRecent.next();
-            if ( CollectionUtils.isSubCollection(
-                    memento.getCommand().getLockingSet(),
-                    other.getCommand().getLockingSet() ) ) {
+            if ( !CollectionUtils.intersection(
+                    memento.getCommand().getConflictSet(),
+                    other.getCommand().getConflictSet() ).isEmpty() ) {
                 return true;
             }
         }
@@ -110,11 +110,11 @@ public class History {
     }
 
     @SuppressWarnings( "unchecked" )
-    private Iterator<Memento> findAllDoneBefore( final Date date ) {
+    private Iterator<Memento> findAllDoneAfter( final Date date ) {
         return new FilterIterator( done.iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {
                 Memento memento = (Memento) obj;
-                return ( !memento.getDate().after( date ) );
+                return ( memento.getDate().after( date ) );
             }
         } );
     }
