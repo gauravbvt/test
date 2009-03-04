@@ -1,6 +1,6 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.pages.Project;
 
 import java.util.Map;
@@ -98,14 +98,14 @@ public abstract class AbstractCommand implements Command {
     /**
      * Add model object's id to locking set
      *
-     * @param mo a ModelObject
+     * @param identifiable a ModelObject
      */
-    protected void needLockOn( ModelObject mo ) {
-        lockingSet.add( mo.getId() );
+    protected void needLockOn( Identifiable identifiable ) {
+        lockingSet.add( identifiable.getId() );
     }
 
-    protected void addConflicting( ModelObject mo ) {
-        conflictSet.add( mo.getId() );
+    protected void addConflicting( Identifiable identifiable ) {
+        conflictSet.add( identifiable.getId() );
     }
 
     public boolean isAuthorized() {
@@ -123,13 +123,13 @@ public abstract class AbstractCommand implements Command {
     /**
      * Get a model object's property value.
      *
-     * @param mo       a model object
+     * @param obj       an object
      * @param property a property name
      * @return an object
      */
-    protected Object getProperty( ModelObject mo, String property ) {
+    protected Object getProperty( Object obj, String property ) {
         try {
-            return BeanUtils.getProperty( mo, property );
+            return BeanUtils.getProperty( obj, property );
         } catch ( IllegalAccessException e ) {
             throw new RuntimeException( e );
         } catch ( InvocationTargetException e ) {
@@ -142,13 +142,13 @@ public abstract class AbstractCommand implements Command {
     /**
      * Set a model object's property value.
      *
-     * @param mo       a model object
+     * @param obj       a model object
      * @param property a property name
      * @param value an object
      */
-    protected void setProperty( ModelObject mo, String property, Object value ) {
+    protected void setProperty( Object obj, String property, Object value ) {
         try {
-            BeanUtils.setProperty( mo, property, value );
+            BeanUtils.setProperty( obj, property, value );
         } catch ( IllegalAccessException e ) {
             throw new RuntimeException( e );
         } catch ( InvocationTargetException e ) {

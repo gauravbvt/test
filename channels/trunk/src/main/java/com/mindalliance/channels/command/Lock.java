@@ -18,7 +18,7 @@ public class Lock {
     /**
      * Id of model object locked.
      */
-    private long modelObjectId;
+    private long id;
     /**
      * The name of the user who owns the lock.
      */
@@ -31,16 +31,16 @@ public class Lock {
     /**
      * Constructor.
      *
-     * @param id the id of the model object to be locked
+     * @param id the id of the identifiable to be locked
      */
     public Lock( long id ) {
-        modelObjectId = id;
+        this.id = id;
         userName = Project.getUserName();
         date = new Date();
     }
 
-    public long getModelObjectId() {
-        return modelObjectId;
+    public long getId() {
+        return id;
     }
 
     public String getUserName() {
@@ -70,6 +70,6 @@ public class Lock {
      * {@inheritDoc}
      */
     public String toString() {
-        return "Lock: " + modelObjectId + "," + userName + "," + date;
+        return "Lock: " + id + "," + userName + "," + date;
     }
 }

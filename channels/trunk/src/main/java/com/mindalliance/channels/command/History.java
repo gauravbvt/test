@@ -100,7 +100,7 @@ public class History {
         Iterator<Memento> moreRecent = findAllDoneAfter( memento.getDate() );
         while ( moreRecent.hasNext() ) {
             Memento other = moreRecent.next();
-            if ( !CollectionUtils.intersection(
+            if ( other != memento && !CollectionUtils.intersection(
                     memento.getCommand().getConflictSet(),
                     other.getCommand().getConflictSet() ).isEmpty() ) {
                 return true;
@@ -114,7 +114,7 @@ public class History {
         return new FilterIterator( done.iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {
                 Memento memento = (Memento) obj;
-                return ( memento.getDate().after( date ) );
+                return ( !memento.getDate().before( date ) );
             }
         } );
     }

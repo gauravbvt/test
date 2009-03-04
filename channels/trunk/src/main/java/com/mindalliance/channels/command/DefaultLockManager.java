@@ -51,7 +51,7 @@ public class DefaultLockManager implements LockManager {
     }
 
     private void addLock( Lock lock ) {
-        locks.put( lock.getModelObjectId(), lock );
+        locks.put( lock.getId(), lock );
     }
 
     /**
@@ -103,7 +103,7 @@ public class DefaultLockManager implements LockManager {
     public void releaseLocks( Collection<Lock> locksToRelease ) throws LockingException {
         synchronized ( this ) {
             for ( Lock lock : locksToRelease ) {
-                locks.remove( lock.getModelObjectId() );
+                locks.remove( lock.getId() );
             }
         }
     }
@@ -126,7 +126,7 @@ public class DefaultLockManager implements LockManager {
      */
     public void releaseAllLocks( String userName ) {
         for ( Lock lock : getAllLocks( userName ) ) {
-            locks.remove( lock.getModelObjectId() );
+            locks.remove( lock.getId() );
         }
     }
 

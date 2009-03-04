@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Entity
 @Inheritance( strategy = InheritanceType.SINGLE_TABLE )
-public abstract class Flow extends ModelObject implements Channelable {
+public abstract class Flow extends ModelObject implements Channelable, ScenarioObject {
 
     /**
      * A list of alternate communication channels for the flow.

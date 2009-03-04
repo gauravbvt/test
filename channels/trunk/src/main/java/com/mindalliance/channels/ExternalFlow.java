@@ -450,4 +450,10 @@ public class ExternalFlow extends Flow {
         if ( isPartTargeted() ) setSignificanceToTarget( flow.getSignificanceToTarget() );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public Scenario getScenario() {
+        return part.getScenario();
+    }
 }

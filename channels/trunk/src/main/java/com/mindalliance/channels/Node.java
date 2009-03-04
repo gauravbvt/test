@@ -23,7 +23,7 @@ import java.util.Map;
  * A node in the flow graph
  */
 @Entity
-public abstract class Node extends ModelObject {
+public abstract class Node extends ModelObject implements ScenarioObject {
 
     /**
      * Initial capacity of outcome and requirement flows.

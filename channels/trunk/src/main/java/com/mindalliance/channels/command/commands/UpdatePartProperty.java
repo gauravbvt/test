@@ -6,6 +6,8 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.ScenarioObject;
 import com.mindalliance.channels.pages.Project;
 
 import java.util.HashMap;
@@ -19,16 +21,16 @@ import java.util.HashMap;
  */
 public class UpdatePartProperty extends AbstractCommand {
 
-    public UpdatePartProperty( final Part part, final String property, final Object value ) {
-        this.addConflicting( part );
-        this.needLockOn( part );
+    public UpdatePartProperty( final ScenarioObject scenarioObject, final String property, final Object value ) {
+        this.addConflicting( scenarioObject );
+        this.needLockOn( scenarioObject );
         this.setArguments( new HashMap<String, Object>() {
             {
-                put( "scenarioId", part.getScenario().getId() );
-                put( "partId", part.getId() );
+                put( "scenarioId", scenarioObject.getScenario().getId() );
+                put( "partId", scenarioObject.getId() );
                 put( "property", property );
                 put( "value", value );
-                put( "old", getProperty( part, property ) );
+                put( "old", getProperty( scenarioObject, property ) );
             }
         } );
 

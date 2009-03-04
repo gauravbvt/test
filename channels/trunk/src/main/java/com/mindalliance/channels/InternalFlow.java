@@ -247,4 +247,11 @@ public class InternalFlow extends Flow {
     public boolean canSetTerminatesSource() {
         return !source.isConnector();
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Scenario getScenario() {
+        return source.getScenario();
+    }
 }
