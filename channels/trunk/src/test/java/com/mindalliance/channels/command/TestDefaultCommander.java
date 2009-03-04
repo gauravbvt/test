@@ -114,6 +114,7 @@ public class TestDefaultCommander extends AbstractChannelsTest {
         AbstractCommand otherUserCommand = makeCommand();
         otherUserCommand.setUserName( "bob" );
         commander.doCommand( command );
+        Thread.sleep( 600 );
         commander.doCommand( otherUserCommand );
         assertFalse( commander.canUndo() );
         commander.doCommand( command );
