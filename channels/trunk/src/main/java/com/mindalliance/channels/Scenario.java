@@ -359,6 +359,23 @@ public class Scenario extends ModelObject {
         return list;
     }
 
+    /**
+     * FInd a flow given its id.
+     * @param id a long
+     * @return a flow
+     * @throws NotFoundException if not found
+     */
+    public Flow findFlow( long id ) throws NotFoundException {
+        Flow flow = null;
+        Iterator<Flow> flows = flows();
+        while ( flow == null && flows.hasNext() ) {
+            Flow f = flows.next();
+            if (f.getId() == id) flow = f;
+        }
+        if (flow == null) throw new NotFoundException();
+        else return flow;
+    }
+
     //=================================================
     /**
      * An iterator that walks through all flow in the scenario.

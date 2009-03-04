@@ -444,6 +444,10 @@ public class ExternalFlow extends Flow {
      */
     @Override
     public void initFrom( Flow flow ) {
+        if ( !hasConnector() ) setMaxDelay( flow.getMaxDelay() );
+        setChannels( flow.getChannels() );
+        if ( !isPartTargeted() ) setSignificanceToSource( flow.getSignificanceToSource() );
+        if ( isPartTargeted() ) setSignificanceToTarget( flow.getSignificanceToTarget() );
     }
 
 }

@@ -1,5 +1,7 @@
 package com.mindalliance.channels.command;
 
+import com.mindalliance.channels.NotFoundException;
+
 /**
  * A command execution controller.
  * A commander serializes command executions.
@@ -11,13 +13,13 @@ package com.mindalliance.channels.command;
  */
 public interface Commander {
     /**
-     * Whether the command can be executed.
-     * All required locks can be taken and the user is authorized.
+     * Whether the command could be executed right now.
+     * The user is authorized and all required locks could be taken.
      *
      * @param command a command
      * @return a boolean
      */
-    boolean canExecute( Command command );
+    boolean canDo( Command command );
 
     /**
      * Executes a command on behalf of the user.
@@ -26,24 +28,18 @@ public interface Commander {
      * @param command a command
      * @return an object
      * @throws CommandException if execution could not proceeed or failed.
+     * @throws com.mindalliance.channels.NotFoundException if the command is out of sync with the model
      */
-    Object execute( Command command ) throws CommandException;
+    Object doCommand( Command command ) throws CommandException, NotFoundException;
 
     /**
-     * Get the history of executed commands.
-     *
-     * @return a command history
-     */
-    History getHistory();
-
-    /**
-     * Whether user can undo a previous command.
+     * Whether user could undo a previous command right now.
      * @return a boolean
      */
     boolean canUndo();
 
     /**
-     * Whether user can redo an undone command.
+     * Whether user could redo an undone command right now.
      * @return a boolean
      */
     boolean canRedo();
@@ -51,13 +47,15 @@ public interface Commander {
     /**
      * Undo user's previous command.
      * @throws CommandException if undoing fails or is not allowed.
+     * @throws com.mindalliance.channels.NotFoundException if the command is out of sync with the model
      */
-    void undo() throws CommandException;
+    void undo() throws CommandException, NotFoundException;
 
     /**
      * Redo user's previous undone command.
      * @throws CommandException if redoing fails or is not allowed.
+     * @throws com.mindalliance.channels.NotFoundException if the command is out of sync with the model
      */
-    void redo() throws CommandException;
+    void redo() throws CommandException, NotFoundException;
 
 }

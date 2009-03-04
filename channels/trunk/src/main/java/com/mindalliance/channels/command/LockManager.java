@@ -2,7 +2,7 @@ package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.NotFoundException;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * The manager of locks on model objects.
@@ -14,62 +14,49 @@ import java.util.List;
  */
 public interface LockManager {
     /**
-     * Grab a write or read lock on a model object.
-     * Multiple read locks can be grabbed on a model object if there is no active write lock on it.
-     * Only one write lock can be grabbed, and only if there are no read locks.
+     * Grab an exclusive, write lock on a model object.
      * The operation is idempotent if the lock is already grabbed by the user.
-     * The operation can attempt to upgrade a lock held by the user from read to write.
-     * An attempt to downgrade a lock held by the user is a noop.
      * Return a lock or throws an exception if it failed.
      *
-     * @param isWrite     a boolean
      * @param id a model object id
      * @return a lock
-     * @throws LockException if lock could not be grabbed
+     * @throws LockingException if lock could not be grabbed
      * @throws com.mindalliance.channels.NotFoundException if model object with id not found
      */
-    Lock grabLock( boolean isWrite, long id ) throws LockException, NotFoundException;
+    Lock grabLockOn( long id ) throws LockingException, NotFoundException;
 
     /**
-     * Release a lock.
+     * Release the user's lock on a model object.
      * Does nothing if the lock is not active.
      *
-     * @param lock a lock
+     * @param id a model object id
      * @return whether the lock needed to be released.
-     * @throws LockException if the lock was active but could not be released
+     * @throws LockingException if the lock was active but could not be released
      */
-    boolean releaseLock( Lock lock ) throws LockException;
+    boolean releaseLockOn( long id ) throws LockingException;
 
     /**
      * Grab locks on all of a list of model objects.
-     * @param isWrite a boolean
-     * @param ids a list of model object ids
-     * @return a list of locks actually grabbed or upgraded
-     * @throws LockException if any of the locks could not be grabbed
+     * @param ids a collection of model object ids
+     * @return a collection of locks actually grabbed or upgraded
+     * @throws LockingException if any of the locks could not be grabbed
      * @throws com.mindalliance.channels.NotFoundException if model object with id not found
      */
-    List<Lock> grabLocks( boolean isWrite, List<Long> ids ) throws LockException, NotFoundException;
+    Collection<Lock> grabLocksOn( Collection<Long> ids ) throws LockingException, NotFoundException;
 
     /**
-     * Release all listed locks, failing silently if a lock is not active.
-     * @param locks a list of locks
-     * @throws LockException if any lock was active but could not be released
+     * Release all listed locks unconditionally, failing silently if a lock is not active.
+     * @param locks a collection of locks on model objects
+     * @throws LockingException if any lock was active but could not be released
      */
-    void releaseLocks( List<Lock> locks ) throws LockException;
-
-    /**
-     * Whether user has read lock on a given model object.
-     * @param id a model object id
-     * @return a boolean
-     */
-    boolean canRead( long id );
+    void releaseLocks( Collection<Lock> locks ) throws LockingException;
 
     /**
      * Whether user has write lock on a given model object.
      * @param id a model object id
      * @return a boolean
      */
-    boolean canWrite( long id );
+    boolean isUserLocking( long id );
 
 
     /**
@@ -79,12 +66,12 @@ public interface LockManager {
     void releaseAllLocks( String userName );
 
     /**
-     * Whether a given lock is active.
+     * Get name of user with a lock on model object with given id.
      *
-     * @param lock a lock
-     * @return a boolean
+     * @param id a model object id
+     * @return a string or null if no lock on model object
      */
-    boolean isActive( Lock lock );
+    String getLockOwner( long id );
 
     /**
      * Get the user's lock on a model object.
@@ -95,19 +82,24 @@ public interface LockManager {
     Lock getLock( long id );
 
     /**
-     * Get all locks on a model object from all users.
-     *
-     * @param ids a list of model object ids
-     * @return a list of locks, possibly empty
+     * Whether someone other than the user has a lock on the model object with given id.
+     * @param id a model object id
+     * @return a boolean
      */
-    List<Lock> getAllLocks( long ids );
+    boolean isLocked( long id );
 
     /**
      * Get all locks on all model objects for a user.
      *
      * @param userName a user's name
-     * @return a list of locks, possibly empty
+     * @return a collection of locks, possibly empty
      */
-    List<Lock> getAllLocks( String userName );
+    Collection<Lock> getAllLocks( String userName );
 
+    /**
+     * Whether all given model objects with given ids could be locked by user.
+     * @param ids a collection of model object ids
+     * @return a boolean
+     */
+    boolean canGrabLocksOn( Collection<Long> ids );
 }

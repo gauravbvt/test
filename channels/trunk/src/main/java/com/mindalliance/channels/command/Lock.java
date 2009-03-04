@@ -1,12 +1,11 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.pages.Project;
 
 import java.util.Date;
 
 /**
- * A lock on a model object.
+ * A write lock on a model object.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -15,10 +14,7 @@ import java.util.Date;
  */
 public class Lock {
 
-    /**
-     * Whether write or read lock.
-     */
-    private boolean write;
+
     /**
      * Id of model object locked.
      */
@@ -35,18 +31,12 @@ public class Lock {
     /**
      * Constructor.
      *
-     * @param write       whtehr write or read lock
-     * @param modelObject the model object to be locked
+     * @param id the id of the model object to be locked
      */
-    public Lock( boolean write, ModelObject modelObject ) {
-        this.write = write;
-        modelObjectId = modelObject.getId();
+    public Lock( long id ) {
+        modelObjectId = id;
         userName = Project.getUserName();
         date = new Date();
-    }
-
-    public boolean isWrite() {
-        return write;
     }
 
     public long getModelObjectId() {
@@ -61,4 +51,13 @@ public class Lock {
         return date;
     }
 
+    /**
+     * Is lock owned by user with given name?
+     *
+     * @param userName a user name
+     * @return a boolean
+     */
+    public boolean isOwnedBy( String userName ) {
+        return userName.equals( userName );
+    }
 }

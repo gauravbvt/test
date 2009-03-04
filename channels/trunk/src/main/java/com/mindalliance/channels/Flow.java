@@ -443,6 +443,22 @@ public abstract class Flow extends ModelObject implements Channelable {
         channels.add( 0, channel );
     }
 
+    /**
+     * Return a partially instantiated flow from which another can be initialized.
+     * @return a Flow
+     */
+    public Flow copy() {
+        try {
+            Flow copy = this.getClass().newInstance();
+            copy.initFrom( this );
+            return copy;
+        } catch ( InstantiationException e ) {
+            throw new RuntimeException( e );
+        } catch ( IllegalAccessException e ) {
+            throw new RuntimeException( e );
+        }
+    }
+
     // Abstract methods
 
     /**

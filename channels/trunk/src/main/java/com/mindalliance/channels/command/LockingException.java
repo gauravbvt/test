@@ -8,32 +8,32 @@ package com.mindalliance.channels.command;
  * Date: Mar 1, 2009
  * Time: 9:48:47 PM
  */
-public class LockException extends Exception {
+public class LockingException extends Exception {
 
     /**
      * {@inheritDoc}
      */
-    public LockException() {
+    public LockingException() {
     }
 
     /**
      * {@inheritDoc}
      */
-    public LockException( String message ) {
+    public LockingException( String message ) {
         super( message );
     }
 
     /**
      * {@inheritDoc}
      */
-    public LockException( String message, Throwable cause ) {
+    public LockingException( String message, Throwable cause ) {
         super( message, cause );
     }
 
     /**
      * {@inheritDoc}
      */
-    public LockException( Throwable cause ) {
+    public LockingException( Throwable cause ) {
         super( cause );
     }
 }

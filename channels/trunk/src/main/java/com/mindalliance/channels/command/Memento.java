@@ -15,11 +15,6 @@ import java.util.Date;
 public class Memento {
 
     /**
-     * The type of command execution.
-     */
-    private Type type;
-
-    /**
      * The command.
      */
     private Command command;
@@ -33,41 +28,15 @@ public class Memento {
      */
     private Date date;
 
-    /**
-     * The type of a memento.
-     */
-    public enum Type {
-        /**
-         * Comand was executed.
-         */
-        Execute,
-        /**
-         * Command was an undo.
-         */
-        Undo,
-        /**
-         * Command was a redo.
-         */
-        Redo
+     public Memento() {
     }
 
-    public Memento() {
-    }
-
-    public Memento( Type type, Command command ) {
-        this.type = type;
+    public Memento( Command command ) {
         this.command = command;
         userName = Project.getUserName();
         date = new Date();
     }
 
-    public Type getType() {
-        return type;
-    }
-
-    public void setType( Type type ) {
-        this.type = type;
-    }
 
     public String getUserName() {
         return userName;

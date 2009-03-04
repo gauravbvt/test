@@ -7,7 +7,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import javax.persistence.CascadeType;
 import java.util.List;
-import java.util.Iterator;
 
 /**
  * A flow between nodes within one scenario.
