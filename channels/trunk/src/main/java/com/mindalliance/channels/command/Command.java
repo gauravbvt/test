@@ -65,9 +65,9 @@ public interface Command<T> {
      * Execute the command.
      *
      * @return an object of class T
-     * @throws com.mindalliance.channels.NotFoundException if some expected model object disappeared
+     * @throws CommandException if execution fails
      */
-    T execute() throws NotFoundException;
+    T execute() throws CommandException;
 
     /**
      * Whether the command can be undone.

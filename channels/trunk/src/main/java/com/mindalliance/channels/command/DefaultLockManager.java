@@ -193,4 +193,11 @@ public class DefaultLockManager implements LockManager {
         }
         return true;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void reset() {
+        locks = new HashMap<Long, Lock>();
+    }
 }

@@ -6,6 +6,7 @@ import com.mindalliance.channels.pages.Project;
 import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -26,7 +27,7 @@ public abstract class AbstractCommand implements Command {
     /**
      * Arguments needed to execute (no model objects)
      */
-    private Map<String, Object> arguments;
+    private Map<String, Object> arguments = new HashMap<String,Object>();
     /**
      * Ids of model objects that must be locked for the duration of the execution of the command.
      */
@@ -103,6 +104,17 @@ public abstract class AbstractCommand implements Command {
     protected void needLockOn( Identifiable identifiable ) {
         lockingSet.add( identifiable.getId() );
     }
+
+    /**
+     * Remove id from lockingSet.
+     * Usually because the command deleted the model object with this id.
+     * @param id a model object id
+     */
+    protected void ignoreLock( Long id ) {
+        lockingSet.remove( id );
+    }
+
+
 
     protected void addConflicting( Identifiable identifiable ) {
         conflictSet.add( identifiable.getId() );

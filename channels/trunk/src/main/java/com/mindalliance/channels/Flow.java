@@ -101,7 +101,9 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      */
     public abstract void setEffectiveChannels( List<Channel> channels );
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void addChannel( Channel channel ) {
         addChannelIfUnique( channel );
     }
@@ -198,8 +200,8 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
 
         return MessageFormat.format(
                 isAskedFor() ? "{2} ask {1} about {0}"
-                             : isTriggeringToTarget() ? "{1} telling {2} to {0}"
-                                                      : "{1} notify {2} of {0}",
+                        : isTriggeringToTarget() ? "{1} telling {2} to {0}"
+                        : "{1} notify {2} of {0}",
 
                 message, getShortName( getSource(), false ), getShortName( getTarget(), false ) );
     }
@@ -218,15 +220,15 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         if ( getSource().isConnector() ) {
             return MessageFormat.format(
                     isAskedFor() ? "Needs to ask for {0}"
-                                 : isTriggeringToTarget() ? "Needs to be told to {0}"
-                                                          : "Needs to be notified of {0}",
+                            : isTriggeringToTarget() ? "Needs to be told to {0}"
+                            : "Needs to be notified of {0}",
                     message.toLowerCase() );
 
         } else {
             return MessageFormat.format(
                     isAskedFor() ? "Ask {1} for {0}"
-                                 : isTriggeringToTarget() ? "Told to {0} by {1}"
-                                                          : "Notified of {0} by {1}",
+                            : isTriggeringToTarget() ? "Told to {0} by {1}"
+                            : "Notified of {0} by {1}",
                     message.toLowerCase(), getShortName( getSource(), false ) );
         }
     }
@@ -245,15 +247,15 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         Node node = getTarget();
         if ( node.isConnector() ) {
             String format = isAskedFor() ? "Can answer with {0}"
-                                         : isTriggeringToTarget() ? "Can tell to {0}"
-                                                                  : "Can notify of {0}";
+                    : isTriggeringToTarget() ? "Can tell to {0}"
+                    : "Can notify of {0}";
 
             return MessageFormat.format( format, message.toLowerCase() );
 
         } else {
             String format = isAskedFor() ? "Answer {1} with {0}"
-                                         : isTriggeringToTarget() ? "Tell {1} to {0}"
-                                                                  : "Notify {1} of {0}" ;
+                    : isTriggeringToTarget() ? "Tell {1} to {0}"
+                    : "Notify {1} of {0}";
 
             return MessageFormat.format(
                     format, message.toLowerCase(), getShortName( node, true ) );
@@ -443,22 +445,6 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         channels.add( 0, channel );
     }
 
-    /**
-     * Return a partially instantiated flow from which another can be initialized.
-     * @return a Flow
-     */
-    public Flow copy() {
-        try {
-            Flow copy = this.getClass().newInstance();
-            copy.initFrom( this );
-            return copy;
-        } catch ( InstantiationException e ) {
-            throw new RuntimeException( e );
-        } catch ( IllegalAccessException e ) {
-            throw new RuntimeException( e );
-        }
-    }
-
     // Abstract methods
 
     /**
@@ -591,9 +577,24 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
 
     /**
      * Whether the flow has a connector as source or target
+     *
      * @return a boolean
      */
     public abstract boolean hasConnector();
+
+    /**
+     * Get a copy of the list of channels
+     *
+     * @return copied list of channels
+     */
+    @Transient
+    public List<Channel> getChannelsCopy() {
+        List<Channel> channelsCopy = new ArrayList<Channel>();
+        for ( Channel channel : getChannels() ) {
+            channelsCopy.add( new Channel( channel ) );
+        }
+        return channelsCopy;
+    }
 
     /**
      * The significance of a flow.

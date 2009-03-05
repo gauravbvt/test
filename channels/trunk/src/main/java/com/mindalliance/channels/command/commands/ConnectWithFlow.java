@@ -10,6 +10,7 @@ import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.pages.Project;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Command to connect source to target with flow of given name.
@@ -19,40 +20,76 @@ import java.util.HashMap;
  * Date: Mar 4, 2009
  * Time: 1:44:34 PM
  */
-//TODO - allow setting state of the flow
 public class ConnectWithFlow extends AbstractCommand {
 
+
     public ConnectWithFlow( final Node source, final Node target, final String name ) {
+        this( source, target, name, new HashMap<String, Object>() );
+    }
+
+    public ConnectWithFlow(
+            final Node source,
+            final Node target,
+            final String name,
+            final Map<String, Object> state ) {
         needLockOn( source );
         needLockOn( target );
         setArguments( new HashMap<String, Object>() {
             {
-                put( "scenario", source.getScenario().getId() );
+                put( "sourceScenario", source.getScenario().getId() );
                 put( "source", source.getId() );
+                put( "targetScenario", source.getScenario().getId() );
                 put( "target", target.getId() );
                 put( "name", name );
+                put( "state", state );
             }
         } );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String getName() {
-        return "connect";  //To change body of implemented methods use File | Settings | File Templates.
+        return "connect"; 
     }
 
-    public Flow execute() throws NotFoundException {
-        Scenario scenario = Project.service().find( Scenario.class, (Long) getArgument( "scenario" ) );
-        Node source = scenario.getNode( (Long) getArgument( "source" ) );
-        Node target = scenario.getNode( (Long) getArgument( "target" ) );
-        String name = (String) getArgument( "name" );
-        Flow flow = Project.service().connect( source, target, name );
-        addArgument( "flow", flow.getId() );
-        return flow;
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
+    public Flow execute() throws CommandException {
+        try {
+            Scenario scenario = Project.service().find(
+                    Scenario.class,
+                    (Long) getArgument( "sourceScenario" ) );
+            Node source = scenario.getNode( (Long) getArgument( "source" ) );
+            scenario = Project.service().find(
+                    Scenario.class,
+                    (Long) getArgument( "targetScenario" ) );
+            Node target = scenario.getNode( (Long) getArgument( "target" ) );
+            String name = (String) getArgument( "name" );
+            Flow flow = Project.service().connect( source, target, name );
+            Map<String, Object> state = (Map<String, Object>) getArgument( "state" );
+            for ( String key : state.keySet() ) {
+                setProperty( flow, key, state.get( key ) );
+            }
+            addArgument( "flow", flow.getId() );
+            return flow;
+        } catch ( NotFoundException e ) {
+            throw new CommandException( "You need to refresh." );
+        }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isUndoable() {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Command makeUndoCommand() throws CommandException {
         try {
             Scenario scenario = Project.service().find( Scenario.class, (Long) getArgument( "scenario" ) );

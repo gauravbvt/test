@@ -28,9 +28,8 @@ public interface Commander {
      * @param command a command
      * @return an object
      * @throws CommandException if execution could not proceeed or failed.
-     * @throws com.mindalliance.channels.NotFoundException if the command is out of sync with the model
      */
-    Object doCommand( Command command ) throws CommandException, NotFoundException;
+    Object doCommand( Command command ) throws CommandException;
 
     /**
      * Whether user could undo a previous command right now.
@@ -47,15 +46,18 @@ public interface Commander {
     /**
      * Undo user's previous command.
      * @throws CommandException if undoing fails or is not allowed.
-     * @throws com.mindalliance.channels.NotFoundException if the command is out of sync with the model
      */
-    void undo() throws CommandException, NotFoundException;
+    void undo() throws CommandException;
 
     /**
      * Redo user's previous undone command.
      * @throws CommandException if redoing fails or is not allowed.
-     * @throws com.mindalliance.channels.NotFoundException if the command is out of sync with the model
      */
-    void redo() throws CommandException, NotFoundException;
+    void redo() throws CommandException;
+
+    /**
+     * Resets commander
+     */
+    void reset();
 
 }

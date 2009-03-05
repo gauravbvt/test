@@ -1,7 +1,5 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.NotFoundException;
-
 import java.util.Collection;
 
 /**
@@ -18,7 +16,6 @@ public class DefaultCommander implements Commander {
     private History history = new History();
 
     public DefaultCommander() {
-
     }
 
     public void setLockManager( LockManager lockManager ) {
@@ -35,7 +32,7 @@ public class DefaultCommander implements Commander {
     /**
      * {@inheritDoc}
      */
-    private Object execute( Command command ) throws CommandException, NotFoundException {
+    private Object execute( Command command ) throws CommandException {
         Object result;
         if ( command.isAuthorized() ) {
             try {
@@ -47,6 +44,7 @@ public class DefaultCommander implements Commander {
                 throw new CommandException( e.getMessage() );
             }
             catch ( Exception e ) {
+                e.printStackTrace();
                 throw new CommandException( "Execution failed.", e );
             }
         } else {
@@ -90,7 +88,7 @@ public class DefaultCommander implements Commander {
     /**
      * {@inheritDoc}
      */
-    public Object doCommand( Command command ) throws CommandException, NotFoundException {
+    public Object doCommand( Command command ) throws CommandException {
         synchronized ( this ) {
             Object result = execute( command );
             history.recordDone( command );
@@ -101,7 +99,7 @@ public class DefaultCommander implements Commander {
     /**
      * {@inheritDoc}
      */
-    public void undo() throws CommandException, NotFoundException {
+    public void undo() throws CommandException {
         synchronized ( this ) {
             Memento memento = history.getUndo();
             if ( memento == null ) throw new CommandException( "Nothing can be undone right now." );
@@ -113,12 +111,20 @@ public class DefaultCommander implements Commander {
     /**
      * {@inheritDoc}
      */
-    public void redo() throws CommandException, NotFoundException {
+    public void redo() throws CommandException {
         synchronized ( this ) {
             Memento memento = history.getRedo();
             if ( memento == null ) throw new CommandException( "Nothing can be redone right now." );
             execute( memento.getCommand() );
             history.recordRedone( memento );
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void reset() {
+        history.reset();
+        lockManager.reset();
     }
 }

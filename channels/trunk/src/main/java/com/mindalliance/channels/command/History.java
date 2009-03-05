@@ -31,15 +31,38 @@ public class History {
      */
     private List<Memento> undone = new ArrayList<Memento>();
 
+    public History() {
+        reset();
+    }
+
     /**
      * Record command as done.
+     * Disable a redo for the user until an undo is performed.
      *
      * @param command a command
      */
     public void recordDone( Command command ) {
         Memento memento = new Memento( command );
         done.add( 0, memento );
-        undone.clear();
+        clearUndone( command.getUserName() );
+    }
+
+    /**
+     * Remove all undone mementos by user who executed command.
+     * In essence disabling a redo for the user until an undo is performed.
+     *
+     * @param userName a user name
+     */
+    @SuppressWarnings( "unchecked" )
+    private void clearUndone( final String userName ) {
+        List<Memento> cleared = new ArrayList<Memento>();
+        cleared.addAll( CollectionUtils.select( undone, new Predicate() {
+            public boolean evaluate( Object obj ) {
+                Memento memento = (Memento) obj;
+                return !memento.getUserName().equals( userName );
+            }
+        } ) );
+        undone = cleared;
     }
 
     /**
@@ -126,4 +149,8 @@ public class History {
         return null;
     }
 
+    public void reset() {
+        done.clear();
+        undone.clear();
+    }
 }

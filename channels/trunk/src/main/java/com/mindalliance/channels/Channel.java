@@ -39,6 +39,11 @@ public class Channel implements Serializable {
     public Channel() {
     }
 
+    public Channel(Channel channel) {
+        medium = channel.getMedium();
+        address = channel.getAddress();
+    }
+
     public Channel( Medium medium, String address ) {
         this.medium = medium;
         this.address = address == null ? "" : address;

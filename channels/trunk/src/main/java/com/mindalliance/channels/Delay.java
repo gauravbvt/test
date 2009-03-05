@@ -65,6 +65,11 @@ public class Delay implements Comparable, Serializable {
     public Delay() {
     }
 
+    public Delay( Delay delay ) {
+        this.amount = delay.getAmount();
+        this.unit = delay.getUnit();
+    }
+
     public Delay( int amount, Unit unit ) {
         this.amount = amount;
         this.unit = unit;
@@ -207,5 +212,25 @@ public class Delay implements Comparable, Serializable {
         return new Integer( getSeconds() ).compareTo( other.getSeconds() );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public boolean equals( Object obj ) {
+        if (obj instanceof Delay ) {
+            Delay other = (Delay) obj;
+            return getSeconds() == other.getSeconds();
+        }
+        else {
+            return false;
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode() {
+        int hash = 1;
+        hash = hash * 31 + getSeconds();
+        return hash;
+    }
 
 }

@@ -20,6 +20,7 @@ public class TestDefaultCommander extends AbstractChannelsTest {
         super.setUp();
         commander = project.getCommander();
         lockManager = project.getLockManager();
+        commander.reset();
     }
 
     private AbstractCommand makeCommand() {
@@ -28,7 +29,7 @@ public class TestDefaultCommander extends AbstractChannelsTest {
                 return "Simple command";
             }
 
-            public Object execute() throws NotFoundException {
+            public Object execute() throws CommandException {
                 System.out.println( "Hello! says " + getUserName());
                 return true;
             }
@@ -43,7 +44,7 @@ public class TestDefaultCommander extends AbstractChannelsTest {
                         return "Undo simple command";  //To change body of implemented methods use File | Settings | File Templates.
                     }
 
-                    public Object execute() throws NotFoundException {
+                    public Object execute() throws CommandException {
                         System.out.println( "Goodbye! says " + getUserName());
                         return true;
                     }
@@ -79,8 +80,6 @@ public class TestDefaultCommander extends AbstractChannelsTest {
             commander.redo();
             assertFalse( commander.canRedo() );
         } catch ( CommandException e ) {
-            fail();
-        } catch ( NotFoundException e ) {
             fail();
         }
     }

@@ -102,4 +102,9 @@ public interface LockManager {
      * @return a boolean
      */
     boolean canGrabLocksOn( Collection<Long> ids );
+
+    /**
+     * Resets lock manager
+     */
+    void reset();
 }
