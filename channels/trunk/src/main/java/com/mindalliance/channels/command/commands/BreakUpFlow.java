@@ -6,7 +6,7 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Delay;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
@@ -76,15 +76,15 @@ public class BreakUpFlow extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    public Object execute() throws CommandException {
+    public Object execute( Service service ) throws CommandException {
         try {
-            Scenario scenario = Project.service().find( Scenario.class, (Long) getArgument( "scenario" ) );
+            Scenario scenario = service.find( Scenario.class, (Long) getArgument( "scenario" ) );
             Flow flow = scenario.findFlow( (Long) getArgument( "flow" ) );
             flow.breakup();
             ignoreLock( (Long) getArgument( "flow" ) );
             return null;
         } catch ( NotFoundException e ) {
-            throw new CommandException( "You need to refresh." );
+            throw new CommandException( "You need to refresh.", e );
         }
     }
 
@@ -99,17 +99,17 @@ public class BreakUpFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    public Command makeUndoCommand() throws CommandException {
+    public Command makeUndoCommand( Service service ) throws CommandException {
         try {
-            Scenario scenario = Project.service().find( Scenario.class, (Long) getArgument( "sourceScenario" ) );
+            Scenario scenario = service.find( Scenario.class, (Long) getArgument( "sourceScenario" ) );
             Node source = scenario.getNode( (Long) getArgument( "source" ) );
-            scenario = Project.service().find( Scenario.class, (Long) getArgument( "targetScenario" ) );
+            scenario = service.find( Scenario.class, (Long) getArgument( "targetScenario" ) );
             Node target = scenario.getNode( (Long) getArgument( "target" ) );
             String name = (String) getArgument( "name" );
             Map<String, Object> state = (Map<String, Object>) getArgument( "state" );
             return new ConnectWithFlow( source, target, name, state );
         } catch ( NotFoundException e ) {
-            throw new CommandException( "Can't undo" );
+            throw new CommandException( "Can't undo", e );
         }
     }
 

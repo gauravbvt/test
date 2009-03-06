@@ -7,7 +7,7 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.Service;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,18 +57,18 @@ public class ConnectWithFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    public Flow execute() throws CommandException {
+    public Flow execute( Service service ) throws CommandException {
         try {
-            Scenario scenario = Project.service().find(
+            Scenario scenario = service.find(
                     Scenario.class,
                     (Long) getArgument( "sourceScenario" ) );
             Node source = scenario.getNode( (Long) getArgument( "source" ) );
-            scenario = Project.service().find(
+            scenario = service.find(
                     Scenario.class,
                     (Long) getArgument( "targetScenario" ) );
             Node target = scenario.getNode( (Long) getArgument( "target" ) );
             String name = (String) getArgument( "name" );
-            Flow flow = Project.service().connect( source, target, name );
+            Flow flow = service.connect( source, target, name );
             Map<String, Object> state = (Map<String, Object>) getArgument( "state" );
             for ( String key : state.keySet() ) {
                 setProperty( flow, key, state.get( key ) );
@@ -76,7 +76,7 @@ public class ConnectWithFlow extends AbstractCommand {
             addArgument( "flow", flow.getId() );
             return flow;
         } catch ( NotFoundException e ) {
-            throw new CommandException( "You need to refresh." );
+            throw new CommandException( "You need to refresh.", e );
         }
     }
 
@@ -90,15 +90,15 @@ public class ConnectWithFlow extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    public Command makeUndoCommand() throws CommandException {
+    public Command makeUndoCommand( Service service ) throws CommandException {
         try {
-            Scenario scenario = Project.service().find( Scenario.class, (Long) getArgument( "scenario" ) );
+            Scenario scenario = service.find( Scenario.class, (Long) getArgument( "scenario" ) );
             Long flowId = (Long) getArgument( "flow" );
             if ( flowId == null ) throw new CommandException( "Can't undo." );
             Flow flow = scenario.findFlow( flowId );
             return new BreakUpFlow( flow );
         } catch ( NotFoundException e ) {
-            throw new CommandException( "Can't undo." );
+            throw new CommandException( "Can't undo.", e );
         }
     }
 }

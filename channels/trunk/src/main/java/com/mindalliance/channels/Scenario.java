@@ -167,7 +167,7 @@ public class Scenario extends ModelObject {
 
     /**
      * Remove a node from this scenario.
-     * "Replace" remove node by connectors in flows to and from node.
+     * "Replace" removed node by connectors in flows to and from node.
      * Quietly succeeds if node is not part of the scenario
      *
      * @param node the node to remove.
@@ -180,8 +180,8 @@ public class Scenario extends ModelObject {
             Iterator<Flow> ins = node.requirements();
             while ( ins.hasNext() ) {
                 Flow in = ins.next();
-                // Preserve the outcome of the source the flow represents
-                if ( in.isInternal()
+                // If the node to be removed is a part, preserve the outcome of the source the flow represents
+                if ( node.isPart() && in.isInternal()
                         && in.getSource().isPart()
                         && !in.getSource().hasMultipleOutcomes( in.getName() ) ) {
                     Flow flow = service.connect( in.getSource(), service.createConnector( this ), in.getName() );
@@ -193,7 +193,8 @@ public class Scenario extends ModelObject {
             Iterator<Flow> outs = node.outcomes();
             while ( outs.hasNext() ) {
                 Flow out = outs.next();
-                if ( out.isInternal()
+                // If the node to be removed is a part, preserve the outcome of the source the flow represents
+                if ( node.isPart() && out.isInternal()
                         && out.getTarget().isPart()
                         && !out.getSource().hasMultipleRequirements( out.getName() ) ) {
                     Flow flow = service.connect( service.createConnector( this ), out.getTarget(), out.getName() );

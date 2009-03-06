@@ -16,6 +16,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.IModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,15 +39,15 @@ public class AttachmentPanel extends Panel {
     private FileUpload upload;
 
     /** The object for the attachments. */
-    private ModelObject modelObject;
+    private IModel<? extends ModelObject> model;
 
     /** The selected type for the upload. */
     private Attachment.Type selectedType = Attachment.Type.Document;
 
-    public AttachmentPanel( String id, ModelObject modelObject ) {
+    public AttachmentPanel( String id, IModel<? extends ModelObject> model ) {
         super( id );
-        this.modelObject = modelObject;
-        add( new ListView<Wrapper>( "attachments", getAttachments( modelObject ) ) {      // NON-NLS
+        this.model = model;
+        add( new ListView<Wrapper>( "attachments", getAttachments( model.getObject() ) ) {      // NON-NLS
             @Override
             protected void populateItem( ListItem<Wrapper> item ) {
                 final Wrapper wrapper = item.getModelObject();
@@ -108,7 +109,7 @@ public class AttachmentPanel extends Panel {
     public void setUpload( FileUpload upload ) {
         this.upload = upload;
         if ( upload != null )
-            getAttachmentManager().attach( modelObject, getSelectedType(), upload );
+            getAttachmentManager().attach( model.getObject(), getSelectedType(), upload );
     }
 
     public Attachment.Type getSelectedType() {
@@ -140,7 +141,7 @@ public class AttachmentPanel extends Panel {
         public void setMarkedForDeletion( boolean markedForDeletion ) {
             this.markedForDeletion = markedForDeletion;
             if ( markedForDeletion ) {
-                Project.getProject().getAttachmentManager().detach( modelObject, attachment );
+                Project.getProject().getAttachmentManager().detach( model.getObject(), attachment );
             }
         }
 

@@ -1,6 +1,7 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.Service;
 
 import java.util.List;
 import java.util.Map;
@@ -64,10 +65,11 @@ public interface Command<T> {
     /**
      * Execute the command.
      *
+     * @param service a service
      * @return an object of class T
      * @throws CommandException if execution fails
      */
-    T execute() throws CommandException;
+    T execute( Service service ) throws CommandException;
 
     /**
      * Whether the command can be undone.
@@ -78,9 +80,10 @@ public interface Command<T> {
     /**
      * Produces a command that, if successfully executed, would reverse the effect of the command.
      *
+     * @param service a service
      * @return a command
      * @throws CommandException if undo command can not be made
      */
-    Command makeUndoCommand() throws CommandException;
+    Command makeUndoCommand( Service service ) throws CommandException;
 
 }

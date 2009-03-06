@@ -173,11 +173,11 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
         addChannelRow();
         addMaxDelayRow();
         addSignificanceToSource();
-        add( new AttachmentPanel( "attachments", flow ) );
-        flowIssuesPanel = new IssuesPanel( "issues", new Model<ModelObject>( flow ) );
+        add( new AttachmentPanel( "attachments", new PropertyModel<Flow>( this, "flow" ) ) );
+        flowIssuesPanel = new IssuesPanel( "issues", new PropertyModel<ModelObject>( this, "flow" ) );
         flowIssuesPanel.setOutputMarkupId( true );
         add( flowIssuesPanel );
-        adjustFields( flow );
+        adjustFields( getFlow() );
     }
 
     /**
@@ -197,13 +197,13 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
         maxDelayRow.setVisible( f.canGetMaxDelay() );
         delayPanel.enable( f.canSetMaxDelay() );
         significanceToSourceRow.setVisible( f.canGetSignificanceToSource() );
-        triggersSourceContainer.setVisible( ( !outcome || flow.isAskedFor() ) && f.canGetTriggersSource() );
+        triggersSourceContainer.setVisible( ( !outcome || f.isAskedFor() ) && f.canGetTriggersSource() );
         triggersSourceCheckBox.setEnabled( f.canSetTriggersSource() );
         terminatesSourceContainer.setVisible( f.canGetTerminatesSource() );
         terminatesSourceCheckBox.setEnabled( f.canSetTerminatesSource() );
     }
 
-    public void update( AjaxRequestTarget target) {
+    public void update( AjaxRequestTarget target ) {
         super.update( target );
         target.addComponent( flowIssuesPanel );
     }
@@ -217,7 +217,7 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {                // NON-NLS
 
             protected void onUpdate( AjaxRequestTarget target ) {
-                addIssues( nameField, getFlow(), "name" );
+                addIssuesAnnotation( nameField, getFlow(), "name" );
                 target.addComponent( nameField );
                 target.addComponent( titleLabel );
                 target.addComponent( otherChoice );
@@ -230,6 +230,7 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
      * Find all candidate names for a flow given partial name.
      * Look in sibling flows and all connector flows of the right "polarity".
      * //TODO - inefficient
+     *
      * @param s partial name
      * @return an iterator on strings
      */
@@ -268,8 +269,8 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
         askedForButtons.add( new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                channelRow.setVisible( isChannelRelevant( flow ) );
-                adjustFields( flow );
+                channelRow.setVisible( isChannelRelevant( getFlow() ) );
+                adjustFields( getFlow() );
                 target.addComponent( ExpandedFlowPanel.this );
                 target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
             }
@@ -284,7 +285,7 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
         significanceToTargetLabel.add( new Label( "target-label", outcome ? "the recipient's task" : "this task" ) );
         significanceToTargetChoice = new DropDownChoice<Flow.Significance>(
                 "significance-to-target",
-                new PropertyModel<Flow.Significance>( flow, "significanceToTarget" ),
+                new PropertyModel<Flow.Significance>( getFlow(), "significanceToTarget" ),
                 new PropertyModel<List<? extends Flow.Significance>>( this, "significanceToTargetChoices" ),
                 new IChoiceRenderer<Flow.Significance>() {
 
@@ -343,7 +344,7 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
      * @return a string
      */
     public String getReplyingOrNotifying() {
-        return flow.isAskedFor() ? "replying" : "notifying";
+        return getFlow().isAskedFor() ? "replying" : "notifying";
     }
 
     /**
@@ -352,7 +353,7 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
      * @return a boolean
      */
     public boolean isTriggeringToSource() {
-        return flow.getSignificanceToSource() == Flow.Significance.Triggers;
+        return getFlow().getSignificanceToSource() == Flow.Significance.Triggers;
     }
 
     /**
@@ -362,9 +363,9 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
      */
     public void setTriggeringToSource( boolean triggers ) {
         if ( triggers ) {
-            flow.becomeTriggeringToSource();
+            getFlow().becomeTriggeringToSource();
         } else {
-            flow.setSignificanceToSource( Flow.Significance.None );
+            getFlow().setSignificanceToSource( Flow.Significance.None );
         }
     }
 
@@ -374,7 +375,7 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
      * @return a boolean
      */
     public boolean isTerminatingToSource() {
-        return flow.getSignificanceToSource() == Flow.Significance.Terminates;
+        return getFlow().getSignificanceToSource() == Flow.Significance.Terminates;
     }
 
     /**
@@ -384,9 +385,9 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
      */
     public void setTerminatingToSource( boolean terminates ) {
         if ( terminates ) {
-            flow.becomeTerminatingToSource();
+            getFlow().becomeTerminatingToSource();
         } else {
-            flow.setSignificanceToSource( Flow.Significance.None );
+            getFlow().setSignificanceToSource( Flow.Significance.None );
         }
     }
 
@@ -400,7 +401,7 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
         significances.add( Flow.Significance.Useful );
         significances.add( Flow.Significance.Critical );
         significances.add( Flow.Significance.Terminates );
-        if ( !flow.isAskedFor() ) significances.add( Flow.Significance.Triggers );
+        if ( !getFlow().isAskedFor() ) significances.add( Flow.Significance.Triggers );
         return significances;
     }
 
@@ -423,8 +424,11 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
         replicateItem.add( new Link( "replicate" ) {
             @Override
             public void onClick() {
-                Flow replica = flow.replicate( outcome );
-                PageParameters parameters = getWebPage().getPageParameters();
+                Flow replica = getFlow().replicate( outcome );
+                // PageParameters parameters = getWebPage().getPageParameters();
+                // TODO - Denis: Fix problem and remove patch
+                PageParameters parameters = ( (ScenarioPage) getWebPage() )
+                        .getParametersCollapsing( getFlow().getScenario().getId() );
                 parameters.add( ScenarioPage.EXPAND_PARM, String.valueOf( replica.getId() ) );
                 this.setResponsePage( getWebPage().getClass(), parameters );
             }
@@ -432,15 +436,18 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
         // add( new ScenarioLink( "hide", new PropertyModel<Node>( this, "node" ) ) );       // NON-NLS
         // TODO - hack - adjust for Bookmarkable link
         String url = getRequest().getURL().
-                replaceAll( "&" + ScenarioPage.EXPAND_PARM + "=" + flow.getId(), "" );
+                replaceAll( "&" + ScenarioPage.EXPAND_PARM + "=" + getFlow().getId(), "" );
         add( new ExternalLink( "hide", url ) );                                  // NON-NLS
         add( new Link( "add-issue" ) {                                                    // NON-NLS
 
             @Override
             public void onClick() {
-                UserIssue newIssue = new UserIssue( flow );
+                UserIssue newIssue = new UserIssue( getFlow() );
                 getService().add( newIssue );
-                PageParameters parameters = getWebPage().getPageParameters();
+                // PageParameters parameters = getWebPage().getPageParameters();
+                // TODO - Denis: Fix probelm and remove patch
+                PageParameters parameters = ( (ScenarioPage) getWebPage() )
+                        .getParametersCollapsing( getFlow().getScenario().getId() );
                 parameters.add( ScenarioPage.EXPAND_PARM, String.valueOf( newIssue.getId() ) );
                 setResponsePage( getWebPage().getClass(), parameters );
             }
@@ -451,6 +458,13 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
 
     private void addAllField() {
         CheckBox checkBox = new CheckBox( "all" );                                        // NON-NLS
+        checkBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {                // NON-NLS
+
+            protected void onUpdate( AjaxRequestTarget target ) {
+                target.addComponent( titleLabel );
+                target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
+            }
+        } );
         allField = new FormComponentLabel( "all-label", checkBox );                       // NON-NLS
         allField.add( checkBox );
         add( allField );
@@ -472,7 +486,7 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
         FormComponentLabel result = new FormComponentLabel( id, component );
         add( result );
         add( component );
-        addIssues( component, getFlow(), component.getId() );
+        addIssuesAnnotation( component, getFlow(), component.getId() );
         return result;
     }
 
@@ -483,7 +497,7 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
      * @param object    the object of the issues
      * @param property  the property of concern. If null, get issues of object
      */
-    protected void addIssues( FormComponent<?> component, ModelObject object, String property ) {
+    protected void addIssuesAnnotation( FormComponent<?> component, ModelObject object, String property ) {
         Analyst analyst = ( (Project) getApplication() ).getAnalyst();
         String issue = property == null ?
                 analyst.getIssuesSummary( object, false ) :
@@ -524,9 +538,14 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
 
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                adjustFields( flow );
+                adjustFields( getFlow() );
                 target.addComponent( ExpandedFlowPanel.this );
                 target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
+                // PageParameters parameters = getWebPage().getPageParameters();
+                // TODO - Denis : fix bug and remove patch
+                /*PageParameters parameters = ( (ScenarioPage) getWebPage() )
+                        .getParametersCollapsing( getFlow().getScenario().getId() );
+                setResponsePage( getWebPage().getClass(), parameters );*/
             }
         } );
 
@@ -580,7 +599,7 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
 
         ChannelListPanel channelListPanel = new ChannelListPanel(
                 "channels",
-                new Model<Channelable>( flow ) );
+                new PropertyModel<Channelable>( this, "flow" ) );
         channelRow.add( channelListPanel );
         add( channelRow );
     }
@@ -588,7 +607,7 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
     private void addMaxDelayRow() {
         maxDelayRow = new WebMarkupContainer( "max-delay-row" );
         add( maxDelayRow );
-        delayPanel = new DelayPanel( "max-delay", new Model<Delay>( flow.getMaxDelay() ) );
+        delayPanel = new DelayPanel( "max-delay", new PropertyModel<Delay>( this, "flow.maxDelay" ) );
         maxDelayRow.add( delayPanel );
     }
 
@@ -653,7 +672,7 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
                     if ( getFlow().getName().isEmpty()
                             || SemMatch.matches( getFlow().getName(), connectorFlow.getName() ) ) {
                         if ( other.equals( connector ) || !node.isConnectedTo(
-                                outcome, connector, flow.getName() ) )
+                                outcome, connector, getFlow().getName() ) )
                             result.add( connector );
                     }
                 }

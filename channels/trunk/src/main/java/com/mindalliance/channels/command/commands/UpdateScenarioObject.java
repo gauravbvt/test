@@ -7,11 +7,12 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ScenarioObject;
 import com.mindalliance.channels.Node;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.Service;
 
 import java.util.HashMap;
 
 /**
+ * Command to update a modelobject contained in a scenario.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -20,10 +21,13 @@ import java.util.HashMap;
  */
 public class UpdateScenarioObject extends AbstractCommand {
 
-    public UpdateScenarioObject( final ScenarioObject scenarioObject, final String property, final Object value ) {
-        this.addConflicting( scenarioObject );
-        this.needLockOn( scenarioObject );
-        this.setArguments( new HashMap<String, Object>() {
+    public UpdateScenarioObject(
+            final ScenarioObject scenarioObject,
+            final String property,
+            final Object value ) {
+        addConflicting( scenarioObject );
+        needLockOn( scenarioObject );
+        setArguments( new HashMap<String, Object>() {
             {
                 put( "scenario", scenarioObject.getScenario().getId() );
                 put( "object", scenarioObject.getId() );
@@ -46,8 +50,8 @@ public class UpdateScenarioObject extends AbstractCommand {
     /**
       * {@inheritDoc}
       */
-    public Object execute() throws CommandException {
-        ScenarioObject scenarioObject = getScenarioObject();
+    public Object execute( Service service ) throws CommandException {
+        ScenarioObject scenarioObject = getScenarioObject( service );
         setProperty(
                 scenarioObject,
                 (String) getArgument( "property" ),
@@ -66,16 +70,16 @@ public class UpdateScenarioObject extends AbstractCommand {
     /**
       * {@inheritDoc}
       */
-    public Command makeUndoCommand() throws CommandException {
-            ScenarioObject scenarioObject = getScenarioObject();
+    public Command makeUndoCommand( Service service ) throws CommandException {
+            ScenarioObject scenarioObject = getScenarioObject( service );
             String property = (String) getArgument( "property" );
             Object oldValue = getArgument( "old" );
             return new UpdateScenarioObject( scenarioObject, property, oldValue );
     }
 
-    private ScenarioObject getScenarioObject() throws CommandException {
+    private ScenarioObject getScenarioObject( Service service ) throws CommandException {
         try {
-            Scenario scenario = Project.service().find( Scenario.class, (Long) getArgument( "scenario" ) );
+            Scenario scenario = service.find( Scenario.class, (Long) getArgument( "scenario" ) );
             boolean isNode = (Boolean) getArgument( "isNode" );
             ScenarioObject scenarioObject;
             if ( isNode ) {
@@ -85,7 +89,7 @@ public class UpdateScenarioObject extends AbstractCommand {
             }
             return scenarioObject;
         } catch ( NotFoundException e ) {
-            throw new CommandException( "Can't undo" );
+            throw new CommandException( "You need to refresh", e );
         }
     }
 }

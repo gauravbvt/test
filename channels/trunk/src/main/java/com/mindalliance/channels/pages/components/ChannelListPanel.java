@@ -46,7 +46,7 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
     /**
      * The object which list of channels is being edited.
      */
-    private final Channelable channelable;
+    private IModel<Channelable> model;
     /**
      * Markup for candidate channels.
      */
@@ -58,7 +58,7 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
     /**
      * List of non-editable channels.
      */
-    List<Channel> channels;
+    private List<Channel> channels;
     /**
      * Markup for non-editable channels.
      */
@@ -74,7 +74,7 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
 
     public ChannelListPanel( String id, IModel<Channelable> model ) {
         super( id, model );
-        this.channelable = model.getObject();
+        this.model = model;
         init();
     }
 
@@ -86,6 +86,7 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
     }
 
     private void adjustFields() {
+        Channelable channelable = model.getObject();
         if ( channelable instanceof Flow ) {
             Flow flow = (Flow) channelable;
             candidateChannelsMarkup.setVisible(
@@ -105,14 +106,14 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
         add( candidateChannelsMarkup );
         candidatesList = new ListView<Wrapper>(
                 "candidates",
-                new PropertyModel<List<Wrapper>>( this, "wrappedCandidateChannels") ) {
+                new PropertyModel<List<Wrapper>>( this, "wrappedCandidateChannels" ) ) {
             @Override
             protected void populateItem( ListItem<Wrapper> item ) {
                 Wrapper wrapper = item.getModelObject();
                 CheckBox candidateCheckBox = new CheckBox(
                         "include-candidate",
                         new PropertyModel<Boolean>( wrapper, "markedForInclusion" ) );
-                candidateCheckBox.add(  new AjaxFormComponentUpdatingBehavior("onchange") {
+                candidateCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                     protected void onUpdate( AjaxRequestTarget target ) {
                         // adjustFields();
                         target.addComponent( candidateChannelsMarkup );
@@ -127,17 +128,18 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
         candidateChannelsMarkup.add( candidatesList );
         candidateChannelsMarkup.setVisible(
                 !candidatesList.getModelObject().isEmpty()
-                && this.isEnabled() );
+                        && this.isEnabled() );
     }
 
     private void addEditableChannels() {
+        final Channelable channelable = model.getObject();
         editableChannelsMarkup = new WebMarkupContainer( "editable-container" );
         editableChannelsMarkup.setOutputMarkupId( true );
         add( editableChannelsMarkup );
         // final List<Wrapper> setChannels = getWrappedChannels( channelable );
         final ListView<Wrapper> editableChannelsList = new ListView<Wrapper>(
                 "editable-channels",
-                new PropertyModel<List<Wrapper>>(this, "wrappedChannels") ) {
+                new PropertyModel<List<Wrapper>>( this, "wrappedChannels" ) ) {
             @Override
             protected void populateItem( ListItem<Wrapper> item ) {
                 final Wrapper wrapper = item.getModelObject();
@@ -147,7 +149,7 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
                         new PropertyModel<Boolean>( wrapper, "markedForInclusion" ) );
                 includeSpan.setVisible( !wrapper.isMarkedForCreation() );
                 includeCheckBox.setEnabled( this.isEnabled() );
-                includeCheckBox.add(  new AjaxFormComponentUpdatingBehavior("onchange") {
+                includeCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                     protected void onUpdate( AjaxRequestTarget target ) {
                         // adjustFields();
                         target.addComponent( candidateChannelsMarkup );
@@ -171,45 +173,46 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
                             }
                         }
                 );
-                mediumChoices.add(  new AjaxFormComponentUpdatingBehavior("onchange") {
+                mediumChoices.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                     protected void onUpdate( AjaxRequestTarget target ) {
                         target.addComponent( editableChannelsMarkup );
                     }
-                });
+                } );
                 item.add( mediumChoices );
                 mediumChoices.setEnabled( this.isEnabled() );
                 TextField<String> addressField = new TextField<String>(
                         "address",
                         new PropertyModel<String>( wrapper, "address" ) );
-                addressField.add(  new AjaxFormComponentUpdatingBehavior("onchange") {
+                addressField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                     protected void onUpdate( AjaxRequestTarget target ) {
                         target.addComponent( editableChannelsMarkup );
                         updateWith( target );
                     }
-                });
+                } );
                 item.add( addressField );
                 addressField.setEnabled( this.isEnabled() );
                 flagIfInvalid( addressField, wrapper );
-                AjaxFallbackLink moveToTopLink = new AjaxFallbackLink("move-to-top") {
+                AjaxFallbackLink moveToTopLink = new AjaxFallbackLink( "move-to-top" ) {
                     public void onClick( AjaxRequestTarget target ) {
                         wrapper.moveToFirst();
                         target.addComponent( editableChannelsMarkup );
                         updateWith( target );
                     }
-                } ;
+                };
                 item.add( moveToTopLink );
                 List<Channel> effectiveChannels = channelable.getEffectiveChannels();
                 moveToTopLink.setVisible(
                         !effectiveChannels.isEmpty() &&
-                        wrapper.getChannel() != effectiveChannels.get( 0 )
-                        && !wrapper.isMarkedForCreation() );
+                                wrapper.getChannel() != effectiveChannels.get( 0 )
+                                && !wrapper.isMarkedForCreation() );
             }
         };
         // editableChannelsList.setOutputMarkupId( true );
-        editableChannelsMarkup.add( editableChannelsList  );
+        editableChannelsMarkup.add( editableChannelsList );
     }
 
     private void addNonEditableChannels() {
+        Channelable channelable = model.getObject();
         nonEditableChannelsMarkup = new WebMarkupContainer( "non-editable-container" );
         add( nonEditableChannelsMarkup );
         channels = channelable.getEffectiveChannels();
@@ -229,9 +232,11 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
 
     /**
      * Get the channelable's effective channels, wrapped
+     *
      * @return a list of Wrappers
      */
-    public List<Wrapper> getWrappedChannels(  ) {
+    public List<Wrapper> getWrappedChannels() {
+        Channelable channelable = model.getObject();
         final List<Wrapper> list = new ArrayList<Wrapper>();
         List<Channel> setChannels = channelable.getEffectiveChannels();
         for ( Channel channel : setChannels ) {
@@ -243,7 +248,8 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
         return list;
     }
 
-    public List<Wrapper> getWrappedCandidateChannels( ) {
+    public List<Wrapper> getWrappedCandidateChannels() {
+        Channelable channelable = model.getObject();
         Set<Channel> candidates = new HashSet<Channel>();
         List<Channelable> channelables = findRelatedChannelables( channelable );
         List<Channel> alreadySetChannels = channelable.getEffectiveChannels();
@@ -279,9 +285,12 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
             Node node = flow.isAskedFor() ? flow.getSource() : flow.getTarget();
             if ( node != null && node.isPart() ) {  // TODO - why can node be null (connecting to internal flow of an external flow)
                 Part part = (Part) node;
-                relatedChannelables.addAll(
-                        Project.service().findAllResourcesNarrowingOrEqualTo(
-                                part.resourceSpec() ) );
+                ResourceSpec partResourceSpec = part.resourceSpec();
+                if ( !partResourceSpec.isAnyone() ) {
+                    relatedChannelables.addAll(
+                            Project.service().findAllResourcesNarrowingOrEqualTo(
+                                    partResourceSpec ) );
+                }
             }
         } else {
             ResourceSpec resourceSpec = (ResourceSpec) channelable;
@@ -294,6 +303,7 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
     }
 
     private void flagIfInvalid( TextField<String> addressField, Wrapper wrapper ) {
+        Channelable channelable = model.getObject();
         if ( !wrapper.isMarkedForCreation() ) {
             Channel channel = wrapper.getChannel();
             boolean ok = true;
@@ -368,6 +378,7 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
         }
 
         public void setMarkedForInclusion( boolean markedForInclusion ) {
+            Channelable channelable = model.getObject();
             this.markedForInclusion = markedForInclusion;
             if ( !markedForCreation ) {
                 if ( !markedForInclusion ) {
@@ -383,6 +394,7 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
         }
 
         public void setMedium( Medium medium ) {
+            Channelable channelable = model.getObject();
             channel.setMedium( medium );
             if ( markedForCreation ) {
                 if ( medium != null ) {
@@ -407,6 +419,7 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
          * Make this channel the first one in the list
          */
         public void moveToFirst() {
+            Channelable channelable = model.getObject();
             channelable.moveToFirst( channel );
         }
     }

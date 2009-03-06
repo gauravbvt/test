@@ -23,7 +23,7 @@ public class DelayPanel extends AbstractUpdatablePanel {
     /**
      * A Delay.
      */
-    private Delay delay;
+    private IModel<Delay> model;
 
     DropDownChoice unitChoice;
 
@@ -31,11 +31,12 @@ public class DelayPanel extends AbstractUpdatablePanel {
 
     public DelayPanel( String id, IModel<Delay> model ) {
         super( id, model );
-        delay = model.getObject();
+        this.model = model;
         init();
     }
 
     private void init() {
+        Delay delay = model.getObject();
         amountField = new TextField<String>( "delay-amount",
                 new PropertyModel<String>( delay, "amountString" ) );
         amountField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {

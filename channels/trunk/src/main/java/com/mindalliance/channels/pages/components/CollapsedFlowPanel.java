@@ -1,8 +1,6 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.UserIssue;
-import com.mindalliance.channels.Service;
 import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
@@ -77,7 +75,10 @@ public class CollapsedFlowPanel extends Panel implements DeletableFlow {
             @Override
             public void onClick() {
                 Flow replica = flow.replicate( outcome );
-                PageParameters parameters = getWebPage().getPageParameters();
+                // PageParameters parameters = ((ScenarioPage)getWebPage()).getPageParameters();
+                // TODO - Denis: Fix problem and remove patch
+                PageParameters parameters = ( (ScenarioPage) getWebPage() )
+                        .getParametersCollapsing( getFlow().getScenario().getId() );
                 parameters.add( ScenarioPage.EXPAND_PARM, String.valueOf( replica.getId() ) );
                 this.setResponsePage( getWebPage().getClass(), parameters );
             }
@@ -87,10 +88,6 @@ public class CollapsedFlowPanel extends Panel implements DeletableFlow {
         add( new ExternalLink( "expand", getRequest().getURL() + "&expand=" + flow.getId() ) );
         add( new CheckBox( "delete",                                                      // NON-NLS
                 new PropertyModel<Boolean>( this, "markedForDeletion" ) ) );   // NON-NLS
-    }
-
-    private Service getService() {
-        return ( (Project) getApplication() ).getService();
     }
 
     /**

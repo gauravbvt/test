@@ -20,14 +20,14 @@ public class Memento {
     /**
      * When the command was executed.
      */
-    private Date date;
+    private long timestamp;
 
-     public Memento() {
+    public Memento() {
     }
 
     public Memento( Command command ) {
         this.command = command;
-        date = new Date();
+        timestamp = System.currentTimeMillis();
     }
 
 
@@ -35,12 +35,12 @@ public class Memento {
         return command.getUserName();
     }
 
-    public Date getDate() {
-        return date;
+    public long getTimestamp() {
+        return timestamp;
     }
 
-    public void setDate( Date date ) {
-        this.date = date;
+    public void setTimestamp( long timestamp ) {
+        this.timestamp = timestamp;
     }
 
     public Command getCommand() {
@@ -55,14 +55,14 @@ public class Memento {
      * {@inheritDoc}
      */
     public String toString() {
-       StringBuilder sb = new StringBuilder();
-        sb.append('[');
-        sb.append(command.getName());
-        sb.append(',');
-        sb.append(getUserName());
-        sb.append(',');
-        sb.append(date);
-        sb.append(']');
+        StringBuilder sb = new StringBuilder();
+        sb.append( '[' );
+        sb.append( command.getName() );
+        sb.append( " by " );
+        sb.append( getUserName() );
+        sb.append( " on " );
+        sb.append( new Date( timestamp ) );
+        sb.append( ']' );
         return sb.toString();
     }
 }

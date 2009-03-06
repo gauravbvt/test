@@ -1,18 +1,14 @@
 package com.mindalliance.channels.pages.components;
 
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.AttributeModifier;
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.pages.ModelObjectLink;
-import com.mindalliance.channels.pages.Project;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -45,13 +41,13 @@ public class ModelObjectPanel extends Panel {
                 new TextArea<String>( "description",                                      // NON-NLS
                         new PropertyModel<String>( mo, "description" ) ) );
         addSpecifics( moDetailsDiv );
-        moDetailsDiv.add( new AttachmentPanel( "attachments", mo ) );
+        moDetailsDiv.add( new AttachmentPanel( "attachments", new Model<ModelObject>( mo ) ) );
 
     }
 
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
         // do nothing
     }
-    
+
 
 }

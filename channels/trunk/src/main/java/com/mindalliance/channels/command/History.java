@@ -5,7 +5,6 @@ import com.mindalliance.channels.pages.Project;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
-import java.util.Date;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -20,6 +19,8 @@ import org.apache.commons.collections.iterators.FilterIterator;
  * Time: 2:24:34 PM
  */
 public class History {
+
+    // TODO - limit the in-memory size of done
     /**
      * List of mementoes of done commands.
      * A new memento is added at the front of the list.
@@ -68,20 +69,22 @@ public class History {
     /**
      * Record memorized command as undone.
      *
-     * @param memento a memento
+     * @param memento memento of the command undo
+     * @param undoingCommand an undoing command
      */
-    public void recordUndone( Memento memento ) {
+    public void recordUndone( Memento memento, Command undoingCommand ) {
         done.remove( memento );
-        undone.add( 0, memento );
+        undone.add( 0, new Memento( undoingCommand ) );
     }
 
     /**
      * Record memorized command as redone.
      *
-     * @param memento a memento
+     * @param memento a memento of the undoing command
+     * @param redoCommand the command that undoes an undoing command
      */
-    public void recordRedone( Memento memento ) {
-        done.add( 0, memento );
+    public void recordRedone( Memento memento, Command redoCommand ) {
+        done.add( 0, new Memento( redoCommand ) );
         undone.remove( memento );
     }
 
@@ -120,7 +123,7 @@ public class History {
      * @return a boolean
      */
     private boolean hasConflict( Memento memento ) {
-        Iterator<Memento> moreRecent = findAllDoneAfter( memento.getDate() );
+        Iterator<Memento> moreRecent = findAllDoneAfter( memento.getTimestamp() );
         while ( moreRecent.hasNext() ) {
             Memento other = moreRecent.next();
             if ( other != memento && !CollectionUtils.intersection(
@@ -133,11 +136,11 @@ public class History {
     }
 
     @SuppressWarnings( "unchecked" )
-    private Iterator<Memento> findAllDoneAfter( final Date date ) {
+    private Iterator<Memento> findAllDoneAfter( final long timestamp ) {
         return new FilterIterator( done.iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {
                 Memento memento = (Memento) obj;
-                return ( !memento.getDate().before( date ) );
+                return ( memento.getTimestamp() >= timestamp );
             }
         } );
     }

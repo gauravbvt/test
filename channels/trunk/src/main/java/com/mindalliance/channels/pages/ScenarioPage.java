@@ -507,7 +507,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
                     redirectHere();
                 }
             } );
-            add( new AttachmentPanel( "attachments", node ) );                            // NON-NLS
+            add( new AttachmentPanel( "attachments", new Model<Node>(node) ) );                            // NON-NLS
             partIssuesPanel = new IssuesPanel( "issues",                                               // NON-NLS
                     new Model<ModelObject>( node ) );
             partIssuesPanel.setOutputMarkupId( true );
@@ -782,6 +782,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
      * @return page parameters
      */
     public PageParameters getPageParameters() {
+        String url = getRequest().getURL();
         PageParameters params = super.getPageParameters();
         if ( params == null ) params = new PageParameters();
         return params;
@@ -798,8 +799,10 @@ public final class ScenarioPage extends WebPage implements Updatable {
         String[] expanded = result.getStringArray( EXPAND_PARM );
         String idString = Long.toString( id );
         result.remove( EXPAND_PARM );
-        for ( String exp : expanded )
-            if ( !exp.equals( idString ) ) result.add( EXPAND_PARM, exp );
+        if ( expanded != null ) {
+            for ( String exp : expanded )
+                if ( !exp.equals( idString ) ) result.add( EXPAND_PARM, exp );
+        }
         return result;
     }
 

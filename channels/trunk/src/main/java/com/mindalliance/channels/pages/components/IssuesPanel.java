@@ -8,6 +8,7 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.ScenarioObject;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ScenarioPage;
 import org.apache.wicket.PageParameters;
@@ -37,14 +38,11 @@ public class IssuesPanel extends Panel {
      */
     public static final int MAX_LENGTH = 80;
 
-    /**
-     * The model object possibly with issues.
-     */
-    private ModelObject modelObject;
+    private IModel<ModelObject> model;
 
     public IssuesPanel( String id, IModel<ModelObject> model ) {
         super( id, model );
-        modelObject = model.getObject();
+        this.model = model;
         init();
     }
 
@@ -55,12 +53,19 @@ public class IssuesPanel extends Panel {
                 new Model<String>( "New" ) ) {
             @Override
             public void onClick() {
-                final UserIssue userIssue = new UserIssue( modelObject );
+                ModelObject modelObject = model.getObject();
+                UserIssue userIssue = new UserIssue( model.getObject() );
                 userIssue.setReportedBy( Project.getUserName() );
                 getService().add( userIssue );
-                final PageParameters params = getWebPage().getPageParameters();
-                params.add( ScenarioPage.EXPAND_PARM, Long.toString( userIssue.getId() ) );
-                setResponsePage( getWebPage().getClass(), params );
+                // TODO - Denis: Fix problem and remove patch
+                PageParameters parameters;
+                if ( modelObject instanceof ScenarioObject )
+                    parameters = ( (ScenarioPage) getWebPage() )
+                            .getParametersCollapsing( ((ScenarioObject)modelObject).getScenario().getId() );
+                else
+                    parameters = getWebPage().getPageParameters();
+                parameters.add( ScenarioPage.EXPAND_PARM, Long.toString( userIssue.getId() ) );
+                setResponsePage( getWebPage().getClass(), parameters );
             }
         };
         add( newIssueLink );
@@ -71,7 +76,7 @@ public class IssuesPanel extends Panel {
         super.onBeforeRender();
         Set<Long> expansions = ( (ScenarioPage) getPage() ).findExpansions();
         createIssuePanels( expansions );
-        setVisible( Project.analyst().hasIssues( modelObject, false ) );
+        setVisible( Project.analyst().hasIssues( model.getObject(), false ) );
     }
 
 
@@ -81,6 +86,7 @@ public class IssuesPanel extends Panel {
      * @return a string
      */
     public String getKind() {
+        ModelObject modelObject = model.getObject();
         if ( modelObject instanceof Scenario ) return "Scenario";
         else if ( modelObject instanceof Part ) return "Task";
         else if ( modelObject instanceof Flow ) return "Flow";
@@ -113,7 +119,8 @@ public class IssuesPanel extends Panel {
      * @return list of issues
      */
     public List<Issue> getModelObjectIssues() {
-        return Project.analyst().listIssues( modelObject, false );
+        List<Issue> issues = Project.analyst().listIssues( model.getObject(), false );
+        return issues;
     }
 
 

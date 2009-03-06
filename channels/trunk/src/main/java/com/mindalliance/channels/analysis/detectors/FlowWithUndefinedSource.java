@@ -46,6 +46,6 @@ public class FlowWithUndefinedSource extends AbstractIssueDetector {
 
     /** {@inheritDoc} */
      public String getTestedProperty() {
-        return "source";
+        return null;
     }
 }

@@ -56,6 +56,7 @@ public class FlowListPanel extends Panel {
                 final Scenario s = n.getScenario();
                 final Set<Long> newExpansions = new HashSet<Long>( ( (ScenarioPage) getPage() ).findExpansions() );
                 newExpansions.add( f.getId() );
+                newExpansions.remove( f.getScenario().getId() ); // TODO - Denis : FIX PROBLEM AND REMOVE PATCH
                 setResponsePage( ScenarioPage.class,
                         ScenarioPage.getParameters( s, n, newExpansions ) );
             }

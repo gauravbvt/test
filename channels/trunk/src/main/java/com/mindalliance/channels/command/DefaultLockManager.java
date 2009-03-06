@@ -2,6 +2,7 @@ package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.pages.Project;
 
 import java.util.List;
@@ -20,13 +21,19 @@ import java.util.Collection;
  */
 public class DefaultLockManager implements LockManager {
 
-    public DefaultLockManager() {
-    }
+    private Service service;
 
     /**
      * The managed locks.
      */
     private Map<Long, Lock> locks = new HashMap<Long, Lock>();
+
+    public DefaultLockManager() {
+    }
+
+    public void setService( Service service ) {
+        this.service = service;
+    }
 
     /**
      * {@inheritDoc}
@@ -34,7 +41,7 @@ public class DefaultLockManager implements LockManager {
     public Lock grabLockOn( long id ) throws LockingException, NotFoundException {
         synchronized ( this ) {
             // Throws NotFoundException is id is stale
-            ModelObject mo = Project.service().find( ModelObject.class, id );
+            ModelObject mo = service.find( ModelObject.class, id );
             Lock lock = getLock( id );
             if ( lock != null ) {
                 String userName = Project.getUserName();
@@ -157,7 +164,7 @@ public class DefaultLockManager implements LockManager {
         Lock lock = locks.get( id );
         if ( lock != null ) {
             try {
-                Project.service().find( ModelObject.class, id );
+                service.find( ModelObject.class, id );
             }
             catch ( NotFoundException e ) {
                 // Clean up obsolete lock

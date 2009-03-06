@@ -22,15 +22,16 @@ public class CollapsedIssuePanel extends Panel {
     /**
      * Issue in panel
      */
-    private Issue issue;
+    private IModel<Issue> model;
 
     public CollapsedIssuePanel( String id, IModel<Issue> model ) {
         super( id );
-        this.issue = model.getObject();
+        this.model = model;
         init();
     }
 
     private void init() {
+        final Issue issue = model.getObject();
         Label label;
         Label suggestion;
         if ( issue.isDetected() ) {

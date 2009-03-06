@@ -1,8 +1,8 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Service;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,6 +16,31 @@ public class TestDefaultCommander extends AbstractChannelsTest {
     private Commander commander;
     private LockManager lockManager;
 
+    public class HelloCommand extends AbstractCommand {
+
+
+        public HelloCommand( String greeting ) {
+            addArgument( "greeting", greeting );
+        }
+
+        public String getName() {
+            return "Hello";
+        }
+
+        public Object execute( Service service ) throws CommandException {
+            System.out.println( getArgument( "greeting" ) + "! says " + getUserName() );
+            return true;
+        }
+
+        public boolean isUndoable() {
+            return true;
+        }
+
+        public Command makeUndoCommand( Service service ) throws CommandException {
+            return makeCommand( "not " + getArgument( "greeting" ) );
+        }
+    }
+
     protected void setUp() {
         super.setUp();
         commander = project.getCommander();
@@ -23,51 +48,16 @@ public class TestDefaultCommander extends AbstractChannelsTest {
         commander.reset();
     }
 
-    private AbstractCommand makeCommand() {
-       AbstractCommand command = new AbstractCommand() {
-            public String getName() {
-                return "Simple command";
-            }
-
-            public Object execute() throws CommandException {
-                System.out.println( "Hello! says " + getUserName());
-                return true;
-            }
-
-            public boolean isUndoable() {
-                return true;
-            }
-
-            public Command makeUndoCommand() {
-                return new AbstractCommand() {
-                    public String getName() {
-                        return "Undo simple command";  //To change body of implemented methods use File | Settings | File Templates.
-                    }
-
-                    public Object execute() throws CommandException {
-                        System.out.println( "Goodbye! says " + getUserName());
-                        return true;
-                    }
-
-                    public boolean isUndoable() {
-                        return false;
-                    }
-
-                    public Command makeUndoCommand() {
-                        return null;
-                    }
-                };
-            }
-        };
+    private AbstractCommand makeCommand( String greeting ) {
+        AbstractCommand command = new HelloCommand( greeting );
         Scenario scenario = project.getService().getDefaultScenario();
         command.needLockOn( scenario );
         command.addConflicting( scenario );
-
         return command;
     }
 
     public void testExecuteSimpleCommand() {
-        AbstractCommand command = makeCommand();
+        AbstractCommand command = makeCommand( "hello" );
         try {
             assertTrue( commander.canDo( command ) );
             assertFalse( commander.canUndo() );
@@ -85,37 +75,38 @@ public class TestDefaultCommander extends AbstractChannelsTest {
     }
 
     public void testCommandLocking() throws Exception {
-        AbstractCommand command = makeCommand();
+        AbstractCommand command = makeCommand( "hello" );
         Scenario scenario = project.getService().getDefaultScenario();
         Lock lock = lockManager.grabLockOn( scenario.getId() );
         lock.setUserName( "bob" );
         command.needLockOn( scenario );
-        assertFalse( commander.canDo( command ));
+        assertFalse( commander.canDo( command ) );
         try {
             commander.doCommand( command );
         }
-        catch( CommandException e) {
+        catch ( CommandException e ) {
             lockManager.releaseAllLocks( "bob" );
-            assertTrue( commander.canDo( command ));
+            assertTrue( commander.canDo( command ) );
             commander.doCommand( command );
             lockManager.grabLockOn( scenario.getId() );
             try {
                 commander.doCommand( command );
             }
-            catch( CommandException exc) {
+            catch ( CommandException exc ) {
                 fail();
             }
         }
     }
 
     public void testUndoingConflicts() throws Exception {
-        AbstractCommand command = makeCommand();
-        AbstractCommand otherUserCommand = makeCommand();
+        AbstractCommand command = makeCommand( "hello" );
+        AbstractCommand otherUserCommand = makeCommand( "hello" );
         otherUserCommand.setUserName( "bob" );
         commander.doCommand( command );
-        Thread.sleep( 600 );
+        Thread.sleep( 10 );
         commander.doCommand( otherUserCommand );
         assertFalse( commander.canUndo() );
+        Thread.sleep( 10 );
         commander.doCommand( command );
         assertTrue( commander.canUndo() );
         commander.undo();
@@ -124,14 +115,16 @@ public class TestDefaultCommander extends AbstractChannelsTest {
         commander.redo();
         assertFalse( commander.canRedo() );
         assertTrue( commander.canUndo() );
+        Thread.sleep( 10 );
         commander.undo();
+        Thread.sleep( 10 );
         commander.doCommand( otherUserCommand );
         assertFalse( commander.canRedo() );
         try {
             commander.redo();
             fail();
         }
-        catch( CommandException e) {
+        catch ( CommandException e ) {
             // ok
         }
     }

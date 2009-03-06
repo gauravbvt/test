@@ -1,5 +1,7 @@
 package com.mindalliance.channels.command;
 
+import com.mindalliance.channels.Service;
+
 import java.util.Collection;
 
 /**
@@ -15,11 +17,17 @@ public class DefaultCommander implements Commander {
 
     private History history = new History();
 
+    private Service service;
+
     public DefaultCommander() {
     }
 
     public void setLockManager( LockManager lockManager ) {
         this.lockManager = lockManager;
+    }
+
+    public void setService( Service service ) {
+        this.service = service;
     }
 
     /**
@@ -37,11 +45,11 @@ public class DefaultCommander implements Commander {
         if ( command.isAuthorized() ) {
             try {
                 Collection<Lock> grabbedLocks = lockManager.grabLocksOn( command.getLockingSet() );
-                result = command.execute();
+                result = command.execute( service );
                 lockManager.releaseLocks( grabbedLocks );
             }
             catch ( LockingException e ) {
-                throw new CommandException( e.getMessage() );
+                throw new CommandException( e.getMessage(), e );
             }
             catch ( Exception e ) {
                 e.printStackTrace();
@@ -62,13 +70,14 @@ public class DefaultCommander implements Commander {
             Memento memento = history.getUndo();
             if ( memento != null ) {
                 Command command = memento.getCommand();
-                if ( command.isUndoable() )
+                if ( command.isUndoable() ) {
                     try {
-                        canUndo = canDo( command.makeUndoCommand() );
+                        canUndo = canDo( command.makeUndoCommand( service ) );
                     } catch ( CommandException e ) {
                         e.printStackTrace();
                         canUndo = false;
                     }
+                }
             }
             return canUndo;
         }
@@ -79,8 +88,20 @@ public class DefaultCommander implements Commander {
      */
     public boolean canRedo() {
         synchronized ( this ) {
+            boolean canRedo = false;
             Memento memento = history.getRedo();
-            return ( memento != null && canDo( memento.getCommand() ) );
+            if ( memento != null ) {
+                Command command = memento.getCommand();
+                if ( command.isUndoable() ) {
+                    try {
+                        canRedo = canDo( command.makeUndoCommand( service ) );
+                    } catch ( CommandException e ) {
+                        e.printStackTrace();
+                        canRedo = false;
+                    }
+                }
+            }
+            return canRedo;
         }
     }
 
@@ -101,10 +122,12 @@ public class DefaultCommander implements Commander {
      */
     public void undo() throws CommandException {
         synchronized ( this ) {
+            // Get memento of command to undo
             Memento memento = history.getUndo();
             if ( memento == null ) throw new CommandException( "Nothing can be undone right now." );
-            execute( memento.getCommand().makeUndoCommand() );
-            history.recordUndone( memento );
+            Command undoCommand = memento.getCommand().makeUndoCommand( service );
+            execute( undoCommand );
+            history.recordUndone( memento, undoCommand );
         }
     }
 
@@ -113,10 +136,13 @@ public class DefaultCommander implements Commander {
      */
     public void redo() throws CommandException {
         synchronized ( this ) {
+            // Get memento of undoing command
             Memento memento = history.getRedo();
             if ( memento == null ) throw new CommandException( "Nothing can be redone right now." );
-            execute( memento.getCommand() );
-            history.recordRedone( memento );
+            // undo the undoing
+            Command redoCommand = memento.getCommand().makeUndoCommand( service );
+            execute( redoCommand );
+            history.recordRedone( memento, redoCommand );
         }
     }
 

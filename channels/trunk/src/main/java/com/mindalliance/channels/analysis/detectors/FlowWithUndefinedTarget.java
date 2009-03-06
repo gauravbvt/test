@@ -52,6 +52,6 @@ public class FlowWithUndefinedTarget extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     public String getTestedProperty() {
-        return "target";
+        return null;
     }
 }
