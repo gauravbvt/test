@@ -62,7 +62,8 @@ public interface Command<T> {
 
     /**
      * Get the ids of model objects that would cause a conflict in undoing/redoing
-     * the command if a more recently executed command has an intersecting conflict set.
+     * the command if a more recently executed command has an intersecting conflict set,
+     * even if all needed locks can be acquired.
      *
      * @return a set of ids (long)
      */

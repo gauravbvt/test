@@ -15,7 +15,7 @@ import com.mindalliance.channels.command.Commander;
 public class AddScenario extends AbstractCommand {
 
     public AddScenario() {
-        super();
+        
     }
 
     /**

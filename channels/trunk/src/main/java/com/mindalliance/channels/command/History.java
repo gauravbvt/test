@@ -19,8 +19,10 @@ import org.apache.commons.collections.iterators.FilterIterator;
  * Time: 2:24:34 PM
  */
 public class History {
-
-    // TODO - limit the in-memory size of done
+    /**
+     * Maximum size of the done list.
+     */
+    private static int MAX_DONE_SIZE = 100;
     /**
      * List of mementoes of done commands.
      * A new memento is added at the front of the list.
@@ -45,7 +47,7 @@ public class History {
     public void recordDone( Command command ) {
         if ( command.isMemorable() ) {
             Memento memento = new Memento( command );
-            done.add( 0, memento );
+            addToDone( memento );
         }
         clearUndone( command.getUserName() );
     }
@@ -89,7 +91,7 @@ public class History {
      */
     public void recordRedone( Memento memento, Command redoCommand ) {
         assert !memento.getCommand().isMemorable();
-        done.add( 0, new Memento( redoCommand ) );
+        addToDone( new Memento( redoCommand ) );
         undone.remove( memento );
     }
 
@@ -160,5 +162,15 @@ public class History {
     public void reset() {
         done.clear();
         undone.clear();
+    }
+
+    /**
+     * Add a memento at the head of the list and drop the last element if maximum size is exceeded.
+     *
+     * @param memento a memento
+     */
+    private void addToDone( Memento memento ) {
+        done.add( 0, memento );
+        if ( done.size() > MAX_DONE_SIZE ) done.remove( done.size() - 1 );
     }
 }
