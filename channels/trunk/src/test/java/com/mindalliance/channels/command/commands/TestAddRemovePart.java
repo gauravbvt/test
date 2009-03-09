@@ -35,7 +35,7 @@ public class TestAddRemovePart extends AbstractChannelsTest {
     }
 
     protected void tearDown() {
-        project.getService().remove( scenario );
+        service.remove( scenario );
     }
 
     public void testRemoveAddPart() throws Exception {

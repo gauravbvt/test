@@ -4,6 +4,8 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.NotFoundException;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,7 +17,7 @@ import com.mindalliance.channels.command.Commander;
 public class AddScenario extends AbstractCommand {
 
     public AddScenario() {
-        
+
     }
 
     /**
@@ -29,20 +31,27 @@ public class AddScenario extends AbstractCommand {
      * {@inheritDoc}
      */
     public Object execute( Commander commander ) throws CommandException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        Scenario scenario = commander.getService().createScenario();
+        addArgument( "scenario", scenario.getId() );
+        return scenario;
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isUndoable() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 
     /**
      * {@inheritDoc}
      */
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        try {
+            Scenario scenario = commander.getService().find( Scenario.class, (Long) get( "scenario" ) );
+            return new RemoveScenario( scenario );
+        } catch ( NotFoundException e ) {
+            throw new CommandException( "You need to refresh", e );
+        }
     }
 }

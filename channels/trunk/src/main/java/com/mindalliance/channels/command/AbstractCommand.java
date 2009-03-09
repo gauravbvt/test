@@ -79,7 +79,7 @@ public abstract class AbstractCommand implements Command {
      * @param key a string
      * @param val an object
      */
-    protected void addArgument( String key, Object val ) {
+    public void addArgument( String key, Object val ) {
         arguments.put( key, val );
     }
 

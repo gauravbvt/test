@@ -90,7 +90,6 @@ public class History {
      * @param redoCommand the command that undoes an undoing command
      */
     public void recordRedone( Memento memento, Command redoCommand ) {
-        assert !memento.getCommand().isMemorable();
         addToDone( new Memento( redoCommand ) );
         undone.remove( memento );
     }
