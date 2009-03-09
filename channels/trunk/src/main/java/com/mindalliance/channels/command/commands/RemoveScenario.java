@@ -55,9 +55,9 @@ public class RemoveScenario extends AbstractCommand {
             service.remove( scenario );
             return null;
         } catch ( NotFoundException e ) {
-            throw new CommandException("Failed to remove scenario.", e);
+            throw new CommandException( "Failed to remove scenario.", e );
         } catch ( IOException e ) {
-            throw new CommandException("Failed to remove scenario.", e);
+            throw new CommandException( "Failed to remove scenario.", e );
         }
     }
 
@@ -72,14 +72,13 @@ public class RemoveScenario extends AbstractCommand {
      * {@inheritDoc}
      */
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        String xml = (String)get("xml");
-        if (xml != null) {
+        String xml = (String) get( "xml" );
+        if ( xml != null ) {
             RestoreScenario restoreScenario = new RestoreScenario();
-            restoreScenario.addArgument( "xml", xml);
+            restoreScenario.addArgument( "xml", xml );
             return restoreScenario;
-        }
-        else {
-            throw new CommandException("Can not restore scenario.");
+        } else {
+            throw new CommandException( "Can not restore scenario." );
         }
     }
 }

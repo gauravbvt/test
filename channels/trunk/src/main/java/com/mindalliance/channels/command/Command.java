@@ -127,4 +127,10 @@ public interface Command<T> {
      * @return a boolean
      */
     boolean noLockRequired();
+
+    /**
+     * Set arguments.
+     * @param fs attributes
+     */
+    void setArguments( Map<String, Object> fs );
 }

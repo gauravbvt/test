@@ -60,7 +60,8 @@ public class RemovePart extends AbstractCommand {
             Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
             Part part = (Part) scenario.getNode( (Long) get( "part" ) );
             // Double check in case this is an undo-undo
-            if ( !commander.canDo( this ) ) throw new CommandException( "Someone is making changes." );
+            if ( !commander.canDo( this ) )
+                throw new CommandException( "Someone is making changes." );
             addArgument( "partState", CommandUtils.getPartState( part ) );
             removePart( part, service );
             ignoreLock( (Long) get( "part" ) );
@@ -109,14 +110,13 @@ public class RemovePart extends AbstractCommand {
             }
             // Recreate disconnected flows where possible
             List<Map<String, Object>> removed = (List<Map<String, Object>>) get( "removedFlows" );
-            AbstractCommand command;
+            Command command;
             for ( Map<String, Object> fs : removed ) {
                 Long otherId = (Long) fs.get( "other" );
                 if ( otherId != null ) {
                     // other is a part (part to part flow)
                     command = new ConnectWithFlow();
-                 }
-                else {
+                } else {
                     // other node is a connector
                     boolean isOutcome = (Boolean) fs.get( "isOutcome" );
                     if ( isOutcome ) {
@@ -126,14 +126,15 @@ public class RemovePart extends AbstractCommand {
                     }
                 }
                 command.setArguments( fs );
-                 // missing arguments scenario and part
-                 multi.addCommand( command );
+                // missing arguments scenario and part
+                multi.addCommand( command );
                 // Use the result of command addPart to supply arguments to connectWithFlow
                 multi.addLink( addPart, "id", command, "part" );
                 multi.addLink( addPart, "scenario.id", command, "scenario" );
             }
 
-            // the undo of this multi is a RemovePart with argument part = id of part created by multi's addPart
+            // the undo of this multi is a RemovePart with argument
+            // part = id of part created by multi's addPart
             Command undoUndo = new RemovePart();
             multi.addLink( addPart, "id", undoUndo, "part" );
             multi.addLink( addPart, "scenario.id", undoUndo, "scenario" );
@@ -162,11 +163,15 @@ public class RemovePart extends AbstractCommand {
             flowState.remove( "part" );
             flowState.remove( "scenario" );
             removedFlows.add( flowState );
-            // If the node to be removed is a part, preserve the outcome of the source the flow represents
+            // If the node to be removed is a part,
+            // preserve the outcome of the source the flow represents
             if ( in.isInternal()
                     && in.getSource().isPart()
-                    && !in.getSource().hasMultipleOutcomes( in.getName() ) ) {
-                Flow flow = service.connect( in.getSource(), service.createConnector( scenario ), in.getName() );
+                    && !in.getSource().hasMultipleOutcomes( in.getName() ) )
+            {
+                Flow flow = service.connect(
+                        in.getSource(),
+                        service.createConnector( scenario ), in.getName() );
                 flow.initFrom( in );
                 addedCapabilities.add( flow.getId() );
             }
@@ -178,16 +183,21 @@ public class RemovePart extends AbstractCommand {
             flowState.remove( "part" );
             flowState.remove( "scenario" );
             removedFlows.add( flowState );
-            // If the node to be removed is a part, preserve the outcome of the source the flow represents
+            // If the node to be removed is a part,
+            // preserve the outcome of the source the flow represents
             if ( out.isInternal()
                     && out.getTarget().isPart()
-                    && !out.getSource().hasMultipleRequirements( out.getName() ) ) {
-                Flow flow = service.connect( service.createConnector( scenario ), out.getTarget(), out.getName() );
+                    && !out.getSource().hasMultipleRequirements( out.getName() ) )
+            {
+                Flow flow = service.connect(
+                        service.createConnector( scenario ),
+                        out.getTarget(), out.getName() );
                 flow.initFrom( out );
                 addedNeeds.add( flow.getId() );
             }
         }
-        // Disconnects all requirements and outcomes of the part, and removes the part from the scenario.
+        // Disconnects all requirements and outcomes of the part,
+        // and removes the part from the scenario.
         scenario.removeNode( part );
         addArgument( "addedNeeds", addedNeeds );
         addArgument( "addedCapabilities", addedCapabilities );

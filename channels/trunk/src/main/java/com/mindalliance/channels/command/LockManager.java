@@ -1,6 +1,5 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.NotFoundException;
 
 import java.util.Collection;
 
@@ -21,9 +20,8 @@ public interface LockManager {
      * @param id a model object id
      * @return a lock
      * @throws LockingException if lock could not be grabbed
-     * @throws com.mindalliance.channels.NotFoundException if model object with id not found
      */
-    Lock grabLockOn( long id ) throws LockingException, NotFoundException;
+    Lock grabLockOn( long id ) throws LockingException;
 
     /**
      * Release the user's lock on a model object.
@@ -40,9 +38,8 @@ public interface LockManager {
      * @param ids a collection of model object ids
      * @return a collection of locks actually grabbed or upgraded
      * @throws LockingException if any of the locks could not be grabbed
-     * @throws com.mindalliance.channels.NotFoundException if model object with id not found
      */
-    Collection<Lock> grabLocksOn( Collection<Long> ids ) throws LockingException, NotFoundException;
+    Collection<Lock> grabLocksOn( Collection<Long> ids ) throws LockingException;
 
     /**
      * Release all listed locks unconditionally, failing silently if a lock is not active.

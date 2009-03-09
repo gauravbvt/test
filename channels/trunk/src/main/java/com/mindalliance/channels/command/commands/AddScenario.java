@@ -48,7 +48,9 @@ public class AddScenario extends AbstractCommand {
      */
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
         try {
-            Scenario scenario = commander.getService().find( Scenario.class, (Long) get( "scenario" ) );
+            Scenario scenario = commander.getService().find(
+                    Scenario.class,
+                    (Long) get( "scenario" ) );
             return new RemoveScenario( scenario );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh", e );

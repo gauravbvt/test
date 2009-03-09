@@ -25,46 +25,55 @@ public class MultiCommand extends AbstractCommand {
      * Links between commands
      */
     private List<Link> links = new ArrayList<Link>();
-
+    /**
+     * List of executed sub-commands.
+     */
     private List<Command> executed = new ArrayList<Command>();
 
     /**
      * A source-sink link between two commands.
      */
-    private class Link {
+    private final class Link {
         /**
          * Command which result is used as argument value in sink command.
          */
-        Command sourceCommand;
+        private Command sourceCommand;
         /**
          * Property path into source command's result. Null if result itself is to be used.
          */
-        String resultProperty;
+        private String resultProperty;
         /**
-         * Command with an argument to be set from the result of the source command's prior execution.
+         * Command with an argument to be set from the result of
+         * the source command's prior execution.
          */
-        Command sinkCommand;
+        private Command sinkCommand;
         /**
          * Name of argument to set in sink command.
          */
-        String argumentName;
+        private String argumentName;
+
+        private Link() {
+        }
 
         /**
          * Process result from command if applicable.
+         *
          * @param command a command
-         * @param result an object
+         * @param result  an object
          */
         private void process( Command command, Object result ) {
-            if (result != null && command == sourceCommand ) {
+            if ( result != null && command == sourceCommand ) {
                 Object value;
                 try {
-                    value = resultProperty != null ? PropertyUtils.getProperty( result, resultProperty ) : result;
+                    value = resultProperty != null
+                            ? PropertyUtils.getProperty( result, resultProperty )
+                            : result;
                 } catch ( IllegalAccessException e ) {
-                    throw new RuntimeException(e);
+                    throw new RuntimeException( e );
                 } catch ( InvocationTargetException e ) {
-                    throw new RuntimeException(e);
-               } catch ( NoSuchMethodException e ) {
-                    throw new RuntimeException(e);
+                    throw new RuntimeException( e );
+                } catch ( NoSuchMethodException e ) {
+                    throw new RuntimeException( e );
                 }
                 sinkCommand.set( argumentName, value );
             }
@@ -88,7 +97,7 @@ public class MultiCommand extends AbstractCommand {
         for ( Command command : commands ) {
             try {
                 Object result = commander.doCommand( command );
-                for (Link link : links) link.process( command, result );
+                for ( Link link : links ) link.process( command, result );
                 executed.add( command );
             }
             catch ( CommandException e ) {
@@ -120,8 +129,8 @@ public class MultiCommand extends AbstractCommand {
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
         MultiCommand undoMulti = new MultiCommand();
         // Add undoes of executed commands in reverse order of their execution.
-        for (int i = executed.size()-1; i >= 0; i-- ) {
-            Command command = executed.get(i);
+        for ( int i = executed.size() - 1; i >= 0; i-- ) {
+            Command command = executed.get( i );
             Command undoCommand = command.makeUndoCommand( commander );
             undoMulti.addCommand( undoCommand );
             // TODO - what about links?
@@ -141,10 +150,11 @@ public class MultiCommand extends AbstractCommand {
 
     /**
      * Add a link between commands
-     * @param sourceCommand the source command
+     *
+     * @param sourceCommand  the source command
      * @param resultProperty the property path applied to result of source command execution
-     * @param sinkCommand the sink command
-     * @param argumentName the name of the argument to be set in sink command
+     * @param sinkCommand    the sink command
+     * @param argumentName   the name of the argument to be set in sink command
      */
     public void addLink(
             Command sourceCommand,

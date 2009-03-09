@@ -21,7 +21,7 @@ public class RemoveNeed extends AbstractCommand {
 
     public RemoveNeed( Flow flow ) {
         super();
-        setArguments( CommandUtils.getFlowState( flow ));
+        setArguments( CommandUtils.getFlowState( flow ) );
         addArgument( "flow", flow.getId() );
     }
 
@@ -43,7 +43,7 @@ public class RemoveNeed extends AbstractCommand {
             flow.disconnect();
             return null;
         } catch ( NotFoundException e ) {
-            throw new CommandException("You need to refresh.", e);
+            throw new CommandException( "You need to refresh.", e );
         }
     }
 

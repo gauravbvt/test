@@ -22,7 +22,7 @@ public class History {
     /**
      * Maximum size of the done list.
      */
-    private static int MAX_DONE_SIZE = 100;
+    private static int MaxDoneSize = 100;
     /**
      * List of mementoes of done commands.
      * A new memento is added at the front of the list.
@@ -134,7 +134,8 @@ public class History {
             Memento other = moreRecent.next();
             if ( other != memento && !CollectionUtils.intersection(
                     memento.getCommand().getConflictSet(),
-                    other.getCommand().getConflictSet() ).isEmpty() ) {
+                    other.getCommand().getConflictSet() ).isEmpty() )
+            {
                 return true;
             }
         }
@@ -146,7 +147,7 @@ public class History {
         return new FilterIterator( done.iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {
                 Memento memento = (Memento) obj;
-                return ( memento.getTimestamp() >= timestamp );
+                return memento.getTimestamp() >= timestamp;
             }
         } );
     }
@@ -158,6 +159,9 @@ public class History {
         return null;
     }
 
+    /**
+     * Reset history.
+     */
     public void reset() {
         done.clear();
         undone.clear();
@@ -170,6 +174,6 @@ public class History {
      */
     private void addToDone( Memento memento ) {
         done.add( 0, memento );
-        if ( done.size() > MAX_DONE_SIZE ) done.remove( done.size() - 1 );
+        if ( done.size() > MaxDoneSize ) done.remove( done.size() - 1 );
     }
 }

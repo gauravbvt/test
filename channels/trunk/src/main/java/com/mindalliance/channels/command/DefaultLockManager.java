@@ -20,7 +20,9 @@ import java.util.Collection;
  * Time: 9:33:48 AM
  */
 public class DefaultLockManager implements LockManager {
-
+    /**
+     * Service.
+     */
     private Service service;
 
     /**
@@ -38,22 +40,27 @@ public class DefaultLockManager implements LockManager {
     /**
      * {@inheritDoc}
      */
-    public Lock grabLockOn( long id ) throws LockingException, NotFoundException {
+    public Lock grabLockOn( long id ) throws LockingException {
         synchronized ( this ) {
             // Throws NotFoundException is id is stale
-            ModelObject mo = service.find( ModelObject.class, id );
-            Lock lock = getLock( id );
-            if ( lock != null ) {
-                String userName = Project.getUserName();
-                if ( !lock.isOwnedBy( userName ) ) {
-                    throw new LockingException( userName + " is making changes to " + mo.getName() + "." );
+            try {
+                ModelObject mo = service.find( ModelObject.class, id );
+                Lock lock = getLock( id );
+                if ( lock != null ) {
+                    String userName = Project.getUserName();
+                    if ( !lock.isOwnedBy( userName ) ) {
+                        throw new LockingException(
+                                userName + " is making changes to " + mo.getName() + "." );
+                    }
+                    // Grab the lock
+                } else {
+                    lock = new Lock( id );
+                    addLock( lock );
                 }
-                // Grab the lock
-            } else {
-                lock = new Lock( id );
-                addLock( lock );
+                return lock;
+            } catch ( NotFoundException e ) {
+                throw new LockingException( "You need to refresh.", e );
             }
-            return lock;
         }
     }
 
@@ -70,7 +77,8 @@ public class DefaultLockManager implements LockManager {
             if ( lock != null ) {
                 String userName = Project.getUserName();
                 if ( !lock.isOwnedBy( userName ) )
-                    throw new LockingException( userName + " does not own the lock. " + userName + " does." );
+                    throw new LockingException(
+                            userName + " does not own the lock. " + userName + " does." );
                 else
                     locks.remove( id );
             }
@@ -81,7 +89,7 @@ public class DefaultLockManager implements LockManager {
     /**
      * {@inheritDoc}
      */
-    public List<Lock> grabLocksOn( Collection<Long> ids ) throws LockingException, NotFoundException {
+    public List<Lock> grabLocksOn( Collection<Long> ids ) throws LockingException {
         synchronized ( this ) {
             StringBuilder sb = new StringBuilder();
             List<Lock> grabbedLocks = new ArrayList<Lock>();

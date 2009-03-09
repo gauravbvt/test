@@ -1,6 +1,5 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Service;
 
 /**

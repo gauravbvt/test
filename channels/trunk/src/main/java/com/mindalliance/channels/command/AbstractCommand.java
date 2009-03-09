@@ -68,8 +68,8 @@ public abstract class AbstractCommand implements Command {
         args.putAll( arguments );
         return args;
     }
-
-    public void setArguments( Map<String, Object> args ) {
+    @SuppressWarnings("unchecked")
+    public void setArguments( Map args ) {
         arguments = args;
     }
 
@@ -196,7 +196,13 @@ public abstract class AbstractCommand implements Command {
     public boolean noLockRequired() {
         return false;
     }
-    
+
+    /**
+     * Make an undo command if one not already set.
+     * @param commander a a commander
+     * @return a command
+     * @throws CommandException if failed to make undo command
+     */
     public Command makeUndoCommand( Commander commander ) throws CommandException {
         if ( undoCommand != null )
             return undoCommand;
@@ -204,6 +210,12 @@ public abstract class AbstractCommand implements Command {
             return doMakeUndoCommand( commander );
     }
 
+    /**
+     * Make an undo command.
+     * @param commander a a commander
+     * @return a command
+     * @throws CommandException if failed to make undo command
+     */
     protected abstract Command doMakeUndoCommand( Commander commander ) throws CommandException;
 
     /**

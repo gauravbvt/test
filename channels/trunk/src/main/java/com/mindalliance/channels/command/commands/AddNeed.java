@@ -49,7 +49,9 @@ public class AddNeed extends AbstractCommand {
             Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
             Part part = (Part) scenario.getNode( (Long) get( "part" ) );
             if ( part == null ) throw new NotFoundException();
-            flow = service.connect( service.createConnector( scenario ), part, (String) get( "name" ) );
+            flow = service.connect(
+                    service.createConnector( scenario ),
+                    part, (String) get( "name" ) );
             Map<String, Object> flowAttributes = (Map<String, Object>) get( "attributes" );
             if ( flowAttributes != null ) {
                 CommandUtils.initialize( flow, flowAttributes );

@@ -24,7 +24,12 @@ import org.apache.commons.beanutils.PropertyUtils;
  * Date: Mar 6, 2009
  * Time: 3:42:39 PM
  */
-public class CommandUtils {
+public final class CommandUtils {
+
+    private CommandUtils() {
+
+    }
+
     /**
      * Captures the state of a flow minus the nodes
      *
@@ -85,7 +90,7 @@ public class CommandUtils {
                 put( "scenario", part.getScenario().getId() );
                 put( "part", part.getId() );
                 put( "otherScenario", other.getScenario().getId() );
-                if (!other.isConnector()) put( "other", other.getId() );
+                if ( !other.isConnector() ) put( "other", other.getId() );
                 put( "attributes", getFlowAttributes( flow ) );
             }
         };
@@ -157,20 +162,21 @@ public class CommandUtils {
 
     /**
      * Initialize an object from attributes
-     * @param object an object
+     *
+     * @param object     an object
      * @param attributes attributes
      */
     public static void initialize( Object object, Map<String, Object> attributes ) {
-        for (String property : attributes.keySet()) {
+        for ( String property : attributes.keySet() ) {
             Object value = attributes.get( property );
             try {
                 PropertyUtils.setProperty( object, property, value );
             } catch ( IllegalAccessException e ) {
-                throw new RuntimeException(e);
+                throw new RuntimeException( e );
             } catch ( InvocationTargetException e ) {
-                throw new RuntimeException(e);
+                throw new RuntimeException( e );
             } catch ( NoSuchMethodException e ) {
-                throw new RuntimeException(e);
+                throw new RuntimeException( e );
             }
         }
     }

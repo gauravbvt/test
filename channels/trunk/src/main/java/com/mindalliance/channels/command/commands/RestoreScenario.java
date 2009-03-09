@@ -21,6 +21,11 @@ import java.io.IOException;
  * Time: 11:22:35 AM
  */
 public class RestoreScenario extends AbstractCommand {
+
+    public RestoreScenario() {
+
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -36,11 +41,12 @@ public class RestoreScenario extends AbstractCommand {
         String xml = (String) get( "xml" );
         if ( xml != null ) {
             try {
-                Scenario scenario = importer.importScenario( new ByteArrayInputStream( xml.getBytes() ) );
+                Scenario scenario = importer.importScenario(
+                        new ByteArrayInputStream( xml.getBytes() ) );
                 addArgument( "scenario", scenario.getId() );
                 return scenario;
             } catch ( IOException e ) {
-                throw new CommandException("Can't restore scenario.", e);
+                throw new CommandException( "Can't restore scenario.", e );
             }
         } else {
             throw new CommandException( "Can't restore scenario." );
@@ -59,10 +65,12 @@ public class RestoreScenario extends AbstractCommand {
      */
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
         try {
-            Scenario scenario = commander.getService().find( Scenario.class, (Long)get("scenario"));
+            Scenario scenario = commander.getService().find(
+                    Scenario.class,
+                    (Long) get( "scenario" ) );
             return new RemoveScenario( scenario );
         } catch ( NotFoundException e ) {
-            throw new CommandException("Can't undo.", e);
+            throw new CommandException( "Can't undo.", e );
         }
     }
 

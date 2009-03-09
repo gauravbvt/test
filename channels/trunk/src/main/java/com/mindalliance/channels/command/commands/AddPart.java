@@ -26,51 +26,50 @@ public class AddPart extends AbstractCommand {
     }
 
     /**
-      * {@inheritDoc}
-      */
+     * {@inheritDoc}
+     */
     public String getName() {
         return "add part";
     }
 
     /**
-      * {@inheritDoc}
-      */
+     * {@inheritDoc}
+     */
     public Part execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
         try {
-            Scenario scenario = service.find( Scenario.class, (Long) get("scenario") );
+            Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
             Part part = service.createPart( scenario );
             addArgument( "part", part.getId() );
             return part;
         } catch ( NotFoundException e ) {
-            throw new CommandException( "You need to refresh", e);
+            throw new CommandException( "You need to refresh", e );
         }
     }
 
     /**
-      * {@inheritDoc}
-      */
+     * {@inheritDoc}
+     */
     public boolean isUndoable() {
         return true;
     }
 
     /**
-      * {@inheritDoc}
-      */
+     * {@inheritDoc}
+     */
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        Service service = commander.getService();        
+        Service service = commander.getService();
         try {
-            Scenario scenario = service.find( Scenario.class, (Long) get("scenario") );
-            Long partId = (Long) get("part");
-            if (partId == null) {
-                throw new CommandException( "Can't undo.");
-            }
-            else {
-                Part part = (Part)scenario.getNode( (Long) get("part") );
+            Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
+            Long partId = (Long) get( "part" );
+            if ( partId == null ) {
+                throw new CommandException( "Can't undo." );
+            } else {
+                Part part = (Part) scenario.getNode( (Long) get( "part" ) );
                 return new RemovePart( part );
             }
         } catch ( NotFoundException e ) {
-            throw new CommandException( "Can't undo", e);
+            throw new CommandException( "Can't undo", e );
         }
     }
 }
