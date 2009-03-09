@@ -4,9 +4,9 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Place;
 import com.mindalliance.channels.pages.ModelObjectLink;
+import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.TextField;
 
@@ -57,7 +57,7 @@ public class OrganizationPanel extends ModelObjectPanel {
         } else {
             Organization parent = org.getParent();
             if ( parent == null || COMPARATOR.compare( name, parent.getName() ) != 0 ) {
-                org.setParent( Organization.named( name ) );
+                org.setParent( Project.service().findOrCreate( Organization.class, name ) );
             }
         }
     }
@@ -84,7 +84,7 @@ public class OrganizationPanel extends ModelObjectPanel {
         } else {
             Place location = org.getLocation();
             if ( location == null || COMPARATOR.compare( name, location.getName() ) != 0 ) {
-                org.setLocation( Place.named( name ) );
+                org.setLocation( Project.service().findOrCreate( Place.class, name ) );
             }
         }
 

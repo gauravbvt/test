@@ -10,10 +10,8 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Scenario;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.slf4j.LoggerFactory;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.orm.jpa.support.JpaDaoSupport;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -21,7 +19,7 @@ import java.util.List;
 /**
  * Persistence through Hibernate.
  */
-public class HibernateDao extends HibernateDaoSupport implements Dao {
+public class HibernateDao extends JpaDaoSupport implements Dao {
 
     public HibernateDao() {
     }
@@ -34,7 +32,7 @@ public class HibernateDao extends HibernateDaoSupport implements Dao {
      * @throws NotFoundException when not found
      */
     public Scenario findScenario( long id ) throws NotFoundException {
-        Scenario result = (Scenario) getHibernateTemplate().get( Scenario.class, id  );
+        Scenario result = getJpaTemplate().find( Scenario.class, id  );
         if ( result == null )
             throw new NotFoundException();
         return result;
@@ -42,8 +40,9 @@ public class HibernateDao extends HibernateDaoSupport implements Dao {
 
     /** {@inheritDoc} */
     @SuppressWarnings( { "unchecked" } )
-    public <T extends ModelObject> List<T> getAll( Class<T> clazz ) {
-        return getHibernateTemplate().find( "from " + clazz.getSimpleName() );
+    public <T extends ModelObject> List<T> list( Class<T> clazz ) {
+        return getJpaTemplate().find(
+                MessageFormat.format( "from {0}", clazz.getSimpleName() ) );              // NON-NLS
     }
 
     /** {@inheritDoc} */
@@ -51,7 +50,7 @@ public class HibernateDao extends HibernateDaoSupport implements Dao {
         LoggerFactory.getLogger( getClass() ).debug(
             MessageFormat.format(
                 "Adding {0} {1}", object.getClass().getSimpleName(), object ) );
-        getHibernateTemplate().save( object );
+        getJpaTemplate().persist( object );
     }
 
     /** {@inheritDoc} */
@@ -59,35 +58,30 @@ public class HibernateDao extends HibernateDaoSupport implements Dao {
         if ( object instanceof Scenario )
             remove( (Scenario) object );
         else
-            getHibernateTemplate().delete( object );
+            getJpaTemplate().remove( object );
     }
 
     /**
      * Delete a scenario. Will not delete the last scenario (silently succeeds).
-     *
      * @param scenario the scenario to delete
      */
     private void remove( Scenario scenario ) {
-        if ( getScenarioCount() > 1 )
-            getHibernateTemplate().delete( scenario );
+        if ( getScenarioCount() > 1L )
+            getJpaTemplate().remove( scenario );
     }
 
     /** {@inheritDoc} */
     public long getScenarioCount() {
-        Session session = getSession( true );
-        try {
-            return (Long) session.createQuery( "select count(*) from Scenario" ).uniqueResult();
 
-        } catch ( HibernateException ex ) {
-            throw convertHibernateAccessException( ex );
-        }
+        return (Long) getJpaTemplate()
+                .find( "select count(*) from Scenario"  ).get( 0 );                       // NON-NLS
     }
 
     /** {@inheritDoc} */
     public Part createPart( Scenario scenario ) {
         Part part = new Part();
         part.setScenario( scenario );
-        getHibernateTemplate().save( part );
+        getJpaTemplate().persist( part );
         return part;
     }
 
@@ -95,35 +89,40 @@ public class HibernateDao extends HibernateDaoSupport implements Dao {
     public Connector createConnector( Scenario scenario ) {
         Connector connector = new Connector();
         connector.setScenario( scenario );
-        getHibernateTemplate().save( connector );
+        getJpaTemplate().persist( connector );
         return connector;
     }
 
     /** {@inheritDoc} */
     public ExternalFlow createExternalFlow( Node source, Node target, String name ) {
         ExternalFlow externalFlow = new ExternalFlow( source, target, name );
-        getHibernateTemplate().save( externalFlow );
+        getJpaTemplate().persist( externalFlow );
         return externalFlow;
     }
 
     /** {@inheritDoc} */
     public InternalFlow createInternalFlow( Node source, Node target, String name ) {
         InternalFlow internalFlow = new InternalFlow( source, target, name );
-        getHibernateTemplate().save( internalFlow );
+        getJpaTemplate().persist( internalFlow );
         return internalFlow;
     }
 
     /** {@inheritDoc} */
     @SuppressWarnings( { "unchecked" } )
     public <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException {
-        T result = (T) getHibernateTemplate().get( clazz, id );
+        T result = getJpaTemplate().find( clazz, id );
         if ( result == null )
             throw new NotFoundException();
         return result;
     }
 
     /** {@inheritDoc} */
-    public boolean isPermanent( ResourceSpec resourceSpec ) {
-        return !getHibernateTemplate().getEntityInterceptor().isTransient( resourceSpec );
+    @SuppressWarnings( { "unchecked" } )
+    public <T extends ModelObject> T find( Class<T> clazz, String name ) {
+        List<T> list = (List<T>) getJpaTemplate().find(
+                MessageFormat.format( "from {0} where name = ?",                          // NON-NLS
+                                      clazz.getSimpleName() ),
+                name );
+        return list.isEmpty() ? null : list.get( 0 );
     }
 }

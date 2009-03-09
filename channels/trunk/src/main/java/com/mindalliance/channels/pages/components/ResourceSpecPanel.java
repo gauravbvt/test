@@ -61,14 +61,20 @@ public class ResourceSpecPanel extends Panel {
         Form resourceSpecForm = new Form( "resourceSpec-form" ) {
             protected void onSubmit() {
                 ResourceSpec newResourceSpec = new ResourceSpec();
-                newResourceSpec.setActor( Actor.named(
-                        actorNameField.getDefaultModelObjectAsString().trim() ) );
-                newResourceSpec.setRole( Role.named(
-                        roleNameField.getDefaultModelObjectAsString().trim() ) );
-                newResourceSpec.setOrganization( Organization.named(
-                        orgNameField.getDefaultModelObjectAsString().trim() ) );
-                newResourceSpec.setJurisdiction( Place.named(
-                        jurNameField.getDefaultModelObjectAsString().trim() ) );
+                newResourceSpec.setActor(
+                        Project.service().findOrCreate(
+                                Actor.class,
+                                actorNameField.getDefaultModelObjectAsString().trim() ) );
+                newResourceSpec.setRole(
+                        Project.service().findOrCreate(
+                                Role.class, roleNameField.getDefaultModelObjectAsString().trim() ) );
+                newResourceSpec.setOrganization(
+                        Project.service().findOrCreate(
+                                Organization.class,
+                                orgNameField.getDefaultModelObjectAsString().trim() ) );
+                newResourceSpec.setJurisdiction(
+                        Project.service().findOrCreate(
+                                Place.class, jurNameField.getDefaultModelObjectAsString().trim() ) );
                 newResourceSpec.setChannels( ( (Channelable) channelsPanel.getDefaultModelObject() ).getEffectiveChannels() );
                 if ( !newResourceSpec.isAnyone() ) {
                     getService().addOrUpdate( newResourceSpec );

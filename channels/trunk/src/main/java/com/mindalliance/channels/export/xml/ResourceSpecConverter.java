@@ -13,6 +13,7 @@ import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Place;
 import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.pages.Project;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -72,13 +73,21 @@ public class ResourceSpecConverter implements Converter {
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "actor" ) ) {
-                resourceSpec.setActor( Actor.named( reader.getValue() ) );
+                resourceSpec.setActor(
+                        Project.service().findOrCreate(
+                                Actor.class, reader.getValue() ) );
             } else if ( nodeName.equals( "role" ) ) {
-                resourceSpec.setRole( Role.named( reader.getValue() ) );
+                resourceSpec.setRole(
+                        Project.service().findOrCreate(
+                                Role.class, reader.getValue() ) );
             } else if ( nodeName.equals( "organization" ) ) {
-                resourceSpec.setOrganization( Organization.named( reader.getValue() ) );
+                resourceSpec.setOrganization(
+                        Project.service().findOrCreate(
+                                Organization.class, reader.getValue() ) );
             } else if ( nodeName.equals( "jurisdiction" ) ) {
-                resourceSpec.setJurisdiction( Place.named( reader.getValue() ) );
+                resourceSpec.setJurisdiction(
+                        Project.service().findOrCreate(
+                                Place.class, reader.getValue() ) );
             } else if ( nodeName.equals( "channel" ) ) {
                 Channel channel = (Channel) context.convertAnother( scenario, Channel.class );
                 resourceSpec.addChannel( channel );

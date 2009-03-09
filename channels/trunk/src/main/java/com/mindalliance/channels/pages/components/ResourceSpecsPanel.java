@@ -50,7 +50,6 @@ public class ResourceSpecsPanel extends AbstractTablePanel {
         columns.add( makeLinkColumn( "Role", "role", "role.name", EMPTY ) );
         columns.add( makeLinkColumn( "Organization", "organization", "organization.name", EMPTY ) );
         columns.add( makeLinkColumn( "Jurisdiction", "jurisdiction", "jurisdiction.name", EMPTY ) );
-        columns.add( makeColumn( "", "kind", "italic", EMPTY ) );
         // view profile column
         columns.add( new AbstractColumn<ResourceSpec>( new Model<String>( "" ) ) {
             public void populateItem( Item<ICellPopulator<ResourceSpec>> cellItem,

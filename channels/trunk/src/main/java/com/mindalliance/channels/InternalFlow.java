@@ -1,11 +1,9 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.pages.Project;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
-import javax.persistence.CascadeType;
 import java.util.List;
 
 /**
@@ -93,15 +91,20 @@ public class InternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void breakup() {
         if ( !source.isConnector() && !target.isConnector() ) {
-            Service service = Project.service();
+            Service service = source.getScenario().getService();
             if ( !source.hasMultipleOutcomes( getName() ) ) {
-                Flow flow = service.connect( source, service.createConnector( source.getScenario() ), getName() );
+                Flow flow = service.connect( source,
+                                             service.createConnector( source.getScenario() ),
+                                             getName() );
                 flow.initFrom( this );
             }
             if ( !target.hasMultipleRequirements( getName() ) ) {
-                Flow flow = service.connect( service.createConnector( target.getScenario() ), target, getName() );
+                Flow flow = service.connect( service.createConnector( target.getScenario() ),
+                                             target,
+                                             getName() );
                 flow.initFrom( this );
             }
         }
@@ -251,6 +254,7 @@ public class InternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
+    @Transient
     public Scenario getScenario() {
         return source.getScenario();
     }

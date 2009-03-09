@@ -45,7 +45,6 @@ public class PlaybookPanel extends AbstractTablePanel<Play> {
         columns.add( makeLinkColumn( "Task", "part", "part.task", EMPTY ) );
         columns.add( makeColumn( "Info", "flow.name", null, "?", "flow.description" ) );
         // style class is one of: ask, notify, answer, receive
-        columns.add( makeLinkColumn( "To/from", "otherPart", "otherPart.name", "@kind", EMPTY ) );
         columns.add( makeColumn( "Channels", "flow.channelsString", EMPTY ) );      // NON-NLS
         columns.add( new PropertyColumn<String>(
                 new Model<String>( "Max delay" ),

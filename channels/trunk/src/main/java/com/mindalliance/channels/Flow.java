@@ -1,16 +1,15 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.pages.Project;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -155,6 +154,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         maxDelay = Delay.parse( s );
     }
 
+    @Enumerated( EnumType.ORDINAL )
     public Significance getSignificanceToSource() {
         return significanceToSource;
     }
@@ -163,6 +163,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         significanceToSource = significance;
     }
 
+    @Enumerated( EnumType.ORDINAL )
     public Significance getSignificanceToTarget() {
         return significanceToTarget;
     }
@@ -566,11 +567,16 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      */
     public Flow replicate( boolean isOutcome ) {
         Flow flow;
-        Service service = Project.service();
         if ( isOutcome ) {
-            flow = service.connect( getSource(), service.createConnector( getSource().getScenario() ), getName() );
+            Node source = getSource();
+            Scenario scenario = getSource().getScenario();
+            Service service = scenario.getService();
+            flow = service.connect( source, service.createConnector( scenario ), getName() );
         } else {
-            flow = service.connect( service.createConnector( getTarget().getScenario() ), getTarget(), getName() );
+            Node target = getTarget();
+            Scenario scenario = target.getScenario();
+            Service service = scenario.getService();
+            flow = service.connect( service.createConnector( scenario ), target, getName() );
         }
         flow.initFrom( this );
         return flow;
@@ -600,7 +606,6 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
     /**
      * The significance of a flow.
      */
-    @Embeddable
     public enum Significance {
         Triggers( "triggers" ),
         Critical( "is critical to" ),

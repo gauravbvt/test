@@ -45,7 +45,7 @@ public final class Memory implements Dao {
 
     /** {@inheritDoc} */
     @SuppressWarnings( { "unchecked" } )
-    public <T extends ModelObject> List<T> getAll( final Class<T> clazz ) {
+    public <T extends ModelObject> List<T> list( final Class<T> clazz ) {
         return (List<T>) CollectionUtils.select( idIndex.values(), new Predicate() {
             public boolean evaluate( Object object ) {
                 return clazz.isAssignableFrom( object.getClass() );
@@ -138,7 +138,7 @@ public final class Memory implements Dao {
     private void remove( ResourceSpec resourceSpec ) {
         //  Remove all permanent specs equal or narrowing resourceSpec
         List<ResourceSpec> toDelete = new ArrayList<ResourceSpec>();
-        for ( ResourceSpec spec : getAll( ResourceSpec.class ) ) {
+        for ( ResourceSpec spec : list( ResourceSpec.class ) ) {
             if ( spec.narrowsOrEquals( resourceSpec ) )
                 toDelete.add( spec );
         }
@@ -154,7 +154,7 @@ public final class Memory implements Dao {
     private ModelObject find( long id ) throws NotFoundException {
         ModelObject result = idIndex.get( id );
         if ( result == null ) {
-            Iterator<Scenario> iterator = getAll( Scenario.class ).iterator();
+            Iterator<Scenario> iterator = list( Scenario.class ).iterator();
             while ( result == null && iterator.hasNext() ) {
                 Scenario scenario = iterator.next();
                 result = scenario.getNode( id );
@@ -171,11 +171,14 @@ public final class Memory implements Dao {
         return result;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isPermanent( ResourceSpec resourceSpec ) {
-        return idIndex.containsKey( resourceSpec.getId() );
+    /** {@inheritDoc} */
+    public <T extends ModelObject> T find( Class<T> clazz, String name ) {
+        for ( T object : list( clazz ) ) {
+            if ( object.getName().equals( name ) )
+                return object;
+        }
+
+        return null;
     }
 
     /**
@@ -201,7 +204,7 @@ public final class Memory implements Dao {
      * @param organization the deleted organization
      */
     private void cascadeDeleteOrganizationToEntities( Organization organization ) {
-        for ( Organization org : getAll( Organization.class ) ) {
+        for ( Organization org : list( Organization.class ) ) {
             Organization parent = org.getParent();
             if ( parent != null && parent == organization ) {
                 // replace deleted parent by parent's parent (could be null)
@@ -216,7 +219,7 @@ public final class Memory implements Dao {
      * @param resourceSpec a resource specification being deleted
      */
     private void cascadeDeleteResourceSpecToParts( ResourceSpec resourceSpec ) {
-        for ( Scenario scenario : getAll( Scenario.class ) ) {
+        for ( Scenario scenario : list( Scenario.class ) ) {
             Iterator<Part> parts = scenario.parts();
             while ( parts.hasNext() ) {
                 Part part = parts.next();

@@ -1,5 +1,6 @@
 package com.mindalliance.channels;
 
+import org.hibernate.annotations.Proxy;
 import com.mindalliance.channels.util.SemMatch;
 
 import javax.persistence.CascadeType;
@@ -22,32 +23,22 @@ import java.util.Map;
 /**
  * A node in the flow graph
  */
-@Entity
+@Entity @Proxy( lazy = true )
 public abstract class Node extends ModelObject implements ScenarioObject {
 
-    /**
-     * Initial capacity of outcome and requirement flows.
-     */
+    /** Initial capacity of outcome and requirement flows. */
     private static final int INITIAL_CAPACITY = 5;
 
-    /**
-     * The name for new flows.
-     */
+    /** The name for new flows. */
     private static final String DEFAULT_FLOW_NAME = "";
 
-    /**
-     * All requirements, indexed by id.
-     */
-    private Map<Long, Flow> requirements;
+    /** All requirements, indexed by id. */
+    private Map<Long,Flow> requirements;
 
-    /**
-     * All outcomes, indexed by id.
-     */
-    private Map<Long, Flow> outcomes;
+    /** All outcomes, indexed by id. */
+    private Map<Long,Flow> outcomes;
 
-    /**
-     * The unique scenario containing this node.
-     */
+    /** The unique scenario containing this node. */
     private Scenario scenario;
 
     protected Node() {
@@ -57,7 +48,6 @@ public abstract class Node extends ModelObject implements ScenarioObject {
 
     /**
      * Get a long string that can be used as a title for this node.
-     *
      * @return a generated short description
      */
     @Transient
@@ -65,7 +55,6 @@ public abstract class Node extends ModelObject implements ScenarioObject {
 
     /**
      * Find a flow connected to this node, given its id.
-     *
      * @param id the id
      * @return a flow or null
      */
@@ -78,16 +67,14 @@ public abstract class Node extends ModelObject implements ScenarioObject {
     }
 
     @OneToMany( cascade = CascadeType.ALL )
-    @JoinTable( name = "Node_Outs" )
-    @MapKey( name = "id" )
-    private Map<Long, Flow> getOutcomes() {
+    @JoinTable( name = "Node_Outs" ) @MapKey( name = "id" )
+    protected Map<Long,Flow> getOutcomes() {
         return outcomes;
     }
 
     /**
      * Set outcomes, rebuilding the index.
      * Package-visible for tests.
-     *
      * @param outcomes the new outcomes
      */
     void setOutcomes( Map<Long, Flow> outcomes ) {
@@ -100,8 +87,7 @@ public abstract class Node extends ModelObject implements ScenarioObject {
     }
 
     /**
-     * Iterates over sorted outcomes.
-     *
+     * Iterates over outcomes, alphabetically by print string.
      * @return a flow iterator
      */
     public Iterator<Flow> outcomes() {
@@ -140,7 +126,6 @@ public abstract class Node extends ModelObject implements ScenarioObject {
 
     /**
      * Create a new outcome for this node.
-     *
      * @param service the underlying store
      * @return an internal flow to a new connector
      */
@@ -150,7 +135,6 @@ public abstract class Node extends ModelObject implements ScenarioObject {
 
     /**
      * Add an outcome to this node.
-     *
      * @param outcome the outcome
      */
     public void addOutcome( Flow outcome ) {
@@ -161,7 +145,6 @@ public abstract class Node extends ModelObject implements ScenarioObject {
     /**
      * Remove an outcome from this node.
      * Removes the source node if a connector.
-     *
      * @param outcome the outcome
      */
     void removeOutcome( Flow outcome ) {
@@ -170,16 +153,14 @@ public abstract class Node extends ModelObject implements ScenarioObject {
     }
 
     @OneToMany( cascade = CascadeType.ALL )
-    @JoinTable( name = "Node_Reqs" )
-    @MapKey( name = "id" )
-    private Map<Long, Flow> getRequirements() {
+    @JoinTable( name = "Node_Reqs" ) @MapKey( name = "id" )
+    protected Map<Long,Flow> getRequirements() {
         return requirements;
     }
 
     /**
      * Set requirements, rebuilding the index.
      * Package-visible for tests.
-     *
      * @param requirements the new requirements
      */
     void setRequirements( Map<Long, Flow> requirements ) {
@@ -192,8 +173,7 @@ public abstract class Node extends ModelObject implements ScenarioObject {
     }
 
     /**
-     * Iterates over sorted requirements.
-     *
+     * Iterates over requirements, alphabetically by print string.
      * @return a flow iterator
      */
     public Iterator<Flow> requirements() {
@@ -220,7 +200,6 @@ public abstract class Node extends ModelObject implements ScenarioObject {
 
     /**
      * Create and add a new requirement.
-     *
      * @param service the underyling store
      * @return a flow from a new connector to this node
      */
@@ -230,7 +209,6 @@ public abstract class Node extends ModelObject implements ScenarioObject {
 
     /**
      * Add a requirement to this node.
-     *
      * @param requirement the requirement
      */
     public void addRequirement( Flow requirement ) {
@@ -241,7 +219,6 @@ public abstract class Node extends ModelObject implements ScenarioObject {
     /**
      * Remove a requirement from this node.
      * Removes the target node if a connector.
-     *
      * @param requirement the requirement
      */
     void removeRequirement( Flow requirement ) {
@@ -268,9 +245,7 @@ public abstract class Node extends ModelObject implements ScenarioObject {
         this.scenario = scenario;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getTitle();

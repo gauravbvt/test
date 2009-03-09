@@ -1,7 +1,5 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.pages.Project;
-
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
@@ -24,17 +22,6 @@ public class Role extends ModelObject {
      */
     public Role( String name ) {
         super( name );
-    }
-
-    /**
-     * Find or create a role by name
-     *
-     * @param name String a given name
-     * @return a new or existing role, or null is name is null or empty
-     */
-    public static Role named( String name ) {
-        if ( name == null || name.isEmpty() ) return null;
-        return Project.service().findOrCreate( Role.class, name );
     }
 
     /**

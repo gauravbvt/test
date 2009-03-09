@@ -27,7 +27,7 @@ public class TestMemory extends TestCase {
 
     public void testInitial() {
         assertEquals( 2, memory.getScenarioCount() );
-        assertTrue( memory.getAll( Scenario.class ).iterator().hasNext() );
+        assertTrue( memory.list( Scenario.class ).iterator().hasNext() );
         try {
             service.findScenario( "bla" );
             fail();

@@ -1,17 +1,18 @@
 package com.mindalliance.channels;
 
-import org.apache.commons.collections.iterators.FilterIterator;
+import com.mindalliance.channels.util.SemMatch;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.iterators.FilterIterator;
+import org.slf4j.LoggerFactory;
 
-import javax.persistence.CascadeType;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import java.text.MessageFormat;
-import java.util.List;
 import java.util.Iterator;
-
-import com.mindalliance.channels.util.SemMatch;
 
 /**
  * A part in a scenario.
@@ -86,8 +87,7 @@ public class Part extends Node {
     /**
      * {@inheritDoc}
      */
-    @Override
-    @Transient
+    @Override @Transient
     public String getTitle() {
         return MessageFormat.format( "{0} {1}", getName(), getTask() );
     }
@@ -112,7 +112,7 @@ public class Part extends Node {
             setName( DEFAULT_ACTOR );
     }
 
-    @ManyToOne( cascade = CascadeType.PERSIST )
+    @ManyToOne
     public Actor getActor() {
         return actor;
     }
@@ -127,7 +127,7 @@ public class Part extends Node {
         adjustName();
     }
 
-    @ManyToOne( cascade = CascadeType.PERSIST )
+    @ManyToOne
     public Place getJurisdiction() {
         return jurisdiction;
     }
@@ -136,7 +136,7 @@ public class Part extends Node {
         this.jurisdiction = jurisdiction;
     }
 
-    @ManyToOne( cascade = CascadeType.PERSIST )
+    @ManyToOne
     public Place getLocation() {
         return location;
     }
@@ -145,7 +145,7 @@ public class Part extends Node {
         this.location = location;
     }
 
-    @ManyToOne( cascade = CascadeType.PERSIST )
+    @ManyToOne
     public Organization getOrganization() {
         return organization;
     }
@@ -160,7 +160,7 @@ public class Part extends Node {
         adjustName();
     }
 
-    @ManyToOne( cascade = CascadeType.ALL )
+    @ManyToOne
     public Role getRole() {
         return role;
     }
@@ -171,6 +171,7 @@ public class Part extends Node {
      * @param role the new role.
      */
     public void setRole( Role role ) {
+        LoggerFactory.getLogger( getClass() ).debug( "Setting role to " + role );
         this.role = role;
         adjustName();
     }
@@ -183,6 +184,10 @@ public class Part extends Node {
         this.completionTime = completionTime;
     }
 
+    @AttributeOverrides( {
+            @AttributeOverride( name = "unit", column = @Column( name = "r_unit" ) ),
+            @AttributeOverride( name = "amount", column = @Column( name = "r_amount" ) )
+            } )
     public Delay getRepeatsEvery() {
         return repeatsEvery;
     }
@@ -229,7 +234,6 @@ public class Part extends Node {
 
     /**
      * Gets the resourceSpec implied by the part
-     *
      * @return a ResourceSpec
      */
     public ResourceSpec resourceSpec() {
@@ -249,7 +253,6 @@ public class Part extends Node {
 
     /**
      * Adapt definition to retracted resourceSpec, if applicable.
-     *
      * @param resourceSpec a resourceSpec being retracted
      */
     public void removeResourceSpec( ResourceSpec resourceSpec ) {
@@ -343,9 +346,9 @@ public class Part extends Node {
     @SuppressWarnings( "unchecked" )
     public Iterator<Flow> outcomesNamed( final String name ) {
         return new FilterIterator( outcomes(), new Predicate() {
-            public boolean evaluate( Object obj ) {
-                Flow flow = (Flow) obj;
-                return SemMatch.same( flow.getName(), name) ; 
+            public boolean evaluate( Object object ) {
+                Flow flow = (Flow) object;
+                return SemMatch.same( flow.getName(), name);
             }
         } );
     }
@@ -358,9 +361,9 @@ public class Part extends Node {
     @SuppressWarnings( "unchecked" )
     public Iterator<Flow> requirementsNamed( final String name ) {
         return new FilterIterator( requirements(), new Predicate() {
-            public boolean evaluate( Object obj ) {
-                Flow flow = (Flow) obj;
-                return SemMatch.same( flow.getName(), name) ;
+            public boolean evaluate( Object object ) {
+                Flow flow = (Flow) object;
+                return SemMatch.same( flow.getName(), name);
             }
         } );
     }

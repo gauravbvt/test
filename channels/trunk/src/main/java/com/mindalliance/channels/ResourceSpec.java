@@ -4,6 +4,9 @@ import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.util.SemMatch;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import java.util.ArrayList;
@@ -22,6 +25,7 @@ import java.util.List;
  * Date: Jan 8, 2009
  * Time: 8:26:05 PM
  */
+@Entity
 public class ResourceSpec extends ModelObject implements Channelable {
 
     /**
@@ -126,6 +130,8 @@ public class ResourceSpec extends ModelObject implements Channelable {
         this.jurisdiction = jurisdiction;
     }
 
+    // TODO why is this manyToMany?
+    @ManyToMany( cascade = CascadeType.ALL ) @JoinTable( name = "Spec_Channels" )
     public List<Channel> getChannels() {
         return channels;
     }
@@ -134,6 +140,7 @@ public class ResourceSpec extends ModelObject implements Channelable {
         this.channels = channels;
     }
 
+    @Transient
     public List<Channel> getEffectiveChannels() {
         return getChannels();
     }
@@ -437,55 +444,25 @@ public class ResourceSpec extends ModelObject implements Channelable {
     }
 
     /**
-     * Whether the resource spec is not solely implied by one or more parts
-     *
-     * @return a boolean
-     */
-    @Transient
-    public boolean isPredefined() {
-        return isEntityOnly() || isPermanent();
-    }
-
-    /**
-     * Whether the resource spec exists independently of parts
-     *
-     * @return a boolean
-     */
-    @Transient
-    public boolean isPermanent() {
-        return Project.service().isPermanent( this );
-    }
-
-    /**
-     * String describing the resource spec's origin
-     *
-     * @return either "a priori" or "from tasks"
-     */
-    @Transient
-    public String getKind() {
-        return isPredefined() ? "added" : "from tasks";
-    }
-
-    /**
      * {@inheritDoc}
      */
     public List<Channel> allChannels() {
         Service service = Project.service();
         List<Channel> allChannels = new ArrayList<Channel>();
         // Unspecified resources have no channels
-        if ( !this.isAnyone() ) {
+        if ( !isAnyone() ) {
             List<ResourceSpec> channelables = service.findAllResourcesBroadeningOrEqualTo( this );
-            // If resource spec has an actor, include the channel of the more specific resources as well
-            // if ( !isAnyActor() ) {
+            // If resource spec has an actor,
+            //    include the channel of the more specific resources as well
             channelables.addAll( service.findAllResourcesNarrowingOrEqualTo( this ) );
-            // }
+
             Collections.sort( channelables, new Comparator<ResourceSpec>() {
                 /**{@inheritDoc} */
-                public int compare( ResourceSpec rs1, ResourceSpec rs2 ) {
-                    int val1 = rs1.specificity();
-                    int val2 = rs2.specificity();
+                public int compare( ResourceSpec o1, ResourceSpec o2 ) {
+                    int val1 = o1.specificity();
+                    int val2 = o2.specificity();
                     // put higher specificity first
-                    return val1 == val2 ? 0 : ( val1 > val2 ? -1 : 1 );
+                    return val1 == val2 ? 0 : val1 > val2 ? -1 : 1;
                 }
             } );
             for ( ResourceSpec resourceSpec : channelables ) {
@@ -499,7 +476,9 @@ public class ResourceSpec extends ModelObject implements Channelable {
         return allChannels;
     }
 
-    // The higher the specificity, the higher the value
+    /** The higher the specificity, the higher the value.
+     * @return a specificity value
+     */
     public int specificity() {
         int val = 0;
         if ( !isAnyActor() ) val += 100;

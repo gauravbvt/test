@@ -8,6 +8,7 @@ import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Delay;
 import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.Medium;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.CommandException;
 
@@ -31,11 +32,12 @@ public class TestBreakUpConnectFlow extends AbstractChannelsTest {
 
     protected void setUp() {
         super.setUp();
-        scenario = project.getService().createScenario();
+        Service service = project.getService();
+        scenario = service.createScenario();
         source = scenario.getDefaultPart();
-        source.setRole( Role.named( "Manager" ) );
-        target = scenario.createPart( project.getService(), Role.named( "Employee" ), "nodding" );
-        Flow flow = project.getService().connect( source, target, "bizspeak" );
+        source.setRole( service.findOrCreate( Role.class, "Manager" ) );
+        target = scenario.createPart( service, service.findOrCreate( Role.class, "Employee" ), "nodding" );
+        Flow flow = service.connect( source, target, "bizspeak" );
         flow.setDescription( "Leveraging core values" );
         flow.setMaxDelay( new Delay( 5, Delay.Unit.minutes ) );
         flow.setSignificanceToSource( Flow.Significance.Terminates );

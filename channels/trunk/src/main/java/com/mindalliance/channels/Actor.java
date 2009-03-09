@@ -1,7 +1,5 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.pages.Project;
-
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
@@ -40,23 +38,10 @@ public class Actor extends ModelObject {
     }
 
     /**
-     * Find or create an actor by name
-     *
-     * @param name String a given name
-     * @return a new or existing actor, or null is name is null or empty
-     */
-    public static Actor named( String name ) {
-        if ( name == null || name.isEmpty() ) return null;
-        return Project.service().findOrCreate( Actor.class, name );
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override @Transient
     public boolean isEntity() {
         return true;
     }
-
-
 }

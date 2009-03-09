@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.List;
 
 /**
  * Test a scenario in isolation.
@@ -121,10 +122,19 @@ public class TestScenario extends TestCase {
         assertSame( f, p3.outcomes().next() );
         assertSame( f, p4.requirements().next() );
 
-        try {
-            service.connect( p3, p4, "" );
-            fail();
-        } catch ( IllegalArgumentException ignored ) {}
+        // we now allow flows of same name between same nodes
+        Iterator<Flow> iterator = p3.outcomesNamed( "" );
+        assertTrue( iterator.hasNext() );
+        assertSame( f, iterator.next() );
+        assertFalse( iterator.hasNext() );
+        Flow f2 = service.connect( p3, p4, "" );
+
+        iterator = p4.requirementsNamed( "" );
+        assertTrue( iterator.hasNext() );
+        assertSame( f, iterator.next() );
+        assertTrue( iterator.hasNext() );
+        assertSame( f2, iterator.next() );
+        assertFalse( iterator.hasNext() );
     }
 
     public void testDisconnect() {
@@ -206,5 +216,28 @@ public class TestScenario extends TestCase {
 
         scenario.removeNode( p2 );
         assertSame( p2, scenario.getNode( p2.getId() ) );
+    }
+
+    public void testFindRoles() {
+        Organization org = service.findOrCreate( Organization.class, "Building" );
+
+        Part p1 = service.createPart( scenario );
+        Role r1 = service.findOrCreate( Role.class, "Janitor" );
+        p1.setRole( r1 );
+
+        Part p2 = service.createPart( scenario );
+        Role r2 = service.findOrCreate( Role.class, "Plumber" );
+        p2.setRole( r2 );
+
+        List<Role> roleList = scenario.findRoles( org );
+        assertEquals( 0, roleList.size() );
+
+        p1.setOrganization( org );
+        p2.setOrganization( org );
+
+        List<Role> roleList2 = scenario.findRoles( org );
+        assertEquals( 2, roleList2.size() );
+        assertTrue( roleList2.contains( r1 ) );
+        assertTrue( roleList2.contains( r2 ) );
     }
 }

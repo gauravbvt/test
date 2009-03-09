@@ -62,10 +62,10 @@ public class OrganizationConverter extends EntityConverter {
     protected void setSpecific( ModelObject entity, String nodeName, String value ) {
         if ( nodeName.equals( "parent" ) ) {
             Organization org = (Organization) entity;
-            org.setParent( Organization.named( value ) );
+            org.setParent( Project.service().findOrCreate( Organization.class, value ) );
         } else if ( nodeName.equals( "location" ) ) {
             Organization org = (Organization) entity;
-            org.setLocation( Place.named( value ) );
+            org.setLocation( Project.service().findOrCreate( Place.class, value ) );
         } else {
             throw new ConversionException( "Unknown element " + nodeName );
         }

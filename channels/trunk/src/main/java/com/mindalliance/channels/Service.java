@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * External service interface.
  */
-@Transactional
+// @Transactional
 public interface Service {
 
     /**
@@ -18,7 +18,7 @@ public interface Service {
      * @return the aptly named scenario
      * @throws NotFoundException when not found
      */
-    @Transactional( readOnly = true )
+//    @Transactional( readOnly = true )
     Scenario findScenario( String name ) throws NotFoundException;
 
     /**
@@ -29,7 +29,7 @@ public interface Service {
      * @return the object
      * @throws NotFoundException when not found
      */
-    @Transactional( readOnly = true )
+//    @Transactional( readOnly = true )
     <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException;
 
     /**
@@ -38,14 +38,14 @@ public interface Service {
      * @param <T> a subclass of model object.
      * @return an iterator
      */
-    @Transactional( readOnly = true )
+//    @Transactional( readOnly = true )
     <T extends ModelObject> List<T> list( Class<T> clazz );
 
     /**
      * Iterate on ModelObject that are entities.
      * @return an iterator on ModelObjects that are entities
      */
-    @Transactional( readOnly = true )
+//    @Transactional( readOnly = true )
     Iterator<ModelObject> iterateEntities();
 
 
@@ -65,7 +65,7 @@ public interface Service {
     /**
      * @return a default scenario
      */
-    @Transactional( readOnly = true )
+//    @Transactional( readOnly = true )
     Scenario getDefaultScenario();
 
     /**
@@ -73,7 +73,7 @@ public interface Service {
      * @param clazz the kind of model object
      * @param name the name
      * @param <T> a subclass of model object
-     * @return the object
+     * @return the object or null if name is null or empty
      */
     <T extends ModelObject> T findOrCreate( Class<T> clazz, String name );
 
@@ -114,7 +114,7 @@ public interface Service {
      * Get all non-empty resource specs, user-entered or not.
      * @return a new list of resource spec
      */
-    @Transactional( readOnly = true )
+//    @Transactional( readOnly = true )
     List<ResourceSpec> findAllResourceSpecs();
 
     /**
@@ -123,7 +123,7 @@ public interface Service {
      * @param resourceSpec a resource
      * @return a list of implied resources
      */
-    @Transactional( readOnly = true )
+//    @Transactional( readOnly = true )
     List<ResourceSpec> findAllResourcesNarrowingOrEqualTo( ResourceSpec resourceSpec );
 
     /**
@@ -134,13 +134,14 @@ public interface Service {
      */
     @Transactional( readOnly = true )
     List<ResourceSpec> findAllResourcesBroadeningOrEqualTo( ResourceSpec resourceSpec );
+    
     /**
      * Find all plays for the resource
      *
      * @param resourceSpec a resource
      * @return a list of plays
      */
-    @Transactional( readOnly = true )
+//    @Transactional( readOnly = true )
     List<Play> findAllPlays( ResourceSpec resourceSpec );
 
     /**
@@ -149,23 +150,15 @@ public interface Service {
      * @param isSelf find resources specified by spec, or else who specified resources need to know
      * @return a list of ResourceSpec's
      */
-    @Transactional( readOnly = true )
+//    @Transactional( readOnly = true )
     List<ResourceSpec> findAllContacts( ResourceSpec resourceSpec, boolean isSelf );
-
-    /**
-     * Whether the resource spec exists independently of parts
-     * @param resourceSpec the resource spec
-     * @return a boolean
-     */
-    @Transactional( readOnly = true )
-    boolean isPermanent( ResourceSpec resourceSpec );
 
     /**
      * Find all user issues about a model object
      * @param identifiable an object with an id
      * @return list of issues
      */
-    @Transactional( readOnly = true )
+//    @Transactional( readOnly = true )
     List<Issue> findAllUserIssues( ModelObject identifiable );
 
     /**
@@ -173,7 +166,7 @@ public interface Service {
      * @param resourceSpec a ResourceSpec to match against
      * @return a permanent resource spec or null if none found
      */
-    @Transactional( readOnly = true )
+//    @Transactional( readOnly = true )
     ResourceSpec findPermanentResourceSpec( ResourceSpec resourceSpec );
 
     /**
@@ -181,7 +174,6 @@ public interface Service {
      * else already permament resource from given resource spec
      * @param resourceSpec resource spec to add or update from
      */
-    @Transactional
     void addOrUpdate( ResourceSpec resourceSpec );
 
     /**
@@ -197,4 +189,12 @@ public interface Service {
      */
     List<Actor> findAllActors( ResourceSpec resourceSpec );
 
+    /**
+     * Make a replicate of the flow
+     *
+     * @param flow the flow to replicate
+     * @param isOutcome whether to replicate as outcome or requirement
+     * @return a created flow
+     */
+    Flow replicate( Flow flow, boolean isOutcome );
 }

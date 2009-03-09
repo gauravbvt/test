@@ -6,22 +6,21 @@ import org.hibernate.annotations.Cascade;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
-import javax.persistence.FetchType;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.List;
+import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.Collections;
 import java.util.Comparator;
-import java.text.Collator;
-
-import com.mindalliance.channels.pages.Project;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 /**
  * A scenario in the project.
@@ -51,13 +50,19 @@ public class Scenario extends ModelObject {
     /**
      * Nodes, indexed by id.
      */
-    private Map<Long, Node> nodeIndex = new HashMap<Long, Node>( INITIAL_CAPACITY );
+    private Map<Long, Node> nodeIndex;
+
+    /** The service in charge of this scenario. */
+    private Service service;
 
     public Scenario() {
+        setNodeIndex( new HashMap<Long, Node>( INITIAL_CAPACITY ) );
     }
 
-    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
+//    @LazyToOne( value = LazyToOneOption.PROXY )
+    @OneToMany( cascade = CascadeType.ALL, mappedBy = "scenario", fetch = FetchType.LAZY )
     @Cascade( org.hibernate.annotations.CascadeType.DELETE_ORPHAN )
+    @MapKey( name = "id" )
     Map<Long, Node> getNodeIndex() {
         return nodeIndex;
     }
@@ -70,7 +75,8 @@ public class Scenario extends ModelObject {
      * Iterate over the nodes in this scenario.
      * There should always be at least a node in the scenario.
      * The nodes are sorted as follows:
-     * 1- triggered nodes with fewer triggering in-scenario nodes leading up to them (smaller number first)
+     * 1- triggered nodes with fewer triggering in-scenario nodes leading up to them
+     *    (smaller number first)
      * 2- the number of required outcomes (larger number first)
      * 3- their names (alphabetical) - connectors always come after parts
      *
@@ -83,28 +89,29 @@ public class Scenario extends ModelObject {
             /**
              * {@inheritDoc}
              */
-            public int compare( Node node, Node other ) {
+            public int compare( Node o1, Node o2 ) {
                 Collator collator = Collator.getInstance();
                 // compare on transitive trigger count
-                int nodeCount = node.transitiveTriggers().size();
-                int otherCount = other.transitiveTriggers().size();
+                int nodeCount = o1.transitiveTriggers().size();
+                int otherCount = o2.transitiveTriggers().size();
                 int compTriggers = nodeCount == otherCount
                         ? 0
                         // fewer transitive triggers means comes before
-                        : ( nodeCount < otherCount ? -1 : 1 );
+                        : nodeCount < otherCount ? -1 : 1;
+
                 if ( compTriggers == 0 ) {
                     // if same trigger count, sort on importance to other nodes
-                    nodeCount = node.requiredOutcomes().size();
-                    otherCount = other.requiredOutcomes().size();
+                    nodeCount = o1.requiredOutcomes().size();
+                    otherCount = o2.requiredOutcomes().size();
                     int compImportance = nodeCount == otherCount
                             ? 0
                             // more required outcomes means comes before
-                            : ( nodeCount > otherCount ? -1 : 1 );
+                            : nodeCount > otherCount ? -1 : 1;
                     if ( compImportance == 0 ) {
                         // if same, sort on node name (connectors always come last)
                         return collator.compare(
-                                node.isConnector() ? "\uFF5A\uFF5A" : ( (Part) node ).getTask(),
-                                other.isConnector() ? "\uFF5A\uFF5A" : ( (Part) other ).getTask() );
+                                o1.isConnector() ? "\uFF5A\uFF5A" : ( (Part) o1 ).getTask(),
+                                o2.isConnector() ? "\uFF5A\uFF5A" : ( (Part) o2 ).getTask() );
                     } else {
                         return compImportance;
                     }
@@ -129,7 +136,7 @@ public class Scenario extends ModelObject {
      * @param service the underlying store
      * @param actor   the actor for the new part
      * @param task    the task of the new part
-     * @return the new part                                        he
+     * @return the new part
      */
     public Part createPart( Service service, Actor actor, String task ) {
         Part result = service.createPart( this );
@@ -182,12 +189,14 @@ public class Scenario extends ModelObject {
             while ( outs.hasNext() ) {
                 outs.next().disconnect();
             }
+
             if ( node.isConnector() ) {
                 Iterator<ExternalFlow> xf = ( (Connector) node ).externalFlows();
                 while ( xf.hasNext() ) {
                     xf.next().disconnect();
                 }
             }
+
             node.setScenario( null );
             nodeIndex.remove( node.getId() );
         }
@@ -227,7 +236,7 @@ public class Scenario extends ModelObject {
      *
      * @return an iterator on connectors having outcomes
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public Iterator<Connector> inputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -242,7 +251,7 @@ public class Scenario extends ModelObject {
      *
      * @return an iterator on parts
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public Iterator<Part> parts() {
         return (Iterator<Part>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -257,7 +266,7 @@ public class Scenario extends ModelObject {
      *
      * @return an iterator on connectors having requirements
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public Iterator<Connector> outputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -294,7 +303,6 @@ public class Scenario extends ModelObject {
      * @return the appropriate parts
      */
     public List<Part> findParts( Organization organization, Role role ) {
-
         List<Part> partsForRole = new ArrayList<Part>();
         Iterator<Part> parts = parts();
         while ( parts.hasNext() ) {
@@ -349,11 +357,21 @@ public class Scenario extends ModelObject {
         Iterator<Flow> flows = flows();
         while ( flow == null && flows.hasNext() ) {
             Flow f = flows.next();
-            if (f.getId() == id) flow = f;
+            if ( f.getId() == id ) flow = f;
         }
-        if (flow == null) throw new NotFoundException();
+        if ( flow == null ) throw new NotFoundException();
         else return flow;
     }
+
+    @Transient
+    public Service getService() {
+        return service;
+    }
+
+    public void setService( Service service ) {
+        this.service = service;
+    }
+
 
     //=================================================
     /**
@@ -383,7 +401,7 @@ public class Scenario extends ModelObject {
             setIterators( nodeIterator.next() );
         }
 
-        @SuppressWarnings( {"unchecked"} )
+        @SuppressWarnings( { "unchecked" } )
         private void setIterators( Node node ) {
             outcomeIterator = node.outcomes();
             reqIterator = (Iterator<Flow>) new FilterIterator(
@@ -406,8 +424,8 @@ public class Scenario extends ModelObject {
         public Flow next() {
             if ( !hasNext() )
                 throw new NoSuchElementException();
-            return outcomeIterator.hasNext() ? outcomeIterator.next()
-                    : reqIterator.next();
+            return outcomeIterator.hasNext() ?
+                   outcomeIterator.next() : reqIterator.next();
         }
 
         public void remove() {

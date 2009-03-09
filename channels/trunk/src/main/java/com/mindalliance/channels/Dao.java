@@ -65,7 +65,7 @@ public interface Dao {
      * @param <T> a subclass of model object.
      * @return a collection
      */
-    <T extends ModelObject> List<T> getAll( Class<T> clazz );
+    <T extends ModelObject> List<T> list( Class<T> clazz );
 
     /**
      * Add a model object.
@@ -81,11 +81,11 @@ public interface Dao {
     void remove( ModelObject object );
 
     /**
-     * Whether the resource spec exists independently of parts
-     * @param resourceSpec the resource spec
-     * @return a boolean
+     * Find the first model object of a given class and name.
+     * @param clazz the subclass of model object
+     * @param name the name looked for
+     * @param <T> a subclass of model object
+     * @return the object or null if not found
      */
-    boolean isPermanent( ResourceSpec resourceSpec );
-
-
+    <T extends ModelObject> T find( Class<T> clazz, String name );
 }

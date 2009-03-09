@@ -1,11 +1,9 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.pages.Project;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
-import javax.persistence.CascadeType;
 import java.text.MessageFormat;
 
 /**
@@ -34,17 +32,6 @@ public class Organization extends ModelObject {
      */
     public Organization( String name ) {
         super( name );
-    }
-
-    /**
-     * Find or create an organization by name
-     *
-     * @param name String a given name
-     * @return a new or existing organization, or null is name is null or empty
-     */
-    public static Organization named( String name ) {
-        if ( name == null || name.isEmpty() ) return null;
-        return Project.service().findOrCreate( Organization.class, name );
     }
 
     /**

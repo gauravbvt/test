@@ -1,6 +1,5 @@
 package com.mindalliance.channels;
 
-import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -14,7 +13,8 @@ import java.util.Date;
 /**
  * An object with name, id and description, comparable by its toString() values.
  */
-@Entity @Inheritance( strategy = InheritanceType.JOINED ) @DiscriminatorColumn( name = "bla" )
+@Entity @Inheritance( strategy = InheritanceType.JOINED )
+@org.hibernate.annotations.Entity( dynamicUpdate = true )
 public abstract class ModelObject implements Serializable, Comparable<ModelObject>, Identifiable {
 
     /** Unique id of this object. */
@@ -51,9 +51,7 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
         this.id = id;
     }
 
-    /**
-     * @return the name of the flow
-     */
+    /** {@inheritDoc} */
     public String getName() {
         return name;
     }

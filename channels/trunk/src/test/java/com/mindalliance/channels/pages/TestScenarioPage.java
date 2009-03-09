@@ -5,13 +5,14 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.service.ChannelsServiceImpl;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.attachments.BitBucket;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.FlowDiagram;
+import com.mindalliance.channels.service.ChannelsServiceImpl;
+import junit.framework.TestCase;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.util.file.File;
@@ -27,8 +28,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
-import junit.framework.TestCase;
 
 /**
  * Simple test using the WicketTester.
@@ -119,13 +118,13 @@ public class TestScenarioPage extends TestCase {
         tester.assertNoErrorMessage();
 
         PageParameters parms = new PageParameters();
-        parms.put( ScenarioPage.SCENARIO_PARM, scenario.getId() );
+        parms.put( ScenarioPage.SCENARIO_PARM, Long.toString( scenario.getId() ) );
 
         tester.startPage( ScenarioPage.class, parms );
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
-        parms.put( ScenarioPage.SCENARIO_PARM, -1 );
+        parms.put( ScenarioPage.SCENARIO_PARM, "-1" );
         tester.startPage( ScenarioPage.class, parms );
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
@@ -135,8 +134,8 @@ public class TestScenarioPage extends TestCase {
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
-        parms.put( ScenarioPage.SCENARIO_PARM, scenario.getId() );
-        parms.put( ScenarioPage.NODE_PARM, -1 );
+        parms.put( ScenarioPage.SCENARIO_PARM, Long.toString( scenario.getId() ) );
+        parms.put( ScenarioPage.NODE_PARM, "-1" );
         tester.startPage( ScenarioPage.class, parms );
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
@@ -146,7 +145,7 @@ public class TestScenarioPage extends TestCase {
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
-        parms.put( ScenarioPage.NODE_PARM, scenario.getDefaultPart().getId() );
+        parms.put( ScenarioPage.NODE_PARM, Long.toString( scenario.getDefaultPart().getId() ) );
         tester.startPage( ScenarioPage.class, parms );
         tester.assertRenderedPage( ScenarioPage.class );
         tester.assertNoErrorMessage();

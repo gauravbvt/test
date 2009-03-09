@@ -333,7 +333,7 @@ public class PartPanel extends AbstractUpdatablePanel {
         else {
             final Actor actor = getPart().getActor();
             if ( actor == null || !isSame( name, actor.getName() ) )
-                getPart().setActor( Actor.named( name ) );
+                getPart().setActor( Project.service().findOrCreate( Actor.class, name ) );
         }
     }
 
@@ -348,7 +348,7 @@ public class PartPanel extends AbstractUpdatablePanel {
         else {
             final Place jurisdiction = getPart().getJurisdiction();
             if ( jurisdiction == null || !isSame( name, jurisdiction.getName() ) )
-                getPart().setJurisdiction( Place.named( name ) );
+                getPart().setJurisdiction( Project.service().findOrCreate( Place.class, name ) );
         }
     }
 
@@ -378,7 +378,9 @@ public class PartPanel extends AbstractUpdatablePanel {
         else {
             final Organization organization = getPart().getOrganization();
             if ( organization == null || !isSame( name, organization.getName() ) )
-                getPart().setOrganization( Organization.named( name ) );
+                getPart().setOrganization(
+                        Project.service().findOrCreate(
+                                Organization.class, name ) );
         }
     }
 
@@ -393,7 +395,7 @@ public class PartPanel extends AbstractUpdatablePanel {
         else {
             final Role role = getPart().getRole();
             if ( role == null || !isSame( name, role.getName() ) )
-                getPart().setRole( Role.named( name ) );
+                getPart().setRole( Project.service().findOrCreate( Role.class, name ) );
         }
     }
 

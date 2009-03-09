@@ -1,5 +1,7 @@
 package com.mindalliance.channels;
 
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -13,7 +15,7 @@ import java.util.Set;
 /**
  * A connector to unspecified node(s) outside of the scenario.
  */
-@Entity
+@Entity @Proxy
 public class Connector extends Node {
 
     /** The connections from external scenarios. */
@@ -49,9 +51,8 @@ public class Connector extends Node {
      */
     @Transient
     public boolean isSource() {
-        Iterator<Flow> outs = outcomes();
-        return outs.hasNext();
-     }
+        return !getOutcomes().isEmpty();
+    }
 
     /**
      * Is the connector a target (true) or source (false)?
@@ -59,21 +60,22 @@ public class Connector extends Node {
      */
     @Transient
     public boolean isTarget() {
-        Iterator<Flow> reqs = requirements();
-        return reqs.hasNext();
-     }
+        return !getRequirements().isEmpty();
+    }
 
     /**
      * Gets the inner flow between part and connector
-     * @return -- the connector's inner flow
+     * @return the connector's inner flow or null if none
      */
     @Transient
     public Flow getInnerFlow() {
-        return isSource() ? outcomes().next() : requirements().next();
+        return isSource() ? getOutcomes().values().iterator().next()
+                          : getRequirements().values().iterator().next();
     }
 
-    private boolean hasInnerFlow() {
-        return outcomes().hasNext() || requirements().hasNext();
+    /** @return true if connector has an inner flow. */
+    public boolean hasInnerFlow() {
+        return !getOutcomes().isEmpty() || !getRequirements().isEmpty();
     }
 
     /**

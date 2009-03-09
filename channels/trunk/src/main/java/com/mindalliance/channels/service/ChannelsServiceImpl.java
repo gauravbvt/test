@@ -14,25 +14,24 @@ import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.UserIssue;
-import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.dao.EvacuationScenario;
 import com.mindalliance.channels.dao.FireScenario;
+import com.mindalliance.channels.export.Importer;
+import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.util.Play;
-import com.mindalliance.channels.util.SemMatch;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.FileInputStream;
-import java.io.IOException;
 
 /**
  * Utility class for common functionality for all Dao implementations.
@@ -50,10 +49,12 @@ public class ChannelsServiceImpl implements Service {
      * True if defaults scenarios will be added when dao is set.
      */
     private boolean addingSamples;
+
     /**
      * True if exported scenarios are to be imported when dao is set.
      */
     private boolean importingScenarios;
+
     /**
      * Directory from which to import exported scenarios
      */
@@ -76,6 +77,7 @@ public class ChannelsServiceImpl implements Service {
 
         result.setName( Scenario.DEFAULT_NAME );
         result.setDescription( Scenario.DEFAULT_DESCRIPTION );
+        result.setService( this );
         createPart( result );
 
         return result;
@@ -106,9 +108,6 @@ public class ChannelsServiceImpl implements Service {
         Flow result;
 
         if ( isInternal( source, target ) ) {
-            if ( getFlow( source, target, name ) != null )
-                throw new IllegalArgumentException();
-
             result = dao.createInternalFlow( source, target, name );
             source.addOutcome( result );
             target.addRequirement( result );
@@ -163,7 +162,7 @@ public class ChannelsServiceImpl implements Service {
      * {@inheritDoc}
      */
     public Scenario findScenario( String name ) throws NotFoundException {
-        for ( Scenario s : dao.getAll( Scenario.class ) ) {
+        for ( Scenario s : dao.list( Scenario.class ) ) {
             if ( name.equals( s.getName() ) )
                 return s;
         }
@@ -182,7 +181,7 @@ public class ChannelsServiceImpl implements Service {
      * {@inheritDoc}
      */
     public <T extends ModelObject> List<T> list( Class<T> clazz ) {
-        return dao.getAll( clazz );
+        return dao.list( clazz );
     }
 
     /**
@@ -190,7 +189,7 @@ public class ChannelsServiceImpl implements Service {
      */
     @SuppressWarnings( {"unchecked"} )
     public Iterator<ModelObject> iterateEntities() {
-        return new FilterIterator( dao.getAll( ModelObject.class ).iterator(), new Predicate() {
+        return new FilterIterator( dao.list( ModelObject.class ).iterator(), new Predicate() {
             public boolean evaluate( Object object ) {
                 return ( (ModelObject) object ).isEntity();
             }
@@ -215,7 +214,7 @@ public class ChannelsServiceImpl implements Service {
      * {@inheritDoc}
      */
     public Scenario getDefaultScenario() {
-        return dao.getAll( Scenario.class ).iterator().next();
+        return dao.list( Scenario.class ).iterator().next();
     }
 
     public Dao getDao() {
@@ -235,7 +234,7 @@ public class ChannelsServiceImpl implements Service {
      * {@inheritDoc}
      */
     public void initialize() {
-        if ( !dao.getAll( Scenario.class ).iterator().hasNext() ) {
+        if ( !dao.list( Scenario.class ).iterator().hasNext() ) {
             if ( addingSamples ) {
                 LoggerFactory.getLogger( getClass() ).info( "Adding sample models" );
                 Scenario evac = createScenario();
@@ -248,7 +247,7 @@ public class ChannelsServiceImpl implements Service {
                 importScenarios();
             }
             // Make sure there is at least one scenario
-            if ( !dao.getAll( Scenario.class ).iterator().hasNext() ) {
+            if ( !dao.list( Scenario.class ).iterator().hasNext() ) {
                 createScenario();
             }
         }
@@ -300,12 +299,10 @@ public class ChannelsServiceImpl implements Service {
      * {@inheritDoc}
      */
     public <T extends ModelObject> T findOrCreate( Class<T> clazz, String name ) {
-        T result = null;
-        Iterator<T> objects = dao.getAll( clazz ).iterator();
-        while ( result == null && objects.hasNext() ) {
-            T object = objects.next();
-            if ( SemMatch.same( object.getName(), name ) ) result = object;
-        }
+        if ( name == null || name.isEmpty() )
+            return null;
+
+        T result = dao.find( clazz, name );
         if ( result == null ) {
             try {
                 result = clazz.newInstance();
@@ -441,13 +438,6 @@ public class ChannelsServiceImpl implements Service {
     /**
      * {@inheritDoc}
      */
-    public boolean isPermanent( ResourceSpec resourceSpec ) {
-        return dao.isPermanent( resourceSpec );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public List<Issue> findAllUserIssues( ModelObject identifiable ) {
         List<Issue> foundIssues = new ArrayList<Issue>();
         for ( UserIssue userIssue : list( UserIssue.class ) ) {
@@ -523,5 +513,17 @@ public class ChannelsServiceImpl implements Service {
 
     public void setImportDirectory( String importDirectory ) {
         this.importDirectory = importDirectory;
+    }
+
+    /** {@inheritDoc} */
+    public Flow replicate( Flow flow, boolean isOutcome ) {
+        Flow result = isOutcome ? connect( flow.getSource(),
+                                           createConnector( flow.getSource().getScenario() ),
+                                           flow.getName() )
+                                : connect( createConnector( flow.getTarget().getScenario() ),
+                                           flow.getTarget(),
+                                           flow.getName() );
+        result.initFrom( flow );
+        return result;
     }
 }
