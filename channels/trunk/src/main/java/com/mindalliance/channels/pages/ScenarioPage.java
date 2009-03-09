@@ -7,6 +7,8 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.command.commands.RemovePart;
+import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.DiagramException;
@@ -507,7 +509,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
                     redirectHere();
                 }
             } );
-            add( new AttachmentPanel( "attachments", new Model<Node>(node) ) );                            // NON-NLS
+            add( new AttachmentPanel( "attachments", new Model<Node>( node ) ) );                            // NON-NLS
             partIssuesPanel = new IssuesPanel( "issues",                                               // NON-NLS
                     new Model<ModelObject>( node ) );
             partIssuesPanel.setOutputMarkupId( true );
@@ -722,7 +724,14 @@ public final class ScenarioPage extends WebPage implements Updatable {
             }
 
             if ( isNodeDeleted() ) {
-                getScenario().removeNode( getNode() );
+                if ( getNode().isPart() )
+                    try {
+                        Project.commander().doCommand( new RemovePart( (Part) getNode() ) );
+                    } catch ( CommandException e ) {
+                        e.printStackTrace();
+                    }
+                else
+                    throw new RuntimeException( "Not allowed to delete a connector via UI" );
                 redirectTo( getScenario() );
 
             } else {
@@ -782,7 +791,6 @@ public final class ScenarioPage extends WebPage implements Updatable {
      * @return page parameters
      */
     public PageParameters getPageParameters() {
-        String url = getRequest().getURL();
         PageParameters params = super.getPageParameters();
         if ( params == null ) params = new PageParameters();
         return params;

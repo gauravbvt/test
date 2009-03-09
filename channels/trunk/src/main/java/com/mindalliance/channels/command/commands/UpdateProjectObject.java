@@ -3,6 +3,7 @@ package com.mindalliance.channels.command.commands;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Service;
@@ -23,8 +24,8 @@ public class UpdateProjectObject extends AbstractCommand {
             final ModelObject modelObject,
             final String property,
             final Object value ) {
+        super();
         addConflicting( modelObject );
-        needLockOn( modelObject );
         setArguments( new HashMap<String, Object>() {
             {
                 put( "object", modelObject.getId() );
@@ -40,20 +41,21 @@ public class UpdateProjectObject extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "update " + getArgument( "type" );
+        return "update " + get( "type" );
     }
 
     /**
      * {@inheritDoc}
      */
-    public Object execute( Service service ) throws CommandException {
+    public Object execute( Commander commander ) throws CommandException {
+        Service service = commander.getService();
         ModelObject modelObject = getModelObject( service );
         setProperty(
                 modelObject,
-                (String) getArgument( "property" ),
-                getArgument( "value" )
+                (String) get( "property" ),
+                get( "value" )
         );
-        return getArgument( "value" );
+        return get( "value" );
     }
 
     /**
@@ -66,16 +68,17 @@ public class UpdateProjectObject extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    public Command makeUndoCommand( Service service ) throws CommandException {
+    protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+        Service service = commander.getService();
         ModelObject modelObject = getModelObject( service );
-        String property = (String) getArgument( "property" );
-        Object oldValue = getArgument( "old" );
+        String property = (String) get( "property" );
+        Object oldValue = get( "old" );
         return new UpdateProjectObject( modelObject, property, oldValue );
     }
 
     private ModelObject getModelObject( Service service ) throws CommandException {
         try {
-            return service.find( ModelObject.class, (Long) getArgument( "object" ) );
+            return service.find( ModelObject.class, (Long) get( "object" ) );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh", e );
         }

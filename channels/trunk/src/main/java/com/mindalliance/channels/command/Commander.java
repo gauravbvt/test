@@ -1,6 +1,7 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.Service;
 
 /**
  * A command execution controller.
@@ -59,5 +60,11 @@ public interface Commander {
      * Resets commander
      */
     void reset();
+
+    /**
+     * Get a service
+     * @return a service
+     */
+    Service getService();
 
 }

@@ -3,6 +3,7 @@ package com.mindalliance.channels.command.commands;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Service;
@@ -19,6 +20,7 @@ import com.mindalliance.channels.NotFoundException;
 public class AddPart extends AbstractCommand {
 
     public AddPart( Scenario scenario ) {
+        super();
         needLockOn( scenario );
         addArgument( "scenario", scenario.getId() );
     }
@@ -33,9 +35,10 @@ public class AddPart extends AbstractCommand {
     /**
       * {@inheritDoc}
       */
-    public Part execute( Service service ) throws CommandException {
+    public Part execute( Commander commander ) throws CommandException {
+        Service service = commander.getService();
         try {
-            Scenario scenario = service.find( Scenario.class, (Long)getArgument("scenario") );
+            Scenario scenario = service.find( Scenario.class, (Long) get("scenario") );
             Part part = service.createPart( scenario );
             addArgument( "part", part.getId() );
             return part;
@@ -54,15 +57,16 @@ public class AddPart extends AbstractCommand {
     /**
       * {@inheritDoc}
       */
-    public Command makeUndoCommand( Service service ) throws CommandException {
+    protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+        Service service = commander.getService();        
         try {
-            Scenario scenario = service.find( Scenario.class, (Long)getArgument("scenario") );
-            Long partId = (Long)getArgument("part");
+            Scenario scenario = service.find( Scenario.class, (Long) get("scenario") );
+            Long partId = (Long) get("part");
             if (partId == null) {
                 throw new CommandException( "Can't undo.");
             }
             else {
-                Part part = (Part)scenario.getNode( (Long)getArgument("part") );
+                Part part = (Part)scenario.getNode( (Long) get("part") );
                 return new RemovePart( part );
             }
         } catch ( NotFoundException e ) {

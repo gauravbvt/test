@@ -4,7 +4,7 @@
         margin: 0;
     }
     div.scenario, .scenario div.role, #directory {
-        page-break-before: always;
+        page-break-before: always; 
     }
 
     body {
@@ -28,6 +28,14 @@
         margin-top: 2em;
         padding-top: 2em;
     }
+
+
+}
+
+
+div.flow-map:after, .scenario div.role:after, #directory:after {
+    content: "Copyright (C) 2009 Mind-Alliance Systems. All Rights Reserved.";
+    display: block;
 }
 
 div.flow-map {

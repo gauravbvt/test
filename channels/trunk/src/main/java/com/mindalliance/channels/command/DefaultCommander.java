@@ -4,6 +4,9 @@ import com.mindalliance.channels.Service;
 
 import java.util.Collection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -12,6 +15,8 @@ import java.util.Collection;
  * Time: 1:47:58 PM
  */
 public class DefaultCommander implements Commander {
+
+    private static final Logger Log = LoggerFactory.getLogger( DefaultCommander.class );
 
     private LockManager lockManager;
 
@@ -30,6 +35,10 @@ public class DefaultCommander implements Commander {
         this.service = service;
     }
 
+    public Service getService() {
+        return service;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -45,7 +54,7 @@ public class DefaultCommander implements Commander {
         if ( command.isAuthorized() ) {
             try {
                 Collection<Lock> grabbedLocks = lockManager.grabLocksOn( command.getLockingSet() );
-                result = command.execute( service );
+                result = command.execute( this );
                 lockManager.releaseLocks( grabbedLocks );
             }
             catch ( LockingException e ) {
@@ -72,7 +81,7 @@ public class DefaultCommander implements Commander {
                 Command command = memento.getCommand();
                 if ( command.isUndoable() ) {
                     try {
-                        canUndo = canDo( command.makeUndoCommand( service ) );
+                        canUndo = command.noLockRequired() || canDo( command.makeUndoCommand( this ) );
                     } catch ( CommandException e ) {
                         e.printStackTrace();
                         canUndo = false;
@@ -94,7 +103,7 @@ public class DefaultCommander implements Commander {
                 Command command = memento.getCommand();
                 if ( command.isUndoable() ) {
                     try {
-                        canRedo = canDo( command.makeUndoCommand( service ) );
+                        canRedo = command.noLockRequired() || canDo( command.makeUndoCommand( this ) );
                     } catch ( CommandException e ) {
                         e.printStackTrace();
                         canRedo = false;
@@ -111,6 +120,7 @@ public class DefaultCommander implements Commander {
      */
     public Object doCommand( Command command ) throws CommandException {
         synchronized ( this ) {
+            Log.info( "Doing: " + command.toString() );
             Object result = execute( command );
             history.recordDone( command );
             return result;
@@ -125,7 +135,8 @@ public class DefaultCommander implements Commander {
             // Get memento of command to undo
             Memento memento = history.getUndo();
             if ( memento == null ) throw new CommandException( "Nothing can be undone right now." );
-            Command undoCommand = memento.getCommand().makeUndoCommand( service );
+            Command undoCommand = memento.getCommand().makeUndoCommand( this );
+            Log.info( "Undoing: " + undoCommand.toString() );
             execute( undoCommand );
             history.recordUndone( memento, undoCommand );
         }
@@ -140,7 +151,8 @@ public class DefaultCommander implements Commander {
             Memento memento = history.getRedo();
             if ( memento == null ) throw new CommandException( "Nothing can be redone right now." );
             // undo the undoing
-            Command redoCommand = memento.getCommand().makeUndoCommand( service );
+            Command redoCommand = memento.getCommand().makeUndoCommand( this );
+            Log.info( "Redoing: " + redoCommand.toString() );
             execute( redoCommand );
             history.recordRedone( memento, redoCommand );
         }

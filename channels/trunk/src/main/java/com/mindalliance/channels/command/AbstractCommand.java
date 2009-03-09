@@ -7,9 +7,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.HashMap;
+import java.util.List;
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -27,7 +28,7 @@ public abstract class AbstractCommand implements Command {
     /**
      * Arguments needed to execute (no model objects)
      */
-    private Map<String, Object> arguments = new HashMap<String,Object>();
+    private Map<String, Object> arguments = new HashMap<String, Object>();
     /**
      * Ids of model objects that must be locked for the duration of the execution of the command.
      */
@@ -36,12 +37,18 @@ public abstract class AbstractCommand implements Command {
      * The command's conflict set.
      */
     private Set<Long> conflictSet = new HashSet<Long>();
+    /**
+     * Whether the command should be remembered after its execution for undoing.
+     */
+    private boolean memorable = true;
+    /**
+     * Optionally preset undo command.
+     */
+    private Command undoCommand;
 
     public AbstractCommand() {
         userName = Project.getUserName();
     }
-
-    public abstract String getName();
 
     public String getUserName() {
         return userName;
@@ -52,12 +59,18 @@ public abstract class AbstractCommand implements Command {
         this.userName = userName;
     }
 
-    public Map getArguments() {
-        return arguments;
+    /**
+     * {@inheritDoc}
+     */
+    public Map<String, Object> getArguments() {
+        // Get a copy of the arguments
+        Map<String, Object> args = new HashMap<String, Object>();
+        args.putAll( arguments );
+        return args;
     }
 
-    public void setArguments( Map<String, Object> arguments ) {
-        this.arguments = arguments;
+    public void setArguments( Map<String, Object> args ) {
+        arguments = args;
     }
 
     /**
@@ -71,13 +84,17 @@ public abstract class AbstractCommand implements Command {
     }
 
     /**
-     * Get an argument by name.
-     *
-     * @param key a string
-     * @return an argument
+     * {@inheritDoc}
      */
-    protected Object getArgument( String key ) {
+    public Object get( String key ) {
         return arguments.get( key );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void set( String key, Object value ) {
+        arguments.put( key, value );
     }
 
     public Set<Long> getLockingSet() {
@@ -97,32 +114,73 @@ public abstract class AbstractCommand implements Command {
     }
 
     /**
-     * Add model object's id to locking set
+     * Add identifiable's id to locking set
      *
-     * @param identifiable a ModelObject
+     * @param identifiable an identifiable object
      */
     protected void needLockOn( Identifiable identifiable ) {
         lockingSet.add( identifiable.getId() );
     }
 
     /**
+     * Add identifiable's id to locking set
+     *
+     * @param identifiables a list of identifiable objects
+     */
+    protected void needLocksOn( List<Identifiable> identifiables ) {
+        for ( Identifiable identifiable : identifiables ) {
+            needLockOn( identifiable );
+        }
+    }
+
+    /**
      * Remove id from lockingSet.
      * Usually because the command deleted the model object with this id.
+     *
      * @param id a model object id
      */
     protected void ignoreLock( Long id ) {
         lockingSet.remove( id );
     }
 
-
-
+    /**
+     * Add identifiable to conflict set.
+     * Also add to locking set.
+     *
+     * @param identifiable an identifiable object
+     */
     protected void addConflicting( Identifiable identifiable ) {
         conflictSet.add( identifiable.getId() );
+        needLockOn( identifiable );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isAuthorized() {
         // By default.
         return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isMemorable() {
+        return memorable;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setMemorable( boolean memorable ) {
+        this.memorable = memorable;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setUndoCommand( Command undoCommand ) {
+        this.undoCommand = undoCommand;
     }
 
     /**
@@ -133,15 +191,31 @@ public abstract class AbstractCommand implements Command {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public boolean noLockRequired() {
+        return false;
+    }
+    
+    public Command makeUndoCommand( Commander commander ) throws CommandException {
+        if ( undoCommand != null )
+            return undoCommand;
+        else
+            return doMakeUndoCommand( commander );
+    }
+
+    protected abstract Command doMakeUndoCommand( Commander commander ) throws CommandException;
+
+    /**
      * Get a model object's property value.
      *
-     * @param obj       an object
+     * @param obj      an object
      * @param property a property name
      * @return an object
      */
     protected Object getProperty( Object obj, String property ) {
         try {
-            return BeanUtils.getProperty( obj, property );
+            return PropertyUtils.getProperty( obj, property );
         } catch ( IllegalAccessException e ) {
             throw new RuntimeException( e );
         } catch ( InvocationTargetException e ) {
@@ -154,16 +228,18 @@ public abstract class AbstractCommand implements Command {
     /**
      * Set a model object's property value.
      *
-     * @param obj       a model object
+     * @param obj      a model object
      * @param property a property name
-     * @param value an object
+     * @param value    an object
      */
     protected void setProperty( Object obj, String property, Object value ) {
         try {
-            BeanUtils.setProperty( obj, property, value );
+            PropertyUtils.setProperty( obj, property, value );
         } catch ( IllegalAccessException e ) {
             throw new RuntimeException( e );
         } catch ( InvocationTargetException e ) {
+            throw new RuntimeException( e );
+        } catch ( NoSuchMethodException e ) {
             throw new RuntimeException( e );
         }
     }

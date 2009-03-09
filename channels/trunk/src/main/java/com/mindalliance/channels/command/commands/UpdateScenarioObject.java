@@ -3,6 +3,7 @@ package com.mindalliance.channels.command.commands;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ScenarioObject;
@@ -25,8 +26,8 @@ public class UpdateScenarioObject extends AbstractCommand {
             final ScenarioObject scenarioObject,
             final String property,
             final Object value ) {
+        super();
         addConflicting( scenarioObject );
-        needLockOn( scenarioObject );
         setArguments( new HashMap<String, Object>() {
             {
                 put( "scenario", scenarioObject.getScenario().getId() );
@@ -44,48 +45,49 @@ public class UpdateScenarioObject extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "update " + ((Boolean)getArgument("isNode") ? "part" : "flow");
+        return "update " + ( (Boolean) get( "isNode" ) ? "part" : "flow" );
     }
 
     /**
-      * {@inheritDoc}
-      */
-    public Object execute( Service service ) throws CommandException {
-        ScenarioObject scenarioObject = getScenarioObject( service );
+     * {@inheritDoc}
+     */
+    public Object execute( Commander commander ) throws CommandException {
+        ScenarioObject scenarioObject = getScenarioObject( commander.getService() );
         setProperty(
                 scenarioObject,
-                (String) getArgument( "property" ),
-                getArgument( "value" )
+                (String) get( "property" ),
+                get( "value" )
         );
-        return getArgument( "value" );
+        return get( "value" );
     }
 
     /**
-      * {@inheritDoc}
-      */
+     * {@inheritDoc}
+     */
     public boolean isUndoable() {
         return true;
     }
 
     /**
-      * {@inheritDoc}
-      */
-    public Command makeUndoCommand( Service service ) throws CommandException {
-            ScenarioObject scenarioObject = getScenarioObject( service );
-            String property = (String) getArgument( "property" );
-            Object oldValue = getArgument( "old" );
-            return new UpdateScenarioObject( scenarioObject, property, oldValue );
+     * {@inheritDoc}
+     */
+    protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+        Service service = commander.getService();
+        ScenarioObject scenarioObject = getScenarioObject( service );
+        String property = (String) get( "property" );
+        Object oldValue = get( "old" );
+        return new UpdateScenarioObject( scenarioObject, property, oldValue );
     }
 
     private ScenarioObject getScenarioObject( Service service ) throws CommandException {
         try {
-            Scenario scenario = service.find( Scenario.class, (Long) getArgument( "scenario" ) );
-            boolean isNode = (Boolean) getArgument( "isNode" );
+            Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
+            boolean isNode = (Boolean) get( "isNode" );
             ScenarioObject scenarioObject;
             if ( isNode ) {
-                scenarioObject = scenario.getNode( (Long) getArgument( "object" ) );
+                scenarioObject = scenario.getNode( (Long) get( "object" ) );
             } else {
-                scenarioObject = scenario.findFlow( (Long) getArgument( "object" ) );
+                scenarioObject = scenario.findFlow( (Long) get( "object" ) );
             }
             return scenarioObject;
         } catch ( NotFoundException e ) {

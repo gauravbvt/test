@@ -167,49 +167,27 @@ public class Scenario extends ModelObject {
 
     /**
      * Remove a node from this scenario.
-     * "Replace" removed node by connectors in flows to and from node.
      * Quietly succeeds if node is not part of the scenario
      *
      * @param node the node to remove.
      */
     public void removeNode( Node node ) {
-        Service service = Project.service();
         if ( getNodeIndex().containsKey( node.getId() )
                 && ( node.isConnector() || hasMoreThanOnePart() ) ) {
-
             Iterator<Flow> ins = node.requirements();
             while ( ins.hasNext() ) {
-                Flow in = ins.next();
-                // If the node to be removed is a part, preserve the outcome of the source the flow represents
-                if ( node.isPart() && in.isInternal()
-                        && in.getSource().isPart()
-                        && !in.getSource().hasMultipleOutcomes( in.getName() ) ) {
-                    Flow flow = service.connect( in.getSource(), service.createConnector( this ), in.getName() );
-                    flow.initFrom( in );
-                }
-                in.disconnect();
+                ins.next().disconnect();
             }
-
             Iterator<Flow> outs = node.outcomes();
             while ( outs.hasNext() ) {
-                Flow out = outs.next();
-                // If the node to be removed is a part, preserve the outcome of the source the flow represents
-                if ( node.isPart() && out.isInternal()
-                        && out.getTarget().isPart()
-                        && !out.getSource().hasMultipleRequirements( out.getName() ) ) {
-                    Flow flow = service.connect( service.createConnector( this ), out.getTarget(), out.getName() );
-                    flow.initFrom( out );
-                }
-                out.disconnect();
+                outs.next().disconnect();
             }
-
             if ( node.isConnector() ) {
                 Iterator<ExternalFlow> xf = ( (Connector) node ).externalFlows();
                 while ( xf.hasNext() ) {
                     xf.next().disconnect();
                 }
             }
-
             node.setScenario( null );
             nodeIndex.remove( node.getId() );
         }
@@ -218,7 +196,7 @@ public class Scenario extends ModelObject {
     private boolean hasMoreThanOnePart() {
         Iterator<Part> parts = parts();
         parts.next();
-        // Note: scenario always has at least one part
+        // Note: scenario must always have at least one part
         return parts.hasNext();
     }
 

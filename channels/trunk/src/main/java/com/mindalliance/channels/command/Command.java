@@ -1,9 +1,5 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Service;
-
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,6 +23,7 @@ public interface Command<T> {
 
     /**
      * Get name of user who will/did execute this command.
+     *
      * @return a string
      */
     String getUserName();
@@ -40,6 +37,22 @@ public interface Command<T> {
     Map<String, Object> getArguments();
 
     /**
+     * Get the value of named argument.
+     *
+     * @param argumentName a string
+     * @return an object
+     */
+    Object get( String argumentName );
+
+    /**
+     * Get the value of named argument.
+     *
+     * @param argumentName a string
+     * @param value        an object
+     */
+    void set( String argumentName, Object value );
+
+    /**
      * Get the ids of model objects on which locks
      * must be acquired for the command to execute.
      *
@@ -50,6 +63,7 @@ public interface Command<T> {
     /**
      * Get the ids of model objects that would cause a conflict in undoing/redoing
      * the command if a more recently executed command has an intersecting conflict set.
+     *
      * @return a set of ids (long)
      */
     Set<Long> getConflictSet();
@@ -65,14 +79,15 @@ public interface Command<T> {
     /**
      * Execute the command.
      *
-     * @param service a service
+     * @param commander a commander executing the command
      * @return an object of class T
      * @throws CommandException if execution fails
      */
-    T execute( Service service ) throws CommandException;
+    T execute( Commander commander ) throws CommandException;
 
     /**
      * Whether the command can be undone.
+     *
      * @return a boolean
      */
     boolean isUndoable();
@@ -80,10 +95,35 @@ public interface Command<T> {
     /**
      * Produces a command that, if successfully executed, would reverse the effect of the command.
      *
-     * @param service a service
+     * @param commander a commander executing the command
      * @return a command
      * @throws CommandException if undo command can not be made
      */
-    Command makeUndoCommand( Service service ) throws CommandException;
+    Command makeUndoCommand( Commander commander ) throws CommandException;
 
+    /**
+     * Whether the command's execution should be remembered.
+     *
+     * @return a boolean
+     */
+    boolean isMemorable();
+
+    /**
+     * Set whether the command's execution should be remembered.
+     *
+     * @param value a boolean
+     */
+    void setMemorable( boolean value );
+
+    /**
+     * Preset the undo command.
+     * @param command a command
+     */
+    void setUndoCommand( Command command );
+
+    /**
+     * Whether no lock is required by the nature of the command.
+     * @return a boolean
+     */
+    boolean noLockRequired();
 }

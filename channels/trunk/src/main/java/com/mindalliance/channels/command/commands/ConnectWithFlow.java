@@ -3,11 +3,13 @@ package com.mindalliance.channels.command.commands;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Service;
+import com.mindalliance.channels.Part;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +24,9 @@ import java.util.Map;
  */
 public class ConnectWithFlow extends AbstractCommand {
 
+    public ConnectWithFlow() {
+        super();
+    }
 
     public ConnectWithFlow( final Node source, final Node target, final String name ) {
         this( source, target, name, new HashMap<String, Object>() );
@@ -32,16 +37,30 @@ public class ConnectWithFlow extends AbstractCommand {
             final Node target,
             final String name,
             final Map<String, Object> state ) {
+        super();
         needLockOn( source );
         needLockOn( target );
+        final Part part;
+        final Node other;
+        final boolean isOutcome;
+        if ( source.isPart() ) {
+            isOutcome = true;
+            part = (Part) source;
+            other = target;
+        } else {
+            isOutcome = false;
+            part = (Part) target;
+            other = source;
+        }
         setArguments( new HashMap<String, Object>() {
             {
-                put( "sourceScenario", source.getScenario().getId() );
-                put( "source", source.getId() );
-                put( "targetScenario", source.getScenario().getId() );
-                put( "target", target.getId() );
+                put( "isOutcome", isOutcome );
+                put( "scenario", part.getScenario().getId() );
+                put( "part", part.getId() );
+                put( "otherScenario", other.getScenario().getId() );
+                put( "other", other.getId() );
                 put( "name", name );
-                put( "state", state );
+                put( "attributes", state );
             }
         } );
     }
@@ -50,28 +69,34 @@ public class ConnectWithFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "connect"; 
+        return "connect";
     }
 
     /**
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    public Flow execute( Service service ) throws CommandException {
+    public Flow execute( Commander commander ) throws CommandException {
+        Service service = commander.getService();
         try {
             Scenario scenario = service.find(
                     Scenario.class,
-                    (Long) getArgument( "sourceScenario" ) );
-            Node source = scenario.getNode( (Long) getArgument( "source" ) );
-            scenario = service.find(
+                    (Long) get( "scenario" ) );
+            Part part = (Part) scenario.getNode( (Long) get( "part" ) );
+            Scenario otherScenario = service.find(
                     Scenario.class,
-                    (Long) getArgument( "targetScenario" ) );
-            Node target = scenario.getNode( (Long) getArgument( "target" ) );
-            String name = (String) getArgument( "name" );
-            Flow flow = service.connect( source, target, name );
-            Map<String, Object> state = (Map<String, Object>) getArgument( "state" );
-            for ( String key : state.keySet() ) {
-                setProperty( flow, key, state.get( key ) );
+                    (Long) get( "otherScenario" ) );
+            Node other = otherScenario.getNode( (Long) get( "other" ) );
+            String name = (String) get( "name" );
+            boolean isOutcome = (Boolean) get( "isOutcome" );
+            Flow flow = isOutcome
+                    ? service.connect( part, other, name )
+                    : service.connect( other, part, name );
+            Map<String, Object> attributes = (Map<String, Object>) get( "attributes" );
+            if ( attributes != null ) {
+                for ( String key : attributes.keySet() ) {
+                    setProperty( flow, key, attributes.get( key ) );
+                }
             }
             addArgument( "flow", flow.getId() );
             return flow;
@@ -90,10 +115,11 @@ public class ConnectWithFlow extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    public Command makeUndoCommand( Service service ) throws CommandException {
+    protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+        Service service = commander.getService();
         try {
-            Scenario scenario = service.find( Scenario.class, (Long) getArgument( "scenario" ) );
-            Long flowId = (Long) getArgument( "flow" );
+            Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
+            Long flowId = (Long) get( "flow" );
             if ( flowId == null ) throw new CommandException( "Can't undo." );
             Flow flow = scenario.findFlow( flowId );
             return new BreakUpFlow( flow );

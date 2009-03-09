@@ -220,14 +220,14 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         if ( getSource().isConnector() ) {
             return MessageFormat.format(
                     isAskedFor() ? "Needs to ask for {0}"
-                            : isTriggeringToTarget() ? "Needs to be told to {0}"
+                           // : isTriggeringToTarget() ? "Needs to be told to {0}"
                             : "Needs to be notified of {0}",
                     message.toLowerCase() );
 
         } else {
             return MessageFormat.format(
                     isAskedFor() ? "Ask {1} for {0}"
-                            : isTriggeringToTarget() ? "Told to {0} by {1}"
+                           // : isTriggeringToTarget() ? "Told to {0} by {1}"
                             : "Notified of {0} by {1}",
                     message.toLowerCase(), getShortName( getSource(), false ) );
         }
@@ -247,14 +247,14 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         Node node = getTarget();
         if ( node.isConnector() ) {
             String format = isAskedFor() ? "Can answer with {0}"
-                    : isTriggeringToTarget() ? "Can tell to {0}"
+                   // : isTriggeringToTarget() ? "Can tell to {0}"
                     : "Can notify of {0}";
 
             return MessageFormat.format( format, message.toLowerCase() );
 
         } else {
             String format = isAskedFor() ? "Answer {1} with {0}"
-                    : isTriggeringToTarget() ? "Tell {1} to {0}"
+                  //  : isTriggeringToTarget() ? "Tell {1} to {0}"
                     : "Notify {1} of {0}";
 
             return MessageFormat.format(
@@ -554,6 +554,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
 
     /**
      * Breakup a flow, possibly creating connector-based flows to preserve requirement and outcome.
+     * TODO - Move to BreakupFlow command
      */
     public abstract void breakup();
 

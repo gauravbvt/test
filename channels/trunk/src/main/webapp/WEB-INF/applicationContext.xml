@@ -14,9 +14,6 @@
         <property name="dao" ref="dao"/>
     </bean>
 
-
-    
-
     <bean id="serializer" class="com.mindalliance.channels.export.xml.XmlStreamer"/>
     <bean id="attachmentManager" class="com.mindalliance.channels.attachments.FileBasedManager">
         <property name="directory" value="target/channels-1.0-SNAPSHOT/uploads"/>
@@ -74,4 +71,16 @@
             </list>
         </property>
     </bean>
+
+    <!-- Lock manager -->
+    <bean id="lockManager" class="com.mindalliance.channels.command.DefaultLockManager">
+        <property name="service" ref="channels"/>
+    </bean>
+
+    <!-- Commander -->
+    <bean id="commander" class="com.mindalliance.channels.command.DefaultCommander">
+        <property name="lockManager" ref="lockManager"/>
+        <property name="service" ref="channels"/>
+    </bean>
+
 </beans>

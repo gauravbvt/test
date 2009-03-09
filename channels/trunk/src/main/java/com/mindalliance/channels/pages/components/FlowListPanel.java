@@ -4,6 +4,8 @@ import com.mindalliance.channels.Service;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.command.commands.BreakUpFlow;
+import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ScenarioPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -134,8 +136,11 @@ public class FlowListPanel extends Panel {
             if ( p.isMarkedForDeletion() ) {
                 final Flow flow = p.getFlow();
                 expansions.remove( flow.getId() );
-                flow.breakup();
-                // flow.disconnect();
+                try {
+                    Project.commander().doCommand(  new BreakUpFlow( flow ) );
+                } catch ( CommandException e ) {
+                    e.printStackTrace();
+                }
             }
     }
 }

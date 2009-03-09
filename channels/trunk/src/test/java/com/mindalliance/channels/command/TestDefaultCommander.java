@@ -2,7 +2,6 @@ package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Service;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -27,8 +26,8 @@ public class TestDefaultCommander extends AbstractChannelsTest {
             return "Hello";
         }
 
-        public Object execute( Service service ) throws CommandException {
-            System.out.println( getArgument( "greeting" ) + "! says " + getUserName() );
+        public Object execute( Commander commander ) throws CommandException {
+            System.out.println( get( "greeting" ) + "! says " + getUserName() );
             return true;
         }
 
@@ -36,8 +35,8 @@ public class TestDefaultCommander extends AbstractChannelsTest {
             return true;
         }
 
-        public Command makeUndoCommand( Service service ) throws CommandException {
-            return makeCommand( "not " + getArgument( "greeting" ) );
+        protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+            return makeCommand( "not " + get( "greeting" ) );
         }
     }
 
@@ -51,7 +50,6 @@ public class TestDefaultCommander extends AbstractChannelsTest {
     private AbstractCommand makeCommand( String greeting ) {
         AbstractCommand command = new HelloCommand( greeting );
         Scenario scenario = project.getService().getDefaultScenario();
-        command.needLockOn( scenario );
         command.addConflicting( scenario );
         return command;
     }

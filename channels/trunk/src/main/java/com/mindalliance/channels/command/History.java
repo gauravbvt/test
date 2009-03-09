@@ -43,8 +43,10 @@ public class History {
      * @param command a command
      */
     public void recordDone( Command command ) {
-        Memento memento = new Memento( command );
-        done.add( 0, memento );
+        if ( command.isMemorable() ) {
+            Memento memento = new Memento( command );
+            done.add( 0, memento );
+        }
         clearUndone( command.getUserName() );
     }
 
@@ -69,21 +71,24 @@ public class History {
     /**
      * Record memorized command as undone.
      *
-     * @param memento memento of the command undo
+     * @param memento        memento of the command undo
      * @param undoingCommand an undoing command
      */
     public void recordUndone( Memento memento, Command undoingCommand ) {
-        done.remove( memento );
-        undone.add( 0, new Memento( undoingCommand ) );
+        if ( memento.getCommand().isMemorable() ) {
+            done.remove( memento );
+            undone.add( 0, new Memento( undoingCommand ) );
+        }
     }
 
     /**
      * Record memorized command as redone.
      *
-     * @param memento a memento of the undoing command
+     * @param memento     a memento of the undoing command
      * @param redoCommand the command that undoes an undoing command
      */
     public void recordRedone( Memento memento, Command redoCommand ) {
+        assert !memento.getCommand().isMemorable();
         done.add( 0, new Memento( redoCommand ) );
         undone.remove( memento );
     }
