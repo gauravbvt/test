@@ -55,6 +55,7 @@ public class UpdateProjectObject extends AbstractCommand {
                 (String) get( "property" ),
                 get( "value" )
         );
+        service.update( modelObject );
         return get( "value" );
     }
 

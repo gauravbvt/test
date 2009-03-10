@@ -8,11 +8,12 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Part;
-import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Scenario;
 import org.slf4j.LoggerFactory;
+import org.springframework.orm.jpa.JpaCallback;
 import org.springframework.orm.jpa.support.JpaDaoSupport;
 
+import javax.persistence.EntityManager;
 import java.text.MessageFormat;
 import java.util.List;
 
@@ -54,7 +55,18 @@ public class HibernateDao extends JpaDaoSupport implements Dao {
     }
 
     /** {@inheritDoc} */
+    public void update( ModelObject object ) {
+        LoggerFactory.getLogger( getClass() ).debug(
+            MessageFormat.format(
+                "Updating {0} {1}", object.getClass().getSimpleName(), object ) );
+        getJpaTemplate().merge( object );
+    }
+
+    /** {@inheritDoc} */
     public void remove( ModelObject object ) {
+        LoggerFactory.getLogger( getClass() ).debug(
+            MessageFormat.format(
+                "Removing {0} {1}", object.getClass().getSimpleName(), object ) );
         if ( object instanceof Scenario )
             remove( (Scenario) object );
         else
@@ -124,5 +136,15 @@ public class HibernateDao extends JpaDaoSupport implements Dao {
                                       clazz.getSimpleName() ),
                 name );
         return list.isEmpty() ? null : list.get( 0 );
+    }
+
+    /** {@inheritDoc} */
+    public void flush() {
+        getJpaTemplate().execute( new JpaCallback() {
+            public Object doInJpa( EntityManager em ) {
+                em.flush();
+                return null;
+            }
+        } );
     }
 }

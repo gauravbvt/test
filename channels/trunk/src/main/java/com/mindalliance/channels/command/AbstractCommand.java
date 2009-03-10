@@ -2,15 +2,14 @@ package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.pages.Project;
+import org.apache.commons.beanutils.PropertyUtils;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.List;
-import java.lang.reflect.InvocationTargetException;
-
-import org.apache.commons.beanutils.PropertyUtils;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

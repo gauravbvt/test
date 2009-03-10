@@ -72,6 +72,10 @@ public final class Memory implements Dao {
     }
 
     /** {@inheritDoc} */
+    public void update( ModelObject object ) {
+    }
+
+    /** {@inheritDoc} */
     public long getScenarioCount() {
         return (long) scenarios.size();
     }
@@ -179,6 +183,10 @@ public final class Memory implements Dao {
         }
 
         return null;
+    }
+
+    /** {@inheritDoc} */
+    public void flush() {
     }
 
     /**

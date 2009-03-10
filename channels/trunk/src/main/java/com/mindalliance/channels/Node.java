@@ -78,12 +78,7 @@ public abstract class Node extends ModelObject implements ScenarioObject {
      * @param outcomes the new outcomes
      */
     void setOutcomes( Map<Long, Flow> outcomes ) {
-        if ( this.outcomes != null )
-            for ( Flow f : new HashSet<Flow>( this.outcomes.values() ) )
-                removeOutcome( f );
         this.outcomes = outcomes;
-        for ( Flow f : outcomes.values() )
-            f.setSource( this );
     }
 
     /**

@@ -1,12 +1,10 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.Service;
-import com.mindalliance.channels.NotFoundException;
-
-import java.util.Collection;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -67,9 +65,6 @@ public class DefaultCommander implements Commander {
                 lockManager.releaseLocks( grabbedLocks );
             } catch ( LockingException e ) {
                 throw new CommandException( e.getMessage(), e );
-            } catch ( NotFoundException e ) {
-                e.printStackTrace();
-                throw new CommandException( "Execution failed.", e );
             }
         } else {
             throw new CommandException( "You are not authorized." );

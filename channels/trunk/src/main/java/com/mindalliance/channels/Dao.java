@@ -74,6 +74,12 @@ public interface Dao {
     void add( ModelObject object );
 
     /**
+     * Update a model object.
+     * @param object the model object.
+     */
+    void update( ModelObject object );
+
+    /**
      * Remove a persistent model object.
      * Last scenario will not be deleted.
      * @param object the object
@@ -88,4 +94,9 @@ public interface Dao {
      * @return the object or null if not found
      */
     <T extends ModelObject> T find( Class<T> clazz, String name );
+
+    /**
+     * Commit changes to persistent store.
+     */
+    void flush();
 }

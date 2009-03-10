@@ -171,7 +171,7 @@ public class Part extends Node {
      * @param role the new role.
      */
     public void setRole( Role role ) {
-        LoggerFactory.getLogger( getClass() ).debug( "Setting role to " + role );
+        LoggerFactory.getLogger( getClass() ).debug( "Setting role of " + this + " to " + role );
         this.role = role;
         adjustName();
     }

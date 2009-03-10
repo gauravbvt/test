@@ -73,7 +73,7 @@ public class ChannelsServiceImpl implements Service {
      */
     public Scenario createScenario() {
         Scenario result = new Scenario();
-        dao.add( result );
+        getDao().add( result );
 
         result.setName( Scenario.DEFAULT_NAME );
         result.setDescription( Scenario.DEFAULT_DESCRIPTION );
@@ -87,7 +87,7 @@ public class ChannelsServiceImpl implements Service {
      * {@inheritDoc}
      */
     public Connector createConnector( Scenario scenario ) {
-        Connector result = dao.createConnector( scenario );
+        Connector result = getDao().createConnector( scenario );
         scenario.addNode( result );
         return result;
     }
@@ -96,7 +96,7 @@ public class ChannelsServiceImpl implements Service {
      * {@inheritDoc}
      */
     public Part createPart( Scenario scenario ) {
-        Part result = dao.createPart( scenario );
+        Part result = getDao().createPart( scenario );
         scenario.addNode( result );
         return result;
     }
@@ -108,12 +108,12 @@ public class ChannelsServiceImpl implements Service {
         Flow result;
 
         if ( isInternal( source, target ) ) {
-            result = dao.createInternalFlow( source, target, name );
+            result = getDao().createInternalFlow( source, target, name );
             source.addOutcome( result );
             target.addRequirement( result );
 
         } else if ( isExternal( source, target ) ) {
-            result = dao.createExternalFlow( source, target, name );
+            result = getDao().createExternalFlow( source, target, name );
             if ( source.isConnector() ) {
                 target.addRequirement( result );
                 ( (Connector) source ).addExternalFlow( (ExternalFlow) result );
@@ -141,28 +141,10 @@ public class ChannelsServiceImpl implements Service {
     }
 
     /**
-     * Find flow between a source and a target.
-     *
-     * @param source the source
-     * @param target the target
-     * @param name   the name of the flow
-     * @return the connecting flow, or null if none
-     */
-    private static Flow getFlow( Node source, Node target, String name ) {
-        for ( Iterator<Flow> flows = source.outcomes(); flows.hasNext(); ) {
-            Flow f = flows.next();
-            if ( target.equals( f.getTarget() ) && f.getName().equals( name ) )
-                return f;
-        }
-
-        return null;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public Scenario findScenario( String name ) throws NotFoundException {
-        for ( Scenario s : dao.list( Scenario.class ) ) {
+        for ( Scenario s : getDao().list( Scenario.class ) ) {
             if ( name.equals( s.getName() ) )
                 return s;
         }
@@ -174,22 +156,22 @@ public class ChannelsServiceImpl implements Service {
      * {@inheritDoc}
      */
     public <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException {
-        return dao.find( clazz, id );
+        return getDao().find( clazz, id );
     }
 
     /**
      * {@inheritDoc}
      */
     public <T extends ModelObject> List<T> list( Class<T> clazz ) {
-        return dao.list( clazz );
+        return getDao().list( clazz );
     }
 
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public Iterator<ModelObject> iterateEntities() {
-        return new FilterIterator( dao.list( ModelObject.class ).iterator(), new Predicate() {
+        return new FilterIterator( getDao().list( ModelObject.class ).iterator(), new Predicate() {
             public boolean evaluate( Object object ) {
                 return ( (ModelObject) object ).isEntity();
             }
@@ -200,21 +182,28 @@ public class ChannelsServiceImpl implements Service {
      * {@inheritDoc}
      */
     public void add( ModelObject object ) {
-        dao.add( object );
+        getDao().add( object );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void update( ModelObject object ) {
+        getDao().update( object );
     }
 
     /**
      * {@inheritDoc}
      */
     public void remove( ModelObject object ) {
-        dao.remove( object );
+        getDao().remove( object );
     }
 
     /**
      * {@inheritDoc}
      */
     public Scenario getDefaultScenario() {
-        return dao.list( Scenario.class ).iterator().next();
+        return getDao().list( Scenario.class ).iterator().next();
     }
 
     public Dao getDao() {
@@ -234,7 +223,7 @@ public class ChannelsServiceImpl implements Service {
      * {@inheritDoc}
      */
     public void initialize() {
-        if ( !dao.list( Scenario.class ).iterator().hasNext() ) {
+        if ( !getDao().list( Scenario.class ).iterator().hasNext() ) {
             if ( addingSamples ) {
                 LoggerFactory.getLogger( getClass() ).info( "Adding sample models" );
                 Scenario evac = createScenario();
@@ -247,7 +236,7 @@ public class ChannelsServiceImpl implements Service {
                 importScenarios();
             }
             // Make sure there is at least one scenario
-            if ( !dao.list( Scenario.class ).iterator().hasNext() ) {
+            if ( !getDao().list( Scenario.class ).iterator().hasNext() ) {
                 createScenario();
             }
         }
@@ -302,12 +291,12 @@ public class ChannelsServiceImpl implements Service {
         if ( name == null || name.isEmpty() )
             return null;
 
-        T result = dao.find( clazz, name );
+        T result = getDao().find( clazz, name );
         if ( result == null ) {
             try {
                 result = clazz.newInstance();
                 result.setName( name );
-                dao.add( result );
+                getDao().add( result );
             } catch ( InstantiationException e ) {
                 throw new RuntimeException( e );
             } catch ( IllegalAccessException e ) {
@@ -418,13 +407,15 @@ public class ChannelsServiceImpl implements Service {
                 Flow flow = flows.next();
                 if ( Play.hasPlay( flow ) ) {
                     if ( flow.getSource().isPart()
-                            && ( (Part) flow.getSource() ).involves( resourceSpec ) ) {
+                            && ( (Part) flow.getSource() ).involves( resourceSpec ) )
+                    {
                         // role sends
                         Play play = new Play( (Part) flow.getSource(), flow, true );
                         plays.add( play );
                     }
                     if ( flow.getTarget().isPart()
-                            && ( (Part) flow.getTarget() ).involves( resourceSpec ) ) {
+                            && ( (Part) flow.getTarget() ).involves( resourceSpec ) )
+                    {
                         // role receives
                         Play play = new Play( (Part) flow.getTarget(), flow, false );
                         plays.add( play );
@@ -476,7 +467,7 @@ public class ChannelsServiceImpl implements Service {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public List<Actor> findAllActors( ResourceSpec resourceSpec ) {
         Set<Actor> actors = new HashSet<Actor>();
         // If the resource spec is anyone, then return no actor,
@@ -525,5 +516,10 @@ public class ChannelsServiceImpl implements Service {
                                            flow.getName() );
         result.initFrom( flow );
         return result;
+    }
+
+    /** {@inheritDoc} */
+    public void flush() {
+        getDao().flush();
     }
 }
