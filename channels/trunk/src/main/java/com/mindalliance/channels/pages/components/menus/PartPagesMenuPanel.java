@@ -19,6 +19,7 @@ public class PartPagesMenuPanel extends MenuPanel {
 
     public PartPagesMenuPanel( String s, IModel<? extends Part> model ) {
         super( s, model );
+        setRenderBodyOnly( true );
         init();
     }
 

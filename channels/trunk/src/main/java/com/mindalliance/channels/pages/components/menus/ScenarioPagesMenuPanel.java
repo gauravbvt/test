@@ -1,10 +1,6 @@
 package com.mindalliance.channels.pages.components.menus;
 
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.pages.ExportPage;
-import com.mindalliance.channels.pages.ScenarioPage;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.IModel;
 
@@ -20,6 +16,7 @@ public class ScenarioPagesMenuPanel extends MenuPanel {
 
     public ScenarioPagesMenuPanel( String s, IModel<? extends ModelObject> model ) {
         super( s, model );
+        setRenderBodyOnly( true );
         init();
     }
 

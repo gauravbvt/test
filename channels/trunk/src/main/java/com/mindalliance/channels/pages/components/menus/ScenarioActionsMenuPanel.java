@@ -1,18 +1,15 @@
 package com.mindalliance.channels.pages.components.menus;
 
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.commands.AddIssue;
 import com.mindalliance.channels.command.commands.AddPart;
-import com.mindalliance.channels.command.commands.RemoveScenario;
 import com.mindalliance.channels.command.commands.AddScenario;
+import com.mindalliance.channels.command.commands.RemoveScenario;
 import com.mindalliance.channels.pages.ExportPage;
-import com.mindalliance.channels.pages.ScenarioPage;
 import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.ScenarioPage;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -42,6 +39,7 @@ public class ScenarioActionsMenuPanel extends MenuPanel {
 
     public ScenarioActionsMenuPanel( String s, IModel<Scenario> model, Set<Long> expansions ) {
         super( s, model );
+        setRenderBodyOnly( true );
         this.expansions = expansions;
         init();
     }
