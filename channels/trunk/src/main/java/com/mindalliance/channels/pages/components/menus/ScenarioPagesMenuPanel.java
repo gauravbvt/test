@@ -26,11 +26,6 @@ public class ScenarioPagesMenuPanel extends MenuPanel {
     private void init() {
         add( new ExternalLink( "index", "index.html" ) );
         add( new ExternalLink( "report", "report.html" ) );
-        // Export
-        add( new BookmarkablePageLink<Scenario>(
-                "export",
-                ExportPage.class,
-                ScenarioPage.getParameters( (Scenario) getModel().getObject(), null ) ) );
     }
 
 }

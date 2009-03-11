@@ -445,7 +445,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
         /**
          * The delete scenario check box.
          */
-        private DeleteBox deleteScenario;
+       // private DeleteBox deleteScenario;
 
         /**
          * The requirement list.
@@ -683,7 +683,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
             outcomes.deleteSelectedFlows( expansions );
             importScenario();
 
-            if ( deleteScenario.isSelected() ) {
+       /*     if ( deleteScenario.isSelected() ) {
                 Service service = getService();
                 Scenario scenario = getScenario();
                 service.remove( scenario );
@@ -692,7 +692,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
                             "Deleted scenario {0} - {1}",
                             scenario.getId(), scenario.getName() ) );
                 setTarget( service.getDefaultScenario() );
-            }
+            }*/
 
             if ( isNodeDeleted() ) {
                 if ( getNode().isPart() )
@@ -785,16 +785,21 @@ public final class ScenarioPage extends WebPage implements Updatable {
         return result;
     }
 
+/*
     //==============================================================
-    /**
+    */
+/**
      * A check box that causes the current scenario to be deleted,
      * if selected and form is submitted.
      */
+/*
     private static final class DeleteBox extends CheckBox {
 
-        /**
+        */
+/**
          * The selection state of the checkbox.
          */
+/*
         private boolean selected;
 
         private DeleteBox( String id ) {
@@ -811,41 +816,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
         }
 
     }
-
-    // Command handling
-
-    private boolean canUndo() {
-        return Project.getProject().getCommander().canUndo();
-    }
-
-    private boolean canRedo() {
-        return Project.getProject().getCommander().canRedo();
-    }
-
-    private void undo() {
-        try {
-            Project.getProject().getCommander().undo();
-        } catch ( CommandException e ) {
-            throw new WicketRuntimeException( e );
-        }
-    }
-
-    private void redo() {
-        try {
-            Project.getProject().getCommander().redo();
-        } catch ( CommandException e ) {
-            throw new WicketRuntimeException( e );
-        }
-    }
-
-    private Object doCommand( Command command ) {
-        Commander commander = Project.getProject().getCommander();
-        try {
-            return commander.doCommand( command );
-        } catch ( CommandException e ) {
-            throw new WicketRuntimeException( e );
-        }
-    }
+*/
 
 
 }

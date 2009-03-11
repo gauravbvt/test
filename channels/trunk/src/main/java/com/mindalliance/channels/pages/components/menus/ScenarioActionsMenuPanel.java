@@ -66,46 +66,53 @@ public class ScenarioActionsMenuPanel extends MenuPanel {
             editLink =
                     new BookmarkablePageLink<Scenario>(
                             "link", ScenarioPage.class,
-                            ((ScenarioPage)getWebPage()).getParametersCollapsing( getScenario().getId() ) );
+                            ( (ScenarioPage) getWebPage() ).getParametersCollapsing( getScenario().getId() ) );
             menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Hide details" ), editLink ) );
 
         } else {
             editLink =
                     new BookmarkablePageLink<Scenario>(
                             "link", ScenarioPage.class,   // NON-NLS
-                            ((ScenarioPage)getWebPage()).getParametersExpanding( getScenario().getId() ) );
+                            ( (ScenarioPage) getWebPage() ).getParametersExpanding( getScenario().getId() ) );
             menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Show details" ), editLink ) );
-        }       
+        }
         // Commands
-        menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers()));
+        menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
+        // Export
+        menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Export" ),
+                new BookmarkablePageLink<Scenario>(
+                        "link",
+                        ExportPage.class,
+                        ScenarioPage.getParameters( (Scenario) getModel().getObject(), null ) ) ) );
+
         return menuItems;
     }
 
     private List<CommandWrapper> getCommandWrappers() {
         return new ArrayList<CommandWrapper>() {
             {
-                add( new CommandWrapper(new AddPart( getScenario())) {
-                    public void onExecution(AjaxRequestTarget target, Object result) {
-                        updateWith( target );
-                    }
-                } );
-                add( new CommandWrapper(new AddIssue( getScenario())) {
-                    public void onExecution(AjaxRequestTarget target, Object result) {
-                        updateWith( target );
-                    }
-                } );
-                add( new CommandWrapper(new AddScenario( ) ) {
-                     public void onExecution( AjaxRequestTarget target, Object result ) {
-                         ((ScenarioPage)getWebPage()).redirectTo( (Scenario)result );
-                     }
-                 });
-                add( new CommandWrapper(new RemoveScenario( getScenario() ) ) {
+                add( new CommandWrapper( new AddPart( getScenario() ) ) {
                     public void onExecution( AjaxRequestTarget target, Object result ) {
-                        ((ScenarioPage)getWebPage()).redirectTo( 
+                        updateWith( target );
+                    }
+                } );
+                add( new CommandWrapper( new AddIssue( getScenario() ) ) {
+                    public void onExecution( AjaxRequestTarget target, Object result ) {
+                        updateWith( target );
+                    }
+                } );
+                add( new CommandWrapper( new AddScenario() ) {
+                    public void onExecution( AjaxRequestTarget target, Object result ) {
+                        ( (ScenarioPage) getWebPage() ).redirectTo( (Scenario) result );
+                    }
+                } );
+                add( new CommandWrapper( new RemoveScenario( getScenario() ) ) {
+                    public void onExecution( AjaxRequestTarget target, Object result ) {
+                        ( (ScenarioPage) getWebPage() ).redirectTo(
                                 Project.getProject().getService().getDefaultScenario() );
                     }
-                });
-             }
+                } );
+            }
         };
     }
 
