@@ -3,6 +3,7 @@ package com.mindalliance.channels.command;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Service;
+import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.pages.Project;
 
 import java.util.List;
@@ -10,6 +11,9 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Default implementation of LockManager.
@@ -20,6 +24,10 @@ import java.util.Collection;
  * Time: 9:33:48 AM
  */
 public class DefaultLockManager implements LockManager {
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( DefaultLockManager.class );
     /**
      * Service.
      */
@@ -214,5 +222,19 @@ public class DefaultLockManager implements LockManager {
      */
     public void reset() {
         locks = new HashMap<Long, Lock>();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean requestLockOn( Identifiable identifiable ) {
+        boolean locked = false;
+        try {
+            grabLockOn( identifiable.getId() );
+            locked = true;
+        } catch ( LockingException e ) {
+            LOG.info("Failed to grab lock on " + identifiable, e);
+        }
+        return locked;
     }
 }

@@ -41,7 +41,7 @@ public class DelayPanel extends AbstractUpdatablePanel {
                 new PropertyModel<String>( delay, "amountString" ) );
         amountField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                updateWith( target );
+                updateWith( target, model.getObject() );
             }
         } );
         add( amountField );
@@ -62,7 +62,7 @@ public class DelayPanel extends AbstractUpdatablePanel {
         };
         unitChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                updateWith( target );
+                updateWith( target, model.getObject() );
             }
         } );
         add( unitChoice );

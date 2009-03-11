@@ -1,6 +1,8 @@
 package com.mindalliance.channels.command;
 
 
+import com.mindalliance.channels.Identifiable;
+
 import java.util.Collection;
 
 /**
@@ -104,4 +106,11 @@ public interface LockManager {
      * Resets lock manager
      */
     void reset();
+
+    /**
+     * Attempt to get lock on identitifiable
+     * @param identifiable an identifiable object
+     * @return a boolean indiciating success (true) or failure (false)
+     */
+    boolean requestLockOn( Identifiable identifiable );
 }

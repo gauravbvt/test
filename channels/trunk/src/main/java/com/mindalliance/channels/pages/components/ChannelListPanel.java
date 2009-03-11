@@ -118,7 +118,7 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
                         // adjustFields();
                         target.addComponent( candidateChannelsMarkup );
                         target.addComponent( editableChannelsMarkup );
-                        updateWith( target );
+                        updateWith( target, getModel().getObject() );
                     }
                 } );
                 item.add( candidateCheckBox );
@@ -154,7 +154,7 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
                         // adjustFields();
                         target.addComponent( candidateChannelsMarkup );
                         target.addComponent( editableChannelsMarkup );
-                        updateWith( target );
+                        updateWith( target, getModel().getObject() );
                     }
                 } );
                 includeSpan.add( includeCheckBox );
@@ -186,7 +186,7 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
                 addressField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                     protected void onUpdate( AjaxRequestTarget target ) {
                         target.addComponent( editableChannelsMarkup );
-                        updateWith( target );
+                        updateWith( target, getModel().getObject() );
                     }
                 } );
                 item.add( addressField );
@@ -196,7 +196,7 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
                     public void onClick( AjaxRequestTarget target ) {
                         wrapper.moveToFirst();
                         target.addComponent( editableChannelsMarkup );
-                        updateWith( target );
+                        updateWith( target, getModel().getObject() );
                     }
                 };
                 item.add( moveToTopLink );

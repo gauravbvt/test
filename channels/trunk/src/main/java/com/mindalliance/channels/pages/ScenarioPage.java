@@ -6,12 +6,13 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
-import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.command.commands.RemovePart;
+import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
@@ -24,6 +25,8 @@ import com.mindalliance.channels.pages.components.ScenarioEditPanel;
 import com.mindalliance.channels.pages.components.ScenarioLink;
 import com.mindalliance.channels.pages.components.Updatable;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
+import com.mindalliance.channels.pages.components.menus.PartActionsMenuPanel;
+import com.mindalliance.channels.pages.components.menus.PartPagesMenuPanel;
 import com.mindalliance.channels.pages.components.menus.ScenarioActionsMenuPanel;
 import com.mindalliance.channels.pages.components.menus.ScenarioPagesMenuPanel;
 import org.apache.commons.lang.StringUtils;
@@ -37,15 +40,11 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.Model;
@@ -87,16 +86,6 @@ public final class ScenarioPage extends WebPage implements Updatable {
      * Class logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( ScenarioPage.class );
-
-    /*
-     * Name property name...
-     */
-//    private static final String NAME_PROPERTY = "name";                                 // NON-NLS
-
-    /**
-     * Description property name.
-     */
-    private static final String DESC_PROPERTY = "description";                            // NON-NLS
 
     /**
      * Specialty field name.
@@ -160,9 +149,9 @@ public final class ScenarioPage extends WebPage implements Updatable {
      */
     private MenuPanel scenarioActionsMenu;
     /**
-     * Scenario pages menu.
+     * Part actions menu.
      */
-    private MenuPanel scenarioPagesMenu;
+    PartActionsMenuPanel partActionsMenu;
 
     /**
      * Used when page is called without parameters.
@@ -331,6 +320,8 @@ public final class ScenarioPage extends WebPage implements Updatable {
     }
 
     private void init( Scenario scenario, Node n, Set<Long> expanded ) {
+        getLockManager().releaseAllLocks( Project.getUserName() );
+        getLockManager().requestLockOn( n );
         node = n;
         expansions = expanded;
 
@@ -386,6 +377,10 @@ public final class ScenarioPage extends WebPage implements Updatable {
         return (Project) getApplication();
     }
 
+    private LockManager getLockManager() {
+        return getProject().getLockManager();
+    }
+
     public Node getNode() {
         return node;
     }
@@ -395,12 +390,16 @@ public final class ScenarioPage extends WebPage implements Updatable {
      *
      * @param target the ajax target
      */
-    public void update( AjaxRequestTarget target ) {
+    public void update( AjaxRequestTarget target, Object context ) {
         if ( !getService().list( Scenario.class ).contains( node.getScenario() ) ) {
             redirectTo( getService().getDefaultScenario() );
         } else {
-            updateExceptScenarioEditPanel( target );
-            if ( scenarioEditPanel != null ) scenarioEditPanel.update( target );
+            if ( context.equals( "undo" ) || context.equals( "redo" ) ) {
+                redirectHere();
+            } else {
+                updateExceptScenarioEditPanel( target, context );
+                if ( scenarioEditPanel != null ) scenarioEditPanel.update( target, context );
+            }
         }
     }
 
@@ -410,7 +409,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
      *
      * @param target the ajax target
      */
-    public void updateExceptScenarioEditPanel( AjaxRequestTarget target ) {
+    public void updateExceptScenarioEditPanel( AjaxRequestTarget target, Object context ) {
         target.addComponent( partIssuesPanel );
         target.addComponent( form.getGraph() );
         target.addComponent( nodeTitle );
@@ -418,6 +417,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
         target.addComponent( scenarioNameLabel );
         target.addComponent( scenarioDescriptionLabel );
         target.addComponent( scenarioDropDownChoice );
+        target.addComponent( partActionsMenu );
     }
 
     //==============================================================
@@ -429,7 +429,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
         /**
          * The nodeDeleted property name.
          */
-        private static final String NODE_DELETED_PROPERTY = "nodeDeleted";                // NON-NLS
+        // private static final String NODE_DELETED_PROPERTY = "nodeDeleted";                // NON-NLS
 
         /**
          * The scenario import field.
@@ -445,7 +445,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
         /**
          * The delete scenario check box.
          */
-       // private DeleteBox deleteScenario;
+        // private DeleteBox deleteScenario;
 
         /**
          * The requirement list.
@@ -484,11 +484,12 @@ public final class ScenarioPage extends WebPage implements Updatable {
                     } );
             nodeTitle.setOutputMarkupId( true );
             add( nodeTitle );               // NON-NLS
+            addPartMenuBar( (Part)node );
             add( new TextArea<String>( "description",                                     // NON-NLS
-                    new PropertyModel<String>( node, DESC_PROPERTY ) ) );
-            add( new CheckBox( "node-del",                                                // NON-NLS
+                    new PropertyModel<String>( this, "nodeDescription" ) ) );
+            /*add( new CheckBox( "node-del",                                                // NON-NLS
                     new PropertyModel<Boolean>( this, NODE_DELETED_PROPERTY ) ) );
-            addGraph( scenario, node );
+*/            addGraph( scenario, node );
             Component panel = node.isPart() ?
                     new PartPanel( SPECIALTY_FIELD, (Part) node )
                     : new Label( SPECIALTY_FIELD, "" );
@@ -496,7 +497,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
             add( panel );
 
             // TODO simplify whole page... only displays parts, now.
-            add( new ExternalLink( "profile", MessageFormat.format(                       // NON-NLS
+ /*           add( new ExternalLink( "profile", MessageFormat.format(                       // NON-NLS
                     "resource.html?scenario={0,number,0}&part={1,number,0}",                                // NON-NLS
                     scenario.getId(), node.getId() ) ) );
             add( new Link( "add-part-issue" ) {                                           // NON-NLS
@@ -509,7 +510,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
                     redirectHere();
                 }
             } );
-            add( new AttachmentPanel( "attachments", new Model<Node>( node ) ) );                            // NON-NLS
+*/            add( new AttachmentPanel( "attachments", new Model<Node>( node ) ) );                            // NON-NLS
             partIssuesPanel = new IssuesPanel( "issues",                                               // NON-NLS
                     new Model<ModelObject>( node ) );
             partIssuesPanel.setOutputMarkupId( true );
@@ -519,6 +520,28 @@ public final class ScenarioPage extends WebPage implements Updatable {
             add( reqs );
             outcomes = new FlowListPanel( "outcomes", node, true );           // NON-NLS
             add( outcomes );
+        }
+
+        private void addPartMenuBar( Part part ) {
+            partActionsMenu = new PartActionsMenuPanel(
+                    "partActionsMenu",
+                    new Model<Part>( part));
+            partActionsMenu.setOutputMarkupId( true );
+            add( partActionsMenu );
+            MenuPanel partPagesMenu = new PartPagesMenuPanel(
+                    "partPagesMenu",
+                    new Model<Part>( part )
+            );
+            partPagesMenu.setOutputMarkupId( true );
+            add( partPagesMenu );
+        }
+
+        public String getNodeDescription() {
+            return getNode().getDescription();
+        }
+
+        public void setNodeDescription( String description ) {
+            doCommand( new UpdateScenarioObject( getNode(), "description", description ) );
         }
 
         //------------------------------
@@ -565,9 +588,11 @@ public final class ScenarioPage extends WebPage implements Updatable {
          */
         private void addScenarioFields( final Scenario scenario ) {
             addHeader( scenario );
-            addMenubar( scenario );
+            addScenarioMenubar( scenario );
             if ( expansions.contains( scenario.getId() ) ) {
-                scenarioEditPanel = new ScenarioEditPanel( "sc-editor", scenario );
+                scenarioEditPanel = new ScenarioEditPanel( 
+                        "sc-editor",
+                        new Model<Scenario>(scenario) );
                 add( scenarioEditPanel );
             } else {
                 add( new Label( "sc-editor" ) );                                          // NON-NLS                
@@ -604,8 +629,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
             }
 
             add( scenarioNameLabel );
-            scenarioDescriptionLabel = new Label( "sc-desc",                                                    // NON-NLS
-                    //  new PropertyModel<String>( scenario, DESC_PROPERTY )
+            scenarioDescriptionLabel = new Label( "sc-desc",                              // NON-NLS
                     new AbstractReadOnlyModel<String>() {
                         @Override
                         public String getObject() {
@@ -619,11 +643,16 @@ public final class ScenarioPage extends WebPage implements Updatable {
             add( scenarioDescriptionLabel );
         }
 
-        private void addMenubar( Scenario scenario ) {
-            scenarioActionsMenu = new ScenarioActionsMenuPanel( "actionsMenu", new Model<Scenario>( scenario ), expansions );
+        private void addScenarioMenubar( Scenario scenario ) {
+            scenarioActionsMenu = new ScenarioActionsMenuPanel(
+                    "scenarioActionsMenu",
+                    new Model<Scenario>( scenario ),
+                    expansions );
             scenarioActionsMenu.setOutputMarkupId( true );
             add( scenarioActionsMenu );
-            scenarioPagesMenu = new ScenarioPagesMenuPanel( "pagesMenu", new Model<Scenario>( scenario ) );
+            ScenarioPagesMenuPanel scenarioPagesMenu = new ScenarioPagesMenuPanel( 
+                    "scenarioPagesMenu",
+                    new Model<Scenario>( scenario ) );
             scenarioPagesMenu.setOutputMarkupId( true );
             add( scenarioPagesMenu );
         }
@@ -656,12 +685,12 @@ public final class ScenarioPage extends WebPage implements Updatable {
         }
 
         //------------------------------
-        private BookmarkablePageLink<Scenario> createExportScenario(
+        /* private BookmarkablePageLink<Scenario> createExportScenario(
                 String id, Scenario scenario ) {
 
             return new BookmarkablePageLink<Scenario>(
                     id, ExportPage.class, getParameters( scenario, null ) );
-        }
+        }*/
 
         public void setTarget( Scenario target ) {
             this.target = target;
@@ -683,7 +712,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
             outcomes.deleteSelectedFlows( expansions );
             importScenario();
 
-       /*     if ( deleteScenario.isSelected() ) {
+            /*     if ( deleteScenario.isSelected() ) {
                 Service service = getService();
                 Scenario scenario = getScenario();
                 service.remove( scenario );
@@ -789,34 +818,48 @@ public final class ScenarioPage extends WebPage implements Updatable {
     //==============================================================
     */
 /**
-     * A check box that causes the current scenario to be deleted,
-     * if selected and form is submitted.
-     */
-/*
-    private static final class DeleteBox extends CheckBox {
+ * A check box that causes the current scenario to be deleted,
+ * if selected and form is submitted.
+ */
+    /*
+private static final class DeleteBox extends CheckBox {
 
-        */
+    */
 /**
-         * The selection state of the checkbox.
-         */
-/*
-        private boolean selected;
+ * The selection state of the checkbox.
+ */
+    /*
+            private boolean selected;
 
-        private DeleteBox( String id ) {
-            super( id );
-            setModel( new PropertyModel<Boolean>( this, "selected" ) );                   // NON-NLS
+            private DeleteBox( String id ) {
+                super( id );
+                setModel( new PropertyModel<Boolean>( this, "selected" ) );                   // NON-NLS
+            }
+
+            public boolean isSelected() {
+                return selected;
+            }
+
+            public void setSelected( boolean selected ) {
+                this.selected = selected;
+            }
+
         }
-
-        public boolean isSelected() {
-            return selected;
+    */
+/**
+ * Execute a command.
+ *
+ * @param command a command
+ * @return the result of the command's execution
+ */
+    private Object doCommand( Command command ) {
+        Commander commander = getProject().getCommander();
+        try {
+            return commander.doCommand( command );
+        } catch ( CommandException e ) {
+            throw new WicketRuntimeException( e );
         }
-
-        public void setSelected( boolean selected ) {
-            this.selected = selected;
-        }
-
     }
-*/
 
 
 }

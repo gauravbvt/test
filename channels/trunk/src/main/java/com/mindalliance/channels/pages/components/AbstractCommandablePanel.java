@@ -6,7 +6,12 @@ import org.apache.wicket.WicketRuntimeException;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.Identifiable;
+import com.mindalliance.channels.Service;
+
+import java.util.ArrayList;
 
 /**
  * Abstract panel.
@@ -27,12 +32,33 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
     }
 
     protected Object doCommand( Command command ) {
-        Commander commander = Project.getProject().getCommander();
+        Commander commander = getCommander();
         try {
             return commander.doCommand( command );
         } catch ( CommandException e ) {
             throw new WicketRuntimeException( e );
         }
     }
+
+    protected Commander getCommander() {
+        return Project.getProject().getCommander();
+    }
+
+    protected LockManager getLockManager() {
+        return Project.getProject().getLockManager();
+    }
+
+    protected Service getService() {
+        return Project.getProject().getService(); 
+    }
+
+    protected boolean isLocked( final Identifiable identifiable ) {
+        return !getLockManager().canGrabLocksOn( new ArrayList<Long>() {
+            {
+                add( identifiable.getId());
+            }
+        } );
+    }
+
 
 }

@@ -12,9 +12,8 @@ import java.io.Serializable;
  * Date: Feb 28, 2009
  * Time: 2:20:01 PM
  *
- * @param <T> the class of the return value of executing a command
  */
-public interface Command<T> extends Serializable {
+public interface Command extends Serializable {
     /**
      * The command's name.
      *
@@ -82,10 +81,10 @@ public interface Command<T> extends Serializable {
      * Execute the command.
      *
      * @param commander a commander executing the command
-     * @return an object of class T
+     * @return an object
      * @throws CommandException if execution fails
      */
-    T execute( Commander commander ) throws CommandException;
+    Object execute( Commander commander ) throws CommandException;
 
     /**
      * Whether the command can be undone.

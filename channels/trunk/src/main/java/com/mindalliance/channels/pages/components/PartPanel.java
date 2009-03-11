@@ -1,41 +1,40 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Place;
+import com.mindalliance.channels.Delay;
+import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Place;
 import com.mindalliance.channels.Role;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Delay;
-import com.mindalliance.channels.util.SemMatch;
+import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ModelObjectLink;
-import com.mindalliance.channels.pages.ScenarioPage;
+import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.util.SemMatch;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.IModel;
 
 import java.text.Collator;
-import java.util.List;
-import java.util.Iterator;
-import java.util.Collection;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A view on a Part.
  */
-public class PartPanel extends AbstractUpdatablePanel {
+public class PartPanel extends AbstractCommandablePanel {
 
     /**
      * The task property.
@@ -89,7 +88,6 @@ public class PartPanel extends AbstractUpdatablePanel {
     //====================================
     public PartPanel( String id, Part part ) {
         super( id );
-        super.setDefaultModel( new CompoundPropertyModel( this ) );
         super.setOutputMarkupPlaceholderTag( false );
         setPart( part );
 
@@ -103,10 +101,10 @@ public class PartPanel extends AbstractUpdatablePanel {
         addField( ORG_PROPERTY, findAllOrganizationNames() );
         add( makeLink( "org-link",                                             // NON-NLS
                 new PropertyModel<ModelObject>( part, ORG_PROPERTY ) ) );
-        addField( JURISDICTION_PROPERTY, findAllPaceNames() );
+        addField( JURISDICTION_PROPERTY, findAllPlaceNames() );
         add( makeLink( "juris-link",                                           // NON-NLS
                 new PropertyModel<ModelObject>( part, JURISDICTION_PROPERTY ) ) );
-        addField( LOCATION_PROPERTY, findAllPaceNames() );
+        addField( LOCATION_PROPERTY, findAllPlaceNames() );
         add( makeLink( "loc-link",                                             // NON-NLS
                 new PropertyModel<ModelObject>( part, LOCATION_PROPERTY ) ) );
         addTimingFields();
@@ -138,7 +136,7 @@ public class PartPanel extends AbstractUpdatablePanel {
         return names;
     }
 
-    private Set<String> findAllPaceNames() {
+    private Set<String> findAllPlaceNames() {
         Set<String> names = new HashSet<String>();
         for ( Place actor : Project.service().list( Place.class ) )
             names.add( actor.getName() );
@@ -162,9 +160,13 @@ public class PartPanel extends AbstractUpdatablePanel {
     private void addField( final String property, final Collection<String> choices ) {
         final TextField<String> field;
         if ( choices == null ) {
-            field = new TextField<String>( property );
+            field = new TextField<String>(
+                    property,
+                    new PropertyModel<String>(this, property ));
         } else {
-            field = new AutoCompleteTextField<String>( property ) {
+            field = new AutoCompleteTextField<String>(
+                    property,
+                    new PropertyModel<String>(this, property ) ) {
                 protected Iterator<String> getChoices( String s ) {
                     List<String> candidates = new ArrayList<String>();
                     for ( String choice : choices ) {
@@ -179,18 +181,15 @@ public class PartPanel extends AbstractUpdatablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssues( field, part, property );
                 target.addComponent( field );
-                updateWith( target );
+                updateWith( target, getPart() );
             }
         } );
 
         // Add style mods from scenario analyst.
         addIssues( field, part, property );
+        field.setEnabled( !isLocked( getPart()) );
         add( field );
 
-    }
-
-    private void addField( final String property ) {
-        addField( property, null );
     }
 
     /**
@@ -219,36 +218,36 @@ public class PartPanel extends AbstractUpdatablePanel {
     private void addTimingFields() {
         final DelayPanel repeatsEveryPanel = new DelayPanel(
                 "repeats-every",
-                new PropertyModel<Delay>( part, "repeatsEvery" ) );
+                new PropertyModel<Delay>( this, "repeatsEvery" ) );
         repeatsEveryPanel.setOutputMarkupId( true );
         repeatsEveryPanel.enable( part.isRepeating() );
         add( repeatsEveryPanel );
         final DelayPanel completionTimePanel = new DelayPanel(
                 "completion-time",
-                new PropertyModel<Delay>( part, "completionTime" ) );
+                new PropertyModel<Delay>( this, "completionTime" ) );
         completionTimePanel.enable( part.isSelfTerminating() );
         completionTimePanel.setOutputMarkupId( true );
         add( completionTimePanel );
         CheckBox selfTerminatingCheckBox = new CheckBox(
                 "self-terminating",
-                new PropertyModel<Boolean>( part, "selfTerminating" ) );
+                new PropertyModel<Boolean>( this, "selfTerminating" ) );
         selfTerminatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 completionTimePanel.enable( part.isSelfTerminating() );
                 target.addComponent( completionTimePanel );
-                updateWith( target );
+                updateWith( target, getPart() );
             }
         } );
         add( selfTerminatingCheckBox );
         CheckBox repeatingCheckBox = new CheckBox(
                 "repeating",
-                new PropertyModel<Boolean>( part, "repeating" ) );
+                new PropertyModel<Boolean>( this, "repeating" ) );
         add( repeatingCheckBox );
         repeatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 repeatsEveryPanel.enable( part.isRepeating() );
                 target.addComponent( repeatsEveryPanel );
-                updateWith( target );
+                updateWith( target, getPart() );
             }
         } );
     }
@@ -325,13 +324,15 @@ public class PartPanel extends AbstractUpdatablePanel {
      * @param name if null or empty, set to null; otherwise, only set if different.
      */
     public void setActor( String name ) {
+        Actor newActor = null;
         if ( name == null || name.trim().isEmpty() )
-            getPart().setActor( null );
+            newActor = null;
         else {
             final Actor actor = getPart().getActor();
             if ( actor == null || !isSame( name, actor.getName() ) )
-                getPart().setActor( Project.service().findOrCreate( Actor.class, name ) );
+                newActor = getService().findOrCreate( Actor.class, name  );
         }
+        doCommand(new UpdateScenarioObject( getPart(), "actor", newActor ) );
     }
 
     /**
@@ -340,13 +341,15 @@ public class PartPanel extends AbstractUpdatablePanel {
      * @param name if null or empty, set to null; otherwise, only set if different.
      */
     public void setJurisdiction( String name ) {
+        Place newPlace = null;
         if ( name == null || name.trim().isEmpty() )
-            getPart().setJurisdiction( null );
+            newPlace = null;
         else {
             final Place jurisdiction = getPart().getJurisdiction();
             if ( jurisdiction == null || !isSame( name, jurisdiction.getName() ) )
-                getPart().setJurisdiction( Project.service().findOrCreate( Place.class, name ) );
+                newPlace = getService().findOrCreate( Place.class, name ) ;
         }
+        doCommand(new UpdateScenarioObject( getPart(), "jurisdiction", newPlace ) );
     }
 
     /**
@@ -355,13 +358,15 @@ public class PartPanel extends AbstractUpdatablePanel {
      * @param name if null or empty, set to null; otherwise, only set if different.
      */
     public void setLocation( String name ) {
+        Place newPlace = null;
         if ( name == null || name.trim().isEmpty() )
-            getPart().setLocation( null );
+            newPlace = null;
         else {
             final Place location = getPart().getLocation();
             if ( location == null || !isSame( name, location.getName() ) )
-                getPart().setLocation( new Place( name ) );
+                newPlace = getService().findOrCreate( Place.class, name ) ;
         }
+        doCommand(new UpdateScenarioObject( getPart(), "location", newPlace ) );
     }
 
     /**
@@ -370,15 +375,15 @@ public class PartPanel extends AbstractUpdatablePanel {
      * @param name if null or empty, set to null; otherwise, only set if different.
      */
     public void setOrganization( String name ) {
+        Organization newOrg = null;
         if ( name == null || name.trim().isEmpty() )
-            getPart().setOrganization( null );
+            newOrg = null;
         else {
             final Organization organization = getPart().getOrganization();
             if ( organization == null || !isSame( name, organization.getName() ) )
-                getPart().setOrganization(
-                        Project.service().findOrCreate(
-                                Organization.class, name ) );
+                newOrg = getService().findOrCreate( Organization.class, name ) ;
         }
+        doCommand(new UpdateScenarioObject( getPart(), "organization", newOrg ) );
     }
 
     /**
@@ -387,13 +392,15 @@ public class PartPanel extends AbstractUpdatablePanel {
      * @param name if null or empty, set to null; otherwise, only set if different.
      */
     public void setRole( String name ) {
+        Role newRole = null;
         if ( name == null || name.trim().isEmpty() )
-            getPart().setRole( null );
+            newRole = null;
         else {
-            final Role role = getPart().getRole();
+            Role role = getPart().getRole();
             if ( role == null || !isSame( name, role.getName() ) )
-                getPart().setRole( Project.service().findOrCreate( Role.class, name ) );
+                newRole = getService().findOrCreate( Role.class, name ) ;
         }
+        doCommand( new UpdateScenarioObject( getPart(), "role", newRole ) );
     }
 
     /**
@@ -402,8 +409,40 @@ public class PartPanel extends AbstractUpdatablePanel {
      * @param task the task
      */
     public void setTask( String task ) {
-        getPart().setTask( task );
+        doCommand( new UpdateScenarioObject( getPart(), "task", task ) );
     }
+
+    public Delay getRepeatsEvery() {
+        return getPart().getRepeatsEvery();
+    }
+
+    public void setRepeatsEvery( Delay delay ) {
+        doCommand( new UpdateScenarioObject( getPart(), "repeatsEvery", delay));
+    }
+
+    public Delay getCompletionTime() {
+        return getPart().getCompletionTime();
+    }
+
+    public void setCompletionTime( Delay delay ) {
+        doCommand( new UpdateScenarioObject( getPart(), "completionTime", delay));
+    }
+
+    public boolean isSelfTerminating() {
+        return getPart().isSelfTerminating();
+    }
+
+    public void setSelfTerminating( boolean val ) {
+        doCommand( new UpdateScenarioObject( getPart(), "selfTerminating", val));
+    }
+
+    public boolean isRepeating() {
+        return getPart().isRepeating();
+    }
+
+    public void setRepeating( boolean val ) {
+        doCommand( new UpdateScenarioObject( getPart(), "repeating", val));
+    }    
 
     public final Part getPart() {
         return part;
@@ -412,5 +451,6 @@ public class PartPanel extends AbstractUpdatablePanel {
     public final void setPart( Part part ) {
         this.part = part;
     }
+
 
 }

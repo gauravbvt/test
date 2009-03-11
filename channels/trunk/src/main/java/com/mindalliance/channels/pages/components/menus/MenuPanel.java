@@ -53,7 +53,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
                     } catch ( CommandException e ) {
                         throw new WicketRuntimeException( "Failed to undo", e );
                     }
-                    updateWith( target );
+                    updateWith( target, "undo" );
                 }
             };
             menuItem = new LinkMenuItem( id, new Model<String>( "Undo" ), link );
@@ -75,7 +75,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
                     } catch ( CommandException e ) {
                         throw new WicketRuntimeException( "Failed to redo", e );
                     }
-                    updateWith( target );
+                    updateWith( target, "redo" );
                 }
             };
             menuItem = new LinkMenuItem( id, new Model<String>( "Redo" ), link );

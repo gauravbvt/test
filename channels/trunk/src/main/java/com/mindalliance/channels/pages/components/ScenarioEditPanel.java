@@ -11,6 +11,7 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.IModel;
 
 /**
  * Editor on the details of a scenario (name, description, etc).
@@ -23,19 +24,19 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
     /**
      * The edited scenario.
      */
-    private Scenario scenario;
+    private final IModel<Scenario> model;
 
     public ScenarioEditPanel( String id,
-                              Scenario scenario ) {
+                              IModel<Scenario> model ) {
         super( id );
-        this.scenario = scenario;
+        this.model = model;
         TextField<String> nameField = new TextField<String>(
                 "name",
                 new PropertyModel<String>( this, "name" ) );
         add( new FormComponentLabel( "name-label", nameField ) );                              // NON-NLS
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                 ( (ScenarioPage) getPage() ).updateExceptScenarioEditPanel(target);
+                 ( (ScenarioPage) getPage() ).updateExceptScenarioEditPanel(target, getScenario());
             }
         } );
         add( nameField );
@@ -46,13 +47,21 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
         add( new FormComponentLabel( "description-label", descField ) );                       // NON-NLS
         descField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                ( (ScenarioPage) getPage() ).updateExceptScenarioEditPanel(target);
+                ( (ScenarioPage) getPage() ).updateExceptScenarioEditPanel(target, getScenario());
              }
         } );
         add( descField );
-        scenarioIssuesPanel = new IssuesPanel( "issues", new Model<ModelObject>( scenario ) );
+        scenarioIssuesPanel = new IssuesPanel( "issues", new Model<ModelObject>( getScenario() ) );
         scenarioIssuesPanel.setOutputMarkupId( true );
         add( scenarioIssuesPanel );
+    }
+
+    public IModel<Scenario> getModel() {
+        return model;
+    }
+
+    private Scenario getScenario() {
+        return getModel().getObject();
     }
 
     /**
@@ -60,7 +69,7 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
      *
      * @param target an ajax request target
      */
-    public void update( AjaxRequestTarget target ) {
+    public void update( AjaxRequestTarget target, Object context ) {
         target.addComponent( scenarioIssuesPanel );
     }
 
@@ -70,7 +79,7 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
      * @return a string
      */
     public String getName() {
-        return scenario.getName();
+        return getScenario().getName();
     }
 
     /**
@@ -78,7 +87,7 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
      * @param name a string
      */
     public void setName( String name ) {
-        doCommand( new UpdateProjectObject( scenario, "name", name ) );
+        doCommand( new UpdateProjectObject( getScenario(), "name", name ) );
     }
 
     /**
@@ -87,7 +96,7 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
      * @return a string
      */
     public String getDescription() {
-        return scenario.getDescription();
+        return getScenario().getDescription();
     }
 
     /**
@@ -95,7 +104,7 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
      * @param desc a string
      */
     public void setDescription( String desc ) {
-        doCommand( new UpdateProjectObject( scenario, "description", desc ) );
+        doCommand( new UpdateProjectObject( getScenario(), "description", desc ) );
     }
 
 }

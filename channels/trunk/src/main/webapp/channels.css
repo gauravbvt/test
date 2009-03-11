@@ -555,7 +555,7 @@ span.menubar {
     font-size: 8pt;
 }
 
-.menubar .menu {
+.menubar .dropmenu {
   width: auto;
   float: left;
   padding: 0.1em 1em 0.1em 1em;
@@ -564,11 +564,11 @@ span.menubar {
   background-color: #ccc;
 }
 
-.menubar .menu:hover {
+.menubar .dropmenu:hover {
     background-color: #bbb;
 }
 
-.menubar .menu ul {
+.menubar .dropmenu ul {
   display: none;
   position: absolute;
   background-color: #e6e6e6;
@@ -579,24 +579,24 @@ span.menubar {
   z-index: 100000;
 }
 
-.menubar span.menu ul li {
+.menubar span.dropmenu ul li {
   display: block;
   padding: 0.2em;
   z-index: 100000;
 }
 
-.menubar .menu li span.disabled {
+.menubar .dropmenu li span.disabled {
     font-style: oblique;
     color: gray;
 }
 
-.menubar span.menu:hover ul {
+.menubar span.dropmenu:hover ul {
   display: block;
   margin: 0;
   padding: 0;
   z-index: 100000;
 }
 
-.menubar span.menu ul li:hover {
+.menubar span.dropmenu ul li:hover {
   background-color: #ccf;
 }

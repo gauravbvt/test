@@ -6,14 +6,12 @@
         xml:lang="en"
         lang="en">
 <body>
-<wicket:extend>
-    <span class="dropmenu">Actions
-        <ul>
-            <li wicket:id="items">
-                <span wicket:id="menuItem">[menu item]</span>
-            </li>
-        </ul>
-    </span>
-</wicket:extend>
+<wicket:panel>
+        <span class="dropmenu">Show
+            <ul>
+                <li><a wicket:id="profile" href="#">Profile</a></li>
+            </ul>
+        </span>
+</wicket:panel>
 </body>
 </html>

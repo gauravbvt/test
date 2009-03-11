@@ -11,6 +11,7 @@ import com.mindalliance.channels.pages.ScenarioPage;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
@@ -34,7 +35,9 @@ import java.util.Set;
  */
 public class ScenarioActionsMenuPanel extends MenuPanel {
 
-    private WebMarkupContainer menuDiv;
+    /**
+     * IDs of expanded model objects.
+     */
     private Set<Long> expansions;
 
     public ScenarioActionsMenuPanel( String s, IModel<Scenario> model, Set<Long> expansions ) {
@@ -44,17 +47,18 @@ public class ScenarioActionsMenuPanel extends MenuPanel {
     }
 
     private void init() {
-        menuDiv = new WebMarkupContainer( "menu" );
-        menuDiv.setOutputMarkupId( true );
-        add( menuDiv );
         ListView<Component> menuItems = new ListView<Component>( "items", new PropertyModel<List<Component>>( this, "menuItems" ) ) {
             protected void populateItem( ListItem<Component> item ) {
                 item.add( item.getModelObject() );
             }
         };
-        menuDiv.add( menuItems );
+        add( menuItems );
     }
 
+    /**
+     * Get population of menu items.
+     * @return a list of menu items
+     */
     public List<Component> getMenuItems() {
         List<Component> menuItems = new ArrayList<Component>();
         // Undo and redo
@@ -79,7 +83,7 @@ public class ScenarioActionsMenuPanel extends MenuPanel {
         // Commands
         menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
         // Export
-        menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Export" ),
+        menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Export to XML" ),
                 new BookmarkablePageLink<Scenario>(
                         "link",
                         ExportPage.class,
@@ -93,12 +97,12 @@ public class ScenarioActionsMenuPanel extends MenuPanel {
             {
                 add( new CommandWrapper( new AddPart( getScenario() ) ) {
                     public void onExecution( AjaxRequestTarget target, Object result ) {
-                        updateWith( target );
+                        updateWith( target, getScenario() );
                     }
                 } );
                 add( new CommandWrapper( new AddIssue( getScenario() ) ) {
                     public void onExecution( AjaxRequestTarget target, Object result ) {
-                        updateWith( target );
+                        updateWith( target, getScenario() );
                     }
                 } );
                 add( new CommandWrapper( new AddScenario() ) {
@@ -106,7 +110,7 @@ public class ScenarioActionsMenuPanel extends MenuPanel {
                         ( (ScenarioPage) getWebPage() ).redirectTo( (Scenario) result );
                     }
                 } );
-                add( new CommandWrapper( new RemoveScenario( getScenario() ) ) {
+                 add( new CommandWrapper( new RemoveScenario( getScenario() ) ) {
                     public void onExecution( AjaxRequestTarget target, Object result ) {
                         ( (ScenarioPage) getWebPage() ).redirectTo(
                                 Project.getProject().getService().getDefaultScenario() );

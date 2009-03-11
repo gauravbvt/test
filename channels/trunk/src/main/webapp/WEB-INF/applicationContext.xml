@@ -32,6 +32,7 @@
         <property name="exporter" ref="serializer"/>
         <property name="analyst" ref="analyst"/>
         <property name="commander" ref="commander"/>
+        <property name="lockManager" ref="lockManager"/>
         <property name="projectName" value="Emergency Communications Plan"/>
         <property name="client" value="Strategic Content Imaging, Inc."/>
         <property name="description" value="Communications planning for responding and recovering from business interruptions due fire and power outage."/>
