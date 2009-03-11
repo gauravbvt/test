@@ -53,7 +53,7 @@ public class Scenario extends ModelObject {
     private Map<Long, Node> nodeIndex;
 
     /** The service in charge of this scenario. */
-    private Service service;
+    transient private Service service;
 
     public Scenario() {
         setNodeIndex( new HashMap<Long, Node>( INITIAL_CAPACITY ) );

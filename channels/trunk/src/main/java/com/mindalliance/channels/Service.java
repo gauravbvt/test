@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Iterator;
 import java.util.List;
+import java.io.Serializable;
 
 /**
  * External service interface.

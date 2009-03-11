@@ -10,18 +10,10 @@
 <form class="stretch" wicket:id="big-form" action="#">
     <div id="header">
         <h1><span wicket:id="header">Title</span></h1>
-        <ul class="menu">
-            <li><a wicket:id="report" href="#">Report</a></li>
-            <li><a wicket:id="index" href="#">Index</a></li>
-            <li><a wicket:id="sc-edit" href="#"><span wicket:id="edit-or-hide">Edit</span></a></li>
-            <li><a wicket:id="add-part" href="#">Add part</a></li>
-            <li><a wicket:id="add-issue" href="#">Add issue</a></li>
-            <li><a wicket:id="sc-export" href="#">Export</a></li>
-            <li><label><input type="checkbox" wicket:id="sc-del"
-                              alt="Delete this scenario">
-                Delete</label>
-            </li>
-        </ul>
+        <span class="menubar">
+            <span wicket:id="pagesMenu">[pages menu]</span>
+            <span wicket:id="actionsMenu">[action menu]</span>
+        </span>
         <p class="caption" wicket:id="sc-desc">A description.</p>
     </div>
     <div wicket:id="sc-editor">(Scenario Editor)</div>
@@ -80,9 +72,6 @@
             <li><label>Select scenario: <select wicket:id="sc-sel" name="scenario">
                 <option>Some scenario</option>
             </select></label></li>
-
-            <li><a wicket:id="sc-new" href="#">New scenario</a></li>
-
             <li><label class="import-ctl"><span>Import: </span><input class="file" type="file" wicket:id="sc-import" name="sc-import"
                                                value="Upload"></label></li>
         </ul>

@@ -549,3 +549,54 @@ div.wicket-aa ul li {
 }
 div.wicket-aa ul li.selected {
 }
+
+span.menubar {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 8pt;
+}
+
+.menubar .menu {
+  width: auto;
+  float: left;
+  padding: 0.1em 1em 0.1em 1em;
+  margin: 1.2em 0em 0em 0em;
+  cursor: default;
+  background-color: #ccc;
+}
+
+.menubar .menu:hover {
+    background-color: #bbb;
+}
+
+.menubar .menu ul {
+  display: none;
+  position: absolute;
+  background-color: #e6e6e6;
+  color: black;
+  list-style: none;
+  margin: 2em 0 4em 0;
+  padding: 0;
+  z-index: 100000;
+}
+
+.menubar span.menu ul li {
+  display: block;
+  padding: 0.2em;
+  z-index: 100000;
+}
+
+.menubar .menu li span.disabled {
+    font-style: oblique;
+    color: gray;
+}
+
+.menubar span.menu:hover ul {
+  display: block;
+  margin: 0;
+  padding: 0;
+  z-index: 100000;
+}
+
+.menubar span.menu ul li:hover {
+  background-color: #ccf;
+}

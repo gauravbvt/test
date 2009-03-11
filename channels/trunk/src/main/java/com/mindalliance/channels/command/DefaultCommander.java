@@ -1,10 +1,11 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

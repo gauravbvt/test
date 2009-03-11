@@ -179,8 +179,6 @@ public class PartPanel extends AbstractUpdatablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssues( field, part, property );
                 target.addComponent( field );
-                target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
-                target.addComponent( ( (ScenarioPage) getPage() ).getNodeTitle() );
                 updateWith( target );
             }
         } );
@@ -250,7 +248,6 @@ public class PartPanel extends AbstractUpdatablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 repeatsEveryPanel.enable( part.isRepeating() );
                 target.addComponent( repeatsEveryPanel );
-                target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
                 updateWith( target );
             }
         } );
@@ -416,11 +413,4 @@ public class PartPanel extends AbstractUpdatablePanel {
         this.part = part;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void update( AjaxRequestTarget target ) {
-        target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
-        updateWith( target );
-    }
 }

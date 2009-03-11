@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -187,6 +188,13 @@ public abstract class AbstractCommand implements Command {
      */
     public String toString() {
         return getName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getTitle() {
+        return StringUtils.capitalize(getName());
     }
 
     /**

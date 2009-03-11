@@ -40,20 +40,21 @@ public class AddScenario extends AbstractCommand {
      * {@inheritDoc}
      */
     public boolean isUndoable() {
-        return true;
+        return false;
     }
 
     /**
      * {@inheritDoc}
      */
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        try {
+        return null;
+/*        try {
             Scenario scenario = commander.getService().find(
                     Scenario.class,
                     (Long) get( "scenario" ) );
             return new RemoveScenario( scenario );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh", e );
-        }
+        }*/
     }
 }

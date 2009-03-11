@@ -2,6 +2,7 @@ package com.mindalliance.channels.command;
 
 import java.util.Map;
 import java.util.Set;
+import java.io.Serializable;
 
 /**
  * A command that can be done, undone and redone.
@@ -13,7 +14,7 @@ import java.util.Set;
  *
  * @param <T> the class of the return value of executing a command
  */
-public interface Command<T> {
+public interface Command<T> extends Serializable {
     /**
      * The command's name.
      *
@@ -133,4 +134,10 @@ public interface Command<T> {
      * @param fs attributes
      */
     void setArguments( Map<String, Object> fs );
+
+    /**
+     * Formatted description.
+     * @return a string
+     */
+    String getTitle();
 }

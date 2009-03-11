@@ -221,7 +221,7 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
                 target.addComponent( nameField );
                 target.addComponent( titleLabel );
                 target.addComponent( otherChoice );
-                target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
+                updateWith( target );
             }
         } );
     }
@@ -272,7 +272,7 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
                 channelRow.setVisible( isChannelRelevant( getFlow() ) );
                 adjustFields( getFlow() );
                 target.addComponent( ExpandedFlowPanel.this );
-                target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
+                updateWith( target );
             }
         } );
 
@@ -301,7 +301,7 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
         significanceToTargetChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 target.addComponent( titleLabel );
-                target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
+                updateWith( target );
             }
         } );
         significanceToTargetLabel.add( significanceToTargetChoice );
@@ -319,7 +319,7 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
         triggersSourceCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 target.addComponent( titleLabel );
-                target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
+                updateWith( target );
             }
         } );
         triggersSourceContainer.add( triggersSourceCheckBox );
@@ -330,7 +330,7 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
                 new PropertyModel<Boolean>( this, "terminatingToSource" ) );
         terminatesSourceCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
+                updateWith( target );
             }
         } );
         terminatesSourceContainer.add( terminatesSourceCheckBox );
@@ -462,7 +462,7 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
 
             protected void onUpdate( AjaxRequestTarget target ) {
                 target.addComponent( titleLabel );
-                target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
+                updateWith( target );
             }
         } );
         allField = new FormComponentLabel( "all-label", checkBox );                       // NON-NLS
@@ -540,7 +540,7 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields( getFlow() );
                 target.addComponent( ExpandedFlowPanel.this );
-                target.addComponent( ( (ScenarioPage) getPage() ).getGraph() );
+                updateWith( target );
                 // PageParameters parameters = getWebPage().getPageParameters();
                 // TODO - Denis : fix bug and remove patch
                 /*PageParameters parameters = ( (ScenarioPage) getWebPage() )
