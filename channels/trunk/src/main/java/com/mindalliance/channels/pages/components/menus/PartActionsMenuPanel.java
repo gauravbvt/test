@@ -27,7 +27,6 @@ public class PartActionsMenuPanel extends MenuPanel {
 
     public PartActionsMenuPanel( String s, IModel<? extends ModelObject> model ) {
         super( s, model );
-        setRenderBodyOnly( true );
         init();
     }
 

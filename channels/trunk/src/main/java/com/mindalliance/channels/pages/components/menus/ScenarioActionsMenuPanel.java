@@ -39,7 +39,6 @@ public class ScenarioActionsMenuPanel extends MenuPanel {
 
     public ScenarioActionsMenuPanel( String s, IModel<Scenario> model, Set<Long> expansions ) {
         super( s, model );
-        setRenderBodyOnly( true );
         this.expansions = expansions;
         init();
     }

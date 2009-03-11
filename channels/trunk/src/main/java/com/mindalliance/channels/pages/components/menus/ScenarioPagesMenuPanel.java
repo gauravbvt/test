@@ -16,7 +16,6 @@ public class ScenarioPagesMenuPanel extends MenuPanel {
 
     public ScenarioPagesMenuPanel( String s, IModel<? extends ModelObject> model ) {
         super( s, model );
-        setRenderBodyOnly( true );
         init();
     }
 

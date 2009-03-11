@@ -581,7 +581,7 @@ div.wicket-aa ul li.selected {
   z-index: 100000;
 }
 
-#part .menubar span.dropmenu:first-child:before {
+#part .menubar span.dropmenu.first:before {
     content: " ";
 }
 
