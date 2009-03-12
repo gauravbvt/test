@@ -89,7 +89,6 @@ public class CollapsedFlowPanel extends AbstractCommandablePanel {
                 new PropertyModel<Flow>( this, "flow" ),
                 isOutcome,
                 true );
-        flowActionsMenu.setOutputMarkupId( true );
         add( flowActionsMenu );
     }
 

@@ -9,6 +9,7 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.pages.Project;
 
 import java.util.Map;
 
@@ -20,9 +21,9 @@ import java.util.Map;
  * Date: Mar 9, 2009
  * Time: 7:44:31 PM
  */
-public class AddIssue extends AbstractCommand {
+public class AddUserIssue extends AbstractCommand {
 
-    public AddIssue( ModelObject modelObject ) {
+    public AddUserIssue( ModelObject modelObject ) {
         addArgument( "modelObject", modelObject.getId() );
     }
 
@@ -42,6 +43,7 @@ public class AddIssue extends AbstractCommand {
         try {
             UserIssue issue = new UserIssue( service.find( ModelObject.class, (Long) get( "modelObject" ) ) );
             Map<String,Object> state = (Map<String,Object>)get("state");
+            issue.setReportedBy( Project.getUserName() );
             if (state != null) {
                 CommandUtils.initialize( issue, state );
             }

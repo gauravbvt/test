@@ -7,10 +7,15 @@
         lang="en">
 <body>
 <wicket:panel>
-    <ul wicket:id="menu" class="menu">
+    <span wicket:id="menubar" class="menubar">
+         <span wicket:id="issueActionsMenu">[issue actions menu]</span>
+    </span>
+
+ <!--   <ul wicket:id="menu" class="menu">
         <li><a wicket:id="expand" href="#">Edit</a></li>
         <li><label><input wicket:id="delete" type="checkbox"> Delete</label></li>
     </ul>
+-->
     <span wicket:id="issue-label" class="issue">Issue.</span>
     <span wicket:id="issue-suggestion" class="suggest">Suggestion.</span>
 </wicket:panel>

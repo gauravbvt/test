@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.menus;
 
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Scenario;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.IModel;
 
@@ -14,7 +15,7 @@ import org.apache.wicket.model.IModel;
  */
 public class ScenarioPagesMenuPanel extends MenuPanel {
 
-    public ScenarioPagesMenuPanel( String s, IModel<? extends ModelObject> model ) {
+    public ScenarioPagesMenuPanel( String s, IModel<? extends Scenario> model ) {
         super( s, model );
         init();
     }

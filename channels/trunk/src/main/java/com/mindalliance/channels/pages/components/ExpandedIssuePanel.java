@@ -2,18 +2,16 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.UserIssue;
-import com.mindalliance.channels.pages.ScenarioPage;
+import com.mindalliance.channels.command.commands.UpdateProjectObject;
+import com.mindalliance.channels.pages.components.menus.IssueActionsMenuPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 
 import java.util.Arrays;
 
@@ -25,7 +23,7 @@ import java.util.Arrays;
  * Date: Jan 23, 2009
  * Time: 7:51:38 PM
  */
-public class ExpandedIssuePanel extends Panel {
+public class ExpandedIssuePanel extends AbstractCommandablePanel {
     /**
      * Issue shown in panel
      */
@@ -40,45 +38,71 @@ public class ExpandedIssuePanel extends Panel {
     private void init() {
         Issue issue = model.getObject();
         setOutputMarkupId( true );
-        // TODO - hack - adjust for Bookmarkable link
-        String url = getRequest().getURL()
-                .replaceAll( "&" + ScenarioPage.EXPAND_PARM + "=" + issue.getId(), "" );
-        ExternalLink expandLink = new ExternalLink( "hide", url );
-        add( expandLink );
-        add( new CheckBox( "delete",                                                      // NON-NLS
-                new PropertyModel<Boolean>(
-                        new IssuesPanel.DeletableWrapper( issue ),
-                        "markedForDeletion" ) ) );
-
+        IssueActionsMenuPanel actionsMenu = new IssueActionsMenuPanel(
+                "issueActionsMenu",
+                new Model<Issue>(model.getObject()),
+                false );
+        add( actionsMenu );
         TextArea<String> descriptionArea = new TextArea<String>( "description",              // NON-NLS
-                new PropertyModel<String>( issue, "description" ) );
+                new PropertyModel<String>( this, "description" ) );
         descriptionArea.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 // do nothing
             }
         } );
+        descriptionArea.setEnabled( isLockedByUser( getIssue() ));
         add( descriptionArea );
         DropDownChoice<Issue.Level> levelChoice = new DropDownChoice<Issue.Level>(
                 "severity",
-                new PropertyModel<Issue.Level>( issue, "severity" ),
+                new PropertyModel<Issue.Level>( this, "severity" ),
                 Arrays.asList( Issue.Level.values() ) );
         levelChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 // do nothing
             }
         } );
+        levelChoice.setEnabled( isLockedByUser( getIssue() ));
         add( levelChoice );
         TextArea<String> remediationArea = new TextArea<String>( "remediation",
-                new PropertyModel<String>( issue, "remediation" ) );
+                new PropertyModel<String>( this, "remediation" ) );
         remediationArea.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 // do nothing
             }
         } );
+        remediationArea.setEnabled( isLockedByUser( getIssue() ) );
         add( remediationArea );
         add( new AttachmentPanel( "attachments", new Model<UserIssue>( (UserIssue) issue ) ) );  // NON-NLS
         add( new Label( "reported-by",
                 new PropertyModel<String>( issue, "reportedBy" ) ) );
+    }
+
+    private Issue getIssue() {
+        return model.getObject();
+    }
+
+    public String getDescription() {
+        return getIssue().getDescription();
+    }
+
+    public void setDescription( String desc ) {
+        doCommand( new UpdateProjectObject( (UserIssue)getIssue(), "description", desc) );
+    }
+
+    public String getRemediation() {
+        return getIssue().getRemediation();
+    }
+
+    public void setRemediation( String rem ) {
+        doCommand( new UpdateProjectObject( (UserIssue)getIssue(), "remediation", rem) );
+    }
+
+    public Issue.Level getSeverity() {
+        return getIssue().getSeverity();
+    }
+
+    public void setSeverity( Issue.Level severity ) {
+        doCommand( new UpdateProjectObject( (UserIssue)getIssue(), "severity", severity) );
     }
 
 

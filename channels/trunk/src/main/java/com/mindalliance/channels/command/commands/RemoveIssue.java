@@ -70,7 +70,7 @@ public class RemoveIssue extends AbstractCommand {
         Service service = commander.getService();
         try {
             ModelObject modelObject = service.find( ModelObject.class, (Long) get( "modelObject" ) );
-            AddIssue addIssue = new AddIssue( modelObject );
+            AddUserIssue addIssue = new AddUserIssue( modelObject );
             addIssue.addArgument( "state", get( "state" ) );
             return addIssue;
         } catch ( NotFoundException e ) {

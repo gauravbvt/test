@@ -1,5 +1,7 @@
 package com.mindalliance.channels;
 
+import java.io.Serializable;
+
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -7,7 +9,7 @@ package com.mindalliance.channels;
  * Date: Jan 23, 2009
  * Time: 8:01:24 PM
  */
-public interface Identifiable {
+public interface Identifiable extends Serializable {
     /**
      * Get id
      * @return an id

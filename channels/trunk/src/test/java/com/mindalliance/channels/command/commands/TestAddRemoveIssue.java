@@ -39,7 +39,7 @@ public class TestAddRemoveIssue extends AbstractChannelsTest {
 
     public void testAddRemoveIssue() throws CommandException {
         int count = countIssues( scenario );
-        Command addIssue = new AddIssue( scenario );
+        Command addIssue = new AddUserIssue( scenario );
         assertTrue( commander.canDo( addIssue ) );
         UserIssue issue = (UserIssue) commander.doCommand( addIssue );
         assertTrue( countIssues( scenario ) == count + 1);

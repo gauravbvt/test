@@ -4,7 +4,7 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.pages.ScenarioPage;
-import com.mindalliance.channels.command.commands.AddIssue;
+import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.BreakUpFlow;
 import com.mindalliance.channels.command.commands.DuplicateFlow;
 import org.apache.wicket.model.IModel;
@@ -15,7 +15,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.link.Link;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class FlowActionsMenuPanel extends MenuPanel {
     private boolean isOutcome;
     private boolean isCollapsed;
 
-    public FlowActionsMenuPanel( String s, IModel<? extends ModelObject> model, boolean isOutcome, boolean isCollapsed ) {
+    public FlowActionsMenuPanel( String s, IModel<? extends Flow> model, boolean isOutcome, boolean isCollapsed ) {
         super( s, model );
         this.isOutcome = isOutcome;
         this.isCollapsed = isCollapsed;
@@ -81,7 +80,7 @@ public class FlowActionsMenuPanel extends MenuPanel {
         return new ArrayList<CommandWrapper>() {
             private final Scenario scenario = getFlow().getScenario();
             {
-                add( new CommandWrapper( new AddIssue( getFlow() ) ) {
+                add( new CommandWrapper( new AddUserIssue( getFlow() ) ) {
                     public void onExecution( AjaxRequestTarget target, Object result ) {
                         updateWith( target, getFlow() );
                     }
@@ -104,6 +103,6 @@ public class FlowActionsMenuPanel extends MenuPanel {
     }
 
     private Flow getFlow() {
-        return (Flow) getModel().getObject();
+        return (Flow)getModel().getObject();
     }
 }

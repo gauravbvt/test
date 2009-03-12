@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.menus;
 
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.command.commands.AddIssue;
+import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.AddPart;
 import com.mindalliance.channels.command.commands.AddScenario;
 import com.mindalliance.channels.command.commands.RemoveScenario;
@@ -37,7 +37,7 @@ public class ScenarioActionsMenuPanel extends MenuPanel {
      */
     private Set<Long> expansions;
 
-    public ScenarioActionsMenuPanel( String s, IModel<Scenario> model, Set<Long> expansions ) {
+    public ScenarioActionsMenuPanel( String s, IModel<? extends Scenario> model, Set<Long> expansions ) {
         super( s, model );
         this.expansions = expansions;
         init();
@@ -97,7 +97,7 @@ public class ScenarioActionsMenuPanel extends MenuPanel {
                         updateWith( target, getScenario() );
                     }
                 } );
-                add( new CommandWrapper( new AddIssue( getScenario() ) ) {
+                add( new CommandWrapper( new AddUserIssue( getScenario() ) ) {
                     public void onExecution( AjaxRequestTarget target, Object result ) {
                         updateWith( target, getScenario() );
                     }

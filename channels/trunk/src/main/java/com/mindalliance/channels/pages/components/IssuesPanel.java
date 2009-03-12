@@ -9,6 +9,7 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.ScenarioObject;
+import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ScenarioPage;
 import org.apache.wicket.PageParameters;
@@ -31,7 +32,7 @@ import java.util.Set;
  * Date: Jan 8, 2009
  * Time: 10:34:20 AM
  */
-public class IssuesPanel extends Panel {
+public class IssuesPanel extends AbstractCommandablePanel {
 
     /**
      * Maximum length of string displayed
@@ -54,14 +55,12 @@ public class IssuesPanel extends Panel {
             @Override
             public void onClick() {
                 ModelObject modelObject = model.getObject();
-                UserIssue userIssue = new UserIssue( model.getObject() );
-                userIssue.setReportedBy( Project.getUserName() );
-                getService().add( userIssue );
+                UserIssue userIssue = (UserIssue) doCommand( new AddUserIssue( model.getObject() ) );
                 // TODO - Denis: Fix problem and remove patch
                 PageParameters parameters;
                 if ( modelObject instanceof ScenarioObject )
                     parameters = ( (ScenarioPage) getWebPage() )
-                            .getParametersCollapsing( ((ScenarioObject)modelObject).getScenario().getId() );
+                            .getParametersCollapsing( ( (ScenarioObject) modelObject ).getScenario().getId() );
                 else
                     parameters = getWebPage().getPageParameters();
                 parameters.add( ScenarioPage.EXPAND_PARM, Long.toString( userIssue.getId() ) );
@@ -93,21 +92,20 @@ public class IssuesPanel extends Panel {
         else return modelObject.getClass().getSimpleName();
     }
 
-    private Service getService() {
-        return ( (Project) getApplication() ).getService();
-    }
-
     private void createIssuePanels( final Set<Long> expansions ) {
-        ListView issuesList = new ListView<Issue>( "issues", new PropertyModel<List<Issue>>(this, "modelObjectIssues")) {
+        ListView issuesList = new ListView<Issue>( "issues", new PropertyModel<List<Issue>>( this, "modelObjectIssues" ) ) {
             protected void populateItem( ListItem<Issue> listItem ) {
                 Issue issue = listItem.getModelObject();
                 final long id = issue.getId();
                 final Panel issuePanel;
-                if ( expansions.contains( id ) )
-                    issuePanel = new ExpandedIssuePanel( "issue", new Model<Issue>(issue) );
-                else
-                    issuePanel = new CollapsedIssuePanel( "issue", new Model<Issue>(issue) );
-                
+                if ( expansions.contains( id ) ) {
+                    requestLockOn( issue );
+                    issuePanel = new ExpandedIssuePanel( "issue", new Model<Issue>( issue ) );
+                } else {
+                    releaseAnyLockOn( issue );
+                    issuePanel = new CollapsedIssuePanel( "issue", new Model<Issue>( issue ) );
+                }
+
                 listItem.add( issuePanel );
             }
         };
@@ -116,6 +114,7 @@ public class IssuesPanel extends Panel {
 
     /**
      * Find all issues of model object
+     *
      * @return list of issues
      */
     public List<Issue> getModelObjectIssues() {

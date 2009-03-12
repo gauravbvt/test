@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.menus;
 
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
@@ -12,7 +12,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -32,14 +31,14 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
     /**
      * A model which object the menu is about..
      */
-    private IModel<? extends ModelObject> model;
+    private IModel<? extends Identifiable> model;
 
-    public MenuPanel( String s, IModel<? extends ModelObject> model ) {
+    public MenuPanel( String s, IModel<? extends Identifiable> model ) {
         super( s, model );
         this.model = model;
     }
 
-    public IModel<? extends ModelObject> getModel() {
+    public IModel<? extends Identifiable> getModel() {
         return model;
     }
 

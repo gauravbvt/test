@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.components.menus;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.command.commands.AddIssue;
+import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.RemovePart;
 import com.mindalliance.channels.command.commands.DuplicatePart;
 import org.apache.wicket.model.IModel;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
  */
 public class PartActionsMenuPanel extends MenuPanel {
 
-    public PartActionsMenuPanel( String s, IModel<? extends ModelObject> model ) {
+    public PartActionsMenuPanel( String s, IModel<? extends Part> model ) {
         super( s, model );
         init();
     }
@@ -62,7 +62,7 @@ public class PartActionsMenuPanel extends MenuPanel {
         return new ArrayList<CommandWrapper>() {
             private final Scenario scenario = getPart().getScenario();
             {
-                add( new CommandWrapper( new AddIssue( getPart() ) ) {
+                add( new CommandWrapper( new AddUserIssue( getPart() ) ) {
                     public void onExecution( AjaxRequestTarget target, Object result ) {
                         updateWith( target, getPart() );
                     }

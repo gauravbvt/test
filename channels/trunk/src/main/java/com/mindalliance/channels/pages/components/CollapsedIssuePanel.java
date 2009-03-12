@@ -1,15 +1,16 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.Issue;
+import com.mindalliance.channels.pages.components.menus.IssueActionsMenuPanel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -53,13 +54,13 @@ public class CollapsedIssuePanel extends Panel {
         }
         add( label );
         add( suggestion );
-        WebMarkupContainer menu = new WebMarkupContainer( "menu" );
-        add( menu );
-        ExternalLink expandLink = new ExternalLink( "expand", getRequest().getURL() + "&expand=" + issue.getId() );
-        menu.add( expandLink );
-        CheckBox deleteCheckBox = new CheckBox( "delete",
-                new PropertyModel<Boolean>( new IssuesPanel.DeletableWrapper( issue ), "markedForDeletion" ) );
-        menu.add( deleteCheckBox );
-        menu.setVisible( !issue.isDetected() );
+        WebMarkupContainer menubar = new WebMarkupContainer( "menubar" );
+        add( menubar );
+        IssueActionsMenuPanel actionsMenu = new IssueActionsMenuPanel(
+                "issueActionsMenu",
+                new Model<Issue>(model.getObject()),
+                true );
+        menubar.add( actionsMenu );
+        menubar.setVisible( !issue.isDetected() );
     }
 }
