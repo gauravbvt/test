@@ -18,7 +18,7 @@ import com.mindalliance.channels.command.CommandException;
  * Date: Mar 9, 2009
  * Time: 8:27:16 PM
  */
-public class AddRemoveIssue extends AbstractChannelsTest {
+public class TestAddRemoveIssue extends AbstractChannelsTest {
 
     private Commander commander;
     private Scenario scenario;

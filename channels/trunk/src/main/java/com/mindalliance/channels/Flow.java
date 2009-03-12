@@ -565,6 +565,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      * @param isOutcome whether to replicate as outcome or requirement
      * @return a created flow
      */
+    //TODO remove
     public Flow replicate( boolean isOutcome ) {
         Flow flow;
         if ( isOutcome ) {

@@ -74,7 +74,7 @@ public class DuplicatePart extends AbstractCommand {
             if ( partId == null ) {
                 throw new CommandException( "Can't undo." );
             } else {
-                Part part = (Part) scenario.getNode( (Long) get( "part" ) );
+                Part part = (Part) scenario.getNode( partId );
                 return new RemovePart( part );
             }
         } catch ( NotFoundException e ) {

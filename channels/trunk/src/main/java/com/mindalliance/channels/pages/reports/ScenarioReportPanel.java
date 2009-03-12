@@ -50,7 +50,7 @@ public class ScenarioReportPanel extends Panel {
                         "Scenario: {0}", scenario.getName() ) ) );
         add( new Label( "description", scenario.getDescription() ) );                     // NON-NLS
 
-        double[] size = { 7.5, 10.0 };
+        double[] size = { 7.5, 9.0 };
         add( new FlowDiagramPanel(
                         "flowMap",                                                        // NON-NLS
                         new Model<Scenario>( scenario ),

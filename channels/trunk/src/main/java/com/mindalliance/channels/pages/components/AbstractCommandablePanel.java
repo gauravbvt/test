@@ -52,12 +52,16 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
         return Project.getProject().getService(); 
     }
 
-    protected boolean isLocked( final Identifiable identifiable ) {
-        return !getLockManager().canGrabLocksOn( new ArrayList<Long>() {
-            {
-                add( identifiable.getId());
-            }
-        } );
+    protected boolean isLockedByUser( Identifiable identifiable ) {
+        return getLockManager().isLockedByUser( identifiable );
+    }
+
+    protected boolean requestLockOn( Identifiable identifiable ) {
+        return getLockManager().requestLockOn( identifiable );
+    }
+
+    protected boolean releaseAnyLockOn( Identifiable identifiable ) {
+        return getLockManager().releaseAnyLockOn( identifiable );
     }
 
 

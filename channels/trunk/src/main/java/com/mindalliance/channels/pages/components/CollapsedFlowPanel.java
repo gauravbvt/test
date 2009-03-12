@@ -1,19 +1,12 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Service;
 import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.pages.ScenarioPage;
+import com.mindalliance.channels.pages.components.menus.FlowActionsMenuPanel;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -23,12 +16,7 @@ import java.text.MessageFormat;
 /**
  * A collapsed flow.
  */
-public class CollapsedFlowPanel extends Panel implements DeletableFlow {
-
-    /**
-     * True when flow should be deleted.
-     */
-    private boolean markedForDeletion;
+public class CollapsedFlowPanel extends AbstractCommandablePanel {
 
     /**
      * The underlying flow.
@@ -67,6 +55,8 @@ public class CollapsedFlowPanel extends Panel implements DeletableFlow {
         }
 
         add( label );
+
+/*
         WebMarkupContainer replicateItem = new WebMarkupContainer( "replicate-item" );
         add( replicateItem );
         replicateItem.setVisible(
@@ -89,23 +79,23 @@ public class CollapsedFlowPanel extends Panel implements DeletableFlow {
         add( new ExternalLink( "expand", getRequest().getURL() + "&expand=" + flow.getId() ) );
         add( new CheckBox( "delete",                                                      // NON-NLS
                 new PropertyModel<Boolean>( this, "markedForDeletion" ) ) );   // NON-NLS
+*/
+       addFlowActionMenu( outcome );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isMarkedForDeletion() {
-        return markedForDeletion;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setMarkedForDeletion( boolean delete ) {
-        markedForDeletion = delete;
+    private void addFlowActionMenu( boolean isOutcome ) {
+        FlowActionsMenuPanel flowActionsMenu = new FlowActionsMenuPanel(
+                "flowActionsMenu",
+                new PropertyModel<Flow>( this, "flow" ),
+                isOutcome,
+                true );
+        flowActionsMenu.setOutputMarkupId( true );
+        add( flowActionsMenu );
     }
 
     public Flow getFlow() {
         return flow;
     }
+
+
 }

@@ -22,21 +22,14 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public void update( AjaxRequestTarget target, Object context ) {
-        updateWith( target, context );
-    }
-
-    /**
      * Pass update event to parent.
      *
      * @param target  an ajax request target
      * @param context an object indicating context of update
      */
-    protected void updateWith( AjaxRequestTarget target, Object context ) {
+    public void updateWith( AjaxRequestTarget target, Object context ) {
         Updatable updatableParent = findParent( Updatable.class );
-        if ( updatableParent != null ) updatableParent.update( target, context );
+        if ( updatableParent != null ) updatableParent.updateWith( target, context );
     }
 
 }

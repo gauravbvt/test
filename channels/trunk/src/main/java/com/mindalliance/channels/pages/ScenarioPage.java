@@ -11,7 +11,6 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.LockManager;
-import com.mindalliance.channels.command.commands.RemovePart;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.DiagramException;
@@ -390,7 +389,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
      *
      * @param target the ajax target
      */
-    public void update( AjaxRequestTarget target, Object context ) {
+    public void updateWith( AjaxRequestTarget target, Object context ) {
         if ( !getService().list( Scenario.class ).contains( node.getScenario() ) ) {
             redirectTo( getService().getDefaultScenario() );
         } else {
@@ -708,8 +707,8 @@ public final class ScenarioPage extends WebPage implements Updatable {
         @Override
         protected void onSubmit() {
 
-            reqs.deleteSelectedFlows( expansions );
-            outcomes.deleteSelectedFlows( expansions );
+            /*reqs.deleteSelectedFlows( expansions );
+            outcomes.deleteSelectedFlows( expansions );*/
             importScenario();
 
             /*     if ( deleteScenario.isSelected() ) {
@@ -723,7 +722,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
                 setTarget( service.getDefaultScenario() );
             }*/
 
-            if ( isNodeDeleted() ) {
+           /* if ( isNodeDeleted() ) {
                 if ( getNode().isPart() )
                     try {
                         Project.commander().doCommand( new RemovePart( (Part) getNode() ) );
@@ -740,7 +739,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
                     redirectHere();
                 else
                     redirectTo( t );
-            }
+            }*/
 
         }
 

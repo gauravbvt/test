@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,9 @@ public class DefaultLockManager implements LockManager {
     /**
      * The managed locks.
      */
-    private Map<Long, Lock> locks = new HashMap<Long, Lock>();
+    private Map<Long, Lock> locks = Collections.synchronizedMap( new HashMap<Long, Lock>() );
+
+    private List<Lock> dirtyLocks = new ArrayList<Lock>();
 
     public DefaultLockManager() {
     }
@@ -138,18 +141,19 @@ public class DefaultLockManager implements LockManager {
      * @return a boolean
      */
     public boolean isUserLocking( long id ) {
-        synchronized ( this ) {
-            Lock lock = getLock( id );
-            return lock != null && lock.isOwnedBy( Project.getUserName() );
-        }
+        Lock lock = getLock( id );
+        return lock != null && lock.isOwnedBy( Project.getUserName() );
     }
 
     /**
      * {@inheritDoc}
      */
     public void releaseAllLocks( String userName ) {
-        for ( Lock lock : getAllLocks( userName ) ) {
-            locks.remove( lock.getId() );
+        synchronized ( this ) {
+            List<Lock> locksToRelease = getAllLocks( userName );
+            for ( Lock lock : locksToRelease ) {
+                locks.remove( lock.getId() );
+            }
         }
     }
 
@@ -177,6 +181,7 @@ public class DefaultLockManager implements LockManager {
      * {@inheritDoc}
      */
     public Lock getLock( long id ) {
+        removeDirtyLocks();
         Lock lock = locks.get( id );
         if ( lock != null ) {
             try {
@@ -184,11 +189,18 @@ public class DefaultLockManager implements LockManager {
             }
             catch ( NotFoundException e ) {
                 // Clean up obsolete lock
-                locks.remove( id );
+                dirtyLocks.add( lock );
                 lock = null;
             }
         }
         return lock;
+    }
+
+    private void removeDirtyLocks() {
+        for (Lock lock : dirtyLocks ) {
+            locks.remove( lock.getId() );
+        }
+        dirtyLocks = new ArrayList<Lock>();
     }
 
     /**
@@ -227,14 +239,35 @@ public class DefaultLockManager implements LockManager {
     /**
      * {@inheritDoc}
      */
+    public boolean isLockedByUser( Identifiable identifiable ) {
+        return isUserLocking( identifiable.getId() );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public boolean requestLockOn( Identifiable identifiable ) {
         boolean locked = false;
         try {
             grabLockOn( identifiable.getId() );
             locked = true;
         } catch ( LockingException e ) {
-            LOG.info("Failed to grab lock on " + identifiable, e);
+            LOG.info( "Failed to grab lock on " + identifiable, e );
         }
         return locked;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean releaseAnyLockOn( Identifiable identifiable ) {
+        boolean unlocked = false;
+        try {
+            releaseLockOn( identifiable.getId() );
+            unlocked = true;
+        } catch ( LockingException e ) {
+            LOG.info( "Failed to release lock on " + identifiable, e );
+        }
+        return unlocked;
     }
 }

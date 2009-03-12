@@ -1,18 +1,21 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.Service;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
+import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.command.commands.BreakUpFlow;
-import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.commands.AddCapability;
+import com.mindalliance.channels.command.commands.AddNeed;
 import com.mindalliance.channels.pages.ScenarioPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.repeater.RepeatingView;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,7 +26,7 @@ import java.util.Set;
 /**
  * A list of flows from a node, either requirements or outcomes.
  */
-public class FlowListPanel extends Panel {
+public class FlowListPanel extends AbstractCommandablePanel {
 
     /**
      * The node for which flows are listed.
@@ -34,73 +37,73 @@ public class FlowListPanel extends Panel {
      * True if outcomes are listed; false if requirements are listed.
      */
     private boolean outcomes;
-
     /**
-     * Panels of expanded flows.
+     * Flows list container.
      */
-    private List<DeletableFlow> deletableFlows;
+    private WebMarkupContainer flowsDiv;
+
 
     public FlowListPanel( String id, Node node, boolean outcomes ) {
         super( id );
         setNode( node );
         setOutcomes( outcomes );
         setDefaultModel( new CompoundPropertyModel( this ) );
-
         add( new Label( "title" ) );                                                      // NON-NLS
 
         add( new Link( "new" ) {                                                          // NON-NLS
 
             @Override
             public void onClick() {
-                final Node n = getNode();
-                final Flow f = isOutcomes() ? n.createOutcome( getService() )
-                        : n.createRequirement( getService() );
-                final Scenario s = n.getScenario();
-                final Set<Long> newExpansions = new HashSet<Long>( ( (ScenarioPage) getPage() ).findExpansions() );
+                Part n = (Part)getNode();
+                Command command = isOutcomes()
+                        ? new AddCapability( n )
+                        : new AddNeed( n );
+                Flow f = (Flow)doCommand( command );
+                Scenario s = n.getScenario();
+                Set<Long> newExpansions = new HashSet<Long>( ( (ScenarioPage) getPage() ).findExpansions() );
                 newExpansions.add( f.getId() );
                 newExpansions.remove( f.getScenario().getId() ); // TODO - Denis : FIX PROBLEM AND REMOVE PATCH
                 setResponsePage( ScenarioPage.class,
                         ScenarioPage.getParameters( s, n, newExpansions ) );
             }
         } );
-
-        // add( createFlowPanels( node, outcomes ) );
+        flowsDiv = new WebMarkupContainer("flows-div");
+        flowsDiv.setOutputMarkupId( true );
+        add( flowsDiv );
     }
 
     protected void onBeforeRender() {
         super.onBeforeRender();
-        add( createFlowPanels( node, outcomes ) );
+        flowsDiv.add( createFlowPanels( outcomes ) );
     }
 
-    private RepeatingView createFlowPanels( Node node, boolean outcomes ) {
-
-        final RepeatingView flowList = new RepeatingView( "flows" );                      // NON-NLS
-        final Iterator<Flow> flows = outcomes ? node.outcomes() : node.requirements();
-        deletableFlows = new ArrayList<DeletableFlow>();
-        while ( flows.hasNext() ) {
-            final Flow flow = flows.next();
-            final long flowId = flow.getId();
-            final Panel panel;
-            Set<Long> expansions = ( (ScenarioPage) getPage() ).findExpansions();
-            if ( expansions.contains( flowId ) ) {
-                final ExpandedFlowPanel flowPanel = outcomes ?
-                        new ExpandedOutPanel( Long.toString( flowId ), flow )
-                        : new ExpandedReqPanel( Long.toString( flowId ), flow );
-                panel = flowPanel;
-                deletableFlows.add( flowPanel );
-            } else {
-                final CollapsedFlowPanel dp =
-                        new CollapsedFlowPanel( Long.toString( flowId ), flow, outcomes );
-                panel = dp;
-                deletableFlows.add( dp );
+    private ListView<Flow> createFlowPanels( final boolean outcomes ) {
+        final Set<Long> expansions = ( (ScenarioPage) getPage() ).findExpansions();
+        return new ListView<Flow>( "flows", new PropertyModel<List<Flow>>(this, "flows") ) {
+            protected void populateItem( ListItem<Flow> item ) {
+                Flow flow = item.getModelObject();
+                long flowId = flow.getId();
+                if ( expansions.contains( flowId ) ) {
+                    requestLockOn( flow );
+                    ExpandedFlowPanel flowPanel = outcomes ?
+                            new ExpandedOutPanel( "flow", flow )
+                            : new ExpandedReqPanel( "flow", flow );
+                    item.add( flowPanel);
+                } else {
+                     releaseAnyLockOn( flow );
+                     CollapsedFlowPanel flowPanel =
+                             new CollapsedFlowPanel( "flow", flow, outcomes );
+                    item.add( flowPanel);
+                }
             }
-            flowList.add( panel );
-        }
-        return flowList;
+        };
     }
 
-    private Service getService() {
-        return ( (Project) getApplication() ).getService();
+    public List<Flow> getFlows() {
+        List<Flow> flows = new ArrayList<Flow>();
+        Iterator<Flow> iterator = outcomes ? node.outcomes() : node.requirements();
+        while( iterator.hasNext() ) flows.add( iterator.next() );
+        return flows;
     }
 
     /**
@@ -126,21 +129,9 @@ public class FlowListPanel extends Panel {
         this.outcomes = outcomes;
     }
 
-    /**
-     * Delete flows that are marked for deletion.
-     *
-     * @param expansions the component expansion list to modify on deletions
-     */
-    public void deleteSelectedFlows( Set<Long> expansions ) {
-        for ( DeletableFlow p : deletableFlows )
-            if ( p.isMarkedForDeletion() ) {
-                final Flow flow = p.getFlow();
-                expansions.remove( flow.getId() );
-                try {
-                    Project.commander().doCommand(  new BreakUpFlow( flow ) );
-                } catch ( CommandException e ) {
-                    e.printStackTrace();
-                }
-            }
+    public void updateWith( AjaxRequestTarget target, Object context ) {
+        target.addComponent( flowsDiv );
+        super.updateWith( target, context );
     }
+
 }

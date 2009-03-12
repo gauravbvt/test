@@ -86,7 +86,10 @@ public class ConnectWithFlow extends AbstractCommand {
             Scenario otherScenario = service.find(
                     Scenario.class,
                     (Long) get( "otherScenario" ) );
-            Node other = otherScenario.getNode( (Long) get( "other" ) );
+            Long nodeId = (Long) get( "other" );
+            Node other = (nodeId != null)
+                    ? otherScenario.getNode( nodeId )
+                    : service.createConnector( otherScenario );
             String name = (String) get( "name" );
             boolean isOutcome = (Boolean) get( "isOutcome" );
             Flow flow = isOutcome
@@ -122,7 +125,7 @@ public class ConnectWithFlow extends AbstractCommand {
             Long flowId = (Long) get( "flow" );
             if ( flowId == null ) throw new CommandException( "Can't undo." );
             Flow flow = scenario.findFlow( flowId );
-            return new BreakUpFlow( flow );
+            return new DisconnectFlow( flow );
         } catch ( NotFoundException e ) {
             throw new CommandException( "Can't undo.", e );
         }

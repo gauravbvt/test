@@ -15,5 +15,5 @@ public interface Updatable {
      * @param target the ajax target
      * @param context an object indicating context of update
      */
-    void update( AjaxRequestTarget target, Object context );
+    void updateWith( AjaxRequestTarget target, Object context );
 }

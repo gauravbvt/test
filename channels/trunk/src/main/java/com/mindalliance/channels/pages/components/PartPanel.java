@@ -181,13 +181,13 @@ public class PartPanel extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssues( field, part, property );
                 target.addComponent( field );
-                updateWith( target, getPart() );
+                // updateWith( target, part );
             }
         } );
 
         // Add style mods from scenario analyst.
         addIssues( field, part, property );
-        field.setEnabled( !isLocked( getPart()) );
+        field.setEnabled( isLockedByUser( getPart()) );
         add( field );
 
     }
@@ -235,7 +235,7 @@ public class PartPanel extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 completionTimePanel.enable( part.isSelfTerminating() );
                 target.addComponent( completionTimePanel );
-                updateWith( target, getPart() );
+                // updateWith( target, getPart() );
             }
         } );
         add( selfTerminatingCheckBox );
@@ -247,7 +247,7 @@ public class PartPanel extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 repeatsEveryPanel.enable( part.isRepeating() );
                 target.addComponent( repeatsEveryPanel );
-                updateWith( target, getPart() );
+                // updateWith( target, getPart() );
             }
         } );
     }

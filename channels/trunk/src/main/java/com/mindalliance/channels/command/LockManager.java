@@ -80,14 +80,7 @@ public interface LockManager {
      */
     Lock getLock( long id );
 
-    /**
-     * Whether someone other than the user has a lock on the model object with given id.
-     * @param id a model object id
-     * @return a boolean
-     */
-    boolean isLocked( long id );
-
-    /**
+     /**
      * Get all locks on all model objects for a user.
      *
      * @param userName a user's name
@@ -108,9 +101,23 @@ public interface LockManager {
     void reset();
 
     /**
+      * Whether someone other than the user has a lock on the model object with given id.
+      * @param identifiable an identifiable
+      * @return a boolean
+      */
+     boolean isLockedByUser( Identifiable identifiable );    
+
+    /**
      * Attempt to get lock on identitifiable
      * @param identifiable an identifiable object
      * @return a boolean indiciating success (true) or failure (false)
      */
     boolean requestLockOn( Identifiable identifiable );
+
+    /**
+     * Attempt to release lock on identifiable, failing silently.
+     * @param identifiable an identifiable
+     * @return a boolean - whether a lock was released
+     */
+    boolean releaseAnyLockOn( Identifiable identifiable );
 }

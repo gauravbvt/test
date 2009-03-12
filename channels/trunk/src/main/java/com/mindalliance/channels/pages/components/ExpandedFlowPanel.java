@@ -9,17 +9,17 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
-import com.mindalliance.channels.UserIssue;
-import com.mindalliance.channels.util.SemMatch;
 import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.command.commands.RedirectFlow;
+import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.pages.ScenarioPage;
+import com.mindalliance.channels.pages.components.menus.FlowActionsMenuPanel;
+import com.mindalliance.channels.util.SemMatch;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -31,24 +31,21 @@ import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.HashSet;
 
 /**
  * Details of an expanded flow.
  */
-public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implements DeletableFlow {
+public abstract class ExpandedFlowPanel extends AbstractCommandablePanel implements DeletableFlow {
 
     /**
      * The flow edited by this panel.
@@ -138,11 +135,10 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
      */
     private IssuesPanel flowIssuesPanel;
 
+    private FlowActionsMenuPanel flowActionsMenu;
+
     protected ExpandedFlowPanel( String id, Flow flow, boolean outcome ) {
         super( id );
-        setDefaultModel( new CompoundPropertyModel<Flow>(
-                new PropertyModel<Flow>( this, "flow" ) ) );                              // NON-NLS
-
         setOutputMarkupId( true );
         setFlow( flow );
         setOutcome( outcome );
@@ -150,10 +146,13 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
         addHeader();
         addNameField();
         addLabeled( "name-label", nameField );                                            // NON-NLS
-        descriptionField = new TextArea<String>( "description" );                         // NON-NLS
+        descriptionField = new TextArea<String>(
+                "description",
+                new PropertyModel<String>( this, "description" ) );                         // NON-NLS
         descriptionField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                target.addComponent( ExpandedFlowPanel.this );
+                // target.addComponent( ExpandedFlowPanel.this );
+                updateWith( target, getFlow() );
             }
         } );
         addLabeled( "description-label", descriptionField );                              // NON-NLS
@@ -186,30 +185,32 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
      * @param f the flow
      */
     private void adjustFields( Flow f ) {
-        nameField.setEnabled( f.canSetNameAndDescription() );
-        descriptionField.setEnabled( f.canSetNameAndDescription() );
-        askedForButtons.setEnabled( f.canSetAskedFor() );
+        nameField.setEnabled( isLockedByUser( f ) && f.canSetNameAndDescription() );
+        descriptionField.setEnabled( isLockedByUser( f ) &&  f.canSetNameAndDescription() );
+        askedForButtons.setEnabled( isLockedByUser( f ) &&  f.canSetAskedFor() );
         allField.setVisible( outcome && f.canGetAll() );
-        allField.setEnabled( outcome && f.canSetAll() );
+        allField.setEnabled( isLockedByUser( f ) &&  outcome && f.canSetAll() );
         significanceToTargetLabel.setVisible( f.canGetSignificanceToTarget() );
-        significanceToTargetChoice.setEnabled( f.canSetSignificanceToTarget() );
+        significanceToTargetChoice.setEnabled( isLockedByUser( f ) &&  f.canSetSignificanceToTarget() );
         channelRow.setVisible( f.canGetChannels() );
         maxDelayRow.setVisible( f.canGetMaxDelay() );
-        delayPanel.enable( f.canSetMaxDelay() );
+        delayPanel.enable( isLockedByUser( f ) &&  f.canSetMaxDelay() );
         significanceToSourceRow.setVisible( f.canGetSignificanceToSource() );
         triggersSourceContainer.setVisible( ( !outcome || f.isAskedFor() ) && f.canGetTriggersSource() );
-        triggersSourceCheckBox.setEnabled( f.canSetTriggersSource() );
+        triggersSourceCheckBox.setEnabled( isLockedByUser( f ) &&  f.canSetTriggersSource() );
         terminatesSourceContainer.setVisible( f.canGetTerminatesSource() );
-        terminatesSourceCheckBox.setEnabled( f.canSetTerminatesSource() );
+        terminatesSourceCheckBox.setEnabled( isLockedByUser( f ) &&  f.canSetTerminatesSource() );
     }
 
-    public void update( AjaxRequestTarget target, Object context ) {
-        super.update( target, context );
-        target.addComponent( flowIssuesPanel );
+    public void updateWith( AjaxRequestTarget target, Object context ) {
+        target.addComponent( ExpandedFlowPanel.this );
+        super.updateWith( target, context );
     }
 
     private void addNameField() {
-        nameField = new AutoCompleteTextField<String>( "name" ) {
+        nameField = new AutoCompleteTextField<String>(
+                "name",
+                new PropertyModel<String>( this, "name" ) ) {
             protected Iterator<String> getChoices( String s ) {
                 return getFlowNameChoices( s );
             }
@@ -218,9 +219,6 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
 
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssuesAnnotation( nameField, getFlow(), "name" );
-                target.addComponent( nameField );
-                target.addComponent( titleLabel );
-                target.addComponent( otherChoice );
                 updateWith( target, getFlow() );
             }
         } );
@@ -261,7 +259,9 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
     }
 
     private void addAskedForRadios() {
-        askedForButtons = new RadioGroup<Boolean>( "askedFor" );                          // NON-NLS
+        askedForButtons = new RadioGroup<Boolean>(
+                "askedFor",
+                new PropertyModel<Boolean>( this, "askedFor" ) );                          // NON-NLS
         askedForButtons.add( new Radio<Boolean>( "askedForTrue",                          // NON-NLS
                 new Model<Boolean>( true ) ) );
         askedForButtons.add( new Radio<Boolean>( "askedForFalse",                         // NON-NLS
@@ -271,7 +271,6 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
             protected void onUpdate( AjaxRequestTarget target ) {
                 channelRow.setVisible( isChannelRelevant( getFlow() ) );
                 adjustFields( getFlow() );
-                target.addComponent( ExpandedFlowPanel.this );
                 updateWith( target, getFlow() );
             }
         } );
@@ -285,7 +284,7 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
         significanceToTargetLabel.add( new Label( "target-label", outcome ? "the recipient's task" : "this task" ) );
         significanceToTargetChoice = new DropDownChoice<Flow.Significance>(
                 "significance-to-target",
-                new PropertyModel<Flow.Significance>( getFlow(), "significanceToTarget" ),
+                new PropertyModel<Flow.Significance>( this, "significanceToTarget" ),
                 new PropertyModel<List<? extends Flow.Significance>>( this, "significanceToTargetChoices" ),
                 new IChoiceRenderer<Flow.Significance>() {
 
@@ -300,7 +299,6 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
         );
         significanceToTargetChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                target.addComponent( titleLabel );
                 updateWith( target, getFlow() );
             }
         } );
@@ -318,7 +316,6 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
                 new PropertyModel<Boolean>( this, "triggeringToSource" ) );
         triggersSourceCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                target.addComponent( titleLabel );
                 updateWith( target, getFlow() );
             }
         } );
@@ -348,50 +345,6 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
     }
 
     /**
-     * Whether the flow triggers the source
-     *
-     * @return a boolean
-     */
-    public boolean isTriggeringToSource() {
-        return getFlow().getSignificanceToSource() == Flow.Significance.Triggers;
-    }
-
-    /**
-     * Set the triggering significance to the source
-     *
-     * @param triggers a boolean
-     */
-    public void setTriggeringToSource( boolean triggers ) {
-        if ( triggers ) {
-            getFlow().becomeTriggeringToSource();
-        } else {
-            getFlow().setSignificanceToSource( Flow.Significance.None );
-        }
-    }
-
-    /**
-     * Whether the flow terminates the source
-     *
-     * @return a boolean
-     */
-    public boolean isTerminatingToSource() {
-        return getFlow().getSignificanceToSource() == Flow.Significance.Terminates;
-    }
-
-    /**
-     * Set the terminating significance to the source
-     *
-     * @param terminates a boolean
-     */
-    public void setTerminatingToSource( boolean terminates ) {
-        if ( terminates ) {
-            getFlow().becomeTerminatingToSource();
-        } else {
-            getFlow().setSignificanceToSource( Flow.Significance.None );
-        }
-    }
-
-    /**
      * Get the list of candidate significances to the target
      *
      * @return a list of significances
@@ -416,62 +369,72 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
                 } );
         titleLabel.setOutputMarkupId( true );
         add( titleLabel );
-        WebMarkupContainer replicateItem = new WebMarkupContainer( "replicate-item" );
-        add( replicateItem );
-        replicateItem.setVisible(
-                ( outcome && getFlow().getTarget().isPart() )
-                        || ( !outcome && getFlow().getSource().isPart() ) );
-        replicateItem.add( new Link( "replicate" ) {
-            @Override
-            public void onClick() {
-                Flow replica = getFlow().replicate( outcome );
-                // PageParameters parameters = getWebPage().getPageParameters();
-                // TODO - Denis: Fix problem and remove patch
-                PageParameters parameters = ( (ScenarioPage) getWebPage() )
-                        .getParametersCollapsing( getFlow().getScenario().getId() );
-                parameters.add( ScenarioPage.EXPAND_PARM, String.valueOf( replica.getId() ) );
-                this.setResponsePage( getWebPage().getClass(), parameters );
-            }
-        } );
-        // add( new ScenarioLink( "hide", new PropertyModel<Node>( this, "node" ) ) );       // NON-NLS
-        // TODO - hack - adjust for Bookmarkable link
-        String url = getRequest().getURL().
-                replaceAll( "&" + ScenarioPage.EXPAND_PARM + "=" + getFlow().getId(), "" );
-        add( new ExternalLink( "hide", url ) );                                  // NON-NLS
-        add( new Link( "add-issue" ) {                                                    // NON-NLS
+        /*       WebMarkupContainer replicateItem = new WebMarkupContainer( "replicate-item" );
+               add( replicateItem );
+               replicateItem.setVisible(
+                       ( outcome && getFlow().getTarget().isPart() )
+                               || ( !outcome && getFlow().getSource().isPart() ) );
+               replicateItem.add( new Link( "replicate" ) {
+                   @Override
+                   public void onClick() {
+                       Flow replica = getFlow().replicate( outcome );
+                       // PageParameters parameters = getWebPage().getPageParameters();
+                       // TODO - Denis: Fix problem and remove patch
+                       PageParameters parameters = ( (ScenarioPage) getWebPage() )
+                               .getParametersCollapsing( getFlow().getScenario().getId() );
+                       parameters.add( ScenarioPage.EXPAND_PARM, String.valueOf( replica.getId() ) );
+                       this.setResponsePage( getWebPage().getClass(), parameters );
+                   }
+               } );
+               // add( new ScenarioLink( "hide", new PropertyModel<Node>( this, "node" ) ) );       // NON-NLS
+               // TODO - hack - adjust for Bookmarkable link
+               String url = getRequest().getURL().
+                       replaceAll( "&" + ScenarioPage.EXPAND_PARM + "=" + getFlow().getId(), "" );
+               add( new ExternalLink( "hide", url ) );                                  // NON-NLS
+               add( new Link( "add-issue" ) {                                                    // NON-NLS
 
-            @Override
-            public void onClick() {
-                UserIssue newIssue = new UserIssue( getFlow() );
-                getService().add( newIssue );
-                // PageParameters parameters = getWebPage().getPageParameters();
-                // TODO - Denis: Fix probelm and remove patch
-                PageParameters parameters = ( (ScenarioPage) getWebPage() )
-                        .getParametersCollapsing( getFlow().getScenario().getId() );
-                parameters.add( ScenarioPage.EXPAND_PARM, String.valueOf( newIssue.getId() ) );
-                setResponsePage( getWebPage().getClass(), parameters );
-            }
-        } );
-        add( new CheckBox( "delete",                                                      // NON-NLS
-                new PropertyModel<Boolean>( this, "markedForDeletion" ) ) );              // NON-NLS
+                   @Override
+                   public void onClick() {
+                       UserIssue newIssue = new UserIssue( getFlow() );
+                       getService().add( newIssue );
+                       // PageParameters parameters = getWebPage().getPageParameters();
+                       // TODO - Denis: Fix probelm and remove patch
+                       PageParameters parameters = ( (ScenarioPage) getWebPage() )
+                               .getParametersCollapsing( getFlow().getScenario().getId() );
+                       parameters.add( ScenarioPage.EXPAND_PARM, String.valueOf( newIssue.getId() ) );
+                       setResponsePage( getWebPage().getClass(), parameters );
+                   }
+               } );
+               add( new CheckBox( "delete",                                                      // NON-NLS
+                       new PropertyModel<Boolean>( this, "markedForDeletion" ) ) );              // NON-NLS
+        */
+        addFlowActionMenu( outcome );
     }
 
+    private void addFlowActionMenu( boolean isOutcome ) {
+        flowActionsMenu = new FlowActionsMenuPanel(
+                "flowActionsMenu",
+                new PropertyModel<Flow>( this, "flow" ),
+                isOutcome,
+                false );
+        flowActionsMenu.setOutputMarkupId( true );
+        add( flowActionsMenu );
+    }
+
+
     private void addAllField() {
-        CheckBox checkBox = new CheckBox( "all" );                                        // NON-NLS
+        CheckBox checkBox = new CheckBox(
+                "all",
+                new PropertyModel<Boolean>( this, "all" ) );                                        // NON-NLS
         checkBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {                // NON-NLS
 
             protected void onUpdate( AjaxRequestTarget target ) {
-                target.addComponent( titleLabel );
                 updateWith( target, getFlow() );
             }
         } );
         allField = new FormComponentLabel( "all-label", checkBox );                       // NON-NLS
         allField.add( checkBox );
         add( allField );
-    }
-
-    private Service getService() {
-        return ( (Project) getApplication() ).getService();
     }
 
     /**
@@ -539,7 +502,6 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields( getFlow() );
-                target.addComponent( ExpandedFlowPanel.this );
                 updateWith( target, getFlow() );
                 // PageParameters parameters = getWebPage().getPageParameters();
                 // TODO - Denis : fix bug and remove patch
@@ -714,41 +676,7 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
      */
     public void setOther( Node other ) {
         if ( other.isConnector() ) {
-            // different other
-            Connector connector = (Connector) other;
-            Flow connectorFlow = connector.getInnerFlow();
-            Flow oldFlow = getFlow();
-            Flow newFlow;
-            if ( isOutcome() ) {
-                if ( connector.getScenario() != oldFlow.getSource().getScenario() ) {
-                    newFlow = getService().connect(
-                            oldFlow.getSource(),
-                            connector,
-                            connectorFlow.getName() );
-                    newFlow.initFrom( oldFlow );
-                } else {
-                    newFlow = getService().connect(
-                            oldFlow.getSource(),
-                            connectorFlow.getTarget(),
-                            connectorFlow.getName() );
-                    newFlow.initFrom( connectorFlow );
-                }
-            } else {
-                if ( connector.getScenario() != oldFlow.getTarget().getScenario() ) {
-                    newFlow = getService().connect(
-                            connector,
-                            oldFlow.getTarget(),
-                            connectorFlow.getName() );
-                    newFlow.initFrom( oldFlow );
-                } else {
-                    newFlow = getService().connect(
-                            connectorFlow.getSource(),
-                            oldFlow.getTarget(),
-                            connectorFlow.getName() );
-                    newFlow.initFrom( connectorFlow );
-                }
-            }
-            oldFlow.disconnect();
+            Flow newFlow = (Flow) doCommand( new RedirectFlow( getFlow(), (Connector) other, isOutcome() ) );
             setFlow( newFlow );
         }
     }
@@ -766,5 +694,118 @@ public abstract class ExpandedFlowPanel extends AbstractUpdatablePanel implement
     public void setMarkedForDeletion( boolean delete ) {
         markedForDeletion = delete;
     }
+
+    /**
+     * Get flow name.
+     *
+     * @return a string
+     */
+    public String getName() {
+        return getFlow().getName();
+    }
+
+    /**
+     * Set flow name via command.
+     *
+     * @param name a string
+     */
+    public void setName( String name ) {
+        doCommand( new UpdateScenarioObject( getFlow(), "name", name ) );
+    }
+
+    /**
+     * Get flow description.
+     *
+     * @return a string
+     */
+    public String getDescription() {
+        return getFlow().getDescription();
+    }
+
+    /**
+     * Set flow name via command.
+     *
+     * @param desc a string
+     */
+    public void setDescription( String desc ) {
+        doCommand( new UpdateScenarioObject( getFlow(), "description", desc ) );
+    }
+
+    public boolean isAskedFor() {
+        return getFlow().isAskedFor();
+    }
+
+    public void setAskedFor( boolean val ) {
+        doCommand( new UpdateScenarioObject( getFlow(), "askedFor", val ) );
+    }
+
+    public boolean isAll() {
+        return getFlow().isAll();
+    }
+
+    public void setAll( boolean val ) {
+        doCommand( new UpdateScenarioObject( getFlow(), "all", val ) );
+    }
+
+    public Flow.Significance getSignificanceToTarget() {
+        return getFlow().getSignificanceToTarget();
+    }
+
+    public void setSignificanceToTarget( Flow.Significance val ) {
+        doCommand( new UpdateScenarioObject( getFlow(), "significanceToTarget", val ) );
+    }
+
+    public Flow.Significance getSignificanceToSource() {
+        return getFlow().getSignificanceToSource();
+    }
+
+    public void setSignificanceToSource( Flow.Significance val ) {
+        doCommand( new UpdateScenarioObject( getFlow(), "significanceToSource", val ) );
+    }
+
+    /**
+     * Whether the flow triggers the source
+     *
+     * @return a boolean
+     */
+    public boolean isTriggeringToSource() {
+        return getFlow().getSignificanceToSource() == Flow.Significance.Triggers;
+    }
+
+    /**
+     * Set the triggering significance to the source
+     *
+     * @param triggers a boolean
+     */
+    public void setTriggeringToSource( boolean triggers ) {
+        if ( triggers ) {
+            setSignificanceToSource( Flow.Significance.Triggers );
+        } else {
+            setSignificanceToSource( Flow.Significance.None );
+        }
+    }
+
+    /**
+     * Whether the flow terminates the source
+     *
+     * @return a boolean
+     */
+    public boolean isTerminatingToSource() {
+        return getFlow().getSignificanceToSource() == Flow.Significance.Terminates;
+    }
+
+    /**
+     * Set the terminating significance to the source
+     *
+     * @param terminates a boolean
+     */
+    public void setTerminatingToSource( boolean terminates ) {
+        if ( terminates ) {
+            setSignificanceToSource( Flow.Significance.Terminates );
+        } else {
+            setSignificanceToSource( Flow.Significance.None );
+        }
+    }
+
 
 }
