@@ -79,7 +79,7 @@ div.organization > h3, div.organization > p.description {
 }
 
 .role div.header div.role-head h4 {
-    font-size: 1.25em;
+    font-size: 1.3125em;
     margin: 0;
 }
 
@@ -209,6 +209,7 @@ table.tasks th h4 {
 
 p.task-name {
     font-weight: bold;
+    font-size: 1.125em;
 }
 
 .tasks p {
@@ -262,6 +263,10 @@ ul.flows li.send-answer {
 
 .issues .major {
     color: red;
+}
+
+.issues, p.description {
+    font-size: 0.75em;
 }
 
 .issues .minor {
