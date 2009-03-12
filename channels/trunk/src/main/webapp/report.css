@@ -4,14 +4,18 @@
         margin: 0;
     }
     div.scenario, .scenario div.role, #directory {
-        page-break-before: always; 
+        page-break-before: always;
+    }
+
+    tr.task {
+        page-break-inside: avoid;
     }
 
     body {
         margin: 0;
         padding: 0;
         font-family: Arial,Helvetica,sans-serif;
-        font-size: 10pt;
+        font-size: 9pt;
    }
 }
 
@@ -20,22 +24,31 @@
         margin: 0;
         padding: 5px;
         font-family: Arial,Helvetica,sans-serif;
-        font-size: 14px;
+        font-size: 100%;
     }
 
     div.scenario, .scenario div.role, #directory {
-        border-top: 1px dotted gray;
-        margin-top: 2em;
-        padding-top: 2em;
+        border-top: 2px solid black;
+        margin-top: 1em;
+        padding-top: 3em;
     }
-
-
 }
 
 
 div.flow-map:after, .scenario div.role:after, #directory:after {
     content: "Copyright (C) 2009 Mind-Alliance Systems. All Rights Reserved.";
+    font-size: 0.625em;
+    font-style: italic;
+    text-align: right;
+    padding: 0.5em 0.5em 0 0;
     display: block;
+}
+
+.role div.header ul.contacts, .tasks td, table.tasks th {
+    width: 61.8%;
+}
+.role div.header div.role-head, .tasks td:first-child, .tasks th:first-child {
+    width: 38.2%;
 }
 
 div.flow-map {
@@ -48,58 +61,59 @@ div.organization > h3, div.organization > p.description {
     display: none;
 }
 
-.role table.header {
+.role div.header {
+    display: table;
     width: 100%;
-    border-collapse: collapse;
-    border-spacing: 0;
+    border-spacing: 0.5em 0;
+    margin-bottom: 2em;
+    table-layout: fixed;
+    position: relative;
 }
 
-.role table.header td {
-    padding: 0.5em;
-    vertical-align: top;
-    width: 50%;
+.role div.header > div {
+    display: table-row;
 }
 
-.role table.header td.scenario-head h3, .role table.header td.role-head h4 {
-    font-size: 1.5em;
+.role div.header div.role-head {
+    display: table-cell;
+}
+
+.role div.header div.role-head h4 {
+    font-size: 1.25em;
     margin: 0;
 }
 
-.role table.header td.scenario-head {
+.role div.header div.role-head ul {
+    margin: 0 0 0.5em 0;
+    padding: 0 0 0 1em;
 }
 
-.role table.header td.role-head {
+.role div.header div.role-head ul li {
 }
 
-.role table.header td.scenario-head h3 {
-    color: darkred;
+.role div.header div.role-head ul li.organization:before {
+    content: "Organization: ";
 }
 
-.role table.header * {
-    margin: 0.5em 0 0 0;
+.role div.header div.role-head ul li.scenario:before {
+    content: "Scenario: ";
 }
 
-.role table.header td.role-head ul {
-    padding: 0;
-    list-style: none;
-}
 
-.role table.header td.role-head ul li {
-    margin: 0;
-}
-
-.role table.header td.role-head ul li.organization {
+.role div.header ul.contacts {
+    display: table-cell;
 }
 
 ul.contacts, ul.channels-only {
-    background-color: #D0D0D0;
+    background: transparent url('images/address_book.png') no-repeat scroll 0.5em 0.25em;
+    border:  0.5pt dotted lightgray;
+    padding: 0.5em 0.5em 0 40px !important;
 }
 
 ul.contacts {
     list-style: none;
     display:table;
     border-spacing:0;
-    padding: 0.5em 0.5em 0 0.5em !important;
 }
 
 ul.contacts h4 {
@@ -161,7 +175,8 @@ p.description:before {
 
 table.tasks {
     width: 100%;
-    border-spacing: 0.5em;
+    border-spacing: 0;
+    table-layout: fixed;
 }
 
 table.tasks th, table.tasks td {
@@ -171,11 +186,21 @@ table.tasks th, table.tasks td {
 }
 
 table.tasks th {
-    background: #f0f0f0;
+    background: #f8f8f8;
+    border-top: 3px double lightgray;
+    border-bottom: 3px double lightgray;
+}
+
+table.tasks thead {
+    padding-bottom: 1em;
 }
 
 table.tasks td {
-    border: 1px solid lightgray;
+    border-top: 0.5pt dotted lightgray;
+}
+
+table.tasks tbody tr:first-child td {
+    border-top: none;
 }
 
 table.tasks th h4 {
@@ -188,14 +213,6 @@ p.task-name {
 
 .tasks p {
     margin: 0 0 0.5em 0;
-}
-
-.tasks td:first-child, .tasks th:first-child {
-    width: 38.2%;
-}
-
-.tasks td, table.tasks th {
-    width: 61.8%;
 }
 
 .tasks td ul {
@@ -212,21 +229,21 @@ ul.flows {
 }
 
 ul.flows > li {
-    min-height: 33px;
-    padding: 15px 0 0 56px;
+    margin-bottom: 1em;
+    padding: 0 0 0 2em;
 }
 
 ul.flows li.receive-notification {
-    background: transparent url('images/arrow_left_blue1.png') no-repeat top left;
+    background: transparent url('images/arrow_left_blue.png') no-repeat top left;
 }
 ul.flows li.receive-answer {
-    background: transparent url('images/arrow_left_blue1.png') no-repeat top left;
+    background: transparent url('images/arrow_left_blue.png') no-repeat top left;
 }
 ul.flows li.send-notification {
-    background: transparent url('images/arrow_right_blue1.png') no-repeat top left;
+    background: transparent url('images/arrow_right_blue.png') no-repeat top left;
 }
 ul.flows li.send-answer {
-    background: transparent url('images/arrow_right_blue1.png') no-repeat top left;
+    background: transparent url('images/arrow_right_blue.png') no-repeat top left;
 }
 
 .urgency {

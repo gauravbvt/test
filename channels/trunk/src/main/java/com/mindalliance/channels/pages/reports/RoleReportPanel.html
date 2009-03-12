@@ -7,32 +7,33 @@
         lang="en">
 <body>
 <wicket:panel>
-    <table class="header"><tr>
-        <td class="role-head">
-            <h4 wicket:id="name">name</h4>
-            <p class="description" wicket:id="description">description</p>
-            <ul>
-                <li wicket:id="org" class="organization">(organization)</li>
+    <div class="header">
+        <div>
+            <div class="role-head">
+                <h4 wicket:id="name">name</h4>
+                <ul>
+                    <li wicket:id="org" class="organization">(organization)</li>
+                    <li wicket:id="sc-name" class="scenario">(scenario)</li>
+                </ul>
+                <p class="description" wicket:id="description">description</p>
+            </div>
+            <ul class="contacts">
+                 <li class="contact" wicket:id="actors">
+                    <span wicket:id="actor">[actor report panel]</span>
+                </li>
             </ul>
-        </td>
-        <td class="scenario-head">
-            <h3 wicket:id="sc-name">Scenario</h3>
-            <p class="description" wicket:id="sc-description">description</p>
-        </td>
-    </tr></table>
-
-    <ul class="contacts">
-         <li class="contact" wicket:id="actors">
-            <span wicket:id="actor">[actor report panel]</span>
-        </li>
-    </ul>
+        </div>
+    </div>
 
     <table class="tasks">
-        <tr><th><h4>Tasks</h4></th><th><h4>Communication Actions</h4></th></tr>
-        <tr class="task" wicket:id="parts">
-            <div wicket:id="part">[part report panel]</div>
-        </tr>
-
+        <thead>
+            <tr><th><h4>Tasks</h4></th><th><h4>Communication Actions</h4></th></tr>
+        </thead>
+        <tbody>
+            <tr class="task" wicket:id="parts">
+                <div wicket:id="part">[part report panel]</div>
+            </tr>
+        </tbody>
     </table>
 </wicket:panel>
 </body>

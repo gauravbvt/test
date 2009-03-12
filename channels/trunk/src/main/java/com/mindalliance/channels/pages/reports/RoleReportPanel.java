@@ -13,7 +13,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
-import java.text.MessageFormat;
 import java.util.List;
 
 /**
@@ -47,14 +46,11 @@ public class RoleReportPanel extends Panel {
     }
 
     private void init() {
-        add( new Label( "sc-name",                                                        // NON-NLS
-                        MessageFormat.format( "Scenario: {0}", scenario.getName() ) ) );
+        add( new Label( "sc-name", scenario.getName() ) );                                // NON-NLS
         add( new Label( "sc-description", scenario.getDescription() ) );                  // NON-NLS
-        add( new Label( "org",                                                            // NON-NLS
-                        MessageFormat.format( "Organization: {0}", organization.getName() ) ) );
+        add( new Label( "org", organization.getName() ) );                                // NON-NLS
 
-        add( new Label( "name", MessageFormat.format(                                     // NON-NLS
-                "Role: {0}", role.getName() ) ) );
+        add( new Label( "name", role.getName() ) );                                       // NON-NLS
 
         String desc = role.getDescription();
         Label descLabel = new Label( "description", desc );                               // NON-NLS
