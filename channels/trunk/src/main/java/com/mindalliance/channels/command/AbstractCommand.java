@@ -263,4 +263,29 @@ public abstract class AbstractCommand implements Command {
         }
     }
 
+    /**
+     * Add a value to a list at a given object's property.
+     *
+     * @param obj      target object
+     * @param property list property name
+     * @param value    value to add
+     */
+    @SuppressWarnings( "unchecked" )
+    protected void addToProperty( Object obj, String property, Object value ) {
+        List list = (List) getProperty( obj, property );
+        list.add( value );
+    }
+
+    /**
+     * Remove a value from a list at a given object's property.
+     *
+     * @param obj      target object
+     * @param property list property name
+     * @param value    value to remove
+     */
+    @SuppressWarnings( "unchecked" )
+    protected void removeFromProperty( Object obj, String property, Object value ) {
+        List list = (List) getProperty( obj, property );
+        list.remove( value );
+    }    
 }

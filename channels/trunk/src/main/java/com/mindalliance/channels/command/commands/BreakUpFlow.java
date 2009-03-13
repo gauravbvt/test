@@ -44,6 +44,8 @@ public class BreakUpFlow extends AbstractCommand {
         try {
             Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
             Flow flow = scenario.findFlow( (Long) get( "flow" ) );
+            // TODO - move logic here
+            // Make sure undo is symetrical (disconnect flows created during breakup)
             flow.breakup();
             ignoreLock( (Long) get( "flow" ) );
             return null;

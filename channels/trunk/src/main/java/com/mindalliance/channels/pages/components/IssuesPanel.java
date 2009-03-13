@@ -1,12 +1,10 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.Deletable;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Service;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.ScenarioObject;
 import com.mindalliance.channels.command.commands.AddUserIssue;
@@ -118,47 +116,7 @@ public class IssuesPanel extends AbstractCommandablePanel {
      * @return list of issues
      */
     public List<Issue> getModelObjectIssues() {
-        List<Issue> issues = Project.analyst().listIssues( model.getObject(), false );
-        return issues;
+        return Project.analyst().listIssues( model.getObject(), false );
     }
 
-
-    //==================================================
-    /**
-     * A wrapper to keep track of the deletion state of an attachment.
-     */
-    public static class DeletableWrapper implements Deletable {
-
-        /**
-         * The underlying issue.
-         */
-        private Issue issue;
-
-        /**
-         * True if user marked item for deletion.
-         */
-        private boolean markedForDeletion;
-
-        public DeletableWrapper( Issue issue ) {
-            this.issue = issue;
-        }
-
-        public boolean isMarkedForDeletion() {
-            return markedForDeletion;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public void setMarkedForDeletion( boolean delete ) {
-            markedForDeletion = delete;
-            if ( delete && !issue.isDetected() ) {
-                Project.service().remove( (ModelObject) issue );
-            }
-        }
-
-        public Issue getIssue() {
-            return issue;
-        }
-    }
 }

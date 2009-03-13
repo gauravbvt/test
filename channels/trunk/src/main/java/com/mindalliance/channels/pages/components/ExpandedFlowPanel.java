@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Channelable;
 import com.mindalliance.channels.Connector;
-import com.mindalliance.channels.Delay;
 import com.mindalliance.channels.ExternalFlow;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.ModelObject;
@@ -45,7 +44,7 @@ import java.util.TreeSet;
 /**
  * Details of an expanded flow.
  */
-public abstract class ExpandedFlowPanel extends AbstractCommandablePanel implements DeletableFlow {
+public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
 
     /**
      * The flow edited by this panel.
@@ -61,10 +60,6 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel impleme
      * True if this flow is marked for deletion.
      */
     private boolean markedForDeletion;
-    /**
-     * Flow's title label
-     */
-    private Label titleLabel;
     /**
      * The name field.
      */
@@ -126,16 +121,6 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel impleme
      * The checkbox for setting Triggers significance to source
      */
     private CheckBox triggersSourceCheckBox;
-    /**
-     * Drop down of choice for the other end of the flow
-     */
-    private DropDownChoice<Node> otherChoice;
-    /**
-     * A panel with issues on the flow.
-     */
-    private IssuesPanel flowIssuesPanel;
-
-    private FlowActionsMenuPanel flowActionsMenu;
 
     protected ExpandedFlowPanel( String id, Flow flow, boolean outcome ) {
         super( id );
@@ -173,7 +158,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel impleme
         addMaxDelayRow();
         addSignificanceToSource();
         add( new AttachmentPanel( "attachments", new PropertyModel<Flow>( this, "flow" ) ) );
-        flowIssuesPanel = new IssuesPanel( "issues", new PropertyModel<ModelObject>( this, "flow" ) );
+        IssuesPanel flowIssuesPanel = new IssuesPanel( "issues", new PropertyModel<ModelObject>( this, "flow" ) );
         flowIssuesPanel.setOutputMarkupId( true );
         add( flowIssuesPanel );
         adjustFields( getFlow() );
@@ -359,7 +344,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel impleme
     }
 
     private void addHeader() {
-        titleLabel = new Label( "title",                                                          // NON-NLS
+        Label titleLabel = new Label( "title",                                                          // NON-NLS
                 new AbstractReadOnlyModel<String>() {
                     @Override
                     public String getObject() {
@@ -369,50 +354,11 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel impleme
                 } );
         titleLabel.setOutputMarkupId( true );
         add( titleLabel );
-        /*       WebMarkupContainer replicateItem = new WebMarkupContainer( "replicate-item" );
-               add( replicateItem );
-               replicateItem.setVisible(
-                       ( outcome && getFlow().getTarget().isPart() )
-                               || ( !outcome && getFlow().getSource().isPart() ) );
-               replicateItem.add( new Link( "replicate" ) {
-                   @Override
-                   public void onClick() {
-                       Flow replica = getFlow().replicate( outcome );
-                       // PageParameters parameters = getWebPage().getPageParameters();
-                       // TODO - Denis: Fix problem and remove patch
-                       PageParameters parameters = ( (ScenarioPage) getWebPage() )
-                               .getParametersCollapsing( getFlow().getScenario().getId() );
-                       parameters.add( ScenarioPage.EXPAND_PARM, String.valueOf( replica.getId() ) );
-                       this.setResponsePage( getWebPage().getClass(), parameters );
-                   }
-               } );
-               // add( new ScenarioLink( "hide", new PropertyModel<Node>( this, "node" ) ) );       // NON-NLS
-               // TODO - hack - adjust for Bookmarkable link
-               String url = getRequest().getURL().
-                       replaceAll( "&" + ScenarioPage.EXPAND_PARM + "=" + getFlow().getId(), "" );
-               add( new ExternalLink( "hide", url ) );                                  // NON-NLS
-               add( new Link( "add-issue" ) {                                                    // NON-NLS
-
-                   @Override
-                   public void onClick() {
-                       UserIssue newIssue = new UserIssue( getFlow() );
-                       getService().add( newIssue );
-                       // PageParameters parameters = getWebPage().getPageParameters();
-                       // TODO - Denis: Fix probelm and remove patch
-                       PageParameters parameters = ( (ScenarioPage) getWebPage() )
-                               .getParametersCollapsing( getFlow().getScenario().getId() );
-                       parameters.add( ScenarioPage.EXPAND_PARM, String.valueOf( newIssue.getId() ) );
-                       setResponsePage( getWebPage().getClass(), parameters );
-                   }
-               } );
-               add( new CheckBox( "delete",                                                      // NON-NLS
-                       new PropertyModel<Boolean>( this, "markedForDeletion" ) ) );              // NON-NLS
-        */
         addFlowActionMenu( outcome );
     }
 
     private void addFlowActionMenu( boolean isOutcome ) {
-        flowActionsMenu = new FlowActionsMenuPanel(
+        FlowActionsMenuPanel flowActionsMenu = new FlowActionsMenuPanel(
                 "flowActionsMenu",
                 new PropertyModel<Flow>( this, "flow" ),
                 isOutcome,
@@ -479,7 +425,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel impleme
      * Add the target/source dropdown. Fill with getOtherNodes(); select with getOther().
      */
     protected final void addOtherField() {
-        otherChoice = new DropDownChoice<Node>(
+        DropDownChoice<Node> otherChoice = new DropDownChoice<Node>(
                 "other",                                                                  // NON-NLS
                 new PropertyModel<Node>( this, "other" ),                                 // NON-NLS
                 new PropertyModel<List<? extends Node>>( this, "otherNodes" ),            // NON-NLS
@@ -569,7 +515,10 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel impleme
     private void addMaxDelayRow() {
         maxDelayRow = new WebMarkupContainer( "max-delay-row" );
         add( maxDelayRow );
-        delayPanel = new DelayPanel( "max-delay", new PropertyModel<Delay>( this, "flow.maxDelay" ) );
+        delayPanel = new DelayPanel(
+                "max-delay",
+                new PropertyModel<ModelObject>( this, "flow") ,
+                "maxDelay" ) ;
         maxDelayRow.add( delayPanel );
     }
 

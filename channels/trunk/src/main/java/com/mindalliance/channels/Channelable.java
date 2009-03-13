@@ -11,7 +11,7 @@ import java.io.Serializable;
  * Date: Feb 2, 2009
  * Time: 8:07:42 PM
  */
-public interface Channelable extends Serializable {
+public interface Channelable extends Identifiable {
 
     /**
      * Get the channels.

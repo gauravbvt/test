@@ -129,13 +129,13 @@ public class History {
      * @return a boolean
      */
     private boolean hasConflict( Memento memento ) {
-        Iterator<Memento> moreRecent = findAllDoneAfter( memento.getTimestamp() );
+        Iterator<Memento> moreRecent = findAllDoneByOtherUserAfter( memento.getTimestamp() );
         while ( moreRecent.hasNext() ) {
             Memento other = moreRecent.next();
-            if ( other != memento && !CollectionUtils.intersection(
+            if ( other != memento
+                    && !CollectionUtils.intersection(
                     memento.getCommand().getConflictSet(),
-                    other.getCommand().getConflictSet() ).isEmpty() )
-            {
+                    other.getCommand().getConflictSet() ).isEmpty() ) {
                 return true;
             }
         }
@@ -143,11 +143,12 @@ public class History {
     }
 
     @SuppressWarnings( "unchecked" )
-    private Iterator<Memento> findAllDoneAfter( final long timestamp ) {
+    private Iterator<Memento> findAllDoneByOtherUserAfter( final long timestamp ) {
         return new FilterIterator( done.iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {
                 Memento memento = (Memento) obj;
-                return memento.getTimestamp() >= timestamp;
+                return !memento.getUserName().equals( Project.getUserName() )
+                        && memento.getTimestamp() >= timestamp;
             }
         } );
     }

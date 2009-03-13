@@ -7,6 +7,7 @@ import com.mindalliance.channels.Medium;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -42,7 +43,7 @@ import java.util.Set;
  * Date: Feb 2, 2009
  * Time: 7:25:50 PM
  */
-public class ChannelListPanel extends AbstractUpdatablePanel {
+public class ChannelListPanel extends AbstractCommandablePanel {
     /**
      * The object which list of channels is being edited.
      */
@@ -91,9 +92,14 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
             Flow flow = (Flow) channelable;
             candidateChannelsMarkup.setVisible(
                     !candidatesList.getModelObject().isEmpty()
+                            && isLockedByUser( channelable )
                             && flow.canSetChannels() );
-            editableChannelsMarkup.setVisible( flow.canSetChannels() );
-            nonEditableChannelsMarkup.setVisible( !flow.canSetChannels() && flow.canGetChannels() );
+            editableChannelsMarkup.setVisible(
+                    isLockedByUser( channelable ) &&
+                            flow.canSetChannels() );
+            nonEditableChannelsMarkup.setVisible(
+                    !( flow.canSetChannels() && isLockedByUser( channelable ) )
+                            && flow.canGetChannels() );
             noChannelLabel.setVisible( channels.isEmpty() );
         } else {
             nonEditableChannelsMarkup.setVisible( false );
@@ -382,9 +388,19 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
             this.markedForInclusion = markedForInclusion;
             if ( !markedForCreation ) {
                 if ( !markedForInclusion ) {
-                    channelable.removeChannel( channel );
+                    doCommand( UpdateObject.makeCommand(
+                            channelable,
+                            "effectiveChannels",
+                            channel,
+                            UpdateObject.Action.Remove ) );
+                    // channelable.removeChannel( channel );
                 } else {
-                    channelable.addChannel( channel );
+                    // channelable.addChannel( channel );
+                    doCommand( UpdateObject.makeCommand(
+                            channelable,
+                            "effectiveChannels",
+                            channel,
+                            UpdateObject.Action.Add ) );
                 }
             }
         }
@@ -395,13 +411,34 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
 
         public void setMedium( Medium medium ) {
             Channelable channelable = model.getObject();
-            channel.setMedium( medium );
             if ( markedForCreation ) {
+                channel.setMedium( medium );
                 if ( medium != null ) {
-                    channelable.addChannel( channel );
+                    // channelable.addChannel( channel );
+                    doCommand( UpdateObject.makeCommand(
+                            channelable,
+                            "effectiveChannels",
+                            channel,
+                            UpdateObject.Action.Add ) );
                 }
             } else {
-                if ( medium == null ) channelable.removeChannel( channel );
+                if ( medium == null ) {
+                    // channelable.removeChannel( channel );
+                    doCommand( UpdateObject.makeCommand(
+                            channelable,
+                            "effectiveChannels",
+                            channel,
+                            UpdateObject.Action.Remove ) );
+                } else {
+                    // channel.setMedium( medium );
+                    int index = channelable.getEffectiveChannels().indexOf( channel );
+                    doCommand( UpdateObject.makeCommand(
+                            channelable,
+                            "effectiveChannels[" + index + "].medium",
+                            medium,
+                            UpdateObject.Action.Set ) );
+
+                }
             }
         }
 
@@ -411,7 +448,14 @@ public class ChannelListPanel extends AbstractUpdatablePanel {
 
         public void setAddress( String address ) {
             if ( channel != null ) {
-                channel.setAddress( address == null ? "" : address.trim() );
+                Channelable channelable = model.getObject();
+                // channel.setAddress( address == null ? "" : address.trim() );
+                int index = channelable.getEffectiveChannels().indexOf( channel );
+                doCommand( UpdateObject.makeCommand(
+                        channelable,
+                        "effectiveChannels[" + index + "].address",
+                        address == null ? "" : address.trim(),
+                        UpdateObject.Action.Set ) );
             }
         }
 

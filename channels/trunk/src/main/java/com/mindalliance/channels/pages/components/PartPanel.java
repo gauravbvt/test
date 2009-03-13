@@ -181,7 +181,7 @@ public class PartPanel extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssues( field, part, property );
                 target.addComponent( field );
-                // updateWith( target, part );
+                updateWith( target, part );
             }
         } );
 
@@ -218,13 +218,15 @@ public class PartPanel extends AbstractCommandablePanel {
     private void addTimingFields() {
         final DelayPanel repeatsEveryPanel = new DelayPanel(
                 "repeats-every",
-                new PropertyModel<Delay>( this, "repeatsEvery" ) );
+                new PropertyModel<ModelObject>( this, "part"),
+                "repeatsEvery"  );
         repeatsEveryPanel.setOutputMarkupId( true );
         repeatsEveryPanel.enable( part.isRepeating() );
         add( repeatsEveryPanel );
         final DelayPanel completionTimePanel = new DelayPanel(
                 "completion-time",
-                new PropertyModel<Delay>( this, "completionTime" ) );
+                new PropertyModel<ModelObject>( this, "part"),
+                "completionTime" );
         completionTimePanel.enable( part.isSelfTerminating() );
         completionTimePanel.setOutputMarkupId( true );
         add( completionTimePanel );
@@ -235,7 +237,7 @@ public class PartPanel extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 completionTimePanel.enable( part.isSelfTerminating() );
                 target.addComponent( completionTimePanel );
-                // updateWith( target, getPart() );
+                updateWith( target, getPart() );
             }
         } );
         add( selfTerminatingCheckBox );
@@ -247,7 +249,7 @@ public class PartPanel extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 repeatsEveryPanel.enable( part.isRepeating() );
                 target.addComponent( repeatsEveryPanel );
-                // updateWith( target, getPart() );
+                updateWith( target, getPart() );
             }
         } );
     }

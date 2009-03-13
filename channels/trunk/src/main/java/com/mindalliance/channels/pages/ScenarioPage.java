@@ -94,17 +94,17 @@ public final class ScenarioPage extends WebPage implements Updatable {
     /**
      * Length a node title is abbreviated to
      */
-    private static final int NODE_TITLE_MAX_LENGTH = 23;
+    private static final int NODE_TITLE_MAX_LENGTH = 30;
 
     /**
      * Length a scenario title is abbreviated to
      */
-    private static final int SCENARIO_TITLE_MAX_LENGTH = 25;
+    private static final int SCENARIO_TITLE_MAX_LENGTH = 40;
 
     /**
      * Length a scenario title is abbreviated to
      */
-    private static final int SCENARIO_DESCRIPTION_MAX_LENGTH = 120;
+    private static final int SCENARIO_DESCRIPTION_MAX_LENGTH = 94;
     /**
      * Id of components that are expanded.
      */
@@ -660,7 +660,6 @@ public final class ScenarioPage extends WebPage implements Updatable {
         private DropDownChoice<Scenario> createSelectScenario( String id ) {
             scenarioDropDownChoice = new DropDownChoice<Scenario>(
                     id, new PropertyModel<Scenario>( this, "target" ),                    // NON-NLS
-                    // getService().list( Scenario.class )
                     new PropertyModel<List<? extends Scenario>>( this, "allScenarios" )
             ) {
 
