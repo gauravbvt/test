@@ -197,8 +197,8 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
     }
 
     public void updateWith( AjaxRequestTarget target, Object context ) {
-        target.addComponent( flowActionsMenu );
-        target.addComponent( flowIssuesPanel );
+        adjustFields( getFlow() );
+        target.addComponent( this );
         super.updateWith( target, context );
     }
 
