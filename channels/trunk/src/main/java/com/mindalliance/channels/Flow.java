@@ -438,14 +438,6 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         return isCritical() || isTriggeringToTarget() || isTerminatingToTarget();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void moveToFirst( Channel channel ) {
-        channels.remove( channel );
-        channels.add( 0, channel );
-    }
-
     // Abstract methods
 
     /**
@@ -552,12 +544,6 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      * @return a boolean
      */
     public abstract boolean canGetTerminatesSource();
-
-    /**
-     * Breakup a flow, possibly creating connector-based flows to preserve requirement and outcome.
-     * TODO - Move to BreakupFlow command
-     */
-    public abstract void breakup();
 
     /**
      * Make a replicate of the flow

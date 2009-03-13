@@ -3,22 +3,20 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.commands.AddCapability;
 import com.mindalliance.channels.command.commands.AddNeed;
-import com.mindalliance.channels.pages.ScenarioPage;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -31,7 +29,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
     /**
      * The node for which flows are listed.
      */
-    private Node node;
+    private IModel<Node> model;
 
     /**
      * True if outcomes are listed; false if requirements are listed.
@@ -42,58 +40,58 @@ public class FlowListPanel extends AbstractCommandablePanel {
      */
     private WebMarkupContainer flowsDiv;
 
+    /**
+     * Expansions
+     */
+    private Set<Long> expansions;
 
-    public FlowListPanel( String id, Node node, boolean outcomes ) {
+
+    public FlowListPanel( String id, IModel<Node> model, boolean outcomes, Set<Long> expansions ) {
         super( id );
-        setNode( node );
+        this.model = model;
+        this.outcomes = outcomes;
+        this.expansions = expansions;
+        init();
+    }
+
+    private void init() {
         setOutcomes( outcomes );
         setDefaultModel( new CompoundPropertyModel( this ) );
         add( new Label( "title" ) );                                                      // NON-NLS
-
-        add( new Link( "new" ) {                                                          // NON-NLS
-
-            @Override
-            public void onClick() {
-                Part n = (Part)getNode();
+        AjaxFallbackLink newLink = new AjaxFallbackLink( "new" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                Part n = (Part) getNode();
                 Command command = isOutcomes()
                         ? new AddCapability( n )
                         : new AddNeed( n );
-                Flow f = (Flow)doCommand( command );
-                Scenario s = n.getScenario();
-                Set<Long> newExpansions = new HashSet<Long>( ( (ScenarioPage) getPage() ).findExpansions() );
-                newExpansions.add( f.getId() );
-                newExpansions.remove( f.getScenario().getId() ); // TODO - Denis : FIX PROBLEM AND REMOVE PATCH
-                setResponsePage( ScenarioPage.class,
-                        ScenarioPage.getParameters( s, n, newExpansions ) );
+                Flow newFlow = (Flow) doCommand( command );
+                updateWith( target, newFlow.getId() );
             }
-        } );
-        flowsDiv = new WebMarkupContainer("flows-div");
+        };
+        add( newLink );
+        flowsDiv = new WebMarkupContainer( "flows-div" );
         flowsDiv.setOutputMarkupId( true );
         add( flowsDiv );
-    }
-
-    protected void onBeforeRender() {
-        super.onBeforeRender();
         flowsDiv.add( createFlowPanels( outcomes ) );
     }
 
     private ListView<Flow> createFlowPanels( final boolean outcomes ) {
-        final Set<Long> expansions = ( (ScenarioPage) getPage() ).findExpansions();
-        return new ListView<Flow>( "flows", new PropertyModel<List<Flow>>(this, "flows") ) {
+        // final Set<Long> expansions = ( (ScenarioPage) getPage() ).findExpansions();
+        return new ListView<Flow>( "flows", new PropertyModel<List<Flow>>( this, "flows" ) ) {
             protected void populateItem( ListItem<Flow> item ) {
                 Flow flow = item.getModelObject();
                 long flowId = flow.getId();
                 if ( expansions.contains( flowId ) ) {
                     requestLockOn( flow );
                     ExpandedFlowPanel flowPanel = outcomes ?
-                            new ExpandedOutPanel( "flow", flow )
-                            : new ExpandedReqPanel( "flow", flow );
-                    item.add( flowPanel);
+                            new ExpandedOutPanel( "flow", item.getModel() )
+                            : new ExpandedReqPanel( "flow", item.getModel() );
+                    item.add( flowPanel );
                 } else {
-                     releaseAnyLockOn( flow );
-                     CollapsedFlowPanel flowPanel =
-                             new CollapsedFlowPanel( "flow", flow, outcomes );
-                    item.add( flowPanel);
+                    releaseAnyLockOn( flow );
+                    CollapsedFlowPanel flowPanel =
+                            new CollapsedFlowPanel( "flow", flow, outcomes );
+                    item.add( flowPanel );
                 }
             }
         };
@@ -101,8 +99,8 @@ public class FlowListPanel extends AbstractCommandablePanel {
 
     public List<Flow> getFlows() {
         List<Flow> flows = new ArrayList<Flow>();
-        Iterator<Flow> iterator = outcomes ? node.outcomes() : node.requirements();
-        while( iterator.hasNext() ) flows.add( iterator.next() );
+        Iterator<Flow> iterator = outcomes ? getNode().outcomes() : getNode().requirements();
+        while ( iterator.hasNext() ) flows.add( iterator.next() );
         return flows;
     }
 
@@ -114,11 +112,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
     }
 
     public final Node getNode() {
-        return node;
-    }
-
-    public final void setNode( Node node ) {
-        this.node = node;
+        return model.getObject();
     }
 
     public final boolean isOutcomes() {
@@ -127,11 +121,6 @@ public class FlowListPanel extends AbstractCommandablePanel {
 
     public final void setOutcomes( boolean outcomes ) {
         this.outcomes = outcomes;
-    }
-
-    public void updateWith( AjaxRequestTarget target, Object context ) {
-        target.addComponent( flowsDiv );
-        super.updateWith( target, context );
     }
 
 }

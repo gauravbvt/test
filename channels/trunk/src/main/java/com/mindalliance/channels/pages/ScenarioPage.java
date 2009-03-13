@@ -395,7 +395,18 @@ public final class ScenarioPage extends WebPage implements Updatable {
         } else {
             if ( context.equals( "undo" ) || context.equals( "redo" ) ) {
                 redirectHere();
-            } else {
+            } else if ( context instanceof Long )  {
+                // toggle show/hide
+                long id = (Long) context;
+                if (expansions.contains( id ) ) {
+                    expansions.remove( id );
+                }
+                else {
+                    expansions.add ((Long) context);
+                }
+                redirectHere();
+            }
+            else {
                 updateExceptScenarioEditPanel( target, context );
                 if ( scenarioEditPanel != null ) scenarioEditPanel.update( target, context );
             }
@@ -515,9 +526,9 @@ public final class ScenarioPage extends WebPage implements Updatable {
             partIssuesPanel.setOutputMarkupId( true );
             add( partIssuesPanel );
             addScenarioFields( scenario );
-            reqs = new FlowListPanel( "reqs", node, false );                  // NON-NLS
+            reqs = new FlowListPanel( "reqs", new Model<Node>(node), false, expansions );                  // NON-NLS
             add( reqs );
-            outcomes = new FlowListPanel( "outcomes", node, true );           // NON-NLS
+            outcomes = new FlowListPanel( "outcomes", new Model<Node>(node), true, expansions );           // NON-NLS
             add( outcomes );
         }
 

@@ -2,15 +2,15 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Flow;
 
-import java.util.Set;
+import org.apache.wicket.model.IModel;
 
 /**
  * Details of an expanded requirement.
  */
 public class ExpandedReqPanel extends ExpandedFlowPanel {
 
-    public ExpandedReqPanel( String id, Flow flow ) {
-        super( id, flow, false );
+    public ExpandedReqPanel( String id, IModel<Flow> model ) {
+        super( id, model, false );
     }
 
     /** {@inheritDoc} */

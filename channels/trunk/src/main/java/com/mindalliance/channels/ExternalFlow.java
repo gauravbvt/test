@@ -396,13 +396,6 @@ public class ExternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
-    public void breakup() {
-        disconnect();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public boolean hasConnector() {
         return true;
     }

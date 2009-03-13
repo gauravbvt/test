@@ -88,29 +88,6 @@ public class InternalFlow extends Flow {
         target = null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void breakup() {
-        if ( !source.isConnector() && !target.isConnector() ) {
-            Service service = source.getScenario().getService();
-            if ( !source.hasMultipleOutcomes( getName() ) ) {
-                Flow flow = service.connect( source,
-                                             service.createConnector( source.getScenario() ),
-                                             getName() );
-                flow.initFrom( this );
-            }
-            if ( !target.hasMultipleRequirements( getName() ) ) {
-                Flow flow = service.connect( service.createConnector( target.getScenario() ),
-                                             target,
-                                             getName() );
-                flow.initFrom( this );
-            }
-        }
-        disconnect();
-    }
-
     @Override
     @Transient
     public boolean isInternal() {

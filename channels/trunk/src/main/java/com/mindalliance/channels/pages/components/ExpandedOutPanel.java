@@ -2,15 +2,15 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Flow;
 
-import java.util.Set;
+import org.apache.wicket.model.IModel;
 
 /**
  * An expanded outcome flow.
  */
 public class ExpandedOutPanel extends ExpandedFlowPanel {
 
-    public ExpandedOutPanel( String id, Flow flow ) {
-        super( id, flow, true );
+    public ExpandedOutPanel( String id, IModel<Flow> model ) {
+        super( id, model, true );
     }
 
     /** {@inheritDoc} */

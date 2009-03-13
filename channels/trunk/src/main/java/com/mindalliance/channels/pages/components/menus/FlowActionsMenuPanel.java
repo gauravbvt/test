@@ -12,6 +12,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.link.ExternalLink;
@@ -59,17 +60,16 @@ public class FlowActionsMenuPanel extends MenuPanel {
         // Undo and redo
         menuItems.add( this.getUndoMenuItem( "menuItem" ) );
         menuItems.add( this.getRedoMenuItem( "menuItem" ) );
-        // Show details
+        // Show/hide details
+        AjaxFallbackLink showHideLink = new AjaxFallbackLink( "link" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                updateWith( target, new Long( getFlow().getId() ) );
+            }
+        };
         if ( isCollapsed ) {
-            ExternalLink showDetailsLink = new ExternalLink( "link", getRequest().getURL() + "&expand=" + getFlow().getId() );
-            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Show details" ), showDetailsLink ) );
-        }
-        else {
-            ExternalLink showDetailsLink = new ExternalLink(
-                    "link",
-                    getRequest().getURL().replaceAll( 
-                            "&" + ScenarioPage.EXPAND_PARM + "=" + getFlow().getId(), "" ) );
-            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Hide details" ), showDetailsLink ) );
+            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Show details" ), showHideLink ) );
+        } else {
+            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Hide details" ), showHideLink ) );
         }
         // Commands
         menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
@@ -79,6 +79,7 @@ public class FlowActionsMenuPanel extends MenuPanel {
     private List<CommandWrapper> getCommandWrappers() {
         return new ArrayList<CommandWrapper>() {
             private final Scenario scenario = getFlow().getScenario();
+
             {
                 add( new CommandWrapper( new AddUserIssue( getFlow() ) ) {
                     public void onExecution( AjaxRequestTarget target, Object result ) {
@@ -103,6 +104,6 @@ public class FlowActionsMenuPanel extends MenuPanel {
     }
 
     private Flow getFlow() {
-        return (Flow)getModel().getObject();
+        return (Flow) getModel().getObject();
     }
 }

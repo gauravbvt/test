@@ -66,6 +66,8 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedTarget"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.PartWithInvalidTiming"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.OrphanedPart"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.RedundantPart"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.RedundantFlow"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.UnconnectedConnector"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowViolatesPolicy"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.NoRedundancy"/>

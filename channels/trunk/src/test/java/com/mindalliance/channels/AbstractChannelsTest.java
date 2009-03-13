@@ -16,6 +16,8 @@ import com.mindalliance.channels.analysis.detectors.UnconnectedConnector;
 import com.mindalliance.channels.analysis.detectors.UnnamedFlow;
 import com.mindalliance.channels.analysis.detectors.PartWithInvalidTiming;
 import com.mindalliance.channels.analysis.detectors.InvalidChannel;
+import com.mindalliance.channels.analysis.detectors.RedundantPart;
+import com.mindalliance.channels.analysis.detectors.RedundantFlow;
 import com.mindalliance.channels.attachments.FileBasedManager;
 import com.mindalliance.channels.service.ChannelsServiceImpl;
 import com.mindalliance.channels.dao.Memory;
@@ -63,12 +65,12 @@ public class AbstractChannelsTest extends TestCase {
         DefaultLockManager lockManager = new DefaultLockManager();
         lockManager.setService( channels );
         project.setLockManager( lockManager );
-        commander.setLockManager( lockManager  );
+        commander.setLockManager( lockManager );
         commander.setService( channels );
         project.setCommander( commander );
-        project.setProjectName("Test");
-        project.setClient("Mind-Alliance");
-        project.setDescription("This is a test project");
+        project.setProjectName( "Test" );
+        project.setClient( "Mind-Alliance" );
+        project.setDescription( "This is a test project" );
         FileBasedManager attachmentManager = new FileBasedManager();
         /*  <bean id="attachmentManager" class="com.mindalliance.channels.attachments.FileBasedManager">
             <property name="directory" value="target/channels-1.0-SNAPSHOT/uploads"/>
@@ -84,7 +86,7 @@ public class AbstractChannelsTest extends TestCase {
         graphRenderer.setDotPath( "/usr/bin" );
         graphRenderer.setAlgo( "dot" );
         graphRenderer.setTimeout( 5000 );
-        DefaultDiagramFactory<Node,Flow> diagramFactory = new DefaultDiagramFactory<Node,Flow>();
+        DefaultDiagramFactory<Node, Flow> diagramFactory = new DefaultDiagramFactory<Node, Flow>();
         diagramFactory.setGraphRenderer( graphRenderer );
         diagramFactory.setUrlFormat( "?scenario={0}&node={1}" );
         diagramFactory.setScenarioUrlFormat( "?scenario={0}" );
@@ -104,6 +106,8 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new FlowWithUndefinedSource() );
         detectors.add( new FlowWithUndefinedTarget() );
         detectors.add( new OrphanedPart() );
+        detectors.add( new RedundantPart() );
+        detectors.add( new RedundantFlow() );
         detectors.add( new UnconnectedConnector() );
         detectors.add( new NoRedundancy() );
         detectors.add( new PotentialDeadlock() );
@@ -112,7 +116,7 @@ public class AbstractChannelsTest extends TestCase {
         project.setAnalyst( analyst );
 
         tester = new WicketTester( project );
-        tester.setParametersForNextRequest( new HashMap<String,String[]>() );
+        tester.setParametersForNextRequest( new HashMap<String, String[]>() );
     }
 
     public void testNothing() {

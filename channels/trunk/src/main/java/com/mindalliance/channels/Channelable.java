@@ -43,9 +43,4 @@ public interface Channelable extends Identifiable {
      */
     List<Channel> allChannels();
 
-    /**
-     * Make given channel the first in the list
-     * @param channel a Channel
-     */
-    void moveToFirst( Channel channel );
 }

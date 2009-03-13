@@ -6,6 +6,7 @@ import com.mindalliance.channels.command.commands.RemoveIssue;
 import com.mindalliance.channels.pages.ScenarioPage;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -54,16 +55,16 @@ public class IssueActionsMenuPanel extends MenuPanel {
         // Undo and redo
         menuItems.add( this.getUndoMenuItem( "menuItem" ) );
         menuItems.add( this.getRedoMenuItem( "menuItem" ) );
-        // Show details
+        // Show/hide details
+        AjaxFallbackLink showHideLink = new AjaxFallbackLink( "link" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                updateWith( target, new Long( getIssue().getId() ) );
+            }
+        };
         if ( isCollapsed ) {
-            ExternalLink showDetailsLink = new ExternalLink( "link", getRequest().getURL() + "&expand=" + getIssue().getId() );
-            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Show details" ), showDetailsLink ) );
+            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Show details" ), showHideLink ) );
         } else {
-            ExternalLink showDetailsLink = new ExternalLink(
-                    "link",
-                    getRequest().getURL().replaceAll(
-                            "&" + ScenarioPage.EXPAND_PARM + "=" + getIssue().getId(), "" ) );
-            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Hide details" ), showDetailsLink ) );
+            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Hide details" ), showHideLink ) );
         }
         // Commands
         menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );

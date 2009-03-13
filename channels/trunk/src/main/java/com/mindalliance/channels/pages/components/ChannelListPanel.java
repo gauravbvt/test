@@ -160,7 +160,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                         // adjustFields();
                         target.addComponent( candidateChannelsMarkup );
                         target.addComponent( editableChannelsMarkup );
-                        updateWith( target, getModel().getObject() );
+                        updateWith( target, channelable );
                     }
                 } );
                 includeSpan.add( includeCheckBox );
@@ -192,7 +192,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                 addressField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                     protected void onUpdate( AjaxRequestTarget target ) {
                         target.addComponent( editableChannelsMarkup );
-                        updateWith( target, getModel().getObject() );
+                        updateWith( target, channelable );
                     }
                 } );
                 item.add( addressField );
@@ -202,7 +202,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                     public void onClick( AjaxRequestTarget target ) {
                         wrapper.moveToFirst();
                         target.addComponent( editableChannelsMarkup );
-                        updateWith( target, getModel().getObject() );
+                        updateWith( target, channelable );
                     }
                 };
                 item.add( moveToTopLink );
@@ -432,11 +432,12 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                 } else {
                     // channel.setMedium( medium );
                     int index = channelable.getEffectiveChannels().indexOf( channel );
-                    doCommand( UpdateObject.makeCommand(
-                            channelable,
-                            "effectiveChannels[" + index + "].medium",
-                            medium,
-                            UpdateObject.Action.Set ) );
+                    if ( index >= 0 )
+                        doCommand( UpdateObject.makeCommand(
+                                channelable,
+                                "effectiveChannels[" + index + "].medium",
+                                medium,
+                                UpdateObject.Action.Set ) );
 
                 }
             }
@@ -451,11 +452,12 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                 Channelable channelable = model.getObject();
                 // channel.setAddress( address == null ? "" : address.trim() );
                 int index = channelable.getEffectiveChannels().indexOf( channel );
-                doCommand( UpdateObject.makeCommand(
-                        channelable,
-                        "effectiveChannels[" + index + "].address",
-                        address == null ? "" : address.trim(),
-                        UpdateObject.Action.Set ) );
+                if ( index >= 0 )
+                    doCommand( UpdateObject.makeCommand(
+                            channelable,
+                            "effectiveChannels[" + index + "].address",
+                            address == null ? "" : address.trim(),
+                            UpdateObject.Action.Set ) );
             }
         }
 
@@ -464,7 +466,11 @@ public class ChannelListPanel extends AbstractCommandablePanel {
          */
         public void moveToFirst() {
             Channelable channelable = model.getObject();
-            channelable.moveToFirst( channel );
+            doCommand( UpdateObject.makeCommand(
+                    channelable,
+                    "effectiveChannels",
+                    channel,
+                    UpdateObject.Action.Move ) );
         }
     }
 }

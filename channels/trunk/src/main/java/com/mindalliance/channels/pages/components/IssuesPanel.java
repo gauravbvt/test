@@ -11,6 +11,8 @@ import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ScenarioPage;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -48,25 +50,13 @@ public class IssuesPanel extends AbstractCommandablePanel {
     private void init() {
         add( new Label( "kind", new PropertyModel<String>( this, "kind" ) ) );
 
-        final Link<String> newIssueLink = new Link<String>( "new-issue",                  // NON-NLS
-                new Model<String>( "New" ) ) {
-            @Override
-            public void onClick() {
-                ModelObject modelObject = model.getObject();
-                UserIssue userIssue = (UserIssue) doCommand( new AddUserIssue( model.getObject() ) );
-                // TODO - Denis: Fix problem and remove patch
-                PageParameters parameters;
-                if ( modelObject instanceof ScenarioObject )
-                    parameters = ( (ScenarioPage) getWebPage() )
-                            .getParametersCollapsing( ( (ScenarioObject) modelObject ).getScenario().getId() );
-                else
-                    parameters = getWebPage().getPageParameters();
-                parameters.add( ScenarioPage.EXPAND_PARM, Long.toString( userIssue.getId() ) );
-                setResponsePage( getWebPage().getClass(), parameters );
+        AjaxFallbackLink newIssueLink = new AjaxFallbackLink( "new-issue" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                UserIssue newIssue = (UserIssue) doCommand( new AddUserIssue( model.getObject() ) );
+                updateWith( target, newIssue.getId() );
             }
         };
         add( newIssueLink );
-
     }
 
     protected void onBeforeRender() {

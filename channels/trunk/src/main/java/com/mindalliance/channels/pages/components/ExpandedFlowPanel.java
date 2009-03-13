@@ -33,6 +33,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.IModel;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -49,7 +50,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
     /**
      * The flow edited by this panel.
      */
-    private Flow flow;
+    private IModel<Flow> model;
 
     /**
      * True if outcome, otherwise a requirement.
@@ -121,11 +122,19 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
      * The checkbox for setting Triggers significance to source
      */
     private CheckBox triggersSourceCheckBox;
+    /**
+     * Flow action menu.
+     */
+    private FlowActionsMenuPanel flowActionsMenu;
+    /**
+     * Issues panel.
+     */
+    private IssuesPanel flowIssuesPanel;
 
-    protected ExpandedFlowPanel( String id, Flow flow, boolean outcome ) {
-        super( id );
+    protected ExpandedFlowPanel( String id, IModel<Flow> model, boolean outcome ) {
+        super( id, model );
+        this.model = model;
         setOutputMarkupId( true );
-        setFlow( flow );
         setOutcome( outcome );
 
         addHeader();
@@ -158,7 +167,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         addMaxDelayRow();
         addSignificanceToSource();
         add( new AttachmentPanel( "attachments", new PropertyModel<Flow>( this, "flow" ) ) );
-        IssuesPanel flowIssuesPanel = new IssuesPanel( "issues", new PropertyModel<ModelObject>( this, "flow" ) );
+        flowIssuesPanel = new IssuesPanel( "issues", new PropertyModel<ModelObject>( this, "flow" ) );
         flowIssuesPanel.setOutputMarkupId( true );
         add( flowIssuesPanel );
         adjustFields( getFlow() );
@@ -188,7 +197,8 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
     }
 
     public void updateWith( AjaxRequestTarget target, Object context ) {
-        target.addComponent( ExpandedFlowPanel.this );
+        target.addComponent( flowActionsMenu );
+        target.addComponent( flowIssuesPanel );
         super.updateWith( target, context );
     }
 
@@ -204,6 +214,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
 
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssuesAnnotation( nameField, getFlow(), "name" );
+                target.addComponent( nameField );
                 updateWith( target, getFlow() );
             }
         } );
@@ -255,7 +266,6 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 channelRow.setVisible( isChannelRelevant( getFlow() ) );
-                adjustFields( getFlow() );
                 updateWith( target, getFlow() );
             }
         } );
@@ -358,7 +368,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
     }
 
     private void addFlowActionMenu( boolean isOutcome ) {
-        FlowActionsMenuPanel flowActionsMenu = new FlowActionsMenuPanel(
+        flowActionsMenu = new FlowActionsMenuPanel(
                 "flowActionsMenu",
                 new PropertyModel<Flow>( this, "flow" ),
                 isOutcome,
@@ -444,7 +454,6 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                 } );
 
         otherChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {                  // NON-NLS
-
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields( getFlow() );
@@ -472,11 +481,11 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
     }
 
     public final Flow getFlow() {
-        return flow;
+        return (Flow)model.getObject();
     }
 
     public final void setFlow( Flow flow ) {
-        this.flow = flow;
+        model.setObject( flow );
     }
 
     public final boolean isOutcome() {
@@ -692,8 +701,8 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         return getFlow().isAll();
     }
 
-    public void setAll( boolean val ) {
-        doCommand( new UpdateScenarioObject( getFlow(), "all", val ) );
+    public void setAll( boolean value ) {
+        doCommand( new UpdateScenarioObject( getFlow(), "all", value ) );
     }
 
     public Flow.Significance getSignificanceToTarget() {
