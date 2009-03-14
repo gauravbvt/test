@@ -84,7 +84,7 @@ div.organization > h3, div.organization > p.description {
 }
 
 .role div.header div.role-head ul {
-    margin: 0 0 0.5em 0;
+    margin: 0.5em 0;
     padding: 0 0 0 1em;
 }
 
@@ -217,7 +217,7 @@ p.task-name {
 }
 
 .tasks td ul {
-    margin: 0;
+    margin: 0.5em 0 0 0;
 }
 
 .task h5 {
