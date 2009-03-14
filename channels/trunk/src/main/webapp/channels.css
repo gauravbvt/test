@@ -303,6 +303,10 @@ ol {
 #reqs ol > li span, #outcomes ol > li span {
 }
 
+.section-title span.menubar {
+    top: 4px;
+}
+
 ul.menu, span.menubar {
     font-weight: normal;
     list-style: none;
@@ -311,7 +315,7 @@ ul.menu, span.menubar {
     display: inline;
     white-space: nowrap;
     position: absolute;
-    top: 3px;
+    top: 0;
     right: 0;
   }
 ul.menu li {
@@ -340,6 +344,11 @@ ul.attach ul.menu {
     margin: 0;
     padding-top: 1.7em;
     position: static;
+}
+
+#reqs span.menubar, #outcomes span.menubar {
+    float: right;
+    position: static;    
 }
 
 h2 ul.menu, h3 ul.menu {
