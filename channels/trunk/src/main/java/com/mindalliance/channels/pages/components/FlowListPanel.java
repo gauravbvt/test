@@ -84,8 +84,8 @@ public class FlowListPanel extends AbstractCommandablePanel {
                 if ( expansions.contains( flowId ) ) {
                     requestLockOn( flow );
                     ExpandedFlowPanel flowPanel = outcomes ?
-                            new ExpandedOutPanel( "flow", item.getModel() )
-                            : new ExpandedReqPanel( "flow", item.getModel() );
+                            new ExpandedOutPanel( "flow", item.getModel(), expansions )
+                            : new ExpandedReqPanel( "flow", item.getModel(), expansions );
                     item.add( flowPanel );
                 } else {
                     releaseAnyLockOn( flow );
@@ -121,6 +121,13 @@ public class FlowListPanel extends AbstractCommandablePanel {
 
     public final void setOutcomes( boolean outcomes ) {
         this.outcomes = outcomes;
+    }
+
+    public void updateWith( AjaxRequestTarget target, Object context ) {
+        if ( context instanceof Long ) {
+            target.addComponent( flowsDiv );
+        }
+        super.updateWith( target, context );
     }
 
 }

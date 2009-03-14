@@ -87,7 +87,10 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
      * The "all" field.
      */
     private FormComponentLabel allField;
-
+    /**
+     * Choice of other node in flow.
+     */
+    DropDownChoice<Node> otherChoice;
     /**
      * The channel field.
      */
@@ -123,20 +126,24 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
      */
     private CheckBox triggersSourceCheckBox;
     /**
-     * Flow action menu.
-     */
-    private FlowActionsMenuPanel flowActionsMenu;
-    /**
      * Issues panel.
      */
-    private IssuesPanel flowIssuesPanel;
+    IssuesPanel issuesPanel;
+    /**
+     * Expansions.
+     */
+    private Set<Long> expansions;
 
-    protected ExpandedFlowPanel( String id, IModel<Flow> model, boolean outcome ) {
+    protected ExpandedFlowPanel( String id, IModel<Flow> model, boolean outcome, Set<Long> expansions ) {
         super( id, model );
         this.model = model;
-        setOutputMarkupId( true );
+        this.expansions = expansions;
         setOutcome( outcome );
+        init();
+    }
 
+    private void init() {
+        setOutputMarkupId( true );
         addHeader();
         addNameField();
         addLabeled( "name-label", nameField );                                            // NON-NLS
@@ -167,9 +174,12 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         addMaxDelayRow();
         addSignificanceToSource();
         add( new AttachmentPanel( "attachments", new PropertyModel<Flow>( this, "flow" ) ) );
-        flowIssuesPanel = new IssuesPanel( "issues", new PropertyModel<ModelObject>( this, "flow" ) );
-        flowIssuesPanel.setOutputMarkupId( true );
-        add( flowIssuesPanel );
+        issuesPanel = new IssuesPanel(
+                "issues",
+                new PropertyModel<ModelObject>( this, "flow" ),
+                expansions );
+        issuesPanel.setOutputMarkupId( true );
+        add( issuesPanel );
         adjustFields( getFlow() );
     }
 
@@ -194,6 +204,8 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         triggersSourceCheckBox.setEnabled( isLockedByUser( f ) &&  f.canSetTriggersSource() );
         terminatesSourceContainer.setVisible( f.canGetTerminatesSource() );
         terminatesSourceCheckBox.setEnabled( isLockedByUser( f ) &&  f.canSetTerminatesSource() );
+        otherChoice.setEnabled(isLockedByUser( f ));
+        issuesPanel.setVisible( Project.analyst().hasIssues( model.getObject(), false ) );
     }
 
     public void updateWith( AjaxRequestTarget target, Object context ) {
@@ -368,7 +380,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
     }
 
     private void addFlowActionMenu( boolean isOutcome ) {
-        flowActionsMenu = new FlowActionsMenuPanel(
+        FlowActionsMenuPanel flowActionsMenu = new FlowActionsMenuPanel(
                 "flowActionsMenu",
                 new PropertyModel<Flow>( this, "flow" ),
                 isOutcome,
@@ -435,7 +447,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
      * Add the target/source dropdown. Fill with getOtherNodes(); select with getOther().
      */
     protected final void addOtherField() {
-        DropDownChoice<Node> otherChoice = new DropDownChoice<Node>(
+        otherChoice = new DropDownChoice<Node>(
                 "other",                                                                  // NON-NLS
                 new PropertyModel<Node>( this, "other" ),                                 // NON-NLS
                 new PropertyModel<List<? extends Node>>( this, "otherNodes" ),            // NON-NLS
@@ -481,7 +493,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
     }
 
     public final Flow getFlow() {
-        return (Flow)model.getObject();
+        return model.getObject();
     }
 
     public final void setFlow( Flow flow ) {
@@ -635,6 +647,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
     public void setOther( Node other ) {
         if ( other.isConnector() ) {
             Flow newFlow = (Flow) doCommand( new RedirectFlow( getFlow(), (Connector) other, isOutcome() ) );
+            requestLockOn( newFlow );
             setFlow( newFlow );
         }
     }

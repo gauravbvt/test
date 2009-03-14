@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.menus;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.pages.ScenarioPage;
 import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.BreakUpFlow;
@@ -83,7 +84,7 @@ public class FlowActionsMenuPanel extends MenuPanel {
             {
                 add( new CommandWrapper( new AddUserIssue( getFlow() ) ) {
                     public void onExecution( AjaxRequestTarget target, Object result ) {
-                        updateWith( target, getFlow() );
+                        updateWith( target, (( UserIssue )result).getId() );
                     }
                 } );
                 if ( ( isOutcome && getFlow().getTarget().isPart() )

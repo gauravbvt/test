@@ -99,7 +99,7 @@ public class ScenarioActionsMenuPanel extends MenuPanel {
                 } );
                 add( new CommandWrapper( new AddUserIssue( getScenario() ) ) {
                     public void onExecution( AjaxRequestTarget target, Object result ) {
-                        updateWith( target, getScenario() );
+                        updateWith( target, result );
                     }
                 } );
                 add( new CommandWrapper( new AddScenario() ) {

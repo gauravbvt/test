@@ -6,15 +6,11 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.UserIssue;
-import com.mindalliance.channels.ScenarioObject;
 import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.pages.ScenarioPage;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -38,12 +34,19 @@ public class IssuesPanel extends AbstractCommandablePanel {
      * Maximum length of string displayed
      */
     public static final int MAX_LENGTH = 80;
-
+    /**
+     * A model on a model object which issues are shown, if any.
+     */
     private IModel<ModelObject> model;
+    /**
+     * Expansions.
+     */
+    private Set<Long> expansions;
 
-    public IssuesPanel( String id, IModel<ModelObject> model ) {
+    public IssuesPanel( String id, IModel<ModelObject> model, Set<Long> expansions ) {
         super( id, model );
         this.model = model;
+        this.expansions = expansions;
         init();
     }
 
@@ -53,19 +56,14 @@ public class IssuesPanel extends AbstractCommandablePanel {
         AjaxFallbackLink newIssueLink = new AjaxFallbackLink( "new-issue" ) {
             public void onClick( AjaxRequestTarget target ) {
                 UserIssue newIssue = (UserIssue) doCommand( new AddUserIssue( model.getObject() ) );
+                setVisible( Project.analyst().hasIssues( model.getObject(), false ) );
+                target.addComponent( this );
                 updateWith( target, newIssue.getId() );
             }
         };
         add( newIssueLink );
+        createIssuePanels();
     }
-
-    protected void onBeforeRender() {
-        super.onBeforeRender();
-        Set<Long> expansions = ( (ScenarioPage) getPage() ).findExpansions();
-        createIssuePanels( expansions );
-        setVisible( Project.analyst().hasIssues( model.getObject(), false ) );
-    }
-
 
     /**
      * Return the kind of issue  -- scenario vs flow vs part (aka "task").
@@ -80,8 +78,8 @@ public class IssuesPanel extends AbstractCommandablePanel {
         else return modelObject.getClass().getSimpleName();
     }
 
-    private void createIssuePanels( final Set<Long> expansions ) {
-        ListView issuesList = new ListView<Issue>( "issues", new PropertyModel<List<Issue>>( this, "modelObjectIssues" ) ) {
+    private void createIssuePanels() {
+        add( new ListView<Issue>( "issues", new PropertyModel<List<Issue>>( this, "modelObjectIssues" ) ) {
             protected void populateItem( ListItem<Issue> listItem ) {
                 Issue issue = listItem.getModelObject();
                 final long id = issue.getId();
@@ -96,8 +94,7 @@ public class IssuesPanel extends AbstractCommandablePanel {
 
                 listItem.add( issuePanel );
             }
-        };
-        addOrReplace( issuesList );
+        } );
     }
 
     /**

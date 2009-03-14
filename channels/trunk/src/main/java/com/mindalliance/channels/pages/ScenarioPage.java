@@ -6,6 +6,7 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
+import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
@@ -114,43 +115,6 @@ public final class ScenarioPage extends WebPage implements Updatable {
      * The current node.
      */
     private Node node;
-
-    /**
-     * The big form.
-     */
-    private ScenarioForm form;
-    /**
-     * The label showing node's title
-     */
-    private Label nodeTitle;
-    /**
-     * Scenario title label in header.
-     */
-    private Label scenarioNameLabel;
-    /**
-     * Scenario description label in header.
-     */
-    private Label scenarioDescriptionLabel;
-    /**
-     * Dropdown with scenario choides
-     */
-    private DropDownChoice<Scenario> scenarioDropDownChoice;
-    /**
-     * Part issues panel.
-     */
-    private IssuesPanel partIssuesPanel;
-    /**
-     * A scenario edit panel
-     */
-    private ScenarioEditPanel scenarioEditPanel;
-    /**
-     * Scenario actions menu.
-     */
-    private MenuPanel scenarioActionsMenu;
-    /**
-     * Part actions menu.
-     */
-    PartActionsMenuPanel partActionsMenu;
 
     /**
      * Used when page is called without parameters.
@@ -327,9 +291,8 @@ public final class ScenarioPage extends WebPage implements Updatable {
         setVersioned( false );
         setStatelessHint( true );
         add( new Label( "sc-title", new PropertyModel<String>( scenario, "name" ) ) );    // NON-NLS
-        form = new ScenarioForm( "big-form", scenario, n );                               // NON-NLS
+        ScenarioForm form = new ScenarioForm( "big-form", scenario, n );
         add( form );
-
         LOG.debug( "Scenario page generated" );
     }
 
@@ -390,51 +353,36 @@ public final class ScenarioPage extends WebPage implements Updatable {
      * @param target the ajax target
      */
     public void updateWith( AjaxRequestTarget target, Object context ) {
-        if ( !getService().list( Scenario.class ).contains( node.getScenario() ) ) {
+        Scenario scenario = node.getScenario();
+        if ( !getService().list( Scenario.class ).contains( scenario ) ) {
             redirectTo( getService().getDefaultScenario() );
         } else {
             if ( context.equals( "undo" ) || context.equals( "redo" ) ) {
                 redirectHere();
-            } else if ( context instanceof Long )  {
+            } else if ( context instanceof Long ) {
                 // toggle show/hide
                 long id = (Long) context;
-                if (expansions.contains( id ) ) {
+                if ( expansions.contains( id ) ) {
                     expansions.remove( id );
+                } else {
+                    expansions.add( (Long) context );
                 }
-                else {
-                    expansions.add ((Long) context);
+            } else if ( context instanceof UserIssue ) {
+                UserIssue userIssue = (UserIssue) context ;
+                expansions.add( userIssue.getId() );
+                if (userIssue.getAbout() == scenario ) {
+                    expansions.add( scenario.getId() );
+                    redirectHere();
                 }
-                redirectHere();
-            }
-            else {
-                updateExceptScenarioEditPanel( target, context );
-                if ( scenarioEditPanel != null ) scenarioEditPanel.update( target, context );
             }
         }
-    }
-
-    /**
-     * Ajax update of all that may need updating, except scenario edit panel.
-     * To avoid circularity.
-     *
-     * @param target the ajax target
-     */
-    public void updateExceptScenarioEditPanel( AjaxRequestTarget target, Object context ) {
-        target.addComponent( partIssuesPanel );
-        target.addComponent( form.getGraph() );
-        target.addComponent( nodeTitle );
-        target.addComponent( scenarioActionsMenu );
-        target.addComponent( scenarioNameLabel );
-        target.addComponent( scenarioDescriptionLabel );
-        target.addComponent( scenarioDropDownChoice );
-        target.addComponent( partActionsMenu );
     }
 
     //==============================================================
     /**
      * The scenario form.
      */
-    private final class ScenarioForm extends Form<Scenario> {
+    private final class ScenarioForm extends Form<Scenario> implements Updatable {
 
         /**
          * The nodeDeleted property name.
@@ -451,6 +399,10 @@ public final class ScenarioPage extends WebPage implements Updatable {
          * If null, redisplay current node.
          */
         private Scenario target;
+        /**
+         * Node edited.
+         */
+        private Node node;
 
         /**
          * The delete scenario check box.
@@ -458,34 +410,31 @@ public final class ScenarioPage extends WebPage implements Updatable {
         // private DeleteBox deleteScenario;
 
         /**
-         * The requirement list.
-         */
-        private FlowListPanel reqs;
-
-        /**
-         * The outcomes list.
-         */
-        private FlowListPanel outcomes;
-
-        /**
          * True if current node will be deleted.
          */
         private boolean nodeDeleted;
 
         /**
-         * The graph section.
+         * Part issues panel.
          */
-        private MarkupContainer graph;
+        private IssuesPanel partIssuesPanel;
+
 
         //------------------------------
         private ScenarioForm( String id, Scenario scenario, final Node node ) {
             super( id, new Model<Scenario>( scenario ) );
             target = scenario;
+            this.node = node;
+            init();
+        }
+
+        private void init() {
 /*
             add( new Label( "node-title",                                                 // NON-NLS
                     new PropertyModel<String>( node, "title" ) ) );                       // NON-NLS
 */
-            nodeTitle = new Label( "node-title",                                                 // NON-NLS
+            setOutputMarkupId( true );
+            Label nodeTitle = new Label( "node-title",                                                 // NON-NLS
                     new AbstractReadOnlyModel<String>() {
                         @Override
                         public String getObject() {
@@ -494,12 +443,13 @@ public final class ScenarioPage extends WebPage implements Updatable {
                     } );
             nodeTitle.setOutputMarkupId( true );
             add( nodeTitle );               // NON-NLS
-            addPartMenuBar( (Part)node );
+            addPartMenuBar( (Part) node );
             add( new TextArea<String>( "description",                                     // NON-NLS
                     new PropertyModel<String>( this, "nodeDescription" ) ) );
             /*add( new CheckBox( "node-del",                                                // NON-NLS
                     new PropertyModel<Boolean>( this, NODE_DELETED_PROPERTY ) ) );
-*/            addGraph( scenario, node );
+*/
+            addGraph( target, node );
             Component panel = node.isPart() ?
                     new PartPanel( SPECIALTY_FIELD, (Part) node )
                     : new Label( SPECIALTY_FIELD, "" );
@@ -507,35 +457,49 @@ public final class ScenarioPage extends WebPage implements Updatable {
             add( panel );
 
             // TODO simplify whole page... only displays parts, now.
- /*           add( new ExternalLink( "profile", MessageFormat.format(                       // NON-NLS
-                    "resource.html?scenario={0,number,0}&part={1,number,0}",                                // NON-NLS
-                    scenario.getId(), node.getId() ) ) );
-            add( new Link( "add-part-issue" ) {                                           // NON-NLS
+            /*           add( new ExternalLink( "profile", MessageFormat.format(                       // NON-NLS
+                                "resource.html?scenario={0,number,0}&part={1,number,0}",                                // NON-NLS
+                                scenario.getId(), node.getId() ) ) );
+                        add( new Link( "add-part-issue" ) {                                           // NON-NLS
 
-                @Override
-                public void onClick() {
-                    UserIssue newIssue = new UserIssue( node );
-                    getService().add( newIssue );
-                    expansions.add( newIssue.getId() );
-                    redirectHere();
-                }
-            } );
-*/            add( new AttachmentPanel( "attachments", new Model<Node>( node ) ) );                            // NON-NLS
+                            @Override
+                            public void onClick() {
+                                UserIssue newIssue = new UserIssue( node );
+                                getService().add( newIssue );
+                                expansions.add( newIssue.getId() );
+                                redirectHere();
+                            }
+                        } );
+            */
+            add( new AttachmentPanel( "attachments", new Model<Node>( node ) ) );                            // NON-NLS
             partIssuesPanel = new IssuesPanel( "issues",                                               // NON-NLS
-                    new Model<ModelObject>( node ) );
+                    new Model<ModelObject>( node ),
+                    expansions );
             partIssuesPanel.setOutputMarkupId( true );
             add( partIssuesPanel );
-            addScenarioFields( scenario );
-            reqs = new FlowListPanel( "reqs", new Model<Node>(node), false, expansions );                  // NON-NLS
+            addScenarioFields( target );
+            FlowListPanel reqs = new FlowListPanel( "reqs", new Model<Node>( node ), false, expansions );
             add( reqs );
-            outcomes = new FlowListPanel( "outcomes", new Model<Node>(node), true, expansions );           // NON-NLS
+            FlowListPanel outcomes = new FlowListPanel( "outcomes", new Model<Node>( node ), true, expansions );
             add( outcomes );
+            adjustComponents();
+        }
+
+        private void adjustComponents() {
+            boolean partHasIssues = Project.analyst().hasIssues( getNode(), false );
+            partIssuesPanel.setVisible( partHasIssues );
+        }
+
+        public void updateWith( AjaxRequestTarget target, Object context ) {
+            adjustComponents();
+            ScenarioPage.this.updateWith( target, context);
+            target.addComponent( this );
         }
 
         private void addPartMenuBar( Part part ) {
-            partActionsMenu = new PartActionsMenuPanel(
+            PartActionsMenuPanel partActionsMenu = new PartActionsMenuPanel(
                     "partActionsMenu",
-                    new Model<Part>( part));
+                    new Model<Part>( part ) );
             partActionsMenu.setOutputMarkupId( true );
             add( partActionsMenu );
             MenuPanel partPagesMenu = new PartPagesMenuPanel(
@@ -556,7 +520,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
 
         //------------------------------
         private void addGraph( final Scenario scenario, final Node n ) {
-            graph = new MarkupContainer( "graph" ) {                                      // NON-NLS
+            MarkupContainer graph = new MarkupContainer( "graph" ) {                                      // NON-NLS
 
                 @Override
                 protected void onComponentTag( ComponentTag tag ) {
@@ -586,10 +550,6 @@ public final class ScenarioPage extends WebPage implements Updatable {
             add( graph );
         }
 
-        public MarkupContainer getGraph() {
-            return graph;
-        }
-
         //------------------------------
         /**
          * Add scenario-related components.
@@ -600,9 +560,10 @@ public final class ScenarioPage extends WebPage implements Updatable {
             addHeader( scenario );
             addScenarioMenubar( scenario );
             if ( expansions.contains( scenario.getId() ) ) {
-                scenarioEditPanel = new ScenarioEditPanel( 
+                ScenarioEditPanel scenarioEditPanel = new ScenarioEditPanel(
                         "sc-editor",
-                        new Model<Scenario>(scenario) );
+                        new Model<Scenario>( scenario ),
+                        expansions );
                 add( scenarioEditPanel );
             } else {
                 add( new Label( "sc-editor" ) );                                          // NON-NLS                
@@ -615,7 +576,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
 
         //------------------------------
         private void addHeader( final Scenario scenario ) {
-            scenarioNameLabel = new Label(
+            Label scenarioNameLabel = new Label(
                     "header",                                                             // NON-NLS
                     /* new PropertyModel<String>( scenario, NAME_PROPERTY ) ); */
                     new AbstractReadOnlyModel() {
@@ -639,7 +600,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
             }
 
             add( scenarioNameLabel );
-            scenarioDescriptionLabel = new Label( "sc-desc",                              // NON-NLS
+            Label scenarioDescriptionLabel = new Label( "sc-desc",                              // NON-NLS
                     new AbstractReadOnlyModel<String>() {
                         @Override
                         public String getObject() {
@@ -654,13 +615,13 @@ public final class ScenarioPage extends WebPage implements Updatable {
         }
 
         private void addScenarioMenubar( Scenario scenario ) {
-            scenarioActionsMenu = new ScenarioActionsMenuPanel(
+            MenuPanel scenarioActionsMenu = new ScenarioActionsMenuPanel(
                     "scenarioActionsMenu",
                     new Model<Scenario>( scenario ),
                     expansions );
             scenarioActionsMenu.setOutputMarkupId( true );
             add( scenarioActionsMenu );
-            ScenarioPagesMenuPanel scenarioPagesMenu = new ScenarioPagesMenuPanel( 
+            ScenarioPagesMenuPanel scenarioPagesMenu = new ScenarioPagesMenuPanel(
                     "scenarioPagesMenu",
                     new Model<Scenario>( scenario ) );
             scenarioPagesMenu.setOutputMarkupId( true );
@@ -669,7 +630,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
 
         //------------------------------
         private DropDownChoice<Scenario> createSelectScenario( String id ) {
-            scenarioDropDownChoice = new DropDownChoice<Scenario>(
+            DropDownChoice<Scenario> scenarioDropDownChoice = new DropDownChoice<Scenario>(
                     id, new PropertyModel<Scenario>( this, "target" ),                    // NON-NLS
                     new PropertyModel<List<? extends Scenario>>( this, "allScenarios" )
             ) {
@@ -732,7 +693,7 @@ public final class ScenarioPage extends WebPage implements Updatable {
                 setTarget( service.getDefaultScenario() );
             }*/
 
-           /* if ( isNodeDeleted() ) {
+            /* if ( isNodeDeleted() ) {
                 if ( getNode().isPart() )
                     try {
                         Project.commander().doCommand( new RemovePart( (Part) getNode() ) );

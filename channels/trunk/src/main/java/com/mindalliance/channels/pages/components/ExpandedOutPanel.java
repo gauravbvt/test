@@ -4,13 +4,15 @@ import com.mindalliance.channels.Flow;
 
 import org.apache.wicket.model.IModel;
 
+import java.util.Set;
+
 /**
  * An expanded outcome flow.
  */
 public class ExpandedOutPanel extends ExpandedFlowPanel {
 
-    public ExpandedOutPanel( String id, IModel<Flow> model ) {
-        super( id, model, true );
+    public ExpandedOutPanel( String id, IModel<Flow> model, Set<Long> expansions ) {
+        super( id, model, true, expansions );
     }
 
     /** {@inheritDoc} */

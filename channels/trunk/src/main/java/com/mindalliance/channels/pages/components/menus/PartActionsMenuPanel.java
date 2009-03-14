@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.menus;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.RemovePart;
 import com.mindalliance.channels.command.commands.DuplicatePart;
@@ -64,7 +65,7 @@ public class PartActionsMenuPanel extends MenuPanel {
             {
                 add( new CommandWrapper( new AddUserIssue( getPart() ) ) {
                     public void onExecution( AjaxRequestTarget target, Object result ) {
-                        updateWith( target, getPart() );
+                        updateWith( target, result );
                     }
                 } );
                 add( new CommandWrapper( new DuplicatePart( getPart() ) ) {

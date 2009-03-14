@@ -150,6 +150,7 @@ public class DefaultLockManager implements LockManager {
      */
     public void releaseAllLocks( String userName ) {
         synchronized ( this ) {
+            removeDirtyLocks();
             List<Lock> locksToRelease = getAllLocks( userName );
             for ( Lock lock : locksToRelease ) {
                 locks.remove( lock.getId() );
@@ -181,7 +182,6 @@ public class DefaultLockManager implements LockManager {
      * {@inheritDoc}
      */
     public Lock getLock( long id ) {
-        removeDirtyLocks();
         Lock lock = locks.get( id );
         if ( lock != null ) {
             try {

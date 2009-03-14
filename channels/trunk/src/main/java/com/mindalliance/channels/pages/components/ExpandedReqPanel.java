@@ -4,13 +4,15 @@ import com.mindalliance.channels.Flow;
 
 import org.apache.wicket.model.IModel;
 
+import java.util.Set;
+
 /**
  * Details of an expanded requirement.
  */
 public class ExpandedReqPanel extends ExpandedFlowPanel {
 
-    public ExpandedReqPanel( String id, IModel<Flow> model ) {
-        super( id, model, false );
+    public ExpandedReqPanel( String id, IModel<Flow> model, Set<Long> expansions ) {
+        super( id, model, false, expansions );
     }
 
     /** {@inheritDoc} */
