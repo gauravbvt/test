@@ -1,10 +1,8 @@
 package com.mindalliance.channels.pages.components.menus;
 
-import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.UserIssue;
-import com.mindalliance.channels.pages.ScenarioPage;
 import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.BreakUpFlow;
 import com.mindalliance.channels.command.commands.DuplicateFlow;
@@ -16,7 +14,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.link.ExternalLink;
 
 import java.util.List;
 import java.util.ArrayList;

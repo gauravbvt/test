@@ -83,30 +83,30 @@ public class PartPanel extends AbstractCommandablePanel {
     /**
      * The part edited by this form.
      */
-    private Part part;
+    private IModel<Part> model;
 
     //====================================
-    public PartPanel( String id, Part part ) {
+    public PartPanel( String id, IModel<Part> model ) {
         super( id );
         super.setOutputMarkupPlaceholderTag( false );
-        setPart( part );
+        this.model = model;
 
         addField( TASK_PROPERTY, findAllTaskNames() );
         addField( ACTOR_PROPERTY, findAllActorNames() );
         add( makeLink( "actor-link",                                           // NON-NLS
-                new PropertyModel<ModelObject>( part, ACTOR_PROPERTY ) ) );
+                new PropertyModel<ModelObject>( getPart(), ACTOR_PROPERTY ) ) );
         addField( ROLE_PROPERTY, findAllRoleNames() );
         add( makeLink( "role-link",                                            // NON-NLS
-                new PropertyModel<ModelObject>( part, ROLE_PROPERTY ) ) );
+                new PropertyModel<ModelObject>( getPart(), ROLE_PROPERTY ) ) );
         addField( ORG_PROPERTY, findAllOrganizationNames() );
         add( makeLink( "org-link",                                             // NON-NLS
-                new PropertyModel<ModelObject>( part, ORG_PROPERTY ) ) );
+                new PropertyModel<ModelObject>( getPart(), ORG_PROPERTY ) ) );
         addField( JURISDICTION_PROPERTY, findAllPlaceNames() );
         add( makeLink( "juris-link",                                           // NON-NLS
-                new PropertyModel<ModelObject>( part, JURISDICTION_PROPERTY ) ) );
+                new PropertyModel<ModelObject>( getPart(), JURISDICTION_PROPERTY ) ) );
         addField( LOCATION_PROPERTY, findAllPlaceNames() );
         add( makeLink( "loc-link",                                             // NON-NLS
-                new PropertyModel<ModelObject>( part, LOCATION_PROPERTY ) ) );
+                new PropertyModel<ModelObject>( getPart(), LOCATION_PROPERTY ) ) );
         addTimingFields();
     }
 
@@ -145,7 +145,7 @@ public class PartPanel extends AbstractCommandablePanel {
 
     private Set<String> findAllTaskNames() {
         Set<String> names = new HashSet<String>();
-        Iterator<Part> allParts = part.getScenario().parts();
+        Iterator<Part> allParts = getPart().getScenario().parts();
         while ( allParts.hasNext() ) {
             names.add( allParts.next().getTask() );
         }
@@ -179,14 +179,14 @@ public class PartPanel extends AbstractCommandablePanel {
         field.setOutputMarkupId( true );
         field.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                addIssues( field, part, property );
+                addIssues( field, getPart(), property );
                 target.addComponent( field );
-                updateWith( target, part );
+                updateWith( target, getPart() );
             }
         } );
 
         // Add style mods from scenario analyst.
-        addIssues( field, part, property );
+        addIssues( field, getPart(), property );
         field.setEnabled( isLockedByUser( getPart()) );
         add( field );
 
@@ -221,13 +221,13 @@ public class PartPanel extends AbstractCommandablePanel {
                 new PropertyModel<ModelObject>( this, "part"),
                 "repeatsEvery"  );
         repeatsEveryPanel.setOutputMarkupId( true );
-        repeatsEveryPanel.enable( part.isRepeating() );
+        repeatsEveryPanel.enable( getPart().isRepeating() );
         add( repeatsEveryPanel );
         final DelayPanel completionTimePanel = new DelayPanel(
                 "completion-time",
                 new PropertyModel<ModelObject>( this, "part"),
                 "completionTime" );
-        completionTimePanel.enable( part.isSelfTerminating() );
+        completionTimePanel.enable( getPart().isSelfTerminating() );
         completionTimePanel.setOutputMarkupId( true );
         add( completionTimePanel );
         CheckBox selfTerminatingCheckBox = new CheckBox(
@@ -235,7 +235,7 @@ public class PartPanel extends AbstractCommandablePanel {
                 new PropertyModel<Boolean>( this, "selfTerminating" ) );
         selfTerminatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                completionTimePanel.enable( part.isSelfTerminating() );
+                completionTimePanel.enable( getPart().isSelfTerminating() );
                 target.addComponent( completionTimePanel );
                 updateWith( target, getPart() );
             }
@@ -247,7 +247,7 @@ public class PartPanel extends AbstractCommandablePanel {
         add( repeatingCheckBox );
         repeatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                repeatsEveryPanel.enable( part.isRepeating() );
+                repeatsEveryPanel.enable( getPart().isRepeating() );
                 target.addComponent( repeatsEveryPanel );
                 updateWith( target, getPart() );
             }
@@ -447,12 +447,9 @@ public class PartPanel extends AbstractCommandablePanel {
     }    
 
     public final Part getPart() {
-        return part;
+        return model.getObject();
     }
 
-    public final void setPart( Part part ) {
-        this.part = part;
-    }
 
 
 }

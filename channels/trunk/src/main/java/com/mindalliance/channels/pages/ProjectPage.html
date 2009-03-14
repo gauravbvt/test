@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en" xmlns:wicket="http://wicket.apache.org/">
+<head>
+    <title wicket:id="sc-title">Title</title>
+    <link rel="stylesheet" href="channels.css" type="text/css">
+</head>
+
+<body>
+    <form wicket:id="big-form" class="stretch" action="#">
+        <div id="header">
+            <h1><span wicket:id="header">Title</span></h1>
+            <span class="menubar">
+                <span wicket:id="scenarioPagesMenu">[pages menu]</span>
+                <span wicket:id="scenarioActionsMenu">[action menu]</span>
+            </span>
+            <p class="caption" wicket:id="sc-desc">A description.</p>
+        </div>
+        <div id="controls">
+            <ul id="sc-sel">
+                <li><label>Select scenario: <select wicket:id="sc-sel" name="scenario">
+                    <option>Some scenario</option>
+                </select></label></li>
+                <li><label class="import-ctl"><span>Import: </span><input class="file" type="file" wicket:id="sc-import"
+                                                                          name="sc-import"
+                                                                          value="Upload"></label></li>
+            </ul>
+        </div>
+        <p id="form-buttons"><input type="submit" value="submit"></p>
+        <span wicket:id="scenario">[scenario panel] </span>
+        <div id="footer">
+            <hr>
+            <p id="logout">Logged in as <span wicket:id="user">User</span> &mdash; <a href="logout">Logout</a><br>
+                &copy; Copyright 2009 Mind-Alliance Inc. All Rights Reserved.</p>
+        </div>
+    </form>
+    <script type="text/javascript" language="javascript">
+        // <![CDATA[
+
+        SI.Files.htmlClass = 'SI-FILES-STYLIZED';
+        SI.Files.fileClass = 'file';
+        SI.Files.wrapClass = 'import-ctl';
+        SI.Files.stylizeAll();
+
+        SI.Files.wrapClass = 'attach-ctl';
+        SI.Files.stylizeAll();
+        // ]]>
+    </script>
+</body>
+</html>

@@ -3,7 +3,6 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.command.commands.UpdateProjectObject;
-import com.mindalliance.channels.pages.ScenarioPage;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;

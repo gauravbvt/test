@@ -40,7 +40,7 @@ public class FlowPage extends WebPage {
         super( parameters );
 
         final Service service = getService();
-        Scenario scenario = ScenarioPage.findScenario( service, parameters );
+        Scenario scenario = ProjectPage.findScenario( service, parameters );
 
         if ( scenario == null )
             redirectTo( service.getDefaultScenario() );
@@ -49,7 +49,7 @@ public class FlowPage extends WebPage {
             if ( parameters.containsKey( "node" ) && parameters.getString( "node" ).equals( "NONE" ) ) {
                 node = null;
             } else {
-                node = ScenarioPage.findNode( scenario, parameters );
+                node = ProjectPage.findNode( scenario, parameters );
                 if ( node == null )
                     redirectTo( scenario );
             }

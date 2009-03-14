@@ -122,7 +122,7 @@ public final class Project extends WebApplication {                             
 //        getRequestCycleSettings().setRenderStrategy( IRequestCycleSettings.REDIRECT_TO_RENDER );
         mount( new QueryStringUrlCodingStrategy( "index.html", IndexPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "report.html", ProjectReportPage.class ) );
-         mount( new QueryStringUrlCodingStrategy( "node.html", ScenarioPage.class ) );
+         mount( new QueryStringUrlCodingStrategy( "node.html", ProjectPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.xml", ExportPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.png", FlowPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "role.html", RolePage.class ) );
@@ -134,8 +134,8 @@ public final class Project extends WebApplication {                             
     }
 
     @Override
-    public Class<ScenarioPage> getHomePage() {
-        return ScenarioPage.class;
+    public Class<ProjectPage> getHomePage() {
+        return ProjectPage.class;
     }
 
     /**

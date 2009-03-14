@@ -15,6 +15,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.Model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -76,7 +77,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
     }
 
     private ListView<Flow> createFlowPanels( final boolean outcomes ) {
-        // final Set<Long> expansions = ( (ScenarioPage) getPage() ).findExpansions();
+        // final Set<Long> expansions = ( (ProjectPage) getPage() ).findExpansions();
         return new ListView<Flow>( "flows", new PropertyModel<List<Flow>>( this, "flows" ) ) {
             protected void populateItem( ListItem<Flow> item ) {
                 Flow flow = item.getModelObject();
@@ -84,8 +85,8 @@ public class FlowListPanel extends AbstractCommandablePanel {
                 if ( expansions.contains( flowId ) ) {
                     requestLockOn( flow );
                     ExpandedFlowPanel flowPanel = outcomes ?
-                            new ExpandedOutPanel( "flow", item.getModel(), expansions )
-                            : new ExpandedReqPanel( "flow", item.getModel(), expansions );
+                            new ExpandedOutPanel( "flow", new Model<Flow>(flow), expansions )
+                            : new ExpandedReqPanel( "flow", new Model<Flow>(flow), expansions );
                     item.add( flowPanel );
                 } else {
                     releaseAnyLockOn( flow );

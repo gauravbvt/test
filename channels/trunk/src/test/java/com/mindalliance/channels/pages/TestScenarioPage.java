@@ -113,51 +113,51 @@ public class TestScenarioPage extends TestCase {
     }
 
     public void testParms() {
-        tester.startPage( ScenarioPage.class );
+        tester.startPage( ProjectPage.class );
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
         PageParameters parms = new PageParameters();
-        parms.put( ScenarioPage.SCENARIO_PARM, Long.toString( scenario.getId() ) );
+        parms.put( ProjectPage.SCENARIO_PARM, Long.toString( scenario.getId() ) );
 
-        tester.startPage( ScenarioPage.class, parms );
+        tester.startPage( ProjectPage.class, parms );
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
-        parms.put( ScenarioPage.SCENARIO_PARM, "-1" );
-        tester.startPage( ScenarioPage.class, parms );
+        parms.put( ProjectPage.SCENARIO_PARM, "-1" );
+        tester.startPage( ProjectPage.class, parms );
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
-        parms.put( ScenarioPage.SCENARIO_PARM, "bla" );
-        tester.startPage( ScenarioPage.class, parms );
+        parms.put( ProjectPage.SCENARIO_PARM, "bla" );
+        tester.startPage( ProjectPage.class, parms );
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
-        parms.put( ScenarioPage.SCENARIO_PARM, Long.toString( scenario.getId() ) );
-        parms.put( ScenarioPage.NODE_PARM, "-1" );
-        tester.startPage( ScenarioPage.class, parms );
+        parms.put( ProjectPage.SCENARIO_PARM, Long.toString( scenario.getId() ) );
+        parms.put( ProjectPage.NODE_PARM, "-1" );
+        tester.startPage( ProjectPage.class, parms );
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
-        parms.put( ScenarioPage.NODE_PARM, "bla" );
-        tester.startPage( ScenarioPage.class, parms );
+        parms.put( ProjectPage.NODE_PARM, "bla" );
+        tester.startPage( ProjectPage.class, parms );
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
-        parms.put( ScenarioPage.NODE_PARM, Long.toString( scenario.getDefaultPart().getId() ) );
-        tester.startPage( ScenarioPage.class, parms );
-        tester.assertRenderedPage( ScenarioPage.class );
+        parms.put( ProjectPage.NODE_PARM, Long.toString( scenario.getDefaultPart().getId() ) );
+        tester.startPage( ProjectPage.class, parms );
+        tester.assertRenderedPage( ProjectPage.class );
         tester.assertNoErrorMessage();
 
-        parms.put( ScenarioPage.EXPAND_PARM, "bla" );
-        tester.startPage( ScenarioPage.class, parms );
-        tester.assertRenderedPage( ScenarioPage.class );
+        parms.put( ProjectPage.EXPAND_PARM, "bla" );
+        tester.startPage( ProjectPage.class, parms );
+        tester.assertRenderedPage( ProjectPage.class );
         tester.assertNoErrorMessage();
 
-        parms.add( ScenarioPage.EXPAND_PARM, "burp" );
-        tester.startPage( ScenarioPage.class, parms );
-        tester.assertRenderedPage( ScenarioPage.class );
+        parms.add( ProjectPage.EXPAND_PARM, "burp" );
+        tester.startPage( ProjectPage.class, parms );
+        tester.assertRenderedPage( ProjectPage.class );
         tester.assertNoErrorMessage();
     }
 
@@ -165,14 +165,14 @@ public class TestScenarioPage extends TestCase {
     public void testNodes() {
         Iterator<Node> nodes = scenario.nodes();
         while ( nodes.hasNext() ) {
-            tester.startPage( new ScenarioPage( scenario, nodes.next() ) );
-            tester.assertRenderedPage( ScenarioPage.class );
+            tester.startPage( new ProjectPage( scenario, nodes.next() ) );
+            tester.assertRenderedPage( ProjectPage.class );
             tester.assertNoErrorMessage();
         }
     }
 
     public void testNewScenario() throws NotFoundException {
-        tester.startPage( new ScenarioPage( scenario ) );
+        tester.startPage( new ProjectPage( scenario ) );
 
         long size = dao.getScenarioCount();
         tester.clickLink( "big-form:sc-new" );
@@ -181,7 +181,7 @@ public class TestScenarioPage extends TestCase {
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
-        tester.startPage( new ScenarioPage( scenario ) );
+        tester.startPage( new ProjectPage( scenario ) );
         tester.clickLink( "big-form:sc-new" );
         assertEquals( size + 2, dao.getScenarioCount() );
         tester.assertRenderedPage( RedirectPage.class );
@@ -193,9 +193,9 @@ public class TestScenarioPage extends TestCase {
     public void testEmptySubmit() throws NotFoundException, IOException {
         Node node = scenario.getDefaultPart();
 
-        tester.startPage( new ScenarioPage( scenario, node ) );
+        tester.startPage( new ProjectPage( scenario, node ) );
         tester.setupRequestAndResponse();
-        tester.assertRenderedPage( ScenarioPage.class );
+        tester.assertRenderedPage( ProjectPage.class );
         tester.assertNoErrorMessage();
 
         FormTester ft = tester.newFormTester( "big-form" );
@@ -214,9 +214,9 @@ public class TestScenarioPage extends TestCase {
         node.setDescription( "" );
         assertEquals( "", node.getDescription() );
 
-        tester.startPage( new ScenarioPage( scenario, node ) );
+        tester.startPage( new ProjectPage( scenario, node ) );
         tester.setupRequestAndResponse();
-        tester.assertRenderedPage( ScenarioPage.class );
+        tester.assertRenderedPage( ProjectPage.class );
         tester.assertNoErrorMessage();
 
         FormTester ft = tester.newFormTester( "big-form" );
@@ -238,9 +238,9 @@ public class TestScenarioPage extends TestCase {
         Node node = scenario.getDefaultPart();
         node.setDescription( "something" );
 
-        tester.startPage( new ScenarioPage( scenario, node ) );
+        tester.startPage( new ProjectPage( scenario, node ) );
         tester.setupRequestAndResponse();
-        tester.assertRenderedPage( ScenarioPage.class );
+        tester.assertRenderedPage( ProjectPage.class );
         tester.assertNoErrorMessage();
 
         FormTester ft = tester.newFormTester( "big-form" );
@@ -262,9 +262,9 @@ public class TestScenarioPage extends TestCase {
         sc2.setName( "Test" );
         assertEquals( 3, dao.getScenarioCount() );
 
-        tester.startPage( new ScenarioPage( scenario ) );
+        tester.startPage( new ProjectPage( scenario ) );
         tester.setupRequestAndResponse();
-        tester.assertRenderedPage( ScenarioPage.class );
+        tester.assertRenderedPage( ProjectPage.class );
         tester.assertNoErrorMessage();
         assertEquals( 3, dao.getScenarioCount() );
 
@@ -285,7 +285,7 @@ public class TestScenarioPage extends TestCase {
 
     public void testGetParameters1() {
         Node node = scenario.getDefaultPart();
-        PageParameters parms = ScenarioPage.getParameters( scenario, node );
+        PageParameters parms = ProjectPage.getParameters( scenario, node );
 
         assertEquals( scenario.getId(), (long) parms.getAsLong( "scenario" ) );
         assertEquals( node.getId(), (long) parms.getAsLong( "node" ) );
@@ -295,7 +295,7 @@ public class TestScenarioPage extends TestCase {
         Node node = scenario.getDefaultPart();
 
         Set<Long> expand = new HashSet<Long>( Arrays.asList( 1L, 2L ) );
-        PageParameters parms = ScenarioPage.getParameters( scenario, node, expand );
+        PageParameters parms = ProjectPage.getParameters( scenario, node, expand );
 
         assertEquals( scenario.getId(), (long) parms.getAsLong( "scenario" ) );
         assertEquals( node.getId(), (long) parms.getAsLong( "node" ) );

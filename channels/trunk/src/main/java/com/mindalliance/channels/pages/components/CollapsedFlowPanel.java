@@ -66,11 +66,11 @@ public class CollapsedFlowPanel extends AbstractCommandablePanel {
             @Override
             public void onClick() {
                 Flow replica = flow.replicate( outcome );
-                // PageParameters parameters = ((ScenarioPage)getWebPage()).getPageParameters();
+                // PageParameters parameters = ((ProjectPage)getWebPage()).getPageParameters();
                 // TODO - Denis: Fix problem and remove patch
-                PageParameters parameters = ( (ScenarioPage) getWebPage() )
+                PageParameters parameters = ( (ProjectPage) getWebPage() )
                         .getParametersCollapsing( getFlow().getScenario().getId() );
-                parameters.add( ScenarioPage.EXPAND_PARM, String.valueOf( replica.getId() ) );
+                parameters.add( ProjectPage.EXPAND_PARM, String.valueOf( replica.getId() ) );
                 this.setResponsePage( getWebPage().getClass(), parameters );
             }
         } );

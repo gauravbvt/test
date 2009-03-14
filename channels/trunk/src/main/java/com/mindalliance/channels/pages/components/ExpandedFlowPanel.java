@@ -189,6 +189,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
      * @param f the flow
      */
     private void adjustFields( Flow f ) {
+        // TODO exception wnem f just got disconnected on undo
         nameField.setEnabled( isLockedByUser( f ) && f.canSetNameAndDescription() );
         descriptionField.setEnabled( isLockedByUser( f ) &&  f.canSetNameAndDescription() );
         askedForButtons.setEnabled( isLockedByUser( f ) &&  f.canSetAskedFor() );
@@ -472,7 +473,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                 updateWith( target, getFlow() );
                 // PageParameters parameters = getWebPage().getPageParameters();
                 // TODO - Denis : fix bug and remove patch
-                /*PageParameters parameters = ( (ScenarioPage) getWebPage() )
+                /*PageParameters parameters = ( (ProjectPage) getWebPage() )
                         .getParametersCollapsing( getFlow().getScenario().getId() );
                 setResponsePage( getWebPage().getClass(), parameters );*/
             }

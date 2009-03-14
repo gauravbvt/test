@@ -17,11 +17,12 @@ import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.FlowDiagram;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.pages.ScenarioPage;
+import com.mindalliance.channels.pages.ProjectPage;
 import com.mindalliance.channels.pages.TestScenarioPage;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.model.Model;
 import static org.easymock.EasyMock.*;
 
 import java.io.IOException;
@@ -85,7 +86,7 @@ public class TestPartPanel extends AbstractChannelsTest {
                 part = (Part) n;
         }
 
-        panel = new PartPanel( "id", part );
+        panel = new PartPanel( "id", new Model<Part>(part) );
         tester.startComponent( panel );
     }
 
@@ -259,9 +260,9 @@ public class TestPartPanel extends AbstractChannelsTest {
      * @throws java.io.IOException if fails
      */
     public void testForm() throws IOException {
-        ScenarioPage page = new ScenarioPage( scenario, part );
+        ProjectPage page = new ProjectPage( scenario, part );
         tester.startPage( page );
-        tester.assertRenderedPage( ScenarioPage.class );
+        tester.assertRenderedPage( ProjectPage.class );
         tester.assertNoErrorMessage();
 
         FormTester ft = tester.newFormTester( "big-form" );

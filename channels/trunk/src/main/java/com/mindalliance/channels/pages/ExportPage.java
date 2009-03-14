@@ -28,10 +28,10 @@ public class ExportPage extends WebPage {
         super( parameters );
 
         final Service service = getService();
-        if ( parameters.containsKey( ScenarioPage.SCENARIO_PARM ) )
+        if ( parameters.containsKey( ProjectPage.SCENARIO_PARM ) )
             try {
                 scenario = service.find( Scenario.class,
-                        parameters.getLong( ScenarioPage.SCENARIO_PARM ) );
+                        parameters.getLong( ProjectPage.SCENARIO_PARM ) );
 
             } catch ( StringValueConversionException ignored ) {
                 LOG.warn( "Bad scenario specified. Exporting default scenario.", ignored );

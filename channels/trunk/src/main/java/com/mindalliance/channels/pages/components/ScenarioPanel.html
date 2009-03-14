@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+        <div wicket:id="sc-editor">[scenario edit panel]</div>
+        <div id="contents">
+            <div id="graph">
+                <div class="picture">
+                    <img wicket:id="graph" src="#" usemap="#G" alt="Information flow diagram">
+                </div>
+                <hr>
+            </div>
+            <div id="part">
+                <div id="part-header">
+                    <div class="section-title">
+                        <h2><span wicket:id="part-title">Node title</span></h2>
+                    <span class="menubar">
+                        <span wicket:id="partPagesMenu">[part pages menu]</span>
+                        <span wicket:id="partActionsMenu">[part action menu]</span>
+                    </span>
+                    </div>
+                    <div class="section-content">
+                        <table summary="Part description">
+                            <div wicket:id="specialty">(Specialty)</div>
+                            <tr>
+                                <th class="area" align="right" valign="top"><label
+                                        for="description">Description:</label>
+                                </th>
+                                <td><textarea id="description" name="description" wicket:id="description"
+                                              cols="40" rows="3">Description</textarea></td>
+                            </tr>
+
+                            <tr wicket:id="attachments">
+                                <th align="right" valign="top">Attachments:</th>
+                                <td>&nbsp;</td>
+                            </tr>
+                        </table>
+                        <span wicket:id="issues">[issues panel]</span>
+                    </div>
+                </div>
+
+                <div wicket:id="reqs" id="reqs">
+                    <h3>Requirements</h3>
+                </div>
+
+                <div wicket:id="outcomes" id="outcomes">
+                    <h3>Outcomes</h3>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+</wicket:panel>
+</body>
+</html>
