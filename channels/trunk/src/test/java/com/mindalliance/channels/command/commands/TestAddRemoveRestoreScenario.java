@@ -5,6 +5,7 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.Change;
 
 import java.util.List;
 
@@ -35,10 +36,12 @@ public class TestAddRemoveRestoreScenario extends AbstractChannelsTest {
         int count = countScenarios();
         Command addScenario = new AddScenario();
         assertTrue( commander.canDo( addScenario ) );
-        scenario = (Scenario) commander.doCommand( addScenario );
+        Change change = commander.doCommand( addScenario );
+        assertTrue( change.isAdded() );
+        scenario = (Scenario) change.getSubject();
         assertTrue( countScenarios() == count + 1 );
         assertFalse( commander.canUndo() );
-     }
+    }
 
     @SuppressWarnings( {"UnusedDeclaration"} )
     private int countScenarios() {

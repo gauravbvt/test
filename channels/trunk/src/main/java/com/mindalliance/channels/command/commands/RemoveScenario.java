@@ -4,6 +4,7 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Service;
@@ -44,7 +45,7 @@ public class RemoveScenario extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    public Object execute( Commander commander ) throws CommandException {
+    public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
@@ -53,7 +54,7 @@ public class RemoveScenario extends AbstractCommand {
             exporter.exportScenario( scenario, bos );
             addArgument( "xml", bos.toString() );
             service.remove( scenario );
-            return null;
+            return new Change( Change.Type.Removed, scenario );
         } catch ( NotFoundException e ) {
             throw new CommandException( "Failed to remove scenario.", e );
         } catch ( IOException e ) {

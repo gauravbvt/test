@@ -81,10 +81,10 @@ public interface Command extends Serializable {
      * Execute the command.
      *
      * @param commander a commander executing the command
-     * @return an object
+     * @return cuased change
      * @throws CommandException if execution fails
      */
-    Object execute( Commander commander ) throws CommandException;
+    Change execute( Commander commander ) throws CommandException;
 
     /**
      * Whether the command can be undone.

@@ -5,6 +5,7 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.CommandUtils;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.Service;
@@ -37,19 +38,19 @@ public class AddUserIssue extends AbstractCommand {
     /**
      * {@inheritDoc
      */
-    @SuppressWarnings("unchecked")
-    public Object execute( Commander commander ) throws CommandException {
+    @SuppressWarnings( "unchecked" )
+    public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
         try {
             UserIssue issue = new UserIssue( service.find( ModelObject.class, (Long) get( "modelObject" ) ) );
-            Map<String,Object> state = (Map<String,Object>)get("state");
+            Map<String, Object> state = (Map<String, Object>) get( "state" );
             issue.setReportedBy( Project.getUserName() );
-            if (state != null) {
+            if ( state != null ) {
                 CommandUtils.initialize( issue, state );
             }
             service.add( issue );
             addArgument( "issue", issue.getId() );
-            return issue;
+            return new Change( Change.Type.Added, issue );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
         }

@@ -57,12 +57,12 @@ public class DefaultCommander implements Commander {
     /**
      * {@inheritDoc}
      */
-    private Object execute( Command command ) throws CommandException {
-        Object result;
+    private Change execute( Command command ) throws CommandException {
+        Change change;
         if ( command.isAuthorized() ) {
             try {
                 Collection<Lock> grabbedLocks = lockManager.grabLocksOn( command.getLockingSet() );
-                result = command.execute( this );
+                change = command.execute( this );
                 lockManager.releaseLocks( grabbedLocks );
             } catch ( LockingException e ) {
                 throw new CommandException( e.getMessage(), e );
@@ -70,7 +70,7 @@ public class DefaultCommander implements Commander {
         } else {
             throw new CommandException( "You are not authorized." );
         }
-        return result;
+        return change;
     }
 
     /**
@@ -123,34 +123,36 @@ public class DefaultCommander implements Commander {
     /**
      * {@inheritDoc}
      */
-    public Object doCommand( Command command ) throws CommandException {
+    public Change doCommand( Command command ) throws CommandException {
         synchronized ( this ) {
             LOG.info( "Doing: " + command.toString() );
-            Object result = execute( command );
+            Change change = execute( command );
             history.recordDone( command );
-            return result;
+            return change;
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public void undo() throws CommandException {
+    public Change undo() throws CommandException {
         synchronized ( this ) {
             // Get memento of command to undo
             Memento memento = history.getUndo();
             if ( memento == null ) throw new CommandException( "Nothing can be undone right now." );
             Command undoCommand = memento.getCommand().makeUndoCommand( this );
             LOG.info( "Undoing: " + undoCommand.toString() );
-            execute( undoCommand );
+            Change change = execute( undoCommand );
+            change.setUndoing( true );
             history.recordUndone( memento, undoCommand );
+            return change;
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public void redo() throws CommandException {
+    public Change redo() throws CommandException {
         synchronized ( this ) {
             // Get memento of undoing command
             Memento memento = history.getRedo();
@@ -158,8 +160,10 @@ public class DefaultCommander implements Commander {
             // undo the undoing
             Command redoCommand = memento.getCommand().makeUndoCommand( this );
             LOG.info( "Redoing: " + redoCommand.toString() );
-            execute( redoCommand );
+            Change change = execute( redoCommand );
+            change.setUndoing( true );
             history.recordRedone( memento, redoCommand );
+            return change;
         }
     }
 

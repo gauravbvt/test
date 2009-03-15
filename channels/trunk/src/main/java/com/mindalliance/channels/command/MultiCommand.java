@@ -93,11 +93,11 @@ public class MultiCommand extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    public Object execute( Commander commander ) throws CommandException {
+    public Change execute( Commander commander ) throws CommandException {
         for ( Command command : commands ) {
             try {
-                Object result = commander.doCommand( command );
-                for ( Link link : links ) link.process( command, result );
+                Change change = commander.doCommand( command );
+                for ( Link link : links ) link.process( command, change.getSubject() );
                 executed.add( command );
             }
             catch ( CommandException e ) {
@@ -105,7 +105,7 @@ public class MultiCommand extends AbstractCommand {
                 // ignore
             }
         }
-        return null;
+        return new Change();
     }
 
     /**

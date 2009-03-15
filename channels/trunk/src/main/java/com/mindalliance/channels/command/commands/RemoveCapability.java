@@ -5,6 +5,7 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.CommandUtils;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Scenario;
@@ -35,13 +36,13 @@ public class RemoveCapability extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    public Object execute( Commander commander ) throws CommandException {
+    public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
         try {
             Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
             Flow flow = scenario.findFlow( (Long) get( "flow" ) );
             flow.disconnect();
-            return null;
+            return new Change( Change.Type.Removed, flow );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
         }

@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.menus;
 
 import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.Change;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 import java.io.Serializable;
@@ -21,7 +22,7 @@ public abstract class CommandWrapper implements Serializable {
 
     private Command command;
 
-    public abstract void onExecution( AjaxRequestTarget target, Object result);
+    public abstract void onExecution( AjaxRequestTarget target, Change change);
 
     public Command getCommand() {
         return command;

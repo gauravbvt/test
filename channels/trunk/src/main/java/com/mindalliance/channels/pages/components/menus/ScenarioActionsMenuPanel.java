@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components.menus;
 
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.command.commands.AddUserIssue;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AddPart;
 import com.mindalliance.channels.command.commands.AddScenario;
+import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.RemoveScenario;
 import com.mindalliance.channels.pages.ExportPage;
-import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ProjectPage;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -54,6 +54,7 @@ public class ScenarioActionsMenuPanel extends MenuPanel {
 
     /**
      * Get population of menu items.
+     *
      * @return a list of menu items
      */
     public List<Component> getMenuItems() {
@@ -92,25 +93,25 @@ public class ScenarioActionsMenuPanel extends MenuPanel {
     private List<CommandWrapper> getCommandWrappers() {
         return new ArrayList<CommandWrapper>() {
             {
-                add( new CommandWrapper( new AddPart( getScenario() ) ) {
-                    public void onExecution( AjaxRequestTarget target, Object result ) {
-                        updateWith( target, getScenario() );
+                final Scenario scenario = getScenario();
+                add( new CommandWrapper( new AddPart( scenario ) ) {
+                    public void onExecution( AjaxRequestTarget target, Change change ) {
+                        update( target, change );
                     }
                 } );
-                add( new CommandWrapper( new AddUserIssue( getScenario() ) ) {
-                    public void onExecution( AjaxRequestTarget target, Object result ) {
-                        updateWith( target, result );
+                add( new CommandWrapper( new AddUserIssue( scenario ) ) {
+                    public void onExecution( AjaxRequestTarget target, Change change ) {
+                        update( target, change );
                     }
                 } );
                 add( new CommandWrapper( new AddScenario() ) {
-                    public void onExecution( AjaxRequestTarget target, Object result ) {
-                        ( (ProjectPage) getWebPage() ).redirectTo( (Scenario) result );
+                    public void onExecution( AjaxRequestTarget target, Change change ) {
+                        update( target, change );
                     }
                 } );
-                 add( new CommandWrapper( new RemoveScenario( getScenario() ) ) {
-                    public void onExecution( AjaxRequestTarget target, Object result ) {
-                        ( (ProjectPage) getWebPage() ).redirectTo(
-                                Project.getProject().getService().getDefaultScenario() );
+                add( new CommandWrapper( new RemoveScenario( scenario ) ) {
+                    public void onExecution( AjaxRequestTarget target, Change change ) {
+                        update( target, change );
                     }
                 } );
             }

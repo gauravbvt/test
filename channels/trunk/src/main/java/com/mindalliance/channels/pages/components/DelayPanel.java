@@ -13,6 +13,7 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.ScenarioObject;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.command.commands.UpdateProjectObject;
+import com.mindalliance.channels.command.Change;
 
 import java.util.List;
 import java.lang.reflect.InvocationTargetException;
@@ -49,7 +50,7 @@ public class DelayPanel extends AbstractCommandablePanel {
                 new PropertyModel<String>( this, "amountString" ) );
         amountField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                updateWith( target, model.getObject() );
+                update( target, new Change( Change.Type.Updated, model.getObject(), property) );
             }
         } );
         add( amountField );
@@ -70,7 +71,7 @@ public class DelayPanel extends AbstractCommandablePanel {
         };
         unitChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                updateWith( target, model.getObject() );
+                update( target, new Change( Change.Type.Updated, model.getObject(), property) );
             }
         } );
         add( unitChoice );
@@ -121,7 +122,7 @@ public class DelayPanel extends AbstractCommandablePanel {
 
     private void setProperty( String prop, Object val ) {
         if ( model.getObject() instanceof ScenarioObject ) {
-            doCommand( new UpdateScenarioObject( (ScenarioObject) model.getObject(), property + "." + prop, val ) );
+            doCommand( new UpdateScenarioObject( model.getObject(), property + "." + prop, val ) );
         } else {
             doCommand( new UpdateProjectObject( model.getObject(), property + "." + prop, val ) );
         }

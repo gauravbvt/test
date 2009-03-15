@@ -37,15 +37,15 @@ public class TestRedirectFlow extends AbstractChannelsTest {
         commander = project.getCommander();
         scenario = service.createScenario();
         source = scenario.getDefaultPart();
-        source.setRole( service.findOrCreate( Role.class, "source" ));
+        source.setRole( service.findOrCreate( Role.class, "source" ) );
         source.setTask( "doing source things" );
         target = service.createPart( scenario );
         target.setTask( "doing target things" );
-        target.setRole( service.findOrCreate( Role.class, "target" ));
+        target.setRole( service.findOrCreate( Role.class, "target" ) );
         flow = service.connect( source, target, "info" );
         otherTarget = service.createPart( scenario );
         otherTarget.setTask( "doing other things" );
-        otherTarget.setRole( service.findOrCreate( Role.class, "other target" ));
+        otherTarget.setRole( service.findOrCreate( Role.class, "other target" ) );
         connector = service.createConnector( scenario );
         service.connect( connector, otherTarget, "info" );
     }
@@ -55,31 +55,31 @@ public class TestRedirectFlow extends AbstractChannelsTest {
     }
 
     public void testRedirectFlow() throws CommandException {
-        assertTrue( countFlows( source.outcomes() ) == 1);
-        assertTrue( countFlows( target.requirements() ) == 1);
-        assertTrue( countFlows( otherTarget.requirements() ) == 1);
+        assertTrue( countFlows( source.outcomes() ) == 1 );
+        assertTrue( countFlows( target.requirements() ) == 1 );
+        assertTrue( countFlows( otherTarget.requirements() ) == 1 );
         Command redirectFlow = new RedirectFlow( flow, connector, true );
         assertTrue( commander.canDo( redirectFlow ) );
-        commander.doCommand( redirectFlow );
-        assertTrue( countFlows( source.outcomes() ) == 1);
-        assertTrue( countFlows( target.requirements() ) == 0);
-        assertTrue( countFlows( otherTarget.requirements() ) == 2);
+        assertTrue( commander.doCommand( redirectFlow ).isAdded() );
+        assertTrue( countFlows( source.outcomes() ) == 1 );
+        assertTrue( countFlows( target.requirements() ) == 0 );
+        assertTrue( countFlows( otherTarget.requirements() ) == 2 );
         assertTrue( commander.canUndo() );
-        commander.undo();
-        assertTrue( countFlows( source.outcomes() ) == 1);
-        assertTrue( countFlows( target.requirements() ) == 1);
-        assertTrue( countFlows( otherTarget.requirements() ) == 1);
+        assertTrue( commander.undo().isUnknown() );
+        assertTrue( countFlows( source.outcomes() ) == 1 );
+        assertTrue( countFlows( target.requirements() ) == 1 );
+        assertTrue( countFlows( otherTarget.requirements() ) == 1 );
         assertTrue( commander.canRedo() );
-        commander.redo();
-        assertTrue( countFlows( source.outcomes() ) == 1);
-        assertTrue( countFlows( target.requirements() ) == 0);
-        assertTrue( countFlows( otherTarget.requirements() ) == 2);
+        assertTrue( commander.redo().isUnknown() );
+        assertTrue( countFlows( source.outcomes() ) == 1 );
+        assertTrue( countFlows( target.requirements() ) == 0 );
+        assertTrue( countFlows( otherTarget.requirements() ) == 2 );
         assertTrue( commander.canUndo() );
     }
 
     private int countFlows( Iterator<Flow> flows ) {
         int count = 0;
-        while( flows.hasNext() ) {
+        while ( flows.hasNext() ) {
             flows.next();
             count++;
         }

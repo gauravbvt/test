@@ -26,10 +26,10 @@ public interface Commander {
      * Locks are grabbed
      *
      * @param command a command
-     * @return an object
+     * @return an change
      * @throws CommandException if execution could not proceeed or failed.
      */
-    Object doCommand( Command command ) throws CommandException;
+    Change doCommand( Command command ) throws CommandException;
 
     /**
      * Whether user could undo a previous command right now.
@@ -46,14 +46,16 @@ public interface Commander {
     /**
      * Undo user's previous command.
      * @throws CommandException if undoing fails or is not allowed.
+     * @return a change
      */
-    void undo() throws CommandException;
+    Change undo() throws CommandException;
 
     /**
      * Redo user's previous undone command.
      * @throws CommandException if redoing fails or is not allowed.
+     * @return a change
      */
-    void redo() throws CommandException;
+    Change redo() throws CommandException;
 
     /**
      * Resets commander

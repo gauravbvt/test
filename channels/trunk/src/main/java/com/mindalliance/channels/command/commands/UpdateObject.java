@@ -8,6 +8,7 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.Change;
 
 import java.util.HashMap;
 import java.util.List;
@@ -104,7 +105,7 @@ public abstract class UpdateObject extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    public Object execute( Commander commander ) throws CommandException {
+    public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
         Identifiable identifiable = getIdentifiable( service );
         switch ( action ) {
@@ -140,16 +141,18 @@ public abstract class UpdateObject extends AbstractCommand {
                 throw new IllegalArgumentException( "Unknown action " + action );
         }
         if ( identifiable instanceof ModelObject ) service.update( (ModelObject) identifiable );
-        return get( "value" );
+        return new Change( Change.Type.Updated, identifiable, (String) get( "property" ) );
     }
 
     /**
      * Move given element within list as property value of identifiable.
      * By default move to top.
+     *
      * @param identifiable an identifiable
-     * @param property a property path
-     * @param element an object
-     * @throws com.mindalliance.channels.command.CommandException if fails
+     * @param property     a property path
+     * @param element      an object
+     * @throws com.mindalliance.channels.command.CommandException
+     *          if fails
      */
     @SuppressWarnings( "unchecked" )
     private void moveInProperty(

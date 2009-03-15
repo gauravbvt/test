@@ -2,9 +2,9 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Part;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.attachments.BitBucket;
 import com.mindalliance.channels.dao.Memory;
@@ -135,17 +135,17 @@ public class TestScenarioPage extends TestCase {
         tester.assertNoErrorMessage();
 
         parms.put( ProjectPage.SCENARIO_PARM, Long.toString( scenario.getId() ) );
-        parms.put( ProjectPage.NODE_PARM, "-1" );
+        parms.put( ProjectPage.PART_PARM, "-1" );
         tester.startPage( ProjectPage.class, parms );
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
-        parms.put( ProjectPage.NODE_PARM, "bla" );
+        parms.put( ProjectPage.PART_PARM, "bla" );
         tester.startPage( ProjectPage.class, parms );
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
-        parms.put( ProjectPage.NODE_PARM, Long.toString( scenario.getDefaultPart().getId() ) );
+        parms.put( ProjectPage.PART_PARM, Long.toString( scenario.getDefaultPart().getId() ) );
         tester.startPage( ProjectPage.class, parms );
         tester.assertRenderedPage( ProjectPage.class );
         tester.assertNoErrorMessage();
@@ -163,9 +163,9 @@ public class TestScenarioPage extends TestCase {
 
     /** Test all nodes pages in default scenario. */
     public void testNodes() {
-        Iterator<Node> nodes = scenario.nodes();
-        while ( nodes.hasNext() ) {
-            tester.startPage( new ProjectPage( scenario, nodes.next() ) );
+        Iterator<Part> parts = scenario.parts();
+        while ( parts.hasNext() ) {
+            tester.startPage( new ProjectPage( scenario, parts.next() ) );
             tester.assertRenderedPage( ProjectPage.class );
             tester.assertNoErrorMessage();
         }
@@ -191,9 +191,9 @@ public class TestScenarioPage extends TestCase {
     /** Test submit with part modifications.
      * @throws NotFoundException on error */
     public void testEmptySubmit() throws NotFoundException, IOException {
-        Node node = scenario.getDefaultPart();
+        Part part = scenario.getDefaultPart();
 
-        tester.startPage( new ProjectPage( scenario, node ) );
+        tester.startPage( new ProjectPage( scenario, part ) );
         tester.setupRequestAndResponse();
         tester.assertRenderedPage( ProjectPage.class );
         tester.assertNoErrorMessage();
@@ -210,11 +210,11 @@ public class TestScenarioPage extends TestCase {
     /** Test submit with part modifications.
      * @throws NotFoundException on error */
     public void testDescriptionSubmit1() throws NotFoundException, IOException {
-        Node node = scenario.getDefaultPart();
-        node.setDescription( "" );
-        assertEquals( "", node.getDescription() );
+        Part part = scenario.getDefaultPart();
+        part.setDescription( "" );
+        assertEquals( "", part.getDescription() );
 
-        tester.startPage( new ProjectPage( scenario, node ) );
+        tester.startPage( new ProjectPage( scenario, part ) );
         tester.setupRequestAndResponse();
         tester.assertRenderedPage( ProjectPage.class );
         tester.assertNoErrorMessage();
@@ -228,17 +228,17 @@ public class TestScenarioPage extends TestCase {
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
-        assertEquals( desc, node.getDescription() );
+        assertEquals( desc, part.getDescription() );
         checkFiles( project );
     }
 
     /** Test submit with part modifications.
      * @throws NotFoundException on error */
     public void testDescriptionSubmit2() throws NotFoundException, IOException {
-        Node node = scenario.getDefaultPart();
-        node.setDescription( "something" );
+        Part part = scenario.getDefaultPart();
+        part.setDescription( "something" );
 
-        tester.startPage( new ProjectPage( scenario, node ) );
+        tester.startPage( new ProjectPage( scenario, part ) );
         tester.setupRequestAndResponse();
         tester.assertRenderedPage( ProjectPage.class );
         tester.assertNoErrorMessage();
@@ -252,7 +252,7 @@ public class TestScenarioPage extends TestCase {
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
-        assertEquals( desc, node.getDescription() );
+        assertEquals( desc, part.getDescription() );
         checkFiles( project );
     }
 
@@ -284,21 +284,21 @@ public class TestScenarioPage extends TestCase {
     }
 
     public void testGetParameters1() {
-        Node node = scenario.getDefaultPart();
-        PageParameters parms = ProjectPage.getParameters( scenario, node );
+        Part part = scenario.getDefaultPart();
+        PageParameters parms = ProjectPage.getParameters( scenario, part );
 
         assertEquals( scenario.getId(), (long) parms.getAsLong( "scenario" ) );
-        assertEquals( node.getId(), (long) parms.getAsLong( "node" ) );
+        assertEquals( part.getId(), (long) parms.getAsLong( "part" ) );
     }
 
     public void testGetParameters2() {
-        Node node = scenario.getDefaultPart();
+        Part part = scenario.getDefaultPart();
 
         Set<Long> expand = new HashSet<Long>( Arrays.asList( 1L, 2L ) );
-        PageParameters parms = ProjectPage.getParameters( scenario, node, expand );
+        PageParameters parms = ProjectPage.getParameters( scenario, part, expand );
 
         assertEquals( scenario.getId(), (long) parms.getAsLong( "scenario" ) );
-        assertEquals( node.getId(), (long) parms.getAsLong( "node" ) );
+        assertEquals( part.getId(), (long) parms.getAsLong( "part" ) );
 
         Set<String> results = new HashSet<String>(
                 Arrays.asList( parms.getStringArray( "expand" ) ) );

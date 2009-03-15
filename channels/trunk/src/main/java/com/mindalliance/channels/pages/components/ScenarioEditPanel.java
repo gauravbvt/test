@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateProjectObject;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -9,9 +10,9 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.FormComponentLabel;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.IModel;
 
 import java.util.Set;
 
@@ -42,13 +43,14 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
     }
 
     private void init() {
+        setOutputMarkupId( true );
         TextField<String> nameField = new TextField<String>(
                 "name",
                 new PropertyModel<String>( this, "name" ) );
         add( new FormComponentLabel( "name-label", nameField ) );                              // NON-NLS
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                updateWith( target, getScenario() );
+                update( target, new Change( Change.Type.Updated, getScenario(), "name" ) );
             }
         } );
         add( nameField );
@@ -59,7 +61,7 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
         add( new FormComponentLabel( "description-label", descField ) );                       // NON-NLS
         descField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                updateWith( target, getScenario() );
+                update( target, new Change( Change.Type.Updated, getScenario(), "description" ) );
             }
         } );
         add( descField );
@@ -69,7 +71,7 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
                 expansions );
         issuesPanel.setOutputMarkupId( true );
         add( issuesPanel );
-        issuesPanel.setVisible( Project.analyst().hasIssues( model.getObject(), false ) );
+        makeVisible( issuesPanel, Project.analyst().hasIssues( model.getObject(), false ) );
     }
 
     public IModel<Scenario> getModel() {
@@ -78,17 +80,6 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
 
     private Scenario getScenario() {
         return getModel().getObject();
-    }
-
-    /**
-     * Ajax update.
-     *
-     * @param target an ajax request target
-     */
-    public void updateWith( AjaxRequestTarget target, Object context ) {
-        issuesPanel.setVisible( Project.analyst().hasIssues( model.getObject(), false ) );
-        target.addComponent( issuesPanel );
-        super.updateWith( target, context );
     }
 
     /**
@@ -127,4 +118,22 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
         doCommand( new UpdateProjectObject( getScenario(), "description", desc ) );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void changed( AjaxRequestTarget target, Change change ) {
+        makeVisible( target, issuesPanel, Project.analyst().hasIssues( model.getObject(), false ) );
+        super.changed( target, change );
+    }
+
+    /**
+     * Change visibility.
+     * @param target an ajax request target
+     * @param visible a boolean
+     */
+    public void setVisibility( AjaxRequestTarget target, boolean visible ) {
+        makeVisible( target, this, visible );
+        if (visible)
+            makeVisible( issuesPanel, Project.analyst().hasIssues( model.getObject(), false ) );
+    }
 }

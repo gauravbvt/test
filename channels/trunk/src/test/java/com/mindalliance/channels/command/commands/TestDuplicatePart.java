@@ -7,6 +7,7 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Change;
 
 import java.util.Iterator;
 
@@ -38,27 +39,29 @@ public class TestDuplicatePart extends AbstractChannelsTest {
         int count = countParts();
         Part part = scenario.getDefaultPart();
         Command duplicatePart = new DuplicatePart( part );
-        assertTrue( commander.canDo( duplicatePart ));
-        Part duplicate = (Part)commander.doCommand( duplicatePart );
-        assertTrue ( duplicate.getName().equals( part.getName() ));
+        assertTrue( commander.canDo( duplicatePart ) );
+        Change change = commander.doCommand( duplicatePart );
+        assertTrue( change.isAdded() );
+        Part duplicate = (Part) change.getSubject();
+        assertTrue( duplicate.getName().equals( part.getName() ) );
         assertTrue( countParts() == count + 1 );
         assertTrue( commander.canUndo() );
-        commander.undo();
+        assertTrue( commander.undo().isRecomposed() );
         assertTrue( countParts() == count );
         assertTrue( commander.canRedo() );
-        commander.redo();
+        assertTrue( commander.redo().isUnknown() );
         assertTrue( countParts() == count + 1 );
     }
 
     private int countParts() {
-         int count = 0;
-         Iterator<Part> parts = scenario.parts();
-         while ( parts.hasNext() ) {
-             parts.next();
-             count++;
-         }
-         return count;
-     }
+        int count = 0;
+        Iterator<Part> parts = scenario.parts();
+        while ( parts.hasNext() ) {
+            parts.next();
+            count++;
+        }
+        return count;
+    }
 
 
 }

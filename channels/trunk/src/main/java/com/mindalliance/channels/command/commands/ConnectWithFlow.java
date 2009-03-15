@@ -4,6 +4,7 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
@@ -76,7 +77,7 @@ public class ConnectWithFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    public Flow execute( Commander commander ) throws CommandException {
+    public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
         try {
             Scenario scenario = service.find(
@@ -87,7 +88,7 @@ public class ConnectWithFlow extends AbstractCommand {
                     Scenario.class,
                     (Long) get( "otherScenario" ) );
             Long nodeId = (Long) get( "other" );
-            Node other = (nodeId != null)
+            Node other = ( nodeId != null )
                     ? otherScenario.getNode( nodeId )
                     : service.createConnector( otherScenario );
             String name = (String) get( "name" );
@@ -102,7 +103,7 @@ public class ConnectWithFlow extends AbstractCommand {
                 }
             }
             addArgument( "flow", flow.getId() );
-            return flow;
+            return new Change( Change.Type.Added, flow );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
         }

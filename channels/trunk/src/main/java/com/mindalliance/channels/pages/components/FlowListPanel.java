@@ -3,7 +3,9 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AddCapability;
 import com.mindalliance.channels.command.commands.AddNeed;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -30,7 +32,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
     /**
      * The node for which flows are listed.
      */
-    private IModel<Node> model;
+    private IModel<Part> model;
 
     /**
      * True if outcomes are listed; false if requirements are listed.
@@ -47,7 +49,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
     private Set<Long> expansions;
 
 
-    public FlowListPanel( String id, IModel<Node> model, boolean outcomes, Set<Long> expansions ) {
+    public FlowListPanel( String id, IModel<Part> model, boolean outcomes, Set<Long> expansions ) {
         super( id );
         this.model = model;
         this.outcomes = outcomes;
@@ -65,8 +67,8 @@ public class FlowListPanel extends AbstractCommandablePanel {
                 Command command = isOutcomes()
                         ? new AddCapability( n )
                         : new AddNeed( n );
-                Flow newFlow = (Flow) doCommand( command );
-                updateWith( target, newFlow.getId() );
+                Change change = doCommand( command );
+                update( target, change );
             }
         };
         add( newLink );
@@ -85,8 +87,8 @@ public class FlowListPanel extends AbstractCommandablePanel {
                 if ( expansions.contains( flowId ) ) {
                     requestLockOn( flow );
                     ExpandedFlowPanel flowPanel = outcomes ?
-                            new ExpandedOutPanel( "flow", new Model<Flow>(flow), expansions )
-                            : new ExpandedReqPanel( "flow", new Model<Flow>(flow), expansions );
+                            new ExpandedOutPanel( "flow", new Model<Flow>( flow ), expansions )
+                            : new ExpandedReqPanel( "flow", new Model<Flow>( flow ), expansions );
                     item.add( flowPanel );
                 } else {
                     releaseAnyLockOn( flow );
@@ -124,11 +126,15 @@ public class FlowListPanel extends AbstractCommandablePanel {
         this.outcomes = outcomes;
     }
 
-    public void updateWith( AjaxRequestTarget target, Object context ) {
-        if ( context instanceof Long ) {
+    /**
+     * {@inheritDoc}
+     */
+    public void updateWith( AjaxRequestTarget target, Change change ) {
+        Identifiable identifiable = change.getSubject();
+        if ( identifiable instanceof Flow ) {
             target.addComponent( flowsDiv );
         }
-        super.updateWith( target, context );
+        super.updateWith( target, change );
     }
 
 }

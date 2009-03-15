@@ -4,10 +4,12 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.NotFoundException;
 
 /**
+ * Command to add a scenario.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -30,10 +32,10 @@ public class AddScenario extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    public Object execute( Commander commander ) throws CommandException {
+    public Change execute( Commander commander ) throws CommandException {
         Scenario scenario = commander.getService().createScenario();
         addArgument( "scenario", scenario.getId() );
-        return scenario;
+        return new Change( Change.Type.Added, scenario );
     }
 
     /**
@@ -48,13 +50,5 @@ public class AddScenario extends AbstractCommand {
      */
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
         return null;
-/*        try {
-            Scenario scenario = commander.getService().find(
-                    Scenario.class,
-                    (Long) get( "scenario" ) );
-            return new RemoveScenario( scenario );
-        } catch ( NotFoundException e ) {
-            throw new CommandException( "You need to refresh", e );
-        }*/
     }
 }

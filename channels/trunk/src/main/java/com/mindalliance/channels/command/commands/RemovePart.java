@@ -6,6 +6,7 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.command.CommandUtils;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.NotFoundException;
@@ -53,7 +54,7 @@ public class RemovePart extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    public Object execute( Commander commander ) throws CommandException {
+    public Change execute( Commander commander ) throws CommandException {
         boolean removed;
         Service service = commander.getService();
         try {
@@ -65,11 +66,10 @@ public class RemovePart extends AbstractCommand {
             addArgument( "partState", CommandUtils.getPartState( part ) );
             removePart( part, service );
             ignoreLock( (Long) get( "part" ) );
-            removed = true;
+            return new Change( Change.Type.Recomposed, scenario );
         } catch ( NotFoundException e ) {
-            removed = false;
+            return new Change( Change.Type.None, null );
         }
-        return removed;
     }
 
     /**

@@ -8,6 +8,7 @@ import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.command.commands.UpdateObject;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -124,7 +125,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                         // adjustFields();
                         target.addComponent( candidateChannelsMarkup );
                         target.addComponent( editableChannelsMarkup );
-                        updateWith( target, getModel().getObject() );
+                        update( target, new Change( Change.Type.Updated, getChannelable(), "effectiveChannels" ) );
                     }
                 } );
                 item.add( candidateCheckBox );
@@ -135,6 +136,10 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         candidateChannelsMarkup.setVisible(
                 !candidatesList.getModelObject().isEmpty()
                         && this.isEnabled() );
+    }
+
+    private Channelable getChannelable() {
+        return model.getObject();
     }
 
     private void addEditableChannels() {
@@ -160,7 +165,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                         // adjustFields();
                         target.addComponent( candidateChannelsMarkup );
                         target.addComponent( editableChannelsMarkup );
-                        updateWith( target, channelable );
+                        update( target, new Change( Change.Type.Updated, getChannelable(), "effectiveChannels" ) );
                     }
                 } );
                 includeSpan.add( includeCheckBox );
@@ -192,7 +197,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                 addressField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                     protected void onUpdate( AjaxRequestTarget target ) {
                         target.addComponent( editableChannelsMarkup );
-                        updateWith( target, channelable );
+                        update( target, new Change( Change.Type.Updated, getChannelable(), "effectiveChannels" ) );
                     }
                 } );
                 item.add( addressField );
@@ -202,7 +207,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                     public void onClick( AjaxRequestTarget target ) {
                         wrapper.moveToFirst();
                         target.addComponent( editableChannelsMarkup );
-                        updateWith( target, channelable );
+                        update( target, new Change( Change.Type.Updated, getChannelable(), "effectiveChannels" ) );
                     }
                 };
                 item.add( moveToTopLink );

@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.menus;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.command.commands.RemoveIssue;
+import com.mindalliance.channels.command.Change;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -54,15 +55,20 @@ public class IssueActionsMenuPanel extends MenuPanel {
         menuItems.add( this.getUndoMenuItem( "menuItem" ) );
         menuItems.add( this.getRedoMenuItem( "menuItem" ) );
         // Show/hide details
-        AjaxFallbackLink showHideLink = new AjaxFallbackLink( "link" ) {
-            public void onClick( AjaxRequestTarget target ) {
-                updateWith( target, new Long( getIssue().getId() ) );
-            }
-        };
         if ( isCollapsed ) {
-            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Show details" ), showHideLink ) );
+            AjaxFallbackLink showLink = new AjaxFallbackLink( "link" ) {
+                public void onClick( AjaxRequestTarget target ) {
+                    update( target, new Change( Change.Type.Expanded, getIssue() ) );
+                }
+            };
+            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Show details" ), showLink ) );
         } else {
-            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Hide details" ), showHideLink ) );
+            AjaxFallbackLink hideLink = new AjaxFallbackLink( "link" ) {
+                public void onClick( AjaxRequestTarget target ) {
+                    update( target, new Change( Change.Type.Collapsed, getIssue() ) );
+                }
+            };
+            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Hide details" ), hideLink ) );
         }
         // Commands
         menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
@@ -79,8 +85,8 @@ public class IssueActionsMenuPanel extends MenuPanel {
                 final Issue issue = getIssue();
                 if ( !issue.isDetected() )
                     add( new CommandWrapper( new RemoveIssue( (UserIssue) issue ) ) {
-                        public void onExecution( AjaxRequestTarget target, Object result ) {
-                            updateWith( target, issue.getAbout() );
+                        public void onExecution( AjaxRequestTarget target, Change change ) {
+                            update( target, change );
                         }
                     } );
             }

@@ -4,6 +4,7 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.Scenario;
@@ -36,7 +37,7 @@ public class RestoreScenario extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    public Object execute( Commander commander ) throws CommandException {
+    public Change execute( Commander commander ) throws CommandException {
         Importer importer = Project.getProject().getImporter();
         String xml = (String) get( "xml" );
         if ( xml != null ) {
@@ -44,7 +45,7 @@ public class RestoreScenario extends AbstractCommand {
                 Scenario scenario = importer.importScenario(
                         new ByteArrayInputStream( xml.getBytes() ) );
                 addArgument( "scenario", scenario.getId() );
-                return scenario;
+                return new Change( Change.Type.Added, scenario );
             } catch ( IOException e ) {
                 throw new CommandException( "Can't restore scenario.", e );
             }

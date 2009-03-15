@@ -4,6 +4,7 @@ import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.AttributeModifier;
@@ -48,11 +49,11 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
             Link link = new AjaxFallbackLink( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {
                     try {
-                        getCommander().undo();
+                        Change change = getCommander().undo();
+                        update( target, change );
                     } catch ( CommandException e ) {
                         throw new WicketRuntimeException( "Failed to undo", e );
                     }
-                    updateWith( target, "undo" );
                 }
             };
             menuItem = new LinkMenuItem( id, new Model<String>( "Undo" ), link );
@@ -70,11 +71,11 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
             Link link = new AjaxFallbackLink( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {
                     try {
-                        getCommander().redo();
+                        Change change = getCommander().redo();
+                        update( target, change );
                     } catch ( CommandException e ) {
                         throw new WicketRuntimeException( "Failed to redo", e );
                     }
-                    updateWith( target, "redo" );
                 }
             };
             menuItem = new LinkMenuItem( id, new Model<String>( "Redo" ), link );
@@ -98,8 +99,8 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
                 Link link = new AjaxFallbackLink( "link" ) {
                     public void onClick( AjaxRequestTarget target ) {
                         try {
-                            Object result = getCommander().doCommand( command );
-                            commandWrapper.onExecution( target, result );
+                            Change change = getCommander().doCommand( command );
+                            commandWrapper.onExecution( target, change );
                         } catch ( CommandException e ) {
                             throw new WicketRuntimeException( "Failed to " + command.getTitle(), e );
                         }

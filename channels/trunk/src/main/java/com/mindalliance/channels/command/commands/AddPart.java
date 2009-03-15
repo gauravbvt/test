@@ -4,6 +4,7 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Service;
@@ -35,13 +36,13 @@ public class AddPart extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    public Part execute( Commander commander ) throws CommandException {
+    public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
         try {
             Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
             Part part = service.createPart( scenario );
             addArgument( "part", part.getId() );
-            return part;
+            return new Change( Change.Type.Added, part );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh", e );
         }
@@ -66,6 +67,7 @@ public class AddPart extends AbstractCommand {
                 throw new CommandException( "Can't undo." );
             } else {
                 Part part = (Part) scenario.getNode( (Long) get( "part" ) );
+                if ( part == null ) throw new NotFoundException();
                 return new RemovePart( part );
             }
         } catch ( NotFoundException e ) {

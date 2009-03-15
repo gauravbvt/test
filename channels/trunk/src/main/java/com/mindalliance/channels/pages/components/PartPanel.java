@@ -7,8 +7,9 @@ import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Place;
 import com.mindalliance.channels.Role;
-import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.util.SemMatch;
@@ -162,11 +163,11 @@ public class PartPanel extends AbstractCommandablePanel {
         if ( choices == null ) {
             field = new TextField<String>(
                     property,
-                    new PropertyModel<String>(this, property ));
+                    new PropertyModel<String>( this, property ) );
         } else {
             field = new AutoCompleteTextField<String>(
                     property,
-                    new PropertyModel<String>(this, property ) ) {
+                    new PropertyModel<String>( this, property ) ) {
                 protected Iterator<String> getChoices( String s ) {
                     List<String> candidates = new ArrayList<String>();
                     for ( String choice : choices ) {
@@ -181,13 +182,13 @@ public class PartPanel extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssues( field, getPart(), property );
                 target.addComponent( field );
-                updateWith( target, getPart() );
+                update( target, new Change( Change.Type.Updated, getPart(), property ) );
             }
         } );
 
         // Add style mods from scenario analyst.
         addIssues( field, getPart(), property );
-        field.setEnabled( isLockedByUser( getPart()) );
+        field.setEnabled( isLockedByUser( getPart() ) );
         add( field );
 
     }
@@ -218,14 +219,14 @@ public class PartPanel extends AbstractCommandablePanel {
     private void addTimingFields() {
         final DelayPanel repeatsEveryPanel = new DelayPanel(
                 "repeats-every",
-                new PropertyModel<ModelObject>( this, "part"),
-                "repeatsEvery"  );
+                new PropertyModel<ModelObject>( this, "part" ),
+                "repeatsEvery" );
         repeatsEveryPanel.setOutputMarkupId( true );
         repeatsEveryPanel.enable( getPart().isRepeating() );
         add( repeatsEveryPanel );
         final DelayPanel completionTimePanel = new DelayPanel(
                 "completion-time",
-                new PropertyModel<ModelObject>( this, "part"),
+                new PropertyModel<ModelObject>( this, "part" ),
                 "completionTime" );
         completionTimePanel.enable( getPart().isSelfTerminating() );
         completionTimePanel.setOutputMarkupId( true );
@@ -237,7 +238,7 @@ public class PartPanel extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 completionTimePanel.enable( getPart().isSelfTerminating() );
                 target.addComponent( completionTimePanel );
-                updateWith( target, getPart() );
+                update( target, new Change( Change.Type.Updated, getPart(), "selfTerminating" ) );
             }
         } );
         add( selfTerminatingCheckBox );
@@ -249,7 +250,7 @@ public class PartPanel extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 repeatsEveryPanel.enable( getPart().isRepeating() );
                 target.addComponent( repeatsEveryPanel );
-                updateWith( target, getPart() );
+                update( target, new Change( Change.Type.Updated, getPart(), "repeating" ) );
             }
         } );
     }
@@ -332,9 +333,9 @@ public class PartPanel extends AbstractCommandablePanel {
         else {
             final Actor actor = getPart().getActor();
             if ( actor == null || !isSame( name, actor.getName() ) )
-                newActor = getService().findOrCreate( Actor.class, name  );
+                newActor = getService().findOrCreate( Actor.class, name );
         }
-        doCommand(new UpdateScenarioObject( getPart(), "actor", newActor ) );
+        doCommand( new UpdateScenarioObject( getPart(), "actor", newActor ) );
     }
 
     /**
@@ -349,9 +350,9 @@ public class PartPanel extends AbstractCommandablePanel {
         else {
             final Place jurisdiction = getPart().getJurisdiction();
             if ( jurisdiction == null || !isSame( name, jurisdiction.getName() ) )
-                newPlace = getService().findOrCreate( Place.class, name ) ;
+                newPlace = getService().findOrCreate( Place.class, name );
         }
-        doCommand(new UpdateScenarioObject( getPart(), "jurisdiction", newPlace ) );
+        doCommand( new UpdateScenarioObject( getPart(), "jurisdiction", newPlace ) );
     }
 
     /**
@@ -366,9 +367,9 @@ public class PartPanel extends AbstractCommandablePanel {
         else {
             final Place location = getPart().getLocation();
             if ( location == null || !isSame( name, location.getName() ) )
-                newPlace = getService().findOrCreate( Place.class, name ) ;
+                newPlace = getService().findOrCreate( Place.class, name );
         }
-        doCommand(new UpdateScenarioObject( getPart(), "location", newPlace ) );
+        doCommand( new UpdateScenarioObject( getPart(), "location", newPlace ) );
     }
 
     /**
@@ -383,9 +384,9 @@ public class PartPanel extends AbstractCommandablePanel {
         else {
             final Organization organization = getPart().getOrganization();
             if ( organization == null || !isSame( name, organization.getName() ) )
-                newOrg = getService().findOrCreate( Organization.class, name ) ;
+                newOrg = getService().findOrCreate( Organization.class, name );
         }
-        doCommand(new UpdateScenarioObject( getPart(), "organization", newOrg ) );
+        doCommand( new UpdateScenarioObject( getPart(), "organization", newOrg ) );
     }
 
     /**
@@ -400,7 +401,7 @@ public class PartPanel extends AbstractCommandablePanel {
         else {
             Role role = getPart().getRole();
             if ( role == null || !isSame( name, role.getName() ) )
-                newRole = getService().findOrCreate( Role.class, name ) ;
+                newRole = getService().findOrCreate( Role.class, name );
         }
         doCommand( new UpdateScenarioObject( getPart(), "role", newRole ) );
     }
@@ -419,7 +420,7 @@ public class PartPanel extends AbstractCommandablePanel {
     }
 
     public void setRepeatsEvery( Delay delay ) {
-        doCommand( new UpdateScenarioObject( getPart(), "repeatsEvery", delay));
+        doCommand( new UpdateScenarioObject( getPart(), "repeatsEvery", delay ) );
     }
 
     public Delay getCompletionTime() {
@@ -427,7 +428,7 @@ public class PartPanel extends AbstractCommandablePanel {
     }
 
     public void setCompletionTime( Delay delay ) {
-        doCommand( new UpdateScenarioObject( getPart(), "completionTime", delay));
+        doCommand( new UpdateScenarioObject( getPart(), "completionTime", delay ) );
     }
 
     public boolean isSelfTerminating() {
@@ -435,7 +436,7 @@ public class PartPanel extends AbstractCommandablePanel {
     }
 
     public void setSelfTerminating( boolean val ) {
-        doCommand( new UpdateScenarioObject( getPart(), "selfTerminating", val));
+        doCommand( new UpdateScenarioObject( getPart(), "selfTerminating", val ) );
     }
 
     public boolean isRepeating() {
@@ -443,13 +444,12 @@ public class PartPanel extends AbstractCommandablePanel {
     }
 
     public void setRepeating( boolean val ) {
-        doCommand( new UpdateScenarioObject( getPart(), "repeating", val));
-    }    
+        doCommand( new UpdateScenarioObject( getPart(), "repeating", val ) );
+    }
 
     public final Part getPart() {
         return model.getObject();
     }
-
 
 
 }

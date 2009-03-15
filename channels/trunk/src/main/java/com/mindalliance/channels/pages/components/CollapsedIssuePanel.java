@@ -1,12 +1,10 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.pages.components.menus.IssueActionsMenuPanel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -19,7 +17,7 @@ import org.apache.wicket.model.PropertyModel;
  * Date: Jan 23, 2009
  * Time: 7:52:29 PM
  */
-public class CollapsedIssuePanel extends Panel {
+public class CollapsedIssuePanel extends AbstractUpdatablePanel {
     /**
      * Issue in panel
      */
@@ -61,6 +59,6 @@ public class CollapsedIssuePanel extends Panel {
                 new Model<Issue>(model.getObject()),
                 true );
         menubar.add( actionsMenu );
-        menubar.setVisible( !issue.isDetected() );
+        makeVisible(menubar, !issue.isDetected() );
     }
 }

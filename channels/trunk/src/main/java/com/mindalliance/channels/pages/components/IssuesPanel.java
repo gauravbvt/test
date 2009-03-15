@@ -5,11 +5,12 @@ import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -42,6 +43,10 @@ public class IssuesPanel extends AbstractCommandablePanel {
      * Expansions.
      */
     private Set<Long> expansions;
+    /**
+     * Issues container.
+     */
+    private WebMarkupContainer issuesContainer;
 
     public IssuesPanel( String id, IModel<ModelObject> model, Set<Long> expansions ) {
         super( id, model );
@@ -55,10 +60,12 @@ public class IssuesPanel extends AbstractCommandablePanel {
 
         AjaxFallbackLink newIssueLink = new AjaxFallbackLink( "new-issue" ) {
             public void onClick( AjaxRequestTarget target ) {
-                UserIssue newIssue = (UserIssue) doCommand( new AddUserIssue( model.getObject() ) );
-                setVisible( Project.analyst().hasIssues( model.getObject(), false ) );
+                Change change = doCommand( new AddUserIssue( model.getObject() ) );
+/*
+                makeVisible( this, Project.analyst().hasIssues( model.getObject(), false ) );
                 target.addComponent( this );
-                updateWith( target, newIssue.getId() );
+*/
+                update( target, change );
             }
         };
         add( newIssueLink );
@@ -79,7 +86,12 @@ public class IssuesPanel extends AbstractCommandablePanel {
     }
 
     private void createIssuePanels() {
-        add( new ListView<Issue>( "issues", new PropertyModel<List<Issue>>( this, "modelObjectIssues" ) ) {
+        issuesContainer = new WebMarkupContainer( "issues-container" );
+        issuesContainer.setOutputMarkupId( true );
+        add( issuesContainer );
+        issuesContainer.add( new ListView<Issue>(
+                "issues",
+                new PropertyModel<List<Issue>>( this, "modelObjectIssues" ) ) {
             protected void populateItem( ListItem<Issue> listItem ) {
                 Issue issue = listItem.getModelObject();
                 final long id = issue.getId();
@@ -104,6 +116,14 @@ public class IssuesPanel extends AbstractCommandablePanel {
      */
     public List<Issue> getModelObjectIssues() {
         return Project.analyst().listIssues( model.getObject(), false );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void updateWith( AjaxRequestTarget target, Change change ) {
+        target.addComponent( issuesContainer );
+        super.updateWith( target, change );
     }
 
 }

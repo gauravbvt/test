@@ -4,6 +4,7 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.NotFoundException;
@@ -36,7 +37,7 @@ public class RemoveIssue extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    public Object execute( Commander commander ) throws CommandException {
+    public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
         try {
             final UserIssue issue = service.find( UserIssue.class, (Long) get( "issue" ) );
@@ -50,7 +51,7 @@ public class RemoveIssue extends AbstractCommand {
                 }
             } );
             service.remove( issue );
-            return null;
+            return new Change( Change.Type.Removed, issue );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
         }

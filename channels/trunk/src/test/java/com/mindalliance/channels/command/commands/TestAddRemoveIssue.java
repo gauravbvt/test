@@ -10,6 +10,7 @@ import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Change;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -31,7 +32,7 @@ public class TestAddRemoveIssue extends AbstractChannelsTest {
         commander = project.getCommander();
         analyst = project.getAnalyst();
         scenario = service.createScenario();
-     }
+    }
 
     protected void tearDown() {
         service.remove( scenario );
@@ -41,23 +42,25 @@ public class TestAddRemoveIssue extends AbstractChannelsTest {
         int count = countIssues( scenario );
         Command addIssue = new AddUserIssue( scenario );
         assertTrue( commander.canDo( addIssue ) );
-        UserIssue issue = (UserIssue) commander.doCommand( addIssue );
-        assertTrue( countIssues( scenario ) == count + 1);
-        issue.setDescription("fubar");
-        assertTrue( commander.canUndo());
-        commander.undo();
+        Change change = commander.doCommand( addIssue );
+        assertTrue( change.isAdded() );
+        UserIssue issue = (UserIssue) change.getSubject();
+        assertTrue( countIssues( scenario ) == count + 1 );
+        issue.setDescription( "fubar" );
+        assertTrue( commander.canUndo() );
+        assertTrue( commander.undo().isRemoved() );
         assertTrue( countIssues( scenario ) == count );
-        assertTrue( commander.canRedo());
-        commander.redo();
+        assertTrue( commander.canRedo() );
+        assertTrue( commander.redo().isAdded() );
         assertTrue( countIssues( scenario ) == count + 1 );
         boolean found = false;
-        for ( Issue i : analyst.listIssues( scenario, false )) {
-            found = found || i.getDescription().equals("fubar");
+        for ( Issue i : analyst.listIssues( scenario, false ) ) {
+            found = found || i.getDescription().equals( "fubar" );
         }
         assertTrue( found );
     }
 
-    private int countIssues( ModelObject mo) {
+    private int countIssues( ModelObject mo ) {
         return analyst.listIssues( mo, false ).size();
     }
 }

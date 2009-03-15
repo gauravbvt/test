@@ -40,7 +40,7 @@ public class CollapsedFlowPanel extends AbstractCommandablePanel {
                         : MessageFormat.format( "({0})", c );
             }
         } );
-        channel.setVisible( c != null && !c.isEmpty() );
+        makeVisible( channel, c != null && !c.isEmpty() );
         add( channel );
 
         // Add style mods from scenario analyst.
@@ -55,32 +55,7 @@ public class CollapsedFlowPanel extends AbstractCommandablePanel {
         }
 
         add( label );
-
-/*
-        WebMarkupContainer replicateItem = new WebMarkupContainer( "replicate-item" );
-        add( replicateItem );
-        replicateItem.setVisible(
-                ( outcome && getFlow().getTarget().isPart() )
-                        || ( !outcome && getFlow().getSource().isPart() ) );
-        replicateItem.add( new Link( "replicate" ) {
-            @Override
-            public void onClick() {
-                Flow replica = flow.replicate( outcome );
-                // PageParameters parameters = ((ProjectPage)getWebPage()).getPageParameters();
-                // TODO - Denis: Fix problem and remove patch
-                PageParameters parameters = ( (ProjectPage) getWebPage() )
-                        .getParametersCollapsing( getFlow().getScenario().getId() );
-                parameters.add( ProjectPage.EXPAND_PARM, String.valueOf( replica.getId() ) );
-                this.setResponsePage( getWebPage().getClass(), parameters );
-            }
-        } );
-
-        // TODO replace expansion links by ajaxfallbacklinks
-        add( new ExternalLink( "expand", getRequest().getURL() + "&expand=" + flow.getId() ) );
-        add( new CheckBox( "delete",                                                      // NON-NLS
-                new PropertyModel<Boolean>( this, "markedForDeletion" ) ) );   // NON-NLS
-*/
-       addFlowActionMenu( outcome );
+        addFlowActionMenu( outcome );
     }
 
     private void addFlowActionMenu( boolean isOutcome ) {

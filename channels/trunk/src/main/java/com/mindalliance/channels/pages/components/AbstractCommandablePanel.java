@@ -1,17 +1,15 @@
 package com.mindalliance.channels.pages.components;
 
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.WicketRuntimeException;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.LockManager;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.Service;
-
-import java.util.ArrayList;
 
 /**
  * Abstract panel.
@@ -31,7 +29,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
         super( s, iModel );
     }
 
-    protected Object doCommand( Command command ) {
+    protected Change doCommand( Command command ) {
         Commander commander = getCommander();
         try {
             return commander.doCommand( command );

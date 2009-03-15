@@ -6,6 +6,7 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.Change;
 
 import java.util.Iterator;
 
@@ -39,35 +40,37 @@ public class TestAddRemovePart extends AbstractChannelsTest {
     }
 
     public void testRemoveAddPart() throws Exception {
-        assertTrue( countParts() == 2);
-        assertTrue( countFlows() == 2);
+        assertTrue( countParts() == 2 );
+        assertTrue( countFlows() == 2 );
 
         RemovePart removePart = new RemovePart( part );
         assertTrue( commander.canDo( removePart ) );
-        assertTrue( (Boolean) commander.doCommand( removePart ) );
-        assertTrue( countParts() == 1);
-        assertTrue( countFlows() == 1);
+        Change change = commander.doCommand( removePart );
+        assertTrue( change.isRecomposed() );
+        assertTrue( change.getSubject() instanceof Scenario );
+        assertTrue( countParts() == 1 );
+        assertTrue( countFlows() == 1 );
 
         assertTrue( commander.canUndo() );
-        commander.undo();
-        assertTrue( countParts() == 2);
-        assertTrue( countFlows() == 2);
+        assertTrue( commander.undo().isUnknown() );
+        assertTrue( countParts() == 2 );
+        assertTrue( countFlows() == 2 );
 
         assertFalse( commander.canUndo() );
         assertTrue( commander.canRedo() );
-        commander.redo();
-        assertTrue( countParts() == 1);
-        assertTrue( countFlows() == 1);
+        assertTrue( commander.redo().isRecomposed() );
+        assertTrue( countParts() == 1 );
+        assertTrue( countFlows() == 1 );
 
         assertTrue( commander.canUndo() );
         commander.undo();
-        assertTrue( countParts() == 2);
-        assertTrue( countFlows() == 2);
+        assertTrue( countParts() == 2 );
+        assertTrue( countFlows() == 2 );
 
         assertTrue( commander.canRedo() );
         commander.redo();
-        assertTrue( countParts() == 1);
-        assertTrue( countFlows() == 1);
+        assertTrue( countParts() == 1 );
+        assertTrue( countFlows() == 1 );
     }
 
     private int countParts() {

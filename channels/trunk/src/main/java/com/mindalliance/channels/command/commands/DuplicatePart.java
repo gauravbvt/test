@@ -5,6 +5,7 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.CommandUtils;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.Scenario;
@@ -39,7 +40,7 @@ public class DuplicatePart extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    public Object execute( Commander commander ) throws CommandException {
+    public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
         Part duplicate;
         try {
@@ -50,7 +51,7 @@ public class DuplicatePart extends AbstractCommand {
             duplicate = service.createPart( scenario );
             CommandUtils.initialize( duplicate, partState );
             addArgument( "duplicate", duplicate.getId() );
-            return duplicate;
+            return new Change( Change.Type.Added, duplicate );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
         }

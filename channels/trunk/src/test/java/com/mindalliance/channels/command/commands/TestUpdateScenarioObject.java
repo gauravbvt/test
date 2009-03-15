@@ -4,6 +4,7 @@ import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.Change;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -30,15 +31,21 @@ public class TestUpdateScenarioObject extends AbstractChannelsTest {
     public void testCommand() throws Exception {
         assertTrue( commander.canDo( command ) );
         String description = part.getDescription();
-        commander.doCommand( command );
+        Change change = commander.doCommand( command );
+        assertTrue( change.isUpdated() );
+        assertTrue( change.getChangedPropertyValue().equals( "ipso lorem etc." ) );
         String newDescription = part.getDescription();
         assertFalse( description.equals( newDescription ) );
         assertTrue( commander.canUndo() );
-        commander.undo();
+        change = commander.undo();
+        assertTrue( change.isUpdated() );
+        assertTrue( change.getChangedPropertyValue().equals( description ) );
         newDescription = part.getDescription();
         assertTrue( description.equals( newDescription ) );
         assertTrue( commander.canRedo() );
-        commander.redo();
+        change = commander.redo();
+        assertTrue( change.isUpdated() );
+        assertTrue( change.getChangedPropertyValue().equals( "ipso lorem etc." ) );
         newDescription = part.getDescription();
         assertFalse( description.equals( newDescription ) );
     }

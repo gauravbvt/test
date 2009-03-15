@@ -3,6 +3,7 @@ package com.mindalliance.channels.command.commands;
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.Change;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -14,29 +15,35 @@ import com.mindalliance.channels.command.Commander;
 public class TestUpdateProjectObject extends AbstractChannelsTest {
 
     private UpdateProjectObject command;
-    private Commander  commander;
+    private Commander commander;
     private Scenario scenario;
 
     protected void setUp() {
-         super.setUp();
-         commander = project.getCommander();
-         scenario = project.getService().getDefaultScenario();
-         command = new UpdateProjectObject( scenario, "description", "ipso lorem etc." );
-         commander.reset();
-     }
+        super.setUp();
+        commander = project.getCommander();
+        scenario = project.getService().getDefaultScenario();
+        command = new UpdateProjectObject( scenario, "description", "ipso lorem etc." );
+        commander.reset();
+    }
 
-       public void testCommand() throws Exception {
+    public void testCommand() throws Exception {
         assertTrue( commander.canDo( command ) );
         String description = scenario.getDescription();
-        commander.doCommand( command );
+        Change change = commander.doCommand( command );
+        assertTrue( change.isUpdated() );
+        assertTrue( change.getChangedPropertyValue().equals( "ipso lorem etc." ) );
         String newDescription = scenario.getDescription();
         assertFalse( description.equals( newDescription ) );
         assertTrue( commander.canUndo() );
-        commander.undo();
+        change = commander.undo();
+        assertTrue( change.isUpdated() );
+        assertTrue( change.getChangedPropertyValue().equals( description ) );
         newDescription = scenario.getDescription();
         assertTrue( description.equals( newDescription ) );
         assertTrue( commander.canRedo() );
-        commander.redo();
+        change = commander.redo();
+        assertTrue( change.isUpdated() );
+        assertTrue( change.getChangedPropertyValue().equals( "ipso lorem etc." ) );
         newDescription = scenario.getDescription();
         assertFalse( description.equals( newDescription ) );
     }

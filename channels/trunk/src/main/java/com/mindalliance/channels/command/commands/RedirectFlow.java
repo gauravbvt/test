@@ -6,6 +6,7 @@ import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.MultiCommand;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Service;
@@ -39,21 +40,26 @@ public class RedirectFlow extends AbstractCommand {
             }
         } );
     }
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     */
     public String getName() {
         return "redirect flow";
     }
 
-    /** {@inheritDoc} */
-    public Object execute( Commander commander ) throws CommandException {
+    /**
+     * {@inheritDoc}
+     */
+    public Change execute( Commander commander ) throws CommandException {
         Flow newFlow;
         Service service = commander.getService();
         try {
             Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
-            Flow oldFlow = scenario.findFlow( (Long)get("flow"));
+            Flow oldFlow = scenario.findFlow( (Long) get( "flow" ) );
             Scenario otherScenario = service.find( Scenario.class, (Long) get( "otherScenario" ) );
-            Connector connector = (Connector)otherScenario.getNode( (Long)get("connector") );
-            boolean isOutcome = (Boolean)get("outcome");
+            Connector connector = (Connector) otherScenario.getNode( (Long) get( "connector" ) );
+            boolean isOutcome = (Boolean) get( "outcome" );
             Flow connectorFlow = connector.getInnerFlow();
             if ( isOutcome ) {
                 if ( connector.getScenario() != oldFlow.getSource().getScenario() ) {
@@ -85,35 +91,40 @@ public class RedirectFlow extends AbstractCommand {
                 }
             }
             addArgument( "newFlow", newFlow.getId() );
-            addArgument ( "oldFlowState", CommandUtils.getFlowState( oldFlow ));
+            addArgument( "oldFlowState", CommandUtils.getFlowState( oldFlow ) );
             oldFlow.disconnect();
-            return newFlow;
+            // What about reporting the removal of the disconnected flow?
+            return new Change( Change.Type.Added, newFlow );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean isUndoable() {
         return true;
     }
 
-    /** {@inheritDoc} */
-    @SuppressWarnings("unchecked")
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
         MultiCommand multi = new MultiCommand();
         Service service = commander.getService();
         try {
             // Reconnect old flow
             Command connectWithFlow = new ConnectWithFlow();
-            connectWithFlow.setArguments( (Map<String,Object>)get("oldFlowState") );
+            connectWithFlow.setArguments( (Map<String, Object>) get( "oldFlowState" ) );
             multi.addCommand( connectWithFlow );
-           // Disconnect newFlow
+            // Disconnect newFlow
             Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
-            Flow newFlow = scenario.findFlow( (Long)get("newFlow"));
+            Flow newFlow = scenario.findFlow( (Long) get( "newFlow" ) );
             Command disconnectFlow = new DisconnectFlow( newFlow );
             multi.addCommand( disconnectFlow );
-        return multi;
+            return multi;
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
         }

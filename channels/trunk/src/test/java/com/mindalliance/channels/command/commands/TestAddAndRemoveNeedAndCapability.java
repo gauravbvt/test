@@ -6,6 +6,7 @@ import com.mindalliance.channels.Service;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.Change;
 
 import java.util.Iterator;
 
@@ -36,35 +37,39 @@ public class TestAddAndRemoveNeedAndCapability extends AbstractChannelsTest {
     }
 
     public void testAddRemoveNeed() throws Exception {
-        Flow need = (Flow)commander.doCommand( new AddNeed( part ));
-        assertTrue( need.getTarget() == part);
-        assertTrue( countNeeds( part ) == 1);
+        Change change = commander.doCommand( new AddNeed( part ) );
+        Flow need = (Flow) change.getSubject();
+        assertTrue( change.isAdded() );
+        assertTrue( need.getTarget() == part );
+        assertTrue( countNeeds( part ) == 1 );
         assertTrue( commander.canUndo() );
-        commander.undo();
-        assertTrue( countNeeds( part ) == 0);
+        assertTrue( commander.undo().isRemoved() );
+        assertTrue( countNeeds( part ) == 0 );
         assertTrue( commander.canRedo() );
-        commander.redo();
-        assertTrue( countNeeds( part ) == 1);
+        assertTrue( commander.redo().isAdded() );
+        assertTrue( countNeeds( part ) == 1 );
     }
 
     public void testAddRemoveCapability() throws Exception {
-        Flow capability = (Flow)commander.doCommand( new AddCapability( part ));
-        assertTrue( capability.getSource() == part);
-        assertTrue( countCapabilities( part ) == 1);
+        Change change = commander.doCommand( new AddCapability( part ) );
+        assertTrue( change.isAdded() );
+        Flow capability = (Flow) change.getSubject();
+        assertTrue( capability.getSource() == part );
+        assertTrue( countCapabilities( part ) == 1 );
         assertTrue( commander.canUndo() );
-        commander.undo();
-        assertTrue( countCapabilities( part ) == 0);
+        assertTrue( commander.undo().isRemoved() );
+        assertTrue( countCapabilities( part ) == 0 );
         assertTrue( commander.canRedo() );
-        commander.redo();
-        assertTrue( countCapabilities( part ) == 1);
+        assertTrue( commander.redo().isAdded() );
+        assertTrue( countCapabilities( part ) == 1 );
     }
 
     private int countNeeds( Part part ) {
         int count = 0;
         Iterator<Flow> needs = part.requirements();
-        while (needs.hasNext()) {
+        while ( needs.hasNext() ) {
             needs.next();
-            count ++;
+            count++;
         }
         return count;
     }
@@ -72,9 +77,9 @@ public class TestAddAndRemoveNeedAndCapability extends AbstractChannelsTest {
     private int countCapabilities( Part part ) {
         int count = 0;
         Iterator<Flow> outcomes = part.outcomes();
-        while (outcomes.hasNext()) {
+        while ( outcomes.hasNext() ) {
             outcomes.next();
-            count ++;
+            count++;
         }
         return count;
     }

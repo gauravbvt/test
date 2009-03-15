@@ -49,7 +49,7 @@ public class FlowPage extends WebPage {
             if ( parameters.containsKey( "node" ) && parameters.getString( "node" ).equals( "NONE" ) ) {
                 node = null;
             } else {
-                node = ProjectPage.findNode( scenario, parameters );
+                node = ProjectPage.findPart( scenario, parameters );
                 if ( node == null )
                     redirectTo( scenario );
             }

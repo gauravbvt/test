@@ -11,6 +11,7 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.MultiCommand;
+import com.mindalliance.channels.command.Change;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -46,14 +47,14 @@ public class BreakUpFlow extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    public Object execute( Commander commander ) throws CommandException {
+    public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
         try {
             Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
             Flow flow = scenario.findFlow( (Long) get( "flow" ) );
             breakup( flow, service );
             ignoreLock( (Long) get( "flow" ) );
-            return null;
+            return new Change( Change.Type.Recomposed, scenario );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
         }

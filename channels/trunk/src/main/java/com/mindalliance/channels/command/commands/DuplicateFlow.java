@@ -9,6 +9,7 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.Change;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -36,17 +37,17 @@ public class DuplicateFlow extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    public Object execute( Commander commander ) throws CommandException {
+    public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
         Flow duplicate;
         try {
             Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
             Flow flow = scenario.findFlow( (Long) get( "flow" ) );
             if ( flow == null ) throw new NotFoundException();
-            boolean isOutcome = (Boolean)get("outcome");
+            boolean isOutcome = (Boolean) get( "outcome" );
             duplicate = duplicate( flow, isOutcome );
             addArgument( "duplicate", duplicate.getId() );
-            return duplicate;
+            return new Change( Change.Type.Added, duplicate );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
         }
@@ -81,7 +82,7 @@ public class DuplicateFlow extends AbstractCommand {
     /**
      * Make a duplicate of the flow
      *
-     * @param flow a flow to duplicate
+     * @param flow      a flow to duplicate
      * @param isOutcome whether to replicate as outcome or requirement
      * @return a created flow
      */
@@ -101,7 +102,6 @@ public class DuplicateFlow extends AbstractCommand {
         duplicate.initFrom( flow );
         return duplicate;
     }
-
 
 
 }

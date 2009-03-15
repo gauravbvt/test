@@ -26,9 +26,9 @@ public class TestDefaultCommander extends AbstractChannelsTest {
             return "Hello";
         }
 
-        public Object execute( Commander commander ) throws CommandException {
+        public Change execute( Commander commander ) throws CommandException {
             System.out.println( get( "greeting" ) + "! says " + getUserName() );
-            return true;
+            return new Change();
         }
 
         public boolean isUndoable() {
@@ -59,13 +59,13 @@ public class TestDefaultCommander extends AbstractChannelsTest {
         try {
             assertTrue( commander.canDo( command ) );
             assertFalse( commander.canUndo() );
-            boolean result;
-            result = (Boolean) commander.doCommand( command );
-            assertTrue( result );
+            Change change;
+            change = commander.doCommand( command );
+            assertTrue( change.isUnknown() );
             assertTrue( commander.canUndo() );
-            commander.undo();
+            assertTrue( commander.undo().isUnknown() );
             assertTrue( commander.canRedo() );
-            commander.redo();
+            assertTrue( commander.redo().isUnknown() );
             assertFalse( commander.canRedo() );
         } catch ( CommandException e ) {
             fail();

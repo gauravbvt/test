@@ -1,46 +1,47 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.Node;
+import com.mindalliance.channels.Identifiable;
+import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Service;
-import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.Part;
-import com.mindalliance.channels.export.Importer;
+import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.ScenarioObject;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.LockManager;
-import com.mindalliance.channels.pages.components.ScenarioPanel;
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.pages.components.ScenarioLink;
-import com.mindalliance.channels.pages.components.Updatable;
+import com.mindalliance.channels.pages.components.ScenarioPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.menus.ScenarioActionsMenuPanel;
 import com.mindalliance.channels.pages.components.menus.ScenarioPagesMenuPanel;
-import org.apache.wicket.PageParameters;
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
-import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.pages.RedirectPage;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.string.StringValueConversionException;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.io.InputStream;
-import java.io.IOException;
 
 /**
  * The scenario editor page.
@@ -60,7 +61,7 @@ public final class ProjectPage extends WebPage implements Updatable {
     /**
      * The 'part' parameter in the URL.
      */
-    static final String NODE_PARM = "node";                                               // NON-NLS
+    static final String PART_PARM = "node";                                               // NON-NLS
 
     /**
      * The 'expand' parameter in the URL.
@@ -80,14 +81,33 @@ public final class ProjectPage extends WebPage implements Updatable {
      * Id of components that are expanded.
      */
     private Set<Long> expansions;
-
     /**
-     * The current node.
+     * Label with name of scenario.
      */
-    private Node node;
+    private Label scenarioNameLabel;
+    /**
+     * Label with description of scenario.
+     */
+    private Label scenarioDescriptionLabel;
+    /**
+     * Choice of scenarios.
+     */
+    private DropDownChoice<Scenario> scenarioDropDownChoice;
+    /**
+     * Scenarios action menu.
+     */
+    private MenuPanel scenarioActionsMenu;
+    /**
+     * The current part.
+     */
+    private Part part;
+    /**
+     * The current scenario.
+     */
+    private Scenario scenario;
     /**
      * The scenario to display after submit.
-     * If null, redisplay current node.
+     * If null, redisplay current part.
      */
     private Scenario target;
 
@@ -99,10 +119,14 @@ public final class ProjectPage extends WebPage implements Updatable {
      * the big form
      */
     private Form form;
+    /**
+     * The scenario panel.
+     */
+    private ScenarioPanel scenarioPanel;
 
     /**
      * Used when page is called without parameters.
-     * Redirect to default scenario, default node, all collapsed.
+     * Redirect to default scenario, default part, all collapsed.
      */
     public ProjectPage() {
         this( new PageParameters() );
@@ -119,9 +143,9 @@ public final class ProjectPage extends WebPage implements Updatable {
             redirectTo( service.getDefaultScenario() );
 
         else {
-            Node n = findNode( scenario, parameters );
-            if ( n != null )
-                init( scenario, n, findExpansions( parameters ) );
+            Part p = findPart( scenario, parameters );
+            if ( p != null )
+                init( scenario, p, findExpansions( parameters ) );
             else
                 redirectTo( scenario );
         }
@@ -140,29 +164,29 @@ public final class ProjectPage extends WebPage implements Updatable {
      * Utility constructor for tests.
      *
      * @param scenario a scenario
-     * @param node     a node in the scenario
+     * @param p        a part in the scenario
      */
-    public ProjectPage( Scenario scenario, Node node ) {
+    public ProjectPage( Scenario scenario, Part p ) {
         Set<Long> expanded = Collections.emptySet();
-        init( scenario, node, expanded );
+        init( scenario, p, expanded );
     }
 
     /**
      * Utility constructor.
      *
-     * @param node the node to display
-     * @param id   a section to expand
+     * @param p  the part to display
+     * @param id a section to expand
      */
-    public ProjectPage( Node node, long id ) {
+    public ProjectPage( Part p, long id ) {
         Set<Long> expanded = new HashSet<Long>();
         expanded.add( id );
-        init( node.getScenario(), node, expanded );
+        init( p.getScenario(), p, expanded );
     }
 
-    private void init( Scenario scenario, Node n, Set<Long> expanded ) {
+    private void init( Scenario scenario, Part p, Set<Long> expanded ) {
         getLockManager().releaseAllLocks( Project.getUserName() );
-        getLockManager().requestLockOn( n );
-        node = n;
+        getLockManager().requestLockOn( p );
+        setPart( p );
         expansions = expanded;
         setVersioned( false );
         setStatelessHint( true );
@@ -176,10 +200,10 @@ public final class ProjectPage extends WebPage implements Updatable {
         addHeader( scenario );
         addScenarioMenubar( scenario );
         addSelectScenario();
-        ScenarioPanel scenarioPanel = new ScenarioPanel(
+        scenarioPanel = new ScenarioPanel(
                 "scenario",
-                new Model<Scenario>( scenario ),
-                (Part) getNode(),
+                new PropertyModel<Scenario>( this, "scenario" ),
+                new PropertyModel<Part>( this, "part" ),
                 expansions );
         form.add( scenarioPanel );
         LOG.debug( "Scenario page generated" );
@@ -194,6 +218,7 @@ public final class ProjectPage extends WebPage implements Updatable {
                 InputStream inputStream = fileUpload.getInputStream();
                 Scenario imported = importer.importScenario( inputStream );
                 setTarget( imported );
+                redirectTo( imported );
             } catch ( IOException e ) {
                 // TODO redirect to a proper error screen... user has to know...
                 String s = "Import error";
@@ -204,7 +229,7 @@ public final class ProjectPage extends WebPage implements Updatable {
     }
 
     private void addHeader( final Scenario scenario ) {
-        Label scenarioNameLabel = new Label(
+        scenarioNameLabel = new Label(
                 "header",                                                             // NON-NLS
                 /* new PropertyModel<String>( scenario, NAME_PROPERTY ) ); */
                 new AbstractReadOnlyModel() {
@@ -217,18 +242,9 @@ public final class ProjectPage extends WebPage implements Updatable {
         );
         scenarioNameLabel.setOutputMarkupId( true );
         // Add style mods from scenario analyst.
-        Analyst analyst = ( (Project) getApplication() ).getAnalyst();
-        String issue = analyst.getIssuesSummary(
-                scenario, Analyst.INCLUDE_PROPERTY_SPECIFIC );
-        if ( !issue.isEmpty() ) {
-            scenarioNameLabel.add( new AttributeModifier(
-                    "class", true, new Model<String>( "error" ) ) );                  // NON-NLS
-            scenarioNameLabel.add( new AttributeModifier(
-                    "title", true, new Model<String>( issue ) ) );                    // NON-NLS
-        }
-
+        annotateScenarioName( scenario );
         form.add( scenarioNameLabel );
-        Label scenarioDescriptionLabel = new Label( "sc-desc",                              // NON-NLS
+        scenarioDescriptionLabel = new Label( "sc-desc",                              // NON-NLS
                 new AbstractReadOnlyModel<String>() {
                     @Override
                     public String getObject() {
@@ -243,8 +259,21 @@ public final class ProjectPage extends WebPage implements Updatable {
         form.add( new Label( "user", Project.getUserName() ) );                            // NON-NLS
     }
 
+    private void annotateScenarioName( Scenario scenario ) {
+        Analyst analyst = ( (Project) getApplication() ).getAnalyst();
+        String issue = analyst.getIssuesSummary(
+                scenario, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        if ( !issue.isEmpty() ) {
+            scenarioNameLabel.add( new AttributeModifier(
+                    "class", true, new Model<String>( "error" ) ) );                  // NON-NLS
+            scenarioNameLabel.add( new AttributeModifier(
+                    "title", true, new Model<String>( issue ) ) );                    // NON-NLS
+        }
+
+    }
+
     private void addScenarioMenubar( Scenario scenario ) {
-        MenuPanel scenarioActionsMenu = new ScenarioActionsMenuPanel(
+        scenarioActionsMenu = new ScenarioActionsMenuPanel(
                 "scenarioActionsMenu",
                 new Model<Scenario>( scenario ),
                 expansions );
@@ -264,7 +293,7 @@ public final class ProjectPage extends WebPage implements Updatable {
     }
 
     private DropDownChoice<Scenario> createSelectScenario() {
-        DropDownChoice<Scenario> scenarioDropDownChoice = new DropDownChoice<Scenario>(
+        scenarioDropDownChoice = new DropDownChoice<Scenario>(
                 "sc-sel", new PropertyModel<Scenario>( this, "target" ),                    // NON-NLS
                 new PropertyModel<List<? extends Scenario>>( this, "allScenarios" )
         ) {
@@ -310,18 +339,18 @@ public final class ProjectPage extends WebPage implements Updatable {
     }
 
     /**
-     * Find node specified in parameters.
+     * Find part specified in parameters.
      *
      * @param scenario   the scenario
      * @param parameters the page parameters
-     * @return a node, or null if not found
+     * @return a part, or null if not found
      */
-    static Node findNode( Scenario scenario, PageParameters parameters ) {
-        if ( parameters.containsKey( NODE_PARM ) )
+    static Part findPart( Scenario scenario, PageParameters parameters ) {
+        if ( parameters.containsKey( PART_PARM ) )
             try {
-                return scenario.getNode( parameters.getLong( NODE_PARM ) );
+                return (Part) scenario.getNode( parameters.getLong( PART_PARM ) );
             } catch ( StringValueConversionException ignored ) {
-                LOG.warn( "Invalid node specified in parameters. Using default." );
+                LOG.warn( "Invalid part specified in parameters. Using default." );
             }
         return null;
     }
@@ -330,39 +359,39 @@ public final class ProjectPage extends WebPage implements Updatable {
         redirectTo( scenario.getDefaultPart() );
     }
 
-    private void redirectTo( Node n ) {
+    private void redirectTo( Part p ) {
         Set<Long> ids = Collections.emptySet();
-        setResponsePage( new RedirectPage( ScenarioLink.linkStringFor( n, ids ) ) );
+        setResponsePage( new RedirectPage( ScenarioLink.linkStringFor( p, ids ) ) );
     }
 
     public void redirectHere() {
-        long sid = node.getScenario().getId();
-        long nid = node.getId();
+        long sid = getScenario().getId();
+        long nid = getPart().getId();
         StringBuffer exps = new StringBuffer( 128 );
         for ( long id : expansions ) {
             exps.append( "&expand=" );                                                    // NON-NLS
             exps.append( Long.toString( id ) );
         }
         setResponsePage(
-                new RedirectPage( MessageFormat.format( "?scenario={0,number,0}&node={1,number,0}{2}",      // NON-NLS
+                new RedirectPage( MessageFormat.format( "?scenario={0,number,0}&part={1,number,0}{2}",      // NON-NLS
                         sid, nid, exps ) ) );
     }
 
     /**
-     * Return initialized parameters for given scenario and node.
+     * Return initialized parameters for given scenario and part.
      *
      * @param scenario the scenario
-     * @param node     the node, maybe null (in which case, would link to first node in scenario)
+     * @param p        the part, maybe null (in which case, would link to first part in scenario)
      * @param expanded components id that should be expanded
      * @return page parameters to use in links, etc.
      */
     public static PageParameters getParameters(
-            Scenario scenario, Node node, Set<Long> expanded ) {
+            Scenario scenario, Part p, Set<Long> expanded ) {
 
         PageParameters result = new PageParameters();
         result.put( SCENARIO_PARM, Long.toString( scenario.getId() ) );
-        if ( node != null ) {
-            result.put( NODE_PARM, Long.toString( node.getId() ) );
+        if ( p != null ) {
+            result.put( PART_PARM, Long.toString( p.getId() ) );
             for ( long id : expanded )
                 result.add( EXPAND_PARM, Long.toString( id ) );
         }
@@ -370,29 +399,29 @@ public final class ProjectPage extends WebPage implements Updatable {
     }
 
     /**
-     * Return initialized parameters for given scenario and node.
+     * Return initialized parameters for given scenario and part.
      *
      * @param scenario the scenario
-     * @param node     the node, maybe null (in which case, would link to first node in scenario)
+     * @param p        the part, maybe null (in which case, would link to first part in scenario)
      * @return page parameters to use in links, etc.
      */
-    public static PageParameters getParameters( Scenario scenario, Node node ) {
+    public static PageParameters getParameters( Scenario scenario, Part p ) {
         Set<Long> expansions = Collections.emptySet();
-        return getParameters( scenario, node, expansions );
+        return getParameters( scenario, p, expansions );
     }
 
     /**
-     * Return initialized parameters for given scenario and node.
+     * Return initialized parameters for given scenario and part.
      *
      * @param scenario the scenario
-     * @param node     the node, maybe null (in which case, would link to first node in scenario)
+     * @param p        the part, maybe null (in which case, would link to first part in scenario)
      * @param id       the id to expand
      * @return page parameters to use in links, etc.
      */
-    public static PageParameters getParameters( Scenario scenario, Node node, long id ) {
+    public static PageParameters getParameters( Scenario scenario, Part p, long id ) {
         Set<Long> expansions = new HashSet<Long>( 1 );
         expansions.add( id );
-        return getParameters( scenario, node, expansions );
+        return getParameters( scenario, p, expansions );
     }
 
     /**
@@ -442,39 +471,23 @@ public final class ProjectPage extends WebPage implements Updatable {
         return getProject().getLockManager();
     }
 
-    public Node getNode() {
-        return node;
+    public Part getPart() {
+        if ( isZombie( part ) ) {
+            return scenario.getDefaultPart();
+        } else {
+            return part;
+        }
     }
 
-    /**
-     * A component was changed. An update signal is received.
-     *
-     * @param target the ajax target
-     */
-    public void updateWith( AjaxRequestTarget target, Object context ) {
-        Scenario scenario = node.getScenario();
-        if ( !getService().list( Scenario.class ).contains( scenario ) ) {
-            redirectTo( getService().getDefaultScenario() );
-        } else {
-            if ( context.equals( "undo" ) || context.equals( "redo" ) ) {
-                redirectHere();
-            } else if ( context instanceof Long ) {
-                // toggle show/hide
-                long id = (Long) context;
-                if ( expansions.contains( id ) ) {
-                    expansions.remove( id );
-                } else {
-                    expansions.add( (Long) context );
-                }
-            } else if ( context instanceof UserIssue ) {
-                UserIssue userIssue = (UserIssue) context;
-                expansions.add( userIssue.getId() );
-                if ( userIssue.getAbout() == scenario ) {
-                    expansions.add( scenario.getId() );
-                    redirectHere();
-                }
-            }
-        }
+    private boolean isZombie( Part part ) {
+        return part == null
+                || scenario.getNode( part.getId() ) == null
+                || part.getScenario() == null;
+    }
+
+    public void setPart( Part part ) {
+        this.part = part;
+        scenario = part.getScenario();
     }
 
     /**
@@ -528,5 +541,73 @@ public final class ProjectPage extends WebPage implements Updatable {
         return target;
     }
 
+    public Scenario getScenario() {
+        return scenario;
+    }
 
+
+    public void changed( AjaxRequestTarget target, Change change ) {
+        Identifiable identifiable = change.getSubject();
+        if ( change.isUnknown() ) {
+            redirectHere();
+        } else if ( change.isCollapsed() ) {
+            expansions.remove( identifiable.getId() );
+        } else if ( change.isExpanded() ) {
+            expansions.add( identifiable.getId() );
+        } else if ( change.getSubject() instanceof Scenario ) {
+            if ( change.isAdded() ) {
+                redirectTo( (Scenario) identifiable );
+            } else if ( change.isRemoved() ) {
+                redirectTo( getService().getDefaultScenario() );
+            } else if ( change.isUpdated() ) {
+                if ( change.getProperty().equals( "name" ) ) {
+                    target.addComponent( scenarioNameLabel );
+                    target.addComponent( scenarioDropDownChoice );
+                } else if ( change.getProperty().equals( "description" ) ) {
+                    target.addComponent( scenarioDescriptionLabel );
+                }
+            }
+        }
+        else if ( change.isAdded() ) {
+            expansions.add( identifiable.getId() );
+        }
+        else if ( change.isRemoved() )  {
+            expansions.remove( identifiable.getId() );
+        }
+        if ( identifiable instanceof Part ) {
+            if ( change.isAdded() ) {
+                setPart( (Part) identifiable );
+            } else if ( change.isRemoved() ) {
+                setPart( getScenario().getDefaultPart() );
+            }
+        }
+        if ( identifiable instanceof Issue
+                && change.isAdded()
+                && ( (Issue) identifiable ).getAbout() instanceof Scenario ) {
+            expansions.add( identifiable.getId() );
+        }
+    }
+
+
+    public void updateWith( AjaxRequestTarget target, Change change ) {
+        Identifiable identifiable = change.getSubject();
+        if ( change.isUndoing() ) {
+            target.addComponent( scenarioPanel );
+        }
+        if ( identifiable instanceof Part && change.isExists() ) {
+            target.addComponent( scenarioPanel );
+        }
+        if ( identifiable instanceof ScenarioObject
+                || ( identifiable instanceof Issue
+                && ( (Issue) identifiable ).getAbout() instanceof Scenario ) ) {
+            annotateScenarioName( getScenario() );
+            target.addComponent( scenarioNameLabel );
+        }
+        if ( identifiable instanceof Issue
+                && change.isAdded()
+                && ( (Issue) identifiable ).getAbout() instanceof Scenario ) {
+            scenarioPanel.expandScenarioEditPanel( target );
+        }
+        target.addComponent( scenarioActionsMenu );
+    }
 }

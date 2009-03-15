@@ -2,10 +2,10 @@ package com.mindalliance.channels.pages.components.menus;
 
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.BreakUpFlow;
 import com.mindalliance.channels.command.commands.DuplicateFlow;
+import com.mindalliance.channels.command.Change;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.Model;
@@ -59,15 +59,20 @@ public class FlowActionsMenuPanel extends MenuPanel {
         menuItems.add( this.getUndoMenuItem( "menuItem" ) );
         menuItems.add( this.getRedoMenuItem( "menuItem" ) );
         // Show/hide details
-        AjaxFallbackLink showHideLink = new AjaxFallbackLink( "link" ) {
-            public void onClick( AjaxRequestTarget target ) {
-                updateWith( target, new Long( getFlow().getId() ) );
-            }
-        };
         if ( isCollapsed ) {
-            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Show details" ), showHideLink ) );
+            AjaxFallbackLink showLink = new AjaxFallbackLink( "link" ) {
+                public void onClick( AjaxRequestTarget target ) {
+                    update( target, new Change( Change.Type.Expanded, getFlow() ) );
+                }
+            };
+            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Show details" ), showLink ) );
         } else {
-            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Hide details" ), showHideLink ) );
+            AjaxFallbackLink hideLink = new AjaxFallbackLink( "link" ) {
+                public void onClick( AjaxRequestTarget target ) {
+                    update( target, new Change( Change.Type.Collapsed, getFlow() ) );
+                }
+            };
+            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Hide details" ), hideLink ) );
         }
         // Commands
         menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
@@ -79,22 +84,24 @@ public class FlowActionsMenuPanel extends MenuPanel {
             private final Scenario scenario = getFlow().getScenario();
 
             {
-                add( new CommandWrapper( new AddUserIssue( getFlow() ) ) {
-                    public void onExecution( AjaxRequestTarget target, Object result ) {
-                        updateWith( target, (( UserIssue )result).getId() );
-                    }
-                } );
+                final Flow flow = getFlow();
+                if ( !isCollapsed )
+                    add( new CommandWrapper( new AddUserIssue( flow ) ) {
+                        public void onExecution( AjaxRequestTarget target, Change change ) {
+                            update( target, change );
+                        }
+                    } );
                 if ( ( isOutcome && getFlow().getTarget().isPart() )
                         || ( !isOutcome && getFlow().getSource().isPart() ) ) {
-                    add( new CommandWrapper( new DuplicateFlow( getFlow(), isOutcome ) ) {
-                        public void onExecution( AjaxRequestTarget target, Object result ) {
-                            updateWith( target, scenario );
+                    add( new CommandWrapper( new DuplicateFlow( flow, isOutcome ) ) {
+                        public void onExecution( AjaxRequestTarget target, Change change ) {
+                            update( target, change );
                         }
                     } );
                 }
-                add( new CommandWrapper( new BreakUpFlow( getFlow() ) ) {
-                    public void onExecution( AjaxRequestTarget target, Object result ) {
-                        updateWith( target, scenario );
+                add( new CommandWrapper( new BreakUpFlow( flow ) ) {
+                    public void onExecution( AjaxRequestTarget target, Change change ) {
+                        update( target, change );
                     }
                 } );
             }

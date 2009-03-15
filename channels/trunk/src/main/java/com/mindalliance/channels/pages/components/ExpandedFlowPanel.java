@@ -9,6 +9,7 @@ import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.RedirectFlow;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.pages.Project;
@@ -31,9 +32,9 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.IModel;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -152,8 +153,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                 new PropertyModel<String>( this, "description" ) );                         // NON-NLS
         descriptionField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                // target.addComponent( ExpandedFlowPanel.this );
-                updateWith( target, getFlow() );
+                update( target, new Change( Change.Type.Updated, getFlow(), "description" ) );
             }
         } );
         addLabeled( "description-label", descriptionField );                              // NON-NLS
@@ -191,28 +191,22 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
     private void adjustFields( Flow f ) {
         // TODO exception wnem f just got disconnected on undo
         nameField.setEnabled( isLockedByUser( f ) && f.canSetNameAndDescription() );
-        descriptionField.setEnabled( isLockedByUser( f ) &&  f.canSetNameAndDescription() );
-        askedForButtons.setEnabled( isLockedByUser( f ) &&  f.canSetAskedFor() );
+        descriptionField.setEnabled( isLockedByUser( f ) && f.canSetNameAndDescription() );
+        askedForButtons.setEnabled( isLockedByUser( f ) && f.canSetAskedFor() );
         allField.setVisible( outcome && f.canGetAll() );
-        allField.setEnabled( isLockedByUser( f ) &&  outcome && f.canSetAll() );
+        allField.setEnabled( isLockedByUser( f ) && outcome && f.canSetAll() );
         significanceToTargetLabel.setVisible( f.canGetSignificanceToTarget() );
-        significanceToTargetChoice.setEnabled( isLockedByUser( f ) &&  f.canSetSignificanceToTarget() );
+        significanceToTargetChoice.setEnabled( isLockedByUser( f ) && f.canSetSignificanceToTarget() );
         channelRow.setVisible( f.canGetChannels() );
         maxDelayRow.setVisible( f.canGetMaxDelay() );
-        delayPanel.enable( isLockedByUser( f ) &&  f.canSetMaxDelay() );
+        delayPanel.enable( isLockedByUser( f ) && f.canSetMaxDelay() );
         significanceToSourceRow.setVisible( f.canGetSignificanceToSource() );
-        triggersSourceContainer.setVisible( ( !outcome || f.isAskedFor() ) && f.canGetTriggersSource() );
-        triggersSourceCheckBox.setEnabled( isLockedByUser( f ) &&  f.canSetTriggersSource() );
+        triggersSourceContainer.setVisible(( !outcome || f.isAskedFor() ) && f.canGetTriggersSource() );
+        triggersSourceCheckBox.setEnabled( isLockedByUser( f ) && f.canSetTriggersSource() );
         terminatesSourceContainer.setVisible( f.canGetTerminatesSource() );
-        terminatesSourceCheckBox.setEnabled( isLockedByUser( f ) &&  f.canSetTerminatesSource() );
-        otherChoice.setEnabled(isLockedByUser( f ));
-        issuesPanel.setVisible( Project.analyst().hasIssues( model.getObject(), false ) );
-    }
-
-    public void updateWith( AjaxRequestTarget target, Object context ) {
-        adjustFields( getFlow() );
-        target.addComponent( this );
-        super.updateWith( target, context );
+        terminatesSourceCheckBox.setEnabled( isLockedByUser( f ) && f.canSetTerminatesSource() );
+        otherChoice.setEnabled( isLockedByUser( f ) );
+        makeVisible( issuesPanel, Project.analyst().hasIssues( model.getObject(), false ) );
     }
 
     private void addNameField() {
@@ -228,7 +222,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssuesAnnotation( nameField, getFlow(), "name" );
                 target.addComponent( nameField );
-                updateWith( target, getFlow() );
+                update( target, new Change( Change.Type.Updated, getFlow(), "name" ) );
             }
         } );
     }
@@ -278,8 +272,8 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         askedForButtons.add( new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                channelRow.setVisible( isChannelRelevant( getFlow() ) );
-                updateWith( target, getFlow() );
+                makeVisible( channelRow, isChannelRelevant( getFlow() ) );
+                update( target, new Change( Change.Type.Updated, getFlow(), "askedFor" ) );
             }
         } );
 
@@ -307,7 +301,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         );
         significanceToTargetChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                updateWith( target, getFlow() );
+                update( target, new Change( Change.Type.Updated, getFlow(), "significanceToTarget" ) );
             }
         } );
         significanceToTargetLabel.add( significanceToTargetChoice );
@@ -324,7 +318,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                 new PropertyModel<Boolean>( this, "triggeringToSource" ) );
         triggersSourceCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                updateWith( target, getFlow() );
+                update( target, new Change( Change.Type.Updated, getFlow(), "significanceToSource" ) );
             }
         } );
         triggersSourceContainer.add( triggersSourceCheckBox );
@@ -335,7 +329,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                 new PropertyModel<Boolean>( this, "terminatingToSource" ) );
         terminatesSourceCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                updateWith( target, getFlow() );
+                update( target, new Change( Change.Type.Updated, getFlow(), "significanceToSource" ) );
             }
         } );
         terminatesSourceContainer.add( terminatesSourceCheckBox );
@@ -398,7 +392,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         checkBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {                // NON-NLS
 
             protected void onUpdate( AjaxRequestTarget target ) {
-                updateWith( target, getFlow() );
+                update( target, new Change( Change.Type.Updated, getFlow(), "all" ) );
             }
         } );
         allField = new FormComponentLabel( "all-label", checkBox );                       // NON-NLS
@@ -467,19 +461,15 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                 } );
 
         otherChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {                  // NON-NLS
+
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields( getFlow() );
-                updateWith( target, getFlow() );
-                // PageParameters parameters = getWebPage().getPageParameters();
-                // TODO - Denis : fix bug and remove patch
-                /*PageParameters parameters = ( (ProjectPage) getWebPage() )
-                        .getParametersCollapsing( getFlow().getScenario().getId() );
-                setResponsePage( getWebPage().getClass(), parameters );*/
+                update( target, new Change( Change.Type.Updated, getFlow(), "other" ) );
             }
         } );
 
-        // TODO fix flow expansion of target when other has changed
+        // TODO fix flow expansion of target when other has changed (fixed?)
         ScenarioLink details = new ScenarioLink( "other-details",                         // NON-NLS
                 new PropertyModel<Node>( this, "other" ),                                 // NON-NLS
                 getFlow() );
@@ -539,8 +529,8 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         add( maxDelayRow );
         delayPanel = new DelayPanel(
                 "max-delay",
-                new PropertyModel<ModelObject>( this, "flow") ,
-                "maxDelay" ) ;
+                new PropertyModel<ModelObject>( this, "flow" ),
+                "maxDelay" );
         maxDelayRow.add( delayPanel );
     }
 
@@ -647,7 +637,8 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
      */
     public void setOther( Node other ) {
         if ( other.isConnector() ) {
-            Flow newFlow = (Flow) doCommand( new RedirectFlow( getFlow(), (Connector) other, isOutcome() ) );
+            Change change = doCommand( new RedirectFlow( getFlow(), (Connector) other, isOutcome() ) );
+            Flow newFlow = (Flow) change.getSubject();
             requestLockOn( newFlow );
             setFlow( newFlow );
         }
@@ -779,5 +770,15 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void changed( AjaxRequestTarget target, Change change ) {
+        if ( change.isUpdated() ) {
+            adjustFields( getFlow() );
+            target.addComponent( this );
+        }
+        super.changed( target, change );
+    }
 
 }

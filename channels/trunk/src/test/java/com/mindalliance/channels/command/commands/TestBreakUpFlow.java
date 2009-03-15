@@ -11,6 +11,7 @@ import com.mindalliance.channels.Medium;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Change;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -60,11 +61,13 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
         assertTrue( countFlows() == 1 );
         assertNotNull( findFlow() );
         assertTrue( commander.canDo( command ) );
-        commander.doCommand( command );
+        Change change = commander.doCommand( command );
+        assertTrue( change.isRecomposed() );
+        assertTrue( change.getSubject() instanceof Scenario );
         assertNull( findFlow() );
         assertTrue( countFlows() == 2 );
         assertTrue( commander.canUndo() );
-        commander.undo();
+        assertTrue( commander.undo().isUnknown() );
         Flow f = findFlow();
         assertNotNull( f );
         assertTrue( f.getName().equals( "bizspeak" ) );
@@ -75,7 +78,7 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
         assertTrue( f.getChannels().size() == 2 );
         assertTrue( countFlows() == 1 );
         assertTrue( commander.canRedo() );
-        commander.redo();
+        assertTrue( commander.redo().isUnknown());
         assertNull( findFlow() );
         assertTrue( countFlows() == 2 );
     }

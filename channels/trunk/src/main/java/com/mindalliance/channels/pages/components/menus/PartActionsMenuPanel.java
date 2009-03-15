@@ -1,12 +1,10 @@
 package com.mindalliance.channels.pages.components.menus;
 
-import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.RemovePart;
 import com.mindalliance.channels.command.commands.DuplicatePart;
+import com.mindalliance.channels.command.Change;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.Component;
@@ -61,21 +59,20 @@ public class PartActionsMenuPanel extends MenuPanel {
 
     private List<CommandWrapper> getCommandWrappers() {
         return new ArrayList<CommandWrapper>() {
-            private final Scenario scenario = getPart().getScenario();
             {
                 add( new CommandWrapper( new AddUserIssue( getPart() ) ) {
-                    public void onExecution( AjaxRequestTarget target, Object result ) {
-                        updateWith( target, result );
+                    public void onExecution( AjaxRequestTarget target, Change change ) {
+                        update( target, change );
                     }
                 } );
                 add( new CommandWrapper( new DuplicatePart( getPart() ) ) {
-                    public void onExecution( AjaxRequestTarget target, Object result ) {
-                        updateWith( target, scenario );
-                    }
+                    public void onExecution( AjaxRequestTarget target, Change change ) {
+                        update( target, change );
+                     }
                 } );
                 add( new CommandWrapper( new RemovePart( getPart() ) ) {
-                    public void onExecution( AjaxRequestTarget target, Object result ) {
-                        updateWith( target, scenario );
+                    public void onExecution( AjaxRequestTarget target, Change change ) {
+                        update( target, change );
                     }
                 } );
             }

@@ -5,6 +5,7 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.CommandUtils;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Scenario;
@@ -42,7 +43,7 @@ public class AddCapability extends AbstractCommand {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    public Object execute( Commander commander ) throws CommandException {
+    public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
         Flow flow;
         try {
@@ -55,7 +56,7 @@ public class AddCapability extends AbstractCommand {
                 CommandUtils.initialize( flow, flowAttributes );
             }
             addArgument( "flow", flow.getId() );
-            return flow;
+            return new Change( Change.Type.Added, flow );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
         }
