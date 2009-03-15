@@ -15,14 +15,21 @@ import java.io.Serializable;
  * Time: 9:02:28 PM
  */
 public abstract class CommandWrapper implements Serializable {
+    /**
+     * The wrapped command.
+     */
+    private Command command;
 
     public CommandWrapper( Command command ) {
         this.command = command;
     }
 
-    private Command command;
-
-    public abstract void onExecution( AjaxRequestTarget target, Change change);
+    /**
+     * Invoked after the command has executed.
+     * @param target an ajax request target
+     * @param change the change caused by the command's execution
+     */
+    public abstract void onExecuted( AjaxRequestTarget target, Change change );
 
     public Command getCommand() {
         return command;

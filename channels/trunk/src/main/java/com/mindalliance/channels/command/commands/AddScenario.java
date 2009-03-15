@@ -6,7 +6,6 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.NotFoundException;
 
 /**
  * Command to add a scenario.

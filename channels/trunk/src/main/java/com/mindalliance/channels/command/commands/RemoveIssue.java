@@ -70,7 +70,9 @@ public class RemoveIssue extends AbstractCommand {
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
         Service service = commander.getService();
         try {
-            ModelObject modelObject = service.find( ModelObject.class, (Long) get( "modelObject" ) );
+            ModelObject modelObject = service.find(
+                    ModelObject.class,
+                    (Long) get( "modelObject" ) );
             AddUserIssue addIssue = new AddUserIssue( modelObject );
             addIssue.addArgument( "state", get( "state" ) );
             return addIssue;

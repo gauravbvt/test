@@ -29,6 +29,12 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
         super( s, iModel );
     }
 
+    /**
+     * Execute a command.
+     *
+     * @param command a command
+     * @return the change caused
+     */
     protected Change doCommand( Command command ) {
         Commander commander = getCommander();
         try {
@@ -42,22 +48,50 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
         return Project.getProject().getCommander();
     }
 
+    /**
+     * Get the lock manager.
+     *
+     * @return a lock manager
+     */
     protected LockManager getLockManager() {
         return Project.getProject().getLockManager();
     }
 
+    /**
+     * Get the service.
+     *
+     * @return a service
+     */
     protected Service getService() {
-        return Project.getProject().getService(); 
+        return Project.getProject().getService();
     }
 
+    /**
+     * Whether an identifiable object is locked by current user.
+     *
+     * @param identifiable an identifiable object
+     * @return a boolean
+     */
     protected boolean isLockedByUser( Identifiable identifiable ) {
         return getLockManager().isLockedByUser( identifiable );
     }
 
+    /**
+     * Request a lock on an identifiable object.
+     *
+     * @param identifiable an identifiable object
+     * @return a boolean - true if request granted
+     */
     protected boolean requestLockOn( Identifiable identifiable ) {
         return getLockManager().requestLockOn( identifiable );
     }
 
+    /**
+     * Release a lock on an identifiable object.
+     *
+     * @param identifiable an identifiable object
+     * @return a boolean - true if release effected
+     */
     protected boolean releaseAnyLockOn( Identifiable identifiable ) {
         return getLockManager().releaseAnyLockOn( identifiable );
     }

@@ -50,7 +50,7 @@ public class RedundantFlow extends AbstractIssueDetector {
         boolean redundant = false;
         while ( !redundant && flows.hasNext() ) {
             Flow otherFlow = flows.next();
-            redundant = (otherFlow != flow) && equivalent( flow, otherFlow );
+            redundant = ( otherFlow != flow ) && equivalent( flow, otherFlow );
         }
         if ( redundant ) {
             DetectedIssue issue = new DetectedIssue( DetectedIssue.DEFINITION, flow );
@@ -63,7 +63,7 @@ public class RedundantFlow extends AbstractIssueDetector {
     }
 
     private boolean equivalent( Flow flow, Flow otherFlow ) {
-        return  flow.getTarget() == otherFlow.getTarget()
+        return flow.getTarget() == otherFlow.getTarget()
                 && flow.isAskedFor() == otherFlow.isAskedFor()
                 && SemMatch.same( flow.getName(), otherFlow.getName() );
     }

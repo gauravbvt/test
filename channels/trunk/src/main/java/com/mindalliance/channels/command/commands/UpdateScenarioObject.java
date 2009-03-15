@@ -57,7 +57,11 @@ public class UpdateScenarioObject extends UpdateObject {
     /**
      * {@inheritDoc}
      */
-    protected UpdateObject createUndoCommand( Identifiable identifiable, String property, Object value, Action action ) {
+    protected UpdateObject createUndoCommand(
+            Identifiable identifiable,
+            String property,
+            Object value,
+            Action action ) {
         return new UpdateScenarioObject( identifiable, property, value, action );
     }
 

@@ -22,9 +22,14 @@ import java.util.List;
  * Time: 5:39:54 PM
  */
 public abstract class UpdateObject extends AbstractCommand {
-
+    /**
+     * The kind of update.
+     */
     private Action action = Action.Set;
 
+    /**
+     * Kinds of updates.
+     */
     public enum Action {
         /**
          * Set value.
@@ -76,7 +81,11 @@ public abstract class UpdateObject extends AbstractCommand {
      * @param action       Set, Add or Remove
      * @return an UpdateObject command
      */
-    public static UpdateObject makeCommand( Identifiable identifiable, String property, Object value, Action action ) {
+    public static UpdateObject makeCommand(
+            Identifiable identifiable,
+            String property,
+            Object value,
+            Action action ) {
         if ( identifiable instanceof ScenarioObject ) {
             return new UpdateScenarioObject( identifiable, property, value, action );
         } else {
@@ -89,16 +98,11 @@ public abstract class UpdateObject extends AbstractCommand {
      */
     public String getName() {
         switch ( action ) {
-            case Set:
-                return "setting to " + get( "type" );
-            case Add:
-                return "adding to " + get( "type" );
-            case Remove:
-                return "removing from " + get( "type" );
-            case Move:
-                return "moving " + get( "type" );
-            default:
-                throw new IllegalArgumentException( "Unknown action " + action );
+            case Set:  return "setting to " + get( "type" );
+            case Add: return "adding to " + get( "type" );
+            case Remove: return "removing from " + get( "type" );
+            case Move: return "moving " + get( "type" );
+            default: throw new IllegalArgumentException( "Unknown action " + action );
         }
     }
 

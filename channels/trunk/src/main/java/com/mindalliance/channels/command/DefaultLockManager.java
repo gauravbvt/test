@@ -38,7 +38,9 @@ public class DefaultLockManager implements LockManager {
      * The managed locks.
      */
     private Map<Long, Lock> locks = Collections.synchronizedMap( new HashMap<Long, Lock>() );
-
+    /**
+     * Dirty locks to be removed.
+     */
     private List<Lock> dirtyLocks = new ArrayList<Lock>();
 
     public DefaultLockManager() {
@@ -197,7 +199,7 @@ public class DefaultLockManager implements LockManager {
     }
 
     private void removeDirtyLocks() {
-        for (Lock lock : dirtyLocks ) {
+        for ( Lock lock : dirtyLocks ) {
             locks.remove( lock.getId() );
         }
         dirtyLocks = new ArrayList<Lock>();

@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -68,7 +69,8 @@ public abstract class AbstractCommand implements Command {
         args.putAll( arguments );
         return args;
     }
-    @SuppressWarnings("unchecked")
+
+    @SuppressWarnings( "unchecked" )
     public void setArguments( Map args ) {
         arguments = args;
     }
@@ -194,7 +196,7 @@ public abstract class AbstractCommand implements Command {
      * {@inheritDoc}
      */
     public String getTitle() {
-        return StringUtils.capitalize(getName());
+        return StringUtils.capitalize( getName() );
     }
 
     /**
@@ -206,6 +208,7 @@ public abstract class AbstractCommand implements Command {
 
     /**
      * Make an undo command if one not already set.
+     *
      * @param commander a a commander
      * @return a command
      * @throws CommandException if failed to make undo command
@@ -219,6 +222,7 @@ public abstract class AbstractCommand implements Command {
 
     /**
      * Make an undo command.
+     *
      * @param commander a a commander
      * @return a command
      * @throws CommandException if failed to make undo command
@@ -287,5 +291,5 @@ public abstract class AbstractCommand implements Command {
     protected void removeFromProperty( Object obj, String property, Object value ) {
         List list = (List) getProperty( obj, property );
         list.remove( value );
-    }    
+    }
 }

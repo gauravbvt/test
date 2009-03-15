@@ -61,17 +61,17 @@ public class PartActionsMenuPanel extends MenuPanel {
         return new ArrayList<CommandWrapper>() {
             {
                 add( new CommandWrapper( new AddUserIssue( getPart() ) ) {
-                    public void onExecution( AjaxRequestTarget target, Change change ) {
+                    public void onExecuted( AjaxRequestTarget target, Change change ) {
                         update( target, change );
                     }
                 } );
                 add( new CommandWrapper( new DuplicatePart( getPart() ) ) {
-                    public void onExecution( AjaxRequestTarget target, Change change ) {
+                    public void onExecuted( AjaxRequestTarget target, Change change ) {
                         update( target, change );
-                     }
+                    }
                 } );
                 add( new CommandWrapper( new RemovePart( getPart() ) ) {
-                    public void onExecution( AjaxRequestTarget target, Change change ) {
+                    public void onExecuted( AjaxRequestTarget target, Change change ) {
                         update( target, change );
                     }
                 } );

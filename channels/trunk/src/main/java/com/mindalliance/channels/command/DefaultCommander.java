@@ -50,6 +50,15 @@ public class DefaultCommander implements Commander {
     /**
      * {@inheritDoc}
      */
+    public void resetUserHistory( String userName ) {
+        synchronized ( this ) {
+            history.resetForUser( userName );
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public boolean canDo( Command command ) {
         return lockManager.canGrabLocksOn( command.getLockingSet() );
     }

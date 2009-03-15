@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * An issues panel.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf

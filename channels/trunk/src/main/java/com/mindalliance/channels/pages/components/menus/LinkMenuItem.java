@@ -19,7 +19,7 @@ public class LinkMenuItem extends Panel {
         super( s, model );
         link.setMarkupId( "link" );
         add( link );
-        link.add( new Label("string", model.getObject()));
+        link.add( new Label( "string", model.getObject() ) );
     }
 
 }

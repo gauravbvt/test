@@ -222,27 +222,17 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     /**
      * {@inheritDoc}
      */
-    public void changed( AjaxRequestTarget target, Change change ) {
-        Identifiable identifiable = change.getSubject();
-        if ( identifiable instanceof ScenarioObject || identifiable instanceof Issue ) {
-            if (!change.isDisplay()) target.addComponent( flowDiagram );
-        }
-        if ( identifiable == getPart() && change.isUpdated() ) {
-            target.addComponent( partTitle );
-        }
-        super.changed( target, change );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public void updateWith( AjaxRequestTarget target, Change change ) {
         Identifiable identifiable = change.getSubject();
         if ( identifiable == getScenario() && change.isDisplay() ) {
             scenarioEditPanel.setVisibility( target, expansions.contains( getScenario().getId() ) );
             target.addComponent( scenarioEditPanel );
         }
+        if ( identifiable == getPart() && change.isUpdated() ) {
+            target.addComponent( partTitle );
+        }
         if ( identifiable instanceof Issue || identifiable instanceof ScenarioObject ) {
+            if (!change.isDisplay()) target.addComponent( flowDiagram );
             target.addComponent( partIssuesPanel );
         }
         makeVisible( target, partIssuesPanel, Project.analyst().hasIssues( getPart(), false ) );

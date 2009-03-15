@@ -29,20 +29,22 @@ public class AddUserIssue extends AbstractCommand {
     }
 
     /**
-     * {@inheritDoc
+     * {@inheritDoc}
      */
     public String getName() {
         return "add issue";
     }
 
     /**
-     * {@inheritDoc
+     * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
         try {
-            UserIssue issue = new UserIssue( service.find( ModelObject.class, (Long) get( "modelObject" ) ) );
+            UserIssue issue = new UserIssue( service.find(
+                    ModelObject.class,
+                    (Long) get( "modelObject" ) ) );
             Map<String, Object> state = (Map<String, Object>) get( "state" );
             issue.setReportedBy( Project.getUserName() );
             if ( state != null ) {
@@ -57,14 +59,14 @@ public class AddUserIssue extends AbstractCommand {
     }
 
     /**
-     * {@inheritDoc
+     * {@inheritDoc}
      */
     public boolean isUndoable() {
         return true;
     }
 
     /**
-     * {@inheritDoc
+     * {@inheritDoc}
      */
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
         Service service = commander.getService();

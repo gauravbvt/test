@@ -71,6 +71,24 @@ public class History {
     }
 
     /**
+     * Remove all done mementos by user who executed command.
+     * In essence disabling an undo for the user until a do is performed.
+     *
+     * @param userName a user name
+     */
+    @SuppressWarnings( "unchecked" )
+    private void clearDone( final String userName ) {
+        List<Memento> cleared = new ArrayList<Memento>();
+        cleared.addAll( CollectionUtils.select( done, new Predicate() {
+            public boolean evaluate( Object obj ) {
+                Memento memento = (Memento) obj;
+                return !memento.getUserName().equals( userName );
+            }
+        } ) );
+        done = cleared;
+    }
+
+     /**
      * Record memorized command as undone.
      *
      * @param memento        memento of the command undo
@@ -132,10 +150,10 @@ public class History {
         Iterator<Memento> moreRecent = findAllDoneByOtherUserAfter( memento.getTimestamp() );
         while ( moreRecent.hasNext() ) {
             Memento other = moreRecent.next();
-            if ( other != memento
-                    && !CollectionUtils.intersection(
+            if ( other != memento && !CollectionUtils.intersection(
                     memento.getCommand().getConflictSet(),
-                    other.getCommand().getConflictSet() ).isEmpty() ) {
+                    other.getCommand().getConflictSet() ).isEmpty() )
+            {
                 return true;
             }
         }
@@ -169,6 +187,15 @@ public class History {
     }
 
     /**
+     * Removes all done and undone mementoes of a user.
+     * @param userName a user's name
+     */
+    public void resetForUser( String userName ) {
+        clearUndone( userName );
+        clearDone (userName );
+    }
+
+    /**
      * Add a memento at the head of the list and drop the last element if maximum size is exceeded.
      *
      * @param memento a memento
@@ -177,4 +204,5 @@ public class History {
         done.add( 0, memento );
         if ( done.size() > MaxDoneSize ) done.remove( done.size() - 1 );
     }
+
 }

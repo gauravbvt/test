@@ -419,6 +419,11 @@ public class PartPanel extends AbstractCommandablePanel {
         return getPart().getRepeatsEvery();
     }
 
+    /**
+     * Sets repeat period.
+     *
+     * @param delay a delay
+     */
     public void setRepeatsEvery( Delay delay ) {
         doCommand( new UpdateScenarioObject( getPart(), "repeatsEvery", delay ) );
     }
@@ -427,6 +432,11 @@ public class PartPanel extends AbstractCommandablePanel {
         return getPart().getCompletionTime();
     }
 
+    /**
+     * Sets completion time.
+     *
+     * @param delay a delay
+     */
     public void setCompletionTime( Delay delay ) {
         doCommand( new UpdateScenarioObject( getPart(), "completionTime", delay ) );
     }
@@ -435,6 +445,11 @@ public class PartPanel extends AbstractCommandablePanel {
         return getPart().isSelfTerminating();
     }
 
+    /**
+     * Sets whether self terminating.
+     *
+     * @param val a boolean
+     */
     public void setSelfTerminating( boolean val ) {
         doCommand( new UpdateScenarioObject( getPart(), "selfTerminating", val ) );
     }
@@ -443,6 +458,11 @@ public class PartPanel extends AbstractCommandablePanel {
         return getPart().isRepeating();
     }
 
+    /**
+     * Sets whether repeating.
+     *
+     * @param val a boolean
+     */
     public void setRepeating( boolean val ) {
         doCommand( new UpdateScenarioObject( getPart(), "repeating", val ) );
     }

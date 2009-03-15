@@ -27,12 +27,12 @@ public class CollapsedFlowPanel extends AbstractCommandablePanel {
         super( id );
         this.flow = flow;
 
-        final Label label = new Label( "title",                                           // NON-NLS
+        final Label label = new Label( "title",                                  // NON-NLS
                 new PropertyModel( flow,
                         outcome ? "outcomeTitle" : "requirementTitle" ) );     // NON-NLS
 
         final String c = Channel.toString( flow.getEffectiveChannels() );
-        final Label channel = new Label( "channels", new AbstractReadOnlyModel() {         // NON-NLS
+        final Label channel = new Label( "channels", new AbstractReadOnlyModel() { // NON-NLS
 
             @Override
             public Object getObject() {
@@ -49,9 +49,9 @@ public class CollapsedFlowPanel extends AbstractCommandablePanel {
                 flow, Analyst.INCLUDE_PROPERTY_SPECIFIC );
         if ( !issue.isEmpty() ) {
             label.add(
-                    new AttributeModifier( "class", true, new Model<String>( "error" ) ) );   // NON-NLS
+                    new AttributeModifier( "class", true, new Model<String>( "error" ) ) );
             label.add(
-                    new AttributeModifier( "title", true, new Model<String>( issue ) ) );     // NON-NLS
+                    new AttributeModifier( "title", true, new Model<String>( issue ) ) ); 
         }
 
         add( label );

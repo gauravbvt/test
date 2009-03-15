@@ -10,6 +10,7 @@ import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.command.Change;
 
 /**
+ * Abstract base class of updatable panels.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -32,7 +33,10 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @param component a component
      * @param visible a boolean
      */
-    protected static void makeVisible( AjaxRequestTarget target, Component component, boolean visible ) {
+    protected static void makeVisible(
+            AjaxRequestTarget target,
+            Component component,
+            boolean visible ) {
         makeVisible( component, visible );
         target.addComponent( component );
     }
@@ -53,10 +57,10 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     /**
      * {@inheritDoc}
      */
-    public void changed( AjaxRequestTarget target, Change change ) {
+    public void changed( Change change ) {
         Updatable updatableParent = findParent( Updatable.class );
         if ( updatableParent != null )
-            updatableParent.changed( target, change );
+            updatableParent.changed( change );
     }
 
     /**
@@ -74,7 +78,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @param change the nature of the change
      */
     protected void update( AjaxRequestTarget target, Change change ) {
-        changed( target, change );
+        changed( change );
         updateWith( target, change );
     }
 

@@ -24,7 +24,9 @@ import java.util.List;
  * Time: 1:52:04 PM
  */
 public class IssueActionsMenuPanel extends MenuPanel {
-
+    /**
+     * Whether the issue is shown collapsed.
+     */
     private boolean isCollapsed;
 
     public IssueActionsMenuPanel( String s, IModel<? extends Issue> model, boolean isCollapsed ) {
@@ -61,14 +63,20 @@ public class IssueActionsMenuPanel extends MenuPanel {
                     update( target, new Change( Change.Type.Expanded, getIssue() ) );
                 }
             };
-            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Show details" ), showLink ) );
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Show details" ),
+                    showLink ) );
         } else {
             AjaxFallbackLink hideLink = new AjaxFallbackLink( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {
                     update( target, new Change( Change.Type.Collapsed, getIssue() ) );
                 }
             };
-            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Hide details" ), hideLink ) );
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Hide details" ),
+                    hideLink ) );
         }
         // Commands
         menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
@@ -85,7 +93,7 @@ public class IssueActionsMenuPanel extends MenuPanel {
                 final Issue issue = getIssue();
                 if ( !issue.isDetected() )
                     add( new CommandWrapper( new RemoveIssue( (UserIssue) issue ) ) {
-                        public void onExecution( AjaxRequestTarget target, Change change ) {
+                        public void onExecuted( AjaxRequestTarget target, Change change ) {
                             update( target, change );
                         }
                     } );

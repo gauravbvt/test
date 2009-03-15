@@ -100,6 +100,11 @@ public class FlowListPanel extends AbstractCommandablePanel {
         };
     }
 
+    /**
+     * Get flows to list.
+     *
+     * @return a list of lofws
+     */
     public List<Flow> getFlows() {
         List<Flow> flows = new ArrayList<Flow>();
         Iterator<Flow> iterator = outcomes ? getNode().outcomes() : getNode().requirements();

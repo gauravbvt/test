@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * An abstract base class for menu panel.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -43,6 +44,11 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
         return model;
     }
 
+    /**
+     * Make an undo menu item.
+     * @param id the id of the menu item.
+     * @return a menu item component
+     */
     protected Component getUndoMenuItem( String id ) {
         Component menuItem;
         if ( getCommander().canUndo() ) {
@@ -59,12 +65,20 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
             menuItem = new LinkMenuItem( id, new Model<String>( "Undo" ), link );
         } else {
             Label undoLabel = new Label( id, "Undo" );
-            undoLabel.add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
+            undoLabel.add( new AttributeModifier(
+                    "class",
+                    true,
+                    new Model<String>( "disabled" ) ) );
             menuItem = undoLabel ;
         }
         return menuItem;
     }
 
+    /**
+     * Make a redo menu item.
+     * @param id the id of the menu item.
+     * @return a menu item component
+     */
     protected Component getRedoMenuItem( String id ) {
         Component menuItem;
         if ( getCommander().canRedo() ) {
@@ -91,7 +105,15 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
         return Project.getProject().getCommander();
     }
 
-    protected List<Component> getCommandMenuItems( String id, List<CommandWrapper> commandWrappers ) {
+    /**
+     * Make menu items from commands.
+     * @param id id of the menu item
+     * @param commandWrappers a list of wrapped commands
+     * @return a list of menu item components
+     */
+    protected List<Component> getCommandMenuItems(
+            String id,
+            List<CommandWrapper> commandWrappers ) {
         List<Component> menuItems = new ArrayList<Component>();
         for ( final CommandWrapper commandWrapper : commandWrappers ) {
             final Command command = commandWrapper.getCommand();
@@ -100,16 +122,23 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
                     public void onClick( AjaxRequestTarget target ) {
                         try {
                             Change change = getCommander().doCommand( command );
-                            commandWrapper.onExecution( target, change );
+                            commandWrapper.onExecuted( target, change );
                         } catch ( CommandException e ) {
-                            throw new WicketRuntimeException( "Failed to " + command.getTitle(), e );
+                            throw new WicketRuntimeException(
+                                    "Failed to " + command.getTitle(),
+                                    e );
                         }
                     }
                 };
-                menuItems.add( new LinkMenuItem( id, new PropertyModel<String>( command, "title" ), link ) );
+                menuItems.add( new LinkMenuItem( id,
+                        new PropertyModel<String>( command, "title" ),
+                        link ) );
             } else {
                 Label label = new Label( id, new PropertyModel<String>( command, "title" ) );
-                label.add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
+                label.add( new AttributeModifier(
+                        "class",
+                        true,
+                        new Model<String>( "disabled" ) ) );
                 menuItems.add( label );
             }
         }

@@ -47,7 +47,7 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
         TextField<String> nameField = new TextField<String>(
                 "name",
                 new PropertyModel<String>( this, "name" ) );
-        add( new FormComponentLabel( "name-label", nameField ) );                              // NON-NLS
+        add( new FormComponentLabel( "name-label", nameField ) );
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getScenario(), "name" ) );
@@ -58,7 +58,7 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
         TextArea<String> descField = new TextArea<String>(
                 "description",
                 new PropertyModel<String>( this, "description" ) );
-        add( new FormComponentLabel( "description-label", descField ) );                       // NON-NLS
+        add( new FormComponentLabel( "description-label", descField ) );                       
         descField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getScenario(), "description" ) );
@@ -121,19 +121,20 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
     /**
      * {@inheritDoc}
      */
-    public void changed( AjaxRequestTarget target, Change change ) {
+    public void updateWith( AjaxRequestTarget target, Change change ) {
         makeVisible( target, issuesPanel, Project.analyst().hasIssues( model.getObject(), false ) );
-        super.changed( target, change );
+        super.updateWith( target, change );
     }
 
     /**
      * Change visibility.
-     * @param target an ajax request target
+     *
+     * @param target  an ajax request target
      * @param visible a boolean
      */
     public void setVisibility( AjaxRequestTarget target, boolean visible ) {
         makeVisible( target, this, visible );
-        if (visible)
+        if ( visible )
             makeVisible( issuesPanel, Project.analyst().hasIssues( model.getObject(), false ) );
     }
 }

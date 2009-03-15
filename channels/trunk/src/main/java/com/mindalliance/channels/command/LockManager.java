@@ -37,6 +37,7 @@ public interface LockManager {
 
     /**
      * Grab locks on all of a list of model objects.
+     *
      * @param ids a collection of model object ids
      * @return a collection of locks actually grabbed or upgraded
      * @throws LockingException if any of the locks could not be grabbed
@@ -45,6 +46,7 @@ public interface LockManager {
 
     /**
      * Release all listed locks unconditionally, failing silently if a lock is not active.
+     *
      * @param locks a collection of locks on model objects
      * @throws LockingException if any lock was active but could not be released
      */
@@ -52,6 +54,7 @@ public interface LockManager {
 
     /**
      * Whether user has write lock on a given model object.
+     *
      * @param id a model object id
      * @return a boolean
      */
@@ -60,6 +63,7 @@ public interface LockManager {
 
     /**
      * Release all locks held by named user.
+     *
      * @param userName a user name
      */
     void releaseAllLocks( String userName );
@@ -80,7 +84,7 @@ public interface LockManager {
      */
     Lock getLock( long id );
 
-     /**
+    /**
      * Get all locks on all model objects for a user.
      *
      * @param userName a user's name
@@ -90,6 +94,7 @@ public interface LockManager {
 
     /**
      * Whether all given model objects with given ids could be locked by user.
+     *
      * @param ids a collection of model object ids
      * @return a boolean
      */
@@ -101,14 +106,16 @@ public interface LockManager {
     void reset();
 
     /**
-      * Whether someone other than the user has a lock on the model object with given id.
-      * @param identifiable an identifiable
-      * @return a boolean
-      */
-     boolean isLockedByUser( Identifiable identifiable );    
+     * Whether someone other than the user has a lock on the model object with given id.
+     *
+     * @param identifiable an identifiable
+     * @return a boolean
+     */
+    boolean isLockedByUser( Identifiable identifiable );
 
     /**
      * Attempt to get lock on identitifiable
+     *
      * @param identifiable an identifiable object
      * @return a boolean indiciating success (true) or failure (false)
      */
@@ -116,6 +123,7 @@ public interface LockManager {
 
     /**
      * Attempt to release lock on identifiable, failing silently.
+     *
      * @param identifiable an identifiable
      * @return a boolean - whether a lock was released
      */

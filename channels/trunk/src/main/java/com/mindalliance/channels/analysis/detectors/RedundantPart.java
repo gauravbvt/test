@@ -24,6 +24,9 @@ public class RedundantPart extends AbstractIssueDetector {
     public RedundantPart() {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean appliesTo( ModelObject modelObject ) {
         return modelObject instanceof Part;
     }
@@ -76,7 +79,6 @@ public class RedundantPart extends AbstractIssueDetector {
                 && (
                 part.getLocation() == null
                         || otherPart.getLocation() == null
-                        || SemMatch.samePlace( part.getLocation(), otherPart.getLocation()
-                ) );
+                        || SemMatch.samePlace( part.getLocation(), otherPart.getLocation() ) );
     }
 }

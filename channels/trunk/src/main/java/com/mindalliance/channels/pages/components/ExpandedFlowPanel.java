@@ -91,7 +91,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
     /**
      * Choice of other node in flow.
      */
-    DropDownChoice<Node> otherChoice;
+    private DropDownChoice<Node> otherChoice;
     /**
      * The channel field.
      */
@@ -129,13 +129,17 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
     /**
      * Issues panel.
      */
-    IssuesPanel issuesPanel;
+    private IssuesPanel issuesPanel;
     /**
      * Expansions.
      */
     private Set<Long> expansions;
 
-    protected ExpandedFlowPanel( String id, IModel<Flow> model, boolean outcome, Set<Long> expansions ) {
+    protected ExpandedFlowPanel(
+            String id,
+            IModel<Flow> model,
+            boolean outcome,
+            Set<Long> expansions ) {
         super( id, model );
         this.model = model;
         this.expansions = expansions;
@@ -150,7 +154,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         addLabeled( "name-label", nameField );                                            // NON-NLS
         descriptionField = new TextArea<String>(
                 "description",
-                new PropertyModel<String>( this, "description" ) );                         // NON-NLS
+                new PropertyModel<String>( this, "description" ) );
         descriptionField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getFlow(), "description" ) );
@@ -196,12 +200,14 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         allField.setVisible( outcome && f.canGetAll() );
         allField.setEnabled( isLockedByUser( f ) && outcome && f.canSetAll() );
         significanceToTargetLabel.setVisible( f.canGetSignificanceToTarget() );
-        significanceToTargetChoice.setEnabled( isLockedByUser( f ) && f.canSetSignificanceToTarget() );
+        significanceToTargetChoice.setEnabled(
+                isLockedByUser( f ) && f.canSetSignificanceToTarget() );
         channelRow.setVisible( f.canGetChannels() );
         maxDelayRow.setVisible( f.canGetMaxDelay() );
         delayPanel.enable( isLockedByUser( f ) && f.canSetMaxDelay() );
         significanceToSourceRow.setVisible( f.canGetSignificanceToSource() );
-        triggersSourceContainer.setVisible(( !outcome || f.isAskedFor() ) && f.canGetTriggersSource() );
+        triggersSourceContainer.setVisible(
+                ( !outcome || f.isAskedFor() ) && f.canGetTriggersSource() );
         triggersSourceCheckBox.setEnabled( isLockedByUser( f ) && f.canSetTriggersSource() );
         terminatesSourceContainer.setVisible( f.canGetTerminatesSource() );
         terminatesSourceCheckBox.setEnabled( isLockedByUser( f ) && f.canSetTerminatesSource() );
@@ -217,7 +223,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                 return getFlowNameChoices( s );
             }
         };
-        nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {                // NON-NLS
+        nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
 
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssuesAnnotation( nameField, getFlow(), "name" );
@@ -264,10 +270,10 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
     private void addAskedForRadios() {
         askedForButtons = new RadioGroup<Boolean>(
                 "askedFor",
-                new PropertyModel<Boolean>( this, "askedFor" ) );                          // NON-NLS
-        askedForButtons.add( new Radio<Boolean>( "askedForTrue",                          // NON-NLS
+                new PropertyModel<Boolean>( this, "askedFor" ) );
+        askedForButtons.add( new Radio<Boolean>( "askedForTrue",
                 new Model<Boolean>( true ) ) );
-        askedForButtons.add( new Radio<Boolean>( "askedForFalse",                         // NON-NLS
+        askedForButtons.add( new Radio<Boolean>( "askedForFalse",
                 new Model<Boolean>( false ) ) );
         askedForButtons.add( new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
@@ -283,11 +289,14 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
     private void addSignificanceToTarget() {
         significanceToTargetLabel = new WebMarkupContainer( "target-significance-label" );
         add( significanceToTargetLabel );
-        significanceToTargetLabel.add( new Label( "target-label", outcome ? "the recipient's task" : "this task" ) );
+        significanceToTargetLabel.add(
+                new Label( "target-label", outcome ? "the recipient's task" : "this task" ) );
         significanceToTargetChoice = new DropDownChoice<Flow.Significance>(
                 "significance-to-target",
                 new PropertyModel<Flow.Significance>( this, "significanceToTarget" ),
-                new PropertyModel<List<? extends Flow.Significance>>( this, "significanceToTargetChoices" ),
+                new PropertyModel<List<? extends Flow.Significance>>(
+                        this,
+                        "significanceToTargetChoices" ),
                 new IChoiceRenderer<Flow.Significance>() {
 
                     public Object getDisplayValue( Flow.Significance significance ) {
@@ -301,7 +310,9 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         );
         significanceToTargetChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getFlow(), "significanceToTarget" ) );
+                update(
+                        target,
+                        new Change( Change.Type.Updated, getFlow(), "significanceToTarget" ) );
             }
         } );
         significanceToTargetLabel.add( significanceToTargetChoice );
@@ -310,7 +321,8 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
     private void addSignificanceToSource() {
         significanceToSourceRow = new WebMarkupContainer( "significance-to-source" );
         add( significanceToSourceRow );
-        significanceToSourceRow.add( new Label( "source-task", outcome ? "This task" : "Sender's task" ) );
+        significanceToSourceRow.add(
+                new Label( "source-task", outcome ? "This task" : "Sender's task" ) );
         triggersSourceContainer = new WebMarkupContainer( "triggers-source-container" );
         significanceToSourceRow.add( triggersSourceContainer );
         triggersSourceCheckBox = new CheckBox(
@@ -318,7 +330,9 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                 new PropertyModel<Boolean>( this, "triggeringToSource" ) );
         triggersSourceCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getFlow(), "significanceToSource" ) );
+                update(
+                        target,
+                        new Change( Change.Type.Updated, getFlow(), "significanceToSource" ) );
             }
         } );
         triggersSourceContainer.add( triggersSourceCheckBox );
@@ -329,12 +343,16 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                 new PropertyModel<Boolean>( this, "terminatingToSource" ) );
         terminatesSourceCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getFlow(), "significanceToSource" ) );
+                update(
+                        target,
+                        new Change( Change.Type.Updated, getFlow(), "significanceToSource" ) );
             }
         } );
         terminatesSourceContainer.add( terminatesSourceCheckBox );
         terminatesSourceContainer.add(
-                new Label( "notifying-or-replying", new PropertyModel<String>( this, "replyingOrNotifying" ) ) );
+                new Label(
+                        "notifying-or-replying",
+                        new PropertyModel<String>( this, "replyingOrNotifying" ) ) );
     }
 
     /**
@@ -361,7 +379,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
     }
 
     private void addHeader() {
-        Label titleLabel = new Label( "title",                                                          // NON-NLS
+        Label titleLabel = new Label( "title",
                 new AbstractReadOnlyModel<String>() {
                     @Override
                     public String getObject() {
@@ -388,14 +406,14 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
     private void addAllField() {
         CheckBox checkBox = new CheckBox(
                 "all",
-                new PropertyModel<Boolean>( this, "all" ) );                                        // NON-NLS
-        checkBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {                // NON-NLS
+                new PropertyModel<Boolean>( this, "all" ) );
+        checkBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
 
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getFlow(), "all" ) );
             }
         } );
-        allField = new FormComponentLabel( "all-label", checkBox );                       // NON-NLS
+        allField = new FormComponentLabel( "all-label", checkBox );
         allField.add( checkBox );
         add( allField );
     }
@@ -423,7 +441,10 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
      * @param object    the object of the issues
      * @param property  the property of concern. If null, get issues of object
      */
-    protected void addIssuesAnnotation( FormComponent<?> component, ModelObject object, String property ) {
+    protected void addIssuesAnnotation(
+            FormComponent<?> component,
+            ModelObject object,
+            String property ) {
         Analyst analyst = ( (Project) getApplication() ).getAnalyst();
         String issue = property == null ?
                 analyst.getIssuesSummary( object, false ) :
@@ -460,7 +481,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                     }
                 } );
 
-        otherChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {                  // NON-NLS
+        otherChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
 
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
@@ -470,24 +491,30 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         } );
 
         // TODO fix flow expansion of target when other has changed (fixed?)
-        ScenarioLink details = new ScenarioLink( "other-details",                         // NON-NLS
-                new PropertyModel<Node>( this, "other" ),                                 // NON-NLS
+        ScenarioLink details = new ScenarioLink( "other-details",
+                new PropertyModel<Node>( this, "other" ),
                 getFlow() );
         details.add(
-                new Label( "type",                                                        // NON-NLS
+                new Label( "type",
                         new Model<String>( isOutcome() ? "To" : "From" ) ) );
         FormComponentLabel otherLabel =
-                new FormComponentLabel( "other-label", otherChoice );                           // NON-NLS
+                new FormComponentLabel( "other-label", otherChoice );
         otherLabel.add( details );
         add( otherLabel );
         add( otherChoice );
     }
 
-    public final Flow getFlow() {
+    public Flow getFlow() {
         return model.getObject();
     }
 
-    public final void setFlow( Flow flow ) {
+    /**
+     * Set flow.
+     * (used by PropertyModel)
+     *
+     * @param flow a flow
+     */
+    public void setFlow( Flow flow ) {
         model.setObject( flow );
     }
 
@@ -572,7 +599,8 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                     Connector connector = (Connector) n;
                     Flow connectorFlow = connector.getInnerFlow();
                     if ( getFlow().getName().isEmpty()
-                            || SemMatch.matches( getFlow().getName(), connectorFlow.getName() ) ) {
+                            || SemMatch.matches( getFlow().getName(), connectorFlow.getName() ) )
+                    {
                         if ( isOutcome() ) {
                             if ( connector.isSource() && !connectorFlow.getTarget().equals( node ) )
                                 result.add( connector );
@@ -593,7 +621,8 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                     Connector connector = c.next();
                     Flow connectorFlow = connector.getInnerFlow();
                     if ( getFlow().getName().isEmpty()
-                            || SemMatch.matches( getFlow().getName(), connectorFlow.getName() ) ) {
+                            || SemMatch.matches( getFlow().getName(), connectorFlow.getName() ) )
+                    {
                         if ( other.equals( connector ) || !node.isConnectedTo(
                                 outcome, connector, getFlow().getName() ) )
                             result.add( connector );
@@ -637,7 +666,9 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
      */
     public void setOther( Node other ) {
         if ( other.isConnector() ) {
-            Change change = doCommand( new RedirectFlow( getFlow(), (Connector) other, isOutcome() ) );
+            Change change = doCommand( new RedirectFlow(
+                    getFlow(),
+                    (Connector) other, isOutcome() ) );
             Flow newFlow = (Flow) change.getSubject();
             requestLockOn( newFlow );
             setFlow( newFlow );
@@ -698,6 +729,11 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         return getFlow().isAskedFor();
     }
 
+    /**
+     * Sets asked for.
+     *
+     * @param val a boolean
+     */
     public void setAskedFor( boolean val ) {
         doCommand( new UpdateScenarioObject( getFlow(), "askedFor", val ) );
     }
@@ -706,6 +742,11 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         return getFlow().isAll();
     }
 
+    /**
+     * Sets all.
+     *
+     * @param value a boolean
+     */
     public void setAll( boolean value ) {
         doCommand( new UpdateScenarioObject( getFlow(), "all", value ) );
     }
@@ -714,6 +755,11 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         return getFlow().getSignificanceToTarget();
     }
 
+    /**
+     * Sets significance to target.
+     *
+     * @param val a flow significance
+     */
     public void setSignificanceToTarget( Flow.Significance val ) {
         doCommand( new UpdateScenarioObject( getFlow(), "significanceToTarget", val ) );
     }
@@ -722,6 +768,11 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         return getFlow().getSignificanceToSource();
     }
 
+    /**
+     * Sets significance to source.
+     *
+     * @param val a flow significance
+     */
     public void setSignificanceToSource( Flow.Significance val ) {
         doCommand( new UpdateScenarioObject( getFlow(), "significanceToSource", val ) );
     }
@@ -773,12 +824,12 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
     /**
      * {@inheritDoc}
      */
-    public void changed( AjaxRequestTarget target, Change change ) {
+    public void updateWith( AjaxRequestTarget target, Change change ) {
         if ( change.isUpdated() ) {
             adjustFields( getFlow() );
             target.addComponent( this );
         }
-        super.changed( target, change );
+        super.updateWith( target, change );
     }
 
 }

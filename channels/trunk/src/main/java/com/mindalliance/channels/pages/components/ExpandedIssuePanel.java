@@ -40,17 +40,17 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
         setOutputMarkupId( true );
         IssueActionsMenuPanel actionsMenu = new IssueActionsMenuPanel(
                 "issueActionsMenu",
-                new Model<Issue>(model.getObject()),
+                new Model<Issue>( model.getObject() ),
                 false );
         add( actionsMenu );
-        TextArea<String> descriptionArea = new TextArea<String>( "description",              // NON-NLS
+        TextArea<String> descriptionArea = new TextArea<String>( "description",
                 new PropertyModel<String>( this, "description" ) );
         descriptionArea.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 // do nothing
             }
         } );
-        descriptionArea.setEnabled( isLockedByUser( getIssue() ));
+        descriptionArea.setEnabled( isLockedByUser( getIssue() ) );
         add( descriptionArea );
         DropDownChoice<Issue.Level> levelChoice = new DropDownChoice<Issue.Level>(
                 "severity",
@@ -61,7 +61,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
                 // do nothing
             }
         } );
-        levelChoice.setEnabled( isLockedByUser( getIssue() ));
+        levelChoice.setEnabled( isLockedByUser( getIssue() ) );
         add( levelChoice );
         TextArea<String> remediationArea = new TextArea<String>( "remediation",
                 new PropertyModel<String>( this, "remediation" ) );
@@ -72,7 +72,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
         } );
         remediationArea.setEnabled( isLockedByUser( getIssue() ) );
         add( remediationArea );
-        add( new AttachmentPanel( "attachments", new Model<UserIssue>( (UserIssue) issue ) ) );  // NON-NLS
+        add( new AttachmentPanel( "attachments", new Model<UserIssue>( (UserIssue) issue ) ) );
         add( new Label( "reported-by",
                 new PropertyModel<String>( issue, "reportedBy" ) ) );
     }
@@ -85,24 +85,39 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
         return getIssue().getDescription();
     }
 
+    /**
+     * Sets description.
+     *
+     * @param desc a string
+     */
     public void setDescription( String desc ) {
-        doCommand( new UpdateProjectObject( (UserIssue)getIssue(), "description", desc) );
+        doCommand( new UpdateProjectObject( getIssue(), "description", desc ) );
     }
 
     public String getRemediation() {
         return getIssue().getRemediation();
     }
 
+    /**
+     * Sets remediation.
+     *
+     * @param rem a string
+     */
     public void setRemediation( String rem ) {
-        doCommand( new UpdateProjectObject( (UserIssue)getIssue(), "remediation", rem) );
+        doCommand( new UpdateProjectObject( getIssue(), "remediation", rem ) );
     }
 
     public Issue.Level getSeverity() {
         return getIssue().getSeverity();
     }
 
+    /**
+     * Sets severity.
+     *
+     * @param severity an issue severity level
+     */
     public void setSeverity( Issue.Level severity ) {
-        doCommand( new UpdateProjectObject( (UserIssue)getIssue(), "severity", severity) );
+        doCommand( new UpdateProjectObject( getIssue(), "severity", severity ) );
     }
 
 

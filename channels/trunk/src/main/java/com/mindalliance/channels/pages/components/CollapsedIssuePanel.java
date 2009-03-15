@@ -56,9 +56,9 @@ public class CollapsedIssuePanel extends AbstractUpdatablePanel {
         add( menubar );
         IssueActionsMenuPanel actionsMenu = new IssueActionsMenuPanel(
                 "issueActionsMenu",
-                new Model<Issue>(model.getObject()),
+                new Model<Issue>( model.getObject() ),
                 true );
         menubar.add( actionsMenu );
-        makeVisible(menubar, !issue.isDetected() );
+        makeVisible( menubar, !issue.isDetected() );
     }
 }

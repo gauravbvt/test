@@ -125,7 +125,11 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                         // adjustFields();
                         target.addComponent( candidateChannelsMarkup );
                         target.addComponent( editableChannelsMarkup );
-                        update( target, new Change( Change.Type.Updated, getChannelable(), "effectiveChannels" ) );
+                        update(
+                                target,
+                                new Change(
+                                        Change.Type.Updated,
+                                        getChannelable(), "effectiveChannels" ) );
                     }
                 } );
                 item.add( candidateCheckBox );
@@ -165,7 +169,11 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                         // adjustFields();
                         target.addComponent( candidateChannelsMarkup );
                         target.addComponent( editableChannelsMarkup );
-                        update( target, new Change( Change.Type.Updated, getChannelable(), "effectiveChannels" ) );
+                        update(
+                                target,
+                                new Change(
+                                        Change.Type.Updated,
+                                        getChannelable(), "effectiveChannels" ) );
                     }
                 } );
                 includeSpan.add( includeCheckBox );
@@ -197,7 +205,12 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                 addressField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                     protected void onUpdate( AjaxRequestTarget target ) {
                         target.addComponent( editableChannelsMarkup );
-                        update( target, new Change( Change.Type.Updated, getChannelable(), "effectiveChannels" ) );
+                        update(
+                                target,
+                                new Change(
+                                        Change.Type.Updated,
+                                        getChannelable(),
+                                        "effectiveChannels" ) );
                     }
                 } );
                 item.add( addressField );
@@ -207,7 +220,12 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                     public void onClick( AjaxRequestTarget target ) {
                         wrapper.moveToFirst();
                         target.addComponent( editableChannelsMarkup );
-                        update( target, new Change( Change.Type.Updated, getChannelable(), "effectiveChannels" ) );
+                        update(
+                                target,
+                                new Change(
+                                        Change.Type.Updated,
+                                        getChannelable(),
+                                        "effectiveChannels" ) );
                     }
                 };
                 item.add( moveToTopLink );
@@ -259,6 +277,12 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         return list;
     }
 
+    /**
+     * Get wrapped candidate channels.
+     * (Used locally by PropertyModel)
+     *
+     * @return a list of channel wrappers
+     */
     public List<Wrapper> getWrappedCandidateChannels() {
         Channelable channelable = model.getObject();
         Set<Channel> candidates = new HashSet<Channel>();
@@ -268,7 +292,8 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         for ( Channelable aChannelable : channelables ) {
             for ( Channel channel : aChannelable.getEffectiveChannels() ) {
                 if ( !alreadySetChannels.contains( channel )
-                        && channel.isValid() ) {
+                        && channel.isValid() )
+                {
                     candidates.add( channel );
                 }
             }
@@ -294,7 +319,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         if ( channelable instanceof Flow ) {
             Flow flow = (Flow) channelable;
             Node node = flow.isAskedFor() ? flow.getSource() : flow.getTarget();
-            if ( node != null && node.isPart() ) {  // TODO - why can node be null (connecting to internal flow of an external flow)
+            if ( node != null && node.isPart() ) {
                 Part part = (Part) node;
                 ResourceSpec partResourceSpec = part.resourceSpec();
                 if ( !partResourceSpec.isAnyone() ) {

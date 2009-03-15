@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * The scenario editor page.
+ * The project's home page.
  */
 public final class ProjectPage extends WebPage implements Updatable {
 
@@ -137,17 +137,17 @@ public final class ProjectPage extends WebPage implements Updatable {
         super( parameters );
 
         Service service = getService();
-        Scenario scenario = findScenario( service, parameters );
+        Scenario sc = findScenario( service, parameters );
 
-        if ( scenario == null )
+        if ( sc == null )
             redirectTo( service.getDefaultScenario() );
 
         else {
-            Part p = findPart( scenario, parameters );
+            Part p = findPart( sc, parameters );
             if ( p != null )
-                init( scenario, p, findExpansions( parameters ) );
+                init( sc, p, findExpansions( parameters ) );
             else
-                redirectTo( scenario );
+                redirectTo( sc );
         }
     }
 
@@ -256,7 +256,7 @@ public final class ProjectPage extends WebPage implements Updatable {
         );
         scenarioDescriptionLabel.setOutputMarkupId( true );
         form.add( scenarioDescriptionLabel );
-        form.add( new Label( "user", Project.getUserName() ) );                            // NON-NLS
+        form.add( new Label( "user", Project.getUserName() ) );       // NON-NLS
     }
 
     private void annotateScenarioName( Scenario scenario ) {
@@ -265,9 +265,9 @@ public final class ProjectPage extends WebPage implements Updatable {
                 scenario, Analyst.INCLUDE_PROPERTY_SPECIFIC );
         if ( !issue.isEmpty() ) {
             scenarioNameLabel.add( new AttributeModifier(
-                    "class", true, new Model<String>( "error" ) ) );                  // NON-NLS
+                    "class", true, new Model<String>( "error" ) ) ); // NON-NLS
             scenarioNameLabel.add( new AttributeModifier(
-                    "title", true, new Model<String>( issue ) ) );                    // NON-NLS
+                    "title", true, new Model<String>( issue ) ) );  // NON-NLS
         }
 
     }
@@ -294,7 +294,7 @@ public final class ProjectPage extends WebPage implements Updatable {
 
     private DropDownChoice<Scenario> createSelectScenario() {
         scenarioDropDownChoice = new DropDownChoice<Scenario>(
-                "sc-sel", new PropertyModel<Scenario>( this, "target" ),                    // NON-NLS
+                "sc-sel", new PropertyModel<Scenario>( this, "target" ),    // NON-NLS
                 new PropertyModel<List<? extends Scenario>>( this, "allScenarios" )
         ) {
 
@@ -355,15 +355,29 @@ public final class ProjectPage extends WebPage implements Updatable {
         return null;
     }
 
+    /**
+     * Redirect to a scenario.
+     *
+     * @param scenario a scenario
+     */
     public void redirectTo( Scenario scenario ) {
+        getProject().getCommander().resetUserHistory( Project.getUserName() );
         redirectTo( scenario.getDefaultPart() );
     }
 
+    /**
+     * redirect to a part.
+     *
+     * @param p a part
+     */
     private void redirectTo( Part p ) {
         Set<Long> ids = Collections.emptySet();
         setResponsePage( new RedirectPage( ScenarioLink.linkStringFor( p, ids ) ) );
     }
 
+    /**
+     * Redirect here.
+     */
     public void redirectHere() {
         long sid = getScenario().getId();
         long nid = getPart().getId();
@@ -373,8 +387,12 @@ public final class ProjectPage extends WebPage implements Updatable {
             exps.append( Long.toString( id ) );
         }
         setResponsePage(
-                new RedirectPage( MessageFormat.format( "?scenario={0,number,0}&part={1,number,0}{2}",      // NON-NLS
-                        sid, nid, exps ) ) );
+                new RedirectPage(
+                        MessageFormat.format(
+                                "?scenario={0,number,0}&part={1,number,0}{2}",      // NON-NLS
+                                sid,
+                                nid,
+                                exps ) ) );
     }
 
     /**
@@ -471,6 +489,11 @@ public final class ProjectPage extends WebPage implements Updatable {
         return getProject().getLockManager();
     }
 
+    /**
+     * Get set or defualt part.
+     *
+     * @return a part
+     */
     public Part getPart() {
         if ( isZombie( part ) ) {
             return scenario.getDefaultPart();
@@ -485,6 +508,11 @@ public final class ProjectPage extends WebPage implements Updatable {
                 || part.getScenario() == null;
     }
 
+    /**
+     * Set part shown.
+     *
+     * @param part a part
+     */
     public void setPart( Part part ) {
         this.part = part;
         scenario = part.getScenario();
@@ -545,33 +573,18 @@ public final class ProjectPage extends WebPage implements Updatable {
         return scenario;
     }
 
-
-    public void changed( AjaxRequestTarget target, Change change ) {
+    /**
+     * {@inheritDoc}
+     */
+    public void changed( Change change ) {
         Identifiable identifiable = change.getSubject();
-        if ( change.isUnknown() ) {
-            redirectHere();
-        } else if ( change.isCollapsed() ) {
+        if ( change.isCollapsed() ) {
             expansions.remove( identifiable.getId() );
         } else if ( change.isExpanded() ) {
             expansions.add( identifiable.getId() );
-        } else if ( change.getSubject() instanceof Scenario ) {
-            if ( change.isAdded() ) {
-                redirectTo( (Scenario) identifiable );
-            } else if ( change.isRemoved() ) {
-                redirectTo( getService().getDefaultScenario() );
-            } else if ( change.isUpdated() ) {
-                if ( change.getProperty().equals( "name" ) ) {
-                    target.addComponent( scenarioNameLabel );
-                    target.addComponent( scenarioDropDownChoice );
-                } else if ( change.getProperty().equals( "description" ) ) {
-                    target.addComponent( scenarioDescriptionLabel );
-                }
-            }
-        }
-        else if ( change.isAdded() ) {
+        } else if ( change.isAdded() ) {
             expansions.add( identifiable.getId() );
-        }
-        else if ( change.isRemoved() )  {
+        } else if ( change.isRemoved() ) {
             expansions.remove( identifiable.getId() );
         }
         if ( identifiable instanceof Part ) {
@@ -583,29 +596,50 @@ public final class ProjectPage extends WebPage implements Updatable {
         }
         if ( identifiable instanceof Issue
                 && change.isAdded()
-                && ( (Issue) identifiable ).getAbout() instanceof Scenario ) {
+                && ( (Issue) identifiable ).getAbout() instanceof Scenario )
+        {
             expansions.add( identifiable.getId() );
         }
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     public void updateWith( AjaxRequestTarget target, Change change ) {
         Identifiable identifiable = change.getSubject();
-        if ( change.isUndoing() ) {
+        if ( change.isUnknown() ) {
+            redirectHere();
+        } else if ( change.isUndoing() ) {
             target.addComponent( scenarioPanel );
+        }
+        if ( identifiable instanceof Scenario ) {
+            if ( change.isUpdated() ) {
+                if ( change.getProperty().equals( "name" ) ) {
+                    target.addComponent( scenarioNameLabel );
+                    target.addComponent( scenarioDropDownChoice );
+                } else if ( change.getProperty().equals( "description" ) ) {
+                    target.addComponent( scenarioDescriptionLabel );
+                }
+            } else if ( change.isAdded() ) {
+                redirectTo( (Scenario) identifiable );
+            } else if ( change.isRemoved() ) {
+                redirectTo( getService().getDefaultScenario() );
+            }
         }
         if ( identifiable instanceof Part && change.isExists() ) {
             target.addComponent( scenarioPanel );
         }
         if ( identifiable instanceof ScenarioObject
                 || ( identifiable instanceof Issue
-                && ( (Issue) identifiable ).getAbout() instanceof Scenario ) ) {
+                && ( (Issue) identifiable ).getAbout() instanceof Scenario ) )
+        {
             annotateScenarioName( getScenario() );
             target.addComponent( scenarioNameLabel );
         }
         if ( identifiable instanceof Issue
                 && change.isAdded()
-                && ( (Issue) identifiable ).getAbout() instanceof Scenario ) {
+                && ( (Issue) identifiable ).getAbout() instanceof Scenario )
+        {
             scenarioPanel.expandScenarioEditPanel( target );
         }
         target.addComponent( scenarioActionsMenu );

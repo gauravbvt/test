@@ -37,14 +37,19 @@ public class ScenarioActionsMenuPanel extends MenuPanel {
      */
     private Set<Long> expansions;
 
-    public ScenarioActionsMenuPanel( String s, IModel<? extends Scenario> model, Set<Long> expansions ) {
+    public ScenarioActionsMenuPanel(
+            String s,
+            IModel<? extends Scenario> model,
+            Set<Long> expansions ) {
         super( s, model );
         this.expansions = expansions;
         init();
     }
 
     private void init() {
-        ListView<Component> menuItems = new ListView<Component>( "items", new PropertyModel<List<Component>>( this, "menuItems" ) ) {
+        ListView<Component> menuItems = new ListView<Component>(
+                "items",
+                new PropertyModel<List<Component>>( this, "menuItems" ) ) {
             protected void populateItem( ListItem<Component> item ) {
                 item.add( item.getModelObject() );
             }
@@ -68,15 +73,23 @@ public class ScenarioActionsMenuPanel extends MenuPanel {
             editLink =
                     new BookmarkablePageLink<Scenario>(
                             "link", ProjectPage.class,
-                            ( (ProjectPage) getWebPage() ).getParametersCollapsing( getScenario().getId() ) );
-            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Hide details" ), editLink ) );
+                            ( (ProjectPage) getWebPage() )
+                                    .getParametersCollapsing( getScenario().getId() ) );
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Hide details" ),
+                    editLink ) );
 
         } else {
             editLink =
                     new BookmarkablePageLink<Scenario>(
                             "link", ProjectPage.class,   // NON-NLS
-                            ( (ProjectPage) getWebPage() ).getParametersExpanding( getScenario().getId() ) );
-            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Show details" ), editLink ) );
+                            ( (ProjectPage) getWebPage() )
+                                    .getParametersExpanding( getScenario().getId() ) );
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Show details" ),
+                    editLink ) );
         }
         // Commands
         menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
@@ -95,22 +108,22 @@ public class ScenarioActionsMenuPanel extends MenuPanel {
             {
                 final Scenario scenario = getScenario();
                 add( new CommandWrapper( new AddPart( scenario ) ) {
-                    public void onExecution( AjaxRequestTarget target, Change change ) {
+                    public void onExecuted( AjaxRequestTarget target, Change change ) {
                         update( target, change );
                     }
                 } );
                 add( new CommandWrapper( new AddUserIssue( scenario ) ) {
-                    public void onExecution( AjaxRequestTarget target, Change change ) {
+                    public void onExecuted( AjaxRequestTarget target, Change change ) {
                         update( target, change );
                     }
                 } );
                 add( new CommandWrapper( new AddScenario() ) {
-                    public void onExecution( AjaxRequestTarget target, Change change ) {
+                    public void onExecuted( AjaxRequestTarget target, Change change ) {
                         update( target, change );
                     }
                 } );
                 add( new CommandWrapper( new RemoveScenario( scenario ) ) {
-                    public void onExecution( AjaxRequestTarget target, Change change ) {
+                    public void onExecuted( AjaxRequestTarget target, Change change ) {
                         update( target, change );
                     }
                 } );

@@ -17,13 +17,12 @@ public interface Updatable {
      * An identifiable object  was changed; change state accordingly.
      * This is in anticipation of receiving an "updateWith" message.
      *
-     * @param target       the ajax target
      * @param change       the nature of the change
      */
-    void changed( AjaxRequestTarget target, Change change );
+    void changed( Change change );
 
     /**
-     * An update signal is received to allow redisplay.
+     * An identifiable object  was changed; update UI components.
      * Always follows a corresponding "changed" message.
      *
      * @param target       the ajax target

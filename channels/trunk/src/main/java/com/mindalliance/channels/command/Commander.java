@@ -68,4 +68,9 @@ public interface Commander {
      */
     Service getService();
 
+    /**
+     * Resets history for current user.
+     * @param userName a string
+     */
+    void resetUserHistory( String userName );
 }

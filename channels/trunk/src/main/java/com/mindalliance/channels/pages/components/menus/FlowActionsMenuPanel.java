@@ -87,20 +87,20 @@ public class FlowActionsMenuPanel extends MenuPanel {
                 final Flow flow = getFlow();
                 if ( !isCollapsed )
                     add( new CommandWrapper( new AddUserIssue( flow ) ) {
-                        public void onExecution( AjaxRequestTarget target, Change change ) {
+                        public void onExecuted( AjaxRequestTarget target, Change change ) {
                             update( target, change );
                         }
                     } );
                 if ( ( isOutcome && getFlow().getTarget().isPart() )
                         || ( !isOutcome && getFlow().getSource().isPart() ) ) {
                     add( new CommandWrapper( new DuplicateFlow( flow, isOutcome ) ) {
-                        public void onExecution( AjaxRequestTarget target, Change change ) {
+                        public void onExecuted( AjaxRequestTarget target, Change change ) {
                             update( target, change );
                         }
                     } );
                 }
                 add( new CommandWrapper( new BreakUpFlow( flow ) ) {
-                    public void onExecution( AjaxRequestTarget target, Change change ) {
+                    public void onExecuted( AjaxRequestTarget target, Change change ) {
                         update( target, change );
                     }
                 } );

@@ -31,11 +31,17 @@ public class DelayPanel extends AbstractCommandablePanel {
      * A Delay.
      */
     private IModel<ModelObject> model;
-
+    /**
+     * Unit choice.
+     */
     private DropDownChoice unitChoice;
-
+    /**
+     * Amount field.
+     */
     private TextField amountField;
-
+    /**
+     * Property with delay as value.
+     */
     private String property;
 
     public DelayPanel( String id, IModel<ModelObject> model, String property ) {
@@ -50,7 +56,7 @@ public class DelayPanel extends AbstractCommandablePanel {
                 new PropertyModel<String>( this, "amountString" ) );
         amountField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, model.getObject(), property) );
+                update( target, new Change( Change.Type.Updated, model.getObject(), property ) );
             }
         } );
         add( amountField );
@@ -71,7 +77,7 @@ public class DelayPanel extends AbstractCommandablePanel {
         };
         unitChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, model.getObject(), property) );
+                update( target, new Change( Change.Type.Updated, model.getObject(), property ) );
             }
         } );
         add( unitChoice );
@@ -91,10 +97,20 @@ public class DelayPanel extends AbstractCommandablePanel {
         return (String) getProperty( "amountString" );
     }
 
+    /**
+     * Set amount as string.
+     * (Used by PropertyModel)
+     * @param val a string
+     */
     public void setAmountString( String val ) {
         setProperty( "amountString", val );
     }
 
+    /**
+     * Set unit.
+     * (Used by PropertyModel)
+     * @param val a a delay unit
+     */
     public void setUnit( Delay.Unit val ) {
         setProperty( "unit", val );
     }
@@ -103,9 +119,9 @@ public class DelayPanel extends AbstractCommandablePanel {
         return (Delay.Unit) getProperty( "unit" );
     }
 
-    @SuppressWarnings("unchecked")
-    public List<? extends Delay.Unit>getUnits() {
-        return(List<? extends Delay.Unit>)getProperty("units");
+    @SuppressWarnings( "unchecked" )
+    public List<? extends Delay.Unit> getUnits() {
+        return (List<? extends Delay.Unit>) getProperty( "units" );
     }
 
     private Object getProperty( String prop ) {

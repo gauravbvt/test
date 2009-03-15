@@ -76,7 +76,7 @@ public class Change implements Serializable {
     /**
      * The change is caused by undoing or redoing.
      */
-    private boolean undoing = false;
+    private boolean undoing;
 
     public Change() {
     }
