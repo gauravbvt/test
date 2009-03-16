@@ -346,9 +346,9 @@ ul.attach ul.menu {
     position: static;
 }
 
-#reqs span.menubar, #outcomes span.menubar {
+#reqs span.menubar, #outcomes span.menubar, .issues span.menubar {
     float: right;
-    position: static;    
+    position: static;
 }
 
 h2 ul.menu, h3 ul.menu {
@@ -378,7 +378,6 @@ span.suggest {
 }
 
 div.picture {
-    overflow: auto;
     background: white;
 }
 div.picture img {
