@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -21,6 +23,10 @@ import org.apache.commons.lang.StringUtils;
  * Time: 6:41:54 PM
  */
 public abstract class AbstractCommand implements Command {
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( AbstractCommand.class );
     /**
      * User name
      */
@@ -292,4 +298,14 @@ public abstract class AbstractCommand implements Command {
         List list = (List) getProperty( obj, property );
         list.remove( value );
     }
+
+    public String getUndoes( Commander commander ) {
+        try {
+            return makeUndoCommand( commander ).getName();
+        } catch ( CommandException e ) {
+            LOG.warn("Can't make undo command.", e);
+            return "?";
+        }
+    }
+
 }

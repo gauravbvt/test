@@ -55,7 +55,6 @@ public class RemovePart extends AbstractCommand {
      * {@inheritDoc}
      */
     public Change execute( Commander commander ) throws CommandException {
-        boolean removed;
         Service service = commander.getService();
         try {
             Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
@@ -85,7 +84,8 @@ public class RemovePart extends AbstractCommand {
     @SuppressWarnings( "unchecked" )
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
         Service service = commander.getService();
-        MultiCommand multi = new MultiCommand();
+        MultiCommand multi = new MultiCommand( getName() );
+        multi.setUndoes( getName() );
         // Reconstitute part
         try {
             Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
@@ -167,8 +167,7 @@ public class RemovePart extends AbstractCommand {
             // preserve the outcome of the source the flow represents
             if ( in.isInternal()
                     && in.getSource().isPart()
-                    && !in.getSource().hasMultipleOutcomes( in.getName() ) )
-            {
+                    && !in.getSource().hasMultipleOutcomes( in.getName() ) ) {
                 Flow flow = service.connect(
                         in.getSource(),
                         service.createConnector( scenario ), in.getName() );
@@ -187,8 +186,7 @@ public class RemovePart extends AbstractCommand {
             // preserve the outcome of the source the flow represents
             if ( out.isInternal()
                     && out.getTarget().isPart()
-                    && !out.getSource().hasMultipleRequirements( out.getName() ) )
-            {
+                    && !out.getSource().hasMultipleRequirements( out.getName() ) ) {
                 Flow flow = service.connect(
                         service.createConnector( scenario ),
                         out.getTarget(), out.getName() );

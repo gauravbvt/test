@@ -139,4 +139,11 @@ public interface Command extends Serializable {
      * @return a string
      */
     String getTitle();
+
+    /**
+     * Return the name of the command it undoes.
+     * @param commander a commander
+     * @return a string
+     */
+    String getUndoes( Commander commander );
 }

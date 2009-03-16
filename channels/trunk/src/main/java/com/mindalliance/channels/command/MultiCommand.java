@@ -18,6 +18,14 @@ import java.util.List;
  */
 public class MultiCommand extends AbstractCommand {
     /**
+     * The command's name.
+     */
+    private String name = "multiple commands";
+    /**
+     * Name of what this command undoes.
+     */
+    private String undoes = "";
+    /**
      * A list of commands.
      */
     private List<Command> commands = new ArrayList<Command>();
@@ -80,14 +88,29 @@ public class MultiCommand extends AbstractCommand {
         }
     }
 
-    public MultiCommand() {
+    public MultiCommand() {}
+
+    public MultiCommand( String name ) {
+        this.name = name;
     }
 
     /**
      * {@inheritDoc}
      */
     public String getName() {
-        return "multiple commands";
+        return name;
+    }
+
+    public void setName( String name ) {
+        this.name = name;
+    }
+
+    public String getUndoes() {
+        return undoes;
+    }
+
+    public void setUndoes( String undoes ) {
+        this.undoes = undoes;
     }
 
     /**

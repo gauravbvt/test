@@ -73,4 +73,15 @@ public interface Commander {
      * @param userName a string
      */
     void resetUserHistory( String userName );
+
+    /**
+     * Get label for undo command.
+     * @return a string
+     */
+    String getUndoTitle();
+    /**
+     * Get label for redo command.
+     * @return a string
+     */
+    String getRedoTitle();
 }

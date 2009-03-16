@@ -97,13 +97,7 @@ public abstract class UpdateObject extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        switch ( action ) {
-            case Set:  return "setting to " + get( "type" );
-            case Add: return "adding to " + get( "type" );
-            case Remove: return "removing from " + get( "type" );
-            case Move: return "moving " + get( "type" );
-            default: throw new IllegalArgumentException( "Unknown action " + action );
-        }
+        return "updating " + get( "type" );
     }
 
     /**

@@ -59,6 +59,30 @@ public class DefaultCommander implements Commander {
     /**
      * {@inheritDoc}
      */
+    public String getUndoTitle() {
+        String title = "Undo";
+        Memento memento = history.getUndo();
+        if (memento != null) {
+           title = title + " " + memento.getCommand().getName();
+        }
+        return title;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getRedoTitle() {
+        String title = "Redo";
+        Memento memento = history.getRedo();
+        if (memento != null) {
+            title = title + " " + memento.getCommand().getUndoes( this );
+        }
+        return title;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public boolean canDo( Command command ) {
         return lockManager.canGrabLocksOn( command.getLockingSet() );
     }

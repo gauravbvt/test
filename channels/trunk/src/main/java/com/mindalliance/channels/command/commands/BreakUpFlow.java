@@ -73,7 +73,8 @@ public class BreakUpFlow extends AbstractCommand {
     @SuppressWarnings( "unchecked" )
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
         Service service = commander.getService();
-        MultiCommand multi = new MultiCommand();
+        MultiCommand multi = new MultiCommand( );
+        multi.setUndoes( getName() );
         ConnectWithFlow connectWithFlow = new ConnectWithFlow();
         connectWithFlow.setArguments( (Map<String, Object>) get( "flowState" ) );
         multi.addCommand( connectWithFlow );

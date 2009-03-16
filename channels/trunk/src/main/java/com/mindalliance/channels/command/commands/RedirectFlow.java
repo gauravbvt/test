@@ -112,7 +112,8 @@ public class RedirectFlow extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        MultiCommand multi = new MultiCommand();
+        MultiCommand multi = new MultiCommand( getName() );
+        multi.setUndoes( getName() );
         Service service = commander.getService();
         try {
             // Reconnect old flow

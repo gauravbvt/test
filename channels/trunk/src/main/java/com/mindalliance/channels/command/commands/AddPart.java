@@ -5,10 +5,13 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.NotFoundException;
+
+import java.util.Map;
 
 /**
  * Command to add a new part to a scenario.
@@ -36,12 +39,15 @@ public class AddPart extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
         try {
             Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
             Part part = service.createPart( scenario );
             addArgument( "part", part.getId() );
+            Map<String, Object> partState = (Map<String, Object>) get( "partState" );
+            if ( partState != null ) CommandUtils.initialize( part, partState );
             return new Change( Change.Type.Added, part );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh", e );

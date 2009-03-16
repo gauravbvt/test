@@ -624,6 +624,8 @@ public final class ProjectPage extends WebPage implements Updatable {
                 redirectTo( (Scenario) identifiable );
             } else if ( change.isRemoved() ) {
                 redirectTo( getService().getDefaultScenario() );
+            } else if ( change.isRecomposed() ) {
+                target.addComponent( scenarioPanel );
             }
         }
         if ( identifiable instanceof Part && change.isExists() ) {
@@ -637,7 +639,7 @@ public final class ProjectPage extends WebPage implements Updatable {
             target.addComponent( scenarioNameLabel );
         }
         if ( identifiable instanceof Issue
-                && change.isAdded()
+                && change.isExists()
                 && ( (Issue) identifiable ).getAbout() instanceof Scenario )
         {
             scenarioPanel.expandScenarioEditPanel( target );

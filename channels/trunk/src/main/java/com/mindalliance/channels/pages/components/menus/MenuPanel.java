@@ -62,7 +62,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
                     }
                 }
             };
-            menuItem = new LinkMenuItem( id, new Model<String>( "Undo" ), link );
+            menuItem = new LinkMenuItem( id, new Model<String>( getCommander().getUndoTitle() ), link );
         } else {
             Label undoLabel = new Label( id, "Undo" );
             undoLabel.add( new AttributeModifier(
@@ -92,7 +92,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
                     }
                 }
             };
-            menuItem = new LinkMenuItem( id, new Model<String>( "Redo" ), link );
+            menuItem = new LinkMenuItem( id, new Model<String>( getCommander().getRedoTitle() ), link );
         } else {
             Label label = new Label( id, "Redo" );
             label.add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
