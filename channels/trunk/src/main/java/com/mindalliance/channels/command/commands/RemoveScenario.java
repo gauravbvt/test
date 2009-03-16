@@ -82,4 +82,11 @@ public class RemoveScenario extends AbstractCommand {
             throw new CommandException( "Can not restore scenario." );
         }
     }
+
+        /**
+     * {@inheritDoc}
+     */
+    public boolean isScenarioSpecific() {
+        return false;
+    }
 }

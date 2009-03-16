@@ -7,6 +7,7 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ScenarioObject;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
@@ -17,6 +18,8 @@ import com.mindalliance.channels.pages.components.menus.PartActionsMenuPanel;
 import com.mindalliance.channels.pages.components.menus.PartPagesMenuPanel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.Component;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -82,7 +85,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     /**
      * Part actions menu
      */
-    private PartActionsMenuPanel partActionsMenu;
+    private Component partActionsMenu;
 
     public ScenarioPanel( String id, IModel<Scenario> scenarioModel, IModel<Part> partModel, Set<Long> expansions ) {
         super( id, scenarioModel );
@@ -135,17 +138,28 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     }
 
     private void addPartMenuBar() {
-        partActionsMenu = new PartActionsMenuPanel(
-                "partActionsMenu",
-                new PropertyModel<Part>( this, "part" ) );
-        partActionsMenu.setOutputMarkupId( true );
-        add( partActionsMenu );
+        addPartActionsMenu();
         MenuPanel partPagesMenu = new PartPagesMenuPanel(
                 "partPagesMenu",
                 new PropertyModel<Part>( this, "part" )
         );
         partPagesMenu.setOutputMarkupId( true );
         add( partPagesMenu );
+    }
+
+    private void addPartActionsMenu() {
+        LockManager lockManager = getLockManager();
+        if ( lockManager.isLockedByUser( getPart() ) ) {
+            partActionsMenu = new PartActionsMenuPanel(
+                    "partActionsMenu",
+                    new PropertyModel<Part>( this, "part" ) );
+        } else {
+            String otherUser = lockManager.getLockOwner( getPart().getId() );
+            partActionsMenu = new Label( "partActionsMenu", new Model<String>( "Edited by " + otherUser ) );
+            partActionsMenu.add( new AttributeModifier( "class", true, new Model<String>( "locked" ) ) );
+        }
+        partActionsMenu.setOutputMarkupId( true );
+        addOrReplace( partActionsMenu );
     }
 
     private void addFlowDiagram( final Scenario scenario, final IModel<Part> partModel ) {
@@ -215,7 +229,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
      * @param target an ajax request target
      */
     public void expandScenarioEditPanel( AjaxRequestTarget target ) {
-        Change change = new Change( Change.Type.Expanded, getScenario() ); 
+        Change change = new Change( Change.Type.Expanded, getScenario() );
         update( target, change );
     }
 
@@ -232,10 +246,11 @@ public class ScenarioPanel extends AbstractCommandablePanel {
             target.addComponent( partTitle );
         }
         if ( identifiable instanceof Issue || identifiable instanceof ScenarioObject ) {
-            if (!change.isDisplay()) target.addComponent( flowDiagram );
+            if ( !change.isDisplay() ) target.addComponent( flowDiagram );
             target.addComponent( partIssuesPanel );
         }
         makeVisible( target, partIssuesPanel, Project.analyst().hasIssues( getPart(), false ) );
+        addPartActionsMenu();
         target.addComponent( partActionsMenu );
         super.updateWith( target, change );
     }

@@ -193,6 +193,7 @@ public final class ProjectPage extends WebPage implements Updatable {
         add( new Label( "sc-title", new PropertyModel<String>( scenario, "name" ) ) );    // NON-NLS
         form = new Form( "big-form" ) {
             protected void onSubmit() {
+                getProject().getCommander().resetUserHistory( Project.getUserName() );                
                 importScenario();
             }
         };
@@ -268,6 +269,12 @@ public final class ProjectPage extends WebPage implements Updatable {
                     "class", true, new Model<String>( "error" ) ) ); // NON-NLS
             scenarioNameLabel.add( new AttributeModifier(
                     "title", true, new Model<String>( issue ) ) );  // NON-NLS
+        }
+        else {
+            scenarioNameLabel.add( new AttributeModifier(
+                    "class", true, new Model<String>( "no-error" ) ) ); // NON-NLS
+            scenarioNameLabel.add( new AttributeModifier(
+                    "title", true, new Model<String>( "No known issue" ) ) );  // NON-NLS
         }
 
     }
@@ -361,7 +368,6 @@ public final class ProjectPage extends WebPage implements Updatable {
      * @param scenario a scenario
      */
     public void redirectTo( Scenario scenario ) {
-        getProject().getCommander().resetUserHistory( Project.getUserName() );
         redirectTo( scenario.getDefaultPart() );
     }
 
@@ -621,8 +627,10 @@ public final class ProjectPage extends WebPage implements Updatable {
                     target.addComponent( scenarioDescriptionLabel );
                 }
             } else if ( change.isAdded() ) {
+                getProject().getCommander().resetUserHistory( Project.getUserName() );
                 redirectTo( (Scenario) identifiable );
             } else if ( change.isRemoved() ) {
+                getProject().getCommander().resetUserHistory( Project.getUserName() );
                 redirectTo( getService().getDefaultScenario() );
             } else if ( change.isRecomposed() ) {
                 target.addComponent( scenarioPanel );
@@ -642,6 +650,8 @@ public final class ProjectPage extends WebPage implements Updatable {
                 && change.isExists()
                 && ( (Issue) identifiable ).getAbout() instanceof Scenario )
         {
+            annotateScenarioName( getScenario() );
+            target.addComponent( scenarioNameLabel );
             scenarioPanel.expandScenarioEditPanel( target );
         }
         target.addComponent( scenarioActionsMenu );

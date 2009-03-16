@@ -299,6 +299,9 @@ public abstract class AbstractCommand implements Command {
         list.remove( value );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String getUndoes( Commander commander ) {
         try {
             return makeUndoCommand( commander ).getName();
@@ -306,6 +309,13 @@ public abstract class AbstractCommand implements Command {
             LOG.warn("Can't make undo command.", e);
             return "?";
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isScenarioSpecific() {
+        return true;
     }
 
 }

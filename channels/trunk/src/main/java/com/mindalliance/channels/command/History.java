@@ -60,35 +60,35 @@ public class History {
      */
     @SuppressWarnings( "unchecked" )
     private void clearUndone( final String userName ) {
-        List<Memento> cleared = new ArrayList<Memento>();
-        cleared.addAll( CollectionUtils.select( undone, new Predicate() {
+        List<Memento> kept = new ArrayList<Memento>();
+        kept.addAll( CollectionUtils.select( undone, new Predicate() {
             public boolean evaluate( Object obj ) {
                 Memento memento = (Memento) obj;
                 return !memento.getUserName().equals( userName );
             }
         } ) );
-        undone = cleared;
+        undone = kept;
     }
 
     /**
-     * Remove all done mementos by user who executed command.
+     * Remove all done scenario-specific mementos by user who executed command.
      * In essence disabling an undo for the user until a do is performed.
      *
      * @param userName a user name
      */
     @SuppressWarnings( "unchecked" )
-    private void clearDone( final String userName ) {
-        List<Memento> cleared = new ArrayList<Memento>();
-        cleared.addAll( CollectionUtils.select( done, new Predicate() {
+    private void clearDoneInScenario( final String userName ) {
+        List<Memento> kept = new ArrayList<Memento>();
+        kept.addAll( CollectionUtils.select( done, new Predicate() {
             public boolean evaluate( Object obj ) {
                 Memento memento = (Memento) obj;
-                return !memento.getUserName().equals( userName );
+                return !memento.getUserName().equals( userName ) || !memento.getCommand().isScenarioSpecific();
             }
         } ) );
-        done = cleared;
+        done = kept;
     }
 
-     /**
+    /**
      * Record memorized command as undone.
      *
      * @param memento        memento of the command undo
@@ -152,8 +152,7 @@ public class History {
             Memento other = moreRecent.next();
             if ( other != memento && !CollectionUtils.intersection(
                     memento.getCommand().getConflictSet(),
-                    other.getCommand().getConflictSet() ).isEmpty() )
-            {
+                    other.getCommand().getConflictSet() ).isEmpty() ) {
                 return true;
             }
         }
@@ -187,12 +186,13 @@ public class History {
     }
 
     /**
-     * Removes all done and undone mementoes of a user.
+     * Removes all scenario-specific done and undone mementoes of a user.
+     *
      * @param userName a user's name
      */
     public void resetForUser( String userName ) {
         clearUndone( userName );
-        clearDone (userName );
+        clearDoneInScenario( userName );
     }
 
     /**

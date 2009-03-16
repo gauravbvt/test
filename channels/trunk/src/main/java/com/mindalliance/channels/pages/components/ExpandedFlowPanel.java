@@ -10,12 +10,14 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.command.commands.RedirectFlow;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.components.menus.FlowActionsMenuPanel;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -393,14 +395,22 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
     }
 
     private void addFlowActionMenu( boolean isOutcome ) {
-        FlowActionsMenuPanel flowActionsMenu = new FlowActionsMenuPanel(
-                "flowActionsMenu",
-                new PropertyModel<Flow>( this, "flow" ),
-                isOutcome,
-                false );
-        flowActionsMenu.setOutputMarkupId( true );
-        add( flowActionsMenu );
+        Component flowActionsMenu;
+        LockManager lockManager = getLockManager();
+        if ( lockManager.isLockedByUser( getFlow() ) ) {
+            flowActionsMenu = new FlowActionsMenuPanel(
+                    "flowActionsMenu",
+                    new PropertyModel<Flow>( this, "flow" ),
+                    isOutcome,
+                    false );
+        } else {
+            String otherUser = lockManager.getLockOwner( getFlow().getId() );
+            flowActionsMenu = new Label( "flowActionsMenu", new Model<String>( "Edited by " + otherUser ) );
+            flowActionsMenu.add( new AttributeModifier( "class", true, new Model<String>( "locked" ) ) );
+        }
+        addOrReplace( flowActionsMenu );
     }
+
 
 
     private void addAllField() {

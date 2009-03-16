@@ -146,4 +146,10 @@ public interface Command extends Serializable {
      * @return a string
      */
     String getUndoes( Commander commander );
+
+    /**
+     * Whether the command modifies the contents of a scenario.
+     * @return a boolean
+     */
+    boolean isScenarioSpecific();
 }

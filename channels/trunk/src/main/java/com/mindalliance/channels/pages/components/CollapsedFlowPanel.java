@@ -2,10 +2,12 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Channel;
+import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.components.menus.FlowActionsMenuPanel;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.Model;
@@ -51,7 +53,7 @@ public class CollapsedFlowPanel extends AbstractCommandablePanel {
             label.add(
                     new AttributeModifier( "class", true, new Model<String>( "error" ) ) );
             label.add(
-                    new AttributeModifier( "title", true, new Model<String>( issue ) ) ); 
+                    new AttributeModifier( "title", true, new Model<String>( issue ) ) );
         }
 
         add( label );
@@ -60,10 +62,10 @@ public class CollapsedFlowPanel extends AbstractCommandablePanel {
 
     private void addFlowActionMenu( boolean isOutcome ) {
         FlowActionsMenuPanel flowActionsMenu = new FlowActionsMenuPanel(
-                "flowActionsMenu",
-                new PropertyModel<Flow>( this, "flow" ),
-                isOutcome,
-                true );
+                    "flowActionsMenu",
+                    new PropertyModel<Flow>( this, "flow" ),
+                    isOutcome,
+                    true );
         add( flowActionsMenu );
     }
 

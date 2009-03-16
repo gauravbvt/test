@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.command.commands.UpdateProjectObject;
+import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.pages.components.menus.IssueActionsMenuPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -12,6 +13,8 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.Component;
+import org.apache.wicket.AttributeModifier;
 
 import java.util.Arrays;
 
@@ -38,11 +41,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
     private void init() {
         Issue issue = model.getObject();
         setOutputMarkupId( true );
-        IssueActionsMenuPanel actionsMenu = new IssueActionsMenuPanel(
-                "issueActionsMenu",
-                new Model<Issue>( model.getObject() ),
-                false );
-        add( actionsMenu );
+        addIssueActionsMenu();
         TextArea<String> descriptionArea = new TextArea<String>( "description",
                 new PropertyModel<String>( this, "description" ) );
         descriptionArea.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
@@ -75,6 +74,22 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
         add( new AttachmentPanel( "attachments", new Model<UserIssue>( (UserIssue) issue ) ) );
         add( new Label( "reported-by",
                 new PropertyModel<String>( issue, "reportedBy" ) ) );
+    }
+
+    private void addIssueActionsMenu() {
+        Component actionsMenu;
+        LockManager lockManager = getLockManager();
+        if ( lockManager.isLockedByUser( getIssue() ) ) {
+            actionsMenu = new IssueActionsMenuPanel(
+                    "issueActionsMenu",
+                    new Model<Issue>( model.getObject() ),
+                    false );
+        } else {
+            String otherUser = lockManager.getLockOwner( getIssue().getId() );
+            actionsMenu = new Label( "issueActionsMenu", new Model<String>( "Edited by " + otherUser ) );
+            actionsMenu.add( new AttributeModifier( "class", true, new Model<String>( "locked" ) ) );
+        }
+        add( actionsMenu );
     }
 
     private Issue getIssue() {

@@ -254,7 +254,7 @@ public class DefaultLockManager implements LockManager {
             grabLockOn( identifiable.getId() );
             locked = true;
         } catch ( LockingException e ) {
-            LOG.info( "Failed to grab lock on " + identifiable, e );
+            LOG.info( "Failed to grab lock on " + identifiable );
         }
         return locked;
     }
@@ -268,7 +268,7 @@ public class DefaultLockManager implements LockManager {
             releaseLockOn( identifiable.getId() );
             unlocked = true;
         } catch ( LockingException e ) {
-            LOG.info( "Failed to release lock on " + identifiable, e );
+            LOG.info( "Failed to release lock on " + identifiable );
         }
         return unlocked;
     }

@@ -81,8 +81,6 @@ public class FlowActionsMenuPanel extends MenuPanel {
 
     private List<CommandWrapper> getCommandWrappers() {
         return new ArrayList<CommandWrapper>() {
-            private final Scenario scenario = getFlow().getScenario();
-
             {
                 final Flow flow = getFlow();
                 if ( !isCollapsed )
