@@ -16,6 +16,9 @@ import com.mindalliance.channels.Service;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Organization;
+import com.mindalliance.channels.Channel;
+import com.mindalliance.channels.Channelable;
+import com.mindalliance.channels.AbstractUnicastChannelable;
 import com.mindalliance.channels.dao.EvacuationScenario;
 import com.mindalliance.channels.dao.FireScenario;
 import com.mindalliance.channels.export.Importer;
@@ -315,13 +318,13 @@ public class ChannelsServiceImpl implements Service {
         Set<ResourceSpec> result = new HashSet<ResourceSpec>();
         // Specs from entities
         for ( Actor actor : list( Actor.class ) ) {
-           result.add( ResourceSpec.with( actor ));
+            result.add( ResourceSpec.with( actor ) );
         }
         for ( Role role : list( Role.class ) ) {
-           result.add( ResourceSpec.with( role ));
+            result.add( ResourceSpec.with( role ) );
         }
         for ( Organization organization : list( Organization.class ) ) {
-           result.add( ResourceSpec.with( organization ));
+            result.add( ResourceSpec.with( organization ) );
         }
         // Specs from scenario parts
         for ( Scenario scenario : list( Scenario.class ) ) {
@@ -471,6 +474,85 @@ public class ChannelsServiceImpl implements Service {
             }
         }
         return new ArrayList<Actor>( actors );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Channel> findAllCandidateChannelsFor( Channelable channelable ) {
+        if ( channelable instanceof Flow ) {
+            return findAllCandidateChannelsForFlow( (Flow) channelable );
+        } else {
+            return findAllCandidateChannelsForUnicastChannelable(
+                    (AbstractUnicastChannelable) channelable );
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    private List<Channel> findAllCandidateChannelsForFlow( Flow flow ) {
+        final Set<Channel> channels = new HashSet<Channel>();
+        List<Channel> currentChannels = flow.getEffectiveChannels();
+        Part part = flow.getContactedPart();
+        if ( part != null ) {
+            List<Flow> relatedFlows = findAllFlowsContacting( part.resourceSpec() );
+            for ( Flow relatedFlow : relatedFlows ) {
+                if ( relatedFlow != flow ) {
+                    for ( Channel channel : relatedFlow.getEffectiveChannels() ) {
+                        if ( relatedFlow.validate( channel ) == null
+                                && !currentChannels.contains( channel ) )
+                            channels.add( new Channel( channel.getMedium(), channel.getAddress() ) );
+                    }
+                }
+            }
+        }
+        return new ArrayList<Channel>() {
+            {
+                addAll( channels );
+            }
+        };
+    }
+
+    private List<Channel> findAllCandidateChannelsForUnicastChannelable(
+            AbstractUnicastChannelable channelable ) {
+        final Set<Channel> channels = new HashSet<Channel>();
+        List<Channel> currentChannels = channelable.getEffectiveChannels();
+        ResourceSpec resourceSpec = ResourceSpec.with( channelable );
+        List<Flow> relatedFlows = findAllFlowsContacting( resourceSpec );
+        for ( Flow relatedFlow : relatedFlows ) {
+            for ( Channel channel : relatedFlow.getEffectiveChannels() ) {
+                if ( channel.isUnicast()
+                        && relatedFlow.validate( channel ) == null
+                        && !currentChannels.contains( channel ) )
+                    channels.add( new Channel( channel.getMedium(), channel.getAddress() ) );
+            }
+        }
+        return new ArrayList<Channel>() {
+            {
+                addAll( channels );
+            }
+        };
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Flow> findAllFlowsContacting( ResourceSpec resourceSpec ) {
+        List<Flow> flows = new ArrayList<Flow>();
+        for ( Scenario scenario : this.list( Scenario.class ) ) {
+            Iterator<Flow> scenarioFlows = scenario.flows();
+            while ( scenarioFlows.hasNext() ) {
+                Flow flow = scenarioFlows.next();
+                Part contactedPart = flow.getContactedPart();
+                if ( contactedPart != null
+                        && resourceSpec.narrowsOrEquals( contactedPart.resourceSpec() ) ) {
+                    flows.add( flow );
+                }
+            }
+        }
+        return flows;
     }
 
     public boolean isImportingScenarios() {

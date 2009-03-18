@@ -3,10 +3,12 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Place;
+import com.mindalliance.channels.Channelable;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.TextField;
 
@@ -43,6 +45,7 @@ public class OrganizationPanel extends ModelObjectPanel {
                 new TextField<String>( "location",                                            // NON-NLS
                         new PropertyModel<String>( this, "locationName" ) ) );
 
+        moDetailsDiv.add( new ChannelListPanel( "channels", new Model<Channelable>( (Organization) mo ) ) );
     }
 
     /**

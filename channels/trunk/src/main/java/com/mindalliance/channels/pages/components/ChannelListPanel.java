@@ -4,11 +4,8 @@ import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.Channelable;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Medium;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.commands.UpdateObject;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -28,9 +25,7 @@ import org.apache.wicket.model.PropertyModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * An editable list of channels.
@@ -196,7 +191,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                 final DropDownChoice<Medium> mediumChoices = new DropDownChoice<Medium>(
                         "medium",
                         new PropertyModel<Medium>( wrapper, "medium" ),
-                        Medium.media(),
+                        (channelable instanceof Flow) ? Medium.media() : Medium.unicastMedia(),
                         new IChoiceRenderer<Medium>() {
                             public Object getDisplayValue( Medium medium ) {
                                 return medium == null ? "Select a medium" : medium.getName();
@@ -295,58 +290,14 @@ public class ChannelListPanel extends AbstractCommandablePanel {
      */
     public List<Wrapper> getWrappedCandidateChannels() {
         Channelable channelable = model.getObject();
-        Set<Channel> candidates = new HashSet<Channel>();
-        List<Channelable> channelables = findRelatedChannelables( channelable );
-        List<Channel> alreadySetChannels = channelable.getEffectiveChannels();
-        // Get all non-redundant, valid candidate channels
-        for ( Channelable aChannelable : channelables ) {
-            for ( Channel channel : aChannelable.getEffectiveChannels() ) {
-                if ( !alreadySetChannels.contains( channel )
-                        && !( aChannelable instanceof Flow && channel.isUnicast() )
-                        && channel.isValid() ) {
-                    candidates.add( channel );
-                }
-            }
-        }
+        List<Channel> candidates = getService().findAllCandidateChannelsFor( channelable );
         // Wrap them as not marked for inclusion
         List<Wrapper> wrappers = new ArrayList<Wrapper>();
         for ( Channel candidate : candidates ) {
             wrappers.add(
-                    new Wrapper(
-                            new Channel( candidate.getMedium(), candidate.getAddress() ), false ) );
+                    new Wrapper( candidate, false ) );
         }
         return wrappers;
-    }
-
-    /**
-     * Find actors, organization and flows that have candidate channels for a given channelable
-     *
-     * @param channelable the given channelable
-     * @return a list of Channelables
-     */
-    private List<Channelable> findRelatedChannelables( Channelable channelable ) {
-        final List<Channelable> relatedChannelables = new ArrayList<Channelable>();
-        // Find broadcast channels in related flows
-        // If applicable (part played by actor or organization),
-        // get actor or organization's unicast channels.
-        if ( channelable instanceof Flow ) {
-            Flow flow = (Flow) channelable;
-            Node node = flow.isAskedFor() ? flow.getSource() : flow.getTarget();
-            if ( node != null && node.isPart() ) {
-                Part part = (Part) node;
-                ResourceSpec partResourceSpec = part.resourceSpec();
-                if ( !partResourceSpec.isAnyone() ) {
-                    boolean isSource = flow.isAskedFor();
-                    relatedChannelables.addAll(
-                            getService().findAllRelatedFlows( partResourceSpec, isSource ) );
-                }
-                if ( partResourceSpec.isActor() )
-                    relatedChannelables.add( partResourceSpec.getActor() );
-                else if ( partResourceSpec.isActor() )
-                    relatedChannelables.add( partResourceSpec.getOrganization() );
-            }
-        }
-        return relatedChannelables;
     }
 
     private void flagIfInvalid( TextField<String> addressField, Wrapper wrapper ) {

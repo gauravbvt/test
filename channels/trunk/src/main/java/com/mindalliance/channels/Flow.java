@@ -620,6 +620,17 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
     }
 
     /**
+     * Get part being contacted if any.
+     *
+     * @return a part or null
+     */
+    @Transient
+    public Part getContactedPart() {
+        Node node = isAskedFor() ? getSource() : getTarget();
+        return node.isPart() ? (Part) node : null;
+    }
+
+    /**
      * The significance of a flow.
      */
     public enum Significance {

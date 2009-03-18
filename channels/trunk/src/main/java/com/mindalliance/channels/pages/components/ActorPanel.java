@@ -2,8 +2,10 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Actor;
+import com.mindalliance.channels.Channelable;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.TextField;
 
@@ -24,7 +26,7 @@ public class ActorPanel extends ModelObjectPanel {
         moDetailsDiv.add(
                 new TextField<String>( "job-title",                                            // NON-NLS
                         new PropertyModel<String>( this, "jobTitle" ) ) );
-
+        moDetailsDiv.add( new ChannelListPanel( "channels", new Model<Channelable>( (Actor) mo ) ) );
     }
 
     /**
