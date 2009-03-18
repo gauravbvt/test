@@ -1,11 +1,14 @@
 package com.mindalliance.channels.pages.components.menus;
 
 import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Scenario;
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.model.PropertyModel;
 
-import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Pages menu for a part.
@@ -23,16 +26,45 @@ public class PartPagesMenuPanel extends MenuPanel {
     }
 
     private void init() {
-        add( new ExternalLink( "profile", MessageFormat.format(                       // NON-NLS
-                "resource.html?scenario={0,number,0}&part={1,number,0}",           // NON-NLS
-                getScenario().getId(), getPart().getId() ) ) );
+        ListView<Component> menuItems = new ListView<Component>(
+                "items",
+                new PropertyModel<List<Component>>( this, "menuItems" ) ) {
+            protected void populateItem( ListItem<Component> item ) {
+                item.add( item.getModelObject() );
+            }
+        };
+        add( menuItems );
+    }
+
+    /**
+     * Get population of menu items.
+     *
+     * @return a list of menu items
+     */
+    public List<Component> getMenuItems() {
+        List<Component> menuItems = new ArrayList<Component>();
+        menuItems.addAll( getModelObjectMenuItems( "menuItem", getModelObjectWrappers() ) );
+        return menuItems;
+    }
+
+    private List<ModelObjectWrapper> getModelObjectWrappers() {
+        List<ModelObjectWrapper> modelObjects = new ArrayList<ModelObjectWrapper>();
+        Part part = getPart();
+        if ( part.getActor() != null )
+            modelObjects.add( new ModelObjectWrapper( "Actor page", part.getActor() ) );
+        if ( part.getRole() != null )
+            modelObjects.add( new ModelObjectWrapper( "Role page", part.getRole() ) );
+        if ( part.getOrganization() != null )
+            modelObjects.add( new ModelObjectWrapper( "Organization page", part.getOrganization() ) );
+        if ( part.getJurisdiction() != null )
+            modelObjects.add( new ModelObjectWrapper( "Jurisdiction page", part.getJurisdiction() ) );
+        if ( part.getLocation() != null )
+            modelObjects.add( new ModelObjectWrapper( "Location page", part.getLocation() ) );
+        return modelObjects;
     }
 
     private Part getPart() {
         return (Part) getModel().getObject();
     }
 
-    private Scenario getScenario() {
-        return getPart().getScenario();
-    }
 }

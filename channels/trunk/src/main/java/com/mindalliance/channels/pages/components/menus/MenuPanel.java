@@ -1,11 +1,13 @@
 package com.mindalliance.channels.pages.components.menus;
 
 import com.mindalliance.channels.Identifiable;
+import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -20,6 +22,7 @@ import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
 
 /**
  * An abstract base class for menu panel.
@@ -46,6 +49,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
 
     /**
      * Make an undo menu item.
+     *
      * @param id the id of the menu item.
      * @return a menu item component
      */
@@ -69,13 +73,14 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
                     "class",
                     true,
                     new Model<String>( "disabled" ) ) );
-            menuItem = undoLabel ;
+            menuItem = undoLabel;
         }
         return menuItem;
     }
 
     /**
      * Make a redo menu item.
+     *
      * @param id the id of the menu item.
      * @return a menu item component
      */
@@ -96,7 +101,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
         } else {
             Label label = new Label( id, "Redo" );
             label.add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
-            menuItem = label ;
+            menuItem = label;
         }
         return menuItem;
     }
@@ -106,8 +111,31 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
     }
 
     /**
+     * Make menu items linking to model object pages.
+     * @param id  id of the menu item
+     * @param moWrappers model object wrappers (model object + link text)
+     * @return a list of components
+     */
+    protected List<Component> getModelObjectMenuItems( String id, List<ModelObjectWrapper> moWrappers ) {
+        List<Component> menuItems = new ArrayList<Component>();
+        for ( ModelObjectWrapper moWrapper : moWrappers ) {
+            ModelObjectLink link = makeLink( "link", new Model<ModelObject>( moWrapper.getModelObject() ) );
+            menuItems.add( new LinkMenuItem( id, new PropertyModel<String>( moWrapper, "title" ), link ) );
+        }
+        return menuItems;
+    }
+
+    private ModelObjectLink makeLink( String id,
+                                      final IModel<ModelObject> model ) {
+        ModelObjectLink link = new ModelObjectLink( id, new Model<ModelObject>( model.getObject() ) );
+        link.setOutputMarkupId( true );
+        return link;
+    }
+
+    /**
      * Make menu items from commands.
-     * @param id id of the menu item
+     *
+     * @param id              id of the menu item
      * @param commandWrappers a list of wrapped commands
      * @return a list of menu item components
      */
@@ -143,6 +171,41 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
             }
         }
         return menuItems;
+    }
+
+    /**
+     * A Model object wrapper.
+     */
+    protected static class ModelObjectWrapper implements Serializable {
+        /**
+         * Model object.
+         */
+        private ModelObject modelObject;
+        /**
+         * Title.
+         */
+        private String title;
+
+        protected ModelObjectWrapper( String title, ModelObject modelObject ) {
+            this.title = title;
+            this.modelObject = modelObject;
+        }
+
+        public ModelObject getModelObject() {
+            return modelObject;
+        }
+
+        public void setModelObject( ModelObject modelObject ) {
+            this.modelObject = modelObject;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle( String title ) {
+            this.title = title;
+        }
     }
 
 

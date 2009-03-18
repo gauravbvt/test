@@ -13,7 +13,6 @@ import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.FlowDiagram;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.menus.PartActionsMenuPanel;
 import com.mindalliance.channels.pages.components.menus.PartPagesMenuPanel;
 import org.apache.commons.lang.StringUtils;
@@ -87,6 +86,10 @@ public class ScenarioPanel extends AbstractCommandablePanel {
      */
     private Component partActionsMenu;
     /**
+      * Part pages menu
+      */
+     private Component partPagesMenu;
+    /**
      * Outcomes flow panel.
      */
     private FlowListPanel outcomesFlowPanel;
@@ -147,7 +150,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
 
     private void addPartMenuBar() {
         addPartActionsMenu();
-        MenuPanel partPagesMenu = new PartPagesMenuPanel(
+        partPagesMenu = new PartPagesMenuPanel(
                 "partPagesMenu",
                 new PropertyModel<Part>( this, "part" )
         );
@@ -261,6 +264,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         }
         makeVisible( target, partIssuesPanel, Project.analyst().hasIssues( getPart(), false ) );
         addPartActionsMenu();
+        target.addComponent( partPagesMenu );
         target.addComponent( partActionsMenu );
         super.updateWith( target, change );
     }

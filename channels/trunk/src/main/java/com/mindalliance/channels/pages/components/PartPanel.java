@@ -10,7 +10,6 @@ import com.mindalliance.channels.Role;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
-import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.wicket.AttributeModifier;
@@ -85,6 +84,10 @@ public class PartPanel extends AbstractCommandablePanel {
      * The part edited by this form.
      */
     private IModel<Part> model;
+    /**
+     * Text fields.
+     */
+    private List<TextField<String>> textFields = new ArrayList<TextField<String>>();
 
     //====================================
     public PartPanel( String id, IModel<Part> model ) {
@@ -94,20 +97,10 @@ public class PartPanel extends AbstractCommandablePanel {
 
         addField( TASK_PROPERTY, findAllTaskNames() );
         addField( ACTOR_PROPERTY, findAllActorNames() );
-        add( makeLink( "actor-link",                                           // NON-NLS
-                new PropertyModel<ModelObject>( getPart(), ACTOR_PROPERTY ) ) );
         addField( ROLE_PROPERTY, findAllRoleNames() );
-        add( makeLink( "role-link",                                            // NON-NLS
-                new PropertyModel<ModelObject>( getPart(), ROLE_PROPERTY ) ) );
         addField( ORG_PROPERTY, findAllOrganizationNames() );
-        add( makeLink( "org-link",                                             // NON-NLS
-                new PropertyModel<ModelObject>( getPart(), ORG_PROPERTY ) ) );
         addField( JURISDICTION_PROPERTY, findAllPlaceNames() );
-        add( makeLink( "juris-link",                                           // NON-NLS
-                new PropertyModel<ModelObject>( getPart(), JURISDICTION_PROPERTY ) ) );
         addField( LOCATION_PROPERTY, findAllPlaceNames() );
-        add( makeLink( "loc-link",                                             // NON-NLS
-                new PropertyModel<ModelObject>( getPart(), LOCATION_PROPERTY ) ) );
         addTimingFields();
     }
 
@@ -153,11 +146,6 @@ public class PartPanel extends AbstractCommandablePanel {
         return names;
     }
 
-    private ModelObjectLink makeLink( String id,
-                                      final IModel<ModelObject> model ) {
-        return new ModelObjectLink( id, new Model<ModelObject>( model.getObject() ) );
-    }
-
     private void addField( final String property, final Collection<String> choices ) {
         final TextField<String> field;
         if ( choices == null ) {
@@ -190,7 +178,7 @@ public class PartPanel extends AbstractCommandablePanel {
         addIssues( field, getPart(), property );
         field.setEnabled( isLockedByUser( getPart() ) );
         add( field );
-
+        textFields.add( field );
     }
 
     /**
@@ -208,10 +196,17 @@ public class PartPanel extends AbstractCommandablePanel {
         if ( !issue.isEmpty() ) {
             component.add(
                     new AttributeModifier(
-                            "class", true, new Model<String>( "error" ) ) );              // NON-NLS
+                            "class", true, new Model<String>( "error" ) ) );
             component.add(
                     new AttributeModifier(
                             "title", true, new Model<String>( issue ) ) );                // NON-NLS
+        } else {
+            component.add(
+                    new AttributeModifier(
+                            "class", true, new Model<String>( "no-error" ) ) );
+            component.add(
+                    new AttributeModifier(
+                            "title", true, new Model<String>( "" ) ) );
         }
     }
 
@@ -471,5 +466,18 @@ public class PartPanel extends AbstractCommandablePanel {
         return model.getObject();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void updateWith( AjaxRequestTarget target, Change change ) {
+        if ( change.getType() == Change.Type.Updated ) {
+            String property = change.getProperty();
+            for ( TextField<String> field : textFields ) {
+                if ( field.getId().equals( property ) )
+                    addIssues( field, getPart(), property );
+            }
+        }
+        super.updateWith( target, change );
+    }
 
 }
