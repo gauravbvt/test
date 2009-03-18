@@ -591,6 +591,35 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public boolean canBeUnicast() {
+        Node node = isAskedFor() ? getSource() : getTarget();
+        if ( node.isPart() ) {
+            Part part = (Part) node;
+            ResourceSpec resourceSpec = part.resourceSpec();
+            return resourceSpec.isActor() || resourceSpec.isOrganization();
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    public String validate( Channel channel ) {
+        String problem = null;
+        if ( !canBeUnicast() && channel.isUnicast() ) {
+            if ( !channel.getAddress().isEmpty() ) {
+                problem = "Can't specify a unicast address when not communicating with an actor or organization.";
+            }
+        } else if ( !channel.isValid() ) {
+            problem = "Invalid address";
+        }
+        return problem;
+    }
+
+    /**
      * The significance of a flow.
      */
     public enum Significance {

@@ -9,7 +9,6 @@ import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Change;
 
 /**
@@ -38,7 +37,7 @@ public class TestAddRemoveIssue extends AbstractChannelsTest {
         service.remove( scenario );
     }
 
-    public void testAddRemoveIssue() throws CommandException {
+    public void testAddRemoveIssue() throws Exception {
         int count = countIssues( scenario );
         Command addIssue = new AddUserIssue( scenario );
         assertTrue( commander.canDo( addIssue ) );

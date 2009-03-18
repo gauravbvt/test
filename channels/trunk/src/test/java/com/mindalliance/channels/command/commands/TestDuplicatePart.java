@@ -35,7 +35,7 @@ public class TestDuplicatePart extends AbstractChannelsTest {
         service.remove( scenario );
     }
 
-    public void testDuplicatePart() throws CommandException {
+    public void testDuplicatePart() throws Exception {
         int count = countParts();
         Part part = scenario.getDefaultPart();
         Command duplicatePart = new DuplicatePart( part );

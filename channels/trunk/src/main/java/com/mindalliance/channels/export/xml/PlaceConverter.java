@@ -4,7 +4,9 @@ import com.mindalliance.channels.Place;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.pages.Project;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
 
 /**
  * XStream place converter
@@ -45,7 +47,11 @@ public class PlaceConverter extends EntityConverter {
     /**
      * {@inheritDoc}
      */
-    protected void setSpecific( ModelObject entity, String nodeName, String value ) {
+    protected void setSpecific(
+            ModelObject entity,
+            String nodeName,
+            HierarchicalStreamReader reader,
+            UnmarshallingContext context  ) {
        // Do nothing
     }
 

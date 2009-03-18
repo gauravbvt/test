@@ -7,13 +7,11 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Place;
-import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.pages.Project;
-import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -26,12 +24,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.HashSet;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * XStream scenario converter.
- * Includes project's permanent resource specs
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -39,6 +37,11 @@ import java.util.HashSet;
  * Time: 1:47:49 PM
  */
 public class ScenarioConverter implements Converter {
+
+    /**
+     * Class logger.
+     */
+    public static final Logger LOG = LoggerFactory.getLogger( ScenarioConverter.class );
 
     public ScenarioConverter() {
     }
@@ -76,12 +79,6 @@ public class ScenarioConverter implements Converter {
             writer.endNode();
         }
 
-        // Permanent resource specifications
-        for ( ResourceSpec resourceSpec : service.list( ResourceSpec.class ) ) {
-            writer.startNode( "resource" );
-            context.convertAnother( resourceSpec );
-            writer.endNode();
-        }
         // Scenario user issues
         List<Issue> issues = service.findAllUserIssues( scenario );
         for ( Issue issue : issues ) {
@@ -114,13 +111,11 @@ public class ScenarioConverter implements Converter {
         Map<String, Long> idMap = new HashMap<String, Long>();
         context.put( "idMap", idMap );
         Scenario scenario = Project.service().createScenario();
-        Service service = Project.service();
         Part defaultPart = scenario.getDefaultPart();
         context.put( "scenario", scenario );
         scenario.setName( reader.getAttribute( "name" ) );
         String oldId = reader.getAttribute( "id" );
         idMap.put( oldId, scenario.getId() );
-        Set<ResourceSpec> resourceSpecs = new HashSet<ResourceSpec>();
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
@@ -135,14 +130,6 @@ public class ScenarioConverter implements Converter {
                 context.convertAnother( scenario, Role.class );
             } else if ( nodeName.equals( "place" ) ) {
                 context.convertAnother( scenario, Place.class );
-/*
-            } else if ( nodeName.equals( "medium" ) ) {
-                context.convertAnother( scenario, Medium.class );
-*/
-                // Resources
-            } else if ( nodeName.equals( "resource" ) ) {
-                ResourceSpec resourceSpec = (ResourceSpec) context.convertAnother( scenario, ResourceSpec.class );
-                resourceSpecs.add( resourceSpec );
                 // Parts and flows
             } else if ( nodeName.equals( "part" ) ) {
                 context.convertAnother( scenario, Part.class );
@@ -152,20 +139,12 @@ public class ScenarioConverter implements Converter {
             } else if ( nodeName.equals( "issue" ) ) {
                 context.convertAnother( scenario, UserIssue.class );
             } else {
-                throw new ConversionException( "Unknown element " + nodeName );
+                LOG.warn( "Unknown element " + nodeName );
             }
             reader.moveUp();
         }
         // Remove automatically created default part
         scenario.removeNode( defaultPart );
-        // Register unique resourceSpecs
-        Set<ResourceSpec> registeredResourceSpecs = new HashSet<ResourceSpec>();
-        registeredResourceSpecs.addAll( service.list( ResourceSpec.class ) );
-        for ( ResourceSpec resourceSpec : resourceSpecs ) {
-            if ( !resourceSpec.isAnyone() && !registeredResourceSpecs.contains( resourceSpec ) ) {
-                service.add( resourceSpec );
-            }
-        }
         return scenario;
     }
 

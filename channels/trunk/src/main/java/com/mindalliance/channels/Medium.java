@@ -1,7 +1,11 @@
 package com.mindalliance.channels;
 
+import javax.persistence.Transient;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A communication medium.
@@ -13,50 +17,68 @@ import java.util.regex.Pattern;
  */
 
 public enum Medium {
+
     /**
-     * Telephone
+     * Telephone.
      */
-    Phone( "Work phone", "(\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}(\\s*((ext\\.?)|(x\\.?))\\s*\\d+)?)|(\\d{3})" ),
+    Phone( "Work phone", "(\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}(\\s*\\D+\\s*\\d+)?)|(\\d{3})" ),
     /**
-     * Telephone
+     * Telephone.
      */
     HomePhone( "Home phone", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}" ),
     /**
-     * Fax
+     * Fax.
      */
     Fax( "Fax", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}" ),
     /**
-     * Cell phone
+     * Cell phone.
      */
     Cell( "Cell", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}" ),
     /**
-     * Email
+     * Phone conference.
+     */
+    PhoneConf( "Phone conference", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}(\\s*\\D+\\s*\\d+)?", false ),
+    /**
+     * Email.
      */
     Email( "Email", "[^@\\s]+@[^@\\s]+\\.\\w+" ),
     /**
-     * Instant messaging
+     * Notification system.
+     */
+    Notifier( "Notification system", ".+", false ),
+    /**
+     * Instant messaging.
      */
     IM( "IM", ".+" ),
     /**
-     * Radio
+     * Radio.
      */
-    Radio( "Radio", ".+" ),
+    Radio( "Radio", ".+", false ),
     /**
-     * Television
+     * Television.
      */
-    TV( "Television", ".+" ),
+    TV( "Television", ".+", false ),
     /**
-     * Courier, like Fedex or UPS
+     * Courier, like Fedex or UPS.
      */
     Courier( "Courier", ".+" ),
     /**
-     * In person
+     * In person, one on one.
      */
     F2F( "Face-to-face", ".+" ),
     /**
-     * Miscellaneous
+     *
      */
-    Other( "Other", ".+" );
+    Meeting( "Meeting", ".+", false ),
+    /**
+     * Miscellaneous unicast.
+     */
+    Other( "Other (unicast)", ".+" ),
+    /**
+     * Miscellaneous broadcast.
+     */
+    OtherBroadcast( "Other (broadcast)", ".+", false );
+
 
     /**
      * The medium's name
@@ -70,9 +92,18 @@ public enum Medium {
      * The compiled pattern
      */
     private Pattern compiledPattern;
+    /**
+     * Whether the medium is unicast or broadcast.
+     */
+    private boolean unicast = true;
 
     Medium( String name, String addressPattern ) {
+        this( name, addressPattern, true );
+    }
+
+    Medium( String name, String addressPattern, boolean unicast ) {
         this.name = name;
+        this.unicast = unicast;
         this.addressPattern = addressPattern;
         compiledPattern = Pattern.compile( addressPattern );
     }
@@ -94,6 +125,19 @@ public enum Medium {
 
     public String getName() {
         return name;
+    }
+
+    public boolean isUnicast() {
+        return unicast;
+    }
+
+    @Transient
+    public boolean isBroadcast() {
+        return !unicast;
+    }
+
+    public void setUnicast( boolean unicast ) {
+        this.unicast = unicast;
     }
 
     public String getAddressPattern() {
@@ -123,5 +167,40 @@ public enum Medium {
     @Override
     public String toString() {
         return name;
+    }
+
+    /**
+     * List all media.
+     *
+     * @return a list of medium's
+     */
+    public static List<Medium> media() {
+        return Arrays.asList( Medium.values() );
+    }
+
+    /**
+     * List unicast media.
+     *
+     * @return a list of medium's
+     */
+    public static List<Medium> unicastMedia() {
+        List<Medium> unicastMedia = new ArrayList<Medium>();
+        for ( Medium medium : values() ) {
+            if ( medium.isUnicast() ) unicastMedia.add( medium );
+        }
+        return unicastMedia;
+    }
+
+    /**
+     * List broadcast media.
+     *
+     * @return a list of medium's
+     */
+    public static List<Medium> broadcastMedia() {
+        List<Medium> broadcastMedia = new ArrayList<Medium>();
+        for ( Medium medium : values() ) {
+            if ( medium.isBroadcast() ) broadcastMedia.add( medium );
+        }
+        return broadcastMedia;
     }
 }

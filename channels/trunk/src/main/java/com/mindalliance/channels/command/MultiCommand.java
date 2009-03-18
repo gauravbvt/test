@@ -1,6 +1,8 @@
 package com.mindalliance.channels.command;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -17,6 +19,10 @@ import java.util.List;
  * Time: 9:30:58 AM
  */
 public class MultiCommand extends AbstractCommand {
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( MultiCommand.class );
     /**
      * The command's name.
      */
@@ -88,7 +94,8 @@ public class MultiCommand extends AbstractCommand {
         }
     }
 
-    public MultiCommand() {}
+    public MultiCommand() {
+    }
 
     public MultiCommand( String name ) {
         this.name = name;
@@ -124,7 +131,7 @@ public class MultiCommand extends AbstractCommand {
                 executed.add( command );
             }
             catch ( CommandException e ) {
-                e.printStackTrace();
+                LOG.warn( " Execution failed", e );
                 // ignore
             }
         }

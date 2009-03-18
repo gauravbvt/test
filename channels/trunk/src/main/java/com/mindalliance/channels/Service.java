@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Iterator;
 import java.util.List;
-import java.io.Serializable;
 
 /**
  * External service interface.
@@ -138,6 +137,14 @@ public interface Service {
      */
     List<ResourceSpec> findAllResourcesBroadeningOrEqualTo( ResourceSpec resourceSpec );
 
+     /**
+     * Find all flows in all scenarios where the part applies as specified (as source or target).
+     * @param resourceSpec a resource spec
+     * @param asSource a boolean
+     * @return a list of flows
+     */
+    List<Flow> findAllRelatedFlows( ResourceSpec resourceSpec, boolean asSource );
+
     /**
      * Find all plays for the resource
      *
@@ -160,20 +167,6 @@ public interface Service {
      * @return list of issues
      */
     List<Issue> findAllUserIssues( ModelObject identifiable );
-
-    /**
-     * Find permanent resource spec matching given one
-     * @param resourceSpec a ResourceSpec to match against
-     * @return a permanent resource spec or null if none found
-     */
-    ResourceSpec findPermanentResourceSpec( ResourceSpec resourceSpec );
-
-    /**
-     * Add resource spec if equivalent not permanent yet,
-     * else already permament resource from given resource spec
-     * @param resourceSpec resource spec to add or update from
-     */
-    void addOrUpdate( ResourceSpec resourceSpec );
 
     /**
      * Add some default scenarios, if needed.

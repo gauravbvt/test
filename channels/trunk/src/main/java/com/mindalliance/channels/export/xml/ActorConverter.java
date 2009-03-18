@@ -2,10 +2,14 @@ package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Channel;
+import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.pages.Project;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
 
 /**
  * XStream Actor converter
@@ -45,15 +49,27 @@ public class ActorConverter extends EntityConverter {
             writer.setValue( jobTitle );
             writer.endNode();
         }
+        // channels
+        for ( Channel channel : actor.getChannels() ) {
+            writer.startNode( "channel" );
+            context.convertAnother( channel );
+            writer.endNode();
+        }
     }
 
     /**
      * {@inheritDoc}
      */
-    protected void setSpecific( ModelObject entity, String nodeName, String value ) {
+    protected void setSpecific( ModelObject entity, String nodeName,
+                                HierarchicalStreamReader reader,
+                                UnmarshallingContext context ) {
+        Scenario scenario = (Scenario) context.get( "scenario" );
         Actor actor = (Actor) entity;
         if ( nodeName.equals( "jobTitle" ) ) {
-            actor.setJobTitle( value );
+            actor.setJobTitle( reader.getValue() );
+        } else if ( nodeName.equals( "channel" ) ) {
+            Channel channel = (Channel) context.convertAnother( scenario, Channel.class );
+            actor.addChannel( channel );
         } else {
             throw new ConversionException( "Unknown element " + nodeName );
         }

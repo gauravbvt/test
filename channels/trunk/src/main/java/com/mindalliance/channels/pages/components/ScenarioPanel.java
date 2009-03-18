@@ -17,9 +17,9 @@ import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.menus.PartActionsMenuPanel;
 import com.mindalliance.channels.pages.components.menus.PartPagesMenuPanel;
 import org.apache.commons.lang.StringUtils;
-import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.Component;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -86,6 +86,14 @@ public class ScenarioPanel extends AbstractCommandablePanel {
      * Part actions menu
      */
     private Component partActionsMenu;
+    /**
+     * Outcomes flow panel.
+     */
+    private FlowListPanel outcomesFlowPanel;
+    /**
+     * Requirements flow panel.
+     */
+    private FlowListPanel reqsFlowPanel;
 
     public ScenarioPanel( String id, IModel<Scenario> scenarioModel, IModel<Part> partModel, Set<Long> expansions ) {
         super( id, scenarioModel );
@@ -100,10 +108,10 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         addScenarioEditPanel( getScenario() );
         addFlowDiagram( getScenario(), partModel );
         addPartContent();
-        FlowListPanel reqs = new FlowListPanel( "reqs", new PropertyModel<Part>( this, "part" ), false, expansions );
-        add( reqs );
-        FlowListPanel outcomes = new FlowListPanel( "outcomes", new PropertyModel<Part>( this, "part" ), true, expansions );
-        add( outcomes );
+        reqsFlowPanel = new FlowListPanel( "reqs", new PropertyModel<Part>( this, "part" ), false, expansions );
+        add( reqsFlowPanel );
+        outcomesFlowPanel = new FlowListPanel( "outcomes", new PropertyModel<Part>( this, "part" ), true, expansions );
+        add( outcomesFlowPanel );
         adjustComponents();
     }
 
@@ -244,6 +252,8 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         }
         if ( identifiable == getPart() && change.isUpdated() ) {
             target.addComponent( partTitle );
+            reqsFlowPanel.refresh( target );
+            outcomesFlowPanel.refresh( target );
         }
         if ( identifiable instanceof Issue || identifiable instanceof ScenarioObject ) {
             if ( !change.isDisplay() ) target.addComponent( flowDiagram );

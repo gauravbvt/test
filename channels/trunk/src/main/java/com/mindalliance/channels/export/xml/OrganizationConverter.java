@@ -3,10 +3,14 @@ package com.mindalliance.channels.export.xml;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Place;
+import com.mindalliance.channels.Channel;
+import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.pages.Project;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
 
 /**
  * XStream organization converter
@@ -54,18 +58,31 @@ public class OrganizationConverter extends EntityConverter {
             writer.setValue( location.getName() );
             writer.endNode();
         }
+        // channels
+        for ( Channel channel : org.getChannels() ) {
+            writer.startNode( "channel" );
+            context.convertAnother( channel );
+            writer.endNode();
+        }
     }
 
     /**
      * {@inheritDoc}
      */
-    protected void setSpecific( ModelObject entity, String nodeName, String value ) {
+    protected void setSpecific( ModelObject entity, String nodeName,
+                                HierarchicalStreamReader reader,
+                                UnmarshallingContext context ) {
+        Scenario scenario = (Scenario) context.get( "scenario" );
+        Organization org = (Organization) entity;
         if ( nodeName.equals( "parent" ) ) {
-            Organization org = (Organization) entity;
-            org.setParent( Project.service().findOrCreate( Organization.class, value ) );
+            org = (Organization) entity;
+            org.setParent( Project.service().findOrCreate( Organization.class, reader.getValue() ) );
         } else if ( nodeName.equals( "location" ) ) {
-            Organization org = (Organization) entity;
-            org.setLocation( Project.service().findOrCreate( Place.class, value ) );
+            org = (Organization) entity;
+            org.setLocation( Project.service().findOrCreate( Place.class, reader.getValue() ) );
+        } else if ( nodeName.equals( "channel" ) ) {
+            Channel channel = (Channel) context.convertAnother( scenario, Channel.class );
+            org.addChannel( channel );
         } else {
             throw new ConversionException( "Unknown element " + nodeName );
         }

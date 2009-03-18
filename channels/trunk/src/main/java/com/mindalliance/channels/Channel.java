@@ -144,4 +144,22 @@ public class Channel implements Serializable {
     public boolean isValid() {
         return medium != null && medium.isAddressValid( address );
     }
+
+    @Transient
+    /**
+     * Is the medium unicast?
+     * @return a boolean
+     */
+    public boolean isUnicast() {
+        return getMedium() != null && getMedium().isUnicast();
+    }
+
+    @Transient
+    /**
+     * Is the medium broadcast?
+     * @return a boolean
+     */
+    public boolean isBroadcast() {
+        return getMedium().isBroadcast();
+    }
 }

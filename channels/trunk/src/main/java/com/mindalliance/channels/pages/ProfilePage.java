@@ -11,7 +11,6 @@ import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.pages.components.ResourceProfilePanel;
-import com.mindalliance.channels.pages.components.ResourceSpecPanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -73,7 +72,6 @@ public class ProfilePage extends WebPage {
         add( new Label( "title", new Model<String>( "Profile: " + resourceSpec.getName() ) ) );
         add ( new ExternalLink("index", "index.html"));
         add( new Label( "resourceSpec-name", new Model<String>( resourceSpec.getName() ) ) );
-        add( new ResourceSpecPanel( "resourceSpec", new Model<ResourceSpec>( resourceSpec ) ) );
         add( new ResourceProfilePanel( "profile", new Model<ResourceSpec>( resourceSpec ) ) );
     }
 
@@ -111,7 +109,6 @@ public class ProfilePage extends WebPage {
             }
         }
         if ( resourceSpec.isAnyone() ) throw new NotFoundException();
-        ResourceSpec permanentResourceSpec = service.findPermanentResourceSpec( resourceSpec );
-        return permanentResourceSpec != null ? permanentResourceSpec : resourceSpec;
+        return resourceSpec;
     }
 }

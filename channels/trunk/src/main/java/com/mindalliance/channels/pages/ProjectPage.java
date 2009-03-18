@@ -583,7 +583,7 @@ public final class ProjectPage extends WebPage implements Updatable {
      * {@inheritDoc}
      */
     public void changed( Change change ) {
-        Identifiable identifiable = change.getSubject();
+        Identifiable identifiable = change.getSubject( );
         if ( change.isCollapsed() ) {
             expansions.remove( identifiable.getId() );
         } else if ( change.isExpanded() ) {

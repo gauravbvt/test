@@ -2,6 +2,8 @@ package com.mindalliance.channels.analysis;
 
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Issue;
+import com.mindalliance.channels.Service;
+import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.util.SimpleCache;
 
 import java.util.List;
@@ -59,5 +61,13 @@ public abstract class AbstractIssueDetector implements IssueDetector {
      * @return -- a list of issues
      */
     protected abstract List<Issue> doDetectIssues( ModelObject modelObject );
+
+    /**
+     * Get service.
+     * @return a service
+     */
+    protected Service getService() {
+        return Project.getProject().getService();
+    }
 
 }

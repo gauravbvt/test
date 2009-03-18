@@ -9,14 +9,11 @@ import com.mindalliance.channels.InternalFlow;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
-import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Scenario;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -55,11 +52,6 @@ public final class Memory implements Dao {
 
     /** {@inheritDoc} */
     public void add( ModelObject object ) {
-        if ( object instanceof ResourceSpec ) {
-            ResourceSpec resourceSpec = (ResourceSpec) object;
-            if ( resourceSpec.isAnyone()/* || resourceSpec.isEntityOnly()*/ )
-                return;
-        }
         if ( idIndex.containsKey( object.getId() ) )
             throw new DuplicateKeyException();
 
@@ -124,8 +116,6 @@ public final class Memory implements Dao {
     public void remove( ModelObject object ) {
         if ( object instanceof Scenario )
             remove( (Scenario) object );
-        else if ( object instanceof ResourceSpec )
-            remove( (ResourceSpec) object );
         else
             idIndex.remove( object.getId() );
     }
@@ -137,21 +127,6 @@ public final class Memory implements Dao {
 
             scenario.disconnect();
         }
-    }
-
-    private void remove( ResourceSpec resourceSpec ) {
-        //  Remove all permanent specs equal or narrowing resourceSpec
-        List<ResourceSpec> toDelete = new ArrayList<ResourceSpec>();
-        for ( ResourceSpec spec : list( ResourceSpec.class ) ) {
-            if ( spec.narrowsOrEquals( resourceSpec ) )
-                toDelete.add( spec );
-        }
-        for ( ResourceSpec spec : toDelete ) {
-            idIndex.remove( spec.getId() );
-        }
-        //  Cascade delete operation to parts and entities
-        cascadeDeleteResourceSpecToParts( resourceSpec );
-        cascadeDeleteResourceSpecToEntities( resourceSpec );
     }
 
 
@@ -188,53 +163,5 @@ public final class Memory implements Dao {
     /** {@inheritDoc} */
     public void flush() {
     }
-
-    /**
-     * Remove an entity if the resourceSpec to be deleted amounts to that entity
-     *
-     * @param resourceSpec a resource specification being deleted
-     */
-    private void cascadeDeleteResourceSpecToEntities( ResourceSpec resourceSpec ) {
-        if ( resourceSpec.isActorOnly() ) {
-            remove( resourceSpec.getActor() );
-        } else if ( resourceSpec.isRoleOnly() ) {
-            remove( resourceSpec.getRole() );
-        } else if ( resourceSpec.isOrganizationOnly() ) {
-            remove( resourceSpec.getOrganization() );
-            cascadeDeleteOrganizationToEntities( resourceSpec.getOrganization() );
-        } else if ( resourceSpec.isJurisdictionOnly() ) {
-            remove( resourceSpec.getJurisdiction() );
-        }
-    }
-
-    /**
-     * Remove the deleted organization from entity definitions
-     * @param organization the deleted organization
-     */
-    private void cascadeDeleteOrganizationToEntities( Organization organization ) {
-        for ( Organization org : list( Organization.class ) ) {
-            Organization parent = org.getParent();
-            if ( parent != null && parent == organization ) {
-                // replace deleted parent by parent's parent (could be null)
-                org.setParent( parent.getParent() );
-            }
-        }
-    }
-
-    /**
-     * Clear resource spec properties of the part to reflect a resource spec being deleted
-     *
-     * @param resourceSpec a resource specification being deleted
-     */
-    private void cascadeDeleteResourceSpecToParts( ResourceSpec resourceSpec ) {
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Part> parts = scenario.parts();
-            while ( parts.hasNext() ) {
-                Part part = parts.next();
-                part.removeResourceSpec( resourceSpec );
-            }
-        }
-    }
-
 
 }

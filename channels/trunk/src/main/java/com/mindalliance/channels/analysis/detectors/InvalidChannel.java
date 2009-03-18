@@ -10,6 +10,8 @@ import com.mindalliance.channels.Channel;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.apache.commons.collections.CollectionUtils;
+
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -43,9 +45,10 @@ public class InvalidChannel extends AbstractIssueDetector {
         Channelable channelable = (Channelable) modelObject;
         List<Channel> channels = channelable.getEffectiveChannels();
         for ( Channel channel : channels ) {
-            if ( !channel.isValid() ) {
-                Issue issue = new DetectedIssue( DetectedIssue.DEFINITION, modelObject );
-                issue.setDescription( channel.toString() + " is not a valid channel." );
+            String problem = channelable.validate( channel );
+            if ( problem != null ) {
+                Issue issue = new DetectedIssue( Issue.DEFINITION, modelObject );
+                issue.setDescription( channel.toString() + ": " + problem );
                 String remediation;
                 if ( channel.getMedium() == null ) {
                     remediation = "Provide a valid medium for the channel.";
@@ -54,6 +57,13 @@ public class InvalidChannel extends AbstractIssueDetector {
                 }
                 issue.setRemediation( remediation );
                 issue.setSeverity( Issue.Level.Major );
+                issues.add( issue );
+            }
+            if ( CollectionUtils.cardinality( channel, channels ) > 1) {
+                Issue issue = new DetectedIssue( Issue.DEFINITION, modelObject );
+                issue.setDescription( channel.toString() + " is repeated.");
+                issue.setRemediation( "Remove this channel.");
+                issue.setSeverity( Issue.Level.Minor );
                 issues.add( issue );
             }
         }

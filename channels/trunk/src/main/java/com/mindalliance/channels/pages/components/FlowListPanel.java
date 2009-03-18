@@ -142,4 +142,12 @@ public class FlowListPanel extends AbstractCommandablePanel {
         super.updateWith( target, change );
     }
 
+    /**
+     * Refresh list of flows.
+     *
+     * @param target an ajax request target
+     */
+    public void refresh( AjaxRequestTarget target ) {
+        target.addComponent( flowsDiv );
+    }
 }

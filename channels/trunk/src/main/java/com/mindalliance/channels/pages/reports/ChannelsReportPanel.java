@@ -43,13 +43,21 @@ public class ChannelsReportPanel extends Panel {
             protected void populateItem( ListItem<Channel> item ) {
                 Channel channel = item.getModelObject();
                 Medium medium = channel.getMedium();
-                item.add( new Label( "medium", medium == null ? ""
-                                                              : medium.toString() + ": " ) );
+                Label mediumLabel = new Label( "medium", medium == null ? ""
+                        : medium.toString() + ": " );
+                item.add( mediumLabel );
                 Label addressLabel = new Label( "address", channel.getAddress() );
-                if ( medium != null )
+                if ( medium != null ) {
+                    mediumLabel.add( new AttributeModifier(
+                            "class",
+                            true,
+                            new Model<String>( medium.isUnicast() ? "unicast" : "broadcast" ) ) );
                     addressLabel.add(
-                        new AttributeModifier( "class", true,
-                                               new Model<String>( medium.getName() ) ) );
+                            new AttributeModifier(
+                                    "class",
+                                    true,
+                                    new Model<String>( medium.getName() ) ) );
+                }
                 item.add( addressLabel );
             }
         } );

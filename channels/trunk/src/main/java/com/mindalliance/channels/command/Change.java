@@ -1,13 +1,12 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.Identifiable;
-
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * A description of state change.
@@ -61,14 +60,15 @@ public class Change implements Serializable {
      * The logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( Change.class );
-    /**
-     * The identifiable object that was changed in some way.
-     */
-    private Identifiable subject;
+
     /**
      * The type of change.
      */
     private Type type = Type.Unknown;
+    /**
+     * The changed indeitifiable.
+     */
+    private Identifiable subject;
     /**
      * The property which value was changed, null if N/A.
      */
@@ -91,7 +91,7 @@ public class Change implements Serializable {
         this.property = property;
     }
 
-    public Identifiable getSubject() {
+    public Identifiable getSubject(  ) {
         return subject;
     }
 
@@ -124,15 +124,15 @@ public class Change implements Serializable {
     }
 
     /**
-     * Gets the updated property value or null if N/A
+     * Gets the updated property value or null if N/A.
      *
      * @return an object
      */
-    public Object getChangedPropertyValue() {
+    public Object getChangedPropertyValue(  )  {
         Object value = null;
         if ( type == Type.Updated ) {
             try {
-                value = PropertyUtils.getProperty( subject, property );
+                value = PropertyUtils.getProperty( getSubject(), property );
             } catch ( IllegalAccessException e ) {
                 throw new RuntimeException( e );
             } catch ( InvocationTargetException e ) {

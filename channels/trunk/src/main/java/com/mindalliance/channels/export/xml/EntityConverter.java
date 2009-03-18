@@ -12,7 +12,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import java.util.List;
 
 /**
- * Abstract XStream converter for Entities
+ * Abstract XStream converter for Entities.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -50,9 +50,10 @@ public abstract class EntityConverter implements Converter {
     }
 
     /**
-     * Write specific properties to xml stream
-     * @param entity the entity model object being converted
-     * @param writer the xml stream
+     * Write specific properties to xml stream.
+     *
+     * @param entity  the entity model object being converted
+     * @param writer  the xml stream
      * @param context a context
      */
     abstract protected void writeSpecifics( ModelObject entity,
@@ -73,9 +74,9 @@ public abstract class EntityConverter implements Converter {
                 reader.moveDown();
                 String nodeName = reader.getNodeName();
                 if ( nodeName.equals( "description" ) ) {
-                    entity.setDescription(reader.getValue());
+                    entity.setDescription( reader.getValue() );
                 } else {
-                    setSpecific( entity, nodeName, reader.getValue() );
+                    setSpecific( entity, nodeName, reader, context );
                 }
                 reader.moveUp();
             }
@@ -84,15 +85,21 @@ public abstract class EntityConverter implements Converter {
     }
 
     /**
-     * Set an entity model object's specific property from xml
-     * @param entity the entity
+     * Set an entity model object's specific property from xml.
+     *
+     * @param entity   the entity
      * @param nodeName the name of the property
-     * @param value the proeprty's value as string
+     * @param reader  the xml stream
+     * @param context a context
      */
-    abstract protected void setSpecific( ModelObject entity, String nodeName, String value );
+    abstract protected void setSpecific(
+            ModelObject entity,
+            String nodeName,
+            HierarchicalStreamReader reader,
+            UnmarshallingContext context );
 
     /**
-     * Find or make an entity
+     * Find or make an entity.
      *
      * @param name entity's name
      * @return an entity

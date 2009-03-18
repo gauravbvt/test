@@ -252,23 +252,6 @@ public class Part extends Node {
     }
 
     /**
-     * Adapt definition to retracted resourceSpec, if applicable.
-     * @param resourceSpec a resourceSpec being retracted
-     */
-    public void removeResourceSpec( ResourceSpec resourceSpec ) {
-        ResourceSpec partResourceSpec = resourceSpec();
-        while ( partResourceSpec.narrowsOrEquals( resourceSpec ) ) {
-            ModelObject entity = partResourceSpec.mostSpecificEntity();
-            if ( entity instanceof Actor ) setActor( null );
-            else if ( entity instanceof Role ) setRole( null );
-            else if ( entity instanceof Organization ) setOrganization( null );
-            else if ( entity instanceof Place ) setJurisdiction( null );
-            else throw new IllegalArgumentException( "Can't unset entity " + entity );
-            partResourceSpec = resourceSpec();
-        }
-    }
-
-    /**
      * Whether the part is self-repeating.
      *
      * @return a boolean

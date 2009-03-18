@@ -10,7 +10,7 @@ import java.text.MessageFormat;
  * A company, agency, social club, etc.
  */
 @Entity
-public class Organization extends ModelObject {
+public class Organization  extends AbstractUnicastChannelable {
 
     /** The unknown organization. */
     public static final Organization UNKNOWN = new Organization( "(unknown)" );
@@ -21,6 +21,8 @@ public class Organization extends ModelObject {
      * The primary location of the organization
      */
     private Place location;
+
+    // private List<Job> jobs = new ArrayList<Job>(); // TODO - reflect in Service.FindAllResourceSpecs()
 
     public Organization() {
     }

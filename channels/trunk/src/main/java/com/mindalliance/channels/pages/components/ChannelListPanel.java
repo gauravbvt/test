@@ -9,7 +9,6 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -29,12 +28,9 @@ import org.apache.wicket.model.PropertyModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-// TODO - Ajax - update display of flow issues when channels list is empty?
 
 /**
  * An editable list of channels.
@@ -178,28 +174,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                 } );
                 includeSpan.add( includeCheckBox );
                 item.add( includeSpan );
-                DropDownChoice<Medium> mediumChoices = new DropDownChoice<Medium>(
-                        "medium",
-                        new PropertyModel<Medium>( wrapper, "medium" ),
-                        Arrays.asList( Medium.values() ),
-                        new IChoiceRenderer<Medium>() {
-                            public Object getDisplayValue( Medium medium ) {
-                                return medium == null ? "Select a medium" : medium.getName();
-                            }
-
-                            public String getIdValue( Medium medium, int index ) {
-                                return Integer.toString( index );
-                            }
-                        }
-                );
-                mediumChoices.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-                    protected void onUpdate( AjaxRequestTarget target ) {
-                        target.addComponent( editableChannelsMarkup );
-                    }
-                } );
-                item.add( mediumChoices );
-                mediumChoices.setEnabled( this.isEnabled() );
-                TextField<String> addressField = new TextField<String>(
+                final TextField<String> addressField = new TextField<String>(
                         "address",
                         new PropertyModel<String>( wrapper, "address" ) );
                 addressField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
@@ -214,8 +189,43 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                     }
                 } );
                 item.add( addressField );
+                final Channel channel = item.getModelObject().getChannel();
                 addressField.setEnabled( this.isEnabled() );
+                addressField.setVisible( !( channel.isUnicast() && !channelable.canBeUnicast() ) );
                 flagIfInvalid( addressField, wrapper );
+                final DropDownChoice<Medium> mediumChoices = new DropDownChoice<Medium>(
+                        "medium",
+                        new PropertyModel<Medium>( wrapper, "medium" ),
+                        Medium.media(),
+                        new IChoiceRenderer<Medium>() {
+                            public Object getDisplayValue( Medium medium ) {
+                                return medium == null ? "Select a medium" : medium.getName();
+                            }
+
+                            public String getIdValue( Medium medium, int index ) {
+                                return Integer.toString( index );
+                            }
+                        }
+                );
+                mediumChoices.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+                    protected void onUpdate( AjaxRequestTarget target ) {
+                        target.addComponent( editableChannelsMarkup );
+                        addressField.setEnabled( ChannelListPanel.this.isEnabled() );
+                        boolean addressAllowed = !( mediumChoices.getModelObject().isUnicast()
+                                && !channelable.canBeUnicast() );
+                        if ( !addressAllowed ) channel.setAddress( "" );
+                        addressField.setVisible( addressAllowed );
+                        target.addComponent( addressField );
+                        update(
+                                target,
+                                new Change(
+                                        Change.Type.Updated,
+                                        getChannelable(),
+                                        "effectiveChannels" ) );
+                    }
+                } );
+                item.add( mediumChoices );
+                mediumChoices.setEnabled( this.isEnabled() );
                 AjaxFallbackLink moveToTopLink = new AjaxFallbackLink( "move-to-top" ) {
                     public void onClick( AjaxRequestTarget target ) {
                         wrapper.moveToFirst();
@@ -292,8 +302,8 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         for ( Channelable aChannelable : channelables ) {
             for ( Channel channel : aChannelable.getEffectiveChannels() ) {
                 if ( !alreadySetChannels.contains( channel )
-                        && channel.isValid() )
-                {
+                        && !( aChannelable instanceof Flow && channel.isUnicast() )
+                        && channel.isValid() ) {
                     candidates.add( channel );
                 }
             }
@@ -309,13 +319,16 @@ public class ChannelListPanel extends AbstractCommandablePanel {
     }
 
     /**
-     * Find channelables that have candidate channels for a given channelable
+     * Find actors, organization and flows that have candidate channels for a given channelable
      *
      * @param channelable the given channelable
      * @return a list of Channelables
      */
     private List<Channelable> findRelatedChannelables( Channelable channelable ) {
-        List<Channelable> relatedChannelables = new ArrayList<Channelable>();
+        final List<Channelable> relatedChannelables = new ArrayList<Channelable>();
+        // Find broadcast channels in related flows
+        // If applicable (part played by actor or organization),
+        // get actor or organization's unicast channels.
         if ( channelable instanceof Flow ) {
             Flow flow = (Flow) channelable;
             Node node = flow.isAskedFor() ? flow.getSource() : flow.getTarget();
@@ -323,16 +336,14 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                 Part part = (Part) node;
                 ResourceSpec partResourceSpec = part.resourceSpec();
                 if ( !partResourceSpec.isAnyone() ) {
+                    boolean isSource = flow.isAskedFor();
                     relatedChannelables.addAll(
-                            Project.service().findAllResourcesNarrowingOrEqualTo(
-                                    partResourceSpec ) );
+                            getService().findAllRelatedFlows( partResourceSpec, isSource ) );
                 }
-            }
-        } else {
-            ResourceSpec resourceSpec = (ResourceSpec) channelable;
-            if ( !resourceSpec.isAnyone() ) {
-                relatedChannelables.addAll(
-                        Project.service().findAllResourcesNarrowingOrEqualTo( resourceSpec ) );
+                if ( partResourceSpec.isActor() )
+                    relatedChannelables.add( partResourceSpec.getActor() );
+                else if ( partResourceSpec.isActor() )
+                    relatedChannelables.add( partResourceSpec.getOrganization() );
             }
         }
         return relatedChannelables;
@@ -342,20 +353,15 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         Channelable channelable = model.getObject();
         if ( !wrapper.isMarkedForCreation() ) {
             Channel channel = wrapper.getChannel();
-            boolean ok = true;
-            String problem = "";
-            if ( !channel.isValid() ) {
-                ok = false;
-                problem = "Not valid";
-            } else {
+            String problem = channelable.validate( channel );
+            if ( problem == null ) {
                 for ( Channel c : channelable.getEffectiveChannels() ) {
                     if ( c != channel && c.equals( channel ) ) {
-                        ok = false;
                         problem = "Repeated";
                     }
                 }
             }
-            if ( !ok ) {
+            if ( problem != null ) {
                 addressField.add(
                         new AttributeModifier(
                                 "class",
@@ -444,7 +450,6 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             if ( markedForCreation ) {
                 channel.setMedium( medium );
                 if ( medium != null ) {
-                    // channelable.addChannel( channel );
                     doCommand( UpdateObject.makeCommand(
                             channelable,
                             "effectiveChannels",

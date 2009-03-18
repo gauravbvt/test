@@ -10,7 +10,6 @@ import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.Medium;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Change;
 
 import java.util.ArrayList;
@@ -57,7 +56,7 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
         project.getService().remove( scenario );
     }
 
-    public void testInternalBreakUp() throws CommandException {
+    public void testInternalBreakUp() throws Exception {
         assertTrue( countFlows() == 1 );
         assertNotNull( findFlow() );
         assertTrue( commander.canDo( command ) );

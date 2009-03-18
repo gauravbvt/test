@@ -14,6 +14,8 @@ import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.dao.EvacuationScenario;
 import com.mindalliance.channels.dao.FireScenario;
 import com.mindalliance.channels.export.Importer;
@@ -169,7 +171,7 @@ public class ChannelsServiceImpl implements Service {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<ModelObject> iterateEntities() {
         return new FilterIterator( getDao().list( ModelObject.class ).iterator(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -311,46 +313,29 @@ public class ChannelsServiceImpl implements Service {
      */
     public List<ResourceSpec> findAllResourceSpecs() {
         Set<ResourceSpec> result = new HashSet<ResourceSpec>();
-        // Permanent specs
-        addSpecs( result, ResourceSpec.class );
-        // addSpecs( result, Actor.class );
-        // addSpecs( result, Role.class );
-        // addSpecs( result, Organization.class );
-
-        // Transient specs from scenario parts
+        // Specs from entities
+        for ( Actor actor : list( Actor.class ) ) {
+           result.add( ResourceSpec.with( actor ));
+        }
+        for ( Role role : list( Role.class ) ) {
+           result.add( ResourceSpec.with( role ));
+        }
+        for ( Organization organization : list( Organization.class ) ) {
+           result.add( ResourceSpec.with( organization ));
+        }
+        // Specs from scenario parts
         for ( Scenario scenario : list( Scenario.class ) ) {
             Iterator<Part> parts = scenario.parts();
             while ( parts.hasNext() ) {
                 Part part = parts.next();
                 ResourceSpec partResourceSpec = part.resourceSpec();
                 if ( !partResourceSpec.isAnyone() ) {
-                    // Find all channels used to communicate with this part
-                    Iterator<Flow> flows = scenario.flows();
-                    while ( flows.hasNext() ) {
-                        Flow flow = flows.next();
-                        if ( !flow.getChannels().isEmpty() ) {
-                            if ( flow.getTarget() == part && !flow.isAskedFor() ) {
-                                partResourceSpec.addChannels( flow.getChannels() );
-                            }
-                            if ( flow.getSource() == part && flow.isAskedFor() ) {
-                                partResourceSpec.addChannels( flow.getChannels() );
-                            }
-                        }
-                    }
                     result.add( partResourceSpec );
                 }
             }
         }
 
         return new ArrayList<ResourceSpec>( result );
-    }
-
-    private void addSpecs( Set<ResourceSpec> result, Class<? extends ModelObject> clazz ) {
-        for ( ModelObject modelObject : list( clazz ) )
-            if ( modelObject instanceof ResourceSpec )
-                result.add( (ResourceSpec) modelObject );
-            else
-                result.add( ResourceSpec.with( modelObject ) );
     }
 
     /**
@@ -407,15 +392,13 @@ public class ChannelsServiceImpl implements Service {
                 Flow flow = flows.next();
                 if ( Play.hasPlay( flow ) ) {
                     if ( flow.getSource().isPart()
-                            && ( (Part) flow.getSource() ).involves( resourceSpec ) )
-                    {
+                            && ( (Part) flow.getSource() ).involves( resourceSpec ) ) {
                         // role sends
                         Play play = new Play( (Part) flow.getSource(), flow, true );
                         plays.add( play );
                     }
                     if ( flow.getTarget().isPart()
-                            && ( (Part) flow.getTarget() ).involves( resourceSpec ) )
-                    {
+                            && ( (Part) flow.getTarget() ).involves( resourceSpec ) ) {
                         // role receives
                         Play play = new Play( (Part) flow.getTarget(), flow, false );
                         plays.add( play );
@@ -438,36 +421,36 @@ public class ChannelsServiceImpl implements Service {
         return foundIssues;
     }
 
+
     /**
-     * {@inheritDoc}
+     * Find all flows in all scenarios where the part applies as specified (as source or target).
+     *
+     * @param resourceSpec a resource spec
+     * @param asSource     a boolean
+     * @return a list of flows
      */
-    public ResourceSpec findPermanentResourceSpec( ResourceSpec resourceSpec ) {
-        ResourceSpec permanent = null;
-        Iterator<ResourceSpec> iterator = list( ResourceSpec.class ).iterator();
-        while ( permanent == null && iterator.hasNext() ) {
-            ResourceSpec rs = iterator.next();
-            if ( rs.equals( resourceSpec ) )
-                permanent = rs;
+    public List<Flow> findAllRelatedFlows( ResourceSpec resourceSpec, boolean asSource ) {
+        Service service = Project.getProject().getService();
+        List<Flow> relatedFlows = new ArrayList<Flow>();
+        for ( Scenario scenario : service.list( Scenario.class ) ) {
+            Iterator<Flow> flows = scenario.flows();
+            while ( flows.hasNext() ) {
+                Flow flow = flows.next();
+                Node node = asSource ? flow.getSource() : flow.getTarget();
+                if ( node.isPart()
+                        && resourceSpec.narrowsOrEquals( ( (Part) node ).resourceSpec() ) ) {
+                    relatedFlows.add( flow );
+                }
+            }
         }
-        return permanent;
+        return relatedFlows;
     }
+
 
     /**
      * {@inheritDoc}
      */
-    public void addOrUpdate( ResourceSpec resourceSpec ) {
-        ResourceSpec permanent = findPermanentResourceSpec( resourceSpec );
-        if ( permanent == null ) {
-            add( resourceSpec );
-        } else {
-            permanent.setChannels( resourceSpec.getChannels() );
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public List<Actor> findAllActors( ResourceSpec resourceSpec ) {
         Set<Actor> actors = new HashSet<Actor>();
         // If the resource spec is anyone, then return no actor,
@@ -506,19 +489,23 @@ public class ChannelsServiceImpl implements Service {
         this.importDirectory = importDirectory;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Flow replicate( Flow flow, boolean isOutcome ) {
         Flow result = isOutcome ? connect( flow.getSource(),
-                                           createConnector( flow.getSource().getScenario() ),
-                                           flow.getName() )
-                                : connect( createConnector( flow.getTarget().getScenario() ),
-                                           flow.getTarget(),
-                                           flow.getName() );
+                createConnector( flow.getSource().getScenario() ),
+                flow.getName() )
+                : connect( createConnector( flow.getTarget().getScenario() ),
+                flow.getTarget(),
+                flow.getName() );
         result.initFrom( flow );
         return result;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void flush() {
         getDao().flush();
     }

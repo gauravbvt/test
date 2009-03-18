@@ -1,7 +1,6 @@
 package com.mindalliance.channels;
 
 import java.util.List;
-import java.io.Serializable;
 
 /**
  * An object with channels.
@@ -15,32 +14,51 @@ public interface Channelable extends Identifiable {
 
     /**
      * Get the channels.
+     *
      * @return a set of channels
      */
     List<Channel> getEffectiveChannels();
 
     /**
      * Add a channel.
+     *
      * @param channel to add
      */
     void addChannel( Channel channel );
 
     /**
      * Remove a channel.
+     *
      * @param channel to remove
      */
     void removeChannel( Channel channel );
 
     /**
      * Produces a summary string of the channels.
+     *
      * @return a String
      */
     String getChannelsString();
 
     /**
      * Get all explicit and implied channels
+     *
      * @return list of channels
      */
     List<Channel> allChannels();
 
+    /**
+     * Whether the channelable can be the recipient of a unicast communication.
+     *
+     * @return a boolean
+     */
+    boolean canBeUnicast();
+
+    /**
+     * Validate a channel.
+     *
+     * @param channel a channel
+     * @return a string indicating a problem or null if none
+     */
+    String validate( Channel channel );
 }

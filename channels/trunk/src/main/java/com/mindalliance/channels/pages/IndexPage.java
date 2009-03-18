@@ -3,7 +3,6 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
-import com.mindalliance.channels.pages.components.ResourceSpecPanel;
 import com.mindalliance.channels.pages.components.ResourceSpecsPanel;
 import com.mindalliance.channels.pages.components.ScenariosPanel;
 import org.apache.wicket.PageParameters;
@@ -60,7 +59,5 @@ public class IndexPage extends WebPage {
                         (ArrayList) resourceSpecs ),
                 PAGE_SIZE ) );
         add( form );
-        add( new ResourceSpecPanel( "new-resourceSpec",
-                new Model<ResourceSpec>( new ResourceSpec() ) ) );
     }
 }

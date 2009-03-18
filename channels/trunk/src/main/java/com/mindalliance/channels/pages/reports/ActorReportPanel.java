@@ -56,7 +56,7 @@ public class ActorReportPanel extends Panel {
         descLabel.setVisible( desc != null && !desc.isEmpty() );
         add( descLabel );
 
-        add( new ChannelsReportPanel( "channels", new Model<Channelable>( spec ) ) );     // NON-NLS
+        add( new ChannelsReportPanel( "channels", new Model<Channelable>( actor ) ) );     // NON-NLS
 
     }
 

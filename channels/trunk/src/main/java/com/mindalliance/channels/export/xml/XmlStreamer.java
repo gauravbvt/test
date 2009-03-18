@@ -78,7 +78,6 @@ public class XmlStreamer implements Importer, Exporter {
             xstream.registerConverter( new RoleConverter() );
             xstream.registerConverter( new OrganizationConverter() );
             xstream.registerConverter( new PlaceConverter() );
-            xstream.registerConverter( new ResourceSpecConverter() );
             xstream.registerConverter( new UserIssueConverter() );
             xstream.registerConverter( new ChannelConverter() );
         }

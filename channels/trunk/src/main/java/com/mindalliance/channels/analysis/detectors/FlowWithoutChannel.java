@@ -1,18 +1,19 @@
 package com.mindalliance.channels.analysis.detectors;
 
-import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.analysis.DetectedIssue;
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.AbstractUnicastChannelable;
+import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Issue;
+import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.Channel;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.Actor;
+import com.mindalliance.channels.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.analysis.DetectedIssue;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Detects issue where a flow has no defined channel.
@@ -30,52 +31,49 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    // An issue when no channel in flow if contacting a role
-    // and there is actors matching resource
-    // or not all such actors spec have contact info (resourceSpec-assigned channels
     public List<Issue> doDetectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
-        if ( needsAtLeastOneChannel( flow ) && flow.getEffectiveChannels().isEmpty() ) {
-            Part part = partNeedingChannel( flow );
-            if ( part.isOnlyRole() ) {
-                ResourceSpec partSpec = part.resourceSpec();
-                List<Actor> actorsInRole = Project.service().
-                        findAllActors( partSpec  );
-                if ( actorsInRole.isEmpty() ) {
-                    DetectedIssue issue = new DetectedIssue( DetectedIssue.DEFINITION, modelObject );
-                    issue.setDescription(
-                            "Flow involves "
-                                    + partSpec
-                                    + " and there is no known actor in this role." );
-                    issue.setRemediation( "Provide at least one (broadcast) channel, "
-                            + "or define actors in this role with contact info." );
-                    issue.setSeverity( Issue.Level.Severe );
-                    issues.add( issue );
-                } else {
-                    for ( Actor actor : actorsInRole ) {
-                        List<Channel> actorChannels = ResourceSpec.with( actor ).allChannels();
-                        if ( actorChannels.isEmpty() ) {
-                            DetectedIssue issue = new DetectedIssue( DetectedIssue.DEFINITION, modelObject );
-                            issue.setDescription( "Flow involves "
-                                    + partSpec
-                                    + " and "
-                                    + actor.getName()
-                                    + " in this role has no contact information." );
-                            issue.setRemediation( "Provide contact information for "
-                                    + actor.getName()
-                                    + ", or provide at least one (broadcast) channel for the flow." );
-                            issue.setSeverity( Issue.Level.Major );
-                            issues.add( issue );
-                        }
-                    }
-                }
-            } else {
-                DetectedIssue issue = new DetectedIssue( DetectedIssue.DEFINITION, modelObject );
+        if ( needsAtLeastOneChannel( flow ) ) {
+            // There is no channel in a flow that requires one
+            if ( flow.getEffectiveChannels().isEmpty() ) {
+                DetectedIssue issue = new DetectedIssue( Issue.DEFINITION, modelObject );
                 issue.setDescription( "Flow requires a channel." );
                 issue.setRemediation( "Provide at least one channel." );
                 issue.setSeverity( Issue.Level.Severe );
                 issues.add( issue );
+            } else {
+                // Communicating with a non-unicastable using a unicast channel for which
+                // a matching actor doesn't have a channel defined with same medium.
+                if ( !flow.canBeUnicast() ) {
+                    final ResourceSpec partResourceSpec = partNeedingChannel( flow ).resourceSpec();
+                    List<Actor> actors = getService().findAllActors( partResourceSpec );
+                    for ( Actor actor : actors ) {
+                        for ( Channel flowChannel : flow.getEffectiveChannels() ) {
+                            boolean channelUndefined = true;
+                            for ( Channel actorChannel : actor.getEffectiveChannels() ) {
+                                if ( actorChannel.getMedium() == flowChannel.getMedium() && actorChannel.isValid() ) {
+                                    channelUndefined = false;
+                                }
+                            }
+                            if ( channelUndefined ) {
+                                DetectedIssue issue = new DetectedIssue( Issue.DEFINITION, modelObject );
+                                issue.setDescription(
+                                        actor.getName()
+                                                + " may be involved and has no valid "
+                                                + flowChannel.getMedium()
+                                                + " contact info." );
+                                issue.setRemediation(
+                                        "Add a "
+                                                + flowChannel.getMedium()
+                                                + " contact info to "
+                                                + actor.getName() );
+                                issue.setSeverity( Issue.Level.Major );
+                                issues.add( issue );
+                            }
+                        }
+                    }
+                }
             }
         }
         return issues;
