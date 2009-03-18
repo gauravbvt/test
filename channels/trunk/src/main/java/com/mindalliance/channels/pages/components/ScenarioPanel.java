@@ -86,9 +86,9 @@ public class ScenarioPanel extends AbstractCommandablePanel {
      */
     private Component partActionsMenu;
     /**
-      * Part pages menu
-      */
-     private Component partPagesMenu;
+     * Part pages menu
+     */
+    private Component partPagesMenu;
     /**
      * Outcomes flow panel.
      */
@@ -98,7 +98,11 @@ public class ScenarioPanel extends AbstractCommandablePanel {
      */
     private FlowListPanel reqsFlowPanel;
 
-    public ScenarioPanel( String id, IModel<Scenario> scenarioModel, IModel<Part> partModel, Set<Long> expansions ) {
+    public ScenarioPanel(
+            String id,
+            IModel<Scenario> scenarioModel,
+            IModel<Part> partModel,
+            Set<Long> expansions ) {
         super( id, scenarioModel );
         this.scenarioModel = scenarioModel;
         this.partModel = partModel;
@@ -111,19 +115,28 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         addScenarioEditPanel( getScenario() );
         addFlowDiagram( getScenario(), partModel );
         addPartContent();
-        reqsFlowPanel = new FlowListPanel( "reqs", new PropertyModel<Part>( this, "part" ), false, expansions );
+        reqsFlowPanel = new FlowListPanel(
+                "reqs",
+                new PropertyModel<Part>( this, "part" ),
+                false,
+                expansions );
         add( reqsFlowPanel );
-        outcomesFlowPanel = new FlowListPanel( "outcomes", new PropertyModel<Part>( this, "part" ), true, expansions );
+        outcomesFlowPanel = new FlowListPanel(
+                "outcomes",
+                new PropertyModel<Part>( this, "part" ),
+                true,
+                expansions );
         add( outcomesFlowPanel );
         adjustComponents();
     }
 
     private void addPartContent() {
-        partTitle = new Label( "part-title",                                                 // NON-NLS
+        partTitle = new Label( "part-title",                      // NON-NLS
                 new AbstractReadOnlyModel<String>() {
                     @Override
                     public String getObject() {
-                        return StringUtils.abbreviate( getPart().getTitle(), PART_TITLE_MAX_LENGTH );
+                        return StringUtils.abbreviate(
+                                getPart().getTitle(), PART_TITLE_MAX_LENGTH );
                     }
                 } );
         partTitle.setOutputMarkupId( true );
@@ -132,10 +145,10 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         PartPanel panel = new PartPanel( "specialty", new PropertyModel<Part>( this, "part" ) );
         panel.setRenderBodyOnly( true );
         add( panel );
-        add( new TextArea<String>( "description",                                     // NON-NLS
+        add( new TextArea<String>( "description",                           // NON-NLS
                 new PropertyModel<String>( this, "partDescription" ) ) );
-        add( new AttachmentPanel( "attachments", new Model<Part>( getPart() ) ) );   // NON-NLS
-        partIssuesPanel = new IssuesPanel( "issues",                                 // NON-NLS
+        add( new AttachmentPanel( "attachments", new Model<Part>( getPart() ) ) );// NON-NLS
+        partIssuesPanel = new IssuesPanel( "issues",                       // NON-NLS
                 new PropertyModel<ModelObject>( this, "part" ),
                 expansions );
         partIssuesPanel.setOutputMarkupId( true );
@@ -166,22 +179,27 @@ public class ScenarioPanel extends AbstractCommandablePanel {
                     new PropertyModel<Part>( this, "part" ) );
         } else {
             String otherUser = lockManager.getLockOwner( getPart().getId() );
-            partActionsMenu = new Label( "partActionsMenu", new Model<String>( "Edited by " + otherUser ) );
-            partActionsMenu.add( new AttributeModifier( "class", true, new Model<String>( "locked" ) ) );
+            partActionsMenu = new Label(
+                    "partActionsMenu", new Model<String>( "Edited by " + otherUser ) );
+            partActionsMenu.add(
+                    new AttributeModifier( "class", true, new Model<String>( "locked" ) ) );
         }
         partActionsMenu.setOutputMarkupId( true );
         addOrReplace( partActionsMenu );
     }
 
     private void addFlowDiagram( final Scenario scenario, final IModel<Part> partModel ) {
-        flowDiagram = new MarkupContainer( "graph" ) {                                      // NON-NLS
+        flowDiagram = new MarkupContainer( "graph" ) {                        // NON-NLS
 
             @Override
             protected void onComponentTag( ComponentTag tag ) {
                 super.onComponentTag( tag );
                 tag.put( "src",                                                       // NON-NLS
-                        MessageFormat.format(
-                                "scenario.png?scenario={0,number,0}&node={1,number,0}&amp;time={2,number,0}", // NON-NLS
+                        MessageFormat.format( // NON-NLS
+                                "scenario.png?"
+                                        + "scenario={0,number,0}"
+                                        + "&node={1,number,0}"
+                                        + "&time={2,number,0}",
                                 scenario.getId(),
                                 partModel.getObject().getId(),
                                 System.currentTimeMillis() ) );
@@ -192,8 +210,8 @@ public class ScenarioPanel extends AbstractCommandablePanel {
                 super.onRender( markupStream );
                 try {
                     DiagramFactory diagramFactory = Project.diagramFactory();
-                    FlowDiagram flowDiagram = diagramFactory.newFlowDiagram( scenario );
-                    getResponse().write( flowDiagram.makeImageMap() );
+                    FlowDiagram diagram = diagramFactory.newFlowDiagram( scenario );
+                    getResponse().write( diagram.makeImageMap() );
                 } catch ( DiagramException e ) {
                     LOG.error( "Can't generate image map", e );
                 }
@@ -230,6 +248,11 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         return getPart().getDescription();
     }
 
+    /**
+     * Set part description.
+     *
+     * @param description a string
+     */
     public void setPartDescription( String description ) {
         doCommand( new UpdateScenarioObject( getPart(), "description", description ) );
     }

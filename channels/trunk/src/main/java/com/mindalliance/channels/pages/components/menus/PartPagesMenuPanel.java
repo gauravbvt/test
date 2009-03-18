@@ -55,11 +55,17 @@ public class PartPagesMenuPanel extends MenuPanel {
         if ( part.getRole() != null )
             modelObjects.add( new ModelObjectWrapper( "Role page", part.getRole() ) );
         if ( part.getOrganization() != null )
-            modelObjects.add( new ModelObjectWrapper( "Organization page", part.getOrganization() ) );
+            modelObjects.add( new ModelObjectWrapper(
+                    "Organization page",
+                    part.getOrganization() ) );
         if ( part.getJurisdiction() != null )
-            modelObjects.add( new ModelObjectWrapper( "Jurisdiction page", part.getJurisdiction() ) );
+            modelObjects.add( new ModelObjectWrapper(
+                    "Jurisdiction page",
+                    part.getJurisdiction() ) );
         if ( part.getLocation() != null )
-            modelObjects.add( new ModelObjectWrapper( "Location page", part.getLocation() ) );
+            modelObjects.add( new ModelObjectWrapper(
+                    "Location page",
+                    part.getLocation() ) );
         return modelObjects;
     }
 

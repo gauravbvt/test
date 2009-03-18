@@ -66,7 +66,9 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
                     }
                 }
             };
-            menuItem = new LinkMenuItem( id, new Model<String>( getCommander().getUndoTitle() ), link );
+            menuItem = new LinkMenuItem(
+                    id,
+                    new Model<String>( getCommander().getUndoTitle() ), link );
         } else {
             Label undoLabel = new Label( id, "Undo" );
             undoLabel.add( new AttributeModifier(
@@ -97,7 +99,9 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
                     }
                 }
             };
-            menuItem = new LinkMenuItem( id, new Model<String>( getCommander().getRedoTitle() ), link );
+            menuItem = new LinkMenuItem(
+                    id,
+                    new Model<String>( getCommander().getRedoTitle() ), link );
         } else {
             Label label = new Label( id, "Redo" );
             label.add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
@@ -116,18 +120,27 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      * @param moWrappers model object wrappers (model object + link text)
      * @return a list of components
      */
-    protected List<Component> getModelObjectMenuItems( String id, List<ModelObjectWrapper> moWrappers ) {
+    protected List<Component> getModelObjectMenuItems(
+            String id,
+            List<ModelObjectWrapper> moWrappers ) {
         List<Component> menuItems = new ArrayList<Component>();
         for ( ModelObjectWrapper moWrapper : moWrappers ) {
-            ModelObjectLink link = makeLink( "link", new Model<ModelObject>( moWrapper.getModelObject() ) );
-            menuItems.add( new LinkMenuItem( id, new PropertyModel<String>( moWrapper, "title" ), link ) );
+            ModelObjectLink link = makeLink(
+                    "link",
+                    new Model<ModelObject>( moWrapper.getModelObject() ) );
+            menuItems.add( new LinkMenuItem(
+                    id,
+                    new PropertyModel<String>( moWrapper, "title" ),
+                    link ) );
         }
         return menuItems;
     }
 
     private ModelObjectLink makeLink( String id,
                                       final IModel<ModelObject> model ) {
-        ModelObjectLink link = new ModelObjectLink( id, new Model<ModelObject>( model.getObject() ) );
+        ModelObjectLink link = new ModelObjectLink(
+                id,
+                new Model<ModelObject>( model.getObject() ) );
         link.setOutputMarkupId( true );
         return link;
     }

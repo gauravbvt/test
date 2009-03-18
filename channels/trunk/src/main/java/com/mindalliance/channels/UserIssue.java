@@ -26,7 +26,7 @@ public class UserIssue extends ModelObject implements Issue {
     /**
      * The identifiable object the issue is about
      */
-    private ModelObject about;
+    private long about;
     /**
      * Remediation
      */
@@ -46,21 +46,21 @@ public class UserIssue extends ModelObject implements Issue {
     /**
      * Create a user issue
      *
-     * @param about a model object
+     * @param mo a model object
      */
-    public UserIssue( ModelObject about ) {
+    public UserIssue( ModelObject mo ) {
         super();
-        this.about = about;
+        this.about = mo.getId();
         setDescription( "(No description)" );
         setReportedBy(Project.getUserName());
     }
 
     @ManyToOne( cascade = CascadeType.PERSIST )
-    public ModelObject getAbout() {
+    public long getAbout() {
         return about;
     }
 
-    void setAbout( ModelObject about ) {
+    void setAbout( long about ) {
         this.about = about;
     }
 

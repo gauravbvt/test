@@ -33,10 +33,10 @@ public class DetectedIssue extends AnalysisObject implements Issue {
      * Constructor
      *
      * @param type  -- the type of issue
-     * @param about -- the ModelObject the issue is about
+     * @param mo -- the ModelObject the issue is about
      */
-    public DetectedIssue( String type, ModelObject about ) {
-        super( about );
+    public DetectedIssue( String type, ModelObject mo ) {
+        super( mo );
         this.type = type;
     }
 
@@ -44,11 +44,11 @@ public class DetectedIssue extends AnalysisObject implements Issue {
      * Constructor
      *
      * @param type     -- the type of issue
-     * @param about    -- the ModelObject the issue is about
+     * @param mo    -- the ModelObject the issue is about
      * @param property -- the problematic property
      */
-    public DetectedIssue( String type, ModelObject about, String property ) {
-        super( about, property );
+    public DetectedIssue( String type, ModelObject mo, String property ) {
+        super( mo, property );
         this.type = type;
     }
 

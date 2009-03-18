@@ -41,7 +41,7 @@ public class RemoveIssue extends AbstractCommand {
         Service service = commander.getService();
         try {
             final UserIssue issue = service.find( UserIssue.class, (Long) get( "issue" ) );
-            addArgument( "modelObject", issue.getAbout().getId() );
+            addArgument( "modelObject", issue.getAbout() );
             addArgument( "state", new HashMap<String, Object>() {
                 {
                     put( "description", issue.getDescription() );

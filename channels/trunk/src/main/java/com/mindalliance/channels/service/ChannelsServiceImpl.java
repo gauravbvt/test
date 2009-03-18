@@ -418,7 +418,7 @@ public class ChannelsServiceImpl implements Service {
     public List<Issue> findAllUserIssues( ModelObject identifiable ) {
         List<Issue> foundIssues = new ArrayList<Issue>();
         for ( UserIssue userIssue : list( UserIssue.class ) ) {
-            if ( userIssue.getAbout().equals( identifiable ) )
+            if ( userIssue.getAbout() == identifiable.getId() )
                 foundIssues.add( userIssue );
         }
         return foundIssues;

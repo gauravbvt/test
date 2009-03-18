@@ -45,7 +45,7 @@ public class UserIssueConverter implements Converter {
      */
     public void marshal( Object object, HierarchicalStreamWriter writer, MarshallingContext context ) {
         UserIssue issue = (UserIssue) object;
-        writer.addAttribute( "about", Long.toString( issue.getAbout().getId() ) );
+        writer.addAttribute( "about", Long.toString( issue.getAbout() ) );
         writer.startNode( "description" );
         writer.setValue( issue.getDescription() );
         writer.endNode();

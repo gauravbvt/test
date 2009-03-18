@@ -7,6 +7,8 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ScenarioObject;
 import com.mindalliance.channels.Service;
+import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.command.Change;
@@ -193,7 +195,7 @@ public final class ProjectPage extends WebPage implements Updatable {
         add( new Label( "sc-title", new PropertyModel<String>( scenario, "name" ) ) );    // NON-NLS
         form = new Form( "big-form" ) {
             protected void onSubmit() {
-                getProject().getCommander().resetUserHistory( Project.getUserName() );                
+                getProject().getCommander().resetUserHistory( Project.getUserName() );
                 importScenario();
             }
         };
@@ -269,8 +271,7 @@ public final class ProjectPage extends WebPage implements Updatable {
                     "class", true, new Model<String>( "error" ) ) ); // NON-NLS
             scenarioNameLabel.add( new AttributeModifier(
                     "title", true, new Model<String>( issue ) ) );  // NON-NLS
-        }
-        else {
+        } else {
             scenarioNameLabel.add( new AttributeModifier(
                     "class", true, new Model<String>( "no-error" ) ) ); // NON-NLS
             scenarioNameLabel.add( new AttributeModifier(
@@ -583,7 +584,7 @@ public final class ProjectPage extends WebPage implements Updatable {
      * {@inheritDoc}
      */
     public void changed( Change change ) {
-        Identifiable identifiable = change.getSubject( );
+        Identifiable identifiable = change.getSubject();
         if ( change.isCollapsed() ) {
             expansions.remove( identifiable.getId() );
         } else if ( change.isExpanded() ) {
@@ -600,11 +601,16 @@ public final class ProjectPage extends WebPage implements Updatable {
                 setPart( getScenario().getDefaultPart() );
             }
         }
-        if ( identifiable instanceof Issue
-                && change.isAdded()
-                && ( (Issue) identifiable ).getAbout() instanceof Scenario )
-        {
-            expansions.add( identifiable.getId() );
+        if ( identifiable instanceof UserIssue && change.isAdded() ) {
+            try {
+                UserIssue userIssue = (UserIssue) identifiable;
+                ModelObject mo = getService().find( UserIssue.class, userIssue.getAbout() );
+                if ( mo instanceof Scenario ) {
+                    expansions.add( identifiable.getId() );
+                }
+            } catch ( NotFoundException e ) {
+                LOG.warn( "Stale id for model object issue is about." );
+            }
         }
     }
 
@@ -641,15 +647,13 @@ public final class ProjectPage extends WebPage implements Updatable {
         }
         if ( identifiable instanceof ScenarioObject
                 || ( identifiable instanceof Issue
-                && ( (Issue) identifiable ).getAbout() instanceof Scenario ) )
-        {
+                && ( (Issue) identifiable ).getAbout() == getScenario().getId() ) ) {
             annotateScenarioName( getScenario() );
             target.addComponent( scenarioNameLabel );
         }
         if ( identifiable instanceof Issue
                 && change.isExists()
-                && ( (Issue) identifiable ).getAbout() instanceof Scenario )
-        {
+                && ( (Issue) identifiable ).getAbout()  == getScenario().getId() ) {
             annotateScenarioName( getScenario() );
             target.addComponent( scenarioNameLabel );
             scenarioPanel.expandScenarioEditPanel( target );

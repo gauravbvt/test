@@ -296,7 +296,8 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
         // Todo compare inclusion
         /*
         if ( !other.isAnyOrganization()
-                && ( organization == null || !organization.isSameOrWithin( other.getOrganization() ) ) )
+                && ( organization == null
+                || !organization.isSameOrWithin( other.getOrganization() ) ) )
             return false;
 
          */

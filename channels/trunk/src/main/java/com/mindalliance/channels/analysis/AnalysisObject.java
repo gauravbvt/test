@@ -16,7 +16,7 @@ public abstract class AnalysisObject implements Serializable {
     /**
      * What model object the analysis is about
      */
-    private ModelObject about;
+    private long about;
     /**
      * The analysis
      */
@@ -30,10 +30,10 @@ public abstract class AnalysisObject implements Serializable {
     /**
      * Constructor
      *
-     * @param about -- the ModelObject the issue is about
+     * @param mo -- the ModelObject the issue is about
      */
-    public AnalysisObject( ModelObject about ) {
-        this.about = about;
+    public AnalysisObject( ModelObject mo ) {
+        this.about = mo.getId();
     }
 
     /**
@@ -47,11 +47,11 @@ public abstract class AnalysisObject implements Serializable {
         this.property = property;
     }
 
-    public ModelObject getAbout() {
+    public long getAbout() {
         return about;
     }
 
-    public void setAbout( ModelObject about ) {
+    public void setAbout( long about ) {
         this.about = about;
     }
 
