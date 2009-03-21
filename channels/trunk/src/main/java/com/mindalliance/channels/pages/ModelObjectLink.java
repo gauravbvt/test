@@ -8,6 +8,7 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Place;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
@@ -60,23 +61,35 @@ public class ModelObjectLink extends ExternalLink {
             s );
     }
 
-    private static String linkFor( Scenario scenario ) {
+    public static String linkFor( Scenario scenario ) {
         return linkFor( scenario.getDefaultPart() );
     }
 
-    private static String linkFor( Role role ) {
+    public static String linkForEntity( ModelObject mo ) {
+        if (mo instanceof Actor) return linkFor( (Actor) mo);
+        else if (mo instanceof Role) return linkFor( (Role) mo);
+        else if (mo instanceof Organization) return linkFor( (Organization) mo);
+        else if (mo instanceof Place) return linkFor( (Place) mo);
+        else throw new IllegalArgumentException( mo + " is not an entity");
+    }
+
+    public static String linkFor( Role role ) {
         return MessageFormat.format( "role.html?id={0,number,0}", role.getId() );                  // NON-NLS
     }
 
-    private static String linkFor( Organization organization ) {
+    public static String linkFor( Organization organization ) {
         return MessageFormat.format( "organization.html?id={0,number,0}", organization.getId() );  // NON-NLS
     }
 
-    private static String linkFor( Actor actor ) {
+    public static String linkFor( Actor actor ) {
         return MessageFormat.format( "actor.html?id={0,number,0}", actor.getId() );                // NON-NLS
     }
 
-    private static String linkFor( Part part ) {
+    public static String linkFor( Place place ) {
+        return MessageFormat.format( "place.html?id={0,number,0}", place.getId() );                // NON-NLS
+    }
+
+    public static String linkFor( Part part ) {
         return MessageFormat.format(
                 "node.html?scenario={0,number,0}&node={1,number,0}",                                    // NON-NLS
                 part.getScenario().getId(),

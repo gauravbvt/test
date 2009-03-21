@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.ProfileLink;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -169,6 +170,7 @@ public abstract class AbstractTablePanel<T> extends Panel {
     }
 
 
+/*
     private Component cellLinkContent( String id, T bean, String moProperty, String labelProperty, String defaultText ) {
         final ModelObject mo = (ModelObject) evaluate( bean, moProperty, null );
         final String labelText;
@@ -189,10 +191,29 @@ public abstract class AbstractTablePanel<T> extends Panel {
                             }
                         } );
             }
-//        }
-
         return new Label( id, new Model<String>( defaultText == null ? "" : defaultText ) );
     }
+*/
+
+    private Component cellLinkContent( String id, T bean, String moProperty, String labelProperty, String defaultText ) {
+        final ModelObject mo = (ModelObject) CommandUtils.getProperty( bean, moProperty, null );
+        if ( mo != null ) {
+            String labelText = (String) CommandUtils.getProperty(
+                    bean,
+                    labelProperty,
+                    defaultText );
+            labelText = (labelText == null || labelText.isEmpty())
+                    ? (defaultText == null ? "" : defaultText)
+                    : labelText;
+            return new ModelObjectLink(
+                    id,
+                    new Model<ModelObject>(mo),
+                    new Model<String>(labelText));
+        } else {
+            return new Label( id, new Model<String>( ( defaultText == null ? "" : defaultText ) ) );
+        }
+    }
+
 
     /**
      * Make a column with a link to a resource's profile.

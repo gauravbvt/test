@@ -2,6 +2,7 @@ package com.mindalliance.channels;
 
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.util.SemMatch;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -354,7 +355,9 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
         return count == 1;
     }
 
-    /** The higher the specificity, the higher the value.
+    /**
+     * The higher the specificity, the higher the value.
+     *
      * @return a specificity value
      */
     public int specificity() {
@@ -366,4 +369,12 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
         return val;
     }
 
+    /**
+     * Is a job specified (actor and role set)?
+     *
+     * @return a boolean
+     */
+    public boolean hasJob() {
+        return actor != null && role != null;
+    }
 }

@@ -191,7 +191,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                 final DropDownChoice<Medium> mediumChoices = new DropDownChoice<Medium>(
                         "medium",
                         new PropertyModel<Medium>( wrapper, "medium" ),
-                        (channelable instanceof Flow) ? Medium.media() : Medium.unicastMedia(),
+                        ( channelable instanceof Flow ) ? Medium.media() : Medium.unicastMedia(),
                         new IChoiceRenderer<Medium>() {
                             public Object getDisplayValue( Medium medium ) {
                                 return medium == null ? "Select a medium" : medium.getName();
@@ -436,7 +436,6 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         public void setAddress( String address ) {
             if ( channel != null ) {
                 Channelable channelable = model.getObject();
-                // channel.setAddress( address == null ? "" : address.trim() );
                 int index = channelable.getEffectiveChannels().indexOf( channel );
                 if ( index >= 0 )
                     doCommand( UpdateObject.makeCommand(

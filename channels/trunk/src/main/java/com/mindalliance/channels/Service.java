@@ -227,4 +227,11 @@ public interface Service {
      * Commit changes to persistent store.
      */
     void flush();
+
+    /**
+     * Find all jobs for an organization that are implied by parts but not confirmed.
+     * @param organization an organization
+     * @return a list of jobs
+     */
+    List<Job> findUnconfirmedJobs( Organization organization );
 }

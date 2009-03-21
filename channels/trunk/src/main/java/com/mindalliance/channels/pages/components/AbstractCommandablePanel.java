@@ -21,12 +21,12 @@ import com.mindalliance.channels.Service;
  */
 public class AbstractCommandablePanel extends AbstractUpdatablePanel {
 
-    public AbstractCommandablePanel( String s ) {
-        super( s );
+    public AbstractCommandablePanel( String id ) {
+        super( id );
     }
 
-    public AbstractCommandablePanel( String s, IModel<?> iModel ) {
-        super( s, iModel );
+    public AbstractCommandablePanel( String id, IModel<? extends Identifiable> iModel ) {
+        super( id, iModel );
     }
 
     /**

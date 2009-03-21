@@ -5,10 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import java.text.MessageFormat;
-import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A company, agency, social club, etc.
@@ -30,7 +28,7 @@ public class Organization extends AbstractUnicastChannelable {
      */
     private Place location;
 
-    private Set<Job> jobs = new HashSet<Job>();
+    private List<Job> jobs = new ArrayList<Job>();
 
     // private List<Job> jobs = new ArrayList<Job>(); // TODO - reflect in Service.FindAllResourceSpecs()
 
@@ -114,11 +112,11 @@ public class Organization extends AbstractUnicastChannelable {
                 : MessageFormat.format( "{0} - {1}", parent.toString(), getName() );
     }
 
-    public Set<Job> getJobs() {
+    public List<Job> getJobs() {
         return jobs;
     }
 
-    public void setJobs( Set<Job> jobs ) {
+    public void setJobs( List<Job> jobs ) {
         this.jobs = jobs;
     }
 
@@ -128,7 +126,7 @@ public class Organization extends AbstractUnicastChannelable {
      * @param job a job
      */
     public void addJob( Job job ) {
-        jobs.add( job );
+        if ( !jobs.contains( job ) ) jobs.add( job );
     }
 
     /**

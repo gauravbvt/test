@@ -180,4 +180,18 @@ public final class CommandUtils {
             }
         }
     }
+
+    public static Object getProperty( Object bean, String property, Object defaultValue ) {
+        Object value = null;
+        try {
+            value = PropertyUtils.getProperty( bean, property );
+        } catch ( IllegalAccessException e ) {
+            throw new RuntimeException( e );
+        } catch ( InvocationTargetException e ) {
+            throw new RuntimeException( e );
+        } catch ( NoSuchMethodException e ) {
+            throw new RuntimeException( e );
+        }
+        return value != null ? value : defaultValue;
+    }
 }

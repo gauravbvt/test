@@ -34,9 +34,10 @@ public class Job implements Serializable {
     public Job() {
     }
 
-    public Job( Actor actor, Role role ) {
+    public Job( Actor actor, Role role, Place jurisdiction ) {
         this.actor = actor;
         this.role = role;
+        this.jurisdiction = jurisdiction;
     }
 
     public Actor getActor() {
@@ -83,7 +84,16 @@ public class Job implements Serializable {
         resourceSpec.setRole( role );
         resourceSpec.setJurisdiction( jurisdiction );
         resourceSpec.setOrganization( organization );
+        assert actor != null;
+        assert role != null;
         return resourceSpec;
+    }
+
+    public String toString() {
+        return (actor == null ? "" : actor.getName())
+                + (title.isEmpty() ? "" : " (" + title + " )")
+                + (role == null ? "" : " as " + role)
+                + (jurisdiction == null ? "" : " for " + jurisdiction );
     }
 
     /**
@@ -111,5 +121,14 @@ public class Job implements Serializable {
         if ( jurisdiction != null ) hash = hash * 31 + jurisdiction.hashCode();
         if ( title != null ) hash = hash * 31 + title.hashCode();
         return hash;
+    }
+
+    /**
+     * Makes a job from a resource spec.
+     * @param resourceSpec a resource spec
+     * @return a job
+     */
+    public static Job from( ResourceSpec resourceSpec ) {
+        return new Job(resourceSpec.getActor(), resourceSpec.getRole(), resourceSpec.getJurisdiction());
     }
 }

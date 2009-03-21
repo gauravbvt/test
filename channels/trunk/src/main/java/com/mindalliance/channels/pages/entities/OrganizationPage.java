@@ -7,6 +7,7 @@ import com.mindalliance.channels.Service;
 import com.mindalliance.channels.pages.ProfileLink;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.components.OrganizationPanel;
+import com.mindalliance.channels.pages.components.JobsPanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -46,20 +47,21 @@ public class OrganizationPage extends WebPage {
         assert organization != null;
         add( new Label( "title", new Model<String>( "Actor: " + organization.getName() ) ) );
         add( new Label( "header-title", new PropertyModel<String>( organization, "name" ) ) );
-        add ( new ExternalLink("index", "index.html"));
+        add( new ExternalLink( "index", "index.html" ) );
         add( new OrganizationPanel( "organization-form", new Model<Organization>( organization ) ) );
+        add( new JobsPanel( "jobs", new Model<Organization>( organization ) ) );
         add( new ProfileLink( "profile-link",
-                        new AbstractReadOnlyModel<ResourceSpec>() {
-                            public ResourceSpec getObject() {
-                                return ( ResourceSpec.with( organization )) ;
-                            }
-                        },
-                        new AbstractReadOnlyModel<String>() {
-                            public String getObject() {
-                                return "View profile";
-                            }
-                        }
-                )  );
+                new AbstractReadOnlyModel<ResourceSpec>() {
+                    public ResourceSpec getObject() {
+                        return ( ResourceSpec.with( organization ) );
+                    }
+                },
+                new AbstractReadOnlyModel<String>() {
+                    public String getObject() {
+                        return "View profile";
+                    }
+                }
+        ) );
     }
 
     private Organization findOrganization( PageParameters parameters ) throws NotFoundException {

@@ -19,6 +19,7 @@ import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.Channelable;
 import com.mindalliance.channels.AbstractUnicastChannelable;
+import com.mindalliance.channels.Job;
 import com.mindalliance.channels.dao.EvacuationScenario;
 import com.mindalliance.channels.dao.FireScenario;
 import com.mindalliance.channels.export.Importer;
@@ -325,6 +326,7 @@ public class ChannelsServiceImpl implements Service {
         }
         for ( Organization organization : list( Organization.class ) ) {
             result.add( ResourceSpec.with( organization ) );
+            result.addAll( organization.jobResourceSpecs() );
         }
         // Specs from scenario parts
         for ( Scenario scenario : list( Scenario.class ) ) {
@@ -590,5 +592,32 @@ public class ChannelsServiceImpl implements Service {
      */
     public void flush() {
         getDao().flush();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Job> findUnconfirmedJobs( Organization organization ) {
+        final Set<Job> unconfirmedJobs = new HashSet<Job>();
+        List<Job> confirmedJobs = organization.getJobs();
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                Part part = parts.next();
+                if ( organization == part.getOrganization() ) {
+                    ResourceSpec resourceSpec = part.resourceSpec();
+                    if ( resourceSpec.hasJob() ) {
+                        Job job = Job.from( resourceSpec );
+                        if ( !confirmedJobs.contains( job ) )
+                            unconfirmedJobs.add( job );
+                    }
+                }
+            }
+        }
+        return new ArrayList<Job>() {
+            {
+                addAll( unconfirmedJobs );
+            }
+        };
     }
 }

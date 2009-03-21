@@ -8,6 +8,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.AttributeModifier;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.Identifiable;
 
 /**
  * Abstract base class of updatable panels.
@@ -19,12 +20,19 @@ import com.mindalliance.channels.command.Change;
  */
 public class AbstractUpdatablePanel extends Panel implements Updatable {
 
-    public AbstractUpdatablePanel( String id ) {
+    private IModel<? extends Identifiable> model = null;
+
+   public AbstractUpdatablePanel( String id ) {
         super( id );
     }
 
-    public AbstractUpdatablePanel( String id, IModel<?> model ) {
+    public AbstractUpdatablePanel( String id, IModel<? extends Identifiable> model ) {
         super( id, model );
+        this.model = model;
+    }
+
+    protected IModel<? extends Identifiable> getModel() {
+        return model;
     }
 
     /**
