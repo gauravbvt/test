@@ -195,6 +195,7 @@ public interface Service {
 
     /**
      * Find all flows across all scenarios that contact a matching part.
+     *
      * @param resourceSpec a resource specification
      * @return a list of flows
      */
@@ -230,8 +231,67 @@ public interface Service {
 
     /**
      * Find all jobs for an organization that are implied by parts but not confirmed.
+     *
      * @param organization an organization
      * @return a list of jobs
      */
     List<Job> findUnconfirmedJobs( Organization organization );
+
+    /**
+     * Find all titles used in organizations, sorted alphabetically.
+     *
+     * @return a sorted list of strings
+     */
+    List<String> findAllJobTitles();
+
+    /**
+     * Find all tasks in a project, sorted.
+     *
+     * @return a list of strings
+     */
+    List<String> findAllTasks();
+
+    /**
+     * Find all names, sorted, of known instances of a model object class.
+     *
+     * @param aClass a model object class
+     * @return a list of strings
+     */
+    List<String> findAllNames( Class<? extends ModelObject> aClass );
+
+    /**
+     * Remove entity with old name if not referenced and if not defined.
+     *
+     * @param aClass  a model object class
+     * @param oldName a string
+     */
+    void cleanup( Class<? extends ModelObject> aClass, String oldName );
+
+    /**
+     * Whether the actor is referenced in another model object.
+     * @param actor an actor
+     * @return a boolean
+     */
+    boolean isReferenced( Actor actor );
+
+    /**
+     * Whether the role is referenced in another model object.
+     * @param role a role
+     * @return a boolean
+     */
+    boolean isReferenced( Role role );
+
+    /**
+     * Whether the organization is referenced in another model object.
+     * @param organization an organization
+     * @return a boolean
+     */
+    boolean isReferenced( Organization organization );
+
+    /**
+     * Whether the place is referenced in another model object.
+     * @param place a place
+     * @return a boolean
+     */
+    boolean isReferenced( Place place );
 }

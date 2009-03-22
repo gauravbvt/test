@@ -1,6 +1,10 @@
 package com.mindalliance.channels.pages.components.menus;
 
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Actor;
+import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Place;
+import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.RemovePart;
 import com.mindalliance.channels.command.commands.DuplicatePart;
@@ -72,7 +76,18 @@ public class PartActionsMenuPanel extends MenuPanel {
                 } );
                 add( new CommandWrapper( new RemovePart( getPart() ) ) {
                     public void onExecuted( AjaxRequestTarget target, Change change ) {
+                        Part part = getPart();
                         update( target, change );
+                        if ( part.getActor() != null )
+                            getService().cleanup( Actor.class, part.getActor().getName() );
+                        if ( part.getRole() != null )
+                            getService().cleanup( Role.class, part.getRole().getName() );
+                        if ( part.getOrganization() != null )
+                            getService().cleanup( Organization.class, part.getOrganization().getName() );
+                        if ( part.getJurisdiction() != null )
+                            getService().cleanup( Place.class, part.getJurisdiction().getName() );
+                        if ( part.getLocation() != null )
+                            getService().cleanup( Place.class, part.getLocation().getName() );
                     }
                 } );
             }

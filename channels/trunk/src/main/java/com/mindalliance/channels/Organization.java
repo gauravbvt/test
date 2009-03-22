@@ -104,6 +104,20 @@ public class Organization extends AbstractUnicastChannelable {
     }
 
     /**
+     * List all ancestors.
+     *
+     * @return a list of organizations
+     */
+    public List<Organization> ancestors() {
+        List<Organization> ancestors = new ArrayList<Organization>();
+        if ( parent != null ) {
+            ancestors.add( parent );
+            ancestors.addAll( parent.ancestors() );
+        }
+        return ancestors;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -150,5 +164,14 @@ public class Organization extends AbstractUnicastChannelable {
         }
         return resourceSpecs;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    public boolean isUndefined() {
+        return super.isUndefined() && parent == null && location == null && jobs.isEmpty();
+    }
+
 }
 

@@ -53,6 +53,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
     protected Flow() {
     }
 
+
     public boolean isAskedFor() {
         return askedFor;
     }
@@ -629,6 +630,19 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         Node node = isAskedFor() ? getSource() : getTarget();
         return node.isPart() ? (Part) node : null;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    public boolean isUndefined() {
+        return super.isUndefined()
+                && channels.isEmpty()
+                && significanceToSource == Significance.None
+                && significanceToTarget == Significance.Useful
+                && maxDelay.equals( new Delay() );
+    }
+        
 
     /**
      * The significance of a flow.

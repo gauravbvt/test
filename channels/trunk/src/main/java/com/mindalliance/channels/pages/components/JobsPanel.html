@@ -7,6 +7,9 @@
         lang="en">
 <body>
 <wicket:panel>
+    <div class="section-title">
+         Jobs
+     </div>
     <div wicket:id="jobsDiv">
         <table>
             <thead>
@@ -29,10 +32,12 @@
             </tr>
         </table>
     </div>
-    <div wicket:id="flows">
-        Flows involving <span wicket:id="job">job</span>
+    <span wicket:id="flows">
+        <div class="section-title">
+            Flows involving <span wicket:id="job">job</span>
+        </div>
         <span wicket:id="playbook">[job flows panel]</span>
-    </div>
+    </span>
 </wicket:panel>
 </body>
 </html>

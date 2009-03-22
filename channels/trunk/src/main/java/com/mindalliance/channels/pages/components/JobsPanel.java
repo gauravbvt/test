@@ -7,12 +7,14 @@ import com.mindalliance.channels.Place;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.util.SemMatch;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdateProjectObject;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import org.apache.wicket.Component;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -31,6 +33,10 @@ import org.apache.wicket.model.PropertyModel;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.text.Collator;
 
 /**
  * Jobs panel.
@@ -42,6 +48,7 @@ import java.util.List;
  */
 public class JobsPanel extends AbstractCommandablePanel {
 
+    private static Collator collator = Collator.getInstance();
     private WebMarkupContainer jobsDiv;
     private Job selectedJob;
     private WebMarkupContainer flowsDiv;
@@ -115,8 +122,8 @@ public class JobsPanel extends AbstractCommandablePanel {
         item.addOrReplace( confirmedCheckBox );
         confirmedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                if ( jobWrapper.hasFlows() ) {
-                    addJobPlaybook( jobWrapper.getJob() );
+                if ( !getOrganization().getJobs().contains( jobWrapper.getJob() ) ) {
+                    addJobPlaybook( null );
                     target.addComponent( flowsDiv );
                 }
                 jobsDiv.addOrReplace( makeJobsTable() );
@@ -138,9 +145,18 @@ public class JobsPanel extends AbstractCommandablePanel {
 
     private void addTitleCell( final ListItem<JobWrapper> item ) {
         final JobWrapper jobWrapper = item.getModel().getObject();
-        TextField<String> titleField = new TextField<String>(
+        final List<String> choices = getService().findAllJobTitles();
+        TextField<String> titleField = new AutoCompleteTextField<String>(
                 "title",
-                new PropertyModel<String>( jobWrapper, "title" ) );
+                new PropertyModel<String>( jobWrapper, "title" ) ) {
+            protected Iterator<String> getChoices( String s ) {
+                List<String> candidates = new ArrayList<String>();
+                for ( String choice : choices ) {
+                    if ( SemMatch.matches( s, choice ) ) candidates.add( choice );
+                }
+                return candidates.iterator();
+            }
+        };
         titleField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addConfirmedCell( item );
@@ -183,6 +199,11 @@ public class JobsPanel extends AbstractCommandablePanel {
         for ( Job job : getService().findUnconfirmedJobs( getOrganization() ) ) {
             jobWrappers.add( new JobWrapper( job, false ) );
         }
+        Collections.sort( jobWrappers, new Comparator<JobWrapper>() {
+            public int compare( JobWrapper jw1, JobWrapper jw2 ) {
+                return collator.compare( jw1.getActor().normalize(), jw2.getActor().normalize() );
+            }
+        } );
         // New job
         JobWrapper creationJobWrapper = new JobWrapper( new Job(), false );
         creationJobWrapper.setMarkedForCreation( true );
@@ -243,6 +264,10 @@ public class JobsPanel extends AbstractCommandablePanel {
                         job,
                         UpdateObject.Action.Remove
                 ) );
+                if ( job.getActor() != null ) getService().cleanup( Actor.class, job.getActor().getName() );
+                if ( job.getRole() != null ) getService().cleanup( Role.class, job.getRole().getName() );
+                if ( job.getJurisdiction() != null )
+                    getService().cleanup( Place.class, job.getJurisdiction().getName() );
             }
         }
 
@@ -255,7 +280,7 @@ public class JobsPanel extends AbstractCommandablePanel {
             if ( markedForCreation ) {
                 job.setTitle( title );
             } else {
-                if ( !title.equals( oldTitle ) ) {
+                if ( !isSame( title, oldTitle ) ) {
                     int index = getOrganization().getJobs().indexOf( job );
                     if ( index >= 0 ) {
                         doCommand( new UpdateProjectObject(
@@ -280,7 +305,7 @@ public class JobsPanel extends AbstractCommandablePanel {
 
         public void setActorName( String name ) {
             String oldName = getActorName();
-            if ( name != null && !name.equals( oldName ) ) {
+            if ( name != null && !isSame( name, oldName ) ) {
                 Actor actor = getService().findOrCreate( Actor.class, name );
                 if ( markedForCreation ) {
                     job.setActor( actor );
@@ -295,6 +320,7 @@ public class JobsPanel extends AbstractCommandablePanel {
                         ) );
                     }
                 }
+                getService().cleanup( Actor.class, oldName );
             }
         }
 
@@ -309,7 +335,7 @@ public class JobsPanel extends AbstractCommandablePanel {
 
         public void setRoleName( String name ) {
             String oldName = getRoleName();
-            if ( name != null && !name.equals( oldName ) ) {
+            if ( name != null && !isSame( name, oldName ) ) {
                 Role role = getService().findOrCreate( Role.class, name );
                 if ( markedForCreation ) {
                     job.setRole( role );
@@ -324,6 +350,7 @@ public class JobsPanel extends AbstractCommandablePanel {
                         ) );
                     }
                 }
+                getService().cleanup( Role.class, oldName );
             }
         }
 
@@ -337,8 +364,8 @@ public class JobsPanel extends AbstractCommandablePanel {
         }
 
         public void setJurisdictionName( String name ) {
-            String oldName = getRoleName();
-            if ( name != null && !name.equals( oldName ) ) {
+            String oldName = getJurisdictionName();
+            if ( name != null && !isSame( name, oldName ) ) {
                 Place jurisdiction = getService().findOrCreate( Place.class, name );
                 if ( markedForCreation ) {
                     job.setJurisdiction( jurisdiction );
@@ -353,6 +380,7 @@ public class JobsPanel extends AbstractCommandablePanel {
                         ) );
                     }
                 }
+                getService().cleanup( Place.class, oldName );
             }
         }
 
@@ -395,10 +423,26 @@ public class JobsPanel extends AbstractCommandablePanel {
             Label label = new Label( "entity", new PropertyModel<String>( jobWrapper, property + "Name" ) );
             link.add( label );
             makeVisible( link, !jobWrapper.isMarkedForCreation() );
+            Class<? extends ModelObject> moClass =
+                    property.equals( "actor" )
+                            ? Actor.class
+                            : ( property.equals( "role" )
+                            ? Role.class
+                            : Place.class );
+            final List<String> choices = getService().findAllNames( moClass );
             // text field
-            TextField<String> entityField = new TextField<String>(
+            TextField<String> entityField = new AutoCompleteTextField<String>(
                     "entity-field",
-                    new PropertyModel<String>( jobWrapper, property + "Name" ) );
+                    new PropertyModel<String>( jobWrapper, property + "Name" ) ) {
+                protected Iterator<String> getChoices( String s ) {
+                    List<String> candidates = new ArrayList<String>();
+                    for ( String choice : choices ) {
+                        if ( SemMatch.matches( s, choice ) ) candidates.add( choice );
+                    }
+                    return candidates.iterator();
+
+                }
+            };
             entityField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                 protected void onUpdate( AjaxRequestTarget target ) {
                     addConfirmedCell( item );

@@ -89,4 +89,13 @@ public abstract class AbstractUnicastChannelable extends ModelObject implements 
     public String validate( Channel channel ) {
         return channel.isValid() ? null : "Invalid address";
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    public boolean isUndefined() {
+        return super.isUndefined() && channels.isEmpty();
+    }
+
 }

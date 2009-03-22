@@ -26,10 +26,8 @@ import org.apache.wicket.model.PropertyModel;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 /**
  * A view on a Part.
@@ -95,55 +93,13 @@ public class PartPanel extends AbstractCommandablePanel {
         super.setOutputMarkupPlaceholderTag( false );
         this.model = model;
 
-        addField( TASK_PROPERTY, findAllTaskNames() );
-        addField( ACTOR_PROPERTY, findAllActorNames() );
-        addField( ROLE_PROPERTY, findAllRoleNames() );
-        addField( ORG_PROPERTY, findAllOrganizationNames() );
-        addField( JURISDICTION_PROPERTY, findAllPlaceNames() );
-        addField( LOCATION_PROPERTY, findAllPlaceNames() );
+        addField( TASK_PROPERTY, getService().findAllTasks() );
+        addField( ACTOR_PROPERTY, getService().findAllNames( Actor.class ) );
+        addField( ROLE_PROPERTY, getService().findAllNames( Role.class ) );
+        addField( ORG_PROPERTY, getService().findAllNames( Organization.class ) );
+        addField( JURISDICTION_PROPERTY, getService().findAllNames( Place.class ) );
+        addField( LOCATION_PROPERTY, getService().findAllNames( Place.class ) );
         addTimingFields();
-    }
-
-    private Set<String> findAllActorNames() {
-        Set<String> names = new HashSet<String>();
-        for ( Actor actor : Project.service().list( Actor.class ) )
-            names.add( actor.getName() );
-/*
-        for ( ResourceSpec rs : Project.service().findAllResourceSpecs() ) {
-            if ( !rs.isAnyActor() ) names.add( rs.getActorName() );
-        }
-*/
-        return names;
-    }
-
-    private Set<String> findAllRoleNames() {
-        Set<String> names = new HashSet<String>();
-        for ( Role actor : Project.service().list( Role.class ) )
-            names.add( actor.getName() );
-        return names;
-    }
-
-    private Set<String> findAllOrganizationNames() {
-        Set<String> names = new HashSet<String>();
-        for ( Organization actor : Project.service().list( Organization.class ) )
-            names.add( actor.getName() );
-        return names;
-    }
-
-    private Set<String> findAllPlaceNames() {
-        Set<String> names = new HashSet<String>();
-        for ( Place actor : Project.service().list( Place.class ) )
-            names.add( actor.getName() );
-        return names;
-    }
-
-    private Set<String> findAllTaskNames() {
-        Set<String> names = new HashSet<String>();
-        Iterator<Part> allParts = getPart().getScenario().parts();
-        while ( allParts.hasNext() ) {
-            names.add( allParts.next().getTask() );
-        }
-        return names;
     }
 
     private void addField( final String property, final Collection<String> choices ) {
@@ -250,17 +206,6 @@ public class PartPanel extends AbstractCommandablePanel {
         } );
     }
 
-    /**
-     * Test if strings are equivalent.
-     *
-     * @param name   the new name
-     * @param target the original name
-     * @return true if strings are equivalent
-     */
-    private static boolean isSame( String name, String target ) {
-        return COMPARATOR.compare( name, target ) == 0;
-    }
-
     //====================================
     /**
      * Get the actor string.
@@ -322,15 +267,17 @@ public class PartPanel extends AbstractCommandablePanel {
      * @param name if null or empty, set to null; otherwise, only set if different.
      */
     public void setActor( String name ) {
+        Actor oldActor = getPart().getActor();
+        String oldName = oldActor == null ? "" : oldActor.getName();
         Actor newActor = null;
         if ( name == null || name.trim().isEmpty() )
             newActor = null;
         else {
-            final Actor actor = getPart().getActor();
-            if ( actor == null || !isSame( name, actor.getName() ) )
+            if ( oldActor == null || !isSame( name, oldName ) )
                 newActor = getService().findOrCreate( Actor.class, name );
         }
         doCommand( new UpdateScenarioObject( getPart(), "actor", newActor ) );
+        getService().cleanup( Actor.class, oldName );
     }
 
     /**
@@ -339,15 +286,17 @@ public class PartPanel extends AbstractCommandablePanel {
      * @param name if null or empty, set to null; otherwise, only set if different.
      */
     public void setJurisdiction( String name ) {
+        Place oldPlace = getPart().getJurisdiction();
+        String oldName = oldPlace == null ? "" : oldPlace.getName();
         Place newPlace = null;
         if ( name == null || name.trim().isEmpty() )
             newPlace = null;
         else {
-            final Place jurisdiction = getPart().getJurisdiction();
-            if ( jurisdiction == null || !isSame( name, jurisdiction.getName() ) )
+            if ( oldPlace == null || !isSame( name, oldName ) )
                 newPlace = getService().findOrCreate( Place.class, name );
         }
         doCommand( new UpdateScenarioObject( getPart(), "jurisdiction", newPlace ) );
+        getService().cleanup( Place.class, oldName );
     }
 
     /**
@@ -356,15 +305,17 @@ public class PartPanel extends AbstractCommandablePanel {
      * @param name if null or empty, set to null; otherwise, only set if different.
      */
     public void setLocation( String name ) {
+        Place oldPlace = getPart().getLocation();
+         String oldName = oldPlace == null ? "" : oldPlace.getName();
         Place newPlace = null;
         if ( name == null || name.trim().isEmpty() )
             newPlace = null;
         else {
-            final Place location = getPart().getLocation();
-            if ( location == null || !isSame( name, location.getName() ) )
+            if ( oldPlace == null || !isSame( name, oldName ) )
                 newPlace = getService().findOrCreate( Place.class, name );
         }
         doCommand( new UpdateScenarioObject( getPart(), "location", newPlace ) );
+        getService().cleanup( Place.class, oldName );
     }
 
     /**
@@ -373,15 +324,17 @@ public class PartPanel extends AbstractCommandablePanel {
      * @param name if null or empty, set to null; otherwise, only set if different.
      */
     public void setOrganization( String name ) {
+        Organization oldOrg = getPart().getOrganization();
+        String oldName = oldOrg == null ? "" : oldOrg.getName();
         Organization newOrg = null;
         if ( name == null || name.trim().isEmpty() )
             newOrg = null;
         else {
-            final Organization organization = getPart().getOrganization();
-            if ( organization == null || !isSame( name, organization.getName() ) )
+            if ( oldOrg == null || !isSame( name, oldName ) )
                 newOrg = getService().findOrCreate( Organization.class, name );
         }
         doCommand( new UpdateScenarioObject( getPart(), "organization", newOrg ) );
+        getService().cleanup( Organization.class, oldName );
     }
 
     /**
@@ -390,15 +343,17 @@ public class PartPanel extends AbstractCommandablePanel {
      * @param name if null or empty, set to null; otherwise, only set if different.
      */
     public void setRole( String name ) {
+        Role oldRole = getPart().getRole();
+        String oldName = oldRole == null ? "" : oldRole.getName();
         Role newRole = null;
         if ( name == null || name.trim().isEmpty() )
             newRole = null;
         else {
-            Role role = getPart().getRole();
-            if ( role == null || !isSame( name, role.getName() ) )
+            if ( oldRole == null || !isSame( name, oldName ) )
                 newRole = getService().findOrCreate( Role.class, name );
         }
         doCommand( new UpdateScenarioObject( getPart(), "role", newRole ) );
+        getService().cleanup( Role.class, oldName );
     }
 
     /**

@@ -10,6 +10,8 @@ import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.Identifiable;
 
+import java.text.Collator;
+
 /**
  * Abstract base class of updatable panels.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -20,9 +22,16 @@ import com.mindalliance.channels.Identifiable;
  */
 public class AbstractUpdatablePanel extends Panel implements Updatable {
 
+    /**
+     * String comparator for equality tests.
+     */
+    private static final Collator COMPARATOR = Collator.getInstance();
+    /**
+     * Model on an identifiable.
+     */
     private IModel<? extends Identifiable> model = null;
 
-   public AbstractUpdatablePanel( String id ) {
+    public AbstractUpdatablePanel( String id ) {
         super( id );
     }
 
@@ -37,9 +46,10 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     /**
      * Set and update a component's visibility.
-     * @param target an ajax request target
+     *
+     * @param target    an ajax request target
      * @param component a component
-     * @param visible a boolean
+     * @param visible   a boolean
      */
     protected static void makeVisible(
             AjaxRequestTarget target,
@@ -51,8 +61,9 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     /**
      * Set a component's visibility.
+     *
      * @param component a component
-     * @param visible a boolean
+     * @param visible   a boolean
      */
     protected static void makeVisible( Component component, boolean visible ) {
         component.add(
@@ -89,5 +100,18 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         changed( change );
         updateWith( target, change );
     }
+
+    /**
+     * Test if strings are equivalent.
+     *
+     * @param name   the new name
+     * @param target the original name
+     * @return true if strings are equivalent
+     */
+    protected static boolean isSame( String name, String target ) {
+        return COMPARATOR.compare( name, target ) == 0;
+    }
+
+    
 
 }

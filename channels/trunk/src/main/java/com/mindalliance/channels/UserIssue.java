@@ -112,4 +112,15 @@ public class UserIssue extends ModelObject implements Issue {
     public void setSeverity( Level severity ) {
         this.severity = severity;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    public boolean isUndefined() {
+        return super.isUndefined()
+                && remediation.isEmpty();
+    }
+
+
 }

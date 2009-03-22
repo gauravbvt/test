@@ -13,20 +13,29 @@ import java.util.Date;
 /**
  * An object with name, id and description, comparable by its toString() values.
  */
-@Entity @Inheritance( strategy = InheritanceType.JOINED )
+@Entity
+@Inheritance( strategy = InheritanceType.JOINED )
 @org.hibernate.annotations.Entity( dynamicUpdate = true )
 public abstract class ModelObject implements Serializable, Comparable<ModelObject>, Identifiable {
 
-    /** Unique id of this object. */
+    /**
+     * Unique id of this object.
+     */
     private long id;
 
-    /** Name of this object. */
+    /**
+     * Name of this object.
+     */
     private String name = "";
 
-    /** The description. */
+    /**
+     * The description.
+     */
     private String description = "";
 
-    /** Time the object was last modified. Set by aspect. */
+    /**
+     * Time the object was last modified. Set by aspect.
+     */
     private Date lastModified;
 
     //=============================
@@ -35,6 +44,7 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
 
     /**
      * Utility constructor for tests.
+     *
      * @param name the name of the new object
      */
     protected ModelObject( String name ) {
@@ -42,7 +52,8 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
         setName( name );
     }
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     public long getId() {
         return id;
     }
@@ -51,13 +62,16 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
         this.id = id;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public String getName() {
         return name;
     }
 
     /**
      * Set the name of this object.
+     *
      * @param name the name. Will complain if null.
      */
     public void setName( String name ) {
@@ -70,6 +84,7 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
 
     /**
      * Set the description of this object.
+     *
      * @param description the description. Will set to empty string if null.
      */
     public void setDescription( String description ) {
@@ -79,6 +94,7 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
     //=============================
     /**
      * Compare with another named object.
+     *
      * @param o the object.
      * @return 0 if equals, -1 if this object smaller than the other, 1 if greater
      */
@@ -86,27 +102,33 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
         int result = Collator.getInstance().compare( toString(), o.toString() );
         if ( result == 0 )
             result = getId() > o.getId() ? 1
-                   : getId() < o.getId() ? -1
-                   : 0;
+                    : getId() < o.getId() ? -1
+                    : 0;
         return result;
     }
 
     //=============================
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals( Object obj ) {
         return this == obj
-            || obj instanceof ModelObject
-                  && id == ( (ModelObject) obj ).getId();
+                || obj instanceof ModelObject
+                && id == ( (ModelObject) obj ).getId();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         return Long.valueOf( id ).hashCode();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return name;
@@ -120,6 +142,7 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
 
     /**
      * Get a label
+     *
      * @return a string
      */
     @Transient
@@ -129,6 +152,7 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
 
     /**
      * Whether the model object is an entity
+     *
      * @return a boolean
      */
     @Transient
@@ -136,4 +160,13 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
         return false;
     }
 
+    /**
+     * Whether no properties other than name are set.
+     *
+     * @return a boolean
+     */
+    @Transient
+    public boolean isUndefined() {
+        return description.isEmpty();
+    }
 }

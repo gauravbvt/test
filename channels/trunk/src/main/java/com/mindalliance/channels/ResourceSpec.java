@@ -309,25 +309,6 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
     }
 
     /**
-     * Do two resource specs have common, known elements?
-     *
-     * @param other another resource spec
-     * @return a boolean
-     */
-    public boolean intersects( ResourceSpec other ) {
-        // Try cheap tests
-        if ( narrowsOrEquals( other ) || other.narrowsOrEquals( this ) ) {
-            return true;
-        } else {
-            // Try expensive test
-            Service service = Project.service();
-            List<ResourceSpec> resources = service.findAllResourcesNarrowingOrEqualTo( this );
-            List<ResourceSpec> others = service.findAllResourcesNarrowingOrEqualTo( other );
-            return !Collections.disjoint( resources, others );
-        }
-    }
-
-    /**
      * Return most specific entity composing this resource specification
      *
      * @return an entity

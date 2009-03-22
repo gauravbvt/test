@@ -20,6 +20,7 @@ import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.Channelable;
 import com.mindalliance.channels.AbstractUnicastChannelable;
 import com.mindalliance.channels.Job;
+import com.mindalliance.channels.Place;
 import com.mindalliance.channels.dao.EvacuationScenario;
 import com.mindalliance.channels.dao.FireScenario;
 import com.mindalliance.channels.export.Importer;
@@ -28,6 +29,7 @@ import com.mindalliance.channels.util.Play;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,6 +40,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.Collections;
 
 /**
  * Utility class for common functionality for all Dao implementations.
@@ -46,6 +49,10 @@ import java.util.Set;
  */
 public class ChannelsServiceImpl implements Service {
 
+    /**
+     * Class logger.
+     */
+    public static final Logger LOG = LoggerFactory.getLogger( ChannelsServiceImpl.class );
     /**
      * The implementation dao.
      */
@@ -614,10 +621,151 @@ public class ChannelsServiceImpl implements Service {
                 }
             }
         }
-        return new ArrayList<Job>() {
-            {
-                addAll( unconfirmedJobs );
+        List<Job> allUnconfirmedJobs = new ArrayList<Job>();
+        allUnconfirmedJobs.addAll( unconfirmedJobs );
+        return allUnconfirmedJobs;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<String> findAllJobTitles() {
+        Set<String> titles = new HashSet<String>();
+        for ( Organization organization : list( Organization.class ) ) {
+            for ( Job job : organization.getJobs() ) {
+                titles.add( job.getTitle() );
             }
-        };
+        }
+        List<String> allTitles = new ArrayList<String>();
+        allTitles.addAll( titles );
+        Collections.sort( allTitles );
+        return allTitles;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<String> findAllTasks() {
+        Set<String> tasks = new HashSet<String>();
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                tasks.add( parts.next().getTask() );
+            }
+        }
+        List<String> allTasks = new ArrayList<String>();
+        allTasks.addAll( tasks );
+        Collections.sort( allTasks );
+        return allTasks;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<String> findAllNames( Class<? extends ModelObject> aClass ) {
+        List<String> allNames = new ArrayList<String>();
+        for ( ModelObject mo : list( aClass ) ) {
+            allNames.add( mo.getName() );
+        }
+        Collections.sort( allNames );
+        return allNames;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void cleanup( Class<? extends ModelObject> clazz, String name ) {
+        if ( name != null && !name.trim().isEmpty() ) {
+            ModelObject mo = getDao().find( clazz, name.trim() );
+            if ( mo != null && mo.isUndefined() ) {
+                boolean garbage;
+                if ( mo instanceof Actor ) garbage = !isReferenced( (Actor) mo );
+                else if ( mo instanceof Role ) garbage = !isReferenced( (Role) mo );
+                else if ( mo instanceof Organization ) garbage = !isReferenced( (Organization) mo );
+                else if ( mo instanceof Place ) garbage = !isReferenced( (Place) mo );
+                else throw new IllegalArgumentException( "Can't clean up something of class " + clazz );
+                if ( garbage ) {
+                    LOG.info( "Removing unused " + mo.getClass().getSimpleName() + " " + mo );
+                    remove( mo );
+                }
+            }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isReferenced( Actor actor ) {
+        for ( Organization org : list( Organization.class ) ) {
+            for ( Job job : org.getJobs() ) {
+                if ( job.getActor() == actor ) return true;
+            }
+        }
+        // Look in parts
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                if ( parts.next().getActor() == actor ) return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isReferenced( Role role ) {
+        for ( Organization org : list( Organization.class ) ) {
+            for ( Job job : org.getJobs() ) {
+                if ( job.getRole() == role ) return true;
+            }
+        }
+        // Look in parts
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                if ( parts.next().getRole() == role ) return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isReferenced( Organization organization ) {
+        for ( Organization org : list( Organization.class ) ) {
+            if ( org.getParent() == organization ) return true;
+        }
+        // Look in parts
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                if ( parts.next().getOrganization() == organization ) return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isReferenced( Place place ) {
+        for ( Organization org : list( Organization.class ) ) {
+            if ( org.getLocation() == place ) return true;
+            else for ( Job job : org.getJobs() ) {
+                if ( job.getJurisdiction() == place ) return true;
+            }
+        }
+        // Look in parts
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                Part part = parts.next();
+                if ( part.getLocation() == place || part.getJurisdiction() == place ) return true;
+            }
+        }
+        return false;
     }
 }
+

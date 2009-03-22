@@ -31,7 +31,7 @@ public class FlowWithUndefinedTarget extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         Node target = flow.getTarget();
-        if ( target.isPart() && ( (Part) target ).isUndefined() ) {
+        if ( target.isPart() && ( (Part) target ).isEmpty() ) {
             DetectedIssue issue = new DetectedIssue( DetectedIssue.DEFINITION, modelObject, "target" );
             issue.setDescription( "The target is not defined." );
             issue.setRemediation( "Name the actor, role or organization of the target." );

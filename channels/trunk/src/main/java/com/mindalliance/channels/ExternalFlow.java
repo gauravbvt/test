@@ -418,4 +418,14 @@ public class ExternalFlow extends Flow {
     public Scenario getScenario() {
         return part.getScenario();
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    public boolean isUndefined() {
+        return super.isUndefined() && part.isUndefined();
+    }
+
+
 }

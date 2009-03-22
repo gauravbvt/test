@@ -1,13 +1,11 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Channelable;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.Model;
+import com.mindalliance.channels.ModelObject;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,41 +14,15 @@ import org.apache.wicket.markup.html.form.TextField;
  * Date: Feb 23, 2009
  * Time: 2:15:22 PM
  */
-public class ActorPanel extends ModelObjectPanel {
+public class ActorPanel extends EntityPanel {
 
     public ActorPanel( String id, IModel<? extends ModelObject> model ) {
         super( id, model );
     }
 
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
-        moDetailsDiv.add(
-                new TextField<String>( "job-title",                                            // NON-NLS
-                        new PropertyModel<String>( this, "jobTitle" ) ) );
-        moDetailsDiv.add( new ChannelListPanel( "channels", new Model<Channelable>( (Actor) mo ) ) );
+        moDetailsDiv.add( new ChannelListPanel( "channels", new Model<Channelable>( (Actor) getEntity() ) ) );
     }
 
-    /**
-     * Set the actor's job title if not null or empty.
-     *
-     * @param name a String
-     */
-    public void setJobTitle( String name ) {
-        Actor actor = (Actor) mo;
-        if ( name == null || name.trim().isEmpty() ) {
-            actor.setJobTitle( "" );
-        } else {
-            actor.setJobTitle( name );
-        }
-    }
-
-    /**
-     * Get the actor's job title.
-     *
-     * @return a String
-     */
-    public String getJobTitle() {
-        String jobTitle = ( (Actor) mo ).getJobTitle();
-        return jobTitle == null ? "" : jobTitle;
-    }
 
 }

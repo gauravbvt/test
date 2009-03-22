@@ -1,0 +1,181 @@
+package com.mindalliance.channels.pages.components;
+
+import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.util.SemMatch;
+import com.mindalliance.channels.command.commands.UpdateProjectObject;
+import com.mindalliance.channels.command.commands.UpdateObject;
+import com.mindalliance.channels.command.Change;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+
+import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
+/**
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: Jan 12, 2009
+ * Time: 7:05:45 PM
+ */
+public class EntityPanel extends AbstractCommandablePanel {
+    /**
+     * The model object being edited
+     */
+    private IModel<? extends ModelObject> model;
+
+    private Pattern namePattern = Pattern.compile( "^.*?(\\(\\d+\\))?$" );
+
+    public EntityPanel( String id, IModel<? extends ModelObject> model ) {
+        super( id, model );
+        this.model = model;
+        init();
+    }
+
+    private void init() {
+        ModelObject mo = getEntity();
+        Form moForm = new Form( "mo-form" ); // TODO -- remove when integrated into ProjectPage
+        add( moForm );
+        WebMarkupContainer moDetailsDiv = new WebMarkupContainer( "mo-details" );
+        moForm.add( moDetailsDiv );
+        final List<String> choices = getNameChoices();
+        TextField<String> nameField = new AutoCompleteTextField<String>( "name",
+                new PropertyModel<String>( this, "name" ) ) {
+            protected Iterator<String> getChoices( String s ) {
+                List<String> candidates = new ArrayList<String>();
+                for ( String choice : choices ) {
+                    if ( SemMatch.matches( s, choice ) ) candidates.add( choice );
+                }
+                return candidates.iterator();
+            }
+        };
+        nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getEntity(), "name" ) );
+            }
+        } );
+        moDetailsDiv.add( nameField );
+        TextArea<String> descriptionField = new TextArea<String>( "description",
+                new PropertyModel<String>( this, "description" ) );
+        descriptionField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getEntity(), "description" ) );
+            }
+        } );
+        moDetailsDiv.add( descriptionField );
+        addSpecifics( moDetailsDiv );
+        moDetailsDiv.add( new AttachmentPanel( "attachments", new Model<ModelObject>( mo ) ) );
+    }
+
+    private List<String> getNameChoices() {
+        List<String> choices = new ArrayList<String>();
+        List<String> namesTaken = getService().findAllNames( getEntity().getClass() );
+        for ( String taken : namesTaken ) {
+            if ( taken.equals( getEntity().getName() ) ) {
+                choices.add( taken );
+            } else {
+                Matcher matcher = namePattern.matcher( taken );
+                int count = matcher.groupCount();
+                if ( count > 1 ) {
+                    String group = matcher.group( 0 );
+                    int index = Integer.valueOf( group.substring( 1, group.length() - 2 ) );
+                    String newTaken = taken.substring( 0, taken.lastIndexOf( '(' ) - 1 ) + "(" + ( index + 1 ) + ")";
+                    choices.add( newTaken );
+                } else {
+                    choices.add( taken + "(2)" );
+                }
+            }
+        }
+        return choices;
+    }
+
+    /**
+     * Add class-specific input fields.
+     *
+     * @param moDetailsDiv the web markup container to add them to
+     */
+    protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
+        // do nothing
+    }
+
+    /**
+     * Get the model object's name
+     *
+     * @return a string
+     */
+    public String getName() {
+        return getEntity().getName();
+    }
+
+    /**
+     * Set the model object's unique new name.
+     *
+     * @param name a string
+     */
+    public void setName( String name ) {
+        if ( name != null ) {
+            String oldName = getEntity().getName();
+            String uniqueName = name.trim();
+            if ( !isSame( oldName, name ) ) {
+                List<String> namesTaken = getService().findAllNames( getEntity().getClass() );
+                int count = 2;
+                while ( namesTaken.contains( uniqueName ) ) {
+                    uniqueName = name + "(" + count++ + ")";
+                }
+                doCommand(
+                        new UpdateProjectObject(
+                                getEntity(),
+                                "name",
+                                uniqueName,
+                                UpdateObject.Action.Set
+                        )
+                );
+            }
+        }
+    }
+
+    /**
+     * Get the model object's description
+     *
+     * @return a string
+     */
+    public String getDescription() {
+        return getEntity().getDescription();
+    }
+
+    /**
+     * Set the model object's description.
+     *
+     * @param desc a string
+     */
+    public void setDescription( String desc ) {
+        if ( desc != null )
+            doCommand(
+                    new UpdateProjectObject(
+                            getEntity(),
+                            "description",
+                            desc,
+                            UpdateObject.Action.Set ) );
+    }
+
+    /**
+     * Get model object.
+     *
+     * @return a model object
+     */
+    protected ModelObject getEntity() {
+        return model.getObject();
+    }
+
+}

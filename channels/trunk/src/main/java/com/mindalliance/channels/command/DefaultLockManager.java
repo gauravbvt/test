@@ -68,6 +68,7 @@ public class DefaultLockManager implements LockManager {
                     // Grab the lock
                 } else {
                     lock = new Lock( id );
+                    LOG.info( lock.getUserName() + " grabs lock on " + id);
                     addLock( lock );
                 }
                 return lock;
@@ -92,8 +93,10 @@ public class DefaultLockManager implements LockManager {
                 if ( !lock.isOwnedBy( userName ) )
                     throw new LockingException(
                             userName + " does not own the lock. " + userName + " does." );
-                else
+                else {
+                    LOG.info( lock.getUserName() + " releases lock on " + id);
                     locks.remove( id );
+                }
             }
             return lock != null;
         }
@@ -131,6 +134,7 @@ public class DefaultLockManager implements LockManager {
     public void releaseLocks( Collection<Lock> locksToRelease ) throws LockingException {
         synchronized ( this ) {
             for ( Lock lock : locksToRelease ) {
+                LOG.info(lock.getUserName() + " releases lock on " + lock.getId());
                 locks.remove( lock.getId() );
             }
         }
@@ -155,6 +159,7 @@ public class DefaultLockManager implements LockManager {
             removeDirtyLocks();
             List<Lock> locksToRelease = getAllLocks( userName );
             for ( Lock lock : locksToRelease ) {
+                LOG.info(userName + " releases lock on " + lock.getId());
                 locks.remove( lock.getId() );
             }
         }

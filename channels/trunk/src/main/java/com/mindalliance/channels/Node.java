@@ -325,4 +325,13 @@ public abstract class Node extends ModelObject implements ScenarioObject {
         return count > 1;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    public boolean isUndefined() {
+        return super.isUndefined() && requirements.isEmpty() && outcomes.isEmpty();
+    }
+
+
 }

@@ -518,11 +518,13 @@ public final class ProjectPage extends WebPage implements Updatable {
     /**
      * Set part shown.
      *
-     * @param part a part
+     * @param p a part
      */
-    public void setPart( Part part ) {
-        this.part = part;
-        scenario = part.getScenario();
+    public void setPart( Part p ) {
+        if ( part != null) getLockManager().releaseAnyLockOn( part );
+        part = p;
+        getLockManager().requestLockOn( p );
+        scenario = p.getScenario();
     }
 
     /**
@@ -653,7 +655,7 @@ public final class ProjectPage extends WebPage implements Updatable {
         }
         if ( identifiable instanceof Issue
                 && change.isExists()
-                && ( (Issue) identifiable ).getAbout()  == getScenario().getId() ) {
+                && ( (Issue) identifiable ).getAbout() == getScenario().getId() ) {
             annotateScenarioName( getScenario() );
             target.addComponent( scenarioNameLabel );
             scenarioPanel.expandScenarioEditPanel( target );
