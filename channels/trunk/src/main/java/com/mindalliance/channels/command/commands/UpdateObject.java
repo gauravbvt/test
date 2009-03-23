@@ -12,6 +12,7 @@ import com.mindalliance.channels.command.Change;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Abstract property update command.
@@ -50,6 +51,9 @@ public abstract class UpdateObject extends AbstractCommand {
 
     }
 
+    public UpdateObject() {
+    }
+
     public UpdateObject( Identifiable identifiable, String property, Object value ) {
         this( identifiable, property, value, Action.Set );
     }
@@ -61,15 +65,13 @@ public abstract class UpdateObject extends AbstractCommand {
             final Action action ) {
         this.action = action;
         addConflicting( identifiable );
-        setArguments( new HashMap<String, Object>() {
-            {
-                put( "object", identifiable.getId() );
-                put( "property", property );
-                put( "value", value );
-                if ( action == Action.Set ) put( "old", getProperty( identifiable, property ) );
-                put( "type", identifiable.getClass().getSimpleName().toLowerCase() );
-            }
-        } );
+        Map<String, Object> args = new HashMap<String, Object>();
+        args.put( "object", identifiable.getId() );
+        args.put( "property", property );
+        args.put( "value", value );
+        if ( action == Action.Set ) args.put( "old", getProperty( identifiable, property ) );
+        args.put( "type", identifiable.getClass().getSimpleName().toLowerCase() );
+        setArguments( args );
     }
 
     /**
@@ -105,7 +107,7 @@ public abstract class UpdateObject extends AbstractCommand {
      */
     public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
-        Identifiable identifiable = getIdentifiable( service );
+        Identifiable identifiable = getIdentifiable( commander );
         switch ( action ) {
             case Set:
                 setProperty(
@@ -170,11 +172,11 @@ public abstract class UpdateObject extends AbstractCommand {
     /**
      * Retrieve target of command.
      *
-     * @param service a service
+     * @param commander a commander
      * @return an identifiable
      * @throws CommandException if fails
      */
-    protected abstract Identifiable getIdentifiable( Service service ) throws CommandException;
+    protected abstract Identifiable getIdentifiable( Commander commander ) throws CommandException;
 
     /**
      * {@inheritDoc}
@@ -187,7 +189,7 @@ public abstract class UpdateObject extends AbstractCommand {
      * {@inheritDoc}
      */
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        Identifiable identifiable = getIdentifiable( commander.getService() );
+        Identifiable identifiable = getIdentifiable( commander );
         String property = (String) get( "property" );
         Object value;
         switch ( action ) {

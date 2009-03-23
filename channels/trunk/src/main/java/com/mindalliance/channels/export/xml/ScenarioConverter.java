@@ -20,10 +20,10 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ public class ScenarioConverter implements Converter {
     /**
      * Class logger.
      */
-    public static final Logger LOG = LoggerFactory.getLogger( ScenarioConverter.class );
+    private static final Logger LOG = LoggerFactory.getLogger( ScenarioConverter.class );
 
     public ScenarioConverter() {
     }
@@ -107,9 +107,13 @@ public class ScenarioConverter implements Converter {
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings( "unchecked" )
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
-        Map<String, Long> idMap = new HashMap<String, Long>();
-        context.put( "idMap", idMap );
+        Map<String, Long> idMap = (Map<String, Long>) context.get( "idMap" );
+        if ( idMap == null ) {
+            idMap = new HashMap<String, Long>();
+            context.put( "idMap", idMap );
+        }
         Scenario scenario = Project.service().createScenario();
         Part defaultPart = scenario.getDefaultPart();
         context.put( "scenario", scenario );

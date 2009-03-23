@@ -1,9 +1,9 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Service;
 import com.mindalliance.channels.Identifiable;
 
 /**
@@ -16,10 +16,13 @@ import com.mindalliance.channels.Identifiable;
  */
 public class UpdateProjectObject extends UpdateObject {
 
+    public UpdateProjectObject() {
+    }
+
     public UpdateProjectObject(
             final Identifiable identifiable,
             final String property,
-            final Object value) {
+            final Object value ) {
         this( identifiable, property, value, Action.Set );
     }
 
@@ -27,16 +30,16 @@ public class UpdateProjectObject extends UpdateObject {
             final Identifiable identifiable,
             final String property,
             final Object value,
-            final Action action) {
+            final Action action ) {
         super( identifiable, property, value, action );
     }
 
     /**
      * {@inheritDoc}
      */
-    protected Identifiable getIdentifiable( Service service ) throws CommandException {
+    protected Identifiable getIdentifiable( Commander commander ) throws CommandException {
         try {
-            return service.find( ModelObject.class, (Long) get( "object" ) );
+            return commander.resolve( ModelObject.class, (Long) get( "object" ) );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh", e );
         }
@@ -46,7 +49,7 @@ public class UpdateProjectObject extends UpdateObject {
      * {@inheritDoc}
      */
     protected UpdateObject createUndoCommand( Identifiable identifiable, String property, Object value, Action action ) {
-        return new UpdateProjectObject( identifiable, property, value, action);
+        return new UpdateProjectObject( identifiable, property, value, action );
     }
 
 

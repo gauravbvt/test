@@ -26,7 +26,6 @@ import java.util.Map;
 public class ConnectWithFlow extends AbstractCommand {
 
     public ConnectWithFlow() {
-        super();
     }
 
     public ConnectWithFlow( final Node source, final Node target, final String name ) {
@@ -53,17 +52,15 @@ public class ConnectWithFlow extends AbstractCommand {
             part = (Part) target;
             other = source;
         }
-        setArguments( new HashMap<String, Object>() {
-            {
-                put( "isOutcome", isOutcome );
-                put( "scenario", part.getScenario().getId() );
-                put( "part", part.getId() );
-                put( "otherScenario", other.getScenario().getId() );
-                put( "other", other.getId() );
-                put( "name", name );
-                put( "attributes", state );
-            }
-        } );
+        Map<String, Object> args = new HashMap<String, Object>();
+        args.put( "isOutcome", isOutcome );
+        args.put( "scenario", part.getScenario().getId() );
+        args.put( "part", part.getId() );
+        args.put( "otherScenario", other.getScenario().getId() );
+        args.put( "other", other.getId() );
+        args.put( "name", name );
+        args.put( "attributes", state );
+        setArguments( args );
     }
 
     /**
@@ -80,14 +77,14 @@ public class ConnectWithFlow extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
         try {
-            Scenario scenario = service.find(
+            Scenario scenario = commander.resolve(
                     Scenario.class,
                     (Long) get( "scenario" ) );
-            Part part = (Part) scenario.getNode( (Long) get( "part" ) );
-            Scenario otherScenario = service.find(
+            Part part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
+            Scenario otherScenario = commander.resolve(
                     Scenario.class,
                     (Long) get( "otherScenario" ) );
-            Long nodeId = (Long) get( "other" );
+            Long nodeId = commander.resolveId( (Long) get( "other" ) );
             Node other = ( nodeId != null )
                     ? otherScenario.getNode( nodeId )
                     : service.createConnector( otherScenario );
@@ -102,6 +99,7 @@ public class ConnectWithFlow extends AbstractCommand {
                     setProperty( flow, key, attributes.get( key ) );
                 }
             }
+            commander.mapId( (Long) get( "flow" ), flow.getId() );
             addArgument( "flow", flow.getId() );
             return new Change( Change.Type.Added, flow );
         } catch ( NotFoundException e ) {
@@ -120,12 +118,11 @@ public class ConnectWithFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        Service service = commander.getService();
         try {
-            Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
+            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Long flowId = (Long) get( "flow" );
             if ( flowId == null ) throw new CommandException( "Can't undo." );
-            Flow flow = scenario.findFlow( flowId );
+            Flow flow = scenario.findFlow( commander.resolveId( flowId ) );
             return new DisconnectFlow( flow );
         } catch ( NotFoundException e ) {
             throw new CommandException( "Can't undo.", e );

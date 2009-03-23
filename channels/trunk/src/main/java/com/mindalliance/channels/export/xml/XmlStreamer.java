@@ -12,6 +12,9 @@ import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.Channel;
+import com.mindalliance.channels.command.AbstractCommand;
+import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.dao.Journal;
 import com.thoughtworks.xstream.XStream;
 
 import java.io.InputStream;
@@ -19,6 +22,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.io.ObjectOutputStream;
+import java.io.FileInputStream;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,18 +53,22 @@ public class XmlStreamer implements Importer, Exporter {
          */
         private XStream xstream;
 
-        /**
-         * Constructor
-         */
         public ConfiguredXStream() {
             xstream = new XStream();
             configure();
+        }
+
+        public XStream getXstream() {
+            return xstream;
         }
 
         /**
          * Configuration of xstream instance
          */
         private void configure() {
+            xstream.alias( "command", AbstractCommand.class );
+            xstream.alias( "journal", Journal.class );
+            xstream.alias( "project", Project.class );
             xstream.alias( "actor", Actor.class );
             xstream.aliasType( "flow", Flow.class );
             xstream.alias( "jurisdiction", Place.class );
@@ -67,10 +76,13 @@ public class XmlStreamer implements Importer, Exporter {
             xstream.alias( "organization", Organization.class );
             xstream.alias( "part", Part.class );
             xstream.alias( "role", Role.class );
-            xstream.alias( "resource", ResourceSpec.class);
+            xstream.alias( "resource", ResourceSpec.class );
             xstream.alias( "issue", UserIssue.class );
             xstream.alias( "scenario", Scenario.class );
             xstream.alias( "channel", Channel.class );
+            xstream.registerConverter( new ProjectConverter() );
+            xstream.registerConverter( new JournalConverter() );
+            xstream.registerConverter( new CommandConverter() );
             xstream.registerConverter( new ScenarioConverter() );
             xstream.registerConverter( new PartConverter() );
             xstream.registerConverter( new FlowConverter() );
@@ -84,11 +96,13 @@ public class XmlStreamer implements Importer, Exporter {
 
         /**
          * Access to xstream instance
+         *
          * @return -- an xstream
          */
         public XStream get() {
             return xstream;
         }
+
     }
 
     /**
@@ -134,6 +148,54 @@ public class XmlStreamer implements Importer, Exporter {
         out.close();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void exportProject( OutputStream stream ) throws IOException {
+        ObjectOutputStream out = configuredXStream.get()
+                .createObjectOutputStream( stream, "export" );
+        out.writeObject( Project.getProject() );
+        out.close();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
+    public Map<String, Long> importProject( FileInputStream stream ) throws IOException {
+        Map<String, Long> idMap;
+        ObjectInputStream in = configuredXStream.get().createObjectInputStream( stream );
+        try {
+            idMap = (Map<String, Long>) in.readObject();
+        } catch ( ClassNotFoundException e ) {
+            throw new IOException( "Failed to import project", e );
+        }
+        return idMap;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void exportJournal( Journal journal, OutputStream stream ) throws IOException {
+        ObjectOutputStream out = configuredXStream.get()
+                .createObjectOutputStream( stream, "export" );
+        out.writeObject( journal );
+        out.close();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Journal importJournal( FileInputStream stream ) throws IOException {
+        ObjectInputStream in = configuredXStream.get().createObjectInputStream( stream );
+        Journal journal;
+        try {
+            journal = (Journal) in.readObject();
+        } catch ( ClassNotFoundException e ) {
+            throw new IOException( "Failed to import journal", e );
+        }
+        return journal;
+    }
 
     /**
      * {@inheritDoc}

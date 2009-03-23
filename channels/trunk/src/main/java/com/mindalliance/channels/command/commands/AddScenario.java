@@ -18,7 +18,6 @@ import com.mindalliance.channels.Scenario;
 public class AddScenario extends AbstractCommand {
 
     public AddScenario() {
-
     }
 
     /**
@@ -33,6 +32,7 @@ public class AddScenario extends AbstractCommand {
      */
     public Change execute( Commander commander ) throws CommandException {
         Scenario scenario = commander.getService().createScenario();
+        commander.mapId( (Long)get("scenario"), scenario.getId() );
         addArgument( "scenario", scenario.getId() );
         return new Change( Change.Type.Added, scenario );
     }

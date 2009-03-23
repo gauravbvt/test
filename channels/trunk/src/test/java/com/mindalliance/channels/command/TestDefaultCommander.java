@@ -2,6 +2,7 @@ package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.command.commands.HelloCommand;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,31 +16,6 @@ public class TestDefaultCommander extends AbstractChannelsTest {
     private Commander commander;
     private LockManager lockManager;
 
-    public class HelloCommand extends AbstractCommand {
-
-
-        public HelloCommand( String greeting ) {
-            addArgument( "greeting", greeting );
-        }
-
-        public String getName() {
-            return "Hello";
-        }
-
-        public Change execute( Commander commander ) throws CommandException {
-            System.out.println( get( "greeting" ) + "! says " + getUserName() );
-            return new Change();
-        }
-
-        public boolean isUndoable() {
-            return true;
-        }
-
-        protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-            return makeCommand( "not " + get( "greeting" ) );
-        }
-    }
-
     protected void setUp() {
         super.setUp();
         commander = project.getCommander();
@@ -47,15 +23,8 @@ public class TestDefaultCommander extends AbstractChannelsTest {
         commander.reset();
     }
 
-    private AbstractCommand makeCommand( String greeting ) {
-        AbstractCommand command = new HelloCommand( greeting );
-        Scenario scenario = project.getService().getDefaultScenario();
-        command.addConflicting( scenario );
-        return command;
-    }
-
     public void testExecuteSimpleCommand() {
-        AbstractCommand command = makeCommand( "hello" );
+        AbstractCommand command = HelloCommand.makeCommand( "hello" );
         try {
             assertTrue( commander.canDo( command ) );
             assertFalse( commander.canUndo() );
@@ -73,7 +42,7 @@ public class TestDefaultCommander extends AbstractChannelsTest {
     }
 
     public void testCommandLocking() throws Exception {
-        AbstractCommand command = makeCommand( "hello" );
+        AbstractCommand command = HelloCommand.makeCommand( "hello" );
         Scenario scenario = project.getService().getDefaultScenario();
         Lock lock = lockManager.grabLockOn( scenario.getId() );
         lock.setUserName( "bob" );
@@ -97,8 +66,8 @@ public class TestDefaultCommander extends AbstractChannelsTest {
     }
 
     public void testUndoingConflicts() throws Exception {
-        AbstractCommand command = makeCommand( "hello" );
-        AbstractCommand otherUserCommand = makeCommand( "hello" );
+        AbstractCommand command = HelloCommand.makeCommand( "hello" );
+        AbstractCommand otherUserCommand = HelloCommand.makeCommand( "hello" );
         otherUserCommand.setUserName( "bob" );
         commander.doCommand( command );
         Thread.sleep( 10 );

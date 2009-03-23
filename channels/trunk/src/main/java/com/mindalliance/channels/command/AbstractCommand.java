@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
  * Time: 6:41:54 PM
  */
 public abstract class AbstractCommand implements Command {
+
     /**
      * Logger.
      */
@@ -33,7 +34,7 @@ public abstract class AbstractCommand implements Command {
     private String userName;
 
     /**
-     * Arguments needed to execute (no model objects)
+     * Arguments needed to execute (all serializable, self-contained or primitive objects, no model objects)
      */
     private Map<String, Object> arguments = new HashMap<String, Object>();
     /**
@@ -157,7 +158,7 @@ public abstract class AbstractCommand implements Command {
      *
      * @param identifiable an identifiable object
      */
-    protected void addConflicting( Identifiable identifiable ) {
+    public void addConflicting( Identifiable identifiable ) {
         conflictSet.add( identifiable.getId() );
         needLockOn( identifiable );
     }

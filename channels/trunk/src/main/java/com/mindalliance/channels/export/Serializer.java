@@ -1,6 +1,7 @@
 package com.mindalliance.channels.export;
 
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.dao.Journal;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -8,6 +9,8 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.FileInputStream;
+import java.util.Map;
 
 /**
  * Import/Export scenarios using serialization.
@@ -55,6 +58,41 @@ public class Serializer implements Importer, Exporter {
      */
     public String getVersion() {
         return "1.0";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void exportProject( OutputStream stream ) throws IOException {
+        // TODO
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Map<String,Long> importProject( FileInputStream stream ) throws IOException {
+        return null; //Todo
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+   public void exportJournal( Journal journal, OutputStream stream ) throws IOException {
+        //Todo
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Journal importJournal( FileInputStream stream ) throws IOException {
+        return null;  //Todo
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Map<String, Long> getIdMap() {
+        return null;  //Todo
     }
 
 

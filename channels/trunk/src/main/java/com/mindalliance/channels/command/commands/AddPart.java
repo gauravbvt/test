@@ -23,6 +23,9 @@ import java.util.Map;
  */
 public class AddPart extends AbstractCommand {
 
+    public AddPart() {
+    }
+
     public AddPart( Scenario scenario ) {
         super();
         needLockOn( scenario );
@@ -43,8 +46,9 @@ public class AddPart extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
         try {
-            Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
+            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Part part = service.createPart( scenario );
+            commander.mapId( (Long) get( "part" ), part.getId() );
             addArgument( "part", part.getId() );
             Map<String, Object> partState = (Map<String, Object>) get( "partState" );
             if ( partState != null ) CommandUtils.initialize( part, partState );
@@ -65,14 +69,13 @@ public class AddPart extends AbstractCommand {
      * {@inheritDoc}
      */
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        Service service = commander.getService();
         try {
-            Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
+            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Long partId = (Long) get( "part" );
             if ( partId == null ) {
                 throw new CommandException( "Can't undo." );
             } else {
-                Part part = (Part) scenario.getNode( (Long) get( "part" ) );
+                Part part = (Part) scenario.getNode( commander.resolveId( partId ) );
                 if ( part == null ) throw new NotFoundException();
                 return new RemovePart( part );
             }

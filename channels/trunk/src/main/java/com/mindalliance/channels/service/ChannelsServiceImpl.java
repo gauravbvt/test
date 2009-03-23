@@ -236,16 +236,17 @@ public class ChannelsServiceImpl implements Service {
      * {@inheritDoc}
      */
     public void initialize() {
+        getDao().load();
         if ( !getDao().list( Scenario.class ).iterator().hasNext() ) {
             if ( addingSamples ) {
-                LoggerFactory.getLogger( getClass() ).info( "Adding sample models" );
+                LOG.info( "Adding sample models" );
                 Scenario evac = createScenario();
                 EvacuationScenario.initialize( evac, this );
                 Scenario fireScenario = createScenario();
                 FireScenario.initialize( fireScenario, this, evac );
             }
             if ( importingScenarios ) {
-                LoggerFactory.getLogger( getClass() ).info( "Adding sample models" );
+                LOG.info( "Adding sample models" );
                 importScenarios();
             }
             // Make sure there is at least one scenario
@@ -269,23 +270,23 @@ public class ChannelsServiceImpl implements Service {
                 for ( File file : files ) {
                     try {
                         Scenario scenario = importer.importScenario( new FileInputStream( file ) );
-                        LoggerFactory.getLogger( getClass() ).info(
+                        LOG.info(
                                 "Imported scenario "
                                         + scenario.getName()
                                         + " from "
                                         + file.getPath() );
                     } catch ( IOException e ) {
-                        LoggerFactory.getLogger( getClass() ).warn( "Failed to import " + file.getPath(), e );
+                        LOG.warn( "Failed to import " + file.getPath(), e );
                     }
                 }
                 /*
                 Scenario scenario = project.getImporter().importScenario( in );
                  */
             } else {
-                LoggerFactory.getLogger( getClass() ).warn( "Directory " + importDirectory + " does not exist." );
+                LOG.warn( "Directory " + importDirectory + " does not exist." );
             }
         } else {
-            LoggerFactory.getLogger( getClass() ).warn( "Import directory is not set." );
+            LOG.warn( "Import directory is not set." );
         }
     }
 

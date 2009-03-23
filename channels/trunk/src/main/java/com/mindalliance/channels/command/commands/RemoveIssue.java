@@ -11,6 +11,7 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.ModelObject;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Remove issue command.
@@ -21,6 +22,9 @@ import java.util.HashMap;
  * Time: 8:01:50 PM
  */
 public class RemoveIssue extends AbstractCommand {
+
+    public RemoveIssue() {
+    }
 
     public RemoveIssue( UserIssue issue ) {
         addConflicting( issue );
@@ -40,16 +44,14 @@ public class RemoveIssue extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
         try {
-            final UserIssue issue = service.find( UserIssue.class, (Long) get( "issue" ) );
+            final UserIssue issue = commander.resolve( UserIssue.class, (Long) get( "issue" ) );
             addArgument( "modelObject", issue.getAbout() );
-            addArgument( "state", new HashMap<String, Object>() {
-                {
-                    put( "description", issue.getDescription() );
-                    put( "remediation", issue.getRemediation() );
-                    put( "severity", issue.getSeverity() );
-                    put( "reportedBy", issue.getReportedBy() );
-                }
-            } );
+            Map<String, Object> state = new HashMap<String, Object>();
+            state.put( "description", issue.getDescription() );
+            state.put( "remediation", issue.getRemediation() );
+            state.put( "severity", issue.getSeverity() );
+            state.put( "reportedBy", issue.getReportedBy() );
+            addArgument( "state", state );
             service.remove( issue );
             return new Change( Change.Type.Removed, issue );
         } catch ( NotFoundException e ) {
@@ -70,7 +72,7 @@ public class RemoveIssue extends AbstractCommand {
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
         Service service = commander.getService();
         try {
-            ModelObject modelObject = service.find(
+            ModelObject modelObject = commander.resolve(
                     ModelObject.class,
                     (Long) get( "modelObject" ) );
             AddUserIssue addIssue = new AddUserIssue( modelObject );

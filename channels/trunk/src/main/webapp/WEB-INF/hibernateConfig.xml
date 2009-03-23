@@ -52,5 +52,8 @@
         <!--</value></property>-->
     <!--</bean>-->
 
-    <bean id="dao" class="com.mindalliance.channels.dao.Memory"/>
+    <bean id="dao" class="com.mindalliance.channels.dao.Memory">
+        <property name="dataDirectoryPath" value="target/data"/>
+        <property name="snapshotThreshold" value="10"/>
+    </bean>
 </beans>

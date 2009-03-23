@@ -23,6 +23,9 @@ import java.util.Map;
  */
 public class DuplicatePart extends AbstractCommand {
 
+    public DuplicatePart() {
+    }
+
     public DuplicatePart( Part part ) {
         needLockOn( part.getScenario() );
         needLockOn( part );
@@ -44,12 +47,13 @@ public class DuplicatePart extends AbstractCommand {
         Service service = commander.getService();
         Part duplicate;
         try {
-            Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
-            Part part = (Part) scenario.getNode( (Long) get( "part" ) );
+            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+            Part part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
             if ( part == null ) throw new NotFoundException();
             Map<String, Object> partState = CommandUtils.getPartState( part );
             duplicate = service.createPart( scenario );
             CommandUtils.initialize( duplicate, partState );
+            commander.mapId( (Long) get( "duplicate" ), duplicate.getId() );
             addArgument( "duplicate", duplicate.getId() );
             return new Change( Change.Type.Added, duplicate );
         } catch ( NotFoundException e ) {
@@ -68,14 +72,13 @@ public class DuplicatePart extends AbstractCommand {
      * {@inheritDoc}
      */
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        Service service = commander.getService();
         try {
-            Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
+            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Long partId = (Long) get( "duplicate" );
             if ( partId == null ) {
                 throw new CommandException( "Can't undo." );
             } else {
-                Part part = (Part) scenario.getNode( partId );
+                Part part = (Part) scenario.getNode( commander.resolveId( partId ) );
                 return new RemovePart( part );
             }
         } catch ( NotFoundException e ) {

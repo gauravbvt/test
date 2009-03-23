@@ -1,6 +1,10 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.Service;
+import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.NotFoundException;
+
+import java.util.Map;
 
 /**
  * A command execution controller.
@@ -33,27 +37,31 @@ public interface Commander {
 
     /**
      * Whether user could undo a previous command right now.
+     *
      * @return a boolean
      */
     boolean canUndo();
 
     /**
      * Whether user could redo an undone command right now.
+     *
      * @return a boolean
      */
     boolean canRedo();
 
     /**
      * Undo user's previous command.
-     * @throws CommandException if undoing fails or is not allowed.
+     *
      * @return a change
+     * @throws CommandException if undoing fails or is not allowed.
      */
     Change undo() throws CommandException;
 
     /**
      * Redo user's previous undone command.
-     * @throws CommandException if redoing fails or is not allowed.
+     *
      * @return a change
+     * @throws CommandException if redoing fails or is not allowed.
      */
     Change redo() throws CommandException;
 
@@ -64,24 +72,62 @@ public interface Commander {
 
     /**
      * Get a service
+     *
      * @return a service
      */
     Service getService();
 
     /**
      * Resets history for current user.
+     *
      * @param userName a string
      */
     void resetUserHistory( String userName );
 
     /**
      * Get label for undo command.
+     *
      * @return a string
      */
     String getUndoTitle();
+
     /**
      * Get label for redo command.
+     *
      * @return a string
      */
     String getRedoTitle();
+
+    /**
+     * Set id translation map.
+     *
+     * @param idMap an id translation map
+     */
+    void setIdMap( Map<String, Long> idMap );
+
+    /**
+     * Find a model object from its id, possibly resolving the id first with idMap.
+     *
+     * @param clazz a model object class
+     * @param id    a long
+     * @return a model object
+     * @throws NotFoundException if not found
+     */
+    <T extends ModelObject> T resolve( Class<T> clazz, Long id ) throws NotFoundException;
+
+    /**
+     * Resolves an id.
+     *
+     * @param id a long
+     * @return a long
+     * @throws NotFoundException if resolution fails
+     */
+    Long resolveId( Long id ) throws NotFoundException;
+
+    /**
+     * Map id translation if a translation map is being used.
+     * @param oldId a Long or null
+     * @param newId a Long
+     */
+    void mapId( Long oldId, Long newId );
 }

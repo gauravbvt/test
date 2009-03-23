@@ -24,6 +24,9 @@ import java.util.Map;
  */
 public class AddUserIssue extends AbstractCommand {
 
+    public AddUserIssue() {
+    }
+
     public AddUserIssue( ModelObject modelObject ) {
         addArgument( "modelObject", modelObject.getId() );
     }
@@ -42,7 +45,7 @@ public class AddUserIssue extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
         try {
-            UserIssue issue = new UserIssue( service.find(
+            UserIssue issue = new UserIssue( commander.resolve(
                     ModelObject.class,
                     (Long) get( "modelObject" ) ) );
             Map<String, Object> state = (Map<String, Object>) get( "state" );
@@ -51,6 +54,7 @@ public class AddUserIssue extends AbstractCommand {
                 CommandUtils.initialize( issue, state );
             }
             service.add( issue );
+            commander.mapId( (Long) get( "issue" ), issue.getId() );
             addArgument( "issue", issue.getId() );
             return new Change( Change.Type.Added, issue );
         } catch ( NotFoundException e ) {
@@ -69,9 +73,8 @@ public class AddUserIssue extends AbstractCommand {
      * {@inheritDoc}
      */
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        Service service = commander.getService();
         try {
-            UserIssue issue = service.find( UserIssue.class, (Long) get( "issue" ) );
+            UserIssue issue = commander.resolve( UserIssue.class, (Long) get( "issue" ) );
             return new RemoveIssue( issue );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );

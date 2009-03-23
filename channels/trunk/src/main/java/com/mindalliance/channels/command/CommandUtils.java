@@ -37,16 +37,14 @@ public final class CommandUtils {
      * @return a map of attribute names and values
      */
     public static Map<String, Object> getFlowAttributes( final Flow flow ) {
-        return new HashMap<String, Object>() {
-            {
-                put( "description", flow.getDescription() );
-                put( "askedFor", flow.isAskedFor() );
-                put( "maxDelay", new Delay( flow.getMaxDelay() ) );
-                put( "channels", flow.getChannelsCopy() );
-                put( "significanceToTarget", flow.getSignificanceToTarget() );
-                put( "significanceToSource", flow.getSignificanceToSource() );
-            }
-        };
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        attributes.put( "description", flow.getDescription() );
+        attributes.put( "askedFor", flow.isAskedFor() );
+        attributes.put( "maxDelay", new Delay( flow.getMaxDelay() ) );
+        attributes.put( "channels", flow.getChannelsCopy() );
+        attributes.put( "significanceToTarget", flow.getSignificanceToTarget() );
+        attributes.put( "significanceToSource", flow.getSignificanceToSource() );
+        return attributes;
     }
 
     /**
@@ -83,17 +81,15 @@ public final class CommandUtils {
             isOutcome = !externalFlow.isPartTargeted();
             other = externalFlow.getConnector();
         }
-        return new HashMap<String, Object>() {
-            {
-                put( "name", flow.getName() );
-                put( "isOutcome", isOutcome );
-                put( "scenario", part.getScenario().getId() );
-                put( "part", part.getId() );
-                put( "otherScenario", other.getScenario().getId() );
-                if ( !other.isConnector() ) put( "other", other.getId() );
-                put( "attributes", getFlowAttributes( flow ) );
-            }
-        };
+        Map<String, Object> state = new HashMap<String, Object>();
+        state.put( "name", flow.getName() );
+        state.put( "isOutcome", isOutcome );
+        state.put( "scenario", part.getScenario().getId() );
+        state.put( "part", part.getId() );
+        state.put( "otherScenario", other.getScenario().getId() );
+        if ( !other.isConnector() ) state.put( "other", other.getId() );
+        state.put( "attributes", getFlowAttributes( flow ) );
+        return state;
     }
 
     /**
@@ -103,19 +99,17 @@ public final class CommandUtils {
      * @return a map of attribute names and values
      */
     public static Map<String, Object> getPartState( final Part part ) {
-        return new HashMap<String, Object>() {
-            {
-                put( "description", part.getDescription() );
-                put( "task", part.getTask() );
-                put( "actor", part.getActor() );
-                put( "role", part.getRole() );
-                put( "organization", part.getOrganization() );
-                put( "jurisdiction", part.getJurisdiction() );
-                put( "location", part.getLocation() );
-                put( "repeatsEvery", part.getRepeatsEvery() );
-                put( "completionTime", part.getCompletionTime() );
-            }
-        };
+        Map<String, Object> state = new HashMap<String, Object>();
+        state.put( "description", part.getDescription() );
+        state.put( "task", part.getTask() );
+        state.put( "actor", part.getActor() );
+        state.put( "role", part.getRole() );
+        state.put( "organization", part.getOrganization() );
+        state.put( "jurisdiction", part.getJurisdiction() );
+        state.put( "location", part.getLocation() );
+        state.put( "repeatsEvery", part.getRepeatsEvery() );
+        state.put( "completionTime", part.getCompletionTime() );
+        return state;
     }
 
     /**

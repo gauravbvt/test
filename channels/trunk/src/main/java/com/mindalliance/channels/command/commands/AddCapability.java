@@ -47,14 +47,15 @@ public class AddCapability extends AbstractCommand {
         Service service = commander.getService();
         Flow flow;
         try {
-            Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
-            Part part = (Part) scenario.getNode( (Long) get( "part" ) );
+            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+            Part part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
             if ( part == null ) throw new NotFoundException();
             flow = service.connect( part, service.createConnector( scenario ), "" );
             Map<String, Object> flowAttributes = (Map<String, Object>) get( "attributes" );
             if ( flowAttributes != null ) {
                 CommandUtils.initialize( flow, flowAttributes );
             }
+            commander.mapId( (Long)get("flow"), flow.getId() );
             addArgument( "flow", flow.getId() );
             return new Change( Change.Type.Added, flow );
         } catch ( NotFoundException e ) {
@@ -73,10 +74,9 @@ public class AddCapability extends AbstractCommand {
      * {@inheritDoc}
      */
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        Service service = commander.getService();
         try {
-            Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
-            Flow flow = scenario.findFlow( (Long) get( "flow" ) );
+            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+            Flow flow = scenario.findFlow( commander.resolveId( (Long) get( "flow" ) ) );
             return new RemoveCapability( flow );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh", e );

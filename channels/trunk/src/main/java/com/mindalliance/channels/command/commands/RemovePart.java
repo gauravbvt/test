@@ -36,12 +36,10 @@ public class RemovePart extends AbstractCommand {
         super();
         addConflicting( part );
         needLocksOn( CommandUtils.getLockingSetFor( part ) );
-        setArguments( new HashMap<String, Object>() {
-            {
-                put( "part", part.getId() );
-                put( "scenario", part.getScenario().getId() );
-            }
-        } );
+        Map<String, Object> args = new HashMap<String, Object>();
+        args.put( "part", part.getId() );
+        args.put( "scenario", part.getScenario().getId() );
+        setArguments( args );
     }
 
     /**
@@ -57,14 +55,14 @@ public class RemovePart extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
         try {
-            Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
-            Part part = (Part) scenario.getNode( (Long) get( "part" ) );
+            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+            Part part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
             // Double check in case this is an undo-undo
             if ( !commander.canDo( this ) )
                 throw new CommandException( "Someone is making changes." );
             addArgument( "partState", CommandUtils.getPartState( part ) );
             removePart( part, service );
-            ignoreLock( (Long) get( "part" ) );
+            ignoreLock( commander.resolveId( (Long) get( "part" ) ) );
             return new Change( Change.Type.Recomposed, scenario );
         } catch ( NotFoundException e ) {
             return new Change( Change.Type.None, null );
@@ -83,12 +81,11 @@ public class RemovePart extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        Service service = commander.getService();
         MultiCommand multi = new MultiCommand( getName() );
         multi.setUndoes( getName() );
         // Reconstitute part
         try {
-            Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
+            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             AddPart addPart = new AddPart( scenario );
             Map<String, Object> partState = (Map<String, Object>) get( "partState" );
             addPart.set( "partState", partState );
@@ -97,14 +94,14 @@ public class RemovePart extends AbstractCommand {
             List<Long> addedNeeds = (List<Long>) get( "addedNeeds" );
             if ( addedNeeds != null ) {
                 for ( long id : addedNeeds ) {
-                    Flow flow = scenario.findFlow( id );
+                    Flow flow = scenario.findFlow( commander.resolveId( id ) );
                     multi.addCommand( new RemoveNeed( flow ) );
                 }
             }
             List<Long> addedCapabilities = (List<Long>) get( "addedCapabilities" );
             if ( addedCapabilities != null ) {
                 for ( long id : addedCapabilities ) {
-                    Flow flow = scenario.findFlow( id );
+                    Flow flow = scenario.findFlow( commander.resolveId( id ) );
                     multi.addCommand( new RemoveCapability( flow ) );
                 }
             }

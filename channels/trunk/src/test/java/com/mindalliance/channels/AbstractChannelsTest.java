@@ -54,7 +54,10 @@ public class AbstractChannelsTest extends TestCase {
         project = new Project();
         project.setUri( "mindalliance.com/channels/demo" );
 
-        Dao dao = new Memory();
+        Memory dao = new Memory();
+        dao.setDataDirectoryPath( "target/data" );
+        dao.setSnapshotThreshold( 10 );
+        dao.reset();
         ChannelsServiceImpl channels = new ChannelsServiceImpl( dao );
 
         project.setService( channels );

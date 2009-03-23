@@ -9,6 +9,7 @@ import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.command.Command;
 import org.slf4j.LoggerFactory;
 import org.springframework.orm.jpa.JpaCallback;
 import org.springframework.orm.jpa.support.JpaDaoSupport;
@@ -147,4 +148,19 @@ public class HibernateDao extends JpaDaoSupport implements Dao {
             }
         } );
     }
+
+    /**
+      * {@inheritDoc}
+      */
+     public void load() {
+        // TODO - Do nothing for now
+     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onAfterCommand( Command command ) {
+        // TODO - Do nothing for now
+    }
+
 }

@@ -27,6 +27,9 @@ import java.util.Map;
  */
 public class BreakUpFlow extends AbstractCommand {
 
+    public BreakUpFlow() {
+    }
+
     public BreakUpFlow( Flow flow ) {
         super();
         addConflicting( flow );
@@ -50,10 +53,10 @@ public class BreakUpFlow extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
         try {
-            Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
-            Flow flow = scenario.findFlow( (Long) get( "flow" ) );
+            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+            Flow flow = scenario.findFlow( commander.resolveId( (Long) get( "flow" ) ) );
             breakup( flow, service );
-            ignoreLock( (Long) get( "flow" ) );
+            ignoreLock( commander.resolveId( (Long) get( "flow" ) ) );
             return new Change( Change.Type.Recomposed, scenario );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
@@ -72,8 +75,7 @@ public class BreakUpFlow extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        Service service = commander.getService();
-        MultiCommand multi = new MultiCommand( );
+        MultiCommand multi = new MultiCommand();
         multi.setUndoes( getName() );
         ConnectWithFlow connectWithFlow = new ConnectWithFlow();
         connectWithFlow.setArguments( (Map<String, Object>) get( "flowState" ) );
@@ -81,9 +83,9 @@ public class BreakUpFlow extends AbstractCommand {
         List<Long> addedFlows = (List<Long>) get( "addedFlows" );
         if ( addedFlows != null ) {
             try {
-                Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
+                Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
                 for ( Long id : addedFlows ) {
-                    Flow addedFlow = scenario.findFlow( id );
+                    Flow addedFlow = scenario.findFlow( commander.resolveId( id ) );
                     DisconnectFlow disconnectFlow = new DisconnectFlow( addedFlow );
                     multi.addCommand( disconnectFlow );
                 }

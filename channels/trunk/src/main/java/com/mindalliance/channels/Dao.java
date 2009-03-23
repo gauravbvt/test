@@ -1,5 +1,7 @@
 package com.mindalliance.channels;
 
+import com.mindalliance.channels.command.Command;
+
 import java.util.List;
 
 /**
@@ -33,48 +35,54 @@ public interface Dao {
 
     /**
      * Create a new internal flow.
+     *
      * @param source the source
      * @param target the target
-     * @param name the name of the flow
+     * @param name   the name of the flow
      * @return a new flow.
      */
     InternalFlow createInternalFlow( Node source, Node target, String name );
 
     /**
      * Create a new external flow.
+     *
      * @param source the source
      * @param target the target
-     * @param name the name of the flow
+     * @param name   the name of the flow
      * @return a new flow.
      */
     ExternalFlow createExternalFlow( Node source, Node target, String name );
 
     /**
      * Find a model object given its id.
+     *
      * @param clazz the subclass of modelobject
-     * @param id the id
-     * @param <T> a subclass of modelobject
+     * @param id    the id
+     * @param <T>   a subclass of modelobject
      * @return the object
      * @throws NotFoundException when not found
      */
-     <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException;
+    <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException;
 
     /**
      * Get all objects of the given class.
+     *
      * @param clazz the given subclass of model object.
-     * @param <T> a subclass of model object.
+     * @param <T>   a subclass of model object.
      * @return a collection
      */
     <T extends ModelObject> List<T> list( Class<T> clazz );
 
     /**
      * Add a model object.
+     *
      * @param object the model object.
      */
     void add( ModelObject object );
 
     /**
      * Update a model object.
+     *
      * @param object the model object.
      */
     void update( ModelObject object );
@@ -82,15 +90,17 @@ public interface Dao {
     /**
      * Remove a persistent model object.
      * Last scenario will not be deleted.
+     *
      * @param object the object
      */
     void remove( ModelObject object );
 
     /**
      * Find the first model object of a given class and name.
+     *
      * @param clazz the subclass of model object
-     * @param name the name looked for
-     * @param <T> a subclass of model object
+     * @param name  the name looked for
+     * @param <T>   a subclass of model object
      * @return the object or null if not found
      */
     <T extends ModelObject> T find( Class<T> clazz, String name );
@@ -99,4 +109,16 @@ public interface Dao {
      * Commit changes to persistent store.
      */
     void flush();
+
+    /**
+     * Handle post command execution event.
+     *
+     * @param command a command
+     */
+    void onAfterCommand( Command command );
+
+    /**
+     * Load persisted project data, if any.
+     */
+    void load();
 }

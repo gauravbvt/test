@@ -1,6 +1,7 @@
 package com.mindalliance.channels.export;
 
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.dao.Journal;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -19,6 +20,21 @@ public interface Exporter extends Serializable {
      * @throws IOException on errors
      */
     void exportScenario( Scenario scenario, OutputStream stream ) throws IOException;
+
+    /**
+     * Export a scenario on the given stream.
+     * @param stream the stream
+     * @throws IOException on errors
+     */
+    void exportProject( OutputStream stream ) throws IOException;
+
+    /**
+     * Export a scenario on the given stream.
+     * @param journal a journal
+     * @param stream the stream
+     * @throws IOException on errors
+     */
+    void exportJournal( Journal journal, OutputStream stream ) throws IOException;
 
     /**
      * The mime type of files to which scenarios are exported.

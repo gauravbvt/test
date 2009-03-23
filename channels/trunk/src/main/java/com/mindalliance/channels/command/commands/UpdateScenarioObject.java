@@ -5,8 +5,8 @@ import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ScenarioObject;
-import com.mindalliance.channels.Service;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 
 /**
  * Command to update a model object contained in a scenario.
@@ -17,6 +17,9 @@ import com.mindalliance.channels.command.CommandException;
  * Time: 12:41:28 PM
  */
 public class UpdateScenarioObject extends UpdateObject {
+
+    public UpdateScenarioObject() {
+    }
 
     public UpdateScenarioObject(
             final Identifiable identifiable,
@@ -38,15 +41,15 @@ public class UpdateScenarioObject extends UpdateObject {
     /**
      * {@inheritDoc}
      */
-    protected Identifiable getIdentifiable( Service service ) throws CommandException {
+    protected Identifiable getIdentifiable( Commander commander ) throws CommandException {
         try {
-            Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
+            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             boolean isNode = (Boolean) get( "isNode" );
             ScenarioObject scenarioObject;
             if ( isNode ) {
-                scenarioObject = scenario.getNode( (Long) get( "object" ) );
+                scenarioObject = scenario.getNode( commander.resolveId( (Long) get( "object" ) ) );
             } else {
-                scenarioObject = scenario.findFlow( (Long) get( "object" ) );
+                scenarioObject = scenario.findFlow( commander.resolveId( (Long) get( "object" ) ) );
             }
             return scenarioObject;
         } catch ( NotFoundException e ) {

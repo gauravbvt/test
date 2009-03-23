@@ -6,7 +6,6 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.Service;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.NotFoundException;
@@ -19,6 +18,9 @@ import com.mindalliance.channels.NotFoundException;
  * Time: 9:04:00 AM
  */
 public class RemoveNeed extends AbstractCommand {
+
+    public RemoveNeed() {
+    }
 
     public RemoveNeed( Flow flow ) {
         super();
@@ -37,10 +39,9 @@ public class RemoveNeed extends AbstractCommand {
      * {@inheritDoc}
      */
     public Change execute( Commander commander ) throws CommandException {
-        Service service = commander.getService();
         try {
-            Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
-            Flow flow = scenario.findFlow( (Long) get( "flow" ) );
+            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+            Flow flow = scenario.findFlow( commander.resolveId( (Long) get( "flow" ) ) );
             flow.disconnect();
             return new Change( Change.Type.Removed, flow );
         } catch ( NotFoundException e ) {

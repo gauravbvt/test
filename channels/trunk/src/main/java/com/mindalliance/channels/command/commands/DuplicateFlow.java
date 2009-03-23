@@ -20,6 +20,9 @@ import com.mindalliance.channels.command.Change;
  */
 public class DuplicateFlow extends AbstractCommand {
 
+    public DuplicateFlow() {
+    }
+
     public DuplicateFlow( Flow flow, boolean isOutcome ) {
         needLockOn( isOutcome ? flow.getSource() : flow.getTarget() );
         addArgument( "scenario", flow.getScenario().getId() );
@@ -38,14 +41,14 @@ public class DuplicateFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     public Change execute( Commander commander ) throws CommandException {
-        Service service = commander.getService();
         Flow duplicate;
         try {
-            Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
-            Flow flow = scenario.findFlow( (Long) get( "flow" ) );
+            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+            Flow flow = scenario.findFlow( commander.resolveId( (Long) get( "flow" ) ) );
             if ( flow == null ) throw new NotFoundException();
             boolean isOutcome = (Boolean) get( "outcome" );
             duplicate = duplicate( flow, isOutcome );
+            commander.mapId( (Long) get( "duplicate" ), duplicate.getId() );
             addArgument( "duplicate", duplicate.getId() );
             return new Change( Change.Type.Added, duplicate );
         } catch ( NotFoundException e ) {
@@ -64,14 +67,13 @@ public class DuplicateFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        Service service = commander.getService();
         try {
-            Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
+            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Long flowId = (Long) get( "duplicate" );
             if ( flowId == null ) {
                 throw new CommandException( "Can't undo." );
             } else {
-                Flow flow = scenario.findFlow( flowId );
+                Flow flow = scenario.findFlow( commander.resolveId( flowId ) );
                 return new BreakUpFlow( flow );
             }
         } catch ( NotFoundException e ) {

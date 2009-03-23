@@ -25,6 +25,9 @@ import java.io.IOException;
  */
 public class RemoveScenario extends AbstractCommand {
 
+    public RemoveScenario() {
+    }
+
     public RemoveScenario( Scenario scenario ) {
         super();
         addArgument( "scenario", scenario.getId() );
@@ -49,7 +52,7 @@ public class RemoveScenario extends AbstractCommand {
         Service service = commander.getService();
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
-            Scenario scenario = service.find( Scenario.class, (Long) get( "scenario" ) );
+            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Exporter exporter = Project.getProject().getExporter();
             exporter.exportScenario( scenario, bos );
             addArgument( "xml", bos.toString() );
@@ -83,7 +86,7 @@ public class RemoveScenario extends AbstractCommand {
         }
     }
 
-        /**
+    /**
      * {@inheritDoc}
      */
     public boolean isScenarioSpecific() {

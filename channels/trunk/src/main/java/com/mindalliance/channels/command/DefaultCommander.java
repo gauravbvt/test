@@ -1,8 +1,11 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.Service;
+import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.NotFoundException;
 
 import java.util.Collection;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +34,10 @@ public class DefaultCommander implements Commander {
      * Service.
      */
     private Service service;
+    /**
+     * An id translation map.
+     */
+    private Map<String, Long> idMap = null;
 
     public DefaultCommander() {
     }
@@ -45,6 +52,33 @@ public class DefaultCommander implements Commander {
 
     public Service getService() {
         return service;
+    }
+
+    public void setIdMap( Map<String, Long> idMap ) {
+        this.idMap = idMap;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public <T extends ModelObject> T resolve( Class<T> clazz, Long id ) throws NotFoundException {
+        return getService().find( clazz, resolveId(id) );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Long resolveId( Long id ) throws NotFoundException {
+        if ( idMap == null ) {
+            return id ;
+        } else {
+            Long realId = idMap.get( id.toString() );
+            if ( realId == null )
+                throw new NotFoundException();
+            else {
+                return realId;
+            }
+        }
     }
 
     /**
@@ -62,8 +96,8 @@ public class DefaultCommander implements Commander {
     public String getUndoTitle() {
         String title = "Undo";
         Memento memento = history.getUndo();
-        if (memento != null) {
-           title = title + " " + memento.getCommand().getName();
+        if ( memento != null ) {
+            title = title + " " + memento.getCommand().getName();
         }
         return title;
     }
@@ -74,7 +108,7 @@ public class DefaultCommander implements Commander {
     public String getRedoTitle() {
         String title = "Redo";
         Memento memento = history.getRedo();
-        if (memento != null) {
+        if ( memento != null ) {
             title = title + " " + memento.getCommand().getUndoes( this );
         }
         return title;
@@ -97,6 +131,7 @@ public class DefaultCommander implements Commander {
                 Collection<Lock> grabbedLocks = lockManager.grabLocksOn( command.getLockingSet() );
                 change = command.execute( this );
                 lockManager.releaseLocks( grabbedLocks );
+                getService().getDao().onAfterCommand( command );
             } catch ( LockingException e ) {
                 throw new CommandException( e.getMessage(), e );
             }
@@ -206,5 +241,14 @@ public class DefaultCommander implements Commander {
     public void reset() {
         history.reset();
         lockManager.reset();
+    }
+
+    /**
+      * {@inheritDoc}
+      */
+    public void mapId( Long oldId, Long newId ) {
+        if (idMap != null && oldId != null) {
+             idMap.put(oldId.toString(), newId);
+        }
     }
 }

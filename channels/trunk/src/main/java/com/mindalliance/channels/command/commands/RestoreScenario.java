@@ -24,7 +24,6 @@ import java.io.IOException;
 public class RestoreScenario extends AbstractCommand {
 
     public RestoreScenario() {
-
     }
 
     /**
@@ -44,6 +43,7 @@ public class RestoreScenario extends AbstractCommand {
             try {
                 Scenario scenario = importer.importScenario(
                         new ByteArrayInputStream( xml.getBytes() ) );
+                commander.mapId( (Long) get( "scenario" ), scenario.getId() );
                 addArgument( "scenario", scenario.getId() );
                 return new Change( Change.Type.Added, scenario );
             } catch ( IOException e ) {
@@ -66,7 +66,7 @@ public class RestoreScenario extends AbstractCommand {
      */
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
         try {
-            Scenario scenario = commander.getService().find(
+            Scenario scenario = commander.resolve(
                     Scenario.class,
                     (Long) get( "scenario" ) );
             return new RemoveScenario( scenario );
