@@ -294,4 +294,9 @@ public interface Service {
      * @return a boolean
      */
     boolean isReferenced( Place place );
+
+    /**
+     * Called when application is terminated.
+     */
+    void onDestroy();
 }

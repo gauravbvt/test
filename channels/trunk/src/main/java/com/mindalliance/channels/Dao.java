@@ -121,4 +121,14 @@ public interface Dao {
      * Load persisted project data, if any.
      */
     void load();
+
+    /**
+     * Called after right after initialization.
+     */
+    void afterInitialize();
+
+    /**
+     * Called when application is terminated.
+     */
+    void onDestroy();
 }

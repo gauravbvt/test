@@ -247,7 +247,7 @@ public final class Memory implements Dao {
     public void load() {
         // Load project data
         try {
-            Map<String, Long> idMap = new HashMap<String,Long>();
+            Map<Long, Long> idMap = new HashMap<Long, Long>();
             Importer importer = Project.getProject().getImporter();
             File dataFile = getDataFile();
             if ( dataFile.length() > 0 ) {
@@ -257,6 +257,7 @@ public final class Memory implements Dao {
             // Load and run journaled commands
             Journal journal = loadJournal();
             Commander commander = Project.getProject().getCommander();
+            commander.setReplaying( true );
             commander.setIdMap( idMap );
             if ( !journal.isEmpty() ) {
                 LOG.info( "Replaying journaled commands" );
@@ -272,6 +273,25 @@ public final class Memory implements Dao {
         } catch ( CommandException e ) {
             LOG.error( "Failed to replay all commands", e );
         }
+    }
+
+    /**
+     * {@inheritDoc} 
+     */
+    public void afterInitialize() {
+        try {
+            takeSnapshot();
+            getJournalFile().delete();
+        } catch ( IOException e ) {
+            throw new RuntimeException( e );
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onDestroy() {
+        afterInitialize();
     }
 
     private File getDataFile() throws IOException {

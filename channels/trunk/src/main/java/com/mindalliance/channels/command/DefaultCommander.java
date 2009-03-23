@@ -6,9 +6,11 @@ import com.mindalliance.channels.NotFoundException;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.collections.bidimap.DualHashBidiMap;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -34,10 +36,13 @@ public class DefaultCommander implements Commander {
      * Service.
      */
     private Service service;
+
+    private boolean replaying = false;
     /**
      * An id translation map.
      */
-    private Map<String, Long> idMap = null;
+    // TODO - this could grow unchecked
+    private DualHashBidiMap idMap = new DualHashBidiMap( new HashMap<Long, Long>() );
 
     public DefaultCommander() {
     }
@@ -54,30 +59,37 @@ public class DefaultCommander implements Commander {
         return service;
     }
 
-    public void setIdMap( Map<String, Long> idMap ) {
-        this.idMap = idMap;
+    public boolean isReplaying() {
+        return replaying;
+    }
+
+    public void setReplaying( boolean replaying ) {
+        this.replaying = replaying;
+    }
+
+    public void setIdMap( Map<Long, Long> idMap ) {
+        this.idMap = new DualHashBidiMap( idMap );
     }
 
     /**
      * {@inheritDoc}
      */
     public <T extends ModelObject> T resolve( Class<T> clazz, Long id ) throws NotFoundException {
-        return getService().find( clazz, resolveId(id) );
+        return getService().find( clazz, resolveId( id ) );
     }
 
     /**
      * {@inheritDoc}
      */
     public Long resolveId( Long id ) throws NotFoundException {
-        if ( idMap == null ) {
-            return id ;
-        } else {
-            Long realId = idMap.get( id.toString() );
-            if ( realId == null )
+        Long realId = (Long) idMap.get( id );
+        if ( realId == null )
+            if ( isReplaying() )
                 throw new NotFoundException();
-            else {
-                return realId;
-            }
+            else
+                return id;
+        else {
+            return realId;
         }
     }
 
@@ -131,7 +143,7 @@ public class DefaultCommander implements Commander {
                 Collection<Lock> grabbedLocks = lockManager.grabLocksOn( command.getLockingSet() );
                 change = command.execute( this );
                 lockManager.releaseLocks( grabbedLocks );
-                if ( !isReplayingJournal() ) getService().getDao().onAfterCommand( command );
+                if ( !isReplaying() ) getService().getDao().onAfterCommand( command );
             } catch ( LockingException e ) {
                 throw new CommandException( e.getMessage(), e );
             }
@@ -193,7 +205,7 @@ public class DefaultCommander implements Commander {
      */
     public Change doCommand( Command command ) throws CommandException {
         synchronized ( this ) {
-            LOG.info( "Doing: " + command.toString() );
+            LOG.info( ( isReplaying() ? "Replaying: " : "Doing: " ) + command.toString() );
             Change change = execute( command );
             history.recordDone( command );
             return change;
@@ -239,24 +251,27 @@ public class DefaultCommander implements Commander {
      * {@inheritDoc}
      */
     public void reset() {
-        idMap = null;
+        replaying = false;
+        idMap = new DualHashBidiMap( new HashMap<Long, Long>() );
         history.reset();
         lockManager.reset();
     }
 
     /**
-      * {@inheritDoc}
-      */
+     * {@inheritDoc}
+     */
     public void mapId( Long oldId, Long newId ) {
-        if (idMap != null && oldId != null) {
-             idMap.put(oldId.toString(), newId);
+        if ( idMap != null && oldId != null ) {
+            idMap.put( oldId, newId );
+        } else {
+            LOG.warn( "Attempt to map " + oldId + " and " + newId );
         }
     }
 
     /**
-      * {@inheritDoc}
-      */
-    public boolean isReplayingJournal() {
-        return idMap != null;
+     * {@inheritDoc}
+     */
+    public void unmapId( long id ) {
+        idMap.removeValue( id );
     }
 }

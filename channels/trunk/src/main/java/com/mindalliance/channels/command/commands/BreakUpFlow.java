@@ -51,11 +51,10 @@ public class BreakUpFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     public Change execute( Commander commander ) throws CommandException {
-        Service service = commander.getService();
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Flow flow = scenario.findFlow( commander.resolveId( (Long) get( "flow" ) ) );
-            breakup( flow, service );
+            breakup( flow, commander );
             ignoreLock( commander.resolveId( (Long) get( "flow" ) ) );
             return new Change( Change.Type.Recomposed, scenario );
         } catch ( NotFoundException e ) {
@@ -96,7 +95,8 @@ public class BreakUpFlow extends AbstractCommand {
         return multi;
     }
 
-    private void breakup( Flow flow, Service service ) {
+    private void breakup( Flow flow, Commander commander ) {
+        Service service = commander.getService();
         if ( flow.isInternal() ) {
             List<Long> addedFlows = new ArrayList<Long>();
             Node source = flow.getSource();
@@ -120,6 +120,7 @@ public class BreakUpFlow extends AbstractCommand {
             set( "addedFlows", addedFlows );
         }
         flow.disconnect();
+        commander.unmapId(flow.getId());
     }
 
 }

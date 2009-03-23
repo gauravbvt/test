@@ -70,7 +70,7 @@ public class Serializer implements Importer, Exporter {
     /**
      * {@inheritDoc}
      */
-    public Map<String,Long> importProject( FileInputStream stream ) throws IOException {
+    public Map<Long,Long> importProject( FileInputStream stream ) throws IOException {
         return null; //Todo
     }
 

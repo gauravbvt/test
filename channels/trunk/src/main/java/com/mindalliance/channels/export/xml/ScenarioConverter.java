@@ -70,15 +70,16 @@ public class ScenarioConverter implements Converter {
         writer.startNode( "description" );
         writer.setValue( scenario.getDescription() );
         writer.endNode();
-        // All entities
-        Iterator<ModelObject> entities = service.iterateEntities();
-        while ( entities.hasNext() ) {
-            ModelObject entity = entities.next();
-            writer.startNode( entity.getClass().getSimpleName().toLowerCase() );
-            context.convertAnother( entity );
-            writer.endNode();
+        // All entities if not within a project export
+        if ( context.get( "project" ) == null ) {
+            Iterator<ModelObject> entities = service.iterateEntities();
+            while ( entities.hasNext() ) {
+                ModelObject entity = entities.next();
+                writer.startNode( entity.getClass().getSimpleName().toLowerCase() );
+                context.convertAnother( entity );
+                writer.endNode();
+            }
         }
-
         // Scenario user issues
         List<Issue> issues = service.findAllUserIssues( scenario );
         for ( Issue issue : issues ) {

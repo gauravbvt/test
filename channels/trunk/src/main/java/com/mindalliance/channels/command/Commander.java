@@ -103,7 +103,7 @@ public interface Commander {
      *
      * @param idMap an id translation map
      */
-    void setIdMap( Map<String, Long> idMap );
+    void setIdMap( Map<Long, Long> idMap );
 
     /**
      * Find a model object from its id, possibly resolving the id first with idMap.
@@ -125,15 +125,28 @@ public interface Commander {
     Long resolveId( Long id ) throws NotFoundException;
 
     /**
-     * Map id translation if a translation map is being used.
+     * Map id translation for replay.
      * @param oldId a Long or null
      * @param newId a Long
      */
     void mapId( Long oldId, Long newId );
 
     /**
+     * Remove id as value from the id translation map.
+     * @param id a long
+     */
+    void unmapId( long id );
+
+    /**
      * Whether commander is in journal replay mode.
      * @return a boolean
      */
-    boolean isReplayingJournal();
+    boolean isReplaying();
+
+    /**
+     * Turns on/off journal replay mode.
+     * @param val a boolean
+     */
+    void setReplaying( boolean val );
+
 }

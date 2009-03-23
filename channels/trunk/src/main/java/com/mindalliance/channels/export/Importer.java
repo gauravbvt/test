@@ -43,7 +43,7 @@ public interface Importer {
      * @throws java.io.IOException on errors
      * @return an id translation map
      */
-    Map<String,Long> importProject( FileInputStream stream ) throws IOException;
+    Map<Long,Long> importProject( FileInputStream stream ) throws IOException;
 
     /**
      * Import a journal from a stream.

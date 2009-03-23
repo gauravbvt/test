@@ -53,6 +53,7 @@ public class RemoveIssue extends AbstractCommand {
             state.put( "reportedBy", issue.getReportedBy() );
             addArgument( "state", state );
             service.remove( issue );
+            commander.unmapId( issue.getId() );
             return new Change( Change.Type.Removed, issue );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );

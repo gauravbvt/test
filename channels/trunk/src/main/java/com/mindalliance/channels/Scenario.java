@@ -2,6 +2,7 @@ package com.mindalliance.channels;
 
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
+import org.apache.commons.lang.text.StrBuilder;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.CascadeType;
@@ -52,14 +53,16 @@ public class Scenario extends ModelObject {
      */
     private Map<Long, Node> nodeIndex;
 
-    /** The service in charge of this scenario. */
+    /**
+     * The service in charge of this scenario.
+     */
     transient private Service service;
 
     public Scenario() {
         setNodeIndex( new HashMap<Long, Node>( INITIAL_CAPACITY ) );
     }
 
-//    @LazyToOne( value = LazyToOneOption.PROXY )
+    //    @LazyToOne( value = LazyToOneOption.PROXY )
     @OneToMany( cascade = CascadeType.ALL, mappedBy = "scenario", fetch = FetchType.LAZY )
     @Cascade( org.hibernate.annotations.CascadeType.DELETE_ORPHAN )
     @MapKey( name = "id" )
@@ -76,7 +79,7 @@ public class Scenario extends ModelObject {
      * There should always be at least a node in the scenario.
      * The nodes are sorted as follows:
      * 1- triggered nodes with fewer triggering in-scenario nodes leading up to them
-     *    (smaller number first)
+     * (smaller number first)
      * 2- the number of required outcomes (larger number first)
      * 3- their names (alphabetical) - connectors always come after parts
      *
@@ -236,7 +239,7 @@ public class Scenario extends ModelObject {
      *
      * @return an iterator on connectors having outcomes
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<Connector> inputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -251,7 +254,7 @@ public class Scenario extends ModelObject {
      *
      * @return an iterator on parts
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<Part> parts() {
         return (Iterator<Part>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -266,7 +269,7 @@ public class Scenario extends ModelObject {
      *
      * @return an iterator on connectors having requirements
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<Connector> outputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -348,6 +351,7 @@ public class Scenario extends ModelObject {
 
     /**
      * FInd a flow given its id.
+     *
      * @param id a long
      * @return a flow
      * @throws NotFoundException if not found
@@ -370,6 +374,19 @@ public class Scenario extends ModelObject {
 
     public void setService( Service service ) {
         this.service = service;
+    }
+
+    /**
+     * Count the parts.
+     *
+     * @return an int
+     */
+    public int countParts() {
+        int count = 0;
+        for ( Node node : nodeIndex.values() ) {
+            if ( node.isPart() ) count++;
+        }
+        return count;
     }
 
 
@@ -401,7 +418,7 @@ public class Scenario extends ModelObject {
             setIterators( nodeIterator.next() );
         }
 
-        @SuppressWarnings( { "unchecked" } )
+        @SuppressWarnings( {"unchecked"} )
         private void setIterators( Node node ) {
             outcomeIterator = node.outcomes();
             reqIterator = (Iterator<Flow>) new FilterIterator(
@@ -425,7 +442,7 @@ public class Scenario extends ModelObject {
             if ( !hasNext() )
                 throw new NoSuchElementException();
             return outcomeIterator.hasNext() ?
-                   outcomeIterator.next() : reqIterator.next();
+                    outcomeIterator.next() : reqIterator.next();
         }
 
         public void remove() {

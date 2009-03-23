@@ -8,11 +8,17 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Actor;
+import com.mindalliance.channels.Organization;
+import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Place;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +70,16 @@ public class ProjectConverter implements Converter {
         writer.startNode( "description" );
         writer.setValue( project.getDescription() );
         writer.endNode();
+        context.put( "project", "true" );
+        // All entities
+        Iterator<ModelObject> entities = service.iterateEntities();
+        while ( entities.hasNext() ) {
+            ModelObject entity = entities.next();
+            writer.startNode( entity.getClass().getSimpleName().toLowerCase() );
+            context.convertAnother( entity );
+            writer.endNode();
+        }
+        // All scenarios
         for ( Scenario scenario : service.list( Scenario.class ) ) {
             writer.startNode( "scenario" );
             context.convertAnother( scenario, new ScenarioConverter( ) );
@@ -91,6 +107,16 @@ public class ProjectConverter implements Converter {
                 project.setClient( reader.getValue() );
             } else if ( nodeName.equals( "description" ) ) {
                 project.setDescription( reader.getValue() );
+                // Entities
+            } else if ( nodeName.equals( "actor" ) ) {
+                context.convertAnother( project, Actor.class );
+            } else if ( nodeName.equals( "organization" ) ) {
+                context.convertAnother( project, Organization.class );
+            } else if ( nodeName.equals( "role" ) ) {
+                context.convertAnother( project, Role.class );
+            } else if ( nodeName.equals( "place" ) ) {
+                context.convertAnother( project, Place.class );
+                // Scenarios
             } else if ( nodeName.equals( "scenario" ) ) {
                 context.convertAnother( project, Scenario.class );
             } else {

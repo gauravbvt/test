@@ -254,6 +254,7 @@ public class ChannelsServiceImpl implements Service {
                 createScenario();
             }
         }
+        getDao().afterInitialize();
     }
 
     private void importScenarios() {
@@ -767,6 +768,13 @@ public class ChannelsServiceImpl implements Service {
             }
         }
         return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onDestroy() {
+        getDao().onDestroy();
     }
 }
 

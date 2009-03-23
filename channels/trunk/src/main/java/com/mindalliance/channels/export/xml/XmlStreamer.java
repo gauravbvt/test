@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.io.ObjectOutputStream;
 import java.io.FileInputStream;
 import java.util.Map;
+import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -162,11 +163,15 @@ public class XmlStreamer implements Importer, Exporter {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    public Map<String, Long> importProject( FileInputStream stream ) throws IOException {
-        Map<String, Long> idMap;
+    public Map<Long, Long> importProject( FileInputStream stream ) throws IOException {
+        Map<Long, Long> idMap;
         ObjectInputStream in = configuredXStream.get().createObjectInputStream( stream );
         try {
-            idMap = (Map<String, Long>) in.readObject();
+            Map<String, Long> map = (Map<String, Long>) in.readObject();
+            idMap = new HashMap<Long, Long>();
+            for ( String key : map.keySet() ) {
+                idMap.put( Long.valueOf( key ), map.get( key ) );
+            }
         } catch ( ClassNotFoundException e ) {
             throw new IOException( "Failed to import project", e );
         }

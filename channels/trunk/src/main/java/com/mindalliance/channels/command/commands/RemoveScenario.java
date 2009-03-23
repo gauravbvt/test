@@ -56,7 +56,13 @@ public class RemoveScenario extends AbstractCommand {
             Exporter exporter = Project.getProject().getExporter();
             exporter.exportScenario( scenario, bos );
             addArgument( "xml", bos.toString() );
+            if (service.list( Scenario.class ).size() == 1 ) {
+                // first create a new scenario
+                Scenario defaultScenario = service.createScenario();
+                addArgument( "defaultScenario", defaultScenario.getId() );
+            }
             service.remove( scenario );
+            commander.unmapId( scenario.getId() );
             return new Change( Change.Type.Removed, scenario );
         } catch ( NotFoundException e ) {
             throw new CommandException( "Failed to remove scenario.", e );

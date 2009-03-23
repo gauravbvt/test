@@ -157,6 +157,17 @@ public class HibernateDao extends JpaDaoSupport implements Dao {
      }
 
     /**
+      * {@inheritDoc}
+      */
+    public void afterInitialize() {
+        //Todo - Do nothing for now
+    }
+
+    public void onDestroy() {
+        // TODO - Do nothing for now
+    }
+
+    /**
      * {@inheritDoc}
      */
     public void onAfterCommand( Command command ) {

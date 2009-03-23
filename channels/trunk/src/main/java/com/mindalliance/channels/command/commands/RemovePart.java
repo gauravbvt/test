@@ -60,8 +60,14 @@ public class RemovePart extends AbstractCommand {
             // Double check in case this is an undo-undo
             if ( !commander.canDo( this ) )
                 throw new CommandException( "Someone is making changes." );
+            addArgument( "part", part.getId() );
             addArgument( "partState", CommandUtils.getPartState( part ) );
+            if ( scenario.countParts() == 1 ) {
+                Part defaultPart = service.createPart( scenario );
+                addArgument( "defaultPart", defaultPart.getId() );
+            }
             removePart( part, service );
+            commander.unmapId( part.getId() );
             ignoreLock( commander.resolveId( (Long) get( "part" ) ) );
             return new Change( Change.Type.Recomposed, scenario );
         } catch ( NotFoundException e ) {
@@ -88,6 +94,8 @@ public class RemovePart extends AbstractCommand {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             AddPart addPart = new AddPart( scenario );
             Map<String, Object> partState = (Map<String, Object>) get( "partState" );
+            addPart.set( "part", get( "part" ) );
+            if ( get( "defaultPart" ) != null ) addPart.set( "defaultPart", get( "defaultPart" ) );
             addPart.set( "partState", partState );
             multi.addCommand( addPart );
             // Disconnect any added needs and capabilities

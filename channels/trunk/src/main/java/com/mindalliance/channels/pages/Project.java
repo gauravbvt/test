@@ -31,6 +31,8 @@ import org.apache.wicket.request.target.coding.MixedParamUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.value.ValueMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -49,6 +51,10 @@ import java.util.Set;
  */
 public final class Project extends WebApplication {                                   // NON-NLS
 
+    /**
+     * Class logger.
+     */
+    public static final Logger LOG = LoggerFactory.getLogger( Project.class );
     /**
      * The project's unique identifier
      */
@@ -131,6 +137,11 @@ public final class Project extends WebApplication {                             
         mount( new QueryStringUrlCodingStrategy( "resource.html", ProfilePage.class ) );
 
         service.initialize();
+    }
+
+    protected void onDestroy() {
+        LOG.info("Goodbye!");
+        service.onDestroy();
     }
 
     @Override
@@ -517,6 +528,8 @@ public final class Project extends WebApplication {                             
         protected ValueMap decodeParameters( String urlFragment, Map urlParameters ) {
             return super.decodeParameters( trimmed( urlFragment ), urlParameters );
         }
+
+
     }
 
 }

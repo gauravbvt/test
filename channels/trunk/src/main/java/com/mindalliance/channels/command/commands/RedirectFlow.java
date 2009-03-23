@@ -96,6 +96,7 @@ public class RedirectFlow extends AbstractCommand {
             addArgument( "newFlow", newFlow.getId() );
             addArgument( "oldFlowState", CommandUtils.getFlowState( oldFlow ) );
             oldFlow.disconnect();
+            commander.unmapId( oldFlow.getId() );
             // What about reporting the removal of the disconnected flow?
             return new Change( Change.Type.Added, newFlow );
         } catch ( NotFoundException e ) {
