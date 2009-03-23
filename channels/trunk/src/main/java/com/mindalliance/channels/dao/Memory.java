@@ -247,23 +247,26 @@ public final class Memory implements Dao {
     public void load() {
         // Load project data
         try {
+            Map<String, Long> idMap = new HashMap<String,Long>();
             Importer importer = Project.getProject().getImporter();
             File dataFile = getDataFile();
             if ( dataFile.length() > 0 ) {
                 LOG.info( "Importing project snapshot" );
-                Map<String,Long> idMap = importer.importProject( new FileInputStream( dataFile ) );
-                // Load and run journaled commands
-                Journal journal = loadJournal();
-                Commander commander = Project.getProject().getCommander();
-                commander.setIdMap( idMap );
+                idMap = importer.importProject( new FileInputStream( dataFile ) );
+            }
+            // Load and run journaled commands
+            Journal journal = loadJournal();
+            Commander commander = Project.getProject().getCommander();
+            commander.setIdMap( idMap );
+            if ( !journal.isEmpty() ) {
                 LOG.info( "Replaying journaled commands" );
                 for ( Command command : journal.getCommands() ) {
                     commander.doCommand( command );
                 }
-                journal.reset();
-                commander.reset();
-                LOG.info( "Persisted project reloaded." );
             }
+            journal.reset();
+            commander.reset();
+            LOG.info( "Persisted project reloaded." );
         } catch ( IOException e ) {
             LOG.error( "Failed to load snapshot", e );
         } catch ( CommandException e ) {
@@ -307,7 +310,7 @@ public final class Memory implements Dao {
         try {
             File journalFile = getJournalFile();
             Importer importer = Project.getProject().getImporter();
-            if (journalFile.length() > 0)
+            if ( journalFile.length() > 0 )
                 journal = importer.importJournal( new FileInputStream( journalFile ) );
             else
                 journal = new Journal();
@@ -329,13 +332,13 @@ public final class Memory implements Dao {
                 getJournalFile().delete();
                 journal.reset();
             } catch ( IOException e ) {
-                throw new RuntimeException("Failed to take snapshot", e);
+                throw new RuntimeException( "Failed to take snapshot", e );
 
             }
         }
         // else save journaled commands
         else {
-           journal.addCommand( command );
+            journal.addCommand( command );
             try {
                 saveJournal();
             } catch ( IOException e ) {

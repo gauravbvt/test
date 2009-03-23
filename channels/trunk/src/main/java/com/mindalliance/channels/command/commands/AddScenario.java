@@ -33,7 +33,9 @@ public class AddScenario extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         Scenario scenario = commander.getService().createScenario();
         commander.mapId( (Long)get("scenario"), scenario.getId() );
+        commander.mapId( (Long)get("defaultPart"), scenario.getDefaultPart().getId() );
         addArgument( "scenario", scenario.getId() );
+        addArgument( "defaultPart", scenario.getDefaultPart().getId() );
         return new Change( Change.Type.Added, scenario );
     }
 

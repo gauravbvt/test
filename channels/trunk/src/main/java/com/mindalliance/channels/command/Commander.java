@@ -130,4 +130,10 @@ public interface Commander {
      * @param newId a Long
      */
     void mapId( Long oldId, Long newId );
+
+    /**
+     * Whether commander is in journal replay mode.
+     * @return a boolean
+     */
+    boolean isReplayingJournal();
 }

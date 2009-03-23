@@ -39,4 +39,7 @@ public class Journal implements Serializable {
         return commands.size();
     }
 
+    public boolean isEmpty() {
+        return commands.isEmpty();
+    }
 }

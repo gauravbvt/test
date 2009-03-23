@@ -131,7 +131,7 @@ public class DefaultCommander implements Commander {
                 Collection<Lock> grabbedLocks = lockManager.grabLocksOn( command.getLockingSet() );
                 change = command.execute( this );
                 lockManager.releaseLocks( grabbedLocks );
-                getService().getDao().onAfterCommand( command );
+                if ( !isReplayingJournal() ) getService().getDao().onAfterCommand( command );
             } catch ( LockingException e ) {
                 throw new CommandException( e.getMessage(), e );
             }
@@ -239,6 +239,7 @@ public class DefaultCommander implements Commander {
      * {@inheritDoc}
      */
     public void reset() {
+        idMap = null;
         history.reset();
         lockManager.reset();
     }
@@ -250,5 +251,12 @@ public class DefaultCommander implements Commander {
         if (idMap != null && oldId != null) {
              idMap.put(oldId.toString(), newId);
         }
+    }
+
+    /**
+      * {@inheritDoc}
+      */
+    public boolean isReplayingJournal() {
+        return idMap != null;
     }
 }
