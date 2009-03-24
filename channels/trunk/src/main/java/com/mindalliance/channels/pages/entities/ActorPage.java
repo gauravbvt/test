@@ -6,7 +6,7 @@ import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.pages.ProfileLink;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.pages.components.ActorPanel;
+import com.mindalliance.channels.pages.components.entities.ActorDetailsPanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -47,7 +47,7 @@ public class ActorPage extends WebPage {
         add( new Label( "title", new Model<String>( "Actor: " + actor.getName() ) ) );
         add( new Label( "header-title", new PropertyModel<String>( actor, "name" ) ) );
         add ( new ExternalLink("index", "index.html"));
-        add( new ActorPanel( "actor-form", new Model<Actor>( actor ) ) );
+        add( new ActorDetailsPanel( "actor-form", new Model<Actor>( actor ) ) );
         add( new ProfileLink( "profile-link",
                         new AbstractReadOnlyModel<ResourceSpec>() {
                             public ResourceSpec getObject() {

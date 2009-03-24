@@ -10,6 +10,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Abstract XStream converter for Entities.
@@ -63,23 +64,23 @@ public abstract class EntityConverter implements Converter {
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings( "unchecked" )
     public Object unmarshal( HierarchicalStreamReader reader,
                              UnmarshallingContext context ) {
-        // String id = reader.getAttribute( "id" );
-        // do nothing for now with id -- will use it to disambiguate homonymous entities
+        Map<String, Long> idMap = (Map<String, Long>) context.get( "idMap" );
         String name = reader.getAttribute( "name" );
+        String id = reader.getAttribute( "id" );
         ModelObject entity = findOrMakeEntity( name );
-        if ( entity != null ) {
-            while ( reader.hasMoreChildren() ) {
-                reader.moveDown();
-                String nodeName = reader.getNodeName();
-                if ( nodeName.equals( "description" ) ) {
-                    entity.setDescription( reader.getValue() );
-                } else {
-                    setSpecific( entity, nodeName, reader, context );
-                }
-                reader.moveUp();
+        idMap.put( id, entity.getId() );
+        while ( reader.hasMoreChildren() ) {
+            reader.moveDown();
+            String nodeName = reader.getNodeName();
+            if ( nodeName.equals( "description" ) ) {
+                entity.setDescription( reader.getValue() );
+            } else {
+                setSpecific( entity, nodeName, reader, context );
             }
+            reader.moveUp();
         }
         return entity;
     }
@@ -89,8 +90,8 @@ public abstract class EntityConverter implements Converter {
      *
      * @param entity   the entity
      * @param nodeName the name of the property
-     * @param reader  the xml stream
-     * @param context a context
+     * @param reader   the xml stream
+     * @param context  a context
      */
     abstract protected void setSpecific(
             ModelObject entity,

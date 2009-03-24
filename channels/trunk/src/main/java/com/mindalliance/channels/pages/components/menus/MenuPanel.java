@@ -7,7 +7,6 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -124,10 +123,12 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
             String id,
             List<ModelObjectWrapper> moWrappers ) {
         List<Component> menuItems = new ArrayList<Component>();
-        for ( ModelObjectWrapper moWrapper : moWrappers ) {
-            ModelObjectLink link = makeLink(
-                    "link",
-                    new Model<ModelObject>( moWrapper.getModelObject() ) );
+        for ( final ModelObjectWrapper moWrapper : moWrappers ) {
+            Link link = new AjaxFallbackLink("link") {
+                public void onClick( AjaxRequestTarget target ) {
+                    update(target, new Change(Change.Type.Expanded, moWrapper.getModelObject()));
+                }
+            };
             menuItems.add( new LinkMenuItem(
                     id,
                     new PropertyModel<String>( moWrapper, "title" ),
@@ -136,14 +137,14 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
         return menuItems;
     }
 
-    private ModelObjectLink makeLink( String id,
+   /* private ModelObjectLink makeLink( String id,
                                       final IModel<ModelObject> model ) {
         ModelObjectLink link = new ModelObjectLink(
                 id,
                 new Model<ModelObject>( model.getObject() ) );
         link.setOutputMarkupId( true );
         return link;
-    }
+    }*/
 
     /**
      * Make menu items from commands.

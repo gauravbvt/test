@@ -15,12 +15,14 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.pages.components.ScenarioLink;
 import com.mindalliance.channels.pages.components.ScenarioPanel;
+import com.mindalliance.channels.pages.components.entities.EntityPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.menus.ScenarioActionsMenuPanel;
-import com.mindalliance.channels.pages.components.menus.ScenarioPagesMenuPanel;
+import com.mindalliance.channels.pages.components.menus.ScenarioShowMenuPanel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -125,6 +127,10 @@ public final class ProjectPage extends WebPage implements Updatable {
      * The scenario panel.
      */
     private ScenarioPanel scenarioPanel;
+    /**
+     * The entity panel.
+     */
+    private Component entityPanel;
 
     /**
      * Used when page is called without parameters.
@@ -209,6 +215,8 @@ public final class ProjectPage extends WebPage implements Updatable {
                 new PropertyModel<Part>( this, "part" ),
                 expansions );
         form.add( scenarioPanel );
+        addEntityPanel();
+        form.add( entityPanel );
         LOG.debug( "Scenario page generated" );
     }
 
@@ -287,11 +295,11 @@ public final class ProjectPage extends WebPage implements Updatable {
                 expansions );
         scenarioActionsMenu.setOutputMarkupId( true );
         form.add( scenarioActionsMenu );
-        ScenarioPagesMenuPanel scenarioPagesMenu = new ScenarioPagesMenuPanel(
-                "scenarioPagesMenu",
+        ScenarioShowMenuPanel scenarioShowMenu = new ScenarioShowMenuPanel(
+                "scenarioShowMenu",
                 new Model<Scenario>( scenario ) );
-        scenarioPagesMenu.setOutputMarkupId( true );
-        form.add( scenarioPagesMenu );
+        scenarioShowMenu.setOutputMarkupId( true );
+        form.add( scenarioShowMenu );
     }
 
     private void addSelectScenario() {
@@ -319,6 +327,32 @@ public final class ProjectPage extends WebPage implements Updatable {
         scenarioDropDownChoice.setOutputMarkupId( true );
 
         return scenarioDropDownChoice;
+    }
+
+    private void addEntityPanel() {
+        ModelObject entity = findExpandedEntity();
+        if ( entity == null ) {
+            entityPanel = new Label( "entity", "" );
+        } else {
+            entityPanel = new EntityPanel( "entity", new Model<ModelObject>( entity ) );
+        }
+        makeVisible( entityPanel, entity != null );
+        entityPanel.setOutputMarkupId( true );
+        form.addOrReplace( entityPanel );
+    }
+
+    private ModelObject findExpandedEntity() {
+        ModelObject entity = null;
+        for ( long id : expansions ) {
+            try {
+                ModelObject mo = getService().find( ModelObject.class, id );
+                if ( mo.isEntity() ) return mo;
+            }
+            catch ( NotFoundException e ) {
+                // ignore
+            }
+        }
+        return entity;
     }
 
     public List<Scenario> getAllScenarios() {
@@ -521,7 +555,7 @@ public final class ProjectPage extends WebPage implements Updatable {
      * @param p a part
      */
     public void setPart( Part p ) {
-        if ( part != null) getLockManager().releaseAnyLockOn( part );
+        if ( part != null ) getLockManager().releaseAnyLockOn( part );
         part = p;
         getLockManager().requestLockOn( p );
         scenario = p.getScenario();
@@ -583,12 +617,31 @@ public final class ProjectPage extends WebPage implements Updatable {
     }
 
     /**
+     * Set a component's visibility.
+     *
+     * @param component a component
+     * @param visible   a boolean
+     */
+    private void makeVisible( Component component, boolean visible ) {
+        component.add(
+                new AttributeModifier(
+                        "style",
+                        true,
+                        new Model<String>( visible ? "display:inline" : "display:none" ) ) );
+    }
+
+
+    /**
      * {@inheritDoc}
      */
     public void changed( Change change ) {
         Identifiable identifiable = change.getSubject();
         if ( change.isCollapsed() ) {
             expansions.remove( identifiable.getId() );
+            if (identifiable instanceof ModelObject
+                    && ((ModelObject)identifiable).isEntity()) {
+                getLockManager().releaseAnyLockOn( identifiable );
+            }
         } else if ( change.isExpanded() ) {
             expansions.add( identifiable.getId() );
         } else if ( change.isAdded() ) {
@@ -625,6 +678,7 @@ public final class ProjectPage extends WebPage implements Updatable {
             redirectHere();
         } else if ( change.isUndoing() ) {
             target.addComponent( scenarioPanel );
+            target.addComponent( entityPanel );
         }
         if ( identifiable instanceof Scenario ) {
             if ( change.isUpdated() ) {
@@ -659,6 +713,16 @@ public final class ProjectPage extends WebPage implements Updatable {
             annotateScenarioName( getScenario() );
             target.addComponent( scenarioNameLabel );
             scenarioPanel.expandScenarioEditPanel( target );
+        }
+        if ( identifiable instanceof ModelObject
+                && ((ModelObject) identifiable).isEntity() ) {
+                if (change.isDisplay() ) {
+                    addEntityPanel();
+                    target.addComponent( entityPanel );
+                } else {
+                    target.addComponent( scenarioPanel );
+                }
+
         }
         target.addComponent( scenarioActionsMenu );
     }

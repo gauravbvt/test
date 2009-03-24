@@ -609,3 +609,27 @@ div.wicket-aa ul li.selected {
 .menubar span.dropmenu ul li:hover {
   background-color: #ccf;
 }
+
+#entity span.menubar {
+    float: right;
+    position: static;
+}
+
+#entity {
+    z-index: 1;
+    position: absolute;
+    left: 2em;
+    bottom: 10em;
+    padding: 5px;
+}
+
+#entity {
+    width: 50%;
+}
+
+#entity {
+    background: #C3D9FF;
+}
+
+#entity {
+    border: 1px outset #c3dede;

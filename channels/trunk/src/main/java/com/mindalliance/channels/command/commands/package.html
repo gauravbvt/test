@@ -1,7 +1,7 @@
 <html><body>
 <h1>Commands</h1>
 
-<p>All changes to the data model <b>must</b> be done via the execution of commands.</p>
+<p>All user-initiated changes to the data model <b>must</b> be done via the execution of commands.</p>
 
 <p>Commands are executed either:</p>
 <ul>
@@ -13,7 +13,7 @@
 <p>This means that a command must be totally self-contained and be able
     to execute after being serialized and deserialized, even after a server restart.</p>
 
-<p>One major difficulty is that model object IDs are unique only within the lifetime of a running instance of Channels
+<p>One major difficulty is that model object (MO) IDs are unique only within the lifetime of a running instance of Channels
     and are re-used across startups. Care must thus be taken to correctly interpret IDs across restarts. Another
     difficulty has to do with undoing deletions. When undoing the deletion of a model object, the un-deleted model
     object has a different ID than the model object that was deleted. Prior commands still refer to the old ID that
@@ -26,11 +26,11 @@
 <h2>Constructor</h2>
 
 <ul>
-<li> put all initial state in arguments (never put MOs as argument values, only their IDs)</li>
-<li>add to conflicting set the IDs of MOs that, if in the locking set of a later executed
+<li>Put all initial state in arguments (never put MOs as argument values, only their IDs)</li>
+<li>Add to conflicting set the IDs of MOs that, if in the locking set of a later executed
     command by any user, will prevent an undo or redo of this command.
     IDs in conflict set are automatically put in locking set.</li>
-<li>add to locking set the IDs of all other MOs for which locks are required for the execution of the command</li>
+<li>Add to locking set the IDs of all other MOs for which locks are required for the execution of the command</li>
 </ul>
 
 <h2>Execute</h2>

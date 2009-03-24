@@ -14,7 +14,7 @@ import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.FlowDiagram;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.components.menus.PartActionsMenuPanel;
-import com.mindalliance.channels.pages.components.menus.PartPagesMenuPanel;
+import com.mindalliance.channels.pages.components.menus.PartShowMenuPanel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -88,7 +88,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     /**
      * Part pages menu
      */
-    private Component partPagesMenu;
+    private Component partShowMenu;
     /**
      * Outcomes flow panel.
      */
@@ -163,12 +163,12 @@ public class ScenarioPanel extends AbstractCommandablePanel {
 
     private void addPartMenuBar() {
         addPartActionsMenu();
-        partPagesMenu = new PartPagesMenuPanel(
-                "partPagesMenu",
+        partShowMenu = new PartShowMenuPanel(
+                "partShowMenu",
                 new PropertyModel<Part>( this, "part" )
         );
-        partPagesMenu.setOutputMarkupId( true );
-        add( partPagesMenu );
+        partShowMenu.setOutputMarkupId( true );
+        add( partShowMenu );
     }
 
     private void addPartActionsMenu() {
@@ -287,7 +287,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         }
         makeVisible( target, partIssuesPanel, Project.analyst().hasIssues( getPart(), false ) );
         addPartActionsMenu();
-        target.addComponent( partPagesMenu );
+        target.addComponent( partShowMenu );
         target.addComponent( partActionsMenu );
         super.updateWith( target, change );
     }

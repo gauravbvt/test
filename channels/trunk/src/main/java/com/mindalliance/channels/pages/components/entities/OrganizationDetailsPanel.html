@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+    <table>
+        <tr>
+            <th align="right">
+                <label for="parent"><a wicket:id="org-link" href=""
+                                       title="Parent organization's details">Parent</a>:</label>
+            </th>
+            <td><input id="parent" width="40" wicket:id="parent" type="text"/></td>
+        </tr>
+        <tr>
+            <th align="right"><label for="location"><a wicket:id="loc-link" href=""
+                                                       title="Location's details">Location</a>:</label>
+            </th>
+            <td><input type="text" size="40" id="location" wicket:id="location" value=""></td>
+        </tr>
+        <tr>
+            <th align="right">
+                <label for="contact-info">Contact info:</label>
+            </th>
+            <td><span id="contact-info" wicket:id="channels">[channel list panel]</span></td>
+        </tr>
+    </table>
+    <div wicket:id="jobs">[jobs panel]</div>
+</wicket:extend>
+</body>
+</html>

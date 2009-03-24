@@ -12,9 +12,9 @@ import org.apache.wicket.model.IModel;
  * Date: Mar 10, 2009
  * Time: 8:30:46 PM
  */
-public class ScenarioPagesMenuPanel extends MenuPanel {
+public class ScenarioShowMenuPanel extends MenuPanel {
 
-    public ScenarioPagesMenuPanel( String s, IModel<? extends Scenario> model ) {
+    public ScenarioShowMenuPanel( String s, IModel<? extends Scenario> model ) {
         super( s, model );
         init();
     }
