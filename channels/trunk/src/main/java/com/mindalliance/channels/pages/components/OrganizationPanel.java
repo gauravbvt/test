@@ -120,12 +120,12 @@ public class OrganizationPanel extends EntityPanel {
                 newOrg = getService().findOrCreate( Organization.class, name );
                 if (newOrg.ancestors().contains( getOrganization() )) {
                     newOrg = oldOrg;
-                    getService().cleanup( Organization.class, name );
+                    getCommander().cleanup( Organization.class, name );
                 }
             }
         }
         doCommand( new UpdateProjectObject( getOrganization(), "parent", newOrg ) );
-        getService().cleanup( Organization.class, oldName );
+        getCommander().cleanup( Organization.class, oldName );
     }
 
     /**
@@ -155,7 +155,7 @@ public class OrganizationPanel extends EntityPanel {
                 newPlace = getService().findOrCreate( Place.class, name );
         }
         doCommand( new UpdateProjectObject( org, "location", newPlace ) );
-        getService().cleanup( Place.class, oldName );
+        getCommander().cleanup( Place.class, oldName );
     }
 
     /**

@@ -77,7 +77,8 @@ public class BreakUpFlow extends AbstractCommand {
         MultiCommand multi = new MultiCommand();
         multi.setUndoes( getName() );
         ConnectWithFlow connectWithFlow = new ConnectWithFlow();
-        connectWithFlow.setArguments( (Map<String, Object>) get( "flowState" ) );
+        connectWithFlow.setArguments( (Map<String,Object>) get( "flowState" ) );
+        connectWithFlow.addArgument( "flow", get( "flow" ) );
         multi.addCommand( connectWithFlow );
         List<Long> addedFlows = (List<Long>) get( "addedFlows" );
         if ( addedFlows != null ) {
@@ -120,7 +121,6 @@ public class BreakUpFlow extends AbstractCommand {
             set( "addedFlows", addedFlows );
         }
         flow.disconnect();
-        commander.unmapId(flow.getId());
     }
 
 }

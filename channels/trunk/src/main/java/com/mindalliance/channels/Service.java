@@ -260,14 +260,6 @@ public interface Service {
     List<String> findAllNames( Class<? extends ModelObject> aClass );
 
     /**
-     * Remove entity with old name if not referenced and if not defined.
-     *
-     * @param aClass  a model object class
-     * @param oldName a string
-     */
-    void cleanup( Class<? extends ModelObject> aClass, String oldName );
-
-    /**
      * Whether the actor is referenced in another model object.
      * @param actor an actor
      * @return a boolean

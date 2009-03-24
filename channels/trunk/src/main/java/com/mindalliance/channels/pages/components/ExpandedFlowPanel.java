@@ -670,7 +670,8 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
     }
 
     /**
-     * Set the node at the other side of this flow
+     * Set the node at the other side of this flow by connecting "through" a connector
+     * to the part in the connector's innerflow.
      *
      * @param other the new source or target
      */

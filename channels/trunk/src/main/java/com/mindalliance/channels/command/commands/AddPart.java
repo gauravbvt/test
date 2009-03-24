@@ -47,13 +47,15 @@ public class AddPart extends AbstractCommand {
         Service service = commander.getService();
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+            // Identify any undefined part likely created to be the lone default part.
             Long defaultPartId = (Long) get( "defaultPart" );
             Part defaultPart = null;
             if ( defaultPartId != null ) {
                 // A default part was added before removing the one being restored by adding it.
-                assert scenario.countParts() == 1;
-                defaultPart = scenario.getDefaultPart();
+                if ( scenario.countParts() == 1 && scenario.getDefaultPart().isUndefined()) {
+                    defaultPart = scenario.getDefaultPart();
                 // commander.mapId( defaultPartId, defaultPart.getId() );
+                }
             }
             Part part = service.createPart( scenario );
             commander.mapId( (Long) get( "part" ), part.getId() );

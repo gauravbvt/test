@@ -676,27 +676,6 @@ public class ChannelsServiceImpl implements Service {
     /**
      * {@inheritDoc}
      */
-    public void cleanup( Class<? extends ModelObject> clazz, String name ) {
-        if ( name != null && !name.trim().isEmpty() ) {
-            ModelObject mo = getDao().find( clazz, name.trim() );
-            if ( mo != null && mo.isUndefined() ) {
-                boolean garbage;
-                if ( mo instanceof Actor ) garbage = !isReferenced( (Actor) mo );
-                else if ( mo instanceof Role ) garbage = !isReferenced( (Role) mo );
-                else if ( mo instanceof Organization ) garbage = !isReferenced( (Organization) mo );
-                else if ( mo instanceof Place ) garbage = !isReferenced( (Place) mo );
-                else throw new IllegalArgumentException( "Can't clean up something of class " + clazz );
-                if ( garbage ) {
-                    LOG.info( "Removing unused " + mo.getClass().getSimpleName() + " " + mo );
-                    remove( mo );
-                }
-            }
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public boolean isReferenced( Actor actor ) {
         for ( Organization org : list( Organization.class ) ) {
             for ( Job job : org.getJobs() ) {

@@ -3,6 +3,10 @@ package com.mindalliance.channels.command;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.Actor;
+import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Organization;
+import com.mindalliance.channels.Place;
 
 import java.util.Collection;
 import java.util.Map;
@@ -10,7 +14,6 @@ import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.collections.bidimap.DualHashBidiMap;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -42,7 +45,7 @@ public class DefaultCommander implements Commander {
      * An id translation map.
      */
     // TODO - this could grow unchecked
-    private DualHashBidiMap idMap = new DualHashBidiMap( new HashMap<Long, Long>() );
+    private Map<Long, Long> idMap = new HashMap<Long, Long>();
 
     public DefaultCommander() {
     }
@@ -68,7 +71,7 @@ public class DefaultCommander implements Commander {
     }
 
     public void setIdMap( Map<Long, Long> idMap ) {
-        this.idMap = new DualHashBidiMap( idMap );
+        this.idMap = idMap;
     }
 
     /**
@@ -82,7 +85,7 @@ public class DefaultCommander implements Commander {
      * {@inheritDoc}
      */
     public Long resolveId( Long id ) throws NotFoundException {
-        Long realId = (Long) idMap.get( id );
+        Long realId = idMap.get( id );
         if ( realId == null )
             if ( isReplaying() )
                 throw new NotFoundException();
@@ -252,7 +255,7 @@ public class DefaultCommander implements Commander {
      */
     public void reset() {
         replaying = false;
-        idMap = new DualHashBidiMap( new HashMap<Long, Long>() );
+        idMap = new HashMap<Long, Long>();
         history.reset();
         lockManager.reset();
     }
@@ -271,7 +274,26 @@ public class DefaultCommander implements Commander {
     /**
      * {@inheritDoc}
      */
-    public void unmapId( long id ) {
-        idMap.removeValue( id );
+    public void cleanup( Class<? extends ModelObject> clazz, String name ) {
+        synchronized ( this ) {
+            Service service = getService();
+            if ( name != null && !name.trim().isEmpty() ) {
+                ModelObject mo = service.getDao().find( clazz, name.trim() );
+                if ( mo != null && mo.isUndefined() ) {
+                    boolean garbage;
+                    if ( mo instanceof Actor ) garbage = !service.isReferenced( (Actor) mo );
+                    else if ( mo instanceof Role ) garbage = !service.isReferenced( (Role) mo );
+                    else if ( mo instanceof Organization ) garbage = !service.isReferenced( (Organization) mo );
+                    else if ( mo instanceof Place ) garbage = !service.isReferenced( (Place) mo );
+                    else throw new IllegalArgumentException( "Can't clean up something of class " + clazz );
+                    if ( garbage ) {
+                        LOG.info( "Removing unused " + mo.getClass().getSimpleName() + " " + mo );
+                        service.remove( mo );
+                    }
+                }
+            }
+        }
     }
+
+
 }

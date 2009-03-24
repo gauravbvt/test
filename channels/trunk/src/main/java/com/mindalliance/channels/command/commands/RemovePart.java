@@ -67,7 +67,6 @@ public class RemovePart extends AbstractCommand {
                 addArgument( "defaultPart", defaultPart.getId() );
             }
             removePart( part, service );
-            commander.unmapId( part.getId() );
             ignoreLock( commander.resolveId( (Long) get( "part" ) ) );
             return new Change( Change.Type.Recomposed, scenario );
         } catch ( NotFoundException e ) {

@@ -132,12 +132,6 @@ public interface Commander {
     void mapId( Long oldId, Long newId );
 
     /**
-     * Remove id as value from the id translation map.
-     * @param id a long
-     */
-    void unmapId( long id );
-
-    /**
      * Whether commander is in journal replay mode.
      * @return a boolean
      */
@@ -148,5 +142,13 @@ public interface Commander {
      * @param val a boolean
      */
     void setReplaying( boolean val );
+
+    /**
+     * Remove entity with old name if not referenced and if not defined.
+     *
+     * @param clazz  a model object class
+     * @param name a string
+     */
+    void cleanup( Class<? extends ModelObject> clazz, String name );
 
 }

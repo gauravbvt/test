@@ -276,7 +276,7 @@ public final class Memory implements Dao {
     }
 
     /**
-     * {@inheritDoc} 
+     * {@inheritDoc}
      */
     public void afterInitialize() {
         try {
@@ -369,10 +369,14 @@ public final class Memory implements Dao {
 
     private void takeSnapshot() throws IOException {
         LOG.info( "Taking project snapshot" );
+        // Make backup
         File dataFile = getDataFile();
-        String backupPath = dataFile.getAbsolutePath() + "_" + System.currentTimeMillis();
-        File backup = new File( backupPath );
-        dataFile.renameTo( backup );
+        if ( dataFile.length() > 0 ) {
+            String backupPath = dataFile.getAbsolutePath() + "_" + System.currentTimeMillis();
+            File backup = new File( backupPath );
+            dataFile.renameTo( backup );
+        }
+        // snap
         dataFile = getDataFile();
         assert dataFile.length() == 0;
         Exporter exporter = Project.getProject().getExporter();

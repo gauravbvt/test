@@ -79,15 +79,15 @@ public class PartActionsMenuPanel extends MenuPanel {
                         Part part = getPart();
                         update( target, change );
                         if ( part.getActor() != null )
-                            getService().cleanup( Actor.class, part.getActor().getName() );
+                            getCommander().cleanup( Actor.class, part.getActor().getName() );
                         if ( part.getRole() != null )
-                            getService().cleanup( Role.class, part.getRole().getName() );
+                            getCommander().cleanup( Role.class, part.getRole().getName() );
                         if ( part.getOrganization() != null )
-                            getService().cleanup( Organization.class, part.getOrganization().getName() );
+                            getCommander().cleanup( Organization.class, part.getOrganization().getName() );
                         if ( part.getJurisdiction() != null )
-                            getService().cleanup( Place.class, part.getJurisdiction().getName() );
+                            getCommander().cleanup( Place.class, part.getJurisdiction().getName() );
                         if ( part.getLocation() != null )
-                            getService().cleanup( Place.class, part.getLocation().getName() );
+                            getCommander().cleanup( Place.class, part.getLocation().getName() );
                     }
                 } );
             }

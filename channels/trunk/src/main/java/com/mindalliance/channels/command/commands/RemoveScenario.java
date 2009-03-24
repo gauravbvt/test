@@ -62,7 +62,6 @@ public class RemoveScenario extends AbstractCommand {
                 addArgument( "defaultScenario", defaultScenario.getId() );
             }
             service.remove( scenario );
-            commander.unmapId( scenario.getId() );
             return new Change( Change.Type.Removed, scenario );
         } catch ( NotFoundException e ) {
             throw new CommandException( "Failed to remove scenario.", e );

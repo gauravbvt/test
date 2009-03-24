@@ -17,7 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Redirect a flow.
+ * Set the node at the other side of this flow by connecting "through" a connector
+ * to the part in the connector's innerflow.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -96,7 +97,6 @@ public class RedirectFlow extends AbstractCommand {
             addArgument( "newFlow", newFlow.getId() );
             addArgument( "oldFlowState", CommandUtils.getFlowState( oldFlow ) );
             oldFlow.disconnect();
-            commander.unmapId( oldFlow.getId() );
             // What about reporting the removal of the disconnected flow?
             return new Change( Change.Type.Added, newFlow );
         } catch ( NotFoundException e ) {

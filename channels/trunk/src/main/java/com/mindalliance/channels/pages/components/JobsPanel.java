@@ -264,10 +264,10 @@ public class JobsPanel extends AbstractCommandablePanel {
                         job,
                         UpdateObject.Action.Remove
                 ) );
-                if ( job.getActor() != null ) getService().cleanup( Actor.class, job.getActor().getName() );
-                if ( job.getRole() != null ) getService().cleanup( Role.class, job.getRole().getName() );
+                if ( job.getActor() != null ) getCommander().cleanup( Actor.class, job.getActor().getName() );
+                if ( job.getRole() != null ) getCommander().cleanup( Role.class, job.getRole().getName() );
                 if ( job.getJurisdiction() != null )
-                    getService().cleanup( Place.class, job.getJurisdiction().getName() );
+                    getCommander().cleanup( Place.class, job.getJurisdiction().getName() );
             }
         }
 
@@ -320,7 +320,7 @@ public class JobsPanel extends AbstractCommandablePanel {
                         ) );
                     }
                 }
-                getService().cleanup( Actor.class, oldName );
+                getCommander().cleanup( Actor.class, oldName );
             }
         }
 
@@ -350,7 +350,7 @@ public class JobsPanel extends AbstractCommandablePanel {
                         ) );
                     }
                 }
-                getService().cleanup( Role.class, oldName );
+                getCommander().cleanup( Role.class, oldName );
             }
         }
 
@@ -380,7 +380,7 @@ public class JobsPanel extends AbstractCommandablePanel {
                         ) );
                     }
                 }
-                getService().cleanup( Place.class, oldName );
+                getCommander().cleanup( Place.class, oldName );
             }
         }
 

@@ -277,7 +277,7 @@ public class PartPanel extends AbstractCommandablePanel {
                 newActor = getService().findOrCreate( Actor.class, name );
         }
         doCommand( new UpdateScenarioObject( getPart(), "actor", newActor ) );
-        getService().cleanup( Actor.class, oldName );
+        getCommander().cleanup( Actor.class, oldName );
     }
 
     /**
@@ -296,7 +296,7 @@ public class PartPanel extends AbstractCommandablePanel {
                 newPlace = getService().findOrCreate( Place.class, name );
         }
         doCommand( new UpdateScenarioObject( getPart(), "jurisdiction", newPlace ) );
-        getService().cleanup( Place.class, oldName );
+        getCommander().cleanup( Place.class, oldName );
     }
 
     /**
@@ -315,7 +315,7 @@ public class PartPanel extends AbstractCommandablePanel {
                 newPlace = getService().findOrCreate( Place.class, name );
         }
         doCommand( new UpdateScenarioObject( getPart(), "location", newPlace ) );
-        getService().cleanup( Place.class, oldName );
+        getCommander().cleanup( Place.class, oldName );
     }
 
     /**
@@ -334,7 +334,7 @@ public class PartPanel extends AbstractCommandablePanel {
                 newOrg = getService().findOrCreate( Organization.class, name );
         }
         doCommand( new UpdateScenarioObject( getPart(), "organization", newOrg ) );
-        getService().cleanup( Organization.class, oldName );
+        getCommander().cleanup( Organization.class, oldName );
     }
 
     /**
@@ -353,7 +353,7 @@ public class PartPanel extends AbstractCommandablePanel {
                 newRole = getService().findOrCreate( Role.class, name );
         }
         doCommand( new UpdateScenarioObject( getPart(), "role", newRole ) );
-        getService().cleanup( Role.class, oldName );
+        getCommander().cleanup( Role.class, oldName );
     }
 
     /**
