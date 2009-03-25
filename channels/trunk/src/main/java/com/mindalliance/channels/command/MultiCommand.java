@@ -120,12 +120,17 @@ public class MultiCommand extends AbstractCommand {
         this.undoes = undoes;
     }
 
+    public List<Command> getCommands() {
+        return commands;
+    }
+
     /**
      * {@inheritDoc}
      */
     public Change execute( Commander commander ) throws CommandException {
         for ( Command command : commands ) {
             try {
+                LOG.info( "--- sub-command --" );
                 Change change = commander.doCommand( command );
                 for ( Link link : links ) link.process( command, change.getSubject() );
                 executed.add( command );
@@ -135,6 +140,7 @@ public class MultiCommand extends AbstractCommand {
                 // ignore
             }
         }
+        LOG.info( "END multicommand " + getName() );
         return new Change();
     }
 

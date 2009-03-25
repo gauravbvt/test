@@ -8,6 +8,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 import com.thoughtworks.xstream.XStream;
 import com.mindalliance.channels.command.AbstractCommand;
+import com.mindalliance.channels.command.MultiCommand;
+import com.mindalliance.channels.command.Command;
 
 import java.util.Map;
 
@@ -61,6 +63,22 @@ public class CommandConverter implements Converter {
         writer.startNode( "arguments" );
         writer.setValue( toJSON( command.getArguments() ) );
         writer.endNode();
+        if ( command instanceof MultiCommand ) {
+            writer.startNode( "multi" );
+            MultiCommand multi = (MultiCommand) command;
+            writer.startNode( "name" );
+            writer.setValue( multi.getName() );
+            writer.endNode();
+            writer.startNode( "undoes" );
+            writer.setValue( multi.getUndoes() );
+            writer.endNode();
+            for ( Command subCommand : multi.getCommands() ) {
+                writer.startNode( "command" );
+                context.convertAnother( subCommand );
+                writer.endNode();
+            }
+            writer.endNode();
+        }
     }
 
     /**
@@ -92,6 +110,23 @@ public class CommandConverter implements Converter {
                 // Arguments arguments = (Arguments) fromJSON( reader.getValue() );
                 // command.setArguments( arguments.getValue() );
                 command.setArguments( (Map) fromJSON( reader.getValue() ) );
+            } else if ( nodeName.equals( "multi" ) ) {
+                MultiCommand multi = (MultiCommand) command;
+                while( reader.hasMoreChildren() ) {
+                    reader.moveDown();
+                    String multiNodeName = reader.getNodeName();
+                    if (multiNodeName.equals("name")) {
+                        multi.setName(reader.getValue());
+                    } else if ( multiNodeName.equals( "undoes" )) {
+                        multi.setUndoes( reader.getValue() );
+                    } else if (multiNodeName.equals("command")) {
+                        Command subCommand = (Command)context.convertAnother( command, AbstractCommand.class );
+                        multi.addCommand( subCommand );
+                    } else {
+                      LOG.warn( "Unknown element " + multiNodeName );
+                    }
+                    reader.moveUp();
+                }
             } else {
                 LOG.warn( "Unknown element " + nodeName );
             }
@@ -102,12 +137,10 @@ public class CommandConverter implements Converter {
 
     private String toJSON( Object obj ) {
         jsonDriver.setMode( XStream.NO_REFERENCES );
-        String json = jsonDriver.toXML( obj );
-        return json;
+        return jsonDriver.toXML( obj );
     }
 
     private Object fromJSON( String json ) {
-        Object result = jsonDriver.fromXML( json );
-        return result;
+        return jsonDriver.fromXML( json );
     }
 }

@@ -94,12 +94,13 @@ public class DefaultCommander implements Commander {
     public Long resolveId( Long id ) throws CommandException {
         Long realId = idMap.get( id );
         if ( realId == null )
-            if ( isReplaying() )
-                throw new CommandException( "Not found " + id );
-            else
-                return id;
+            return id;
         else {
-            return resolveId( realId );
+            if ( isReplaying() ) {
+                return realId;
+            } else {
+                return resolveId( realId );
+            }
         }
     }
 
@@ -166,7 +167,7 @@ public class DefaultCommander implements Commander {
                 if ( !isReplaying() ) getService().getDao().onAfterCommand( command );
             } catch ( LockingException e ) {
                 throw new CommandException( e.getMessage(), e );
-            } 
+            }
         } else {
             throw new CommandException( "You are not authorized." );
         }
@@ -225,8 +226,10 @@ public class DefaultCommander implements Commander {
      */
     public Change doCommand( Command command ) throws CommandException {
         synchronized ( this ) {
+            if ( command instanceof MultiCommand ) LOG.info( "*** START multicommand ***" );
             LOG.info( ( isReplaying() ? "Replaying: " : "Doing: " ) + command.toString() );
             Change change = execute( command );
+            if ( command instanceof MultiCommand ) LOG.info( "*** END multicommand ***" );
             history.recordDone( command );
             return change;
         }
@@ -241,8 +244,10 @@ public class DefaultCommander implements Commander {
             Memento memento = history.getUndo();
             if ( memento == null ) throw new CommandException( "Nothing can be undone right now." );
             Command undoCommand = memento.getCommand().makeUndoCommand( this );
+            if ( undoCommand instanceof MultiCommand ) LOG.info( "*** START multicommand ***" );
             LOG.info( "Undoing: " + undoCommand.toString() );
             Change change = execute( undoCommand );
+            if ( undoCommand instanceof MultiCommand ) LOG.info( "*** END multicommand ***" );
             change.setUndoing( true );
             history.recordUndone( memento, undoCommand );
             return change;

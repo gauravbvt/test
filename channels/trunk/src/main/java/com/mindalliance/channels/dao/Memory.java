@@ -345,24 +345,26 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     public void onAfterCommand( Command command ) {
-        // Update snapshot if required
-        if ( journal.size() >= snapshotThreshold ) {
-            try {
-                takeSnapshot();
-                getJournalFile().delete();
-                journal.reset();
-            } catch ( IOException e ) {
-                throw new RuntimeException( "Failed to take snapshot", e );
+        if ( command.isMemorable() ) {
+            // Update snapshot if required
+            if ( journal.size() >= snapshotThreshold ) {
+                try {
+                    takeSnapshot();
+                    getJournalFile().delete();
+                    journal.reset();
+                } catch ( IOException e ) {
+                    throw new RuntimeException( "Failed to take snapshot", e );
 
+                }
             }
-        }
-        // else save journaled commands
-        else {
-            journal.addCommand( command );
-            try {
-                saveJournal();
-            } catch ( IOException e ) {
-                throw new RuntimeException( "Failed to save journal", e );
+            // else save journaled commands
+            else {
+                journal.addCommand( command );
+                try {
+                    saveJournal();
+                } catch ( IOException e ) {
+                    throw new RuntimeException( "Failed to save journal", e );
+                }
             }
         }
     }

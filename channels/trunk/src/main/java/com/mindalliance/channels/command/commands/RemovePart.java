@@ -19,6 +19,9 @@ import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Command to remove a part from a scenario.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -28,6 +31,12 @@ import java.util.ArrayList;
  * Time: 1:40:31 PM
  */
 public class RemovePart extends AbstractCommand {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( RemovePart.class );
+
 
     public RemovePart() {
     }
@@ -90,30 +99,46 @@ public class RemovePart extends AbstractCommand {
             AddPart addPart = new AddPart( scenario );
             Map<String, Object> partState = (Map<String, Object>) get( "partState" );
             addPart.set( "part", commander.resolveId( (Long) get( "part" ) ) );
-            if ( get( "defaultPart" ) != null ) addPart.set( "defaultPart", get( "defaultPart" ) );
+            if ( get( "defaultPart" ) != null ) {
+                addPart.set( "defaultPart", get( "defaultPart" ) );
+            }
             addPart.set( "partState", partState );
             multi.addCommand( addPart );
-            // Disconnect any added needs and capabilities
+            // Disconnect any added needs and capabilities - don't fail if not found
             List<Long> addedNeeds = (List<Long>) get( "addedNeeds" );
             if ( addedNeeds != null ) {
                 for ( long id : addedNeeds ) {
-                    Flow flow = scenario.findFlow( commander.resolveId( id ) );
-                    multi.addCommand( new RemoveNeed( flow ) );
+                    // It may not have been put in snapshot yet.
+                    Long flowId = commander.resolveId( id );
+                    if ( flowId != null )  {
+                        Flow flow = scenario.findFlow( flowId );
+                        multi.addCommand( new RemoveNeed( flow ) );
+                    }
+                    else {
+                        LOG.info( "Info need not found at " + id );
+                    }
                 }
             }
             List<Long> addedCapabilities = (List<Long>) get( "addedCapabilities" );
             if ( addedCapabilities != null ) {
                 for ( long id : addedCapabilities ) {
-                    Flow flow = scenario.findFlow( commander.resolveId( id ) );
-                    multi.addCommand( new RemoveCapability( flow ) );
+                    // It may not have been put in snapshot yet.
+                    Long flowId = commander.resolveId( id );
+                    if ( flowId != null )  {
+                        Flow flow = scenario.findFlow( flowId );
+                        multi.addCommand( new RemoveCapability( flow ) );
+                    }
+                    else {
+                        LOG.info( "Info capability not found at " + id );
+                    }
                 }
             }
             // Recreate disconnected flows where possible
             List<Map<String, Object>> removed = (List<Map<String, Object>>) get( "removedFlows" );
             Command command;
             for ( Map<String, Object> fs : removed ) {
-                Long removedFlowId = (Long) fs.get( "flow ");
-                Map<String, Object> state = (Map<String, Object>)fs.get( "state" );
+                Long removedFlowId = commander.resolveId( (Long) fs.get( "flow " ) );
+                Map<String, Object> state = (Map<String, Object>) fs.get( "state" );
                 Long otherId = (Long) state.get( "other" );
                 if ( otherId != null ) {
                     // other is a part (part to part flow)
@@ -128,7 +153,7 @@ public class RemovePart extends AbstractCommand {
                     }
                 }
                 command.setArguments( state );
-                command.set( "flow", removedFlowId);
+                command.set( "flow", removedFlowId );
                 multi.addCommand( command );
                 // Missing arguments scenario and part:
                 // Use the result of command addPart to supply arguments to connectWithFlow
@@ -167,7 +192,7 @@ public class RemovePart extends AbstractCommand {
             flowState.remove( "scenario" );
             Map<String, Object> flowSnapshot = new HashMap<String, Object>();
             flowSnapshot.put( "flow", in.getId() );
-            flowSnapshot.put( "state", flowState);
+            flowSnapshot.put( "state", flowState );
             removedFlows.add( flowSnapshot );
             // If the node to be removed is a part,
             // preserve the outcome of the source the flow represents
@@ -189,7 +214,7 @@ public class RemovePart extends AbstractCommand {
             flowState.remove( "scenario" );
             Map<String, Object> flowSnapshot = new HashMap<String, Object>();
             flowSnapshot.put( "flow", out.getId() );
-            flowSnapshot.put( "state", flowState);
+            flowSnapshot.put( "state", flowState );
             removedFlows.add( flowSnapshot );
             // If the node to be removed is a part,
             // preserve the outcome of the source the flow represents

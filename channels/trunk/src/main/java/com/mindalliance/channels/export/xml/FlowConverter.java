@@ -241,7 +241,7 @@ public class FlowConverter implements Converter {
                 // TODO - temporary
             } else if ( nodeName.equals( "critical" ) ) {
                 boolean critical = reader.getValue().equals( "true" );
-                for ( Flow flow : flows ) if (critical)flow.becomeCritical();
+                for ( Flow flow : flows ) if ( critical ) flow.becomeCritical();
             } else if ( nodeName.equals( "all" ) ) {
                 boolean all = reader.getValue().equals( "true" );
                 for ( Flow flow : flows ) flow.setAll( all );
@@ -393,7 +393,7 @@ public class FlowConverter implements Converter {
                         roleName,
                         organizationName,
                         task,
-                        taskDescription);
+                        taskDescription );
                 for ( Part externalPart : externalParts ) {
                     if ( isSource ) {
                         service.connect( externalPart, connector, flowName );
@@ -412,7 +412,7 @@ public class FlowConverter implements Converter {
                                                   final String roleName,
                                                   final String organizationName,
                                                   final String task,
-                                                  final String taskDescription) {
+                                                  final String taskDescription ) {
         List<Part> externalParts = new ArrayList<Part>();
         Iterator<Part> iterator =
                 (Iterator<Part>) new FilterIterator( scenario.parts(), new Predicate() {
@@ -449,7 +449,7 @@ public class FlowConverter implements Converter {
                                             roleName,
                                             organizationName,
                                             task,
-                                            taskDescription);
+                                            taskDescription );
                         }
                     }
                     );
@@ -476,10 +476,10 @@ public class FlowConverter implements Converter {
     }
 
     private boolean partMatches( Part part,
-                             String roleName,
-                             String organizationName,
-                             String task,
-                             String taskDescription) {
+                                 String roleName,
+                                 String organizationName,
+                                 String task,
+                                 String taskDescription ) {
         if ( roleName != null ) {
             if ( part.getRole() == null
                     || !SemMatch.same( part.getRole().getName(), roleName ) ) return false;
@@ -498,12 +498,12 @@ public class FlowConverter implements Converter {
     }
 
     private boolean connectorMatches( Connector connector,
-                             boolean isSource,
-                             String flowName,
-                             String roleName,
-                             String organizationName,
-                             String task,
-                             String taskDescription) {
+                                      boolean isSource,
+                                      String flowName,
+                                      String roleName,
+                                      String organizationName,
+                                      String task,
+                                      String taskDescription ) {
         // we are matching the part attached to the connector,
         // so it's input-edness is the reverse of that of the connector
         if ( connector.isSource() == isSource ) return false;
