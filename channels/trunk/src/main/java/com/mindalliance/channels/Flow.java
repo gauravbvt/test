@@ -10,6 +10,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
+import javax.persistence.FetchType;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,7 +78,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         this.askedFor = askedFor;
     }
 
-    @OneToMany( cascade = CascadeType.ALL )
+    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     public List<Channel> getChannels() {
         return channels;
     }

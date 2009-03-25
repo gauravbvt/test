@@ -1,20 +1,19 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.AbstractCommand;
-import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.command.AbstractCommand;
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.export.Exporter;
+import com.mindalliance.channels.pages.Project;
 
-import java.util.Iterator;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -56,15 +55,13 @@ public class RemoveScenario extends AbstractCommand {
             Exporter exporter = Project.getProject().getExporter();
             exporter.exportScenario( scenario, bos );
             addArgument( "xml", bos.toString() );
-            if (service.list( Scenario.class ).size() == 1 ) {
+            if ( service.list( Scenario.class ).size() == 1 ) {
                 // first create a new scenario
                 Scenario defaultScenario = service.createScenario();
                 addArgument( "defaultScenario", defaultScenario.getId() );
             }
             service.remove( scenario );
             return new Change( Change.Type.Removed, scenario );
-        } catch ( NotFoundException e ) {
-            throw new CommandException( "Failed to remove scenario.", e );
         } catch ( IOException e ) {
             throw new CommandException( "Failed to remove scenario.", e );
         }

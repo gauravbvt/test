@@ -45,29 +45,26 @@ public class AddPart extends AbstractCommand {
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
-        try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            // Identify any undefined part likely created to be the lone default part.
-            Long defaultPartId = (Long) get( "defaultPart" );
-            Part defaultPart = null;
-            if ( defaultPartId != null ) {
-                // A default part was added before removing the one being restored by adding it.
-                if ( scenario.countParts() == 1 && scenario.getDefaultPart().isUndefined() ) {
-                    defaultPart = scenario.getDefaultPart();
-                    // commander.mapId( defaultPartId, defaultPart.getId() );
-                }
+
+        Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+        // Identify any undefined part likely created to be the lone default part.
+        Long defaultPartId = (Long) get( "defaultPart" );
+        Part defaultPart = null;
+        if ( defaultPartId != null ) {
+            // A default part was added before removing the one being restored by adding it.
+            if ( scenario.countParts() == 1 && scenario.getDefaultPart().isUndefined() ) {
+                defaultPart = scenario.getDefaultPart();
+                // commander.mapId( defaultPartId, defaultPart.getId() );
             }
-            Part part = service.createPart( scenario );
-            if ( get( "part" ) != null )
-                commander.mapId( (Long) get( "part" ), part.getId() );
-            addArgument( "part", part.getId() );
-            if ( defaultPart != null ) scenario.removeNode( defaultPart );
-            Map<String, Object> partState = (Map<String, Object>) get( "partState" );
-            if ( partState != null ) CommandUtils.initialize( part, partState );
-            return new Change( Change.Type.Added, part );
-        } catch ( NotFoundException e ) {
-            throw new CommandException( "You need to refresh", e );
         }
+        Part part = service.createPart( scenario );
+        if ( get( "part" ) != null )
+            commander.mapId( (Long) get( "part" ), part.getId() );
+        addArgument( "part", part.getId() );
+        if ( defaultPart != null ) scenario.removeNode( defaultPart );
+        Map<String, Object> partState = (Map<String, Object>) get( "partState" );
+        if ( partState != null ) CommandUtils.initialize( part, partState );
+        return new Change( Change.Type.Added, part );
     }
 
     /**

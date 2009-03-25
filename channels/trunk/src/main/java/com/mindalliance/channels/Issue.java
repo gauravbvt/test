@@ -61,11 +61,11 @@ public interface Issue extends Identifiable, Serializable {
     String[] TYPES = new String[]{DEFINITION, FLOW, STRUCTURAL};
 
     /**
-     * The id of the identifiable object the issue is about
+     * The identifiable object the issue is about
      *
-     * @return a ModelObject identifier
+     * @return a ModelObject
      */
-    long getAbout();
+    ModelObject getAbout();
 
     /**
      * The type of issue

@@ -1,10 +1,9 @@
 package com.mindalliance.channels.command.commands;
 
+import com.mindalliance.channels.Identifiable;
+import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Identifiable;
 
 /**
  * Command to update a modelobject contained in a project.
@@ -37,18 +36,17 @@ public class UpdateProjectObject extends UpdateObject {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Identifiable getIdentifiable( Commander commander ) throws CommandException {
-        try {
-            return commander.resolve( ModelObject.class, (Long) get( "object" ) );
-        } catch ( NotFoundException e ) {
-            throw new CommandException( "You need to refresh", e );
-        }
+        return commander.resolve( ModelObject.class, (Long) get( "object" ) );
     }
 
     /**
      * {@inheritDoc}
      */
-    protected UpdateObject createUndoCommand( Identifiable identifiable, String property, Object value, Action action ) {
+    @Override
+    protected UpdateObject createUndoCommand(
+            Identifiable identifiable, String property, Object value, Action action ) {
         return new UpdateProjectObject( identifiable, property, value, action );
     }
 

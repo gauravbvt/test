@@ -1,9 +1,8 @@
 package com.mindalliance.channels;
 
-import org.hibernate.annotations.Proxy;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import java.text.MessageFormat;
@@ -15,7 +14,7 @@ import java.util.Set;
 /**
  * A connector to unspecified node(s) outside of the scenario.
  */
-@Entity @Proxy
+@Entity
 public class Connector extends Node {
 
     /** The connections from external scenarios. */
@@ -87,7 +86,7 @@ public class Connector extends Node {
         return !getExternalFlows().isEmpty();
     }
 
-    @OneToMany( cascade = CascadeType.ALL )
+    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     private Set<ExternalFlow> getExternalFlows() {
         return externalFlows;
     }

@@ -1,15 +1,14 @@
 package com.mindalliance.channels.command.commands;
 
+import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Service;
+import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.command.AbstractCommand;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.CommandUtils;
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.UserIssue;
-import com.mindalliance.channels.Service;
-import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.pages.Project;
 
 import java.util.Map;
@@ -44,23 +43,21 @@ public class AddUserIssue extends AbstractCommand {
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
-        try {
-            UserIssue issue = new UserIssue( commander.resolve(
-                    ModelObject.class,
-                    (Long) get( "modelObject" ) ) );
-            Map<String, Object> state = (Map<String, Object>) get( "state" );
-            issue.setReportedBy( Project.getUserName() );
-            if ( state != null ) {
-                CommandUtils.initialize( issue, state );
-            }
-            service.add( issue );
-            if ( get( "issue" ) != null )
-                commander.mapId( (Long) get( "issue" ), issue.getId() );
-            addArgument( "issue", issue.getId() );
-            return new Change( Change.Type.Added, issue );
-        } catch ( NotFoundException e ) {
-            throw new CommandException( "You need to refresh.", e );
+
+        UserIssue issue = new UserIssue( commander.resolve(
+                ModelObject.class,
+                (Long) get( "modelObject" ) ) );
+        Map<String, Object> state = (Map<String, Object>) get( "state" );
+        issue.setReportedBy( Project.getUserName() );
+        if ( state != null ) {
+            CommandUtils.initialize( issue, state );
         }
+        service.add( issue );
+        if ( get( "issue" ) != null )
+            commander.mapId( (Long) get( "issue" ), issue.getId() );
+        addArgument( "issue", issue.getId() );
+        return new Change( Change.Type.Added, issue );
+
     }
 
     /**
@@ -73,13 +70,10 @@ public class AddUserIssue extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        try {
-            UserIssue issue = commander.resolve( UserIssue.class, (Long) get( "issue" ) );
-            return new RemoveIssue( issue );
-        } catch ( NotFoundException e ) {
-            throw new CommandException( "You need to refresh.", e );
-        }
+        UserIssue issue = commander.resolve( UserIssue.class, (Long) get( "issue" ) );
+        return new RemoveIssue( issue );
     }
 
 }

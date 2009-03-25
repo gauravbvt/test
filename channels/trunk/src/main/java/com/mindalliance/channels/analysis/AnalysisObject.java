@@ -13,10 +13,12 @@ import java.io.Serializable;
  * Time: 9:30:43 AM
  */
 public abstract class AnalysisObject implements Serializable {
+
     /**
      * What model object the analysis is about
      */
-    private long about;
+    private ModelObject about;
+
     /**
      * The analysis
      */
@@ -33,7 +35,7 @@ public abstract class AnalysisObject implements Serializable {
      * @param mo -- the ModelObject the issue is about
      */
     public AnalysisObject( ModelObject mo ) {
-        this.about = mo.getId();
+        this.about = mo;
     }
 
     /**
@@ -47,11 +49,11 @@ public abstract class AnalysisObject implements Serializable {
         this.property = property;
     }
 
-    public long getAbout() {
+    public ModelObject getAbout() {
         return about;
     }
 
-    public void setAbout( long about ) {
+    public void setAbout( ModelObject about ) {
         this.about = about;
     }
 
@@ -70,6 +72,4 @@ public abstract class AnalysisObject implements Serializable {
     public void setDescription( String description ) {
         this.description = description;
     }
-
-
 }

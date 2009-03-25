@@ -2,12 +2,9 @@ package com.mindalliance.channels;
 
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
-import org.apache.commons.lang.text.StrBuilder;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
@@ -53,18 +50,14 @@ public class Scenario extends ModelObject {
      */
     private Map<Long, Node> nodeIndex;
 
-    /**
-     * The service in charge of this scenario.
-     */
-    transient private Service service;
+    /** The service in charge of this scenario. */
+    private transient Service service;
 
     public Scenario() {
         setNodeIndex( new HashMap<Long, Node>( INITIAL_CAPACITY ) );
     }
 
-    //    @LazyToOne( value = LazyToOneOption.PROXY )
-    @OneToMany( cascade = CascadeType.ALL, mappedBy = "scenario", fetch = FetchType.LAZY )
-    @Cascade( org.hibernate.annotations.CascadeType.DELETE_ORPHAN )
+    @OneToMany( cascade = { CascadeType.REMOVE }, mappedBy = "scenario" )
     @MapKey( name = "id" )
     Map<Long, Node> getNodeIndex() {
         return nodeIndex;
@@ -79,7 +72,7 @@ public class Scenario extends ModelObject {
      * There should always be at least a node in the scenario.
      * The nodes are sorted as follows:
      * 1- triggered nodes with fewer triggering in-scenario nodes leading up to them
-     * (smaller number first)
+     *    (smaller number first)
      * 2- the number of required outcomes (larger number first)
      * 3- their names (alphabetical) - connectors always come after parts
      *
@@ -183,7 +176,8 @@ public class Scenario extends ModelObject {
      */
     public void removeNode( Node node ) {
         if ( getNodeIndex().containsKey( node.getId() )
-                && ( node.isConnector() || hasMoreThanOnePart() ) ) {
+                && ( node.isConnector() || hasMoreThanOnePart() ) )
+        {
             Iterator<Flow> ins = node.requirements();
             while ( ins.hasNext() ) {
                 ins.next().disconnect();
@@ -200,8 +194,9 @@ public class Scenario extends ModelObject {
                 }
             }
 
-            node.setScenario( null );
+            service.remove( node );
             nodeIndex.remove( node.getId() );
+            node.setScenario( null );
         }
     }
 
@@ -239,7 +234,7 @@ public class Scenario extends ModelObject {
      *
      * @return an iterator on connectors having outcomes
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public Iterator<Connector> inputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -254,7 +249,7 @@ public class Scenario extends ModelObject {
      *
      * @return an iterator on parts
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public Iterator<Part> parts() {
         return (Iterator<Part>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -269,7 +264,7 @@ public class Scenario extends ModelObject {
      *
      * @return an iterator on connectors having requirements
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public Iterator<Connector> outputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -389,7 +384,6 @@ public class Scenario extends ModelObject {
         return count;
     }
 
-
     //=================================================
     /**
      * An iterator that walks through all flow in the scenario.
@@ -418,7 +412,7 @@ public class Scenario extends ModelObject {
             setIterators( nodeIterator.next() );
         }
 
-        @SuppressWarnings( {"unchecked"} )
+        @SuppressWarnings( { "unchecked" } )
         private void setIterators( Node node ) {
             outcomeIterator = node.outcomes();
             reqIterator = (Iterator<Flow>) new FilterIterator(
@@ -442,7 +436,7 @@ public class Scenario extends ModelObject {
             if ( !hasNext() )
                 throw new NoSuchElementException();
             return outcomeIterator.hasNext() ?
-                    outcomeIterator.next() : reqIterator.next();
+                   outcomeIterator.next() : reqIterator.next();
         }
 
         public void remove() {

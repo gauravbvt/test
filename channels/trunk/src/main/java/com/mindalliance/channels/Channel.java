@@ -39,7 +39,7 @@ public class Channel implements Serializable {
     public Channel() {
     }
 
-    public Channel(Channel channel) {
+    public Channel( Channel channel ) {
         medium = channel.getMedium();
         address = channel.getAddress();
     }

@@ -85,7 +85,6 @@ public class HibernateDao extends JpaDaoSupport implements Dao {
 
     /** {@inheritDoc} */
     public long getScenarioCount() {
-
         return (Long) getJpaTemplate()
                 .find( "select count(*) from Scenario"  ).get( 0 );                       // NON-NLS
     }

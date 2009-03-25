@@ -1,6 +1,9 @@
 package com.mindalliance.channels;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 /**
@@ -18,18 +21,24 @@ public class Job implements Serializable {
      * An actor.
      */
     private Actor actor;
+
     /**
      * A role.
      */
     private Role role;
+
     /**
      * A title.
      */
     private String title = "";
+
     /**
      * A jurisdiction.
      */
     private Place jurisdiction;
+
+    /** Primary key for persistence. */
+    private long id;
 
     public Job() {
     }
@@ -40,6 +49,7 @@ public class Job implements Serializable {
         this.jurisdiction = jurisdiction;
     }
 
+    @ManyToOne
     public Actor getActor() {
         return actor;
     }
@@ -48,6 +58,7 @@ public class Job implements Serializable {
         this.actor = actor;
     }
 
+    @ManyToOne
     public Role getRole() {
         return role;
     }
@@ -64,6 +75,7 @@ public class Job implements Serializable {
         this.title = title;
     }
 
+    @ManyToOne
     public Place getJurisdiction() {
         return jurisdiction;
     }
@@ -89,16 +101,21 @@ public class Job implements Serializable {
         return resourceSpec;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String toString() {
-        return (actor == null ? "" : actor.getName())
-                + (title.isEmpty() ? "" : " (" + title + " )")
-                + (role == null ? "" : " as " + role)
-                + (jurisdiction == null ? "" : " for " + jurisdiction );
+        return ( actor == null ? "" : actor.getName() )
+                + ( title.isEmpty() ? "" : " (" + title + " )" )
+                + ( role == null ? "" : " as " + role )
+                + ( jurisdiction == null ? "" : " for " + jurisdiction );
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean equals( Object obj ) {
         if ( obj instanceof Job ) {
             Job job = (Job) obj;
@@ -114,6 +131,7 @@ public class Job implements Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public int hashCode() {
         int hash = 1;
         if ( actor != null ) hash = hash * 31 + actor.hashCode();
@@ -129,6 +147,17 @@ public class Job implements Serializable {
      * @return a job
      */
     public static Job from( ResourceSpec resourceSpec ) {
-        return new Job(resourceSpec.getActor(), resourceSpec.getRole(), resourceSpec.getJurisdiction());
+        return new Job( resourceSpec.getActor(), resourceSpec.getRole(),
+                        resourceSpec.getJurisdiction()) ;
+    }
+
+    @Id
+    @GeneratedValue
+    public long getId() {
+        return id;
+    }
+
+    public void setId( long id ) {
+        this.id = id;
     }
 }

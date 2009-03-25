@@ -1,13 +1,13 @@
 package com.mindalliance.channels;
 
+import com.mindalliance.channels.pages.Project;
 import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
-import javax.persistence.CascadeType;
-
-import com.mindalliance.channels.pages.Project;
+import javax.persistence.FetchType;
+import java.text.MessageFormat;
 
 /**
  * A user provided issue
@@ -19,22 +19,27 @@ import com.mindalliance.channels.pages.Project;
  */
 @Entity
 public class UserIssue extends ModelObject implements Issue {
+
     /**
      * Max length of name
      */
-    private static int MAX_LENGTH = 40;
+    private static final int MAX_LENGTH = 40;
+
     /**
      * The identifiable object the issue is about
      */
-    private long about;
+    private ModelObject about;
+
     /**
      * Remediation
      */
     private String remediation = "";
+
     /**
      * Name of user who created or last modified the issue
      */
     private String reportedBy = "";
+
     /**
      * The issue's severity
      */
@@ -44,23 +49,22 @@ public class UserIssue extends ModelObject implements Issue {
     }
 
     /**
-     * Create a user issue
+     * Create a user issue.
      *
      * @param mo a model object
      */
     public UserIssue( ModelObject mo ) {
-        super();
-        this.about = mo.getId();
+        this.about = mo;
         setDescription( "(No description)" );
-        setReportedBy(Project.getUserName());
+        setReportedBy( Project.getUserName() );
     }
 
-    @ManyToOne( cascade = CascadeType.PERSIST )
-    public long getAbout() {
+    @ManyToOne( fetch = FetchType.LAZY )
+    public ModelObject getAbout() {
         return about;
     }
 
-    void setAbout( long about ) {
+    void setAbout( ModelObject about ) {
         this.about = about;
     }
 
@@ -85,6 +89,7 @@ public class UserIssue extends ModelObject implements Issue {
         return "From user";
     }
 
+    @Override
     @Transient
     public String getName() {
         return getLabel( MAX_LENGTH );
@@ -94,7 +99,8 @@ public class UserIssue extends ModelObject implements Issue {
      * {@inheritDoc}
      */
     public String getLabel( int maxLength ) {
-        return StringUtils.abbreviate( "(" + severity + ") " + getDescription(), maxLength );
+        return StringUtils.abbreviate( MessageFormat.format( "({0}) {1}",
+                                            severity, getDescription() ), maxLength );
     }
 
     /**

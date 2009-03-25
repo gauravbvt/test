@@ -71,18 +71,15 @@ public class DuplicatePart extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Long partId = (Long) get( "duplicate" );
-            if ( partId == null ) {
-                throw new CommandException( "Can't undo." );
-            } else {
-                Part part = (Part) scenario.getNode( commander.resolveId( partId ) );
-                return new RemovePart( part );
-            }
-        } catch ( NotFoundException e ) {
-            throw new CommandException( "Can't undo", e );
+        Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+        Long partId = (Long) get( "duplicate" );
+        if ( partId == null ) {
+            throw new CommandException( "Can't undo." );
+        } else {
+            Part part = (Part) scenario.getNode( commander.resolveId( partId ) );
+            return new RemovePart( part );
         }
     }
 

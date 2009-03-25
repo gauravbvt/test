@@ -1,14 +1,13 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.AbstractCommand;
-import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.UserIssue;
-import com.mindalliance.channels.Service;
-import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Service;
+import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.command.AbstractCommand;
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,20 +42,17 @@ public class RemoveIssue extends AbstractCommand {
      */
     public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
-        try {
-            final UserIssue issue = commander.resolve( UserIssue.class, (Long) get( "issue" ) );
-            addArgument( "modelObject", issue.getAbout() );
-            Map<String, Object> state = new HashMap<String, Object>();
-            state.put( "description", issue.getDescription() );
-            state.put( "remediation", issue.getRemediation() );
-            state.put( "severity", issue.getSeverity() );
-            state.put( "reportedBy", issue.getReportedBy() );
-            addArgument( "state", state );
-            service.remove( issue );
-            return new Change( Change.Type.Removed, issue );
-        } catch ( NotFoundException e ) {
-            throw new CommandException( "You need to refresh.", e );
-        }
+
+        UserIssue issue = commander.resolve( UserIssue.class, (Long) get( "issue" ) );
+        addArgument( "modelObject", issue.getAbout() );
+        Map<String, Object> state = new HashMap<String, Object>();
+        state.put( "description", issue.getDescription() );
+        state.put( "remediation", issue.getRemediation() );
+        state.put( "severity", issue.getSeverity() );
+        state.put( "reportedBy", issue.getReportedBy() );
+        addArgument( "state", state );
+        service.remove( issue );
+        return new Change( Change.Type.Removed, issue );
     }
 
     /**
@@ -69,18 +65,14 @@ public class RemoveIssue extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
         Service service = commander.getService();
-        try {
-            ModelObject modelObject = commander.resolve(
-                    ModelObject.class,
-                    (Long) get( "modelObject" ) );
-            AddUserIssue addIssue = new AddUserIssue( modelObject );
-            addIssue.addArgument( "state", get( "state" ) );
-            return addIssue;
-        } catch ( NotFoundException e ) {
-            throw new CommandException( "You need to refresh.", e );
-        }
+        ModelObject modelObject = commander.resolve(
+                ModelObject.class,
+                (Long) get( "modelObject" ) );
+        AddUserIssue addIssue = new AddUserIssue( modelObject );
+        addIssue.addArgument( "state", get( "state" ) );
+        return addIssue;
     }
-
 }

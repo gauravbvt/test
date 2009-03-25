@@ -688,14 +688,10 @@ public final class ProjectPage extends WebPage implements Updatable {
             }
         }
         if ( identifiable instanceof UserIssue && change.isAdded() ) {
-            try {
-                UserIssue userIssue = (UserIssue) identifiable;
-                ModelObject mo = getService().find( UserIssue.class, userIssue.getAbout() );
-                if ( mo instanceof Scenario ) {
-                    expand( identifiable );
-                }
-            } catch ( NotFoundException e ) {
-                LOG.warn( "Stale id for model object issue is about." );
+            UserIssue userIssue = (UserIssue) identifiable;
+            ModelObject mo = userIssue.getAbout();
+            if ( mo instanceof Scenario ) {
+                expand( identifiable );
             }
         }
     }
@@ -732,13 +728,13 @@ public final class ProjectPage extends WebPage implements Updatable {
         }
         if ( identifiable instanceof ScenarioObject
                 || ( identifiable instanceof Issue
-                && ( (Issue) identifiable ).getAbout() == getScenario().getId() ) ) {
+                && ( (Issue) identifiable ).getAbout().getId() == getScenario().getId() ) ) {
             annotateScenarioName( getScenario() );
             target.addComponent( scenarioNameLabel );
         }
         if ( identifiable instanceof Issue
                 && change.isExists()
-                && ( (Issue) identifiable ).getAbout() == getScenario().getId() ) {
+                && ( (Issue) identifiable ).getAbout().getId() == getScenario().getId() ) {
             annotateScenarioName( getScenario() );
             target.addComponent( scenarioNameLabel );
             scenarioPanel.expandScenarioEditPanel( target );

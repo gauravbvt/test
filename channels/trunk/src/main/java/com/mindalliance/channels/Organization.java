@@ -2,7 +2,9 @@ package com.mindalliance.channels;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ public class Organization extends AbstractUnicastChannelable {
      * Parent organization. May be null.
      */
     private Organization parent;
+
     /**
      * The primary location of the organization
      */
@@ -53,7 +56,7 @@ public class Organization extends AbstractUnicastChannelable {
         return true;
     }
 
-    @ManyToOne( cascade = CascadeType.PERSIST )
+    @ManyToOne( cascade = CascadeType.PERSIST, fetch = FetchType.LAZY )
     public Organization getParent() {
         return parent;
     }
@@ -62,7 +65,7 @@ public class Organization extends AbstractUnicastChannelable {
         this.parent = parent;
     }
 
-    @ManyToOne( cascade = CascadeType.PERSIST )
+    @ManyToOne( cascade = CascadeType.PERSIST, fetch = FetchType.LAZY )
     public Place getLocation() {
         return location;
     }
@@ -126,6 +129,7 @@ public class Organization extends AbstractUnicastChannelable {
                 : MessageFormat.format( "{0} - {1}", parent.toString(), getName() );
     }
 
+    @OneToMany
     public List<Job> getJobs() {
         return jobs;
     }

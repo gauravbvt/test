@@ -5,8 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Lob;
 import javax.persistence.Transient;
-import java.io.Serializable;
 import java.text.Collator;
 import java.util.Date;
 
@@ -15,8 +15,7 @@ import java.util.Date;
  */
 @Entity
 @Inheritance( strategy = InheritanceType.JOINED )
-@org.hibernate.annotations.Entity( dynamicUpdate = true )
-public abstract class ModelObject implements Serializable, Comparable<ModelObject>, Identifiable {
+public abstract class ModelObject implements Comparable<ModelObject>, Identifiable {
 
     /**
      * Unique id of this object.
@@ -78,6 +77,7 @@ public abstract class ModelObject implements Serializable, Comparable<ModelObjec
         this.name = name == null ? "" : name;
     }
 
+    @Lob
     public String getDescription() {
         return description;
     }

@@ -1,9 +1,11 @@
 package com.mindalliance.channels;
 
-import javax.persistence.Transient;
 import javax.persistence.Entity;
-import java.util.List;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Abstract class for channelable model objects with only unicast channels.
@@ -16,20 +18,19 @@ import java.util.ArrayList;
 @Entity
 public abstract class AbstractUnicastChannelable extends ModelObject implements Channelable {
 
-    public AbstractUnicastChannelable() {
-        super();
-    }
-
-
-    public AbstractUnicastChannelable( String name ) {
-        super( name );
-    }
-
     /**
      * Channels.
      */
     private List<Channel> channels = new ArrayList<Channel>();
 
+    protected AbstractUnicastChannelable() {
+    }
+
+    protected AbstractUnicastChannelable( String name ) {
+        super( name );
+    }
+
+    @OneToMany @JoinTable( name = "AUC_CHANNELS" )
     public List<Channel> getChannels() {
         return channels;
     }

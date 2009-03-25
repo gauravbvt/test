@@ -1,15 +1,14 @@
 package com.mindalliance.channels.command.commands;
 
+import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.command.AbstractCommand;
-import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -77,15 +76,12 @@ public class RestoreScenario extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        try {
-            Scenario scenario = commander.resolve(
-                    Scenario.class,
-                    (Long) get( "scenario" ) );
-            return new RemoveScenario( scenario );
-        } catch ( NotFoundException e ) {
-            throw new CommandException( "Can't undo.", e );
-        }
+        Scenario scenario = commander.resolve(
+                Scenario.class,
+                (Long) get( "scenario" ) );
+        return new RemoveScenario( scenario );
     }
 
 

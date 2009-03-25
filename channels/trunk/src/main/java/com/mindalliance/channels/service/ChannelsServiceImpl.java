@@ -328,13 +328,13 @@ public class ChannelsServiceImpl implements Service {
         Set<ResourceSpec> result = new HashSet<ResourceSpec>();
         // Specs from entities
         for ( Actor actor : list( Actor.class ) ) {
-            result.add( ResourceSpec.with( actor ) );
+            result.add( ResourceSpec.with( actor ));
         }
         for ( Role role : list( Role.class ) ) {
-            result.add( ResourceSpec.with( role ) );
+            result.add( ResourceSpec.with( role ));
         }
         for ( Organization organization : list( Organization.class ) ) {
-            result.add( ResourceSpec.with( organization ) );
+            result.add( ResourceSpec.with( organization ));
             result.addAll( organization.jobResourceSpecs() );
         }
         // Specs from scenario parts
@@ -429,7 +429,7 @@ public class ChannelsServiceImpl implements Service {
     public List<Issue> findAllUserIssues( ModelObject identifiable ) {
         List<Issue> foundIssues = new ArrayList<Issue>();
         for ( UserIssue userIssue : list( UserIssue.class ) ) {
-            if ( userIssue.getAbout() == identifiable.getId() )
+            if ( userIssue.getAbout().getId() == identifiable.getId() )
                 foundIssues.add( userIssue );
         }
         return foundIssues;
@@ -459,7 +459,6 @@ public class ChannelsServiceImpl implements Service {
         }
         return relatedFlows;
     }
-
 
     /**
      * {@inheritDoc}

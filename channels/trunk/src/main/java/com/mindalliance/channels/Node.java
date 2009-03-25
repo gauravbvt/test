@@ -1,10 +1,10 @@
 package com.mindalliance.channels;
 
-import org.hibernate.annotations.Proxy;
 import com.mindalliance.channels.util.SemMatch;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +22,7 @@ import java.util.Map;
 /**
  * A node in the flow graph
  */
-@Entity @Proxy( lazy = true )
+@Entity
 public abstract class Node extends ModelObject implements ScenarioObject {
 
     /** Initial capacity of outcome and requirement flows. */
@@ -66,7 +65,7 @@ public abstract class Node extends ModelObject implements ScenarioObject {
         return result;
     }
 
-    @OneToMany( cascade = CascadeType.ALL )
+    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     @JoinTable( name = "Node_Outs" ) @MapKey( name = "id" )
     protected Map<Long,Flow> getOutcomes() {
         return outcomes;
@@ -147,7 +146,7 @@ public abstract class Node extends ModelObject implements ScenarioObject {
         outcome.setSource( null );
     }
 
-    @OneToMany( cascade = CascadeType.ALL )
+    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     @JoinTable( name = "Node_Reqs" ) @MapKey( name = "id" )
     protected Map<Long,Flow> getRequirements() {
         return requirements;
@@ -159,12 +158,7 @@ public abstract class Node extends ModelObject implements ScenarioObject {
      * @param requirements the new requirements
      */
     void setRequirements( Map<Long, Flow> requirements ) {
-        if ( this.requirements != null )
-            for ( Flow f : new HashSet<Flow>( this.requirements.values() ) )
-                removeRequirement( f );
         this.requirements = requirements;
-        for ( Flow f : requirements.values() )
-            f.setTarget( this );
     }
 
     /**
@@ -231,7 +225,7 @@ public abstract class Node extends ModelObject implements ScenarioObject {
         return false;
     }
 
-    @ManyToOne( optional = false )
+    @ManyToOne
     public Scenario getScenario() {
         return scenario;
     }
@@ -306,8 +300,8 @@ public abstract class Node extends ModelObject implements ScenarioObject {
      */
     public boolean hasMultipleOutcomes( String name ) {
         int count = 0;
-        for (Flow outcome : outcomes.values()) {
-            if ( SemMatch.same(outcome.getName(), name)) count++;
+        for ( Flow outcome : outcomes.values() ) {
+            if ( SemMatch.same( outcome.getName(), name ) ) count++;
         }
         return count > 1;
     }
@@ -319,8 +313,8 @@ public abstract class Node extends ModelObject implements ScenarioObject {
      */
     public boolean hasMultipleRequirements( String name ) {
         int count = 0;
-        for (Flow req : requirements.values()) {
-            if ( SemMatch.same(req.getName(), name)) count++;
+        for ( Flow req : requirements.values() ) {
+            if ( SemMatch.same( req.getName(), name ) ) count++;
         }
         return count > 1;
     }

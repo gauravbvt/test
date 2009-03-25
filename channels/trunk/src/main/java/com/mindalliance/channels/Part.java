@@ -3,12 +3,12 @@ package com.mindalliance.channels;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
-import org.slf4j.LoggerFactory;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import java.text.MessageFormat;
@@ -123,11 +123,13 @@ public class Part extends Node {
      * @param actor the new actor.
      */
     public void setActor( Actor actor ) {
+        Actor old = this.actor;
         this.actor = actor;
-        adjustName();
+        if ( old == null || !old.equals( actor ) )
+            adjustName();
     }
 
-    @ManyToOne
+    @ManyToOne( fetch = FetchType.LAZY )
     public Place getJurisdiction() {
         return jurisdiction;
     }
@@ -136,7 +138,7 @@ public class Part extends Node {
         this.jurisdiction = jurisdiction;
     }
 
-    @ManyToOne
+    @ManyToOne( fetch = FetchType.LAZY )
     public Place getLocation() {
         return location;
     }
@@ -145,7 +147,7 @@ public class Part extends Node {
         this.location = location;
     }
 
-    @ManyToOne
+    @ManyToOne( fetch = FetchType.LAZY )
     public Organization getOrganization() {
         return organization;
     }
@@ -156,11 +158,13 @@ public class Part extends Node {
      * @param organization the new organization.
      */
     public void setOrganization( Organization organization ) {
+        Organization old = this.organization;
         this.organization = organization;
-        adjustName();
+        if ( old == null || !old.equals( organization ) )
+            adjustName();
     }
 
-    @ManyToOne
+    @ManyToOne( fetch = FetchType.LAZY )
     public Role getRole() {
         return role;
     }
@@ -171,9 +175,10 @@ public class Part extends Node {
      * @param role the new role.
      */
     public void setRole( Role role ) {
-        LoggerFactory.getLogger( getClass() ).debug( "Setting role of " + this + " to " + role );
+        Role old = this.role;
         this.role = role;
-        adjustName();
+        if ( old == null || !old.equals( role ) )
+            adjustName();
     }
 
     public Delay getCompletionTime() {
@@ -261,7 +266,6 @@ public class Part extends Node {
      *
      * @return a boolean
      */
-    @Transient
     public boolean isRepeating() {
         return repeating;
     }
@@ -271,7 +275,6 @@ public class Part extends Node {
      *
      * @param val a boolean
      */
-    @Transient
     public void setRepeating( boolean val ) {
         repeating = val;
         if ( val && repeatsEvery.getAmount() == 0 ) {
@@ -285,7 +288,6 @@ public class Part extends Node {
      *
      * @return a boolean
      */
-    @Transient
     public boolean isSelfTerminating() {
         return selfTerminating;
     }
@@ -295,7 +297,6 @@ public class Part extends Node {
      *
      * @param val a boolean
      */
-    @Transient
     public void setSelfTerminating( boolean val ) {
         selfTerminating = val;
         if ( val && completionTime.getAmount() == 0 ) {
