@@ -9,10 +9,32 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
 
     <!--<bean id="timingLogger" class="org.springframework.aop.interceptor.JamonPerformanceMonitorInterceptor"/>-->
-    <!--<aop:config>-->
+
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="/WEB-INF/ehcache.xml"/>
+    </bean>
+
+    <bean id="resultCache" class="com.mindalliance.channels.service.ResultCache">
+        <property name="cacheKey" value="results"/>
+        <property name="cacheManager" ref="cacheManager"/>
+    </bean>
+
+    <bean id="cacheSet" class="com.mindalliance.channels.service.CacheAdvice">
+        <property name="cache" ref="resultCache"/>
+    </bean>
+    <bean id="cacheClear" class="com.mindalliance.channels.service.CacheResetAdvice">
+        <property name="cache" ref="resultCache"/>
+    </bean>
+
+    <aop:config>
         <!--<aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.Service.*(..))"-->
                      <!--advice-ref="timingLogger"/>-->
-    <!--</aop:config>-->
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.Service.*(..))"
+                     advice-ref="cacheSet"/>
+
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.Dao.onAfterCommand(..))"
+                     advice-ref="cacheClear"/>
+    </aop:config>
 
     <!--<tx:annotation-driven transaction-manager="txManager"/>-->
 
