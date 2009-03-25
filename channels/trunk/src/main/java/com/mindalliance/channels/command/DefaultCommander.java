@@ -11,6 +11,8 @@ import com.mindalliance.channels.Place;
 import java.util.Collection;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,6 +98,15 @@ public class DefaultCommander implements Commander {
         }
     }
 
+    private Set<Long> resolveIds( Set<Long> ids ) throws NotFoundException {
+        Set<Long> resolvedIds = new HashSet<Long>();
+        for (Long id : ids) {
+            resolvedIds.add( resolveId( id) );
+        }
+        return resolvedIds;
+    }
+
+    
     /**
      * {@inheritDoc}
      */
@@ -143,12 +154,14 @@ public class DefaultCommander implements Commander {
         Change change;
         if ( command.isAuthorized() ) {
             try {
-                Collection<Lock> grabbedLocks = lockManager.grabLocksOn( command.getLockingSet() );
+                Collection<Lock> grabbedLocks = lockManager.grabLocksOn( resolveIds( command.getLockingSet() ) );
                 change = command.execute( this );
                 lockManager.releaseLocks( grabbedLocks );
                 if ( !isReplaying() ) getService().getDao().onAfterCommand( command );
             } catch ( LockingException e ) {
                 throw new CommandException( e.getMessage(), e );
+            } catch ( NotFoundException e ) {
+                 throw new CommandException( e.getMessage(), e );
             }
         } else {
             throw new CommandException( "You are not authorized." );
