@@ -141,7 +141,7 @@ public abstract class UpdateObject extends AbstractCommand {
     }
 
     private Action action() {
-        return Action.valueOf(  (String)get("action")) ;
+        return Action.valueOf( (String) get( "action" ) );
     }
 
     /**
