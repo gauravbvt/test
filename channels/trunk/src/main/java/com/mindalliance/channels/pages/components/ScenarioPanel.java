@@ -7,7 +7,6 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ScenarioObject;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
@@ -172,13 +171,12 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     }
 
     private void addPartActionsMenu() {
-        LockManager lockManager = getLockManager();
-        if ( lockManager.isLockedByUser( getPart() ) ) {
+        if ( isLockedByUser( getPart() ) ) {
             partActionsMenu = new PartActionsMenuPanel(
                     "partActionsMenu",
                     new PropertyModel<Part>( this, "part" ) );
         } else {
-            String otherUser = lockManager.getLockOwner( getPart().getId() );
+            String otherUser = getLockOwner( getPart() );
             partActionsMenu = new Label(
                     "partActionsMenu", new Model<String>( "Edited by " + otherUser ) );
             partActionsMenu.add(

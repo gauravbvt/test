@@ -54,24 +54,20 @@ public class RemovePart extends AbstractCommand {
      */
     public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
-        try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Part part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
-            // Double check in case this is an undo-undo
-            if ( !commander.canDo( this ) )
-                throw new CommandException( "Someone is making changes." );
-            addArgument( "part", part.getId() );
-            addArgument( "partState", CommandUtils.getPartState( part ) );
-            if ( scenario.countParts() == 1 ) {
-                Part defaultPart = service.createPart( scenario );
-                addArgument( "defaultPart", defaultPart.getId() );
-            }
-            removePart( part, service );
-            ignoreLock( commander.resolveId( (Long) get( "part" ) ) );
-            return new Change( Change.Type.Recomposed, scenario );
-        } catch ( NotFoundException e ) {
-            return new Change( Change.Type.None, null );
+        Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+        Part part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
+        // Double check in case this is an undo-undo
+        if ( !commander.canDo( this ) )
+            throw new CommandException( "Someone is making changes." );
+        addArgument( "part", part.getId() );
+        addArgument( "partState", CommandUtils.getPartState( part ) );
+        if ( scenario.countParts() == 1 ) {
+            Part defaultPart = service.createPart( scenario );
+            addArgument( "defaultPart", defaultPart.getId() );
         }
+        removePart( part, service );
+        ignoreLock( commander.resolveId( (Long) get( "part" ) ) );
+        return new Change( Change.Type.Recomposed, scenario );
     }
 
     /**
@@ -86,14 +82,14 @@ public class RemovePart extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        MultiCommand multi = new MultiCommand( getName() );
+        MultiCommand multi = new MultiCommand( "add part" );
         multi.setUndoes( getName() );
         // Reconstitute part
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             AddPart addPart = new AddPart( scenario );
             Map<String, Object> partState = (Map<String, Object>) get( "partState" );
-            addPart.set( "part", get( "part" ) );
+            addPart.set( "part", commander.resolveId( (Long) get( "part" ) ) );
             if ( get( "defaultPart" ) != null ) addPart.set( "defaultPart", get( "defaultPart" ) );
             addPart.set( "partState", partState );
             multi.addCommand( addPart );
@@ -116,22 +112,25 @@ public class RemovePart extends AbstractCommand {
             List<Map<String, Object>> removed = (List<Map<String, Object>>) get( "removedFlows" );
             Command command;
             for ( Map<String, Object> fs : removed ) {
-                Long otherId = (Long) fs.get( "other" );
+                Long removedFlowId = (Long) fs.get( "flow ");
+                Map<String, Object> state = (Map<String, Object>)fs.get( "state" );
+                Long otherId = (Long) state.get( "other" );
                 if ( otherId != null ) {
                     // other is a part (part to part flow)
                     command = new ConnectWithFlow();
                 } else {
                     // other node is a connector
-                    boolean isOutcome = (Boolean) fs.get( "isOutcome" );
+                    boolean isOutcome = (Boolean) state.get( "isOutcome" );
                     if ( isOutcome ) {
                         command = new AddCapability();
                     } else {
                         command = new AddNeed();
                     }
                 }
-                command.setArguments( fs );
-                // missing arguments scenario and part
+                command.setArguments( state );
+                command.set( "flow", removedFlowId);
                 multi.addCommand( command );
+                // Missing arguments scenario and part:
                 // Use the result of command addPart to supply arguments to connectWithFlow
                 multi.addLink( addPart, "id", command, "part" );
                 multi.addLink( addPart, "scenario.id", command, "scenario" );
@@ -166,7 +165,10 @@ public class RemovePart extends AbstractCommand {
             Map<String, Object> flowState = CommandUtils.getFlowState( in, part );
             flowState.remove( "part" );
             flowState.remove( "scenario" );
-            removedFlows.add( flowState );
+            Map<String, Object> flowSnapshot = new HashMap<String, Object>();
+            flowSnapshot.put( "flow", in.getId() );
+            flowSnapshot.put( "state", flowState);
+            removedFlows.add( flowSnapshot );
             // If the node to be removed is a part,
             // preserve the outcome of the source the flow represents
             if ( in.isInternal()
@@ -185,7 +187,10 @@ public class RemovePart extends AbstractCommand {
             Map<String, Object> flowState = CommandUtils.getFlowState( out, part );
             flowState.remove( "part" );
             flowState.remove( "scenario" );
-            removedFlows.add( flowState );
+            Map<String, Object> flowSnapshot = new HashMap<String, Object>();
+            flowSnapshot.put( "flow", out.getId() );
+            flowSnapshot.put( "state", flowState);
+            removedFlows.add( flowSnapshot );
             // If the node to be removed is a part,
             // preserve the outcome of the source the flow represents
             if ( out.isInternal()

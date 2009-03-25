@@ -7,6 +7,7 @@ import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Place;
+import com.mindalliance.channels.Identifiable;
 
 import java.util.Collection;
 import java.util.Map;
@@ -79,34 +80,38 @@ public class DefaultCommander implements Commander {
     /**
      * {@inheritDoc}
      */
-    public <T extends ModelObject> T resolve( Class<T> clazz, Long id ) throws NotFoundException {
-        return getService().find( clazz, resolveId( id ) );
+    public <T extends ModelObject> T resolve( Class<T> clazz, Long id ) throws CommandException {
+        try {
+            return getService().find( clazz, resolveId( id ) );
+        } catch ( NotFoundException e ) {
+            throw new CommandException( "YOu need to refresh.", e );
+        }
     }
 
     /**
      * {@inheritDoc}
      */
-    public Long resolveId( Long id ) throws NotFoundException {
+    public Long resolveId( Long id ) throws CommandException {
         Long realId = idMap.get( id );
         if ( realId == null )
             if ( isReplaying() )
-                throw new NotFoundException();
+                throw new CommandException( "Not found " + id );
             else
                 return id;
         else {
-            return realId;
+            return resolveId( realId );
         }
     }
 
-    private Set<Long> resolveIds( Set<Long> ids ) throws NotFoundException {
+    private Set<Long> resolveIds( Set<Long> ids ) throws CommandException {
         Set<Long> resolvedIds = new HashSet<Long>();
-        for (Long id : ids) {
-            resolvedIds.add( resolveId( id) );
+        for ( Long id : ids ) {
+            resolvedIds.add( resolveId( id ) );
         }
         return resolvedIds;
     }
 
-    
+
     /**
      * {@inheritDoc}
      */
@@ -133,6 +138,7 @@ public class DefaultCommander implements Commander {
      */
     public String getRedoTitle() {
         String title = "Redo";
+        // memento of a command done to undo another
         Memento memento = history.getRedo();
         if ( memento != null ) {
             title = title + " " + memento.getCommand().getUndoes( this );
@@ -160,9 +166,7 @@ public class DefaultCommander implements Commander {
                 if ( !isReplaying() ) getService().getDao().onAfterCommand( command );
             } catch ( LockingException e ) {
                 throw new CommandException( e.getMessage(), e );
-            } catch ( NotFoundException e ) {
-                 throw new CommandException( e.getMessage(), e );
-            }
+            } 
         } else {
             throw new CommandException( "You are not authorized." );
         }
@@ -308,5 +312,45 @@ public class DefaultCommander implements Commander {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isLockedByUser( Identifiable identifiable ) {
+        return lockManager.isLockedByUser( identifiable );
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    public boolean requestLockOn( Identifiable identifiable ) {
+        return lockManager.requestLockOn( identifiable );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean requestLockOn( Long id ) {
+        return lockManager.requestLockOn( id );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean releaseAnyLockOn( Identifiable identifiable ) {
+        return lockManager.releaseAnyLockOn( identifiable );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean releaseAnyLockOn( Long id ) {
+        return lockManager.releaseAnyLockOn( id );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void releaseAllLocks( String userName ) {
+        lockManager.releaseAllLocks( userName );
+    }
 }

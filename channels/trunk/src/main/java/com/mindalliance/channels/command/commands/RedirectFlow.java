@@ -58,45 +58,45 @@ public class RedirectFlow extends AbstractCommand {
         Service service = commander.getService();
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Flow oldFlow = scenario.findFlow( commander.resolveId( (Long) get( "flow" ) ) );
+            Flow redirectedFlow = scenario.findFlow( commander.resolveId( (Long) get( "flow" ) ) );
             Scenario otherScenario = commander.resolve( Scenario.class, (Long) get( "otherScenario" ) );
             Connector connector = (Connector) otherScenario.getNode(
                     commander.resolveId( (Long) get( "connector" ) ) );
             boolean isOutcome = (Boolean) get( "outcome" );
             Flow connectorFlow = connector.getInnerFlow();
             if ( isOutcome ) {
-                if ( connector.getScenario() != oldFlow.getSource().getScenario() ) {
+                if ( connector.getScenario() != redirectedFlow.getSource().getScenario() ) {
                     newFlow = service.connect(
-                            oldFlow.getSource(),
+                            redirectedFlow.getSource(),
                             connector,
                             connectorFlow.getName() );
-                    newFlow.initFrom( oldFlow );
+                    newFlow.initFrom( redirectedFlow );
                 } else {
                     newFlow = service.connect(
-                            oldFlow.getSource(),
+                            redirectedFlow.getSource(),
                             connectorFlow.getTarget(),
                             connectorFlow.getName() );
                     newFlow.initFrom( connectorFlow );
                 }
             } else {
-                if ( connector.getScenario() != oldFlow.getTarget().getScenario() ) {
+                if ( connector.getScenario() != redirectedFlow.getTarget().getScenario() ) {
                     newFlow = service.connect(
                             connector,
-                            oldFlow.getTarget(),
+                            redirectedFlow.getTarget(),
                             connectorFlow.getName() );
-                    newFlow.initFrom( oldFlow );
+                    newFlow.initFrom( redirectedFlow );
                 } else {
                     newFlow = service.connect(
                             connectorFlow.getSource(),
-                            oldFlow.getTarget(),
+                            redirectedFlow.getTarget(),
                             connectorFlow.getName() );
                     newFlow.initFrom( connectorFlow );
                 }
             }
             commander.mapId( (Long) get( "newFlow" ), newFlow.getId() );
             addArgument( "newFlow", newFlow.getId() );
-            addArgument( "oldFlowState", CommandUtils.getFlowState( oldFlow ) );
-            oldFlow.disconnect();
+            addArgument( "oldFlowState", CommandUtils.getFlowState( redirectedFlow ) );
+            redirectedFlow.disconnect();
             // What about reporting the removal of the disconnected flow?
             return new Change( Change.Type.Added, newFlow );
         } catch ( NotFoundException e ) {
@@ -122,6 +122,8 @@ public class RedirectFlow extends AbstractCommand {
             // Reconnect old flow
             Command connectWithFlow = new ConnectWithFlow();
             connectWithFlow.setArguments( (Map<String, Object>) get( "oldFlowState" ) );
+            // The flow to be re-connected.
+            connectWithFlow.set( "flow", get( "flow" ) );
             multi.addCommand( connectWithFlow );
             // Disconnect newFlow
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );

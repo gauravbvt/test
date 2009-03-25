@@ -3,7 +3,6 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.command.commands.UpdateProjectObject;
-import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.pages.components.menus.IssueActionsMenuPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -78,14 +77,13 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
 
     private void addIssueActionsMenu() {
         Component actionsMenu;
-        LockManager lockManager = getLockManager();
-        if ( lockManager.isLockedByUser( getIssue() ) ) {
+        if ( isLockedByUser( getIssue() ) ) {
             actionsMenu = new IssueActionsMenuPanel(
                     "issueActionsMenu",
                     new Model<Issue>( model.getObject() ),
                     false );
         } else {
-            String otherUser = lockManager.getLockOwner( getIssue().getId() );
+            String otherUser = getLockOwner( getIssue() );
             actionsMenu = new Label( "issueActionsMenu", new Model<String>( "Edited by " + otherUser ) );
             actionsMenu.add( new AttributeModifier( "class", true, new Model<String>( "locked" ) ) );
         }

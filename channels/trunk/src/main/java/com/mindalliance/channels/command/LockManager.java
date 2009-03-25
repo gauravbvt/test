@@ -122,10 +122,26 @@ public interface LockManager {
     boolean requestLockOn( Identifiable identifiable );
 
     /**
+     * Attempt to get lock on identitifiable
+     *
+     * @param id an identifiable object's id
+     * @return a boolean indiciating success (true) or failure (false)
+     */
+    boolean requestLockOn( Long id );
+
+    /**
      * Attempt to release lock on identifiable, failing silently.
      *
      * @param identifiable an identifiable
      * @return a boolean - whether a lock was released
      */
     boolean releaseAnyLockOn( Identifiable identifiable );
+
+    /**
+     * Attempt to release lock on identifiable, failing silently.
+     *
+     * @param id an identifiable's id
+     * @return a boolean - whether a lock was released
+     */
+    boolean releaseAnyLockOn( Long id );
 }

@@ -9,9 +9,10 @@ import com.mindalliance.channels.ScenarioObject;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.pages.components.ScenarioLink;
 import com.mindalliance.channels.pages.components.ScenarioPanel;
@@ -192,10 +193,13 @@ public final class ProjectPage extends WebPage implements Updatable {
     }
 
     private void init( Scenario scenario, Part p, Set<Long> expanded ) {
-        getLockManager().releaseAllLocks( Project.getUserName() );
-        getLockManager().requestLockOn( p );
+        getCommander().releaseAllLocks( Project.getUserName() );
+        getCommander().requestLockOn( p );
         setPart( p );
         expansions = expanded;
+        for ( Long id : expansions ) {
+            getCommander().requestLockOn( id );
+        }
         setVersioned( false );
         setStatelessHint( true );
         add( new Label( "sc-title", new PropertyModel<String>( scenario, "name" ) ) );    // NON-NLS
@@ -526,8 +530,8 @@ public final class ProjectPage extends WebPage implements Updatable {
         return (Project) getApplication();
     }
 
-    private LockManager getLockManager() {
-        return getProject().getLockManager();
+    private Commander getCommander() {
+        return getProject().getCommander();
     }
 
     /**
@@ -555,9 +559,9 @@ public final class ProjectPage extends WebPage implements Updatable {
      * @param p a part
      */
     public void setPart( Part p ) {
-        if ( part != null ) getLockManager().releaseAnyLockOn( part );
+        if ( part != null ) getCommander().releaseAnyLockOn( part );
         part = p;
-        getLockManager().requestLockOn( p );
+        getCommander().requestLockOn( p );
         scenario = p.getScenario();
     }
 
@@ -630,6 +634,26 @@ public final class ProjectPage extends WebPage implements Updatable {
                         new Model<String>( visible ? "display:inline" : "display:none" ) ) );
     }
 
+    private void expand( Identifiable identifiable ) {
+        // First collapse any already expanded entity
+        if ( identifiable instanceof ModelObject
+                && ( (ModelObject) identifiable ).isEntity() ) {
+            ModelObject entity = findExpandedEntity();
+            if ( entity != null ) collapse( entity );
+            getCommander().releaseAnyLockOn( entity );
+        }
+        // Never lock a scenario
+        if ( !( identifiable instanceof Scenario ) ) {
+            getCommander().requestLockOn( identifiable );
+        }
+        expansions.add( identifiable.getId() );
+    }
+
+    private void collapse( Identifiable identifiable ) {
+        getCommander().releaseAnyLockOn( identifiable );
+        expansions.remove( identifiable.getId() );
+    }
+
 
     /**
      * {@inheritDoc}
@@ -637,23 +661,30 @@ public final class ProjectPage extends WebPage implements Updatable {
     public void changed( Change change ) {
         Identifiable identifiable = change.getSubject();
         if ( change.isCollapsed() ) {
-            expansions.remove( identifiable.getId() );
-            if (identifiable instanceof ModelObject
-                    && ((ModelObject)identifiable).isEntity()) {
-                getLockManager().releaseAnyLockOn( identifiable );
-            }
+            collapse( identifiable );
         } else if ( change.isExpanded() ) {
-            expansions.add( identifiable.getId() );
+            expand( identifiable );
         } else if ( change.isAdded() ) {
-            expansions.add( identifiable.getId() );
+            expand( identifiable );
         } else if ( change.isRemoved() ) {
-            expansions.remove( identifiable.getId() );
+            collapse( identifiable );
+        }
+        if ( identifiable instanceof Scenario ) {
+            if ( change.isExists() ) {
+                getCommander().resetUserHistory( Project.getUserName() );
+            }
         }
         if ( identifiable instanceof Part ) {
             if ( change.isAdded() ) {
                 setPart( (Part) identifiable );
             } else if ( change.isRemoved() ) {
                 setPart( getScenario().getDefaultPart() );
+                expand( getScenario().getDefaultPart() );
+            }
+        }
+        if ( identifiable instanceof Flow ) {
+            if ( change.isUpdated() && change.getProperty().equals( "other" ) ) {
+                expand( identifiable );
             }
         }
         if ( identifiable instanceof UserIssue && change.isAdded() ) {
@@ -661,7 +692,7 @@ public final class ProjectPage extends WebPage implements Updatable {
                 UserIssue userIssue = (UserIssue) identifiable;
                 ModelObject mo = getService().find( UserIssue.class, userIssue.getAbout() );
                 if ( mo instanceof Scenario ) {
-                    expansions.add( identifiable.getId() );
+                    expand( identifiable );
                 }
             } catch ( NotFoundException e ) {
                 LOG.warn( "Stale id for model object issue is about." );
@@ -689,10 +720,8 @@ public final class ProjectPage extends WebPage implements Updatable {
                     target.addComponent( scenarioDescriptionLabel );
                 }
             } else if ( change.isAdded() ) {
-                getProject().getCommander().resetUserHistory( Project.getUserName() );
                 redirectTo( (Scenario) identifiable );
             } else if ( change.isRemoved() ) {
-                getProject().getCommander().resetUserHistory( Project.getUserName() );
                 redirectTo( getService().getDefaultScenario() );
             } else if ( change.isRecomposed() ) {
                 target.addComponent( scenarioPanel );
@@ -715,13 +744,13 @@ public final class ProjectPage extends WebPage implements Updatable {
             scenarioPanel.expandScenarioEditPanel( target );
         }
         if ( identifiable instanceof ModelObject
-                && ((ModelObject) identifiable).isEntity() ) {
-                if (change.isDisplay() ) {
-                    addEntityPanel();
-                    target.addComponent( entityPanel );
-                } else {
-                    target.addComponent( scenarioPanel );
-                }
+                && ( (ModelObject) identifiable ).isEntity() ) {
+            if ( change.isDisplay() ) {
+                addEntityPanel();
+                target.addComponent( entityPanel );
+            } else {
+                target.addComponent( scenarioPanel );
+            }
 
         }
         target.addComponent( scenarioActionsMenu );

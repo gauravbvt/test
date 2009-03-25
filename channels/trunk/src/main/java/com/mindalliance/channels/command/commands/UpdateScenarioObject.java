@@ -38,6 +38,13 @@ public class UpdateScenarioObject extends UpdateObject {
         addArgument( "isNode", identifiable instanceof Node );
     }
 
+    protected String getObjectTypeName( String type ) {
+        if ( type.contains( "flow" ) )
+            return "flow";
+        else
+            return "part";
+    }
+
     /**
      * {@inheritDoc}
      */

@@ -157,7 +157,7 @@ public class MultiCommand extends AbstractCommand {
      * {@inheritDoc}
      */
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        MultiCommand undoMulti = new MultiCommand();
+        MultiCommand undoMulti = new MultiCommand( getName() );
         // Add undoes of executed commands in reverse order of their execution.
         for ( int i = executed.size() - 1; i >= 0; i-- ) {
             Command command = executed.get( i );

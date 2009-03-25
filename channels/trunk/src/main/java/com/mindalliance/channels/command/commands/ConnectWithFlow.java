@@ -5,6 +5,7 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
@@ -76,35 +77,30 @@ public class ConnectWithFlow extends AbstractCommand {
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
-        try {
-            Scenario scenario = commander.resolve(
-                    Scenario.class,
-                    (Long) get( "scenario" ) );
-            Part part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
-            Scenario otherScenario = commander.resolve(
-                    Scenario.class,
-                    (Long) get( "otherScenario" ) );
-            Long nodeId = commander.resolveId( (Long) get( "other" ) );
-            Node other = ( nodeId != null )
-                    ? otherScenario.getNode( nodeId )
-                    : service.createConnector( otherScenario );
-            String name = (String) get( "name" );
-            boolean isOutcome = (Boolean) get( "isOutcome" );
-            Flow flow = isOutcome
-                    ? service.connect( part, other, name )
-                    : service.connect( other, part, name );
-            Map<String, Object> attributes = (Map<String, Object>) get( "attributes" );
-            if ( attributes != null ) {
-                for ( String key : attributes.keySet() ) {
-                    setProperty( flow, key, attributes.get( key ) );
-                }
-            }
-            commander.mapId( (Long) get( "flow" ), flow.getId() );
-            addArgument( "flow", flow.getId() );
-            return new Change( Change.Type.Added, flow );
-        } catch ( NotFoundException e ) {
-            throw new CommandException( "You need to refresh.", e );
+        Scenario scenario = commander.resolve(
+                Scenario.class,
+                (Long) get( "scenario" ) );
+        Part part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
+        Scenario otherScenario = commander.resolve(
+                Scenario.class,
+                (Long) get( "otherScenario" ) );
+        Long nodeId = commander.resolveId( (Long) get( "other" ) );
+        Node other = ( nodeId != null )
+                ? otherScenario.getNode( nodeId )
+                : service.createConnector( otherScenario );
+        String name = (String) get( "name" );
+        boolean isOutcome = (Boolean) get( "isOutcome" );
+        Flow flow = isOutcome
+                ? service.connect( part, other, name )
+                : service.connect( other, part, name );
+        Map<String, Object> attributes = (Map<String, Object>) get( "attributes" );
+        if ( attributes != null ) {
+            CommandUtils.initialize( flow, attributes );
         }
+        if ( get( "flow" ) != null )
+            commander.mapId( (Long) get( "flow" ), flow.getId() );
+        addArgument( "flow", flow.getId() );
+        return new Change( Change.Type.Added, flow );
     }
 
     /**

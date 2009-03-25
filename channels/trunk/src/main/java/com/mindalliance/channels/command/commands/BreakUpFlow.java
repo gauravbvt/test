@@ -74,11 +74,11 @@ public class BreakUpFlow extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        MultiCommand multi = new MultiCommand();
+        MultiCommand multi = new MultiCommand( "unbreak flow" );
         multi.setUndoes( getName() );
         ConnectWithFlow connectWithFlow = new ConnectWithFlow();
-        connectWithFlow.setArguments( (Map<String,Object>) get( "flowState" ) );
-        connectWithFlow.addArgument( "flow", get( "flow" ) );
+        connectWithFlow.setArguments( (Map<String, Object>) get( "flowState" ) );
+        connectWithFlow.addArgument( "flow", commander.resolveId( (Long) get( "flow" ) ) );
         multi.addCommand( connectWithFlow );
         List<Long> addedFlows = (List<Long>) get( "addedFlows" );
         if ( addedFlows != null ) {

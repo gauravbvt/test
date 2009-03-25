@@ -10,7 +10,6 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.command.commands.RedirectFlow;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.pages.Project;
@@ -396,15 +395,14 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
 
     private void addFlowActionMenu( boolean isOutcome ) {
         Component flowActionsMenu;
-        LockManager lockManager = getLockManager();
-        if ( lockManager.isLockedByUser( getFlow() ) ) {
+        if ( isLockedByUser( getFlow() ) ) {
             flowActionsMenu = new FlowActionsMenuPanel(
                     "flowActionsMenu",
                     new PropertyModel<Flow>( this, "flow" ),
                     isOutcome,
                     false );
         } else {
-            String otherUser = lockManager.getLockOwner( getFlow().getId() );
+            String otherUser = getLockOwner( getFlow() );
             flowActionsMenu = new Label( "flowActionsMenu", new Model<String>( "Edited by " + otherUser ) );
             flowActionsMenu.add( new AttributeModifier( "class", true, new Model<String>( "locked" ) ) );
         }
@@ -681,7 +679,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                     getFlow(),
                     (Connector) other, isOutcome() ) );
             Flow newFlow = (Flow) change.getSubject();
-            requestLockOn( newFlow );
+            // requestLockOn( newFlow );
             setFlow( newFlow );
         }
     }

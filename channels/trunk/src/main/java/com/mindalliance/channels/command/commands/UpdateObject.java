@@ -95,8 +95,18 @@ public abstract class UpdateObject extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "updating " + get( "type" );
+        return "updating " + getObjectTypeName( (String) get( "type" ) );
     }
+
+    /**
+     * Get the type of object updated.
+     *
+     * @param type a raw type name
+     * @return a string
+     */
+    protected String getObjectTypeName( String type ) {
+        return type;
+    };
 
     /**
      * {@inheritDoc}

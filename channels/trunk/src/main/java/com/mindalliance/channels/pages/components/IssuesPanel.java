@@ -98,10 +98,8 @@ public class IssuesPanel extends AbstractCommandablePanel {
                 final long id = issue.getId();
                 final Panel issuePanel;
                 if ( expansions.contains( id ) ) {
-                    requestLockOn( issue );
                     issuePanel = new ExpandedIssuePanel( "issue", new Model<Issue>( issue ) );
                 } else {
-                    releaseAnyLockOn( issue );
                     issuePanel = new CollapsedIssuePanel( "issue", new Model<Issue>( issue ) );
                 }
 

@@ -254,12 +254,19 @@ public class DefaultLockManager implements LockManager {
      * {@inheritDoc}
      */
     public boolean requestLockOn( Identifiable identifiable ) {
+        return requestLockOn ( identifiable.getId() );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean requestLockOn( Long id ) {
         boolean locked = false;
         try {
-            grabLockOn( identifiable.getId() );
+            grabLockOn( id );
             locked = true;
         } catch ( LockingException e ) {
-            LOG.info( "Failed to grab lock on " + identifiable );
+            LOG.info( "Failed to grab lock on " + id );
         }
         return locked;
     }
@@ -268,13 +275,21 @@ public class DefaultLockManager implements LockManager {
      * {@inheritDoc}
      */
     public boolean releaseAnyLockOn( Identifiable identifiable ) {
+        return releaseAnyLockOn( identifiable.getId() );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean releaseAnyLockOn( Long id ) {
         boolean unlocked = false;
         try {
-            releaseLockOn( identifiable.getId() );
+            releaseLockOn( id );
             unlocked = true;
         } catch ( LockingException e ) {
-            LOG.info( "Failed to release lock on " + identifiable );
+            LOG.info( "Failed to release lock on " + id );
         }
         return unlocked;
     }
+
 }

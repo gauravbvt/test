@@ -77,23 +77,12 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
     }
 
     /**
-     * Request a lock on an identifiable object.
-     *
-     * @param identifiable an identifiable object
-     * @return a boolean - true if request granted
+     * Get name of lock owner.
+     * @param identifiable the possibly locked identifiable
+     * @return a string or null
      */
-    protected boolean requestLockOn( Identifiable identifiable ) {
-        return getLockManager().requestLockOn( identifiable );
-    }
-
-    /**
-     * Release a lock on an identifiable object.
-     *
-     * @param identifiable an identifiable object
-     * @return a boolean - true if release effected
-     */
-    protected boolean releaseAnyLockOn( Identifiable identifiable ) {
-        return getLockManager().releaseAnyLockOn( identifiable );
+    protected String getLockOwner( Identifiable identifiable ) {
+        return getLockManager().getLockOwner( identifiable.getId() );
     }
 
 

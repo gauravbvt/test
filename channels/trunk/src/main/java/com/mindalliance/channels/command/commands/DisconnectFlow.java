@@ -68,6 +68,8 @@ public class DisconnectFlow extends AbstractCommand {
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
         Command connectWithFlow = new ConnectWithFlow();
         connectWithFlow.setArguments( (Map<String, Object>) get( "flowState" ) );
+        // The flow being re-connected
+        connectWithFlow.set( "flow", commander.resolveId( (Long) ( get( "flow" ) ) ));
         return connectWithFlow;
     }
 

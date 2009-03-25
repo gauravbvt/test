@@ -46,7 +46,6 @@ public class EntityPanel extends AbstractCommandablePanel {
     }
 
     private void init() {
-        getLockManager().requestLockOn( getEntity() );
         banner = new WebMarkupContainer( "banner" );
         banner.setOutputMarkupId( true );
         add( banner );

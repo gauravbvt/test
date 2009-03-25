@@ -85,13 +85,11 @@ public class FlowListPanel extends AbstractCommandablePanel {
                 Flow flow = item.getModelObject();
                 long flowId = flow.getId();
                 if ( expansions.contains( flowId ) ) {
-                    requestLockOn( flow );
                     ExpandedFlowPanel flowPanel = outcomes ?
                             new ExpandedOutPanel( "flow", new Model<Flow>( flow ), expansions )
                             : new ExpandedReqPanel( "flow", new Model<Flow>( flow ), expansions );
                     item.add( flowPanel );
                 } else {
-                    releaseAnyLockOn( flow );
                     CollapsedFlowPanel flowPanel =
                             new CollapsedFlowPanel( "flow", flow, outcomes );
                     item.add( flowPanel );

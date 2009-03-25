@@ -3,6 +3,7 @@ package com.mindalliance.channels.command;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.Identifiable;
 
 import java.util.Map;
 
@@ -111,18 +112,18 @@ public interface Commander {
      * @param clazz a model object class
      * @param id    a long
      * @return a model object
-     * @throws NotFoundException if not found
+     * @throws CommandException if not found
      */
-    <T extends ModelObject> T resolve( Class<T> clazz, Long id ) throws NotFoundException;
+    <T extends ModelObject> T resolve( Class<T> clazz, Long id ) throws CommandException;
 
     /**
      * Resolves an id.
      *
      * @param id a long
      * @return a long
-     * @throws NotFoundException if resolution fails
+     * @throws CommandException if resolution fails
      */
-    Long resolveId( Long id ) throws NotFoundException;
+    Long resolveId( Long id ) throws CommandException;
 
     /**
      * Map id translation for replay.
@@ -150,5 +151,53 @@ public interface Commander {
      * @param name a string
      */
     void cleanup( Class<? extends ModelObject> clazz, String name );
+
+    /**
+     * Whether someone other than the user has a lock on the model object with given id.
+     *
+     * @param identifiable an identifiable
+     * @return a boolean
+     */
+    boolean isLockedByUser( Identifiable identifiable );
+
+    /**
+     * Attempt to get lock on identitifiable
+     *
+     * @param identifiable an identifiable object
+     * @return a boolean indiciating success (true) or failure (false)
+     */
+    boolean requestLockOn( Identifiable identifiable );
+
+    /**
+     * Attempt to get lock on identitifiable
+     *
+     * @param id an identifiable's id
+     * @return a boolean indiciating success (true) or failure (false)
+     */
+    boolean requestLockOn( Long id );
+
+    /**
+     * Attempt to release lock on identifiable, failing silently.
+     *
+     * @param identifiable an identifiable
+     * @return a boolean - whether a lock was released
+     */
+    boolean releaseAnyLockOn( Identifiable identifiable );
+
+    /**
+      * Attempt to release lock on identifiable, failing silently.
+      *
+      * @param id an identifiable's id
+      * @return a boolean - whether a lock was released
+      */
+     boolean releaseAnyLockOn( Long id );
+
+    /**
+     * Release all locks held by named user.
+     *
+     * @param userName a user name
+     */
+    void releaseAllLocks( String userName );
+
 
 }

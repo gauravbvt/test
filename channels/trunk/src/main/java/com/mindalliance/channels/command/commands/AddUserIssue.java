@@ -54,7 +54,8 @@ public class AddUserIssue extends AbstractCommand {
                 CommandUtils.initialize( issue, state );
             }
             service.add( issue );
-            commander.mapId( (Long) get( "issue" ), issue.getId() );
+            if ( get( "issue" ) != null )
+                commander.mapId( (Long) get( "issue" ), issue.getId() );
             addArgument( "issue", issue.getId() );
             return new Change( Change.Type.Added, issue );
         } catch ( NotFoundException e ) {
