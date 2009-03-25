@@ -246,7 +246,7 @@ public class ChannelsServiceImpl implements Service {
                 FireScenario.initialize( fireScenario, this, evac );
             }
             if ( importingScenarios ) {
-                LOG.info( "Adding sample models" );
+                LOG.info( "Importing default models" );
                 importScenarios();
             }
             // Make sure there is at least one scenario

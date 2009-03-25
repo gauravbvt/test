@@ -23,10 +23,6 @@ import java.util.Map;
  * Time: 5:39:54 PM
  */
 public abstract class UpdateObject extends AbstractCommand {
-    /**
-     * The kind of update.
-     */
-    private Action action = Action.Set;
 
     /**
      * Kinds of updates.
@@ -63,9 +59,9 @@ public abstract class UpdateObject extends AbstractCommand {
             final String property,
             final Object value,
             final Action action ) {
-        this.action = action;
         addConflicting( identifiable );
         Map<String, Object> args = new HashMap<String, Object>();
+        args.put( "action", action.toString() );
         args.put( "object", identifiable.getId() );
         args.put( "property", property );
         args.put( "value", value );
@@ -108,7 +104,7 @@ public abstract class UpdateObject extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         Service service = commander.getService();
         Identifiable identifiable = getIdentifiable( commander );
-        switch ( action ) {
+        switch ( action() ) {
             case Set:
                 setProperty(
                         identifiable,
@@ -138,10 +134,14 @@ public abstract class UpdateObject extends AbstractCommand {
                 );
                 break;
             default:
-                throw new IllegalArgumentException( "Unknown action " + action );
+                throw new IllegalArgumentException( "Unknown action " + action() );
         }
         if ( identifiable instanceof ModelObject ) service.update( (ModelObject) identifiable );
         return new Change( Change.Type.Updated, identifiable, (String) get( "property" ) );
+    }
+
+    private Action action() {
+        return Action.valueOf(  (String)get("action")) ;
     }
 
     /**
@@ -192,7 +192,7 @@ public abstract class UpdateObject extends AbstractCommand {
         Identifiable identifiable = getIdentifiable( commander );
         String property = (String) get( "property" );
         Object value;
-        switch ( action ) {
+        switch ( action() ) {
             case Set:
                 Object oldValue = get( "old" );
                 return createUndoCommand( identifiable, property, oldValue, Action.Set );
@@ -209,7 +209,7 @@ public abstract class UpdateObject extends AbstractCommand {
                 if ( oldIndex != null ) command.set( "index", oldIndex );
                 return command;
             default:
-                throw new RuntimeException( "Unknown action " + action );
+                throw new RuntimeException( "Unknown action " + action() );
         }
     }
 
