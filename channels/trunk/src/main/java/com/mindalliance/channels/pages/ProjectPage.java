@@ -649,12 +649,11 @@ public final class ProjectPage extends WebPage implements Updatable {
                 && ( (ModelObject) identifiable ).isEntity() ) {
             ModelObject entity = findExpandedEntity();
             if ( entity != null ) {
-                collapse( entity );
+                expansions.remove( entity.getId() );
                 getCommander().releaseAnyLockOn( entity );
-                // expandedEntities.remove( entity.getId() );
                 expandedEntities.add( 0, entity.getId() );
             }
-            expandedEntities.remove( identifiable.getId() );
+            // expandedEntities.remove( identifiable.getId() );
         }
         // Never lock a scenario
         if ( !( identifiable instanceof Scenario ) ) {
