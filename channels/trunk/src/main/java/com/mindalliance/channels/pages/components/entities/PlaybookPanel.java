@@ -34,6 +34,13 @@ public class PlaybookPanel extends AbstractTablePanel<Play> {
         init();
     }
 
+    public PlaybookPanel( String s, IModel<ResourceSpec> model, int pageSize, Set<Long> expansions ) {
+        super( s, model, pageSize, expansions );
+        player = model.getObject();
+        init();
+    }
+
+
     private void init() {
         final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
         // columns
@@ -42,7 +49,7 @@ public class PlaybookPanel extends AbstractTablePanel<Play> {
                 "part.scenario.name", "part.scenario.name" ) );                  // NON-NLS
         // columns.add( makeLinkColumn( "Role", "part.role", "part.role.name", EMPTY ) );
         columns.add( makeLinkColumn( "Task", "part", "part.task", EMPTY ) );
-        columns.add( makeColumn( "Info", "flow.name", null, "?", "flow.description" ) );
+        columns.add( makeColumn( "Info", "flow.name", "kind", "?", "flow.description" ) );
         // style class is one of: ask, notify, answer, receive
         // columns.add( makeColumn( "Channels", "flow.channelsString", EMPTY ) );      // NON-NLS
         columns.add( new PropertyColumn<String>(

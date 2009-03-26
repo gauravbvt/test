@@ -104,7 +104,7 @@ public class Play implements Serializable {
      * @return a string
      */
     public String getRequiredness() {
-        return flow.isRequired() ? "required" : "";
+        return flow.isRequired() ? "required" : "optional";
     }
 
     /**

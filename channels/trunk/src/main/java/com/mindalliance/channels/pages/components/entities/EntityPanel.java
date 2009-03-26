@@ -123,7 +123,9 @@ public class EntityPanel extends AbstractCommandablePanel {
     }
 
     private Component getEntityFlowsPanel() {
-        return new Label( "aspect", "Flows is under construction" );
+        return new EntityFlowsPanel( "aspect",
+                new PropertyModel<ModelObject>( this, "entity" ),
+                getExpansions() );
     }
 
     private Component getEntityIssuesPanel() {
