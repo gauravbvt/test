@@ -89,6 +89,8 @@ public abstract class AbstractCommand implements Command {
      * @param val an object
      */
     public void addArgument( String key, Object val ) {
+        if (val instanceof Identifiable)
+            throw new IllegalArgumentException("Can't have identifiables as argument value");
         arguments.put( key, val );
     }
 

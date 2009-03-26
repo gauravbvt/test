@@ -2,13 +2,11 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.pages.ModelObjectLink;
+import com.mindalliance.channels.pages.components.entities.EntityLink;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.markup.html.basic.Label;
@@ -180,11 +178,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                     ? ( defaultText == null ? "" : defaultText )
                     : labelText;
             if ( mo.isEntity() ) {
-                return new AjaxFallbackLink( "entity-link" ) {
-                    public void onClick( AjaxRequestTarget target ) {
-                        update( target, new Change( Change.Type.Expanded, mo ) );
-                    }
-                };
+                return new EntityLink( id, new Model<ModelObject>( mo ) );
             } else {
                 return new ModelObjectLink(
                         id,

@@ -1,9 +1,13 @@
 package com.mindalliance.channels.pages.components.menus;
 
 import com.mindalliance.channels.Identifiable;
+import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.commands.AddUserIssue;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.ListItem;
 
@@ -46,6 +50,23 @@ public class EntityActionsMenuPanel extends MenuPanel {
         // Undo and redo
         menuItems.add( this.getUndoMenuItem( "menuItem" ) );
         menuItems.add( this.getRedoMenuItem( "menuItem" ) );
+        // Commands
+        menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
         return menuItems;
     }
+
+    private List<CommandWrapper> getCommandWrappers() {
+        return new ArrayList<CommandWrapper>() {
+            {
+                add( new CommandWrapper( new AddUserIssue( (ModelObject)getModel().getObject() ) ) {
+                    public void onExecuted(
+                            AjaxRequestTarget target,
+                            Change change ) {
+                        update( target, change );
+                    }
+                } );
+            }
+        };
+    }
+
 }

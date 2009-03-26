@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.entities;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Actor;
+import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -84,32 +85,32 @@ public class EntityPanel extends AbstractCommandablePanel {
             entityAspect = getEntityMapPanel();
         } else if ( aspectShown.equals( "flows" ) ) {
             entityAspect = getEntityFlowsPanel();
-        } else {
+        } else if ( aspectShown.equals( "issues" ) ) {
             entityAspect = getEntityIssuesPanel();
+        } else {
+            // Should never happen
+            throw new RuntimeException( "Unknown aspect " + aspectShown );
         }
         entityAspect.setOutputMarkupId( true );
         addOrReplace( entityAspect );
     }
 
     private Component getEntityDetailsPanel() {
-        if (getEntity() instanceof Organization ) {
+        if ( getEntity() instanceof Organization ) {
             return new OrganizationDetailsPanel(
                     "aspect",
-                    new PropertyModel<ModelObject>(this, "entity"),
-                    getExpansions());
-        }
-        else if (getEntity() instanceof Actor ) {
+                    new PropertyModel<ModelObject>( this, "entity" ),
+                    getExpansions() );
+        } else if ( getEntity() instanceof Actor ) {
             return new ActorDetailsPanel(
                     "aspect",
-                    new PropertyModel<ModelObject>(this, "entity"),
-                    getExpansions());
-        }
-
-        else {
+                    new PropertyModel<ModelObject>( this, "entity" ),
+                    getExpansions() );
+        } else {
             return new EntityDetailsPanel(
                     "aspect",
-                    new PropertyModel<ModelObject>(this, "entity"),
-                    getExpansions());
+                    new PropertyModel<ModelObject>( this, "entity" ),
+                    getExpansions() );
         }
     }
 
@@ -124,11 +125,12 @@ public class EntityPanel extends AbstractCommandablePanel {
     private Component getEntityFlowsPanel() {
         return new Label( "aspect", "Flows is under construction" );
     }
+
     private Component getEntityIssuesPanel() {
         return new EntityIssuesPanel(
                 "aspect",
-                new PropertyModel<ModelObject>( this, "entity"),
-                getExpansions());
+                new PropertyModel<ModelObject>( this, "entity" ),
+                getExpansions() );
     }
 
     private void addEntityActionMenu() {
@@ -162,11 +164,9 @@ public class EntityPanel extends AbstractCommandablePanel {
     }
 
     public void setAspectShown( AjaxRequestTarget target, String aspect ) {
-        if ( !aspectShown.equals( aspect ) ) {
-            this.aspectShown = aspect;
-            showEntityAspect();
-            target.addComponent( entityAspect );
-        }
+        this.aspectShown = aspect;
+        showEntityAspect();
+        target.addComponent( entityAspect );
     }
 
     /**
@@ -176,6 +176,9 @@ public class EntityPanel extends AbstractCommandablePanel {
         target.addComponent( entityActionsMenu );
         if ( change.getType() == Change.Type.Updated ) {
             target.addComponent( banner );
+        }
+        if ( change.getSubject() instanceof UserIssue ) {
+            setAspectShown( target, "issues" );
         }
         super.updateWith( target, change );
     }
