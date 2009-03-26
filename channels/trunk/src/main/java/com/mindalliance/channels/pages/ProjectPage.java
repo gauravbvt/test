@@ -47,6 +47,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.ArrayList;
 
 /**
  * The project's home page.
@@ -86,6 +87,10 @@ public final class ProjectPage extends WebPage implements Updatable {
      * Id of components that are expanded.
      */
     private Set<Long> expansions;
+    /**
+     * Ids of expanded entities.
+     */
+    private List<Long> expandedEntities = new ArrayList<Long>();
     /**
      * Label with name of scenario.
      */
@@ -350,6 +355,7 @@ public final class ProjectPage extends WebPage implements Updatable {
 
     private ModelObject findExpandedEntity() {
         ModelObject entity = null;
+
         for ( long id : expansions ) {
             try {
                 ModelObject mo = getService().find( ModelObject.class, id );
@@ -642,10 +648,13 @@ public final class ProjectPage extends WebPage implements Updatable {
         if ( identifiable instanceof ModelObject
                 && ( (ModelObject) identifiable ).isEntity() ) {
             ModelObject entity = findExpandedEntity();
-            if ( entity != null )  {
+            if ( entity != null ) {
                 collapse( entity );
                 getCommander().releaseAnyLockOn( entity );
+                // expandedEntities.remove( entity.getId() );
+                expandedEntities.add( 0, entity.getId() );
             }
+            expandedEntities.remove( identifiable.getId() );
         }
         // Never lock a scenario
         if ( !( identifiable instanceof Scenario ) ) {
@@ -655,6 +664,14 @@ public final class ProjectPage extends WebPage implements Updatable {
     }
 
     private void collapse( Identifiable identifiable ) {
+        if ( identifiable instanceof ModelObject
+                && ( (ModelObject) identifiable ).isEntity() ) {
+            if ( !expandedEntities.isEmpty() ) {
+                long entityId = expandedEntities.remove( 0 );
+                getCommander().requestLockOn( entityId );
+                expansions.add( entityId );
+            }
+        }
         getCommander().releaseAnyLockOn( identifiable );
         expansions.remove( identifiable.getId() );
     }
@@ -759,6 +776,7 @@ public final class ProjectPage extends WebPage implements Updatable {
 
     /**
      * Get read-only expansions.
+     *
      * @return a read-only set of Longs
      */
     private Set<Long> getReadOnlyExpansions() {

@@ -20,7 +20,7 @@ public class ScenarioShowMenuPanel extends MenuPanel {
     }
 
     private void init() {
-        add( new ExternalLink( "index", "index.html" ) );
+        // add( new ExternalLink( "index", "index.html" ) );
         add( new ExternalLink( "report", "report.html" ) );
     }
 
