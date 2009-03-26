@@ -387,6 +387,40 @@ public class JobsPanel extends AbstractCommandablePanel {
                             getService() ) ).isEmpty();
         }
 
+        /**
+         * Get actor from its name.
+         * Returns null if name is empty.
+         * @return an actor
+         */
+        public Actor getActor() {
+            if (!getActorName().isEmpty())
+                return getService().findOrCreate( Actor.class, getActorName() );
+            else
+                return null;
+        }
+
+        /**
+          * Get role from its name.
+          * Returns null if name is empty.
+          * @return a role
+          */
+         public Role getRole() {
+             if (!getRoleName().isEmpty())
+                 return getService().findOrCreate( Role.class, getRoleName() );
+             else
+                 return null;
+         }
+        /**
+          * Get jurisdiction place from its name.
+          * Returns null if name is empty.
+          * @return a place
+          */
+         public Place getJurisdiction() {
+             if (!getJurisdictionName().isEmpty())
+                 return getService().findOrCreate( Place.class, getJurisdictionName() );
+             else
+                 return null;
+         }
     }
 
     public class JobEntityPanel extends Panel {
