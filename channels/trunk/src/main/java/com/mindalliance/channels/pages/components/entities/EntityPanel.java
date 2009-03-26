@@ -82,6 +82,8 @@ public class EntityPanel extends AbstractCommandablePanel {
             entityAspect = getEntityNetworkPanel();
         } else if ( aspectShown.equals( "map" ) ) {
             entityAspect = getEntityMapPanel();
+        } else if ( aspectShown.equals( "flows" ) ) {
+            entityAspect = getEntityFlowsPanel();
         } else {
             entityAspect = getEntityIssuesPanel();
         }
@@ -119,6 +121,9 @@ public class EntityPanel extends AbstractCommandablePanel {
         return new Label( "aspect", "Map is under construction" );
     }
 
+    private Component getEntityFlowsPanel() {
+        return new Label( "aspect", "Flows is under construction" );
+    }
     private Component getEntityIssuesPanel() {
         return new EntityIssuesPanel(
                 "aspect",

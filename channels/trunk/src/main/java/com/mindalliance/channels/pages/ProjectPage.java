@@ -217,7 +217,7 @@ public final class ProjectPage extends WebPage implements Updatable {
                 "scenario",
                 new PropertyModel<Scenario>( this, "scenario" ),
                 new PropertyModel<Part>( this, "part" ),
-                expansions );
+                getReadOnlyExpansions() );
         form.add( scenarioPanel );
         addEntityPanel();
         form.add( entityPanel );
@@ -296,7 +296,7 @@ public final class ProjectPage extends WebPage implements Updatable {
         scenarioActionsMenu = new ScenarioActionsMenuPanel(
                 "scenarioActionsMenu",
                 new Model<Scenario>( scenario ),
-                expansions );
+                getReadOnlyExpansions() );
         scenarioActionsMenu.setOutputMarkupId( true );
         form.add( scenarioActionsMenu );
         ScenarioShowMenuPanel scenarioShowMenu = new ScenarioShowMenuPanel(
@@ -341,7 +341,7 @@ public final class ProjectPage extends WebPage implements Updatable {
             entityPanel = new EntityPanel(
                     "entity",
                     new Model<ModelObject>( entity ),
-                    getExpansions() );
+                    getReadOnlyExpansions() );
         }
         makeVisible( entityPanel, entity != null );
         entityPanel.setOutputMarkupId( true );
@@ -758,10 +758,10 @@ public final class ProjectPage extends WebPage implements Updatable {
     }
 
     /**
-     * Get expansions.
-     * @return a set of Longs
+     * Get read-only expansions.
+     * @return a read-only set of Longs
      */
-    public Set<Long> getExpansions() {
-        return expansions;
+    private Set<Long> getReadOnlyExpansions() {
+        return Collections.unmodifiableSet( expansions );
     }
 }

@@ -5,12 +5,14 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Place;
 import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Job;
 import com.mindalliance.channels.pages.Project;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.converters.MarshallingContext;
-import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * XStream organization converter
@@ -21,6 +23,12 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
  * Time: 6:53:05 PM
  */
 public class OrganizationConverter extends EntityConverter {
+
+    /**
+     * Class logger.
+     */
+    public static final Logger LOG = LoggerFactory.getLogger( OrganizationConverter.class );
+
 
     public OrganizationConverter() {
     }
@@ -64,12 +72,19 @@ public class OrganizationConverter extends EntityConverter {
             context.convertAnother( channel );
             writer.endNode();
         }
+        // jobs
+        for ( Job job : org.getJobs() ) {
+            writer.startNode( "job" );
+            context.convertAnother( job );
+            writer.endNode();
+        }
     }
 
     /**
      * {@inheritDoc}
      */
-    protected void setSpecific( ModelObject entity, String nodeName,
+    protected void setSpecific( ModelObject entity,
+                                String nodeName,
                                 HierarchicalStreamReader reader,
                                 UnmarshallingContext context ) {
         Scenario scenario = (Scenario) context.get( "scenario" );
@@ -83,8 +98,11 @@ public class OrganizationConverter extends EntityConverter {
         } else if ( nodeName.equals( "channel" ) ) {
             Channel channel = (Channel) context.convertAnother( scenario, Channel.class );
             org.addChannel( channel );
+        } else if ( nodeName.equals( "job" ) ) {
+            Job job = (Job) context.convertAnother( scenario, Job.class );
+            org.addJob( job );
         } else {
-            throw new ConversionException( "Unknown element " + nodeName );
+            LOG.warn( "Unknown element " + nodeName );
         }
     }
 }

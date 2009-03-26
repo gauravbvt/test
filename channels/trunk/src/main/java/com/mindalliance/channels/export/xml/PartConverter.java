@@ -3,7 +3,6 @@ package com.mindalliance.channels.export.xml;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.mindalliance.channels.Flow;
@@ -21,6 +20,9 @@ import com.mindalliance.channels.pages.Project;
 import java.util.Map;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * An XStream Part converter.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -31,6 +33,10 @@ import java.util.List;
  */
 public class PartConverter implements Converter {
 
+    /**
+     * Class logger.
+     */
+    public static final Logger LOG = LoggerFactory.getLogger( PartConverter.class );
     public PartConverter() {
     }
 
@@ -139,7 +145,7 @@ public class PartConverter implements Converter {
             } else if ( nodeName.equals( "issue" ) ) {
                 context.convertAnother( scenario, UserIssue.class );
             } else {
-                throw new ConversionException( "Unknown element " + nodeName );
+                LOG.warn( "Unknown element " + nodeName );
             }
             reader.moveUp();
         }

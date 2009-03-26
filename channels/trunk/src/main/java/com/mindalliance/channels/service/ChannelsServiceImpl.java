@@ -335,7 +335,7 @@ public class ChannelsServiceImpl implements Service {
         }
         for ( Organization organization : list( Organization.class ) ) {
             result.add( ResourceSpec.with( organization ) );
-            result.addAll( organization.jobResourceSpecs() );
+            result.addAll( organization.jobResourceSpecs( this ) );
         }
         // Specs from scenario parts
         for ( Scenario scenario : list( Scenario.class ) ) {
@@ -412,7 +412,7 @@ public class ChannelsServiceImpl implements Service {
                         plays.add( play );
                     }
                     if ( flow.getTarget().isPart()
-                            &&  ( (Part) flow.getTarget() ).resourceSpec().narrowsOrEquals( resourceSpec ) ) {
+                            && ( (Part) flow.getTarget() ).resourceSpec().narrowsOrEquals( resourceSpec ) ) {
                         // receives
                         Play play = new Play( (Part) flow.getTarget(), flow, false );
                         plays.add( play );
@@ -678,7 +678,7 @@ public class ChannelsServiceImpl implements Service {
     public boolean isReferenced( Actor actor ) {
         for ( Organization org : list( Organization.class ) ) {
             for ( Job job : org.getJobs() ) {
-                if ( job.getActor() == actor ) return true;
+                if ( job.getActorName().equals( actor.getName() ) ) return true;
             }
         }
         // Look in parts
@@ -697,7 +697,7 @@ public class ChannelsServiceImpl implements Service {
     public boolean isReferenced( Role role ) {
         for ( Organization org : list( Organization.class ) ) {
             for ( Job job : org.getJobs() ) {
-                if ( job.getRole() == role ) return true;
+                if ( job.getRoleName().equals( role.getName() ) ) return true;
             }
         }
         // Look in parts
@@ -734,7 +734,7 @@ public class ChannelsServiceImpl implements Service {
         for ( Organization org : list( Organization.class ) ) {
             if ( org.getLocation() == place ) return true;
             else for ( Job job : org.getJobs() ) {
-                if ( job.getJurisdiction() == place ) return true;
+                if ( job.getJurisdictionName().equals( place.getName() ) ) return true;
             }
         }
         // Look in parts

@@ -59,19 +59,19 @@ public class EntityShowMenuPanel extends MenuPanel {
                  changeAspectTo(target, "network");
              }
          };
-         menuItems.add( new LinkMenuItem(
-                 "menuItem",
-                 new Model<String>( "Network" ),
-                 networkLink ) );
-        Link issuesLink = new AjaxFallbackLink("link"){
+        Link flowsLink = new AjaxFallbackLink("link"){
              public void onClick( AjaxRequestTarget target ) {
-                 changeAspectTo(target, "issues");
+                 changeAspectTo(target, "flows");
              }
          };
          menuItems.add( new LinkMenuItem(
                  "menuItem",
-                 new Model<String>( "Issues" ),
-                 issuesLink ) );
+                 new Model<String>( "Flows" ),
+                 flowsLink ) );
+         menuItems.add( new LinkMenuItem(
+                 "menuItem",
+                 new Model<String>( "Network" ),
+                 networkLink ) );
         Link mapLink = new AjaxFallbackLink("link"){
              public void onClick( AjaxRequestTarget target ) {
                  changeAspectTo(target, "map");
@@ -81,6 +81,15 @@ public class EntityShowMenuPanel extends MenuPanel {
                  "menuItem",
                  new Model<String>( "Map" ),
                  mapLink ) );
+        Link issuesLink = new AjaxFallbackLink("link"){
+             public void onClick( AjaxRequestTarget target ) {
+                 changeAspectTo(target, "issues");
+             }
+         };
+         menuItems.add( new LinkMenuItem(
+                 "menuItem",
+                 new Model<String>( "Issues" ),
+                 issuesLink ) );
         return menuItems;
     }
 

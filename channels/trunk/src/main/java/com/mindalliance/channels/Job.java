@@ -3,7 +3,6 @@ package com.mindalliance.channels;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 /**
@@ -18,14 +17,14 @@ import java.io.Serializable;
 public class Job implements Serializable {
 
     /**
-     * An actor.
+     * An actor's name.
      */
-    private Actor actor;
+    private String actorName = "";
 
     /**
-     * A role.
+     * A role's name.
      */
-    private Role role;
+    private String roleName = "";
 
     /**
      * A title.
@@ -35,36 +34,45 @@ public class Job implements Serializable {
     /**
      * A jurisdiction.
      */
-    private Place jurisdiction;
+    private String jurisdictionName = "";
 
-    /** Primary key for persistence. */
+    /**
+     * Primary key for persistence.
+     */
     private long id;
 
     public Job() {
     }
 
-    public Job( Actor actor, Role role, Place jurisdiction ) {
-        this.actor = actor;
-        this.role = role;
-        this.jurisdiction = jurisdiction;
+    public Job( String actorName, String roleName, String jurisdictionName ) {
+        this.actorName = actorName;
+        this.roleName = roleName;
+        this.jurisdictionName = jurisdictionName;
+        title = "";
     }
 
-    @ManyToOne
-    public Actor getActor() {
-        return actor;
+    public String getActorName() {
+        return actorName;
     }
 
-    public void setActor( Actor actor ) {
-        this.actor = actor;
+    public void setActorName( String actorName ) {
+        this.actorName = actorName;
     }
 
-    @ManyToOne
-    public Role getRole() {
-        return role;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setRole( Role role ) {
-        this.role = role;
+    public void setRoleName( String roleName ) {
+        this.roleName = roleName;
+    }
+
+    public String getJurisdictionName() {
+        return jurisdictionName;
+    }
+
+    public void setJurisdictionName( String jurisdictionName ) {
+        this.jurisdictionName = jurisdictionName;
     }
 
     public String getTitle() {
@@ -72,32 +80,25 @@ public class Job implements Serializable {
     }
 
     public void setTitle( String title ) {
-        this.title = title;
-    }
-
-    @ManyToOne
-    public Place getJurisdiction() {
-        return jurisdiction;
-    }
-
-    public void setJurisdiction( Place jurisdiction ) {
-        this.jurisdiction = jurisdiction;
+        this.title = ( title == null ? "" : title );
     }
 
     /**
      * Job as resource specifiction.
      *
      * @param organization an organization
+     * @param service a service
      * @return a resource spec
      */
-    public ResourceSpec resourceSpec( Organization organization ) {
+    public ResourceSpec resourceSpec( Organization organization, Service service ) {
         ResourceSpec resourceSpec = new ResourceSpec();
-        resourceSpec.setActor( actor );
-        resourceSpec.setRole( role );
-        resourceSpec.setJurisdiction( jurisdiction );
+        if ( actorName != null && !actorName.isEmpty() )
+            resourceSpec.setActor( service.findOrCreate( Actor.class, actorName ) );
+        if ( roleName != null && !roleName.isEmpty() )
+            resourceSpec.setRole( service.findOrCreate( Role.class, roleName ) );
+        if ( jurisdictionName != null && !jurisdictionName.isEmpty() )
+            resourceSpec.setJurisdiction( service.findOrCreate( Place.class, jurisdictionName ) );
         resourceSpec.setOrganization( organization );
-        assert actor != null;
-        assert role != null;
         return resourceSpec;
     }
 
@@ -106,10 +107,10 @@ public class Job implements Serializable {
      */
     @Override
     public String toString() {
-        return ( actor == null ? "" : actor.getName() )
-                + ( title.isEmpty() ? "" : " (" + title + " )" )
-                + ( role == null ? "" : " as " + role )
-                + ( jurisdiction == null ? "" : " for " + jurisdiction );
+        return ( getActorName() )
+                + ( getTitle().isEmpty() ? "" : " (" + title + " )" )
+                + ( getRoleName().isEmpty() ? "" : " as " + getRoleName() )
+                + ( getJurisdictionName().isEmpty() ? "" : " for " + getJurisdictionName() );
     }
 
     /**
@@ -119,10 +120,10 @@ public class Job implements Serializable {
     public boolean equals( Object obj ) {
         if ( obj instanceof Job ) {
             Job job = (Job) obj;
-            return actor == job.getActor()
-                    && role == job.getRole()
-                    && jurisdiction == job.getJurisdiction()
-                    && title.equals( job.getTitle() );
+            return getActorName().equals( job.getActorName() )
+                    && getRoleName().equals( job.getRoleName() )
+                    && getJurisdictionName().equals( job.getJurisdictionName() )
+                    && getTitle().equals( job.getTitle() );
         } else {
             return false;
         }
@@ -134,21 +135,24 @@ public class Job implements Serializable {
     @Override
     public int hashCode() {
         int hash = 1;
-        if ( actor != null ) hash = hash * 31 + actor.hashCode();
-        if ( role != null ) hash = hash * 31 + role.hashCode();
-        if ( jurisdiction != null ) hash = hash * 31 + jurisdiction.hashCode();
-        if ( title != null ) hash = hash * 31 + title.hashCode();
+        hash = hash * 31 + getActorName().hashCode();
+        hash = hash * 31 + getRoleName().hashCode();
+        hash = hash * 31 + getJurisdictionName().hashCode();
+        hash = hash * 31 + getTitle().hashCode();
         return hash;
     }
 
     /**
      * Makes a job from a resource spec.
+     *
      * @param resourceSpec a resource spec
      * @return a job
      */
     public static Job from( ResourceSpec resourceSpec ) {
-        return new Job( resourceSpec.getActor(), resourceSpec.getRole(),
-                        resourceSpec.getJurisdiction()) ;
+        return new Job(
+                resourceSpec.getActor().getName(),
+                resourceSpec.getRole().getName(),
+                resourceSpec.getJurisdiction().getName() );
     }
 
     @Id

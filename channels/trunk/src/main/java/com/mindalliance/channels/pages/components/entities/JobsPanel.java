@@ -2,44 +2,41 @@ package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Job;
+import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Place;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Role;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.util.SemMatch;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdateProjectObject;
-import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
-import com.mindalliance.channels.pages.components.entities.PlaybookPanel;
+import com.mindalliance.channels.util.SemMatch;
 import org.apache.wicket.Component;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.pages.RedirectPage;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.io.Serializable;
+import java.text.Collator;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
-import java.text.Collator;
 
 /**
  * Jobs panel.
@@ -114,7 +111,7 @@ public class JobsPanel extends AbstractCommandablePanel {
     }
 
     public ResourceSpec getJobResourceSpec() {
-        return selectedJob.resourceSpec( getOrganization() );
+        return selectedJob.resourceSpec( getOrganization(), getService() );
     }
 
     private void addConfirmedCell( ListItem<JobWrapper> item ) {
@@ -205,7 +202,7 @@ public class JobsPanel extends AbstractCommandablePanel {
         }
         Collections.sort( jobWrappers, new Comparator<JobWrapper>() {
             public int compare( JobWrapper jw1, JobWrapper jw2 ) {
-                return collator.compare( jw1.getActor().normalize(), jw2.getActor().normalize() );
+                return collator.compare( jw1.getNormalizedActorName(), jw2.getNormalizedActorName() );
             }
         } );
         // New job
@@ -268,10 +265,13 @@ public class JobsPanel extends AbstractCommandablePanel {
                         job,
                         UpdateObject.Action.Remove
                 ) );
-                if ( job.getActor() != null ) getCommander().cleanup( Actor.class, job.getActor().getName() );
-                if ( job.getRole() != null ) getCommander().cleanup( Role.class, job.getRole().getName() );
-                if ( job.getJurisdiction() != null )
-                    getCommander().cleanup( Place.class, job.getJurisdiction().getName() );
+                ResourceSpec resourceSpec = job.resourceSpec( getOrganization(), getService() );
+                if ( resourceSpec.getActor( ) != null )
+                    getCommander().cleanup( Actor.class, resourceSpec.getActor().getName() );
+                if ( resourceSpec.getRole() != null )
+                    getCommander().cleanup( Role.class, resourceSpec.getRole().getName() );
+                if ( resourceSpec.getJurisdiction() != null )
+                    getCommander().cleanup( Place.class, resourceSpec.getJurisdiction().getName() );
             }
         }
 
@@ -298,28 +298,26 @@ public class JobsPanel extends AbstractCommandablePanel {
             }
         }
 
-        public Actor getActor() {
-            return job.getActor();
+        private String getNormalizedActorName() {
+            return getService().findOrCreate( Actor.class, getActorName() ).normalize();
         }
 
         public String getActorName() {
-            Actor actor = job.getActor();
-            return actor != null ? actor.getName() : "";
+            return job.getActorName();
         }
 
         public void setActorName( String name ) {
             String oldName = getActorName();
             if ( name != null && !isSame( name, oldName ) ) {
-                Actor actor = getService().findOrCreate( Actor.class, name );
                 if ( markedForCreation ) {
-                    job.setActor( actor );
+                    job.setActorName( name );
                 } else {
                     int index = getOrganization().getJobs().indexOf( job );
                     if ( index >= 0 ) {
                         doCommand( new UpdateProjectObject(
                                 getOrganization(),
-                                "jobs[" + index + "].actor",
-                                actor,
+                                "jobs[" + index + "].actorName",
+                                name,
                                 UpdateObject.Action.Set
                         ) );
                     }
@@ -328,28 +326,23 @@ public class JobsPanel extends AbstractCommandablePanel {
             }
         }
 
-        public Role getRole() {
-            return job.getRole();
+        public String getRoleName() {
+            return job.getRoleName();
         }
 
-        public String getRoleName() {
-            Role role = job.getRole();
-            return role != null ? role.getName() : "";
-        }
 
         public void setRoleName( String name ) {
             String oldName = getRoleName();
             if ( name != null && !isSame( name, oldName ) ) {
-                Role role = getService().findOrCreate( Role.class, name );
                 if ( markedForCreation ) {
-                    job.setRole( role );
+                    job.setRoleName( name );
                 } else {
                     int index = getOrganization().getJobs().indexOf( job );
                     if ( index >= 0 ) {
                         doCommand( new UpdateProjectObject(
                                 getOrganization(),
-                                "jobs[" + index + "].role",
-                                role,
+                                "jobs[" + index + "].roleName",
+                                name,
                                 UpdateObject.Action.Set
                         ) );
                     }
@@ -358,28 +351,22 @@ public class JobsPanel extends AbstractCommandablePanel {
             }
         }
 
-        public Place getJurisdiction() {
-            return job.getJurisdiction();
-        }
-
         public String getJurisdictionName() {
-            Place jurisdiction = job.getJurisdiction();
-            return jurisdiction != null ? jurisdiction.getName() : "";
+            return job.getJurisdictionName();
         }
 
         public void setJurisdictionName( String name ) {
             String oldName = getJurisdictionName();
             if ( name != null && !isSame( name, oldName ) ) {
-                Place jurisdiction = getService().findOrCreate( Place.class, name );
                 if ( markedForCreation ) {
-                    job.setJurisdiction( jurisdiction );
+                    job.setJurisdictionName( name );
                 } else {
                     int index = getOrganization().getJobs().indexOf( job );
                     if ( index >= 0 ) {
                         doCommand( new UpdateProjectObject(
                                 getOrganization(),
-                                "jobs[" + index + "].jurisdiction",
-                                jurisdiction,
+                                "jobs[" + index + "].jurisdictionName",
+                                name,
                                 UpdateObject.Action.Set
                         ) );
                     }
@@ -389,13 +376,15 @@ public class JobsPanel extends AbstractCommandablePanel {
         }
 
         public boolean canBeConfirmed() {
-            return job.getActor() != null
-                    && job.getRole() != null
+            return !job.getActorName().isEmpty()
+                    && !job.getRoleName().isEmpty()
                     && !job.getTitle().isEmpty();
         }
 
         public boolean hasFlows() {
-            return !getService().findAllPlays( job.resourceSpec( getOrganization() ) ).isEmpty();
+            return !getService().findAllPlays(
+                    job.resourceSpec( getOrganization(),
+                            getService() ) ).isEmpty();
         }
 
     }

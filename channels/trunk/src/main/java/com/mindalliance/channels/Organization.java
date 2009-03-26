@@ -159,12 +159,13 @@ public class Organization extends AbstractUnicastChannelable {
     /**
      * Return resources specs from jobs.
      *
+     * @param service a service
      * @return a list of resource specs
      */
-    public List<ResourceSpec> jobResourceSpecs() {
+    public List<ResourceSpec> jobResourceSpecs( Service service) {
         List<ResourceSpec> resourceSpecs = new ArrayList<ResourceSpec>();
         for ( Job job : jobs ) {
-            resourceSpecs.add( job.resourceSpec( this ) );
+            resourceSpecs.add( job.resourceSpec( this, service ) );
         }
         return resourceSpecs;
     }

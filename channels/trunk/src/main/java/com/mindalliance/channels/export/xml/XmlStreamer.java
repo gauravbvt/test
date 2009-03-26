@@ -12,6 +12,7 @@ import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.Channel;
+import com.mindalliance.channels.Job;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.dao.Journal;
@@ -81,6 +82,7 @@ public class XmlStreamer implements Importer, Exporter {
             xstream.alias( "issue", UserIssue.class );
             xstream.alias( "scenario", Scenario.class );
             xstream.alias( "channel", Channel.class );
+            xstream.alias( "job", Job.class );
             xstream.registerConverter( new ProjectConverter() );
             xstream.registerConverter( new JournalConverter() );
             xstream.registerConverter( new CommandConverter() );
@@ -93,6 +95,7 @@ public class XmlStreamer implements Importer, Exporter {
             xstream.registerConverter( new PlaceConverter() );
             xstream.registerConverter( new UserIssueConverter() );
             xstream.registerConverter( new ChannelConverter() );
+            xstream.registerConverter( new JobConverter() );
         }
 
         /**
