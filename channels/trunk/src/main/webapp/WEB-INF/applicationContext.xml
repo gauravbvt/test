@@ -70,6 +70,7 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.RedundantFlow"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.UnconnectedConnector"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowViolatesPolicy"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.UnconfirmedJob"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.NoRedundancy"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.PotentialDeadlock"/>
             </list>

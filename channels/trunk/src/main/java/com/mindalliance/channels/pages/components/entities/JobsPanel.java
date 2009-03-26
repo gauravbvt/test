@@ -162,7 +162,7 @@ public class JobsPanel extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addConfirmedCell( item );
                 target.addComponent( item );
-                if ( !jobWrapper.isMarkedForCreation() ) {
+                if ( !jobWrapper.isMarkedForCreation() && jobWrapper.isConfirmed() ) {
                     update( target, new Change(
                             Change.Type.Updated,
                             getOrganization(),
@@ -281,7 +281,7 @@ public class JobsPanel extends AbstractCommandablePanel {
 
         public void setTitle( String title ) {
             String oldTitle = getTitle();
-            if ( markedForCreation ) {
+            if ( markedForCreation || !confirmed ) {
                 job.setTitle( title );
             } else {
                 if ( !isSame( title, oldTitle ) ) {

@@ -122,8 +122,7 @@ public class Job implements Serializable {
             Job job = (Job) obj;
             return getActorName().equals( job.getActorName() )
                     && getRoleName().equals( job.getRoleName() )
-                    && getJurisdictionName().equals( job.getJurisdictionName() )
-                    && getTitle().equals( job.getTitle() );
+                    && getJurisdictionName().equals( job.getJurisdictionName() );
         } else {
             return false;
         }
@@ -138,21 +137,27 @@ public class Job implements Serializable {
         hash = hash * 31 + getActorName().hashCode();
         hash = hash * 31 + getRoleName().hashCode();
         hash = hash * 31 + getJurisdictionName().hashCode();
-        hash = hash * 31 + getTitle().hashCode();
         return hash;
     }
 
     /**
-     * Makes a job from a resource spec.
-     *
+     * Extract a job from a resource spec.
+     * Returns null if none implied.
      * @param resourceSpec a resource spec
      * @return a job
      */
     public static Job from( ResourceSpec resourceSpec ) {
-        return new Job(
-                resourceSpec.getActor().getName(),
-                resourceSpec.getRole().getName(),
-                resourceSpec.getJurisdiction().getName() );
+        Actor actor = resourceSpec.getActor();
+        Role role = resourceSpec.getRole();
+        Place jurisdiction = resourceSpec.getJurisdiction();
+        Organization organization = resourceSpec.getOrganization();
+        if (actor == null || role == null || organization == null)
+            return null;
+        else
+            return new Job(
+                actor.getName() ,
+                role.getName(),
+                jurisdiction  == null ? "" : jurisdiction.getName() );
     }
 
     @Id

@@ -616,7 +616,7 @@ public class ChannelsServiceImpl implements Service {
                     ResourceSpec resourceSpec = part.resourceSpec();
                     if ( resourceSpec.hasJob() ) {
                         Job job = Job.from( resourceSpec );
-                        if ( !confirmedJobs.contains( job ) )
+                        if ( job != null && !confirmedJobs.contains( job ) )
                             unconfirmedJobs.add( job );
                     }
                 }
