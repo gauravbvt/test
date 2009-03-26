@@ -148,15 +148,15 @@ public class DefaultAnalyst implements Analyst {
     /**
      * Find the issues on parts and flows for all plays of a resource
      *
-     * @param resource a resource
+     * @param resourceSpec a resource
      * @return a list of issues
      */
-    private List<Issue> findAllIssuesInPlays( ResourceSpec resource ) {
+    private List<Issue> findAllIssuesInPlays( ResourceSpec resourceSpec ) {
         List<Issue> issues = new ArrayList<Issue>();
-        List<Play> plays = Project.service().findAllPlays( resource );
+        List<Play> plays = Project.service().findAllPlays( resourceSpec );
         Set<Part> parts = new HashSet<Part>();
         for ( Play play : plays ) {
-            parts.add( play.getPart() );
+            parts.add( play.getPartFor( resourceSpec ) );
             Iterator<Issue> iterator = findIssues( play.getFlow(), true );
             while ( iterator.hasNext() ) issues.add( iterator.next() );
         }

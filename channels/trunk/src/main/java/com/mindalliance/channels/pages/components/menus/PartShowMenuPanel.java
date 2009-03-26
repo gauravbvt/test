@@ -21,7 +21,7 @@ import java.util.List;
 public class PartShowMenuPanel extends MenuPanel {
 
     public PartShowMenuPanel( String s, IModel<? extends Part> model ) {
-        super( s, model );
+        super( s, model, null );
         init();
     }
 

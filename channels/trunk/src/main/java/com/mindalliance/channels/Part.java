@@ -251,7 +251,7 @@ public class Part extends Node {
      * @param resourceSpec a resource
      * @return a boolean
      */
-    public boolean involves( ResourceSpec resourceSpec ) {
+    public boolean isImpliedBy( ResourceSpec resourceSpec ) {
         ResourceSpec partResourceSpec = resourceSpec();
         if (partResourceSpec.isAnyone()) {
             return false;

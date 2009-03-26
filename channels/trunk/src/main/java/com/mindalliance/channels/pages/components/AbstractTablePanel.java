@@ -1,23 +1,22 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.pages.ModelObjectLink;
-import com.mindalliance.channels.pages.ProfileLink;
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.wicket.Component;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
-import java.lang.reflect.InvocationTargetException;
+import java.util.Set;
 
 /**
  * Abstract panel holding a table showing properties of a model object.
@@ -29,7 +28,7 @@ import java.lang.reflect.InvocationTargetException;
  * Date: Jan 13, 2009
  * Time: 10:25:30 AM
  */
-public abstract class AbstractTablePanel<T> extends Panel {
+public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
 
     /**
      * Content of an empty cell
@@ -40,12 +39,12 @@ public abstract class AbstractTablePanel<T> extends Panel {
      */
     private int pageSize = 5;
 
-    public AbstractTablePanel( String s, IModel<?> iModel ) {
-        super( s, iModel );
+    public AbstractTablePanel( String s, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
+        super( s, iModel, expansions );
     }
 
-    public AbstractTablePanel( String s, IModel<?> iModel, int pageSize ) {
-        super( s, iModel );
+    public AbstractTablePanel( String s, IModel<? extends Identifiable> iModel, int pageSize, Set<Long> expansions ) {
+        super( s, iModel, expansions );
         this.pageSize = pageSize;
     }
 
@@ -103,7 +102,7 @@ public abstract class AbstractTablePanel<T> extends Panel {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
                                       IModel<T> model ) {
-                String text = (String) evaluate( model.getObject(), labelProperty, defaultText );
+                String text = (String) CommandUtils.getProperty( model.getObject(), labelProperty, defaultText );
                 String labelText = ( text == null || text.isEmpty() ) ? ( defaultText == null ? "" : defaultText ) : text;
                 cellItem.add( new Label( id, new Model<String>( labelText ) ) );
                 if ( style != null ) {
@@ -112,7 +111,7 @@ public abstract class AbstractTablePanel<T> extends Panel {
                         cellItem.add( new AttributeModifier( "class", true, new Model<String>( styleClass ) ) );
                 }
                 if ( titleProperty != null ) {
-                    String title = (String) evaluate( model.getObject(), titleProperty, null );
+                    String title = (String) CommandUtils.getProperty( model.getObject(), titleProperty, null );
                     if ( title != null )
                         cellItem.add( new AttributeModifier( "title", true, new Model<String>( title ) ) );
                 }
@@ -170,31 +169,6 @@ public abstract class AbstractTablePanel<T> extends Panel {
     }
 
 
-/*
-    private Component cellLinkContent( String id, T bean, String moProperty, String labelProperty, String defaultText ) {
-        final ModelObject mo = (ModelObject) evaluate( bean, moProperty, null );
-        final String labelText;
-        if ( mo != null ) {
-            String text = (String) evaluate( bean, labelProperty, defaultText );
-            labelText = ( text == null || text.isEmpty() ) ? ( defaultText == null ? "" : defaultText ) : text;
-                return new ModelObjectLink( id,
-                        new AbstractReadOnlyModel<ModelObject>() {
-                            @Override
-                            public ModelObject getObject() {
-                                return mo;
-                            }
-                        },
-                        new AbstractReadOnlyModel<String>() {
-                            @Override
-                            public String getObject() {
-                                return labelText;
-                            }
-                        } );
-            }
-        return new Label( id, new Model<String>( defaultText == null ? "" : defaultText ) );
-    }
-*/
-
     private Component cellLinkContent( String id, T bean, String moProperty, String labelProperty, String defaultText ) {
         final ModelObject mo = (ModelObject) CommandUtils.getProperty( bean, moProperty, null );
         if ( mo != null ) {
@@ -202,67 +176,30 @@ public abstract class AbstractTablePanel<T> extends Panel {
                     bean,
                     labelProperty,
                     defaultText );
-            labelText = (labelText == null || labelText.isEmpty())
-                    ? (defaultText == null ? "" : defaultText)
+            labelText = ( labelText == null || labelText.isEmpty() )
+                    ? ( defaultText == null ? "" : defaultText )
                     : labelText;
-            return new ModelObjectLink(
-                    id,
-                    new Model<ModelObject>(mo),
-                    new Model<String>(labelText));
+            if ( mo.isEntity() ) {
+                return new AjaxFallbackLink( "entity-link" ) {
+                    public void onClick( AjaxRequestTarget target ) {
+                        update( target, new Change( Change.Type.Expanded, mo ) );
+                    }
+                };
+            } else {
+                return new ModelObjectLink(
+                        id,
+                        new Model<ModelObject>( mo ),
+                        new Model<String>( labelText ) );
+            }
         } else {
             return new Label( id, new Model<String>( ( defaultText == null ? "" : defaultText ) ) );
         }
     }
 
-
-    /**
-     * Make a column with a link to a resource's profile.
-     * Assumes the table rows are resources.
-     *
-     * @param name  the column's name
-     * @param label the cells' text
-     * @return an AbstractColumn
-     */
-    protected AbstractColumn<T> makeResourceLinkColumn( String name, final String label ) {
-        return new AbstractColumn<T>( new Model<String>( name ) ) {
-
-            public void populateItem( Item<ICellPopulator<T>> cellItem, String id, final IModel<T> model ) {
-                cellItem.add( new ProfileLink( id,
-                        new AbstractReadOnlyModel<ResourceSpec>() {
-                            public ResourceSpec getObject() {
-                                return (ResourceSpec) model.getObject();
-                            }
-                        },
-                        new AbstractReadOnlyModel<String>() {
-                            public String getObject() {
-                                return label;
-                            }
-                        }
-                ) );
-                cellItem.add( new AttributeModifier( "class", true, new Model<String>( "link" ) ) );
-            }
-        };
-    }
-
-    private Object evaluate( Object bean, String path, Object defaultValue ) {
-        if (path == null || path.isEmpty()) return bean;
-        Object value = defaultValue;
-        try {
-            value = PropertyUtils.getProperty( bean, path );
-        } catch ( IllegalAccessException e ) {
-            e.printStackTrace();
-        } catch ( InvocationTargetException e ) {
-            e.printStackTrace();
-        } catch ( NoSuchMethodException e ) {
-            e.printStackTrace();
-        }
-        return value;
-    }
-
     private String findStyleClass( Object bean, String style ) {
         String styleClass;
         if ( style.startsWith( "@" ) ) {
-            styleClass = (String) evaluate( bean, style.substring( 1 ), null );
+            styleClass = (String) CommandUtils.getProperty( bean, style.substring( 1 ), null );
         } else {
             styleClass = style;
         }

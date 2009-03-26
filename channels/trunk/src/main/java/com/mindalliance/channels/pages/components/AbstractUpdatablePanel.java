@@ -6,11 +6,15 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.Component;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Application;
 import com.mindalliance.channels.pages.Updatable;
+import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.ProjectPage;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.Identifiable;
 
 import java.text.Collator;
+import java.util.Set;
 
 /**
  * Abstract base class of updatable panels.
@@ -30,14 +34,19 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * Model on an identifiable.
      */
     private IModel<? extends Identifiable> model = null;
+    /**
+     * Ids of expanded model objects.
+     */
+    private Set<Long> expansions;
 
     public AbstractUpdatablePanel( String id ) {
         super( id );
     }
 
-    public AbstractUpdatablePanel( String id, IModel<? extends Identifiable> model ) {
+    public AbstractUpdatablePanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( id, model );
         this.model = model;
+        this.expansions = expansions;
     }
 
     protected IModel<? extends Identifiable> getModel() {
@@ -112,6 +121,12 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         return COMPARATOR.compare( name, target ) == 0;
     }
 
-    
+    /**
+     * Get the expansions.
+     * @return a set of Longs
+     */
+    protected Set<Long> getExpansions() {
+        return expansions;
+    }
 
 }

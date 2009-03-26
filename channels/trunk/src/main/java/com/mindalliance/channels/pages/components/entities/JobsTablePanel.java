@@ -2,6 +2,9 @@ package com.mindalliance.channels.pages.components.entities;
 
 import org.apache.wicket.model.IModel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
+import com.mindalliance.channels.Identifiable;
+
+import java.util.Set;
 
 /**
  * A table showing an organiztion's jobs, confirmed or not. 
@@ -13,11 +16,11 @@ import com.mindalliance.channels.pages.components.AbstractTablePanel;
  */
 public class JobsTablePanel extends AbstractTablePanel {
 
-    public JobsTablePanel( String s, IModel iModel, int pageSize ) {
-        super( s, iModel, pageSize );
+    public JobsTablePanel( String s, IModel<? extends Identifiable> iModel, int pageSize, Set<Long> expansions ) {
+        super( s, iModel, pageSize, expansions );
     }
 
-    public JobsTablePanel( String s, IModel iModel ) {
-        super( s, iModel );
+    public JobsTablePanel( String s, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
+        super( s, iModel, expansions );
     }
 }

@@ -338,7 +338,10 @@ public final class ProjectPage extends WebPage implements Updatable {
         if ( entity == null ) {
             entityPanel = new Label( "entity", "" );
         } else {
-            entityPanel = new EntityPanel( "entity", new Model<ModelObject>( entity ) );
+            entityPanel = new EntityPanel(
+                    "entity",
+                    new Model<ModelObject>( entity ),
+                    getExpansions() );
         }
         makeVisible( entityPanel, entity != null );
         entityPanel.setOutputMarkupId( true );
@@ -639,8 +642,10 @@ public final class ProjectPage extends WebPage implements Updatable {
         if ( identifiable instanceof ModelObject
                 && ( (ModelObject) identifiable ).isEntity() ) {
             ModelObject entity = findExpandedEntity();
-            if ( entity != null ) collapse( entity );
-            getCommander().releaseAnyLockOn( entity );
+            if ( entity != null )  {
+                collapse( entity );
+                getCommander().releaseAnyLockOn( entity );
+            }
         }
         // Never lock a scenario
         if ( !( identifiable instanceof Scenario ) ) {
@@ -750,5 +755,13 @@ public final class ProjectPage extends WebPage implements Updatable {
 
         }
         target.addComponent( scenarioActionsMenu );
+    }
+
+    /**
+     * Get expansions.
+     * @return a set of Longs
+     */
+    public Set<Long> getExpansions() {
+        return expansions;
     }
 }

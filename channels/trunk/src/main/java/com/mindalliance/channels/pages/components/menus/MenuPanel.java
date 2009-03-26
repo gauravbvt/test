@@ -21,6 +21,7 @@ import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.io.Serializable;
 
 /**
@@ -37,8 +38,8 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      */
     private IModel<? extends Identifiable> model;
 
-    public MenuPanel( String s, IModel<? extends Identifiable> model ) {
-        super( s, model );
+    public MenuPanel( String s, IModel<? extends Identifiable> model, Set<Long> expansions ) {
+        super( s, model, expansions );
         this.model = model;
     }
 

@@ -5,7 +5,6 @@ import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.LockManager;
-import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.menus.EntityActionsMenuPanel;
 import com.mindalliance.channels.pages.components.menus.EntityShowMenuPanel;
@@ -18,6 +17,8 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+
+import java.util.Set;
 
 /**
  * A panel showing an entity (actor, organization, role or place)
@@ -40,8 +41,8 @@ public class EntityPanel extends AbstractCommandablePanel {
         return aspectShown;
     }
 
-    public EntityPanel( String id, IModel<? extends ModelObject> model ) {
-        super( id, model );
+    public EntityPanel( String id, IModel<? extends ModelObject> model, Set<Long> expansions ) {
+        super( id, model, expansions );
         init();
     }
 
@@ -92,18 +93,21 @@ public class EntityPanel extends AbstractCommandablePanel {
         if (getEntity() instanceof Organization ) {
             return new OrganizationDetailsPanel(
                     "aspect",
-                    new PropertyModel<ModelObject>(this, "entity"));
+                    new PropertyModel<ModelObject>(this, "entity"),
+                    getExpansions());
         }
         else if (getEntity() instanceof Actor ) {
             return new ActorDetailsPanel(
                     "aspect",
-                    new PropertyModel<ModelObject>(this, "entity"));
+                    new PropertyModel<ModelObject>(this, "entity"),
+                    getExpansions());
         }
 
         else {
             return new EntityDetailsPanel(
                     "aspect",
-                    new PropertyModel<ModelObject>(this, "entity"));
+                    new PropertyModel<ModelObject>(this, "entity"),
+                    getExpansions());
         }
     }
 
@@ -116,7 +120,10 @@ public class EntityPanel extends AbstractCommandablePanel {
     }
 
     private Component getEntityIssuesPanel() {
-        return new Label( "aspect", "Issues is under construction" );
+        return new EntityIssuesPanel(
+                "aspect",
+                new PropertyModel<ModelObject>( this, "entity"),
+                getExpansions());
     }
 
     private void addEntityActionMenu() {

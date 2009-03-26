@@ -289,6 +289,7 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      * @return a boolean
      */
     public boolean narrowsOrEquals( ResourceSpec other ) {
+        if ( other.isAnyone() ) return false;
         if ( equals( other ) ) return true;
         if ( actor != other.getActor() && !other.isAnyActor() )
             return false;

@@ -6,6 +6,8 @@ import org.apache.wicket.model.Model;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.pages.components.entities.PlaybookPanel;
 
+import java.util.Set;
+
 /**
  * A resource's profile
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -20,16 +22,16 @@ public class ResourceProfilePanel extends Panel {
      */
     private ResourceSpec resourceSpec;
 
-    public ResourceProfilePanel( String id, IModel<ResourceSpec> model ) {
+    public ResourceProfilePanel( String id, IModel model ) {
         super( id, model );
-        resourceSpec = model.getObject();
+        resourceSpec = (ResourceSpec)model.getObject();
         init();
     }
 
     private void init() {
-        add( new ContactInfoPanel( "contact-info", new Model<ResourceSpec>( resourceSpec ) ) );
-        add( new ResourceIssuesTablePanel( "issues", new Model<ResourceSpec>( resourceSpec ) ) );
-        add( new PlaybookPanel( "playbook", new Model<ResourceSpec>( resourceSpec ) ) );
-        add( new DirectoryPanel( "directory", new Model<ResourceSpec>( resourceSpec ) ) );
+        add( new ContactInfoPanel( "contact-info", new Model( resourceSpec ) , null) );
+        add( new ResourceIssuesTablePanel( "issues", new Model( resourceSpec ), null ) );
+        add( new PlaybookPanel( "playbook", new Model( resourceSpec ) , null) );
+        add( new DirectoryPanel( "directory", new Model( resourceSpec ), null ) );
     }
 }

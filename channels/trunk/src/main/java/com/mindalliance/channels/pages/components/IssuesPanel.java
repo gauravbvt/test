@@ -41,18 +41,13 @@ public class IssuesPanel extends AbstractCommandablePanel {
      */
     private IModel<ModelObject> model;
     /**
-     * Expansions.
-     */
-    private Set<Long> expansions;
-    /**
      * Issues container.
      */
     private WebMarkupContainer issuesContainer;
 
     public IssuesPanel( String id, IModel<ModelObject> model, Set<Long> expansions ) {
-        super( id, model );
+        super( id, model, expansions );
         this.model = model;
-        this.expansions = expansions;
         init();
     }
 
@@ -97,7 +92,7 @@ public class IssuesPanel extends AbstractCommandablePanel {
                 Issue issue = listItem.getModelObject();
                 final long id = issue.getId();
                 final Panel issuePanel;
-                if ( expansions.contains( id ) ) {
+                if ( getExpansions().contains( id ) ) {
                     issuePanel = new ExpandedIssuePanel( "issue", new Model<Issue>( issue ) );
                 } else {
                     issuePanel = new CollapsedIssuePanel( "issue", new Model<Issue>( issue ) );

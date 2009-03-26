@@ -30,7 +30,7 @@ public class IssueActionsMenuPanel extends MenuPanel {
     private boolean isCollapsed;
 
     public IssueActionsMenuPanel( String s, IModel<? extends Issue> model, boolean isCollapsed ) {
-        super( s, model );
+        super( s, model, null );
         this.isCollapsed = isCollapsed;
         init();
     }

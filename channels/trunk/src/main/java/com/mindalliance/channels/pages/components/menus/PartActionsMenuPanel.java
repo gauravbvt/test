@@ -30,7 +30,7 @@ import java.util.ArrayList;
 public class PartActionsMenuPanel extends MenuPanel {
 
     public PartActionsMenuPanel( String s, IModel<? extends Part> model ) {
-        super( s, model );
+        super( s, model, null );
         init();
     }
 

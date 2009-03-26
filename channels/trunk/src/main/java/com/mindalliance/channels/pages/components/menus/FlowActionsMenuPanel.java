@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages.components.menus;
 
 import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.BreakUpFlow;
 import com.mindalliance.channels.command.commands.DuplicateFlow;
@@ -31,7 +30,7 @@ public class FlowActionsMenuPanel extends MenuPanel {
     private boolean isCollapsed;
 
     public FlowActionsMenuPanel( String s, IModel<? extends Flow> model, boolean isOutcome, boolean isCollapsed ) {
-        super( s, model );
+        super( s, model, null );
         this.isOutcome = isOutcome;
         this.isCollapsed = isCollapsed;
         init();

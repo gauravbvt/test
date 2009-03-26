@@ -20,6 +20,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -38,8 +39,8 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
 
     private Pattern namePattern = Pattern.compile( "^.*?(\\(\\d+\\))?$" );
 
-    public EntityDetailsPanel( String id, IModel<? extends ModelObject> model ) {
-        super( id, model );
+    public EntityDetailsPanel( String id, IModel<? extends ModelObject> model, Set<Long> expansions ) {
+        super( id, model, expansions );
         this.model = model;
         init();
     }

@@ -26,6 +26,7 @@ import org.apache.wicket.model.PropertyModel;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * An editable list of channels.
@@ -66,7 +67,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
     private Label noChannelLabel;
 
     public ChannelListPanel( String id, IModel<Channelable> model ) {
-        super( id, model );
+        super( id, model, null );
         this.model = model;
         init();
     }

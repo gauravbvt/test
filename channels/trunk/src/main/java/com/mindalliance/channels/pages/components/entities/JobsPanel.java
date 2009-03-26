@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Set;
 import java.text.Collator;
 
 /**
@@ -55,8 +56,8 @@ public class JobsPanel extends AbstractCommandablePanel {
     private Job selectedJob;
     private WebMarkupContainer flowsDiv;
 
-    public JobsPanel( String id, IModel<Organization> model ) {
-        super( id, model );
+    public JobsPanel( String id, IModel<Organization> model, Set<Long> expansions ) {
+        super( id, model, expansions );
         init();
     }
 
@@ -104,7 +105,8 @@ public class JobsPanel extends AbstractCommandablePanel {
             jobLabel = new Label( "job", selectedJob.toString() );
             jobPlaybook = new PlaybookPanel(
                     "playbook",
-                    new PropertyModel<ResourceSpec>( this, "jobResourceSpec" ) );
+                    new PropertyModel<ResourceSpec>( this, "jobResourceSpec" ),
+                    getExpansions());
         }
         flowsDiv.addOrReplace( jobLabel );
         flowsDiv.addOrReplace( jobPlaybook );
@@ -415,10 +417,12 @@ public class JobsPanel extends AbstractCommandablePanel {
         private void init() {
             // link
             AjaxFallbackLink link = new AjaxFallbackLink( "entity-link" ) {
-                public void onClick( AjaxRequestTarget ajaxRequestTarget ) {
+                public void onClick( AjaxRequestTarget target ) {
                     ModelObject mo = (ModelObject) CommandUtils.getProperty( jobWrapper, property, null );
-                    if ( mo != null ) setResponsePage(
-                            new RedirectPage( ModelObjectLink.linkForEntity( mo ) ) );
+                    if ( mo != null ) {
+                        // setResponsePage(  new RedirectPage( ModelObjectLink.linkForEntity( mo ) ) );
+                        update(target, new Change(Change.Type.Expanded, mo));
+                    }
                 }
             };
             add( link );

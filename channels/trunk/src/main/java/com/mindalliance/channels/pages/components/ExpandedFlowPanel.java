@@ -131,19 +131,14 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
      * Issues panel.
      */
     private IssuesPanel issuesPanel;
-    /**
-     * Expansions.
-     */
-    private Set<Long> expansions;
 
     protected ExpandedFlowPanel(
             String id,
             IModel<Flow> model,
             boolean outcome,
             Set<Long> expansions ) {
-        super( id, model );
+        super( id, model, expansions );
         this.model = model;
-        this.expansions = expansions;
         setOutcome( outcome );
         init();
     }
@@ -182,7 +177,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         issuesPanel = new IssuesPanel(
                 "issues",
                 new PropertyModel<ModelObject>( this, "flow" ),
-                expansions );
+                getExpansions() );
         issuesPanel.setOutputMarkupId( true );
         add( issuesPanel );
         adjustFields( getFlow() );

@@ -26,9 +26,12 @@ public class ModelObjectLink extends ExternalLink {
         this( id, mo, null );
     }
 
-    public ModelObjectLink(
-            String id, final IModel<? extends ModelObject> mo, IModel<String> s ) {
+    public ModelObjectLink( String id, IModel<? extends ModelObject> mo, IModel<String> text)  {
+        this( id, mo, text, null );
+    }
 
+    public ModelObjectLink(
+            String id, final IModel<? extends ModelObject> mo, IModel<String> text, final String hint ) {
         super(
             id,
             new AbstractReadOnlyModel<String>() {
@@ -47,7 +50,7 @@ public class ModelObjectLink extends ExternalLink {
                     else if ( obj instanceof Organization )
                         result = linkFor( (Organization) obj );
                     else if ( obj instanceof InternalFlow )
-                        result = linkFor( (InternalFlow) obj );
+                        result = linkFor( (InternalFlow) obj, hint );
                     else {
                         result = "#";
                         if ( obj != null )
@@ -58,7 +61,7 @@ public class ModelObjectLink extends ExternalLink {
                     return result;
                 }
             },
-            s );
+            text );
     }
 
     public static String linkFor( Scenario scenario ) {
@@ -97,10 +100,10 @@ public class ModelObjectLink extends ExternalLink {
 
         );
     }
-    private static String linkFor( InternalFlow flow ) {
-        final Node source = flow.getSource();
+    private static String linkFor( InternalFlow flow, final String hint ) {
+        final Node source = ( hint != null && hint.equals( "target" )) ? flow.getTarget() : flow.getSource();
         return MessageFormat.format(
-                "node.html?scenario={0,number,0}&node={1,number,0}&expand={2,number,0}",                         // NON-NLS
+                "node.html?scenario={0,number,0}&node={1,number,0}&expand={2,number,0}",               // NON-NLS
                 source.getScenario().getId(),
                 source.getId(),
                 flow.getId()

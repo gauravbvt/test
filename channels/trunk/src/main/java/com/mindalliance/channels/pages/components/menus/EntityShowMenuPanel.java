@@ -28,7 +28,7 @@ public class EntityShowMenuPanel extends MenuPanel {
     private EntityPanel entityPanel;
 
     public EntityShowMenuPanel( String id, IModel<? extends Identifiable> model ) {
-        super( id, model );
+        super( id, model, null );
         init();
     }
 

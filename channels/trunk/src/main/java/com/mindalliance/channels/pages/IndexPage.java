@@ -48,7 +48,7 @@ public class IndexPage extends WebPage {
         List<Scenario> scenarios = service.list( Scenario.class );
 
         add( new ScenariosPanel( "all-scenarios",
-                new Model<ArrayList<Scenario>>( (ArrayList) scenarios ) ) );
+                new Model<ArrayList<Scenario>>( (ArrayList) scenarios ), null ) );
         Form form = new Form( "resourceSpecs-form" ) {
             protected void onSubmit() {
                 setResponsePage( new RedirectPage( "index.html" ) );
@@ -57,7 +57,8 @@ public class IndexPage extends WebPage {
         form.add( new ResourceSpecsPanel( "all-resourceSpecs",
                 new Model<ArrayList<ResourceSpec>>(
                         (ArrayList) resourceSpecs ),
-                PAGE_SIZE ) );
+                PAGE_SIZE,
+                null) );
         add( form );
     }
 }

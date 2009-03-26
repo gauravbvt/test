@@ -19,9 +19,6 @@ import com.mindalliance.channels.export.Exporter;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.GraphBuilder;
-import com.mindalliance.channels.pages.entities.ActorPage;
-import com.mindalliance.channels.pages.entities.OrganizationPage;
-import com.mindalliance.channels.pages.entities.RolePage;
 import com.mindalliance.channels.pages.reports.ProjectReportPage;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.context.SecurityContextHolder;
@@ -131,10 +128,12 @@ public final class Project extends WebApplication {                             
          mount( new QueryStringUrlCodingStrategy( "node.html", ProjectPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.xml", ExportPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.png", FlowPage.class ) );
+        /*
         mount( new QueryStringUrlCodingStrategy( "role.html", RolePage.class ) );
         mount( new QueryStringUrlCodingStrategy( "actor.html", ActorPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "organization.html", OrganizationPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "resource.html", ProfilePage.class ) );
+        */
 
         service.initialize();
     }

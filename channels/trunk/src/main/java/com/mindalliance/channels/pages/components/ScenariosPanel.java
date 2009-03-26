@@ -8,6 +8,7 @@ import com.mindalliance.channels.util.SortableBeanProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -22,9 +23,9 @@ public class ScenariosPanel extends AbstractTablePanel {
      */
     private List<Scenario> scenarios;
 
-    public ScenariosPanel( String s, IModel<ArrayList<Scenario>> model ) {
-        super( s, model );
-        scenarios = model.getObject();
+    public ScenariosPanel( String s, IModel model, Set<Long> expansions ) {
+        super( s, model, expansions );
+        scenarios = (ArrayList<Scenario>)model.getObject();
         init();
     }
 

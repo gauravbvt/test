@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class EntityActionsMenuPanel extends MenuPanel {
 
     public EntityActionsMenuPanel( String id, IModel<? extends Identifiable> model ) {
-        super( id, model );
+        super( id, model, null );
         init();
     }
 

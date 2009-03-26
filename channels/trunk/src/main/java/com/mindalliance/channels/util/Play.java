@@ -2,6 +2,7 @@ package com.mindalliance.channels.util;
 
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.ResourceSpec;
 
 import java.io.Serializable;
 
@@ -133,5 +134,21 @@ public class Play implements Serializable {
         if ( part != null) hash = hash * SEED + part.hashCode();
         if ( flow != null) hash = hash * SEED + flow.hashCode();
         return hash;
+    }
+
+    /**
+     * Return the part in the play that equals or narrows a resourceSpec.
+     * Assumes at least one part matches.
+     * @param resourceSpec a resourceSpec
+     * @return a part
+     */
+    public Part getPartFor( ResourceSpec resourceSpec ) {
+        Part part = getPart();
+        if (part.resourceSpec().narrowsOrEquals( resourceSpec )) {
+            return part;
+        }
+        else {
+            return getOtherPart();
+        }
     }
 }

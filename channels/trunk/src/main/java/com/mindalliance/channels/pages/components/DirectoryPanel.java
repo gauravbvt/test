@@ -1,24 +1,22 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.Service;
-import com.mindalliance.channels.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.ProfileLink;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.util.SortableBeanProvider;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.AttributeModifier;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A directory of resources specified resources may need to contact
@@ -34,8 +32,8 @@ public class DirectoryPanel extends AbstractTablePanel<ResourceSpec> {
      */
     private ResourceSpec resourceSpec;
 
-    public DirectoryPanel( String id, IModel<ResourceSpec> model ) {
-        super( id, model );
+    public DirectoryPanel( String id, IModel<ResourceSpec> model, Set<Long> expansions ) {
+        super( id, model, expansions );
         setRenderBodyOnly( true );
         resourceSpec = model.getObject();
         init();
@@ -86,10 +84,6 @@ public class DirectoryPanel extends AbstractTablePanel<ResourceSpec> {
                 columns,
                 new SortableBeanProvider<ResourceSpec>( resourceSpecs, "name" ),
                 getPageSize() ) );
-    }
-
-    private Service getService() {
-        return ( (Project) getApplication() ).getService();
     }
 
 

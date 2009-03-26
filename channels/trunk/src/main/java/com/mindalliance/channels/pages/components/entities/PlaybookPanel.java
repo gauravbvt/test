@@ -1,11 +1,9 @@
 package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.util.Play;
 import com.mindalliance.channels.util.SortableBeanProvider;
-import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
@@ -14,6 +12,7 @@ import org.apache.wicket.model.Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Playbook page
@@ -29,8 +28,8 @@ public class PlaybookPanel extends AbstractTablePanel<Play> {
      */
     private ResourceSpec player;
 
-    public PlaybookPanel( String s, IModel<ResourceSpec> model ) {
-        super( s, model );
+    public PlaybookPanel( String s, IModel<ResourceSpec> model, Set<Long> expansions ) {
+        super( s, model, expansions );
         player = model.getObject();
         init();
     }
@@ -61,9 +60,6 @@ public class PlaybookPanel extends AbstractTablePanel<Play> {
                 getPageSize() ) );
     }
 
-    private Service getService() {
-        return ( (Project) getApplication() ).getService();
-    }
 
 
 }

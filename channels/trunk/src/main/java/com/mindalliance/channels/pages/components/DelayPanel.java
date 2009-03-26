@@ -16,6 +16,7 @@ import com.mindalliance.channels.command.commands.UpdateProjectObject;
 import com.mindalliance.channels.command.Change;
 
 import java.util.List;
+import java.util.Set;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -45,7 +46,7 @@ public class DelayPanel extends AbstractCommandablePanel {
     private String property;
 
     public DelayPanel( String id, IModel<ModelObject> model, String property ) {
-        super( id, model );
+        super( id, model, null );
         this.model = model;
         this.property = property;
         init();

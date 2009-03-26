@@ -328,13 +328,13 @@ public class ChannelsServiceImpl implements Service {
         Set<ResourceSpec> result = new HashSet<ResourceSpec>();
         // Specs from entities
         for ( Actor actor : list( Actor.class ) ) {
-            result.add( ResourceSpec.with( actor ));
+            result.add( ResourceSpec.with( actor ) );
         }
         for ( Role role : list( Role.class ) ) {
-            result.add( ResourceSpec.with( role ));
+            result.add( ResourceSpec.with( role ) );
         }
         for ( Organization organization : list( Organization.class ) ) {
-            result.add( ResourceSpec.with( organization ));
+            result.add( ResourceSpec.with( organization ) );
             result.addAll( organization.jobResourceSpecs() );
         }
         // Specs from scenario parts
@@ -406,14 +406,14 @@ public class ChannelsServiceImpl implements Service {
                 Flow flow = flows.next();
                 if ( Play.hasPlay( flow ) ) {
                     if ( flow.getSource().isPart()
-                            && ( (Part) flow.getSource() ).involves( resourceSpec ) ) {
-                        // role sends
+                            && ( (Part) flow.getSource() ).resourceSpec().narrowsOrEquals( resourceSpec ) ) {
+                        // sends
                         Play play = new Play( (Part) flow.getSource(), flow, true );
                         plays.add( play );
                     }
                     if ( flow.getTarget().isPart()
-                            && ( (Part) flow.getTarget() ).involves( resourceSpec ) ) {
-                        // role receives
+                            &&  ( (Part) flow.getTarget() ).resourceSpec().narrowsOrEquals( resourceSpec ) ) {
+                        // receives
                         Play play = new Play( (Part) flow.getTarget(), flow, false );
                         plays.add( play );
                     }

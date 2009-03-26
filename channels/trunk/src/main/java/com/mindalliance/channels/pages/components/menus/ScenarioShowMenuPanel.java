@@ -15,7 +15,7 @@ import org.apache.wicket.model.IModel;
 public class ScenarioShowMenuPanel extends MenuPanel {
 
     public ScenarioShowMenuPanel( String s, IModel<? extends Scenario> model ) {
-        super( s, model );
+        super( s, model, null );
         init();
     }
 

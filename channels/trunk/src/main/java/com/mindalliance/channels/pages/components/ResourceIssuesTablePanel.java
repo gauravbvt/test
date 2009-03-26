@@ -12,6 +12,7 @@ import com.mindalliance.channels.pages.Project;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -26,8 +27,8 @@ public class ResourceIssuesTablePanel extends AbstractTablePanel {
      */
     private ResourceSpec resourceSpec;
 
-    public ResourceIssuesTablePanel( String id, IModel<ResourceSpec> model ) {
-        super( id, model );
+    public ResourceIssuesTablePanel( String id, IModel<ResourceSpec> model, Set<Long> expansions ) {
+        super( id, model, expansions );
         resourceSpec = model.getObject();
         init();
     }

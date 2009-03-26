@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -35,8 +36,11 @@ import java.util.Collections;
  */
 public class OrganizationDetailsPanel extends EntityDetailsPanel {
 
-    public OrganizationDetailsPanel( String id, IModel<? extends ModelObject> model ) {
-        super( id, model );
+    public OrganizationDetailsPanel(
+            String id,
+            IModel<? extends ModelObject> model,
+            Set<Long> expansions ) {
+        super( id, model, expansions );
     }
 
     /**
@@ -89,7 +93,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         moDetailsDiv.add( new ChannelListPanel(
                 "channels",
                 new Model<Channelable>( organization ) ) );
-        moDetailsDiv.add( new JobsPanel( "jobs", new Model<Organization>( organization  ) ) );
+        moDetailsDiv.add( new JobsPanel( "jobs", new Model<Organization>( organization  ), getExpansions() ) );
 
     }
 

@@ -17,6 +17,7 @@ import org.apache.wicket.model.Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -31,15 +32,15 @@ public class ResourceSpecsPanel extends AbstractTablePanel {
      */
     private List<ResourceSpec> resourceSpecs;
 
-    public ResourceSpecsPanel( String id, IModel<ArrayList<ResourceSpec>> model ) {
-        super( id, model );
-        resourceSpecs = model.getObject();
+    public ResourceSpecsPanel( String id, IModel model, Set<Long> expansions ) {
+        super( id, model, expansions );
+        resourceSpecs = (List<ResourceSpec>)model.getObject();
         init();
     }
 
-    public ResourceSpecsPanel( String id, IModel<ArrayList<ResourceSpec>> model, int pageSize ) {
-        super( id, model, pageSize );
-        resourceSpecs = model.getObject();
+    public ResourceSpecsPanel( String id, IModel model, int pageSize, Set<Long> expansions ) {
+        super( id, model, pageSize, expansions );
+        resourceSpecs = (List<ResourceSpec>)model.getObject();
         init();
     }
 

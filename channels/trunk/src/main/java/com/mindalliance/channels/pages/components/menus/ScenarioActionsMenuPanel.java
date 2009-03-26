@@ -32,17 +32,11 @@ import java.util.Set;
  */
 public class ScenarioActionsMenuPanel extends MenuPanel {
 
-    /**
-     * IDs of expanded model objects.
-     */
-    private Set<Long> expansions;
-
     public ScenarioActionsMenuPanel(
             String s,
             IModel<? extends Scenario> model,
             Set<Long> expansions ) {
-        super( s, model );
-        this.expansions = expansions;
+        super( s, model, expansions );
         init();
     }
 
@@ -69,7 +63,7 @@ public class ScenarioActionsMenuPanel extends MenuPanel {
         menuItems.add( this.getRedoMenuItem( "menuItem" ) );
         // Edit<->Hide
         Link editLink;
-        if ( expansions.contains( getScenario().getId() ) ) {
+        if ( getExpansions().contains( getScenario().getId() ) ) {
             editLink =
                     new BookmarkablePageLink<Scenario>(
                             "link", ProjectPage.class,

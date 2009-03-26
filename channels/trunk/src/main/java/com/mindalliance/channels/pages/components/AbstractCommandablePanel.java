@@ -11,6 +11,8 @@ import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.Service;
 
+import java.util.Set;
+
 /**
  * Abstract panel.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -25,8 +27,8 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
         super( id );
     }
 
-    public AbstractCommandablePanel( String id, IModel<? extends Identifiable> iModel ) {
-        super( id, iModel );
+    public AbstractCommandablePanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
+        super( id, iModel, expansions );
     }
 
     /**

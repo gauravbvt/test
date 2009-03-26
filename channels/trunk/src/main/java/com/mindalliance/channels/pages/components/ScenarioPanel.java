@@ -65,10 +65,6 @@ public class ScenarioPanel extends AbstractCommandablePanel {
      */
     private MarkupContainer flowDiagram;
     /**
-     * Expansions.
-     */
-    private Set<Long> expansions;
-    /**
      * Scenario model.
      */
     private IModel<Scenario> scenarioModel;
@@ -102,10 +98,9 @@ public class ScenarioPanel extends AbstractCommandablePanel {
             IModel<Scenario> scenarioModel,
             IModel<Part> partModel,
             Set<Long> expansions ) {
-        super( id, scenarioModel );
+        super( id, scenarioModel, expansions );
         this.scenarioModel = scenarioModel;
         this.partModel = partModel;
-        this.expansions = expansions;
         init();
     }
 
@@ -118,13 +113,13 @@ public class ScenarioPanel extends AbstractCommandablePanel {
                 "reqs",
                 new PropertyModel<Part>( this, "part" ),
                 false,
-                expansions );
+                getExpansions() );
         add( reqsFlowPanel );
         outcomesFlowPanel = new FlowListPanel(
                 "outcomes",
                 new PropertyModel<Part>( this, "part" ),
                 true,
-                expansions );
+                getExpansions() );
         add( outcomesFlowPanel );
         adjustComponents();
     }
@@ -149,7 +144,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         add( new AttachmentPanel( "attachments", new Model<Part>( getPart() ) ) );// NON-NLS
         partIssuesPanel = new IssuesPanel( "issues",                       // NON-NLS
                 new PropertyModel<ModelObject>( this, "part" ),
-                expansions );
+                getExpansions() );
         partIssuesPanel.setOutputMarkupId( true );
         add( partIssuesPanel );
     }
@@ -157,7 +152,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     private void adjustComponents() {
         boolean partHasIssues = Project.analyst().hasIssues( getPart(), false );
         makeVisible( partIssuesPanel, partHasIssues );
-        makeVisible( scenarioEditPanel, expansions.contains( getScenario().getId() ) );
+        makeVisible( scenarioEditPanel, getExpansions().contains( getScenario().getId() ) );
     }
 
     private void addPartMenuBar() {
@@ -229,7 +224,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         scenarioEditPanel = new ScenarioEditPanel(
                 "sc-editor",
                 new Model<Scenario>( scenario ),
-                expansions );
+                getExpansions() );
         add( scenarioEditPanel );
     }
 
@@ -271,7 +266,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     public void updateWith( AjaxRequestTarget target, Change change ) {
         Identifiable identifiable = change.getSubject();
         if ( identifiable == getScenario() && change.isDisplay() ) {
-            scenarioEditPanel.setVisibility( target, expansions.contains( getScenario().getId() ) );
+            scenarioEditPanel.setVisibility( target, getExpansions().contains( getScenario().getId() ) );
             target.addComponent( scenarioEditPanel );
         }
         if ( identifiable == getPart() && change.isUpdated() ) {
