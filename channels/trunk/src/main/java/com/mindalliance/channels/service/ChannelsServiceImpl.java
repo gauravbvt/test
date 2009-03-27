@@ -399,23 +399,34 @@ public class ChannelsServiceImpl implements Service {
      * {@inheritDoc}
      */
     public List<Play> findAllPlays( ResourceSpec resourceSpec ) {
+        return findAllPlays( resourceSpec, false );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Play> findAllPlays( ResourceSpec resourceSpec, boolean specific ) {
         Set<Play> plays = new HashSet<Play>();
         for ( Scenario scenario : list( Scenario.class ) ) {
             Iterator<Flow> flows = scenario.flows();
             while ( flows.hasNext() ) {
                 Flow flow = flows.next();
                 if ( Play.hasPlay( flow ) ) {
-                    if ( flow.getSource().isPart()
-                            && ( (Part) flow.getSource() ).resourceSpec().narrowsOrEquals( resourceSpec ) ) {
-                        // sends
-                        Play play = new Play( (Part) flow.getSource(), flow, true );
-                        plays.add( play );
+                    if ( flow.getSource().isPart() ) {
+                        Part part = (Part) flow.getSource();
+                        if ( part.resourceSpec().matches( resourceSpec, specific ) ) {
+                            // sends
+                            Play play = new Play( part, flow, true );
+                            plays.add( play );
+                        }
                     }
-                    if ( flow.getTarget().isPart()
-                            && ( (Part) flow.getTarget() ).resourceSpec().narrowsOrEquals( resourceSpec ) ) {
-                        // receives
-                        Play play = new Play( (Part) flow.getTarget(), flow, false );
-                        plays.add( play );
+                    if ( flow.getTarget().isPart() ) {
+                        Part part = (Part) flow.getTarget();
+                        if ( part.resourceSpec().matches( resourceSpec, specific ) ) {
+                            // receives
+                            Play play = new Play( part, flow, false );
+                            plays.add( play );
+                        }
                     }
                 }
             }
@@ -433,6 +444,15 @@ public class ChannelsServiceImpl implements Service {
                 foundIssues.add( userIssue );
         }
         return foundIssues;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Issue> findAllIssuesFor( ResourceSpec resourceSpec, boolean specific ) {
+        return Project.getProject().getAnalyst().findAllIssuesFor( 
+                resourceSpec,
+                specific );
     }
 
 
@@ -754,5 +774,7 @@ public class ChannelsServiceImpl implements Service {
     public void onDestroy() {
         getDao().onDestroy();
     }
+
+
 }
 

@@ -226,7 +226,13 @@ public abstract class AbstractCommand implements Command {
         if ( undoCommand != null )
             return undoCommand;
         else
+        try{
             return doMakeUndoCommand( commander );
+        }
+        catch (RuntimeException e) {
+            LOG.warn("Runtime exception while making undo command.", e);
+            throw new CommandException("Runtime exception while making undo command.", e);
+        }
     }
 
     /**

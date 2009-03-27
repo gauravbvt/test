@@ -22,19 +22,36 @@ import java.util.Set;
  * Date: Jan 12, 2009
  * Time: 8:01:49 PM
  */
-public class PlaybookPanel extends AbstractTablePanel<Play> {
+public class PlaysTablePanel extends AbstractTablePanel<Play> {
     /**
      * The player
      */
     private ResourceSpec player;
+    /**
+     * Whether the plays are specific to resourceSpec.
+     */
+    private boolean specific = true;
 
-    public PlaybookPanel( String s, IModel<ResourceSpec> model, Set<Long> expansions ) {
+    public PlaysTablePanel( String s, IModel<ResourceSpec> model, Set<Long> expansions ) {
         super( s, model, expansions );
         player = model.getObject();
         init();
     }
 
-    public PlaybookPanel( String s, IModel<ResourceSpec> model, int pageSize, Set<Long> expansions ) {
+    public PlaysTablePanel(
+            String s,
+            IModel<ResourceSpec> model,
+            IModel<Boolean> specificModel,
+            int pageSize,
+            Set<Long> expansions ) {
+        super( s, model, pageSize, expansions );
+        player = model.getObject();
+        specific = specificModel.getObject();
+        init();
+    }
+
+
+    public PlaysTablePanel( String s, IModel<ResourceSpec> model, int pageSize, Set<Long> expansions ) {
         super( s, model, pageSize, expansions );
         player = model.getObject();
         init();
@@ -59,7 +76,7 @@ public class PlaybookPanel extends AbstractTablePanel<Play> {
                 new Model<String>( "Importance" ),
                 "requiredness", "requiredness" ) );                                 // NON-NLS
         // provider and table
-        List<Play> plays = getService().findAllPlays( player );
+        List<Play> plays = getService().findAllPlays( player, specific );
         add( new AjaxFallbackDefaultDataTable<Play>(
                 "playbook",
                 columns,

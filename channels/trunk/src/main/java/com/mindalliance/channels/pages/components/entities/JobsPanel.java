@@ -100,7 +100,7 @@ public class JobsPanel extends AbstractCommandablePanel {
             jobPlaybook = new Label( "playbook", "No playbook" );
         } else {
             jobLabel = new Label( "job", selectedJob.toString() );
-            jobPlaybook = new PlaybookPanel(
+            jobPlaybook = new PlaysTablePanel(
                     "playbook",
                     new PropertyModel<ResourceSpec>( this, "jobResourceSpec" ),
                     getExpansions());

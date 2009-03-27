@@ -103,4 +103,13 @@ public interface Analyst {
      */
     List<Issue> findAllIssuesFor( ResourceSpec resource );
 
+    /**
+     * Find all issues related to any of the components of a resource
+     *
+     * @param resource a resource
+     * @param specific a boolean -- true -> equality match, false -> marrow or equals
+     * @return a list of issues
+     */
+    List<Issue> findAllIssuesFor( ResourceSpec resource, boolean specific );
+
 }

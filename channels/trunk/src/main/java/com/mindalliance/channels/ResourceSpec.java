@@ -1,10 +1,6 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.util.SemMatch;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * A Resource is an actor in a role for an organization with a jurisdiction.
@@ -280,6 +276,18 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
     @Override
     public String toString() {
         return getName();
+    }
+
+    /**
+     * Whether this resource spec matches another.
+     * @param other a resource spec
+     * @param precisely a boolean - true -> must be equal, false -> must be equal or more narrow
+     * @return a boolean
+     */
+    public boolean matches( ResourceSpec other, boolean precisely ) {
+        return precisely
+                ? equals( other )
+                : narrowsOrEquals( other );
     }
 
     /**

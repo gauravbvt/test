@@ -127,33 +127,41 @@ public class DefaultAnalyst implements Analyst {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> findAllIssuesFor( ResourceSpec resource ) {
-        List<Issue> issues = new ArrayList<Issue>();
-        if ( !resource.isAnyActor() ) {
-            issues.addAll( listIssues( resource.getActor(), true ) );
-        }
-        if ( !resource.isAnyOrganization() ) {
-            issues.addAll( listIssues( resource.getOrganization(), true ) );
-        }
-        if ( !resource.isAnyRole() ) {
-            issues.addAll( listIssues( resource.getRole(), true ) );
-        }
-        if ( !resource.isAnyJurisdiction() ) {
-            issues.addAll( listIssues( resource.getJurisdiction(), true ) );
-        }
-        issues.addAll( findAllIssuesInPlays( resource ) );
-        return issues;
+    public List<Issue> findAllIssuesFor( ResourceSpec resourceSpec ) {
+        return findAllIssuesFor( resourceSpec, false );
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Issue> findAllIssuesFor( ResourceSpec resourceSpec, boolean specific ) {
+        List<Issue> issues = new ArrayList<Issue>();
+        if ( !resourceSpec.isAnyActor() ) {
+            issues.addAll( listIssues( resourceSpec.getActor(), true ) );
+        }
+        if ( !resourceSpec.isAnyOrganization() ) {
+            issues.addAll( listIssues( resourceSpec.getOrganization(), true ) );
+        }
+        if ( !resourceSpec.isAnyRole() ) {
+            issues.addAll( listIssues( resourceSpec.getRole(), true ) );
+        }
+        if ( !resourceSpec.isAnyJurisdiction() ) {
+            issues.addAll( listIssues( resourceSpec.getJurisdiction(), true ) );
+        }
+        issues.addAll( findAllIssuesInPlays( resourceSpec, specific ) );
+        return issues;
+     }
 
     /**
      * Find the issues on parts and flows for all plays of a resource
      *
      * @param resourceSpec a resource
+     * @param specific whether the match is "equals" or "narrows or equals"
      * @return a list of issues
      */
-    private List<Issue> findAllIssuesInPlays( ResourceSpec resourceSpec ) {
+    private List<Issue> findAllIssuesInPlays( ResourceSpec resourceSpec, boolean specific ) {
         List<Issue> issues = new ArrayList<Issue>();
-        List<Play> plays = Project.service().findAllPlays( resourceSpec );
+        List<Play> plays = Project.service().findAllPlays( resourceSpec, specific );
         Set<Part> parts = new HashSet<Part>();
         for ( Play play : plays ) {
             parts.add( play.getPartFor( resourceSpec ) );

@@ -4,9 +4,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.pages.components.entities.PlaybookPanel;
-
-import java.util.Set;
+import com.mindalliance.channels.pages.components.entities.PlaysTablePanel;
 
 /**
  * A resource's profile
@@ -31,7 +29,7 @@ public class ResourceProfilePanel extends Panel {
     private void init() {
         add( new ContactInfoPanel( "contact-info", new Model( resourceSpec ) , null) );
         add( new ResourceIssuesTablePanel( "issues", new Model( resourceSpec ), null ) );
-        add( new PlaybookPanel( "playbook", new Model( resourceSpec ) , null) );
+        add( new PlaysTablePanel( "playbook", new Model( resourceSpec ) , null) );
         add( new DirectoryPanel( "directory", new Model( resourceSpec ), null ) );
     }
 }

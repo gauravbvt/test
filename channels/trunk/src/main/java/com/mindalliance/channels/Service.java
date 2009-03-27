@@ -169,6 +169,15 @@ public interface Service {
     List<Play> findAllPlays( ResourceSpec resourceSpec );
 
     /**
+     * Find all plays for the resource
+     *
+     * @param resourceSpec a resource
+     * @param specific whether the plays are specific to the resourceSpec
+     * @return a list of plays
+     */
+    List<Play> findAllPlays( ResourceSpec resourceSpec, boolean specific );
+
+    /**
      * Find all contact of specified resources
      *
      * @param resourceSpec a resource specification
@@ -291,4 +300,12 @@ public interface Service {
      * Called when application is terminated.
      */
     void onDestroy();
+
+    /**
+     * Find all issues attributable to entities and parts matching a resource spec.
+     * @param resourceSpec a resource spec
+     * @param specific a boolean -- true -> equality match, false -> marrow or equals
+     * @return a list of issues
+     */
+    List<Issue> findAllIssuesFor( ResourceSpec resourceSpec, boolean specific );
 }
