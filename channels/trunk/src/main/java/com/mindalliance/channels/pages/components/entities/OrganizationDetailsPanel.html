@@ -7,7 +7,6 @@
         lang="en">
 <body>
 <wicket:extend>
-    <table>
         <tr>
             <th align="right">
                 <label for="parent"><a wicket:id="org-link" href=""
@@ -27,8 +26,8 @@
             </th>
             <td><span id="contact-info" wicket:id="channels">[channel list panel]</span></td>
         </tr>
-    </table>
-    <div wicket:id="jobs">[jobs panel]</div>
+        <tr><th align="right">Jobs:</th>
+            <td wicket:id="jobs">[jobs panel]</td></tr>
 </wicket:extend>
 </body>
 </html>

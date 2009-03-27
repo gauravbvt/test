@@ -423,21 +423,19 @@ html, #sc-details {
     border: 1px outset #6fafaf;
 }
 
-#part-header, #reqs, #outcomes, div.section {
-    background: #f6f6f6;
-    padding: 5px;
-}
 #graph {
     background: white;
 }
-#part-header, #reqs, #outcomes, div.section, #graph {
+#part-header, #reqs, #outcomes, div.section, #graph, div.aspect {
     border: 1px inset #c3dede;
 }
+#part-header, #reqs, #outcomes, div.section, div.aspect {
+    background: #f6f6f6;
+    padding: 5px;
+}
+
 #sc-details {
     border: 1px outset #c3dede;
-}
-input[type='text'], textarea, select, div.flow-details {
-    border: 1px inset #a7c092;
 }
 
 td.link.notify, td.link.answer {
@@ -593,7 +591,7 @@ div.wicket-aa ul li.selected {
     content: " ";
 }
 
-.menubar span.dropmenu:before {
+.menubar span.dropmenu:before, .menubar span.menuitem:before {
     content: " \2015  ";
 }
 
@@ -610,26 +608,49 @@ div.wicket-aa ul li.selected {
   background-color: #ccf;
 }
 
-#entity span.menubar {
-    float: right;
-    position: static;
+.menubar span.menuitem {
+    padding-left: 5px;
 }
+
 
 #entity {
     z-index: 1;
     position: absolute;
     left: 2em;
-    bottom: 10em;
+    top: 6em;
     padding: 5px;
-}
 
-#entity {
     width: 50%;
-}
-
-#entity {
     background: #C3D9FF;
+    border: 1px outset #c3dede;
+    max-height: 75%;
+    overflow: auto;
 }
 
-#entity {
-    border: 1px outset #c3dede;
+#entity span.menubar {
+    float: right;
+    position: static;
+}
+
+#entity .jobs table {
+    border-collapse: separate;
+}
+#entity .jobs thead td {
+    border-bottom: 1px solid #4d8222;
+    font-weight: bold;
+    padding: 0 10px 0 0
+}
+#entity tr.headers th  {
+    text-align: left;
+    font-weight: bold;
+}
+#entity tr.even {
+    background-color: #FDFDFD;
+}
+#entity tr.odd {
+
+}
+#entity table {
+    width: 100%;
+}
+

@@ -10,14 +10,12 @@
     <div id="entity">
         <span wicket:id="banner">
             <div id="header">
-                <h1><span wicket:id="header-title">[Entity name]</span></h1>
+                <h1 wicket:id="header-title">[Entity name]</h1>
                 <span class="menubar">
                     <span wicket:id="entityShowMenu">[entity pages menu]</span>
                     <span wicket:id="entityActionsMenu">[entity action menu]</span>
+                    <span class="menuitem"><a wicket:id="close" href="#">Close</a></span>
                 </span>
-                <ul class="menu">
-                    <li><a wicket:id="close" href="#">Close</a></li>
-                </ul>
             </div>
         </span>
         <div class="aspect" wicket:id="aspect">[aspect panel]</div>

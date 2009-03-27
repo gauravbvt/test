@@ -1,30 +1,29 @@
 package com.mindalliance.channels.pages.components.entities;
 
+import com.mindalliance.channels.Channelable;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Place;
-import com.mindalliance.channels.Channelable;
-import com.mindalliance.channels.util.SemMatch;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateProjectObject;
 import com.mindalliance.channels.pages.ModelObjectLink;
-import com.mindalliance.channels.pages.components.entities.EntityDetailsPanel;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.Model;
+import com.mindalliance.channels.util.SemMatch;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -46,6 +45,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
     /**
      * {@inheritDoc }
      */
+    @Override
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
         Organization organization= getOrganization();
         moDetailsDiv.add( new ModelObjectLink(
@@ -54,6 +54,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         final List<String> parentChoices = findCandidateParents();
         final TextField parentField = new AutoCompleteTextField<String>( "parent",
                 new PropertyModel<String>( this, "parentOrganization" ) ) {
+            @Override
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : parentChoices ) {
@@ -75,6 +76,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         final List<String> locationChoices = getService().findAllNames( Place.class );
         TextField locationField = new AutoCompleteTextField<String>( "location",
                 new PropertyModel<String>( this, "locationName" ) ) {
+            @Override
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : locationChoices ) {
@@ -84,6 +86,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
             }
         };
         locationField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getModel().getObject(), "location" ) );
             }
