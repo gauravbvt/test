@@ -23,7 +23,7 @@ public class UnnamedFlow extends AbstractIssueDetector {
     }
 
     /** {@inheritDoc} */
-    public List<Issue> doDetectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = null;
         Flow flow = (Flow) modelObject;
         String name = flow.getName();

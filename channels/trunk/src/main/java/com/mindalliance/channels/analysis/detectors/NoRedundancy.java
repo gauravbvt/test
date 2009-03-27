@@ -46,7 +46,7 @@ public class NoRedundancy extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    protected List<Issue> doDetectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         final Part part = (Part) modelObject;
         // Find all critical sourced requirements of a part

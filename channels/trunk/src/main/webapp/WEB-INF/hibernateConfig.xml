@@ -31,6 +31,8 @@
                      <!--advice-ref="timingLogger"/>-->
         <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.Service.*(..))"
                      advice-ref="cacheSet"/>
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.analysis.Analyst.*(..))"
+                     advice-ref="cacheSet"/>
 
         <aop:advisor pointcut="execution(* com.mindalliance.channels.Dao.onAfterCommand(..))"
                      advice-ref="cacheClear"/>

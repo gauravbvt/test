@@ -25,10 +25,6 @@ import java.util.Set;
  */
 public class EntityFlowsPanel extends AbstractCommandablePanel {
     /**
-     * Container.
-     */
-    private WebMarkupContainer includeContainer;
-    /**
      * Whether to include the flows of all members.
      */
     private boolean membersIncluded = false;
@@ -43,9 +39,9 @@ public class EntityFlowsPanel extends AbstractCommandablePanel {
     }
 
     private void init( final Set<Long> expansions ) {
-        includeContainer = new WebMarkupContainer("include");
+        WebMarkupContainer includeContainer = new WebMarkupContainer( "include" );
         includeContainer.setVisible( !(getEntity() instanceof Actor) );
-        add(includeContainer);
+        add( includeContainer );
         CheckBox specificCheckBox = new CheckBox(
                 "members-included",
                 new PropertyModel<Boolean>( this, "membersIncluded" ) );

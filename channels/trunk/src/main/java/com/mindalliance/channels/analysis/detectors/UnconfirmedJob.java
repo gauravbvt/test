@@ -37,7 +37,7 @@ public class UnconfirmedJob extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected List<Issue> doDetectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Organization org = (Organization) modelObject;
         for ( Job job : getService().findUnconfirmedJobs( org ) ) {

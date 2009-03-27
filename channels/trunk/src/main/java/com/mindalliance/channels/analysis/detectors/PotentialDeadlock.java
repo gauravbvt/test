@@ -42,7 +42,7 @@ public class PotentialDeadlock extends AbstractIssueDetector {
      * @param modelObject -- the ModelObject being analyzed
      * @return a list of Issues
      */
-    public List<Issue> doDetectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Scenario scenario = (Scenario) modelObject;
         GraphBuilder graphBuilder = Project.graphBuilder();

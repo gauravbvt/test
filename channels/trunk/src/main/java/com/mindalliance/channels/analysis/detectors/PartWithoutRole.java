@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class PartWithoutRole extends AbstractIssueDetector {
 
     /** {@inheritDoc} */
-    public List<Issue> doDetectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( part.getRole() == null ) {

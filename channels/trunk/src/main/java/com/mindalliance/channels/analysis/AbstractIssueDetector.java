@@ -4,7 +4,6 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.Service;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.util.SimpleCache;
 
 import java.util.List;
 /**
@@ -17,23 +16,11 @@ import java.util.List;
  */
 public abstract class AbstractIssueDetector implements IssueDetector {
 
-    /**
-     * Cache of issues found by the detector.
-     */
-    private SimpleCache<ModelObject,List<Issue>> cache =
-            new SimpleCache<ModelObject,List<Issue>>();
 
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
-        List<Issue> issues = cache.get( modelObject, modelObject.getLastModified() );
-        if ( issues == null ) {
-            issues = doDetectIssues( modelObject );
-            cache.put( modelObject, issues  );
-        }
-        return issues;
-    }
+    public abstract List<Issue> detectIssues( ModelObject modelObject );
 
     /**
      * {@inheritDoc}
@@ -53,14 +40,6 @@ public abstract class AbstractIssueDetector implements IssueDetector {
                 && property != null
                 && property.equals( getTestedProperty() );
     }
-
-    /**
-     * Do the work of detecting issues about the model object.
-     *
-     * @param modelObject -- the model object being analyzed
-     * @return -- a list of issues
-     */
-    protected abstract List<Issue> doDetectIssues( ModelObject modelObject );
 
     /**
      * Get service.

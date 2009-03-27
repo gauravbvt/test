@@ -1,14 +1,12 @@
 package com.mindalliance.channels.analysis.detectors;
 
-import com.mindalliance.channels.AbstractUnicastChannelable;
+import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
 
@@ -31,7 +29,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> doDetectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         if ( needsAtLeastOneChannel( flow ) ) {

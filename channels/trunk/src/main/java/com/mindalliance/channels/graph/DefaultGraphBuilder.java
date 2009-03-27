@@ -3,7 +3,6 @@ package com.mindalliance.channels.graph;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.util.SimpleCache;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DirectedMultigraph;
@@ -22,12 +21,6 @@ import java.util.Iterator;
 public class DefaultGraphBuilder implements GraphBuilder {
 
     /**
-     * Cached directed graphs
-     */
-    private SimpleCache<Scenario, DirectedGraph<Node, Flow>> digraphs =
-            new SimpleCache<Scenario, DirectedGraph<Node, Flow>>();
-
-    /**
      * Constructor
      */
     public DefaultGraphBuilder() {
@@ -40,13 +33,9 @@ public class DefaultGraphBuilder implements GraphBuilder {
      * @return a DirectedGraph
      */
     public DirectedGraph<Node, Flow> buildDirectedGraph( Scenario scenario ) {
-        DirectedGraph<Node, Flow> digraph = digraphs.get( scenario, scenario.getLastModified() );
-        if ( digraph == null ) {
-            digraph = new DirectedMultigraph<Node, Flow>(
+        DirectedGraph<Node, Flow> digraph = new DirectedMultigraph<Node, Flow>(
                     new FlowFactory() );
             populateGraph( digraph, scenario );
-            digraphs.put( scenario, digraph );
-        }
         return digraph;
     }
 

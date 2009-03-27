@@ -25,7 +25,7 @@ public class FlowWithUndefinedSource extends AbstractIssueDetector {
     }
 
     /** {@inheritDoc} */
-    public List<Issue> doDetectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         Node source = flow.getSource();

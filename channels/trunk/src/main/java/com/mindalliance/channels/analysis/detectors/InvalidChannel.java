@@ -40,7 +40,7 @@ public class InvalidChannel extends AbstractIssueDetector {
      * @param modelObject -- the model object being analyzed
      * @return -- a list of issues
      */
-    protected List<Issue> doDetectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Channelable channelable = (Channelable) modelObject;
         List<Channel> channels = channelable.getEffectiveChannels();

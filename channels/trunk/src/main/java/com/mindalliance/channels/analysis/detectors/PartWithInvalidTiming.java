@@ -37,7 +37,7 @@ public class PartWithInvalidTiming extends AbstractIssueDetector {
      * @param modelObject -- the model object being analyzed
      * @return -- a list of issues
      */
-    protected List<Issue> doDetectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( part.isRepeating() ) {

@@ -42,7 +42,7 @@ public class RedundantFlow extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected List<Issue> doDetectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         Node source = flow.getSource();

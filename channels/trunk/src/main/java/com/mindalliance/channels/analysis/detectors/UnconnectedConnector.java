@@ -47,7 +47,7 @@ public class UnconnectedConnector extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected List<Issue> doDetectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         Iterator<Flow> outcomes = part.outcomes();
