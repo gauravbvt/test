@@ -4,11 +4,13 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.menus.EntityActionsMenuPanel;
 import com.mindalliance.channels.pages.components.menus.EntityShowMenuPanel;
+import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -32,6 +34,7 @@ import java.util.Set;
 public class EntityPanel extends AbstractCommandablePanel {
 
     private WebMarkupContainer banner;
+    private Label entityNameLabel;
     private EntityShowMenuPanel entityShowMenu;
     private Component entityActionsMenu;
     private Component entityAspect;
@@ -51,7 +54,8 @@ public class EntityPanel extends AbstractCommandablePanel {
         banner = new WebMarkupContainer( "banner" );
         banner.setOutputMarkupId( true );
         add( banner );
-        banner.add( new Label( "header-title", new PropertyModel<String>( this, "entityName" ) ) );
+        entityNameLabel = new Label( "header-title", new PropertyModel<String>( this, "entityName" ) );
+        banner.add( entityNameLabel );
         AjaxFallbackLink closeLink = new AjaxFallbackLink( "close" ) {
             public void onClick( AjaxRequestTarget target ) {
                 Change change = new Change( Change.Type.Collapsed, getEntity() );
@@ -74,7 +78,27 @@ public class EntityPanel extends AbstractCommandablePanel {
                 "class",
                 true,
                 new PropertyModel<String>( this, "entityClass" ) ) );
+        annotateEntityName();
     }
+
+    private void annotateEntityName(  ) {
+        Analyst analyst = ( (Project) getApplication() ).getAnalyst();
+        String issue = analyst.getIssuesSummary(
+                getEntity(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        if ( !issue.isEmpty() ) {
+            entityNameLabel.add( new AttributeModifier(
+                    "class", true, new Model<String>( "error" ) ) ); // NON-NLS
+            entityNameLabel.add( new AttributeModifier(
+                    "title", true, new Model<String>( issue ) ) );  // NON-NLS
+        } else {
+            entityNameLabel.add( new AttributeModifier(
+                    "class", true, new Model<String>( "no-error" ) ) ); // NON-NLS
+            entityNameLabel.add( new AttributeModifier(
+                    "title", true, new Model<String>( "No known issue" ) ) );  // NON-NLS
+        }
+
+    }
+
 
     private void showEntityAspect() {
         if ( aspectShown.equals( "details" ) ) {
@@ -176,12 +200,14 @@ public class EntityPanel extends AbstractCommandablePanel {
      */
     public void updateWith( AjaxRequestTarget target, Change change ) {
         target.addComponent( entityActionsMenu );
-        if ( change.getType() == Change.Type.Updated ) {
+        /*if ( change.getType() == Change.Type.Updated ) {
             target.addComponent( banner );
-        }
+        }*/
         if ( change.getSubject() instanceof UserIssue ) {
             setAspectShown( target, "issues" );
         }
+        adjustComponents();
+        target.addComponent( banner );
         super.updateWith( target, change );
     }
 }
