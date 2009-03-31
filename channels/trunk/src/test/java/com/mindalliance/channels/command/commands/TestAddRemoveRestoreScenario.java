@@ -2,7 +2,7 @@ package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Change;
@@ -20,16 +20,16 @@ public class TestAddRemoveRestoreScenario extends AbstractChannelsTest {
 
     private Commander commander;
     private Scenario scenario;
-    private Service service;
+    private DataQueryObject dqo;
 
     protected void setUp() {
         super.setUp();
-        service = project.getService();
+        dqo = project.getDqo();
         commander = project.getCommander();
     }
 
     protected void tearDown() {
-        if ( scenario != null ) service.remove( scenario );
+        if ( scenario != null ) dqo.remove( scenario );
     }
 
     public void testAddRemoveRestore() throws Exception {
@@ -46,7 +46,7 @@ public class TestAddRemoveRestoreScenario extends AbstractChannelsTest {
     @SuppressWarnings( {"UnusedDeclaration"} )
     private int countScenarios() {
         int count = 0;
-        List<Scenario> scenarios = service.list( Scenario.class );
+        List<Scenario> scenarios = dqo.list( Scenario.class );
         for ( Scenario sc : scenarios ) count++;
         return count;
     }

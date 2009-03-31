@@ -2,7 +2,7 @@ package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.command.Commander;
@@ -21,19 +21,19 @@ public class TestAddAndRemoveNeedAndCapability extends AbstractChannelsTest {
 
     private Commander commander;
     private Scenario scenario;
-    private Service service;
+    private DataQueryObject dqo;
     private Part part;
 
     protected void setUp() {
         super.setUp();
-        service = project.getService();
+        dqo = project.getDqo();
         commander = project.getCommander();
-        scenario = service.createScenario();
+        scenario = dqo.createScenario();
         part = scenario.getDefaultPart();
     }
 
     protected void tearDown() {
-        service.remove( scenario );
+        dqo.remove( scenario );
     }
 
     public void testAddRemoveNeed() throws Exception {

@@ -1,9 +1,6 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
-import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.util.SortableBeanProvider;
@@ -61,7 +58,7 @@ public class IssuesTablePanel extends AbstractTablePanel {
         columns.add( makeColumn( "Remediation", "remediation", "remediation", EMPTY ) );
         columns.add( makeColumn( "Reported by", "reportedBy", "reportedBy", EMPTY ) );
         // provider and table
-        List<Issue> issues = getService().findAllIssuesFor( resourceSpec, specific );
+        List<Issue> issues = getDqo().findAllIssuesFor( resourceSpec, specific );
         add( new AjaxFallbackDefaultDataTable<Issue>(
                 "issues-table",
                 columns,

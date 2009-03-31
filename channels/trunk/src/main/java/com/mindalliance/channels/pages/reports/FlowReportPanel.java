@@ -127,7 +127,7 @@ public class FlowReportPanel extends Panel {
 
         Set<LocalizedActor> actors = new HashSet<LocalizedActor>();
         for ( Part p : parts ) {
-            for ( Actor a : Project.getProject().getService().findAllActors( p.resourceSpec() ) )
+            for ( Actor a : Project.getProject().getDqo().findAllActors( p.resourceSpec() ) )
                 actors.add( new LocalizedActor( a,  p.getScenario() ) );
         }
 

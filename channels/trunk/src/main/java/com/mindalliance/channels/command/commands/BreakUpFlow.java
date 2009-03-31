@@ -3,7 +3,7 @@ package com.mindalliance.channels.command.commands;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Command;
@@ -97,21 +97,21 @@ public class BreakUpFlow extends AbstractCommand {
     }
 
     private void breakup( Flow flow, Commander commander ) {
-        Service service = commander.getService();
+        DataQueryObject dqo = commander.getDqo();
         if ( flow.isInternal() ) {
             List<Long> addedFlows = new ArrayList<Long>();
             Node source = flow.getSource();
             Node target = flow.getTarget();
             if ( !source.isConnector() && !target.isConnector() ) {
                 if ( !source.hasMultipleOutcomes( getName() ) ) {
-                    Flow newFlow = service.connect( source,
-                            service.createConnector( source.getScenario() ),
+                    Flow newFlow = dqo.connect( source,
+                            dqo.createConnector( source.getScenario() ),
                             getName() );
                     newFlow.initFrom( flow );
                     addedFlows.add( newFlow.getId() );
                 }
                 if ( !target.hasMultipleRequirements( getName() ) ) {
-                    Flow newFlow = service.connect( service.createConnector( target.getScenario() ),
+                    Flow newFlow = dqo.connect( dqo.createConnector( target.getScenario() ),
                             target,
                             getName() );
                     newFlow.initFrom( flow );

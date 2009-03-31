@@ -3,7 +3,7 @@ package com.mindalliance.channels.command.commands;
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.Change;
@@ -22,21 +22,21 @@ public class TestAddRemovePart extends AbstractChannelsTest {
     private Part part;
     private Commander commander;
     private Scenario scenario;
-    private Service service;
+    private DataQueryObject dqo;
 
     protected void setUp() {
         super.setUp();
-        service = project.getService();
+        dqo = project.getDqo();
         commander = project.getCommander();
-        scenario = service.createScenario();
+        scenario = dqo.createScenario();
         part = scenario.getDefaultPart();
-        Part other = service.createPart( scenario );
-        service.connect( part, other, "foo" );
-        service.connect( service.createConnector( scenario ), part, "bar" );
+        Part other = dqo.createPart( scenario );
+        dqo.connect( part, other, "foo" );
+        dqo.connect( dqo.createConnector( scenario ), part, "bar" );
     }
 
     protected void tearDown() {
-        service.remove( scenario );
+        dqo.remove( scenario );
     }
 
     public void testRemoveAddPart() throws Exception {

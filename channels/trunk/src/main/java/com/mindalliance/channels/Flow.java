@@ -290,7 +290,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      * Note: this method should not be called directly.
      *
      * @param source the source node.
-     * @see Service#connect(Node, Node, String)
+     * @see DataQueryObject#connect(Node, Node, String)
      */
     abstract void setSource( Node source );
 
@@ -299,7 +299,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      * Note: this method should not be called directly.
      *
      * @param target the target node.
-     * @see Service#connect(Node, Node, String)
+     * @see DataQueryObject#connect(Node, Node, String)
      */
     abstract void setTarget( Node target );
 
@@ -559,13 +559,13 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         if ( isOutcome ) {
             Node source = getSource();
             Scenario scenario = getSource().getScenario();
-            Service service = scenario.getService();
-            flow = service.connect( source, service.createConnector( scenario ), getName() );
+            DataQueryObject dqo = scenario.getDqo();
+            flow = dqo.connect( source, dqo.createConnector( scenario ), getName() );
         } else {
             Node target = getTarget();
             Scenario scenario = target.getScenario();
-            Service service = scenario.getService();
-            flow = service.connect( service.createConnector( scenario ), target, getName() );
+            DataQueryObject dqo = scenario.getDqo();
+            flow = dqo.connect( dqo.createConnector( scenario ), target, getName() );
         }
         flow.initFrom( this );
         return flow;

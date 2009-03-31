@@ -9,7 +9,7 @@ import com.mindalliance.channels.Place;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.pages.components.ResourceProfilePanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
@@ -75,36 +75,36 @@ public class ProfilePage extends WebPage {
         add( new ResourceProfilePanel( "profile", new Model<ResourceSpec>( resourceSpec ) ) );
     }
 
-    private Service getService() {
-        return ( (Project) getApplication() ).getService();
+    private DataQueryObject getDqo() {
+        return ( (Project) getApplication() ).getDqo();
     }
 
     private ResourceSpec makeResource( PageParameters params ) throws NotFoundException {
         ResourceSpec resourceSpec;
-        Service service = getService();
+        DataQueryObject dqo = getDqo();
         if ( params.containsKey( SCENARIO_PARM ) && params.containsKey( PART_PARM ) ) {
-            Scenario scenario = service.find( Scenario.class, params.getLong( SCENARIO_PARM ) );
+            Scenario scenario = dqo.find( Scenario.class, params.getLong( SCENARIO_PARM ) );
             Node node = scenario.getNode( params.getLong( PART_PARM ) );
             if ( !node.isPart() ) throw new NotFoundException();
             resourceSpec = ( (Part) node ).resourceSpec();
         } else {
             resourceSpec = new ResourceSpec();
             if ( params.containsKey( ACTOR_PARM ) ) {
-                Actor actor = service.find( Actor.class, params.getLong( ACTOR_PARM ) );
+                Actor actor = dqo.find( Actor.class, params.getLong( ACTOR_PARM ) );
                 resourceSpec.setActor( actor );
             }
             if ( params.containsKey( ROLE_PARM ) ) {
-                Role role = service.find( Role.class, params.getLong( ROLE_PARM ) );
+                Role role = dqo.find( Role.class, params.getLong( ROLE_PARM ) );
                 resourceSpec.setRole( role );
             }
             if ( params.containsKey( ORGANIZATION_PARM ) ) {
-                Organization organization = service.find(
+                Organization organization = dqo.find(
                         Organization.class,
                         params.getLong( ORGANIZATION_PARM ) );
                 resourceSpec.setOrganization( organization );
             }
             if ( params.containsKey( JURISDICTION_PARM ) ) {
-                Place jurisdiction = service.find( Place.class, params.getLong( JURISDICTION_PARM ) );
+                Place jurisdiction = dqo.find( Place.class, params.getLong( JURISDICTION_PARM ) );
                 resourceSpec.setJurisdiction( jurisdiction );
             }
         }

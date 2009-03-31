@@ -9,7 +9,7 @@ import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Scenario;
 
@@ -55,7 +55,7 @@ public class RedirectFlow extends AbstractCommand {
      */
     public Change execute( Commander commander ) throws CommandException {
         Flow newFlow;
-        Service service = commander.getService();
+        DataQueryObject dqo = commander.getDqo();
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Flow redirectedFlow = scenario.findFlow( commander.resolveId( (Long) get( "flow" ) ) );
@@ -66,13 +66,13 @@ public class RedirectFlow extends AbstractCommand {
             Flow connectorFlow = connector.getInnerFlow();
             if ( isOutcome ) {
                 if ( connector.getScenario() != redirectedFlow.getSource().getScenario() ) {
-                    newFlow = service.connect(
+                    newFlow = dqo.connect(
                             redirectedFlow.getSource(),
                             connector,
                             connectorFlow.getName() );
                     newFlow.initFrom( redirectedFlow );
                 } else {
-                    newFlow = service.connect(
+                    newFlow = dqo.connect(
                             redirectedFlow.getSource(),
                             connectorFlow.getTarget(),
                             connectorFlow.getName() );
@@ -80,13 +80,13 @@ public class RedirectFlow extends AbstractCommand {
                 }
             } else {
                 if ( connector.getScenario() != redirectedFlow.getTarget().getScenario() ) {
-                    newFlow = service.connect(
+                    newFlow = dqo.connect(
                             connector,
                             redirectedFlow.getTarget(),
                             connectorFlow.getName() );
                     newFlow.initFrom( redirectedFlow );
                 } else {
-                    newFlow = service.connect(
+                    newFlow = dqo.connect(
                             connectorFlow.getSource(),
                             redirectedFlow.getTarget(),
                             connectorFlow.getName() );

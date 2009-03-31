@@ -14,22 +14,22 @@
         <property name="configLocation" value="/WEB-INF/ehcache.xml"/>
     </bean>
 
-    <bean id="resultCache" class="com.mindalliance.channels.service.ResultCache">
+    <bean id="resultCache" class="com.mindalliance.channels.query.ResultCache">
         <property name="cacheKey" value="results"/>
         <property name="cacheManager" ref="cacheManager"/>
     </bean>
 
-    <bean id="cacheSet" class="com.mindalliance.channels.service.CacheAdvice">
+    <bean id="cacheSet" class="com.mindalliance.channels.query.CacheAdvice">
         <property name="cache" ref="resultCache"/>
     </bean>
-    <bean id="cacheClear" class="com.mindalliance.channels.service.CacheResetAdvice">
+    <bean id="cacheClear" class="com.mindalliance.channels.query.CacheResetAdvice">
         <property name="cache" ref="resultCache"/>
     </bean>
 
     <aop:config>
-        <!--<aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.Service.*(..))"-->
+        <!--<aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.DataQueryObjectryObject.*(..))"-->
                      <!--advice-ref="timingLogger"/>-->
-        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.Service.*(..))"
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.DataQueryObject.*(..))"
                      advice-ref="cacheSet"/>
         <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.analysis.Analyst.*(..))"
                      advice-ref="cacheSet"/>

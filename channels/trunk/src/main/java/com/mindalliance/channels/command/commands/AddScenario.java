@@ -31,7 +31,7 @@ public class AddScenario extends AbstractCommand {
      * {@inheritDoc}
      */
     public Change execute( Commander commander ) throws CommandException {
-        Scenario scenario = commander.getService().createScenario();
+        Scenario scenario = commander.getDqo().createScenario();
         commander.mapId( (Long)get("scenario"), scenario.getId() );
         commander.mapId( (Long)get("defaultPart"), scenario.getDefaultPart().getId() );
         addArgument( "scenario", scenario.getId() );

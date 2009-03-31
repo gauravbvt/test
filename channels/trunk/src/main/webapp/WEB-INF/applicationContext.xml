@@ -7,7 +7,7 @@
            http://www.springframework.org/schema/context
            http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
-    <bean id="channels" class="com.mindalliance.channels.service.ChannelsServiceImpl">
+    <bean id="channels" class="com.mindalliance.channels.query.DataQueryObjectImpl">
         <property name="addingSamples" value="false"/>
         <property name="importingScenarios" value="true"/>
         <property name="importDirectory" value="target/import"/>
@@ -24,7 +24,7 @@
     <!-- setup wicket application -->
     <bean id="wicketApplication" class="com.mindalliance.channels.pages.Project">
         <property name="uri" value="mindalliance.com/channels/demo"/>
-        <property name="service" ref="channels"/>
+        <property name="dqo" ref="channels"/>
         <property name="graphBuilder" ref="graphBuilder"/>
         <property name="diagramFactory" ref="diagramFactory"/>
         <property name="attachmentManager" ref="attachmentManager"/>
@@ -81,13 +81,13 @@
 
     <!-- Lock manager -->
     <bean id="lockManager" class="com.mindalliance.channels.command.DefaultLockManager">
-        <property name="service" ref="channels"/>
+        <property name="dqo" ref="channels"/>
     </bean>
 
     <!-- Commander -->
     <bean id="commander" class="com.mindalliance.channels.command.DefaultCommander">
         <property name="lockManager" ref="lockManager"/>
-        <property name="service" ref="channels"/>
+        <property name="dqo" ref="channels"/>
     </bean>
 
 </beans>

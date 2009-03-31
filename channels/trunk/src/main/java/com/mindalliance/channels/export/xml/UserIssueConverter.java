@@ -73,7 +73,7 @@ public class UserIssueConverter implements Converter {
             String idString = reader.getAttribute( "about" );
             Long id = idMap.get( idString );
             if ( id != null ) {
-                ModelObject about = Project.service().find( ModelObject.class, id );
+                ModelObject about = Project.dqo().find( ModelObject.class, id );
                 issue = new UserIssue( about );
                 while ( reader.hasMoreChildren() ) {
                     reader.moveDown();
@@ -89,7 +89,7 @@ public class UserIssueConverter implements Converter {
                     }
                     reader.moveUp();
                 }
-                Project.service().add( issue );
+                Project.dqo().add( issue );
                 idMap.put( issueId, issue.getId() );                
             } else {
                 LOG.warn( "Issue's model object not found at " + id );

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Actor;
@@ -39,9 +39,9 @@ public class DefaultCommander implements Commander {
      */
     private History history = new History();
     /**
-     * Service.
+     * Data query object.
      */
-    private Service service;
+    private DataQueryObject dqo;
 
     private boolean replaying = false;
     /**
@@ -57,12 +57,12 @@ public class DefaultCommander implements Commander {
         this.lockManager = lockManager;
     }
 
-    public void setService( Service service ) {
-        this.service = service;
+    public void setDqo( DataQueryObject dqo ) {
+        this.dqo = dqo;
     }
 
-    public Service getService() {
-        return service;
+    public DataQueryObject getDqo() {
+        return dqo;
     }
 
     public boolean isReplaying() {
@@ -82,7 +82,7 @@ public class DefaultCommander implements Commander {
      */
     public <T extends ModelObject> T resolve( Class<T> clazz, Long id ) throws CommandException {
         try {
-            return getService().find( clazz, resolveId( id ) );
+            return getDqo().find( clazz, resolveId( id ) );
         } catch ( NotFoundException e ) {
             throw new CommandException( "YOu need to refresh.", e );
         }
@@ -164,7 +164,7 @@ public class DefaultCommander implements Commander {
                 Collection<Lock> grabbedLocks = lockManager.grabLocksOn( resolveIds( command.getLockingSet() ) );
                 change = command.execute( this );
                 lockManager.releaseLocks( grabbedLocks );
-                if ( !isReplaying() ) getService().getDao().onAfterCommand( command );
+                if ( !isReplaying() ) getDqo().getDao().onAfterCommand( command );
             } catch ( LockingException e ) {
                 throw new CommandException( e.getMessage(), e );
             }
@@ -298,19 +298,19 @@ public class DefaultCommander implements Commander {
      */
     public void cleanup( Class<? extends ModelObject> clazz, String name ) {
         synchronized ( this ) {
-            Service service = getService();
+            DataQueryObject dqo = getDqo();
             if ( name != null && !name.trim().isEmpty() ) {
-                ModelObject mo = service.getDao().find( clazz, name.trim() );
+                ModelObject mo = dqo.getDao().find( clazz, name.trim() );
                 if ( mo != null && mo.isUndefined() ) {
                     boolean garbage;
-                    if ( mo instanceof Actor ) garbage = !service.isReferenced( (Actor) mo );
-                    else if ( mo instanceof Role ) garbage = !service.isReferenced( (Role) mo );
-                    else if ( mo instanceof Organization ) garbage = !service.isReferenced( (Organization) mo );
-                    else if ( mo instanceof Place ) garbage = !service.isReferenced( (Place) mo );
+                    if ( mo instanceof Actor ) garbage = !dqo.isReferenced( (Actor) mo );
+                    else if ( mo instanceof Role ) garbage = !dqo.isReferenced( (Role) mo );
+                    else if ( mo instanceof Organization ) garbage = !dqo.isReferenced( (Organization) mo );
+                    else if ( mo instanceof Place ) garbage = !dqo.isReferenced( (Place) mo );
                     else throw new IllegalArgumentException( "Can't clean up something of class " + clazz );
                     if ( garbage ) {
                         LOG.info( "Removing unused " + mo.getClass().getSimpleName() + " " + mo );
-                        service.remove( mo );
+                        dqo.remove( mo );
                     }
                 }
             }

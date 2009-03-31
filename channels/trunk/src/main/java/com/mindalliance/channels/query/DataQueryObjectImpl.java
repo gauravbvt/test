@@ -1,4 +1,4 @@
-package com.mindalliance.channels.service;
+package com.mindalliance.channels.query;
 
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Connector;
@@ -12,7 +12,7 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Organization;
@@ -47,12 +47,12 @@ import java.util.Collections;
  * Done this way because of HibernateDao requires a specific superclass
  * and java does not support multiple inheritance...
  */
-public class ChannelsServiceImpl implements Service {
+public class DataQueryObjectImpl implements DataQueryObject {
 
     /**
      * Class logger.
      */
-    public static final Logger LOG = LoggerFactory.getLogger( ChannelsServiceImpl.class );
+    public static final Logger LOG = LoggerFactory.getLogger( DataQueryObjectImpl.class );
     /**
      * The implementation dao.
      */
@@ -73,10 +73,10 @@ public class ChannelsServiceImpl implements Service {
      */
     private String importDirectory;
 
-    public ChannelsServiceImpl() {
+    public DataQueryObjectImpl() {
     }
 
-    public ChannelsServiceImpl( Dao dao ) {
+    public DataQueryObjectImpl( Dao dao ) {
         setAddingSamples( false );
         setDao( dao );
     }
@@ -90,7 +90,7 @@ public class ChannelsServiceImpl implements Service {
 
         result.setName( Scenario.DEFAULT_NAME );
         result.setDescription( Scenario.DEFAULT_DESCRIPTION );
-        result.setService( this );
+        result.setDqo( this );
         createPart( result );
 
         return result;
@@ -482,9 +482,8 @@ public class ChannelsServiceImpl implements Service {
      * @return a list of flows
      */
     public List<Flow> findAllRelatedFlows( ResourceSpec resourceSpec, boolean asSource ) {
-        Service service = Project.getProject().getService();
         List<Flow> relatedFlows = new ArrayList<Flow>();
-        for ( Scenario scenario : service.list( Scenario.class ) ) {
+        for ( Scenario scenario : list( Scenario.class ) ) {
             Iterator<Flow> flows = scenario.flows();
             while ( flows.hasNext() ) {
                 Flow flow = flows.next();

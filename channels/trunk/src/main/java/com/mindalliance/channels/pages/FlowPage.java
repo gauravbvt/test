@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.graph.DiagramException;
@@ -39,11 +39,11 @@ public class FlowPage extends WebPage {
     public FlowPage( PageParameters parameters ) {
         super( parameters );
 
-        final Service service = getService();
-        Scenario scenario = ProjectPage.findScenario( service, parameters );
+        final DataQueryObject dqo = getDqo();
+        Scenario scenario = ProjectPage.findScenario( dqo, parameters );
 
         if ( scenario == null )
-            redirectTo( service.getDefaultScenario() );
+            redirectTo( dqo.getDefaultScenario() );
 
         else {
             if ( parameters.containsKey( "node" ) && parameters.getString( "node" ).equals( "NONE" ) ) {
@@ -98,8 +98,8 @@ public class FlowPage extends WebPage {
         }
     }
 
-    private Service getService() {
-        return ( (Project) getApplication() ).getService();
+    private DataQueryObject getDqo() {
+        return ( (Project) getApplication() ).getDqo();
     }
 
     private void redirectTo( Scenario s ) {

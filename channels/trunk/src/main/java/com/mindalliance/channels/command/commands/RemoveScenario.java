@@ -2,7 +2,7 @@ package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
@@ -48,19 +48,19 @@ public class RemoveScenario extends AbstractCommand {
      * {@inheritDoc}
      */
     public Change execute( Commander commander ) throws CommandException {
-        Service service = commander.getService();
+        DataQueryObject dqo = commander.getDqo();
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Exporter exporter = Project.getProject().getExporter();
             exporter.exportScenario( scenario, bos );
             addArgument( "xml", bos.toString() );
-            if ( service.list( Scenario.class ).size() == 1 ) {
+            if ( dqo.list( Scenario.class ).size() == 1 ) {
                 // first create a new scenario
-                Scenario defaultScenario = service.createScenario();
+                Scenario defaultScenario = dqo.createScenario();
                 addArgument( "defaultScenario", defaultScenario.getId() );
             }
-            service.remove( scenario );
+            dqo.remove( scenario );
             return new Change( Change.Type.Removed, scenario );
         } catch ( IOException e ) {
             throw new CommandException( "Failed to remove scenario.", e );

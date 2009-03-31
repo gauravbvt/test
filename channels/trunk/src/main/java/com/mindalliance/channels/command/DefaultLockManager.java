@@ -2,7 +2,7 @@ package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.pages.Project;
 
@@ -30,9 +30,9 @@ public class DefaultLockManager implements LockManager {
      */
     private static final Logger LOG = LoggerFactory.getLogger( DefaultLockManager.class );
     /**
-     * Service.
+     * Data query object.
      */
-    private Service service;
+    private DataQueryObject dqo;
 
     /**
      * The managed locks.
@@ -46,8 +46,8 @@ public class DefaultLockManager implements LockManager {
     public DefaultLockManager() {
     }
 
-    public void setService( Service service ) {
-        this.service = service;
+    public void setDqo( DataQueryObject dqo ) {
+        this.dqo = dqo;
     }
 
     /**
@@ -57,7 +57,7 @@ public class DefaultLockManager implements LockManager {
         synchronized ( this ) {
             // Throws NotFoundException is id is stale
             try {
-                ModelObject mo = service.find( ModelObject.class, id );
+                ModelObject mo = dqo.find( ModelObject.class, id );
                 Lock lock = getLock( id );
                 if ( lock != null ) {
                     String userName = Project.getUserName();
@@ -192,7 +192,7 @@ public class DefaultLockManager implements LockManager {
         Lock lock = locks.get( id );
         if ( lock != null ) {
             try {
-                service.find( ModelObject.class, id );
+                dqo.find( ModelObject.class, id );
             }
             catch ( NotFoundException e ) {
                 // Clean up obsolete lock

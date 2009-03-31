@@ -127,7 +127,7 @@ public class ResourceSpecsPanel extends AbstractTablePanel {
         public void setMarkedForDeletion( boolean delete ) {
             markedForDeletion = delete;
             if ( delete ) {
-                Project.service().remove( resourceSpec );
+                Project.dqo().remove( resourceSpec );
             }
         }
 

@@ -42,7 +42,7 @@ public abstract class EntityConverter implements Converter {
         writer.endNode();
         writeSpecifics( entity, writer, context );
         // User issues
-        List<Issue> issues = Project.service().findAllUserIssues( entity );
+        List<Issue> issues = Project.dqo().findAllUserIssues( entity );
         for ( Issue issue : issues ) {
             writer.startNode( "issue" );
             context.convertAnother( issue );

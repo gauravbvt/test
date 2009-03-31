@@ -6,7 +6,7 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Actor;
@@ -57,7 +57,7 @@ public class ProjectConverter implements Converter {
             HierarchicalStreamWriter writer,
             MarshallingContext context ) {
         Project project = (Project) obj;
-        Service service = project.getService();
+        DataQueryObject dqo = project.getDqo();
         writer.addAttribute( "uri", project.getUri() );
         writer.addAttribute( "version", project.getExporter().getVersion() );
         writer.addAttribute( "date", new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( new Date() ) );
@@ -72,7 +72,7 @@ public class ProjectConverter implements Converter {
         writer.endNode();
         context.put( "project", "true" );
         // All entities
-        Iterator<ModelObject> entities = service.iterateEntities();
+        Iterator<ModelObject> entities = dqo.iterateEntities();
         while ( entities.hasNext() ) {
             ModelObject entity = entities.next();
             writer.startNode( entity.getClass().getSimpleName().toLowerCase() );
@@ -80,7 +80,7 @@ public class ProjectConverter implements Converter {
             writer.endNode();
         }
         // All scenarios
-        for ( Scenario scenario : service.list( Scenario.class ) ) {
+        for ( Scenario scenario : dqo.list( Scenario.class ) ) {
             writer.startNode( "scenario" );
             context.convertAnother( scenario, new ScenarioConverter( ) );
             writer.endNode();

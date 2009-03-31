@@ -2,11 +2,10 @@ package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Change;
 
 import java.util.Iterator;
@@ -22,17 +21,17 @@ public class TestDuplicatePart extends AbstractChannelsTest {
 
     private Commander commander;
     private Scenario scenario;
-    private Service service;
+    private DataQueryObject dqo;
 
     protected void setUp() {
         super.setUp();
-        service = project.getService();
+        dqo = project.getDqo();
         commander = project.getCommander();
-        scenario = service.createScenario();
+        scenario = dqo.createScenario();
     }
 
     protected void tearDown() {
-        service.remove( scenario );
+        dqo.remove( scenario );
     }
 
     public void testDuplicatePart() throws Exception {

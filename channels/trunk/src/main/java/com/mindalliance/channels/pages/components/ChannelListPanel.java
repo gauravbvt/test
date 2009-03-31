@@ -26,7 +26,6 @@ import org.apache.wicket.model.PropertyModel;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * An editable list of channels.
@@ -291,7 +290,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
      */
     public List<Wrapper> getWrappedCandidateChannels() {
         Channelable channelable = model.getObject();
-        List<Channel> candidates = getService().findAllCandidateChannelsFor( channelable );
+        List<Channel> candidates = getDqo().findAllCandidateChannelsFor( channelable );
         // Wrap them as not marked for inclusion
         List<Wrapper> wrappers = new ArrayList<Wrapper>();
         for ( Channel candidate : candidates ) {

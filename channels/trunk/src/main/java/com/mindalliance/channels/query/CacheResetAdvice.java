@@ -1,4 +1,4 @@
-package com.mindalliance.channels.service;
+package com.mindalliance.channels.query;
 
 import org.springframework.aop.AfterReturningAdvice;
 

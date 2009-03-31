@@ -10,7 +10,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Flow;
 
 import java.util.HashMap;
@@ -62,7 +62,7 @@ public class RemovePart extends AbstractCommand {
      * {@inheritDoc}
      */
     public Change execute( Commander commander ) throws CommandException {
-        Service service = commander.getService();
+        DataQueryObject dqo = commander.getDqo();
         Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
         Part part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
         // Double check in case this is an undo-undo
@@ -71,10 +71,10 @@ public class RemovePart extends AbstractCommand {
         addArgument( "part", part.getId() );
         addArgument( "partState", CommandUtils.getPartState( part ) );
         if ( scenario.countParts() == 1 ) {
-            Part defaultPart = service.createPart( scenario );
+            Part defaultPart = dqo.createPart( scenario );
             addArgument( "defaultPart", defaultPart.getId() );
         }
-        removePart( part, service );
+        removePart( part, dqo );
         ignoreLock( commander.resolveId( (Long) get( "part" ) ) );
         return new Change( Change.Type.Recomposed, scenario );
     }
@@ -177,9 +177,9 @@ public class RemovePart extends AbstractCommand {
      * Remove a part after making sure that needs and capabilities are preserved.
      *
      * @param part    a part
-     * @param service a service
+     * @param dqo a data query object
      */
-    private void removePart( Part part, Service service ) {
+    private void removePart( Part part, DataQueryObject dqo ) {
         List<Long> addedNeeds = new ArrayList<Long>();
         List<Long> addedCapabilities = new ArrayList<Long>();
         List<Map<String, Object>> removedFlows = new ArrayList<Map<String, Object>>();
@@ -199,9 +199,9 @@ public class RemovePart extends AbstractCommand {
             if ( in.isInternal()
                     && in.getSource().isPart()
                     && !in.getSource().hasMultipleOutcomes( in.getName() ) ) {
-                Flow flow = service.connect(
+                Flow flow = dqo.connect(
                         in.getSource(),
-                        service.createConnector( scenario ), in.getName() );
+                        dqo.createConnector( scenario ), in.getName() );
                 flow.initFrom( in );
                 addedCapabilities.add( flow.getId() );
             }
@@ -221,8 +221,8 @@ public class RemovePart extends AbstractCommand {
             if ( out.isInternal()
                     && out.getTarget().isPart()
                     && !out.getSource().hasMultipleRequirements( out.getName() ) ) {
-                Flow flow = service.connect(
-                        service.createConnector( scenario ),
+                Flow flow = dqo.connect(
+                        dqo.createConnector( scenario ),
                         out.getTarget(), out.getName() );
                 flow.initFrom( out );
                 addedNeeds.add( flow.getId() );

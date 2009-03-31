@@ -21,7 +21,7 @@ public class TestUpdateProjectObject extends AbstractChannelsTest {
     protected void setUp() {
         super.setUp();
         commander = project.getCommander();
-        scenario = project.getService().getDefaultScenario();
+        scenario = project.getDqo().getDefaultScenario();
         command = new UpdateProjectObject( scenario, "description", "ipso lorem etc." );
         commander.reset();
     }

@@ -1,4 +1,4 @@
-package com.mindalliance.channels.service;
+package com.mindalliance.channels.query;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;

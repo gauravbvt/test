@@ -7,9 +7,9 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * External service interface.
+ * Data query interface.
  */
-public interface Service {
+public interface DataQueryObject {
 
     /**
      * Get the persistence store accessor.

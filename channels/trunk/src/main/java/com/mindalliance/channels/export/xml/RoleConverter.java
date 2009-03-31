@@ -30,7 +30,7 @@ public class RoleConverter extends EntityConverter {
      */
     @Override
     ModelObject findOrMakeEntity( String name ) {
-        return Project.service().findOrCreate( Role.class, name );
+        return Project.dqo().findOrCreate( Role.class, name );
     }
 
     /**

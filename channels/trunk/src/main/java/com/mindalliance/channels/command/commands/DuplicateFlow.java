@@ -3,7 +3,7 @@ package com.mindalliance.channels.command.commands;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Command;
@@ -93,13 +93,13 @@ public class DuplicateFlow extends AbstractCommand {
         if ( isOutcome ) {
             Node source = flow.getSource();
             Scenario scenario = flow.getSource().getScenario();
-            Service service = scenario.getService();
-            duplicate = service.connect( source, service.createConnector( scenario ), getName() );
+            DataQueryObject dqo = scenario.getDqo();
+            duplicate = dqo.connect( source, dqo.createConnector( scenario ), getName() );
         } else {
             Node target = flow.getTarget();
             Scenario scenario = target.getScenario();
-            Service service = scenario.getService();
-            duplicate = service.connect( service.createConnector( scenario ), target, getName() );
+            DataQueryObject dqo = scenario.getDqo();
+            duplicate = dqo.connect( dqo.createConnector( scenario ), target, getName() );
         }
         duplicate.initFrom( flow );
         return duplicate;

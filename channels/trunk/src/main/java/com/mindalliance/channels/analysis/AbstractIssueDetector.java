@@ -2,7 +2,7 @@ package com.mindalliance.channels.analysis;
 
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Issue;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.pages.Project;
 
 import java.util.List;
@@ -42,11 +42,11 @@ public abstract class AbstractIssueDetector implements IssueDetector {
     }
 
     /**
-     * Get service.
-     * @return a service
+     * Get data query object.
+     * @return a data query object
      */
-    protected Service getService() {
-        return Project.getProject().getService();
+    protected DataQueryObject getDqo() {
+        return Project.getProject().getDqo();
     }
 
 }

@@ -1,7 +1,7 @@
 package com.mindalliance.channels;
 
 import com.mindalliance.channels.dao.Memory;
-import com.mindalliance.channels.service.ChannelsServiceImpl;
+import com.mindalliance.channels.query.DataQueryObjectImpl;
 import junit.framework.TestCase;
 
 import java.util.HashMap;
@@ -20,7 +20,7 @@ public class TestNode extends TestCase {
     private Part p1;
     private Part p2;
     private Scenario scenario;
-    private ChannelsServiceImpl service;
+    private DataQueryObjectImpl dqo;
 
     public TestNode() {
     }
@@ -28,18 +28,18 @@ public class TestNode extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        service = new ChannelsServiceImpl( new Memory() );
-        scenario = service.createScenario();
-        p1 = service.createPart( scenario );
-            p1.setActor( service.findOrCreate( Actor.class, "p1" ) );
-        p2 = service.createPart( scenario );
-            p2.setActor( service.findOrCreate( Actor.class, "p2" ) );
+        dqo = new DataQueryObjectImpl( new Memory() );
+        scenario = dqo.createScenario();
+        p1 = dqo.createPart( scenario );
+            p1.setActor( dqo.findOrCreate( Actor.class, "p1" ) );
+        p2 = dqo.createPart( scenario );
+            p2.setActor( dqo.findOrCreate( Actor.class, "p2" ) );
 
-        f1 = p1.createOutcome( service );
+        f1 = p1.createOutcome( dqo );
                 f1.setName( "A" );
-        f2 = p2.createRequirement( service );
+        f2 = p2.createRequirement( dqo );
                 f2.setName( "B" );
-        f3 = service.connect( p1, p2, "message" );
+        f3 = dqo.connect( p1, p2, "message" );
     }
 
     public void testSetOutcomes() {
@@ -97,10 +97,10 @@ public class TestNode extends TestCase {
     }
 
     public void testIsness() {
-        Part part = service.createPart( scenario );
+        Part part = dqo.createPart( scenario );
         assertTrue( part.isPart() );
         assertFalse( part.isConnector() );
-        Connector c = service.createConnector( scenario );
+        Connector c = dqo.createConnector( scenario );
         assertFalse( c.isPart() );
         assertTrue( c.isConnector() );
     }

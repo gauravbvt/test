@@ -161,7 +161,7 @@ public class DefaultAnalyst implements Analyst {
      */
     private List<Issue> findAllIssuesInPlays( ResourceSpec resourceSpec, boolean specific ) {
         List<Issue> issues = new ArrayList<Issue>();
-        List<Play> plays = Project.service().findAllPlays( resourceSpec, specific );
+        List<Play> plays = Project.dqo().findAllPlays( resourceSpec, specific );
         Set<Part> parts = new HashSet<Part>();
         for ( Play play : plays ) {
             parts.add( play.getPartFor( resourceSpec ) );

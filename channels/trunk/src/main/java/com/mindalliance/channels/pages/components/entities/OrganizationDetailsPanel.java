@@ -73,7 +73,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         moDetailsDiv.add(
                 new ModelObjectLink( "loc-link",
                         new PropertyModel<Organization>( organization, "location" ) ) );
-        final List<String> locationChoices = getService().findAllNames( Place.class );
+        final List<String> locationChoices = getDqo().findAllNames( Place.class );
         TextField locationField = new AutoCompleteTextField<String>( "location",
                 new PropertyModel<String>( this, "locationName" ) ) {
             @Override
@@ -105,7 +105,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         Organization organization = getOrganization();
         List<String> candidateNames = new ArrayList<String>();
         List<Organization> ancestors = organization.ancestors();
-        List<Organization> allOrganizations = getService().list( Organization.class );
+        List<Organization> allOrganizations = getDqo().list( Organization.class );
         allOrganizations.remove( organization );
         Collection<Organization> candidates = CollectionUtils.subtract( allOrganizations, ancestors );
         for ( Organization candidate : candidates ) {
@@ -129,7 +129,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
             newOrg = null;
         else {
             if ( oldOrg == null || !isSame( name, oldName ) ) {
-                newOrg = getService().findOrCreate( Organization.class, name );
+                newOrg = getDqo().findOrCreate( Organization.class, name );
                 if (newOrg.ancestors().contains( getOrganization() )) {
                     newOrg = oldOrg;
                     getCommander().cleanup( Organization.class, name );
@@ -164,7 +164,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
             newPlace = null;
         else {
             if ( oldPlace == null || !isSame( name, oldName ) )
-                newPlace = getService().findOrCreate( Place.class, name );
+                newPlace = getDqo().findOrCreate( Place.class, name );
         }
         doCommand( new UpdateProjectObject( org, "location", newPlace ) );
         getCommander().cleanup( Place.class, oldName );

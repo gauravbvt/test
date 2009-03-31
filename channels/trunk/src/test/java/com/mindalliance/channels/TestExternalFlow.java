@@ -1,6 +1,6 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.service.ChannelsServiceImpl;
+import com.mindalliance.channels.query.DataQueryObjectImpl;
 import com.mindalliance.channels.dao.Memory;
 import junit.framework.TestCase;
 
@@ -10,7 +10,7 @@ import junit.framework.TestCase;
 @SuppressWarnings( { "HardCodedStringLiteral" } )
 public class TestExternalFlow extends TestCase {
 
-    private Service service;
+    private DataQueryObject dqo;
     private Scenario s1;
     private Scenario s2;
 
@@ -24,23 +24,23 @@ public class TestExternalFlow extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        service = new ChannelsServiceImpl( new Memory() );
-        s1 = service.createScenario();
+        dqo = new DataQueryObjectImpl( new Memory() );
+        s1 = dqo.createScenario();
         s1p1 = s1.getDefaultPart();
         s1p1.setActor( new Actor( "p1" ) );
-        s1p2 = service.createPart( s1 );
+        s1p2 = dqo.createPart( s1 );
         s1p2.setActor( new Actor( "p2" ) );
 
-        s2 = service.createScenario();
+        s2 = dqo.createScenario();
 
         // S2 "included" in S1
         Part s2Part = s2.getDefaultPart();
         s2Part.setActor( new Actor( "p3" ) );
-        s2Part.createOutcome( service );
-        s2Part.createRequirement( service );
+        s2Part.createOutcome( dqo );
+        s2Part.createRequirement( dqo );
 
-        service.connect( s1p1, s2.inputs().next(), "" );
-        service.connect( s2.outputs().next(), s1p2, "" );
+        dqo.connect( s1p1, s2.inputs().next(), "" );
+        dqo.connect( s2.outputs().next(), s1p2, "" );
     }
 
     public void testConstructor() {

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
@@ -42,7 +42,7 @@ public class AddUserIssue extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
-        Service service = commander.getService();
+        DataQueryObject dqo = commander.getDqo();
 
         UserIssue issue = new UserIssue( commander.resolve(
                 ModelObject.class,
@@ -52,7 +52,7 @@ public class AddUserIssue extends AbstractCommand {
         if ( state != null ) {
             CommandUtils.initialize( issue, state );
         }
-        service.add( issue );
+        dqo.add( issue );
         if ( get( "issue" ) != null )
             commander.mapId( (Long) get( "issue" ), issue.getId() );
         addArgument( "issue", issue.getId() );

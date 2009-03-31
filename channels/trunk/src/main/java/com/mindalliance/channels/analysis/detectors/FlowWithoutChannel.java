@@ -45,7 +45,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
                 // a matching actor doesn't have a channel defined with same medium.
                 if ( !flow.canBeUnicast() ) {
                     final ResourceSpec partResourceSpec = partNeedingChannel( flow ).resourceSpec();
-                    List<Actor> actors = getService().findAllActors( partResourceSpec );
+                    List<Actor> actors = getDqo().findAllActors( partResourceSpec );
                     for ( Actor actor : actors ) {
                         for ( Channel flowChannel : flow.getEffectiveChannels() ) {
                             if ( flowChannel.isUnicast() ) {

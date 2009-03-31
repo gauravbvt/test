@@ -44,7 +44,7 @@ public class OrganizationConverter extends EntityConverter {
      * {@inheritDoc}
      */
     ModelObject findOrMakeEntity( String name ) {
-        return Project.service().findOrCreate( Organization.class, name );
+        return Project.dqo().findOrCreate( Organization.class, name );
     }
 
     /**
@@ -91,10 +91,10 @@ public class OrganizationConverter extends EntityConverter {
         Organization org = (Organization) entity;
         if ( nodeName.equals( "parent" ) ) {
             org = (Organization) entity;
-            org.setParent( Project.service().findOrCreate( Organization.class, reader.getValue() ) );
+            org.setParent( Project.dqo().findOrCreate( Organization.class, reader.getValue() ) );
         } else if ( nodeName.equals( "location" ) ) {
             org = (Organization) entity;
-            org.setLocation( Project.service().findOrCreate( Place.class, reader.getValue() ) );
+            org.setLocation( Project.dqo().findOrCreate( Place.class, reader.getValue() ) );
         } else if ( nodeName.equals( "channel" ) ) {
             Channel channel = (Channel) context.convertAnother( scenario, Channel.class );
             org.addChannel( channel );

@@ -7,7 +7,7 @@ import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.NotFoundException;
@@ -44,14 +44,14 @@ public class AddNeed extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
-        Service service = commander.getService();
+        DataQueryObject dqo = commander.getDqo();
         Flow flow;
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Part part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
             if ( part == null ) throw new NotFoundException();
-            flow = service.connect(
-                    service.createConnector( scenario ),
+            flow = dqo.connect(
+                    dqo.createConnector( scenario ),
                     part, (String) get( "name" ) );
             Map<String, Object> flowAttributes = (Map<String, Object>) get( "attributes" );
             if ( flowAttributes != null ) {

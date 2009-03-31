@@ -7,7 +7,7 @@ import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.RedirectFlow;
@@ -616,8 +616,8 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
             }
         }
         // Add inputs/outputs of other scenarios
-        Service service = ( (Project) getApplication() ).getService();
-        for ( Scenario s : service.list( Scenario.class ) ) {
+        DataQueryObject dqo = ( (Project) getApplication() ).getDqo();
+        for ( Scenario s : dqo.list( Scenario.class ) ) {
             if ( !scenario.equals( s ) ) {
                 Iterator<Connector> c = isOutcome() ? s.inputs() : s.outputs();
                 while ( c.hasNext() ) {
@@ -638,8 +638,8 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
 
     private List<Connector> findAllRelevantConnectors() {
         List<Connector> result = new ArrayList<Connector>();
-        Service service = ( (Project) getApplication() ).getService();
-        for ( Scenario s : service.list( Scenario.class ) ) {
+        DataQueryObject dqo = ( (Project) getApplication() ).getDqo();
+        for ( Scenario s : dqo.list( Scenario.class ) ) {
             Iterator<Connector> connectorIterator = isOutcome()
                     ? s.inputs()
                     : s.outputs();

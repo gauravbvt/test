@@ -2,7 +2,7 @@ package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.Issue;
@@ -22,19 +22,19 @@ public class TestAddRemoveIssue extends AbstractChannelsTest {
 
     private Commander commander;
     private Scenario scenario;
-    private Service service;
+    private DataQueryObject dqo;
     private Analyst analyst;
 
     protected void setUp() {
         super.setUp();
-        service = project.getService();
+        dqo = project.getDqo();
         commander = project.getCommander();
         analyst = project.getAnalyst();
-        scenario = service.createScenario();
+        scenario = dqo.createScenario();
     }
 
     protected void tearDown() {
-        service.remove( scenario );
+        dqo.remove( scenario );
     }
 
     public void testAddRemoveIssue() throws Exception {

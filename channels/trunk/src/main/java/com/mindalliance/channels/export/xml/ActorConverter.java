@@ -40,7 +40,7 @@ public class ActorConverter extends EntityConverter {
      */
     @Override
     ModelObject findOrMakeEntity( String name ) {
-        return Project.service().findOrCreate( Actor.class, name );
+        return Project.dqo().findOrCreate( Actor.class, name );
     }
 
     /**

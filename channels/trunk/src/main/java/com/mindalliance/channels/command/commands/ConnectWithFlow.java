@@ -10,7 +10,7 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Part;
 
 import java.util.HashMap;
@@ -76,7 +76,7 @@ public class ConnectWithFlow extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
-        Service service = commander.getService();
+        DataQueryObject dqo = commander.getDqo();
         Scenario scenario = commander.resolve(
                 Scenario.class,
                 (Long) get( "scenario" ) );
@@ -87,12 +87,12 @@ public class ConnectWithFlow extends AbstractCommand {
         Long nodeId = commander.resolveId( (Long) get( "other" ) );
         Node other = ( nodeId != null )
                 ? otherScenario.getNode( nodeId )
-                : service.createConnector( otherScenario );
+                : dqo.createConnector( otherScenario );
         String name = (String) get( "name" );
         boolean isOutcome = (Boolean) get( "isOutcome" );
         Flow flow = isOutcome
-                ? service.connect( part, other, name )
-                : service.connect( other, part, name );
+                ? dqo.connect( part, other, name )
+                : dqo.connect( other, part, name );
         Map<String, Object> attributes = (Map<String, Object>) get( "attributes" );
         if ( attributes != null ) {
             CommandUtils.initialize( flow, attributes );

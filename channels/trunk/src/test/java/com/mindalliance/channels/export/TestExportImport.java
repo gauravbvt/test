@@ -2,7 +2,7 @@ package com.mindalliance.channels.export;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -24,15 +24,15 @@ import java.util.Map;
 public class TestExportImport extends AbstractChannelsTest {
 
     private List<String> scenarioNames;
-    private Service service;
+    private DataQueryObject dqo;
 
 
     @Override
     protected void setUp() {
         super.setUp();
-        service = project.getService();
+        dqo = project.getDqo();
         scenarioNames = new ArrayList<String>();
-        for ( Scenario scenario : project.getService().list( Scenario.class ) ) {
+        for ( Scenario scenario : project.getDqo().list( Scenario.class ) ) {
             scenarioNames.add( scenario.getName() );
         }
     }
@@ -42,7 +42,7 @@ public class TestExportImport extends AbstractChannelsTest {
         Map<String,String> exported1 = new HashMap<String,String>();
         Map<String,String> exported2 = new HashMap<String,String>();
         // allow removal of all named scenarios by creating an empty one
-        service.createScenario();
+        dqo.createScenario();
         // Export all named scenarios
         try {
             exportAll(exported0);
@@ -85,7 +85,7 @@ public class TestExportImport extends AbstractChannelsTest {
     private void exportAll(Map<String,String> exported) throws Exception {
         for ( String name : scenarioNames ) {
             ByteArrayOutputStream out;
-            Scenario scenario = service.findScenario( name );
+            Scenario scenario = dqo.findScenario( name );
             out = new ByteArrayOutputStream();
             project.getExporter().exportScenario( scenario, out );
             String xml = out.toString();
@@ -97,7 +97,7 @@ public class TestExportImport extends AbstractChannelsTest {
 
     private void removeAll() throws Exception {
         for ( String name : scenarioNames ) {
-            service.remove( service.findScenario( name ) );
+            dqo.remove( dqo.findScenario( name ) );
         }
     }
 

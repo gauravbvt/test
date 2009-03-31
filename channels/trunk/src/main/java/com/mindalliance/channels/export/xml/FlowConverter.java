@@ -10,7 +10,7 @@ import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.pages.Project;
@@ -94,7 +94,7 @@ public class FlowConverter implements Converter {
         }
         // Flow user issues (exported only if an internal flow)
         if ( flow.isInternal() ) {
-            for ( Issue issue : Project.service().findAllUserIssues( flow ) ) {
+            for ( Issue issue : Project.dqo().findAllUserIssues( flow ) ) {
                 writer.startNode( "issue" );
                 context.convertAnother( issue );
                 writer.endNode();
@@ -259,10 +259,10 @@ public class FlowConverter implements Converter {
             List<Node> sources, List<Node> targets, String name, String idValue ) {
 
         List<Flow> flows = new ArrayList<Flow>();
-        Service service = Project.service();
+        DataQueryObject dqo = Project.dqo();
         for ( Node source : sources ) {
             for ( Node target : targets ) {
-                Flow flow = service.connect( source, target, name );
+                Flow flow = dqo.connect( source, target, name );
                 flows.add( flow );
                 // Register flow id if internal because it is guaranteed to be the exported flow
                 if ( flow.isInternal() ) {
@@ -306,7 +306,7 @@ public class FlowConverter implements Converter {
         String externalScenarioName = reader.getAttribute( "scenario" );
         if ( externalScenarioName == null ) {
             // Connector is in same scenario
-            Connector connector = Project.service().createConnector( scenario );
+            Connector connector = Project.dqo().createConnector( scenario );
             connectors.add( connector );
             // try to connect external part that match specifications
             connectMatchingExternalParts( connector, reader, isSource );
@@ -362,7 +362,7 @@ public class FlowConverter implements Converter {
             String externalScenarioName = reader.getAttribute( "scenario" );
             String externalScenarioDescription = "";
             String flowName = reader.getAttribute( "flow" );
-            Service service = Project.service();
+            DataQueryObject dqo = Project.dqo();
             String roleName = null;
             String organizationName = null;
             String task = null;
@@ -396,9 +396,9 @@ public class FlowConverter implements Converter {
                         taskDescription );
                 for ( Part externalPart : externalParts ) {
                     if ( isSource ) {
-                        service.connect( externalPart, connector, flowName );
+                        dqo.connect( externalPart, connector, flowName );
                     } else {
-                        service.connect( connector, externalPart, flowName );
+                        dqo.connect( connector, externalPart, flowName );
                     }
                 }
             }
@@ -463,7 +463,7 @@ public class FlowConverter implements Converter {
                                                   String scenarioDescription ) {
         List<Scenario> scenarios = new ArrayList<Scenario>();
         try {
-            scenarios.add( Project.service().findScenario( scenarioName ) );
+            scenarios.add( Project.dqo().findScenario( scenarioName ) );
         } catch ( NotFoundException e ) {
             LoggerFactory.getLogger( FlowConverter.class ).info(
                     "No scenario found matching name ["

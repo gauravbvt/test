@@ -104,7 +104,7 @@ public class PlaysTablePanel extends AbstractTablePanel<Play> {
             return playsModel.getObject();
         }
         else {
-            return getService().findAllPlays( player, specific );
+            return getDqo().findAllPlays( player, specific );
         }
     }
 

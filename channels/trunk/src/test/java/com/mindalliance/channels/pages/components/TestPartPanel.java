@@ -12,7 +12,7 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.attachments.BitBucket;
-import com.mindalliance.channels.service.ChannelsServiceImpl;
+import com.mindalliance.channels.query.DataQueryObjectImpl;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.FlowDiagram;
@@ -49,11 +49,11 @@ public class TestPartPanel extends AbstractChannelsTest {
     protected void setUp() {
         super.setUp();
         project = new Project();
-        ChannelsServiceImpl service = new ChannelsServiceImpl();
+        DataQueryObjectImpl dqo = new DataQueryObjectImpl();
 
-        service.setAddingSamples( true );
-        service.setDao( new Memory() );
-        project.setService( service );
+        dqo.setAddingSamples( true );
+        dqo.setDao( new Memory() );
+        project.setDqo( dqo );
         project.setAttachmentManager( new BitBucket() );
         DiagramFactory dm = createMock( DiagramFactory.class );
          FlowDiagram fd = createMock(  FlowDiagram.class);
@@ -77,7 +77,7 @@ public class TestPartPanel extends AbstractChannelsTest {
         tester.setParametersForNextRequest( new HashMap<String,String[]>() );
 
         // Find first part in scenario
-        scenario = project.getService().getDefaultScenario();
+        scenario = project.getDqo().getDefaultScenario();
         Iterator<Node> nodes = scenario.nodes();
         part = null;
         while ( part == null && nodes.hasNext() ) {

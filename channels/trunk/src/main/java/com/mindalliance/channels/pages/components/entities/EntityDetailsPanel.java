@@ -80,7 +80,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
 
     private List<String> getNameChoices() {
         List<String> choices = new ArrayList<String>();
-        List<String> namesTaken = getService().findAllNames( getEntity().getClass() );
+        List<String> namesTaken = getDqo().findAllNames( getEntity().getClass() );
         for ( String taken : namesTaken ) {
             if ( taken.equals( getEntity().getName() ) ) {
                 choices.add( taken );
@@ -128,7 +128,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
             String oldName = getEntity().getName();
             String uniqueName = name.trim();
             if ( !isSame( oldName, name ) ) {
-                List<String> namesTaken = getService().findAllNames( getEntity().getClass() );
+                List<String> namesTaken = getDqo().findAllNames( getEntity().getClass() );
                 int count = 2;
                 while ( namesTaken.contains( uniqueName ) ) {
                     uniqueName = name + "(" + count++ + ")";

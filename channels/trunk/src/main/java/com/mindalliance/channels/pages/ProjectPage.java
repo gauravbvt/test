@@ -6,7 +6,7 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ScenarioObject;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Flow;
@@ -152,11 +152,11 @@ public final class ProjectPage extends WebPage implements Updatable {
         // Call super to remember parameters in links
         super( parameters );
 
-        Service service = getService();
-        Scenario sc = findScenario( service, parameters );
+        DataQueryObject dqo = getDqo();
+        Scenario sc = findScenario( dqo, parameters );
 
         if ( sc == null )
-            redirectTo( service.getDefaultScenario() );
+            redirectTo( dqo.getDefaultScenario() );
 
         else {
             Part p = findPart( sc, parameters );
@@ -360,7 +360,7 @@ public final class ProjectPage extends WebPage implements Updatable {
 
         for ( long id : expansions ) {
             try {
-                ModelObject mo = getService().find( ModelObject.class, id );
+                ModelObject mo = getDqo().find( ModelObject.class, id );
                 if ( mo.isEntity() ) return mo;
             }
             catch ( NotFoundException e ) {
@@ -371,7 +371,7 @@ public final class ProjectPage extends WebPage implements Updatable {
     }
 
     public List<Scenario> getAllScenarios() {
-        List<Scenario> allScenarios = Project.getProject().getService().list( Scenario.class );
+        List<Scenario> allScenarios = Project.getProject().getDqo().list( Scenario.class );
         Collections.sort( allScenarios, new Comparator<Scenario>(){
             public int compare( Scenario sc1, Scenario sc2 ) {
                 return Collator.getInstance().compare( sc1.getName(), sc2.getName() );
@@ -383,14 +383,14 @@ public final class ProjectPage extends WebPage implements Updatable {
     /**
      * Find scenario specified in parameters.
      *
-     * @param service    the scenario container
+     * @param dqo    the scenario container
      * @param parameters the page parameters
      * @return a scenario, or null if not found
      */
-    static Scenario findScenario( Service service, PageParameters parameters ) {
+    static Scenario findScenario( DataQueryObject dqo, PageParameters parameters ) {
         if ( parameters.containsKey( SCENARIO_PARM ) )
             try {
-                return service.find( Scenario.class, parameters.getLong( SCENARIO_PARM ) );
+                return dqo.find( Scenario.class, parameters.getLong( SCENARIO_PARM ) );
             } catch ( StringValueConversionException ignored ) {
                 LOG.warn( "Invalid scenario specified in parameters. Using default." );
             } catch ( NotFoundException ignored ) {
@@ -535,12 +535,12 @@ public final class ProjectPage extends WebPage implements Updatable {
     }
 
     /**
-     * Get the channels service from project via the application context.
+     * Get the channels data query object from project via the application context.
      *
-     * @return the service
+     * @return the data query object
      */
-    private Service getService() {
-        return getProject().getService();
+    private DataQueryObject getDqo() {
+        return getProject().getDqo();
     }
 
     private Project getProject() {
@@ -747,7 +747,7 @@ public final class ProjectPage extends WebPage implements Updatable {
             } else if ( change.isAdded() ) {
                 redirectTo( (Scenario) identifiable );
             } else if ( change.isRemoved() ) {
-                redirectTo( getService().getDefaultScenario() );
+                redirectTo( getDqo().getDefaultScenario() );
             } else if ( change.isRecomposed() ) {
                 target.addComponent( scenarioPanel );
             }

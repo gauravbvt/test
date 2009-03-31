@@ -1,8 +1,7 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Identifiable;
 
 import java.util.Map;
@@ -72,11 +71,11 @@ public interface Commander {
     void reset();
 
     /**
-     * Get a service
+     * Get a data query object
      *
-     * @return a service
+     * @return a data query object
      */
-    Service getService();
+    DataQueryObject getDqo();
 
     /**
      * Resets history for current user.

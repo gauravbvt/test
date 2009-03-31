@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.pages.components.ResourceSpecsPanel;
 import com.mindalliance.channels.pages.components.ScenariosPanel;
 import org.apache.wicket.PageParameters;
@@ -36,16 +36,16 @@ public class IndexPage extends WebPage {
     public IndexPage( PageParameters parameters ) {
         super( parameters );
 
-        final Service service = ( (Project) getApplication() ).getService();
-        resourceSpecs = service.findAllResourceSpecs();
-        init( service );
+        final DataQueryObject dqo = ( (Project) getApplication() ).getDqo();
+        resourceSpecs = dqo.findAllResourceSpecs();
+        init( dqo );
     }
 
     @SuppressWarnings( {"unchecked"} )
-    private void init( Service service ) {
+    private void init( DataQueryObject dqo ) {
         add( new Label( "title", "Index" ) );
 
-        List<Scenario> scenarios = service.list( Scenario.class );
+        List<Scenario> scenarios = dqo.list( Scenario.class );
 
         add( new ScenariosPanel( "all-scenarios",
                 new Model<ArrayList<Scenario>>( (ArrayList) scenarios ), null ) );

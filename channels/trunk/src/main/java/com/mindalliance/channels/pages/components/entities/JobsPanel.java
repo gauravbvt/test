@@ -111,7 +111,7 @@ public class JobsPanel extends AbstractCommandablePanel {
     }
 
     public ResourceSpec getJobResourceSpec() {
-        return selectedJob.resourceSpec( getOrganization(), getService() );
+        return selectedJob.resourceSpec( getOrganization(), getDqo() );
     }
 
     private void addConfirmedCell( ListItem<JobWrapper> item ) {
@@ -146,7 +146,7 @@ public class JobsPanel extends AbstractCommandablePanel {
 
     private void addTitleCell( final ListItem<JobWrapper> item ) {
         final JobWrapper jobWrapper = item.getModel().getObject();
-        final List<String> choices = getService().findAllJobTitles();
+        final List<String> choices = getDqo().findAllJobTitles();
         TextField<String> titleField = new AutoCompleteTextField<String>(
                 "title",
                 new PropertyModel<String>( jobWrapper, "title" ) ) {
@@ -197,7 +197,7 @@ public class JobsPanel extends AbstractCommandablePanel {
             jobWrappers.add( new JobWrapper( job, true ) );
         }
         // Unconfirmed jobs
-        for ( Job job : getService().findUnconfirmedJobs( getOrganization() ) ) {
+        for ( Job job : getDqo().findUnconfirmedJobs( getOrganization() ) ) {
             jobWrappers.add( new JobWrapper( job, false ) );
         }
         Collections.sort( jobWrappers, new Comparator<JobWrapper>() {
@@ -265,7 +265,7 @@ public class JobsPanel extends AbstractCommandablePanel {
                         job,
                         UpdateObject.Action.Remove
                 ) );
-                ResourceSpec resourceSpec = job.resourceSpec( getOrganization(), getService() );
+                ResourceSpec resourceSpec = job.resourceSpec( getOrganization(), getDqo() );
                 if ( resourceSpec.getActor( ) != null )
                     getCommander().cleanup( Actor.class, resourceSpec.getActor().getName() );
                 if ( resourceSpec.getRole() != null )
@@ -299,7 +299,7 @@ public class JobsPanel extends AbstractCommandablePanel {
         }
 
         private String getNormalizedActorName() {
-            return getService().findOrCreate( Actor.class, getActorName() ).normalize();
+            return getDqo().findOrCreate( Actor.class, getActorName() ).normalize();
         }
 
         public String getActorName() {
@@ -382,9 +382,9 @@ public class JobsPanel extends AbstractCommandablePanel {
         }
 
         public boolean hasFlows() {
-            return !getService().findAllPlays(
+            return !getDqo().findAllPlays(
                     job.resourceSpec( getOrganization(),
-                            getService() ) ).isEmpty();
+                            getDqo() ) ).isEmpty();
         }
 
         /**
@@ -394,7 +394,7 @@ public class JobsPanel extends AbstractCommandablePanel {
          */
         public Actor getActor() {
             if (!getActorName().isEmpty())
-                return getService().findOrCreate( Actor.class, getActorName() );
+                return getDqo().findOrCreate( Actor.class, getActorName() );
             else
                 return null;
         }
@@ -406,7 +406,7 @@ public class JobsPanel extends AbstractCommandablePanel {
           */
          public Role getRole() {
              if (!getRoleName().isEmpty())
-                 return getService().findOrCreate( Role.class, getRoleName() );
+                 return getDqo().findOrCreate( Role.class, getRoleName() );
              else
                  return null;
          }
@@ -417,7 +417,7 @@ public class JobsPanel extends AbstractCommandablePanel {
           */
          public Place getJurisdiction() {
              if (!getJurisdictionName().isEmpty())
-                 return getService().findOrCreate( Place.class, getJurisdictionName() );
+                 return getDqo().findOrCreate( Place.class, getJurisdictionName() );
              else
                  return null;
          }
@@ -458,7 +458,7 @@ public class JobsPanel extends AbstractCommandablePanel {
                             : ( property.equals( "role" )
                             ? Role.class
                             : Place.class );
-            final List<String> choices = getService().findAllNames( moClass );
+            final List<String> choices = getDqo().findAllNames( moClass );
             // text field
             TextField<String> entityField = new AutoCompleteTextField<String>(
                     "entity-field",

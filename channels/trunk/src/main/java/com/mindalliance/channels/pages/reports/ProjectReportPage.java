@@ -40,7 +40,7 @@ public class ProjectReportPage extends WebPage {
         add( new Label( "date", DateFormat.getDateTimeInstance(
             DateFormat.LONG, DateFormat.LONG ).format( new Date() ) ) );
 
-        List<Scenario> scenarios = Project.service().list( Scenario.class );
+        List<Scenario> scenarios = Project.dqo().list( Scenario.class );
         Collections.sort( scenarios, new Comparator<Scenario>() {
             public int compare( Scenario o1, Scenario o2 ) {
                 return Collator.getInstance().compare( o1.getName(), o2.getName() );

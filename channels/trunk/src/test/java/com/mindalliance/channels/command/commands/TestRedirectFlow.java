@@ -2,7 +2,7 @@ package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.Flow;
@@ -24,7 +24,7 @@ public class TestRedirectFlow extends AbstractChannelsTest {
 
     private Commander commander;
     private Scenario scenario;
-    private Service service;
+    private DataQueryObject dqo;
     Part source;
     Part target;
     Part otherTarget;
@@ -33,25 +33,25 @@ public class TestRedirectFlow extends AbstractChannelsTest {
 
     protected void setUp() {
         super.setUp();
-        service = project.getService();
+        dqo = project.getDqo();
         commander = project.getCommander();
-        scenario = service.createScenario();
+        scenario = dqo.createScenario();
         source = scenario.getDefaultPart();
-        source.setRole( service.findOrCreate( Role.class, "source" ) );
+        source.setRole( dqo.findOrCreate( Role.class, "source" ) );
         source.setTask( "doing source things" );
-        target = service.createPart( scenario );
+        target = dqo.createPart( scenario );
         target.setTask( "doing target things" );
-        target.setRole( service.findOrCreate( Role.class, "target" ) );
-        flow = service.connect( source, target, "info" );
-        otherTarget = service.createPart( scenario );
+        target.setRole( dqo.findOrCreate( Role.class, "target" ) );
+        flow = dqo.connect( source, target, "info" );
+        otherTarget = dqo.createPart( scenario );
         otherTarget.setTask( "doing other things" );
-        otherTarget.setRole( service.findOrCreate( Role.class, "other target" ) );
-        connector = service.createConnector( scenario );
-        service.connect( connector, otherTarget, "info" );
+        otherTarget.setRole( dqo.findOrCreate( Role.class, "other target" ) );
+        connector = dqo.createConnector( scenario );
+        dqo.connect( connector, otherTarget, "info" );
     }
 
     protected void tearDown() {
-        service.remove( scenario );
+        dqo.remove( scenario );
     }
 
     public void testRedirectFlow() throws CommandException {

@@ -93,12 +93,12 @@ public class PartPanel extends AbstractCommandablePanel {
         super.setOutputMarkupPlaceholderTag( false );
         this.model = model;
 
-        addField( TASK_PROPERTY, getService().findAllTasks() );
-        addField( ACTOR_PROPERTY, getService().findAllNames( Actor.class ) );
-        addField( ROLE_PROPERTY, getService().findAllNames( Role.class ) );
-        addField( ORG_PROPERTY, getService().findAllNames( Organization.class ) );
-        addField( JURISDICTION_PROPERTY, getService().findAllNames( Place.class ) );
-        addField( LOCATION_PROPERTY, getService().findAllNames( Place.class ) );
+        addField( TASK_PROPERTY, getDqo().findAllTasks() );
+        addField( ACTOR_PROPERTY, getDqo().findAllNames( Actor.class ) );
+        addField( ROLE_PROPERTY, getDqo().findAllNames( Role.class ) );
+        addField( ORG_PROPERTY, getDqo().findAllNames( Organization.class ) );
+        addField( JURISDICTION_PROPERTY, getDqo().findAllNames( Place.class ) );
+        addField( LOCATION_PROPERTY, getDqo().findAllNames( Place.class ) );
         addTimingFields();
     }
 
@@ -274,7 +274,7 @@ public class PartPanel extends AbstractCommandablePanel {
             newActor = null;
         else {
             if ( oldActor == null || !isSame( name, oldName ) )
-                newActor = getService().findOrCreate( Actor.class, name );
+                newActor = getDqo().findOrCreate( Actor.class, name );
         }
         doCommand( new UpdateScenarioObject( getPart(), "actor", newActor ) );
         getCommander().cleanup( Actor.class, oldName );
@@ -293,7 +293,7 @@ public class PartPanel extends AbstractCommandablePanel {
             newPlace = null;
         else {
             if ( oldPlace == null || !isSame( name, oldName ) )
-                newPlace = getService().findOrCreate( Place.class, name );
+                newPlace = getDqo().findOrCreate( Place.class, name );
         }
         doCommand( new UpdateScenarioObject( getPart(), "jurisdiction", newPlace ) );
         getCommander().cleanup( Place.class, oldName );
@@ -312,7 +312,7 @@ public class PartPanel extends AbstractCommandablePanel {
             newPlace = null;
         else {
             if ( oldPlace == null || !isSame( name, oldName ) )
-                newPlace = getService().findOrCreate( Place.class, name );
+                newPlace = getDqo().findOrCreate( Place.class, name );
         }
         doCommand( new UpdateScenarioObject( getPart(), "location", newPlace ) );
         getCommander().cleanup( Place.class, oldName );
@@ -331,7 +331,7 @@ public class PartPanel extends AbstractCommandablePanel {
             newOrg = null;
         else {
             if ( oldOrg == null || !isSame( name, oldName ) )
-                newOrg = getService().findOrCreate( Organization.class, name );
+                newOrg = getDqo().findOrCreate( Organization.class, name );
         }
         doCommand( new UpdateScenarioObject( getPart(), "organization", newOrg ) );
         getCommander().cleanup( Organization.class, oldName );
@@ -350,7 +350,7 @@ public class PartPanel extends AbstractCommandablePanel {
             newRole = null;
         else {
             if ( oldRole == null || !isSame( name, oldName ) )
-                newRole = getService().findOrCreate( Role.class, name );
+                newRole = getDqo().findOrCreate( Role.class, name );
         }
         doCommand( new UpdateScenarioObject( getPart(), "role", newRole ) );
         getCommander().cleanup( Role.class, oldName );

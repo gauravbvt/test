@@ -6,7 +6,6 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class Organization extends AbstractUnicastChannelable {
 
     private List<Job> jobs = new ArrayList<Job>();
 
-    // private List<Job> jobs = new ArrayList<Job>(); // TODO - reflect in Service.FindAllResourceSpecs()
+    // private List<Job> jobs = new ArrayList<Job>(); // TODO - reflect in DataQueryObject.FindAllResourceSpecs()
 
     public Organization() {
     }
@@ -160,13 +159,13 @@ public class Organization extends AbstractUnicastChannelable {
     /**
      * Return resources specs from jobs.
      *
-     * @param service a service
+     * @param dqo a data query object
      * @return a list of resource specs
      */
-    public List<ResourceSpec> jobResourceSpecs( Service service) {
+    public List<ResourceSpec> jobResourceSpecs( DataQueryObject dqo) {
         List<ResourceSpec> resourceSpecs = new ArrayList<ResourceSpec>();
         for ( Job job : jobs ) {
-            resourceSpecs.add( job.resourceSpec( this, service ) );
+            resourceSpecs.add( job.resourceSpec( this, dqo ) );
         }
         return resourceSpecs;
     }

@@ -120,11 +120,11 @@ public abstract class Node extends ModelObject implements ScenarioObject {
 
     /**
      * Create a new outcome for this node.
-     * @param service the underlying store
+     * @param dqo the underlying store
      * @return an internal flow to a new connector
      */
-    public Flow createOutcome( Service service ) {
-        return service.connect( this, service.createConnector( getScenario() ), DEFAULT_FLOW_NAME );
+    public Flow createOutcome( DataQueryObject dqo ) {
+        return dqo.connect( this, dqo.createConnector( getScenario() ), DEFAULT_FLOW_NAME );
     }
 
     /**
@@ -189,11 +189,11 @@ public abstract class Node extends ModelObject implements ScenarioObject {
 
     /**
      * Create and add a new requirement.
-     * @param service the underyling store
+     * @param dqo the underyling store
      * @return a flow from a new connector to this node
      */
-    public Flow createRequirement( Service service ) {
-        return service.connect( service.createConnector( getScenario() ), this, DEFAULT_FLOW_NAME );
+    public Flow createRequirement( DataQueryObject dqo ) {
+        return dqo.connect( dqo.createConnector( getScenario() ), this, DEFAULT_FLOW_NAME );
     }
 
     /**

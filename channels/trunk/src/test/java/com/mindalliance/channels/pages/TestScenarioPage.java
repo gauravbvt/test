@@ -11,7 +11,7 @@ import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.FlowDiagram;
-import com.mindalliance.channels.service.ChannelsServiceImpl;
+import com.mindalliance.channels.query.DataQueryObjectImpl;
 import junit.framework.TestCase;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.pages.RedirectPage;
@@ -49,12 +49,12 @@ public class TestScenarioPage extends TestCase {
 
         dao = new Memory();
         project = new Project();
-        ChannelsServiceImpl service = new ChannelsServiceImpl();
-        service.setAddingSamples( true );
-        service.setDao( dao );
-        service.initialize();
+        DataQueryObjectImpl dqo = new DataQueryObjectImpl();
+        dqo.setAddingSamples( true );
+        dqo.setDao( dao );
+        dqo.initialize();
 
-        project.setService( service );
+        project.setDqo( dqo );
         project.setAttachmentManager( new BitBucket() );
         DiagramFactory dm = createMock( DiagramFactory.class );
         FlowDiagram fd = createMock(  FlowDiagram.class);
@@ -75,7 +75,7 @@ public class TestScenarioPage extends TestCase {
         replay( sa );
         project.setAnalyst( sa );
 
-        scenario = project.getService().getDefaultScenario();
+        scenario = project.getDqo().getDefaultScenario();
         tester = new WicketTester( project );
         tester.setParametersForNextRequest( new HashMap<String,String[]>() );
     }
@@ -93,7 +93,7 @@ public class TestScenarioPage extends TestCase {
 
         Importer importer = createMock( Importer.class );
         expect( importer.importScenario( (InputStream) notNull() ) )
-                .andReturn( project.getService().createScenario() );
+                .andReturn( project.getDqo().createScenario() );
 
         replay( importer );
         project.setImporter( importer );
@@ -258,7 +258,7 @@ public class TestScenarioPage extends TestCase {
 
     public void testDeleteScenario() throws IOException, NotFoundException {
         assertEquals( 2, dao.getScenarioCount() );
-        Scenario sc2 = project.getService().createScenario();
+        Scenario sc2 = project.getDqo().createScenario();
         sc2.setName( "Test" );
         assertEquals( 3, dao.getScenarioCount() );
 

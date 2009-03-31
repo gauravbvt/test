@@ -3,14 +3,14 @@ package com.mindalliance.channels.dao;
 import com.mindalliance.channels.DuplicateKeyException;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.service.ChannelsServiceImpl;
+import com.mindalliance.channels.query.DataQueryObjectImpl;
 import junit.framework.TestCase;
 
 public class TestMemory extends TestCase {
 
     private Memory memory ;
 
-    private ChannelsServiceImpl service;
+    private DataQueryObjectImpl dqo;
 
     public TestMemory() {
     }
@@ -19,21 +19,21 @@ public class TestMemory extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         memory = new Memory();
-        service = new ChannelsServiceImpl();
-        service.setAddingSamples( true );
-        service.setDao( memory );
-        service.initialize();
+        dqo = new DataQueryObjectImpl();
+        dqo.setAddingSamples( true );
+        dqo.setDao( memory );
+        dqo.initialize();
     }
 
     public void testInitial() {
         assertEquals( 2, memory.getScenarioCount() );
         assertTrue( memory.list( Scenario.class ).iterator().hasNext() );
         try {
-            service.findScenario( "bla" );
+            dqo.findScenario( "bla" );
             fail();
         } catch ( NotFoundException ignored ) {
             try {
-                service.find( Scenario.class, -1L );
+                dqo.find( Scenario.class, -1L );
                 fail();
             } catch ( NotFoundException ignore ) {
             }
@@ -43,17 +43,17 @@ public class TestMemory extends TestCase {
     public void testAddDelete() throws DuplicateKeyException, NotFoundException {
         long size = memory.getScenarioCount();
 
-        Scenario s = service.createScenario();
+        Scenario s = dqo.createScenario();
         s.setName( "Bogus" );
 
         assertEquals( size + 1, memory.getScenarioCount() );
 
-        assertSame( s, service.findScenario( s.getName() ) );
-        assertSame( s, service.find( Scenario.class, s.getId() ) );
+        assertSame( s, dqo.findScenario( s.getName() ) );
+        assertSame( s, dqo.find( Scenario.class, s.getId() ) );
 
         memory.remove( s );
         try {
-            service.findScenario( s.getName() );
+            dqo.findScenario( s.getName() );
             fail();
         } catch ( NotFoundException ignored ) {}
         try {
@@ -62,7 +62,7 @@ public class TestMemory extends TestCase {
         } catch ( NotFoundException ignored ) {}
 
         for ( long i = size; i > 0 ; i-- )
-            memory.remove( service.getDefaultScenario() );
+            memory.remove( dqo.getDefaultScenario() );
         assertEquals( 1, memory.getScenarioCount() );
         // last one not deleted
     }
@@ -80,12 +80,12 @@ public class TestMemory extends TestCase {
     }
 
     public void testDefault() {
-        assertNotNull( service.getDefaultScenario() );
+        assertNotNull( dqo.getDefaultScenario() );
     }
 
     public void testCreateScenario() throws NotFoundException {
         assertEquals( 2, memory.getScenarioCount() );
-        Scenario s = service.createScenario();
+        Scenario s = dqo.createScenario();
         assertEquals( 3, memory.getScenarioCount() );
         assertSame( s, memory.find( Scenario.class, s.getId() ) );
     }

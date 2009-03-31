@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.reports;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Role;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -50,13 +50,13 @@ public class ProjectDirectoryPanel extends Panel {
     }
 
     private static List<Role> findRolesOutOfOrganization() {
-        Service service = Project.service();
+        DataQueryObject dqo = Project.dqo();
         List<Role> rolesWithoutOrg = new ArrayList<Role>();
-        for ( Role role : service.list( Role.class ) ) {
+        for ( Role role : dqo.list( Role.class ) ) {
             ResourceSpec roleSpec = ResourceSpec.with( role );
             boolean inOrganization = false;
             Iterator<ResourceSpec> roleSpecs =
-                    service.findAllResourcesNarrowingOrEqualTo( roleSpec ).iterator();
+                    dqo.findAllResourcesNarrowingOrEqualTo( roleSpec ).iterator();
             while ( !inOrganization && roleSpecs.hasNext() ) {
                 if ( !roleSpecs.next().isAnyOrganization() ) {
                     inOrganization = true;

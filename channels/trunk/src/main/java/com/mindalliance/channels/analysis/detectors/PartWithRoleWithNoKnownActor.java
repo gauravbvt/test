@@ -44,7 +44,7 @@ public class PartWithRoleWithNoKnownActor extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( part.getRole() != null && part.getOrganization() != null && part.getActor() == null ) {
-            List<Actor> actorsInRole = getService().findAllActors( part.resourceSpec() );
+            List<Actor> actorsInRole = getDqo().findAllActors( part.resourceSpec() );
             if ( actorsInRole.isEmpty() ) {
                 Issue issue = new DetectedIssue( Issue.STRUCTURAL, part );
                 issue.setDescription( "There is no known actor playing this role." );

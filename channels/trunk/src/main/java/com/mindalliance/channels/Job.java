@@ -87,17 +87,17 @@ public class Job implements Serializable {
      * Job as resource specifiction.
      *
      * @param organization an organization
-     * @param service a service
+     * @param dqo a data query object
      * @return a resource spec
      */
-    public ResourceSpec resourceSpec( Organization organization, Service service ) {
+    public ResourceSpec resourceSpec( Organization organization, DataQueryObject dqo ) {
         ResourceSpec resourceSpec = new ResourceSpec();
         if ( actorName != null && !actorName.isEmpty() )
-            resourceSpec.setActor( service.findOrCreate( Actor.class, actorName ) );
+            resourceSpec.setActor( dqo.findOrCreate( Actor.class, actorName ) );
         if ( roleName != null && !roleName.isEmpty() )
-            resourceSpec.setRole( service.findOrCreate( Role.class, roleName ) );
+            resourceSpec.setRole( dqo.findOrCreate( Role.class, roleName ) );
         if ( jurisdictionName != null && !jurisdictionName.isEmpty() )
-            resourceSpec.setJurisdiction( service.findOrCreate( Place.class, jurisdictionName ) );
+            resourceSpec.setJurisdiction( dqo.findOrCreate( Place.class, jurisdictionName ) );
         resourceSpec.setOrganization( organization );
         return resourceSpec;
     }

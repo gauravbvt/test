@@ -9,7 +9,7 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Place;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.pages.Project;
 import com.thoughtworks.xstream.converters.Converter;
@@ -60,7 +60,7 @@ public class ScenarioConverter implements Converter {
                          MarshallingContext context ) {
         Scenario scenario = (Scenario) object;
         Project project = Project.getProject();
-        Service service = project.getService();
+        DataQueryObject dqo = project.getDqo();
         context.put( "scenario", scenario );
         writer.addAttribute( "project", project.getUri() );
         writer.addAttribute( "version", project.getExporter().getVersion() );
@@ -72,7 +72,7 @@ public class ScenarioConverter implements Converter {
         writer.endNode();
         // All entities if not within a project export
         if ( context.get( "project" ) == null ) {
-            Iterator<ModelObject> entities = service.iterateEntities();
+            Iterator<ModelObject> entities = dqo.iterateEntities();
             while ( entities.hasNext() ) {
                 ModelObject entity = entities.next();
                 writer.startNode( entity.getClass().getSimpleName().toLowerCase() );
@@ -81,7 +81,7 @@ public class ScenarioConverter implements Converter {
             }
         }
         // Scenario user issues
-        List<Issue> issues = service.findAllUserIssues( scenario );
+        List<Issue> issues = dqo.findAllUserIssues( scenario );
         for ( Issue issue : issues ) {
             writer.startNode( "issue" );
             context.convertAnother( issue );
@@ -115,7 +115,7 @@ public class ScenarioConverter implements Converter {
             idMap = new HashMap<String, Long>();
             context.put( "idMap", idMap );
         }
-        Scenario scenario = Project.service().createScenario();
+        Scenario scenario = Project.dqo().createScenario();
         Part defaultPart = scenario.getDefaultPart();
         context.put( "scenario", scenario );
         scenario.setName( reader.getAttribute( "name" ) );

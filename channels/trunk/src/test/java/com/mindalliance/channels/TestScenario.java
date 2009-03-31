@@ -1,6 +1,6 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.service.ChannelsServiceImpl;
+import com.mindalliance.channels.query.DataQueryObjectImpl;
 import com.mindalliance.channels.dao.Memory;
 import junit.framework.TestCase;
 
@@ -18,7 +18,7 @@ public class TestScenario extends TestCase {
 
     /** The scenario being tested. */
     private Scenario scenario;
-    private Service service;
+    private DataQueryObject dqo;
 
     public TestScenario() {
     }
@@ -26,8 +26,8 @@ public class TestScenario extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        service = new ChannelsServiceImpl( new Memory() );
-        scenario = service.createScenario();
+        dqo = new DataQueryObjectImpl( new Memory() );
+        scenario = dqo.createScenario();
     }
 
     public void testDescription() {
@@ -54,26 +54,26 @@ public class TestScenario extends TestCase {
     public void testEquals() {
         assertEquals( scenario, scenario );
         assertFalse( scenario.equals( null ) );
-        assertFalse( scenario.equals( service.createScenario() ) );
+        assertFalse( scenario.equals( dqo.createScenario() ) );
     }
 
     public void testHashCode() {
-        assertNotSame( scenario.hashCode(), service.createScenario().hashCode() );
+        assertNotSame( scenario.hashCode(), dqo.createScenario().hashCode() );
     }
 
     public void testNodes() {
         assertEquals( 1, scenario.getNodeCount() );
 
         Node p1 = scenario.getDefaultPart();
-        Part p2 = service.createPart( scenario );
-        Part p3 = service.createPart( scenario );
+        Part p2 = dqo.createPart( scenario );
+        Part p3 = dqo.createPart( scenario );
 
         assertSame( p1, scenario.getNode( p1.getId() ) );
         assertSame( p2, scenario.getNode( p2.getId() ) );
         assertSame( p3, scenario.getNode( p3.getId() ) );
 
-        Flow f1 = service.connect( p1, p2, "" );
-        Flow f2 = service.connect( p2, p3, "" );
+        Flow f1 = dqo.connect( p1, p2, "" );
+        Flow f2 = dqo.connect( p2, p3, "" );
 
         assertEquals( 3, scenario.getNodeCount() );
         assertSame( f1, p1.getFlow( f1.getId() ) );
@@ -107,14 +107,14 @@ public class TestScenario extends TestCase {
     }
 
     public void testConnect() {
-        Part p1 = service.createPart( scenario );
-        Part p2 = service.createPart( scenario );
+        Part p1 = dqo.createPart( scenario );
+        Part p2 = dqo.createPart( scenario );
 
-        service.connect( p1, p2, "" );
-        Part p3 = service.createPart( scenario );
-        Part p4 = service.createPart( scenario );
+        dqo.connect( p1, p2, "" );
+        Part p3 = dqo.createPart( scenario );
+        Part p4 = dqo.createPart( scenario );
 
-        Flow f = service.connect( p3, p4, "" );
+        Flow f = dqo.connect( p3, p4, "" );
         assertSame( p3, f.getSource() );
         assertSame( p4, f.getTarget() );
         assertSame( f, p3.getFlow( f.getId() ) );
@@ -127,7 +127,7 @@ public class TestScenario extends TestCase {
         assertTrue( iterator.hasNext() );
         assertSame( f, iterator.next() );
         assertFalse( iterator.hasNext() );
-        Flow f2 = service.connect( p3, p4, "" );
+        Flow f2 = dqo.connect( p3, p4, "" );
 
         iterator = p4.requirementsNamed( "" );
         assertTrue( iterator.hasNext() );
@@ -138,10 +138,10 @@ public class TestScenario extends TestCase {
     }
 
     public void testDisconnect() {
-        Part p1 = service.createPart( scenario );
-        Part p2 = service.createPart( scenario );
+        Part p1 = dqo.createPart( scenario );
+        Part p2 = dqo.createPart( scenario );
 
-        Flow f = service.connect( p1, p2, "" );
+        Flow f = dqo.connect( p1, p2, "" );
 
         assertSame( f, p1.getFlow( f.getId() ) );
         assertSame( f, p2.getFlow( f.getId() ) );
@@ -151,14 +151,14 @@ public class TestScenario extends TestCase {
     }
 
     public void testFlows() {
-        Part bob = service.createPart( scenario );
-        Part sue = service.createPart( scenario );
-        Part joe = service.createPart( scenario );
+        Part bob = dqo.createPart( scenario );
+        Part sue = dqo.createPart( scenario );
+        Part joe = dqo.createPart( scenario );
 
-        Flow f1 = service.connect( bob, sue, "" );
-        Flow f2 = service.connect( bob, joe, "" );
-        Flow f3 = service.connect( sue, joe, "" );
-        Flow f4 = service.connect( joe, bob, "" );
+        Flow f1 = dqo.connect( bob, sue, "" );
+        Flow f2 = dqo.connect( bob, joe, "" );
+        Flow f3 = dqo.connect( sue, joe, "" );
+        Flow f4 = dqo.connect( joe, bob, "" );
 
         Set<Flow> fs = new HashSet<Flow>();
         fs.add( f1 );
@@ -198,16 +198,16 @@ public class TestScenario extends TestCase {
         assertSame( dp, nodes2.next() );
         assertFalse( nodes2.hasNext() );
 
-        Flow out = dp.createOutcome( service );
+        Flow out = dp.createOutcome( dqo );
         Connector c1 = (Connector) out.getTarget();
-        Flow in  = dp.createRequirement( service );
+        Flow in  = dp.createRequirement( dqo );
         Connector c2 = (Connector) in.getSource();
         scenario.removeNode( dp );
 
         assertSame( dp, scenario.getNode( dp.getId() ) );
         assertSame( c1, scenario.getNode( c1.getId() ) );
         assertSame( c2, scenario.getNode( c2.getId() ) );
-        Part p2 = service.createPart( scenario );
+        Part p2 = dqo.createPart( scenario );
         scenario.removeNode( dp );
         assertSame( p2, scenario.getNode( p2.getId() ) );
         assertNull( scenario.getNode( dp.getId() ) );
@@ -219,14 +219,14 @@ public class TestScenario extends TestCase {
     }
 
     public void testFindRoles() {
-        Organization org = service.findOrCreate( Organization.class, "Building" );
+        Organization org = dqo.findOrCreate( Organization.class, "Building" );
 
-        Part p1 = service.createPart( scenario );
-        Role r1 = service.findOrCreate( Role.class, "Janitor" );
+        Part p1 = dqo.createPart( scenario );
+        Role r1 = dqo.findOrCreate( Role.class, "Janitor" );
         p1.setRole( r1 );
 
-        Part p2 = service.createPart( scenario );
-        Role r2 = service.findOrCreate( Role.class, "Plumber" );
+        Part p2 = dqo.createPart( scenario );
+        Role r2 = dqo.findOrCreate( Role.class, "Plumber" );
         p2.setRole( r2 );
 
         List<Role> roleList = scenario.findRoles( org );

@@ -50,8 +50,8 @@ public class Scenario extends ModelObject {
      */
     private Map<Long, Node> nodeIndex;
 
-    /** The service in charge of this scenario. */
-    private transient Service service;
+    /** The data query object in charge of this scenario. */
+    private transient DataQueryObject dqo;
 
     public Scenario() {
         setNodeIndex( new HashMap<Long, Node>( INITIAL_CAPACITY ) );
@@ -129,13 +129,13 @@ public class Scenario extends ModelObject {
     /**
      * Convenience accessor for tests.
      *
-     * @param service the underlying store
+     * @param dqo the underlying store
      * @param actor   the actor for the new part
      * @param task    the task of the new part
      * @return the new part
      */
-    public Part createPart( Service service, Actor actor, String task ) {
-        Part result = service.createPart( this );
+    public Part createPart( DataQueryObject dqo, Actor actor, String task ) {
+        Part result = dqo.createPart( this );
         result.setActor( actor );
         result.setTask( task );
         addNode( result );
@@ -145,13 +145,13 @@ public class Scenario extends ModelObject {
     /**
      * Convenience accessor for tests.
      *
-     * @param service the underlying store
+     * @param dqo the underlying store
      * @param role    the role for the new part
      * @param task    the task of the new part
      * @return the new part
      */
-    public Part createPart( Service service, Role role, String task ) {
-        Part result = service.createPart( this );
+    public Part createPart( DataQueryObject dqo, Role role, String task ) {
+        Part result = dqo.createPart( this );
         result.setRole( role );
         result.setTask( task );
         addNode( result );
@@ -194,7 +194,7 @@ public class Scenario extends ModelObject {
                 }
             }
 
-            service.remove( node );
+            dqo.remove( node );
             nodeIndex.remove( node.getId() );
             node.setScenario( null );
         }
@@ -363,12 +363,12 @@ public class Scenario extends ModelObject {
     }
 
     @Transient
-    public Service getService() {
-        return service;
+    public DataQueryObject getDqo() {
+        return dqo;
     }
 
-    public void setService( Service service ) {
-        this.service = service;
+    public void setDqo( DataQueryObject dqo ) {
+        this.dqo = dqo;
     }
 
     /**

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
@@ -41,7 +41,7 @@ public class RemoveIssue extends AbstractCommand {
      * {@inheritDoc}
      */
     public Change execute( Commander commander ) throws CommandException {
-        Service service = commander.getService();
+        DataQueryObject dqo = commander.getDqo();
 
         UserIssue issue = commander.resolve( UserIssue.class, (Long) get( "issue" ) );
         addArgument( "modelObject", issue.getAbout().getId() );
@@ -51,7 +51,7 @@ public class RemoveIssue extends AbstractCommand {
         state.put( "severity", issue.getSeverity() );
         state.put( "reportedBy", issue.getReportedBy() );
         addArgument( "state", state );
-        service.remove( issue );
+        dqo.remove( issue );
         return new Change( Change.Type.Removed, issue );
     }
 

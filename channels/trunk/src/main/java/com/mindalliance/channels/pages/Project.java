@@ -10,7 +10,7 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.analysis.Analyst;
@@ -58,7 +58,7 @@ public final class Project extends WebApplication {                             
     private String uri;
 
     /** The underlying service. */
-    private Service service;
+    private DataQueryObject dqo;
 
     /**
      * The builder of graphs (as data)
@@ -135,12 +135,12 @@ public final class Project extends WebApplication {                             
         mount( new QueryStringUrlCodingStrategy( "resource.html", ProfilePage.class ) );
         */
 
-        service.initialize();
+        dqo.initialize();
     }
 
     protected void onDestroy() {
         LOG.info("Goodbye!");
-        service.onDestroy();
+        dqo.onDestroy();
     }
 
     @Override
@@ -171,12 +171,12 @@ public final class Project extends WebApplication {                             
         this.uri = uri;
     }
 
-    public Service getService() {
-        return service;
+    public DataQueryObject getDqo() {
+        return dqo;
     }
 
-    public void setService( Service service ) {
-        this.service = service;
+    public void setDqo( DataQueryObject dqo ) {
+        this.dqo = dqo;
     }
 
     public DiagramFactory getDiagramFactory() {
@@ -286,8 +286,8 @@ public final class Project extends WebApplication {                             
      *
      * @return a Dao
      */
-    public static Service service() {
-        return getProject().getService();
+    public static DataQueryObject dqo() {
+        return getProject().getDqo();
     }
 
     /**
@@ -337,7 +337,7 @@ public final class Project extends WebApplication {                             
 
         // Find all actors in role for organization
         Set<Actor> actors = new HashSet<Actor>();
-        for ( ResourceSpec spec : getService().findAllResourceSpecs() ) {
+        for ( ResourceSpec spec : getDqo().findAllResourceSpecs() ) {
             if ( spec.getActor() != null ) {
                 boolean sameOrg = Organization.UNKNOWN.equals( organization ) ?
                                     spec.getOrganization() == null
@@ -368,7 +368,7 @@ public final class Project extends WebApplication {                             
      */
     public List<Role> findRolesIn( Organization organization ) {
         Set<Role> roles = new HashSet<Role>();
-        for ( Scenario scenario : getService().list( Scenario.class ) )
+        for ( Scenario scenario : getDqo().list( Scenario.class ) )
             roles.addAll( scenario.findRoles( organization ) );
 
         boolean hasUnknown = roles.contains( Role.UNKNOWN );
@@ -392,7 +392,7 @@ public final class Project extends WebApplication {                             
      */
     public List<Organization> findOrganizations() {
         List<Organization> orgs = new ArrayList<Organization>(
-                new HashSet<Organization>( getService().list( Organization.class ) ) );
+                new HashSet<Organization>( getDqo().list( Organization.class ) ) );
 
         Collections.sort( orgs, new Comparator<Organization>() {
             /** {@inheritDoc} */
@@ -422,12 +422,12 @@ public final class Project extends WebApplication {                             
             Iterator<ExternalFlow> xFlows = ( (Connector) node ).externalFlows();
             while ( xFlows.hasNext() ) {
                 ExternalFlow xFlow = xFlows.next();
-                actors.addAll( getService().findAllActors( xFlow.getPart().resourceSpec() ) );
+                actors.addAll( getDqo().findAllActors( xFlow.getPart().resourceSpec() ) );
             }
         } else {
             Part otherPart = (Part) node;
             if ( otherPart.getActor() == null )
-                actors.addAll( getService().findAllActors( otherPart.resourceSpec() ) );
+                actors.addAll( getDqo().findAllActors( otherPart.resourceSpec() ) );
         }
 
         List<Actor> list = new ArrayList<Actor>( actors );

@@ -96,7 +96,7 @@ public class PartConverter implements Converter {
             writer.endNode();
         }
         // Part user issues
-        List<Issue> issues = Project.service().findAllUserIssues( part );
+        List<Issue> issues = Project.dqo().findAllUserIssues( part );
         for ( Issue issue : issues ) {
             writer.startNode( "issue" );
             context.convertAnother( issue );
@@ -108,7 +108,7 @@ public class PartConverter implements Converter {
     @SuppressWarnings( "unchecked" )
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
         Scenario scenario = (Scenario) context.get( "scenario" );
-        Part part = Project.service().createPart( scenario );
+        Part part = Project.dqo().createPart( scenario );
         Map<String, Long> idMap = (Map<String, Long>) context.get( "idMap" );
         String id = reader.getAttribute( "id" );
         idMap.put( id, part.getId() );
