@@ -9,6 +9,7 @@ import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
+
 /**
  * A communication channel
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -20,7 +21,9 @@ import java.util.List;
 @Entity
 public class Channel implements Serializable {
 
-    /** Bogus channels for reports. */
+    /**
+     * Bogus channels for reports.
+     */
     public static final Channel Unknown = new Channel( null, "(unknown channel)" );
 
     /**
@@ -33,7 +36,9 @@ public class Channel implements Serializable {
      */
     private String address = "";
 
-    /** An identifier for persistence. */
+    /**
+     * An identifier for persistence.
+     */
     private long id;
 
     public Channel() {
@@ -78,6 +83,7 @@ public class Channel implements Serializable {
 
     /**
      * Compares channels for equality.
+     *
      * @param obj the object
      * @return if the same
      */
@@ -85,17 +91,18 @@ public class Channel implements Serializable {
     public boolean equals( Object obj ) {
         if ( obj instanceof Channel ) {
             Channel channel = (Channel) obj;
-            if (medium == null || channel.getMedium() == null)
+            if ( medium == null || channel.getMedium() == null )
                 return false;
             else
                 return address.equals( channel.getAddress() ) && medium == channel.getMedium();
-        }
-        else {
+        } else {
             return false;
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         int hash = 1;
@@ -161,5 +168,15 @@ public class Channel implements Serializable {
      */
     public boolean isBroadcast() {
         return getMedium().isBroadcast();
+    }
+
+    /**
+     * Whether the channel requires an address to be fully defined.
+     *
+     * @return a boolean
+     */
+    public boolean requiresAddress() {
+        String pattern = medium.getAddressPattern();
+        return !( pattern.isEmpty() || pattern.equals( ".*" ) );
     }
 }

@@ -450,9 +450,27 @@ public class ChannelsServiceImpl implements Service {
      * {@inheritDoc}
      */
     public List<Issue> findAllIssuesFor( ResourceSpec resourceSpec, boolean specific ) {
-        return Project.getProject().getAnalyst().findAllIssuesFor( 
+        return Project.getProject().getAnalyst().findAllIssuesFor(
                 resourceSpec,
                 specific );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<ResourceSpec> findAllResponsibilitiesOf( Actor actor ) {
+        List<ResourceSpec> responsibilities = new ArrayList<ResourceSpec>();
+        List<ResourceSpec> resourceSpecs = this.findAllResourcesNarrowingOrEqualTo(
+                ResourceSpec.with( actor ) );
+        for ( ResourceSpec resourceSpec : resourceSpecs ) {
+            ResourceSpec responsibility = new ResourceSpec( resourceSpec );
+            assert responsibility.getActor() == actor;
+            if ( !responsibility.isAnyRole() ) {
+                responsibility.setActor( null );
+                responsibilities.add( responsibility );
+            }
+        }
+        return responsibilities;
     }
 
 

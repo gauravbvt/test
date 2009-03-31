@@ -45,6 +45,7 @@ public class UserIssueConverter implements Converter {
      */
     public void marshal( Object object, HierarchicalStreamWriter writer, MarshallingContext context ) {
         UserIssue issue = (UserIssue) object;
+        writer.addAttribute( "id", Long.toString( issue.getId() ));
         writer.addAttribute( "about", Long.toString( issue.getAbout().getId() ) );
         writer.startNode( "description" );
         writer.setValue( issue.getDescription() );
@@ -68,6 +69,7 @@ public class UserIssueConverter implements Converter {
         Map<String, Long> idMap = (Map<String, Long>) context.get( "idMap" );
         UserIssue issue = null;
         try {
+            String issueId = reader.getAttribute( "id" );
             String idString = reader.getAttribute( "about" );
             Long id = idMap.get( idString );
             if ( id != null ) {
@@ -88,6 +90,7 @@ public class UserIssueConverter implements Converter {
                     reader.moveUp();
                 }
                 Project.service().add( issue );
+                idMap.put( issueId, issue.getId() );                
             } else {
                 LOG.warn( "Issue's model object not found at " + id );
             }

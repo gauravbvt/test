@@ -308,4 +308,12 @@ public interface Service {
      * @return a list of issues
      */
     List<Issue> findAllIssuesFor( ResourceSpec resourceSpec, boolean specific );
+
+    /**
+     * Find all responsibilities of an actor.
+     * A responsibility is a found resourceSpec that includes the actor, but with the actor removed.
+     * @param actor an actor
+     * @return a list of resource specifications
+     */
+    List<ResourceSpec> findAllResponsibilitiesOf( Actor actor );
 }

@@ -48,26 +48,32 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
                     List<Actor> actors = getService().findAllActors( partResourceSpec );
                     for ( Actor actor : actors ) {
                         for ( Channel flowChannel : flow.getEffectiveChannels() ) {
-                            boolean channelUndefined = true;
-                            for ( Channel actorChannel : actor.getEffectiveChannels() ) {
-                                if ( actorChannel.getMedium() == flowChannel.getMedium() && actorChannel.isValid() ) {
+                            if ( flowChannel.isUnicast() ) {
+                                boolean channelUndefined = true;
+                                if ( !flowChannel.requiresAddress() ) {
                                     channelUndefined = false;
+                                } else {
+                                    for ( Channel actorChannel : actor.getEffectiveChannels() ) {
+                                        if ( actorChannel.getMedium() == flowChannel.getMedium() && actorChannel.isValid() ) {
+                                            channelUndefined = false;
+                                        }
+                                    }
                                 }
-                            }
-                            if ( channelUndefined ) {
-                                DetectedIssue issue = new DetectedIssue( Issue.DEFINITION, modelObject );
-                                issue.setDescription(
-                                        actor.getName()
-                                                + " may be involved and has no valid "
-                                                + flowChannel.getMedium()
-                                                + " contact info." );
-                                issue.setRemediation(
-                                        "Add a "
-                                                + flowChannel.getMedium()
-                                                + " contact info to "
-                                                + actor.getName() );
-                                issue.setSeverity( Issue.Level.Major );
-                                issues.add( issue );
+                                if ( channelUndefined ) {
+                                    DetectedIssue issue = new DetectedIssue( Issue.DEFINITION, modelObject );
+                                    issue.setDescription(
+                                            actor.getName()
+                                                    + " may be involved and has no valid "
+                                                    + flowChannel.getMedium()
+                                                    + " contact info." );
+                                    issue.setRemediation(
+                                            "Add a "
+                                                    + flowChannel.getMedium()
+                                                    + " contact info to "
+                                                    + actor.getName() );
+                                    issue.setSeverity( Issue.Level.Major );
+                                    issues.add( issue );
+                                }
                             }
                         }
                     }

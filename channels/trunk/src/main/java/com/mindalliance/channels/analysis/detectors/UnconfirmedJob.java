@@ -20,6 +20,9 @@ import java.util.ArrayList;
  */
 public class UnconfirmedJob extends AbstractIssueDetector {
 
+    public UnconfirmedJob() {
+    }
+
     /**
      * {@inheritDoc}
      */

@@ -42,12 +42,14 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.text.Collator;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * The project's home page.
@@ -369,7 +371,13 @@ public final class ProjectPage extends WebPage implements Updatable {
     }
 
     public List<Scenario> getAllScenarios() {
-        return Project.getProject().getService().list( Scenario.class );
+        List<Scenario> allScenarios = Project.getProject().getService().list( Scenario.class );
+        Collections.sort( allScenarios, new Comparator<Scenario>(){
+            public int compare( Scenario sc1, Scenario sc2 ) {
+                return Collator.getInstance().compare( sc1.getName(), sc2.getName() );
+            }
+        } );
+        return allScenarios;
     }
 
     /**

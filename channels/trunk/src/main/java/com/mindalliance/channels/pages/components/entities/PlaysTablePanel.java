@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.util.Play;
 import com.mindalliance.channels.util.SortableBeanProvider;
@@ -31,6 +32,10 @@ public class PlaysTablePanel extends AbstractTablePanel<Play> {
      * Whether the plays are specific to resourceSpec.
      */
     private boolean specific = true;
+    /**
+     * Pre-computed plays.
+     */
+    private IModel<List<Play>> playsModel;
 
     public PlaysTablePanel( String s, IModel<ResourceSpec> model, Set<Long> expansions ) {
         super( s, model, expansions );
@@ -50,13 +55,23 @@ public class PlaysTablePanel extends AbstractTablePanel<Play> {
         init();
     }
 
-
     public PlaysTablePanel( String s, IModel<ResourceSpec> model, int pageSize, Set<Long> expansions ) {
         super( s, model, pageSize, expansions );
         player = model.getObject();
         init();
     }
 
+    public PlaysTablePanel(
+            String s,
+            IModel<ModelObject> entityModel,
+            IModel<List<Play>> playsModel,
+            Set<Long> expansions,
+            int pageSize
+            ) {
+        super (s, entityModel, pageSize, expansions);
+        this.playsModel = playsModel;
+        init();
+    }
 
     private void init() {
         final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
@@ -64,7 +79,7 @@ public class PlaysTablePanel extends AbstractTablePanel<Play> {
         columns.add( new PropertyColumn<String>(
                 new Model<String>( "Scenario" ),
                 "part.scenario.name", "part.scenario.name" ) );                  // NON-NLS
-        // columns.add( makeLinkColumn( "Role", "part.role", "part.role.name", EMPTY ) );
+        columns.add( makeLinkColumn( "Role", "part.role", "part.role.name", EMPTY ) );
         columns.add( makeLinkColumn( "Task", "part", "part.task", EMPTY ) );
         columns.add( makeColumn( "Info", "flow.name", "kind", "?", "flow.description" ) );
         // style class is one of: ask, notify, answer, receive
@@ -76,7 +91,7 @@ public class PlaysTablePanel extends AbstractTablePanel<Play> {
                 new Model<String>( "Importance" ),
                 "requiredness", "requiredness" ) );                                 // NON-NLS
         // provider and table
-        List<Play> plays = getService().findAllPlays( player, specific );
+        List<Play> plays = getPlays();
         add( new AjaxFallbackDefaultDataTable<Play>(
                 "playbook",
                 columns,
@@ -84,6 +99,13 @@ public class PlaysTablePanel extends AbstractTablePanel<Play> {
                 getPageSize() ) );
     }
 
-
+    private List<Play> getPlays() {
+        if (playsModel != null) {
+            return playsModel.getObject();
+        }
+        else {
+            return getService().findAllPlays( player, specific );
+        }
+    }
 
 }

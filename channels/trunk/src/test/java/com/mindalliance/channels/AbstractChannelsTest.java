@@ -19,6 +19,8 @@ import com.mindalliance.channels.analysis.detectors.InvalidChannel;
 import com.mindalliance.channels.analysis.detectors.RedundantPart;
 import com.mindalliance.channels.analysis.detectors.RedundantFlow;
 import com.mindalliance.channels.analysis.detectors.UnconfirmedJob;
+import com.mindalliance.channels.analysis.detectors.FlowToSelf;
+import com.mindalliance.channels.analysis.detectors.PartWithRoleWithNoKnownActor;
 import com.mindalliance.channels.attachments.FileBasedManager;
 import com.mindalliance.channels.service.ChannelsServiceImpl;
 import com.mindalliance.channels.dao.Memory;
@@ -114,6 +116,8 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new RedundantFlow() );
         detectors.add( new UnconnectedConnector() );
         detectors.add( new NoRedundancy() );
+        detectors.add( new FlowToSelf() );
+        detectors.add( new PartWithRoleWithNoKnownActor() );
         detectors.add( new PotentialDeadlock() );
         detectors.add( new FlowViolatesPolicy() );
         detectors.add( new UnconfirmedJob() );

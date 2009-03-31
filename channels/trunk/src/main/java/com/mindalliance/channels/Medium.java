@@ -65,7 +65,7 @@ public enum Medium {
     /**
      * In person, one on one.
      */
-    F2F( "Face-to-face", ".+" ),
+    F2F( "Face-to-face", ".*" ),
     /**
      *
      */
