@@ -9,7 +9,7 @@ import java.io.OutputStream;
  * Date: Feb 11, 2009
  * Time: 4:30:22 PM
  */
-public interface FlowDiagram {
+public interface Diagram {
     /**
      * Constrain size of diagram.
      *

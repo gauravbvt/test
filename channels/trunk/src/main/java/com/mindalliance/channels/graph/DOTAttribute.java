@@ -20,7 +20,7 @@ public class DOTAttribute {
      */
     private String value;
 
-    DOTAttribute( String name, String value ) {
+    public DOTAttribute( String name, String value ) {
         this.name = name;
         this.value = value;
     }
@@ -72,7 +72,7 @@ public class DOTAttribute {
      *
      * @return an empty list of DOTAttributes
      */
-    static List<DOTAttribute> emptyList() {
+    public static List<DOTAttribute> emptyList() {
         return new ArrayList<DOTAttribute>();
     }
 

@@ -1,4 +1,4 @@
-package com.mindalliance.channels.graph;
+package com.mindalliance.channels.graph.diagrams;
 
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
@@ -6,13 +6,18 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.graph.URLProvider;
+import com.mindalliance.channels.graph.DOTAttributeProvider;
+import com.mindalliance.channels.graph.DOTAttribute;
+import com.mindalliance.channels.graph.DiagramFactory;
+import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.analysis.Analyst;
 
 import java.text.MessageFormat;
 import java.util.List;
 
 /**
- * Provider of providers for scenarios
+ * Provider of providers for scenarios.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -20,22 +25,26 @@ import java.util.List;
  * Time: 2:31:11 PM
  * A provider of graph attribute providers needed for rendering a scenario
  */
-public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
+public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
 
     /**
-     * Color used to indicate issues.
+     * Message format as URL template with {1} = scenario id.
      */
-    private static final String COLOR_ERROR = "red3";
+    private static String SCENARIO_URL_FORMAT = "?scenario={0,number,0}";
+    /**
+     * Message format as URL template with {1} = scenario id and {2} = vertex id.
+     */
+    private static String NODE_URL_FORMAT = "?scenario={0,number,0}&node={1,number,0}";
     /**
      * Color for subgraph contour
      */
     private static final String SUBGRAPH_COLOR = "azure2";
     /**
-     * Font for subgraph labels
+     * Font for subgraph labels.
      */
     private static final String SUBGRAPH_FONT = "Arial-Bold";
     /**
-     * Font size for subgraph labels
+     * Font size for subgraph labels.
      */
     private static final String SUBGRAPH_FONT_SIZE = "10";
     /**
@@ -43,15 +52,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
      */
     private static final String NODE_FONT = "Arial";
     /**
-     * Font for edge labels
-     */
-    private static final String EDGE_FONT = "Helvetica-Oblique";
-    /**
-     * Font size for edge labels
-     */
-    private static final String EDGE_FONT_SIZE = "8";
-    /**
-     * Font size for node labels
+     * Font size for node labels.
      */
     private static final String NODE_FONT_SIZE = "10";
     /**
@@ -59,60 +60,28 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
      */
     private static final int LINE_WRAP_SIZE = 15;
     /**
-     * Distance for edge head and tail labels
+     * Distance for edge head and tail labels.
      */
     private static final String LABEL_DISTANCE = "1.0";
     /**
-     * Distance for edge head and tail labels
+     * Distance for edge head and tail labels.
      */
     private static final String LABEL_ANGLE = "45";
     /**
-     * Scenario in context
+     * Scenario in context.
      */
     private Scenario scenario;
-    /**
-     * PNG, SVG, IMAP etc.
-     */
-    private String outputFormat;
-    /**
-     * Message format as URL template with {1} = scenario id
-     */
-    private String scenarioUrlFormat;
-    /**
-     * Message format as URL template with {1} = scenario id and {2} = vertex id
-     */
-    private String urlFormat;
-    /**
-     * Relative path to icon directory
-     */
-    private String imageDirectory;
-    /**
-     * Diagram size constraint.
-     * Diagram takes natural size if null.
-     */
-    private double[] graphSize;
-    /**
-     * Whether the direction is LR or top-bottom
-     */
-    private String graphOrientation = "LR";
-    /**
-     * Scenario analyst in context
-     */
-    private Analyst analyst;
 
-    public ScenarioMetaProvider( Scenario scenario, String outputFormat, String urlFormat,
-                                 String scenarioUrlFormat, String imageDirectory,
+    public FlowMapMetaProvider( Scenario scenario,
+                                 String outputFormat,
+                                 String imageDirectory,
                                  Analyst analyst ) {
+        super( outputFormat, imageDirectory, analyst );
         this.scenario = scenario;
-        this.outputFormat = outputFormat;
-        this.urlFormat = urlFormat;
-        this.scenarioUrlFormat = scenarioUrlFormat;
-        this.imageDirectory = imageDirectory;
-        this.analyst = analyst;
     }
 
     /**
-     * Get context provisioned from
+     * Get context provisioned from.
      *
      * @return an object that knows of the vertices and edges
      */
@@ -120,6 +89,9 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
         return scenario;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public URLProvider<Node, Flow> getURLProvider() {
         return new URLProvider<Node, Flow>() {
             /**
@@ -130,7 +102,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
              */
             public String getGraphURL( Node node ) {
                 Object[] args = {node.getScenario().getId()};
-                return MessageFormat.format( scenarioUrlFormat, args );
+                return MessageFormat.format( SCENARIO_URL_FORMAT, args );
             }
 
             /**
@@ -141,7 +113,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
              */
             public String getVertexURL( Node node ) {
                 Object[] args = {node.getScenario().getId(), node.getId()};
-                return MessageFormat.format( urlFormat, args );
+                return MessageFormat.format( NODE_URL_FORMAT, args );
             }
 
             /**
@@ -156,10 +128,15 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
         };
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public EdgeNameProvider<Flow> getEdgeLabelProvider() {
         return new EdgeNameProvider<Flow>() {
             public String getEdgeName( Flow flow ) {
-                String label = separate( flow.getName() ).replaceAll( "\\|", "\\\\n" );
+                String label = separate(
+                        flow.getName(),
+                        LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" );
                 if ( flow.isAskedFor() && !label.endsWith( "?" ) ) {
                     label = label + "?";
                 }
@@ -168,6 +145,9 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
         };
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public VertexNameProvider<Node> getVertexLabelProvider() {
         return new VertexNameProvider<Node>() {
             public String getVertexName( Node node ) {
@@ -178,38 +158,14 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
     }
 
     /**
-     * Insert '|' at a space or after other separator at intervals of minimum size in a string
-     *
-     * @param s a String
-     * @return modified string
+     * {@inheritDoc}
      */
-    private String separate( String s ) {
-        StringBuilder sb = new StringBuilder();
-        int count = 0;
-        String separators = "  ,.-_?\"";
-        for ( char c : s.toCharArray() ) {
-            if ( count >= LINE_WRAP_SIZE && separators.indexOf( c ) >= 0 ) {
-                if ( c != ' ' ) sb.append( c );
-                sb.append( '|' );
-                count = 0;
-            } else {
-                sb.append( c );
-                count++;
-            }
-        }
-        return sb.toString();
-    }
-
     public VertexNameProvider<Node> getVertexIDProvider() {
         return new VertexNameProvider<Node>() {
             public String getVertexName( Node node ) {
                 return "" + node.getId();
             }
         };
-    }
-
-    private String sanitize( String label ) {
-        return label.replaceAll( "\"", "\\\\\"" );
     }
 
     private String getNodeLabel( Node node ) {
@@ -250,19 +206,6 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
         return new ScenarioDOTAttributeProvider();
     }
 
-    public void setGraphSize( double[] size ) {
-        this.graphSize = size;
-    }
-
-    /**
-     * Set graph orientation
-     *
-     * @param graphOrientation a String ("TB" or "LR")
-     */
-    public void setGraphOrientation( String graphOrientation ) {
-        if ( graphOrientation != null ) this.graphOrientation = graphOrientation;
-    }
-
     /**
      * A DOTAttributeProvider for scenarios.
      */
@@ -273,9 +216,9 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
 
         public List<DOTAttribute> getGraphAttributes() {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-            list.add( new DOTAttribute( "rankdir", graphOrientation ) );
-            if ( graphSize != null ) {
-                list.add( new DOTAttribute( "size", getSizeString() ) );
+            list.add( new DOTAttribute( "rankdir", getGraphOrientation() ) );
+            if ( getGraphSize() != null ) {
+                list.add( new DOTAttribute( "size", getGraphSizeString() ) );
                 list.add( new DOTAttribute( "ratio", "compress" ) );
             }
             // list.add( new DOTAttribute( "overlap", "false" ) );
@@ -284,16 +227,8 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
             return list;
         }
 
-        private String getSizeString() {
-            StringBuilder sb = new StringBuilder();
-            sb.append( graphSize[0] );
-            sb.append( ',' );
-            sb.append( graphSize[1] );
-            return sb.toString();
-        }
-
         /**
-         * Gets semi-colon-separated style declarations for subgraphs
+         * Gets semi-colon-separated style declarations for subgraphs.
          *
          * @return the style declarations
          */
@@ -308,7 +243,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
 
         public List<DOTAttribute> getVertexAttributes( Node vertex, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-            if ( outputFormat.equalsIgnoreCase( DiagramFactory.SVG ) ) {
+            if ( getOutputFormat().equalsIgnoreCase( DiagramFactory.SVG ) ) {
                 if ( vertex.isPart() ) {
                     list.add( new DOTAttribute( "shape", "box" ) );
                 } else if ( vertex.isConnector() ) {
@@ -331,9 +266,9 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
             }
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", NODE_FONT ) );
-            if ( analyst.hasIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+            if ( getAnalyst().hasIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", sanitize( analyst.getIssuesSummary( vertex,
+                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( vertex,
                         Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             }
             return list;
@@ -387,10 +322,10 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
                 list.add( new DOTAttribute( "labelangle", LABEL_ANGLE ) );
             }
             // Issue coloring
-            if ( analyst.hasIssues( edge, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+            if ( getAnalyst().hasIssues( edge, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", sanitize( analyst.getIssuesSummary( edge,
+                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( edge,
                         Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             }
             return list;
@@ -420,7 +355,7 @@ public class ScenarioMetaProvider implements MetaProvider<Node, Flow> {
                 iconName = "unknown";
             }
         }
-        return imageDirectory + "/" + iconName + ( numLines > 0 ? numLines : "" ) + ".png";
+        return getImageDirectory() + "/" + iconName + ( numLines > 0 ? numLines : "" ) + ".png";
     }
 
 }

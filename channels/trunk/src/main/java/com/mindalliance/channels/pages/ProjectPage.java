@@ -16,10 +16,11 @@ import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.pages.components.ScenarioLink;
 import com.mindalliance.channels.pages.components.ScenarioPanel;
+import com.mindalliance.channels.pages.components.PlanMapPanel;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
-import com.mindalliance.channels.pages.components.menus.ScenarioActionsMenuPanel;
-import com.mindalliance.channels.pages.components.menus.ScenarioShowMenuPanel;
+import com.mindalliance.channels.pages.components.menus.ProjectActionsMenuPanel;
+import com.mindalliance.channels.pages.components.menus.ProjectShowMenuPanel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
@@ -108,7 +109,7 @@ public final class ProjectPage extends WebPage implements Updatable {
     /**
      * Scenarios action menu.
      */
-    private MenuPanel scenarioActionsMenu;
+    private MenuPanel projectActionsMenu;
     /**
      * The current part.
      */
@@ -139,6 +140,14 @@ public final class ProjectPage extends WebPage implements Updatable {
      * The entity panel.
      */
     private Component entityPanel;
+    /**
+     * Synthetic id for expanding scenarios map panel.
+     */
+    private static final Long SCENARIO_MAP_ID = -1L;
+    /**
+     * The scenarios map panel.
+     */
+    private Component planMapPanel;
 
     /**
      * Used when page is called without parameters.
@@ -227,7 +236,7 @@ public final class ProjectPage extends WebPage implements Updatable {
                 getReadOnlyExpansions() );
         form.add( scenarioPanel );
         addEntityPanel();
-        form.add( entityPanel );
+        addPlanMap();
         LOG.debug( "Scenario page generated" );
     }
 
@@ -300,17 +309,17 @@ public final class ProjectPage extends WebPage implements Updatable {
     }
 
     private void addScenarioMenubar( Scenario scenario ) {
-        scenarioActionsMenu = new ScenarioActionsMenuPanel(
-                "scenarioActionsMenu",
+        projectActionsMenu = new ProjectActionsMenuPanel(
+                "projectActionsMenu",
                 new Model<Scenario>( scenario ),
                 getReadOnlyExpansions() );
-        scenarioActionsMenu.setOutputMarkupId( true );
-        form.add( scenarioActionsMenu );
-        ScenarioShowMenuPanel scenarioShowMenu = new ScenarioShowMenuPanel(
-                "scenarioShowMenu",
+        projectActionsMenu.setOutputMarkupId( true );
+        form.add( projectActionsMenu );
+        ProjectShowMenuPanel projectShowMenu = new ProjectShowMenuPanel(
+                "projectShowMenu",
                 new Model<Scenario>( scenario ) );
-        scenarioShowMenu.setOutputMarkupId( true );
-        form.add( scenarioShowMenu );
+        projectShowMenu.setOutputMarkupId( true );
+        form.add( projectShowMenu );
     }
 
     private void addSelectScenario() {
@@ -355,6 +364,21 @@ public final class ProjectPage extends WebPage implements Updatable {
         form.addOrReplace( entityPanel );
     }
 
+    private void addPlanMap(  ) {
+        boolean showPlanMap = expansions.contains( SCENARIO_MAP_ID );
+        if (showPlanMap) {
+                planMapPanel = new PlanMapPanel(
+                        "plan-map",
+                        getReadOnlyExpansions());
+        }
+        else {
+           planMapPanel = new Label("plan-map", "");
+        }
+        makeVisible( planMapPanel, showPlanMap);
+        planMapPanel.setOutputMarkupId( true );
+        form.addOrReplace( planMapPanel );
+    }
+
     private ModelObject findExpandedEntity() {
         ModelObject entity = null;
 
@@ -383,7 +407,7 @@ public final class ProjectPage extends WebPage implements Updatable {
     /**
      * Find scenario specified in parameters.
      *
-     * @param dqo    the scenario container
+     * @param dqo data query object
      * @param parameters the page parameters
      * @return a scenario, or null if not found
      */
@@ -778,7 +802,7 @@ public final class ProjectPage extends WebPage implements Updatable {
             }
 
         }
-        target.addComponent( scenarioActionsMenu );
+        target.addComponent( projectActionsMenu );
     }
 
     /**

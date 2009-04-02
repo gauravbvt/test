@@ -15,7 +15,7 @@ import com.mindalliance.channels.attachments.BitBucket;
 import com.mindalliance.channels.query.DataQueryObjectImpl;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.graph.FlowDiagram;
+import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ProjectPage;
 import com.mindalliance.channels.pages.TestScenarioPage;
@@ -56,9 +56,9 @@ public class TestPartPanel extends AbstractChannelsTest {
         project.setDqo( dqo );
         project.setAttachmentManager( new BitBucket() );
         DiagramFactory dm = createMock( DiagramFactory.class );
-         FlowDiagram fd = createMock(  FlowDiagram.class);
+         Diagram fd = createMock(  Diagram.class);
          expect( fd.makeImageMap( ) ).andReturn( "" ).anyTimes();
-         expect( dm.newFlowDiagram( (Scenario) anyObject() ) )
+         expect( dm.newFlowMapDiagram( (Scenario) anyObject() ) )
                      .andReturn( fd ).anyTimes();
          replay( dm );
          replay( fd );

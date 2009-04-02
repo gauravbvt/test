@@ -2,6 +2,9 @@ package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
+import com.mindalliance.channels.DataQueryObject;
+
+import java.util.List;
 
 /**
  * A diagram maker
@@ -45,21 +48,28 @@ public interface DiagramFactory<Vertex, Edge> {
 
 
     /**
-     * Instantiate a flow diagram.
+     * Instantiate a flow map diagram.
      *
      * @param scenario a scenario
      * @param node     a selected node
-     * @return a flow diagram
+     * @return a flow map diagram
      */
-    FlowDiagram newFlowDiagram( Scenario scenario, Node node );
+    Diagram newFlowMapDiagram( Scenario scenario, Node node );
 
     /**
-     * Instantiate a flow diagram.
+     * Instantiate a flow map diagram.
      *
      * @param scenario a scenario
-     * @return a flow diagram
+     * @return a flow map diagram
      */
-    FlowDiagram newFlowDiagram( Scenario scenario );
+    Diagram newFlowMapDiagram( Scenario scenario );
+
+    /**
+     * Instantiate a plan map diagram.
+     * @param scenarios list of scenarios
+     * @return a plan map diagram
+     */
+    Diagram newPlanMapDiagram( List<Scenario> scenarios );
 
     /**
      * Gets the preset graph renderer.
@@ -69,23 +79,16 @@ public interface DiagramFactory<Vertex, Edge> {
     GraphRenderer<Vertex, Edge> getGraphRenderer();
 
     /**
-     * Get preset URL format.
-     *
-     * @return a String
-     */
-    String getUrlFormat();
-
-    /**
-     * Get preset scenario URL format
-     *
-     * @return a String
-     */
-    String getScenarioUrlFormat();
-
-    /**
      * Get preset image directory path
      *
      * @return a String
      */
     String getImageDirectory();
+
+    /**
+     * Get data query object.
+     * @return a data query object
+     */
+    DataQueryObject getDqo();
+
 }

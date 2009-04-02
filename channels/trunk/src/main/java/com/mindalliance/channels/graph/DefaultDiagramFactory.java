@@ -2,6 +2,12 @@ package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
+import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.graph.diagrams.FlowMapDiagram;
+import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
+
+import java.util.List;
 
 /**
  * The default implementation of DiagramFactory
@@ -20,17 +26,13 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
      */
     private GraphRenderer<V, E> graphRenderer;
     /**
-     * 0: scenario id, 1: node id
-     */
-    private String urlFormat;
-    /**
-     * 0: scenario id
-     */
-    private String scenarioUrlFormat;
-    /**
      * Path to image directory
      */
     private String imageDirectory;
+    /**
+     * Data query object.
+     */
+    private DataQueryObject dqo;
 
     public DefaultDiagramFactory() {
     }
@@ -46,22 +48,6 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
         return graphRenderer;
     }
 
-    public String getUrlFormat() {
-        return urlFormat;
-    }
-
-    public void setUrlFormat( String urlFormat ) {
-        this.urlFormat = urlFormat;
-    }
-
-    public String getScenarioUrlFormat() {
-        return scenarioUrlFormat;
-    }
-
-    public void setScenarioUrlFormat( String scenarioUrlFormat ) {
-        this.scenarioUrlFormat = scenarioUrlFormat;
-    }
-
     public String getImageDirectory() {
         return imageDirectory;
     }
@@ -70,17 +56,33 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
         this.imageDirectory = imageDirectory;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public FlowDiagram newFlowDiagram( Scenario scenario, Node node ) {
-        return new DefaultFlowDiagram( scenario, node, this );
+    public DataQueryObject getDqo() {
+        return dqo;
+    }
+
+    public void setDqo( DataQueryObject dqo ) {
+        this.dqo = dqo;
     }
 
     /**
      * {@inheritDoc}
      */
-    public FlowDiagram newFlowDiagram( Scenario scenario ) {
-        return new DefaultFlowDiagram( scenario, scenario.getDefaultPart(), this );
+    public Diagram newFlowMapDiagram( Scenario scenario, Node node ) {
+        return new FlowMapDiagram( scenario, node, this );
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Diagram newFlowMapDiagram( Scenario scenario ) {
+        return new FlowMapDiagram( scenario, scenario.getDefaultPart(), this );
+    }
+    /**
+      * {@inheritDoc}
+      */
+    // TODO - why can't I say:  List<Scenario> scenarios ?
+    public Diagram newPlanMapDiagram( List scenarios ) {
+        return new PlanMapDiagram( (List<Scenario>)scenarios, this);
+    }
+
 }

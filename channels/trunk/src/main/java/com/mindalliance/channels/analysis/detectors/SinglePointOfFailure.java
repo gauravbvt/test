@@ -2,6 +2,7 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
+import com.mindalliance.channels.analysis.network.FlowMapGraphBuilder;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
@@ -10,7 +11,6 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.util.SimpleCache;
 import com.mindalliance.channels.graph.GraphBuilder;
-import com.mindalliance.channels.pages.Project;
 import org.jgrapht.alg.BlockCutpointGraph;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.AsUndirectedGraph;
@@ -106,8 +106,8 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
     }
 
     private Set<Node> detectSignificantCutpoints( Scenario scenario ) {
-        GraphBuilder graphBuilder = Project.graphBuilder();
-        final DirectedGraph<Node, Flow> digraph = graphBuilder.buildDirectedGraph( scenario );
+        GraphBuilder<Node, Flow> graphBuilder = new FlowMapGraphBuilder( scenario );
+        final DirectedGraph<Node, Flow> digraph = graphBuilder.buildDirectedGraph();
         BlockCutpointGraph<Node, Flow> bcg = new BlockCutpointGraph<Node, Flow>(
                 new AsUndirectedGraph<Node, Flow>( digraph ) );
         Set<Node> cutpoints = new HashSet<Node>();

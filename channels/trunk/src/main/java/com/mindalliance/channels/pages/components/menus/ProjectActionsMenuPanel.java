@@ -30,9 +30,9 @@ import java.util.Set;
  * Date: Mar 10, 2009
  * Time: 8:58:39 AM
  */
-public class ScenarioActionsMenuPanel extends MenuPanel {
+public class ProjectActionsMenuPanel extends MenuPanel {
 
-    public ScenarioActionsMenuPanel(
+    public ProjectActionsMenuPanel(
             String s,
             IModel<? extends Scenario> model,
             Set<Long> expansions ) {

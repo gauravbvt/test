@@ -30,6 +30,8 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.context.ApplicationContext;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -61,12 +63,7 @@ public final class Project extends WebApplication {                             
     private DataQueryObject dqo;
 
     /**
-     * The builder of graphs (as data)
-     */
-    private GraphBuilder graphBuilder;
-
-    /**
-     * A diagram factory
+     * A diagram factory  - for testing only
      */
     private DiagramFactory diagramFactory;
 
@@ -180,19 +177,22 @@ public final class Project extends WebApplication {                             
     }
 
     public DiagramFactory getDiagramFactory() {
-        return diagramFactory;
+        if ( diagramFactory != null ) {
+            // When testing only
+            return diagramFactory;
+        } else {
+            // Get a prototype bean
+            return (DiagramFactory) getApplicationContext().getBean( "diagramFactory" );
+        }
     }
 
+    private ApplicationContext getApplicationContext() {
+        return WebApplicationContextUtils .getRequiredWebApplicationContext(getServletContext());
+    }
+
+    // FOR TESTING ONLY
     public void setDiagramFactory( DiagramFactory dm ) {
         diagramFactory = dm;
-    }
-
-    public GraphBuilder getGraphBuilder() {
-        return graphBuilder;
-    }
-
-    public void setGraphBuilder( GraphBuilder graphBuilder ) {
-        this.graphBuilder = graphBuilder;
     }
 
     public AttachmentManager getAttachmentManager() {
@@ -265,16 +265,6 @@ public final class Project extends WebApplication {                             
 
     public void setDescription( String description ) {
         this.description = description;
-    }
-
-    /**
-     * Gets the project's graph builder
-     *
-     * @return a GraphBuilder
-     */
-    public static GraphBuilder graphBuilder() {
-        Project project = (Project) WebApplication.get();
-        return project.getGraphBuilder();
     }
 
     public static Project getProject() {

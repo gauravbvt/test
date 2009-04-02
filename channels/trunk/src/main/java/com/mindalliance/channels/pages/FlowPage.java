@@ -5,7 +5,7 @@ import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.graph.FlowDiagram;
+import com.mindalliance.channels.graph.Diagram;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Response;
 import org.apache.wicket.markup.MarkupStream;
@@ -34,7 +34,7 @@ public class FlowPage extends WebPage {
     /**
      * The flow diagram displayed
      */
-    private FlowDiagram flowDiagram;
+    private Diagram flowDiagram;
 
     public FlowPage( PageParameters parameters ) {
         super( parameters );
@@ -54,7 +54,7 @@ public class FlowPage extends WebPage {
                     redirectTo( scenario );
             }
         }
-        flowDiagram = Project.diagramFactory().newFlowDiagram( scenario, node );
+        flowDiagram = Project.diagramFactory().newFlowMapDiagram( scenario, node );
         if ( parameters.containsKey( "size" ) ) {
             double[] size = convertSize( parameters.getString( "size" ) );
             flowDiagram.setDiagramSize( size[0], size[1] );

@@ -8,8 +8,8 @@ import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.util.SemMatch;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
+import com.mindalliance.channels.analysis.network.FlowMapGraphBuilder;
 import com.mindalliance.channels.graph.GraphBuilder;
-import com.mindalliance.channels.pages.Project;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.jgrapht.DirectedGraph;
@@ -45,8 +45,8 @@ public class PotentialDeadlock extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Scenario scenario = (Scenario) modelObject;
-        GraphBuilder graphBuilder = Project.graphBuilder();
-        DirectedGraph<Node, Flow> digraph = graphBuilder.buildDirectedGraph( scenario );
+        GraphBuilder<Node,Flow> graphBuilder = new FlowMapGraphBuilder( scenario );
+        DirectedGraph<Node, Flow> digraph = graphBuilder.buildDirectedGraph( );
         StrongConnectivityInspector<Node, Flow> sci =
                 new StrongConnectivityInspector<Node, Flow>( digraph );
         List<Set<Node>> cycles = sci.stronglyConnectedSets();

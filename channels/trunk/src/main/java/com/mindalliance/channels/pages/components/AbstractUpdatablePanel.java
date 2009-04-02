@@ -12,6 +12,7 @@ import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ProjectPage;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.Identifiable;
+import com.mindalliance.channels.DataQueryObject;
 
 import java.text.Collator;
 import java.util.Set;
@@ -51,6 +52,15 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     protected IModel<? extends Identifiable> getModel() {
         return model;
+    }
+
+    /**
+     * Get the data query object.
+     *
+     * @return a data query object
+     */
+    protected DataQueryObject getDqo() {
+        return Project.getProject().getDqo();
     }
 
     /**

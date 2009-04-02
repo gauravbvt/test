@@ -21,10 +21,12 @@ import com.mindalliance.channels.Channelable;
 import com.mindalliance.channels.AbstractUnicastChannelable;
 import com.mindalliance.channels.Job;
 import com.mindalliance.channels.Place;
+import com.mindalliance.channels.analysis.network.ScenarioRelationship;
 import com.mindalliance.channels.dao.EvacuationScenario;
 import com.mindalliance.channels.dao.FireScenario;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.components.ScenarioLink;
 import com.mindalliance.channels.util.Play;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
@@ -473,15 +475,39 @@ public class DataQueryObjectImpl implements DataQueryObject {
         return responsibilities;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public ScenarioRelationship findScenarioRelationship(
+            Scenario fromScenario,
+            Scenario toScenario ) {
+        List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
+        Iterator<Flow> flows = fromScenario.flows();
+        while ( flows.hasNext() ) {
+            Flow flow = flows.next();
+            if ( !flow.isInternal() ) {
+                ExternalFlow externalFlow = (ExternalFlow)flow;
+                if ( externalFlow.getConnector().getScenario() == toScenario ) {
+                    externalFlows.add( externalFlow );
+                }
+            }
+        }
+        if (externalFlows.isEmpty()) {
+            return null;
+        } else {
+            ScenarioRelationship scenarioRelationship = new ScenarioRelationship(
+                    fromScenario,
+                    toScenario);
+            scenarioRelationship.setExternalFlows( externalFlows );
+            return scenarioRelationship;
+        }
+    }
+
 
     /**
-     * Find all flows in all scenarios where the part applies as specified (as source or target).
-     *
-     * @param resourceSpec a resource spec
-     * @param asSource     a boolean
-     * @return a list of flows
+     * {@inheritDoc}
      */
-    public List<Flow> findAllRelatedFlows( ResourceSpec resourceSpec, boolean asSource ) {
+     public List<Flow> findAllRelatedFlows( ResourceSpec resourceSpec, boolean asSource ) {
         List<Flow> relatedFlows = new ArrayList<Flow>();
         for ( Scenario scenario : list( Scenario.class ) ) {
             Iterator<Flow> flows = scenario.flows();

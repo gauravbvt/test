@@ -25,7 +25,6 @@ import com.mindalliance.channels.attachments.FileBasedManager;
 import com.mindalliance.channels.query.DataQueryObjectImpl;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.export.xml.XmlStreamer;
-import com.mindalliance.channels.graph.DefaultGraphBuilder;
 import com.mindalliance.channels.graph.GraphvizRenderer;
 import com.mindalliance.channels.graph.DefaultDiagramFactory;
 import com.mindalliance.channels.pages.Project;
@@ -61,18 +60,17 @@ public class AbstractChannelsTest extends TestCase {
         dao.setDataDirectoryPath( "target/data" );
         dao.setSnapshotThreshold( 10 );
         dao.reset();
-        DataQueryObjectImpl channels = new DataQueryObjectImpl( dao );
+        DataQueryObjectImpl dqo = new DataQueryObjectImpl( dao );
 
-        project.setDqo( channels );
+        project.setDqo( dqo );
         project.setExporter( xmlStreamer );
         project.setImporter( xmlStreamer );
-        project.setGraphBuilder( new DefaultGraphBuilder() );
         DefaultCommander commander = new DefaultCommander();
         DefaultLockManager lockManager = new DefaultLockManager();
-        lockManager.setDqo( channels );
+        lockManager.setDqo( dqo );
         project.setLockManager( lockManager );
         commander.setLockManager( lockManager );
-        commander.setDqo( channels );
+        commander.setDqo( dqo );
         project.setCommander( commander );
         project.setProjectName( "Test" );
         project.setClient( "Mind-Alliance" );
@@ -94,9 +92,8 @@ public class AbstractChannelsTest extends TestCase {
         graphRenderer.setTimeout( 5000 );
         DefaultDiagramFactory<Node, Flow> diagramFactory = new DefaultDiagramFactory<Node, Flow>();
         diagramFactory.setGraphRenderer( graphRenderer );
-        diagramFactory.setUrlFormat( "?scenario={0}&node={1}" );
-        diagramFactory.setScenarioUrlFormat( "?scenario={0}" );
         diagramFactory.setImageDirectory( "src/site/resources/images" );
+        diagramFactory.setDqo( dqo );
         project.setDiagramFactory( diagramFactory );
         // Set scenario analyst
         // Initialize analyst

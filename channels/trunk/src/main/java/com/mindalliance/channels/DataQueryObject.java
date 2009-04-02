@@ -1,6 +1,8 @@
 package com.mindalliance.channels;
 
 import com.mindalliance.channels.util.Play;
+import com.mindalliance.channels.pages.components.ScenarioLink;
+import com.mindalliance.channels.analysis.network.ScenarioRelationship;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Iterator;
@@ -316,4 +318,13 @@ public interface DataQueryObject {
      * @return a list of resource specifications
      */
     List<ResourceSpec> findAllResponsibilitiesOf( Actor actor );
+
+    /**
+     * Find any relationship between a scenario and another.
+     * A link is one or more external flow in the from-scenario referencing a connector in the to-scenario.
+     * @param fromScenario a scenario
+     * @param toScenario a scenario
+     * @return a scenario relationship or null if no link exists
+     */
+    ScenarioRelationship findScenarioRelationship( Scenario fromScenario, Scenario toScenario );
 }

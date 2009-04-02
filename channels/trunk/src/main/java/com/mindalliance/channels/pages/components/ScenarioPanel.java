@@ -10,7 +10,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.graph.FlowDiagram;
+import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.components.menus.PartActionsMenuPanel;
 import com.mindalliance.channels.pages.components.menus.PartShowMenuPanel;
@@ -203,7 +203,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
                 super.onRender( markupStream );
                 try {
                     DiagramFactory diagramFactory = Project.diagramFactory();
-                    FlowDiagram diagram = diagramFactory.newFlowDiagram( scenario );
+                    Diagram diagram = diagramFactory.newFlowMapDiagram( scenario );
                     getResponse().write( diagram.makeImageMap() );
                 } catch ( DiagramException e ) {
                     LOG.error( "Can't generate image map", e );

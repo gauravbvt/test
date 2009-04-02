@@ -9,7 +9,6 @@ import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.Identifiable;
-import com.mindalliance.channels.DataQueryObject;
 
 import java.util.Set;
 
@@ -57,15 +56,6 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      */
     protected LockManager getLockManager() {
         return Project.getProject().getLockManager();
-    }
-
-    /**
-     * Get the data query object.
-     *
-     * @return a data query object
-     */
-    protected DataQueryObject getDqo() {
-        return Project.getProject().getDqo();
     }
 
     /**

@@ -5,7 +5,7 @@ import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.pages.components.FlowDiagramPanel;
+import com.mindalliance.channels.pages.components.diagrams.FlowDiagramPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
