@@ -12,6 +12,18 @@ import com.mindalliance.channels.analysis.Analyst;
  */
 public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
     /**
+     * Message format as URL template with {1} = graph id.
+     */
+    protected static String GRAPH_URL_FORMAT = "?graph={0,number,0}";
+    /**
+     * Message format as URL template with {1} = graph id and {2} = vertex id.
+     */
+    protected static String VERTEX_URL_FORMAT = "?graph={0,number,0}&vertex={1,number,0}";
+    /**
+     * Message format as URL template with {1} = graph id and {2} = edge id.
+     */
+    protected static String EDGE_URL_FORMAT = "?graph={0,number,0}&edge={1,number,0}";
+    /**
      * Color used to indicate issues.
      */
     protected static final String COLOR_ERROR = "red3";

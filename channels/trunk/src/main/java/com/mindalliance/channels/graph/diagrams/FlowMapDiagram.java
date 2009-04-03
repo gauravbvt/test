@@ -1,7 +1,6 @@
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.InternalFlow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.analysis.network.FlowMapGraphBuilder;
@@ -10,13 +9,9 @@ import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.pages.Project;
-import org.jgrapht.DirectedGraph;
-import org.jgrapht.EdgeFactory;
 import org.jgrapht.Graph;
-import org.jgrapht.graph.DirectedMultigraph;
 
 import java.io.OutputStream;
-import java.util.Iterator;
 
 /**
  * Flow map diagram.
@@ -26,7 +21,7 @@ import java.util.Iterator;
  * Date: Feb 11, 2009
  * Time: 3:16:51 PM
  */
-public class FlowMapDiagram extends AbstractDiagram {
+public class FlowMapDiagram extends AbstractDiagram<Node,Flow> {
 
     /**
      * The scenario being diagrammed.
@@ -39,9 +34,8 @@ public class FlowMapDiagram extends AbstractDiagram {
 
     public FlowMapDiagram(
             Scenario scenario,
-            Node selectedNode,
-            DiagramFactory<Node, Flow> diagramFactory ) {
-        super( diagramFactory );
+            Node selectedNode ) {
+        super( );
         this.scenario = scenario;
         this.selectedNode = selectedNode;
     }
@@ -52,7 +46,7 @@ public class FlowMapDiagram extends AbstractDiagram {
      */
     @SuppressWarnings( "unchecked" )
     public void render( String outputFormat, OutputStream outputStream ) {
-        DiagramFactory<Node, Flow> diagramFactory = (DiagramFactory<Node, Flow>) getDiagramFactory();
+        DiagramFactory<Node, Flow> diagramFactory = getDiagramFactory();
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
         GraphBuilder flowMapGraphBuilder = new FlowMapGraphBuilder( scenario );

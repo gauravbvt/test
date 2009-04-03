@@ -31,9 +31,8 @@ public class PlanMapDiagram extends AbstractDiagram<Scenario,ScenarioRelationshi
 
     private Scenario selectedScenario;
 
-    public PlanMapDiagram( List<Scenario> scenarios,
-                           DiagramFactory<Scenario, ScenarioRelationship> diagramFactory ) {
-        super(diagramFactory);
+    public PlanMapDiagram( List<Scenario> scenarios ) {
+        super();
         this.scenarios = scenarios;
     }
 

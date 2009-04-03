@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
-import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.graph.Diagram;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.model.IModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Plan map diagram panel.
@@ -19,8 +19,14 @@ import java.util.ArrayList;
  */
 public class PlanMapDiagramPanel extends AbstractDiagramPanel {
 
+    /**
+     * List of scenarios to be mapped.
+     */
+    private List<Scenario> scenarios;
+
     public PlanMapDiagramPanel( String id, IModel<ArrayList<Scenario>> model ) {
-        super( id, model );
+        super( id );
+        scenarios = model.getObject();
     }
 
     public PlanMapDiagramPanel(
@@ -29,15 +35,28 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
             double[] diagramSize,
             String orientation,
             boolean withImageMap ) {
-        super( id, model, diagramSize, orientation, withImageMap );
+        super( id, diagramSize, orientation, withImageMap );
+        scenarios = model.getObject();
     }
 
 
     protected Diagram makeDiagram() {
-        return getDiagramFactory().newPlanMapDiagram( (ArrayList<Scenario>)getModel().getObject() );
+        return getDiagramFactory().newPlanMapDiagram( scenarios );
     }
 
     protected String makeDiagramUrl() {
         return null;
+    }
+
+    protected void onSelectGraph( String graphId, AjaxRequestTarget target ) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    protected void onSelectVertex( String graphId, String vertexId, AjaxRequestTarget target ) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    protected void onSelectEdge( String graphId, String edgeId, AjaxRequestTarget target ) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

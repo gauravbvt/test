@@ -68,21 +68,21 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
      * {@inheritDoc}
      */
     public Diagram newFlowMapDiagram( Scenario scenario, Node node ) {
-        return new FlowMapDiagram( scenario, node, this );
+        return new FlowMapDiagram( scenario, node );
     }
 
     /**
      * {@inheritDoc}
      */
     public Diagram newFlowMapDiagram( Scenario scenario ) {
-        return new FlowMapDiagram( scenario, scenario.getDefaultPart(), this );
+        return new FlowMapDiagram( scenario, scenario.getDefaultPart() );
     }
     /**
       * {@inheritDoc}
       */
     // TODO - why can't I say:  List<Scenario> scenarios ?
     public Diagram newPlanMapDiagram( List scenarios ) {
-        return new PlanMapDiagram( (List<Scenario>)scenarios, this);
+        return new PlanMapDiagram( (List<Scenario>)scenarios );
     }
 
 }

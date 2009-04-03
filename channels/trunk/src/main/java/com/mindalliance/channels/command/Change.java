@@ -52,7 +52,11 @@ public class Change implements Serializable {
         /**
          * Unknown change
          */
-        Unknown,;
+        Unknown,
+        /**
+         * Selection
+         */
+        Selected
 
     }
 
@@ -205,6 +209,15 @@ public class Change implements Serializable {
      */
     public boolean isCollapsed() {
         return type == Type.Collapsed;
+    }
+
+    /**
+     * Whether type is Selected.
+     *
+     * @return a boolean
+     */
+    public boolean isSelected() {
+        return type == Type.Selected;
     }
 
     /**

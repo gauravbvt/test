@@ -364,17 +364,16 @@ public final class ProjectPage extends WebPage implements Updatable {
         form.addOrReplace( entityPanel );
     }
 
-    private void addPlanMap(  ) {
+    private void addPlanMap() {
         boolean showPlanMap = expansions.contains( SCENARIO_MAP_ID );
-        if (showPlanMap) {
-                planMapPanel = new PlanMapPanel(
-                        "plan-map",
-                        getReadOnlyExpansions());
+        if ( showPlanMap ) {
+            planMapPanel = new PlanMapPanel(
+                    "plan-map",
+                    getReadOnlyExpansions() );
+        } else {
+            planMapPanel = new Label( "plan-map", "" );
         }
-        else {
-           planMapPanel = new Label("plan-map", "");
-        }
-        makeVisible( planMapPanel, showPlanMap);
+        makeVisible( planMapPanel, showPlanMap );
         planMapPanel.setOutputMarkupId( true );
         form.addOrReplace( planMapPanel );
     }
@@ -396,7 +395,7 @@ public final class ProjectPage extends WebPage implements Updatable {
 
     public List<Scenario> getAllScenarios() {
         List<Scenario> allScenarios = Project.getProject().getDqo().list( Scenario.class );
-        Collections.sort( allScenarios, new Comparator<Scenario>(){
+        Collections.sort( allScenarios, new Comparator<Scenario>() {
             public int compare( Scenario sc1, Scenario sc2 ) {
                 return Collator.getInstance().compare( sc1.getName(), sc2.getName() );
             }
@@ -407,7 +406,7 @@ public final class ProjectPage extends WebPage implements Updatable {
     /**
      * Find scenario specified in parameters.
      *
-     * @param dqo data query object
+     * @param dqo        data query object
      * @param parameters the page parameters
      * @return a scenario, or null if not found
      */
@@ -728,7 +727,7 @@ public final class ProjectPage extends WebPage implements Updatable {
             }
         }
         if ( identifiable instanceof Part ) {
-            if ( change.isAdded() ) {
+            if ( change.isAdded() || change.isSelected() ) {
                 setPart( (Part) identifiable );
             } else if ( change.isRemoved() ) {
                 setPart( getScenario().getDefaultPart() );
@@ -768,7 +767,7 @@ public final class ProjectPage extends WebPage implements Updatable {
                 } else if ( change.getProperty().equals( "description" ) ) {
                     target.addComponent( scenarioDescriptionLabel );
                 }
-            } else if ( change.isAdded() ) {
+            } else if ( change.isAdded() || change.isSelected() ) {
                 redirectTo( (Scenario) identifiable );
             } else if ( change.isRemoved() ) {
                 redirectTo( getDqo().getDefaultScenario() );
@@ -776,8 +775,10 @@ public final class ProjectPage extends WebPage implements Updatable {
                 target.addComponent( scenarioPanel );
             }
         }
-        if ( identifiable instanceof Part && change.isExists() ) {
-            target.addComponent( scenarioPanel );
+        if ( identifiable instanceof Part ) {
+            if ( change.isExists() || change.isSelected() ) {
+                target.addComponent( scenarioPanel );
+            }
         }
         if ( identifiable instanceof ScenarioObject
                 || ( identifiable instanceof Issue

@@ -14,6 +14,7 @@ import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.components.menus.PartActionsMenuPanel;
 import com.mindalliance.channels.pages.components.menus.PartShowMenuPanel;
+import com.mindalliance.channels.pages.components.diagrams.FlowDiagramPanel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -107,7 +108,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     private void init() {
         setOutputMarkupId( true );
         addScenarioEditPanel( getScenario() );
-        addFlowDiagram( getScenario(), partModel );
+        addFlowDiagram( );
         addPartContent();
         reqsFlowPanel = new FlowListPanel(
                 "reqs",
@@ -181,7 +182,8 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         addOrReplace( partActionsMenu );
     }
 
-    private void addFlowDiagram( final Scenario scenario, final IModel<Part> partModel ) {
+    private void addFlowDiagram( ) {
+/*
         flowDiagram = new MarkupContainer( "graph" ) {                        // NON-NLS
 
             @Override
@@ -212,7 +214,10 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         };
 
         flowDiagram.setOutputMarkupId( true );
-        add( flowDiagram );
+*/
+        flowDiagram = new FlowDiagramPanel( "flow-map", scenarioModel, partModel );
+        flowDiagram.setOutputMarkupId( true );
+        addOrReplace( flowDiagram );
     }
 
     /**
@@ -269,10 +274,15 @@ public class ScenarioPanel extends AbstractCommandablePanel {
             scenarioEditPanel.setVisibility( target, getExpansions().contains( getScenario().getId() ) );
             target.addComponent( scenarioEditPanel );
         }
-        if ( identifiable == getPart() && change.isUpdated() ) {
-            target.addComponent( partTitle );
-            reqsFlowPanel.refresh( target );
-            outcomesFlowPanel.refresh( target );
+        if ( identifiable == getPart() ) {
+            if ( change.isUpdated() ) {
+                target.addComponent( partTitle );
+                reqsFlowPanel.refresh( target );
+                outcomesFlowPanel.refresh( target );
+            } else if ( change.isSelected() ) {
+                addFlowDiagram();
+                target.addComponent( flowDiagram );
+            }
         }
         if ( identifiable instanceof Issue || identifiable instanceof ScenarioObject ) {
             if ( !change.isDisplay() ) target.addComponent( flowDiagram );

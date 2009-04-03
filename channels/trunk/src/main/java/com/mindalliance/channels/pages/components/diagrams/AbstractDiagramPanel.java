@@ -3,8 +3,12 @@ package com.mindalliance.channels.pages.components.diagrams;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
+import com.mindalliance.channels.graph.diagrams.DiagramAjaxBehavior;
 import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.RequestCycle;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -22,15 +26,11 @@ import java.io.Serializable;
  * Date: Apr 1, 2009
  * Time: 1:11:09 PM
  */
-public abstract class AbstractDiagramPanel extends Panel {
+public abstract class AbstractDiagramPanel extends AbstractUpdatablePanel {
     /**
      * Class logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( AbstractDiagramPanel.class );
-    /**
-     * Model.
-     */
-    private IModel<? extends Serializable> model;
     /**
      * The flow diagram
      */
@@ -48,24 +48,20 @@ public abstract class AbstractDiagramPanel extends Panel {
      */
     private String orientation;
 
-    public AbstractDiagramPanel( String id, IModel<? extends Serializable> model ) {
-        this( id, model, null, null, true );
+    private StringBuilder imageMapHolder;
+
+    public AbstractDiagramPanel( String id ) {
+        this( id,  null, null, true );
     }
 
     public AbstractDiagramPanel( String id,
-                                 IModel<? extends Serializable> model,
                                  double[] diagramSize,
                                  String orientation,
                                  boolean withImageMap ) {
-        super( id, model );
-        this.model = model;
+        super( id );
         this.diagramSize = diagramSize;
         this.orientation = orientation;
         this.withImageMap = withImageMap;
-    }
-
-    public IModel<? extends Serializable> getModel() {
-        return model;
     }
 
     public Diagram getDiagram() {
@@ -86,12 +82,16 @@ public abstract class AbstractDiagramPanel extends Panel {
 
     /**
      * Get diagram factory.
+     *
      * @return diagram factory
      */
     protected DiagramFactory getDiagramFactory() {
         return Project.diagramFactory();
     }
 
+    /**
+     * Initialize.
+     */
     protected void init() {
         diagram = makeDiagram();
         if ( diagramSize != null ) {
@@ -99,6 +99,26 @@ public abstract class AbstractDiagramPanel extends Panel {
         }
         if ( orientation != null ) {
             diagram.setOrientation( orientation );
+        }
+        if ( withImageMap ) {
+            imageMapHolder = new StringBuilder( diagram.makeImageMap() );
+            add( new DiagramAjaxBehavior( imageMapHolder ) {
+                protected void respond( AjaxRequestTarget target ) {
+                    RequestCycle requestCycle = RequestCycle.get();
+                    String graphId = requestCycle.getRequest().getParameter( "graph" );
+                    String vertexId = requestCycle.getRequest().getParameter( "vertex" );
+                    String edgeId = requestCycle.getRequest().getParameter( "edge" );
+                    if ( graphId != null ) {
+                        if ( vertexId == null && edgeId == null ) {
+                            onSelectGraph( graphId, target );
+                        } else if ( vertexId != null ) {
+                            onSelectVertex( graphId, vertexId, target );
+                        } else {
+                            onSelectEdge( graphId, vertexId, target );
+                        }
+                    }
+                }
+            } );
         }
         MarkupContainer graph = new MarkupContainer( "graph" ) {
             @Override
@@ -115,7 +135,7 @@ public abstract class AbstractDiagramPanel extends Panel {
                 super.onRender( markupStream );
                 if ( withImageMap ) {
                     try {
-                        getResponse().write( diagram.makeImageMap() );
+                        getResponse().write( imageMapHolder.toString() );
                     } catch ( DiagramException e ) {
                         LOG.error( "Can't generate image map", e );
                     }
@@ -139,4 +159,29 @@ public abstract class AbstractDiagramPanel extends Panel {
      * @return a string
      */
     protected abstract String makeDiagramUrl();
+
+    /**
+     * Graph selected event.
+     * @param graphId a string
+     * @param target an ajax request target
+     */
+    protected abstract void onSelectGraph( String graphId, AjaxRequestTarget target );
+
+    /**
+     * Vertex selected event.
+     * @param graphId a string
+     * @param vertexId a string
+     * @param target an ajax request target
+     */
+    protected abstract void onSelectVertex( String graphId, String vertexId, AjaxRequestTarget target );
+
+    /**
+     * Edge selected event.
+     * @param graphId a string
+     * @param edgeId a string
+     * @param target an ajax request target
+     */
+    protected abstract void onSelectEdge( String graphId, String edgeId, AjaxRequestTarget target );
+
+
 }

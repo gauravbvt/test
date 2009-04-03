@@ -1,5 +1,7 @@
 package com.mindalliance.channels.graph;
 
+import com.mindalliance.channels.pages.Project;
+
 import java.io.ByteArrayOutputStream;
 import java.io.BufferedOutputStream;
 
@@ -13,11 +15,6 @@ import java.io.BufferedOutputStream;
 public abstract class AbstractDiagram<V,E> implements Diagram {
 
     /**
-     * The diagram's maker
-     */
-    private DiagramFactory<V,E> diagramFactory;
-
-    /**
      * Whether the direction is LR or top-bottom
      */
     private String orientation;
@@ -28,8 +25,7 @@ public abstract class AbstractDiagram<V,E> implements Diagram {
      */
     private double[] diagramSize;
 
-    public AbstractDiagram( DiagramFactory<V,E> diagramFactory ) {
-        this.diagramFactory = diagramFactory;
+    public AbstractDiagram(  ) {
     }
 
 
@@ -50,7 +46,7 @@ public abstract class AbstractDiagram<V,E> implements Diagram {
     }
 
     public DiagramFactory<V,E> getDiagramFactory() {
-        return diagramFactory;
+        return Project.diagramFactory();
     }
 
     public String getOrientation() {

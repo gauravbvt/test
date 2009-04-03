@@ -27,15 +27,7 @@ import java.util.List;
  */
 public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
 
-    /**
-     * Message format as URL template with {1} = scenario id.
-     */
-    private static String SCENARIO_URL_FORMAT = "?scenario={0,number,0}";
-    /**
-     * Message format as URL template with {1} = scenario id and {2} = vertex id.
-     */
-    private static String NODE_URL_FORMAT = "?scenario={0,number,0}&node={1,number,0}";
-    /**
+     /**
      * Color for subgraph contour
      */
     private static final String SUBGRAPH_COLOR = "azure2";
@@ -102,7 +94,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
              */
             public String getGraphURL( Node node ) {
                 Object[] args = {node.getScenario().getId()};
-                return MessageFormat.format( SCENARIO_URL_FORMAT, args );
+                return MessageFormat.format( GRAPH_URL_FORMAT, args );
             }
 
             /**
@@ -113,7 +105,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
              */
             public String getVertexURL( Node node ) {
                 Object[] args = {node.getScenario().getId(), node.getId()};
-                return MessageFormat.format( NODE_URL_FORMAT, args );
+                return MessageFormat.format( VERTEX_URL_FORMAT, args );
             }
 
             /**

@@ -11,6 +11,7 @@ import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.analysis.Analyst;
@@ -48,7 +49,7 @@ import java.util.Set;
  * Initialized in /WEB-INF/applicationContext.xml.
  * @TODO split into a bonified service-level object
  */
-public final class Project extends WebApplication {                                   // NON-NLS
+public final class Project extends WebApplication implements Identifiable {                                   // NON-NLS
 
     /**
      * Class logger.
@@ -106,6 +107,10 @@ public final class Project extends WebApplication {                             
      * Default Constructor.
      */
     public Project() {
+    }
+
+    public long getId() {
+        return 0;
     }
 
     /**

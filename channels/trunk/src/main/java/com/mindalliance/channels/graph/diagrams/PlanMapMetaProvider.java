@@ -23,14 +23,6 @@ import java.text.MessageFormat;
  */
 public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, ScenarioRelationship> {
     /**
-     * Message format as URL template with {1} = scenario id.
-     */
-    private static String SCENARIO_URL_FORMAT = "?scenario={0,number,0}";
-    /**
-     * Message format as URL template with {1} = scenario id.
-     */
-    private static String SCENARIO_REL_URL_FORMAT = "?scenarioRel={0,number,0},{1,number,0}";
-    /**
      * Number of characters after which a long line is wrapped on separator.
      */
     private static final int LINE_WRAP_SIZE = 15;
@@ -77,13 +69,16 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
             }
 
             public String getVertexURL( Scenario scenario ) {
-                Object[] args = {scenario.getId()};
-                return MessageFormat.format( SCENARIO_URL_FORMAT, args );
+                // Plan id = 0 for now sice there is only one plan
+                Object[] args = {0, scenario.getId()};
+                return MessageFormat.format( VERTEX_URL_FORMAT, args );
             }
 
             public String getEdgeURL( ScenarioRelationship scRel ) {
-                Object[] args = {scRel.getFromScenario().getId(), scRel.getToScenario().getId()};
-                return MessageFormat.format( SCENARIO_REL_URL_FORMAT, args );
+                String scRelId = scRel.getFromScenario().getId() + "," + scRel.getToScenario().getId();
+                // Plan id = 0 for now sice there is only one plan
+                Object[] args = {0, scRelId};
+                return MessageFormat.format(EDGE_URL_FORMAT, args );
             }
         };
     }

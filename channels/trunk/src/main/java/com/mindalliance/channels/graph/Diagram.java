@@ -1,6 +1,7 @@
 package com.mindalliance.channels.graph;
 
 import java.io.OutputStream;
+import java.io.Serializable;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -9,7 +10,7 @@ import java.io.OutputStream;
  * Date: Feb 11, 2009
  * Time: 4:30:22 PM
  */
-public interface Diagram {
+public interface Diagram extends Serializable {
     /**
      * Constrain size of diagram.
      *
