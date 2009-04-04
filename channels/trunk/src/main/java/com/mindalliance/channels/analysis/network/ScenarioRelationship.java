@@ -72,9 +72,9 @@ public class ScenarioRelationship implements Identifiable {
         fromScenarioId = Long.valueOf( fromId );
         toScenarioId = Long.valueOf( toId );
         ScenarioRelationship scRel = dqo.findScenarioRelationship(
-                getFromScenario(dqo),
-                getToScenario(dqo));
-        if (scRel != null) externalFlows = scRel.getExternalFlows();
+                getFromScenario( dqo ),
+                getToScenario( dqo ) );
+        if ( scRel != null ) externalFlows = scRel.getExternalFlows();
     }
 
     public String getName() {
@@ -159,4 +159,30 @@ public class ScenarioRelationship implements Identifiable {
         }
         return count + ( count > 1 ? " issues" : " issue" );
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        return getName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals( Object obj ) {
+        return this == obj
+                || obj instanceof ScenarioRelationship
+                && getId() == ( (ScenarioRelationship) obj ).getId();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Long.valueOf( getId() ).hashCode();
+    }
+
 }

@@ -23,10 +23,17 @@ import org.jgrapht.Graph;
  * Time: 1:58:47 PM
  */
 public class PlanMapDiagram extends AbstractDiagram<Scenario,ScenarioRelationship> {
-
+    /**
+     * The scenarios mapped.
+     */
     private List<Scenario> scenarios;
-
+    /**
+     * Selected vertex-scenario.
+     */
     private Scenario selectedScenario;
+    /**
+     * Selected edge-scenario relationship.
+     */
     private ScenarioRelationship selectedScRel;
 
     public PlanMapDiagram( List<Scenario> scenarios, Scenario scenario, ScenarioRelationship scRel ) {

@@ -9,6 +9,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.markup.html.basic.Label;
@@ -65,17 +66,22 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     }
 
     private void init() {
+        AjaxFallbackLink closeLink = new AjaxFallbackLink( "close" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                Change change = new Change( Change.Type.Collapsed, Project.getProject() );
+                update( target, change );
+            }
+        };
+        add( closeLink );
         addPlanMapDiagramPanel();
         addFlowsTitleLabel();
         addExternalFlowsPanel();
     }
 
     private void addPlanMapDiagramPanel() {
-        ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
-        scenarios.addAll( getDqo().list( Scenario.class ) );
         planMapDiagramPanel = new PlanMapDiagramPanel(
                 "plan-map",
-                new Model<ArrayList<Scenario>>( scenarios ),
+                new PropertyModel<ArrayList<Scenario>>( this, "scenarios" ),
                 selectedScenario,
                 selectedScRel );
         planMapDiagramPanel.setOutputMarkupId( true );
@@ -98,6 +104,17 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
         );
         externalFlowsPanel.setOutputMarkupId( true );
         addOrReplace( externalFlowsPanel );
+    }
+
+    /**
+     * Get scenarios to map.
+     *
+     * @return an array list of scenarios
+     */
+    public ArrayList<Scenario> getScenarios() {
+        ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
+        scenarios.addAll( getDqo().list( Scenario.class ) );
+        return scenarios;
     }
 
     /**
@@ -177,43 +194,37 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
      * {@inheritDoc}
      */
     public void changed( Change change ) {
-        Identifiable changed = change.getSubject();
-        if ( changed instanceof Scenario ) {
-            if ( change.isSelected() ) {
+        if ( change.isSelected() ) {
+            Identifiable changed = change.getSubject();
+            if ( changed instanceof Project ) {
+                selectedScenario = null;
+                selectedScRel = null;
+            } else if ( changed instanceof Scenario ) {
                 selectedScenario = (Scenario) changed;
                 selectedScRel = null;
-            }
-        } else if ( changed instanceof ScenarioRelationship ) {
-            if ( change.isSelected() ) {
+            } else if ( changed instanceof ScenarioRelationship ) {
                 selectedScenario = null;
                 selectedScRel = (ScenarioRelationship) changed;
             }
+            // Don't percolate change on selection.
+        } else {
+            super.changed( change );
         }
-        // Don't percolate change.
     }
 
     /**
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change ) {
-        Identifiable changed = change.getSubject();
-        if ( changed instanceof Scenario ) {
-            if ( change.isSelected() ) {
-                addPlanMapDiagramPanel();
-                addExternalFlowsPanel();
-                target.addComponent( planMapDiagramPanel );
-                target.addComponent( flowsTitleLabel );
-                target.addComponent( externalFlowsPanel );
-            }
-        } else if ( changed instanceof ScenarioRelationship ) {
-            if ( change.isSelected() ) {
-                addPlanMapDiagramPanel();
-                addExternalFlowsPanel();
-                target.addComponent( planMapDiagramPanel );
-                target.addComponent( flowsTitleLabel );
-                target.addComponent( externalFlowsPanel );
-            }
+        if ( change.isSelected() ) {
+            addPlanMapDiagramPanel();
+            addExternalFlowsPanel();
+            target.addComponent( planMapDiagramPanel );
+            target.addComponent( flowsTitleLabel );
+            target.addComponent( externalFlowsPanel );
+            // Don't percolate update on selection.
+        } else {
+            super.updateWith( target, change );
         }
-        // Don't percolate update.
     }
 }

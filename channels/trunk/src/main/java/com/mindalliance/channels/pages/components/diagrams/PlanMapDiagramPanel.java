@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.analysis.network.ScenarioRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.graph.Diagram;
@@ -90,7 +91,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
         StringBuilder sb = new StringBuilder();
         sb.append( "plan.png?scenario=" );
         sb.append( selectedScenario == null ? "NONE" : selectedScenario.getId() );
-        sb.append("&connection=");
+        sb.append( "&connection=" );
         sb.append( selectedScRel == null ? "NONE" : selectedScRel.getId() );
         sb.append( "&time=" );
         sb.append( MessageFormat.format( "{2,number,0}", System.currentTimeMillis() ) );
@@ -107,6 +108,13 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
             sb.append( orientation );
         }
         return sb.toString();
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    protected void onClick( AjaxRequestTarget target ) {
+        update( target, new Change( Change.Type.Selected, Project.getProject() ) );
     }
 
     /**

@@ -9,6 +9,7 @@ import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.slf4j.Logger;
@@ -127,7 +128,7 @@ public abstract class AbstractDiagramPanel extends AbstractUpdatablePanel {
                 super.onComponentTag( tag );
                 tag.put( "src", makeDiagramUrl() );
                 if ( withImageMap ) {
-                    // TODO may not be unique in the page
+                    // TODO may not be unique in the page but should be
                     tag.put( "usemap", "#" + getContainerId() );
                 }
             }
@@ -144,6 +145,11 @@ public abstract class AbstractDiagramPanel extends AbstractUpdatablePanel {
                 }
             }
         };
+        graph.add( new AjaxEventBehavior("onclick") {
+            protected void onEvent( AjaxRequestTarget target ) {
+                onClick( target );
+            }
+        } );
         graph.setOutputMarkupId( true );
         add( graph );
     }
@@ -168,6 +174,11 @@ public abstract class AbstractDiagramPanel extends AbstractUpdatablePanel {
      */
     protected abstract String makeDiagramUrl();
 
+    /**
+     * Image is clicked.
+     * @param target an ajax request target
+     */
+    protected abstract void onClick(AjaxRequestTarget target);
     /**
      * Graph selected event.
      * @param graphId a string

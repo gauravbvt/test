@@ -44,11 +44,11 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
     }
 
     public FlowMapDiagramPanel( String id,
-                             IModel<Scenario> model,
-                             Node selectedNode,
-                             double[] diagramSize,
-                             String orientation,
-                             boolean withImageMap ) {
+                                IModel<Scenario> model,
+                                Node selectedNode,
+                                double[] diagramSize,
+                                String orientation,
+                                boolean withImageMap ) {
         super( id, diagramSize, orientation, withImageMap );
         scenario = model.getObject();
         this.selectedNode = selectedNode;
@@ -99,6 +99,16 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
         return sb.toString();
     }
 
+    /**
+     * {@inheritDoc }
+     */
+    protected void onClick( AjaxRequestTarget target ) {
+        // Do nothing
+    }
+
+    /**
+     * {@inheritDoc }
+     */
     protected void onSelectGraph( String graphId, AjaxRequestTarget target ) {
         try {
             Scenario scenario = getDqo().find( Scenario.class, Long.valueOf( graphId ) );
@@ -108,10 +118,13 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
         }
     }
 
+    /**
+     * {@inheritDoc }
+     */
     protected void onSelectVertex( String graphId, String vertexId, AjaxRequestTarget target ) {
         try {
             Scenario scenario = getDqo().find( Scenario.class, Long.valueOf( graphId ) );
-            Part part = (Part)scenario.getNode( Long.valueOf( vertexId ) );
+            Part part = (Part) scenario.getNode( Long.valueOf( vertexId ) );
             if ( part != null ) {
                 this.update( target, new Change( Change.Type.Selected, part ) );
             } else {
@@ -122,6 +135,9 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
         }
     }
 
+    /**
+     * {@inheritDoc }
+     */
     protected void onSelectEdge( String graphId, String edgeId, AjaxRequestTarget target ) {
         // do nothing - never called
     }

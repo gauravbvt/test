@@ -10,6 +10,7 @@ import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.ExternalFlow;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Commander;
@@ -318,7 +319,7 @@ public final class ProjectPage extends WebPage implements Updatable {
         projectShowMenu = new ProjectShowMenuPanel(
                 "projectShowMenu",
                 new Model<Scenario>( scenario ),
-                getReadOnlyExpansions());
+                getReadOnlyExpansions() );
         projectShowMenu.setOutputMarkupId( true );
         form.add( projectShowMenu );
     }
@@ -757,16 +758,18 @@ public final class ProjectPage extends WebPage implements Updatable {
         if ( change.isUnknown() ) {
             redirectHere();
         } else if ( change.isUndoing() ) {
+            target.addComponent(planMapPanel );
             target.addComponent( scenarioPanel );
             target.addComponent( entityPanel );
+            target.addComponent( planMapPanel );
         }
         if ( identifiable instanceof Project ) {
-            if (change.isDisplay()) {
-                addPlanMapPanel();
+            if ( change.isDisplay() ) {
                 target.addComponent( planMapPanel );
             }
         }
         if ( identifiable instanceof Scenario ) {
+            target.addComponent(planMapPanel );
             if ( change.isUpdated() ) {
                 if ( change.getProperty().equals( "name" ) ) {
                     target.addComponent( scenarioNameLabel );
@@ -787,6 +790,9 @@ public final class ProjectPage extends WebPage implements Updatable {
                 target.addComponent( scenarioPanel );
             }
         }
+        if ( identifiable instanceof ExternalFlow ) {
+            target.addComponent(planMapPanel );
+        }
         if ( identifiable instanceof ScenarioObject
                 || ( identifiable instanceof Issue
                 && ( (Issue) identifiable ).getAbout().getId() == getScenario().getId() ) ) {
@@ -799,6 +805,8 @@ public final class ProjectPage extends WebPage implements Updatable {
             annotateScenarioName( getScenario() );
             target.addComponent( scenarioNameLabel );
             scenarioPanel.expandScenarioEditPanel( target );
+            addPlanMapPanel();
+            target.addComponent(planMapPanel );
         }
         if ( identifiable instanceof ModelObject
                 && ( (ModelObject) identifiable ).isEntity() ) {
