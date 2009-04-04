@@ -765,6 +765,7 @@ public final class ProjectPage extends WebPage implements Updatable {
         }
         if ( identifiable instanceof Project ) {
             if ( change.isDisplay() ) {
+                addPlanMapPanel();
                 target.addComponent( planMapPanel );
             }
         }
