@@ -20,12 +20,12 @@ import java.text.MessageFormat;
  * Date: Feb 11, 2009
  * Time: 11:31:48 AM
  */
-public class FlowDiagramPanel extends AbstractDiagramPanel {
+public class FlowMapDiagramPanel extends AbstractDiagramPanel {
 
     /**
      * Class logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger( FlowDiagramPanel.class );
+    private static final Logger LOG = LoggerFactory.getLogger( FlowMapDiagramPanel.class );
     /**
      * Scenario to be diagrammed
      */
@@ -35,15 +35,15 @@ public class FlowDiagramPanel extends AbstractDiagramPanel {
      */
     private Node selectedNode;
 
-    public FlowDiagramPanel( String id, IModel<Scenario> model ) {
+    public FlowMapDiagramPanel( String id, IModel<Scenario> model ) {
         this( id, model, null, null, null, true );
     }
 
-    public FlowDiagramPanel( String id, IModel<Scenario> model, IModel<Part> partModel ) {
+    public FlowMapDiagramPanel( String id, IModel<Scenario> model, IModel<Part> partModel ) {
         this( id, model, partModel.getObject(), null, null, true );
     }
 
-    public FlowDiagramPanel( String id,
+    public FlowMapDiagramPanel( String id,
                              IModel<Scenario> model,
                              Node selectedNode,
                              double[] diagramSize,
@@ -58,8 +58,15 @@ public class FlowDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc}
      */
+    protected String getContainerId() {
+        return "flow-map";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     protected Diagram makeDiagram() {
-        return getDiagramFactory().newFlowMapDiagram( scenario );
+        return getDiagramFactory().newFlowMapDiagram( scenario, scenario.getDefaultPart() );
     }
 
     /**

@@ -111,6 +111,10 @@ public final class ProjectPage extends WebPage implements Updatable {
      */
     private MenuPanel projectActionsMenu;
     /**
+     * Scenarios show menu.
+     */
+    private MenuPanel projectShowMenu;
+    /**
      * The current part.
      */
     private Part part;
@@ -140,10 +144,6 @@ public final class ProjectPage extends WebPage implements Updatable {
      * The entity panel.
      */
     private Component entityPanel;
-    /**
-     * Synthetic id for expanding scenarios map panel.
-     */
-    private static final Long SCENARIO_MAP_ID = -1L;
     /**
      * The scenarios map panel.
      */
@@ -236,7 +236,7 @@ public final class ProjectPage extends WebPage implements Updatable {
                 getReadOnlyExpansions() );
         form.add( scenarioPanel );
         addEntityPanel();
-        addPlanMap();
+        addPlanMapPanel();
         LOG.debug( "Scenario page generated" );
     }
 
@@ -315,9 +315,10 @@ public final class ProjectPage extends WebPage implements Updatable {
                 getReadOnlyExpansions() );
         projectActionsMenu.setOutputMarkupId( true );
         form.add( projectActionsMenu );
-        ProjectShowMenuPanel projectShowMenu = new ProjectShowMenuPanel(
+        projectShowMenu = new ProjectShowMenuPanel(
                 "projectShowMenu",
-                new Model<Scenario>( scenario ) );
+                new Model<Scenario>( scenario ),
+                getReadOnlyExpansions());
         projectShowMenu.setOutputMarkupId( true );
         form.add( projectShowMenu );
     }
@@ -364,8 +365,8 @@ public final class ProjectPage extends WebPage implements Updatable {
         form.addOrReplace( entityPanel );
     }
 
-    private void addPlanMap() {
-        boolean showPlanMap = expansions.contains( SCENARIO_MAP_ID );
+    private void addPlanMapPanel() {
+        boolean showPlanMap = expansions.contains( Project.getProject().getId() );
         if ( showPlanMap ) {
             planMapPanel = new PlanMapPanel(
                     "plan-map",
@@ -687,7 +688,7 @@ public final class ProjectPage extends WebPage implements Updatable {
             // expandedEntities.remove( identifiable.getId() );
         }
         // Never lock a scenario
-        if ( !( identifiable instanceof Scenario ) ) {
+        if ( !( identifiable instanceof Scenario || identifiable instanceof Project ) ) {
             getCommander().requestLockOn( identifiable );
         }
         expansions.add( identifiable.getId() );
@@ -759,6 +760,12 @@ public final class ProjectPage extends WebPage implements Updatable {
             target.addComponent( scenarioPanel );
             target.addComponent( entityPanel );
         }
+        if ( identifiable instanceof Project ) {
+            if (change.isDisplay()) {
+                addPlanMapPanel();
+                target.addComponent( planMapPanel );
+            }
+        }
         if ( identifiable instanceof Scenario ) {
             if ( change.isUpdated() ) {
                 if ( change.getProperty().equals( "name" ) ) {
@@ -804,6 +811,7 @@ public final class ProjectPage extends WebPage implements Updatable {
 
         }
         target.addComponent( projectActionsMenu );
+        target.addComponent( projectShowMenu );
     }
 
     /**

@@ -36,15 +36,9 @@ public class PlanMapGraphBuilder implements GraphBuilder<Scenario, ScenarioRelat
         DirectedGraph<Scenario, ScenarioRelationship> digraph =
                 new DirectedMultigraph<Scenario, ScenarioRelationship>(
                         new EdgeFactory<Scenario, ScenarioRelationship>() {
-                            /**
-                             * Separate id generator for diagram-based flows.
-                             */
-                            private long IdCounter = 1L;
 
                             public ScenarioRelationship createEdge( Scenario scenario, Scenario otherScenario ) {
-                                ScenarioRelationship scRel = new ScenarioRelationship( scenario, otherScenario );
-                                scRel.setId( IdCounter++ );
-                                return scRel;
+                                return new ScenarioRelationship( scenario, otherScenario );
                             }
 
                         } );
@@ -57,6 +51,8 @@ public class PlanMapGraphBuilder implements GraphBuilder<Scenario, ScenarioRelat
             List<Scenario> scenarios ) {
         for ( Scenario scenario : scenarios ) {
             digraph.addVertex( scenario );
+        }
+        for  ( Scenario scenario : scenarios ) {
             for ( Scenario other : scenarios ) {
                 if ( scenario != other ) {
                     ScenarioRelationship scRel = dqo.findScenarioRelationship( scenario, other );

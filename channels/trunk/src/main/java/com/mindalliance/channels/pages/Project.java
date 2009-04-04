@@ -19,7 +19,6 @@ import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.export.Exporter;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.pages.reports.ProjectReportPage;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.context.SecurityContextHolder;
@@ -47,6 +46,7 @@ import java.util.Set;
 /**
  * Application object for Channels.
  * Initialized in /WEB-INF/applicationContext.xml.
+ *
  * @TODO split into a bonified service-level object
  */
 public final class Project extends WebApplication implements Identifiable {                                   // NON-NLS
@@ -56,11 +56,17 @@ public final class Project extends WebApplication implements Identifiable {     
      */
     public static final Logger LOG = LoggerFactory.getLogger( Project.class );
     /**
+     * Constant id for singleton project.
+     */
+    private static long PROJECT_ID = -1;
+    /**
      * The project's unique identifier
      */
     private String uri;
 
-    /** The underlying service. */
+    /**
+     * The underlying service.
+     */
     private DataQueryObject dqo;
 
     /**
@@ -110,7 +116,7 @@ public final class Project extends WebApplication implements Identifiable {     
     }
 
     public long getId() {
-        return 0;
+        return PROJECT_ID;
     }
 
     /**
@@ -127,9 +133,10 @@ public final class Project extends WebApplication implements Identifiable {     
 //        getRequestCycleSettings().setRenderStrategy( IRequestCycleSettings.REDIRECT_TO_RENDER );
         mount( new QueryStringUrlCodingStrategy( "index.html", IndexPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "report.html", ProjectReportPage.class ) );
-         mount( new QueryStringUrlCodingStrategy( "node.html", ProjectPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "node.html", ProjectPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.xml", ExportPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "scenario.png", FlowPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "scenario.png", FlowMapPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "plan.png", PlanMapPage.class ) );
         /*
         mount( new QueryStringUrlCodingStrategy( "role.html", RolePage.class ) );
         mount( new QueryStringUrlCodingStrategy( "actor.html", ActorPage.class ) );
@@ -141,7 +148,7 @@ public final class Project extends WebApplication implements Identifiable {     
     }
 
     protected void onDestroy() {
-        LOG.info("Goodbye!");
+        LOG.info( "Goodbye!" );
         dqo.onDestroy();
     }
 
@@ -159,7 +166,7 @@ public final class Project extends WebApplication implements Identifiable {     
         if ( authentication != null ) {
             Object obj = authentication.getPrincipal();
             result = obj instanceof UserDetails ? ( (UserDetails) obj ).getUsername()
-                                                : obj.toString();
+                    : obj.toString();
         }
 
         return result;
@@ -192,7 +199,7 @@ public final class Project extends WebApplication implements Identifiable {     
     }
 
     private ApplicationContext getApplicationContext() {
-        return WebApplicationContextUtils .getRequiredWebApplicationContext(getServletContext());
+        return WebApplicationContextUtils.getRequiredWebApplicationContext( getServletContext() );
     }
 
     // FOR TESTING ONLY
@@ -296,6 +303,7 @@ public final class Project extends WebApplication implements Identifiable {     
 
     /**
      * Get current project's diagram maker.
+     *
      * @return a DiagramFactory
      */
     public static DiagramFactory diagramFactory() {
@@ -313,6 +321,7 @@ public final class Project extends WebApplication implements Identifiable {     
 
     /**
      * Get the project's commander
+     *
      * @return a commander
      */
     public static Commander commander() {
@@ -321,8 +330,9 @@ public final class Project extends WebApplication implements Identifiable {     
 
     /**
      * Find actors in given organization and role.
+     *
      * @param organization the organization, possibly Organization.UNKNOWN
-     * @param role the role, possibly Role.UNKNOWN
+     * @param role         the role, possibly Role.UNKNOWN
      * @return a sorted list of actors
      */
     public List<Actor> findActors( Organization organization, Role role ) {
@@ -335,11 +345,11 @@ public final class Project extends WebApplication implements Identifiable {     
         for ( ResourceSpec spec : getDqo().findAllResourceSpecs() ) {
             if ( spec.getActor() != null ) {
                 boolean sameOrg = Organization.UNKNOWN.equals( organization ) ?
-                                    spec.getOrganization() == null
-                                  : organization.equals( spec.getOrganization() );
+                        spec.getOrganization() == null
+                        : organization.equals( spec.getOrganization() );
                 boolean sameRole = Role.UNKNOWN.equals( role ) ?
-                                    spec.getRole() == null
-                                  : role.equals( spec.getRole() );
+                        spec.getRole() == null
+                        : role.equals( spec.getRole() );
                 if ( sameOrg && sameRole )
                     actors.add( spec.getActor() );
             }
@@ -358,6 +368,7 @@ public final class Project extends WebApplication implements Identifiable {     
 
     /**
      * Find all roles in given organization across all scenarios.
+     *
      * @param organization the organization, possibly Organization.UNKNOWN
      * @return a sorted list of roles
      */
@@ -383,6 +394,7 @@ public final class Project extends WebApplication implements Identifiable {     
 
     /**
      * Find all organization in project, including the UNKNOWN organization, if need be.
+     *
      * @return a sorted list of organizations
      */
     public List<Organization> findOrganizations() {
@@ -404,6 +416,7 @@ public final class Project extends WebApplication implements Identifiable {     
 
     /**
      * Find actors that should be included in a flow of a part.
+     *
      * @param part the part
      * @param flow a flow of the part
      * @return list of actors in project that applies
@@ -437,9 +450,10 @@ public final class Project extends WebApplication implements Identifiable {     
 
     /**
      * Find actors in given organization and role in a given scenario.
+     *
      * @param organization the organization, possibly Organization.UNKNOWN
-     * @param role the role, possibly Role.UNKNOWN
-     * @param scenario the scenario
+     * @param role         the role, possibly Role.UNKNOWN
+     * @param scenario     the scenario
      * @return a sorted list of actors
      */
     public List<Actor> findActors( Organization organization, Role role, Scenario scenario ) {
@@ -450,11 +464,11 @@ public final class Project extends WebApplication implements Identifiable {     
         while ( parts.hasNext() ) {
             Part part = parts.next();
             boolean sameOrg = Organization.UNKNOWN.equals( organization ) ?
-                                part.getOrganization() == null
-                              : organization.equals( part.getOrganization() );
+                    part.getOrganization() == null
+                    : organization.equals( part.getOrganization() );
             boolean sameRole = Role.UNKNOWN.equals( role ) ?
-                                part.getRole() == null
-                              : role.equals( part.getRole() );
+                    part.getRole() == null
+                    : role.equals( part.getRole() );
 
             if ( sameOrg && sameRole ) {
                 if ( part.getActor() != null )

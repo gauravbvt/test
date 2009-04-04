@@ -654,3 +654,36 @@ div.wicket-aa ul li.selected {
     width: 100%;
 }
 
+#plan-map {
+    z-index: 10000;
+    position: absolute;
+    right: 2em;
+    bottom: 6em;
+    padding: 5px;
+
+    width: 50%;
+    background: #C3D9FF;
+    border: 1px outset #c3dede;
+    max-height: 75%;
+    overflow: auto;
+}
+
+#plan-map span.menubar {
+    float: right;
+    position: static;
+}
+
+#plan-map tr.headers th  {
+    text-align: left;
+    font-weight: bold;
+}
+#plan-map tr.even {
+    background-color: #FDFDFD;
+}
+#plan-map tr.odd {
+
+}
+#plan-map table {
+    width: 100%;
+}
+

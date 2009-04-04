@@ -9,6 +9,7 @@ import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.analysis.network.ScenarioRelationship;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
 import java.text.MessageFormat;
@@ -30,6 +31,10 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
      * Color for subgraph contour
      */
     private static final String SCENARIO_COLOR = "azure2";
+    /**
+     * Color for subgraph contour
+     */
+    private static final String SELECTED_SCENARIO_COLOR = "azure4";
     /**
      * Font for subgraph labels.
      */
@@ -75,10 +80,9 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
             }
 
             public String getEdgeURL( ScenarioRelationship scRel ) {
-                String scRelId = scRel.getFromScenario().getId() + "," + scRel.getToScenario().getId();
                 // Plan id = 0 for now sice there is only one plan
-                Object[] args = {0, scRelId};
-                return MessageFormat.format(EDGE_URL_FORMAT, args );
+                Object[] args = {0, scRel.getId()};
+                return MessageFormat.format( EDGE_URL_FORMAT, args );
             }
         };
     }
@@ -124,7 +128,7 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
      * Date: Apr 1, 2009
      * Time: 8:37:04 PM
      */
-    private class PlanDOTAttributeProvider implements DOTAttributeProvider<Scenario,ScenarioRelationship> {
+    private class PlanDOTAttributeProvider implements DOTAttributeProvider<Scenario, ScenarioRelationship> {
 
 
         public List<DOTAttribute> getGraphAttributes() {
@@ -147,15 +151,18 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
         public List<DOTAttribute> getVertexAttributes( Scenario vertex, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "shape", "box" ) );
+            list.add( new DOTAttribute( "color", SCENARIO_COLOR ) );
+            list.add( new DOTAttribute( "style", "filled" ) );
             if ( highlighted ) {
-                list.add( new DOTAttribute( "color", SCENARIO_COLOR ) );
-                list.add( new DOTAttribute( "style", "filled" ) );
+                list.add( new DOTAttribute( "color", SELECTED_SCENARIO_COLOR ) );
             } else {
-                list.add( new DOTAttribute( "style", "solid" ) );
-                list.add( new DOTAttribute( "color", "gray" ) );
+                list.add( new DOTAttribute( "color", SCENARIO_COLOR ) );
             }
             list.add( new DOTAttribute( "fontsize", SCENARIO_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", SCENARIO_FONT ) );
+            list.add( new DOTAttribute(
+                    "tooltip", 
+                    sanitize( StringUtils.abbreviate( vertex.getDescription(), 50 ) ) ) );
             if ( getAnalyst().hasIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( vertex,
@@ -166,17 +173,21 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
 
         public List<DOTAttribute> getEdgeAttributes( ScenarioRelationship edge, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-            list.add( new DOTAttribute( "arrowsize", "0.75" ) );
+            list.add( new DOTAttribute( "arrowhead", "dot" ) );
+            // list.add( new DOTAttribute( "arrowsize", "0.75" ) );
             list.add( new DOTAttribute( "fontname", EDGE_FONT ) );
             list.add( new DOTAttribute( "fontsize", EDGE_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );
             list.add( new DOTAttribute( "len", "1.5" ) );
             list.add( new DOTAttribute( "weight", "2.0" ) );
+            if ( highlighted ) {
+                list.add( new DOTAttribute( "penwidth", "3.0" ) );
+            }
             // Issue coloring
-            if ( edge.hasIssues(getAnalyst() )) {
+            if ( edge.hasIssues( getAnalyst() ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", sanitize( edge.getIssuesSummary( getAnalyst() ) ) ));
+                list.add( new DOTAttribute( "tooltip", sanitize( edge.getIssuesSummary( getAnalyst() ) ) ) );
             }
             return list;
         }

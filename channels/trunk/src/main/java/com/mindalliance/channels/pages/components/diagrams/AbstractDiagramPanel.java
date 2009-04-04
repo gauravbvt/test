@@ -11,12 +11,9 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 
 /**
  * Abstract Diagram Panel
@@ -101,7 +98,11 @@ public abstract class AbstractDiagramPanel extends AbstractUpdatablePanel {
             diagram.setOrientation( orientation );
         }
         if ( withImageMap ) {
-            imageMapHolder = new StringBuilder( diagram.makeImageMap() );
+            String imageMap = diagram.makeImageMap();
+            // imageMap = imageMap.replace( "id=\"G\"", "id=\"" + getContainerId() + "\"" );
+            imageMap = imageMap.replace( "id=\"G\"", "" );
+            imageMap = imageMap.replace( "name=\"G\"", "name=\"" + getContainerId() + "\"" );
+            imageMapHolder = new StringBuilder( imageMap );
             add( new DiagramAjaxBehavior( imageMapHolder ) {
                 protected void respond( AjaxRequestTarget target ) {
                     RequestCycle requestCycle = RequestCycle.get();
@@ -114,19 +115,20 @@ public abstract class AbstractDiagramPanel extends AbstractUpdatablePanel {
                         } else if ( vertexId != null ) {
                             onSelectVertex( graphId, vertexId, target );
                         } else {
-                            onSelectEdge( graphId, vertexId, target );
+                            onSelectEdge( graphId, edgeId, target );
                         }
                     }
                 }
             } );
         }
-        MarkupContainer graph = new MarkupContainer( "graph" ) {
+        MarkupContainer graph = new MarkupContainer( getContainerId() ) {
             @Override
             protected void onComponentTag( ComponentTag tag ) {
                 super.onComponentTag( tag );
                 tag.put( "src", makeDiagramUrl() );
                 if ( withImageMap ) {
-                    tag.put( "usemap", "#G" );
+                    // TODO may not be unique in the page
+                    tag.put( "usemap", "#" + getContainerId() );
                 }
             }
 
@@ -145,6 +147,12 @@ public abstract class AbstractDiagramPanel extends AbstractUpdatablePanel {
         graph.setOutputMarkupId( true );
         add( graph );
     }
+
+    /**
+     * Return the wisket id of the diagram's container.
+     * @return a string
+     */
+    protected abstract String getContainerId();
 
     /**
      * Instantiate diagram to display.

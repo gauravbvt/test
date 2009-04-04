@@ -4,6 +4,7 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.analysis.network.ScenarioRelationship;
 import com.mindalliance.channels.graph.diagrams.FlowMapDiagram;
 import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
 
@@ -72,17 +73,12 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public Diagram newFlowMapDiagram( Scenario scenario ) {
-        return new FlowMapDiagram( scenario, scenario.getDefaultPart() );
-    }
-    /**
       * {@inheritDoc}
       */
     // TODO - why can't I say:  List<Scenario> scenarios ?
-    public Diagram newPlanMapDiagram( List scenarios ) {
-        return new PlanMapDiagram( (List<Scenario>)scenarios );
+    public Diagram newPlanMapDiagram( List scenarios, Scenario scenario, ScenarioRelationship scRel ) {
+        return new PlanMapDiagram( (List<Scenario>)scenarios, scenario, scRel );
     }
+
 
 }

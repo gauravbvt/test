@@ -8,20 +8,15 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ScenarioObject;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
-import com.mindalliance.channels.graph.DiagramException;
-import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.components.menus.PartActionsMenuPanel;
 import com.mindalliance.channels.pages.components.menus.PartShowMenuPanel;
-import com.mindalliance.channels.pages.components.diagrams.FlowDiagramPanel;
+import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -31,7 +26,6 @@ import org.apache.wicket.model.PropertyModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.MessageFormat;
 import java.util.Set;
 
 /**
@@ -215,7 +209,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
 
         flowDiagram.setOutputMarkupId( true );
 */
-        flowDiagram = new FlowDiagramPanel( "flow-map", scenarioModel, partModel );
+        flowDiagram = new FlowMapDiagramPanel( "flow-map", scenarioModel, partModel );
         flowDiagram.setOutputMarkupId( true );
         addOrReplace( flowDiagram );
     }

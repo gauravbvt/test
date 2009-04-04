@@ -13,9 +13,6 @@ import java.io.OutputStream;
 import java.util.List;
 
 import org.jgrapht.Graph;
-import org.jgrapht.DirectedGraph;
-import org.jgrapht.EdgeFactory;
-import org.jgrapht.graph.DirectedMultigraph;
 
 /**
  * A plan map diagram.
@@ -30,10 +27,13 @@ public class PlanMapDiagram extends AbstractDiagram<Scenario,ScenarioRelationshi
     private List<Scenario> scenarios;
 
     private Scenario selectedScenario;
+    private ScenarioRelationship selectedScRel;
 
-    public PlanMapDiagram( List<Scenario> scenarios ) {
+    public PlanMapDiagram( List<Scenario> scenarios, Scenario scenario, ScenarioRelationship scRel ) {
         super();
         this.scenarios = scenarios;
+        this.selectedScenario = scenario;
+        this.selectedScRel = scRel;
     }
 
     public void render( String outputFormat, OutputStream outputStream ) {
@@ -49,6 +49,9 @@ public class PlanMapDiagram extends AbstractDiagram<Scenario,ScenarioRelationshi
         graphRenderer.resetHighlight();
         if ( selectedScenario != null ) {
             graphRenderer.highlightVertex( selectedScenario );
+        }
+        if ( selectedScRel != null ) {
+            graphRenderer.highlightEdge( selectedScRel );
         }
         PlanMapMetaProvider metaProvider = new PlanMapMetaProvider(
                 scenarios,

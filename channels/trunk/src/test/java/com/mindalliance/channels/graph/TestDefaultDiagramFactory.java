@@ -37,7 +37,7 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 DiagramFactory diagramFactory = project.getDiagramFactory();
-                Diagram flowDiagram = diagramFactory.newFlowMapDiagram(scenario, selectedNode);
+                Diagram flowDiagram = diagramFactory.newFlowMapDiagram( scenario, selectedNode );
                 flowDiagram.render( DiagramFactory.SVG, new BufferedOutputStream( baos ) );
                 String svg = baos.toString();
                 assertFalse( svg.isEmpty() );
@@ -50,12 +50,12 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
     }
 
     public void testGetPNG() {
-        for ( Scenario scenario : scenarios )  {
+        for ( Scenario scenario : scenarios ) {
             Node selectedNode = findSelected( scenario );
             try {
                 FileOutputStream fileOut = new FileOutputStream( "target/" + scenario.getName() + ".png" );
                 DiagramFactory diagramFactory = project.getDiagramFactory();
-                Diagram flowDiagram = diagramFactory.newFlowMapDiagram(scenario, selectedNode);
+                Diagram flowDiagram = diagramFactory.newFlowMapDiagram( scenario, selectedNode );
                 flowDiagram.render( DiagramFactory.PNG, fileOut );
                 fileOut.flush();
                 fileOut.close();
@@ -73,9 +73,9 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
         for ( Scenario scenario : scenarios ) {
             try {
                 DiagramFactory diagramFactory = project.getDiagramFactory();
-                Diagram flowDiagram = diagramFactory.newFlowMapDiagram(scenario);
-                String map = flowDiagram.makeImageMap( );
-                System.out.print(map);
+                Diagram flowDiagram = diagramFactory.newFlowMapDiagram( scenario, scenario.getDefaultPart() );
+                String map = flowDiagram.makeImageMap();
+                System.out.print( map );
                 assertFalse( map.isEmpty() );
                 assertTrue( map.startsWith( "<map" ) );
             } catch ( Exception e ) {

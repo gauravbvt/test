@@ -3,6 +3,7 @@ package com.mindalliance.channels.graph;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.analysis.network.ScenarioRelationship;
 
 import java.util.List;
 
@@ -57,19 +58,13 @@ public interface DiagramFactory<Vertex, Edge> {
     Diagram newFlowMapDiagram( Scenario scenario, Node node );
 
     /**
-     * Instantiate a flow map diagram.
-     *
-     * @param scenario a scenario
-     * @return a flow map diagram
-     */
-    Diagram newFlowMapDiagram( Scenario scenario );
-
-    /**
      * Instantiate a plan map diagram.
      * @param scenarios list of scenarios
+     * @param scRel selected scenario relationship
+     * @param scenario selected scenario
      * @return a plan map diagram
      */
-    Diagram newPlanMapDiagram( List<Scenario> scenarios );
+    Diagram newPlanMapDiagram( List<Scenario> scenarios, Scenario scenario, ScenarioRelationship scRel );
 
     /**
      * Gets the preset graph renderer.

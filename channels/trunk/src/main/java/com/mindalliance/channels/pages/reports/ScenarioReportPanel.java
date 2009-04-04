@@ -5,7 +5,7 @@ import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.pages.components.diagrams.FlowDiagramPanel;
+import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -51,7 +51,7 @@ public class ScenarioReportPanel extends Panel {
         add( new Label( "description", scenario.getDescription() ) );                     // NON-NLS
 
         double[] size = { 7.5, 9.0 };
-        add( new FlowDiagramPanel(
+        add( new FlowMapDiagramPanel(
                         "flowMap",                                                        // NON-NLS
                         new Model<Scenario>( scenario ),
                         null,

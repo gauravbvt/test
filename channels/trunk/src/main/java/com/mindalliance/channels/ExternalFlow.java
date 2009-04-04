@@ -154,6 +154,30 @@ public class ExternalFlow extends Flow {
         return connector.isTarget();
     }
 
+    /**
+     * Get a string description of the kind of communication
+     * including max delay if applicable
+     *
+     * @return a string description of the communication
+     */
+    public String getKind() {
+        if ( !isPartTargeted() ) {
+            return isAskedFor() ? "answer" : "notify";
+        } else {
+            return isAskedFor() ? "ask" : "receive";
+        }
+    }
+
+
+    /**
+     * Get external part.
+     * @return a part
+     */
+    @Transient
+    public Part getExternalPart() {
+        return (Part)(isPartTargeted() ? getSource() : getTarget());
+    }
+
     @Override
     @Transient
     public boolean isAskedFor() {
