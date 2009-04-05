@@ -128,6 +128,8 @@ public class ScenarioPanel extends AbstractCommandablePanel {
                                 getPart().getTitle(), PART_TITLE_MAX_LENGTH );
                     }
                 } );
+        partTitle.add( new AttributeModifier( "title", true, 
+                                              new Model<String>( getPart().getTitle() ) ) );
         partTitle.setOutputMarkupId( true );
         add( partTitle );               // NON-NLS
         addPartMenuBar();

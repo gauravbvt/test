@@ -59,9 +59,9 @@ import java.util.Comparator;
 public final class ProjectPage extends WebPage implements Updatable {
 
     /**
-     * Class logger.
+     * The 'expand' parameter in the URL.
      */
-    private static final Logger LOG = LoggerFactory.getLogger( ProjectPage.class );
+    public static final String EXPAND_PARM = "expand";                                    // NON-NLS
 
     /**
      * The 'scenario' parameter in the URL.
@@ -74,9 +74,9 @@ public final class ProjectPage extends WebPage implements Updatable {
     static final String PART_PARM = "node";                                               // NON-NLS
 
     /**
-     * The 'expand' parameter in the URL.
+     * Class logger.
      */
-    public static final String EXPAND_PARM = "expand";                                    // NON-NLS
+    private static final Logger LOG = LoggerFactory.getLogger( ProjectPage.class );
 
     /**
      * Length a scenario title is abbreviated to
@@ -87,26 +87,37 @@ public final class ProjectPage extends WebPage implements Updatable {
      * Length a scenario title is abbreviated to
      */
     private static final int SCENARIO_DESCRIPTION_MAX_LENGTH = 94;
+
+    /**
+     * Synthetic id for expanding scenarios map panel.
+     */
+    private static final Long SCENARIO_MAP_ID = -1L;
+
     /**
      * Id of components that are expanded.
      */
     private Set<Long> expansions;
+
     /**
      * Ids of expanded entities.
      */
     private List<Long> expandedEntities = new ArrayList<Long>();
+
     /**
      * Label with name of scenario.
      */
     private Label scenarioNameLabel;
+
     /**
      * Label with description of scenario.
      */
     private Label scenarioDescriptionLabel;
+
     /**
      * Choice of scenarios.
      */
     private DropDownChoice<Scenario> scenarioDropDownChoice;
+
     /**
      * Scenarios action menu.
      */
@@ -119,32 +130,32 @@ public final class ProjectPage extends WebPage implements Updatable {
      * The current part.
      */
     private Part part;
+
     /**
      * The current scenario.
      */
     private Scenario scenario;
-    /**
-     * The scenario to display after submit.
-     * If null, redisplay current part.
-     */
-    private Scenario target;
 
     /**
      * The scenario import field.
      */
     private FileUploadField scenarioImport;
+
     /**
      * the big form
      */
-    private Form form;
+    private Form<?> form;
+
     /**
      * The scenario panel.
      */
     private ScenarioPanel scenarioPanel;
+
     /**
      * The entity panel.
      */
     private Component entityPanel;
+
     /**
      * The scenarios map panel.
      */
@@ -210,6 +221,7 @@ public final class ProjectPage extends WebPage implements Updatable {
     }
 
     private void init( Scenario scenario, Part p, Set<Long> expanded ) {
+        setScenario( scenario );
         getCommander().releaseAllLocks( Project.getUserName() );
         getCommander().requestLockOn( p );
         setPart( p );
@@ -219,17 +231,20 @@ public final class ProjectPage extends WebPage implements Updatable {
         }
         setVersioned( false );
         setStatelessHint( true );
-        add( new Label( "sc-title", new PropertyModel<String>( scenario, "name" ) ) );    // NON-NLS
+        add( new Label( "sc-title",                                                       // NON-NLS
+                        new PropertyModel<String>( this, "scenario.name" ) ) );           // NON-NLS
+
         form = new Form( "big-form" ) {
+            @Override
             protected void onSubmit() {
                 getProject().getCommander().resetUserHistory( Project.getUserName() );
                 importScenario();
             }
         };
         add( form );
-        addHeader( scenario );
-        addScenarioMenubar( scenario );
-        addSelectScenario();
+        addHeader();
+        addScenarioMenubar();
+        addScenarioSelector();
         scenarioPanel = new ScenarioPanel(
                 "scenario",
                 new PropertyModel<Scenario>( this, "scenario" ),
@@ -249,7 +264,6 @@ public final class ProjectPage extends WebPage implements Updatable {
             try {
                 InputStream inputStream = fileUpload.getInputStream();
                 Scenario imported = importer.importScenario( inputStream );
-                setTarget( imported );
                 redirectTo( imported );
             } catch ( IOException e ) {
                 // TODO redirect to a proper error screen... user has to know...
@@ -260,9 +274,9 @@ public final class ProjectPage extends WebPage implements Updatable {
         }
     }
 
-    private void addHeader( final Scenario scenario ) {
+    private void addHeader() {
         scenarioNameLabel = new Label(
-                "header",                                                             // NON-NLS
+                "header",                                                                 // NON-NLS
                 /* new PropertyModel<String>( scenario, NAME_PROPERTY ) ); */
                 new AbstractReadOnlyModel() {
                     @Override
@@ -274,9 +288,9 @@ public final class ProjectPage extends WebPage implements Updatable {
         );
         scenarioNameLabel.setOutputMarkupId( true );
         // Add style mods from scenario analyst.
-        annotateScenarioName( scenario );
+        annotateScenarioName();
         form.add( scenarioNameLabel );
-        scenarioDescriptionLabel = new Label( "sc-desc",                              // NON-NLS
+        scenarioDescriptionLabel = new Label( "sc-desc",                                  // NON-NLS
                 new AbstractReadOnlyModel<String>() {
                     @Override
                     public String getObject() {
@@ -288,28 +302,21 @@ public final class ProjectPage extends WebPage implements Updatable {
         );
         scenarioDescriptionLabel.setOutputMarkupId( true );
         form.add( scenarioDescriptionLabel );
-        form.add( new Label( "user", Project.getUserName() ) );       // NON-NLS
+        form.add( new Label( "user", Project.getUserName() ) );                           // NON-NLS
     }
 
-    private void annotateScenarioName( Scenario scenario ) {
-        Analyst analyst = ( (Project) getApplication() ).getAnalyst();
-        String issue = analyst.getIssuesSummary(
-                scenario, Analyst.INCLUDE_PROPERTY_SPECIFIC );
-        if ( !issue.isEmpty() ) {
-            scenarioNameLabel.add( new AttributeModifier(
-                    "class", true, new Model<String>( "error" ) ) ); // NON-NLS
-            scenarioNameLabel.add( new AttributeModifier(
-                    "title", true, new Model<String>( issue ) ) );  // NON-NLS
-        } else {
-            scenarioNameLabel.add( new AttributeModifier(
-                    "class", true, new Model<String>( "no-error" ) ) ); // NON-NLS
-            scenarioNameLabel.add( new AttributeModifier(
-                    "title", true, new Model<String>( "No known issue" ) ) );  // NON-NLS
-        }
-
+    private void annotateScenarioName() {
+        Analyst analyst = getProject().getAnalyst();
+        String issue = analyst.getIssuesSummary( scenario, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        scenarioNameLabel.add(
+                new AttributeModifier( "class", true,                                     // NON-NLS
+                    new Model<String>( issue.isEmpty() ? "no-error" : "error" ) ) );      // NON-NLS
+        scenarioNameLabel.add(
+                new AttributeModifier( "title", true,                                     // NON-NLS
+                    new Model<String>( issue.isEmpty() ? "No known issue" :  issue ) ) );
     }
 
-    private void addScenarioMenubar( Scenario scenario ) {
+    private void addScenarioMenubar() {
         projectActionsMenu = new ProjectActionsMenuPanel(
                 "projectActionsMenu",
                 new Model<Scenario>( scenario ),
@@ -324,17 +331,15 @@ public final class ProjectPage extends WebPage implements Updatable {
         form.add( projectShowMenu );
     }
 
-    private void addSelectScenario() {
-        scenarioImport = new FileUploadField( "sc-import", new Model<FileUpload>() ); // NON-NLS
+    private void addScenarioSelector() {
+        scenarioImport = new FileUploadField( "sc-import", new Model<FileUpload>() );     // NON-NLS
         form.add( scenarioImport );
-        form.add( createSelectScenario() );                                      // NON-NLS
-    }
 
-    private DropDownChoice<Scenario> createSelectScenario() {
         scenarioDropDownChoice = new DropDownChoice<Scenario>(
-                "sc-sel", new PropertyModel<Scenario>( this, "target" ),    // NON-NLS
-                new PropertyModel<List<? extends Scenario>>( this, "allScenarios" )
-        ) {
+                "sc-sel",                                                                 // NON-NLS
+                new PropertyModel<Scenario>( ProjectPage.this, "scenario" ),              // NON-NLS
+                new PropertyModel<List<? extends Scenario>>(
+                        ProjectPage.this, "allScenarios" ) ) {                            // NON-NLS
 
             @Override
             protected boolean wantOnSelectionChangedNotifications() {
@@ -343,12 +348,11 @@ public final class ProjectPage extends WebPage implements Updatable {
 
             @Override
             protected void onSelectionChanged( Scenario newSelection ) {
-                ( (ProjectPage) getWebPage() ).redirectTo( newSelection );
+                redirectTo( newSelection );
             }
         };
         scenarioDropDownChoice.setOutputMarkupId( true );
-
-        return scenarioDropDownChoice;
+        form.add( scenarioDropDownChoice );
     }
 
     private void addEntityPanel() {
@@ -381,27 +385,27 @@ public final class ProjectPage extends WebPage implements Updatable {
     }
 
     private ModelObject findExpandedEntity() {
-        ModelObject entity = null;
-
         for ( long id : expansions ) {
             try {
                 ModelObject mo = getDqo().find( ModelObject.class, id );
                 if ( mo.isEntity() ) return mo;
             }
-            catch ( NotFoundException e ) {
+            catch ( NotFoundException ignored ) {
                 // ignore
             }
         }
-        return entity;
+
+        return null;
     }
 
     public List<Scenario> getAllScenarios() {
-        List<Scenario> allScenarios = Project.getProject().getDqo().list( Scenario.class );
+        List<Scenario> allScenarios = getProject().getDqo().list( Scenario.class );
         Collections.sort( allScenarios, new Comparator<Scenario>() {
-            public int compare( Scenario sc1, Scenario sc2 ) {
-                return Collator.getInstance().compare( sc1.getName(), sc2.getName() );
+            public int compare( Scenario o1, Scenario o2 ) {
+                return Collator.getInstance().compare( o1.getName(), o2.getName() );
             }
         } );
+
         return allScenarios;
     }
 
@@ -466,7 +470,7 @@ public final class ProjectPage extends WebPage implements Updatable {
      * Redirect here.
      */
     public void redirectHere() {
-        long sid = getScenario().getId();
+        long sid = scenario.getId();
         long nid = getPart().getId();
         StringBuffer exps = new StringBuffer( 128 );
         for ( long id : expansions ) {
@@ -476,7 +480,7 @@ public final class ProjectPage extends WebPage implements Updatable {
         setResponsePage(
                 new RedirectPage(
                         MessageFormat.format(
-                                "?scenario={0,number,0}&part={1,number,0}{2}",      // NON-NLS
+                                "?scenario={0,number,0}&part={1,number,0}{2}",            // NON-NLS
                                 sid,
                                 nid,
                                 exps ) ) );
@@ -544,7 +548,7 @@ public final class ProjectPage extends WebPage implements Updatable {
      * @param parameters page parameters
      * @return set of ids
      */
-    public Set<Long> findExpansions( PageParameters parameters ) {
+    public static Set<Long> findExpansions( PageParameters parameters ) {
         if ( parameters == null ) return new HashSet<Long>();
         Set<Long> result = new HashSet<Long>( parameters.size() );
         if ( parameters.containsKey( EXPAND_PARM ) ) {
@@ -604,7 +608,7 @@ public final class ProjectPage extends WebPage implements Updatable {
         if ( part != null ) getCommander().releaseAnyLockOn( part );
         part = p;
         getCommander().requestLockOn( p );
-        scenario = p.getScenario();
+        setScenario( p.getScenario() );
     }
 
     /**
@@ -615,7 +619,7 @@ public final class ProjectPage extends WebPage implements Updatable {
      */
     public PageParameters getParametersExpanding( long id ) {
         PageParameters result = getPageParameters();
-        if ( !this.findExpansions().contains( id ) ) {
+        if ( !findExpansions().contains( id ) ) {
             result.add( EXPAND_PARM, Long.toString( id ) );
         }
         return result;
@@ -626,6 +630,7 @@ public final class ProjectPage extends WebPage implements Updatable {
      *
      * @return page parameters
      */
+    @Override
     public PageParameters getPageParameters() {
         PageParameters params = super.getPageParameters();
         if ( params == null ) params = new PageParameters();
@@ -650,16 +655,12 @@ public final class ProjectPage extends WebPage implements Updatable {
         return result;
     }
 
-    public void setTarget( Scenario target ) {
-        this.target = target;
-    }
-
-    public Scenario getTarget() {
-        return target;
-    }
-
     public Scenario getScenario() {
         return scenario;
+    }
+
+    public void setScenario( Scenario scenario ) {
+        this.scenario = scenario;
     }
 
     /**
@@ -679,7 +680,8 @@ public final class ProjectPage extends WebPage implements Updatable {
     private void expand( Identifiable identifiable ) {
         // First collapse any already expanded entity
         if ( identifiable instanceof ModelObject
-                && ( (ModelObject) identifiable ).isEntity() ) {
+                && ( (ModelObject) identifiable ).isEntity() )
+        {
             ModelObject entity = findExpandedEntity();
             if ( entity != null ) {
                 expansions.remove( entity.getId() );
@@ -697,7 +699,8 @@ public final class ProjectPage extends WebPage implements Updatable {
 
     private void collapse( Identifiable identifiable ) {
         if ( identifiable instanceof ModelObject
-                && ( (ModelObject) identifiable ).isEntity() ) {
+                && ( (ModelObject) identifiable ).isEntity() )
+        {
             if ( !expandedEntities.isEmpty() ) {
                 long entityId = expandedEntities.remove( 0 );
                 getCommander().requestLockOn( entityId );
@@ -732,8 +735,8 @@ public final class ProjectPage extends WebPage implements Updatable {
             if ( change.isAdded() || change.isSelected() ) {
                 setPart( (Part) identifiable );
             } else if ( change.isRemoved() ) {
-                setPart( getScenario().getDefaultPart() );
-                expand( getScenario().getDefaultPart() );
+                setPart( scenario.getDefaultPart() );
+                expand( scenario.getDefaultPart() );
             }
         }
         if ( identifiable instanceof Flow ) {
@@ -796,21 +799,24 @@ public final class ProjectPage extends WebPage implements Updatable {
         }
         if ( identifiable instanceof ScenarioObject
                 || ( identifiable instanceof Issue
-                && ( (Issue) identifiable ).getAbout().getId() == getScenario().getId() ) ) {
-            annotateScenarioName( getScenario() );
+                && ( (Issue) identifiable ).getAbout().getId() == scenario.getId() ) )
+        {
+            annotateScenarioName();
             target.addComponent( scenarioNameLabel );
         }
         if ( identifiable instanceof Issue
                 && change.isExists()
-                && ( (Issue) identifiable ).getAbout().getId() == getScenario().getId() ) {
-            annotateScenarioName( getScenario() );
+                && ( (Issue) identifiable ).getAbout().getId() == scenario.getId() )
+        {
+            annotateScenarioName();
             target.addComponent( scenarioNameLabel );
             scenarioPanel.expandScenarioEditPanel( target );
             addPlanMapPanel();
             target.addComponent(planMapPanel );
         }
         if ( identifiable instanceof ModelObject
-                && ( (ModelObject) identifiable ).isEntity() ) {
+                && ( (ModelObject) identifiable ).isEntity() )
+        {
             if ( change.isDisplay() ) {
                 addEntityPanel();
                 target.addComponent( entityPanel );

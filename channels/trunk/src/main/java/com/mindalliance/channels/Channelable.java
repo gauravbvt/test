@@ -55,6 +55,11 @@ public interface Channelable extends Identifiable {
     boolean canBeUnicast();
 
     /**
+     * @return true if the channels in this object can be modified.
+     */
+    boolean canSetChannels();
+
+    /**
      * Validate a channel.
      *
      * @param channel a channel

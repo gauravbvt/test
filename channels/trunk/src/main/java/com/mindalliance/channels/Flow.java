@@ -88,18 +88,11 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
     }
 
     /**
-     * Get the channels that are in effect.
-     *
-     * @return the effective channels
-     */
-    @Transient
-    public abstract List<Channel> getEffectiveChannels();
-
-    /**
      * Set the channels that are in effect.
      *
      * @param channels the channels
      */
+    @Transient
     public abstract void setEffectiveChannels( List<Channel> channels );
 
     /**
@@ -464,13 +457,6 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
     public abstract boolean canGetMaxDelay();
 
     /**
-     * Whether the flow's channels can be set.
-     *
-     * @return a boolean
-     */
-    public abstract boolean canSetChannels();
-
-    /**
      * Whether the flow's channels property applies.
      *
      * @return a boolean
@@ -643,7 +629,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
                 && significanceToTarget == Significance.Useful
                 && maxDelay.equals( new Delay() );
     }
-        
+
 
     /**
      * The significance of a flow.

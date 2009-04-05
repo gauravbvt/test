@@ -111,6 +111,7 @@ public class InternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean hasConnector() {
         return source.isConnector() || target.isConnector();
     }
@@ -118,6 +119,7 @@ public class InternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean canSetNameAndDescription() {
         return true;
     }
@@ -126,6 +128,7 @@ public class InternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean canSetMaxDelay() {
         return !( source.isConnector() || target.isConnector() );
     }
@@ -141,6 +144,7 @@ public class InternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean canSetAskedFor() {
         return true;
     }
@@ -148,6 +152,7 @@ public class InternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean canGetMaxDelay() {
         return !( source.isConnector() || target.isConnector() );
     }
@@ -155,6 +160,7 @@ public class InternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean canGetChannels() {
         return !( target.isConnector() && isNotification() )
                 && !( source.isConnector() && isAskedFor() );
@@ -163,13 +169,16 @@ public class InternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean canSetAll() {
-        return isNotification() && getSource().isPart() && getTarget().isPart() && ( (Part) getTarget() ).isOnlyRole();
+        return isNotification() && getSource().isPart() && getTarget().isPart()
+               && ( (Part) getTarget() ).isOnlyRole();
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean canGetAll() {
         return canSetAll();
     }
@@ -177,6 +186,7 @@ public class InternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean canGetSignificanceToTarget() {
         return !target.isConnector();
     }
@@ -184,6 +194,7 @@ public class InternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean canSetSignificanceToTarget() {
         return !target.isConnector();
     }
@@ -191,6 +202,7 @@ public class InternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean canGetSignificanceToSource() {
         return !source.isConnector();
     }
@@ -200,6 +212,7 @@ public class InternalFlow extends Flow {
      *
      * @return a boolean
      */
+    @Override
     public boolean canGetTriggersSource() {
         return !source.isConnector() && isAskedFor();
     }
@@ -209,6 +222,7 @@ public class InternalFlow extends Flow {
      *
      * @return a boolean
      */
+    @Override
     public boolean canGetTerminatesSource() {
         return !source.isConnector();
     }
@@ -217,6 +231,7 @@ public class InternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean canSetTriggersSource() {
         return source.isPart() && isAskedFor();
     }
@@ -224,6 +239,7 @@ public class InternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean canSetTerminatesSource() {
         return !source.isConnector();
     }

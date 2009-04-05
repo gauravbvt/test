@@ -21,11 +21,11 @@ public enum Medium {
     /**
      * Telephone.
      */
-    Phone( "Work phone", "(\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}(\\s*\\D+\\s*\\d+)?)|(\\d{3})" ),
+    Phone( "Phone", "(\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}(\\s*\\D+\\s*\\d+)?)|(\\d{3})" ),
     /**
      * Telephone.
      */
-    HomePhone( "Home phone", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}" ),
+    HomePhone( "Phone - home", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}" ),
     /**
      * Fax.
      */
@@ -33,11 +33,11 @@ public enum Medium {
     /**
      * Cell phone.
      */
-    Cell( "Cell", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}" ),
+    Cell( "Phone - cell", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}" ),
     /**
      * Phone conference.
      */
-    PhoneConf( "Phone conference", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}(\\s*\\D+\\s*\\d+)?", false ),
+    PhoneConf( "Conference call", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}(\\s*\\D+\\s*\\d+)?", false ),
     /**
      * Email.
      */

@@ -43,12 +43,15 @@
 
     <tr>
         <th align="right"><label>Timing:</label></th>
-        <td nowrap="nowrap">
-            <input type="checkbox" wicket:id="self-terminating"/>Completes usually after <span
-                wicket:id="completion-time">[Delay panel]</span>
-            <br/>
-            <input type="checkbox" wicket:id="repeating"/>Repeat every <span
-                wicket:id="repeats-every">[Delay panel]</span>
+        <td>
+            <span class="timing">
+                <input type="checkbox" wicket:id="self-terminating"/>Completes usually after <span
+                    wicket:id="completion-time">[Delay panel]</span>
+            </span>
+            <span class="timing">
+                <input type="checkbox" wicket:id="repeating"/>Repeats every <span
+                    wicket:id="repeats-every">[Delay panel]</span>
+            </span>
         </td>
     </tr>
 </wicket:panel>

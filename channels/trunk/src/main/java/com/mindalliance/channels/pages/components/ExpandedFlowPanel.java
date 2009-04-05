@@ -1,13 +1,13 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.Channelable;
 import com.mindalliance.channels.Connector;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.ExternalFlow;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.ScenarioObject;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.RedirectFlow;
@@ -152,6 +152,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                 "description",
                 new PropertyModel<String>( this, "description" ) );
         descriptionField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getFlow(), "description" ) );
             }
@@ -170,7 +171,8 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         }
         // ChannelListPanel configures itself according
         // to the flow's canGetChannels() and canSetChannels() values
-        addChannelRow();
+        channelRow = createChannelRow();
+        add( channelRow  );
         addMaxDelayRow();
         addSignificanceToSource();
         add( new AttachmentPanel( "attachments", new PropertyModel<Flow>( this, "flow" ) ) );
@@ -190,24 +192,26 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
      */
     private void adjustFields( Flow f ) {
         // TODO exception wnem f just got disconnected on undo
-        nameField.setEnabled( isLockedByUser( f ) && f.canSetNameAndDescription() );
-        descriptionField.setEnabled( isLockedByUser( f ) && f.canSetNameAndDescription() );
-        askedForButtons.setEnabled( isLockedByUser( f ) && f.canSetAskedFor() );
+        boolean lockedByUser = isLockedByUser( f );
+
+        nameField.setEnabled( lockedByUser && f.canSetNameAndDescription() );
+        descriptionField.setEnabled( lockedByUser && f.canSetNameAndDescription() );
+        askedForButtons.setEnabled( lockedByUser && f.canSetAskedFor() );
         allField.setVisible( outcome && f.canGetAll() );
-        allField.setEnabled( isLockedByUser( f ) && outcome && f.canSetAll() );
+        allField.setEnabled( lockedByUser && outcome && f.canSetAll() );
         significanceToTargetLabel.setVisible( f.canGetSignificanceToTarget() );
         significanceToTargetChoice.setEnabled(
-                isLockedByUser( f ) && f.canSetSignificanceToTarget() );
+                lockedByUser && f.canSetSignificanceToTarget() );
         channelRow.setVisible( f.canGetChannels() );
         maxDelayRow.setVisible( f.canGetMaxDelay() );
-        delayPanel.enable( isLockedByUser( f ) && f.canSetMaxDelay() );
+        delayPanel.enable( lockedByUser && f.canSetMaxDelay() );
         significanceToSourceRow.setVisible( f.canGetSignificanceToSource() );
         triggersSourceContainer.setVisible(
                 ( !outcome || f.isAskedFor() ) && f.canGetTriggersSource() );
-        triggersSourceCheckBox.setEnabled( isLockedByUser( f ) && f.canSetTriggersSource() );
+        triggersSourceCheckBox.setEnabled( lockedByUser && f.canSetTriggersSource() );
         terminatesSourceContainer.setVisible( f.canGetTerminatesSource() );
-        terminatesSourceCheckBox.setEnabled( isLockedByUser( f ) && f.canSetTerminatesSource() );
-        otherChoice.setEnabled( isLockedByUser( f ) );
+        terminatesSourceCheckBox.setEnabled( lockedByUser && f.canSetTerminatesSource() );
+        otherChoice.setEnabled( lockedByUser );
         makeVisible( issuesPanel, Project.analyst().hasIssues( model.getObject(), false ) );
     }
 
@@ -305,6 +309,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                 }
         );
         significanceToTargetChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update(
                         target,
@@ -338,6 +343,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                 "terminates-source",
                 new PropertyModel<Boolean>( this, "terminatingToSource" ) );
         terminatesSourceCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update(
                         target,
@@ -412,6 +418,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                 new PropertyModel<Boolean>( this, "all" ) );
         checkBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
 
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getFlow(), "all" ) );
             }
@@ -536,23 +543,11 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         return isOutcome() ? getFlow().getSource() : getFlow().getTarget();
     }
 
-    private void addChannelRow() {
-        channelRow = new WebMarkupContainer( "channel-row" );                             // NON-NLS
-        channelRow.setOutputMarkupPlaceholderTag( true );
-        channelRow.add( new Label( "channel-title", new AbstractReadOnlyModel<String>() { // NON-NLS
-
-            @Override
-            public String getObject() {
-                return getFlow().isAskedFor() ? "Sender's channels:" : "Receiver's channels:";
-            }
-        } ) );
-
-        ChannelListPanel channelListPanel = new ChannelListPanel(
-                "channels",
-                new PropertyModel<Channelable>( this, "flow" ) );
-        channelRow.add( channelListPanel );
-        add( channelRow );
-    }
+    /**
+     * Add the channels section.
+     * @return the channels section
+     */
+    protected abstract WebMarkupContainer createChannelRow();
 
     private void addMaxDelayRow() {
         maxDelayRow = new WebMarkupContainer( "max-delay-row" );
@@ -601,9 +596,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                 } else if ( n.isConnector() ) {
                     Connector connector = (Connector) n;
                     Flow connectorFlow = connector.getInnerFlow();
-                    if ( getFlow().getName().isEmpty()
-                            || SemMatch.matches( getFlow().getName(), connectorFlow.getName() ) )
-                    {
+                    if ( isEmptyOrEquivalent( connectorFlow ) ) {
                         if ( isOutcome() ) {
                             if ( connector.isSource() && !connectorFlow.getTarget().equals( node ) )
                                 result.add( connector );
@@ -623,9 +616,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                 while ( c.hasNext() ) {
                     Connector connector = c.next();
                     Flow connectorFlow = connector.getInnerFlow();
-                    if ( getFlow().getName().isEmpty()
-                            || SemMatch.matches( getFlow().getName(), connectorFlow.getName() ) )
-                    {
+                    if ( isEmptyOrEquivalent( connectorFlow ) ) {
                         if ( other.equals( connector ) || !node.isConnectedTo(
                                 outcome, connector, getFlow().getName() ) )
                             result.add( connector );
@@ -634,6 +625,11 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
             }
         }
         return new ArrayList<Node>( result );
+    }
+
+    private boolean isEmptyOrEquivalent( ScenarioObject connectorFlow ) {
+        return getFlow().getName().isEmpty()
+                            || SemMatch.matches( getFlow().getName(), connectorFlow.getName() );
     }
 
     private List<Connector> findAllRelevantConnectors() {

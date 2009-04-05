@@ -132,7 +132,7 @@ div.section input[type='submit'] {
     font-size: 8pt;
 }
 
-input[type='text'], textarea, select, div.flow-details {
+input, textarea, select, div.flow-details {
     padding-left: 0.3em;
     margin: 0;
 }
@@ -141,8 +141,14 @@ input[type='checkbox'], input[type='radio'] {
     margin: 0;
     vertical-align: middle;
 }
+input[type='submit'], input[type='button'],input[type='file'] {
+    font-size: 8pt;
+}
+input[type='file'] {
+    margin-top: 2px;
+}
 input[type='text'], textarea {
-    width: 99%;
+    width: 96%;
 }
 
 input[type="text"].no-expand  {
@@ -156,6 +162,7 @@ input[type="text"].address  {
 input[type="text"].invalid-address {
     width: 12em;
     background-color: bisque;
+    border: 1px inset gray;
 }
 
 
@@ -244,8 +251,9 @@ div.flow-details {
     padding: 5px;
 }
 
-td, th, input, textarea, select {
+textarea, select, input[type='text'], td, th {
     font: inherit;
+    margin: 0;
   }
 
 th {
@@ -260,6 +268,18 @@ th.area {
     padding-top: 1px;
     white-space: normal;
 }
+
+td span.timing:first-child {
+    margin-bottom: 2px;
+}
+span.timing {
+    display: block;
+    white-space: nowrap;
+}
+span.timing input:first-child {
+    margin-right: 2px;
+}
+
 div.section td, div.section th {
     padding-right: 2em;
 }
@@ -281,7 +301,7 @@ ul.menu, div.caption, span.menubar {
 
 #form-buttons {
     margin: 0;
-    top: 5px;
+    top: 3px;
     right: 5px;
     position: absolute;
 }
@@ -301,6 +321,14 @@ ol {
 }
 
 #reqs ol > li span, #outcomes ol > li span {
+}
+
+ol.channels {
+}
+
+ol.channels li {
+    margin: 0 0 2px !important;
+    white-space: nowrap;
 }
 
 .section-title span.menubar {
@@ -500,58 +528,23 @@ li.doc_PolicyCant {
     background: transparent url('images/scroll_error.png') no-repeat 0;
 }
 
-.SI-FILES-STYLIZED label.attach-ctl, .SI-FILES-STYLIZED label.import-ctl {
-    overflow: hidden;
-    position: relative;
-    display: -moz-inline-box;
-    margin: 0;
-    padding: 0;
-}
-.SI-FILES-STYLIZED label.import-ctl input.file, .SI-FILES-STYLIZED label.attach-ctl input.file {
-    margin-left: -13em;
-    opacity: 0;
-    -moz-opacity: 0;
-    filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0);
-}
-
-.SI-FILES-STYLIZED label.import-ctl span, .SI-FILES-STYLIZED label.attach-ctl span {
-    display: none;
-}
-.SI-FILES-STYLIZED label.attach-ctl {
-    width: 72px;
-    height: 16px;
-    background: transparent url('images/select.png') 0 0 no-repeat;
-    margin-left: 5px;
-    vertical-align: middle;
-}
-.SI-FILES-STYLIZED label.import-ctl {
-    width: 53px;
-    height: 20px;
-    background: transparent url('images/import.png') no-repeat 0 100% ;
-}
-
-input[type='submit'] {
-    width: 53px;
-    height: 16px;
-    background: transparent url('images/submit.png') no-repeat 0 0;
-    border: none;
-    cursor: pointer;
-    text-indent: -1000px;
-}
-
 div.wicket-aa-container {
     background: white;
-    border: 1px solid #c3dede;
+    border: 1px outset gray;
     margin: 2px;
-    padding-left: 5px;
 }
 div.wicket-aa {
 }
 div.wicket-aa ul {
-    margin:5px;
-    padding:0 0 0 1em;
+    margin: 0;
+    padding: 2px;
+    list-style: none;
 }
 div.wicket-aa ul li {
+    cursor: pointer;
+}
+div.wicket-aa ul li:hover {
+    background: #C3D9FF;
 }
 div.wicket-aa ul li.selected {
 }
