@@ -49,7 +49,7 @@ public class ProjectShowMenuPanel extends MenuPanel {
         ExternalLink reportLink = new ExternalLink( "link", "report.html" );
         menuItems.add( new LinkMenuItem(
                 "menuItem",
-                new Model<String>( "Plan Playbook" ),
+                new Model<String>( "Playbook" ),
                 reportLink ) );
         if ( getExpansions().contains( Project.getProject().getId() ) ) {
             AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {
@@ -69,7 +69,7 @@ public class ProjectShowMenuPanel extends MenuPanel {
             };
             menuItems.add( new LinkMenuItem(
                     "menuItem",
-                    new Model<String>( "Show plan map" ),
+                    new Model<String>( "Plan map" ),
                     planMapLink ) );
         }
         return menuItems;

@@ -15,6 +15,8 @@ import org.apache.wicket.markup.MarkupStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Random;
+
 
 /**
  * Abstract Diagram Panel
@@ -126,7 +128,7 @@ public abstract class AbstractDiagramPanel extends AbstractUpdatablePanel {
             @Override
             protected void onComponentTag( ComponentTag tag ) {
                 super.onComponentTag( tag );
-                tag.put( "src", makeDiagramUrl() );
+                tag.put( "src", makeDiagramUrl() + makeSeed() );
                 if ( withImageMap ) {
                     // TODO may not be unique in the page but should be
                     tag.put( "usemap", "#" + getContainerId() );
@@ -152,6 +154,10 @@ public abstract class AbstractDiagramPanel extends AbstractUpdatablePanel {
         } );
         graph.setOutputMarkupId( true );
         add( graph );
+    }
+
+    private String makeSeed() {
+        return "&seed=" + System.currentTimeMillis() + new Random().nextInt();
     }
 
     /**
