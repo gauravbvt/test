@@ -359,8 +359,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         }
 
         private List<Medium> getMedia( Wrapper wrapper ) {
-            List<Medium> media = getChannelable().canBeUnicast() ? Medium.media()
-                                                                 : Medium.broadcastMedia();
+            List<Medium> media = Medium.media();
             Collections.sort( media, new Comparator<Medium>() {
                 public int compare( Medium o1, Medium o2 ) {
                     return Collator.getInstance().compare( o1.getName(), o2.getName() );
@@ -375,7 +374,8 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         }
 
         private TextField<String> createAddressField( Wrapper wrapper ) {
-            final List<String> suggestions = getCandidateAddresses( wrapper.getMedium() );
+            Medium medium = wrapper.getMedium();
+            final List<String> suggestions = getCandidateAddresses( medium );
 
             AutoCompleteTextField<String> result = new AutoCompleteTextField<String>(
                     "address", new PropertyModel<String>( wrapper, "address" ) ) {        // NON-NLS
@@ -402,8 +402,8 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                     } );
 
             flagIfInvalid( result, wrapper );
-            result.setVisible( !wrapper.getChannel().isUnicast()
-                               || getChannelable().canBeUnicast() );
+            result.setVisible( medium != null && medium.isUnicast()
+                               && getChannelable().canBeUnicast() );
             result.setEnabled( isEnabled() );
             return result;
         }
