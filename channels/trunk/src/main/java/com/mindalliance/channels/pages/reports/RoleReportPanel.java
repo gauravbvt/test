@@ -56,7 +56,7 @@ public class RoleReportPanel extends Panel {
         Label descLabel = new Label( "description", desc );                               // NON-NLS
         descLabel.setVisible( desc != null && !desc.isEmpty() );
         add( descLabel );
-        List<Actor> actors = Project.getProject().findActors( organization, role, scenario );
+        List<Actor> actors = Project.getProject().getDqo().findActors( organization, role, scenario );
         if ( actors.isEmpty() )
             actors.add( Actor.UNKNOWN );
         add( new ListView<Actor>( "actors", actors ) {                                    // NON-NLS

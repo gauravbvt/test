@@ -377,8 +377,8 @@ public class JobsPanel extends AbstractCommandablePanel {
 
         public boolean canBeConfirmed() {
             return !job.getActorName().isEmpty()
-                    && !job.getRoleName().isEmpty()
-                    && !job.getTitle().isEmpty();
+                    && !job.getRoleName().isEmpty();
+                    // && !job.getTitle().isEmpty();
         }
 
         public boolean hasFlows() {

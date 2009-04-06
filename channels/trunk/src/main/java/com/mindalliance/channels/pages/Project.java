@@ -1,21 +1,11 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Connector;
-import com.mindalliance.channels.ExternalFlow;
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.Organization;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.Role;
-import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Identifiable;
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.attachments.AttachmentManager;
+import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.export.Exporter;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.DiagramFactory;
@@ -30,18 +20,10 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Application object for Channels.
@@ -328,169 +310,6 @@ public final class Project extends WebApplication implements Identifiable {     
         return getProject().getCommander();
     }
 
-    /**
-     * Find actors in given organization and role.
-     *
-     * @param organization the organization, possibly Organization.UNKNOWN
-     * @param role         the role, possibly Role.UNKNOWN
-     * @return a sorted list of actors
-     */
-    public List<Actor> findActors( Organization organization, Role role ) {
-        ResourceSpec resourceSpec = new ResourceSpec();
-        resourceSpec.setRole( role );
-        resourceSpec.setOrganization( organization );
-
-        // Find all actors in role for organization
-        Set<Actor> actors = new HashSet<Actor>();
-        for ( ResourceSpec spec : getDqo().findAllResourceSpecs() ) {
-            if ( spec.getActor() != null ) {
-                boolean sameOrg = Organization.UNKNOWN.equals( organization ) ?
-                        spec.getOrganization() == null
-                        : organization.equals( spec.getOrganization() );
-                boolean sameRole = Role.UNKNOWN.equals( role ) ?
-                        spec.getRole() == null
-                        : role.equals( spec.getRole() );
-                if ( sameOrg && sameRole )
-                    actors.add( spec.getActor() );
-            }
-        }
-
-        List<Actor> list = new ArrayList<Actor>( actors );
-        Collections.sort( list, new Comparator<Actor>() {
-            /** {@inheritDoc} */
-            public int compare( Actor o1, Actor o2 ) {
-                return Collator.getInstance().compare( o1.getName(), o2.getName() );
-            }
-        } );
-
-        return list;
-    }
-
-    /**
-     * Find all roles in given organization across all scenarios.
-     *
-     * @param organization the organization, possibly Organization.UNKNOWN
-     * @return a sorted list of roles
-     */
-    public List<Role> findRolesIn( Organization organization ) {
-        Set<Role> roles = new HashSet<Role>();
-        for ( Scenario scenario : getDqo().list( Scenario.class ) )
-            roles.addAll( scenario.findRoles( organization ) );
-
-        boolean hasUnknown = roles.contains( Role.UNKNOWN );
-        roles.remove( Role.UNKNOWN );
-
-        List<Role> list = new ArrayList<Role>( roles );
-        Collections.sort( list, new Comparator<Role>() {
-            /** {@inheritDoc} */
-            public int compare( Role o1, Role o2 ) {
-                return Collator.getInstance().compare( o1.getName(), o2.getName() );
-            }
-        } );
-        if ( hasUnknown )
-            list.add( Role.UNKNOWN );
-        return list;
-    }
-
-    /**
-     * Find all organization in project, including the UNKNOWN organization, if need be.
-     *
-     * @return a sorted list of organizations
-     */
-    public List<Organization> findOrganizations() {
-        List<Organization> orgs = new ArrayList<Organization>(
-                new HashSet<Organization>( getDqo().list( Organization.class ) ) );
-
-        Collections.sort( orgs, new Comparator<Organization>() {
-            /** {@inheritDoc} */
-            public int compare( Organization o1, Organization o2 ) {
-                return Collator.getInstance().compare( o1.toString(), o2.toString() );
-            }
-        } );
-
-        if ( !findRolesIn( Organization.UNKNOWN ).isEmpty() )
-            orgs.add( Organization.UNKNOWN );
-
-        return orgs;
-    }
-
-    /**
-     * Find actors that should be included in a flow of a part.
-     *
-     * @param part the part
-     * @param flow a flow of the part
-     * @return list of actors in project that applies
-     */
-    public List<Actor> findRelevantActors( Part part, Flow flow ) {
-        Set<Actor> actors = new HashSet<Actor>();
-
-        boolean partIsSource = flow.getSource().equals( part );
-        Node node = partIsSource ? flow.getTarget() : flow.getSource();
-        if ( node.isConnector() ) {
-            Iterator<ExternalFlow> xFlows = ( (Connector) node ).externalFlows();
-            while ( xFlows.hasNext() ) {
-                ExternalFlow xFlow = xFlows.next();
-                actors.addAll( getDqo().findAllActors( xFlow.getPart().resourceSpec() ) );
-            }
-        } else {
-            Part otherPart = (Part) node;
-            if ( otherPart.getActor() == null )
-                actors.addAll( getDqo().findAllActors( otherPart.resourceSpec() ) );
-        }
-
-        List<Actor> list = new ArrayList<Actor>( actors );
-        Collections.sort( list, new Comparator<Actor>() {
-            public int compare( Actor o1, Actor o2 ) {
-                return Collator.getInstance().compare( o1.getName(), o2.getName() );
-            }
-        } );
-
-        return list;
-    }
-
-    /**
-     * Find actors in given organization and role in a given scenario.
-     *
-     * @param organization the organization, possibly Organization.UNKNOWN
-     * @param role         the role, possibly Role.UNKNOWN
-     * @param scenario     the scenario
-     * @return a sorted list of actors
-     */
-    public List<Actor> findActors( Organization organization, Role role, Scenario scenario ) {
-        Set<Actor> actors = new HashSet<Actor>();
-        boolean noActorRoleFound = false;
-
-        Iterator<Part> parts = scenario.parts();
-        while ( parts.hasNext() ) {
-            Part part = parts.next();
-            boolean sameOrg = Organization.UNKNOWN.equals( organization ) ?
-                    part.getOrganization() == null
-                    : organization.equals( part.getOrganization() );
-            boolean sameRole = Role.UNKNOWN.equals( role ) ?
-                    part.getRole() == null
-                    : role.equals( part.getRole() );
-
-            if ( sameOrg && sameRole ) {
-                if ( part.getActor() != null )
-                    actors.add( part.getActor() );
-                else
-                    noActorRoleFound = true;
-            }
-        }
-
-        if ( noActorRoleFound )
-            return findActors( organization, role );
-        else {
-            List<Actor> list = new ArrayList<Actor>( actors );
-            Collections.sort( list, new Comparator<Actor>() {
-                /** {@inheritDoc} */
-                public int compare( Actor o1, Actor o2 ) {
-                    return Collator.getInstance().compare( o1.getName(), o2.getName() );
-                }
-            } );
-            return list;
-        }
-    }
 
     //=========================================================================
     /**

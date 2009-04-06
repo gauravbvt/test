@@ -190,6 +190,14 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
         }
     }
 
+    public void refresh( AjaxRequestTarget target ) {
+        addPlanMapDiagramPanel();
+        addExternalFlowsPanel();
+        target.addComponent( planMapDiagramPanel );
+        target.addComponent( flowsTitleLabel );
+        target.addComponent( externalFlowsPanel );
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -217,11 +225,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
      */
     public void updateWith( AjaxRequestTarget target, Change change ) {
         if ( change.isSelected() ) {
-            addPlanMapDiagramPanel();
-            addExternalFlowsPanel();
-            target.addComponent( planMapDiagramPanel );
-            target.addComponent( flowsTitleLabel );
-            target.addComponent( externalFlowsPanel );
+            refresh( target );
             // Don't percolate update on selection.
         } else {
             super.updateWith( target, change );

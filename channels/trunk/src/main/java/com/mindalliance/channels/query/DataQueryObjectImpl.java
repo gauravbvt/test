@@ -26,7 +26,6 @@ import com.mindalliance.channels.dao.EvacuationScenario;
 import com.mindalliance.channels.dao.FireScenario;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.pages.components.ScenarioLink;
 import com.mindalliance.channels.util.Play;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
@@ -43,6 +42,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.Collections;
+import java.util.Comparator;
+import java.text.Collator;
 
 /**
  * Utility class for common functionality for all Dao implementations.
@@ -218,7 +219,13 @@ public class DataQueryObjectImpl implements DataQueryObject {
      * {@inheritDoc}
      */
     public Scenario getDefaultScenario() {
-        return getDao().list( Scenario.class ).iterator().next();
+        List<Scenario> allScenarios = list( Scenario.class );
+        Collections.sort( allScenarios, new Comparator<Scenario>() {
+            public int compare( Scenario o1, Scenario o2 ) {
+                return Collator.getInstance().compare( o1.getName(), o2.getName() );
+            }
+        } );
+        return allScenarios.get( 0 );
     }
 
     public Dao getDao() {
@@ -734,6 +741,153 @@ public class DataQueryObjectImpl implements DataQueryObject {
         Collections.sort( allNames );
         return allNames;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Actor> findActors( Organization organization, Role role ) {
+        ResourceSpec resourceSpec = new ResourceSpec();
+        resourceSpec.setRole( role );
+        resourceSpec.setOrganization( organization );
+
+        // Find all actors in role for organization
+        Set<Actor> actors = new HashSet<Actor>();
+        for ( ResourceSpec spec : findAllResourceSpecs() ) {
+            if ( spec.getActor() != null ) {
+                boolean sameOrg = Organization.UNKNOWN.equals( organization ) ?
+                        spec.getOrganization() == null
+                        : organization.equals( spec.getOrganization() );
+                boolean sameRole = Role.UNKNOWN.equals( role ) ?
+                        spec.getRole() == null
+                        : role.equals( spec.getRole() );
+                if ( sameOrg && sameRole )
+                    actors.add( spec.getActor() );
+            }
+        }
+
+        List<Actor> list = new ArrayList<Actor>( actors );
+        Collections.sort( list, new Comparator<Actor>() {
+            /** {@inheritDoc} */
+            public int compare( Actor o1, Actor o2 ) {
+                return Collator.getInstance().compare( o1.getName(), o2.getName() );
+            }
+        } );
+
+        return list;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Role> findRolesIn( Organization organization ) {
+        Set<Role> roles = new HashSet<Role>();
+        for ( Scenario scenario : list( Scenario.class ) )
+            roles.addAll( scenario.findRoles( organization ) );
+
+        boolean hasUnknown = roles.contains( Role.UNKNOWN );
+        roles.remove( Role.UNKNOWN );
+
+        List<Role> list = new ArrayList<Role>( roles );
+        Collections.sort( list, new Comparator<Role>() {
+            /** {@inheritDoc} */
+            public int compare( Role o1, Role o2 ) {
+                return Collator.getInstance().compare( o1.getName(), o2.getName() );
+            }
+        } );
+        if ( hasUnknown )
+            list.add( Role.UNKNOWN );
+        return list;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Organization> findOrganizations() {
+        List<Organization> orgs = new ArrayList<Organization>(
+                new HashSet<Organization>( list( Organization.class ) ) );
+
+        Collections.sort( orgs, new Comparator<Organization>() {
+            /** {@inheritDoc} */
+            public int compare( Organization o1, Organization o2 ) {
+                return Collator.getInstance().compare( o1.toString(), o2.toString() );
+            }
+        } );
+
+        if ( !findRolesIn( Organization.UNKNOWN ).isEmpty() )
+            orgs.add( Organization.UNKNOWN );
+
+        return orgs;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Actor> findRelevantActors( Part part, Flow flow ) {
+        Set<Actor> actors = new HashSet<Actor>();
+
+        boolean partIsSource = flow.getSource().equals( part );
+        Node node = partIsSource ? flow.getTarget() : flow.getSource();
+        if ( node.isConnector() ) {
+            Iterator<ExternalFlow> xFlows = ( (Connector) node ).externalFlows();
+            while ( xFlows.hasNext() ) {
+                ExternalFlow xFlow = xFlows.next();
+                actors.addAll( findAllActors( xFlow.getPart().resourceSpec() ) );
+            }
+        } else {
+            Part otherPart = (Part) node;
+            if ( otherPart.getActor() == null )
+                actors.addAll( findAllActors( otherPart.resourceSpec() ) );
+        }
+
+        List<Actor> list = new ArrayList<Actor>( actors );
+        Collections.sort( list, new Comparator<Actor>() {
+            public int compare( Actor o1, Actor o2 ) {
+                return Collator.getInstance().compare( o1.getName(), o2.getName() );
+            }
+        } );
+
+        return list;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Actor> findActors( Organization organization, Role role, Scenario scenario ) {
+        Set<Actor> actors = new HashSet<Actor>();
+        boolean noActorRoleFound = false;
+
+        Iterator<Part> parts = scenario.parts();
+        while ( parts.hasNext() ) {
+            Part part = parts.next();
+            boolean sameOrg = Organization.UNKNOWN.equals( organization ) ?
+                    part.getOrganization() == null
+                    : organization.equals( part.getOrganization() );
+            boolean sameRole = Role.UNKNOWN.equals( role ) ?
+                    part.getRole() == null
+                    : role.equals( part.getRole() );
+
+            if ( sameOrg && sameRole ) {
+                if ( part.getActor() != null )
+                    actors.add( part.getActor() );
+                else
+                    noActorRoleFound = true;
+            }
+        }
+
+        if ( noActorRoleFound )
+            return findActors( organization, role );
+        else {
+            List<Actor> list = new ArrayList<Actor>( actors );
+            Collections.sort( list, new Comparator<Actor>() {
+                /** {@inheritDoc} */
+                public int compare( Actor o1, Actor o2 ) {
+                    return Collator.getInstance().compare( o1.getName(), o2.getName() );
+                }
+            } );
+            return list;
+        }
+    }
+
 
     /**
      * {@inheritDoc}

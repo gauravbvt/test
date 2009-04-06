@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Detects the issue where a part has no given role.
+ * Detects the issue where a part has no given role but has actor and organization.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -23,7 +23,7 @@ public class PartWithoutRole extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
-        if ( part.getRole() == null ) {
+        if ( part.getActor() != null && part.getOrganization() != null && part.getRole() == null  ) {
             DetectedIssue issue = new DetectedIssue( DetectedIssue.DEFINITION, modelObject, getTestedProperty() );
             issue.setDescription( "The role is missing." );
             issue.setRemediation( "Name a role." );

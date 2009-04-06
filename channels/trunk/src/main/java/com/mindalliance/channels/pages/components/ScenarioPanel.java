@@ -179,38 +179,6 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     }
 
     private void addFlowDiagram( ) {
-/*
-        flowDiagram = new MarkupContainer( "graph" ) {                        // NON-NLS
-
-            @Override
-            protected void onComponentTag( ComponentTag tag ) {
-                super.onComponentTag( tag );
-                tag.put( "src",                                                       // NON-NLS
-                        MessageFormat.format( // NON-NLS
-                                "scenario.png?"
-                                        + "scenario={0,number,0}"
-                                        + "&node={1,number,0}"
-                                        + "&time={2,number,0}",
-                                scenario.getId(),
-                                partModel.getObject().getId(),
-                                System.currentTimeMillis() ) );
-            }
-
-            @Override
-            protected void onRender( MarkupStream markupStream ) {
-                super.onRender( markupStream );
-                try {
-                    DiagramFactory diagramFactory = Project.diagramFactory();
-                    Diagram diagram = diagramFactory.newFlowMapDiagram( scenario );
-                    getResponse().write( diagram.makeImageMap() );
-                } catch ( DiagramException e ) {
-                    LOG.error( "Can't generate image map", e );
-                }
-            }
-        };
-
-        flowDiagram.setOutputMarkupId( true );
-*/
         flowDiagram = new FlowMapDiagramPanel( "flow-map", scenarioModel, partModel );
         flowDiagram.setOutputMarkupId( true );
         addOrReplace( flowDiagram );
@@ -291,4 +259,12 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         super.updateWith( target, change );
     }
 
+    /**
+     * For a redraw of flow map.
+     * @param target ajax request target
+     */
+    public void refreshFlowMap( AjaxRequestTarget target ) {
+        addFlowDiagram();
+        target.addComponent( flowDiagram );
+    }
 }

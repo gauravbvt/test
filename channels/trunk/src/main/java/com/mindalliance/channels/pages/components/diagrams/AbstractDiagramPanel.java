@@ -51,7 +51,7 @@ public abstract class AbstractDiagramPanel extends AbstractUpdatablePanel {
     private StringBuilder imageMapHolder;
 
     public AbstractDiagramPanel( String id ) {
-        this( id,  null, null, true );
+        this( id, null, null, true );
     }
 
     public AbstractDiagramPanel( String id,
@@ -101,11 +101,8 @@ public abstract class AbstractDiagramPanel extends AbstractUpdatablePanel {
             diagram.setOrientation( orientation );
         }
         if ( withImageMap ) {
-            String imageMap = diagram.makeImageMap();
-            // imageMap = imageMap.replace( "id=\"G\"", "id=\"" + getContainerId() + "\"" );
-            imageMap = imageMap.replace( "id=\"G\"", "" );
-            imageMap = imageMap.replace( "name=\"G\"", "name=\"" + getContainerId() + "\"" );
-            imageMapHolder = new StringBuilder( imageMap );
+            imageMapHolder = new StringBuilder();
+            updateImageMap();
             add( new DiagramAjaxBehavior( imageMapHolder ) {
                 protected void respond( AjaxRequestTarget target ) {
                     RequestCycle requestCycle = RequestCycle.get();
@@ -147,7 +144,7 @@ public abstract class AbstractDiagramPanel extends AbstractUpdatablePanel {
                 }
             }
         };
-        graph.add( new AjaxEventBehavior("onclick") {
+        graph.add( new AjaxEventBehavior( "onclick" ) {
             protected void onEvent( AjaxRequestTarget target ) {
                 onClick( target );
             }
@@ -156,12 +153,21 @@ public abstract class AbstractDiagramPanel extends AbstractUpdatablePanel {
         add( graph );
     }
 
+    private void updateImageMap() {
+        String imageMap = diagram.makeImageMap();
+        // imageMap = imageMap.replace( "id=\"G\"", "id=\"" + getContainerId() + "\"" );
+        imageMap = imageMap.replace( "id=\"G\"", "" );
+        imageMap = imageMap.replace( "name=\"G\"", "name=\"" + getContainerId() + "\"" );
+        imageMapHolder.replace( 0, imageMapHolder.length(), imageMap );
+    }
+
     private String makeSeed() {
-        return "&seed=" + System.currentTimeMillis() + new Random().nextInt();
+        return "&_seed=" + System.currentTimeMillis() + new Random().nextInt();
     }
 
     /**
      * Return the wisket id of the diagram's container.
+     *
      * @return a string
      */
     protected abstract String getContainerId();
@@ -182,29 +188,34 @@ public abstract class AbstractDiagramPanel extends AbstractUpdatablePanel {
 
     /**
      * Image is clicked.
+     *
      * @param target an ajax request target
      */
-    protected abstract void onClick(AjaxRequestTarget target);
+    protected abstract void onClick( AjaxRequestTarget target );
+
     /**
      * Graph selected event.
+     *
      * @param graphId a string
-     * @param target an ajax request target
+     * @param target  an ajax request target
      */
     protected abstract void onSelectGraph( String graphId, AjaxRequestTarget target );
 
     /**
      * Vertex selected event.
-     * @param graphId a string
+     *
+     * @param graphId  a string
      * @param vertexId a string
-     * @param target an ajax request target
+     * @param target   an ajax request target
      */
     protected abstract void onSelectVertex( String graphId, String vertexId, AjaxRequestTarget target );
 
     /**
      * Edge selected event.
+     *
      * @param graphId a string
-     * @param edgeId a string
-     * @param target an ajax request target
+     * @param edgeId  a string
+     * @param target  an ajax request target
      */
     protected abstract void onSelectEdge( String graphId, String edgeId, AjaxRequestTarget target );
 

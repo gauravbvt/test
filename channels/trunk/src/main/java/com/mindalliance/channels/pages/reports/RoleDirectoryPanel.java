@@ -54,7 +54,7 @@ public class RoleDirectoryPanel extends Panel {
         add( descLabel );
 
         // Find all actors in role for organization
-        List<Actor> actors = Project.getProject().findActors( organization, role );
+        List<Actor> actors = Project.getProject().getDqo().findActors( organization, role );
         if ( actors.isEmpty() )
             actors.add( Actor.UNKNOWN );
         add( new ListView<Actor>( "actors", actors ) {                                    // NON-NLS

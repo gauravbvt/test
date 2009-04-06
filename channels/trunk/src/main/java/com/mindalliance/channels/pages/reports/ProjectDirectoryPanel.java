@@ -32,7 +32,7 @@ public class ProjectDirectoryPanel extends Panel {
     }
 
     private void init() {
-        List<Organization> orgs = Project.getProject().findOrganizations();
+        List<Organization> orgs = Project.getProject().getDqo().findOrganizations();
         add( new ListView<Organization>( "organizations", orgs ) {                        // NON-NLS
             @Override
             protected void populateItem( ListItem<Organization> item ) {

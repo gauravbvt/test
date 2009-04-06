@@ -1,7 +1,6 @@
 package com.mindalliance.channels;
 
 import com.mindalliance.channels.util.Play;
-import com.mindalliance.channels.pages.components.ScenarioLink;
 import com.mindalliance.channels.analysis.network.ScenarioRelationship;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -269,6 +268,49 @@ public interface DataQueryObject {
      * @return a list of strings
      */
     List<String> findAllNames( Class<? extends ModelObject> aClass );
+
+    /**
+     * Find actors in given organization and role.
+     *
+     * @param organization the organization, possibly Organization.UNKNOWN
+     * @param role         the role, possibly Role.UNKNOWN
+     * @return a sorted list of actors
+     */
+     List<Actor> findActors( Organization organization, Role role );
+
+    /**
+     * Find all roles in given organization across all scenarios.
+     *
+     * @param organization the organization, possibly Organization.UNKNOWN
+     * @return a sorted list of roles
+     */
+    List<Role> findRolesIn( Organization organization );
+
+    /**
+     * Find all organization in project, including the UNKNOWN organization, if need be.
+     *
+     * @return a sorted list of organizations
+     */
+    List<Organization> findOrganizations();
+
+        /**
+     * Find actors that should be included in a flow of a part.
+     *
+     * @param part the part
+     * @param flow a flow of the part
+     * @return list of actors in project that applies
+     */
+    List<Actor> findRelevantActors( Part part, Flow flow );
+
+    /**
+     * Find actors in given organization and role in a given scenario.
+     *
+     * @param organization the organization, possibly Organization.UNKNOWN
+     * @param role         the role, possibly Role.UNKNOWN
+     * @param scenario     the scenario
+     * @return a sorted list of actors
+     */
+    List<Actor> findActors( Organization organization, Role role, Scenario scenario );
 
     /**
      * Whether the actor is referenced in another model object.

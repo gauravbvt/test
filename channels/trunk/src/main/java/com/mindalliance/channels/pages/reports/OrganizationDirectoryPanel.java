@@ -40,7 +40,7 @@ public class OrganizationDirectoryPanel extends Panel {
         add( new Label( "description", organization.getDescription() ) );                 // NON-NLS
 
         add( new ListView<Role>( "roles",                                                 // NON-NLS
-                                 Project.getProject().findRolesIn( organization ) ) {
+                                 Project.getProject().getDqo().findRolesIn( organization ) ) {
             @Override
             protected void populateItem( ListItem<Role> item ) {
                 Role role = item.getModelObject();

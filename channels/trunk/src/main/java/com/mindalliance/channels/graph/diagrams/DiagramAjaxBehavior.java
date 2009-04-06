@@ -40,7 +40,7 @@ public abstract class DiagramAjaxBehavior extends AbstractDefaultAjaxBehavior {
             hrefMatcher.appendReplacement( newImageMap, Matcher.quoteReplacement("href=\"" + callback + "\"") );
         }
         hrefMatcher.appendTail( newImageMap );
-        imageMapHolder.replace( 0, imageMapHolder.length() - 1, newImageMap.toString() );
+        imageMapHolder.replace( 0, imageMapHolder.length(), newImageMap.toString() );
     }
 
     private String getCallback( String query ) {

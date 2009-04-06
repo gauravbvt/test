@@ -89,11 +89,6 @@ public final class ProjectPage extends WebPage implements Updatable {
     private static final int SCENARIO_DESCRIPTION_MAX_LENGTH = 94;
 
     /**
-     * Synthetic id for expanding scenarios map panel.
-     */
-    private static final Long SCENARIO_MAP_ID = -1L;
-
-    /**
      * Id of components that are expanded.
      */
     private Set<Long> expansions;
@@ -232,7 +227,7 @@ public final class ProjectPage extends WebPage implements Updatable {
         setVersioned( false );
         setStatelessHint( true );
         add( new Label( "sc-title",                                                       // NON-NLS
-                        new PropertyModel<String>( this, "scenario.name" ) ) );           // NON-NLS
+                new PropertyModel<String>( this, "scenario.name" ) ) );           // NON-NLS
 
         form = new Form( "big-form" ) {
             @Override
@@ -310,10 +305,10 @@ public final class ProjectPage extends WebPage implements Updatable {
         String issue = analyst.getIssuesSummary( scenario, Analyst.INCLUDE_PROPERTY_SPECIFIC );
         scenarioNameLabel.add(
                 new AttributeModifier( "class", true,                                     // NON-NLS
-                    new Model<String>( issue.isEmpty() ? "no-error" : "error" ) ) );      // NON-NLS
+                        new Model<String>( issue.isEmpty() ? "no-error" : "error" ) ) );      // NON-NLS
         scenarioNameLabel.add(
                 new AttributeModifier( "title", true,                                     // NON-NLS
-                    new Model<String>( issue.isEmpty() ? "No known issue" :  issue ) ) );
+                        new Model<String>( issue.isEmpty() ? "No known issue" : issue ) ) );
     }
 
     private void addScenarioMenubar() {
@@ -680,8 +675,7 @@ public final class ProjectPage extends WebPage implements Updatable {
     private void expand( Identifiable identifiable ) {
         // First collapse any already expanded entity
         if ( identifiable instanceof ModelObject
-                && ( (ModelObject) identifiable ).isEntity() )
-        {
+                && ( (ModelObject) identifiable ).isEntity() ) {
             ModelObject entity = findExpandedEntity();
             if ( entity != null ) {
                 expansions.remove( entity.getId() );
@@ -699,8 +693,7 @@ public final class ProjectPage extends WebPage implements Updatable {
 
     private void collapse( Identifiable identifiable ) {
         if ( identifiable instanceof ModelObject
-                && ( (ModelObject) identifiable ).isEntity() )
-        {
+                && ( (ModelObject) identifiable ).isEntity() ) {
             if ( !expandedEntities.isEmpty() ) {
                 long entityId = expandedEntities.remove( 0 );
                 getCommander().requestLockOn( entityId );
@@ -761,9 +754,11 @@ public final class ProjectPage extends WebPage implements Updatable {
         if ( change.isUnknown() ) {
             redirectHere();
         } else if ( change.isUndoing() ) {
-            target.addComponent(planMapPanel );
+            scenarioPanel.refreshFlowMap( target );
             target.addComponent( scenarioPanel );
             target.addComponent( entityPanel );
+            if (planMapPanel instanceof PlanMapPanel)
+                ((PlanMapPanel)planMapPanel).refresh( target );
             target.addComponent( planMapPanel );
         }
         if ( identifiable instanceof Project ) {
@@ -773,7 +768,7 @@ public final class ProjectPage extends WebPage implements Updatable {
             }
         }
         if ( identifiable instanceof Scenario ) {
-            target.addComponent(planMapPanel );
+            target.addComponent( planMapPanel );
             if ( change.isUpdated() ) {
                 if ( change.getProperty().equals( "name" ) ) {
                     target.addComponent( scenarioNameLabel );
@@ -791,32 +786,30 @@ public final class ProjectPage extends WebPage implements Updatable {
         }
         if ( identifiable instanceof Part ) {
             if ( change.isExists() || change.isSelected() ) {
+                scenarioPanel.refreshFlowMap( target );
                 target.addComponent( scenarioPanel );
             }
         }
         if ( identifiable instanceof ExternalFlow ) {
-            target.addComponent(planMapPanel );
+            target.addComponent( planMapPanel );
         }
         if ( identifiable instanceof ScenarioObject
                 || ( identifiable instanceof Issue
-                && ( (Issue) identifiable ).getAbout().getId() == scenario.getId() ) )
-        {
+                && ( (Issue) identifiable ).getAbout().getId() == scenario.getId() ) ) {
             annotateScenarioName();
             target.addComponent( scenarioNameLabel );
         }
         if ( identifiable instanceof Issue
                 && change.isExists()
-                && ( (Issue) identifiable ).getAbout().getId() == scenario.getId() )
-        {
+                && ( (Issue) identifiable ).getAbout().getId() == scenario.getId() ) {
             annotateScenarioName();
             target.addComponent( scenarioNameLabel );
             scenarioPanel.expandScenarioEditPanel( target );
             addPlanMapPanel();
-            target.addComponent(planMapPanel );
+            target.addComponent( planMapPanel );
         }
         if ( identifiable instanceof ModelObject
-                && ( (ModelObject) identifiable ).isEntity() )
-        {
+                && ( (ModelObject) identifiable ).isEntity() ) {
             if ( change.isDisplay() ) {
                 addEntityPanel();
                 target.addComponent( entityPanel );
