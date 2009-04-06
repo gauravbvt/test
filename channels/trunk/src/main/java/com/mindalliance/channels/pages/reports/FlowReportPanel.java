@@ -19,6 +19,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
+import java.io.Serializable;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -144,7 +145,7 @@ public class FlowReportPanel extends Panel {
     /**
      * An actor from a scenario.
      */
-    private static class LocalizedActor {
+    private static class LocalizedActor implements Serializable {
 
         /** The actor. */
         private Actor actor;

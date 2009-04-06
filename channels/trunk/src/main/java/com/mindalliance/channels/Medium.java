@@ -73,11 +73,11 @@ public enum Medium {
     /**
      * Miscellaneous unicast.
      */
-    OtherUnicast( "Unicast", ".+" ),
+    OtherUnicast( "Other - unicast", ".+" ),
     /**
      * Miscellaneous broadcast.
      */
-    Other( "Broadcast", ".+", false );
+    Other( "Other - broadcast", ".+", false );
 
 
     /**

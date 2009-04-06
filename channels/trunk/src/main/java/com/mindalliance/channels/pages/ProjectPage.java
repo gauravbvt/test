@@ -421,7 +421,8 @@ public final class ProjectPage extends WebPage implements Updatable {
     static Part findPart( Scenario scenario, PageParameters parameters ) {
         if ( parameters.containsKey( PART_PARM ) )
             try {
-                return (Part) scenario.getNode( parameters.getLong( PART_PARM ) );
+                if ( scenario != null )
+                    return (Part) scenario.getNode( parameters.getLong( PART_PARM ) );
             } catch ( StringValueConversionException ignored ) {
                 LOG.warn( "Invalid part specified in parameters. Using default." );
             }

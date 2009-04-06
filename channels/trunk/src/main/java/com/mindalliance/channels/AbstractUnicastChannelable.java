@@ -86,7 +86,7 @@ public abstract class AbstractUnicastChannelable extends ModelObject implements 
 
     /** {@inheritDoc} */
     public boolean canSetChannels() {
-        return false;
+        return true;
     }
 
     /**

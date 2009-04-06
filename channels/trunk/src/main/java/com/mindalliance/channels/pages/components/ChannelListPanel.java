@@ -402,8 +402,9 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                     } );
 
             flagIfInvalid( result, wrapper );
-            result.setVisible( medium != null && medium.isUnicast()
-                               && getChannelable().canBeUnicast() );
+            result.setVisible( medium != null &&
+                               ( medium.isUnicast() && getChannelable().canBeUnicast()
+                                 || medium == Medium.Other || medium == Medium.OtherUnicast ) );
             result.setEnabled( isEnabled() );
             return result;
         }
