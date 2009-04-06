@@ -1,112 +1,52 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.InternalFlow;
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Organization;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Role;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Place;
-import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import com.mindalliance.channels.command.Change;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.model.IModel;
-import org.slf4j.LoggerFactory;
-
-import java.text.MessageFormat;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.AttributeModifier;
 
 /**
- * A link to an aggregate object.
- * @todo rework to use bookmarkable page links.
+ * A link to a model object.
  */
-public class ModelObjectLink extends ExternalLink {
+public class ModelObjectLink extends AbstractUpdatablePanel {
+
+    private IModel<? extends ModelObject> moModel;
+    private IModel<String> textModel;
+    private String hint;
 
     public ModelObjectLink( String id, IModel<? extends ModelObject> mo ) {
         this( id, mo, null );
     }
 
-    public ModelObjectLink( String id, IModel<? extends ModelObject> mo, IModel<String> text)  {
+    public ModelObjectLink( String id, IModel<? extends ModelObject> mo, IModel<String> text ) {
         this( id, mo, text, null );
     }
 
     public ModelObjectLink(
-            String id, final IModel<? extends ModelObject> mo, IModel<String> text, final String hint ) {
-        super(
-            id,
-            new AbstractReadOnlyModel<String>() {
-                @Override
-                public String getObject() {
-                    ModelObject obj = mo.getObject();
-                    String result;
-                    if ( obj instanceof Scenario )
-                        result = linkFor( (Scenario) obj );
-                    else if ( obj instanceof Role )
-                        result = linkFor( (Role) obj );
-                    else if ( obj instanceof Part )
-                        result = linkFor( (Part) obj );
-                    else if ( obj instanceof Actor )
-                        result = linkFor( (Actor) obj );
-                    else if ( obj instanceof Organization )
-                        result = linkFor( (Organization) obj );
-                    else if ( obj instanceof InternalFlow )
-                        result = linkFor( (InternalFlow) obj, hint );
-                    else {
-                        result = "#";
-                        if ( obj != null )
-                            LoggerFactory.getLogger( ModelObjectLink.class ).warn(
-                                    MessageFormat.format( "Links to {0} are not implemented",
-                                                          obj.getClass() ) );
-                    }
-                    return result;
-                }
-            },
-            text );
+            String id, final IModel<? extends ModelObject> mo, IModel<String> text, String hint ) {
+        super( id );
+        moModel = mo;
+        textModel = text;
+        this.hint = hint;
+        init();
     }
 
-    public static String linkFor( Scenario scenario ) {
-        return linkFor( scenario.getDefaultPart() );
-    }
-
-    public static String linkForEntity( ModelObject mo ) {
-        if (mo instanceof Actor) return linkFor( (Actor) mo);
-        else if (mo instanceof Role) return linkFor( (Role) mo);
-        else if (mo instanceof Organization) return linkFor( (Organization) mo);
-        else if (mo instanceof Place) return linkFor( (Place) mo);
-        else throw new IllegalArgumentException( mo + " is not an entity");
-    }
-
-    public static String linkFor( Role role ) {
-        return MessageFormat.format( "role.html?id={0,number,0}", role.getId() );                  // NON-NLS
-    }
-
-    public static String linkFor( Organization organization ) {
-        return MessageFormat.format( "organization.html?id={0,number,0}", organization.getId() );  // NON-NLS
-    }
-
-    public static String linkFor( Actor actor ) {
-        return MessageFormat.format( "actor.html?id={0,number,0}", actor.getId() );                // NON-NLS
-    }
-
-    public static String linkFor( Place place ) {
-        return MessageFormat.format( "place.html?id={0,number,0}", place.getId() );                // NON-NLS
-    }
-
-    public static String linkFor( Part part ) {
-        return MessageFormat.format(
-                "node.html?scenario={0,number,0}&node={1,number,0}",                                    // NON-NLS
-                part.getScenario().getId(),
-                part.getId()
-
-        );
-    }
-    private static String linkFor( InternalFlow flow, final String hint ) {
-        final Node source = ( hint != null && hint.equals( "target" )) ? flow.getTarget() : flow.getSource();
-        return MessageFormat.format(
-                "node.html?scenario={0,number,0}&node={1,number,0}&expand={2,number,0}",               // NON-NLS
-                source.getScenario().getId(),
-                source.getId(),
-                flow.getId()
-        );
+    private void init() {
+        AjaxFallbackLink link = new AjaxFallbackLink( "link" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Selected, moModel.getObject() ) );
+            }
+        };
+        add( link );
+        if ( hint != null && !hint.isEmpty() ) {
+            link.add( new AttributeModifier( "title", true, new Model<String>( hint ) ) );
+        }
+        Label textLabel = new Label( "text", textModel );
+        link.add( textLabel );
     }
 }

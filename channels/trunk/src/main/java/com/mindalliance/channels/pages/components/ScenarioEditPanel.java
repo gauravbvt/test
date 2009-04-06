@@ -6,6 +6,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateProjectObject;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.FormComponentLabel;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -44,7 +45,14 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
 
     private void init() {
         setOutputMarkupId( true );
-        TextField<String> nameField = new TextField<String>(
+        AjaxFallbackLink closeLink = new AjaxFallbackLink( "close" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                Change change = new Change( Change.Type.Collapsed, getScenario() );
+                update( target, change );
+            }
+        };
+        add( closeLink );
+         TextField<String> nameField = new TextField<String>(
                 "name",
                 new PropertyModel<String>( this, "name" ) );
         add( new FormComponentLabel( "name-label", nameField ) );

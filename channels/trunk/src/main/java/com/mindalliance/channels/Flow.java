@@ -619,6 +619,28 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
     }
 
     /**
+     * Get scenario-local part
+     *
+     * @return a part or null
+     */
+    @Transient
+    public Part getLocalPart() {
+        Node source = getSource();
+        if ( source.isPart() && source.getScenario() == getScenario() ) {
+            return (Part)source;
+        } else {
+            Node target = getTarget();
+            if ( target.isPart() && target.getScenario() == getScenario() ) {
+                return (Part)target;
+            } else {
+                // Should never happen?
+                return null;
+            }
+
+        }
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Transient

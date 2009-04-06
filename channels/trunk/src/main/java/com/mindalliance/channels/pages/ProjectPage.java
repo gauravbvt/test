@@ -27,6 +27,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -158,7 +159,7 @@ public final class ProjectPage extends WebPage implements Updatable {
 
     /**
      * Used when page is called without parameters.
-     * Redirect to default scenario, default part, all collapsed.
+     * Set to default scenario, default part, all collapsed.
      */
     public ProjectPage() {
         this( new PageParameters() );
@@ -167,20 +168,10 @@ public final class ProjectPage extends WebPage implements Updatable {
     public ProjectPage( PageParameters parameters ) {
         // Call super to remember parameters in links
         super( parameters );
-
         DataQueryObject dqo = getDqo();
         Scenario sc = findScenario( dqo, parameters );
-
-        if ( sc == null )
-            redirectTo( dqo.getDefaultScenario() );
-
-        else {
-            Part p = findPart( sc, parameters );
-            if ( p != null )
-                init( sc, p, findExpansions( parameters ) );
-            else
-                redirectTo( sc );
-        }
+        Part p = findPart( scenario, parameters );
+        init( sc, p, findExpansions( parameters ) );
     }
 
     /**
@@ -195,30 +186,17 @@ public final class ProjectPage extends WebPage implements Updatable {
     /**
      * Utility constructor for tests.
      *
-     * @param scenario a scenario
-     * @param p        a part in the scenario
+     * @param sc a scenario
+     * @param p  a part in the scenario
      */
-    public ProjectPage( Scenario scenario, Part p ) {
-        Set<Long> expanded = Collections.emptySet();
-        init( scenario, p, expanded );
+    public ProjectPage( Scenario sc, Part p ) {
+        init( sc, p, new HashSet<Long>() );
     }
 
-    /**
-     * Utility constructor.
-     *
-     * @param p  the part to display
-     * @param id a section to expand
-     */
-    public ProjectPage( Part p, long id ) {
-        Set<Long> expanded = new HashSet<Long>();
-        expanded.add( id );
-        init( p.getScenario(), p, expanded );
-    }
 
-    private void init( Scenario scenario, Part p, Set<Long> expanded ) {
-        setScenario( scenario );
+    private void init( Scenario sc, Part p, Set<Long> expanded ) {
         getCommander().releaseAllLocks( Project.getUserName() );
-        getCommander().requestLockOn( p );
+        setScenario( sc );
         setPart( p );
         expansions = expanded;
         for ( Long id : expansions ) {
@@ -226,8 +204,8 @@ public final class ProjectPage extends WebPage implements Updatable {
         }
         setVersioned( false );
         setStatelessHint( true );
-        add( new Label( "sc-title",                                                       // NON-NLS
-                new PropertyModel<String>( this, "scenario.name" ) ) );           // NON-NLS
+        add( new Label( "sc-title",
+                new PropertyModel<String>( this, "scenario.name" ) ) );
 
         form = new Form( "big-form" ) {
             @Override
@@ -314,13 +292,13 @@ public final class ProjectPage extends WebPage implements Updatable {
     private void addScenarioMenubar() {
         projectActionsMenu = new ProjectActionsMenuPanel(
                 "projectActionsMenu",
-                new Model<Scenario>( scenario ),
+                new PropertyModel<Scenario>( this, "scenario" ),
                 getReadOnlyExpansions() );
         projectActionsMenu.setOutputMarkupId( true );
         form.add( projectActionsMenu );
         projectShowMenu = new ProjectShowMenuPanel(
                 "projectShowMenu",
-                new Model<Scenario>( scenario ),
+                new PropertyModel<Scenario>( this, "scenario" ),
                 getReadOnlyExpansions() );
         projectShowMenu.setOutputMarkupId( true );
         form.add( projectShowMenu );
@@ -334,7 +312,14 @@ public final class ProjectPage extends WebPage implements Updatable {
                 "sc-sel",                                                                 // NON-NLS
                 new PropertyModel<Scenario>( ProjectPage.this, "scenario" ),              // NON-NLS
                 new PropertyModel<List<? extends Scenario>>(
-                        ProjectPage.this, "allScenarios" ) ) {                            // NON-NLS
+                        ProjectPage.this, "allScenarios" ) );
+        scenarioDropDownChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change(Change.Type.Selected, getScenario()));
+            }
+        } );
+/*
+        {                            // NON-NLS
 
             @Override
             protected boolean wantOnSelectionChangedNotifications() {
@@ -346,6 +331,7 @@ public final class ProjectPage extends WebPage implements Updatable {
                 redirectTo( newSelection );
             }
         };
+*/
         scenarioDropDownChoice.setOutputMarkupId( true );
         form.add( scenarioDropDownChoice );
     }
@@ -463,6 +449,7 @@ public final class ProjectPage extends WebPage implements Updatable {
 
     /**
      * Redirect here.
+     * // TODO - UNUSED
      */
     public void redirectHere() {
         long sid = scenario.getId();
@@ -602,8 +589,9 @@ public final class ProjectPage extends WebPage implements Updatable {
     public void setPart( Part p ) {
         if ( part != null ) getCommander().releaseAnyLockOn( part );
         part = p;
-        getCommander().requestLockOn( p );
-        setScenario( p.getScenario() );
+        if ( part == null ) part = scenario.getDefaultPart();
+        getCommander().requestLockOn( part );
+        if ( part.getScenario() != scenario ) setScenario( part.getScenario() );
     }
 
     /**
@@ -654,8 +642,40 @@ public final class ProjectPage extends WebPage implements Updatable {
         return scenario;
     }
 
-    public void setScenario( Scenario scenario ) {
-        this.scenario = scenario;
+    public void setScenario( Scenario sc ) {
+        if ( scenario != null && scenario != sc ) {
+            collapseScenarioObjects();
+        }
+        scenario = sc;
+        if ( scenario == null )
+            scenario = getDqo().getDefaultScenario();
+    }
+
+    private void collapseScenarioObjects() {
+        List<Identifiable> toCollapse = new ArrayList<Identifiable>();
+        List<Identifiable> toReexpand =  new ArrayList<Identifiable>();
+        for (long id : expansions ) {
+            try {
+                ModelObject expanded = getDqo().find( ModelObject.class, id );
+                if ( expanded instanceof Scenario ) {
+                    toCollapse.add( expanded );
+                    toReexpand.add( getScenario() );
+                }
+                if (expanded instanceof ScenarioObject ) {
+                    if (((ScenarioObject)expanded).getScenario() == scenario) {
+                        toCollapse.add(expanded);
+                    }
+                }
+            } catch ( NotFoundException e ) {
+                LOG.warn("Failed to find expanded " + id);
+            }
+        }
+        for ( Identifiable identifiable : toCollapse) {
+            collapse( identifiable);
+        }
+        for ( Identifiable identifiable : toReexpand) {
+            expand( identifiable);
+        }
     }
 
     /**
@@ -723,6 +743,9 @@ public final class ProjectPage extends WebPage implements Updatable {
             if ( change.isExists() ) {
                 getCommander().resetUserHistory( Project.getUserName() );
             }
+            if ( change.isSelected() ) {
+                collapseScenarioObjects();
+            }
         }
         if ( identifiable instanceof Part ) {
             if ( change.isAdded() || change.isSelected() ) {
@@ -735,6 +758,14 @@ public final class ProjectPage extends WebPage implements Updatable {
         if ( identifiable instanceof Flow ) {
             if ( change.isUpdated() && change.getProperty().equals( "other" ) ) {
                 expand( identifiable );
+            }
+            if ( change.isSelected() ) {
+                Flow flow = (Flow)identifiable;
+                expand( identifiable );
+                if (flow.getScenario() != scenario) {
+                    setScenario( flow.getScenario() );
+                }
+                setPart( flow.getLocalPart() );
             }
         }
         if ( identifiable instanceof UserIssue && change.isAdded() ) {
@@ -751,15 +782,8 @@ public final class ProjectPage extends WebPage implements Updatable {
      */
     public void updateWith( AjaxRequestTarget target, Change change ) {
         Identifiable identifiable = change.getSubject();
-        if ( change.isUnknown() ) {
-            redirectHere();
-        } else if ( change.isUndoing() ) {
-            scenarioPanel.refreshFlowMap( target );
-            target.addComponent( scenarioPanel );
-            target.addComponent( entityPanel );
-            if (planMapPanel instanceof PlanMapPanel)
-                ((PlanMapPanel)planMapPanel).refresh( target );
-            target.addComponent( planMapPanel );
+        if ( change.isUndoing() || change.isUnknown() ) {
+            refreshAll( target );
         }
         if ( identifiable instanceof Project ) {
             if ( change.isDisplay() ) {
@@ -769,6 +793,9 @@ public final class ProjectPage extends WebPage implements Updatable {
         }
         if ( identifiable instanceof Scenario ) {
             target.addComponent( planMapPanel );
+            if ( change.isDisplay() ) {
+                scenarioPanel.refreshScenarioEditPanel( target );
+            }
             if ( change.isUpdated() ) {
                 if ( change.getProperty().equals( "name" ) ) {
                     target.addComponent( scenarioNameLabel );
@@ -777,9 +804,9 @@ public final class ProjectPage extends WebPage implements Updatable {
                     target.addComponent( scenarioDescriptionLabel );
                 }
             } else if ( change.isAdded() || change.isSelected() ) {
-                redirectTo( (Scenario) identifiable );
+                refreshAll(target );
             } else if ( change.isRemoved() ) {
-                redirectTo( getDqo().getDefaultScenario() );
+                refreshAll(target );
             } else if ( change.isRecomposed() ) {
                 target.addComponent( scenarioPanel );
             }
@@ -789,6 +816,9 @@ public final class ProjectPage extends WebPage implements Updatable {
                 scenarioPanel.refreshFlowMap( target );
                 target.addComponent( scenarioPanel );
             }
+        }
+        if ( identifiable instanceof Flow ) {
+            refreshAll( target );
         }
         if ( identifiable instanceof ExternalFlow ) {
             target.addComponent( planMapPanel );
@@ -822,6 +852,22 @@ public final class ProjectPage extends WebPage implements Updatable {
         target.addComponent( projectShowMenu );
     }
 
+    private void refreshAll( AjaxRequestTarget target ) {
+        target.addComponent( scenarioNameLabel );
+        target.addComponent( scenarioDescriptionLabel );
+        target.addComponent( scenarioDropDownChoice );
+        scenarioPanel.refreshFlowMap( target );
+        target.addComponent( scenarioPanel );
+        target.addComponent( entityPanel );
+        if ( planMapPanel instanceof PlanMapPanel )
+            ( (PlanMapPanel) planMapPanel ).refresh( target );
+    }
+
+    private void update( AjaxRequestTarget target, Change change ) {
+        changed( change );
+        updateWith( target, change );
+    }
+
     /**
      * Get read-only expansions.
      *
@@ -830,4 +876,5 @@ public final class ProjectPage extends WebPage implements Updatable {
     private Set<Long> getReadOnlyExpansions() {
         return Collections.unmodifiableSet( expansions );
     }
+
 }

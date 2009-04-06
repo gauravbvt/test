@@ -23,8 +23,6 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
@@ -36,11 +34,6 @@ import java.util.Set;
  * Time: 8:52:20 AM
  */
 public class ScenarioPanel extends AbstractCommandablePanel {
-
-    /**
-     * Class logger.
-     */
-    private static final Logger LOG = LoggerFactory.getLogger( ScenarioPanel.class );
 
     /**
      * Length a part title is abbreviated to
@@ -101,8 +94,8 @@ public class ScenarioPanel extends AbstractCommandablePanel {
 
     private void init() {
         setOutputMarkupId( true );
-        addScenarioEditPanel( getScenario() );
-        addFlowDiagram( );
+        addScenarioEditPanel();
+        addFlowDiagram();
         addPartContent();
         reqsFlowPanel = new FlowListPanel(
                 "reqs",
@@ -128,8 +121,8 @@ public class ScenarioPanel extends AbstractCommandablePanel {
                                 getPart().getTitle(), PART_TITLE_MAX_LENGTH );
                     }
                 } );
-        partTitle.add( new AttributeModifier( "title", true, 
-                                              new Model<String>( getPart().getTitle() ) ) );
+        partTitle.add( new AttributeModifier( "title", true,
+                new Model<String>( getPart().getTitle() ) ) );
         partTitle.setOutputMarkupId( true );
         add( partTitle );               // NON-NLS
         addPartMenuBar();
@@ -178,7 +171,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         addOrReplace( partActionsMenu );
     }
 
-    private void addFlowDiagram( ) {
+    private void addFlowDiagram() {
         flowDiagram = new FlowMapDiagramPanel( "flow-map", scenarioModel, partModel );
         flowDiagram.setOutputMarkupId( true );
         addOrReplace( flowDiagram );
@@ -186,13 +179,11 @@ public class ScenarioPanel extends AbstractCommandablePanel {
 
     /**
      * Add scenario-related components.
-     *
-     * @param scenario the underlying scenario
      */
-    private void addScenarioEditPanel( final Scenario scenario ) {
+    private void addScenarioEditPanel() {
         scenarioEditPanel = new ScenarioEditPanel(
                 "sc-editor",
-                new Model<Scenario>( scenario ),
+                scenarioModel,
                 getExpansions() );
         add( scenarioEditPanel );
     }
@@ -261,10 +252,16 @@ public class ScenarioPanel extends AbstractCommandablePanel {
 
     /**
      * For a redraw of flow map.
+     *
      * @param target ajax request target
      */
     public void refreshFlowMap( AjaxRequestTarget target ) {
         addFlowDiagram();
         target.addComponent( flowDiagram );
+    }
+
+    public void refreshScenarioEditPanel( AjaxRequestTarget target ) {
+        makeVisible( scenarioEditPanel, getExpansions().contains( getScenario().getId() ) );
+        target.addComponent( scenarioEditPanel );
     }
 }

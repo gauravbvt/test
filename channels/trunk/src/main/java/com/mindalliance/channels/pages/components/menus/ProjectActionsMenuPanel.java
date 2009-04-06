@@ -10,6 +10,7 @@ import com.mindalliance.channels.pages.ExportPage;
 import com.mindalliance.channels.pages.ProjectPage;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -65,10 +66,11 @@ public class ProjectActionsMenuPanel extends MenuPanel {
         Link editLink;
         if ( getExpansions().contains( getScenario().getId() ) ) {
             editLink =
-                    new BookmarkablePageLink<Scenario>(
-                            "link", ProjectPage.class,
-                            ( (ProjectPage) getWebPage() )
-                                    .getParametersCollapsing( getScenario().getId() ) );
+                    new AjaxFallbackLink( "link" ) {
+                        public void onClick( AjaxRequestTarget target ) {
+                            update( target, new Change(Change.Type.Collapsed, getScenario()));
+                        }
+                    };
             menuItems.add( new LinkMenuItem(
                     "menuItem",
                     new Model<String>( "Hide details" ),
@@ -76,10 +78,11 @@ public class ProjectActionsMenuPanel extends MenuPanel {
 
         } else {
             editLink =
-                    new BookmarkablePageLink<Scenario>(
-                            "link", ProjectPage.class,   // NON-NLS
-                            ( (ProjectPage) getWebPage() )
-                                    .getParametersExpanding( getScenario().getId() ) );
+                    new AjaxFallbackLink( "link" ) {
+                        public void onClick( AjaxRequestTarget target ) {
+                            update( target, new Change(Change.Type.Expanded, getScenario()));
+                        }
+                    };
             menuItems.add( new LinkMenuItem(
                     "menuItem",
                     new Model<String>( "Show details" ),

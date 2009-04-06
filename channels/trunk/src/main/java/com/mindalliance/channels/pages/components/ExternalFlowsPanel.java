@@ -44,12 +44,12 @@ public class ExternalFlowsPanel extends AbstractTablePanel<ExternalFlow> {
         columns.add( new PropertyColumn<String>(
                 new Model<String>( "Scenario" ),
                 "scenario.name", "scenario.name" ) );
-        columns.add( makeLinkColumn( "Part", "part", "part.name", EMPTY ) );
+        columns.add( makeLinkColumn( "Part", "part", "part.title", EMPTY ) );
         columns.add( makeColumn( "Info", "name", "@kind", "?", "description" ) );
         columns.add( new PropertyColumn<String>(
                 new Model<String>( "Connected scenario" ),
                 "externalPart.scenario.name", "externalPart.scenario.name" ) );
-        columns.add( makeLinkColumn( "Connected part", "externalPart", "externalPart.name", EMPTY ) );
+        columns.add( makeLinkColumn( "Connected part", "externalPart", "externalPart.title", EMPTY ) );
         List<ExternalFlow> externalFlows = externalFlowsModel.getObject();
         add( new AjaxFallbackDefaultDataTable<ExternalFlow>(
                 "flows",

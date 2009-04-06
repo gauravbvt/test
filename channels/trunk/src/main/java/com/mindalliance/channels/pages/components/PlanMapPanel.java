@@ -4,6 +4,7 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ExternalFlow;
+import com.mindalliance.channels.Part;
 import com.mindalliance.channels.analysis.network.ScenarioRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
@@ -45,18 +46,6 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
      * Expansions.
      */
     private Set<Long> expansions;
-    /**
-     * Plan diagram panel
-     */
-    private PlanMapDiagramPanel planMapDiagramPanel;
-    /**
-     * Title for external flows panel.
-     */
-    private Label flowsTitleLabel;
-    /**
-     * External flows panel.
-     */
-    private ExternalFlowsPanel externalFlowsPanel;
 
 
     public PlanMapPanel( String id, Set<Long> expansions ) {
@@ -79,7 +68,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     }
 
     private void addPlanMapDiagramPanel() {
-        planMapDiagramPanel = new PlanMapDiagramPanel(
+        PlanMapDiagramPanel planMapDiagramPanel = new PlanMapDiagramPanel(
                 "plan-map",
                 new PropertyModel<ArrayList<Scenario>>( this, "scenarios" ),
                 selectedScenario,
@@ -89,13 +78,13 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     }
 
     private void addFlowsTitleLabel() {
-        flowsTitleLabel = new Label( "flows-title", new PropertyModel<String>( this, "flowsTitle" ) );
+        Label flowsTitleLabel = new Label( "flows-title", new PropertyModel<String>( this, "flowsTitle" ) );
         flowsTitleLabel.setOutputMarkupId( true );
         add( flowsTitleLabel );
     }
 
     private void addExternalFlowsPanel() {
-        externalFlowsPanel = new ExternalFlowsPanel(
+        ExternalFlowsPanel externalFlowsPanel = new ExternalFlowsPanel(
                 "flows",
                 new Model<Project>( Project.getProject() ),
                 new PropertyModel<ArrayList<ExternalFlow>>( this, "externalFlows" ),
@@ -193,9 +182,10 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     public void refresh( AjaxRequestTarget target ) {
         addPlanMapDiagramPanel();
         addExternalFlowsPanel();
-        target.addComponent( planMapDiagramPanel );
+        target.addComponent( this );
+        /*target.addComponent( planMapDiagramPanel );
         target.addComponent( flowsTitleLabel );
-        target.addComponent( externalFlowsPanel );
+        target.addComponent( externalFlowsPanel );*/
     }
 
     /**
@@ -214,7 +204,10 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
                 selectedScenario = null;
                 selectedScRel = (ScenarioRelationship) changed;
             }
-            // Don't percolate change on selection.
+            // Don't percolate chane on selection of project, scenario or scenario relationship.
+            else {
+                super.changed( change );
+            }
         } else {
             super.changed( change );
         }
@@ -226,7 +219,10 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     public void updateWith( AjaxRequestTarget target, Change change ) {
         if ( change.isSelected() ) {
             refresh( target );
-            // Don't percolate update on selection.
+            // Don't percolate update on selection unless a part was selected.
+            if ( change.getSubject() instanceof Part )  {
+                super.updateWith( target, change );
+            }
         } else {
             super.updateWith( target, change );
         }
