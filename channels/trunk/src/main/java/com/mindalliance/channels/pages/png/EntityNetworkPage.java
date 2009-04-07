@@ -26,7 +26,6 @@ public class EntityNetworkPage extends PngWebPage {
      private static final Logger LOG = LoggerFactory.getLogger( EntityNetworkPage.class );
 
     private ModelObject entity;
-    private ModelObject selectedEntity;
     private EntityRelationship selectedEntityRel;
 
     public EntityNetworkPage( PageParameters parameters ) {
@@ -35,17 +34,9 @@ public class EntityNetworkPage extends PngWebPage {
         if ( parameters.containsKey( "entity" ) && !parameters.getString( "entity" ).equals( "NONE" ) ) {
             Long entityId = Long.valueOf(parameters.getString( "entity" ));
             try {
-                selectedEntity = dqo.find( ModelObject.class, entityId);
-            } catch ( NotFoundException e ) {
-                LOG.warn("Selected entity not found at :" + entityId, e);
-            }
-        }
-        if ( parameters.containsKey( "other" ) && !parameters.getString( "entity" ).equals( "NONE" ) ) {
-            Long entityId = Long.valueOf(parameters.getString( "entity" ));
-            try {
                 entity = dqo.find( ModelObject.class, entityId);
             } catch ( NotFoundException e ) {
-                LOG.warn("Entity not found at :" + entityId, e);
+                LOG.warn("Selected entity not found at :" + entityId, e);
             }
         }
         if ( parameters.containsKey( "connection" ) && !parameters.getString( "connection" ).equals( "NONE" ) ) {
@@ -57,6 +48,6 @@ public class EntityNetworkPage extends PngWebPage {
 
     protected Diagram makeDiagram() {
         DiagramFactory<ModelObject, EntityRelationship> factory = getDiagramFactory();
-        return factory.newEntityNetworkDiagram( entity, selectedEntity, selectedEntityRel );
+        return factory.newEntityNetworkDiagram( entity, selectedEntityRel );
     }
 }

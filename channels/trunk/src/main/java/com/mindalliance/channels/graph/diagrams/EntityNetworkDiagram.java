@@ -24,13 +24,11 @@ import java.util.List;
 public class EntityNetworkDiagram extends AbstractDiagram<ModelObject, EntityRelationship> {
 
     private ModelObject entity;
-    private ModelObject selectedEntity;
     private EntityRelationship selectedEntityRel;
 
-    public EntityNetworkDiagram( ModelObject entity, ModelObject selectedEntity, EntityRelationship selectedEntityRel ) {
+    public EntityNetworkDiagram( ModelObject entity, EntityRelationship selectedEntityRel ) {
         super();
         this.entity = entity;
-        this.selectedEntity = selectedEntity;
         this.selectedEntityRel= selectedEntityRel;
     }
 
@@ -46,9 +44,7 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelObject, EntityRel
         GraphRenderer<ModelObject,EntityRelationship> graphRenderer =
                 diagramFactory.getGraphRenderer();
         graphRenderer.resetHighlight();
-        if ( selectedEntity != null ) {
-            graphRenderer.highlightVertex( selectedEntity );
-        }
+        graphRenderer.highlightVertex( entity );
         if ( selectedEntityRel != null ) {
             graphRenderer.highlightEdge( selectedEntityRel );
         }

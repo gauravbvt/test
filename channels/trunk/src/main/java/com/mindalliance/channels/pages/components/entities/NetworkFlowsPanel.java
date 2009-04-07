@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
@@ -23,6 +24,9 @@ import java.util.Set;
  */
 public class NetworkFlowsPanel extends AbstractTablePanel<Flow> {
 
+    /**
+     * Flows model.
+     */
     private IModel<ArrayList<Flow>> flowsModel;
 
     public NetworkFlowsPanel(
@@ -41,6 +45,7 @@ public class NetworkFlowsPanel extends AbstractTablePanel<Flow> {
                 new Model<String>( "Scenario" ),
                 "scenario.name", "scenario.name" ) );
         columns.add( makeColumn( "Info", "name", "@kind", "?", "description" ) );
+        columns.add( makeLinkColumn( "Source", "source", "source.title", EMPTY ) );
         columns.add( makeLinkColumn( "Target", "target", "target.title", EMPTY ) );
         columns.add( new PropertyColumn<String>(
                 new Model<String>( "Max delay" ),
@@ -54,5 +59,6 @@ public class NetworkFlowsPanel extends AbstractTablePanel<Flow> {
                 getPageSize() ) );
 
     }
+
 
 }

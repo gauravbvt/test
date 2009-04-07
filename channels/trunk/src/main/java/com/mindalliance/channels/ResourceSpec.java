@@ -367,4 +367,22 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
     public boolean hasJob() {
         return actor != null && role != null;
     }
+
+    /**
+     * WHether the source spec contains an entity in its definition.
+     * @param entity an entity
+     * @return a boolean
+     */
+    public boolean hasEntity( ModelObject entity ) {
+        assert entity.isEntity();
+        if (entity instanceof Actor) {
+            return actor == entity;
+        } else if (entity instanceof Role) {
+            return role == entity;
+        } else if (entity instanceof Organization) {
+            return organization == entity;
+        } else  {
+            return jurisdiction == entity;
+        }
+    }
 }

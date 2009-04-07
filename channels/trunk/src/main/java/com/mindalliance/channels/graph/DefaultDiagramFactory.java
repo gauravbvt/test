@@ -75,8 +75,8 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
         return new FlowMapDiagram( scenario, node );
     }
 
-    public Diagram newEntityNetworkDiagram( ModelObject entity, ModelObject selectedEntity, EntityRelationship selectedEntityRel ) {
-        return new EntityNetworkDiagram( entity, selectedEntity, selectedEntityRel);
+    public Diagram newEntityNetworkDiagram( ModelObject entity, EntityRelationship selectedEntityRel ) {
+        return new EntityNetworkDiagram( entity, selectedEntityRel);
     }
 
     /**

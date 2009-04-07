@@ -11,7 +11,6 @@ import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.text.MessageFormat;
 
 /**
@@ -29,28 +28,24 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
      */
     private static final Logger LOG = LoggerFactory.getLogger( EntityNetworkDiagramPanel.class );
     private IModel<T> entityModel;
-    private T selectedEntity;
     private EntityRelationship<T> selectedEntityRel;
 
     public EntityNetworkDiagramPanel(
             String id,
             IModel<T> entityModel,
-            T selectedEntity,
             EntityRelationship<T> selectedEntityRel ) {
-        this( id, entityModel, selectedEntity, selectedEntityRel, null, null, true );
+        this( id, entityModel, selectedEntityRel, null, null, true );
     }
 
     public EntityNetworkDiagramPanel(
             String id,
             IModel<T> entityModel,
-            T selectedEntity,
             EntityRelationship<T> selectedEntityRel,
             double[] diagramSize,
             String orientation,
             boolean withImageMap ) {
         super( id, diagramSize, orientation, withImageMap );
         this.entityModel = entityModel;
-        this.selectedEntity = selectedEntity;
         this.selectedEntityRel = selectedEntityRel;
         init();
     }
@@ -63,7 +58,6 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
     protected Diagram makeDiagram() {
         return getDiagramFactory().newEntityNetworkDiagram(
                 entityModel.getObject(),
-                selectedEntity,
                 selectedEntityRel );
     }
 
@@ -71,8 +65,6 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
         StringBuilder sb = new StringBuilder();
         sb.append( "network.png?entity=" );
         sb.append( getEntity().getId() );
-        sb.append( "&other=");
-        sb.append( selectedEntity == null ? "NONE" : selectedEntity.getId() );
         sb.append( "&connection=" );
         sb.append( selectedEntityRel == null ? "NONE" : selectedEntityRel.getId() );
         sb.append( "&time=" );
@@ -103,7 +95,8 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
     protected void onSelectVertex( String graphId, String vertexId, AjaxRequestTarget target ) {
         try {
             T entity = (T)getDqo().find( ModelObject.class, Long.valueOf( vertexId ) );
-            update( target, new Change( Change.Type.Selected, entity ) );
+            if (entity != getEntity())
+                update( target, new Change( Change.Type.Selected, entity ) );
         } catch ( NotFoundException e ) {
             LOG.warn( "Not found", e );
         }

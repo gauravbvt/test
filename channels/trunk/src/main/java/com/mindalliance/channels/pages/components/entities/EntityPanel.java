@@ -34,21 +34,33 @@ import java.util.Set;
  */
 public class EntityPanel extends AbstractCommandablePanel {
 
+    public static final String DETAILS = "details";
+    public static final String FLOWS = "flows";
+    public static final String NETWORK = "network";
+    public static final String MAP = "map";
+    public static final String ISSUES = "issues";
+
     private WebMarkupContainer banner;
     private Label entityNameLabel;
     private Component entityActionsMenu;
     private Component entityAspect;
-    private String aspectShown = "details";
+    private String aspectShown = DETAILS;
+
+
+    public EntityPanel( String id, IModel<? extends ModelObject> model, Set<Long> expansions ) {
+        this( id, model, expansions, DETAILS );
+    }
+
+    public EntityPanel( String id, IModel<? extends ModelObject> model, Set<Long> expansions, String aspect ) {
+        super( id, model, expansions );
+        aspectShown = aspect;
+        init();
+    }
 
 
     public String getAspectShown() {
-        return aspectShown;
-    }
-
-    public EntityPanel( String id, IModel<? extends ModelObject> model, Set<Long> expansions ) {
-        super( id, model, expansions );
-        init();
-    }
+         return aspectShown;
+     }
 
     private void init() {
         banner = new WebMarkupContainer( "banner" );
@@ -101,15 +113,15 @@ public class EntityPanel extends AbstractCommandablePanel {
 
 
     private void showEntityAspect() {
-        if ( aspectShown.equals( "details" ) ) {
+        if ( aspectShown.equals( DETAILS ) ) {
             entityAspect = getEntityDetailsPanel();
-        } else if ( aspectShown.equals( "network" ) ) {
+        } else if ( aspectShown.equals( NETWORK ) ) {
             entityAspect = getEntityNetworkPanel();
-        } else if ( aspectShown.equals( "map" ) ) {
+        } else if ( aspectShown.equals( MAP ) ) {
             entityAspect = getEntityMapPanel();
-        } else if ( aspectShown.equals( "flows" ) ) {
+        } else if ( aspectShown.equals( FLOWS ) ) {
             entityAspect = getEntityFlowsPanel();
-        } else if ( aspectShown.equals( "issues" ) ) {
+        } else if ( aspectShown.equals( ISSUES ) ) {
             entityAspect = getEntityIssuesPanel();
         } else {
             // Should never happen
@@ -207,7 +219,7 @@ public class EntityPanel extends AbstractCommandablePanel {
     }
 
     public void setAspectShown( AjaxRequestTarget target, String aspect ) {
-        this.aspectShown = aspect;
+        aspectShown = aspect;
         showEntityAspect();
         target.addComponent( entityAspect );
     }

@@ -4,9 +4,6 @@ import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Role;
-import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.analysis.network.EntityRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.pages.Project;
@@ -37,7 +34,6 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
     private static final int PAGE_SIZE = 10;
 
     private IModel<T> entityModel;
-    private T selectedEntity;
     private EntityRelationship<T> selectedEntityRel;
 
 
@@ -60,7 +56,6 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
         EntityNetworkDiagramPanel<T> entityRelDiagramPanel = new EntityNetworkDiagramPanel<T>(
                 "diagram",
                 entityModel,
-                selectedEntity,
                 selectedEntityRel
         );
         addOrReplace( entityRelDiagramPanel );
@@ -89,12 +84,7 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
      * @return a string
      */
     public String getFlowsTitle() {
-        if ( selectedEntity != null ) {
-            return "Flows between \""
-                    + getEntity().getName()
-                    + "\" and "
-                    + selectedEntity.getName();
-        } else if ( selectedEntityRel != null ) {
+        if ( selectedEntityRel != null ) {
             T fromEntity = selectedEntityRel.getFromEntity( getDqo() );
             T toEntity = selectedEntityRel.getToEntity( getDqo() );
             if ( fromEntity == null || toEntity == null ) {
@@ -121,17 +111,14 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
     public List<Flow> getFlows() {
         if ( selectedEntityRel != null ) {
             return selectedEntityRel.getFlows();
-        } else if ( selectedEntity != null ) {
-            List<Flow> flows = new ArrayList<Flow>();
-            EntityRelationship<T> entityRel = getDqo().findEntityRelationship( getEntity(), selectedEntity );
-            if ( entityRel != null ) flows.addAll( entityRel.getFlows() );
-            return flows;
         } else {
             List<Flow> flows = new ArrayList<Flow>();
             for ( T other : getEntities() ) {
                 if ( getEntity() != other ) {
-                    EntityRelationship<T> entityRel = getDqo().findEntityRelationship( getEntity(), other );
-                    if ( entityRel != null ) flows.addAll( entityRel.getFlows() );
+                    EntityRelationship<T> sendRel = getDqo().findEntityRelationship( getEntity(), other );
+                    if ( sendRel != null ) flows.addAll( sendRel.getFlows() );
+                    EntityRelationship<T> receiveRel = getDqo().findEntityRelationship( other, getEntity() );
+                    if ( receiveRel != null ) flows.addAll( receiveRel.getFlows() );
                 }
             }
             return flows;
@@ -159,13 +146,17 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
         if ( change.isSelected() ) {
             Identifiable changed = change.getSubject();
             if ( changed instanceof Project ) {
-                selectedEntity = null;
                 selectedEntityRel = null;
-            } else if ( changed instanceof Part ) {
-                selectedEntity = (T) extractEntityFromPart( (Part) changed );
-                selectedEntityRel = null;
+            } else if ( changed instanceof ModelObject
+                    && ((ModelObject)changed).isEntity()) {
+                if (changed == getEntity()) {
+                    selectedEntityRel = null;
+                } else {
+                    // other entity selected; make it an expanded change
+                    change.setType(  Change.Type.Expanded );
+                    super.changed( change );
+                }
             } else if ( changed instanceof EntityRelationship ) {
-                selectedEntity = null;
                 selectedEntityRel = (EntityRelationship<T>) changed;
             }
             // Don't percolate change on selection of project, entity or entity relationship.
@@ -177,6 +168,7 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
         }
     }
 
+/*
     private ModelObject extractEntityFromPart( Part part ) {
         ModelObject entity = getEntity();
         if ( entity instanceof Actor ) {
@@ -190,6 +182,7 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
             return null;
         }
     }
+*/
 
     /**
      * {@inheritDoc}
@@ -198,7 +191,7 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
         if ( change.isSelected() ) {
             refresh( target );
             // Don't percolate update on selection unless a part was selected.
-            if ( change.getSubject() instanceof Flow ) {
+            if ( change.getSubject() instanceof Part ) {
                 super.updateWith( target, change );
             }
         } else {

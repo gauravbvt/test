@@ -71,13 +71,11 @@ public interface DiagramFactory<Vertex, Edge> {
     /**
      * Instantiate an entity network diagram.
      * @param entity the entity at the center of the diagram
-     * @param selectedEntity another entity selected
      * @param selectedEntityRel an edge selected
      * @return an entity network diagram
      */
     <T extends ModelObject>Diagram newEntityNetworkDiagram(
             T entity,
-            T selectedEntity,
             EntityRelationship<T> selectedEntityRel );
 
     /**

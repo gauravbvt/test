@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.text.MessageFormat;
 import java.text.Collator;
 import java.util.Arrays;
@@ -97,7 +98,7 @@ public final class ProjectPage extends WebPage implements Updatable {
     /**
      * Ids of expanded entities.
      */
-    private List<Long> expandedEntities = new ArrayList<Long>();
+    private List<EntityExpansion> expandedEntities = new ArrayList<EntityExpansion>();
 
     /**
      * Label with name of scenario.
@@ -156,6 +157,10 @@ public final class ProjectPage extends WebPage implements Updatable {
      * The scenarios map panel.
      */
     private Component planMapPanel;
+    /**
+     * The aspect for entity panel.
+     */
+    private String entityAspect = EntityPanel.DETAILS;
 
     /**
      * Used when page is called without parameters.
@@ -344,7 +349,8 @@ public final class ProjectPage extends WebPage implements Updatable {
             entityPanel = new EntityPanel(
                     "entity",
                     new Model<ModelObject>( entity ),
-                    getReadOnlyExpansions() );
+                    getReadOnlyExpansions(),
+                    entityAspect);
         }
         makeVisible( entityPanel, entity != null );
         entityPanel.setOutputMarkupId( true );
@@ -700,8 +706,9 @@ public final class ProjectPage extends WebPage implements Updatable {
             ModelObject entity = findExpandedEntity();
             if ( entity != null ) {
                 expansions.remove( entity.getId() );
+                entityAspect = getEntityPanelAspect();
                 getCommander().releaseAnyLockOn( entity );
-                expandedEntities.add( 0, entity.getId() );
+                expandedEntities.add( 0, new EntityExpansion( entityAspect, entity.getId() ));
             }
             // expandedEntities.remove( identifiable.getId() );
         }
@@ -716,15 +723,24 @@ public final class ProjectPage extends WebPage implements Updatable {
         if ( identifiable instanceof ModelObject
                 && ( (ModelObject) identifiable ).isEntity() ) {
             if ( !expandedEntities.isEmpty() ) {
-                long entityId = expandedEntities.remove( 0 );
-                getCommander().requestLockOn( entityId );
-                expansions.add( entityId );
+                EntityExpansion entityExpansion = expandedEntities.remove( 0 );
+                getCommander().requestLockOn( entityExpansion.getEntityId() );
+                expansions.add( entityExpansion.getEntityId() );
+                entityAspect = entityExpansion.getAspect();
             }
         }
         getCommander().releaseAnyLockOn( identifiable );
         expansions.remove( identifiable.getId() );
     }
 
+    private String getEntityPanelAspect() {
+        if ( entityPanel instanceof EntityPanel ) {
+            return ((EntityPanel)entityPanel).getAspectShown();
+        }
+        else {
+            return EntityPanel.DETAILS;
+        }
+    }
 
     /**
      * {@inheritDoc}
@@ -878,4 +894,26 @@ public final class ProjectPage extends WebPage implements Updatable {
         return Collections.unmodifiableSet( expansions );
     }
 
+    /**
+     * Entity expansion record.
+     */
+    private class EntityExpansion implements Serializable {
+
+        private String aspect = "details";
+        private Long entityId;
+
+        private EntityExpansion( String apsect, Long entityId ) {
+            this.aspect = apsect;
+            this.entityId = entityId;
+        }
+
+        public String getAspect() {
+            return aspect;
+        }
+
+        public Long getEntityId() {
+            return entityId;
+        }
+
+    }
 }

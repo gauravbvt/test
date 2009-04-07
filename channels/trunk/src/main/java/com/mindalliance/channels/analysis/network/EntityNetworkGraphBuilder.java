@@ -8,6 +8,7 @@ import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;
 
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * An entity network graph builder.
@@ -48,18 +49,28 @@ public class EntityNetworkGraphBuilder implements GraphBuilder<ModelObject, Enti
             ModelObject entity,
             List<? extends ModelObject> entities ) {
         digraph.addVertex( entity );
-        for ( ModelObject otherEntity : entities ) {
-            if ( otherEntity != entity ) digraph.addVertex( otherEntity );
-        }
+        List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
         for ( ModelObject otherEntity : entities ) {
             if ( otherEntity != entity ) {
-                EntityRelationship entityRel = dqo.findEntityRelationship( entity, otherEntity );
-                if ( entityRel != null ) {
-                    digraph.addEdge( entity, otherEntity, entityRel );
+                EntityRelationship sendRel = dqo.findEntityRelationship( entity, otherEntity );
+                if ( sendRel != null ) {
+                    rels.add( sendRel );
+                }
+                EntityRelationship receiveRel = dqo.findEntityRelationship( otherEntity, entity );
+                if ( receiveRel != null ) {
+                    rels.add( receiveRel );
                 }
             }
         }
+        for ( EntityRelationship entityRel : rels ) {
+            digraph.addVertex( entityRel.getToEntity( dqo ) );
+            digraph.addVertex( entityRel.getFromEntity( dqo ) );
+        }
+        for ( EntityRelationship entityRel : rels ) {
+            if ( entityRel != null ) {
+                digraph.addEdge( entityRel.getFromEntity( dqo ), entityRel.getToEntity( dqo ), entityRel );
+            }
+        }
     }
-
 
 }

@@ -516,8 +516,6 @@ public class DataQueryObjectImpl implements DataQueryObject {
      */
     public EntityRelationship findEntityRelationship( ModelObject fromEntity, ModelObject toEntity ) {
         List<Flow> entityFlows = new ArrayList<Flow>();
-        ResourceSpec fromResourceSpec = ResourceSpec.with( fromEntity );
-        ResourceSpec toResourceSpec = ResourceSpec.with( toEntity );
         for ( Scenario scenario : list( Scenario.class ) ) {
             Iterator<Flow> flows = scenario.flows();
             while ( flows.hasNext() ) {
@@ -525,8 +523,8 @@ public class DataQueryObjectImpl implements DataQueryObject {
                 if ( flow.getSource().isPart() && flow.getTarget().isPart() ) {
                     Part sourcePart = (Part) flow.getSource();
                     Part targetPart = (Part) flow.getTarget();
-                    if ( sourcePart.resourceSpec().narrowsOrEquals( fromResourceSpec )
-                            && targetPart.resourceSpec().narrowsOrEquals( toResourceSpec ) ) {
+                    if ( sourcePart.resourceSpec().hasEntity( fromEntity )
+                            && targetPart.resourceSpec().hasEntity( toEntity ) ) {
                         entityFlows.add( flow );
                     }
                 }
@@ -539,7 +537,6 @@ public class DataQueryObjectImpl implements DataQueryObject {
             entityRel.setFlows( entityFlows );
             return entityRel;
         }
-
 
     }
 
