@@ -47,11 +47,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
      * Font size for node labels.
      */
     private static final String NODE_FONT_SIZE = "10";
-    /**
-     * Number of characters after which a long line is wrapped on separator.
-     */
-    private static final int LINE_WRAP_SIZE = 15;
-    /**
+     /**
      * Distance for edge head and tail labels.
      */
     private static final String LABEL_DISTANCE = "1.0";

@@ -22,6 +22,7 @@ import com.mindalliance.channels.AbstractUnicastChannelable;
 import com.mindalliance.channels.Job;
 import com.mindalliance.channels.Place;
 import com.mindalliance.channels.analysis.network.ScenarioRelationship;
+import com.mindalliance.channels.analysis.network.EntityRelationship;
 import com.mindalliance.channels.dao.EvacuationScenario;
 import com.mindalliance.channels.dao.FireScenario;
 import com.mindalliance.channels.export.Importer;
@@ -493,28 +494,60 @@ public class DataQueryObjectImpl implements DataQueryObject {
         while ( flows.hasNext() ) {
             Flow flow = flows.next();
             if ( !flow.isInternal() ) {
-                ExternalFlow externalFlow = (ExternalFlow)flow;
+                ExternalFlow externalFlow = (ExternalFlow) flow;
                 if ( externalFlow.getConnector().getScenario() == toScenario ) {
                     externalFlows.add( externalFlow );
                 }
             }
         }
-        if (externalFlows.isEmpty()) {
+        if ( externalFlows.isEmpty() ) {
             return null;
         } else {
             ScenarioRelationship scenarioRelationship = new ScenarioRelationship(
                     fromScenario,
-                    toScenario);
+                    toScenario );
             scenarioRelationship.setExternalFlows( externalFlows );
             return scenarioRelationship;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public EntityRelationship findEntityRelationship( ModelObject fromEntity, ModelObject toEntity ) {
+        List<Flow> entityFlows = new ArrayList<Flow>();
+        ResourceSpec fromResourceSpec = ResourceSpec.with( fromEntity );
+        ResourceSpec toResourceSpec = ResourceSpec.with( toEntity );
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            Iterator<Flow> flows = scenario.flows();
+            while ( flows.hasNext() ) {
+                Flow flow = flows.next();
+                if ( flow.getSource().isPart() && flow.getTarget().isPart() ) {
+                    Part sourcePart = (Part) flow.getSource();
+                    Part targetPart = (Part) flow.getTarget();
+                    if ( sourcePart.resourceSpec().narrowsOrEquals( fromResourceSpec )
+                            && targetPart.resourceSpec().narrowsOrEquals( toResourceSpec ) ) {
+                        entityFlows.add( flow );
+                    }
+                }
+            }
+        }
+        if ( entityFlows.isEmpty() ) {
+            return null;
+        } else {
+            EntityRelationship entityRel = new EntityRelationship( fromEntity, toEntity );
+            entityRel.setFlows( entityFlows );
+            return entityRel;
+        }
+
+
     }
 
 
     /**
      * {@inheritDoc}
      */
-     public List<Flow> findAllRelatedFlows( ResourceSpec resourceSpec, boolean asSource ) {
+    public List<Flow> findAllRelatedFlows( ResourceSpec resourceSpec, boolean asSource ) {
         List<Flow> relatedFlows = new ArrayList<Flow>();
         for ( Scenario scenario : list( Scenario.class ) ) {
             Iterator<Flow> flows = scenario.flows();
@@ -886,6 +919,44 @@ public class DataQueryObjectImpl implements DataQueryObject {
             } );
             return list;
         }
+    }
+
+    /**
+     * {@inheritDoc
+     */
+    public List<Job> findAllJobs( Actor actor ) {
+        String actorName = actor.getName();
+        List<Job> jobs = new ArrayList<Job>();
+        for ( Organization org : list( Organization.class ) ) {
+            for ( Job job : org.getJobs() ) {
+                if ( job.getActorName().equals( actorName ) ) {
+                    jobs.add( job );
+                }
+            }
+            for ( Job job : findUnconfirmedJobs( org ) ) {
+                if ( job.getActorName().equals( actorName ) ) {
+                    jobs.add( job );
+                }
+            }
+        }
+        return jobs;
+    }
+
+    /**
+     * {@inheritDoc
+     */
+    public List<String> findJobTitles( Actor actor ) {
+        String actorName = actor.getName();
+        List<String> titles = new ArrayList<String>();
+        for ( Organization org : list( Organization.class ) ) {
+            for ( Job job : org.getJobs() ) {
+                if ( job.getActorName().equals( actorName ) ) {
+                    String title = job.getTitle();
+                    if ( !title.isEmpty() ) titles.add( title );
+                }
+            }
+        }
+        return titles;
     }
 
 

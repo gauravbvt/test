@@ -42,11 +42,11 @@ public class PlanMapGraphBuilder implements GraphBuilder<Scenario, ScenarioRelat
                             }
 
                         } );
-        populateScenariosGraph( digraph, scenarios );
+        populateGraph( digraph, scenarios );
         return digraph;
     }
 
-    private void populateScenariosGraph(
+    private void populateGraph(
             DirectedGraph<Scenario, ScenarioRelationship> digraph,
             List<Scenario> scenarios ) {
         for ( Scenario scenario : scenarios ) {

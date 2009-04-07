@@ -17,7 +17,7 @@ import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.analysis.network.ScenarioRelationship;
 
 /**
- * A scenario relationship panel
+ * A panel with a table of external flows.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf

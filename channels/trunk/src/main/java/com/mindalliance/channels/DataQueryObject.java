@@ -2,6 +2,7 @@ package com.mindalliance.channels;
 
 import com.mindalliance.channels.util.Play;
 import com.mindalliance.channels.analysis.network.ScenarioRelationship;
+import com.mindalliance.channels.analysis.network.EntityRelationship;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Iterator;
@@ -363,10 +364,33 @@ public interface DataQueryObject {
 
     /**
      * Find any relationship between a scenario and another.
-     * A link is one or more external flow in the from-scenario referencing a connector in the to-scenario.
+     * A relationship is one or more external flow in the from-scenario referencing a connector in the to-scenario.
      * @param fromScenario a scenario
      * @param toScenario a scenario
      * @return a scenario relationship or null if no link exists
      */
     ScenarioRelationship findScenarioRelationship( Scenario fromScenario, Scenario toScenario );
+
+    /**
+     * Find any relationship between an entity and an other.
+     * A relationship is one or more flow from the entity to the other.
+     * @param fromEntity an entity
+     * @param toEntity an entity
+     * @return an entity relationship or null if no link exists
+     */
+    <T extends ModelObject>EntityRelationship<T> findEntityRelationship( T fromEntity, T toEntity );
+
+    /**
+     * Find all jobs, confirmed or not, of an actor.
+     * @param actor an actor
+     * @return a list of jobs
+     */
+    List<Job> findAllJobs( Actor actor );
+
+    /**
+     * Find all job titles of an actor.
+     * @param actor an actor
+     * @return a list of strings
+     */
+    List<String> findJobTitles( Actor actor );
 }

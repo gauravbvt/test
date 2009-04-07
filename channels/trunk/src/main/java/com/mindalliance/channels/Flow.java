@@ -652,6 +652,17 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
                 && maxDelay.equals( new Delay() );
     }
 
+    /**
+     * Get a string description of the kind of communication
+     * including max delay if applicable
+     *
+     * @return a string description of the communication
+     */
+    public String getKind() {
+        return isAskedFor() ? "answer" : "notify";
+    }
+
+
 
     /**
      * The significance of a flow.

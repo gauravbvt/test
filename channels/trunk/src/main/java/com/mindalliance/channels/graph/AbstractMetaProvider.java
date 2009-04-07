@@ -37,6 +37,10 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
     protected static final String EDGE_FONT_SIZE = "8";
 
     /**
+     * Number of characters after which a long line is wrapped on separator.
+     */
+    protected static final int LINE_WRAP_SIZE = 15;
+    /**
      * PNG, SVG, IMAP etc.
      */
     private String outputFormat;

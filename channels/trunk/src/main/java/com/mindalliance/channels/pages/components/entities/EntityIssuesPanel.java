@@ -37,32 +37,32 @@ public class EntityIssuesPanel extends AbstractTablePanel {
      */
     private IssuesPanel entityIssues;
     /**
-     *  Issues table.
+     * Issues table.
      */
     private IssuesTablePanel issuesTable;
 
     public EntityIssuesPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( id, model, expansions );
-        init( expansions );
+        init();
     }
 
-    private void init( final Set<Long> expansions ) {
+    private void init() {
         WebMarkupContainer includeContainer = new WebMarkupContainer( "include" );
-         includeContainer.setVisible( !(getEntity() instanceof Actor ) );
-         add( includeContainer );
+        includeContainer.setVisible( !( getEntity() instanceof Actor ) );
+        add( includeContainer );
         CheckBox specificCheckBox = new CheckBox(
                 "members-included",
                 new PropertyModel<Boolean>( this, "membersIncluded" ) );
         specificCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                addIssuesTable( expansions );
+                addIssuesTable();
                 target.addComponent( issuesTable );
             }
         } );
         includeContainer.add( specificCheckBox );
         Label entityLabel = new Label( "entity", new PropertyModel( this, "entity.label" ) );
         includeContainer.add( entityLabel );
-        addIssuesTable( expansions );
+        addIssuesTable();
         entityIssues = new IssuesPanel(
                 "issues",
                 new Model<ModelObject>( getEntity() ),
@@ -72,13 +72,13 @@ public class EntityIssuesPanel extends AbstractTablePanel {
         makeVisible( entityIssues, Project.analyst().hasIssues( getEntity(), false ) );
     }
 
-    private void addIssuesTable( Set<Long> expansions ) {
+    private void addIssuesTable() {
         issuesTable = new IssuesTablePanel(
                 "issues-table",
                 new PropertyModel<ResourceSpec>( this, "resourceSpec" ),
                 new PropertyModel<Boolean>( this, "membersExcluded" ),
                 20,
-                expansions );
+                getExpansions() );
         issuesTable.setOutputMarkupId( true );
         addOrReplace( issuesTable );
     }

@@ -39,16 +39,16 @@ public class EntityFlowsPanel extends AbstractCommandablePanel {
 
     public EntityFlowsPanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
         super( id, iModel, expansions );
-        init( expansions );
+        init( );
     }
 
-    private void init( final Set<Long> expansions ) {
+    private void init(  ) {
         CheckBox restrictCheckBox = new CheckBox(
                 "restricted",
                 new PropertyModel<Boolean>( this, "restricted" ) );
         restrictCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                addPlaysTable( expansions );
+                addPlaysTable(  );
                 target.addComponent( playsTable );
             }
         } );
@@ -57,10 +57,10 @@ public class EntityFlowsPanel extends AbstractCommandablePanel {
                 "restricted-string",
                 new PropertyModel<String>( this, "restrictedString" ) );
         add( restrictedLabel );
-        addPlaysTable( expansions );
+        addPlaysTable(  );
     }
 
-    private void addPlaysTable( Set<Long> expansions ) {
+    private void addPlaysTable(  ) {
         /*       playsTable = new PlaysTablePanel(
                         "flows",
                         new PropertyModel<ResourceSpec>( this, "resourceSpec" ),
@@ -72,7 +72,7 @@ public class EntityFlowsPanel extends AbstractCommandablePanel {
                 "flows",
                 new PropertyModel<ModelObject>( this, "entity" ),
                 new PropertyModel<List<Play>>( this, "plays" ),
-                expansions,
+                getExpansions(),
                 20 );
         playsTable.setOutputMarkupId( true );
         addOrReplace( playsTable );

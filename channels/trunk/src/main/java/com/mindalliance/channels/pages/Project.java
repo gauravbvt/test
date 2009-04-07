@@ -10,6 +10,9 @@ import com.mindalliance.channels.export.Exporter;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.pages.reports.ProjectReportPage;
+import com.mindalliance.channels.pages.png.PlanMapPage;
+import com.mindalliance.channels.pages.png.FlowMapPage;
+import com.mindalliance.channels.pages.png.EntityNetworkPage;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.userdetails.UserDetails;
@@ -119,6 +122,7 @@ public final class Project extends WebApplication implements Identifiable {     
         mount( new QueryStringUrlCodingStrategy( "scenario.xml", ExportPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.png", FlowMapPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "plan.png", PlanMapPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "network.png", EntityNetworkPage.class ) );
         /*
         mount( new QueryStringUrlCodingStrategy( "role.html", RolePage.class ) );
         mount( new QueryStringUrlCodingStrategy( "actor.html", ActorPage.class ) );

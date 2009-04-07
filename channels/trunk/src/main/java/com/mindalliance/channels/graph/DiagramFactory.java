@@ -3,7 +3,9 @@ package com.mindalliance.channels.graph;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.analysis.network.ScenarioRelationship;
+import com.mindalliance.channels.analysis.network.EntityRelationship;
 
 import java.util.List;
 
@@ -65,6 +67,18 @@ public interface DiagramFactory<Vertex, Edge> {
      * @return a plan map diagram
      */
     Diagram newPlanMapDiagram( List<Scenario> scenarios, Scenario scenario, ScenarioRelationship scRel );
+
+    /**
+     * Instantiate an entity network diagram.
+     * @param entity the entity at the center of the diagram
+     * @param selectedEntity another entity selected
+     * @param selectedEntityRel an edge selected
+     * @return an entity network diagram
+     */
+    <T extends ModelObject>Diagram newEntityNetworkDiagram(
+            T entity,
+            T selectedEntity,
+            EntityRelationship<T> selectedEntityRel );
 
     /**
      * Gets the preset graph renderer.

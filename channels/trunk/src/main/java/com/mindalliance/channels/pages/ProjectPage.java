@@ -397,7 +397,7 @@ public final class ProjectPage extends WebPage implements Updatable {
      * @param parameters the page parameters
      * @return a scenario, or null if not found
      */
-    static Scenario findScenario( DataQueryObject dqo, PageParameters parameters ) {
+    public static Scenario findScenario( DataQueryObject dqo, PageParameters parameters ) {
         if ( parameters.containsKey( SCENARIO_PARM ) )
             try {
                 return dqo.find( Scenario.class, parameters.getLong( SCENARIO_PARM ) );
@@ -418,7 +418,7 @@ public final class ProjectPage extends WebPage implements Updatable {
      * @param parameters the page parameters
      * @return a part, or null if not found
      */
-    static Part findPart( Scenario scenario, PageParameters parameters ) {
+    public static Part findPart( Scenario scenario, PageParameters parameters ) {
         if ( parameters.containsKey( PART_PARM ) )
             try {
                 if ( scenario != null )
@@ -793,11 +793,11 @@ public final class ProjectPage extends WebPage implements Updatable {
             }
         }
         if ( identifiable instanceof Scenario ) {
-            target.addComponent( planMapPanel );
             if ( change.isDisplay() ) {
                 scenarioPanel.refreshScenarioEditPanel( target );
             }
             if ( change.isUpdated() ) {
+                target.addComponent( planMapPanel );
                 if ( change.getProperty().equals( "name" ) ) {
                     target.addComponent( scenarioNameLabel );
                     target.addComponent( scenarioDropDownChoice );

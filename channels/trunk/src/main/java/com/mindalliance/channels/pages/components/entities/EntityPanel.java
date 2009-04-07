@@ -4,6 +4,7 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.Role;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.LockManager;
@@ -35,7 +36,6 @@ public class EntityPanel extends AbstractCommandablePanel {
 
     private WebMarkupContainer banner;
     private Label entityNameLabel;
-    private EntityShowMenuPanel entityShowMenu;
     private Component entityActionsMenu;
     private Component entityAspect;
     private String aspectShown = "details";
@@ -63,7 +63,7 @@ public class EntityPanel extends AbstractCommandablePanel {
             }
         };
         banner.add( closeLink );
-        entityShowMenu = new EntityShowMenuPanel(
+        EntityShowMenuPanel entityShowMenu = new EntityShowMenuPanel(
                 "entityShowMenu",
                 new PropertyModel<ModelObject>( this, "entity" ) );
         entityShowMenu.setEntityPanel( this );
@@ -81,7 +81,7 @@ public class EntityPanel extends AbstractCommandablePanel {
         annotateEntityName();
     }
 
-    private void annotateEntityName(  ) {
+    private void annotateEntityName() {
         Analyst analyst = ( (Project) getApplication() ).getAnalyst();
         String issue = analyst.getIssuesSummary(
                 getEntity(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
@@ -139,7 +139,24 @@ public class EntityPanel extends AbstractCommandablePanel {
     }
 
     private Component getEntityNetworkPanel() {
-        return new Label( "aspect", "Network is under construction" );
+        if ( getEntity() instanceof Actor ) {
+            return new EntityNetworkPanel<Actor>(
+                    "aspect",
+                    new PropertyModel<Actor>( this, "entity" ),
+                    getExpansions() );
+        } else if ( getEntity() instanceof Role ) {
+            return new EntityNetworkPanel<Role>(
+                    "aspect",
+                    new PropertyModel<Role>( this, "entity" ),
+                    getExpansions() );
+        } else if ( getEntity() instanceof Organization ) {
+            return new EntityNetworkPanel<Organization>(
+                    "aspect",
+                    new PropertyModel<Organization>( this, "entity" ),
+                    getExpansions() );
+        } else {
+            return new Label( "aspect", "Network is under construction" );
+        }
     }
 
     private Component getEntityMapPanel() {

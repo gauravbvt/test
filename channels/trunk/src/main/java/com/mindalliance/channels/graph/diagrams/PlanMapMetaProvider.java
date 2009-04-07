@@ -24,10 +24,6 @@ import java.text.MessageFormat;
  */
 public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, ScenarioRelationship> {
     /**
-     * Number of characters after which a long line is wrapped on separator.
-     */
-    private static final int LINE_WRAP_SIZE = 15;
-    /**
      * Color for subgraph contour
      */
     private static final String SCENARIO_COLOR = "azure2";
@@ -74,13 +70,11 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
             }
 
             public String getVertexURL( Scenario scenario ) {
-                // Plan id = 0 for now sice there is only one plan
                 Object[] args = {0, scenario.getId()};
                 return MessageFormat.format( VERTEX_URL_FORMAT, args );
             }
 
             public String getEdgeURL( ScenarioRelationship scRel ) {
-                // Plan id = 0 for now sice there is only one plan
                 Object[] args = {0, scRel.getId()};
                 return MessageFormat.format( EDGE_URL_FORMAT, args );
             }
@@ -138,9 +132,6 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
                 list.add( new DOTAttribute( "size", getGraphSizeString() ) );
                 list.add( new DOTAttribute( "ratio", "compress" ) );
             }
-            // list.add( new DOTAttribute( "overlap", "false" ) );
-            // list.add( new DOTAttribute( "splines", "true" ) );
-            // list.add( new DOTAttribute( "sep", ".1" ) );
             return list;
         }
 

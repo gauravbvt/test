@@ -31,7 +31,7 @@ public class ScenarioRelationship implements Identifiable {
     private static final Logger LOG = LoggerFactory.getLogger( ScenarioRelationship.class );
 
     /**
-     * Scenario wehre external links are defined.
+     * Scenario where external links are defined.
      */
     private Long fromScenarioId;
     /**

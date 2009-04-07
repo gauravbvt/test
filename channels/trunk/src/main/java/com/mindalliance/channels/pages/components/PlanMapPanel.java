@@ -42,15 +42,9 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
      * Selected scenario relationship in plan.
      */
     private ScenarioRelationship selectedScRel;
-    /**
-     * Expansions.
-     */
-    private Set<Long> expansions;
-
 
     public PlanMapPanel( String id, Set<Long> expansions ) {
         super( id, null, expansions );
-        this.expansions = expansions;
         init();
     }
 
@@ -89,7 +83,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
                 new Model<Project>( Project.getProject() ),
                 new PropertyModel<ArrayList<ExternalFlow>>( this, "externalFlows" ),
                 PAGE_SIZE,
-                expansions
+                getExpansions()
         );
         externalFlowsPanel.setOutputMarkupId( true );
         addOrReplace( externalFlowsPanel );
@@ -183,9 +177,6 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
         addPlanMapDiagramPanel();
         addExternalFlowsPanel();
         target.addComponent( this );
-        /*target.addComponent( planMapDiagramPanel );
-        target.addComponent( flowsTitleLabel );
-        target.addComponent( externalFlowsPanel );*/
     }
 
     /**

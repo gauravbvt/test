@@ -4,9 +4,12 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.analysis.network.ScenarioRelationship;
+import com.mindalliance.channels.analysis.network.EntityRelationship;
 import com.mindalliance.channels.graph.diagrams.FlowMapDiagram;
 import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
+import com.mindalliance.channels.graph.diagrams.EntityNetworkDiagram;
 
 import java.util.List;
 
@@ -70,6 +73,10 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
      */
     public Diagram newFlowMapDiagram( Scenario scenario, Node node ) {
         return new FlowMapDiagram( scenario, node );
+    }
+
+    public Diagram newEntityNetworkDiagram( ModelObject entity, ModelObject selectedEntity, EntityRelationship selectedEntityRel ) {
+        return new EntityNetworkDiagram( entity, selectedEntity, selectedEntityRel);
     }
 
     /**
