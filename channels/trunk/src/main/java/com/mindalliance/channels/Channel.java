@@ -115,7 +115,7 @@ public class Channel implements Serializable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append( medium == null ? "NO MEDIUM" : medium.getName() );
+        sb.append( medium == null ? "NO MEDIUM" : medium.getLabel() );
         sb.append( ": " );
         sb.append( address.isEmpty() ? "?" : address );
         return sb.toString();

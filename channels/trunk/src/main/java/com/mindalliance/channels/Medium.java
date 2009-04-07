@@ -25,7 +25,7 @@ public enum Medium {
     /**
      * Telephone.
      */
-    HomePhone( "Phone - home", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}" ),
+    HomePhone( "Home", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}" ),
     /**
      * Fax.
      */
@@ -33,7 +33,7 @@ public enum Medium {
     /**
      * Cell phone.
      */
-    Cell( "Phone - cell", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}" ),
+    Cell( "Cell", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}" ),
     /**
      * Phone conference.
      */
@@ -65,7 +65,7 @@ public enum Medium {
     /**
      * In person, one on one.
      */
-    F2F( "Face-to-face", ".*" ),
+    F2F( "Face to face", ".*" ),
     /**
      *
      */
@@ -73,17 +73,17 @@ public enum Medium {
     /**
      * Miscellaneous unicast.
      */
-    OtherUnicast( "Other - unicast", ".+" ),
+    OtherUnicast( "Unicast", ".+" ),
     /**
      * Miscellaneous broadcast.
      */
-    Other( "Other - broadcast", ".+", false );
+    Other( "Broadcast", ".+", false );
 
 
     /**
      * The medium's name
      */
-    private String name = "";
+    private String label = "";
     /**
      * A pattern for validation
      */
@@ -97,12 +97,12 @@ public enum Medium {
      */
     private boolean unicast = true;
 
-    Medium( String name, String addressPattern ) {
-        this( name, addressPattern, true );
+    Medium( String label, String addressPattern ) {
+        this( label, addressPattern, true );
     }
 
-    Medium( String name, String addressPattern, boolean unicast ) {
-        this.name = name;
+    Medium( String label, String addressPattern, boolean unicast ) {
+        this.label = label;
         this.unicast = unicast;
         this.addressPattern = addressPattern;
         compiledPattern = Pattern.compile( addressPattern );
@@ -117,14 +117,14 @@ public enum Medium {
      */
     public static Medium named( String name ) {
         for ( Medium m : Medium.values() ) {
-            if ( m.getName().equals( name ) )
+            if ( m.getLabel().equals( name ) )
                 return m;
         }
         return Other;
     }
 
-    public String getName() {
-        return name;
+    public String getLabel() {
+        return label;
     }
 
     public boolean isUnicast() {
@@ -166,7 +166,7 @@ public enum Medium {
      */
     @Override
     public String toString() {
-        return name;
+        return label;
     }
 
     /**

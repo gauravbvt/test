@@ -329,8 +329,8 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                         public Object getDisplayValue( Medium object ) {
                             return object == null ? "Select a medium"
                                  : candidateMedia.contains( object ) ?
-                                        MessageFormat.format( "{0} *", object.getName() )
-                                 : object.getName();
+                                        MessageFormat.format( "{0} *", object.getLabel() )
+                                 : object.getLabel();
                         }
 
                         public String getIdValue( Medium object, int index ) {
@@ -362,7 +362,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             List<Medium> media = Medium.media();
             Collections.sort( media, new Comparator<Medium>() {
                 public int compare( Medium o1, Medium o2 ) {
-                    return Collator.getInstance().compare( o1.getName(), o2.getName() );
+                    return Collator.getInstance().compare( o1.getLabel(), o2.getLabel() );
                 }
             } );
 

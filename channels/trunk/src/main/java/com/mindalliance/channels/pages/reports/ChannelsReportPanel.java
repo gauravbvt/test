@@ -56,7 +56,7 @@ public class ChannelsReportPanel extends Panel {
                             new AttributeModifier(
                                     "class",
                                     true,
-                                    new Model<String>( medium.getName() ) ) );
+                                    new Model<String>( medium.getLabel() ) ) );
                 }
                 item.add( addressLabel );
             }
