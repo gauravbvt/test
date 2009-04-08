@@ -44,8 +44,8 @@ public class NetworkFlowsPanel extends AbstractTablePanel<Flow> {
         columns.add( new PropertyColumn<String>(
                 new Model<String>( "Scenario" ),
                 "scenario.name", "scenario.name" ) );
-        columns.add( makeColumn( "Info", "name", "@kind", "?", "description" ) );
         columns.add( makeLinkColumn( "Source", "source", "source.title", EMPTY ) );
+        columns.add( makeColumn( "Info", "name", "@kind", "?", "description" ) );
         columns.add( makeLinkColumn( "Target", "target", "target.title", EMPTY ) );
         columns.add( new PropertyColumn<String>(
                 new Model<String>( "Max delay" ),

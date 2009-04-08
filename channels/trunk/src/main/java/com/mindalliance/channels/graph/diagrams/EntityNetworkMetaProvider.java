@@ -149,7 +149,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
         public List<DOTAttribute> getEdgeAttributes( EntityRelationship edge, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowhead", "vee" ) );
-            // list.add( new DOTAttribute( "arrowsize", "0.75" ) );
+            list.add( new DOTAttribute( "arrowsize", "0.75" ) );
             list.add( new DOTAttribute( "fontname", EDGE_FONT ) );
             list.add( new DOTAttribute( "fontsize", EDGE_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );

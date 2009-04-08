@@ -33,17 +33,45 @@ import java.util.Set;
  * Time: 12:37:10 PM
  */
 public class EntityPanel extends AbstractCommandablePanel {
-
+    /**
+     * Details aspect.
+     */
     public static final String DETAILS = "details";
+    /**
+     * Flows aspect.
+     */
     public static final String FLOWS = "flows";
+    /**
+     * Network aspect.
+     */
     public static final String NETWORK = "network";
+    /**
+     * Map aspect.
+     */
     public static final String MAP = "map";
+    /**
+     * Issues aspect.
+     */
     public static final String ISSUES = "issues";
-
+    /**
+     * Banner.
+     */
     private WebMarkupContainer banner;
+    /**
+     * Entity name plus aspect.
+     */
     private Label entityNameLabel;
+    /**
+     * Entity actions menu.
+     */
     private Component entityActionsMenu;
+    /**
+     * Entity aspect panel (or label).
+     */
     private Component entityAspect;
+    /**
+     * Name of aspect shown.
+     */
     private String aspectShown = DETAILS;
 
 
@@ -59,14 +87,15 @@ public class EntityPanel extends AbstractCommandablePanel {
 
 
     public String getAspectShown() {
-         return aspectShown;
-     }
+        return aspectShown;
+    }
 
     private void init() {
         banner = new WebMarkupContainer( "banner" );
         banner.setOutputMarkupId( true );
         add( banner );
         entityNameLabel = new Label( "header-title", new PropertyModel<String>( this, "entityName" ) );
+        entityNameLabel.setOutputMarkupId( true );
         banner.add( entityNameLabel );
         AjaxFallbackLink closeLink = new AjaxFallbackLink( "close" ) {
             public void onClick( AjaxRequestTarget target ) {
@@ -205,22 +234,39 @@ public class EntityPanel extends AbstractCommandablePanel {
         banner.addOrReplace( entityActionsMenu );
     }
 
-
+    /**
+     * Get entity name plus aspect.
+     * @return a string
+     */
     public String getEntityName() {
-        return getEntity().getName();
+        return getEntity().getName() + " " + getAspectShown();
     }
 
+    /**
+     * Get entity's class.
+     * @return a class
+     */
     public String getEntityClass() {
         return getEntity().getClass().getSimpleName().toLowerCase();
     }
 
+    /**
+     * Get the entity that's viewed.
+     * @return a model object
+     */
     public ModelObject getEntity() {
         return (ModelObject) getModel().getObject();
     }
 
+    /**
+     * Change aspect shown.
+     * @param target an ajax request target
+     * @param aspect  the name of the aspect
+     */
     public void setAspectShown( AjaxRequestTarget target, String aspect ) {
         aspectShown = aspect;
         showEntityAspect();
+        target.addComponent( entityNameLabel );
         target.addComponent( entityAspect );
     }
 

@@ -92,7 +92,7 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
             } else {
                 return "Flows from \""
                         + fromEntity.getName()
-                        + "\" connecting to \""
+                        + "\" to \""
                         + toEntity.getName()
                         + "\"";
             }
