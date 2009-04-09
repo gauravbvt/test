@@ -2,9 +2,11 @@ package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Channelable;
+import com.mindalliance.channels.Job;
 import com.mindalliance.channels.Medium;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
@@ -58,8 +60,8 @@ public class ActorReportPanel extends Panel {
         Actor actor = spec.getActor() == null ? Actor.UNKNOWN : spec.getActor();
         add( new Label( "name", actor.getName() ) );                                      // NON-NLS
 
-        String title = "";
-        Label titleLabel = new Label( "title", ", " + title );                            // NON-NLS
+        String title = getTitle( actor );
+        Label titleLabel = new Label( "title", title );                                   // NON-NLS
         titleLabel.setVisible( !title.isEmpty() );
         add( titleLabel );
 
@@ -78,4 +80,13 @@ public class ActorReportPanel extends Panel {
                                       new Model<Channelable>( actor ), showMedia ) );
     }
 
+    private String getTitle( Actor actor ) {
+        for ( Job job : ( (Project) getApplication() ).getDqo().findAllJobs( actor ) ) {
+            String title = job.getTitle().trim();
+            if ( !title.isEmpty() )
+                return title;
+        }
+
+        return "";
+    }
 }

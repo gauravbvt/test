@@ -637,7 +637,8 @@ public class DataQueryObjectImpl implements DataQueryObject {
                 for ( Flow relatedFlow : flows )
                     for ( Channel channel : relatedFlow.getEffectiveChannels() )
                         if ( relatedFlow.validate( channel ) == null
-                             && !defined.contains( channel.getMedium() ) ) {
+                             && !defined.contains( channel.getMedium() ) )
+                        {
                             defined.add(  channel.getMedium() );
                             channels.add( new Channel( channel ) );
                         }
