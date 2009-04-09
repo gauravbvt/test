@@ -485,32 +485,39 @@ public class DataQueryObjectImpl implements DataQueryObject {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public ScenarioRelationship findScenarioRelationship(
-            Scenario fromScenario,
-            Scenario toScenario ) {
-        List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
-        Iterator<Flow> flows = fromScenario.flows();
-        while ( flows.hasNext() ) {
-            Flow flow = flows.next();
-            if ( !flow.isInternal() ) {
-                ExternalFlow externalFlow = (ExternalFlow) flow;
-                if ( externalFlow.getConnector().getScenario() == toScenario ) {
-                    externalFlows.add( externalFlow );
-                }
-            }
-        }
-        if ( externalFlows.isEmpty() ) {
-            return null;
-        } else {
-            ScenarioRelationship scenarioRelationship = new ScenarioRelationship(
-                    fromScenario,
-                    toScenario );
-            scenarioRelationship.setExternalFlows( externalFlows );
-            return scenarioRelationship;
-        }
-    }
+     /**
+      * {@inheritDoc}
+      */
+     public ScenarioRelationship findScenarioRelationship(
+             Scenario fromScenario,
+             Scenario toScenario ) {
+         List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
+         List<Part> initiators = new ArrayList<Part>();
+         Iterator<Flow> flows = fromScenario.flows();
+         while ( flows.hasNext() ) {
+             Flow flow = flows.next();
+             if ( !flow.isInternal() ) {
+                 ExternalFlow externalFlow = (ExternalFlow) flow;
+                 if ( externalFlow.getConnector().getScenario() == toScenario ) {
+                     externalFlows.add( externalFlow );
+                 }
+             }
+         }
+         for ( Part part : toScenario.getInitiators() ) {
+             if ( part.getScenario() == fromScenario ) initiators.add( part );
+         }
+         if ( externalFlows.isEmpty() && initiators.isEmpty() ) {
+             return null;
+         } else {
+             ScenarioRelationship scenarioRelationship = new ScenarioRelationship(
+                     fromScenario,
+                     toScenario );
+             scenarioRelationship.setExternalFlows( externalFlows );
+             scenarioRelationship.setInitiators( initiators );
+             return scenarioRelationship;
+         }
+     }
+
 
     /**
      * {@inheritDoc}
