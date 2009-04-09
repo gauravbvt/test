@@ -648,10 +648,10 @@ div.wicket-aa ul li.selected {
 }
 
 #plan-map {
-    z-index: 10000;
+    z-index: 1;
     position: absolute;
     right: 2em;
-    bottom: 6em;
+    bottom: 2em;
     padding: 5px;
 
     width: 50%;

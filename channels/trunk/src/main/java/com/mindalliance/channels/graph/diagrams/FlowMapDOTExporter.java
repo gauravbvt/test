@@ -169,7 +169,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     private void exportAutoStarts( PrintWriter out, Graph<Node, Flow> g ) {
         for ( Part autoStarter : autoStarters ) {
             List<DOTAttribute> attributes = getTimingEdgeAttributes();
-            attributes.add( new DOTAttribute( "label", "starts with scenario" ) );
+            attributes.add( new DOTAttribute( "headlabel", "(starts)" ) );
             String autoStarterId = getVertexID( autoStarter );
             out.print( getIndent() + START + getArrow( g ) + autoStarterId );
             out.print( "[" );
