@@ -341,6 +341,41 @@ public class Scenario extends ModelObject {
     }
 
     /**
+     * Find parts played by a given role.
+     *
+     * @param role         the role, possibly Role.UNKNOWN
+     * @return the appropriate parts
+     */
+    public List<Part> findParts( Role role ) {
+        List<Part> result = new ArrayList<Part>();
+
+        for ( Iterator<Part> parts = parts(); parts.hasNext(); ) {
+            Part part = parts.next();
+            if ( part.isPlayedBy( role ) )
+                result.add( part );
+        }
+
+        return result;
+    }
+
+    /**
+     * Find parts played by a given organization, when no roles or actors have been specified.
+     *
+     * @param organization the organization, possibly Organization.UNKNOWN
+     * @return the appropriate parts
+     */
+    public List<Part> findParts( Organization organization ) {
+        List<Part> partsForRole = new ArrayList<Part>();
+        Iterator<Part> parts = parts();
+        while ( parts.hasNext() ) {
+            Part part = parts.next();
+            if ( part.isIn( organization ) && part.getActor() == null && part.getRole() == null )
+                partsForRole.add( part );
+        }
+        return partsForRole;
+    }
+
+    /**
      * Find parts played by a given role in a given organization.
      *
      * @param organization the organization, possibly Organization.UNKNOWN

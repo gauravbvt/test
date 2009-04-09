@@ -15,7 +15,7 @@ import java.text.MessageFormat;
 import java.util.Set;
 
 /**
- * Actor report panel
+ * Actor report panel.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf

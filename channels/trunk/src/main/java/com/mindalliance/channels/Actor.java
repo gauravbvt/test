@@ -9,8 +9,11 @@ import javax.persistence.Transient;
 @Entity
 public class Actor extends AbstractUnicastChannelable {
 
+    /** The name of the unknown actor. */
+    public static final String UnknownName = "(unknown contact)";
+
     /** Bogus actor used to signify that the actor is not known... */
-    public static final Actor UNKNOWN = new Actor( "(unknown contact)" );
+    public static final Actor UNKNOWN = new Actor( UnknownName );
 
     public Actor() {
     }

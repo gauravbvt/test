@@ -1,6 +1,7 @@
 package com.mindalliance.channels;
 
 import com.mindalliance.channels.util.SemMatch;
+import org.apache.commons.collections.iterators.IteratorChain;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -213,6 +214,15 @@ public abstract class Node extends ModelObject implements ScenarioObject {
     void removeRequirement( Flow requirement ) {
         requirements.remove( requirement.getId() );
         requirement.setTarget( null );
+    }
+
+    /**
+     * Get all flows attached to this part, requirements and outcomes.
+     * @return a flow iterator
+     */
+    @SuppressWarnings( { "unchecked" } )
+    public Iterator<Flow> flows() {
+        return (Iterator<Flow>) new IteratorChain( requirements(), outcomes() );
     }
 
     @Transient

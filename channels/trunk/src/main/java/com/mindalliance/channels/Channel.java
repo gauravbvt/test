@@ -20,7 +20,7 @@ import java.text.MessageFormat;
  * Time: 2:06:19 PM
  */
 @Entity
-public class Channel implements Serializable {
+public class Channel implements Serializable, Comparable<Channel> {
 
     /**
      * Bogus channels for reports.
@@ -92,10 +92,8 @@ public class Channel implements Serializable {
     public boolean equals( Object obj ) {
         if ( obj instanceof Channel ) {
             Channel channel = (Channel) obj;
-            if ( medium == null || channel.getMedium() == null )
-                return false;
-            else
-                return address.equals( channel.getAddress() ) && medium == channel.getMedium();
+            return medium != null && channel.getMedium() != null
+                && address.equals( channel.getAddress() ) && medium == channel.getMedium();
         } else {
             return false;
         }
@@ -180,5 +178,16 @@ public class Channel implements Serializable {
     public boolean requiresAddress() {
         String pattern = medium.getAddressPattern();
         return !( pattern.isEmpty() || pattern.equals( ".*" ) );
+    }
+
+    public int compareTo( Channel o ) {
+        if ( medium == o.getMedium() ) {
+            return address == o.getAddress() ? 0
+                 : address == null           ? o.getAddress().compareTo( address )
+                                             : address.compareTo( o.getAddress() );
+
+        } else
+            return medium != null ? medium.compareTo( o.getMedium() )
+                                  : o.getMedium().compareTo( medium );
     }
 }

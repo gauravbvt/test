@@ -71,7 +71,7 @@ public class FlowReportPanel extends Panel {
 
         Component channelsPanel =
                 new ChannelsReportPanel( "channels", new Model<Channelable>( flow ), null );
-        channelsPanel.setVisible( showContacts && actors.isEmpty() );
+        channelsPanel.setVisible( showContacts && !channels.isEmpty() && actors.isEmpty() );
         add( channelsPanel );
 
         WebMarkupContainer actorsDiv = createContacts( channels, actors );
