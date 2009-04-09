@@ -212,8 +212,8 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         String message = getName();
         if ( message == null || message.trim().isEmpty() )
             message = !isAskedFor() && isTriggeringToTarget() ? "do something" : "something";
-
-        if ( getSource().isConnector() ) {
+        Node source = getSource();
+        if ( source.isConnector() ) {
             return MessageFormat.format(
                     isAskedFor() ? "Needs to ask for {0}"
                             : isTriggeringToTarget() ? "Needs to be told to {0}"
@@ -221,12 +221,30 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
                     message.toLowerCase() );
 
         } else {
+            Part part = (Part) source;
             return MessageFormat.format(
-                    isAskedFor() ? "Ask {1} for {0}"
-                            : isTriggeringToTarget() ? "Told to {0} by {1}"
-                            : "Notified of {0} by {1}",
-                    message.toLowerCase(), getShortName( getSource(), false ) );
+                    isAskedFor() ? "Ask {1}{2}{3} for {0}"
+                            : isTriggeringToTarget() ? "Told to {0} by {1}{2}{3}"
+                            : "Notified of {0} by {1}{2}{3}",
+                    message.toLowerCase(),
+                    getShortName( part, false ),
+                    getOrganizationString( part ),
+                    getJurisdictionString( part ) );
         }
+    }
+
+    @Transient
+    private static String getOrganizationString( Part part ) {
+        Organization organization = part.getOrganization();
+        return organization == null ? ""
+             : MessageFormat.format( " in {0}", organization.getLabel() );
+    }
+
+    @Transient
+    private static String getJurisdictionString( Part part ) {
+        Place place = part.getJurisdiction();
+        return place == null ? ""
+             : MessageFormat.format( " for {0}", place );
     }
 
     /**
@@ -249,12 +267,16 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
             return MessageFormat.format( format, message.toLowerCase() );
 
         } else {
-            String format = isAskedFor() ? "Answer {1} with {0}"
-                    : isTriggeringToTarget() ? "Tell {1} to {0}"
-                    : "Notify {1} of {0}";
+            Part part = (Part) node;
+            String format = isAskedFor() ? "Answer {1}{2}{3} with {0}"
+                    : isTriggeringToTarget() ? "Tell {1}{2}{3} to {0}"
+                    : "Notify {1}{2}{3} of {0}";
 
             return MessageFormat.format(
-                    format, message.toLowerCase(), getShortName( node, true ) );
+                    format, message.toLowerCase(),
+                    getShortName( node, true ),
+                    getOrganizationString( part ),
+                    getJurisdictionString( part ) );
         }
     }
 

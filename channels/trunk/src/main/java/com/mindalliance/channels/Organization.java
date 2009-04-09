@@ -6,6 +6,7 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,9 +125,8 @@ public class Organization extends AbstractUnicastChannelable {
      */
     @Override
     public String toString() {
-        return getName();
-       /* return parent == null ? getName()
-                : MessageFormat.format( "{0} - {1}", parent.toString(), getName() );*/
+       return parent == null ? getName()
+                : MessageFormat.format( "{0} - {1}", parent.toString(), getName() );
     }
 
     @OneToMany
@@ -162,7 +162,7 @@ public class Organization extends AbstractUnicastChannelable {
      * @param dqo a data query object
      * @return a list of resource specs
      */
-    public List<ResourceSpec> jobResourceSpecs( DataQueryObject dqo) {
+    public List<ResourceSpec> jobResourceSpecs( DataQueryObject dqo ) {
         List<ResourceSpec> resourceSpecs = new ArrayList<ResourceSpec>();
         for ( Job job : jobs ) {
             resourceSpecs.add( job.resourceSpec( this, dqo ) );
@@ -173,6 +173,7 @@ public class Organization extends AbstractUnicastChannelable {
     /**
      * {@inheritDoc}
      */
+    @Override
     @Transient
     public boolean isUndefined() {
         return super.isUndefined() && parent == null && location == null && jobs.isEmpty();
