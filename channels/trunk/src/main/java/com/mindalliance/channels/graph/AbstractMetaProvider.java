@@ -30,11 +30,11 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
     /**
      * Font for edge labels.
      */
-    protected static final String EDGE_FONT = "Helvetica-Oblique";
+    public static final String EDGE_FONT = "Helvetica-Oblique";
     /**
      * Font size for edge labels.
      */
-    protected static final String EDGE_FONT_SIZE = "8";
+    public static final String EDGE_FONT_SIZE = "8";
 
     /**
      * Number of characters after which a long line is wrapped on separator.

@@ -22,7 +22,20 @@
                 </th>
                 <td><textarea cols="40" rows="4" wicket:id="description">...</textarea></td>
             </tr>
-        </table>
+            <tr>
+                <th align="right"><label wicket:id="location-label">Location:</label></th>
+                <td><input width="40" wicket:id="location" type="text"/></td>
+            </tr>
+            <tr>
+                <th align="right">&#160;</th>
+                <td>
+                    <span class="timing">
+                        <input type="checkbox" wicket:id="self-terminating"/>If unaddressed, runs its course within <span
+                            wicket:id="completion-time">[Delay panel]</span>
+                    </span>
+                </td>
+            </tr>
+         </table>
         <span wicket:id="issues">[issues panel]</span>
     </div>
 </wicket:panel>

@@ -169,4 +169,11 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
     public boolean isUndefined() {
         return description.isEmpty();
     }
+
+    /**
+     * Executed just before the model object is removed.
+     */
+    public void beforeRemove() {
+        // default is to do nothing
+    }
 }

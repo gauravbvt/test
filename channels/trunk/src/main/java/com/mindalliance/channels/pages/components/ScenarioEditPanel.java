@@ -2,6 +2,8 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Place;
+import com.mindalliance.channels.util.SemMatch;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateProjectObject;
 import com.mindalliance.channels.pages.Project;
@@ -11,11 +13,16 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.FormComponentLabel;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 
 import java.util.Set;
+import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Editor on the details of a scenario (name, description, etc).
@@ -52,7 +59,14 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
             }
         };
         add( closeLink );
-         TextField<String> nameField = new TextField<String>(
+        addIdentityFields();
+        addLocationField();
+        addTimingFields();
+        addIssuesPanel();
+    }
+
+    private void addIdentityFields() {
+        TextField<String> nameField = new TextField<String>(
                 "name",
                 new PropertyModel<String>( this, "name" ) );
         add( new FormComponentLabel( "name-label", nameField ) );
@@ -66,13 +80,16 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
         TextArea<String> descField = new TextArea<String>(
                 "description",
                 new PropertyModel<String>( this, "description" ) );
-        add( new FormComponentLabel( "description-label", descField ) );                       
+        add( new FormComponentLabel( "description-label", descField ) );
         descField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getScenario(), "description" ) );
             }
         } );
         add( descField );
+    }
+
+    private void addIssuesPanel() {
         issuesPanel = new IssuesPanel(
                 "issues",
                 new Model<ModelObject>( getScenario() ),
@@ -82,11 +99,58 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
         makeVisible( issuesPanel, Project.analyst().hasIssues( model.getObject(), false ) );
     }
 
+    private void addLocationField() {
+        final List<String> choices = getDqo().findAllNames( Place.class ) ;
+        AutoCompleteTextField<String> locationField = new AutoCompleteTextField<String>(
+                "location",
+                new PropertyModel<String>( this, "location" ) ) {
+            protected Iterator<String> getChoices( String s ) {
+                List<String> candidates = new ArrayList<String>();
+                for ( String choice : choices ) {
+                    if ( SemMatch.matches( s, choice ) ) candidates.add( choice );
+                }
+                return candidates.iterator();
+            }
+        };
+        add( new FormComponentLabel( "location-label", locationField ) );
+        locationField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getScenario(), "location" ) );
+            }
+        } );
+        add( locationField );
+    }
+
+    private void addTimingFields() {
+        final DelayPanel completionTimePanel = new DelayPanel(
+                "completion-time",
+                new PropertyModel<ModelObject>( this, "scenario" ),
+                "completionTime" );
+        completionTimePanel.enable( getScenario().isSelfTerminating() );
+        completionTimePanel.setOutputMarkupId( true );
+        add( completionTimePanel );
+        CheckBox selfTerminatingCheckBox = new CheckBox(
+                "self-terminating",
+                new PropertyModel<Boolean>( this, "selfTerminating" ) );
+        selfTerminatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                completionTimePanel.enable( getScenario().isSelfTerminating() );
+                target.addComponent( completionTimePanel );
+                update( target, new Change( Change.Type.Updated, getScenario(), "selfTerminating" ) );
+            }
+        } );
+        add( selfTerminatingCheckBox );
+    }
+
     public IModel<Scenario> getModel() {
         return model;
     }
 
-    private Scenario getScenario() {
+    /**
+     * Get edited scenario.
+     * @return a scenario
+     */
+    public Scenario getScenario() {
         return getModel().getObject();
     }
 
@@ -127,6 +191,53 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
     }
 
     /**
+     * Get the location string.
+     *
+     * @return the name of the location, or the empty string if null
+     */
+    public String getLocation() {
+        final Place location = getScenario().getLocation();
+        return location == null ? "" : location.getName();
+    }
+
+    /**
+     * Set the part's location.
+     *
+     * @param name if null or empty, set to null; otherwise, only set if different.
+     */
+    public void setLocation( String name ) {
+        Place oldPlace = getScenario().getLocation();
+        String oldName = oldPlace == null ? "" : oldPlace.getName();
+        Place newPlace = null;
+        if ( name == null || name.trim().isEmpty() )
+            newPlace = null;
+        else {
+            if ( oldPlace == null || !isSame( name, oldName ) )
+                newPlace = getDqo().findOrCreate( Place.class, name );
+        }
+        doCommand( new UpdateProjectObject( getScenario(), "location", newPlace ) );
+        getCommander().cleanup( Place.class, oldName );
+    }
+
+    /**
+     * Is part self-terminating?
+     *
+     * @return a boolean
+     */
+    public boolean isSelfTerminating() {
+        return getScenario().isSelfTerminating();
+    }
+
+    /**
+     * Sets whether self terminating.
+     *
+     * @param val a boolean
+     */
+    public void setSelfTerminating( boolean val ) {
+        doCommand( new UpdateProjectObject( getScenario(), "selfTerminating", val ) );
+    }
+
+    /**
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change ) {
@@ -145,4 +256,5 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
         if ( visible )
             makeVisible( issuesPanel, Project.analyst().hasIssues( model.getObject(), false ) );
     }
+
 }

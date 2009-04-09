@@ -53,11 +53,15 @@ public class UnconnectedConnector extends AbstractIssueDetector {
         Iterator<Flow> outcomes = part.outcomes();
         while ( outcomes.hasNext() ) {
             Flow outcome = outcomes.next();
-            if ( outcome.getTarget().isConnector() && !part.hasMultipleOutcomes( outcome.getName() ) ) {
-                DetectedIssue issue = new DetectedIssue( DetectedIssue.STRUCTURAL, part );
-                issue.setDescription( "'" + outcome.getName() + "' is produced but never sent." );
-                issue.setSeverity( Issue.Level.Minor );
-                issues.add( issue );
+            if ( outcome.getTarget().isConnector() ) {
+                Connector connector = (Connector) outcome.getTarget();
+                if ( !connector.externalFlows().hasNext()
+                        && !part.hasMultipleOutcomes( outcome.getName() ) ) {
+                    DetectedIssue issue = new DetectedIssue( DetectedIssue.STRUCTURAL, part );
+                    issue.setDescription( "'" + outcome.getName() + "' is produced but never sent." );
+                    issue.setSeverity( Issue.Level.Minor );
+                    issues.add( issue );
+                }
             }
         }
         Iterator<Flow> requirements = part.requirements();
@@ -66,7 +70,7 @@ public class UnconnectedConnector extends AbstractIssueDetector {
             if ( requirement.getSource().isConnector() && !part.hasMultipleRequirements( requirement.getName() ) ) {
                 DetectedIssue issue = new DetectedIssue( DetectedIssue.STRUCTURAL, part );
                 issue.setDescription(
-                                ( requirement.isRequired() ? "Required " : "" )
+                        ( requirement.isRequired() ? "Required " : "" )
                                 + "'"
                                 + requirement.getName()
                                 + "' is needed but never received." );

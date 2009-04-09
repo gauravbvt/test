@@ -4,8 +4,8 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.analysis.network.ScenarioRelationship;
-import com.mindalliance.channels.analysis.network.EntityRelationship;
+import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
+import com.mindalliance.channels.analysis.graph.EntityRelationship;
 
 import java.util.List;
 

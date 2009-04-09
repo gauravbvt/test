@@ -25,7 +25,7 @@ public class RemoveNeed extends AbstractCommand {
     public RemoveNeed( Flow flow ) {
         super();
         setArguments( CommandUtils.getFlowState( flow ) );
-        addArgument( "flow", flow.getId() );
+        set( "flow", flow.getId() );
     }
 
     /**

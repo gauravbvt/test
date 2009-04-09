@@ -79,6 +79,18 @@ public class Part extends Node {
      * Not repeated if null.
      */
     private Delay repeatsEvery = new Delay();
+    /**
+     * Whether this part is started by the onset of the scenario.
+     */
+    private boolean startsWithScenario;
+    /**
+     * Whether the part can terminate the scenario.
+     */
+    private boolean terminatesScenario;
+    /**
+     * The scenario, if any, this part can initiate.
+     */
+    private Scenario initiatedScenario;
 
     public Part() {
         adjustName();
@@ -87,7 +99,8 @@ public class Part extends Node {
     /**
      * {@inheritDoc}
      */
-    @Override @Transient
+    @Override
+    @Transient
     public String getTitle() {
         return MessageFormat.format( "{0} {1}", getName(), getTask() );
     }
@@ -190,8 +203,8 @@ public class Part extends Node {
     }
 
     @AttributeOverrides( {
-            @AttributeOverride( name = "unit", column = @Column( name = "r_unit" ) ),
-            @AttributeOverride( name = "amount", column = @Column( name = "r_amount" ) )
+        @AttributeOverride( name = "unit", column = @Column( name = "r_unit" ) ),
+        @AttributeOverride( name = "amount", column = @Column( name = "r_amount" ) )
             } )
     public Delay getRepeatsEvery() {
         return repeatsEvery;
@@ -239,6 +252,7 @@ public class Part extends Node {
 
     /**
      * Gets the resourceSpec implied by the part
+     *
      * @return a ResourceSpec
      */
     public ResourceSpec resourceSpec() {
@@ -253,11 +267,10 @@ public class Part extends Node {
      */
     public boolean isImpliedBy( ResourceSpec resourceSpec ) {
         ResourceSpec partResourceSpec = resourceSpec();
-        if (partResourceSpec.isAnyone()) {
+        if ( partResourceSpec.isAnyone() ) {
             return false;
-        }
-        else {
-             return resourceSpec.narrowsOrEquals( partResourceSpec );
+        } else {
+            return resourceSpec.narrowsOrEquals( partResourceSpec );
         }
     }
 
@@ -305,6 +318,45 @@ public class Part extends Node {
         }
     }
 
+    public boolean isStartsWithScenario() {
+        return startsWithScenario;
+    }
+
+    public void setStartsWithScenario( boolean startsWithScenario ) {
+        this.startsWithScenario = startsWithScenario;
+    }
+
+    public boolean isTerminatesScenario() {
+        return terminatesScenario;
+    }
+
+    public void setTerminatesScenario( boolean terminatesScenario ) {
+        this.terminatesScenario = terminatesScenario;
+    }
+
+    public Scenario getInitiatedScenario() {
+        return initiatedScenario;
+    }
+
+    public void setInitiatedScenario( Scenario sc ) {
+        Scenario priorInitiated = initiatedScenario;
+        if ( priorInitiated != null ) {
+            initiatedScenario = null;
+            priorInitiated.removeInitiator( this );
+        }
+        initiatedScenario = sc;
+        if ( sc != null ) sc.addInitiator( this );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void beforeRemove() {
+        if ( initiatedScenario != null ) {
+            initiatedScenario.removeInitiator( this );
+        }
+    }
+
     /**
      * Test if this part is considered belonging to an organization.
      *
@@ -329,6 +381,7 @@ public class Part extends Node {
 
     /**
      * Iterate over all outcomes of the part of a given name.
+     *
      * @param name a flow name
      * @return a boolean
      */
@@ -337,13 +390,14 @@ public class Part extends Node {
         return new FilterIterator( outcomes(), new Predicate() {
             public boolean evaluate( Object object ) {
                 Flow flow = (Flow) object;
-                return SemMatch.same( flow.getName(), name);
+                return SemMatch.same( flow.getName(), name );
             }
         } );
     }
 
     /**
      * Iterate over all requirements of the part of a given name.
+     *
      * @param name a flow name
      * @return a boolean
      */
@@ -352,7 +406,7 @@ public class Part extends Node {
         return new FilterIterator( requirements(), new Predicate() {
             public boolean evaluate( Object object ) {
                 Flow flow = (Flow) object;
-                return SemMatch.same( flow.getName(), name);
+                return SemMatch.same( flow.getName(), name );
             }
         } );
     }

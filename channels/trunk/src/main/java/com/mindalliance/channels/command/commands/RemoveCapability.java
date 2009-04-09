@@ -24,7 +24,7 @@ public class RemoveCapability extends AbstractCommand {
     public RemoveCapability( Flow flow ) {
         super();
         setArguments( CommandUtils.getFlowState( flow ) );
-        addArgument( "flow", flow.getId() );
+        set( "flow", flow.getId() );
     }
 
     /**

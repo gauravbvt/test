@@ -55,7 +55,7 @@ public class RestoreScenario extends AbstractCommand {
                 Scenario scenario = importer.importScenario(
                         new ByteArrayInputStream( xml.getBytes() ) );
                 commander.mapId( (Long) get( "scenario" ), scenario.getId() );
-                addArgument( "scenario", scenario.getId() );
+                set( "scenario", scenario.getId() );
                 if ( defaultScenario != null ) dqo.remove( defaultScenario );
                 return new Change( Change.Type.Added, scenario );
             } catch ( IOException e ) {

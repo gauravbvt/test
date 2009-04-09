@@ -1,12 +1,6 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.analysis.network.ScenarioRelationship;
 import org.jgrapht.DirectedGraph;
-
-import java.util.List;
 
 /**
  * Graph builder.

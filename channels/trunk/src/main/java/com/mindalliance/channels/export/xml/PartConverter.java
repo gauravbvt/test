@@ -37,6 +37,7 @@ public class PartConverter implements Converter {
      * Class logger.
      */
     public static final Logger LOG = LoggerFactory.getLogger( PartConverter.class );
+
     public PartConverter() {
     }
 
@@ -95,6 +96,18 @@ public class PartConverter implements Converter {
             writer.setValue( part.getRepeatsEvery().toString() );
             writer.endNode();
         }
+        writer.startNode( "startsWithScenario" );
+        writer.setValue( "" + part.isStartsWithScenario() );
+        writer.endNode();
+        writer.startNode( "terminatesScenario" );
+        writer.setValue( "" + part.isTerminatesScenario() );
+        writer.endNode();
+        if ( part.getInitiatedScenario() != null ) {
+            writer.startNode( "initiatedScenario" );
+            writer.addAttribute( "scenario", part.getInitiatedScenario().getName() );
+            writer.setValue( part.getInitiatedScenario().getDescription() );
+            writer.endNode();
+        }
         // Part user issues
         List<Issue> issues = Project.dqo().findAllUserIssues( part );
         for ( Issue issue : issues ) {
@@ -104,7 +117,9 @@ public class PartConverter implements Converter {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings( "unchecked" )
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
         Scenario scenario = (Scenario) context.get( "scenario" );
@@ -137,9 +152,25 @@ public class PartConverter implements Converter {
                         (Place) context.convertAnother( scenario, Place.class );
                 part.setJurisdiction( jurisdiction );
             } else if ( nodeName.equals( "completionTime" ) ) {
-                part.setCompletionTime( Delay.parse(reader.getValue()) );
+                part.setCompletionTime( Delay.parse( reader.getValue() ) );
             } else if ( nodeName.equals( "repeatsEvery" ) ) {
-                part.setRepeatsEvery( Delay.parse(reader.getValue()) );
+                part.setRepeatsEvery( Delay.parse( reader.getValue() ) );
+            } else if ( nodeName.equals( "startsWithScenario" ) ) {
+                part.setStartsWithScenario( reader.getValue().equals( "true" ) );
+            } else if ( nodeName.equals( "terminatesScenario" ) ) {
+                part.setTerminatesScenario( reader.getValue().equals( "true" ) );
+            } else if ( nodeName.equals( "initiatedScenario" ) ) {
+                String externalScenarioName = reader.getAttribute( "scenario" );
+                String externalScenarioDescription = reader.getValue();
+                List<Scenario> externalScenarios = ConverterUtils.findMatchingScenarios(
+                        externalScenarioName,
+                        externalScenarioDescription );
+                if ( !externalScenarios.isEmpty() ) {
+                    part.setInitiatedScenario( externalScenarios.get( 0 ) );
+                    if ( externalScenarios.size() > 1 ) {
+                        LOG.warn( "More than one candidate scenarios for initiation by part " + id );
+                    }
+                }
             } else if ( nodeName.equals( "flow" ) ) {
                 context.convertAnother( scenario, Flow.class );
             } else if ( nodeName.equals( "issue" ) ) {

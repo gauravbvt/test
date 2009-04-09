@@ -28,8 +28,8 @@ public class AddCapability extends AbstractCommand {
 
     public AddCapability( Part part ) {
         addConflicting( part );
-        addArgument( "part", part.getId() );
-        addArgument( "scenario", part.getScenario().getId() );
+        set( "part", part.getId() );
+        set( "scenario", part.getScenario().getId() );
     }
 
     /**
@@ -56,7 +56,7 @@ public class AddCapability extends AbstractCommand {
                 CommandUtils.initialize( flow, flowAttributes );
             }
             commander.mapId( (Long)get("flow"), flow.getId() );
-            addArgument( "flow", flow.getId() );
+            set( "flow", flow.getId() );
             return new Change( Change.Type.Added, flow );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );

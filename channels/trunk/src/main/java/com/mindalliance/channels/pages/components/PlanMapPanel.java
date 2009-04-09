@@ -5,7 +5,7 @@ import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ExternalFlow;
 import com.mindalliance.channels.Part;
-import com.mindalliance.channels.analysis.network.ScenarioRelationship;
+import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
 import com.mindalliance.channels.pages.Project;
@@ -59,6 +59,8 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
         addPlanMapDiagramPanel();
         addFlowsTitleLabel();
         addExternalFlowsPanel();
+        addCausesTitleLabel();
+        addCausesPanel();
     }
 
     private void addPlanMapDiagramPanel() {
@@ -77,6 +79,12 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
         add( flowsTitleLabel );
     }
 
+    private void addCausesTitleLabel() {
+        Label causesTitleLabel = new Label( "causes-title", new PropertyModel<String>( this, "causesTitle" ) );
+        causesTitleLabel.setOutputMarkupId( true );
+        add( causesTitleLabel );
+    }
+
     private void addExternalFlowsPanel() {
         ExternalFlowsPanel externalFlowsPanel = new ExternalFlowsPanel(
                 "flows",
@@ -87,6 +95,18 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
         );
         externalFlowsPanel.setOutputMarkupId( true );
         addOrReplace( externalFlowsPanel );
+    }
+
+    private void addCausesPanel() {
+        ScenarioCausesPanel scenarioCausesPanel = new ScenarioCausesPanel(
+                "causes",
+                new Model<Project>( Project.getProject() ),
+                new PropertyModel<ArrayList<ScenarioRelationship>>( this, "scenarioRelationships" ),
+                PAGE_SIZE,
+                getExpansions()
+        );
+        scenarioCausesPanel.setOutputMarkupId( true );
+        addOrReplace( scenarioCausesPanel );
     }
 
     /**
@@ -128,6 +148,33 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     }
 
     /**
+     * Get flows title.
+     *
+     * @return a string
+     */
+    public String getCausesTitle() {
+        if ( selectedScenario != null ) {
+            return "What \""
+                    + selectedScenario.getName()
+                    + " causes";
+        } else if ( selectedScRel != null ) {
+            Scenario fromScenario = selectedScRel.getFromScenario( getDqo() );
+            Scenario toScenario = selectedScRel.getToScenario( getDqo() );
+            if ( fromScenario == null || toScenario == null ) {
+                return "*** You need to refresh ***";
+            } else {
+                return "How \""
+                        + fromScenario.getName()
+                        + "\" causes \""
+                        + toScenario.getName()
+                        + "\"";
+            }
+        } else {
+            return "All causations";
+        }
+    }
+
+    /**
      * Get external flows.
      *
      * @return a list of external flows
@@ -161,6 +208,36 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     }
 
     /**
+     * Get scenario relationships.
+     * @return a list of scenario relationships
+     */
+    public List<ScenarioRelationship> getScenarioRelationships() {
+        List<ScenarioRelationship> scRels = new ArrayList<ScenarioRelationship>();
+        if ( selectedScRel != null ) {
+            scRels.add(selectedScRel);
+        } else if ( selectedScenario != null ) {
+            List<Scenario> allScenarios = getDqo().list( Scenario.class );
+            for ( Scenario other : allScenarios ) {
+                if ( selectedScenario != other ) {
+                    ScenarioRelationship scRel = getDqo().findScenarioRelationship( selectedScenario, other );
+                    if ( scRel != null ) scRels.add( scRel );
+                }
+            }
+        } else {
+            List<Scenario> allScenarios = getDqo().list( Scenario.class );
+            for ( Scenario scenario : allScenarios ) {
+                for ( Scenario other : allScenarios ) {
+                    if ( scenario != other ) {
+                        ScenarioRelationship scRel = getDqo().findScenarioRelationship( scenario, other );
+                        if ( scRel != null ) scRels.add( scRel );
+                    }
+                }
+            }
+        }
+        return scRels;
+    }
+
+    /**
      * Get to-scenario from selected scenario relationship.
      *
      * @return a scenario
@@ -176,6 +253,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     public void refresh( AjaxRequestTarget target ) {
         addPlanMapDiagramPanel();
         addExternalFlowsPanel();
+        addCausesPanel();
         target.addComponent( this );
     }
 
@@ -211,7 +289,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
         if ( change.isSelected() ) {
             refresh( target );
             // Don't percolate update on selection unless a part was selected.
-            if ( change.getSubject() instanceof Part )  {
+            if ( change.getSubject() instanceof Part ) {
                 super.updateWith( target, change );
             }
         } else {

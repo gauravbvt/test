@@ -60,14 +60,12 @@ public abstract class UpdateObject extends AbstractCommand {
             final Object value,
             final Action action ) {
         addConflicting( identifiable );
-        Map<String, Object> args = new HashMap<String, Object>();
-        args.put( "action", action.toString() );
-        args.put( "object", identifiable.getId() );
-        args.put( "property", property );
-        args.put( "value", value );
-        if ( action == Action.Set ) args.put( "old", getProperty( identifiable, property ) );
-        args.put( "type", identifiable.getClass().getSimpleName().toLowerCase() );
-        setArguments( args );
+        set( "action", action.toString() );
+        set( "object", identifiable.getId() );
+        set( "property", property );
+        set( "value", value );
+        if ( action == Action.Set ) set( "old", getProperty( identifiable, property ) );
+        set( "type", identifiable.getClass().getSimpleName().toLowerCase() );
     }
 
     /**
@@ -106,7 +104,7 @@ public abstract class UpdateObject extends AbstractCommand {
      */
     protected String getObjectTypeName( String type ) {
         return type;
-    };
+    }
 
     /**
      * {@inheritDoc}
@@ -119,28 +117,28 @@ public abstract class UpdateObject extends AbstractCommand {
                 setProperty(
                         identifiable,
                         (String) get( "property" ),
-                        get( "value" )
+                        get( "value", commander )
                 );
                 break;
             case Add:
                 addToProperty(
                         identifiable,
                         (String) get( "property" ),
-                        get( "value" )
+                        get( "value", commander )
                 );
                 break;
             case Remove:
                 removeFromProperty(
                         identifiable,
                         (String) get( "property" ),
-                        get( "value" )
+                        get( "value", commander )
                 );
                 break;
             case Move:
                 moveInProperty(
                         identifiable,
                         (String) get( "property" ),
-                        get( "value" )
+                        get( "value", commander )
                 );
                 break;
             default:
@@ -204,16 +202,16 @@ public abstract class UpdateObject extends AbstractCommand {
         Object value;
         switch ( action() ) {
             case Set:
-                Object oldValue = get( "old" );
+                Object oldValue = get( "old", commander );
                 return createUndoCommand( identifiable, property, oldValue, Action.Set );
             case Add:
-                value = get( "value" );
+                value = get( "value", commander );
                 return createUndoCommand( identifiable, property, value, Action.Remove );
             case Remove:
-                value = get( "value" );
+                value = get( "value", commander );
                 return createUndoCommand( identifiable, property, value, Action.Add );
             case Move:
-                value = get( "value" );
+                value = get( "value", commander );
                 Command command = createUndoCommand( identifiable, property, value, Action.Move );
                 Integer oldIndex = (Integer) get( "oldIndex" );
                 if ( oldIndex != null ) command.set( "index", oldIndex );

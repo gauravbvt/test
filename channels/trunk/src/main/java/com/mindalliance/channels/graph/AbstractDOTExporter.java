@@ -59,6 +59,16 @@ public abstract class AbstractDOTExporter<V,E> implements StyledDOTExporter<V,E>
         return metaProvider;
     }
 
+    protected String getArrow( Graph<V, E> g ) {
+        String arrow;
+        if ( g instanceof DirectedGraph ) {
+            arrow = " -> ";
+        } else {
+            arrow = " -- ";
+        }
+        return arrow;
+    }
+
     /**
      * Writes a Graph in DOT format
      *
@@ -66,14 +76,12 @@ public abstract class AbstractDOTExporter<V,E> implements StyledDOTExporter<V,E>
      * @param g      -- the graph being exported
      */
     public void export( Writer writer, Graph<V, E> g ) {
+        beforeExport( g );
         PrintWriter out = new PrintWriter( writer );
-        String arrow;
         // Graph declaration
         if ( g instanceof DirectedGraph ) {
-            arrow = " -> ";
             out.println( "digraph G {" );
         } else {
-            arrow = " -- ";
             out.println( "graph G {" );
         }
         if ( metaProvider.getDOTAttributeProvider() != null ) {
@@ -84,10 +92,18 @@ public abstract class AbstractDOTExporter<V,E> implements StyledDOTExporter<V,E>
         exportVertices( out, g );
 
         // Edges
-        exportEdges( out, g, arrow );
+        exportEdges( out, g );
         // Close graph
         out.println( "}" );
         out.flush();
+    }
+
+    /**
+     * Pre-processing before exporting.
+     * @param g a graph
+     */
+    protected void beforeExport( Graph<V, E> g ) {
+        // Default is do nothing.
     }
 
     /**
@@ -103,10 +119,10 @@ public abstract class AbstractDOTExporter<V,E> implements StyledDOTExporter<V,E>
      * Export edges to DOT.
      * @param out a print writer
      * @param g a graph
-     * @param arrow the arrow string
      */
-    protected void exportEdges( PrintWriter out, Graph<V, E> g, String arrow ) {
+    protected void exportEdges( PrintWriter out, Graph<V, E> g ) {
         MetaProvider<V,E> metaProvider = getMetaProvider();
+        String arrow = getArrow( g );
         for ( E e : g.edgeSet() ) {
             List<DOTAttribute> attributes = DOTAttribute.emptyList();
             if ( metaProvider.getEdgeLabelProvider() != null ) {
@@ -196,6 +212,12 @@ public abstract class AbstractDOTExporter<V,E> implements StyledDOTExporter<V,E>
         return getMetaProvider().getVertexIDProvider().getVertexName( v );
     }
 
-
+    /**
+     * Get indentation.
+     * @return a string of spaces
+     */
+    protected String getIndent() {
+        return INDENT;
+    }
 
 }

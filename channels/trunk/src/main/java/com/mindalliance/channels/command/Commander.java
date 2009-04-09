@@ -114,7 +114,7 @@ public interface Commander {
      * @throws CommandException if not found
      */
     <T extends ModelObject> T resolve( Class<T> clazz, Long id ) throws CommandException;
-
+    
     /**
      * Resolves an id.
      *

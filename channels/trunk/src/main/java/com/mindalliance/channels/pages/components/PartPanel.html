@@ -52,6 +52,16 @@
                 <input type="checkbox" wicket:id="repeating"/>Repeats every <span
                     wicket:id="repeats-every">[Delay panel]</span>
             </span>
+            <span class="timing">
+                 <input type="checkbox" wicket:id="startsWithScenario"/>Starts with this scenario
+                 &#160;<input type="checkbox" wicket:id="terminatesScenario"/>Can terminate this scenario
+             </span>
+            <span class="timing">
+                <input type="checkbox" wicket:id="initiatesScenario"/> Causes scenario
+                <select wicket:id="initiatedScenario">
+                    <option>[other scenario]</option>
+                </select>
+            </span>
         </td>
     </tr>
 </wicket:panel>

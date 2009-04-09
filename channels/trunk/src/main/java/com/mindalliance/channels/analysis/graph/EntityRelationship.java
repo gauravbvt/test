@@ -1,4 +1,4 @@
-package com.mindalliance.channels.analysis.network;
+package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.DataQueryObject;

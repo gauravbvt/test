@@ -27,7 +27,7 @@ public class RemoveIssue extends AbstractCommand {
 
     public RemoveIssue( UserIssue issue ) {
         addConflicting( issue );
-        addArgument( "issue", issue.getId() );
+        set( "issue", issue.getId() );
     }
 
     /**
@@ -44,13 +44,13 @@ public class RemoveIssue extends AbstractCommand {
         DataQueryObject dqo = commander.getDqo();
 
         UserIssue issue = commander.resolve( UserIssue.class, (Long) get( "issue" ) );
-        addArgument( "modelObject", issue.getAbout().getId() );
+        set( "modelObject", issue.getAbout().getId() );
         Map<String, Object> state = new HashMap<String, Object>();
         state.put( "description", issue.getDescription() );
         state.put( "remediation", issue.getRemediation() );
         state.put( "severity", issue.getSeverity() );
         state.put( "reportedBy", issue.getReportedBy() );
-        addArgument( "state", state );
+        set( "state", state );
         dqo.remove( issue );
         return new Change( Change.Type.Removed, issue );
     }
@@ -71,7 +71,7 @@ public class RemoveIssue extends AbstractCommand {
                 ModelObject.class,
                 (Long) get( "modelObject" ) );
         AddUserIssue addIssue = new AddUserIssue( modelObject );
-        addIssue.addArgument( "state", get( "state" ) );
+        addIssue.set( "state", get( "state" ) );
         return addIssue;
     }
 }

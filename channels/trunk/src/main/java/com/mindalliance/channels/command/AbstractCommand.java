@@ -1,6 +1,8 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.Identifiable;
+import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.pages.Project;
 import org.apache.commons.beanutils.PropertyUtils;
 
@@ -83,29 +85,42 @@ public abstract class AbstractCommand implements Command {
     }
 
     /**
-     * Add an argument.
-     *
-     * @param key a string
-     * @param val an object
+     * {@inheritDoc}
      */
-    public void addArgument( String key, Object val ) {
-        if (val instanceof Identifiable)
-            throw new IllegalArgumentException("Can't have identifiables as argument value");
-        arguments.put( key, val );
+    public Object get( String key ) {
+        Object value = arguments.get( key );
+        assert !( value instanceof ModelObjectRef || value instanceof Identifiable );
+        return value;
     }
 
     /**
      * {@inheritDoc}
      */
-    public Object get( String key ) {
-        return arguments.get( key );
+    public Object get( String key, Commander commander ) {
+        Object value = arguments.get( key );
+        if ( value instanceof ModelObjectRef ) {
+            ModelObjectRef moRef = (ModelObjectRef) value;
+            try {
+                value = commander.resolve( moRef.getModelObjectClass(), moRef.getId() );
+            } catch ( CommandException e ) {
+                LOG.warn( " Can't dereference " + moRef, e );
+            } catch ( NotFoundException e ) {
+                LOG.warn( " Can't dereference " + moRef, e );
+            }
+        }
+        return value;
     }
 
     /**
      * {@inheritDoc}
      */
     public void set( String key, Object value ) {
-        arguments.put( key, value );
+        Object val;
+        if ( value instanceof Identifiable )
+            val = new ModelObjectRef( (ModelObject) value );
+        else
+            val = value;
+        arguments.put( key, val );
     }
 
     public Set<Long> getLockingSet() {
@@ -226,13 +241,13 @@ public abstract class AbstractCommand implements Command {
         if ( undoCommand != null )
             return undoCommand;
         else
-        try{
-            return doMakeUndoCommand( commander );
-        }
-        catch (RuntimeException e) {
-            LOG.warn("Runtime exception while making undo command.", e);
-            throw new CommandException("Runtime exception while making undo command.", e);
-        }
+            try {
+                return doMakeUndoCommand( commander );
+            }
+            catch ( RuntimeException e ) {
+                LOG.warn( "Runtime exception while making undo command.", e );
+                throw new CommandException( "Runtime exception while making undo command.", e );
+            }
     }
 
     /**
@@ -279,7 +294,7 @@ public abstract class AbstractCommand implements Command {
             throw new RuntimeException( e );
         } catch ( NoSuchMethodException e ) {
             throw new RuntimeException( e );
-        } catch (RuntimeException e) {
+        } catch ( RuntimeException e ) {
             throw e;
         }
     }
@@ -317,7 +332,7 @@ public abstract class AbstractCommand implements Command {
         try {
             return makeUndoCommand( commander ).getName();
         } catch ( CommandException e ) {
-            LOG.warn("Can't make undo command.", e);
+            LOG.warn( "Can't make undo command.", e );
             return "?";
         }
     }

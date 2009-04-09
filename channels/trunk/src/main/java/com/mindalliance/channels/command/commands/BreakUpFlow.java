@@ -35,9 +35,9 @@ public class BreakUpFlow extends AbstractCommand {
         addConflicting( flow );
         needLocksOn( CommandUtils.getLockingSetFor( flow ) );
         needLockOn( flow.getScenario() );
-        addArgument( "flow", flow.getId() );
-        addArgument( "scenario", flow.getScenario().getId() );
-        addArgument( "flowState", CommandUtils.getFlowState( flow ) );
+        set( "flow", flow.getId() );
+        set( "scenario", flow.getScenario().getId() );
+        set( "flowState", CommandUtils.getFlowState( flow ) );
     }
 
     /**
@@ -78,7 +78,7 @@ public class BreakUpFlow extends AbstractCommand {
         multi.setUndoes( getName() );
         ConnectWithFlow connectWithFlow = new ConnectWithFlow();
         connectWithFlow.setArguments( (Map<String, Object>) get( "flowState" ) );
-        connectWithFlow.addArgument( "flow", commander.resolveId( (Long) get( "flow" ) ) );
+        connectWithFlow.set( "flow", commander.resolveId( (Long) get( "flow" ) ) );
         multi.addCommand( connectWithFlow );
         List<Long> addedFlows = (List<Long>) get( "addedFlows" );
         if ( addedFlows != null ) {

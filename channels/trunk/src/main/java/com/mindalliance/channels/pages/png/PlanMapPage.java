@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.png;
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.analysis.network.ScenarioRelationship;
+import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.graph.Diagram;
 import org.apache.wicket.PageParameters;
 import org.slf4j.Logger;

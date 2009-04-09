@@ -21,7 +21,7 @@ public class HelloCommand extends AbstractCommand {
     }
 
     public HelloCommand( String greeting ) {
-        addArgument( "greeting", greeting );
+        set( "greeting", greeting );
     }
 
     public String getName() {

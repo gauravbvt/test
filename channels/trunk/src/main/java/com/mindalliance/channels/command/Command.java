@@ -45,6 +45,14 @@ public interface Command extends Serializable {
     Object get( String argumentName );
 
     /**
+      * Get the value of named argument, allowing for resoluton of ModelObjectRef values.
+      *
+      * @param argumentName a string
+      * @param commander a commander
+     * @return an object
+      */
+    Object get( String argumentName, Commander commander );
+    /**
      * Get the value of named argument.
      *
      * @param argumentName a string

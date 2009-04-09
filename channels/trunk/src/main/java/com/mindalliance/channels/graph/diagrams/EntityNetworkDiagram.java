@@ -1,8 +1,8 @@
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.analysis.network.EntityNetworkGraphBuilder;
-import com.mindalliance.channels.analysis.network.EntityRelationship;
+import com.mindalliance.channels.analysis.graph.EntityNetworkGraphBuilder;
+import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.GraphBuilder;

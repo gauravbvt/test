@@ -29,8 +29,8 @@ public class DuplicatePart extends AbstractCommand {
     public DuplicatePart( Part part ) {
         needLockOn( part.getScenario() );
         needLockOn( part );
-        addArgument( "scenario", part.getScenario().getId() );
-        addArgument( "part", part.getId() );
+        set( "scenario", part.getScenario().getId() );
+        set( "part", part.getId() );
     }
 
     /**
@@ -54,7 +54,7 @@ public class DuplicatePart extends AbstractCommand {
             duplicate = dqo.createPart( scenario );
             CommandUtils.initialize( duplicate, partState );
             commander.mapId( (Long) get( "duplicate" ), duplicate.getId() );
-            addArgument( "duplicate", duplicate.getId() );
+            set( "duplicate", duplicate.getId() );
             return new Change( Change.Type.Added, duplicate );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );

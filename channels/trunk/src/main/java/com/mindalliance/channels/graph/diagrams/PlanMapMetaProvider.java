@@ -6,7 +6,7 @@ import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.analysis.network.ScenarioRelationship;
+import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.apache.commons.lang.StringUtils;
@@ -88,8 +88,17 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
     public EdgeNameProvider<ScenarioRelationship> getEdgeLabelProvider() {
         return new EdgeNameProvider<ScenarioRelationship>() {
             public String getEdgeName( ScenarioRelationship scenarioRel ) {
-                int count = scenarioRel.getExternalFlows().size();
-                return count + ( count > 1 ? " flows" : " flow" );
+                String name = "";
+                if ( scenarioRel.hasExternalFlows() ) {
+                    int count = scenarioRel.getExternalFlows().size();
+                    name = name + count + ( count > 1 ? " flows" : " flow" );
+                }
+                if ( scenarioRel.hasInitiators() ) {
+                    name = name + (name.isEmpty() ? "" : " and ");
+                    int count = scenarioRel.getInitiators().size();
+                    name = name + count + ( count > 1 ? " causes" : " cause" );
+                }
+                return name;
             }
         };
     }
@@ -152,7 +161,7 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
             list.add( new DOTAttribute( "fontsize", SCENARIO_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", SCENARIO_FONT ) );
             list.add( new DOTAttribute(
-                    "tooltip", 
+                    "tooltip",
                     sanitize( StringUtils.abbreviate( vertex.getDescription(), 50 ) ) ) );
             if ( getAnalyst().hasIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
@@ -164,7 +173,7 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
 
         public List<DOTAttribute> getEdgeAttributes( ScenarioRelationship edge, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-            list.add( new DOTAttribute( "arrowhead", "dot" ) );
+            list.add( new DOTAttribute( "arrowhead", "vee" ) );
             // list.add( new DOTAttribute( "arrowsize", "0.75" ) );
             list.add( new DOTAttribute( "fontname", EDGE_FONT ) );
             list.add( new DOTAttribute( "fontsize", EDGE_FONT_SIZE ) );

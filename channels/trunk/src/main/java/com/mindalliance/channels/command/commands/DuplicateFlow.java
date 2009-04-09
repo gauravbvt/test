@@ -25,9 +25,9 @@ public class DuplicateFlow extends AbstractCommand {
 
     public DuplicateFlow( Flow flow, boolean isOutcome ) {
         needLockOn( isOutcome ? flow.getSource() : flow.getTarget() );
-        addArgument( "scenario", flow.getScenario().getId() );
-        addArgument( "flow", flow.getId() );
-        addArgument( "outcome", isOutcome );
+        set( "scenario", flow.getScenario().getId() );
+        set( "flow", flow.getId() );
+        set( "outcome", isOutcome );
     }
 
     /**
@@ -49,7 +49,7 @@ public class DuplicateFlow extends AbstractCommand {
             boolean isOutcome = (Boolean) get( "outcome" );
             duplicate = duplicate( flow, isOutcome );
             commander.mapId( (Long) get( "duplicate" ), duplicate.getId() );
-            addArgument( "duplicate", duplicate.getId() );
+            set( "duplicate", duplicate.getId() );
             return new Change( Change.Type.Added, duplicate );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );

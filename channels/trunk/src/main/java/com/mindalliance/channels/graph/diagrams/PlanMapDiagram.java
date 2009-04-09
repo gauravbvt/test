@@ -6,8 +6,8 @@ import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.analysis.network.ScenarioRelationship;
-import com.mindalliance.channels.analysis.network.PlanMapGraphBuilder;
+import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
+import com.mindalliance.channels.analysis.graph.PlanMapGraphBuilder;
 
 import java.io.OutputStream;
 import java.util.List;

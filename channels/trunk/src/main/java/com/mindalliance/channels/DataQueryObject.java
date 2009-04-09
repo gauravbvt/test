@@ -1,8 +1,8 @@
 package com.mindalliance.channels;
 
 import com.mindalliance.channels.util.Play;
-import com.mindalliance.channels.analysis.network.ScenarioRelationship;
-import com.mindalliance.channels.analysis.network.EntityRelationship;
+import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
+import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Iterator;

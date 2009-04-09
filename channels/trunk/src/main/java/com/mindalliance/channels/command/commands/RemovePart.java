@@ -68,11 +68,11 @@ public class RemovePart extends AbstractCommand {
         // Double check in case this is an undo-undo
         if ( !commander.canDo( this ) )
             throw new CommandException( "Someone is making changes." );
-        addArgument( "part", part.getId() );
-        addArgument( "partState", CommandUtils.getPartState( part ) );
+        set( "part", part.getId() );
+        set( "partState", CommandUtils.getPartState( part ) );
         if ( scenario.countParts() == 1 ) {
             Part defaultPart = dqo.createPart( scenario );
-            addArgument( "defaultPart", defaultPart.getId() );
+            set( "defaultPart", defaultPart.getId() );
         }
         removePart( part, dqo );
         ignoreLock( commander.resolveId( (Long) get( "part" ) ) );
@@ -231,9 +231,9 @@ public class RemovePart extends AbstractCommand {
         // Disconnects all requirements and outcomes of the part,
         // and removes the part from the scenario.
         scenario.removeNode( part );
-        addArgument( "addedNeeds", addedNeeds );
-        addArgument( "addedCapabilities", addedCapabilities );
-        addArgument( "removedFlows", removedFlows );
+        set( "addedNeeds", addedNeeds );
+        set( "addedCapabilities", addedCapabilities );
+        set( "removedFlows", removedFlows );
     }
 
 }

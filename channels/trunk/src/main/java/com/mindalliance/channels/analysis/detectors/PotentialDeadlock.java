@@ -8,7 +8,7 @@ import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.util.SemMatch;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
-import com.mindalliance.channels.analysis.network.FlowMapGraphBuilder;
+import com.mindalliance.channels.analysis.graph.FlowMapGraphBuilder;
 import com.mindalliance.channels.graph.GraphBuilder;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;

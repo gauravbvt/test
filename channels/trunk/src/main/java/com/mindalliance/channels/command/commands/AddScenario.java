@@ -34,8 +34,8 @@ public class AddScenario extends AbstractCommand {
         Scenario scenario = commander.getDqo().createScenario();
         commander.mapId( (Long)get("scenario"), scenario.getId() );
         commander.mapId( (Long)get("defaultPart"), scenario.getDefaultPart().getId() );
-        addArgument( "scenario", scenario.getId() );
-        addArgument( "defaultPart", scenario.getDefaultPart().getId() );
+        set( "scenario", scenario.getId() );
+        set( "defaultPart", scenario.getDefaultPart().getId() );
         return new Change( Change.Type.Added, scenario );
     }
 

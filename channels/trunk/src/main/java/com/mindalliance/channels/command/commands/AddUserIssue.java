@@ -27,7 +27,7 @@ public class AddUserIssue extends AbstractCommand {
     }
 
     public AddUserIssue( ModelObject modelObject ) {
-        addArgument( "modelObject", modelObject.getId() );
+        set( "modelObject", modelObject.getId() );
     }
 
     /**
@@ -55,7 +55,7 @@ public class AddUserIssue extends AbstractCommand {
         dqo.add( issue );
         if ( get( "issue" ) != null )
             commander.mapId( (Long) get( "issue" ), issue.getId() );
-        addArgument( "issue", issue.getId() );
+        set( "issue", issue.getId() );
         return new Change( Change.Type.Added, issue );
 
     }

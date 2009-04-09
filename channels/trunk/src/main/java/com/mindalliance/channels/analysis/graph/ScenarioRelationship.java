@@ -1,10 +1,11 @@
-package com.mindalliance.channels.analysis.network;
+package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ExternalFlow;
 import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.Part;
 import com.mindalliance.channels.analysis.Analyst;
 
 import java.util.List;
@@ -43,6 +44,10 @@ public class ScenarioRelationship implements Identifiable {
      * External flows in fromScenario referencing node in toScenario
      */
     private List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
+    /**
+     * Parts in fromscenario that initiate th to-scenario
+     */
+    private List<Part> initiators = new ArrayList<Part>();
 
     public ScenarioRelationship() {
     }
@@ -74,7 +79,10 @@ public class ScenarioRelationship implements Identifiable {
         ScenarioRelationship scRel = dqo.findScenarioRelationship(
                 getFromScenario( dqo ),
                 getToScenario( dqo ) );
-        if ( scRel != null ) externalFlows = scRel.getExternalFlows();
+        if ( scRel != null ) {
+            externalFlows = scRel.getExternalFlows();
+            initiators = scRel.getInitiators();
+        }
     }
 
     public String getName() {
@@ -99,6 +107,14 @@ public class ScenarioRelationship implements Identifiable {
 
     public void setExternalFlows( List<ExternalFlow> externalFlows ) {
         this.externalFlows = externalFlows;
+    }
+
+    public List<Part> getInitiators() {
+        return initiators;
+    }
+
+    public void setInitiators( List<Part> initiators ) {
+        this.initiators = initiators;
     }
 
     /**
@@ -185,4 +201,33 @@ public class ScenarioRelationship implements Identifiable {
         return Long.valueOf( getId() ).hashCode();
     }
 
+    /**
+     * Whether has external flows.
+     * @return a boolean
+     */
+    public boolean hasExternalFlows() {
+        return !externalFlows.isEmpty();
+    }
+
+    /**
+     * Whether has external initiators.
+     * @return a boolean
+     */
+    public boolean hasInitiators() {
+        return !initiators.isEmpty();
+    }
+
+    /**
+     * Clear out initiators.
+     */
+    public void clearInitiators() {
+        initiators = new ArrayList<Part>();
+    }
+
+    /**
+     * Clear out external flows.
+     */
+    public void clearExternalFlows() {
+        externalFlows = new ArrayList<ExternalFlow>();
+    }
 }

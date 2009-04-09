@@ -29,7 +29,7 @@ public class RemoveScenario extends AbstractCommand {
 
     public RemoveScenario( Scenario scenario ) {
         super();
-        addArgument( "scenario", scenario.getId() );
+        set( "scenario", scenario.getId() );
         addConflicting( scenario );
         Iterator<Part> parts = scenario.parts();
         while ( parts.hasNext() ) {
@@ -54,11 +54,11 @@ public class RemoveScenario extends AbstractCommand {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Exporter exporter = Project.getProject().getExporter();
             exporter.exportScenario( scenario, bos );
-            addArgument( "xml", bos.toString() );
+            set( "xml", bos.toString() );
             if ( dqo.list( Scenario.class ).size() == 1 ) {
                 // first create a new scenario
                 Scenario defaultScenario = dqo.createScenario();
-                addArgument( "defaultScenario", defaultScenario.getId() );
+                set( "defaultScenario", defaultScenario.getId() );
             }
             dqo.remove( scenario );
             return new Change( Change.Type.Removed, scenario );
@@ -81,7 +81,7 @@ public class RemoveScenario extends AbstractCommand {
         String xml = (String) get( "xml" );
         if ( xml != null ) {
             RestoreScenario restoreScenario = new RestoreScenario();
-            restoreScenario.addArgument( "xml", xml );
+            restoreScenario.set( "xml", xml );
             return restoreScenario;
         } else {
             throw new CommandException( "Can not restore scenario." );

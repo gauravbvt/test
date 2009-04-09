@@ -5,7 +5,7 @@ import com.mindalliance.channels.graph.URLProvider;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.analysis.network.EntityRelationship;
+import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Role;

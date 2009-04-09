@@ -99,7 +99,7 @@ public class ConnectWithFlow extends AbstractCommand {
         }
         if ( get( "flow" ) != null )
             commander.mapId( (Long) get( "flow" ), flow.getId() );
-        addArgument( "flow", flow.getId() );
+        set( "flow", flow.getId() );
         return new Change( Change.Type.Added, flow );
     }
 

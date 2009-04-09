@@ -11,6 +11,7 @@ import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.Delay;
 import com.mindalliance.channels.pages.Project;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -70,6 +71,25 @@ public class ScenarioConverter implements Converter {
         writer.startNode( "description" );
         writer.setValue( scenario.getDescription() );
         writer.endNode();
+        if ( scenario.getLocation() != null ) {
+            writer.startNode( "location" );
+            writer.setValue( scenario.getLocation().getName() );
+            writer.endNode();
+        }
+        if ( scenario.isSelfTerminating() ) {
+            writer.startNode( "expected-duration" );
+            writer.setValue( scenario.getCompletionTime().toString() );
+            writer.endNode();
+        }
+        for ( Part initiator : scenario.getInitiators() ) {
+            writer.startNode( "initiator" );
+            writer.addAttribute( "scenario", initiator.getScenario().getName() );
+            writer.startNode( "scenario-description" );
+            writer.setValue( initiator.getScenario().getDescription() );
+            writer.endNode();
+            ConverterUtils.writePartSpecification( initiator, writer );
+            writer.endNode();
+        }
         // All entities if not within a project export
         if ( context.get( "project" ) == null ) {
             Iterator<ModelObject> entities = dqo.iterateEntities();
@@ -105,6 +125,8 @@ public class ScenarioConverter implements Converter {
         }
     }
 
+
+
     /**
      * {@inheritDoc}
      */
@@ -115,7 +137,8 @@ public class ScenarioConverter implements Converter {
             idMap = new HashMap<String, Long>();
             context.put( "idMap", idMap );
         }
-        Scenario scenario = Project.dqo().createScenario();
+        DataQueryObject dqo = Project.dqo();
+        Scenario scenario = dqo.createScenario();
         Part defaultPart = scenario.getDefaultPart();
         context.put( "scenario", scenario );
         scenario.setName( reader.getAttribute( "name" ) );
@@ -127,6 +150,13 @@ public class ScenarioConverter implements Converter {
             if ( nodeName.equals( "description" ) ) {
                 scenario.setDescription( reader.getValue() );
                 // Entities
+            } else if ( nodeName.equals( "location" ) ) {
+                scenario.setLocation( dqo.findOrCreate( Place.class, reader.getValue() ) );
+            } else if ( nodeName.equals( "expected-duration" ) ) {
+                scenario.setSelfTerminating( true );
+                scenario.setCompletionTime( Delay.parse( reader.getValue() ) );
+            } else if ( nodeName.equals( "initiator" ) ) {
+                resolveInitiator( reader, scenario );
             } else if ( nodeName.equals( "actor" ) ) {
                 context.convertAnother( scenario, Actor.class );
             } else if ( nodeName.equals( "organization" ) ) {
@@ -152,5 +182,49 @@ public class ScenarioConverter implements Converter {
         scenario.removeNode( defaultPart );
         return scenario;
     }
+
+    private void resolveInitiator( HierarchicalStreamReader reader, Scenario scenario ) {
+        String externalScenarioName = reader.getAttribute( "scenario" );
+        String externalScenarioDescription = "";
+        String roleName = null;
+        String organizationName = null;
+        String task = null;
+        String taskDescription = "";
+        while ( reader.hasMoreChildren() ) {
+            reader.moveDown();
+            String nodeName = reader.getNodeName();
+            if ( nodeName.equals( "scenario-description" ) ) {
+                externalScenarioDescription = reader.getValue();
+            } else {
+                String name = reader.getAttribute( "name" ).trim();
+                if ( nodeName.equals( "part-role" ) ) {
+                    roleName = name;
+                } else if ( nodeName.equals( "part-task" ) ) {
+                    task = name;
+                    taskDescription = reader.getValue();
+                } else if ( nodeName.equals( "part-organization" ) ) {
+                    organizationName = name;
+                }
+            }
+            reader.moveUp();
+        }
+        List<Scenario> externalScenarios = ConverterUtils.findMatchingScenarios(
+                externalScenarioName,
+                externalScenarioDescription );
+        for ( Scenario externalScenario : externalScenarios ) {
+            List<Part> externalParts = ConverterUtils.findMatchingParts(
+                    externalScenario,
+                    roleName,
+                    organizationName,
+                    task,
+                    taskDescription );
+            for ( Part externalPart : externalParts ) {
+                scenario.addInitiator( externalPart );
+            }
+        }
+
+    }
+
+
 
 }

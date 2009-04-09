@@ -7,7 +7,6 @@ import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.InternalFlow;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.Node;
-import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.DataQueryObject;
@@ -23,7 +22,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -157,7 +155,7 @@ public class FlowConverter implements Converter {
             Part part = (Part) ( connector.isSource()
                     ? innerFlow.getTarget()
                     : innerFlow.getSource() );
-            writePartSpecification( part, writer );
+            ConverterUtils.writePartSpecification( part, writer );
             // Connector is in this scenario
         } else {
             // keep specs of external flows it participates in
@@ -171,31 +169,13 @@ public class FlowConverter implements Converter {
                 writer.startNode( "scenario-description" );
                 writer.setValue( connector.getScenario().getDescription() );
                 writer.endNode();
-                writePartSpecification( externalPart, writer );
+                ConverterUtils.writePartSpecification( externalPart, writer );
                 writer.endNode();
             }
         }
         writer.endNode();
     }
 
-    private void writePartSpecification( Part part, HierarchicalStreamWriter writer ) {
-        if ( part.getRole() != null ) {
-            writer.startNode( "part-role" );
-            writer.addAttribute( "name", part.getRole().getName() );
-            writer.endNode();
-        }
-        if ( part.getTask() != null ) {
-            writer.startNode( "part-task" );
-            writer.addAttribute( "name", part.getTask() );
-            writer.setValue( part.getDescription() );
-            writer.endNode();
-        }
-        if ( part.getOrganization() != null ) {
-            writer.startNode( "part-organization" );
-            writer.addAttribute( "name", part.getOrganization().getName() );
-            writer.endNode();
-        }
-    }
 
     /**
      * {@inheritDoc}
@@ -385,11 +365,11 @@ public class FlowConverter implements Converter {
                 }
                 reader.moveUp();
             }
-            List<Scenario> externalScenarios = findMatchingScenarios(
+            List<Scenario> externalScenarios = ConverterUtils.findMatchingScenarios(
                     externalScenarioName,
                     externalScenarioDescription );
             for ( Scenario externalScenario : externalScenarios ) {
-                List<Part> externalParts = findMatchingExternalParts( externalScenario,
+                List<Part> externalParts = ConverterUtils.findMatchingParts( externalScenario,
                         roleName,
                         organizationName,
                         task,
@@ -407,24 +387,6 @@ public class FlowConverter implements Converter {
 
     }
 
-    @SuppressWarnings( "unchecked" )
-    private List<Part> findMatchingExternalParts( Scenario scenario,
-                                                  final String roleName,
-                                                  final String organizationName,
-                                                  final String task,
-                                                  final String taskDescription ) {
-        List<Part> externalParts = new ArrayList<Part>();
-        Iterator<Part> iterator =
-                (Iterator<Part>) new FilterIterator( scenario.parts(), new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        Part part = (Part) obj;
-                        return partMatches( part, roleName, organizationName, task, taskDescription );
-                    }
-                }
-                );
-        while ( iterator.hasNext() ) externalParts.add( iterator.next() );
-        return externalParts;
-    }
 
     @SuppressWarnings( "unchecked" )
     private List<Connector> findMatchingConnectors( String scenarioName,
@@ -436,7 +398,7 @@ public class FlowConverter implements Converter {
                                                     final String taskDescription,
                                                     final boolean isSource ) {
         List<Connector> connectors = new ArrayList<Connector>();
-        List<Scenario> scenarios = findMatchingScenarios( scenarioName, scenarioDescription );
+        List<Scenario> scenarios = ConverterUtils.findMatchingScenarios( scenarioName, scenarioDescription );
         for ( Scenario scenario : scenarios ) {
             Iterator<Connector> iterator =
                     (Iterator<Connector>) new FilterIterator( scenario.nodes(), new Predicate() {
@@ -458,44 +420,6 @@ public class FlowConverter implements Converter {
         return connectors;
     }
 
-    // TODO do semantic match on scenario name and description
-    private List<Scenario> findMatchingScenarios( String scenarioName,
-                                                  String scenarioDescription ) {
-        List<Scenario> scenarios = new ArrayList<Scenario>();
-        try {
-            scenarios.add( Project.dqo().findScenario( scenarioName ) );
-        } catch ( NotFoundException e ) {
-            LoggerFactory.getLogger( FlowConverter.class ).info(
-                    "No scenario found matching name ["
-                            + scenarioName
-                            + "] and description ["
-                            + scenarioDescription
-                            + "]" );
-        }
-        return scenarios;
-    }
-
-    private boolean partMatches( Part part,
-                                 String roleName,
-                                 String organizationName,
-                                 String task,
-                                 String taskDescription ) {
-        if ( roleName != null ) {
-            if ( part.getRole() == null
-                    || !SemMatch.same( part.getRole().getName(), roleName ) ) return false;
-        }
-        if ( organizationName != null ) {
-            if ( part.getOrganization() == null
-                    || !SemMatch.same( part.getOrganization().getName(), organizationName ) )
-                return false;
-        }
-        if ( task != null ) {
-            if ( part.getTask() == null || !SemMatch.same( part.getTask(), task ) )
-                // TODO match task description
-                return false;
-        }
-        return true;
-    }
 
     private boolean connectorMatches( Connector connector,
                                       boolean isSource,
@@ -511,7 +435,7 @@ public class FlowConverter implements Converter {
         Part part = (Part) ( isSource ? innerFlow.getSource() : innerFlow.getTarget() );
         // TODO match task description
         return SemMatch.same( innerFlow.getName(), flowName )
-                && partMatches( part, roleName, organizationName, task, taskDescription );
+                && ConverterUtils.partMatches( part, roleName, organizationName, task, taskDescription );
     }
 
 }

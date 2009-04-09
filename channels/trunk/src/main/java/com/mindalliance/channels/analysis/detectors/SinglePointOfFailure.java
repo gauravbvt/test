@@ -2,7 +2,7 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
-import com.mindalliance.channels.analysis.network.FlowMapGraphBuilder;
+import com.mindalliance.channels.analysis.graph.FlowMapGraphBuilder;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;

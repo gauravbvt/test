@@ -1,9 +1,10 @@
-package com.mindalliance.channels.analysis.network;
+package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.InternalFlow;
+import com.mindalliance.channels.Part;
 import com.mindalliance.channels.graph.GraphBuilder;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
@@ -57,6 +58,9 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
                 if ( !node.outcomes().hasNext() && !node.requirements().hasNext() )
                     // added if not part of a flow
                     graph.addVertex( node );
+            }
+            for ( Part initiator : scenario.getInitiators()) {
+                graph.addVertex( initiator );
             }
             // add flows as edges
             Iterator<Flow> flows = scenario.flows();

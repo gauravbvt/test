@@ -27,9 +27,6 @@ import java.util.Set;
 @Entity
 public class Scenario extends ModelObject {
 
-    // TODO - Add location (as in area) of the scenario (where the scenario applies
-    //  - e.g. avian flu case in New Jersey)
-
     /**
      * The default name for new scenarios.
      */
@@ -49,15 +46,34 @@ public class Scenario extends ModelObject {
      * Nodes, indexed by id.
      */
     private Map<Long, Node> nodeIndex;
+    /**
+     * Parts that can initiate this scenario.
+     */
+    private Set<Part> initiators = new HashSet<Part>();
+    /**
+     * The spatial scope of the scenario.
+     * Everywhere if null.
+     */
+    private Place location;
+    /**
+     * Whether the scenario can terminate on its own.
+     */
+    private boolean selfTerminating;
+    /**
+     * How long it usually takes for the scenario to terminate on its own, if it does.
+     */
+    private Delay completionTime = new Delay();
 
-    /** The data query object in charge of this scenario. */
+    /**
+     * The data query object in charge of this scenario.
+     */
     private transient DataQueryObject dqo;
 
     public Scenario() {
         setNodeIndex( new HashMap<Long, Node>( INITIAL_CAPACITY ) );
     }
 
-    @OneToMany( cascade = { CascadeType.REMOVE }, mappedBy = "scenario" )
+    @OneToMany( cascade = {CascadeType.REMOVE}, mappedBy = "scenario" )
     @MapKey( name = "id" )
     Map<Long, Node> getNodeIndex() {
         return nodeIndex;
@@ -67,12 +83,44 @@ public class Scenario extends ModelObject {
         this.nodeIndex = nodeIndex;
     }
 
+    public Set<Part> getInitiators() {
+        return initiators;
+    }
+
+    public void setInitiators( Set<Part> initiators ) {
+        this.initiators = initiators;
+    }
+
+    public Place getLocation() {
+        return location;
+    }
+
+    public void setLocation( Place location ) {
+        this.location = location;
+    }
+
+    public boolean isSelfTerminating() {
+        return selfTerminating;
+    }
+
+    public void setSelfTerminating( boolean selfTerminating ) {
+        this.selfTerminating = selfTerminating;
+    }
+
+    public Delay getCompletionTime() {
+        return completionTime;
+    }
+
+    public void setCompletionTime( Delay completionTime ) {
+        this.completionTime = completionTime;
+    }
+
     /**
      * Iterate over the nodes in this scenario.
      * There should always be at least a node in the scenario.
      * The nodes are sorted as follows:
      * 1- triggered nodes with fewer triggering in-scenario nodes leading up to them
-     *    (smaller number first)
+     * (smaller number first)
      * 2- the number of required outcomes (larger number first)
      * 3- their names (alphabetical) - connectors always come after parts
      *
@@ -129,9 +177,9 @@ public class Scenario extends ModelObject {
     /**
      * Convenience accessor for tests.
      *
-     * @param dqo the underlying store
-     * @param actor   the actor for the new part
-     * @param task    the task of the new part
+     * @param dqo   the underlying store
+     * @param actor the actor for the new part
+     * @param task  the task of the new part
      * @return the new part
      */
     public Part createPart( DataQueryObject dqo, Actor actor, String task ) {
@@ -145,9 +193,9 @@ public class Scenario extends ModelObject {
     /**
      * Convenience accessor for tests.
      *
-     * @param dqo the underlying store
-     * @param role    the role for the new part
-     * @param task    the task of the new part
+     * @param dqo  the underlying store
+     * @param role the role for the new part
+     * @param task the task of the new part
      * @return the new part
      */
     public Part createPart( DataQueryObject dqo, Role role, String task ) {
@@ -176,8 +224,7 @@ public class Scenario extends ModelObject {
      */
     public void removeNode( Node node ) {
         if ( getNodeIndex().containsKey( node.getId() )
-                && ( node.isConnector() || hasMoreThanOnePart() ) )
-        {
+                && ( node.isConnector() || hasMoreThanOnePart() ) ) {
             Iterator<Flow> ins = node.requirements();
             while ( ins.hasNext() ) {
                 ins.next().disconnect();
@@ -234,7 +281,7 @@ public class Scenario extends ModelObject {
      *
      * @return an iterator on connectors having outcomes
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<Connector> inputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -249,7 +296,7 @@ public class Scenario extends ModelObject {
      *
      * @return an iterator on parts
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<Part> parts() {
         return (Iterator<Part>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -264,7 +311,7 @@ public class Scenario extends ModelObject {
      *
      * @return an iterator on connectors having requirements
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<Connector> outputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -384,6 +431,34 @@ public class Scenario extends ModelObject {
         return count;
     }
 
+    /**
+     * Add part as initiator.
+     * @param part a part
+     */
+    public void addInitiator( Part part ) {
+        initiators.add( part );
+        if ( part.getInitiatedScenario() != this ) {
+            part.setInitiatedScenario( this );
+        }
+    }
+
+    /**
+     * Remove part as initiator.
+     * @param part a part
+     */
+    public void removeInitiator( Part part ) {
+        initiators.remove( part );
+        if ( part.getInitiatedScenario() == this ) {
+            part.setInitiatedScenario( null );
+        }
+    }
+
+    public void beforeRemove() {
+        for ( Part part : initiators ) {
+            part.setInitiatedScenario( null );
+        }
+    }
+
     //=================================================
     /**
      * An iterator that walks through all flow in the scenario.
@@ -412,7 +487,7 @@ public class Scenario extends ModelObject {
             setIterators( nodeIterator.next() );
         }
 
-        @SuppressWarnings( { "unchecked" } )
+        @SuppressWarnings( {"unchecked"} )
         private void setIterators( Node node ) {
             outcomeIterator = node.outcomes();
             reqIterator = (Iterator<Flow>) new FilterIterator(
@@ -436,7 +511,7 @@ public class Scenario extends ModelObject {
             if ( !hasNext() )
                 throw new NoSuchElementException();
             return outcomeIterator.hasNext() ?
-                   outcomeIterator.next() : reqIterator.next();
+                    outcomeIterator.next() : reqIterator.next();
         }
 
         public void remove() {

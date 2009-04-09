@@ -8,7 +8,7 @@ import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.analysis.network.EntityRelationship;
+import com.mindalliance.channels.analysis.graph.EntityRelationship;
 
 /**
  * Generation of an entity network PNG.

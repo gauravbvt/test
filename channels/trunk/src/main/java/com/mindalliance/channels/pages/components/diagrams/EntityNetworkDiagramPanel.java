@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.analysis.network.EntityRelationship;
+import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.pages.Project;

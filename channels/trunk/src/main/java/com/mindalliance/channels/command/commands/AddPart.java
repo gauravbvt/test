@@ -29,7 +29,7 @@ public class AddPart extends AbstractCommand {
     public AddPart( Scenario scenario ) {
         super();
         needLockOn( scenario );
-        addArgument( "scenario", scenario.getId() );
+        set( "scenario", scenario.getId() );
     }
 
     /**
@@ -60,7 +60,7 @@ public class AddPart extends AbstractCommand {
         Part part = dqo.createPart( scenario );
         if ( get( "part" ) != null )
             commander.mapId( (Long) get( "part" ), part.getId() );
-        addArgument( "part", part.getId() );
+        set( "part", part.getId() );
         if ( defaultPart != null ) scenario.removeNode( defaultPart );
         Map<String, Object> partState = (Map<String, Object>) get( "partState" );
         if ( partState != null ) CommandUtils.initialize( part, partState );

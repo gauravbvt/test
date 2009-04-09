@@ -34,8 +34,8 @@ public class UpdateScenarioObject extends UpdateObject {
             final Object value,
             final Action action ) {
         super( identifiable, property, value, action );
-        addArgument( "scenario", ( (ScenarioObject) identifiable ).getScenario().getId() );
-        addArgument( "isNode", identifiable instanceof Node );
+        set( "scenario", ( (ScenarioObject) identifiable ).getScenario().getId() );
+        set( "isNode", identifiable instanceof Node );
     }
 
     protected String getObjectTypeName( String type ) {

@@ -4,7 +4,7 @@ import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Part;
-import com.mindalliance.channels.analysis.network.EntityRelationship;
+import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;

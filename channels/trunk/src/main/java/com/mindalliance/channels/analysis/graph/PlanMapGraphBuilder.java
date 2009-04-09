@@ -1,4 +1,4 @@
-package com.mindalliance.channels.analysis.network;
+package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.DataQueryObject;
@@ -52,14 +52,17 @@ public class PlanMapGraphBuilder implements GraphBuilder<Scenario, ScenarioRelat
         for ( Scenario scenario : scenarios ) {
             digraph.addVertex( scenario );
         }
-        for  ( Scenario scenario : scenarios ) {
+        for ( Scenario scenario : scenarios ) {
             for ( Scenario other : scenarios ) {
                 if ( scenario != other ) {
                     ScenarioRelationship scRel = dqo.findScenarioRelationship( scenario, other );
-                    if ( scRel != null ) digraph.addEdge( scenario, other, scRel );
+                    if ( scRel != null ) {
+                        digraph.addEdge( scenario, other, scRel );
+                    }
                 }
             }
         }
     }
-
 }
+
+

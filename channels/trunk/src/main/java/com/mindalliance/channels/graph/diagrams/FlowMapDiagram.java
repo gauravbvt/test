@@ -3,7 +3,7 @@ package com.mindalliance.channels.graph.diagrams;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.analysis.network.FlowMapGraphBuilder;
+import com.mindalliance.channels.analysis.graph.FlowMapGraphBuilder;
 import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.GraphBuilder;
