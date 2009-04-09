@@ -51,6 +51,10 @@ public class PartReportPanel extends Panel {
         Place location = part.getLocation();
         add( new Label( "location", location != null ? location.toString() : "Unspecified" ) );
 
+        Place jurisdiction = part.getJurisdiction();
+        add( new Label( "jurisdiction", jurisdiction != null ? jurisdiction.toString()
+                                        : "Unspecified" ) );
+
         WebMarkupContainer completionDiv = new WebMarkupContainer( "delay-div" );
         Label completionTimeLabel;
         if ( part.isSelfTerminating() ) {
