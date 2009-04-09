@@ -1,10 +1,12 @@
 package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.Actor;
+import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.Channelable;
 import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.ExternalFlow;
 import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.Medium;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Part;
@@ -12,6 +14,7 @@ import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -24,6 +27,7 @@ import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -57,9 +61,29 @@ public class FlowReportPanel extends Panel {
 
     private void init() {
         boolean partIsSource = flow.getSource() == part;
+        boolean showContacts = !partIsSource &&  flow.isAskedFor()
+                             || partIsSource && !flow.isAskedFor();
 
+        addFlowPropertyFields( partIsSource );
+
+        List<Channel> channels = flow.getChannels();
+        List<LocalizedActor> actors = findActors();
+
+        Component channelsPanel =
+                new ChannelsReportPanel( "channels", new Model<Channelable>( flow ), null );
+        channelsPanel.setVisible( showContacts && actors.isEmpty() );
+        add( channelsPanel );
+
+        WebMarkupContainer actorsDiv = createContacts( channels, actors );
+        actorsDiv.setVisible( showContacts && !actors.isEmpty() );
+        add( actorsDiv );
+
+        add( new IssuesReportPanel( "issues", new Model<ModelObject>( flow ) ) );
+    }
+
+    private void addFlowPropertyFields( boolean partIsSource ) {
         Label informationLabel = new Label( "information",
-                   partIsSource ? flow.getOutcomeTitle() : flow.getRequirementTitle() );
+                partIsSource ? flow.getOutcomeTitle() : flow.getRequirementTitle() );
         informationLabel.add( new AttributeModifier( "class", true, new Model<String>(
                 flow.isRequired() ? "required-information" : "information" ) ) );
         add( informationLabel );
@@ -70,18 +94,15 @@ public class FlowReportPanel extends Panel {
         Label descLabel = new Label( "description", desc );
         descLabel.setVisible( desc != null && !desc.isEmpty() );
         add( descLabel );
+    }
 
-        final List<LocalizedActor> actors = findActors();
+    private WebMarkupContainer createContacts(
+            List<Channel> channels, final List<LocalizedActor> actors ) {
 
-        boolean showContact = !partIsSource &&  flow.isAskedFor()
-                            || partIsSource && !flow.isAskedFor();
+        final Set<Medium> media = EnumSet.noneOf( Medium.class );
+        for ( Channel c : channels )
+            media.add( c.getMedium() );
 
-        ChannelsReportPanel channels =
-                new ChannelsReportPanel( "channels", new Model<Channelable>( flow ) );
-        channels.setVisible( showContact && !flow.getChannels().isEmpty() );
-        add( channels );
-
-        WebMarkupContainer actorsDiv = new WebMarkupContainer( "actors-div" );
         ListView<LocalizedActor> actorsList = new ListView<LocalizedActor>( "actors", actors ) {
             @Override
             protected void populateItem( ListItem<LocalizedActor> item ) {
@@ -98,16 +119,15 @@ public class FlowReportPanel extends Panel {
                     spec.setActor( actor );
                 }
 
-                item.add( new ActorReportPanel( "actor", scenario, spec, true ) );
+                item.add( new ActorReportPanel( "actor", scenario, spec, true, media ) );
             }
         };
         actorsList.add( new AttributeModifier( "class", true,
                 new Model<String>( flow.isAll() ? "all-actors" : "any-actor" ) ) );
-        actorsDiv.add( actorsList );
-        actorsDiv.setVisible( showContact && !actors.isEmpty() );
-        add( actorsDiv );
 
-        add( new IssuesReportPanel( "issues", new Model<ModelObject>( flow ) ) );
+        WebMarkupContainer result = new WebMarkupContainer( "actors-div" );
+        result.add( actorsList );
+        return result;
     }
 
     private List<LocalizedActor> findActors() {

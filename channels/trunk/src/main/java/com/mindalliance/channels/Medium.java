@@ -25,7 +25,7 @@ public enum Medium {
     /**
      * Telephone.
      */
-    HomePhone( "Home", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}" ),
+    HomePhone( "Home phone", "\\d*\\D*\\d{3}\\D*\\d{3}\\D*\\d{4}" ),
     /**
      * Fax.
      */
@@ -65,7 +65,7 @@ public enum Medium {
     /**
      * In person, one on one.
      */
-    F2F( "Face to face", ".*" ),
+    F2F( "Face to face", ".+" ),
     /**
      *
      */

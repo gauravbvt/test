@@ -127,7 +127,6 @@ ul.contacts li.contact {
 
 ul.contacts li.contact p.name {
     display: table-cell;
-    font-weight: bold;
     margin: 0;
     padding-bottom: 0.5em;
 }

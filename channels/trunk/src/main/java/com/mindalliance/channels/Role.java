@@ -10,7 +10,7 @@ import javax.persistence.Transient;
 public class Role extends ModelObject {
 
     /** The undefined role. */
-    public static final Role UNKNOWN = new Role( "(unknown)" );
+    public static final Role UNKNOWN = new Role( "(Unknown role)" );
 
     public Role() {
     }

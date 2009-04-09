@@ -1,28 +1,28 @@
 package com.mindalliance.channels.query;
 
 import com.mindalliance.channels.Actor;
+import com.mindalliance.channels.Channel;
+import com.mindalliance.channels.Channelable;
 import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.Dao;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.ExternalFlow;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Issue;
+import com.mindalliance.channels.Job;
+import com.mindalliance.channels.Medium;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.DataQueryObject;
-import com.mindalliance.channels.UserIssue;
-import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Organization;
-import com.mindalliance.channels.Channel;
-import com.mindalliance.channels.Channelable;
-import com.mindalliance.channels.AbstractUnicastChannelable;
-import com.mindalliance.channels.Job;
+import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Place;
-import com.mindalliance.channels.analysis.network.ScenarioRelationship;
+import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.analysis.network.EntityRelationship;
+import com.mindalliance.channels.analysis.network.ScenarioRelationship;
 import com.mindalliance.channels.dao.EvacuationScenario;
 import com.mindalliance.channels.dao.FireScenario;
 import com.mindalliance.channels.export.Importer;
@@ -30,21 +30,22 @@ import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.util.Play;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.Collections;
-import java.util.Comparator;
-import java.text.Collator;
 
 /**
  * Utility class for common functionality for all Dao implementations.
@@ -590,19 +591,13 @@ public class DataQueryObjectImpl implements DataQueryObject {
      * {@inheritDoc}
      */
     public List<Channel> findAllCandidateChannelsFor( Channelable channelable ) {
-        if ( channelable instanceof Flow ) {
-            return findAllCandidateChannelsForFlow( (Flow) channelable );
-        } else {
-            return findAllCandidateChannelsForUnicastChannelable(
-                    (AbstractUnicastChannelable) channelable );
-        }
+        return channelable instanceof Flow  ? findAllCandidateChannelsFor( (Flow) channelable )
+             : channelable instanceof Actor ? findAllCandidateChannelsFor( (Actor) channelable )
+             : findAllCandidateChannelsFor( (Organization) channelable );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    private List<Channel> findAllCandidateChannelsForFlow( Flow flow ) {
-        final Set<Channel> channels = new HashSet<Channel>();
+    private List<Channel> findAllCandidateChannelsFor( Flow flow ) {
+        Set<Channel> channels = new HashSet<Channel>();
         List<Channel> currentChannels = flow.getEffectiveChannels();
         Part part = flow.getContactedPart();
         if ( part != null ) {
@@ -612,54 +607,63 @@ public class DataQueryObjectImpl implements DataQueryObject {
                     for ( Channel channel : relatedFlow.getEffectiveChannels() ) {
                         if ( relatedFlow.validate( channel ) == null
                                 && !currentChannels.contains( channel ) )
-                            channels.add( new Channel( channel.getMedium(), channel.getAddress() ) );
+                            channels.add( new Channel( channel ) );
                     }
                 }
             }
         }
-        return new ArrayList<Channel>() {
-            {
-                addAll( channels );
-            }
-        };
+        return new ArrayList<Channel>( channels );
     }
 
-    private List<Channel> findAllCandidateChannelsForUnicastChannelable(
-            AbstractUnicastChannelable channelable ) {
-        final Set<Channel> channels = new HashSet<Channel>();
-        List<Channel> currentChannels = channelable.getEffectiveChannels();
-        ResourceSpec resourceSpec = ResourceSpec.with( channelable );
-        List<Flow> relatedFlows = findAllFlowsContacting( resourceSpec );
-        for ( Flow relatedFlow : relatedFlows ) {
-            for ( Channel channel : relatedFlow.getEffectiveChannels() ) {
-                if ( channel.isUnicast()
-                        && relatedFlow.validate( channel ) == null
-                        && !currentChannels.contains( channel ) )
-                    channels.add( new Channel( channel.getMedium(), channel.getAddress() ) );
+    private List<Channel> findAllCandidateChannelsFor( Actor actor ) {
+        Set<Channel> channels = new HashSet<Channel>( actor.getEffectiveChannels() );
+        Set<Medium> defined = EnumSet.noneOf( Medium.class );
+        for ( Channel c : channels )
+            defined.add( c.getMedium() );
+
+        for ( Job job : findAllJobs( actor ) ) {
+            Role role = getDao().find( Role.class, job.getRoleName() );
+            if ( role != null ) {
+                List<Flow> flows = new ArrayList<Flow>();
+                for ( Scenario scenario : list( Scenario.class ) ) {
+                    Iterator<Flow> scenarioFlows = scenario.flows();
+                    while ( scenarioFlows.hasNext() ) {
+                        Flow flow = scenarioFlows.next();
+                        Part part = flow.getContactedPart();
+                        if ( part != null  && role.equals( part.getRole() ) )
+                            flows.add( flow );
+                    }
+                }
+                for ( Flow relatedFlow : flows )
+                    for ( Channel channel : relatedFlow.getEffectiveChannels() )
+                        if ( relatedFlow.validate( channel ) == null
+                             && !defined.contains( channel.getMedium() ) ) {
+                            defined.add(  channel.getMedium() );
+                            channels.add( new Channel( channel ) );
+                        }
             }
         }
-        return new ArrayList<Channel>() {
-            {
-                addAll( channels );
-            }
-        };
+
+        return new ArrayList<Channel>( channels );
     }
 
+    private List<Channel> findAllCandidateChannelsFor( Organization organization ) {
+        return organization.getEffectiveChannels();
+    }
 
     /**
      * {@inheritDoc}
      */
     public List<Flow> findAllFlowsContacting( ResourceSpec resourceSpec ) {
         List<Flow> flows = new ArrayList<Flow>();
-        for ( Scenario scenario : this.list( Scenario.class ) ) {
+        for ( Scenario scenario : list( Scenario.class ) ) {
             Iterator<Flow> scenarioFlows = scenario.flows();
             while ( scenarioFlows.hasNext() ) {
                 Flow flow = scenarioFlows.next();
                 Part contactedPart = flow.getContactedPart();
                 if ( contactedPart != null
-                        && resourceSpec.narrowsOrEquals( contactedPart.resourceSpec() ) ) {
+                        && resourceSpec.narrowsOrEquals( contactedPart.resourceSpec() ) )
                     flows.add( flow );
-                }
             }
         }
         return flows;
@@ -706,7 +710,7 @@ public class DataQueryObjectImpl implements DataQueryObject {
      * {@inheritDoc}
      */
     public List<Job> findUnconfirmedJobs( Organization organization ) {
-        final Set<Job> unconfirmedJobs = new HashSet<Job>();
+        Set<Job> unconfirmedJobs = new HashSet<Job>();
         List<Job> confirmedJobs = organization.getJobs();
         for ( Scenario scenario : list( Scenario.class ) ) {
             Iterator<Part> parts = scenario.parts();
@@ -722,9 +726,7 @@ public class DataQueryObjectImpl implements DataQueryObject {
                 }
             }
         }
-        List<Job> allUnconfirmedJobs = new ArrayList<Job>();
-        allUnconfirmedJobs.addAll( unconfirmedJobs );
-        return allUnconfirmedJobs;
+        return new ArrayList<Job>( unconfirmedJobs );
     }
 
     /**
@@ -919,7 +921,7 @@ public class DataQueryObjectImpl implements DataQueryObject {
     }
 
     /**
-     * {@inheritDoc
+     * {@inheritDoc}
      */
     public List<Job> findAllJobs( Actor actor ) {
         String actorName = actor.getName();

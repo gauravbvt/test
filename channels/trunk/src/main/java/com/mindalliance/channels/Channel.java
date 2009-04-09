@@ -9,9 +9,10 @@ import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
+import java.text.MessageFormat;
 
 /**
- * A communication channel
+ * A communication channel.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -114,11 +115,12 @@ public class Channel implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append( medium == null ? "NO MEDIUM" : medium.getLabel() );
-        sb.append( ": " );
-        sb.append( address.isEmpty() ? "?" : address );
-        return sb.toString();
+        String label = medium == null ? "Unspecified medium" : medium.getLabel();
+
+        return address.isEmpty() ?  Medium.F2F.equals( medium ) ?
+                                               label : MessageFormat.format( "via {0}", label )
+             : Medium.Other.equals( medium ) ? MessageFormat.format( "via {0}", getAddress() )
+                                             : MessageFormat.format( "{0}: {1}", label, address );
     }
 
     /**

@@ -658,6 +658,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      *
      * @return a string description of the communication
      */
+    @Transient
     public String getKind() {
         return isAskedFor() ? "answer" : "notify";
     }

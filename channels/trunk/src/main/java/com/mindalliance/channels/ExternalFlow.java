@@ -160,6 +160,7 @@ public class ExternalFlow extends Flow {
      *
      * @return a string description of the communication
      */
+    @Transient
     public String getKind() {
         if ( !isPartTargeted() ) {
             return isAskedFor() ? "answer" : "notify";
