@@ -5,6 +5,7 @@ import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.ProjectPage;
 import com.mindalliance.channels.command.Change;
 import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.IModel;
@@ -47,6 +48,7 @@ public class ProjectShowMenuPanel extends MenuPanel {
     public List<Component> getMenuItems() {
         List<Component> menuItems = new ArrayList<Component>();
         ExternalLink reportLink = new ExternalLink( "link", "report.html" );
+        reportLink.setPopupSettings( new PopupSettings(PopupSettings.RESIZABLE | PopupSettings.SCROLLBARS) );
         menuItems.add( new LinkMenuItem(
                 "menuItem",
                 new Model<String>( "Playbook" ),
