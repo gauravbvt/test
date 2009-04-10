@@ -14,11 +14,23 @@ import java.io.Serializable;
  * Time: 7:34:16 PM
  */
 public class ModelObjectRef implements Serializable {
-
+    /**
+     * A model object's id.
+     */
     private long id;
+    /**
+     * The model object's class name
+     */
     private String className;
+    /**
+     * The entity's name, if an entity is referenced.
+     */
+    private String entityName;
 
     public ModelObjectRef( ModelObject mo ) {
+        if ( mo.isEntity() ) {
+            entityName = mo.getName();
+        }
         id = mo.getId();
         className = mo.getClass().getName();
     }
@@ -44,5 +56,23 @@ public class ModelObjectRef implements Serializable {
      */
     public String toString() {
         return className + ":" + id;
+    }
+
+    /**
+     * Resolve the reference to a model object
+     * @param commander a commander
+     * @return a model object
+     * @throws NotFoundException if not found
+     * @throws CommandException if commander fails to resolve
+     */
+    public ModelObject resolve( Commander commander ) throws NotFoundException, CommandException {
+        ModelObject mo;
+        if ( entityName == null ) {
+            mo = commander.resolve( getModelObjectClass(), id );
+        }
+        else {
+            mo = commander.getDqo().findOrCreate( getModelObjectClass(), entityName );
+        }
+        return mo;
     }
 }

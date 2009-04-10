@@ -101,7 +101,7 @@ public abstract class AbstractCommand implements Command {
         if ( value instanceof ModelObjectRef ) {
             ModelObjectRef moRef = (ModelObjectRef) value;
             try {
-                value = commander.resolve( moRef.getModelObjectClass(), moRef.getId() );
+                value = moRef.resolve( commander );
             } catch ( CommandException e ) {
                 LOG.warn( " Can't dereference " + moRef, e );
             } catch ( NotFoundException e ) {

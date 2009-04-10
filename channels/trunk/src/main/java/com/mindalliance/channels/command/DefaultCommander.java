@@ -84,7 +84,7 @@ public class DefaultCommander implements Commander {
         try {
             return getDqo().find( clazz, resolveId( id ) );
         } catch ( NotFoundException e ) {
-            throw new CommandException( "YOu need to refresh.", e );
+            throw new CommandException( "You need to refresh.", e );
         }
     }
 
