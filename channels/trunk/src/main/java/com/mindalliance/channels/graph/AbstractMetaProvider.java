@@ -39,7 +39,7 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
     /**
      * Number of characters after which a long line is wrapped on separator.
      */
-    protected static final int LINE_WRAP_SIZE = 15;
+    public static final int LINE_WRAP_SIZE = 15;
     /**
      * PNG, SVG, IMAP etc.
      */
@@ -119,7 +119,7 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
      * @param lineWrapSize an integer
      * @return modified string
      */
-    protected String separate( String s, int lineWrapSize ) {
+    public static String separate( String s, int lineWrapSize ) {
         StringBuilder sb = new StringBuilder();
         int count = 0;
         String separators = "  ,.-_?\"";

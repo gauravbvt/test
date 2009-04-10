@@ -87,7 +87,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
     }
 
     private String getEntityLabel( ModelObject modelObject ) {
-        String label = separate(modelObject.getName(), LINE_WRAP_SIZE);
+        String label = AbstractMetaProvider.separate(modelObject.getName(), LINE_WRAP_SIZE);
         while (label.split( "\\|" ).length > 3) {
             label = StringUtils.reverse(label);
             label = label.replaceFirst( "\\|", " " );

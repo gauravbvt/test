@@ -155,7 +155,9 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     private void exportInitiations( PrintWriter out, Graph<Node, Flow> g ) {
         for ( Part initiator : initiators ) {
             List<DOTAttribute> attributes = getTimingEdgeAttributes();
-            attributes.add( new DOTAttribute( "label", "causes scenario" ) );
+            attributes.add( new DOTAttribute( "label", makeLabelAboutScenario(
+                    "causes",
+                    initiator.getInitiatedScenario() ) ) );
             String initiatorId = getVertexID( initiator );
             out.print( getIndent() + initiatorId + getArrow( g ) + START );
             out.print( "[" );
@@ -183,7 +185,9 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     private void exportTerminations( PrintWriter out, Graph<Node, Flow> g ) {
         for ( Part terminator : terminators ) {
             List<DOTAttribute> attributes = getTimingEdgeAttributes();
-            attributes.add( new DOTAttribute( "label", "ends scenario" ) );
+            attributes.add( new DOTAttribute( "label", makeLabelAboutScenario(
+                    "ends",
+                    terminator.getScenario() ) ) );
             String terminatorId = getVertexID( terminator );
             out.print( getIndent() + terminatorId + getArrow( g ) + STOP );
             out.print( "[" );
@@ -194,10 +198,16 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         }
     }
 
+    private String makeLabelAboutScenario( String s, Scenario scenario ) {
+        return AbstractMetaProvider.separate(
+                        s + " " + scenario.getName().toLowerCase(),
+                        AbstractMetaProvider.LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" );
+    }
+
     private List<DOTAttribute> getTimingEdgeAttributes() {
         List<DOTAttribute> list = DOTAttribute.emptyList();
         list.add( new DOTAttribute( "color", "gray" ) );
-        list.add( new DOTAttribute( "arrowhead", "none"));
+        list.add( new DOTAttribute( "arrowhead", "none" ) );
         list.add( new DOTAttribute( "fontname", AbstractMetaProvider.EDGE_FONT ) );
         list.add( new DOTAttribute( "fontsize", AbstractMetaProvider.EDGE_FONT_SIZE ) );
         list.add( new DOTAttribute( "fontcolor", "dimgray" ) );
@@ -205,5 +215,6 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         list.add( new DOTAttribute( "weight", "2.0" ) );
         return list;
     }
+
 
 }

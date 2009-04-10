@@ -106,7 +106,7 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
     public VertexNameProvider<Scenario> getVertexLabelProvider() {
         return new VertexNameProvider<Scenario>() {
             public String getVertexName( Scenario scenario ) {
-                String label = separate(
+                String label = AbstractMetaProvider.separate(
                         scenario.getName(),
                         LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" );
 

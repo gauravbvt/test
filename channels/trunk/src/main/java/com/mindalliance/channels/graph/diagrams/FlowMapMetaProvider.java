@@ -122,7 +122,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
     public EdgeNameProvider<Flow> getEdgeLabelProvider() {
         return new EdgeNameProvider<Flow>() {
             public String getEdgeName( Flow flow ) {
-                String label = separate(
+                String label = AbstractMetaProvider.separate(
                         flow.getName(),
                         LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" );
                 if ( flow.isAskedFor() && !label.endsWith( "?" ) ) {
@@ -160,20 +160,25 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
         if ( node.isPart() ) {
             Part part = (Part) node;
             String label = "";
-            if ( part.getActor() != null ) label += part.getActor().toString();
+            if ( part.getActor() != null ) label += part.getActor().getName();
             if ( part.getRole() != null ) {
                 if ( !label.isEmpty() ) label += "|as ";
-                label += part.getRole();
+                label += part.getRole().getName();
+            }
+            if ( part.getJurisdiction() != null ) {
+                if ( !label.isEmpty() ) label += "|for ";
+                label += part.getJurisdiction().getName();
             }
             if ( part.getOrganization() != null ) {
-                if ( !label.isEmpty() ) {
-                    if ( part.getActor() == null || part.getRole() == null ) {
+                if ( !label.isEmpty() )  label += "|in ";
+                /*{
+                    if ( part.getActor() == null || part.getRole() == null || part.getJurisdiction() == null ) {
                         label += "|in ";
                     } else {
                         label += " in ";
                     }
-                }
-                label += part.getOrganization();
+                }*/
+                label += part.getOrganization().getName();
             }
             if ( !label.isEmpty() ) label += "|";
             label += part.getTask();
@@ -331,7 +336,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
         else {
             String label = getNodeLabel( node );
             String[] lines = label.split( "\\|" );
-            numLines = Math.min( lines.length, 3 );
+            numLines = Math.min( lines.length, 4 );
             Part part = (Part) node;
             if ( part.getActor() != null ) {
                 iconName = part.isSystem() ? "system" : "person";
