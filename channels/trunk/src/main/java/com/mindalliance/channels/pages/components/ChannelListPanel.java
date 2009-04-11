@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.Channelable;
 import com.mindalliance.channels.Medium;
+import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import org.apache.commons.collections.Predicate;
@@ -135,7 +136,8 @@ public class ChannelListPanel extends AbstractCommandablePanel {
      * @return a list of channel
      */
     public Set<Channel> getCandidateChannels() {
-        return new HashSet<Channel>( getDqo().findAllCandidateChannelsFor( getChannelable() ) );
+        return new HashSet<Channel>(
+                getDqo().findAllChannelsFor( new ResourceSpec( getChannelable() ) ) );
     }
 
     //====================================================

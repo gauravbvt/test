@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Channel;
-import com.mindalliance.channels.Channelable;
 import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.ExternalFlow;
 import com.mindalliance.channels.Flow;
@@ -25,6 +24,7 @@ import org.apache.wicket.model.Model;
 import java.io.Serializable;
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumSet;
@@ -67,18 +67,39 @@ public class FlowReportPanel extends Panel {
         addFlowPropertyFields( partIsSource );
 
         List<Channel> channels = flow.getChannels();
+        Set<Medium> unicasts = getUnicasts( flow );
+        Collection<Channel> broadcasts = getBroadcasts( channels );
         List<LocalizedActor> actors = findActors();
 
-        Component channelsPanel =
-                new ChannelsReportPanel( "channels", new Model<Channelable>( flow ), null );
+        ResourceSpec spec = new ResourceSpec( flow.getContactedPart() );
+        Component channelsPanel = new ChannelsReportPanel( "channels", spec, unicasts, broadcasts );
         channelsPanel.setVisible( showContacts && !channels.isEmpty() && actors.isEmpty() );
         add( channelsPanel );
 
-        WebMarkupContainer actorsDiv = createContacts( channels, actors );
+        WebMarkupContainer actorsDiv = createContacts( actors, unicasts, broadcasts );
         actorsDiv.setVisible( showContacts && !actors.isEmpty() );
         add( actorsDiv );
 
         add( new IssuesReportPanel( "issues", new Model<ModelObject>( flow ) ) );
+    }
+
+    private static Collection<Channel> getBroadcasts( List<Channel> channels ) {
+        Set<Channel> broadcasts = new HashSet<Channel>();
+        for ( Channel c : channels )
+            if ( c.isBroadcast() )
+                broadcasts.add( c );
+        return broadcasts;
+    }
+
+    private static Set<Medium> getUnicasts( Flow flow ) {
+        Set<Medium> result = EnumSet.noneOf( Medium.class );
+
+        for ( Channel c : flow.getChannels() ) {
+            Medium medium = c.getMedium();
+            if ( medium.isUnicast() )
+                result.add( medium );
+        }
+        return result;
     }
 
     private void addFlowPropertyFields( boolean partIsSource ) {
@@ -97,29 +118,23 @@ public class FlowReportPanel extends Panel {
     }
 
     private WebMarkupContainer createContacts(
-            List<Channel> channels, final List<LocalizedActor> actors ) {
-
-        final Set<Medium> media = EnumSet.noneOf( Medium.class );
-        for ( Channel c : channels )
-            media.add( c.getMedium() );
+            final List<LocalizedActor> actors, final Set<Medium> unicasts,
+            final Collection<Channel> broadcasts ) {
 
         ListView<LocalizedActor> actorsList = new ListView<LocalizedActor>( "actors", actors ) {
             @Override
             protected void populateItem( ListItem<LocalizedActor> item ) {
                 LocalizedActor localizedActor = item.getModel().getObject();
-                Scenario scenario = part.getScenario().equals( localizedActor.getScenario() ) ?
-                                    null : localizedActor.getScenario();
-
+                Part p = localizedActor.getPart();
                 Actor actor = localizedActor.getActor();
-                ResourceSpec spec = new ResourceSpec();
-                if ( Actor.UNKNOWN.equals( actor ) ) {
-                    spec.setRole( part.getRole() );
-                    spec.setOrganization( part.getOrganization() );
-                } else {
+                ResourceSpec spec = new ResourceSpec( p );
+                if ( !Actor.UNKNOWN.equals( actor ) )
                     spec.setActor( actor );
-                }
 
-                item.add( new ActorReportPanel( "actor", scenario, spec, true, media ) );
+                Scenario scenario = p.getScenario().equals( part.getScenario() ) ? null
+                                                                                 : p.getScenario();
+                item.add( new ActorReportPanel(
+                        "actor", scenario, spec, true, unicasts, broadcasts ) );
             }
         };
         actorsList.add( new AttributeModifier( "class", true,
@@ -139,20 +154,22 @@ public class FlowReportPanel extends Panel {
         if ( node.isConnector() ) {
             Iterator<ExternalFlow> xFlows = ( (Connector) node ).externalFlows();
             while ( xFlows.hasNext() )
-                parts.add( xFlows.next().getPart() );
+                parts.add( xFlows.next().getContactedPart() );
         } else {
-            Part otherPart = (Part) node;
-            if ( otherPart.getActor() == null )
+            Part otherPart = flow.getContactedPart();
+            if ( otherPart != null )
                 parts.add( otherPart );
         }
 
-        Set<LocalizedActor> actors = new HashSet<LocalizedActor>();
+        Set<LocalizedActor> localizedActors = new HashSet<LocalizedActor>();
         for ( Part p : parts ) {
-            for ( Actor a : Project.getProject().getDqo().findAllActors( p.resourceSpec() ) )
-                actors.add( new LocalizedActor( a,  p.getScenario() ) );
+            ResourceSpec spec = p.resourceSpec();
+            List<Actor> actors = Project.getProject().getDqo().findAllActors( spec );
+            for ( Actor a : actors )
+                localizedActors.add( new LocalizedActor( a, p ) );
         }
 
-        List<LocalizedActor> list = new ArrayList<LocalizedActor>( actors );
+        List<LocalizedActor> list = new ArrayList<LocalizedActor>( localizedActors );
         Collections.sort( list, new Comparator<LocalizedActor>() {
             public int compare( LocalizedActor o1, LocalizedActor o2 ) {
                 return Collator.getInstance().compare(
@@ -163,27 +180,27 @@ public class FlowReportPanel extends Panel {
     }
 
     /**
-     * An actor from a scenario.
+     * An actor from a part in a scenario.
      */
     private static class LocalizedActor implements Serializable {
 
         /** The actor. */
         private Actor actor;
 
-        /** The scenario. */
-        private Scenario scenario;
+        /** The part. */
+        private Part part;
 
-        private LocalizedActor( Actor actor, Scenario scenario ) {
+        private LocalizedActor( Actor actor, Part part ) {
             this.actor = actor;
-            this.scenario = scenario;
+            this.part = part;
         }
 
         public Actor getActor() {
             return actor;
         }
 
-        public Scenario getScenario() {
-            return scenario;
+        public Part getPart() {
+            return part;
         }
 
         @Override
@@ -195,7 +212,7 @@ public class FlowReportPanel extends Panel {
             LocalizedActor that = (LocalizedActor) obj;
             if ( actor != null ? !actor.equals( that.actor ) : that.actor != null )
                 return false;
-            if ( scenario != null ? !scenario.equals( that.scenario ) : that.scenario != null )
+            if ( part != null ? !part.equals( that.part ) : that.part != null )
                 return false;
             return true;
         }
@@ -203,7 +220,7 @@ public class FlowReportPanel extends Panel {
         @Override
         public int hashCode() {
             int result = actor != null ? actor.hashCode() : 0;
-            result = 31 * result + ( scenario != null ? scenario.hashCode() : 0 );
+            result = 31 * result + ( part != null ? part.hashCode() : 0 );
             return result;
         }
     }

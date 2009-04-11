@@ -56,7 +56,8 @@ public class RoleReportPanel extends Panel {
         Label descLabel = new Label( "description", desc );                               // NON-NLS
         descLabel.setVisible( desc != null && !desc.isEmpty() );
         add( descLabel );
-        List<Actor> actors = Project.getProject().getDqo().findActors( organization, role, scenario );
+        List<Actor> actors = Project.getProject().getDqo().findActors(
+                organization, role, scenario );
         if ( actors.isEmpty() )
             actors.add( Actor.UNKNOWN );
         add( new ListView<Actor>( "actors", actors ) {                                    // NON-NLS
@@ -64,10 +65,11 @@ public class RoleReportPanel extends Panel {
             protected void populateItem( ListItem<Actor> item ) {
                 Actor actor = item.getModelObject();
                 ResourceSpec spec = new ResourceSpec();
-                if ( actor.equals( Actor.UNKNOWN ) ) {
+                if ( !organization.equals( Organization.UNKNOWN ) )
                     spec.setOrganization( organization );
+                if ( !role.equals( Role.UNKNOWN ) )
                     spec.setRole( role );
-                } else
+                if ( !actor.equals( Actor.UNKNOWN ) )
                     spec.setActor( actor );
                 item.add( new ActorReportPanel( "actor", scenario, spec, false ) );       // NON-NLS
             }

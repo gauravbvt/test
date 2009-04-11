@@ -83,6 +83,7 @@ public class Scenario extends ModelObject {
         this.nodeIndex = nodeIndex;
     }
 
+    @OneToMany
     public Set<Part> getInitiators() {
         return initiators;
     }

@@ -197,12 +197,11 @@ public interface DataQueryObject {
     List<Issue> findAllUserIssues( ModelObject identifiable );
 
     /**
-     * Find candidate channels others than those already assigned.
-     *
-     * @param channelable a model object that can be assigned channels
-     * @return a list of channels
+     * Find all relevant channels for a given resource spec.
+     * @param spec the spec
+     * @return the channels
      */
-    List<Channel> findAllCandidateChannelsFor( Channelable channelable );
+    List<Channel> findAllChannelsFor( ResourceSpec spec );
 
     /**
      * Find all flows across all scenarios that contact a matching part.

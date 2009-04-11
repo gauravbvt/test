@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Channelable;
+import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.Job;
 import com.mindalliance.channels.Medium;
 import com.mindalliance.channels.ResourceSpec;
@@ -9,9 +9,9 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.Model;
 
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -34,24 +34,26 @@ public class ActorReportPanel extends Panel {
     private boolean showScenario;
 
     /** Restrict shown media to these. If null, show everything. */
-    private Set<Medium> showMedia;
+    private final Set<Medium> unicasts;
+    private final Collection<Channel> broadcasts;
 
     public ActorReportPanel(
             String id, Scenario scenario, ResourceSpec spec, boolean showScenario ) {
 
-        this( id, scenario, spec, showScenario, null );
+        this( id, scenario, spec, showScenario, null, null );
         this.spec = spec;
     }
 
     public ActorReportPanel(
             String id, Scenario scenario, ResourceSpec spec, boolean showScenario,
-            Set<Medium> showMedia ) {
+            Set<Medium> unicasts, Collection<Channel> broadcasts ) {
 
         super( id );
         this.spec = spec;
         this.scenario = scenario;
         this.showScenario = showScenario;
-        this.showMedia = showMedia;
+        this.unicasts = unicasts;
+        this.broadcasts = broadcasts;
         setRenderBodyOnly( true );
         init();
     }
@@ -77,7 +79,7 @@ public class ActorReportPanel extends Panel {
         add( descLabel );
 
         add( new ChannelsReportPanel( "channels",                                         // NON-NLS
-                                      new Model<Channelable>( actor ), showMedia ) );
+                                      spec, unicasts, broadcasts ) );
     }
 
     private String getTitle( Actor actor ) {

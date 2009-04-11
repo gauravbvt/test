@@ -1,18 +1,18 @@
 package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.Channel;
-import com.mindalliance.channels.Channelable;
 import com.mindalliance.channels.Medium;
+import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -24,18 +24,24 @@ import java.util.Set;
  * Time: 10:55:29 AM
  */
 public class ChannelsReportPanel extends Panel {
+
     /**
-     * A Channelable
+     * A resource spec.
      */
-    private Channelable channelable;
+    private ResourceSpec spec;
 
     /** Restrict shown media to these. If null, show everything. */
-    private Set<Medium> showMedia;
+    private final Set<Medium> unicasts;
 
-    public ChannelsReportPanel( String id, IModel<Channelable> model, Set<Medium> showMedia ) {
-        super( id, model );
-        channelable = model.getObject();
-        this.showMedia = showMedia;
+    /** Broadcast channels to include. */
+    private final Collection<Channel> broadcasts;
+
+    public ChannelsReportPanel(
+            String id, ResourceSpec spec, Set<Medium> unicasts, Collection<Channel> broadcasts ) {
+        super( id, new Model<ResourceSpec>( spec ) );
+        this.spec = spec ;
+        this.unicasts = unicasts;
+        this.broadcasts = broadcasts;
         init();
     }
 
@@ -75,15 +81,17 @@ public class ChannelsReportPanel extends Panel {
 
     private List<Channel> getChannels() {
         List<Channel> result = new ArrayList<Channel>();
-//        List<Channel> manualChannels = channelable.allChannels();
-        Project project = (Project) getApplication();
-        List<Channel> manualChannels = project.getDqo().findAllCandidateChannelsFor( channelable );
 
-        if ( showMedia == null || showMedia.isEmpty() )
+        Project project = (Project) getApplication();
+        List<Channel> manualChannels = project.getDqo().findAllChannelsFor( spec );
+
+        if ( unicasts == null || unicasts.isEmpty() )
             result.addAll( manualChannels );
         else
             for ( Channel c : manualChannels )
-                if ( showMedia.contains( c.getMedium() ) )
+                if ( unicasts.contains( c.getMedium() ) )
+                    result.add( c );
+                else if ( broadcasts.contains( c ) )
                     result.add( c );
 
         if ( result.isEmpty() )

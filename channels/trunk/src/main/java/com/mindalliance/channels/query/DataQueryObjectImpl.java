@@ -2,7 +2,6 @@ package com.mindalliance.channels.query;
 
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Channel;
-import com.mindalliance.channels.Channelable;
 import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.DataQueryObject;
@@ -41,7 +40,6 @@ import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -560,9 +558,8 @@ public class DataQueryObjectImpl implements DataQueryObject {
                 Flow flow = flows.next();
                 Node node = asSource ? flow.getSource() : flow.getTarget();
                 if ( node.isPart()
-                        && resourceSpec.narrowsOrEquals( ( (Part) node ).resourceSpec() ) ) {
+                        && resourceSpec.narrowsOrEquals( ( (Part) node ).resourceSpec() ) )
                     relatedFlows.add( flow );
-                }
             }
         }
         return relatedFlows;
@@ -571,7 +568,7 @@ public class DataQueryObjectImpl implements DataQueryObject {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public List<Actor> findAllActors( ResourceSpec resourceSpec ) {
         Set<Actor> actors = new HashSet<Actor>();
         // If the resource spec is anyone, then return no actor,
@@ -595,106 +592,77 @@ public class DataQueryObjectImpl implements DataQueryObject {
     }
 
     /**
-     * {@inheritDoc}
+     * Find all relevant channels for a given resource spec.
+     * @param spec the spec
+     * @return the channels
      */
-    public List<Channel> findAllCandidateChannelsFor( Channelable channelable ) {
-        return channelable instanceof Flow ? findAllCandidateChannelsFor( (Flow) channelable )
-                : channelable instanceof Actor ? findAllCandidateChannelsFor( (Actor) channelable )
-                : findAllCandidateChannelsFor( (Organization) channelable );
-    }
-
-    private List<Channel> findAllCandidateChannelsFor( Flow flow ) {
-        Set<Channel> channels = new HashSet<Channel>( flow.getEffectiveChannels() );
-        Part part = flow.getContactedPart();
-        if ( part != null ) {
-            List<Flow> relatedFlows = findAllFlowsContacting( part.resourceSpec() );
-            for ( Flow relatedFlow : relatedFlows ) {
-                for ( Channel channel : relatedFlow.getEffectiveChannels() ) {
-                    if ( relatedFlow.validate( channel ) == null )
-                        channels.add( new Channel( channel ) );
-                }
-            }
-        }
-        return new ArrayList<Channel>( channels );
-    }
-
-    private List<Channel> findAllCandidateChannelsFor( Actor actor ) {
-        Set<Channel> channels = new HashSet<Channel>( actor.getEffectiveChannels() );
-        Set<Channel> unfilled = new HashSet<Channel>();
-        Set<Medium> defined = EnumSet.noneOf( Medium.class );
-        for ( Channel c : channels )
-            defined.add( c.getMedium() );
-
-        for ( Role role : findAllRoles( actor ) )
-            for ( Scenario scenario : list( Scenario.class ) )
-                for ( Part part : scenario.findParts( role ) )
-                    for ( Iterator<Flow> i = part.flows(); i.hasNext(); ) {
-                        Flow flow = i.next();
-                        Node node = flow.isAskedFor() ? flow.getSource() : flow.getTarget();
-
-                        if ( node.equals( part ) ) {
-                            for ( Channel channel : flow.getEffectiveChannels() ) {
-                                if ( channel.isUnicast() && !channel.isValid() )
-                                    unfilled.add( channel );
-                                else {
-                                    defined.add( channel.getMedium() );
-                                    channels.add( channel );
-                                }
-                            }
-                        }
-                    }
-
-        for ( Channel channel : unfilled )
-            if ( !defined.contains( channel.getMedium() ) )
-                channels.add( channel );
-
-        List<Channel> result = new ArrayList<Channel>( channels );
-        Collections.sort( result );
-        return result;
-    }
-
-    private Set<Role> findAllRoles( Actor actor ) {
-        Set<Role> result = new HashSet<Role>();
-        for ( Job job : findAllJobs( actor ) ) {
-            Role role = getDao().find( Role.class, job.getRoleName() );
-            if ( role != null )
-                result.add( role );
-        }
-        return result;
-    }
-
-    private List<Channel> findAllCandidateChannelsFor( Organization organization ) {
-        Set<Channel> channels = new HashSet<Channel>( organization.getEffectiveChannels() );
-        Set<Channel> unfilled = new HashSet<Channel>();
-        Set<Medium> defined = EnumSet.noneOf( Medium.class );
-        for ( Channel c : channels )
-            defined.add( c.getMedium() );
+    public List<Channel> findAllChannelsFor( ResourceSpec spec ) {
+        Set<Channel> channels = new HashSet<Channel>();
 
         for ( Scenario scenario : list( Scenario.class ) )
-            for ( Part part : scenario.findParts( organization ) )
-                for ( Iterator<Flow> i = part.flows(); i.hasNext(); ) {
-                    Flow flow = i.next();
-                    Node node = flow.isAskedFor() ? flow.getSource() : flow.getTarget();
+            for ( Iterator<Flow> flows = scenario.flows(); flows.hasNext(); ) {
+                Flow flow = flows.next();
+                Part p = flow.getContactedPart();
+                if ( p != null && p.resourceSpec().matches( spec, true ) )
+                    addUniqueChannels( channels, flow.getEffectiveChannels() );
+            }
 
-                    if ( node.equals( part ) ) {
-                        for ( Channel channel : flow.getEffectiveChannels() ) {
-                            if ( channel.isUnicast() && !channel.isValid() )
-                                unfilled.add( channel );
-                            else {
-                                defined.add( channel.getMedium() );
-                                channels.add( channel );
-                            }
-                        }
-                    }
-                }
+        if ( spec.getActor() != null ) {
+            addUniqueChannels( channels, spec.getActor().getEffectiveChannels() );
 
-        for ( Channel channel : unfilled )
-            if ( !defined.contains( channel.getMedium() ) )
-                channels.add( channel );
+            ResourceSpec s = new ResourceSpec( spec );
+            s.setActor( null );
+            addUniqueChannels( channels, findAllChannelsFor( s ) );
+        }
+
+        if ( spec.getJurisdiction() != null ) {
+            ResourceSpec s = new ResourceSpec( spec );
+            s.setJurisdiction( null );
+            addUniqueChannels( channels, findAllChannelsFor( s ) );
+        }
+
+        if ( spec.getRole() != null ) {
+            ResourceSpec s = new ResourceSpec( spec );
+            s.setRole( null );
+            addUniqueChannels( channels, findAllChannelsFor( s ) );
+        }
+
+        Organization organization = spec.getOrganization();
+        if ( organization != null ) {
+            addUniqueChannels( channels, organization.getEffectiveChannels() );
+
+            ResourceSpec s = new ResourceSpec( spec );
+            s.setOrganization( organization.getParent() );
+            addUniqueChannels( channels, findAllChannelsFor( s ) );
+        }
 
         List<Channel> result = new ArrayList<Channel>( channels );
         Collections.sort( result );
         return result;
+    }
+
+    private static void addUniqueChannels( Set<Channel> result, List<Channel> candidates ) {
+        for ( Channel channel : candidates ) {
+            Medium medium = channel.getMedium();
+            if ( containsInvalidChannel( result, medium ) )
+                result.remove( new Channel( medium, "" ) );
+            if ( medium.isBroadcast() || !containsValidChannel( result, medium ) )
+                result.add( channel );
+        }
+    }
+
+    private static boolean containsValidChannel( Set<Channel> channels, Medium medium ) {
+        for ( Channel channel : channels )
+            if ( channel.getMedium() == medium && channel.isValid() )
+                return true;
+        return false;
+    }
+
+    private static boolean containsInvalidChannel( Set<Channel> channels, Medium medium ) {
+        for ( Channel channel : channels )
+            if ( channel.getMedium() == medium && !channel.isValid() )
+                return true;
+        return false;
     }
 
     /**

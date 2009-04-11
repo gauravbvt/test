@@ -45,14 +45,32 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
     }
 
     public ResourceSpec( Part part ) {
-        actor = part.getActor();
-        role = part.getRole();
-        organization = part.getOrganization();
-        jurisdiction = part.getJurisdiction();
+        fromPart( part );
+    }
+
+    public ResourceSpec( Channelable channelable ) {
+        if ( channelable instanceof Actor )
+            actor = (Actor) channelable;
+        else if ( channelable instanceof Organization )
+            organization = (Organization) channelable;
+        else if ( channelable instanceof Flow ) {
+            fromPart( ( (Flow) channelable ).getContactedPart() );
+        } else {
+            throw new IllegalArgumentException( "Not a channelable: " + channelable );
+        }
+    }
+
+    private void fromPart( Part part ) {
+        if ( part != null ) {
+            actor = part.getActor();
+            role = part.getRole();
+            organization = part.getOrganization();
+            jurisdiction = part.getJurisdiction();
+        }
     }
 
     /**
-     * Resource factory
+     * Resource factory.
      *
      * @param entity an entity
      * @return a new resource spec
