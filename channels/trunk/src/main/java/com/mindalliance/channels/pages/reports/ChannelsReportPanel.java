@@ -85,7 +85,7 @@ public class ChannelsReportPanel extends Panel {
         Project project = (Project) getApplication();
         List<Channel> manualChannels = project.getDqo().findAllChannelsFor( spec );
 
-        if ( unicasts == null || unicasts.isEmpty() )
+        if ( unicasts == null )
             result.addAll( manualChannels );
         else
             for ( Channel c : manualChannels )

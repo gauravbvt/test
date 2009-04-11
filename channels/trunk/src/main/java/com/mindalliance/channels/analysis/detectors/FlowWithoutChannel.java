@@ -35,6 +35,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
     @Override
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
+
         Flow flow = (Flow) modelObject;
         if ( needsAtLeastOneChannel( flow ) ) {
             // There is no channel in a flow that requires one
@@ -44,34 +45,48 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
                         Issue.Level.Severe,
                         "Flow requires a channel.",
                         "Provide at least one channel." ) );
+
             } else if ( !flow.canBeUnicast() ) {
                 // Communicating with a non-unicastable using a unicast channel for which
                 // a matching actor doesn't have a channel defined with same medium.
                 Set<Medium> media = getUnicastMedia( flow );
                 ResourceSpec partSpec = flow.getContactedPart().resourceSpec();
-                for ( Actor actor : getDqo().findAllActors( partSpec ) ) {
-                    ResourceSpec actorSpec = new ResourceSpec( partSpec );
-                    actorSpec.setActor( actor );
-
-                    for ( Channel channel : getDqo().findAllChannelsFor( actorSpec ) ) {
-                        Medium channelMedium = channel.getMedium();
-                        if ( media.contains( channelMedium ) && !channel.isValid() )
-                            issues.add( createIssue(
-                                    modelObject,
-                                    Issue.Level.Major,
-                                    MessageFormat.format(
-                                        "{0} may be involved and has no valid {1} contact info.",
-                                         actor.getName(),
-                                         channel.getMedium() ),
-                                    MessageFormat.format(
-                                         "Add a {0} contact info to {1}",
-                                         channel.getMedium(),
-                                         actor.getName() ) ) );
-                    }
+                List<Actor> actors = getDqo().findAllActors( partSpec );
+                if ( actors.isEmpty() ) {
+                    issues.addAll( findIssues( modelObject, partSpec, media ) );
                 }
+                else
+                    for ( Actor actor : actors ) {
+                        ResourceSpec actorSpec = new ResourceSpec( partSpec );
+                        actorSpec.setActor( actor );
+                        issues.addAll( findIssues( modelObject, actorSpec, media ) );
+                    }
             }
         }
         return issues;
+    }
+
+    private List<Issue> findIssues(
+            ModelObject modelObject, ResourceSpec actorSpec, Set<Medium> media ) {
+
+        List<Issue> result = new ArrayList<Issue>();
+        for ( Channel channel : getDqo().findAllChannelsFor( actorSpec ) ) {
+            Medium channelMedium = channel.getMedium();
+            if ( media.contains( channelMedium ) && !channel.isValid() ) {
+                result.add( createIssue(
+                        modelObject,
+                        Issue.Level.Major,
+                        MessageFormat.format(
+                            "{0} may be involved and has no valid {1} contact info.",
+                            actorSpec.toString(),
+                            channel.getMedium() ),
+                        MessageFormat.format(
+                            "Add a {0} contact info to {1}",
+                            channel.getMedium(),
+                            actorSpec.toString() ) ) );
+            }
+        }
+        return result;
     }
 
     private static Set<Medium> getUnicastMedia( Flow flow ) {

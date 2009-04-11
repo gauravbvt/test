@@ -7,7 +7,6 @@ import com.mindalliance.channels.ExternalFlow;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Medium;
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Scenario;
@@ -68,24 +67,25 @@ public class FlowReportPanel extends Panel {
 
         List<Channel> channels = flow.getChannels();
         Set<Medium> unicasts = getUnicasts( flow );
-        Collection<Channel> broadcasts = getBroadcasts( channels );
-        List<LocalizedActor> actors = findActors();
+        Collection<Channel> broadcasts = getBroadcasts( flow );
+        List<LocalizedActor> actors = findActors( flow, broadcasts, unicasts );
 
         ResourceSpec spec = new ResourceSpec( flow.getContactedPart() );
-        Component channelsPanel = new ChannelsReportPanel( "channels", spec, unicasts, broadcasts );
+        Component channelsPanel = new ChannelsReportPanel(
+                "channels", spec, unicasts, broadcasts );
         channelsPanel.setVisible( showContacts && !channels.isEmpty() && actors.isEmpty() );
         add( channelsPanel );
 
-        WebMarkupContainer actorsDiv = createContacts( actors, unicasts, broadcasts );
+        WebMarkupContainer actorsDiv = createContacts( actors );
         actorsDiv.setVisible( showContacts && !actors.isEmpty() );
         add( actorsDiv );
 
         add( new IssuesReportPanel( "issues", new Model<ModelObject>( flow ) ) );
     }
 
-    private static Collection<Channel> getBroadcasts( List<Channel> channels ) {
+    private static Collection<Channel> getBroadcasts( Flow flow ) {
         Set<Channel> broadcasts = new HashSet<Channel>();
-        for ( Channel c : channels )
+        for ( Channel c : flow.getEffectiveChannels() )
             if ( c.isBroadcast() )
                 broadcasts.add( c );
         return broadcasts;
@@ -94,7 +94,7 @@ public class FlowReportPanel extends Panel {
     private static Set<Medium> getUnicasts( Flow flow ) {
         Set<Medium> result = EnumSet.noneOf( Medium.class );
 
-        for ( Channel c : flow.getChannels() ) {
+        for ( Channel c : flow.getEffectiveChannels() ) {
             Medium medium = c.getMedium();
             if ( medium.isUnicast() )
                 result.add( medium );
@@ -117,9 +117,7 @@ public class FlowReportPanel extends Panel {
         add( descLabel );
     }
 
-    private WebMarkupContainer createContacts(
-            final List<LocalizedActor> actors, final Set<Medium> unicasts,
-            final Collection<Channel> broadcasts ) {
+    private WebMarkupContainer createContacts( final List<LocalizedActor> actors ) {
 
         ListView<LocalizedActor> actorsList = new ListView<LocalizedActor>( "actors", actors ) {
             @Override
@@ -134,7 +132,8 @@ public class FlowReportPanel extends Panel {
                 Scenario scenario = p.getScenario().equals( part.getScenario() ) ? null
                                                                                  : p.getScenario();
                 item.add( new ActorReportPanel(
-                        "actor", scenario, spec, true, unicasts, broadcasts ) );
+                        "actor", scenario, spec, true,
+                        localizedActor.getUnicasts(), localizedActor.getBroadcasts() ) );
             }
         };
         actorsList.add( new AttributeModifier( "class", true,
@@ -145,38 +144,33 @@ public class FlowReportPanel extends Panel {
         return result;
     }
 
-    private List<LocalizedActor> findActors() {
-
-        Set<Part> parts = new HashSet<Part>();
-
-        boolean partIsSource = flow.getSource().equals( part );
-        Node node = partIsSource ? flow.getTarget() : flow.getSource();
-        if ( node.isConnector() ) {
-            Iterator<ExternalFlow> xFlows = ( (Connector) node ).externalFlows();
-            while ( xFlows.hasNext() )
-                parts.add( xFlows.next().getContactedPart() );
-        } else {
-            Part otherPart = flow.getContactedPart();
-            if ( otherPart != null )
-                parts.add( otherPart );
-        }
+    private static List<LocalizedActor> findActors(
+            Flow flow, Collection<Channel> broadcasts, Set<Medium> unicasts ) {
 
         Set<LocalizedActor> localizedActors = new HashSet<LocalizedActor>();
-        for ( Part p : parts ) {
-            ResourceSpec spec = p.resourceSpec();
-            List<Actor> actors = Project.getProject().getDqo().findAllActors( spec );
-            for ( Actor a : actors )
-                localizedActors.add( new LocalizedActor( a, p ) );
-        }
 
-        List<LocalizedActor> list = new ArrayList<LocalizedActor>( localizedActors );
-        Collections.sort( list, new Comparator<LocalizedActor>() {
+        Part part = flow.getContactedPart();
+        if ( part == null ) {
+            Connector connector = (Connector) flow.getContactedNode();
+
+            for ( Iterator<ExternalFlow> flows = connector.externalFlows(); flows.hasNext(); ) {
+                ExternalFlow f = flows.next();
+                Collection<Channel> b = getBroadcasts( f );
+                Set<Medium> u = getUnicasts( f );
+                localizedActors.addAll( findActors( f, b, u ) );
+            }
+        } else
+            for ( Actor a : Project.getProject().getDqo().findAllActors( part.resourceSpec() ) )
+                localizedActors.add( new LocalizedActor( a, part, unicasts, broadcasts ) );
+
+        List<LocalizedActor> result = new ArrayList<LocalizedActor>( localizedActors );
+        Collections.sort( result, new Comparator<LocalizedActor>() {
             public int compare( LocalizedActor o1, LocalizedActor o2 ) {
                 return Collator.getInstance().compare(
                         o1.getActor().getName(), o2.getActor().getName() );
             }
         } );
-        return list;
+        return result;
     }
 
     /**
@@ -184,15 +178,24 @@ public class FlowReportPanel extends Panel {
      */
     private static class LocalizedActor implements Serializable {
 
+        /** Unicast media used to contact the actor. */
+        private Set<Medium> unicasts;
+
+        /** Broadcast channels used to contact the actor. */
+        private Collection<Channel> broadcasts;
+
         /** The actor. */
         private Actor actor;
 
         /** The part. */
         private Part part;
 
-        private LocalizedActor( Actor actor, Part part ) {
+        private LocalizedActor( Actor actor, Part part,
+                                Set<Medium> unicasts, Collection<Channel> broadcasts ) {
             this.actor = actor;
             this.part = part;
+            this.unicasts = unicasts;
+            this.broadcasts = broadcasts;
         }
 
         public Actor getActor() {
@@ -201,6 +204,14 @@ public class FlowReportPanel extends Panel {
 
         public Part getPart() {
             return part;
+        }
+
+        public Collection<Channel> getBroadcasts() {
+            return broadcasts;
+        }
+
+        public Set<Medium> getUnicasts() {
+            return unicasts;
         }
 
         @Override
