@@ -61,7 +61,7 @@ public class CyclicTriggering extends AbstractIssueDetector {
                             sb.append(".");
                     }
                     issue.setDescription(sb.toString());
-                    issue.setRemediation("Break the loop by having one of these tasks not trigger another.");
+                    issue.setRemediation("Break the loop by having one of these tasks not trigger the other.");
                     issue.setSeverity( Issue.Level.Major);
                     issues.add(issue);
                 }

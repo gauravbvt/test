@@ -47,6 +47,10 @@ public class Scenario extends ModelObject {
      */
     private Map<Long, Node> nodeIndex;
     /**
+     * Whether not meant to be caused during the plan.
+     */
+    private boolean incident;
+    /**
      * Parts that can initiate this scenario.
      */
     private Set<Part> initiators = new HashSet<Part>();
@@ -81,6 +85,14 @@ public class Scenario extends ModelObject {
 
     void setNodeIndex( Map<Long, Node> nodeIndex ) {
         this.nodeIndex = nodeIndex;
+    }
+
+    public boolean isIncident() {
+        return incident;
+    }
+
+    public void setIncident( boolean incident ) {
+        this.incident = incident;
     }
 
     @OneToMany
@@ -468,6 +480,15 @@ public class Scenario extends ModelObject {
         for ( Part part : initiators ) {
             part.setInitiatedScenario( null );
         }
+    }
+
+    /**
+     * Whether this scenario has initiators.
+     * @return
+     */
+    @Transient
+    public boolean isInitiated() {
+        return !getInitiators().isEmpty();
     }
 
     //=================================================

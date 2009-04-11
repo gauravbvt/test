@@ -5,12 +5,13 @@ import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Scenario;
 
 import java.util.List;
 import java.util.ArrayList;
 
 /**
- * A part with a defined task is never triggered.
+ * A part with a defined task which does not start with the scenario is never triggered.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -28,13 +29,12 @@ public class NeverTriggeredSpecifiedTask extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( !part.hasDefaultTask() && !part.isStartsWithScenario() && !part.isTriggered() ) {
-                Issue issue = new DetectedIssue( Issue.STRUCTURAL, part );
-                issue.setDescription( "This task is never triggered  even though"
-                        + " it does not start with the scenario." );
-                issue.setRemediation( "Start this task with the scenario,"
-                        + " or have an incoming flow trigger it" );
-                issue.setSeverity( Issue.Level.Major );
-                issues.add( issue );
+                    Issue issue = new DetectedIssue( Issue.STRUCTURAL, part );
+                    issue.setDescription( "This task, which does not start with the scenario, is never triggered." );
+                    issue.setRemediation( "Start this task with the scenario,"
+                            + " or have an incoming flow trigger it" );
+                    issue.setSeverity( Issue.Level.Major );
+                    issues.add( issue );
         }
         return issues;
     }

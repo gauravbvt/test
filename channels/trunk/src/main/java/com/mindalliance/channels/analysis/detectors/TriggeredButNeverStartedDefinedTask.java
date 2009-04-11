@@ -28,15 +28,31 @@ public class TriggeredButNeverStartedDefinedTask extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
-        if ( !part.hasDefaultTask() && !part.isStartsWithScenario() && part.isTriggered() ) {
-            boolean started = getDqo().findIfPartStarted( part );
-            if ( !started ) {
-                Issue issue = new DetectedIssue( Issue.STRUCTURAL, part );
-                issue.setDescription( "This task is triggered but any flow that triggers it"
-                        + "  comes from a task that is itself never started." );
-                issue.setRemediation( "Make sure a triggering flow comes from a task that is started." );
-                issue.setSeverity( Issue.Level.Major );
-                issues.add( issue );
+        if ( !part.hasDefaultTask() ) {
+            if ( !part.isStartsWithScenario() ) {
+                if ( part.isTriggered() ) {
+                    boolean started = getDqo().findIfPartStarted( part );
+                    if ( !started ) {
+                        Issue issue = new DetectedIssue( Issue.STRUCTURAL, part );
+                        issue.setDescription( "This task is triggered but any flow that triggers it"
+                                + "  comes from a task that is itself never started." );
+                        issue.setRemediation( "Make sure a triggering flow comes from a task that is started." );
+                        issue.setSeverity( Issue.Level.Major );
+                        issues.add( issue );
+                    }
+                }
+            } else {
+                boolean started = getDqo().findIfScenarioStarted( part.getScenario() );
+                if ( !started ) {
+                    Issue issue = new DetectedIssue( Issue.STRUCTURAL, part );
+                    issue.setDescription( "This task starts with the scenario but no task"
+                            + " is ever started that causes the scenario to happen.");
+                    issue.setRemediation( "Make sure the scenario is caused by a task"
+                            + " that can start (from another scenario),"
+                            + " or make the scenario an incident (i.e. happens irrespective of the plan." );
+                    issue.setSeverity( Issue.Level.Major );
+                    issues.add( issue );
+                }
             }
         }
         return issues;

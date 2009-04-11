@@ -73,6 +73,8 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.TriggeredButNeverStartedDefinedTask"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.NeverTriggeredSpecifiedTask"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.AutoStartPartAlsoTriggered"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.NonIncidentScenarioNeverInitiated"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.InitiatedScenarioNeverStarted"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.CyclicTriggering"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.NoRedundancy"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.PotentialDeadlock"/>

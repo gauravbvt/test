@@ -568,7 +568,7 @@ public class DataQueryObjectImpl implements DataQueryObject {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public List<Actor> findAllActors( ResourceSpec resourceSpec ) {
         Set<Actor> actors = new HashSet<Actor>();
         // If the resource spec is anyone, then return no actor,
@@ -593,6 +593,7 @@ public class DataQueryObjectImpl implements DataQueryObject {
 
     /**
      * Find all relevant channels for a given resource spec.
+     *
      * @param spec the spec
      * @return the channels
      */
@@ -976,14 +977,14 @@ public class DataQueryObjectImpl implements DataQueryObject {
      * {@inheritDoc}
      */
     public boolean findIfPartStarted( Part part ) {
-        return doFindIfPartStarted( part, new HashSet<Part>() );
+        return doFindIfPartStarted( part, new HashSet<ModelObject>() );
     }
 
-    private boolean doFindIfPartStarted( Part part, Set<Part> visited ) {
+    private boolean doFindIfPartStarted( Part part, Set<ModelObject> visited ) {
         if ( visited.contains( part ) ) return false;
         visited.add( part );
         if ( part.isStartsWithScenario() ) {
-            return true;
+            return doFindIfScenarioStarted( part.getScenario(), visited );
         } else {
             boolean started = false;
             Iterator<Flow> reqs = part.requirements();
@@ -1007,6 +1008,26 @@ public class DataQueryObjectImpl implements DataQueryObject {
             }
             return started;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean findIfScenarioStarted( Scenario scenario ) {
+        return doFindIfScenarioStarted( scenario, new HashSet<ModelObject>() );
+
+    }
+
+    private boolean doFindIfScenarioStarted( Scenario scenario, Set<ModelObject> visited ) {
+        if ( scenario.isIncident() ) return true;
+        if ( visited.contains( scenario ) ) return false;
+        visited.add( scenario );
+        boolean started = false;
+        Iterator<Part> initiators = scenario.getInitiators().iterator();
+        while ( !started && initiators.hasNext() ) {
+            started = doFindIfPartStarted( initiators.next(), visited );
+        }
+        return started;
     }
 
     /**

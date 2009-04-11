@@ -26,6 +26,8 @@ import com.mindalliance.channels.analysis.detectors.NeverTriggeredSpecifiedTask;
 import com.mindalliance.channels.analysis.detectors.AutoStartPartAlsoTriggered;
 import com.mindalliance.channels.analysis.detectors.CyclicTriggering;
 import com.mindalliance.channels.analysis.detectors.ScenarioNeverTerminates;
+import com.mindalliance.channels.analysis.detectors.NonIncidentScenarioNeverInitiated;
+import com.mindalliance.channels.analysis.detectors.InitiatedScenarioNeverStarted;
 import com.mindalliance.channels.attachments.FileBasedManager;
 import com.mindalliance.channels.query.DataQueryObjectImpl;
 import com.mindalliance.channels.dao.Memory;
@@ -124,6 +126,8 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new TriggeredButNeverStartedDefinedTask() );
         detectors.add( new NeverTriggeredSpecifiedTask() );
         detectors.add( new AutoStartPartAlsoTriggered() );
+        detectors.add( new NonIncidentScenarioNeverInitiated() );
+        detectors.add( new InitiatedScenarioNeverStarted() );
         detectors.add( new CyclicTriggering() );
         detectors.add( new PotentialDeadlock() );
         detectors.add( new FlowViolatesPolicy() );

@@ -210,7 +210,7 @@ public final class ProjectPage extends WebPage implements Updatable {
         setVersioned( false );
         setStatelessHint( true );
         add( new Label( "sc-title",
-                new PropertyModel<String>( this, "scenario.name" ) ) );
+                new Model<String>( "Channels: " + Project.getProject().getProjectName() ) ) );
 
         form = new Form( "big-form" ) {
             @Override

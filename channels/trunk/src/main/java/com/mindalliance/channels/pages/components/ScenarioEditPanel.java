@@ -86,6 +86,15 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
             }
         } );
         add( descField );
+        CheckBox incidentCheckBox = new CheckBox(
+                "incident",
+                new PropertyModel<Boolean>( this, "incident" ) );
+        incidentCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getScenario(), "incident" ) );
+            }
+        } );
+        add( incidentCheckBox );
     }
 
     private void addIssuesPanel() {
@@ -187,6 +196,24 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
      */
     public void setDescription( String desc ) {
         doCommand( new UpdateProjectObject( getScenario(), "description", desc ) );
+    }
+
+    /**
+     * Get whether scenario is incident.
+     *
+     * @return a boolean
+     */
+    public boolean isIncident() {
+        return getScenario().isIncident();
+    }
+
+    /**
+     * Set scenario as incident via command.
+     *
+     * @param val a boolean
+     */
+    public void setIncident( boolean val ) {
+        doCommand( new UpdateProjectObject( getScenario(), "incident", val ) );
     }
 
     /**

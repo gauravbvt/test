@@ -399,4 +399,11 @@ public interface DataQueryObject {
      * @return a boolean
      */
     boolean findIfPartStarted( Part part );
+
+    /**
+     * Whether the scenario can ever start.
+     * @param scenario a scenario
+     * @return a boolean
+     */
+    boolean findIfScenarioStarted( Scenario scenario );
 }
