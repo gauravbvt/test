@@ -485,38 +485,38 @@ public class DataQueryObjectImpl implements DataQueryObject {
     }
 
     /**
-     /**
-      * {@inheritDoc}
-      */
-     public ScenarioRelationship findScenarioRelationship(
-             Scenario fromScenario,
-             Scenario toScenario ) {
-         List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
-         List<Part> initiators = new ArrayList<Part>();
-         Iterator<Flow> flows = fromScenario.flows();
-         while ( flows.hasNext() ) {
-             Flow flow = flows.next();
-             if ( !flow.isInternal() ) {
-                 ExternalFlow externalFlow = (ExternalFlow) flow;
-                 if ( externalFlow.getConnector().getScenario() == toScenario ) {
-                     externalFlows.add( externalFlow );
-                 }
-             }
-         }
-         for ( Part part : toScenario.getInitiators() ) {
-             if ( part.getScenario() == fromScenario ) initiators.add( part );
-         }
-         if ( externalFlows.isEmpty() && initiators.isEmpty() ) {
-             return null;
-         } else {
-             ScenarioRelationship scenarioRelationship = new ScenarioRelationship(
-                     fromScenario,
-                     toScenario );
-             scenarioRelationship.setExternalFlows( externalFlows );
-             scenarioRelationship.setInitiators( initiators );
-             return scenarioRelationship;
-         }
-     }
+     * /**
+     * {@inheritDoc}
+     */
+    public ScenarioRelationship findScenarioRelationship(
+            Scenario fromScenario,
+            Scenario toScenario ) {
+        List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
+        List<Part> initiators = new ArrayList<Part>();
+        Iterator<Flow> flows = fromScenario.flows();
+        while ( flows.hasNext() ) {
+            Flow flow = flows.next();
+            if ( !flow.isInternal() ) {
+                ExternalFlow externalFlow = (ExternalFlow) flow;
+                if ( externalFlow.getConnector().getScenario() == toScenario ) {
+                    externalFlows.add( externalFlow );
+                }
+            }
+        }
+        for ( Part part : toScenario.getInitiators() ) {
+            if ( part.getScenario() == fromScenario ) initiators.add( part );
+        }
+        if ( externalFlows.isEmpty() && initiators.isEmpty() ) {
+            return null;
+        } else {
+            ScenarioRelationship scenarioRelationship = new ScenarioRelationship(
+                    fromScenario,
+                    toScenario );
+            scenarioRelationship.setExternalFlows( externalFlows );
+            scenarioRelationship.setInitiators( initiators );
+            return scenarioRelationship;
+        }
+    }
 
 
     /**
@@ -598,9 +598,9 @@ public class DataQueryObjectImpl implements DataQueryObject {
      * {@inheritDoc}
      */
     public List<Channel> findAllCandidateChannelsFor( Channelable channelable ) {
-        return channelable instanceof Flow  ? findAllCandidateChannelsFor( (Flow) channelable )
-             : channelable instanceof Actor ? findAllCandidateChannelsFor( (Actor) channelable )
-             : findAllCandidateChannelsFor( (Organization) channelable );
+        return channelable instanceof Flow ? findAllCandidateChannelsFor( (Flow) channelable )
+                : channelable instanceof Actor ? findAllCandidateChannelsFor( (Actor) channelable )
+                : findAllCandidateChannelsFor( (Organization) channelable );
     }
 
     private List<Channel> findAllCandidateChannelsFor( Flow flow ) {
@@ -610,7 +610,7 @@ public class DataQueryObjectImpl implements DataQueryObject {
             List<Flow> relatedFlows = findAllFlowsContacting( part.resourceSpec() );
             for ( Flow relatedFlow : relatedFlows ) {
                 for ( Channel channel : relatedFlow.getEffectiveChannels() ) {
-                    if ( relatedFlow.validate( channel ) == null  )
+                    if ( relatedFlow.validate( channel ) == null )
                         channels.add( new Channel( channel ) );
                 }
             }
@@ -627,7 +627,7 @@ public class DataQueryObjectImpl implements DataQueryObject {
 
         for ( Role role : findAllRoles( actor ) )
             for ( Scenario scenario : list( Scenario.class ) )
-                for ( Part part : scenario.findParts( role  ) )
+                for ( Part part : scenario.findParts( role ) )
                     for ( Iterator<Flow> i = part.flows(); i.hasNext(); ) {
                         Flow flow = i.next();
                         Node node = flow.isAskedFor() ? flow.getSource() : flow.getTarget();
@@ -637,7 +637,7 @@ public class DataQueryObjectImpl implements DataQueryObject {
                                 if ( channel.isUnicast() && !channel.isValid() )
                                     unfilled.add( channel );
                                 else {
-                                    defined.add(  channel.getMedium() );
+                                    defined.add( channel.getMedium() );
                                     channels.add( channel );
                                 }
                             }
@@ -671,7 +671,7 @@ public class DataQueryObjectImpl implements DataQueryObject {
             defined.add( c.getMedium() );
 
         for ( Scenario scenario : list( Scenario.class ) )
-            for ( Part part : scenario.findParts( organization  ) )
+            for ( Part part : scenario.findParts( organization ) )
                 for ( Iterator<Flow> i = part.flows(); i.hasNext(); ) {
                     Flow flow = i.next();
                     Node node = flow.isAskedFor() ? flow.getSource() : flow.getTarget();
@@ -681,7 +681,7 @@ public class DataQueryObjectImpl implements DataQueryObject {
                             if ( channel.isUnicast() && !channel.isValid() )
                                 unfilled.add( channel );
                             else {
-                                defined.add(  channel.getMedium() );
+                                defined.add( channel.getMedium() );
                                 channels.add( channel );
                             }
                         }
@@ -1004,6 +1004,42 @@ public class DataQueryObjectImpl implements DataQueryObject {
         return titles;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public boolean findIfPartStarted( Part part ) {
+        return doFindIfPartStarted( part, new HashSet<Part>() );
+    }
+
+    private boolean doFindIfPartStarted( Part part, Set<Part> visited ) {
+        if ( visited.contains( part ) ) return false;
+        visited.add( part );
+        if ( part.isStartsWithScenario() ) {
+            return true;
+        } else {
+            boolean started = false;
+            Iterator<Flow> reqs = part.requirements();
+            while ( !started && reqs.hasNext() ) {
+                Flow req = reqs.next();
+                if ( req.isTriggeringToTarget() ) {
+                    Node source = req.getSource();
+                    started = source.isPart() && doFindIfPartStarted( (Part) source, visited );
+                }
+            }
+            if ( !started ) {
+                Iterator<Flow> outs = part.outcomes();
+                while ( !started && outs.hasNext() ) {
+                    Flow req = outs.next();
+                    // A task-triggering request from target of response.
+                    if ( req.isTriggeringToSource() ) {
+                        Node target = req.getTarget();
+                        started = target.isPart() && doFindIfPartStarted( (Part) target, visited );
+                    }
+                }
+            }
+            return started;
+        }
+    }
 
     /**
      * {@inheritDoc}

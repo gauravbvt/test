@@ -8,6 +8,8 @@ import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.RequestCycle;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.markup.ComponentTag;
@@ -163,6 +165,16 @@ public abstract class AbstractDiagramPanel extends AbstractUpdatablePanel {
 
     private String makeSeed() {
         return "&_seed=" + System.currentTimeMillis() + new Random().nextInt();
+    }
+
+    /**
+     * Only refresh the image.
+     *
+     * @param target an ajax request target
+     */
+    public void refreshImage( AjaxRequestTarget target ) {
+        add( new AttributeModifier( "src", true, new Model<String>( makeDiagramUrl() + makeSeed() ) ) );
+        target.addComponent( this );
     }
 
     /**

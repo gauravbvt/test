@@ -53,7 +53,7 @@
         <property name="issueDetectors">
             <list value-type="java.util.ArrayList">
                 <bean class="com.mindalliance.channels.analysis.detectors.FromUser"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.PartWithoutTask"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.StartedOrTerminatedPartWithoutTask"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.PartWithoutRole"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowWithoutChannel"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.InvalidChannel"/>
@@ -69,6 +69,11 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.UnconfirmedJob"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowToSelf"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.PartWithRoleWithNoKnownActor"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.ScenarioNeverTerminates"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.TriggeredButNeverStartedDefinedTask"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.NeverTriggeredSpecifiedTask"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.AutoStartPartAlsoTriggered"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.CyclicTriggering"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.NoRedundancy"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.PotentialDeadlock"/>
             </list>

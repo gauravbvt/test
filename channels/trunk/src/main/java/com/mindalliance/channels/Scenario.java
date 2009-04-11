@@ -118,11 +118,7 @@ public class Scenario extends ModelObject {
     /**
      * Iterate over the nodes in this scenario.
      * There should always be at least a node in the scenario.
-     * The nodes are sorted as follows:
-     * 1- triggered nodes with fewer triggering in-scenario nodes leading up to them
-     * (smaller number first)
-     * 2- the number of required outcomes (larger number first)
-     * 3- their names (alphabetical) - connectors always come after parts
+     * The nodes are sorted on their tasks.
      *
      * @return an iterator on sorted nodes
      */
@@ -135,32 +131,9 @@ public class Scenario extends ModelObject {
              */
             public int compare( Node o1, Node o2 ) {
                 Collator collator = Collator.getInstance();
-                // compare on transitive trigger count
-                int nodeCount = o1.transitiveTriggers().size();
-                int otherCount = o2.transitiveTriggers().size();
-                int compTriggers = nodeCount == otherCount
-                        ? 0
-                        // fewer transitive triggers means comes before
-                        : nodeCount < otherCount ? -1 : 1;
-
-                if ( compTriggers == 0 ) {
-                    // if same trigger count, sort on importance to other nodes
-                    nodeCount = o1.requiredOutcomes().size();
-                    otherCount = o2.requiredOutcomes().size();
-                    int compImportance = nodeCount == otherCount
-                            ? 0
-                            // more required outcomes means comes before
-                            : nodeCount > otherCount ? -1 : 1;
-                    if ( compImportance == 0 ) {
-                        // if same, sort on node name (connectors always come last)
-                        return collator.compare(
-                                o1.isConnector() ? "\uFF5A\uFF5A" : ( (Part) o1 ).getTask(),
-                                o2.isConnector() ? "\uFF5A\uFF5A" : ( (Part) o2 ).getTask() );
-                    } else {
-                        return compImportance;
-                    }
-                } else
-                    return compTriggers;
+                return collator.compare(
+                        o1.isConnector() ? "\uFF5A\uFF5A" : ( (Part) o1 ).getTask(),
+                        o2.isConnector() ? "\uFF5A\uFF5A" : ( (Part) o2 ).getTask() );
             }
         } );
         return nodes.iterator();
@@ -343,7 +316,7 @@ public class Scenario extends ModelObject {
     /**
      * Find parts played by a given role.
      *
-     * @param role         the role, possibly Role.UNKNOWN
+     * @param role the role, possibly Role.UNKNOWN
      * @return the appropriate parts
      */
     public List<Part> findParts( Role role ) {
@@ -468,6 +441,7 @@ public class Scenario extends ModelObject {
 
     /**
      * Add part as initiator.
+     *
      * @param part a part
      */
     public void addInitiator( Part part ) {
@@ -479,6 +453,7 @@ public class Scenario extends ModelObject {
 
     /**
      * Remove part as initiator.
+     *
      * @param part a part
      */
     public void removeInitiator( Part part ) {

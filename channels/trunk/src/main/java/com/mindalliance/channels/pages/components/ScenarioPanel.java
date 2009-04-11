@@ -15,7 +15,6 @@ import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -49,9 +48,9 @@ public class ScenarioPanel extends AbstractCommandablePanel {
      */
     private ScenarioEditPanel scenarioEditPanel;
     /**
-     * Flow diagram container.
+     * Flow diagram panel.
      */
-    private MarkupContainer flowDiagram;
+    private FlowMapDiagramPanel flowDiagramContainer;
     /**
      * Scenario model.
      */
@@ -172,9 +171,9 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     }
 
     private void addFlowDiagram() {
-        flowDiagram = new FlowMapDiagramPanel( "flow-map", scenarioModel, partModel );
-        flowDiagram.setOutputMarkupId( true );
-        addOrReplace( flowDiagram );
+        flowDiagramContainer = new FlowMapDiagramPanel( "flow-map", scenarioModel, partModel );
+        flowDiagramContainer.setOutputMarkupId( true );
+        addOrReplace( flowDiagramContainer );
     }
 
     /**
@@ -235,12 +234,13 @@ public class ScenarioPanel extends AbstractCommandablePanel {
                 reqsFlowPanel.refresh( target );
                 outcomesFlowPanel.refresh( target );
             } else if ( change.isSelected() ) {
-                addFlowDiagram();
-                target.addComponent( flowDiagram );
+                // just refresh the image on part selection
+                flowDiagramContainer.refreshImage( target );
+                target.addComponent( flowDiagramContainer );
             }
         }
         if ( identifiable instanceof Issue || identifiable instanceof ScenarioObject ) {
-            if ( !change.isDisplay() ) target.addComponent( flowDiagram );
+            if ( !change.isDisplay() ) target.addComponent( flowDiagramContainer );
             target.addComponent( partIssuesPanel );
         }
         makeVisible( target, partIssuesPanel, Project.analyst().hasIssues( getPart(), false ) );
@@ -257,7 +257,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
      */
     public void refreshFlowMap( AjaxRequestTarget target ) {
         addFlowDiagram();
-        target.addComponent( flowDiagram );
+        target.addComponent( flowDiagramContainer );
     }
 
     public void refreshScenarioEditPanel( AjaxRequestTarget target ) {

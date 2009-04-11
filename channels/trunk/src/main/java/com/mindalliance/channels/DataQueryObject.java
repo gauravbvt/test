@@ -393,4 +393,11 @@ public interface DataQueryObject {
      * @return a list of strings
      */
     List<String> findJobTitles( Actor actor );
+
+    /**
+     * Find if part is ever started.
+     * @param part a part
+     * @return a boolean
+     */
+    boolean findIfPartStarted( Part part );
 }

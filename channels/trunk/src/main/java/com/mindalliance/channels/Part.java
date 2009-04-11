@@ -420,5 +420,47 @@ public class Part extends Node {
                 && isEmpty();
     }
 
+    /**
+     * Whether a flow triggers this part.
+     * @return a boolean
+     */
+    @Transient
+    public boolean isTriggered() {
+        Iterator<Flow> reqs = requirements();
+        boolean triggered = false;
+        while ( !triggered && reqs.hasNext() ) {
+            Flow req = reqs.next();
+            triggered = req.isTriggeringToTarget();
+        }
+        if (!triggered) {
+            Iterator<Flow> outs = outcomes();
+            while ( !triggered && outs.hasNext() ) {
+                Flow req = outs.next();
+                triggered = req.isTriggeringToSource();
+            }
+        }
+        return triggered;
+    }
 
+    /**
+     * Whether a flow terminates this part.
+     * @return a boolean
+     */
+    @Transient
+    public boolean isTerminated() {
+        Iterator<Flow> reqs = requirements();
+        boolean terminated = false;
+        while ( !terminated && reqs.hasNext() ) {
+            Flow req = reqs.next();
+            terminated = req.isTerminatingToTarget();
+        }
+        if (!terminated) {
+            Iterator<Flow> outs = outcomes();
+            while ( !terminated && outs.hasNext() ) {
+                Flow req = outs.next();
+                terminated = req.isTerminatingToSource();
+            }
+        }
+        return terminated;
+    }
 }

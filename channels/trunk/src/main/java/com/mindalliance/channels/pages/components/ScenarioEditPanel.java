@@ -15,7 +15,6 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 
@@ -92,7 +91,7 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
     private void addIssuesPanel() {
         issuesPanel = new IssuesPanel(
                 "issues",
-                new Model<ModelObject>( getScenario() ),
+                new PropertyModel<ModelObject>( this, "scenario" ),
                 expansions );
         issuesPanel.setOutputMarkupId( true );
         add( issuesPanel );

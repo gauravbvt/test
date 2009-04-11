@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A node in the flow graph
@@ -267,25 +268,6 @@ public abstract class Node extends ModelObject implements ScenarioObject {
         }
 
         return result;
-    }
-
-    /**
-     * Find all requirement flows that directly or indirectly can trigger this node.
-     * Don't traverse external flows.
-     *
-     * @return a list of flows
-     */
-    public List<Flow> transitiveTriggers() {
-        List<Flow> triggerFlows = new ArrayList<Flow>();
-        for ( Flow req : requirements.values() ) {
-            if ( req.isTriggeringToTarget() ) {
-                if ( req.isInternal() ) {
-                    triggerFlows.addAll( req.getSource().transitiveTriggers() );
-                }
-                triggerFlows.add( req );
-            }
-        }
-        return triggerFlows;
     }
 
     /**
