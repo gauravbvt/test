@@ -92,6 +92,7 @@ public abstract class PngWebPage extends WebPage {
      */
     @Override
     protected void onRender( MarkupStream markupStream ) {
+        //TODO - is rendered twice (select part in flow map)
         Diagram diagram = makeDiagram();
         configureDiagram( diagram );
         try {

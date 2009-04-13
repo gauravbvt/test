@@ -233,10 +233,6 @@ public class ScenarioPanel extends AbstractCommandablePanel {
                 target.addComponent( partTitle );
                 reqsFlowPanel.refresh( target );
                 outcomesFlowPanel.refresh( target );
-            } else if ( change.isSelected() ) {
-                // just refresh the image on part selection
-                flowDiagramContainer.refreshImage( target );
-                target.addComponent( flowDiagramContainer );
             }
         }
         if ( identifiable instanceof Issue || identifiable instanceof ScenarioObject ) {
@@ -261,7 +257,12 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     }
 
     public void refreshScenarioEditPanel( AjaxRequestTarget target ) {
+        scenarioEditPanel.refresh( target );
         makeVisible( scenarioEditPanel, getExpansions().contains( getScenario().getId() ) );
         target.addComponent( scenarioEditPanel );
+    }
+
+    public void refreshFlowMapImage( AjaxRequestTarget target ) {
+        flowDiagramContainer.refreshImage( target );
     }
 }

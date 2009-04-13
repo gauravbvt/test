@@ -320,7 +320,7 @@ public final class ProjectPage extends WebPage implements Updatable {
                         ProjectPage.this, "allScenarios" ) );
         scenarioDropDownChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change(Change.Type.Selected, getScenario()));
+                update( target, new Change( Change.Type.Selected, getScenario() ) );
             }
         } );
 /*
@@ -350,7 +350,7 @@ public final class ProjectPage extends WebPage implements Updatable {
                     "entity",
                     new Model<ModelObject>( entity ),
                     getReadOnlyExpansions(),
-                    entityAspect);
+                    entityAspect );
         }
         makeVisible( entityPanel, entity != null );
         entityPanel.setOutputMarkupId( true );
@@ -660,28 +660,28 @@ public final class ProjectPage extends WebPage implements Updatable {
 
     private void collapseScenarioObjects() {
         List<Identifiable> toCollapse = new ArrayList<Identifiable>();
-        List<Identifiable> toReexpand =  new ArrayList<Identifiable>();
-        for (long id : expansions ) {
+        List<Identifiable> toReexpand = new ArrayList<Identifiable>();
+        for ( long id : expansions ) {
             try {
                 ModelObject expanded = getDqo().find( ModelObject.class, id );
                 if ( expanded instanceof Scenario ) {
                     toCollapse.add( expanded );
                     toReexpand.add( getScenario() );
                 }
-                if (expanded instanceof ScenarioObject ) {
-                    if (((ScenarioObject)expanded).getScenario() == scenario) {
-                        toCollapse.add(expanded);
+                if ( expanded instanceof ScenarioObject ) {
+                    if ( ( (ScenarioObject) expanded ).getScenario() == scenario ) {
+                        toCollapse.add( expanded );
                     }
                 }
             } catch ( NotFoundException e ) {
-                LOG.warn("Failed to find expanded " + id);
+                LOG.warn( "Failed to find expanded " + id );
             }
         }
-        for ( Identifiable identifiable : toCollapse) {
-            collapse( identifiable);
+        for ( Identifiable identifiable : toCollapse ) {
+            collapse( identifiable );
         }
-        for ( Identifiable identifiable : toReexpand) {
-            expand( identifiable);
+        for ( Identifiable identifiable : toReexpand ) {
+            expand( identifiable );
         }
     }
 
@@ -708,7 +708,7 @@ public final class ProjectPage extends WebPage implements Updatable {
                 expansions.remove( entity.getId() );
                 entityAspect = getEntityPanelAspect();
                 getCommander().releaseAnyLockOn( entity );
-                expandedEntities.add( 0, new EntityExpansion( entityAspect, entity.getId() ));
+                expandedEntities.add( 0, new EntityExpansion( entityAspect, entity.getId() ) );
             }
             // expandedEntities.remove( identifiable.getId() );
         }
@@ -735,9 +735,8 @@ public final class ProjectPage extends WebPage implements Updatable {
 
     private String getEntityPanelAspect() {
         if ( entityPanel instanceof EntityPanel ) {
-            return ((EntityPanel)entityPanel).getAspectShown();
-        }
-        else {
+            return ( (EntityPanel) entityPanel ).getAspectShown();
+        } else {
             return EntityPanel.DETAILS;
         }
     }
@@ -759,8 +758,15 @@ public final class ProjectPage extends WebPage implements Updatable {
         if ( identifiable instanceof Scenario ) {
             if ( change.isExists() ) {
                 getCommander().resetUserHistory( Project.getUserName() );
+                if ( change.isAdded() ) {
+                    setScenario( (Scenario) change.getSubject() );
+                    setPart( null );
+                }
             }
-            if ( change.isSelected() ) {
+            else if ( change.isRecomposed() ) {
+                collapseScenarioObjects();
+            }
+            else if ( change.isSelected() ) {
                 collapseScenarioObjects();
             }
         }
@@ -768,8 +774,8 @@ public final class ProjectPage extends WebPage implements Updatable {
             if ( change.isAdded() || change.isSelected() ) {
                 setPart( (Part) identifiable );
             } else if ( change.isRemoved() ) {
-                setPart( scenario.getDefaultPart() );
-                expand( scenario.getDefaultPart() );
+                setPart( null );
+                expand( getPart() );
             }
         }
         if ( identifiable instanceof Flow ) {
@@ -777,9 +783,9 @@ public final class ProjectPage extends WebPage implements Updatable {
                 expand( identifiable );
             }
             if ( change.isSelected() ) {
-                Flow flow = (Flow)identifiable;
+                Flow flow = (Flow) identifiable;
                 expand( identifiable );
-                if (flow.getScenario() != scenario) {
+                if ( flow.getScenario() != scenario ) {
                     setScenario( flow.getScenario() );
                 }
                 setPart( flow.getLocalPart() );
@@ -801,78 +807,87 @@ public final class ProjectPage extends WebPage implements Updatable {
         Identifiable identifiable = change.getSubject();
         if ( change.isUndoing() || change.isUnknown() ) {
             refreshAll( target );
-        }
-        if ( identifiable instanceof Project ) {
-            if ( change.isDisplay() ) {
+        } else {
+            if ( identifiable instanceof Project ) {
+                if ( change.isDisplay() ) {
+                    addPlanMapPanel();
+                    target.addComponent( planMapPanel );
+                }
+            }
+            if ( identifiable instanceof Scenario ) {
+                if ( change.isDisplay() ) {
+                    scenarioPanel.refreshScenarioEditPanel( target );
+                }
+                if ( change.isUpdated() ) {
+                    target.addComponent( planMapPanel );
+                    if ( change.getProperty().equals( "name" ) ) {
+                        target.addComponent( scenarioNameLabel );
+                        target.addComponent( scenarioDropDownChoice );
+                    } else if ( change.getProperty().equals( "description" ) ) {
+                        target.addComponent( scenarioDescriptionLabel );
+                    }
+                } else if ( change.isAdded() || change.isSelected() ) {
+                    refreshAll( target );
+                } else if ( change.isRemoved() ) {
+                    refreshAll( target );
+                } else if ( change.isRecomposed() ) {
+                    scenarioPanel.refreshFlowMap( target );
+                    target.addComponent( scenarioPanel );
+                }
+            }
+            if ( identifiable instanceof Part ) {
+                if ( change.isExists() ) {
+                    scenarioPanel.refreshFlowMap( target );
+                    target.addComponent( scenarioPanel );
+                }
+                else if (change.isSelected() ) {
+                    scenarioPanel.refreshFlowMapImage( target );
+                    target.addComponent( scenarioPanel );
+                }
+            }
+            if ( identifiable instanceof Flow ) {
+                refreshAll( target );
+            }
+            if ( identifiable instanceof ExternalFlow ) {
+                target.addComponent( planMapPanel );
+            }
+            if ( identifiable instanceof ScenarioObject
+                    || ( identifiable instanceof Issue
+                    && ( (Issue) identifiable ).getAbout().getId() == scenario.getId() ) ) {
+                annotateScenarioName();
+                target.addComponent( scenarioNameLabel );
+            }
+            if ( identifiable instanceof Issue
+                    && change.isExists()
+                    && ( (Issue) identifiable ).getAbout().getId() == scenario.getId() ) {
+                annotateScenarioName();
+                target.addComponent( scenarioNameLabel );
+                scenarioPanel.expandScenarioEditPanel( target );
                 addPlanMapPanel();
                 target.addComponent( planMapPanel );
             }
-        }
-        if ( identifiable instanceof Scenario ) {
-            if ( change.isDisplay() ) {
-                scenarioPanel.refreshScenarioEditPanel( target );
-            }
-            if ( change.isUpdated() ) {
-                target.addComponent( planMapPanel );
-                if ( change.getProperty().equals( "name" ) ) {
-                    target.addComponent( scenarioNameLabel );
-                    target.addComponent( scenarioDropDownChoice );
-                } else if ( change.getProperty().equals( "description" ) ) {
-                    target.addComponent( scenarioDescriptionLabel );
+            if ( identifiable instanceof ModelObject
+                    && ( (ModelObject) identifiable ).isEntity() ) {
+                if ( change.isDisplay() ) {
+                    addEntityPanel();
+                    target.addComponent( entityPanel );
+                } else {
+                    target.addComponent( scenarioPanel );
                 }
-            } else if ( change.isAdded() || change.isSelected() ) {
-                refreshAll(target );
-            } else if ( change.isRemoved() ) {
-                refreshAll(target );
-            } else if ( change.isRecomposed() ) {
-                target.addComponent( scenarioPanel );
-            }
-        }
-        if ( identifiable instanceof Part ) {
-            if ( change.isExists() || change.isSelected() ) {
-                scenarioPanel.refreshFlowMap( target );
-                target.addComponent( scenarioPanel );
-            }
-        }
-        if ( identifiable instanceof Flow ) {
-            refreshAll( target );
-        }
-        if ( identifiable instanceof ExternalFlow ) {
-            target.addComponent( planMapPanel );
-        }
-        if ( identifiable instanceof ScenarioObject
-                || ( identifiable instanceof Issue
-                && ( (Issue) identifiable ).getAbout().getId() == scenario.getId() ) ) {
-            annotateScenarioName();
-            target.addComponent( scenarioNameLabel );
-        }
-        if ( identifiable instanceof Issue
-                && change.isExists()
-                && ( (Issue) identifiable ).getAbout().getId() == scenario.getId() ) {
-            annotateScenarioName();
-            target.addComponent( scenarioNameLabel );
-            scenarioPanel.expandScenarioEditPanel( target );
-            addPlanMapPanel();
-            target.addComponent( planMapPanel );
-        }
-        if ( identifiable instanceof ModelObject
-                && ( (ModelObject) identifiable ).isEntity() ) {
-            if ( change.isDisplay() ) {
-                addEntityPanel();
-                target.addComponent( entityPanel );
-            } else {
-                target.addComponent( scenarioPanel );
-            }
 
+            }
+            target.addComponent( projectActionsMenu );
+            target.addComponent( projectShowMenu );
         }
-        target.addComponent( projectActionsMenu );
-        target.addComponent( projectShowMenu );
     }
 
     private void refreshAll( AjaxRequestTarget target ) {
+        target.addComponent( projectActionsMenu );
+        target.addComponent( projectShowMenu );
         target.addComponent( scenarioNameLabel );
         target.addComponent( scenarioDescriptionLabel );
         target.addComponent( scenarioDropDownChoice );
+        scenarioPanel.refreshScenarioEditPanel( target );
         scenarioPanel.refreshFlowMap( target );
         target.addComponent( scenarioPanel );
         target.addComponent( entityPanel );
@@ -917,3 +932,4 @@ public final class ProjectPage extends WebPage implements Updatable {
 
     }
 }
+

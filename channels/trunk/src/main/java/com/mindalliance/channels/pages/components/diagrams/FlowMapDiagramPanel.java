@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Part;
@@ -29,29 +28,29 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * Scenario to be diagrammed
      */
-    private Scenario scenario;
+    private IModel<Scenario> scenarioModel;
     /**
      * Selected node. Null if none selected.
      */
-    private Node selectedNode;
+    private IModel<Part> partModel;
 
     public FlowMapDiagramPanel( String id, IModel<Scenario> model ) {
         this( id, model, null, null, null, true );
     }
 
-    public FlowMapDiagramPanel( String id, IModel<Scenario> model, IModel<Part> partModel ) {
-        this( id, model, partModel.getObject(), null, null, true );
+    public FlowMapDiagramPanel( String id, IModel<Scenario> scenarioModel, IModel<Part> partModel ) {
+        this( id, scenarioModel, partModel, null, null, true );
     }
 
     public FlowMapDiagramPanel( String id,
-                                IModel<Scenario> model,
-                                Node selectedNode,
+                                IModel<Scenario> scenariomodel,
+                                IModel<Part> partModel,
                                 double[] diagramSize,
                                 String orientation,
                                 boolean withImageMap ) {
         super( id, diagramSize, orientation, withImageMap );
-        scenario = model.getObject();
-        this.selectedNode = selectedNode;
+        this.scenarioModel = scenariomodel;
+        this.partModel = partModel;
         init();
     }
 
@@ -66,7 +65,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
      * {@inheritDoc}
      */
     protected Diagram makeDiagram() {
-        return getDiagramFactory().newFlowMapDiagram( scenario, scenario.getDefaultPart() );
+        return getDiagramFactory().newFlowMapDiagram( getScenario(), getPart() );
     }
 
     /**
@@ -75,10 +74,10 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
         sb.append( "scenario.png?scenario=" );
-        sb.append( scenario.getId() );
+        sb.append( getScenario().getId() );
         sb.append( "&node=" );
-        if ( selectedNode != null ) {
-            sb.append( selectedNode.getId() );
+        if ( getPart() != null ) {
+            sb.append( getPart().getId() );
         } else {
             sb.append( "NONE" );
         }
@@ -140,6 +139,17 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
      */
     protected void onSelectEdge( String graphId, String edgeId, AjaxRequestTarget target ) {
         // do nothing - never called
+    }
+
+    private Scenario getScenario() {
+        return scenarioModel.getObject();
+    }
+
+    private Part getPart() {
+        if ( partModel == null )
+            return null;
+        else
+            return partModel.getObject();
     }
 }
 

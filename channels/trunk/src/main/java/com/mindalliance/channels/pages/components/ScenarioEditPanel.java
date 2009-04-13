@@ -32,6 +32,10 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
      */
     private IssuesPanel issuesPanel;
     /**
+     * How long before scenario self-terminates, if applicable.
+     */
+    private DelayPanel completionTimePanel;
+    /**
      * Expansions.
      */
     private Set<Long> expansions;
@@ -130,7 +134,7 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
     }
 
     private void addTimingFields() {
-        final DelayPanel completionTimePanel = new DelayPanel(
+        completionTimePanel = new DelayPanel(
                 "completion-time",
                 new PropertyModel<ModelObject>( this, "scenario" ),
                 "completionTime" );
@@ -268,6 +272,7 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
      */
     public void updateWith( AjaxRequestTarget target, Change change ) {
         makeVisible( target, issuesPanel, Project.analyst().hasIssues( model.getObject(), false ) );
+        target.addComponent( issuesPanel );
         super.updateWith( target, change );
     }
 
@@ -283,4 +288,10 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
             makeVisible( issuesPanel, Project.analyst().hasIssues( model.getObject(), false ) );
     }
 
+    public void refresh( AjaxRequestTarget target ) {
+        makeVisible( target, issuesPanel, Project.analyst().hasIssues( model.getObject(), false ) );
+        target.addComponent( issuesPanel );
+        completionTimePanel.enable( getScenario().isSelfTerminating() );
+        target.addComponent( completionTimePanel );
+    }
 }
