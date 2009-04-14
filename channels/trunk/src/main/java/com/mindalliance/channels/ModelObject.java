@@ -1,5 +1,6 @@
 package com.mindalliance.channels;
 
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -172,8 +173,9 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
 
     /**
      * Executed just before the model object is removed.
+     * @param dataQueryObject a data query object
      */
-    public void beforeRemove() {
+    public void beforeRemove( DataQueryObject dataQueryObject ) {
         // default is to do nothing
     }
 }

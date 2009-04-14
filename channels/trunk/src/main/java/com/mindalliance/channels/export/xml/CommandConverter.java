@@ -1,6 +1,5 @@
 package com.mindalliance.channels.export.xml;
 
-import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -24,7 +23,7 @@ import org.slf4j.LoggerFactory;
  * Date: Mar 22, 2009
  * Time: 12:07:35 PM
  */
-public class CommandConverter implements Converter {
+public class CommandConverter extends AbstractChannelsConverter {
 
     /**
      * Class logger.

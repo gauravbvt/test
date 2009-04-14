@@ -3,7 +3,6 @@ package com.mindalliance.channels.export.xml;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.pages.Project;
-import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -20,7 +19,7 @@ import java.util.Map;
  * Date: Jan 16, 2009
  * Time: 4:10:27 PM
  */
-public abstract class EntityConverter implements Converter {
+public abstract class EntityConverter extends AbstractChannelsConverter {
 
     public EntityConverter() {
 

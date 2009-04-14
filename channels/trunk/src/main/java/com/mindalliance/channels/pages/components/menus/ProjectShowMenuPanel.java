@@ -6,6 +6,7 @@ import com.mindalliance.channels.pages.ProjectPage;
 import com.mindalliance.channels.command.Change;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.PopupSettings;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.IModel;
@@ -47,6 +48,32 @@ public class ProjectShowMenuPanel extends MenuPanel {
 
     public List<Component> getMenuItems() {
         List<Component> menuItems = new ArrayList<Component>();
+        // Edit<->Hide
+        Link editLink;
+        if ( getExpansions().contains( getScenario().getId() ) ) {
+            editLink =
+                    new AjaxFallbackLink( "link" ) {
+                        public void onClick( AjaxRequestTarget target ) {
+                            update( target, new Change(Change.Type.Collapsed, getScenario()));
+                        }
+                    };
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Hide scenario details" ),
+                    editLink ) );
+
+        } else {
+            editLink =
+                    new AjaxFallbackLink( "link" ) {
+                        public void onClick( AjaxRequestTarget target ) {
+                            update( target, new Change(Change.Type.Expanded, getScenario()));
+                        }
+                    };
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Scenario details" ),
+                    editLink ) );
+        }
         ExternalLink reportLink = new ExternalLink( "link", "report.html" );
         reportLink.setPopupSettings( new PopupSettings(PopupSettings.RESIZABLE | PopupSettings.SCROLLBARS) );
         menuItems.add( new LinkMenuItem(
@@ -77,5 +104,8 @@ public class ProjectShowMenuPanel extends MenuPanel {
         return menuItems;
     }
 
+    private Scenario getScenario() {
+        return (Scenario) getModel().getObject();
+    }
 
 }

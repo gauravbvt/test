@@ -1,5 +1,8 @@
 package com.mindalliance.channels;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -125,12 +128,20 @@ public class Organization extends AbstractUnicastChannelable {
      */
     @Override
     public String toString() {
-       return parent == null ? getName()
+        return parent == null ? getName()
                 : MessageFormat.format( "{0} - {1}", parent.toString(), getName() );
     }
 
     @OneToMany
+    @SuppressWarnings( "unchecked" )
     public List<Job> getJobs() {
+        // Filter out incomplete jobs (actor
+        jobs = (List<Job>) CollectionUtils.select( jobs, new Predicate() {
+            public boolean evaluate( Object obj ) {
+                Job job = (Job) obj;
+                return job.isDefined();
+            }
+        } );
         return jobs;
     }
 
@@ -165,7 +176,7 @@ public class Organization extends AbstractUnicastChannelable {
     public List<ResourceSpec> jobResourceSpecs( DataQueryObject dqo ) {
         List<ResourceSpec> resourceSpecs = new ArrayList<ResourceSpec>();
         for ( Job job : jobs ) {
-            resourceSpecs.add( job.resourceSpec( this, dqo ) );
+            resourceSpecs.add( job.resourceSpec( this ) );
         }
         return resourceSpecs;
     }

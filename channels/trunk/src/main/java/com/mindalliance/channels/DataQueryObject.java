@@ -387,6 +387,13 @@ public interface DataQueryObject {
     List<Job> findAllJobs( Actor actor );
 
     /**
+     * Find all confirmed jobs with resource spec
+     * @param resourceSpec a resource spec
+     * @return a list of jobs
+     */
+    List<Job> findAllConfirmedJobs( ResourceSpec resourceSpec );
+
+    /**
      * Find all job titles of an actor.
      * @param actor an actor
      * @return a list of strings
@@ -406,4 +413,18 @@ public interface DataQueryObject {
      * @return a boolean
      */
     boolean findIfScenarioStarted( Scenario scenario );
+
+    /**
+     * Find all parts that has the specified resource.
+     * @param resourceSpec a resource spec
+     * @return a list of parts
+     */
+    List<Part> findAllPartsWith( ResourceSpec resourceSpec );
+
+    /**
+     * Find all parts located at a given place.
+     * @param place a place
+     * @return a list of parts
+     */
+    List<Part> findAllPartsWithLocation( Place place );
 }

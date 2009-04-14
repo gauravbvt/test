@@ -27,6 +27,7 @@ import com.mindalliance.channels.dao.FireScenario;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.util.Play;
+import com.mindalliance.channels.util.SemMatch;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.slf4j.Logger;
@@ -212,6 +213,7 @@ public class DataQueryObjectImpl implements DataQueryObject {
      * {@inheritDoc}
      */
     public void remove( ModelObject object ) {
+        object.beforeRemove( this );
         getDao().remove( object );
     }
 
@@ -939,16 +941,30 @@ public class DataQueryObjectImpl implements DataQueryObject {
      * {@inheritDoc}
      */
     public List<Job> findAllJobs( Actor actor ) {
-        String actorName = actor.getName();
         List<Job> jobs = new ArrayList<Job>();
         for ( Organization org : list( Organization.class ) ) {
             for ( Job job : org.getJobs() ) {
-                if ( job.getActorName().equals( actorName ) ) {
+                if ( job.getActor() ==  actor ) {
                     jobs.add( job );
                 }
             }
             for ( Job job : findUnconfirmedJobs( org ) ) {
-                if ( job.getActorName().equals( actorName ) ) {
+                if ( job.getActor() == actor ) {
+                    jobs.add( job );
+                }
+            }
+        }
+        return jobs;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Job> findAllConfirmedJobs( ResourceSpec resourceSpec ) {
+        List<Job> jobs = new ArrayList<Job>();
+        for ( Organization org : list( Organization.class ) ) {
+            for ( Job job : org.getJobs() ) {
+                if ( job.resourceSpec( org ).narrowsOrEquals( resourceSpec )) {
                     jobs.add( job );
                 }
             }
@@ -1018,6 +1034,38 @@ public class DataQueryObjectImpl implements DataQueryObject {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public List<Part> findAllPartsWith( ResourceSpec resourceSpec ) {
+        List<Part> list = new ArrayList<Part>();
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                Part part = parts.next();
+                if ( part.resourceSpec().narrowsOrEquals( resourceSpec ) )
+                    list.add( part );
+            }
+        }
+        return list;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Part> findAllPartsWithLocation( Place place ) {
+        List<Part> list = new ArrayList<Part>();
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                Part part = parts.next();
+                if ( SemMatch.samePlace( part.getLocation(), place ) )
+                    list.add( part );
+            }
+        }
+        return list;
+    }
+
     private boolean doFindIfScenarioStarted( Scenario scenario, Set<ModelObject> visited ) {
         if ( scenario.isIncident() ) return true;
         if ( visited.contains( scenario ) ) return false;
@@ -1036,7 +1084,7 @@ public class DataQueryObjectImpl implements DataQueryObject {
     public boolean isReferenced( Actor actor ) {
         for ( Organization org : list( Organization.class ) ) {
             for ( Job job : org.getJobs() ) {
-                if ( job.getActorName().equals( actor.getName() ) ) return true;
+                if ( job.getActor() == actor ) return true;
             }
         }
         // Look in parts
@@ -1055,7 +1103,7 @@ public class DataQueryObjectImpl implements DataQueryObject {
     public boolean isReferenced( Role role ) {
         for ( Organization org : list( Organization.class ) ) {
             for ( Job job : org.getJobs() ) {
-                if ( job.getRoleName().equals( role.getName() ) ) return true;
+                if ( job.getRole() == role ) return true;
             }
         }
         // Look in parts
@@ -1092,7 +1140,7 @@ public class DataQueryObjectImpl implements DataQueryObject {
         for ( Organization org : list( Organization.class ) ) {
             if ( org.getLocation() == place ) return true;
             else for ( Job job : org.getJobs() ) {
-                if ( job.getJurisdictionName().equals( place.getName() ) ) return true;
+                if ( job.getJurisdiction() == place ) return true;
             }
         }
         // Look in parts

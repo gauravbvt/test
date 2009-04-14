@@ -111,12 +111,12 @@ public class JobsPanel extends AbstractCommandablePanel {
     }
 
     public ResourceSpec getJobResourceSpec() {
-        return selectedJob.resourceSpec( getOrganization(), getDqo() );
+        return selectedJob.resourceSpec( getOrganization() );
     }
 
     private void addConfirmedCell( ListItem<JobWrapper> item ) {
         final JobWrapper jobWrapper = item.getModel().getObject();
-        CheckBox confirmedCheckBox = new CheckBox(
+        final CheckBox confirmedCheckBox = new CheckBox(
                 "confirmed",
                 new PropertyModel<Boolean>( jobWrapper, "confirmed" ) );
         makeVisible( confirmedCheckBox, jobWrapper.canBeConfirmed() );
@@ -265,7 +265,7 @@ public class JobsPanel extends AbstractCommandablePanel {
                         job,
                         UpdateObject.Action.Remove
                 ) );
-                ResourceSpec resourceSpec = job.resourceSpec( getOrganization(), getDqo() );
+                ResourceSpec resourceSpec = job.resourceSpec( getOrganization() );
                 if ( resourceSpec.getActor( ) != null )
                     getCommander().cleanup( Actor.class, resourceSpec.getActor().getName() );
                 if ( resourceSpec.getRole() != null )
@@ -310,7 +310,7 @@ public class JobsPanel extends AbstractCommandablePanel {
             String oldName = getActorName();
             if ( name != null && !isSame( name, oldName ) ) {
                 if ( markedForCreation ) {
-                    job.setActorName( name );
+                    job.setActor( getDqo().findOrCreate(  Actor.class , name ) );
                 } else {
                     int index = getOrganization().getJobs().indexOf( job );
                     if ( index >= 0 ) {
@@ -335,7 +335,7 @@ public class JobsPanel extends AbstractCommandablePanel {
             String oldName = getRoleName();
             if ( name != null && !isSame( name, oldName ) ) {
                 if ( markedForCreation ) {
-                    job.setRoleName( name );
+                    job.setRole( getDqo().findOrCreate( Role.class, name ) );
                 } else {
                     int index = getOrganization().getJobs().indexOf( job );
                     if ( index >= 0 ) {
@@ -359,7 +359,7 @@ public class JobsPanel extends AbstractCommandablePanel {
             String oldName = getJurisdictionName();
             if ( name != null && !isSame( name, oldName ) ) {
                 if ( markedForCreation ) {
-                    job.setJurisdictionName( name );
+                    job.setJurisdiction( getDqo().findOrCreate( Place.class, name ) );
                 } else {
                     int index = getOrganization().getJobs().indexOf( job );
                     if ( index >= 0 ) {
@@ -383,8 +383,7 @@ public class JobsPanel extends AbstractCommandablePanel {
 
         public boolean hasFlows() {
             return !getDqo().findAllPlays(
-                    job.resourceSpec( getOrganization(),
-                            getDqo() ) ).isEmpty();
+                    job.resourceSpec( getOrganization() ) ).isEmpty();
         }
 
         /**

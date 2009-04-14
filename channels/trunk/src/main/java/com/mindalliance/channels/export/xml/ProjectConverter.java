@@ -1,6 +1,5 @@
 package com.mindalliance.channels.export.xml;
 
-import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -31,7 +30,7 @@ import org.slf4j.LoggerFactory;
  * Date: Mar 22, 2009
  * Time: 12:05:43 PM
  */
-public class ProjectConverter implements Converter {
+public class ProjectConverter extends AbstractChannelsConverter {
 
     /**
      * Class logger.
@@ -57,7 +56,7 @@ public class ProjectConverter implements Converter {
             HierarchicalStreamWriter writer,
             MarshallingContext context ) {
         Project project = (Project) obj;
-        DataQueryObject dqo = project.getDqo();
+        DataQueryObject dqo = getDqo();
         writer.addAttribute( "uri", project.getUri() );
         writer.addAttribute( "version", project.getExporter().getVersion() );
         writer.addAttribute( "date", new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( new Date() ) );

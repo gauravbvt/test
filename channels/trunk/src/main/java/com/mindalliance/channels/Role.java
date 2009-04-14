@@ -32,4 +32,17 @@ public class Role extends ModelObject {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void beforeRemove( DataQueryObject dqo ) {
+        for ( Job job : dqo.findAllConfirmedJobs( ResourceSpec.with( this ) ) ) {
+           job.setRole( null );
+       }
+       for (Part part : dqo.findAllPartsWith( ResourceSpec.with( this ) )) {
+           part.setRole( null );
+       }
+    }
+
+
 }

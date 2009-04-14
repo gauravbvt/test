@@ -5,7 +5,6 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.pages.Project;
-import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -23,7 +22,7 @@ import java.util.Map;
  * Date: Jan 25, 2009
  * Time: 9:37:40 AM
  */
-public class UserIssueConverter implements Converter {
+public class UserIssueConverter extends AbstractChannelsConverter {
 
     /**
      * Class logger.

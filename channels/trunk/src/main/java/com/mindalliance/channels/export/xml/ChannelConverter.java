@@ -2,7 +2,6 @@ package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.Medium;
-import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -15,7 +14,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * Date: Feb 2, 2009
  * Time: 3:27:22 PM
  */
-public class ChannelConverter implements Converter {
+public class ChannelConverter extends AbstractChannelsConverter {
 
     public ChannelConverter() {
     }

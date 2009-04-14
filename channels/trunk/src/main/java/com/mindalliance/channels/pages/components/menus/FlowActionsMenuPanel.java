@@ -54,9 +54,6 @@ public class FlowActionsMenuPanel extends MenuPanel {
      */
     public List<Component> getMenuItems() {
         List<Component> menuItems = new ArrayList<Component>();
-        // Undo and redo
-        menuItems.add( this.getUndoMenuItem( "menuItem" ) );
-        menuItems.add( this.getRedoMenuItem( "menuItem" ) );
         // Show/hide details
         if ( isCollapsed ) {
             AjaxFallbackLink showLink = new AjaxFallbackLink( "link" ) {
@@ -73,6 +70,9 @@ public class FlowActionsMenuPanel extends MenuPanel {
             };
             menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Hide details" ), hideLink ) );
         }
+        // Undo and redo
+        menuItems.add( this.getUndoMenuItem( "menuItem" ) );
+        menuItems.add( this.getRedoMenuItem( "menuItem" ) );
         // Commands
         menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
         return menuItems;

@@ -1,11 +1,13 @@
 package com.mindalliance.channels.export.xml;
 
-import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.mindalliance.channels.Job;
+import com.mindalliance.channels.Actor;
+import com.mindalliance.channels.Role;
+import com.mindalliance.channels.Place;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +19,7 @@ import org.slf4j.LoggerFactory;
  * Date: Mar 26, 2009
  * Time: 9:38:21 AM
  */
-public class JobConverter implements Converter {
+public class JobConverter extends AbstractChannelsConverter {
 
     /**
      * Class logger.
@@ -56,11 +58,11 @@ public class JobConverter implements Converter {
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "actor" ) ) {
-                job.setActorName( reader.getValue() );
+                job.setActor( getDqo().findOrCreate( Actor.class, reader.getValue() ) );
             } else if ( nodeName.equals( "role" ) ) {
-                job.setRoleName( reader.getValue() );
+                job.setRole( getDqo().findOrCreate( Role.class, reader.getValue() ) );
             } else if ( nodeName.equals( "jurisdiction" ) ) {
-                job.setJurisdictionName( reader.getValue() );
+                job.setJurisdiction( getDqo().findOrCreate( Place.class, reader.getValue() ) );
             } else if ( nodeName.equals( "title" ) ) {
                 job.setTitle( reader.getValue() );
             } else {

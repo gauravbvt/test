@@ -62,32 +62,6 @@ public class ProjectActionsMenuPanel extends MenuPanel {
         // Undo and redo
         menuItems.add( this.getUndoMenuItem( "menuItem" ) );
         menuItems.add( this.getRedoMenuItem( "menuItem" ) );
-        // Edit<->Hide
-        Link editLink;
-        if ( getExpansions().contains( getScenario().getId() ) ) {
-            editLink =
-                    new AjaxFallbackLink( "link" ) {
-                        public void onClick( AjaxRequestTarget target ) {
-                            update( target, new Change(Change.Type.Collapsed, getScenario()));
-                        }
-                    };
-            menuItems.add( new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( "Hide details" ),
-                    editLink ) );
-
-        } else {
-            editLink =
-                    new AjaxFallbackLink( "link" ) {
-                        public void onClick( AjaxRequestTarget target ) {
-                            update( target, new Change(Change.Type.Expanded, getScenario()));
-                        }
-                    };
-            menuItems.add( new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( "Show details" ),
-                    editLink ) );
-        }
         // Commands
         menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
         // Export

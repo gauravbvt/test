@@ -187,7 +187,6 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     public void remove( ModelObject object ) {
-        object.beforeRemove();
         if ( object instanceof Scenario )
             remove( (Scenario) object );
         else

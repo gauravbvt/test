@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import com.mindalliance.channels.query.DataQueryObjectImpl;
+
 /**
  * A scenario in the project.
  * Provides an iterator on its nodes.
@@ -476,7 +478,7 @@ public class Scenario extends ModelObject {
         }
     }
 
-    public void beforeRemove() {
+    public void beforeRemove( DataQueryObject dataQueryObject ) {
         for ( Part part : initiators ) {
             part.setInitiatedScenario( null );
         }

@@ -13,7 +13,6 @@ import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.Delay;
 import com.mindalliance.channels.pages.Project;
-import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -37,7 +36,7 @@ import org.slf4j.LoggerFactory;
  * Date: Dec 16, 2008
  * Time: 1:47:49 PM
  */
-public class ScenarioConverter implements Converter {
+public class ScenarioConverter extends AbstractChannelsConverter {
 
     /**
      * Class logger.
@@ -61,7 +60,7 @@ public class ScenarioConverter implements Converter {
                          MarshallingContext context ) {
         Scenario scenario = (Scenario) object;
         Project project = Project.getProject();
-        DataQueryObject dqo = project.getDqo();
+        DataQueryObject dqo = getDqo();
         context.put( "scenario", scenario );
         writer.addAttribute( "project", project.getUri() );
         writer.addAttribute( "version", project.getExporter().getVersion() );
@@ -74,6 +73,11 @@ public class ScenarioConverter implements Converter {
         if ( scenario.getLocation() != null ) {
             writer.startNode( "location" );
             writer.setValue( scenario.getLocation().getName() );
+            writer.endNode();
+        }
+        if ( scenario.isIncident() ) {
+            writer.startNode( "incident" );
+            writer.setValue( "" + scenario.isIncident() );
             writer.endNode();
         }
         if ( scenario.isSelfTerminating() ) {
@@ -149,14 +153,16 @@ public class ScenarioConverter implements Converter {
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "description" ) ) {
                 scenario.setDescription( reader.getValue() );
-                // Entities
             } else if ( nodeName.equals( "location" ) ) {
                 scenario.setLocation( dqo.findOrCreate( Place.class, reader.getValue() ) );
+            } else if ( nodeName.equals( "incident" ) ) {
+                scenario.setIncident( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "expected-duration" ) ) {
                 scenario.setSelfTerminating( true );
                 scenario.setCompletionTime( Delay.parse( reader.getValue() ) );
             } else if ( nodeName.equals( "initiator" ) ) {
                 resolveInitiator( reader, scenario );
+                // Entities
             } else if ( nodeName.equals( "actor" ) ) {
                 context.convertAnother( scenario, Actor.class );
             } else if ( nodeName.equals( "organization" ) ) {

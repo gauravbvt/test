@@ -9,10 +9,14 @@ import javax.persistence.Transient;
 @Entity
 public class Actor extends AbstractUnicastChannelable {
 
-    /** The name of the unknown actor. */
+    /**
+     * The name of the unknown actor.
+     */
     public static final String UnknownName = "(unknown contact)";
 
-    /** Bogus actor used to signify that the actor is not known... */
+    /**
+     * Bogus actor used to signify that the actor is not known...
+     */
     public static final Actor UNKNOWN = new Actor( UnknownName );
 
     public Actor() {
@@ -30,26 +34,39 @@ public class Actor extends AbstractUnicastChannelable {
     /**
      * {@inheritDoc}
      */
-    @Override @Transient
+    @Override
+    @Transient
     public boolean isEntity() {
         return true;
     }
 
     /**
      * Return a normalized version of the name.
+     *
      * @return a string
      */
     public String normalize() {
         String name = getName().trim();
-        if (this == UNKNOWN || name.indexOf( ',') >= 0 ) return name;
+        if ( this == UNKNOWN || name.indexOf( ',' ) >= 0 ) return name;
         else {
-           int index = name.lastIndexOf( ' ' );
-            if (index >= 0 ) {
+            int index = name.lastIndexOf( ' ' );
+            if ( index >= 0 ) {
                 String s = name.substring( 0, index );
                 return name.substring( index + 1 ) + ", " + s;
-            }
-            else
+            } else
                 return name;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void beforeRemove( DataQueryObject dqo ) {
+        for ( Job job : dqo.findAllConfirmedJobs( ResourceSpec.with( this ) ) ) {
+            job.setActor( null );
+        }
+        for ( Part part : dqo.findAllPartsWith( ResourceSpec.with( this ) ) ) {
+            part.setActor( null );
         }
     }
 

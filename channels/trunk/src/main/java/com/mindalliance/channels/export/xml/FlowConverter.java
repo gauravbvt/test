@@ -15,7 +15,6 @@ import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.util.SemMatch;
 import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -36,7 +35,7 @@ import java.util.Map;
  * Date: Dec 16, 2008
  * Time: 3:28:38 PM
  */
-public class FlowConverter implements Converter {
+public class FlowConverter extends AbstractChannelsConverter {
     /**
      * The exported-imported id map
      */

@@ -25,4 +25,21 @@ public class Place extends ModelObject {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void beforeRemove( DataQueryObject dqo ) {
+        for ( Job job : dqo.findAllConfirmedJobs( ResourceSpec.with( this ) ) ) {
+           job.setJurisdiction( null );
+       }
+       for (Part part : dqo.findAllPartsWith( ResourceSpec.with( this ) )) {
+           part.setJurisdiction( null );
+       }
+        for (Part part : dqo.findAllPartsWithLocation( this )) {
+            part.setLocation( null );
+        }
+    }
+
+
+
 }
