@@ -55,6 +55,7 @@ div.flow-map {
 }
 
 div.flow-map img {
+    border: none;
 }
 
 div.organization > h3, div.organization > p.description {
