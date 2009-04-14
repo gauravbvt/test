@@ -7,27 +7,32 @@
         lang="en">
 <body>
 <wicket:extend>
-        <tr>
-            <th align="right">
-                <label for="parent"><a wicket:id="org-link" href=""
-                                       title="Parent organization's details">Parent</a>:</label>
-            </th>
-            <td><input id="parent" width="40" wicket:id="parent" type="text"/></td>
-        </tr>
-        <tr>
-            <th align="right"><label for="location"><a wicket:id="loc-link" href=""
-                                                       title="Location's details">Location</a>:</label>
-            </th>
-            <td><input type="text" size="40" id="location" wicket:id="location" value=""></td>
-        </tr>
-        <tr>
-            <th align="right">
-                <label for="contact-info">Contact info:</label>
-            </th>
-            <td><span id="contact-info" wicket:id="channels">[channel list panel]</span></td>
-        </tr>
-        <tr><th align="right">Jobs:</th>
-            <td wicket:id="jobs">[jobs panel]</td></tr>
+    <tr>
+        <th align="right">
+            <label for="parent"><a wicket:id="org-link" href=""
+                                   title="Parent organization's details">Parent</a>:</label>
+        </th>
+        <td><input id="parent" width="40" wicket:id="parent" type="text"/></td>
+    </tr>
+    <tr>
+        <th align="right"><label for="location"><a wicket:id="loc-link" href=""
+                                                   title="Location's details">Location</a>:</label>
+        </th>
+        <td><input type="text" size="40" id="location" wicket:id="location" value=""></td>
+    </tr>
+    <tr>
+        <th align="right">
+            <label for="contact-info">Contact info:</label>
+        </th>
+        <td><span id="contact-info" wicket:id="channels">[channel list panel]</span></td>
+    </tr>
+    <tr>
+        <th align="right">Jobs:</th>
+        <td>
+            <input wicket:id="actorsRequired" type="checkbox"/>Roles in this organization must have known actors
+            <span wicket:id="jobs">[jobs panel]</span>
+        </td>
+    </tr>
 </wicket:extend>
 </body>
 </html>

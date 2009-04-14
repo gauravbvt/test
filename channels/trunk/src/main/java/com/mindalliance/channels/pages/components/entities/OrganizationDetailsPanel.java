@@ -6,6 +6,7 @@ import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Place;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateProjectObject;
+import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.util.SemMatch;
@@ -15,6 +16,7 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -47,10 +49,11 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
      */
     @Override
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
-        Organization organization= getOrganization();
+        Organization organization = getOrganization();
         moDetailsDiv.add( new ModelObjectLink(
                 "org-link",
-                new PropertyModel<Organization>( organization, "parent" ) ) );
+                new PropertyModel<Organization>( organization, "parent" ),
+                new Model<String>( "Parent" ) ) );
         final List<String> parentChoices = findCandidateParents();
         final TextField parentField = new AutoCompleteTextField<String>( "parent",
                 new PropertyModel<String>( this, "parentOrganization" ) ) {
@@ -72,7 +75,8 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         moDetailsDiv.add( parentField );
         moDetailsDiv.add(
                 new ModelObjectLink( "loc-link",
-                        new PropertyModel<Organization>( organization, "location" ) ) );
+                        new PropertyModel<Organization>( organization, "location" ),
+                        new Model<String>( "Location" ) ) );
         final List<String> locationChoices = getDqo().findAllNames( Place.class );
         TextField locationField = new AutoCompleteTextField<String>( "location",
                 new PropertyModel<String>( this, "locationName" ) ) {
@@ -96,7 +100,17 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         moDetailsDiv.add( new ChannelListPanel(
                 "channels",
                 new Model<Channelable>( organization ) ) );
-        moDetailsDiv.add( new JobsPanel( "jobs", new Model<Organization>( organization  ), getExpansions() ) );
+        CheckBox actorsRequiredCheckBox = new CheckBox(
+                "actorsRequired",
+                new PropertyModel<Boolean>( this, "actorsRequired" ) );
+        actorsRequiredCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getOrganization(), "actorsRequired" ) );
+            }
+        } );
+        actorsRequiredCheckBox.setEnabled( isLockedByUser( getOrganization() ) );
+        moDetailsDiv.add( actorsRequiredCheckBox );
+        moDetailsDiv.add( new JobsPanel( "jobs", new Model<Organization>( organization ), getExpansions() ) );
 
     }
 
@@ -130,7 +144,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         else {
             if ( oldOrg == null || !isSame( name, oldName ) ) {
                 newOrg = getDqo().findOrCreate( Organization.class, name );
-                if (newOrg.ancestors().contains( getOrganization() )) {
+                if ( newOrg.ancestors().contains( getOrganization() ) ) {
                     newOrg = oldOrg;
                     getCommander().cleanup( Organization.class, name );
                 }
@@ -182,6 +196,29 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
 
     private Organization getOrganization() {
         return (Organization) getEntity();
+    }
+
+    /**
+     * Are actors required in roles?
+     *
+     * @return a boolean
+     */
+    public boolean isActorsRequired() {
+        return getOrganization().isActorsRequired();
+    }
+
+    /**
+     * Update actors requirement.
+     *
+     * @param val a boolean
+     */
+    public void setActorsRequired( boolean val ) {
+        doCommand(
+                new UpdateProjectObject(
+                        getOrganization(),
+                        "actorsRequired",
+                        val,
+                        UpdateObject.Action.Set ) );
     }
 
 }

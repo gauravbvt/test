@@ -33,8 +33,15 @@ public class Organization extends AbstractUnicastChannelable {
      * The primary location of the organization
      */
     private Place location;
-
+    /**
+     * Jobs.
+     */
     private List<Job> jobs = new ArrayList<Job>();
+
+    /**
+     * Whether reoles must have associated actors, else issues.
+     */
+    private boolean actorsRequired;
 
     // private List<Job> jobs = new ArrayList<Job>(); // TODO - reflect in DataQueryObject.FindAllResourceSpecs()
 
@@ -57,6 +64,14 @@ public class Organization extends AbstractUnicastChannelable {
     @Override
     public boolean isEntity() {
         return true;
+    }
+
+    public boolean isActorsRequired() {
+        return actorsRequired;
+    }
+
+    public void setActorsRequired( boolean actorsRequired ) {
+        this.actorsRequired = actorsRequired;
     }
 
     @ManyToOne( cascade = CascadeType.PERSIST, fetch = FetchType.LAZY )

@@ -55,6 +55,9 @@ public class OrganizationConverter extends EntityConverter {
                                    MarshallingContext context ) {
         Organization org = (Organization) entity;
         Organization parent = org.getParent();
+        writer.startNode( "actorsRequired" );
+        writer.setValue( "" + org.isActorsRequired() );
+        writer.endNode();
         if ( parent != null && !parent.getName().trim().isEmpty() ) {
             writer.startNode( "parent" );
             writer.setValue( parent.getName() );
@@ -89,7 +92,9 @@ public class OrganizationConverter extends EntityConverter {
                                 UnmarshallingContext context ) {
         Scenario scenario = (Scenario) context.get( "scenario" );
         Organization org = (Organization) entity;
-        if ( nodeName.equals( "parent" ) ) {
+        if ( nodeName.equals( "actorsRequired" ) ) {
+            org.setActorsRequired( reader.getValue().equals( "true" ) );
+        } else if ( nodeName.equals( "parent" ) ) {
             org = (Organization) entity;
             org.setParent( Project.dqo().findOrCreate( Organization.class, reader.getValue() ) );
         } else if ( nodeName.equals( "location" ) ) {
