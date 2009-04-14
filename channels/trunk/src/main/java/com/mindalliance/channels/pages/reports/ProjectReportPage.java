@@ -54,6 +54,6 @@ public class ProjectReportPage extends WebPage {
         } );
         add( new PlanMapDiagramPanel( "planMap",                                          // NON-NLS
             new Model<ArrayList<Scenario>>( (ArrayList) scenarios ),
-            null, null ) );
+            null, null, null, null, false ) );
     }
 }

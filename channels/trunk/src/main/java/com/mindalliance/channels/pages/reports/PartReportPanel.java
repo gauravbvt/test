@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.reports;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Scenario;
 import org.apache.commons.collections.iterators.IteratorChain;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -53,9 +54,15 @@ public class PartReportPanel extends Panel {
 
         add( new Label( "jurisdiction", part.getJurisdiction() == null ?                  // NON-NLS
                             "Unspecified" : part.getJurisdiction().toString() ) );
+        addTimingInfo();
 
+        addFlows( getSortedFlows( part ) );
+        add( new IssuesReportPanel( "issues", new Model<ModelObject>( part ) ) );         // NON-NLS
+    }
+
+    private void addTimingInfo() {
         WebMarkupContainer completionDiv = new WebMarkupContainer( "delay-div" );         // NON-NLS
-        completionDiv.add( new Label( "completion-time",
+        completionDiv.add( new Label( "completion-time",                                  // NON-NLS
                             part.isSelfTerminating() ? part.getCompletionTime().toString() : "" ) );
         completionDiv.setVisible( part.isSelfTerminating() );
         add( completionDiv );
@@ -66,16 +73,20 @@ public class PartReportPanel extends Panel {
         repeatsDiv.setVisible( part.isRepeating() );
         add( repeatsDiv );
 
-        WebMarkupContainer starts = new WebMarkupContainer( "starts" );
+        WebMarkupContainer starts = new WebMarkupContainer( "starts" );                   // NON-NLS
         starts.setVisible( part.isStartsWithScenario() );
         add( starts );
 
-        WebMarkupContainer terminates = new WebMarkupContainer( "terminates" );
+        WebMarkupContainer terminates = new WebMarkupContainer( "terminates" );           // NON-NLS
         terminates.setVisible( part.isTerminatesScenario() );
         add( terminates );
 
-        addFlows( getSortedFlows( part ) );
-        add( new IssuesReportPanel( "issues", new Model<ModelObject>( part ) ) );         // NON-NLS
+        Scenario initiatedScenario = part.getInitiatedScenario();
+        WebMarkupContainer starting = new WebMarkupContainer( "starting" );               // NON-NLS
+        String name = initiatedScenario == null ? "" : initiatedScenario.getName();
+        starting.add( new Label( "started-scenario", name ) );                            // NON-NLS
+        starting.setVisible( initiatedScenario != null );
+        add( starting );
     }
 
     private static String uppercasedName( String name ) {
