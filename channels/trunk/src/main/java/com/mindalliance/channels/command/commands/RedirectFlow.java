@@ -38,7 +38,7 @@ public class RedirectFlow extends AbstractCommand {
         args.put( "scenario", flow.getScenario().getId() );
         args.put( "flow", flow.getId() );
         args.put( "otherScenario", connector.getScenario().getId() );
-        args.put( "connector", connector.getId() );
+        args.put( "connected", connector.getInnerFlow().getId() );
         args.put( "outcome", isOutcome );
         setArguments( args );
     }
@@ -60,12 +60,14 @@ public class RedirectFlow extends AbstractCommand {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Flow redirectedFlow = scenario.findFlow( commander.resolveId( (Long) get( "flow" ) ) );
             Scenario otherScenario = commander.resolve( Scenario.class, (Long) get( "otherScenario" ) );
-            Connector connector = (Connector) otherScenario.getNode(
-                    commander.resolveId( (Long) get( "connector" ) ) );
+            Flow connectorFlow = otherScenario.findFlow(
+                    commander.resolveId( (Long) get( "connected" ) ) );
             boolean isOutcome = (Boolean) get( "outcome" );
-            Flow connectorFlow = connector.getInnerFlow();
+            Connector connector = isOutcome
+                    ? (Connector)connectorFlow.getSource()
+                    : (Connector)connectorFlow.getTarget();
             if ( isOutcome ) {
-                if ( connector.getScenario() != redirectedFlow.getSource().getScenario() ) {
+                if ( connectorFlow.getScenario() != redirectedFlow.getSource().getScenario() ) {
                     newFlow = dqo.connect(
                             redirectedFlow.getSource(),
                             connector,
@@ -79,7 +81,7 @@ public class RedirectFlow extends AbstractCommand {
                     newFlow.initFrom( connectorFlow );
                 }
             } else {
-                if ( connector.getScenario() != redirectedFlow.getTarget().getScenario() ) {
+                if ( connectorFlow.getScenario() != redirectedFlow.getTarget().getScenario() ) {
                     newFlow = dqo.connect(
                             connector,
                             redirectedFlow.getTarget(),
