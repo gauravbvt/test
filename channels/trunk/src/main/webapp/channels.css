@@ -99,7 +99,7 @@ div.section-title {
     width: 32%;
 }
 
-#header {
+div.header {
     height: 5em;
     padding-left: 60px;
     margin-bottom: 5px;
@@ -367,7 +367,7 @@ div.section-title ul.menu {
 ul.attach ul.menu {
     padding-top: 2px;
 }
-#header ul.menu, #header span.menubar {
+.header ul.menu, .header span.menubar {
     display: block;
     margin: 0;
     padding-top: 1.7em;
@@ -436,15 +436,15 @@ html, #sc-details {
     background: #C3D9FF;
 }
 
-#header {
+div.header {
     background: transparent url('images/logo.png') no-repeat 5px 2px;
 }
-.role #header {
+.role .header {
     background: transparent url('images/role.png') no-repeat 5px 2px;
 }
-.actor #header {
+.actor .header {
     background: transparent url('images/actor.png') no-repeat 5px 2px;
-}.organization #header {
+}.organization .header {
     background: transparent url('images/organization.png') no-repeat 5px 2px;
 }
 #footer {
@@ -468,19 +468,19 @@ html, #sc-details {
 
 td.link.notify, td.link.answer {
     background: transparent url('images/arrow_right_blue.png') no-repeat 0 50%;
-    padding-left: 20px;
+    padding-left: 25px;
 }
 #reqs h3 span {
     background: transparent url('images/arrow_left_blue.png') no-repeat 100% 50%;
-    padding-right: 20px;
+    padding-right: 25px;
 }
 td.link.ask, td.link.receive {
     background: transparent url('images/arrow_left_blue.png') no-repeat 0 50%;
-    padding-left: 20px;
+    padding-left: 25px;
 }
 #outcomes h3 span {
     background: transparent url('images/arrow_right_blue.png') no-repeat 100% 50%;
-    padding-right: 20px;
+    padding-right: 25px;
 }
 
 th.wicket_orderDown a {

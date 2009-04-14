@@ -103,16 +103,18 @@ public class FlowReportPanel extends Panel {
     }
 
     private void addFlowPropertyFields( boolean partIsSource ) {
-        Label informationLabel = new Label( "information",
-                partIsSource ? flow.getOutcomeTitle() : flow.getRequirementTitle() );
-        informationLabel.add( new AttributeModifier( "class", true, new Model<String>(
-                flow.isRequired() ? "required-information" : "information" ) ) );
+        String classes = flow.isRequired() ? "required-information" : "information";      // NON-NLS
+
+        String title = partIsSource ? flow.getOutcomeTitle() : flow.getRequirementTitle();
+        Label informationLabel = new Label( "information", title );                       // NON-NLS
+        informationLabel.add(
+                new AttributeModifier( "class", true, new Model<String>( classes ) ) );   // NON-NLS
         add( informationLabel );
 
-        add( new Label( "urgency", flow.getMaxDelay().toString() ) );
+        add( new Label( "urgency", flow.getMaxDelay().toString() ) );                     // NON-NLS
 
         String desc = flow.getDescription();
-        Label descLabel = new Label( "description", desc );
+        Label descLabel = new Label( "description", desc );                               // NON-NLS
         descLabel.setVisible( desc != null && !desc.isEmpty() );
         add( descLabel );
     }

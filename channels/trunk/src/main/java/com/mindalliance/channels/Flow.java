@@ -236,7 +236,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
     @Transient
     private static String getOrganizationString( Part part ) {
         Organization organization = part.getOrganization();
-        return organization == null ? ""
+        return organization == null || part.getRole() == null && part.getActor() == null ? ""
              : MessageFormat.format( " in {0}", organization.getLabel() );
     }
 

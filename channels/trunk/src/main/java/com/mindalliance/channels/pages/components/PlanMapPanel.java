@@ -49,7 +49,8 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     }
 
     private void init() {
-        AjaxFallbackLink closeLink = new AjaxFallbackLink( "close" ) {
+        AjaxFallbackLink<?> closeLink = new AjaxFallbackLink( "close" ) {
+            @Override
             public void onClick( AjaxRequestTarget target ) {
                 Change change = new Change( Change.Type.Collapsed, Project.getProject() );
                 update( target, change );
@@ -74,13 +75,15 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     }
 
     private void addFlowsTitleLabel() {
-        Label flowsTitleLabel = new Label( "flows-title", new PropertyModel<String>( this, "flowsTitle" ) );
+        Label flowsTitleLabel = new Label( "flows-title",
+                                           new PropertyModel<String>( this, "flowsTitle" ) );
         flowsTitleLabel.setOutputMarkupId( true );
         add( flowsTitleLabel );
     }
 
     private void addCausesTitleLabel() {
-        Label causesTitleLabel = new Label( "causes-title", new PropertyModel<String>( this, "causesTitle" ) );
+        Label causesTitleLabel = new Label( "causes-title",
+                                            new PropertyModel<String>( this, "causesTitle" ) );
         causesTitleLabel.setOutputMarkupId( true );
         add( causesTitleLabel );
     }
@@ -114,10 +117,8 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
      *
      * @return an array list of scenarios
      */
-    public ArrayList<Scenario> getScenarios() {
-        ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
-        scenarios.addAll( getDqo().list( Scenario.class ) );
-        return scenarios;
+    public List<Scenario> getScenarios() {
+        return getDqo().list( Scenario.class );
     }
 
     /**
@@ -184,7 +185,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
             return selectedScRel.getExternalFlows();
         } else if ( selectedScenario != null ) {
             List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
-            List<Scenario> allScenarios = getDqo().list( Scenario.class );
+            List<Scenario> allScenarios = getScenarios();
             for ( Scenario other : allScenarios ) {
                 if ( selectedScenario != other ) {
                     ScenarioRelationship scRel = getDqo().findScenarioRelationship( selectedScenario, other );
@@ -194,7 +195,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
             return externalFlows;
         } else {
             List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
-            List<Scenario> allScenarios = getDqo().list( Scenario.class );
+            List<Scenario> allScenarios = getScenarios();
             for ( Scenario scenario : allScenarios ) {
                 for ( Scenario other : allScenarios ) {
                     if ( scenario != other ) {
@@ -216,7 +217,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
         if ( selectedScRel != null ) {
             scRels.add(selectedScRel);
         } else if ( selectedScenario != null ) {
-            List<Scenario> allScenarios = getDqo().list( Scenario.class );
+            List<Scenario> allScenarios = getScenarios();
             for ( Scenario other : allScenarios ) {
                 if ( selectedScenario != other ) {
                     ScenarioRelationship scRel = getDqo().findScenarioRelationship( selectedScenario, other );
@@ -224,7 +225,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
                 }
             }
         } else {
-            List<Scenario> allScenarios = getDqo().list( Scenario.class );
+            List<Scenario> allScenarios = getScenarios();
             for ( Scenario scenario : allScenarios ) {
                 for ( Scenario other : allScenarios ) {
                     if ( scenario != other ) {
@@ -260,6 +261,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void changed( Change change ) {
         if ( change.isSelected() ) {
             Identifiable changed = change.getSubject();
@@ -285,6 +287,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void updateWith( AjaxRequestTarget target, Change change ) {
         if ( change.isSelected() ) {
             refresh( target );

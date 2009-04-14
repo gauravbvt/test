@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.reports;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Place;
+import org.apache.commons.collections.iterators.IteratorChain;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -13,13 +13,13 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * Part report panel
+ * Part report panel.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -41,89 +41,101 @@ public class PartReportPanel extends Panel {
     }
 
     private void init() {
-        add( new Label( "task", uppercasedName() ) );
+        add( new Label( "task", uppercasedName( part.getTask() ) ) );                     // NON-NLS
 
         String desc = part.getDescription();
-        Label descLabel = new Label( "description", desc );
-        add( descLabel );
+        Label descLabel = new Label( "description", desc );                               // NON-NLS
         descLabel.setVisible( desc != null && !desc.isEmpty() );
+        add( descLabel );
 
-        Place location = part.getLocation();
-        add( new Label( "location", location != null ? location.toString() : "Unspecified" ) );
+        add( new Label( "location", part.getLocation() == null ?                          // NON-NLS
+                            "Unspecified" : part.getLocation().toString() ) );
 
-        Place jurisdiction = part.getJurisdiction();
-        add( new Label( "jurisdiction", jurisdiction != null ? jurisdiction.toString()
-                                        : "Unspecified" ) );
+        add( new Label( "jurisdiction", part.getJurisdiction() == null ?                  // NON-NLS
+                            "Unspecified" : part.getJurisdiction().toString() ) );
 
-        WebMarkupContainer completionDiv = new WebMarkupContainer( "delay-div" );
-        Label completionTimeLabel;
-        if ( part.isSelfTerminating() ) {
-            completionTimeLabel = new Label( "completion-time", part.getCompletionTime().toString() );
-        } else {
-            completionTimeLabel = new Label( "completion-time", "" );
-            completionDiv.setVisible( false );
-        }
-        completionDiv.add( completionTimeLabel );
+        WebMarkupContainer completionDiv = new WebMarkupContainer( "delay-div" );         // NON-NLS
+        completionDiv.add( new Label( "completion-time",
+                            part.isSelfTerminating() ? part.getCompletionTime().toString() : "" ) );
+        completionDiv.setVisible( part.isSelfTerminating() );
         add( completionDiv );
 
-        WebMarkupContainer repeatsDiv = new WebMarkupContainer( "repeats-div" );
-        Label repeatsEveryLabel;
-        if ( part.isRepeating() ) {
-            repeatsEveryLabel = new Label( "repeats-every", part.getRepeatsEvery().toString() );
-        } else {
-            repeatsEveryLabel = new Label( "repeats-every", "" );
-            repeatsDiv.setVisible( false );
-        }
-        repeatsDiv.add( repeatsEveryLabel );
+        WebMarkupContainer repeatsDiv = new WebMarkupContainer( "repeats-div" );          // NON-NLS
+        repeatsDiv.add( new Label( "repeats-every",                                       // NON-NLS
+                                   part.isRepeating() ? part.getRepeatsEvery().toString() : "" ) );
+        repeatsDiv.setVisible( part.isRepeating() );
         add( repeatsDiv );
 
-        addSends();
-        addReceives();
-        add( new IssuesReportPanel( "issues", new Model<ModelObject>( part ) ) );
+        WebMarkupContainer starts = new WebMarkupContainer( "starts" );
+        starts.setVisible( part.isStartsWithScenario() );
+        add( starts );
+
+        WebMarkupContainer terminates = new WebMarkupContainer( "terminates" );
+        terminates.setVisible( part.isTerminatesScenario() );
+        add( terminates );
+
+        addFlows( getSortedFlows( part ) );
+        add( new IssuesReportPanel( "issues", new Model<ModelObject>( part ) ) );         // NON-NLS
     }
 
-    private String uppercasedName() {
-        String name = part.getTask();
-
+    private static String uppercasedName( String name ) {
         return name.length() > 0 ? name.substring( 0, 1 ).toUpperCase() + name.substring( 1 )
-                : name;
+                                 : name;
     }
 
-    private void addReceives() {
-        Iterator<Flow> requirements = part.requirements();
-        List<Flow> receives = new ArrayList<Flow>();
-        while ( requirements.hasNext() )
-            receives.add( requirements.next() );
+    private static List<Flow> getSortedFlows( Part part ) {
+        List<Flow> heads = new ArrayList<Flow>();
+        List<Flow> middle = new ArrayList<Flow>();
+        List<Flow> tails = new ArrayList<Flow>();
 
-        add( new ListView<Flow>( "receives", receives ) {
-            @Override
-            protected void populateItem( ListItem<Flow> item ) {
-                Flow flow = item.getModelObject();
-                item.add( new AttributeModifier( "class", true, new Model<String>(
-                        MessageFormat.format( "{0}-{1}",
-                                "receive",
-                                flow.isAskedFor() ? "answer" : "notification" ) ) ) );
-                item.add( new FlowReportPanel( "receive", new Model<Flow>( flow ), part ) );
+        Iterator<?> i = new IteratorChain( part.requirements(), part.outcomes() );
+        while ( i.hasNext() ) {
+            Flow flow = (Flow) i.next();
+            switch ( flow.getSource().equals( part ) ?
+                        flow.getSignificanceToSource() : flow.getSignificanceToTarget() )
+            {
+            case Triggers :
+                heads.add( flow );
+                break;
+            case Terminates :
+                tails.add( flow );
+                break;
+            default :
+                middle.add( flow );
             }
-        } );
+        }
+
+        Collections.sort( heads );
+        Collections.sort( middle );
+        Collections.sort( tails );
+
+        heads.addAll( middle );
+        heads.addAll( tails );
+        return heads;
     }
 
-    private void addSends() {
-        List<Flow> sends = new ArrayList<Flow>();
-        Iterator<Flow> outcomes = part.outcomes();
-        while ( outcomes.hasNext() )
-            sends.add( outcomes.next() );
+    private void addFlows( final List<Flow> flows ) {
 
-        add( new ListView<Flow>( "sends", sends ) {
+        add( new ListView<Flow>( "flows", flows ) {                                       // NON-NLS
             @Override
             protected void populateItem( ListItem<Flow> item ) {
                 Flow flow = item.getModelObject();
-                item.add( new AttributeModifier( "class", true, new Model<String>(
-                        MessageFormat.format( "{0}-{1}",
-                                "send",
-                                flow.isAskedFor() ? "answer" : "notification" ) ) ) );
 
-                item.add( new FlowReportPanel( "send", new Model<Flow>( flow ), part ) );
+                boolean incoming = part.equals( flow.getContactedPart() );
+                String type = incoming ? "receive" : "send";                              // NON-NLS
+                type += flow.isAskedFor() ? "-answer" : "-notification";                  // NON-NLS
+
+                Flow.Significance s = part.equals( flow.getSource() ) ?
+                        flow.getSignificanceToSource() : flow.getSignificanceToTarget();
+                if ( s.equals( Flow.Significance.Triggers ) )
+                    type += " trigger" ;                                                  // NON-NLS
+                if ( s.equals( Flow.Significance.Terminates ) )
+                    type += " terminate" ;                                               // NON-NLS
+
+                item.add( new AttributeModifier(
+                        "class", true, new Model<String>( type ) ) );                     // NON-NLS
+
+                item.add( new FlowReportPanel( "flow", new Model<Flow>( flow ), part ) ); // NON-NLS
             }
         } );
     }
