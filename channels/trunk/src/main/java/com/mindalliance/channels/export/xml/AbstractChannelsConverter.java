@@ -30,7 +30,7 @@ public abstract class AbstractChannelsConverter implements Converter {
 
     /**
      * List of external flows that could not be connected but were made into internal connector flows.
-     * XStream's API did not allow using a DataHolder for this purpose, at least not in an obvious way.
+     * XStream's API did not allow using a "global" DataHolder for this purpose, at least not in an obvious way.
      */
     private static ThreadLocal brokenFlows = new ThreadLocal() {
         protected synchronized Object initialValue() {

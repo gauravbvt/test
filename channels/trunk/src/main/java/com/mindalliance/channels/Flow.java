@@ -195,9 +195,9 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
             message = "something";
 
         return MessageFormat.format(
-                isAskedFor() ? "{2} ask {1} about {0}"
+                isAskedFor() ? "{2} ask {1} about \"{0}\""
                     //    : isTriggeringToTarget() ? "{1} telling {2} to {0}"
-                        : "{1} notify {2} of {0}",
+                        : "{1} notify {2} of \"{0}\"",
 
                 message, getShortName( getSource(), false ), getShortName( getTarget(), false ) );
     }
@@ -211,21 +211,21 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
     public String getRequirementTitle() {
         String message = getName();
         if ( message == null || message.trim().isEmpty() )
-            message = !isAskedFor() && isTriggeringToTarget() ? "do something" : "something";
+            message = /*!isAskedFor() && isTriggeringToTarget() ? "do something" :*/ "something";
         Node source = getSource();
         if ( source.isConnector() ) {
             return MessageFormat.format(
-                    isAskedFor() ? "Needs to ask for {0}"
-                            : isTriggeringToTarget() ? "Needs to be told to {0}"
-                            : "Needs to be notified of {0}",
+                    isAskedFor() ? "Needs to ask for \"{0}\""
+                          //  : isTriggeringToTarget() ? "Needs to be told to {0}"
+                            : "Needs to be notified of \"{0}\"",
                     message.toLowerCase() );
 
         } else {
             Part part = (Part) source;
             return MessageFormat.format(
-                    isAskedFor() ? "Ask {1}{2}{3} for {0}"
-                            : isTriggeringToTarget() ? "Told to {0} by {1}{2}{3}"
-                            : "Notified of {0} by {1}{2}{3}",
+                    isAskedFor() ? "Ask {1}{2}{3} for \"{0}\""
+                         //   : isTriggeringToTarget() ? "Told to {0} by {1}{2}{3}"
+                            : "Notified of \"{0}\" by {1}{2}{3}",
                     message.toLowerCase(),
                     getShortName( part, false ),
                     getOrganizationString( part ),
@@ -260,17 +260,17 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
 
         Node node = getTarget();
         if ( node.isConnector() ) {
-            String format = isAskedFor() ? "Can answer with {0}"
-                    : isTriggeringToTarget() ? "Can tell to {0}"
-                    : "Can notify of {0}";
+            String format = isAskedFor() ? "Can answer with \"{0}\""
+                 //   : isTriggeringToTarget() ? "Can tell to {0}"
+                    : "Can notify of \"{0}\"";
 
             return MessageFormat.format( format, message.toLowerCase() );
 
         } else {
             Part part = (Part) node;
-            String format = isAskedFor() ? "Answer {1}{2}{3} with {0}"
-                    : isTriggeringToTarget() ? "Tell {1}{2}{3} to {0}"
-                    : "Notify {1}{2}{3} of {0}";
+            String format = isAskedFor() ? "Answer {1}{2}{3} with \"{0}\""
+                  //  : isTriggeringToTarget() ? "Tell {1}{2}{3} to {0}"
+                    : "Notify {1}{2}{3} of \"{0}\"";
 
             return MessageFormat.format(
                     format, message.toLowerCase(),
