@@ -194,7 +194,7 @@ public class FlowConverter extends AbstractChannelsConverter {
         // If a node is a "connector specification", multiple actual connectors might match
         List<Node> targets = resolveNodes( reader, scenario, idMap, false );
         reader.moveUp();
-        List<Flow> flows = makeFlows( sources, targets, flowName, idValue );
+        List<Flow> flows = makeFlows( scenario, sources, targets, flowName, idValue );
         while ( reader.hasMoreChildren() ) {
             // for ( Flow flow : flows ) flow.setName( flowName );
             reader.moveDown();
@@ -235,10 +235,24 @@ public class FlowConverter extends AbstractChannelsConverter {
     }
 
     private List<Flow> makeFlows(
-            List<Node> sources, List<Node> targets, String name, String idValue ) {
+            Scenario scenario,
+            List<Node> sources,
+            List<Node> targets,
+            String name,
+            String idValue ) {
 
         List<Flow> flows = new ArrayList<Flow>();
-        DataQueryObject dqo = Project.dqo();
+        DataQueryObject dqo = getDqo();
+        assert ( !( sources.isEmpty() && targets.isEmpty() ) );
+        Connector externalConnectorStandby = null;
+        if ( sources.isEmpty() ) {
+            externalConnectorStandby = dqo.createConnector( scenario );
+            sources.add( externalConnectorStandby );
+
+        } else if ( targets.isEmpty() ) {
+            externalConnectorStandby = dqo.createConnector( scenario );
+            targets.add( externalConnectorStandby );
+        }
         for ( Node source : sources ) {
             for ( Node target : targets ) {
                 Flow flow = dqo.connect( source, target, name );
@@ -251,8 +265,13 @@ public class FlowConverter extends AbstractChannelsConverter {
                 }
             }
         }
+        if ( externalConnectorStandby != null ) {
+            List<Flow> brokenExternalFlows = getBrokenExternalFlows();
+            brokenExternalFlows.addAll( flows );
+        }
         return flows;
     }
+
 
     private List<Node> resolveNodes( HierarchicalStreamReader reader,
                                      Scenario scenario,
@@ -375,9 +394,13 @@ public class FlowConverter extends AbstractChannelsConverter {
                         taskDescription );
                 for ( Part externalPart : externalParts ) {
                     if ( isSource ) {
-                        dqo.connect( externalPart, connector, flowName );
+                        ExternalFlow externalFlow = (ExternalFlow) dqo.connect( externalPart, connector, flowName );
+                        externalFlow.setName( flowName );
+                        reconnectBrokenExternalFlow( externalFlow );
                     } else {
-                        dqo.connect( connector, externalPart, flowName );
+                        ExternalFlow externalFlow = (ExternalFlow) dqo.connect( connector, externalPart, flowName );
+                        externalFlow.setName( flowName );
+                        reconnectBrokenExternalFlow( externalFlow );
                     }
                 }
             }
@@ -386,6 +409,31 @@ public class FlowConverter extends AbstractChannelsConverter {
 
     }
 
+    @SuppressWarnings( "unchecked" )
+    private void reconnectBrokenExternalFlow( ExternalFlow externalFlow ) {
+        List<Flow> brokenExternalFlows = getBrokenExternalFlows();
+        List<Flow> toDelete = new ArrayList<Flow>();
+        for ( Flow brokenFlow : brokenExternalFlows ) {
+            assert ( brokenFlow.hasConnector() );
+            if ( brokenFlow.getName().equals( externalFlow.getName() ) ) {
+                if ( brokenFlow.getLocalPart().equals( externalFlow.getPart() ) ) {
+                    externalFlow.setChannels( brokenFlow.getChannels() );
+                    externalFlow.setMaxDelay( brokenFlow.getMaxDelay() );
+                    externalFlow.setSignificanceToSource( brokenFlow.getSignificanceToSource() );
+                    externalFlow.setSignificanceToTarget( brokenFlow.getSignificanceToTarget() );
+                    externalFlow.setAll( brokenFlow.isAll() );
+                    externalFlow.setAskedFor( brokenFlow.isAskedFor() );
+                    externalFlow.setDescription( brokenFlow.getDescription() );
+                    replaceInIdMap( brokenFlow, externalFlow, idMap ); // nothing replaced
+                    brokenFlow.disconnect();
+                    toDelete.add( brokenFlow );
+                }
+            }
+        }
+        for ( Flow flow : toDelete ) {
+            brokenExternalFlows.remove( flow );
+        }
+    }
 
     @SuppressWarnings( "unchecked" )
     private List<Connector> findMatchingConnectors( String scenarioName,

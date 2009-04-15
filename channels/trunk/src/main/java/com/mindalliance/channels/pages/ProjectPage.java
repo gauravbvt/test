@@ -54,6 +54,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 
 /**
  * The project's home page.
@@ -241,7 +242,8 @@ public final class ProjectPage extends WebPage implements Updatable {
             Importer importer = Project.getProject().getImporter();
             try {
                 InputStream inputStream = fileUpload.getInputStream();
-                Scenario imported = importer.importScenario( inputStream );
+                Scenario imported = importer.importScenario(
+                        inputStream );
                 redirectTo( imported );
             } catch ( IOException e ) {
                 // TODO redirect to a proper error screen... user has to know...

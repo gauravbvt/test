@@ -51,16 +51,18 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
                 // a matching actor doesn't have a channel defined with same medium.
                 Set<Medium> media = getUnicastMedia( flow );
                 ResourceSpec partSpec = flow.getContactedPart().resourceSpec();
-                List<Actor> actors = getDqo().findAllActors( partSpec );
-                if ( actors.isEmpty() ) {
-                    issues.addAll( findIssues( modelObject, partSpec, media ) );
+                // If both any actor and any organization, don't bother with missing addresses
+                if ( !( partSpec.getActor() == null && partSpec.getOrganization() == null ) ) {
+                    List<Actor> actors = getDqo().findAllActors( partSpec );
+                    if ( actors.isEmpty() ) {
+                        issues.addAll( findIssues( modelObject, partSpec, media ) );
+                    } else
+                        for ( Actor actor : actors ) {
+                            ResourceSpec actorSpec = new ResourceSpec( partSpec );
+                            actorSpec.setActor( actor );
+                            issues.addAll( findIssues( modelObject, actorSpec, media ) );
+                        }
                 }
-                else
-                    for ( Actor actor : actors ) {
-                        ResourceSpec actorSpec = new ResourceSpec( partSpec );
-                        actorSpec.setActor( actor );
-                        issues.addAll( findIssues( modelObject, actorSpec, media ) );
-                    }
             }
         }
         return issues;
@@ -77,13 +79,13 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
                         modelObject,
                         Issue.Level.Major,
                         MessageFormat.format(
-                            "{0} may be involved and has no valid {1} contact info.",
-                            actorSpec.toString(),
-                            channel.getMedium() ),
+                                "{0} may be involved and has no valid {1} contact info.",
+                                actorSpec.toString(),
+                                channel.getMedium() ),
                         MessageFormat.format(
-                            "Add a {0} contact info to {1}",
-                            channel.getMedium(),
-                            actorSpec.toString() ) ) );
+                                "Add a {0} contact info to {1}",
+                                channel.getMedium(),
+                                actorSpec.toString() ) ) );
             }
         }
         return result;
@@ -111,7 +113,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
 
     private static boolean needsAtLeastOneChannel( Flow flow ) {
         return !flow.getTarget().isConnector() && flow.isNotification()
-            || !flow.getSource().isConnector() && flow.isAskedFor();
+                || !flow.getSource().isConnector() && flow.isAskedFor();
     }
 
     /**

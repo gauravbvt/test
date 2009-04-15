@@ -196,7 +196,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
 
         return MessageFormat.format(
                 isAskedFor() ? "{2} ask {1} about {0}"
-                        : isTriggeringToTarget() ? "{1} telling {2} to {0}"
+                    //    : isTriggeringToTarget() ? "{1} telling {2} to {0}"
                         : "{1} notify {2} of {0}",
 
                 message, getShortName( getSource(), false ), getShortName( getTarget(), false ) );

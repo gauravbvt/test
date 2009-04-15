@@ -45,6 +45,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.HashMap;
 
 /**
  * Utility class for common functionality for all Dao implementations.
@@ -281,7 +282,8 @@ public class DataQueryObjectImpl implements DataQueryObject {
                 Importer importer = Project.getProject().getImporter();
                 for ( File file : files ) {
                     try {
-                        Scenario scenario = importer.importScenario( new FileInputStream( file ) );
+                        Scenario scenario = importer.importScenario(
+                                new FileInputStream( file ) );
                         LOG.info(
                                 "Imported scenario "
                                         + scenario.getName()

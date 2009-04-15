@@ -96,7 +96,7 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
                 if ( scenarioRel.hasInitiators() ) {
                     name = name + (name.isEmpty() ? "" : " and ");
                     int count = scenarioRel.getInitiators().size();
-                    name = name + count + ( count > 1 ? " causes" : " cause" );
+                    name = name + " caused by";// count + ( count > 1 ? " causes" : " cause" );
                 }
                 return name;
             }

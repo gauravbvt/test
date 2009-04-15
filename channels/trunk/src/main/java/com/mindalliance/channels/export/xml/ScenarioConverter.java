@@ -130,7 +130,6 @@ public class ScenarioConverter extends AbstractChannelsConverter {
     }
 
 
-
     /**
      * {@inheritDoc}
      */
@@ -186,6 +185,7 @@ public class ScenarioConverter extends AbstractChannelsConverter {
         }
         // Remove automatically created default part
         scenario.removeNode( defaultPart );
+        // repairExternalFlows( scenario, context );
         return scenario;
     }
 
@@ -230,7 +230,5 @@ public class ScenarioConverter extends AbstractChannelsConverter {
         }
 
     }
-
-
 
 }

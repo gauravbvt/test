@@ -17,6 +17,10 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.dao.Journal;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.converters.DataHolder;
+import com.thoughtworks.xstream.io.binary.BinaryStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 import java.io.InputStream;
 import java.io.IOException;
@@ -44,6 +48,7 @@ public class XmlStreamer implements Importer, Exporter {
      * Class logger.
      */
     public static final Logger LOG = LoggerFactory.getLogger( XmlStreamer.class );
+
 
     /**
      * Holder of a configured XStream instance.
@@ -99,7 +104,7 @@ public class XmlStreamer implements Importer, Exporter {
         }
 
         /**
-         * Access to xstream instance
+         * Access to xstream instance.
          *
          * @return -- an xstream
          */
@@ -128,7 +133,7 @@ public class XmlStreamer implements Importer, Exporter {
         return "0.1";
     }
 
-    /**
+     /**
      * {@inheritDoc}
      */
     public Scenario importScenario( InputStream stream ) throws IOException {
@@ -211,5 +216,6 @@ public class XmlStreamer implements Importer, Exporter {
     public String getMimeType() {
         return "application/xml";
     }
+
 
 }

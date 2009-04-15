@@ -57,7 +57,7 @@ public class PlanMapGraphBuilder implements GraphBuilder<Scenario, ScenarioRelat
                 if ( scenario != other ) {
                     ScenarioRelationship scRel = dqo.findScenarioRelationship( scenario, other );
                     if ( scRel != null ) {
-                        digraph.addEdge( scenario, other, scRel );
+                        digraph.addEdge( other, scenario, scRel );
                     }
                 }
             }

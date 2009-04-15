@@ -13,6 +13,7 @@ import com.mindalliance.channels.pages.Project;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.HashMap;
 
 /**
  * Restore a delete scenario.
