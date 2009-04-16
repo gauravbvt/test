@@ -203,4 +203,10 @@ public interface Commander {
      * @return a long
      */
     long getLastModified();
+
+    /**
+     * Get the name of the last user to have made a change.
+     * @return a string
+     */
+    String getLastModifier();
 }

@@ -27,8 +27,11 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -39,6 +42,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.string.StringValueConversionException;
+import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -161,6 +165,14 @@ public final class ProjectPage extends WebPage implements Updatable {
      * The aspect for entity panel.
      */
     private String entityAspect = EntityPanel.DETAILS;
+    /**
+     * Refresh button container.
+     */
+    private WebMarkupContainer refreshNeededContainer;
+    /**
+     * When last refreshed.
+     */
+    private long lastRefreshed = System.currentTimeMillis();
 
     /**
      * Used when page is called without parameters.
@@ -221,6 +233,7 @@ public final class ProjectPage extends WebPage implements Updatable {
         };
         add( form );
         addHeader();
+        addRefresh();
         addScenarioMenubar();
         addScenarioSelector();
         scenarioPanel = new ScenarioPanel(
@@ -282,6 +295,41 @@ public final class ProjectPage extends WebPage implements Updatable {
         scenarioDescriptionLabel.setOutputMarkupId( true );
         form.add( scenarioDescriptionLabel );
         form.add( new Label( "user", Project.getUserName() ) );                           // NON-NLS
+    }
+
+    private void addRefresh() {
+        refreshNeededContainer = new WebMarkupContainer( "refresh-needed" );
+        refreshNeededContainer.setOutputMarkupId( true );
+        refreshNeededContainer.add( new AjaxEventBehavior( "onclick" ) {
+            protected void onEvent( AjaxRequestTarget target ) {
+                lastRefreshed = System.currentTimeMillis();
+                refreshAll( target );
+            }
+        } );
+        refreshNeededContainer.add( new AbstractAjaxTimerBehavior( Duration.seconds( 10 ) ) {
+            protected void onTimer( AjaxRequestTarget target ) {
+                updateRefresh();
+                target.addComponent( refreshNeededContainer );
+            }
+        } );
+
+        form.add( refreshNeededContainer );
+        updateRefresh();
+    }
+
+    private void updateRefresh() {
+        Commander commander = Project.getProject().getCommander();
+        String lastModifier = commander.getLastModifier();
+        long lastModified = commander.getLastModified();
+        makeVisible(
+                refreshNeededContainer,
+                lastModified > lastRefreshed
+                        && !lastModifier.isEmpty()
+                        && !lastModifier.equals( Project.getUserName() ) );
+        refreshNeededContainer.add(new AttributeModifier(
+                "title",
+                true,
+                new Model<String>("Plan was modified by " + lastModifier)));
     }
 
     private void annotateScenarioName() {
@@ -695,9 +743,9 @@ public final class ProjectPage extends WebPage implements Updatable {
                     toCollapse.add( expanded );
                 } else {
                     if ( expanded instanceof Issue ) {
-                        Issue issue = (Issue)expanded;
+                        Issue issue = (Issue) expanded;
                         ModelObject about = issue.getAbout();
-                        if (about instanceof Flow || about instanceof Part ) {
+                        if ( about instanceof Flow || about instanceof Part ) {
                             toCollapse.add( expanded );
                         }
                     }
@@ -788,12 +836,12 @@ public final class ProjectPage extends WebPage implements Updatable {
                     setScenario( (Scenario) change.getSubject() );
                     setPart( null );
                 }
-            }
-            else if ( change.isRecomposed() ) {
+            } else if ( change.isRecomposed() ) {
                 collapseScenarioObjects();
-            }
-            else if ( change.isSelected() ) {
+            } else if ( change.isSelected() ) {
                 collapseScenarioObjects();
+                setScenario( (Scenario) change.getSubject() );
+                setPart( null );
             }
         }
         if ( identifiable instanceof Part ) {
@@ -867,8 +915,7 @@ public final class ProjectPage extends WebPage implements Updatable {
                 if ( change.isExists() ) {
                     scenarioPanel.refresh( target );
                     target.addComponent( scenarioPanel );
-                }
-                else if (change.isSelected() ) {
+                } else if ( change.isSelected() ) {
                     scenarioPanel.refresh( target );
                     target.addComponent( scenarioPanel );
                 }
@@ -921,6 +968,8 @@ public final class ProjectPage extends WebPage implements Updatable {
         target.addComponent( entityPanel );
         if ( planMapPanel instanceof PlanMapPanel )
             ( (PlanMapPanel) planMapPanel ).refresh( target );
+        updateRefresh();
+        target.addComponent( refreshNeededContainer );
     }
 
     private void update( AjaxRequestTarget target, Change change ) {

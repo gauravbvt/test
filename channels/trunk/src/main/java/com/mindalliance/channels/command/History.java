@@ -28,6 +28,10 @@ public class History {
      */
     private long lastModified;
     /**
+     * Name of user who made last modification.
+     */
+    private String lastModifier;
+    /**
      * List of mementoes of done commands.
      * A new memento is added at the front of the list.
      */
@@ -54,7 +58,7 @@ public class History {
             addToDone( memento );
         }
         clearUndone( command.getUserName() );
-        updateLastModified();
+        updateLastModified( command );
     }
 
     /**
@@ -103,7 +107,7 @@ public class History {
         if ( memento.getCommand().isMemorable() ) {
             done.remove( memento );
             undone.add( 0, new Memento( undoingCommand ) );
-            updateLastModified();
+            updateLastModified( undoingCommand );
         }
     }
 
@@ -116,7 +120,7 @@ public class History {
     public void recordRedone( Memento memento, Command redoCommand ) {
         addToDone( new Memento( redoCommand ) );
         undone.remove( memento );
-        updateLastModified();
+        updateLastModified( redoCommand );
     }
 
     /**
@@ -190,7 +194,8 @@ public class History {
     public void reset() {
         done.clear();
         undone.clear();
-        updateLastModified();
+        lastModified = System.currentTimeMillis();
+        lastModifier = "";
     }
 
     /**
@@ -219,10 +224,19 @@ public class History {
      * @return a long
      */
     public long getLastModified() {
-        return lastModified;
+       return lastModified;
     }
 
-    private void updateLastModified() {
+    private void updateLastModified( Command command ) {
         lastModified = System.currentTimeMillis();
+        lastModifier = command.getUserName();
+    }
+
+    /**
+     * Return name of last user to make a change.
+     * @return a string
+     */
+    public String getLastModifier() {
+        return lastModifier;
     }
 }

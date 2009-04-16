@@ -76,6 +76,10 @@ public class ScenarioPanel extends AbstractCommandablePanel {
      */
     private PartPanel partPanel;
     /**
+     * Part description.
+     */
+    private TextArea<String> partDescription;
+    /**
      * Outcomes flow panel.
      */
     private FlowListPanel outcomesFlowPanel;
@@ -133,8 +137,10 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         // partPanel.setRenderBodyOnly( true );
         partPanel.setOutputMarkupId( true );
         add( partPanel );
-        add( new TextArea<String>( "description",                           // NON-NLS
-                new PropertyModel<String>( this, "partDescription" ) ) );
+        partDescription = new TextArea<String>( "description",                           // NON-NLS
+                new PropertyModel<String>( this, "partDescription" ) );
+        partDescription.setOutputMarkupId( true );
+        add( partDescription );
         add( new AttachmentPanel( "attachments", new Model<Part>( getPart() ) ) );// NON-NLS
         partIssuesPanel = new IssuesPanel( "issues",                       // NON-NLS
                 new PropertyModel<ModelObject>( this, "part" ),
@@ -144,6 +150,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     }
 
     private void adjustComponents() {
+        partDescription.setEnabled( isLockedByUser( getPart() ) );
         boolean partHasIssues = Project.analyst().hasIssues( getPart(), false );
         makeVisible( partIssuesPanel, partHasIssues );
         makeVisible( scenarioEditPanel, getExpansions().contains( getScenario().getId() ) );
@@ -241,10 +248,12 @@ public class ScenarioPanel extends AbstractCommandablePanel {
             }
         }
         if ( identifiable instanceof Issue || identifiable instanceof ScenarioObject ) {
-            if ( !change.isDisplay() ) target.addComponent( flowDiagramContainer );
-            target.addComponent( partIssuesPanel );
+            if ( !change.isDisplay() ) {
+                target.addComponent( flowDiagramContainer );
+                makeVisible( target, partIssuesPanel, Project.analyst().hasIssues( getPart(), false ) );
+                target.addComponent( partIssuesPanel );
+            }
         }
-        makeVisible( target, partIssuesPanel, Project.analyst().hasIssues( getPart(), false ) );
         addPartActionsMenu();
         target.addComponent( partShowMenu );
         target.addComponent( partActionsMenu );
@@ -252,15 +261,19 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     }
 
     /**
-     * For a redraw of flow map.
+     * Refresh part panel and flow diagram.
      *
      * @param target ajax request target
-     * @param reloadDiagram whether to reload the diagram panel vs just the image
      */
     public void refresh( AjaxRequestTarget target ) {
         partPanel.refresh( target );
         addFlowDiagram();
         target.addComponent( flowDiagramContainer );
+        adjustComponents();
+        target.addComponent( scenarioEditPanel );
+        target.addComponent( partDescription );
+        target.addComponent( partIssuesPanel );
+        target.addComponent( partIssuesPanel );
     }
 
     public void refreshScenarioEditPanel( AjaxRequestTarget target ) {

@@ -365,4 +365,8 @@ public class DefaultCommander implements Commander {
     public long getLastModified() {
         return history.getLastModified();
     }
+
+    public String getLastModifier() {
+        return history.getLastModifier();
+    }
 }
