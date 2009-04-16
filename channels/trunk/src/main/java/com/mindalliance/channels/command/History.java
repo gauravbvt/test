@@ -24,6 +24,10 @@ public class History {
      */
     private static int MaxDoneSize = 100;
     /**
+     * Last modified timestamp.
+     */
+    private long lastModified;
+    /**
      * List of mementoes of done commands.
      * A new memento is added at the front of the list.
      */
@@ -50,6 +54,7 @@ public class History {
             addToDone( memento );
         }
         clearUndone( command.getUserName() );
+        updateLastModified();
     }
 
     /**
@@ -98,6 +103,7 @@ public class History {
         if ( memento.getCommand().isMemorable() ) {
             done.remove( memento );
             undone.add( 0, new Memento( undoingCommand ) );
+            updateLastModified();
         }
     }
 
@@ -110,6 +116,7 @@ public class History {
     public void recordRedone( Memento memento, Command redoCommand ) {
         addToDone( new Memento( redoCommand ) );
         undone.remove( memento );
+        updateLastModified();
     }
 
     /**
@@ -183,6 +190,7 @@ public class History {
     public void reset() {
         done.clear();
         undone.clear();
+        updateLastModified();
     }
 
     /**
@@ -205,4 +213,16 @@ public class History {
         if ( done.size() > MaxDoneSize ) done.remove( done.size() - 1 );
     }
 
+    /**
+     * Get timestamp of last modification.
+     * If no recorded modification, return system current time.
+     * @return a long
+     */
+    public long getLastModified() {
+        return lastModified;
+    }
+
+    private void updateLastModified() {
+        lastModified = System.currentTimeMillis();
+    }
 }

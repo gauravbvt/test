@@ -5,7 +5,7 @@ import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.diagrams.DiagramAjaxBehavior;
 import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.AttributeModifier;
@@ -17,8 +17,6 @@ import org.apache.wicket.markup.MarkupStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Random;
-
 
 /**
  * Abstract Diagram Panel
@@ -28,7 +26,7 @@ import java.util.Random;
  * Date: Apr 1, 2009
  * Time: 1:11:09 PM
  */
-public abstract class AbstractDiagramPanel extends AbstractUpdatablePanel {
+public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
     /**
      * Class logger.
      */
@@ -164,7 +162,7 @@ public abstract class AbstractDiagramPanel extends AbstractUpdatablePanel {
     }
 
     private String makeSeed() {
-        return "&_seed=" + System.currentTimeMillis() + new Random().nextInt();
+        return "&_modified=" + getCommander().getLastModified();
     }
 
     /**

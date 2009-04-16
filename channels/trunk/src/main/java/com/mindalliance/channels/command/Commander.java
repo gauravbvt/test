@@ -198,5 +198,9 @@ public interface Commander {
      */
     void releaseAllLocks( String userName );
 
-
+    /**
+     * System time when last modification was made.
+     * @return a long
+     */
+    long getLastModified();
 }

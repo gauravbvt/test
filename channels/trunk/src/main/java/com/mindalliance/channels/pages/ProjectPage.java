@@ -54,7 +54,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 
 /**
  * The project's home page.
@@ -687,6 +686,31 @@ public final class ProjectPage extends WebPage implements Updatable {
         }
     }
 
+    private void collapsePartObjects() {
+        List<Identifiable> toCollapse = new ArrayList<Identifiable>();
+        for ( long id : expansions ) {
+            try {
+                ModelObject expanded = getDqo().find( ModelObject.class, id );
+                if ( expanded instanceof Flow ) {
+                    toCollapse.add( expanded );
+                } else {
+                    if ( expanded instanceof Issue ) {
+                        Issue issue = (Issue)expanded;
+                        ModelObject about = issue.getAbout();
+                        if (about instanceof Flow || about instanceof Part ) {
+                            toCollapse.add( expanded );
+                        }
+                    }
+                }
+            } catch ( NotFoundException e ) {
+                LOG.warn( "Failed to find expanded " + id );
+            }
+        }
+        for ( Identifiable identifiable : toCollapse ) {
+            collapse( identifiable );
+        }
+    }
+
     /**
      * Set a component's visibility.
      *
@@ -775,9 +799,11 @@ public final class ProjectPage extends WebPage implements Updatable {
         if ( identifiable instanceof Part ) {
             if ( change.isAdded() || change.isSelected() ) {
                 setPart( (Part) identifiable );
+                collapsePartObjects();
             } else if ( change.isRemoved() ) {
                 setPart( null );
                 expand( getPart() );
+                collapsePartObjects();
             }
         }
         if ( identifiable instanceof Flow ) {
@@ -833,24 +859,24 @@ public final class ProjectPage extends WebPage implements Updatable {
                 } else if ( change.isRemoved() ) {
                     refreshAll( target );
                 } else if ( change.isRecomposed() ) {
-                    scenarioPanel.refreshFlowMap( target );
+                    scenarioPanel.refresh( target );
                     target.addComponent( scenarioPanel );
                 }
             }
             if ( identifiable instanceof Part ) {
                 if ( change.isExists() ) {
-                    scenarioPanel.refreshFlowMap( target );
+                    scenarioPanel.refresh( target );
                     target.addComponent( scenarioPanel );
                 }
                 else if (change.isSelected() ) {
-                    scenarioPanel.refreshFlowMapImage( target );
+                    scenarioPanel.refresh( target );
                     target.addComponent( scenarioPanel );
                 }
             }
             if ( identifiable instanceof Flow ) {
-                refreshAll( target );
+                if ( !change.isDisplay() ) refreshAll( target );
             }
-            if ( identifiable instanceof ExternalFlow ) {
+            if ( identifiable instanceof ExternalFlow && !change.isDisplay() ) {
                 target.addComponent( planMapPanel );
             }
             if ( identifiable instanceof ScenarioObject
@@ -890,7 +916,7 @@ public final class ProjectPage extends WebPage implements Updatable {
         target.addComponent( scenarioDescriptionLabel );
         target.addComponent( scenarioDropDownChoice );
         scenarioPanel.refreshScenarioEditPanel( target );
-        scenarioPanel.refreshFlowMap( target );
+        scenarioPanel.refresh( target );
         target.addComponent( scenarioPanel );
         target.addComponent( entityPanel );
         if ( planMapPanel instanceof PlanMapPanel )

@@ -358,4 +358,11 @@ public class DefaultCommander implements Commander {
     public void releaseAllLocks( String userName ) {
         lockManager.releaseAllLocks( userName );
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public long getLastModified() {
+        return history.getLastModified();
+    }
 }

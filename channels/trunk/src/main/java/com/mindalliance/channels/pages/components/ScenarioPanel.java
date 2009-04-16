@@ -64,13 +64,17 @@ public class ScenarioPanel extends AbstractCommandablePanel {
      */
     private Label partTitle;
     /**
-     * Part actions menu
+     * Part actions menu.
      */
     private Component partActionsMenu;
     /**
-     * Part pages menu
+     * Part pages menu.
      */
     private Component partShowMenu;
+    /**
+     * Part panel.
+     */
+    private PartPanel partPanel;
     /**
      * Outcomes flow panel.
      */
@@ -125,9 +129,10 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         partTitle.setOutputMarkupId( true );
         add( partTitle );               // NON-NLS
         addPartMenuBar();
-        PartPanel panel = new PartPanel( "specialty", new PropertyModel<Part>( this, "part" ) );
-        panel.setRenderBodyOnly( true );
-        add( panel );
+        partPanel = new PartPanel( "specialty", new PropertyModel<Part>( this, "part" ) );
+        // partPanel.setRenderBodyOnly( true );
+        partPanel.setOutputMarkupId( true );
+        add( partPanel );
         add( new TextArea<String>( "description",                           // NON-NLS
                 new PropertyModel<String>( this, "partDescription" ) ) );
         add( new AttachmentPanel( "attachments", new Model<Part>( getPart() ) ) );// NON-NLS
@@ -250,8 +255,10 @@ public class ScenarioPanel extends AbstractCommandablePanel {
      * For a redraw of flow map.
      *
      * @param target ajax request target
+     * @param reloadDiagram whether to reload the diagram panel vs just the image
      */
-    public void refreshFlowMap( AjaxRequestTarget target ) {
+    public void refresh( AjaxRequestTarget target ) {
+        partPanel.refresh( target );
         addFlowDiagram();
         target.addComponent( flowDiagramContainer );
     }

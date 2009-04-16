@@ -96,7 +96,13 @@ public class PartPanel extends AbstractCommandablePanel {
      * Initiated scenario choice.
      */
     private DropDownChoice initiatedScenarioChoice;
-
+    private DelayPanel repeatsEveryPanel;
+    private DelayPanel completionTimePanel;
+    private CheckBox selfTerminatingCheckBox;
+    private CheckBox repeatingCheckBox;
+    private CheckBox startWithScenarioCheckBox;
+    private CheckBox terminatesScenarioCheckBox;
+    private CheckBox initiatesScenarioCheckBox;
 
     //====================================
     public PartPanel( String id, IModel<Part> model ) {
@@ -111,6 +117,23 @@ public class PartPanel extends AbstractCommandablePanel {
         addField( JURISDICTION_PROPERTY, getDqo().findAllNames( Place.class ) );
         addField( LOCATION_PROPERTY, getDqo().findAllNames( Place.class ) );
         addTimingFields();
+        adjustFields();
+    }
+
+    private void adjustFields() {
+        for ( TextField field : textFields ) {
+            field.setEnabled( isLockedByUser( getPart() ) );
+        }
+        repeatsEveryPanel.enable( getPart().isRepeating()
+                && isLockedByUser( getPart() ) );
+        completionTimePanel.enable( getPart().isSelfTerminating()
+                && isLockedByUser( getPart() ) );
+        selfTerminatingCheckBox.setEnabled( isLockedByUser( getPart() ) );
+        repeatingCheckBox.setEnabled( isLockedByUser( getPart() ) );
+        startWithScenarioCheckBox.setEnabled( isLockedByUser( getPart() ) );
+        terminatesScenarioCheckBox.setEnabled( isLockedByUser( getPart() ) );
+        initiatesScenarioCheckBox.setEnabled( isLockedByUser( getPart() ) );
+        initiatedScenarioChoice.setEnabled( isLockedByUser( getPart() ) );
     }
 
     private void addField( final String property, final Collection<String> choices ) {
@@ -143,7 +166,6 @@ public class PartPanel extends AbstractCommandablePanel {
 
         // Add style mods from scenario analyst.
         addIssues( field, getPart(), property );
-        field.setEnabled( isLockedByUser( getPart() ) );
         add( field );
         textFields.add( field );
     }
@@ -179,23 +201,19 @@ public class PartPanel extends AbstractCommandablePanel {
 
 
     private void addTimingFields() {
-        final DelayPanel repeatsEveryPanel = new DelayPanel(
+        repeatsEveryPanel = new DelayPanel(
                 "repeats-every",
                 new PropertyModel<ModelObject>( this, "part" ),
                 "repeatsEvery" );
         repeatsEveryPanel.setOutputMarkupId( true );
-        repeatsEveryPanel.enable( getPart().isRepeating()
-                && isLockedByUser( getPart() ) );
         add( repeatsEveryPanel );
-        final DelayPanel completionTimePanel = new DelayPanel(
+        completionTimePanel = new DelayPanel(
                 "completion-time",
                 new PropertyModel<ModelObject>( this, "part" ),
                 "completionTime" );
-        completionTimePanel.enable( getPart().isSelfTerminating()
-                && isLockedByUser( getPart() ) );
         completionTimePanel.setOutputMarkupId( true );
         add( completionTimePanel );
-        CheckBox selfTerminatingCheckBox = new CheckBox(
+        selfTerminatingCheckBox = new CheckBox(
                 "self-terminating",
                 new PropertyModel<Boolean>( this, "selfTerminating" ) );
         selfTerminatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
@@ -206,9 +224,8 @@ public class PartPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getPart(), "selfTerminating" ) );
             }
         } );
-        selfTerminatingCheckBox.setEnabled( isLockedByUser( getPart() ) );
         add( selfTerminatingCheckBox );
-        CheckBox repeatingCheckBox = new CheckBox(
+        repeatingCheckBox = new CheckBox(
                 "repeating",
                 new PropertyModel<Boolean>( this, "repeating" ) );
         add( repeatingCheckBox );
@@ -219,31 +236,27 @@ public class PartPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getPart(), "repeating" ) );
             }
         } );
-        repeatingCheckBox.setEnabled( isLockedByUser( getPart() ) );
-        CheckBox startWithScenarioCheckBox = new CheckBox(
+        startWithScenarioCheckBox = new CheckBox(
                 "startsWithScenario",
                 new PropertyModel<Boolean>( this, "startsWithScenario" ) );
-        startWithScenarioCheckBox.setEnabled( isLockedByUser( getPart() ) );
         add( startWithScenarioCheckBox );
         startWithScenarioCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getPart(), "startsWithScenario" ) );
             }
         } );
-        CheckBox terminatesScenarioCheckBox = new CheckBox(
+        terminatesScenarioCheckBox = new CheckBox(
                 "terminatesScenario",
                 new PropertyModel<Boolean>( this, "terminatesScenario" ) );
-        terminatesScenarioCheckBox.setEnabled( isLockedByUser( getPart() ) );
         add( terminatesScenarioCheckBox );
         terminatesScenarioCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getPart(), "terminatesScenario" ) );
             }
         } );
-        final CheckBox initiatesScenarioCheckBox = new CheckBox(
+        initiatesScenarioCheckBox = new CheckBox(
                 "initiatesScenario",
                 new PropertyModel<Boolean>( this, "initiatesScenario" ) );
-        initiatesScenarioCheckBox.setEnabled( isLockedByUser( getPart() ) );
         add( initiatesScenarioCheckBox );
         initiatesScenarioCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
@@ -270,7 +283,6 @@ public class PartPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getPart(), "initiatedScenario" ) );
             }
         } );
-        initiatedScenarioChoice.setEnabled( isLockedByUser( getPart() ) );
         add( initiatedScenarioChoice );
     }
 
@@ -595,6 +607,15 @@ public class PartPanel extends AbstractCommandablePanel {
      */
     public final Part getPart() {
         return model.getObject();
+    }
+
+    /**
+     * Refresh part panel.
+     * @param target an ajax request target
+     */
+    public void refresh( AjaxRequestTarget target ) {
+        adjustFields();
+        target.addComponent( this );
     }
 
     /**
