@@ -55,9 +55,11 @@ public class OrganizationConverter extends EntityConverter {
                                    MarshallingContext context ) {
         Organization org = (Organization) entity;
         Organization parent = org.getParent();
-        writer.startNode( "actorsRequired" );
-        writer.setValue( "" + org.isActorsRequired() );
-        writer.endNode();
+        if ( org.isActorsRequired() ) {
+            writer.startNode( "actorsRequired" );
+            writer.setValue( "" + org.isActorsRequired() );
+            writer.endNode();
+        }
         if ( parent != null && !parent.getName().trim().isEmpty() ) {
             writer.startNode( "parent" );
             writer.setValue( parent.getName() );

@@ -148,7 +148,7 @@ public class Job implements Serializable {
         int hash = 1;
         hash = hash * 31 + actor.hashCode();
         hash = hash * 31 + role.hashCode();
-        hash = hash * 31 + jurisdiction.hashCode();
+        if ( jurisdiction != null ) hash = hash * 31 + jurisdiction.hashCode();
         return hash;
     }
 
