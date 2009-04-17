@@ -221,6 +221,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
             if ( getGraphSize() != null ) {
                 list.add( new DOTAttribute( "size", getGraphSizeString() ) );
                 list.add( new DOTAttribute( "ratio", "compress" ) );
+                list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             }
             // list.add( new DOTAttribute( "overlap", "false" ) );
             // list.add( new DOTAttribute( "splines", "true" ) );
@@ -235,6 +236,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
          */
         public List<DOTAttribute> getSubgraphAttributes() {
             List<DOTAttribute> list = DOTAttribute.emptyList();
+            list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             list.add( new DOTAttribute( "fontsize", SUBGRAPH_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", SUBGRAPH_FONT ) );
             list.add( new DOTAttribute( "color", SUBGRAPH_COLOR ) );
@@ -265,6 +267,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
                     list.add( new DOTAttribute( "shape", "none" ) );
                 }
             }
+            list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", NODE_FONT ) );
             if ( getAnalyst().hasIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
@@ -275,19 +278,20 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
             if ( vertex.isConnector() ) {
                 Connector connector = (Connector) vertex;
                 Iterator<ExternalFlow> externalFlows = connector.externalFlows();
+                list.add( new DOTAttribute( "fontcolor", "white" ) );
                 if ( externalFlows.hasNext() ) {
-                    list.add( new DOTAttribute( "tooltip", summarizeExternalFlows( externalFlows ) ) );
+                    list.add( new DOTAttribute( "tooltip", "Connected to: " + summarizeExternalFlows( externalFlows ) ) );
                 } else {
                     list.add( new DOTAttribute( "tooltip", "Not connected" ) );
                 }
             }
-            list.add( new DOTAttribute( "fontcolor", "white" ) );
             return list;
         }
 
         public List<DOTAttribute> getEdgeAttributes( Flow edge, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
+            list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             list.add( new DOTAttribute( "fontname", EDGE_FONT ) );
             list.add( new DOTAttribute( "fontsize", EDGE_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );

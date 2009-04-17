@@ -12,6 +12,10 @@ import com.mindalliance.channels.analysis.Analyst;
  */
 public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
     /**
+     * Default font color.
+     */
+    protected static String FONTCOLOR = "black";
+    /**
      * Message format as URL template with {1} = graph id.
      */
     protected static String GRAPH_URL_FORMAT = "?graph={0,number,0}";
