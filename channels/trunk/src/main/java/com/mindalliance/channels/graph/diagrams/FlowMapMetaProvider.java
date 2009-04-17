@@ -6,6 +6,8 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Connector;
+import com.mindalliance.channels.ExternalFlow;
 import com.mindalliance.channels.graph.URLProvider;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
@@ -15,6 +17,7 @@ import com.mindalliance.channels.analysis.Analyst;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Iterator;
 
 /**
  * Provider of providers for scenarios.
@@ -27,7 +30,7 @@ import java.util.List;
  */
 public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
 
-     /**
+    /**
      * Color for subgraph contour
      */
     private static final String SUBGRAPH_COLOR = "azure2";
@@ -47,7 +50,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
      * Font size for node labels.
      */
     private static final String NODE_FONT_SIZE = "10";
-     /**
+    /**
      * Distance for edge head and tail labels.
      */
     private static final String LABEL_DISTANCE = "1.0";
@@ -61,9 +64,9 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
     private Scenario scenario;
 
     public FlowMapMetaProvider( Scenario scenario,
-                                 String outputFormat,
-                                 String imageDirectory,
-                                 Analyst analyst ) {
+                                String outputFormat,
+                                String imageDirectory,
+                                Analyst analyst ) {
         super( outputFormat, imageDirectory, analyst );
         this.scenario = scenario;
     }
@@ -100,8 +103,12 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
              * @return a URL string
              */
             public String getVertexURL( Node node ) {
-                Object[] args = {node.getScenario().getId(), node.getId()};
-                return MessageFormat.format( VERTEX_URL_FORMAT, args );
+                if ( node.isPart() ) {
+                    Object[] args = {node.getScenario().getId(), node.getId()};
+                    return MessageFormat.format( VERTEX_URL_FORMAT, args );
+                } else {
+                    return null;
+                }
             }
 
             /**
@@ -170,7 +177,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
                 label += part.getJurisdiction().getName();
             }
             if ( part.getOrganization() != null ) {
-                if ( !label.isEmpty() )  label += "|in ";
+                if ( !label.isEmpty() ) label += "|in ";
                 /*{
                     if ( part.getActor() == null || part.getRole() == null || part.getJurisdiction() == null ) {
                         label += "|in ";
@@ -187,7 +194,8 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
             }
             return label;
         } else {
-            return node.getName();
+            return "c";
+            // return node.getName();
         }
     }
 
@@ -264,6 +272,16 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
                 list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( vertex,
                         Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             }
+            if ( vertex.isConnector() ) {
+                Connector connector = (Connector) vertex;
+                Iterator<ExternalFlow> externalFlows = connector.externalFlows();
+                if ( externalFlows.hasNext() ) {
+                    list.add( new DOTAttribute( "tooltip", summarizeExternalFlows( externalFlows ) ) );
+                } else {
+                    list.add( new DOTAttribute( "tooltip", "Not connected" ) );
+                }
+            }
+            list.add( new DOTAttribute( "fontcolor", "white" ) );
             return list;
         }
 
@@ -326,11 +344,26 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
 
     }
 
+    private String summarizeExternalFlows( Iterator<ExternalFlow> externalFlows ) {
+        StringBuilder sb = new StringBuilder();
+        while ( externalFlows.hasNext() ) {
+            ExternalFlow flow = externalFlows.next();
+            sb.append( flow.getTitle() );
+            if ( externalFlows.hasNext() ) sb.append( " -- " );
+        }
+        return sanitize( sb.toString() );
+    }
+
     private String getIcon( Node node ) {
         String iconName;
         int numLines = 0;
         if ( node.isConnector() ) {
-            iconName = "connector";
+            Connector connector = (Connector) node;
+            if ( connector.externalFlows().hasNext() ) {
+                iconName = "connector";
+            } else {
+                iconName = "connector_red";
+            }
         }
         // node is a part
         else {

@@ -80,6 +80,7 @@ public abstract class AbstractDiagram<V, E> implements Diagram {
             render( DiagramFactory.IMAGE_MAP, new BufferedOutputStream( baos ) );
             // System.out.println( "*** Image map generated at " + System.currentTimeMillis() );
             imageMap = baos.toString();
+            // System.out.println( imageMap );
         }
         return imageMap;
     }

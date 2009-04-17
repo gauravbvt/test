@@ -329,7 +329,7 @@ public final class ProjectPage extends WebPage implements Updatable {
         refreshNeededContainer.add(new AttributeModifier(
                 "title",
                 true,
-                new Model<String>("Plan was modified by " + lastModifier)));
+                new Model<String>("Refresh - plan was modified by " + lastModifier)));
     }
 
     private void annotateScenarioName() {
