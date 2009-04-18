@@ -209,4 +209,10 @@ public interface Commander {
      * @return a string
      */
     String getLastModifier();
+
+    /**
+     * Set mappings of ids from old space to new space.
+     * @param idMap a map of Long to Long
+     */
+
 }

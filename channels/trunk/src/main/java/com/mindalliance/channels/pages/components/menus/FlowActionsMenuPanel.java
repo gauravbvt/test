@@ -4,6 +4,7 @@ import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.BreakUpFlow;
 import com.mindalliance.channels.command.commands.DuplicateFlow;
+import com.mindalliance.channels.command.commands.DisconnectFlow;
 import com.mindalliance.channels.command.Change;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
@@ -96,6 +97,11 @@ public class FlowActionsMenuPanel extends MenuPanel {
                         }
                     } );
                 }
+                add( new CommandWrapper( new DisconnectFlow( flow ) ) {
+                    public void onExecuted( AjaxRequestTarget target, Change change ) {
+                        update( target, change );
+                    }
+                } );
                 add( new CommandWrapper( new BreakUpFlow( flow ) ) {
                     public void onExecuted( AjaxRequestTarget target, Change change ) {
                         update( target, change );

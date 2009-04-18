@@ -50,6 +50,8 @@ public class DefaultCommander implements Commander {
     // TODO - this could grow unchecked
     private Map<Long, Long> idMap = new HashMap<Long, Long>();
 
+    // private Map<Long, Long> replayIdMap;
+
     public DefaultCommander() {
     }
 
@@ -91,16 +93,34 @@ public class DefaultCommander implements Commander {
     /**
      * {@inheritDoc}
      */
+    public void mapId( Long oldId, Long newId ) {
+        if ( oldId != null && newId != null ) {
+             idMap.put( oldId, newId );
+        } else {
+            LOG.warn( "Attempt to map " + oldId + " and " + newId );
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public Long resolveId( Long id ) throws CommandException {
+        if ( id == null ) return null;
+        Long realId = idMap.get( id );
+        if ( isReplaying() ) {
+            return realId == null ? id : realId;
+        } else {
+            return realId == null ? id : resolveRealId( realId );
+        }
+    }
+
+    private Long resolveRealId( Long id ) {
         Long realId = idMap.get( id );
         if ( realId == null )
             return id;
         else {
-            if ( isReplaying() ) {
-                return realId;
-            } else {
-                return resolveId( realId );
-            }
+            // any number of jumps
+            return resolveRealId( realId );
         }
     }
 
@@ -280,17 +300,6 @@ public class DefaultCommander implements Commander {
         idMap = new HashMap<Long, Long>();
         history.reset();
         lockManager.reset();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void mapId( Long oldId, Long newId ) {
-        if ( idMap != null && oldId != null ) {
-            idMap.put( oldId, newId );
-        } else {
-            LOG.warn( "Attempt to map " + oldId + " and " + newId );
-        }
     }
 
     /**

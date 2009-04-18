@@ -10,7 +10,7 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ScenarioObject;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.RedirectFlow;
+import com.mindalliance.channels.command.commands.SatisfyNeed;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.components.menus.FlowActionsMenuPanel;
@@ -172,7 +172,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         // ChannelListPanel configures itself according
         // to the flow's canGetChannels() and canSetChannels() values
         channelRow = createChannelRow();
-        add( channelRow  );
+        add( channelRow );
         addMaxDelayRow();
         addSignificanceToSource();
         add( new AttachmentPanel( "attachments", new PropertyModel<Flow>( this, "flow" ) ) );
@@ -411,7 +411,6 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
     }
 
 
-
     private void addAllField() {
         CheckBox checkBox = new CheckBox(
                 "all",
@@ -545,6 +544,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
 
     /**
      * Add the channels section.
+     *
      * @return the channels section
      */
     protected abstract WebMarkupContainer createChannelRow();
@@ -629,7 +629,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
 
     private boolean isEmptyOrEquivalent( ScenarioObject connectorFlow ) {
         return getFlow().getName().isEmpty()
-                            || SemMatch.matches( getFlow().getName(), connectorFlow.getName() );
+                || SemMatch.matches( getFlow().getName(), connectorFlow.getName() );
     }
 
     private List<Connector> findAllRelevantConnectors() {
@@ -666,9 +666,10 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
      */
     public void setOther( Node other ) {
         if ( other.isConnector() ) {
-            Change change = doCommand( new RedirectFlow(
-                    getFlow(),
-                    (Connector) other, isOutcome() ) );
+            Connector connector = (Connector) other;
+            Flow need = isOutcome() ? connector.getInnerFlow() : getFlow();
+            Flow capability = isOutcome() ? getFlow() : connector.getInnerFlow();
+            Change change = doCommand( new SatisfyNeed( need, capability, getFlow().getScenario() ) );
             Flow newFlow = (Flow) change.getSubject();
             // requestLockOn( newFlow );
             setFlow( newFlow );

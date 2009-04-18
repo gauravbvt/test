@@ -306,7 +306,8 @@ public final class ProjectPage extends WebPage implements Updatable {
                 refreshAll( target );
             }
         } );
-        refreshNeededContainer.add( new AbstractAjaxTimerBehavior( Duration.seconds( 10 ) ) {
+        // Put timer on form since it is never updated or replaced
+        form.add( new AbstractAjaxTimerBehavior( Duration.seconds( 10 ) ) {
             protected void onTimer( AjaxRequestTarget target ) {
                 updateRefresh();
                 target.addComponent( refreshNeededContainer );

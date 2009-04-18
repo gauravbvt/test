@@ -37,7 +37,7 @@ public class DisconnectFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "disconnect flow";
+        return "remove flow";
     }
 
     /**

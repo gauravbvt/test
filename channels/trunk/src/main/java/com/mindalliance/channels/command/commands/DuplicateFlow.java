@@ -74,7 +74,7 @@ public class DuplicateFlow extends AbstractCommand {
                 throw new CommandException( "Can't undo." );
             } else {
                 Flow flow = scenario.findFlow( commander.resolveId( flowId ) );
-                return new BreakUpFlow( flow );
+                return new DisconnectFlow( flow );
             }
         } catch ( NotFoundException e ) {
             throw new CommandException( "Can't undo", e );
