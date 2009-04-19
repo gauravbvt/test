@@ -89,6 +89,7 @@
 
     <!-- Commander -->
     <bean id="commander" class="com.mindalliance.channels.command.DefaultCommander">
+        <property name="timeout" value="60"/>
         <property name="lockManager" ref="lockManager"/>
         <property name="dqo" ref="dqo"/>
     </bean>

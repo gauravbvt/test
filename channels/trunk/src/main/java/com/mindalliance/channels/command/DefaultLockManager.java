@@ -154,7 +154,7 @@ public class DefaultLockManager implements LockManager {
     /**
      * {@inheritDoc}
      */
-    public void releaseAllLocks( String userName ) {
+    public boolean releaseAllLocks( String userName ) {
         synchronized ( this ) {
             removeDirtyLocks();
             List<Lock> locksToRelease = getAllLocks( userName );
@@ -162,6 +162,7 @@ public class DefaultLockManager implements LockManager {
                 LOG.info(userName + " releases lock on " + lock.getId());
                 locks.remove( lock.getId() );
             }
+            return !locksToRelease.isEmpty();
         }
     }
 

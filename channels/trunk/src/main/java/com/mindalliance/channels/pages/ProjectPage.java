@@ -309,8 +309,13 @@ public final class ProjectPage extends WebPage implements Updatable {
         // Put timer on form since it is never updated or replaced
         form.add( new AbstractAjaxTimerBehavior( Duration.seconds( 10 ) ) {
             protected void onTimer( AjaxRequestTarget target ) {
-                updateRefresh();
-                target.addComponent( refreshNeededContainer );
+                getCommander().processTimeOuts();
+                if ( getCommander().isTimedOut() ) {
+                    refreshAll( target );
+                } else {
+                    updateRefresh();
+                    target.addComponent( refreshNeededContainer );
+                }
             }
         } );
 
@@ -319,18 +324,47 @@ public final class ProjectPage extends WebPage implements Updatable {
     }
 
     private void updateRefresh() {
-        Commander commander = Project.getProject().getCommander();
-        String lastModifier = commander.getLastModifier();
-        long lastModified = commander.getLastModified();
+        String reasonsToRefresh = getReasonsToRefresh();
         makeVisible(
                 refreshNeededContainer,
-                lastModified > lastRefreshed
-                        && !lastModifier.isEmpty()
-                        && !lastModifier.equals( Project.getUserName() ) );
-        refreshNeededContainer.add(new AttributeModifier(
+                !reasonsToRefresh.isEmpty() );
+        refreshNeededContainer.add( new AttributeModifier(
                 "title",
                 true,
-                new Model<String>("Refresh - plan was modified by " + lastModifier)));
+                new Model<String>( "Refresh:" + reasonsToRefresh ) ) );
+    }
+
+    private String getReasonsToRefresh() {
+        String reasons = "";
+        String lastModifier = getCommander().getLastModifier();
+        long lastModified = getCommander().getLastModified();
+        if ( lastModified > lastRefreshed
+                && !lastModifier.isEmpty()
+                && !lastModifier.equals( Project.getUserName() ) ) {
+            reasons = " -- Plan was modified by " + lastModifier;
+        }
+        // Find expansions that were locked and are not unlocked
+        Set<ModelObject> editables = getEditableModelObjects();
+        for ( ModelObject mo : editables ) {
+            if ( getCommander().isUnlocked( mo ) ) {
+                reasons += " -- " + mo.getName() + " can now be edited.";
+            }
+        }
+        return reasons;
+    }
+
+    private Set<ModelObject> getEditableModelObjects() {
+        Set<ModelObject> editables = new HashSet<ModelObject>();
+        for ( Long id : expansions ) {
+            try {
+                ModelObject mo = getDqo().find( ModelObject.class, id );
+                editables.add( mo );
+            } catch ( NotFoundException e ) {
+                // ignore
+            }
+        }
+        editables.add( getPart() );
+        return editables;
     }
 
     private void annotateScenarioName() {
@@ -958,6 +992,7 @@ public final class ProjectPage extends WebPage implements Updatable {
     }
 
     private void refreshAll( AjaxRequestTarget target ) {
+        setPart( getPart() );
         target.addComponent( projectActionsMenu );
         target.addComponent( projectShowMenu );
         target.addComponent( scenarioNameLabel );
@@ -971,6 +1006,7 @@ public final class ProjectPage extends WebPage implements Updatable {
             ( (PlanMapPanel) planMapPanel ).refresh( target );
         updateRefresh();
         target.addComponent( refreshNeededContainer );
+        getCommander().clearTimeOut();
     }
 
     private void update( AjaxRequestTarget target, Change change ) {

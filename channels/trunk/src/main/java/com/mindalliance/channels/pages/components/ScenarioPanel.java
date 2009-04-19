@@ -171,6 +171,12 @@ public class ScenarioPanel extends AbstractCommandablePanel {
             partActionsMenu = new PartActionsMenuPanel(
                     "partActionsMenu",
                     new PropertyModel<Part>( this, "part" ) );
+        } else if ( getCommander().isTimedOut() ) {
+            partActionsMenu = new Label(
+                    "partActionsMenu", new Model<String>( "Timed out" ) );
+            partActionsMenu.add(
+                    new AttributeModifier( "class", true, new Model<String>( "locked" ) ) );
+
         } else {
             String otherUser = getLockOwner( getPart() );
             partActionsMenu = new Label(
@@ -266,6 +272,10 @@ public class ScenarioPanel extends AbstractCommandablePanel {
      * @param target ajax request target
      */
     public void refresh( AjaxRequestTarget target ) {
+        adjustComponents();
+        addPartActionsMenu();
+        target.addComponent( partShowMenu );
+        target.addComponent( partActionsMenu );
         partPanel.refresh( target );
         addFlowDiagram();
         target.addComponent( flowDiagramContainer );

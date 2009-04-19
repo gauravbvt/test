@@ -8,6 +8,7 @@ import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Place;
 import com.mindalliance.channels.Identifiable;
+import com.mindalliance.channels.pages.Project;
 
 import java.util.Collection;
 import java.util.Map;
@@ -49,8 +50,22 @@ public class DefaultCommander implements Commander {
      */
     // TODO - this could grow unchecked
     private Map<Long, Long> idMap = new HashMap<Long, Long>();
-
-    // private Map<Long, Long> replayIdMap;
+    /**
+     * Record of when users were most recently active.
+     */
+    private Map<String, Long> whenLastActive = new HashMap<String, Long>();
+    /**
+     * Users who timed out but have yet to be refreshed.
+     */
+    private Set<String> timedOut = new HashSet<String>();
+    /**
+     * Default timeout period  in seconds = 5 minutes
+     */
+    private int timeout = 300;
+    /**
+     * When timeouts were last checked.
+     */
+    private long whenLastCheckedForTimeouts = System.currentTimeMillis();
 
     public DefaultCommander() {
     }
@@ -65,6 +80,14 @@ public class DefaultCommander implements Commander {
 
     public DataQueryObject getDqo() {
         return dqo;
+    }
+
+    public int getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout( int timeout ) {
+        this.timeout = timeout;
     }
 
     public boolean isReplaying() {
@@ -95,7 +118,7 @@ public class DefaultCommander implements Commander {
      */
     public void mapId( Long oldId, Long newId ) {
         if ( oldId != null && newId != null ) {
-             idMap.put( oldId, newId );
+            idMap.put( oldId, newId );
         } else {
             LOG.warn( "Attempt to map " + oldId + " and " + newId );
         }
@@ -191,6 +214,7 @@ public class DefaultCommander implements Commander {
         } else {
             throw new CommandException( "You are not authorized." );
         }
+        updateUserActive( command.getUserName() );
         return change;
     }
 
@@ -337,6 +361,8 @@ public class DefaultCommander implements Commander {
      * {@inheritDoc}
      */
     public boolean requestLockOn( Identifiable identifiable ) {
+        if ( isTimedOut() ) return false;
+        updateUserActive( Project.getUserName() );
         return lockManager.requestLockOn( identifiable );
     }
 
@@ -344,6 +370,8 @@ public class DefaultCommander implements Commander {
      * {@inheritDoc}
      */
     public boolean requestLockOn( Long id ) {
+        if ( isTimedOut() ) return false;
+        updateUserActive( Project.getUserName() );
         return lockManager.requestLockOn( id );
     }
 
@@ -375,7 +403,57 @@ public class DefaultCommander implements Commander {
         return history.getLastModified();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String getLastModifier() {
         return history.getLastModifier();
+    }
+
+    private void updateUserActive( String userName ) {
+        whenLastActive.put( userName, System.currentTimeMillis() );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public synchronized void processTimeOuts() {
+        long now = System.currentTimeMillis();
+        long timeoutMillis = timeout * 1000;
+        if ( ( now - whenLastCheckedForTimeouts ) > timeoutMillis ) {
+            for ( String userName : whenLastActive.keySet() ) {
+                long time = whenLastActive.get( userName );
+                if ( ( now - time ) > timeoutMillis ) {
+                    if ( lockManager.releaseAllLocks( userName ) ) {
+                        timedOut.add( userName );
+                    }
+                }
+            }
+            for ( String userName : timedOut ) {
+                whenLastActive.remove( userName );
+            }
+            whenLastCheckedForTimeouts = now;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public synchronized boolean isTimedOut() {
+        return timedOut.contains( Project.getUserName() );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public synchronized void clearTimeOut() {
+        timedOut.remove( Project.getUserName() );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isUnlocked( ModelObject mo ) {
+        return lockManager.getLock( mo.getId() ) == null;
     }
 }

@@ -211,8 +211,25 @@ public interface Commander {
     String getLastModifier();
 
     /**
-     * Set mappings of ids from old space to new space.
-     * @param idMap a map of Long to Long
+     * Check for and process user inactivity timeouts.
      */
+    void processTimeOuts();
 
+    /**
+     * Is current user timed out?
+     * @return a boolean
+     */
+    boolean isTimedOut();
+
+    /**
+     * Clear timeout notice for current user.
+     */
+    void clearTimeOut();
+
+    /**
+     * Whether the model object is not locked.
+     * @param mo a model object
+     * @return a boolean
+     */
+    boolean isUnlocked( ModelObject mo );
 }

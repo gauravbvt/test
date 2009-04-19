@@ -65,8 +65,9 @@ public interface LockManager {
      * Release all locks held by named user.
      *
      * @param userName a user name
+     * @return a boolean -- whether any lock was released
      */
-    void releaseAllLocks( String userName );
+    boolean releaseAllLocks( String userName );
 
     /**
      * Get name of user with a lock on model object with given id.
