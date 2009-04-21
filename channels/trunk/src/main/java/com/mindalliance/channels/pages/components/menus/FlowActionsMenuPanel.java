@@ -1,10 +1,12 @@
 package com.mindalliance.channels.pages.components.menus;
 
 import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.Part;
 import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.BreakUpFlow;
 import com.mindalliance.channels.command.commands.DuplicateFlow;
 import com.mindalliance.channels.command.commands.DisconnectFlow;
+import com.mindalliance.channels.command.commands.CopyFlow;
 import com.mindalliance.channels.command.Change;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
@@ -30,7 +32,11 @@ public class FlowActionsMenuPanel extends MenuPanel {
     private boolean isOutcome;
     private boolean isCollapsed;
 
-    public FlowActionsMenuPanel( String s, IModel<? extends Flow> model, boolean isOutcome, boolean isCollapsed ) {
+    public FlowActionsMenuPanel(
+            String s,
+            IModel<? extends Flow> model,
+            boolean isOutcome,
+            boolean isCollapsed ) {
         super( s, model, null );
         this.isOutcome = isOutcome;
         this.isCollapsed = isCollapsed;
@@ -80,35 +86,46 @@ public class FlowActionsMenuPanel extends MenuPanel {
     }
 
     private List<CommandWrapper> getCommandWrappers() {
-        return new ArrayList<CommandWrapper>() {
-            {
-                final Flow flow = getFlow();
-                if ( !isCollapsed )
-                    add( new CommandWrapper( new AddUserIssue( flow ) ) {
-                        public void onExecuted( AjaxRequestTarget target, Change change ) {
-                            update( target, change );
-                        }
-                    } );
-                if ( ( isOutcome && getFlow().getTarget().isPart() )
-                        || ( !isOutcome && getFlow().getSource().isPart() ) ) {
-                    add( new CommandWrapper( new DuplicateFlow( flow, isOutcome ) ) {
-                        public void onExecuted( AjaxRequestTarget target, Change change ) {
-                            update( target, change );
-                        }
-                    } );
-                }
-                add( new CommandWrapper( new DisconnectFlow( flow ) ) {
-                    public void onExecuted( AjaxRequestTarget target, Change change ) {
-                        update( target, change );
-                    }
-                } );
-                add( new CommandWrapper( new BreakUpFlow( flow ) ) {
-                    public void onExecuted( AjaxRequestTarget target, Change change ) {
-                        update( target, change );
-                    }
-                } );
+        List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
+        final Flow flow = getFlow();
+        commandWrappers.add( new CommandWrapper( new CopyFlow( getFlow(), getPart() ) ) {
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                update( target, change );
             }
-        };
+        } );
+        if ( !isCollapsed )
+            commandWrappers.add( new CommandWrapper( new AddUserIssue( flow ) ) {
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
+        if ( ( isOutcome && getFlow().getTarget().isPart() )
+                || ( !isOutcome && getFlow().getSource().isPart() ) ) {
+            commandWrappers.add( new CommandWrapper( new DuplicateFlow( flow, isOutcome ) ) {
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
+        }
+        commandWrappers.add( new CommandWrapper( new DisconnectFlow( flow ) ) {
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                update( target, change );
+            }
+        } );
+        commandWrappers.add( new CommandWrapper( new BreakUpFlow( flow ) ) {
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                update( target, change );
+            }
+        } );
+        return commandWrappers;
+    }
+
+    private Part getPart() {
+        if (isOutcome) {
+            return (Part)getFlow().getSource();
+        } else {
+            return (Part)getFlow().getTarget();
+        }
     }
 
     private Flow getFlow() {

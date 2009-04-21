@@ -6,6 +6,8 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.ExternalFlow;
 import com.mindalliance.channels.Identifiable;
+import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.DataQueryObject;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -40,6 +42,7 @@ public final class CommandUtils {
         Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put( "description", flow.getDescription() );
         attributes.put( "askedFor", flow.isAskedFor() );
+        attributes.put( "all", flow.isAll() );
         attributes.put( "maxDelay", new Delay( flow.getMaxDelay() ) );
         attributes.put( "channels", flow.getChannelsCopy() );
         attributes.put( "significanceToTarget", flow.getSignificanceToTarget() );
@@ -175,8 +178,16 @@ public final class CommandUtils {
         }
     }
 
+    /**
+     * Get a bean's property value.
+     *
+     * @param bean         an object
+     * @param property     a string
+     * @param defaultValue an object
+     * @return an object
+     */
     public static Object getProperty( Object bean, String property, Object defaultValue ) {
-        Object value = null;
+        Object value;
         try {
             value = PropertyUtils.getProperty( bean, property );
         } catch ( IllegalAccessException e ) {
@@ -187,5 +198,86 @@ public final class CommandUtils {
             throw new RuntimeException( e );
         }
         return value != null ? value : defaultValue;
+    }
+
+    /**
+     * Get a copy of a part, including needs and capabilities.
+     *
+     * @param part a part
+     * @return a map
+     */
+    public static Map<String, Object> getPartCopy( Part part ) {
+        Map<String, Object> copy = new HashMap<String, Object>();
+        copy.put( "scenario", part.getScenario().getId() );
+        copy.put( "partState", getPartState( part ) );
+        Iterator<Flow> needs = part.requirements();
+        List<Map<String, Object>> needStates = new ArrayList<Map<String, Object>>();
+        while ( needs.hasNext() ) {
+            needStates.add( getNeedState( needs.next(), part ) );
+        }
+        copy.put( "needs", needStates );
+        Iterator<Flow> capabilities = part.outcomes();
+        List<Map<String, Object>> capabilityStates = new ArrayList<Map<String, Object>>();
+        while ( capabilities.hasNext() ) {
+            capabilityStates.add( getCapabilityState( capabilities.next(), part ) );
+        }
+        copy.put( "capabilities", capabilityStates );
+        return copy;
+    }
+
+    /**
+     * Get state of a part's capability.
+     * @param flow a flow
+     * @param part a part
+     * @return a map
+     */
+    @SuppressWarnings( "unchecked" )
+    public static Map<String, Object> getCapabilityState( Flow flow, Part part ) {
+        Map<String, Object> capabilityState = getFlowState( flow, part );
+        Map<String, Object> attributes = (Map<String, Object>) capabilityState.get( "attributes" );
+        attributes.remove( "significanceToTarget" );
+        attributes.remove( "all" );
+        if ( !flow.isAskedFor() ) attributes.remove( "channels" );
+        return capabilityState;
+    }
+
+    /**
+     * Get state of a part's need.
+     * @param flow a flow
+     * @param part a part
+     * @return a map
+     */
+    @SuppressWarnings( "unchecked" )
+    public static Map<String, Object> getNeedState( Flow flow, Part part ) {
+        Map<String, Object> needState = getFlowState( flow, part );
+        Map<String, Object> attributes = (Map<String, Object>) needState.get( "attributes" );
+        attributes.remove( "significanceToSource" );
+        attributes.remove( "all" );
+        if ( flow.isAskedFor() ) attributes.remove( "channels" );
+        return needState;
+    }
+
+    /**
+     * Make a duplicate of the flow
+     *
+     * @param flow      a flow to duplicate
+     * @param isOutcome whether to replicate as outcome or requirement
+     * @return a created flow
+     */
+    public static Flow duplicate( Flow flow, boolean isOutcome ) {
+        Flow duplicate;
+        if ( isOutcome ) {
+            Node source = flow.getSource();
+            Scenario scenario = flow.getSource().getScenario();
+            DataQueryObject dqo = scenario.getDqo();
+            duplicate = dqo.connect( source, dqo.createConnector( scenario ), flow.getName() );
+        } else {
+            Node target = flow.getTarget();
+            Scenario scenario = target.getScenario();
+            DataQueryObject dqo = scenario.getDqo();
+            duplicate = dqo.connect( dqo.createConnector( scenario ), target, flow.getName() );
+        }
+        duplicate.initFrom( flow );
+        return duplicate;
     }
 }

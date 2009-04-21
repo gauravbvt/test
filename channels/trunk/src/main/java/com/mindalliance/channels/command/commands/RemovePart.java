@@ -45,10 +45,8 @@ public class RemovePart extends AbstractCommand {
         super();
         addConflicting( part );
         needLocksOn( CommandUtils.getLockingSetFor( part ) );
-        Map<String, Object> args = new HashMap<String, Object>();
-        args.put( "part", part.getId() );
-        args.put( "scenario", part.getScenario().getId() );
-        setArguments( args );
+        set( "part", part.getId() );
+        set( "scenario", part.getScenario().getId() );
     }
 
     /**

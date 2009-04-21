@@ -19,8 +19,9 @@ import com.mindalliance.channels.NotFoundException;
  */
 public class RemoveCapability extends AbstractCommand {
 
-    public RemoveCapability() {}
-    
+    public RemoveCapability() {
+    }
+
     public RemoveCapability( Flow flow ) {
         super();
         setArguments( CommandUtils.getFlowState( flow ) );

@@ -10,6 +10,8 @@ import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.NotFoundException;
 
+import java.util.Map;
+
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.

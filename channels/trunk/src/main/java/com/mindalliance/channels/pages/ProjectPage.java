@@ -309,21 +309,26 @@ public final class ProjectPage extends WebPage implements Updatable {
         // Put timer on form since it is never updated or replaced
         form.add( new AbstractAjaxTimerBehavior( Duration.seconds( 10 ) ) {
             protected void onTimer( AjaxRequestTarget target ) {
-                getCommander().processTimeOuts();
-                if ( getCommander().isTimedOut() ) {
-                    refreshAll( target );
-                } else {
-                    updateRefresh();
-                    target.addComponent( refreshNeededContainer );
-                }
+                doTimedUpdate( target );
             }
         } );
 
         form.add( refreshNeededContainer );
-        updateRefresh();
+        updateRefreshNotice();
     }
 
-    private void updateRefresh() {
+    private void doTimedUpdate( AjaxRequestTarget target ) {
+        getCommander().processTimeOuts();
+        if ( getCommander().isTimedOut() ) {
+            refreshAll( target );
+        } else {
+            updateRefreshNotice();
+            target.addComponent( refreshNeededContainer );
+        }
+    }
+
+
+    private void updateRefreshNotice() {
         String reasonsToRefresh = getReasonsToRefresh();
         makeVisible(
                 refreshNeededContainer,
@@ -346,7 +351,7 @@ public final class ProjectPage extends WebPage implements Updatable {
         // Find expansions that were locked and are not unlocked
         Set<ModelObject> editables = getEditableModelObjects();
         for ( ModelObject mo : editables ) {
-            if ( getCommander().isUnlocked( mo ) ) {
+            if ( !( mo instanceof Scenario ) && getCommander().isUnlocked( mo ) ) {
                 reasons += " -- " + mo.getName() + " can now be edited.";
             }
         }
@@ -744,14 +749,16 @@ public final class ProjectPage extends WebPage implements Updatable {
 
     private void collapseScenarioObjects() {
         List<Identifiable> toCollapse = new ArrayList<Identifiable>();
-        List<Identifiable> toReexpand = new ArrayList<Identifiable>();
+        // List<Identifiable> toReexpand = new ArrayList<Identifiable>();
         for ( long id : expansions ) {
             try {
                 ModelObject expanded = getDqo().find( ModelObject.class, id );
+/*
                 if ( expanded instanceof Scenario ) {
                     toCollapse.add( expanded );
                     toReexpand.add( getScenario() );
                 }
+*/
                 if ( expanded instanceof ScenarioObject ) {
                     if ( ( (ScenarioObject) expanded ).getScenario() == scenario ) {
                         toCollapse.add( expanded );
@@ -764,9 +771,11 @@ public final class ProjectPage extends WebPage implements Updatable {
         for ( Identifiable identifiable : toCollapse ) {
             collapse( identifiable );
         }
+/*
         for ( Identifiable identifiable : toReexpand ) {
             expand( identifiable );
         }
+*/
     }
 
     private void collapsePartObjects() {
@@ -854,6 +863,7 @@ public final class ProjectPage extends WebPage implements Updatable {
      * {@inheritDoc}
      */
     public void changed( Change change ) {
+        if ( change.isNone() ) return;
         Identifiable identifiable = change.getSubject();
         if ( change.isCollapsed() ) {
             collapse( identifiable );
@@ -868,14 +878,14 @@ public final class ProjectPage extends WebPage implements Updatable {
             if ( change.isExists() ) {
                 getCommander().resetUserHistory( Project.getUserName() );
                 if ( change.isAdded() ) {
-                    setScenario( (Scenario) change.getSubject() );
+                    setScenario( (Scenario) identifiable );
                     setPart( null );
                 }
             } else if ( change.isRecomposed() ) {
                 collapseScenarioObjects();
             } else if ( change.isSelected() ) {
                 collapseScenarioObjects();
-                setScenario( (Scenario) change.getSubject() );
+                setScenario( (Scenario) identifiable );
                 setPart( null );
             }
         }
@@ -915,6 +925,9 @@ public final class ProjectPage extends WebPage implements Updatable {
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change ) {
+        target.addComponent( projectActionsMenu );
+        target.addComponent( projectShowMenu );
+        if ( change.isNone() ) return;
         Identifiable identifiable = change.getSubject();
         if ( change.isUndoing() || change.isUnknown() ) {
             refreshAll( target );
@@ -930,9 +943,10 @@ public final class ProjectPage extends WebPage implements Updatable {
                     scenarioPanel.refreshScenarioEditPanel( target );
                 }
                 if ( change.isUpdated() ) {
+                    annotateScenarioName();
+                    target.addComponent( scenarioNameLabel );
                     target.addComponent( planMapPanel );
                     if ( change.getProperty().equals( "name" ) ) {
-                        target.addComponent( scenarioNameLabel );
                         target.addComponent( scenarioDropDownChoice );
                     } else if ( change.getProperty().equals( "description" ) ) {
                         target.addComponent( scenarioDescriptionLabel );
@@ -942,6 +956,8 @@ public final class ProjectPage extends WebPage implements Updatable {
                 } else if ( change.isRemoved() ) {
                     refreshAll( target );
                 } else if ( change.isRecomposed() ) {
+                    annotateScenarioName();
+                    target.addComponent( scenarioNameLabel );
                     scenarioPanel.refresh( target );
                     target.addComponent( scenarioPanel );
                 }
@@ -986,8 +1002,6 @@ public final class ProjectPage extends WebPage implements Updatable {
                 }
 
             }
-            target.addComponent( projectActionsMenu );
-            target.addComponent( projectShowMenu );
         }
     }
 
@@ -998,13 +1012,15 @@ public final class ProjectPage extends WebPage implements Updatable {
         target.addComponent( scenarioNameLabel );
         target.addComponent( scenarioDescriptionLabel );
         target.addComponent( scenarioDropDownChoice );
+        annotateScenarioName();
+        target.addComponent( scenarioNameLabel );
         scenarioPanel.refreshScenarioEditPanel( target );
         scenarioPanel.refresh( target );
         target.addComponent( scenarioPanel );
         target.addComponent( entityPanel );
         if ( planMapPanel instanceof PlanMapPanel )
             ( (PlanMapPanel) planMapPanel ).refresh( target );
-        updateRefresh();
+        updateRefreshNotice();
         target.addComponent( refreshNeededContainer );
         getCommander().clearTimeOut();
     }

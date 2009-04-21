@@ -45,12 +45,14 @@ public class AddCapability extends AbstractCommand {
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
         DataQueryObject dqo = commander.getDqo();
-        Flow flow;
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Part part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
             if ( part == null ) throw new NotFoundException();
-            flow = dqo.connect( part, dqo.createConnector( scenario ), "" );
+            Flow flow = dqo.connect(
+                    part,
+                    dqo.createConnector( scenario ),
+                    (String) get( "name" ) );
             Map<String, Object> flowAttributes = (Map<String, Object>) get( "attributes" );
             if ( flowAttributes != null ) {
                 CommandUtils.initialize( flow, flowAttributes );

@@ -128,9 +128,9 @@ public class ScenarioPanel extends AbstractCommandablePanel {
                                 getPart().getTitle(), PART_TITLE_MAX_LENGTH );
                     }
                 } );
+        partTitle.setOutputMarkupId( true );
         partTitle.add( new AttributeModifier( "title", true,
                 new Model<String>( getPart().getTitle() ) ) );
-        partTitle.setOutputMarkupId( true );
         add( partTitle );               // NON-NLS
         addPartMenuBar();
         partPanel = new PartPanel( "specialty", new PropertyModel<Part>( this, "part" ) );
@@ -241,23 +241,27 @@ public class ScenarioPanel extends AbstractCommandablePanel {
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change ) {
-        Identifiable identifiable = change.getSubject();
-        if ( identifiable == getScenario() && change.isDisplay() ) {
-            scenarioEditPanel.setVisibility( target, getExpansions().contains( getScenario().getId() ) );
-            target.addComponent( scenarioEditPanel );
-        }
-        if ( identifiable == getPart() ) {
-            if ( change.isUpdated() ) {
-                target.addComponent( partTitle );
-                reqsFlowPanel.refresh( target );
-                outcomesFlowPanel.refresh( target );
+        if ( !change.isNone() ) {
+            Identifiable identifiable = change.getSubject();
+            if ( identifiable == getScenario() && change.isDisplay() ) {
+                scenarioEditPanel.setVisibility( target, getExpansions().contains( getScenario().getId() ) );
+                target.addComponent( scenarioEditPanel );
             }
-        }
-        if ( identifiable instanceof Issue || identifiable instanceof ScenarioObject ) {
-            if ( !change.isDisplay() ) {
-                target.addComponent( flowDiagramContainer );
-                makeVisible( target, partIssuesPanel, Project.analyst().hasIssues( getPart(), false ) );
-                target.addComponent( partIssuesPanel );
+            if ( identifiable == getPart() ) {
+                if ( change.isUpdated() ) {
+                    partTitle.add( new AttributeModifier( "title", true,
+                            new Model<String>( getPart().getTitle() ) ) );
+                    target.addComponent( partTitle );
+                    reqsFlowPanel.refresh( target );
+                    outcomesFlowPanel.refresh( target );
+                }
+            }
+            if ( identifiable instanceof Issue || identifiable instanceof ScenarioObject ) {
+                if ( !change.isDisplay() ) {
+                    target.addComponent( flowDiagramContainer );
+                    makeVisible( target, partIssuesPanel, Project.analyst().hasIssues( getPart(), false ) );
+                    target.addComponent( partIssuesPanel );
+                }
             }
         }
         addPartActionsMenu();

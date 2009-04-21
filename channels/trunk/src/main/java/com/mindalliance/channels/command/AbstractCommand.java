@@ -344,4 +344,12 @@ public abstract class AbstractCommand implements Command {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canDo( Commander commander ) {
+        // Default
+        return true;
+    }
+
 }

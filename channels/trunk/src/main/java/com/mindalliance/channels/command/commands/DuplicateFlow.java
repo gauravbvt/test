@@ -10,6 +10,7 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.CommandUtils;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -47,7 +48,7 @@ public class DuplicateFlow extends AbstractCommand {
             Flow flow = scenario.findFlow( commander.resolveId( (Long) get( "flow" ) ) );
             if ( flow == null ) throw new NotFoundException();
             boolean isOutcome = (Boolean) get( "outcome" );
-            duplicate = duplicate( flow, isOutcome );
+            duplicate = CommandUtils.duplicate( flow, isOutcome );
             commander.mapId( (Long) get( "duplicate" ), duplicate.getId() );
             set( "duplicate", duplicate.getId() );
             return new Change( Change.Type.Added, duplicate );
@@ -81,29 +82,7 @@ public class DuplicateFlow extends AbstractCommand {
         }
     }
 
-    /**
-     * Make a duplicate of the flow
-     *
-     * @param flow      a flow to duplicate
-     * @param isOutcome whether to replicate as outcome or requirement
-     * @return a created flow
-     */
-    public Flow duplicate( Flow flow, boolean isOutcome ) {
-        Flow duplicate;
-        if ( isOutcome ) {
-            Node source = flow.getSource();
-            Scenario scenario = flow.getSource().getScenario();
-            DataQueryObject dqo = scenario.getDqo();
-            duplicate = dqo.connect( source, dqo.createConnector( scenario ), getName() );
-        } else {
-            Node target = flow.getTarget();
-            Scenario scenario = target.getScenario();
-            DataQueryObject dqo = scenario.getDqo();
-            duplicate = dqo.connect( dqo.createConnector( scenario ), target, getName() );
-        }
-        duplicate.initFrom( flow );
-        return duplicate;
-    }
+
 
 
 }

@@ -45,14 +45,14 @@ public class AddNeed extends AbstractCommand {
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
         DataQueryObject dqo = commander.getDqo();
-        Flow flow;
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Part part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
             if ( part == null ) throw new NotFoundException();
-            flow = dqo.connect(
+            Flow flow = dqo.connect(
                     dqo.createConnector( scenario ),
-                    part, (String) get( "name" ) );
+                    part,
+                    (String) get( "name" ) );
             Map<String, Object> flowAttributes = (Map<String, Object>) get( "attributes" );
             if ( flowAttributes != null ) {
                 CommandUtils.initialize( flow, flowAttributes );

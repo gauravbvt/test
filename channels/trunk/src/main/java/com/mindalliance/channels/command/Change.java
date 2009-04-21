@@ -17,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
  * Time: 8:09:56 AM
  */
 public class Change implements Serializable {
+
     /**
      * A kind of change.
      */
@@ -237,5 +238,15 @@ public class Change implements Serializable {
     public boolean isDisplay() {
         return isExpanded() || isCollapsed();
     }
+
+    /**
+     * Whether type is None.
+     *
+     * @return a boolean
+     */
+    public boolean isNone() {
+        return type == Type.None;
+    }
+
 
 }

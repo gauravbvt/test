@@ -55,7 +55,7 @@ public class DefaultLockManager implements LockManager {
      */
     public Lock grabLockOn( long id ) throws LockingException {
         synchronized ( this ) {
-            // Throws NotFoundException is id is stale
+            // Warn if id is stale but don't fail since the model object is gone so there can be no conflict.
             try {
                 ModelObject mo = dqo.find( ModelObject.class, id );
                 Lock lock = getLock( id );
@@ -73,7 +73,8 @@ public class DefaultLockManager implements LockManager {
                 }
                 return lock;
             } catch ( NotFoundException e ) {
-                throw new LockingException( "You need to refresh.", e );
+                LOG.warn( "Could not grab lock: " + id + " not found");
+                return null;
             }
         }
     }
@@ -112,7 +113,8 @@ public class DefaultLockManager implements LockManager {
             for ( long id : ids ) {
                 if ( !isUserLocking( id ) ) {
                     try {
-                        grabbedLocks.add( grabLockOn( id ) );
+                        Lock lock = grabLockOn( id );
+                        if (lock != null) grabbedLocks.add( lock );
                     }
                     catch ( LockingException e ) {
                         sb.append( e.getMessage() );
@@ -264,8 +266,7 @@ public class DefaultLockManager implements LockManager {
     public boolean requestLockOn( Long id ) {
         boolean locked = false;
         try {
-            grabLockOn( id );
-            locked = true;
+            locked = grabLockOn( id ) != null;
         } catch ( LockingException e ) {
             LOG.info( "Failed to grab lock on " + id );
         }

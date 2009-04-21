@@ -232,4 +232,29 @@ public interface Commander {
      * @return a boolean
      */
     boolean isUnlocked( ModelObject mo );
+
+    /**
+     * Remember state of part or flow.
+     * @param state a map
+     */
+    void setCopy( Map<String, Object> state );
+
+    /**
+     * Get copied state of part or flow.
+     * Null if none copied.
+     * @return a map
+     */
+    Map<String, Object> getCopy();
+
+    /**
+     * Is a part copied?
+     * @return a boolean
+     */
+    boolean isPartCopied();
+
+    /**
+     * Is a flow copied?
+     * @return a boolean
+     */
+    boolean isFlowCopied();
 }

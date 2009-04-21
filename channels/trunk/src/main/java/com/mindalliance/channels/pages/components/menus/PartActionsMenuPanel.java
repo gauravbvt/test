@@ -8,6 +8,8 @@ import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.RemovePart;
 import com.mindalliance.channels.command.commands.DuplicatePart;
+import com.mindalliance.channels.command.commands.CopyPart;
+import com.mindalliance.channels.command.commands.PasteFlow;
 import com.mindalliance.channels.command.Change;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
@@ -62,36 +64,44 @@ public class PartActionsMenuPanel extends MenuPanel {
     }
 
     private List<CommandWrapper> getCommandWrappers() {
-        return new ArrayList<CommandWrapper>() {
-            {
-                add( new CommandWrapper( new AddUserIssue( getPart() ) ) {
-                    public void onExecuted( AjaxRequestTarget target, Change change ) {
-                        update( target, change );
-                    }
-                } );
-                add( new CommandWrapper( new DuplicatePart( getPart() ) ) {
-                    public void onExecuted( AjaxRequestTarget target, Change change ) {
-                        update( target, change );
-                    }
-                } );
-                add( new CommandWrapper( new RemovePart( getPart() ) ) {
-                    public void onExecuted( AjaxRequestTarget target, Change change ) {
-                        Part part = getPart();
-                        update( target, change );
-                        if ( part.getActor() != null )
-                            getCommander().cleanup( Actor.class, part.getActor().getName() );
-                        if ( part.getRole() != null )
-                            getCommander().cleanup( Role.class, part.getRole().getName() );
-                        if ( part.getOrganization() != null )
-                            getCommander().cleanup( Organization.class, part.getOrganization().getName() );
-                        if ( part.getJurisdiction() != null )
-                            getCommander().cleanup( Place.class, part.getJurisdiction().getName() );
-                        if ( part.getLocation() != null )
-                            getCommander().cleanup( Place.class, part.getLocation().getName() );
-                    }
-                } );
+        List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
+        commandWrappers.add( new CommandWrapper( new CopyPart( getPart() ) ) {
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                update( target, change );
             }
-        };
+        } );
+        commandWrappers.add( new CommandWrapper( new PasteFlow( getPart() ) ) {
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                update( target, change );
+            }
+        } );
+        commandWrappers.add( new CommandWrapper( new AddUserIssue( getPart() ) ) {
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                update( target, change );
+            }
+        } );
+        commandWrappers.add( new CommandWrapper( new DuplicatePart( getPart() ) ) {
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                update( target, change );
+            }
+        } );
+        commandWrappers.add( new CommandWrapper( new RemovePart( getPart() ) ) {
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                Part part = getPart();
+                update( target, change );
+                if ( part.getActor() != null )
+                    getCommander().cleanup( Actor.class, part.getActor().getName() );
+                if ( part.getRole() != null )
+                    getCommander().cleanup( Role.class, part.getRole().getName() );
+                if ( part.getOrganization() != null )
+                    getCommander().cleanup( Organization.class, part.getOrganization().getName() );
+                if ( part.getJurisdiction() != null )
+                    getCommander().cleanup( Place.class, part.getJurisdiction().getName() );
+                if ( part.getLocation() != null )
+                    getCommander().cleanup( Place.class, part.getLocation().getName() );
+            }
+        } );
+        return commandWrappers;
     }
 
     private Part getPart() {

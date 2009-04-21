@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,25 +50,56 @@ public class DefaultCommander implements Commander {
      * An id translation map.
      */
     // TODO - this could grow unchecked
-    private Map<Long, Long> idMap = new HashMap<Long, Long>();
+    private Map<Long, Long> idMap = Collections.synchronizedMap(new HashMap<Long, Long>());
     /**
      * Record of when users were most recently active.
      */
-    private Map<String, Long> whenLastActive = new HashMap<String, Long>();
+    private Map<String, Long> whenLastActive = Collections.synchronizedMap(new HashMap<String, Long>());
     /**
      * Users who timed out but have yet to be refreshed.
      */
-    private Set<String> timedOut = new HashSet<String>();
+    private Set<String> timedOut = Collections.synchronizedSet(new HashSet<String>());
     /**
      * Default timeout period  in seconds = 5 minutes
      */
     private int timeout = 300;
+
+    /**
+     * A user's copied state of eiher a model object.
+     */
+    private Map<String, Map<String, Object>> copy = Collections.synchronizedMap(
+            new HashMap<String, Map<String, Object>>());
+
     /**
      * When timeouts were last checked.
      */
     private long whenLastCheckedForTimeouts = System.currentTimeMillis();
 
     public DefaultCommander() {
+    }
+
+    public Map<String, Object> getCopy() {
+        return copy.get( Project.getUserName() );
+    }
+
+    public void setCopy( Map<String, Object> state ) {
+        copy.put( Project.getUserName(), state );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isPartCopied() {
+        Map<String, Object> userCopy = getCopy();
+        return userCopy != null && userCopy.get( "partState" ) != null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isFlowCopied() {
+        Map<String, Object> userCopy = getCopy();
+        return userCopy != null && userCopy.get( "isOutcome" ) != null;
     }
 
     public void setLockManager( LockManager lockManager ) {
@@ -194,7 +226,7 @@ public class DefaultCommander implements Commander {
      * {@inheritDoc}
      */
     public boolean canDo( Command command ) {
-        return lockManager.canGrabLocksOn( command.getLockingSet() );
+        return command.canDo( this ) && lockManager.canGrabLocksOn( command.getLockingSet() );
     }
 
     /**
@@ -321,7 +353,7 @@ public class DefaultCommander implements Commander {
      */
     public void reset() {
         replaying = false;
-        idMap = new HashMap<Long, Long>();
+        idMap.clear();
         history.reset();
         lockManager.reset();
     }

@@ -160,4 +160,11 @@ public interface Command extends Serializable {
      * @return a boolean
      */
     boolean isScenarioSpecific();
+
+    /**
+     * Can execute irrespective of locking.
+     * @param commander a commander
+     * @return a boolean
+     */
+    boolean canDo( Commander commander );
 }
