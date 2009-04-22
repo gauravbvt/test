@@ -3,6 +3,8 @@ package com.mindalliance.channels.export.xml;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.export.ScenarioSpecification;
+import com.mindalliance.channels.export.PartSpecification;
 import com.mindalliance.channels.util.SemMatch;
 import com.mindalliance.channels.pages.Project;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -26,28 +28,34 @@ import org.apache.commons.collections.Predicate;
 public class ConverterUtils {
 
     public static void writePartSpecification( Part part, HierarchicalStreamWriter writer ) {
-         if ( part.getRole() != null ) {
-             writer.startNode( "part-role" );
-             writer.addAttribute( "name", part.getRole().getName() );
-             writer.endNode();
-         }
-         if ( part.getTask() != null ) {
-             writer.startNode( "part-task" );
-             writer.addAttribute( "name", part.getTask() );
-             writer.setValue( part.getDescription() );
-             writer.endNode();
-         }
-         if ( part.getOrganization() != null ) {
-             writer.startNode( "part-organization" );
-             writer.addAttribute( "name", part.getOrganization().getName() );
-             writer.endNode();
-         }
-     }
+        writer.startNode( "part-id" );
+        writer.setValue( "" + part.getId() );
+        writer.endNode();
+        if ( part.getRole() != null ) {
+            writer.startNode( "part-role" );
+            writer.addAttribute( "name", part.getRole().getName() );
+            writer.endNode();
+        }
+        if ( part.getTask() != null ) {
+            writer.startNode( "part-task" );
+            writer.addAttribute( "name", part.getTask() );
+            writer.setValue( part.getDescription() );
+            writer.endNode();
+        }
+        if ( part.getOrganization() != null ) {
+            writer.startNode( "part-organization" );
+            writer.addAttribute( "name", part.getOrganization().getName() );
+            writer.endNode();
+        }
+    }
 
+    public static List<Scenario> findMatchingScenarios( ScenarioSpecification scSpec ) {
+         return findMatchingScenarios(scSpec.getName(), scSpec.getDescription());
+    }
 
     // TODO do semantic match on scenario name and description
     public static List<Scenario> findMatchingScenarios( String scenarioName,
-                                                  String scenarioDescription ) {
+                                                        String scenarioDescription ) {
         List<Scenario> scenarios = new ArrayList<Scenario>();
         try {
             scenarios.add( Project.dqo().findScenario( scenarioName ) );
@@ -62,12 +70,22 @@ public class ConverterUtils {
         return scenarios;
     }
 
+    public static List<Part> findMatchingParts( Scenario scenario, PartSpecification partSpec) {
+        return findMatchingParts(
+                scenario,
+                partSpec.getRoleName(),
+                partSpec.getOrganizationName(),
+                partSpec.getTask(),
+                partSpec.getTaskDescription()
+        );
+}
+
     @SuppressWarnings( "unchecked" )
     public static List<Part> findMatchingParts( Scenario scenario,
-                                                  final String roleName,
-                                                  final String organizationName,
-                                                  final String task,
-                                                  final String taskDescription ) {
+                                                final String roleName,
+                                                final String organizationName,
+                                                final String task,
+                                                final String taskDescription ) {
         List<Part> externalParts = new ArrayList<Part>();
         Iterator<Part> iterator =
                 (Iterator<Part>) new FilterIterator( scenario.parts(), new Predicate() {
@@ -81,11 +99,21 @@ public class ConverterUtils {
         return externalParts;
     }
 
+    public static boolean partMatches( Part part, PartSpecification partSpec ) {
+        return partMatches(
+                part,
+                partSpec.getRoleName(),
+                partSpec.getOrganizationName(),
+                partSpec.getTask(),
+                partSpec.getTaskDescription()
+        );
+    }
+
     public static boolean partMatches( Part part,
-                                 String roleName,
-                                 String organizationName,
-                                 String task,
-                                 String taskDescription ) {
+                                       String roleName,
+                                       String organizationName,
+                                       String task,
+                                       String taskDescription ) {
         if ( roleName != null ) {
             if ( part.getRole() == null
                     || !SemMatch.same( part.getRole().getName(), roleName ) ) return false;
@@ -97,7 +125,10 @@ public class ConverterUtils {
         }
         if ( task != null ) {
             if ( part.getTask() == null || !SemMatch.same( part.getTask(), task ) )
-                // TODO match task description
+                return false;
+        }
+        if ( taskDescription != null ) {
+            if ( part.getDescription() == null || !SemMatch.same( part.getDescription(), taskDescription ) )
                 return false;
         }
         return true;

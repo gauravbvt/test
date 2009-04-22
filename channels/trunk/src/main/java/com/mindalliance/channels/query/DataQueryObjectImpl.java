@@ -25,6 +25,7 @@ import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.dao.EvacuationScenario;
 import com.mindalliance.channels.dao.FireScenario;
 import com.mindalliance.channels.export.Importer;
+import com.mindalliance.channels.export.ConnectionSpecification;
 import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.util.Play;
 import com.mindalliance.channels.util.SemMatch;
@@ -45,6 +46,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
 import java.util.HashMap;
 
 /**
@@ -259,7 +261,7 @@ public class DataQueryObjectImpl implements DataQueryObject {
             }
             if ( importingScenarios ) {
                 LOG.info( "Importing default models" );
-                importScenarios();
+                loadScenarios();
             }
             // Make sure there is at least one scenario
             if ( !getDao().list( Scenario.class ).iterator().hasNext() ) {
@@ -269,7 +271,8 @@ public class DataQueryObjectImpl implements DataQueryObject {
         getDao().afterInitialize();
     }
 
-    private void importScenarios() {
+    @SuppressWarnings( "unchecked" )
+    private void loadScenarios() {
         if ( importDirectory != null ) {
             File directory = new File( importDirectory );
             if ( directory.exists() && directory.isDirectory() ) {
@@ -280,10 +283,18 @@ public class DataQueryObjectImpl implements DataQueryObject {
                     }
                 } );
                 Importer importer = Project.getProject().getImporter();
+                Map<String, Long> idMap = new HashMap<String, Long>();
+                Map<Connector, ConnectionSpecification> proxyConnectors =
+                        new HashMap<Connector, ConnectionSpecification>();
                 for ( File file : files ) {
                     try {
-                        Scenario scenario = importer.importScenario(
+                        Map<String, Object> results = importer.loadScenario(
                                 new FileInputStream( file ) );
+                        // Cumulate results
+                        idMap.putAll( (Map<String, Long>) results.get( "idMap" ) );
+                        proxyConnectors.putAll(
+                                (Map<Connector, ConnectionSpecification>) results.get( "proxyConnectors" ) );
+                        Scenario scenario = (Scenario) results.get( "scenario" );
                         LOG.info(
                                 "Imported scenario "
                                         + scenario.getName()
@@ -293,9 +304,8 @@ public class DataQueryObjectImpl implements DataQueryObject {
                         LOG.warn( "Failed to import " + file.getPath(), e );
                     }
                 }
-                /*
-                Scenario scenario = project.getImporter().importScenario( in );
-                 */
+                // Reconnect external links
+                importer.reconnectExternalFlows( idMap, proxyConnectors );
             } else {
                 LOG.warn( "Directory " + importDirectory + " does not exist." );
             }
@@ -946,7 +956,7 @@ public class DataQueryObjectImpl implements DataQueryObject {
         List<Job> jobs = new ArrayList<Job>();
         for ( Organization org : list( Organization.class ) ) {
             for ( Job job : org.getJobs() ) {
-                if ( job.getActor() ==  actor ) {
+                if ( job.getActor() == actor ) {
                     jobs.add( job );
                 }
             }
@@ -966,7 +976,7 @@ public class DataQueryObjectImpl implements DataQueryObject {
         List<Job> jobs = new ArrayList<Job>();
         for ( Organization org : list( Organization.class ) ) {
             for ( Job job : org.getJobs() ) {
-                if ( job.resourceSpec( org ).narrowsOrEquals( resourceSpec )) {
+                if ( job.resourceSpec( org ).narrowsOrEquals( resourceSpec ) ) {
                     jobs.add( job );
                 }
             }

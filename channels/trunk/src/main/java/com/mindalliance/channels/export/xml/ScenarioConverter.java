@@ -135,11 +135,8 @@ public class ScenarioConverter extends AbstractChannelsConverter {
      */
     @SuppressWarnings( "unchecked" )
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
-        Map<String, Long> idMap = (Map<String, Long>) context.get( "idMap" );
-        if ( idMap == null ) {
-            idMap = new HashMap<String, Long>();
-            context.put( "idMap", idMap );
-        }
+        Map<String, Long> idMap = getIdMap( context );
+        getProxyConnectors( context );
         DataQueryObject dqo = Project.dqo();
         Scenario scenario = dqo.createScenario();
         Part defaultPart = scenario.getDefaultPart();
@@ -185,8 +182,12 @@ public class ScenarioConverter extends AbstractChannelsConverter {
         }
         // Remove automatically created default part
         scenario.removeNode( defaultPart );
-        // repairExternalFlows( scenario, context );
-        return scenario;
+        Map<String, Object> state = new HashMap<String, Object>();
+        state.put( "scenario", scenario );
+        state.put( "idMap", context.get( "idMap" ) );
+        state.put( "proxyConnectors", context.get( "proxyConnectors" ) );
+        state.put( "portalConnectors", context.get( "portalConnectors" ) );
+        return state;
     }
 
     private void resolveInitiator( HierarchicalStreamReader reader, Scenario scenario ) {
@@ -201,7 +202,7 @@ public class ScenarioConverter extends AbstractChannelsConverter {
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "scenario-description" ) ) {
                 externalScenarioDescription = reader.getValue();
-            } else {
+            } else if (!nodeName.equals("part-id")) {
                 String name = reader.getAttribute( "name" ).trim();
                 if ( nodeName.equals( "part-role" ) ) {
                     roleName = name;

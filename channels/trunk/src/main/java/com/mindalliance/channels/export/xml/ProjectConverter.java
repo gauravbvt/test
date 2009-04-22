@@ -12,14 +12,12 @@ import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Place;
-import com.mindalliance.channels.Flow;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +81,7 @@ public class ProjectConverter extends AbstractChannelsConverter {
         // All scenarios
         for ( Scenario scenario : dqo.list( Scenario.class ) ) {
             writer.startNode( "scenario" );
-            context.convertAnother( scenario, new ScenarioConverter( ) );
+            context.convertAnother( scenario, new ScenarioConverter() );
             writer.endNode();
         }
     }
@@ -94,8 +92,9 @@ public class ProjectConverter extends AbstractChannelsConverter {
     public Object unmarshal(
             HierarchicalStreamReader reader,
             UnmarshallingContext context ) {
-        Map<String, Long> idMap = new HashMap<String,Long>();
-        context.put( "idMap", idMap );
+        getIdMap( context );
+        getProxyConnectors( context );
+        // getPortalConnectors( context );
         Project project = Project.getProject();
         String uri = reader.getAttribute( "uri" );
         project.setUri( uri );
@@ -125,7 +124,11 @@ public class ProjectConverter extends AbstractChannelsConverter {
             }
             reader.moveUp();
         }
-        return context.get("idMap");
+        Map<String, Object> state = new HashMap<String, Object>();
+        state.put( "idMap", context.get( "idMap" ) );
+        state.put( "proxyConnectors", context.get( "proxyConnectors" ) );
+        state.put( "portalConnectors", context.get( "portalConnectors" ) );
+        return state;
     }
 
 }

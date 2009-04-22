@@ -1,6 +1,7 @@
 package com.mindalliance.channels.export;
 
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.dao.Journal;
 import org.slf4j.LoggerFactory;
 
@@ -86,6 +87,15 @@ public class Serializer implements Importer, Exporter {
      */
     public Journal importJournal( FileInputStream stream ) throws IOException {
         return null;  //Todo
+    }
+
+    public Map<String, Object> loadScenario( InputStream inputStream ) throws IOException {
+        // TODO
+        return null;
+    }
+
+    public void reconnectExternalFlows( Map<String, Long> idMap, Map<Connector, ConnectionSpecification> proxyConnectors ) {
+        // TODO
     }
 
     /**

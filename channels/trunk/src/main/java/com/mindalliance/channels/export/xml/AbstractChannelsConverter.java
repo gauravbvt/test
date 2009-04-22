@@ -1,14 +1,15 @@
 package com.mindalliance.channels.export.xml;
 
 import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.mindalliance.channels.DataQueryObject;
-import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Identifiable;
+import com.mindalliance.channels.Connector;
+import com.mindalliance.channels.export.ConnectionSpecification;
 import com.mindalliance.channels.pages.Project;
 
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Abstract XStream converter base class for Channels.
@@ -29,23 +30,46 @@ public abstract class AbstractChannelsConverter implements Converter {
     }
 
     /**
-     * List of external flows that could not be connected but were made into internal connector flows.
-     * XStream's API did not allow using a "global" DataHolder for this purpose, at least not in an obvious way.
-     */
-    private static ThreadLocal brokenFlows = new ThreadLocal() {
-        protected synchronized Object initialValue() {
-            return new ArrayList<Flow>();
-        }
-    };
-
-    /**
-     * Return broken external flows in context.
+     * Get idMap from context, initializing it if needed.
      *
-     * @return a list of connector flows
+     * @param context an unmarshalling context
+     * @return a map
      */
     @SuppressWarnings( "unchecked" )
-    protected List<Flow> getBrokenExternalFlows() {
-        return (List<Flow>) brokenFlows.get();
+    protected Map<String, Long> getIdMap( UnmarshallingContext context ) {
+        Map<String, Long> idMap = (Map<String, Long>) context.get( "idMap" );
+        if ( idMap == null ) {
+            idMap = new HashMap<String, Long>();
+            context.put( "idMap", idMap );
+        }
+        return idMap;
+    }
+
+
+/*    protected Map<Connector, List<ConnectionSpecification>> getPortalConnectors( UnmarshallingContext context ) {
+        Map<Connector, List<ConnectionSpecification>> portalConnectors =
+                (Map<Connector, List<ConnectionSpecification>>) context.get( "portalConnectors" );
+        if ( portalConnectors == null ) {
+            portalConnectors = new HashMap<Connector, List<ConnectionSpecification>>();
+            context.put( "portalConnectors", portalConnectors );
+        }
+        return portalConnectors;
+    }*/
+
+    /**
+     * Get proxy connectors: connectors meant to be replaced by external connectors.
+     * @param context an unmarshalling context
+     * @return a map
+     */
+    @SuppressWarnings( "unchecked" )
+    protected Map<Connector, ConnectionSpecification> getProxyConnectors( UnmarshallingContext context ) {
+        Map<Connector, ConnectionSpecification> proxyConnectors =
+                (Map<Connector, ConnectionSpecification>) context.get( "proxyConnectors" );
+        if ( proxyConnectors == null ) {
+            proxyConnectors = new HashMap<Connector, ConnectionSpecification>();
+            context.put( "proxyConnectors", proxyConnectors );
+        }
+        return proxyConnectors;
     }
 
     /**

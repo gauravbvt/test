@@ -1,6 +1,7 @@
 package com.mindalliance.channels.export;
 
 import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.dao.Journal;
 
 import java.io.IOException;
@@ -17,7 +18,7 @@ public interface Importer {
      * Import a scenario from a stream.
      *
      * @param stream an input stream
-     * @return the imported scenario
+     * @return a map with scenario, idMap and proxy connectors
      * @throws IOException on errors
      */
     Scenario importScenario( InputStream stream ) throws IOException;
@@ -40,10 +41,10 @@ public interface Importer {
      * Import a project from a stream.
      *
      * @param stream an input stream
-     * @throws java.io.IOException on errors
      * @return an id translation map
+     * @throws java.io.IOException on errors
      */
-    Map<Long,Long> importProject( FileInputStream stream ) throws IOException;
+    Map<Long, Long> importProject( FileInputStream stream ) throws IOException;
 
     /**
      * Import a journal from a stream.
@@ -53,6 +54,25 @@ public interface Importer {
      * @throws java.io.IOException on errors
      */
     Journal importJournal( FileInputStream stream ) throws IOException;
-    
+
+    /**
+     * Load scenario, do not reconnect external flows.
+     *
+     * @param inputStream an input stream
+     * @return mapped results
+     * @throws java.io.IOException on errors
+     */
+    Map<String, Object> loadScenario( InputStream inputStream ) throws IOException;
+
+    /**
+     * Reconnect external flows given proxy connectors and idMap
+     *
+     * @param idMap a map of exported to imported ids
+     * @param proxyConnectors a map of proxy connectors
+     * (external connectors stand-ins) with specs of external connectors
+     */
+    void reconnectExternalFlows(
+            Map<String, Long> idMap,
+            Map<Connector, ConnectionSpecification> proxyConnectors );
 }
 

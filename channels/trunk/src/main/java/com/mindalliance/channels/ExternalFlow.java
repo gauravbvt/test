@@ -273,9 +273,11 @@ public class ExternalFlow extends Flow {
     @Transient
     public Significance getSignificanceToSource() {
         Flow flow = getConnectorFlow();
-        return flow == null     ? Significance.None
-             : isPartTargeted() ? flow.getSignificanceToSource()
-                                : super.getSignificanceToSource();
+        return flow == null
+                ? Significance.None
+                : isPartTargeted()
+                        ? flow.getSignificanceToSource()
+                        : super.getSignificanceToSource();
     }
 
     /**
@@ -285,9 +287,11 @@ public class ExternalFlow extends Flow {
     @Transient
     public Significance getSignificanceToTarget() {
         Flow flow = getConnectorFlow();
-        return flow == null ? Flow.Significance.None
-             : isPartTargeted() ? super.getSignificanceToTarget()
-             : flow.getSignificanceToTarget();
+        return flow == null
+                    ? Flow.Significance.None
+                    : isPartTargeted()
+                        ? super.getSignificanceToTarget()
+                        : flow.getSignificanceToTarget();
 
     }
 
