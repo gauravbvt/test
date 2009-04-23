@@ -663,7 +663,7 @@ public final class ProjectPage extends WebPage implements Updatable {
     }
 
     /**
-     * Get set or defualt part.
+     * Get set or default part.
      *
      * @return a part
      */
@@ -894,12 +894,15 @@ public final class ProjectPage extends WebPage implements Updatable {
 
         else if ( identifiable instanceof Part ) {
             if ( change.isAdded() || change.isSelected() ) {
-                setPart( (Part) identifiable );
+                collapse( getPart() );
                 collapsePartObjects();
+                setPart( (Part) identifiable );
+                expand( getPart() );
             } else if ( change.isRemoved() ) {
+                collapse( getPart() );
+                collapsePartObjects();
                 setPart( null );
                 expand( getPart() );
-                collapsePartObjects();
             }
         }
 
