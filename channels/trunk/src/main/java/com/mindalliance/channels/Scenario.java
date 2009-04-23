@@ -223,9 +223,14 @@ public class Scenario extends ModelObject {
             }
 
             if ( node.isConnector() ) {
+                List<ExternalFlow> toDisconnect = new ArrayList<ExternalFlow>();
                 Iterator<ExternalFlow> xf = ( (Connector) node ).externalFlows();
                 while ( xf.hasNext() ) {
-                    xf.next().disconnect();
+                    toDisconnect.add(xf.next());
+                }
+                // Avoid ConcurrentModificationException
+                for (ExternalFlow flow : toDisconnect) {
+                    flow.disconnect();
                 }
             }
 

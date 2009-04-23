@@ -427,4 +427,25 @@ public interface DataQueryObject {
      * @return a list of parts
      */
     List<Part> findAllPartsWithLocation( Place place );
+
+    /**
+     * Find the unsatisfied needs of a part.
+     * @param part a part
+     * @return list of needs (flows with connectors as sources)
+     */
+    List<Flow> findUnsatisfiedNeeds( Part part );
+
+    /**
+     * Find the unused capabilities of a part.
+     * @param part a part
+     * @return list of capabilities (flows with connectors as targets)
+     */
+    List<Flow> findUnusedCapabilities( Part part );
+
+    /**
+     * Find all connectors for capabilities that match a need.
+     * @param need a flow
+     * @return a list of connectors
+     */
+    List<Connector> findAllSatificers( Flow need );
 }

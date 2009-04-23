@@ -227,6 +227,7 @@ public final class CommandUtils {
 
     /**
      * Get state of a part's capability.
+     *
      * @param flow a flow
      * @param part a part
      * @return a map
@@ -243,6 +244,7 @@ public final class CommandUtils {
 
     /**
      * Get state of a part's need.
+     *
      * @param flow a flow
      * @param part a part
      * @return a map
@@ -279,5 +281,19 @@ public final class CommandUtils {
         }
         duplicate.initFrom( flow );
         return duplicate;
+    }
+
+    /**
+     * Capture a flow's identity (id and state).
+     *
+     * @param flow a flow
+     * @param part a part
+     * @return a map
+     */
+    public static Map<String, Object> getFlowIdentity( Flow flow, Part part ) {
+        Map<String, Object> identity = new HashMap<String, Object>();
+        identity.put( "flow", flow.getId() );
+        identity.put( "state", getFlowState( flow, part ) );
+        return identity;
     }
 }

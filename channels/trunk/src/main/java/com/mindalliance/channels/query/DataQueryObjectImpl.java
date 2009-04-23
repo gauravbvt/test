@@ -50,9 +50,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * Utility class for common functionality for all Dao implementations.
- * Done this way because of HibernateDao requires a specific superclass
- * and java does not support multiple inheritance...
+ * Data query object instance.
  */
 public class DataQueryObjectImpl implements DataQueryObject {
 
@@ -1076,6 +1074,83 @@ public class DataQueryObjectImpl implements DataQueryObject {
             }
         }
         return list;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Flow> findUnsatisfiedNeeds( Part part ) {
+        List<Flow> unsatisfiedNeeds = new ArrayList<Flow>();
+        Iterator<Flow> receives = part.requirements();
+        while ( receives.hasNext() ) {
+            Flow receive = receives.next();
+            if ( receive.getSource().isConnector() ) {
+                if ( !( (Connector) receive.getSource() ).externalFlows().hasNext() ) {
+                    Iterator<Flow> others = part.requirements();
+                    boolean satisfied = false;
+                    while ( !satisfied && others.hasNext() ) {
+                        Flow other = others.next();
+                        Node source = other.getSource();
+                        satisfied = !source.isConnector()
+                                && SemMatch.matches( receive.getName(), other.getName() )
+                                && SemMatch.matches( receive.getDescription(), other.getDescription() );
+                    }
+                    if ( !satisfied ) unsatisfiedNeeds.add( receive );
+                }
+            }
+        }
+        return unsatisfiedNeeds;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Flow> findUnusedCapabilities( Part part ) {
+        List<Flow> unusedCapabilities = new ArrayList<Flow>();
+        Iterator<Flow> sends = part.outcomes();
+        while ( sends.hasNext() ) {
+            Flow send = sends.next();
+            if ( send.getTarget().isConnector() ) {
+                if ( !( (Connector) send.getTarget() ).externalFlows().hasNext() ) {
+                    Iterator<Flow> others = part.outcomes();
+                    boolean used = false;
+                    while ( !used && others.hasNext() ) {
+                        Flow other = others.next();
+                        Node target = other.getTarget();
+                        used = !target.isConnector()
+                                && SemMatch.matches( send.getName(), other.getName() )
+                                && SemMatch.matches( send.getDescription(), other.getDescription() );
+                    }
+                    if ( !used ) unusedCapabilities.add( send );
+                }
+            }
+        }
+        return unusedCapabilities;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Connector> findAllSatificers( Flow need ) {
+        List<Connector> connectors = new ArrayList<Connector>();
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                Part part = parts.next();
+                if ( part != need.getTarget() ) {
+                    Iterator<Flow> outcomes = part.outcomes();
+                    while ( outcomes.hasNext() ) {
+                        Flow outcome = outcomes.next();
+                        if ( outcome.getTarget().isConnector()
+                                && SemMatch.matches( outcome.getName(), need.getName() )
+                                && SemMatch.matches( outcome.getDescription(), need.getDescription() ) ) {
+                            connectors.add( (Connector) outcome.getTarget() );
+                        }
+                    }
+                }
+            }
+        }
+        return connectors;
     }
 
     private boolean doFindIfScenarioStarted( Scenario scenario, Set<ModelObject> visited ) {

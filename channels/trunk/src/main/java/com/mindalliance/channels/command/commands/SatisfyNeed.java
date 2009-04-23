@@ -12,9 +12,12 @@ import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
+import com.mindalliance.channels.Part;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Set the node at the other side of this flow by connecting "through" a connector
@@ -86,14 +89,27 @@ public class SatisfyNeed extends AbstractCommand {
             newFlow.setSignificanceToTarget( need.getSignificanceToTarget() );
             newFlow.setChannels( need.isAskedFor() ? capability.getChannels() : need.getChannels() );
             newFlow.setMaxDelay( need.getMaxDelay() );
-            commander.mapId( (Long) get( "newFlow" ), newFlow.getId() );
+            commander.mapId( (Long) get( "satisfy" ), newFlow.getId() );
             set( "satisfy", newFlow.getId() );
-            set( "need", need.getId() );
-            set( "needState", CommandUtils.getFlowState( need ) );
-            set("capability", capability.getId() );
-            set( "capabilityState", CommandUtils.getFlowState( capability ) );
-            need.disconnect();
-            capability.disconnect();
+            List<Map<String, Object>> removed = new ArrayList<Map<String, Object>>();
+            if ( needScenario == capabilityScenario ) {
+                removed.add( CommandUtils.getFlowIdentity( capability, (Part) fromNode ) );
+                capability.disconnect();
+                removed.add( CommandUtils.getFlowIdentity( need, (Part) toNode ) );
+                need.disconnect();
+            } else {
+                // External - which connector to use depends on context
+                if ( context == capabilityScenario ) {
+                    // from capability's part to need's connector
+                    removed.add( CommandUtils.getFlowIdentity( capability, (Part) fromNode ) );
+                    capability.disconnect();
+                } else {
+                    // from capability's connector to need's part
+                    removed.add( CommandUtils.getFlowIdentity( need, (Part) toNode ) );
+                    need.disconnect();
+                }
+            }
+            set( "removedFlows", removed );
             // What about reporting the removal of the disconnected flow?
             return new Change( Change.Type.Added, newFlow );
         } catch ( NotFoundException e ) {
@@ -116,16 +132,14 @@ public class SatisfyNeed extends AbstractCommand {
         MultiCommand multi = new MultiCommand( getName() );
         multi.setUndoes( getName() );
         try {
-            // Recreate need given state and old id
-            Command connectNeed = new ConnectWithFlow();
-            connectNeed.setArguments( (Map<String, Object>) get( "needState" ) );
-            connectNeed.set( "flow", get( "need" ) );
-            multi.addCommand( connectNeed );
-            // Recreate capability given state and old id
-            Command connectCapability = new ConnectWithFlow();
-            connectCapability.setArguments( (Map<String, Object>) get( "capabilityState" ) );
-            connectCapability.set( "flow", get( "capability" ) );
-            multi.addCommand( connectCapability );
+            // Recreate deleted need and/or capability
+            List<Map<String, Object>> removed = (List<Map<String, Object>>) get( "removedFlows" );
+            for ( Map<String, Object> identity : removed ) {
+                Command connectWithFlow = new ConnectWithFlow();
+                connectWithFlow.setArguments( (Map<String, Object>) identity.get( "state" ) );
+                connectWithFlow.set( "flow", identity.get( "flow" ) );
+                multi.addCommand( connectWithFlow );
+            }
             // Disconnect need satisfying flow
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "context" ) );
             Flow newFlow = scenario.findFlow( commander.resolveId( (Long) get( "satisfy" ) ) );

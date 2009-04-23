@@ -10,6 +10,7 @@ import com.mindalliance.channels.command.commands.RemovePart;
 import com.mindalliance.channels.command.commands.DuplicatePart;
 import com.mindalliance.channels.command.commands.CopyPart;
 import com.mindalliance.channels.command.commands.PasteFlow;
+import com.mindalliance.channels.command.commands.SatisfyAllNeeds;
 import com.mindalliance.channels.command.Change;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
@@ -81,6 +82,11 @@ public class PartActionsMenuPanel extends MenuPanel {
             }
         } );
         commandWrappers.add( new CommandWrapper( new DuplicatePart( getPart() ) ) {
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                update( target, change );
+            }
+        } );
+        commandWrappers.add( new CommandWrapper( new SatisfyAllNeeds( getPart() ) ) {
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 update( target, change );
             }
