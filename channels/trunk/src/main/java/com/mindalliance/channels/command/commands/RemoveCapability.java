@@ -43,6 +43,7 @@ public class RemoveCapability extends AbstractCommand {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Flow flow = scenario.findFlow( commander.resolveId( (Long) get( "flow" ) ) );
             flow.disconnect();
+            commander.releaseAnyLockOn( flow );
             return new Change( Change.Type.Removed, flow );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );

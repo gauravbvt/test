@@ -12,6 +12,8 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Part;
+import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.InternalFlow;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -85,9 +87,7 @@ public class ConnectWithFlow extends AbstractCommand {
                 Scenario.class,
                 (Long) get( "otherScenario" ) );
         Long nodeId = commander.resolveId( (Long) get( "other" ) );
-        Node other = ( nodeId != null )
-                ? otherScenario.getNode( nodeId )
-                : dqo.createConnector( otherScenario );
+        Node other = CommandUtils.resolveNode( nodeId, otherScenario, dqo );
         String name = (String) get( "name" );
         boolean isOutcome = (Boolean) get( "isOutcome" );
         Flow flow = isOutcome

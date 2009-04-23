@@ -1,26 +1,25 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.AbstractCommand;
-import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.command.MultiCommand;
-import com.mindalliance.channels.command.CommandUtils;
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Flow;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
-
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.command.AbstractCommand;
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.CommandUtils;
+import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.MultiCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Command to remove a part from a scenario.
@@ -73,6 +72,7 @@ public class RemovePart extends AbstractCommand {
             set( "defaultPart", defaultPart.getId() );
         }
         removePart( part, dqo );
+        commander.releaseAnyLockOn( part );
         ignoreLock( commander.resolveId( (Long) get( "part" ) ) );
         return new Change( Change.Type.Recomposed, scenario );
     }
@@ -131,13 +131,18 @@ public class RemovePart extends AbstractCommand {
                     }
                 }
             }
-            // Recreate disconnected flows where possible
+            // Recreate disconnected flows, possibly external, where possible
             List<Map<String, Object>> removed = (List<Map<String, Object>>) get( "removedFlows" );
-            Command command;
-            for ( Map<String, Object> fs : removed ) {
-                Long removedFlowId = commander.resolveId( (Long) fs.get( "flow " ) );
-                Map<String, Object> state = (Map<String, Object>) fs.get( "state" );
+            for ( Map<String, Object> identity : removed ) {
+/*
+                Command command;
+                Long removedFlowId = commander.resolveId( (Long) identity.get( "flow " ) );
+                Map<String, Object> state = (Map<String, Object>) identity.get( "state" );
                 Long otherId = (Long) state.get( "other" );
+                Scenario otherScenario = commander.resolve(
+                        Scenario.class,
+                        (Long) state.get( "otherScenario" ) );
+                Node other = CommandUtils.resolveNode( otherId, otherScenario, dqo );
                 if ( otherId != null ) {
                     // other is a part (part to part flow)
                     command = new ConnectWithFlow();
@@ -153,10 +158,16 @@ public class RemovePart extends AbstractCommand {
                 command.setArguments( state );
                 command.set( "flow", removedFlowId );
                 multi.addCommand( command );
-                // Missing arguments scenario and part:
-                // Use the result of command addPart to supply arguments to connectWithFlow
-                multi.addLink( addPart, "id", command, "part" );
-                multi.addLink( addPart, "scenario.id", command, "scenario" );
+*/
+                Command connectWithFlow = new ConnectWithFlow();
+                connectWithFlow.setArguments( (Map<String, Object>) identity.get( "state" ) );
+                // Id of deleted flow to be recreated -- passed along for mapping old to new
+                connectWithFlow.set( "flow", identity.get( "flow" ) );
+                multi.addCommand( connectWithFlow );
+                // Missing arguments scenario and part.
+                // Use the result of command addPart to supply missing arguments to connectWithFlow
+                multi.addLink( addPart, "id", connectWithFlow, "part" );
+                multi.addLink( addPart, "scenario.id", connectWithFlow, "scenario" );
             }
 
             // the undo of this multi is a RemovePart with argument

@@ -48,6 +48,7 @@ public class DisconnectFlow extends AbstractCommand {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Flow flow = scenario.findFlow( commander.resolveId( (Long) get( "flow" ) ) );
             flow.disconnect();
+            commander.releaseAnyLockOn( flow );
             return new Change( Change.Type.Removed, flow );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
@@ -68,8 +69,8 @@ public class DisconnectFlow extends AbstractCommand {
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
         Command connectWithFlow = new ConnectWithFlow();
         connectWithFlow.setArguments( (Map<String, Object>) get( "flowState" ) );
-        // The flow being re-connected
-        connectWithFlow.set( "flow", commander.resolveId( (Long) ( get( "flow" ) ) ) );
+        // The previous id of the flow being re-connected
+        connectWithFlow.set( "flow", get( "flow" ) );
         return connectWithFlow;
     }
 

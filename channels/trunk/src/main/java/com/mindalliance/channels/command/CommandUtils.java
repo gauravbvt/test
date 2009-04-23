@@ -8,6 +8,10 @@ import com.mindalliance.channels.ExternalFlow;
 import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.Connector;
+import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.InternalFlow;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -90,7 +94,14 @@ public final class CommandUtils {
         state.put( "scenario", part.getScenario().getId() );
         state.put( "part", part.getId() );
         state.put( "otherScenario", other.getScenario().getId() );
-        if ( !other.isConnector() ) state.put( "other", other.getId() );
+        if ( other.isConnector() ) {
+            // Remember the connector's inner flow if external (its id is persistent, if mapped)
+            if ( part.getScenario() != other.getScenario() ) {
+                state.put( "other", ( (Connector) other ).getInnerFlow().getId() );
+            }
+        } else {
+            state.put( "other", other.getId() );
+        }
         state.put( "attributes", getFlowAttributes( flow ) );
         return state;
     }
@@ -295,5 +306,40 @@ public final class CommandUtils {
         identity.put( "flow", flow.getId() );
         identity.put( "state", getFlowState( flow, part ) );
         return identity;
+    }
+
+    /**
+     * Resolve a node from an id.
+     * @param id a long
+     * @param scenario a scenario in context
+     * @param dqo a data query object
+     * @return a node
+     * @throws CommandException if not found
+     */
+    public static Node resolveNode( Long id, Scenario scenario, DataQueryObject dqo ) throws CommandException {
+        Node node;
+        // null id represents a local connector
+        if ( id != null ) {
+            ModelObject mo;
+            try {
+                mo = dqo.find( ModelObject.class, id );
+            } catch ( NotFoundException e ) {
+                throw new CommandException( "You need to refresh.", e );
+            }
+            // How external an connector is captured
+            if ( mo instanceof InternalFlow ) {
+                InternalFlow internalFlow = (InternalFlow) mo;
+                assert ( internalFlow.hasConnector() );
+                node = internalFlow.getSource().isConnector()
+                        ? internalFlow.getSource()
+                        : internalFlow.getTarget();
+            } else {
+                node = scenario.getNode( id );
+            }
+
+        } else {
+            node = dqo.createConnector( scenario );
+        }
+        return node;
     }
 }

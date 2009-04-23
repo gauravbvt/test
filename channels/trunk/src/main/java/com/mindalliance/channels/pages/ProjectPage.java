@@ -669,7 +669,9 @@ public final class ProjectPage extends WebPage implements Updatable {
      */
     public Part getPart() {
         if ( isZombie( part ) ) {
-            return scenario.getDefaultPart();
+            Part part = scenario.getDefaultPart();
+            getCommander().requestLockOn( part );
+            return part;
         } else {
             return part;
         }

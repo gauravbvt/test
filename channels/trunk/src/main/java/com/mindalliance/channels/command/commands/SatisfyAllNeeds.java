@@ -131,7 +131,7 @@ public class SatisfyAllNeeds extends AbstractCommand {
                 Long removedNeedId = commander.resolveId( (Long) flowIdentity.get( "flow" ) );
                 Map<String, Object> state = (Map<String, Object>) flowIdentity.get( "state" );
                 Long otherId = (Long) state.get( "other" );
-                // other node is a connector
+                // other node is a local connector
                 assert (otherId == null);
                 boolean isOutcome = (Boolean) state.get( "isOutcome" );
                 // it's a need

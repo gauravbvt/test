@@ -52,6 +52,7 @@ public class RemoveIssue extends AbstractCommand {
         state.put( "reportedBy", issue.getReportedBy() );
         set( "state", state );
         dqo.remove( issue );
+        commander.releaseAnyLockOn( issue );
         return new Change( Change.Type.Removed, issue );
     }
 
