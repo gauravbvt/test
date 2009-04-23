@@ -55,7 +55,8 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
 
     private void init() {
         setOutputMarkupId( true );
-        AjaxFallbackLink closeLink = new AjaxFallbackLink( "close" ) {
+        AjaxFallbackLink<?> closeLink = new AjaxFallbackLink( "close" ) {
+            @Override
             public void onClick( AjaxRequestTarget target ) {
                 Change change = new Change( Change.Type.Collapsed, getScenario() );
                 update( target, change );
@@ -66,6 +67,7 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
         addLocationField();
         addTimingFields();
         addIssuesPanel();
+        add( new AttachmentPanel( "attachments", getModel() ) );
     }
 
     private void addIdentityFields() {

@@ -14,9 +14,10 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.IModel;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,20 +39,19 @@ public class AttachmentPanel extends Panel {
     /** The file upload received from the client. */
     private FileUpload upload;
 
-    /** The object for the attachments. */
-    private IModel<? extends ModelObject> model;
-
     /** The selected type for the upload. */
     private Attachment.Type selectedType = Attachment.Type.Document;
 
     public AttachmentPanel( String id, IModel<? extends ModelObject> model ) {
-        super( id );
-        this.model = model;
-        add( new ListView<Wrapper>( "attachments", getAttachments( model.getObject() ) ) {      // NON-NLS
+        super( id, model );
+        setOutputMarkupId( true );
+
+        add( new ListView<Wrapper>( "attachments",
+                                    new PropertyModel<List<Wrapper>>( this, "attachments" ) ) {                           // NON-NLS
             @Override
             protected void populateItem( ListItem<Wrapper> item ) {
-                final Wrapper wrapper = item.getModelObject();
-                final Attachment a = wrapper.getAttachment();
+                Wrapper wrapper = item.getModelObject();
+                Attachment a = wrapper.getAttachment();
                 item.add( new ExternalLink( "attachment", a.getLink(), a.getLabel() ) );  // NON-NLS
                 item.add( new CheckBox( "delete",                                         // NON-NLS
                         new PropertyModel<Boolean>( wrapper, "markedForDeletion" ) ) );   // NON-NLS
@@ -76,16 +76,17 @@ public class AttachmentPanel extends Panel {
                 }
         ) );
 
-        add( new FileUploadField( UPLOAD_PROPERTY,
-                                  new PropertyModel<FileUpload>( this, UPLOAD_PROPERTY ) ) );
+        add( new FileUploadField(
+                UPLOAD_PROPERTY, new PropertyModel<FileUpload>( this, UPLOAD_PROPERTY ) ) );
     }
 
-    private List<Wrapper> getAttachments( ModelObject object ) {
-        final List<Wrapper> result = new ArrayList<Wrapper>( 5 );
+    public List<Wrapper> getAttachments() {
+        List<Wrapper> result = new ArrayList<Wrapper>();
 
-        final AttachmentManager manager = getAttachmentManager();
+        AttachmentManager manager = getAttachmentManager();
         if ( manager != null ) {
-            final Iterator<Attachment> iterator = manager.attachments( object );
+            ModelObject object = (ModelObject) getDefaultModelObject();
+            Iterator<Attachment> iterator = manager.attachments( object );
             while ( iterator.hasNext() )
                 result.add( new Wrapper( iterator.next() ) );
         }
@@ -94,7 +95,7 @@ public class AttachmentPanel extends Panel {
     }
 
     private AttachmentManager getAttachmentManager() {
-        final Project project = (Project) getApplication();
+        Project project = (Project) getApplication();
         return project.getAttachmentManager();
     }
 
@@ -108,8 +109,11 @@ public class AttachmentPanel extends Panel {
      */
     public void setUpload( FileUpload upload ) {
         this.upload = upload;
-        if ( upload != null )
-            getAttachmentManager().attach( model.getObject(), getSelectedType(), upload );
+        if ( upload != null ) {
+            ModelObject object = (ModelObject) getDefaultModelObject();
+            LoggerFactory.getLogger( getClass() ).info(  "Attaching file to {}", object );
+            getAttachmentManager().attach( object, getSelectedType(), upload );
+        }
     }
 
     public Attachment.Type getSelectedType() {
@@ -141,7 +145,8 @@ public class AttachmentPanel extends Panel {
         public void setMarkedForDeletion( boolean markedForDeletion ) {
             this.markedForDeletion = markedForDeletion;
             if ( markedForDeletion ) {
-                Project.getProject().getAttachmentManager().detach( model.getObject(), attachment );
+                ModelObject object = (ModelObject) getDefaultModelObject();
+                Project.getProject().getAttachmentManager().detach( object, attachment );
             }
         }
 

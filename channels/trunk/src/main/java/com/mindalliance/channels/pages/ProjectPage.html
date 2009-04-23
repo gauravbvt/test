@@ -10,13 +10,13 @@
 <form wicket:id="big-form" class="stretch" action="#">
     <div class="header">
         <h1><span wicket:id="header">Title</span></h1>
-            <span class="menubar">
-                <span wicket:id="projectShowMenu">[show menu]</span>
-                <span wicket:id="projectActionsMenu">[action menu]</span>
-            </span>
-            <span class="button" wicket:id="refresh-needed">
-                <img src="/images/refresh_needed.png" alt="Refresh needed"/>
-            </span>
+        <span class="button" wicket:id="refresh-needed">
+            <img src="/images/refresh_needed.png" alt="Refresh needed"/>
+        </span>
+        <span class="menubar">
+            <span wicket:id="projectShowMenu">[show menu]</span>
+            <span wicket:id="projectActionsMenu">[action menu]</span>
+        </span>
 
         <p class="caption" wicket:id="sc-desc">A description.</p>
     </div>
@@ -30,7 +30,7 @@
                                                                       value="Upload"></label></li>
         </ul>
     </div>
-    <p id="form-buttons"><input type="button" value="Submit"></p>
+    <p id="form-buttons"><input wicket:id="submit" type="button" value="Submit"></p>
     <span wicket:id="entity">[entity panel]</span>
     <span wicket:id="scenario">[scenario edit panel] </span>
     <span wicket:id="plan-map">[plan map panel] </span>

@@ -33,19 +33,21 @@ import java.util.Set;
 public class IssuesPanel extends AbstractCommandablePanel {
 
     /**
-     * Maximum length of string displayed
+     * Maximum length of string displayed.
      */
     public static final int MAX_LENGTH = 80;
+
     /**
      * A model on a model object which issues are shown, if any.
      */
-    private IModel<ModelObject> model;
+    private IModel<? extends ModelObject> model;
+
     /**
      * Issues container.
      */
     private WebMarkupContainer issuesContainer;
 
-    public IssuesPanel( String id, IModel<ModelObject> model, Set<Long> expansions ) {
+    public IssuesPanel( String id, IModel<? extends ModelObject> model, Set<Long> expansions ) {
         super( id, model, expansions );
         this.model = model;
         init();
@@ -54,7 +56,8 @@ public class IssuesPanel extends AbstractCommandablePanel {
     private void init() {
         add( new Label( "kind", new PropertyModel<String>( this, "kind" ) ) );
 
-        AjaxFallbackLink newIssueLink = new AjaxFallbackLink( "new-issue" ) {
+        AjaxFallbackLink<?> newIssueLink = new AjaxFallbackLink( "new-issue" ) {
+            @Override
             public void onClick( AjaxRequestTarget target ) {
                 Change change = doCommand( new AddUserIssue( model.getObject() ) );
 /*
@@ -88,17 +91,17 @@ public class IssuesPanel extends AbstractCommandablePanel {
         issuesContainer.add( new ListView<Issue>(
                 "issues",
                 new PropertyModel<List<Issue>>( this, "modelObjectIssues" ) ) {
-            protected void populateItem( ListItem<Issue> listItem ) {
-                Issue issue = listItem.getModelObject();
-                final long id = issue.getId();
-                final Panel issuePanel;
-                if ( getExpansions().contains( id ) ) {
+            @Override
+            protected void populateItem( ListItem<Issue> item ) {
+                Issue issue = item.getModelObject();
+                Panel issuePanel;
+                if ( getExpansions().contains( issue.getId() ) ) {
                     issuePanel = new ExpandedIssuePanel( "issue", new Model<Issue>( issue ) );
                 } else {
                     issuePanel = new CollapsedIssuePanel( "issue", new Model<Issue>( issue ) );
                 }
 
-                listItem.add( issuePanel );
+                item.add( issuePanel );
             }
         } );
     }
@@ -115,6 +118,7 @@ public class IssuesPanel extends AbstractCommandablePanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void updateWith( AjaxRequestTarget target, Change change ) {
         target.addComponent( issuesContainer );
         super.updateWith( target, change );

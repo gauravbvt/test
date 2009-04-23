@@ -22,9 +22,6 @@ import java.util.List;
  */
 public class FileBasedManager implements AttachmentManager {
 
-    /** The copy buffer size. */
-    private static final int BUFFER_SIZE = 1024;
-
     /** The logger. */
     private static final Logger LOG = LoggerFactory.getLogger( FileBasedManager.class );
 
