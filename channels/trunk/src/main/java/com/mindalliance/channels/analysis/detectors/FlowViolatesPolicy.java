@@ -37,7 +37,7 @@ public class FlowViolatesPolicy extends AbstractIssueDetector {
         while ( attachments.hasNext() ) {
             Attachment attachment = attachments.next();
             if ( attachment.isPolicyViolation() ) {
-                Issue issue = new DetectedIssue( Issue.FLOW, flow );
+                Issue issue = makeIssue( Issue.FLOW, flow );
                 issue.setDescription( "Violates policy per \"" + attachment.getLabel() + "\"." );
                 issue.setRemediation( "Change or remove flow, or change the policy." );
                 issue.setSeverity( Issue.Level.Severe );

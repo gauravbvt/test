@@ -54,6 +54,8 @@ public class IssuesTablePanel extends AbstractTablePanel {
         columns.add( new PropertyColumn<String>(
                 new Model<String>( "Type" ), "type", "type" ) );
         columns.add( new PropertyColumn<String>(
+                new Model<String>( "Waived?" ), "waivedString", "waivedString" ) );
+        columns.add( new PropertyColumn<String>(
                 new Model<String>( "Severity" ), "severity.ordinal", "severity.label" ) );
         columns.add( makeColumn( "Remediation", "remediation", "remediation", EMPTY ) );
         columns.add( makeColumn( "Reported by", "reportedBy", "reportedBy", EMPTY ) );

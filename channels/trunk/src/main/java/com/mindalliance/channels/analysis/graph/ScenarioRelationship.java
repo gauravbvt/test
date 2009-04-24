@@ -157,7 +157,7 @@ public class ScenarioRelationship implements Identifiable {
         boolean hasIssues = false;
         Iterator<ExternalFlow> iterator = externalFlows.iterator();
         while ( !hasIssues && iterator.hasNext() ) {
-            hasIssues = analyst.hasIssues( iterator.next(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
+            hasIssues = analyst.hasUnwaivedIssues( iterator.next(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
         }
         return hasIssues;
     }
@@ -171,7 +171,7 @@ public class ScenarioRelationship implements Identifiable {
     public String getIssuesSummary( Analyst analyst ) {
         int count = 0;
         for ( ExternalFlow externalFlow : externalFlows ) {
-            count += analyst.listIssues( externalFlow, Analyst.INCLUDE_PROPERTY_SPECIFIC ).size();
+            count += analyst.listUnwaivedIssues( externalFlow, Analyst.INCLUDE_PROPERTY_SPECIFIC ).size();
         }
         return count + ( count > 1 ? " issues" : " issue" );
     }

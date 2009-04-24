@@ -35,7 +35,7 @@ public class IssuesReportPanel extends Panel {
     }
 
     private void init( Analyst analyst ) {
-        List<Issue> issues = analyst.listIssues( modelObject, true );
+        List<Issue> issues = analyst.listUnwaivedIssues( modelObject, true );
         add( new ListView<Issue>( "issues", issues ) {
             @Override
             protected void populateItem( ListItem<Issue> item ) {

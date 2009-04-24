@@ -353,8 +353,7 @@ public final class ProjectPage extends WebPage implements Updatable {
         long lastModified = getCommander().getLastModified();
         if ( lastModified > lastRefreshed
                 && !lastModifier.isEmpty()
-                && !lastModifier.equals( Project.getUserName() ) )
-        {
+                && !lastModifier.equals( Project.getUserName() ) ) {
             reasons = " -- Plan was modified by " + lastModifier;
         }
         // Find expansions that were locked and are not unlocked
@@ -414,6 +413,7 @@ public final class ProjectPage extends WebPage implements Updatable {
                 new PropertyModel<Scenario>( this, "scenario" ),                          // NON-NLS
                 new PropertyModel<List<? extends Scenario>>( this, "allScenarios" ) );    // NON-NLS
         scenarioDropDownChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) { // NON-NLS
+
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Selected, getScenario() ) );
@@ -457,7 +457,7 @@ public final class ProjectPage extends WebPage implements Updatable {
         boolean showPlanMap = expansions.contains( Project.getProject().getId() );
 
         planMapPanel = showPlanMap ? new PlanMapPanel( "plan-map", getReadOnlyExpansions() )
-                                   : new Label( "plan-map", "" );
+                : new Label( "plan-map", "" );
 
         makeVisible( planMapPanel, showPlanMap );
         planMapPanel.setOutputMarkupId( true );
@@ -826,8 +826,7 @@ public final class ProjectPage extends WebPage implements Updatable {
     private void expand( Identifiable identifiable ) {
         // First collapse any already expanded entity
         if ( identifiable instanceof ModelObject
-                && ( (ModelObject) identifiable ).isEntity() )
-        {
+                && ( (ModelObject) identifiable ).isEntity() ) {
             ModelObject entity = findExpandedEntity();
             if ( entity != null ) {
                 expansions.remove( entity.getId() );
@@ -846,8 +845,7 @@ public final class ProjectPage extends WebPage implements Updatable {
 
     private void collapse( Identifiable identifiable ) {
         if ( identifiable instanceof ModelObject
-                && ( (ModelObject) identifiable ).isEntity() )
-        {
+                && ( (ModelObject) identifiable ).isEntity() ) {
             if ( !expandedEntities.isEmpty() ) {
                 EntityExpansion entityExpansion = expandedEntities.remove( 0 );
                 getCommander().requestLockOn( entityExpansion.getEntityId() );
@@ -861,7 +859,7 @@ public final class ProjectPage extends WebPage implements Updatable {
 
     private String getEntityPanelAspect() {
         return entityPanel instanceof EntityPanel ? ( (EntityPanel) entityPanel ).getAspectShown()
-                                                  : EntityPanel.DETAILS;
+                : EntityPanel.DETAILS;
     }
 
     /**
@@ -890,9 +888,7 @@ public final class ProjectPage extends WebPage implements Updatable {
                 setScenario( (Scenario) identifiable );
                 setPart( null );
             }
-        }
-
-        else if ( identifiable instanceof Part ) {
+        } else if ( identifiable instanceof Part ) {
             if ( change.isAdded() || change.isSelected() ) {
                 collapse( getPart() );
                 collapsePartObjects();
@@ -904,9 +900,7 @@ public final class ProjectPage extends WebPage implements Updatable {
                 setPart( null );
                 expand( getPart() );
             }
-        }
-
-        else if ( identifiable instanceof Flow ) {
+        } else if ( identifiable instanceof Flow ) {
             if ( change.isUpdated() && change.getProperty().equals( "other" ) ) {
                 expand( identifiable );
             } else if ( change.isSelected() ) {
@@ -917,9 +911,7 @@ public final class ProjectPage extends WebPage implements Updatable {
                 }
                 setPart( flow.getLocalPart() );
             }
-        }
-
-        else if ( identifiable instanceof UserIssue && change.isAdded() ) {
+        } else if ( identifiable instanceof UserIssue && change.isAdded() ) {
             UserIssue userIssue = (UserIssue) identifiable;
             ModelObject mo = userIssue.getAbout();
             if ( mo instanceof Scenario ) {
@@ -936,7 +928,11 @@ public final class ProjectPage extends WebPage implements Updatable {
         target.addComponent( projectShowMenu );
         if ( change.isNone() ) return;
         Identifiable identifiable = change.getSubject();
-        if ( change.isUndoing() || change.isUnknown() ) {
+        if ( change.isUndoing()
+                || change.isUnknown()
+                || ( identifiable instanceof ModelObject
+                        && change.isUpdated()
+                        && change.getProperty().equals( "waivedIssueDetections" ) ) ) {
             refreshAll( target );
         } else {
             if ( identifiable instanceof Project ) {
@@ -985,16 +981,14 @@ public final class ProjectPage extends WebPage implements Updatable {
                 target.addComponent( planMapPanel );
             }
             if ( identifiable instanceof ScenarioObject
-                 || identifiable instanceof Issue
-                    && ( (Issue) identifiable ).getAbout().getId() == scenario.getId() )
-            {
+                    || identifiable instanceof Issue
+                    && ( (Issue) identifiable ).getAbout().getId() == scenario.getId() ) {
                 annotateScenarioName();
                 target.addComponent( scenarioNameLabel );
             }
             if ( identifiable instanceof Issue
                     && change.isExists()
-                    && ( (Issue) identifiable ).getAbout().getId() == scenario.getId() )
-            {
+                    && ( (Issue) identifiable ).getAbout().getId() == scenario.getId() ) {
                 annotateScenarioName();
                 target.addComponent( scenarioNameLabel );
                 scenarioPanel.expandScenarioEditPanel( target );
@@ -1002,8 +996,7 @@ public final class ProjectPage extends WebPage implements Updatable {
                 target.addComponent( planMapPanel );
             }
             if ( identifiable instanceof ModelObject
-                    && ( (ModelObject) identifiable ).isEntity() )
-            {
+                    && ( (ModelObject) identifiable ).isEntity() ) {
                 if ( change.isDisplay() ) {
                     addEntityPanel();
                     target.addComponent( entityPanel );

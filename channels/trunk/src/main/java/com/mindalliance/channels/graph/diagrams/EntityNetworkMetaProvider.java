@@ -136,7 +136,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
             }
         list.add( new DOTAttribute( "fontsize", ENTITY_FONT_SIZE ) );
         list.add( new DOTAttribute( "fontname", ENTITY_FONT ) );
-        if ( getAnalyst().hasIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+        if ( getAnalyst().hasUnwaivedIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
             list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
             list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( vertex,
                     Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );

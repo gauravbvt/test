@@ -35,6 +35,21 @@ public abstract class AbstractIssueDetector implements IssueDetector {
     /**
      * {@inheritDoc}
      */
+    public String getKind() {
+        return getClass().getSimpleName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canBeWaived() {
+        // default
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public boolean appliesTo( ModelObject modelObject, String property ) {
         return appliesTo( modelObject )
                 && property != null
@@ -47,6 +62,32 @@ public abstract class AbstractIssueDetector implements IssueDetector {
      */
     protected DataQueryObject getDqo() {
         return Project.getProject().getDqo();
+    }
+
+    /**
+     * Make detected issue.
+     * @param type a string
+     * @param about a model object
+     * @return a detected issue
+     */
+    protected DetectedIssue makeIssue( String type, ModelObject about ) {
+        DetectedIssue issue = new DetectedIssue( type, about );
+        issue.setKind( getKind() );
+        issue.setCanBeWaived( canBeWaived() );
+        return issue;
+    }
+
+    /**
+     * Make detected issue.
+     * @param type a string
+     * @param about a model object
+     * @param property a string
+     * @return a detected issue
+     */
+    protected DetectedIssue makeIssue( String type, ModelObject about, String property ) {
+        DetectedIssue issue = new DetectedIssue( type, about, property );
+        issue.setKind( getClass().getSimpleName() );
+        return issue;
     }
 
 }

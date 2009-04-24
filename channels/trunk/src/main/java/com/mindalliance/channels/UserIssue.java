@@ -123,6 +123,37 @@ public class UserIssue extends ModelObject implements Issue {
      * {@inheritDoc}
      */
     @Transient
+    public boolean isWaived() {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canBeWaived() {
+        // User issues are removed, not waived.
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    public String getKind() {
+        return "user";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String waivedString() {
+        return "";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
     public boolean isUndefined() {
         return super.isUndefined()
                 && remediation.isEmpty();

@@ -19,12 +19,19 @@ import java.util.ArrayList;
  */
 public class PartWithoutRole extends AbstractIssueDetector {
 
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canBeWaived() {
+        return true;
+    }
+
     /** {@inheritDoc} */
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( part.getActor() != null && part.getOrganization() != null && part.getRole() == null  ) {
-            DetectedIssue issue = new DetectedIssue( DetectedIssue.DEFINITION, modelObject, getTestedProperty() );
+            DetectedIssue issue = makeIssue( DetectedIssue.DEFINITION, modelObject, getTestedProperty() );
             issue.setDescription( "The role is missing." );
             issue.setRemediation( "Name a role." );
             issue.setSeverity( Issue.Level.Minor );

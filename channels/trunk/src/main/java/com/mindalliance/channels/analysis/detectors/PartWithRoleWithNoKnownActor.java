@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Part has a role bu there is no known actor in that role.
+ * Part has a role but there is no known actor in that role.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -22,6 +22,13 @@ public class PartWithRoleWithNoKnownActor extends AbstractIssueDetector {
 
     public PartWithRoleWithNoKnownActor() {
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canBeWaived() {
+        return true;
+    }    
 
     /**
      * {@inheritDoc}
@@ -46,7 +53,7 @@ public class PartWithRoleWithNoKnownActor extends AbstractIssueDetector {
         if ( part.getRole() != null && part.getOrganization() != null && part.getActor() == null ) {
             List<Actor> actorsInRole = getDqo().findAllActors( part.resourceSpec() );
             if ( part.getOrganization().isActorsRequired() && actorsInRole.isEmpty() ) {
-                Issue issue = new DetectedIssue( Issue.STRUCTURAL, part );
+                Issue issue = makeIssue( Issue.STRUCTURAL, part );
                 issue.setDescription( "There is no known actor playing this role." );
                 issue.setRemediation( " Identify an actor playing this role." );
                 issue.setSeverity( Issue.Level.Major );

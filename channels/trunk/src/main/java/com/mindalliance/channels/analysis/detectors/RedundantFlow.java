@@ -35,6 +35,13 @@ public class RedundantFlow extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
+    public boolean canBeWaived() {
+        return true;
+    }    
+
+    /**
+     * {@inheritDoc}
+     */
     public String getTestedProperty() {
         return null;
     }
@@ -53,7 +60,7 @@ public class RedundantFlow extends AbstractIssueDetector {
             redundant = ( otherFlow != flow ) && equivalent( flow, otherFlow );
         }
         if ( redundant ) {
-            DetectedIssue issue = new DetectedIssue( DetectedIssue.DEFINITION, flow );
+            DetectedIssue issue = makeIssue( DetectedIssue.DEFINITION, flow );
             issue.setDescription( "This flow is redundant." );
             issue.setRemediation( "Change the information transmitted, or break it up." );
             issue.setSeverity( Issue.Level.Minor );

@@ -44,13 +44,13 @@ public class UnconnectedConnector extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         for ( Flow capability : getDqo().findUnusedCapabilities( part ) ) {
-            DetectedIssue issue = new DetectedIssue( DetectedIssue.STRUCTURAL, part );
+            DetectedIssue issue = makeIssue( DetectedIssue.STRUCTURAL, part );
             issue.setDescription( "'" + capability.getName() + "' is produced but never sent." );
             issue.setSeverity( Issue.Level.Minor );
             issues.add( issue );
         }
         for ( Flow need : getDqo().findUnsatisfiedNeeds( part ) ) {
-            DetectedIssue issue = new DetectedIssue( DetectedIssue.STRUCTURAL, part );
+            DetectedIssue issue = makeIssue( DetectedIssue.STRUCTURAL, part );
             issue.setDescription(
                     ( need.isRequired() ? "Required " : "" )
                             + "'"

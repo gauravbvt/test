@@ -37,6 +37,13 @@ public class PotentialDeadlock extends AbstractIssueDetector {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public boolean canBeWaived() {
+        return true;
+    }
+
+    /**
      * Detect cycles where all flows are critical.
      *
      * @param modelObject -- the ModelObject being analyzed
@@ -76,7 +83,7 @@ public class PotentialDeadlock extends AbstractIssueDetector {
                     }
                     // This is a "critical" cycle
                     if ( allCritical ) {
-                        Issue issue = new DetectedIssue( Issue.STRUCTURAL, scenario );
+                        Issue issue = makeIssue( Issue.STRUCTURAL, scenario );
                         issue.setDescription( "Potential deadlock if any of "
                                 + getRequirementDescriptions( criticalRequirementsInCycle )
                                 + " fails." );

@@ -99,14 +99,23 @@ public class ConnectedFlowList extends Panel {
         protected void addIssues( Component component, ModelObject object, String property ) {
 
             final Analyst analyst = Project.analyst();
-            final String issue = property == null ? analyst.getIssuesSummary( object, false )
+            final String summary = property == null ? analyst.getIssuesSummary( object, false )
                     : analyst.getIssuesSummary( object, property );
-            if ( !issue.isEmpty() ) {
+            boolean hasIssues = analyst.hasIssues( object, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+            if ( !summary.isEmpty() ) {
                 component.add( new AttributeModifier(
                         "class", true, new Model<String>( "error" ) ) );                  // NON-NLS
                 component.add( new AttributeModifier(
-                        "title", true, new Model<String>( issue ) ) );                    // NON-NLS
+                        "title", true, new Model<String>( summary ) ) );                    // NON-NLS
+            } else {
+            if ( hasIssues ) {
+                // All waived issues
+                component.add(
+                        new AttributeModifier( "class", true, new Model<String>( "waived" ) ) );
+                component.add(
+                        new AttributeModifier( "title", true, new Model<String>( "All issues waived" ) ) );
             }
+        }
         }
     }
 

@@ -18,12 +18,12 @@ import java.util.List;
 public interface Analyst {
 
     /**
-     * Whether to include issues that are property-specific
+     * Whether to include issues that are property-specific.
      */
     boolean INCLUDE_PROPERTY_SPECIFIC = true;
 
     /**
-     * Use all applicable issue detectors to find issues about a model object
+     * Use all applicable issue detectors to find issues about a model object.
      *
      * @param modelObject -- the model object being analyzed
      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
@@ -32,7 +32,7 @@ public interface Analyst {
     Iterator<Issue> findIssues( ModelObject modelObject, boolean includingPropertySpecific );
 
     /**
-     * Use all applicable issue detectors to find issues about a model object's property
+     * Use all applicable issue detectors to find issues about a model object's property.
      *
      * @param modelObject -- the model object being analyzed
      * @param property    -- the name of a property of the model object
@@ -41,7 +41,7 @@ public interface Analyst {
     Iterator<Issue> findIssues( ModelObject modelObject, String property );
 
     /**
-      * Use all applicable issue detectors to find issues about a model object
+      * Use all applicable issue detectors to find issues about a model object.
       *
       * @param modelObject -- the model object being analyzed
       * @param includingPropertySpecific -- all issues or only those that are not specific to a property
@@ -50,7 +50,7 @@ public interface Analyst {
      List<Issue> listIssues( ModelObject modelObject, boolean includingPropertySpecific );
 
      /**
-      * Use all applicable issue detectors to find issues about a model object's property
+      * Use all applicable issue detectors to find issues about a model object's property.
       *
       * @param modelObject -- the model object being analyzed
       * @param property    -- the name of a property of the model object
@@ -59,16 +59,25 @@ public interface Analyst {
      List<Issue> listIssues( ModelObject modelObject, String property );
 
     /**
-     * Tests whether a model object has issues
-     *
-     * @param modelObject -- the model object being analyzed
-     * @param includingPropertySpecific -- all issues or only those that are not specific to a property
-     * @return whether a model object has issues
-     */
-    boolean hasIssues( ModelObject modelObject, boolean includingPropertySpecific );
+      * Use all unwaived issue detectors to find issues about a model object.
+      *
+      * @param modelObject -- the model object being analyzed
+      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
+      * @return a list of issues detected
+      */
+     List<Issue> listUnwaivedIssues( ModelObject modelObject, boolean includingPropertySpecific );
+
+     /**
+      * Use all unwaived issue detectors to find issues about a model object's property.
+      *
+      * @param modelObject -- the model object being analyzed
+      * @param property    -- the name of a property of the model object
+      * @return a list of issues detected
+      */
+     List<Issue> listUnwaivedIssues( ModelObject modelObject, String property );
 
     /**
-     * Tests whether a specifi property of a model object has issues
+     * Tests whether a specific property of a model object has issues.
      *
      * @param modelObject -- the model object being analyzed
      * @param property    -- the specifiec property being analyzed
@@ -77,7 +86,34 @@ public interface Analyst {
     boolean hasIssues( ModelObject modelObject, String property );
 
     /**
-     * Produces an aggregate description of issues detected about a model object
+     * Tests whether a model object has issues.
+     *
+     * @param modelObject -- the model object being analyzed
+     * @param includingPropertySpecific -- all issues or only those that are not specific to a property
+     * @return whether a model object has issues
+     */
+    boolean hasIssues( ModelObject modelObject, boolean includingPropertySpecific );
+
+    /**
+     * Tests whether a specific property of a model object has unwaived issues.
+     *
+     * @param modelObject -- the model object being analyzed
+     * @param property    -- the specifiec property being analyzed
+     * @return whether a specifi property of a model object has issues
+     */
+    boolean hasUnwaivedIssues( ModelObject modelObject, String property );
+
+    /**
+     * Tests whether a model object has unwaived issues.
+     *
+     * @param modelObject -- the model object being analyzed
+     * @param includingPropertySpecific -- all issues or only those that are not specific to a property
+     * @return whether a model object has issues
+     */
+    boolean hasUnwaivedIssues( ModelObject modelObject, boolean includingPropertySpecific );
+
+    /**
+     * Produces an aggregate description of unwaived issues detected about a model object.
      *
      * @param modelObject -- the model object being analyzed
      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
@@ -86,7 +122,7 @@ public interface Analyst {
     String getIssuesSummary( ModelObject modelObject, boolean includingPropertySpecific );
 
     /**
-     * Produces an aggregate description of issues detected about a specific property
+     * Produces an aggregate description of unwaived issues detected about a specific property.
      * of a model object
      *
      * @param modelObject -- the model object being analyzed
@@ -96,7 +132,7 @@ public interface Analyst {
     String getIssuesSummary( ModelObject modelObject, String property );
 
     /**
-     * Find all issues related to any of the components of a resource
+     * Find all issues related to any of the components of a resource.
      *
      * @param resource a resource
      * @return a list of issues
@@ -104,7 +140,7 @@ public interface Analyst {
     List<Issue> findAllIssuesFor( ResourceSpec resource );
 
     /**
-     * Find all issues related to any of the components of a resource
+     * Find all issues related to any of the components of a resource.
      *
      * @param resource a resource
      * @param specific a boolean -- true -> equality match, false -> marrow or equals

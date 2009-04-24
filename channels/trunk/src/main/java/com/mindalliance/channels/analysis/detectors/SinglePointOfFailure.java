@@ -47,6 +47,13 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public boolean canBeWaived() {
+        return true;
+    }    
+
+    /**
      * Detects one or more actors who play parts where they are bottlenecks.
      * A bottleneck is an "articulation vertex" (a point connecting otherwise
      * disjoint subgraphs) with a large enough out degree (count of outcomes).
@@ -73,7 +80,7 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
         }
         // Found single points of failure?
         for ( Node node : actorNodes ) {
-            DetectedIssue issue = new DetectedIssue( DetectedIssue.STRUCTURAL, node );
+            DetectedIssue issue = makeIssue( DetectedIssue.STRUCTURAL, node );
             issue.setDescription( "Single point of failure." );
             issue.setRemediation( "Delegate responsibilities or add redundancy." );
             issue.setSeverity( Issue.Level.Major );

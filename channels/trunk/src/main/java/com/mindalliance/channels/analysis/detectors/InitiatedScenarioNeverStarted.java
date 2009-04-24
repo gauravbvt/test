@@ -30,7 +30,7 @@ public class InitiatedScenarioNeverStarted extends AbstractIssueDetector {
         Scenario scenario = (Scenario) modelObject;
         if ( !scenario.isIncident() && scenario.isInitiated() ) {
             if ( !getDqo().findIfScenarioStarted( scenario ) ) {
-                Issue issue = new DetectedIssue( Issue.STRUCTURAL, scenario );
+                Issue issue = makeIssue( Issue.STRUCTURAL, scenario );
                 issue.setDescription( "The scenario can not be caused by planned tasks"
                         + " because none of the tasks that cause it are started." );
                 issue.setRemediation( "Ensure that tasks that cause this scenario can start,"

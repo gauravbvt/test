@@ -29,7 +29,7 @@ public class NonIncidentScenarioNeverInitiated extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Scenario scenario = (Scenario) modelObject;
         if ( !scenario.isIncident() && !scenario.isInitiated() ) {
-            Issue issue = new DetectedIssue( Issue.STRUCTURAL, scenario );
+            Issue issue = makeIssue( Issue.STRUCTURAL, scenario );
             issue.setDescription( "The scenario is never caused by a task even though"
                     + " it is expected to be (it is not an incident)." );
             issue.setRemediation( "Make the scenario an incident, or make sure at least one"

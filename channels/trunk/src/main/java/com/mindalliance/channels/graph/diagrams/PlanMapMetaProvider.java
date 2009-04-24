@@ -163,7 +163,7 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
             list.add( new DOTAttribute(
                     "tooltip",
                     sanitize( StringUtils.abbreviate( vertex.getDescription(), 50 ) ) ) );
-            if ( getAnalyst().hasIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+            if ( getAnalyst().hasUnwaivedIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( vertex,
                         Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );

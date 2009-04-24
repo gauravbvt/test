@@ -4,6 +4,8 @@ import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.command.commands.UpdateProjectObject;
 import com.mindalliance.channels.pages.components.menus.IssueActionsMenuPanel;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.basic.Label;
@@ -12,8 +14,6 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.Component;
-import org.apache.wicket.AttributeModifier;
 
 import java.util.Arrays;
 
@@ -41,6 +41,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
         Issue issue = model.getObject();
         setOutputMarkupId( true );
         addIssueActionsMenu();
+        // Description
         TextArea<String> descriptionArea = new TextArea<String>( "description",
                 new PropertyModel<String>( this, "description" ) );
         descriptionArea.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
@@ -48,8 +49,9 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
                 // do nothing
             }
         } );
-        descriptionArea.setEnabled( isLockedByUser( getIssue() ) );
+        descriptionArea.setEnabled( !getIssue().isDetected() && isLockedByUser( getIssue() ) );
         add( descriptionArea );
+         // Severity
         DropDownChoice<Issue.Level> levelChoice = new DropDownChoice<Issue.Level>(
                 "severity",
                 new PropertyModel<Issue.Level>( this, "severity" ),
@@ -59,8 +61,9 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
                 // do nothing
             }
         } );
-        levelChoice.setEnabled( isLockedByUser( getIssue() ) );
+        levelChoice.setEnabled( !getIssue().isDetected() && isLockedByUser( getIssue() ) );
         add( levelChoice );
+        // Remediation
         TextArea<String> remediationArea = new TextArea<String>( "remediation",
                 new PropertyModel<String>( this, "remediation" ) );
         remediationArea.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
@@ -68,7 +71,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
                 // do nothing
             }
         } );
-        remediationArea.setEnabled( isLockedByUser( getIssue() ) );
+        remediationArea.setEnabled( !getIssue().isDetected() && isLockedByUser( getIssue() ) );
         add( remediationArea );
         add( new AttachmentPanel( "attachments", new Model<UserIssue>( (UserIssue) issue ) ) );
         add( new Label( "reported-by",
@@ -132,6 +135,5 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
     public void setSeverity( Issue.Level severity ) {
         doCommand( new UpdateProjectObject( getIssue(), "severity", severity ) );
     }
-
 
 }

@@ -65,6 +65,7 @@ public class FlowConverter extends AbstractChannelsConverter {
         } else {
             writeFlowNodes( (ExternalFlow) flow, writer, currentScenario );
         }
+        exportDetectionWaivers( flow, writer );
         writer.startNode( "description" );
         writer.setValue( flow.getDescription() );
         writer.endNode();
@@ -187,6 +188,8 @@ public class FlowConverter extends AbstractChannelsConverter {
             if ( nodeName.equals( "description" ) ) {
                 String description = reader.getValue();
                 flow.setDescription( description );
+            } else if ( nodeName.equals( "detection-waivers" ) ) {
+                importDetectionWaivers( flow, reader );
             } else if ( nodeName.equals( "channel" ) ) {
                 Channel channel = (Channel) context.convertAnother( scenario, Channel.class );
                 flow.addChannel( channel );

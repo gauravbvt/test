@@ -34,6 +34,13 @@ public class RedundantPart extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
+    public boolean canBeWaived() {
+        return true;
+    }    
+
+    /**
+     * {@inheritDoc}
+     */
     public String getTestedProperty() {
         return null;
     }
@@ -47,7 +54,7 @@ public class RedundantPart extends AbstractIssueDetector {
         List<Part> equivalentParts = findEquivalentTo( part );
         int count = equivalentParts.size();
         if ( count > 0 ) {
-            DetectedIssue issue = new DetectedIssue( DetectedIssue.DEFINITION, part );
+            DetectedIssue issue = makeIssue( DetectedIssue.DEFINITION, part );
             issue.setDescription(
                     "This part is restated "
                             + ( ( count == 1 ) ? "once." : count + " times." ) );

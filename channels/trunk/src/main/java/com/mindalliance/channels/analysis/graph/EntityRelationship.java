@@ -139,7 +139,7 @@ public class EntityRelationship<T extends ModelObject> implements Identifiable {
         boolean hasIssues = false;
         Iterator<Flow> iterator = flows.iterator();
         while ( !hasIssues && iterator.hasNext() ) {
-            hasIssues = analyst.hasIssues( iterator.next(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
+            hasIssues = analyst.hasUnwaivedIssues( iterator.next(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
         }
         return hasIssues;
     }
@@ -153,7 +153,7 @@ public class EntityRelationship<T extends ModelObject> implements Identifiable {
     public String getIssuesSummary( Analyst analyst ) {
         int count = 0;
         for ( Flow flow : flows ) {
-            count += analyst.listIssues( flow, Analyst.INCLUDE_PROPERTY_SPECIFIC ).size();
+            count += analyst.listUnwaivedIssues( flow, Analyst.INCLUDE_PROPERTY_SPECIFIC ).size();
         }
         return count + ( count > 1 ? " issues" : " issue" );
     }

@@ -43,14 +43,23 @@ public class CollapsedFlowPanel extends AbstractCommandablePanel {
         makeVisible( channel, c != null && !c.isEmpty() );
         add( channel );
 
-        // Add style mods from scenario analyst.
+        // Add style mods from analyst.
         Analyst analyst = ( (Project) getApplication() ).getAnalyst();
-        String issue = analyst.getIssuesSummary( flow, Analyst.INCLUDE_PROPERTY_SPECIFIC );
-        if ( !issue.isEmpty() ) {
+        String summary = analyst.getIssuesSummary( flow, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        boolean hasIssues = analyst.hasIssues( flow, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        if ( !summary.isEmpty() ) {
             label.add(
                     new AttributeModifier( "class", true, new Model<String>( "error" ) ) );
             label.add(
-                    new AttributeModifier( "title", true, new Model<String>( issue ) ) );
+                    new AttributeModifier( "title", true, new Model<String>( summary ) ) );
+        } else {
+            if ( hasIssues ) {
+                // All waived issues
+                label.add(
+                        new AttributeModifier( "class", true, new Model<String>( "waived" ) ) );
+                label.add(
+                        new AttributeModifier( "title", true, new Model<String>( "All issues waived" ) ) );
+            }
         }
 
         add( label );

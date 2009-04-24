@@ -270,7 +270,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", NODE_FONT ) );
-            if ( getAnalyst().hasIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+            if ( getAnalyst().hasUnwaivedIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( vertex,
                         Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
@@ -337,7 +337,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
                 list.add( new DOTAttribute( "labelangle", LABEL_ANGLE ) );
             }
             // Issue coloring
-            if ( getAnalyst().hasIssues( edge, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+            if ( getAnalyst().hasUnwaivedIssues( edge, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( edge,

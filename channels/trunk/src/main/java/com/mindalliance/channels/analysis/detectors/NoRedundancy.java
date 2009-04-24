@@ -38,6 +38,13 @@ public class NoRedundancy extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
+    public boolean canBeWaived() {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public String getTestedProperty() {
         return null;
     }
@@ -80,7 +87,7 @@ public class NoRedundancy extends AbstractIssueDetector {
                         }
                     } );
             if ( !alternates.hasNext() ) {
-                DetectedIssue issue = new DetectedIssue( DetectedIssue.STRUCTURAL, part );
+                DetectedIssue issue = makeIssue( DetectedIssue.STRUCTURAL, part );
                 issue.setDescription( "Has a only one source for critical \""
                         + name + "\"" );
                 issue.setRemediation( "Add alternate source." );

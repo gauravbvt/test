@@ -2,9 +2,12 @@ package com.mindalliance.channels.export.xml;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.Connector;
+import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.export.ConnectionSpecification;
 import com.mindalliance.channels.pages.Project;
 
@@ -45,19 +48,19 @@ public abstract class AbstractChannelsConverter implements Converter {
         return idMap;
     }
 
-
 /*    protected Map<Connector, List<ConnectionSpecification>> getPortalConnectors( UnmarshallingContext context ) {
-        Map<Connector, List<ConnectionSpecification>> portalConnectors =
-                (Map<Connector, List<ConnectionSpecification>>) context.get( "portalConnectors" );
-        if ( portalConnectors == null ) {
-            portalConnectors = new HashMap<Connector, List<ConnectionSpecification>>();
-            context.put( "portalConnectors", portalConnectors );
-        }
-        return portalConnectors;
-    }*/
+    Map<Connector, List<ConnectionSpecification>> portalConnectors =
+            (Map<Connector, List<ConnectionSpecification>>) context.get( "portalConnectors" );
+    if ( portalConnectors == null ) {
+        portalConnectors = new HashMap<Connector, List<ConnectionSpecification>>();
+        context.put( "portalConnectors", portalConnectors );
+    }
+    return portalConnectors;
+}*/
 
     /**
      * Get proxy connectors: connectors meant to be replaced by external connectors.
+     *
      * @param context an unmarshalling context
      * @return a map
      */
@@ -88,5 +91,38 @@ public abstract class AbstractChannelsConverter implements Converter {
         }
     }
 
+    /**
+     * Export issue detection waivers.
+     *
+     * @param modelObject a model object
+     * @param writer      a writer
+     */
+    protected void exportDetectionWaivers( ModelObject modelObject, HierarchicalStreamWriter writer ) {
+        if ( !modelObject.getWaivedIssueDetections().isEmpty() ) {
+            writer.startNode( "detection-waivers" );
+            for ( String detection : modelObject.getWaivedIssueDetections() ) {
+                writer.startNode( "detection" );
+                writer.setValue( detection );
+                writer.endNode();
+            }
+            writer.endNode();
+        }
+    }
 
+    /**
+     * Import issue detection waivers.
+     *
+     * @param modelObject a model object
+     * @param reader      a reader
+     */
+    protected void importDetectionWaivers( ModelObject modelObject, HierarchicalStreamReader reader ) {
+        while ( reader.hasMoreChildren() ) {
+            reader.moveDown();
+            String nodeName = reader.getNodeName();
+            assert ( nodeName.equals( "detection" ) );
+            String detection = reader.getValue();
+            modelObject.waiveIssueDetection( detection );
+            reader.moveUp();
+        }
+    }
 }

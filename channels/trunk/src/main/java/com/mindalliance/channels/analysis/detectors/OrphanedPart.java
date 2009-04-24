@@ -43,7 +43,7 @@ public class OrphanedPart extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( !part.requirements().hasNext() && !part.outcomes().hasNext() ) {
-            DetectedIssue issue = new DetectedIssue( DetectedIssue.STRUCTURAL, part );
+            DetectedIssue issue = makeIssue( DetectedIssue.STRUCTURAL, part );
             issue.setDescription( "Does not produce or need information." );
             issue.setRemediation( "Add sent or received information." );
             issue.setSeverity( Issue.Level.Minor );

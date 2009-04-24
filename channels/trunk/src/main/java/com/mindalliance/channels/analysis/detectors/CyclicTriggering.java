@@ -46,7 +46,7 @@ public class CyclicTriggering extends AbstractIssueDetector {
             // collect all critical requirements of nodes in the cycle.
             for ( Set<Part> cycle : cycles ) {
                 if ( cycle.size() > 1 ) {
-                    Issue issue = new DetectedIssue( Issue.STRUCTURAL, scenario );
+                    Issue issue = makeIssue( Issue.STRUCTURAL, scenario );
                     StringBuilder sb = new StringBuilder();
                     sb.append("These parts trigger each other in a loop: ");
                     int count = 0;

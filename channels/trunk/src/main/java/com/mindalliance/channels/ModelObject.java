@@ -10,6 +10,8 @@ import javax.persistence.Lob;
 import javax.persistence.Transient;
 import java.text.Collator;
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * An object with name, id and description, comparable by its toString() values.
@@ -36,7 +38,11 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
     /**
      * Time the object was last modified. Set by aspect.
      */
-    private Date lastModified;
+    // private Date lastModified;
+    /**
+     * List of waived issue detections (issue detector class simple names)
+     */
+    private List<String> waivedIssueDetections = new ArrayList<String>();
 
     //=============================
     protected ModelObject() {
@@ -141,6 +147,37 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
         return new Date();
     }
 
+    public List<String> getWaivedIssueDetections() {
+        return waivedIssueDetections;
+    }
+
+    public void setWaivedIssueDetections( List<String> waivedIssueDetections ) {
+        this.waivedIssueDetections = waivedIssueDetections;
+    }
+
+    /**
+     * Waive a kind of issue detection.
+     *
+     * @param detection a string
+     */
+    public void waiveIssueDetection( String detection ) {
+        if ( !waivedIssueDetections.contains( detection ) )
+            waivedIssueDetections.add( detection );
+    }
+
+    /**
+     * Un-waive a kind of issue detection.
+     *
+     * @param detection a string
+     */
+    public void unwaiveIssueDetection( String detection ) {
+        waivedIssueDetections.remove( detection );
+    }
+
+    public boolean isWaived( String detection ) {
+        return waivedIssueDetections.contains( detection );
+    }
+
     /**
      * Get a label
      *
@@ -173,6 +210,7 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
 
     /**
      * Executed just before the model object is removed.
+     *
      * @param dataQueryObject a data query object
      */
     public void beforeRemove( DataQueryObject dataQueryObject ) {

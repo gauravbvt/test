@@ -39,6 +39,7 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
         writer.startNode( "description" );
         writer.setValue( entity.getDescription() == null ? "" : entity.getDescription() );
         writer.endNode();
+        exportDetectionWaivers( entity, writer );
         writeSpecifics( entity, writer, context );
         // User issues
         List<Issue> issues = Project.dqo().findAllUserIssues( entity );
@@ -76,6 +77,8 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "description" ) ) {
                 entity.setDescription( reader.getValue() );
+            }  else if ( nodeName.equals( "detection-waivers" ) ) {
+                importDetectionWaivers( entity, reader );
             } else {
                 setSpecific( entity, nodeName, reader, context );
             }

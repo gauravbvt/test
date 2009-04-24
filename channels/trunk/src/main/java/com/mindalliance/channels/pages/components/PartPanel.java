@@ -133,7 +133,8 @@ public class PartPanel extends AbstractCommandablePanel {
         startWithScenarioCheckBox.setEnabled( isLockedByUser( getPart() ) );
         terminatesScenarioCheckBox.setEnabled( isLockedByUser( getPart() ) );
         initiatesScenarioCheckBox.setEnabled( isLockedByUser( getPart() ) );
-        initiatedScenarioChoice.setEnabled( isLockedByUser( getPart() ) );
+        initiatedScenarioChoice.setEnabled(
+                getPart().getInitiatedScenario() != null && isLockedByUser( getPart() ) );
     }
 
     private void addField( final String property, final Collection<String> choices ) {
@@ -179,23 +180,32 @@ public class PartPanel extends AbstractCommandablePanel {
      */
     protected void addIssues( FormComponent<?> component, ModelObject object, String property ) {
         Analyst analyst = ( (Project) getApplication() ).getAnalyst();
-        String issue = property == null ?
+        String summary = property == null ?
                 analyst.getIssuesSummary( object, false ) :
                 analyst.getIssuesSummary( object, property );
-        if ( !issue.isEmpty() ) {
+        boolean hasIssues = analyst.hasIssues( object, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        if ( !summary.isEmpty() ) {
             component.add(
                     new AttributeModifier(
                             "class", true, new Model<String>( "error" ) ) );
             component.add(
                     new AttributeModifier(
-                            "title", true, new Model<String>( issue ) ) );                // NON-NLS
+                            "title", true, new Model<String>( summary ) ) );                // NON-NLS
         } else {
-            component.add(
-                    new AttributeModifier(
-                            "class", true, new Model<String>( "no-error" ) ) );
-            component.add(
-                    new AttributeModifier(
-                            "title", true, new Model<String>( "" ) ) );
+            if ( hasIssues ) {
+                // All waived issues
+                component.add(
+                        new AttributeModifier( "class", true, new Model<String>( "waived" ) ) );
+                component.add(
+                        new AttributeModifier( "title", true, new Model<String>( "All issues waived" ) ) );
+            } else {
+                component.add(
+                        new AttributeModifier(
+                                "class", true, new Model<String>( "no-error" ) ) );
+                component.add(
+                        new AttributeModifier(
+                                "title", true, new Model<String>( "" ) ) );
+            }
         }
     }
 
@@ -260,7 +270,7 @@ public class PartPanel extends AbstractCommandablePanel {
         add( initiatesScenarioCheckBox );
         initiatesScenarioCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                initiatedScenarioChoice.setEnabled( initiatesScenarioCheckBox.getInput() != null);
+                initiatedScenarioChoice.setEnabled( initiatesScenarioCheckBox.getInput() != null );
                 target.addComponent( initiatedScenarioChoice );
             }
         } );
@@ -289,6 +299,7 @@ public class PartPanel extends AbstractCommandablePanel {
     //====================================
     /**
      * Get all scenarios that could be initiated by this part.
+     *
      * @return a list of scenarios
      */
     public List<Scenario> getInitiatableScenarios() {
@@ -575,7 +586,7 @@ public class PartPanel extends AbstractCommandablePanel {
      * @param initiates a boolean
      */
     public void setInitiatesScenario( boolean initiates ) {
-        if (!initiates) {
+        if ( !initiates ) {
             doCommand( new UpdateScenarioObject( getPart(), "initiatedScenario", null ) );
         }
     }
@@ -611,6 +622,7 @@ public class PartPanel extends AbstractCommandablePanel {
 
     /**
      * Refresh part panel.
+     *
      * @param target an ajax request target
      */
     public void refresh( AjaxRequestTarget target ) {

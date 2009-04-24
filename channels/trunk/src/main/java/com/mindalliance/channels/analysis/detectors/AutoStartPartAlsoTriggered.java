@@ -29,7 +29,7 @@ public class AutoStartPartAlsoTriggered extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( part.isStartsWithScenario() && part.isTriggered() ) {
-            Issue issue = new DetectedIssue( Issue.FLOW, part );
+            Issue issue = makeIssue( Issue.FLOW, part );
             issue.setDescription( "This task is unnecessarily triggered"
                     + " since it starts with the scenario." );
             issue.setRemediation( "Either have no flow trigger this task,"

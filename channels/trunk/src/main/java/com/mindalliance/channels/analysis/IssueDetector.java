@@ -16,6 +16,12 @@ import java.util.List;
 public interface IssueDetector {
 
     /**
+     * The detector's unique kind.
+     * @return a string
+     */
+    String getKind();
+
+    /**
      * Detect an issue on a model object
      *
      * @param modelObject -- the ModelObject being analyzed
@@ -46,4 +52,10 @@ public interface IssueDetector {
      * @return the name of a property or null if test applies to some combination of properties
      */
     String getTestedProperty();
+
+    /**
+     * Whether issues detected by this detectro can be waived.
+     * @return a boolean
+     */
+    boolean canBeWaived();
 }

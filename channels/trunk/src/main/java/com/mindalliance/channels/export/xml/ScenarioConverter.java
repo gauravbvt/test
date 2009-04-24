@@ -70,6 +70,7 @@ public class ScenarioConverter extends AbstractChannelsConverter {
         writer.startNode( "description" );
         writer.setValue( scenario.getDescription() );
         writer.endNode();
+        exportDetectionWaivers( scenario, writer );
         if ( scenario.getLocation() != null ) {
             writer.startNode( "location" );
             writer.setValue( scenario.getLocation().getName() );
@@ -149,6 +150,8 @@ public class ScenarioConverter extends AbstractChannelsConverter {
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "description" ) ) {
                 scenario.setDescription( reader.getValue() );
+            } else if ( nodeName.equals( "detection-waivers" ) ) {
+                importDetectionWaivers( scenario, reader );
             } else if ( nodeName.equals( "location" ) ) {
                 scenario.setLocation( dqo.findOrCreate( Place.class, reader.getValue() ) );
             } else if ( nodeName.equals( "incident" ) ) {

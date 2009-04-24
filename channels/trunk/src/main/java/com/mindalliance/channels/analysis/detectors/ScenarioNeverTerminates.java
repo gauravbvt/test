@@ -27,6 +27,13 @@ public class ScenarioNeverTerminates extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
+    public boolean canBeWaived() {
+        return true;
+    }    
+
+    /**
+     * {@inheritDoc}
+     */
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Scenario scenario = (Scenario) modelObject;
@@ -38,7 +45,7 @@ public class ScenarioNeverTerminates extends AbstractIssueDetector {
                 terminated = part.isTerminatesScenario();
             }
             if ( !terminated ) {
-                Issue issue = new DetectedIssue( Issue.STRUCTURAL, scenario );
+                Issue issue = makeIssue( Issue.STRUCTURAL, scenario );
                 issue.setDescription( "The scenario never ends." );
                 issue.setRemediation( "Have the scenario end on its own"
                         + " or make sure at least one task terminates it." );

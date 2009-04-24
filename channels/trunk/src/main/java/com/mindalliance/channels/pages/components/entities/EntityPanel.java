@@ -124,20 +124,28 @@ public class EntityPanel extends AbstractCommandablePanel {
 
     private void annotateEntityName() {
         Analyst analyst = ( (Project) getApplication() ).getAnalyst();
-        String issue = analyst.getIssuesSummary(
+        String summary = analyst.getIssuesSummary(
                 getEntity(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
-        if ( !issue.isEmpty() ) {
+        boolean hasIssues = analyst.hasIssues( getEntity(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        if ( !summary.isEmpty() ) {
             entityNameLabel.add( new AttributeModifier(
                     "class", true, new Model<String>( "error" ) ) ); // NON-NLS
             entityNameLabel.add( new AttributeModifier(
-                    "title", true, new Model<String>( issue ) ) );  // NON-NLS
+                    "title", true, new Model<String>( summary ) ) );  // NON-NLS
         } else {
-            entityNameLabel.add( new AttributeModifier(
-                    "class", true, new Model<String>( "no-error" ) ) ); // NON-NLS
-            entityNameLabel.add( new AttributeModifier(
-                    "title", true, new Model<String>( "No known issue" ) ) );  // NON-NLS
+            if ( hasIssues ) {
+                // All waived issues
+                entityNameLabel.add(
+                        new AttributeModifier( "class", true, new Model<String>( "waived" ) ) );
+                entityNameLabel.add(
+                        new AttributeModifier( "title", true, new Model<String>( "All issues waived" ) ) );
+            } else {
+                entityNameLabel.add( new AttributeModifier(
+                        "class", true, new Model<String>( "no-error" ) ) ); // NON-NLS
+                entityNameLabel.add( new AttributeModifier(
+                        "title", true, new Model<String>( "No known issue" ) ) );  // NON-NLS
+            }
         }
-
     }
 
 
@@ -236,6 +244,7 @@ public class EntityPanel extends AbstractCommandablePanel {
 
     /**
      * Get entity name plus aspect.
+     *
      * @return a string
      */
     public String getEntityName() {
@@ -244,6 +253,7 @@ public class EntityPanel extends AbstractCommandablePanel {
 
     /**
      * Get entity's class.
+     *
      * @return a class
      */
     public String getEntityClass() {
@@ -252,6 +262,7 @@ public class EntityPanel extends AbstractCommandablePanel {
 
     /**
      * Get the entity that's viewed.
+     *
      * @return a model object
      */
     public ModelObject getEntity() {
@@ -260,8 +271,9 @@ public class EntityPanel extends AbstractCommandablePanel {
 
     /**
      * Change aspect shown.
+     *
      * @param target an ajax request target
-     * @param aspect  the name of the aspect
+     * @param aspect the name of the aspect
      */
     public void setAspectShown( AjaxRequestTarget target, String aspect ) {
         aspectShown = aspect;

@@ -13,15 +13,17 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
 
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.CollectionUtils;
+
 /**
- * Default implementation of Analyst
+ * Default implementation of Analyst.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: Nov 26, 2008
  * Time: 10:07:27 AM
  */
-// TODO - cache detected issues, reset cache according to changes to the model
 public class DefaultAnalyst implements Analyst {
 
     private static final String DESCRIPTION_SEPARATOR = " -- ";
@@ -48,6 +50,34 @@ public class DefaultAnalyst implements Analyst {
         return new IssueIterator( issueDetectors, modelObject, property );
     }
 
+    @SuppressWarnings( "unchecked" )
+    private Iterator<Issue> findUnwaivedIssues(
+            final ModelObject modelObject,
+            boolean includingPropertySpecific ) {
+        List<IssueDetector> unwaivedDetectors = (List<IssueDetector>) CollectionUtils.select(
+                issueDetectors,
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        IssueDetector issueDetector = (IssueDetector) obj;
+                        return !modelObject.isWaived( issueDetector.getKind() );
+                    }
+                } );
+        return new IssueIterator( unwaivedDetectors, modelObject, includingPropertySpecific );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private Iterator<Issue> findUnwaivedIssues( final ModelObject modelObject, String property ) {
+        List<IssueDetector> unwaivedDetectors = (List<IssueDetector>) CollectionUtils.select(
+                issueDetectors,
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        IssueDetector issueDetector = (IssueDetector) obj;
+                        return !modelObject.isWaived( issueDetector.getKind() );
+                    }
+                } );
+        return new IssueIterator( unwaivedDetectors, modelObject, property );
+    }
+
 
     /**
      * {@inheritDoc}
@@ -55,7 +85,7 @@ public class DefaultAnalyst implements Analyst {
     public List<Issue> listIssues( ModelObject modelObject, boolean includingPropertySpecific ) {
         List<Issue> issues = new ArrayList<Issue>();
         Iterator<Issue> iterator = findIssues( modelObject, includingPropertySpecific );
-        while (iterator.hasNext()) issues.add( iterator.next() );
+        while ( iterator.hasNext() ) issues.add( iterator.next() );
         return issues;
     }
 
@@ -65,15 +95,22 @@ public class DefaultAnalyst implements Analyst {
     public List<Issue> listIssues( ModelObject modelObject, String property ) {
         List<Issue> issues = new ArrayList<Issue>();
         Iterator<Issue> iterator = findIssues( modelObject, property );
-        while (iterator.hasNext()) issues.add( iterator.next() );
+        while ( iterator.hasNext() ) issues.add( iterator.next() );
         return issues;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean hasIssues( ModelObject modelObject, boolean includingPropertySpecific ) {
-        return findIssues( modelObject, includingPropertySpecific ).hasNext();
+    public List<Issue> listUnwaivedIssues( ModelObject modelObject, boolean includingPropertySpecific ) {
+        List<Issue> issues = new ArrayList<Issue>();
+        Iterator<Issue> iterator = findUnwaivedIssues( modelObject, includingPropertySpecific );
+        while ( iterator.hasNext() ) issues.add( iterator.next() );
+        return issues;
+    }
+
+    public List<Issue> listUnwaivedIssues( ModelObject modelObject, String property ) {
+        List<Issue> issues = new ArrayList<Issue>();
+        Iterator<Issue> iterator = findUnwaivedIssues( modelObject, property );
+        while ( iterator.hasNext() ) issues.add( iterator.next() );
+        return issues;
     }
 
     /**
@@ -86,8 +123,29 @@ public class DefaultAnalyst implements Analyst {
     /**
      * {@inheritDoc}
      */
+    public boolean hasIssues( ModelObject modelObject, boolean includingPropertySpecific ) {
+        return findIssues( modelObject, includingPropertySpecific ).hasNext();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean hasUnwaivedIssues( ModelObject modelObject, String property ) {
+        return findUnwaivedIssues( modelObject, property ).hasNext();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean hasUnwaivedIssues( ModelObject modelObject, boolean includingPropertySpecific ) {
+        return findUnwaivedIssues( modelObject, includingPropertySpecific ).hasNext();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public String getIssuesSummary( ModelObject modelObject, boolean includingPropertySpecific ) {
-        Iterator<Issue> issues = findIssues( modelObject, includingPropertySpecific );
+        Iterator<Issue> issues = findUnwaivedIssues( modelObject, includingPropertySpecific );
         return summarize( issues );
     }
 
@@ -95,7 +153,7 @@ public class DefaultAnalyst implements Analyst {
      * {@inheritDoc}
      */
     public String getIssuesSummary( ModelObject modelObject, String property ) {
-        Iterator<Issue> issues = findIssues( modelObject, property );
+        Iterator<Issue> issues = findUnwaivedIssues( modelObject, property );
         return summarize( issues );
     }
 
@@ -150,13 +208,13 @@ public class DefaultAnalyst implements Analyst {
         }
         issues.addAll( findAllIssuesInPlays( resourceSpec, specific ) );
         return issues;
-     }
+    }
 
     /**
      * Find the issues on parts and flows for all plays of a resource
      *
      * @param resourceSpec a resource
-     * @param specific whether the match is "equals" or "narrows or equals"
+     * @param specific     whether the match is "equals" or "narrows or equals"
      * @return a list of issues
      */
     private List<Issue> findAllIssuesInPlays( ResourceSpec resourceSpec, boolean specific ) {

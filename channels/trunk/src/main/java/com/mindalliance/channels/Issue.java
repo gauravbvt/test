@@ -28,6 +28,7 @@ public interface Issue extends Identifiable, Serializable {
 
         /**
          * A string represneting the severity level
+         *
          * @return a String
          */
         public String getLabel() {
@@ -36,6 +37,7 @@ public interface Issue extends Identifiable, Serializable {
 
         /**
          * A sortable value
+         *
          * @return an int
          */
         public int getOrdinal() {
@@ -145,4 +147,31 @@ public interface Issue extends Identifiable, Serializable {
      */
     void setSeverity( Level severity );
 
+    /**
+     * Whether an issue is waived.
+     *
+     * @return a boolean
+     */
+    boolean isWaived();
+
+    /**
+     * This issue is of a kind that can be waived.
+     *
+     * @return
+     */
+    boolean canBeWaived();
+
+    /**
+     * Get the kind of issue (either user issue or a detection).
+     *
+     * @return a string
+     */
+    String getKind();
+
+    /**
+     * Get a string denoting whether this issues is waived.
+     *
+     * @return a string
+     */
+    String waivedString();
 }
