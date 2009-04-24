@@ -106,6 +106,7 @@ public class InternalFlow extends Flow {
         setChannels( flow.getChannels() );
         if ( !source.isConnector() ) setSignificanceToSource( flow.getSignificanceToSource() );
         if ( !target.isConnector() ) setSignificanceToTarget( flow.getSignificanceToTarget() );
+        setAll( flow.isAll() );
     }
 
     /**

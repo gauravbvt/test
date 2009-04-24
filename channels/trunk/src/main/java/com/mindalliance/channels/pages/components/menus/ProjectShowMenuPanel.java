@@ -54,7 +54,7 @@ public class ProjectShowMenuPanel extends MenuPanel {
             editLink =
                     new AjaxFallbackLink( "link" ) {
                         public void onClick( AjaxRequestTarget target ) {
-                            update( target, new Change(Change.Type.Collapsed, getScenario()));
+                            update( target, new Change( Change.Type.Collapsed, getScenario() ) );
                         }
                     };
             menuItems.add( new LinkMenuItem(
@@ -66,7 +66,7 @@ public class ProjectShowMenuPanel extends MenuPanel {
             editLink =
                     new AjaxFallbackLink( "link" ) {
                         public void onClick( AjaxRequestTarget target ) {
-                            update( target, new Change(Change.Type.Expanded, getScenario()));
+                            update( target, new Change( Change.Type.Expanded, getScenario() ) );
                         }
                     };
             menuItems.add( new LinkMenuItem(
@@ -75,7 +75,10 @@ public class ProjectShowMenuPanel extends MenuPanel {
                     editLink ) );
         }
         ExternalLink reportLink = new ExternalLink( "link", "report.html" );
-        reportLink.setPopupSettings( new PopupSettings(PopupSettings.RESIZABLE | PopupSettings.SCROLLBARS) );
+        reportLink.setPopupSettings( new PopupSettings(
+                PopupSettings.RESIZABLE |
+                        PopupSettings.SCROLLBARS |
+                        PopupSettings.MENU_BAR ) );
         menuItems.add( new LinkMenuItem(
                 "menuItem",
                 new Model<String>( "Playbook" ),

@@ -302,6 +302,7 @@ public class XmlStreamer implements Importer, Exporter {
         externalFlow.setAll( localInnerFlow.isAll() );
         externalFlow.setAskedFor( localInnerFlow.isAskedFor() );
         externalFlow.setDescription( localInnerFlow.getDescription() );
+        externalFlow.setWaivedIssueDetections( localInnerFlow.getWaivedIssueDetections() );
         replaceInIdMap( localInnerFlow, externalFlow, idMap );
         localInnerFlow.disconnect();
     }

@@ -970,6 +970,8 @@ public final class ProjectPage extends WebPage implements Updatable {
                     scenarioPanel.refresh( target );
                     target.addComponent( scenarioPanel );
                 } else if ( change.isSelected() ) {
+                    // In case selecting the part switched scenarios
+                    target.addComponent( scenarioDropDownChoice );
                     scenarioPanel.refresh( target );
                     target.addComponent( scenarioPanel );
                 }

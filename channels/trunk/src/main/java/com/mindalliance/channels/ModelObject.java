@@ -152,7 +152,7 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
     }
 
     public void setWaivedIssueDetections( List<String> waivedIssueDetections ) {
-        this.waivedIssueDetections = waivedIssueDetections;
+        this.waivedIssueDetections = waivedIssueDetections ;
     }
 
     /**
