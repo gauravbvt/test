@@ -4,6 +4,7 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Issue;
+import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.util.Play;
 import com.mindalliance.channels.pages.Project;
 
@@ -208,6 +209,13 @@ public class DefaultAnalyst implements Analyst {
         }
         issues.addAll( findAllIssuesInPlays( resourceSpec, specific ) );
         return issues;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public DataQueryObject getDqo() {
+        return Project.getProject().getDqo();
     }
 
     /**

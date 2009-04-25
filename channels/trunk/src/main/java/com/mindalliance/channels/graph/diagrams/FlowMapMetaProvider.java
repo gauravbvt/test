@@ -8,6 +8,7 @@ import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.ExternalFlow;
+import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.graph.URLProvider;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
@@ -167,9 +168,19 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
         if ( node.isPart() ) {
             Part part = (Part) node;
             String label = "";
-            if ( part.getActor() != null ) label += part.getActor().getName();
+            if ( part.getActor() != null ) {
+                label += part.getActor().getName();
+            }
             if ( part.getRole() != null ) {
-                if ( !label.isEmpty() ) label += "|as ";
+                if ( !label.isEmpty() ) label += "|";
+                if ( part.getActor() == null ) {
+                    List<Actor> partActors = getAnalyst().getDqo().findAllActors( part.resourceSpec() );
+                    if ( partActors.size() == 1 ) {
+                        label += partActors.get( 0 ).getName();
+                        label += " ";
+                    }
+                }
+                if ( !label.isEmpty() ) label += "as ";
                 label += part.getRole().getName();
             }
             if ( part.getJurisdiction() != null ) {
@@ -274,6 +285,16 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( vertex,
                         Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
+            } else {
+                String tooltip = vertex.getTitle();
+                if ( vertex.isPart() ) {
+                    List<Actor> partActors = getAnalyst().getDqo().findAllActors(
+                            ( (Part) vertex ).resourceSpec() );
+                    if ( partActors.size() > 1 ) {
+                        tooltip = sanitize( listActors( partActors ) );
+                    }
+                }
+                list.add( new DOTAttribute( "tooltip", tooltip ) );
             }
             if ( vertex.isConnector() ) {
                 Connector connector = (Connector) vertex;
@@ -348,6 +369,16 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
 
     }
 
+    private String listActors( List<Actor> partActors ) {
+        StringBuilder sb = new StringBuilder();
+        Iterator<Actor> actors = partActors.iterator();
+        while ( actors.hasNext() ) {
+            sb.append( actors.next().getName() );
+            if ( actors.hasNext() ) sb.append( ", " );
+        }
+        return sb.toString();
+    }
+
     private String summarizeExternalFlows( Iterator<ExternalFlow> externalFlows ) {
         StringBuilder sb = new StringBuilder();
         while ( externalFlows.hasNext() ) {
@@ -378,7 +409,13 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
             if ( part.getActor() != null ) {
                 iconName = part.isSystem() ? "system" : "person";
             } else if ( part.getRole() != null ) {
-                iconName = part.isSystem() ? "system" : "role";
+                List<Actor> partActors = getAnalyst().getDqo().findAllActors( part.resourceSpec() );
+                boolean onePlayer = partActors.size() == 1;
+                iconName = part.isSystem()
+                        ? "system"
+                        : onePlayer
+                        ? "person"
+                        : "role";
             } else if ( part.getOrganization() != null ) {
                 iconName = "organization";
             } else {

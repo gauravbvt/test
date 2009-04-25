@@ -3,6 +3,7 @@ package com.mindalliance.channels.analysis;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Issue;
+import com.mindalliance.channels.DataQueryObject;
 
 import java.util.Iterator;
 import java.util.List;
@@ -25,7 +26,7 @@ public interface Analyst {
     /**
      * Use all applicable issue detectors to find issues about a model object.
      *
-     * @param modelObject -- the model object being analyzed
+     * @param modelObject               -- the model object being analyzed
      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
      * @return an iterator on issues detected
      */
@@ -41,40 +42,40 @@ public interface Analyst {
     Iterator<Issue> findIssues( ModelObject modelObject, String property );
 
     /**
-      * Use all applicable issue detectors to find issues about a model object.
-      *
-      * @param modelObject -- the model object being analyzed
-      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
-      * @return a list of issues detected
-      */
-     List<Issue> listIssues( ModelObject modelObject, boolean includingPropertySpecific );
-
-     /**
-      * Use all applicable issue detectors to find issues about a model object's property.
-      *
-      * @param modelObject -- the model object being analyzed
-      * @param property    -- the name of a property of the model object
-      * @return a list of issues detected
-      */
-     List<Issue> listIssues( ModelObject modelObject, String property );
+     * Use all applicable issue detectors to find issues about a model object.
+     *
+     * @param modelObject               -- the model object being analyzed
+     * @param includingPropertySpecific -- all issues or only those that are not specific to a property
+     * @return a list of issues detected
+     */
+    List<Issue> listIssues( ModelObject modelObject, boolean includingPropertySpecific );
 
     /**
-      * Use all unwaived issue detectors to find issues about a model object.
-      *
-      * @param modelObject -- the model object being analyzed
-      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
-      * @return a list of issues detected
-      */
-     List<Issue> listUnwaivedIssues( ModelObject modelObject, boolean includingPropertySpecific );
+     * Use all applicable issue detectors to find issues about a model object's property.
+     *
+     * @param modelObject -- the model object being analyzed
+     * @param property    -- the name of a property of the model object
+     * @return a list of issues detected
+     */
+    List<Issue> listIssues( ModelObject modelObject, String property );
 
-     /**
-      * Use all unwaived issue detectors to find issues about a model object's property.
-      *
-      * @param modelObject -- the model object being analyzed
-      * @param property    -- the name of a property of the model object
-      * @return a list of issues detected
-      */
-     List<Issue> listUnwaivedIssues( ModelObject modelObject, String property );
+    /**
+     * Use all unwaived issue detectors to find issues about a model object.
+     *
+     * @param modelObject               -- the model object being analyzed
+     * @param includingPropertySpecific -- all issues or only those that are not specific to a property
+     * @return a list of issues detected
+     */
+    List<Issue> listUnwaivedIssues( ModelObject modelObject, boolean includingPropertySpecific );
+
+    /**
+     * Use all unwaived issue detectors to find issues about a model object's property.
+     *
+     * @param modelObject -- the model object being analyzed
+     * @param property    -- the name of a property of the model object
+     * @return a list of issues detected
+     */
+    List<Issue> listUnwaivedIssues( ModelObject modelObject, String property );
 
     /**
      * Tests whether a specific property of a model object has issues.
@@ -88,7 +89,7 @@ public interface Analyst {
     /**
      * Tests whether a model object has issues.
      *
-     * @param modelObject -- the model object being analyzed
+     * @param modelObject               -- the model object being analyzed
      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
      * @return whether a model object has issues
      */
@@ -106,7 +107,7 @@ public interface Analyst {
     /**
      * Tests whether a model object has unwaived issues.
      *
-     * @param modelObject -- the model object being analyzed
+     * @param modelObject               -- the model object being analyzed
      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
      * @return whether a model object has issues
      */
@@ -115,7 +116,7 @@ public interface Analyst {
     /**
      * Produces an aggregate description of unwaived issues detected about a model object.
      *
-     * @param modelObject -- the model object being analyzed
+     * @param modelObject               -- the model object being analyzed
      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
      * @return an aggregate description of issues or an empty string if none
      */
@@ -147,5 +148,12 @@ public interface Analyst {
      * @return a list of issues
      */
     List<Issue> findAllIssuesFor( ResourceSpec resource, boolean specific );
+
+    /**
+     * Get data query object.
+     *
+     * @return a data query object
+     */
+    DataQueryObject getDqo();
 
 }
