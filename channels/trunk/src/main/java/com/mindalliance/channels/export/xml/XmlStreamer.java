@@ -355,7 +355,10 @@ public class XmlStreamer implements Importer, Exporter {
         Flow externalInnerFlow = externalConnector.getInnerFlow();
         Part part = (Part) ( conSpec.isSource() ? externalInnerFlow.getSource() : externalInnerFlow.getTarget() );
         String partIdValue = conSpec.getPartSpecification().getId();
-        boolean partIdMatches = partIdValue != null && idMap.get( partIdValue ) == part.getId();
+        Long mappedPartId = idMap.get( partIdValue );
+        boolean partIdMatches = partIdValue != null 
+                                    && mappedPartId != null
+                                    && mappedPartId == part.getId();
         return SemMatch.same( externalInnerFlow.getName(), conSpec.getFlowName() )
                 && ( partIdMatches || ConverterUtils.partMatches( part, conSpec.getPartSpecification() ) );
     }
