@@ -123,8 +123,13 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
 
     private void exportStart( PrintWriter out, AbstractMetaProvider<Node, Flow> metaProvider ) {
         List<DOTAttribute> attributes = DOTAttribute.emptyList();
-        attributes.add( new DOTAttribute( "label", "" ) );
+        attributes.add( new DOTAttribute( "fontcolor", AbstractMetaProvider.FONTCOLOR ) );
+        attributes.add( new DOTAttribute( "fontsize", FlowMapMetaProvider.NODE_FONT_SIZE ) );
+        attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
+        attributes.add( new DOTAttribute( "labelloc", "b" ) );
+        attributes.add( new DOTAttribute( "label", "Scenario begins" ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
+        attributes.add( new DOTAttribute( "tooltip", "Scenario begins" ) );
         attributes.add( new DOTAttribute( "image", metaProvider.getImageDirectory() + "/" + "start.png" ) );
         out.print( getIndent() );
         out.print( START );
@@ -135,8 +140,13 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
 
     private void exportStop( PrintWriter out, AbstractMetaProvider<Node, Flow> metaProvider ) {
         List<DOTAttribute> attributes = DOTAttribute.emptyList();
-        attributes.add( new DOTAttribute( "label", "" ) );
+        attributes.add( new DOTAttribute( "fontcolor", AbstractMetaProvider.FONTCOLOR ) );
+        attributes.add( new DOTAttribute( "fontsize", FlowMapMetaProvider.NODE_FONT_SIZE ) );
+        attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
+        attributes.add( new DOTAttribute( "labelloc", "b" ) );
+        attributes.add( new DOTAttribute( "label", "Scenario ends" ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
+        attributes.add( new DOTAttribute( "tooltip", "Scenario ends" ) );
         attributes.add( new DOTAttribute( "image", metaProvider.getImageDirectory() + "/" + "stop.png" ) );
         out.print( getIndent() );
         out.print( STOP );
@@ -156,8 +166,12 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         for ( Part initiator : initiators ) {
             List<DOTAttribute> attributes = getTimingEdgeAttributes();
             attributes.add( new DOTAttribute( "label", makeLabelAboutScenario(
-                    "causes",
+                    "Causes",
                     initiator.getInitiatedScenario() ) ) );
+            attributes.add( new DOTAttribute(
+                    "tooltip",
+                    sanitize( "Causes "
+                    + initiator.getInitiatedScenario().getName().toLowerCase() ) ) );
             String initiatorId = getVertexID( initiator );
             out.print( getIndent() + initiatorId + getArrow( g ) + START );
             out.print( "[" );
@@ -186,8 +200,12 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         for ( Part terminator : terminators ) {
             List<DOTAttribute> attributes = getTimingEdgeAttributes();
             attributes.add( new DOTAttribute( "label", makeLabelAboutScenario(
-                    "ends",
+                    "Ends",
                     terminator.getScenario() ) ) );
+            attributes.add( new DOTAttribute(
+                    "tooltip",
+                    sanitize( "Ends "
+                    + terminator.getScenario().getName().toLowerCase() ) ) );
             String terminatorId = getVertexID( terminator );
             out.print( getIndent() + terminatorId + getArrow( g ) + STOP );
             out.print( "[" );
@@ -200,8 +218,8 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
 
     private String makeLabelAboutScenario( String s, Scenario scenario ) {
         return AbstractMetaProvider.separate(
-                        s + " " + scenario.getName().toLowerCase(),
-                        AbstractMetaProvider.LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" );
+                s + " " + scenario.getName().toLowerCase(),
+                AbstractMetaProvider.LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" );
     }
 
     private List<DOTAttribute> getTimingEdgeAttributes() {
@@ -216,5 +234,13 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         return list;
     }
 
+    /**
+     * Make label safe.
+     * @param label  a string
+     * @return a sanitized string
+     */
+    public String sanitize( String label ) {
+        return label.replaceAll( "\"", "\\\\\"" );
+    }
 
 }

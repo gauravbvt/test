@@ -14,7 +14,7 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
     /**
      * Default font color.
      */
-    protected static String FONTCOLOR = "black";
+    public static String FONTCOLOR = "black";
     /**
      * Message format as URL template with {1} = graph id.
      */

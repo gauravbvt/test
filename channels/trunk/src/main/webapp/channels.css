@@ -72,6 +72,7 @@ div.section-content {
     left: 10px;
     position: inherit;
     z-index: 1000;
+    cursor: pointer;
 }
 
 div.section-title {
@@ -678,5 +679,9 @@ div.aspect {
     min-height: 14em;
     z-index: 1;
     overflow: hidden;
+}
+
+.button {
+    cursor: pointer;    
 }
 

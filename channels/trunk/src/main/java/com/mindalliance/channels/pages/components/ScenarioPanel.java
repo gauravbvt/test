@@ -214,32 +214,33 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     }
 
     private void addFlowSizing() {
-        WebMarkupContainer reduceToFit = new WebMarkupContainer("fit");
+        WebMarkupContainer reduceToFit = new WebMarkupContainer( "fit" );
         reduceToFit.add( new AbstractDefaultAjaxBehavior() {
-            protected void onComponentTag( ComponentTag tag) {
-                super.onComponentTag(tag);
+            protected void onComponentTag( ComponentTag tag ) {
+                super.onComponentTag( tag );
                 String domIdentifier = "#graph";
                 String script = "wicketAjaxGet('"
-                                + getCallbackUrl( true )
-                                + "&width='+$('"+domIdentifier+"').width()+'"
-                                + "&height='+$('"+domIdentifier+"').height()";
-                String onclick = ("{" +  generateCallbackScript(script) + " return false;}")
-                                    .replaceAll("&amp;", "&"); 
-                tag.put("onclick", onclick);
+                        + getCallbackUrl( true )
+                        + "&width='+$('" + domIdentifier + "').width()+'"
+                        + "&height='+$('" + domIdentifier + "').height()";
+                String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
+                        .replaceAll( "&amp;", "&" );
+                tag.put( "onclick", onclick );
             }
+
             protected void respond( AjaxRequestTarget target ) {
                 RequestCycle requestCycle = RequestCycle.get();
                 String swidth = requestCycle.getRequest().getParameter( "width" );
                 String sheight = requestCycle.getRequest().getParameter( "height" );
-                flowDiagramDim[0] = Double.parseDouble( swidth ) / 96.0;
-                flowDiagramDim[1] = Double.parseDouble( sheight ) / 96.0;
+                flowDiagramDim[0] = ( Double.parseDouble( swidth ) - 20 ) / 96.0;
+                flowDiagramDim[1] = ( Double.parseDouble( sheight ) - 20 ) / 96.0;
                 addFlowDiagram();
                 target.addComponent( flowDiagramContainer );
             }
         } );
         add( reduceToFit );
-        WebMarkupContainer fullSize = new WebMarkupContainer("full");
-        fullSize.add( new AjaxEventBehavior("onclick") {
+        WebMarkupContainer fullSize = new WebMarkupContainer( "full" );
+        fullSize.add( new AjaxEventBehavior( "onclick" ) {
             protected void onEvent( AjaxRequestTarget target ) {
                 flowDiagramDim = new double[2];
                 addFlowDiagram();
@@ -250,7 +251,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     }
 
     private void addFlowDiagram() {
-        if (flowDiagramDim[0] <= 0.0 || flowDiagramDim[0] <= 0.0) {
+        if ( flowDiagramDim[0] <= 0.0 || flowDiagramDim[0] <= 0.0 ) {
             flowDiagramContainer = new FlowMapDiagramPanel(
                     "flow-map",
                     scenarioModel,
@@ -334,7 +335,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
                 if ( !change.isDisplay() ) {
                     target.addComponent( flowDiagramContainer );
                     makeVisible( target, partIssuesPanel,
-                                 Project.analyst().hasIssues( getPart(), false ) );
+                            Project.analyst().hasIssues( getPart(), false ) );
                     target.addComponent( partIssuesPanel );
                     // target.addComponent( attachments );
                 }

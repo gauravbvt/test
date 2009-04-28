@@ -67,7 +67,7 @@ public final class ProjectPage extends WebPage implements Updatable {
     /**
      * Delay between refresh check callbacks.
      */
-    public static final int REFRESH_DELAY = 3000;
+    public static final int REFRESH_DELAY = 10;
     /**
      * The 'expand' parameter in the URL.
      */

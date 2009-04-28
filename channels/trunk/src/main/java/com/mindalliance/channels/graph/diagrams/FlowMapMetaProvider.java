@@ -46,11 +46,11 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
     /**
      * Font for node labels
      */
-    private static final String NODE_FONT = "Arial";
+    public static final String NODE_FONT = "Arial";
     /**
      * Font size for node labels.
      */
-    private static final String NODE_FONT_SIZE = "10";
+    public static final String NODE_FONT_SIZE = "10";
     /**
      * Distance for edge head and tail labels.
      */
@@ -363,6 +363,8 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( edge,
                         Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
+            } else {
+                list.add( new DOTAttribute( "tooltip", sanitize( edge.getTitle() ) ) );
             }
             return list;
         }
