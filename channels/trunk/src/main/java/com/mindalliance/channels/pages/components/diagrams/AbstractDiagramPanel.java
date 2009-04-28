@@ -322,14 +322,12 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
      * @param domIdentifier a CSS path to a dom element
      * @param scrollTop     an int
      * @param scrollLeft    an int
-     * @param target        a an ajax request target
      * @return a script that will cause scrolling
      */
     protected String scroll(
             String domIdentifier,
             int scrollTop,
-            int scrollLeft,
-            AjaxRequestTarget target ) {
+            int scrollLeft ) {
         String script = null;
         if ( domIdentifier != null ) {
             // Timeout needed to let document fully update.

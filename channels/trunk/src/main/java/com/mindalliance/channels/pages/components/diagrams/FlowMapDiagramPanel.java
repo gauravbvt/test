@@ -136,7 +136,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             Scenario scenario = getDqo().find( Scenario.class, Long.valueOf( graphId ) );
             Part part = (Part) scenario.getNode( Long.valueOf( vertexId ) );
             if ( part != null ) {
-                String js = scroll( domIdentifier, scrollTop, scrollLeft, target );
+                String js = scroll( domIdentifier, scrollTop, scrollLeft );
                 Change change = new Change( Change.Type.Selected, part );
                 change.setScript( js );
                 this.update( target, change );
