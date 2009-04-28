@@ -1011,7 +1011,7 @@ public final class ProjectPage extends WebPage implements Updatable {
 
             }
         }
-        if ( !change.getScript().isEmpty() ) {
+        if ( change.getScript() != null ) {
             target.appendJavascript( change.getScript() );
         }
     }
