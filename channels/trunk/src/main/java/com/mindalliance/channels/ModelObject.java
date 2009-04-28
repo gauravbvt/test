@@ -1,6 +1,5 @@
 package com.mindalliance.channels;
 
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -9,9 +8,9 @@ import javax.persistence.InheritanceType;
 import javax.persistence.Lob;
 import javax.persistence.Transient;
 import java.text.Collator;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.ArrayList;
 
 /**
  * An object with name, id and description, comparable by its toString() values.
@@ -147,6 +146,8 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
         return new Date();
     }
 
+    // TODO objectify strings if and when persistence is to work...
+    @Transient
     public List<String> getWaivedIssueDetections() {
         return waivedIssueDetections;
     }

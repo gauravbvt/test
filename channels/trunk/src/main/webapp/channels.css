@@ -67,6 +67,13 @@ div.section-content {
     overflow: auto;
 }
 
+#contents div.zoom {
+    top: 10px;
+    left: 10px;
+    position: inherit;
+    z-index: 1000;
+}
+
 div.section-title {
     position: relative;
 }
@@ -611,88 +618,65 @@ div.wicket-aa ul li.selected {
     padding-left: 5px;
 }
 
-
 #entity {
-    z-index: 1;
-    position: absolute;
-    left: 2em;
-    top: 7em;
+    background: #C3D9FF;
+    border: 1px outset #C3DEDE;
     padding: 5px;
 
+    position: absolute;
+    top: 7em;
+    bottom: 7em;
+    left: 2em;
     width: 50%;
-    background: #C3D9FF;
-    border: 1px outset #c3dede;
-    max-height: 75%;
-    overflow: auto;
+    min-height: 14em;
+    z-index: 1;
+    overflow: hidden;
 }
 
-#entity .picture {
-    overflow: auto;
-}
-
-#entity span.menubar {
+#entity span.menubar, #plan-map span.menubar {
     float: right;
-    position: static;
 }
 
-#entity .jobs table {
+div.aspect {
+    right: 5px;
+    top: 5em;
+    bottom: 5px;
+    left: 5px;
+    overflow: auto;
+    position: absolute;
+}
+
+.aspect table {
+    width: 100%;
     border-collapse: separate;
 }
-#entity .jobs thead td {
+.aspect thead td {
     border-bottom: 1px solid #4d8222;
     font-weight: bold;
     padding: 0 10px 0 0
 }
-#entity tr.headers th  {
+.aspect tr.headers th  {
     text-align: left;
     font-weight: bold;
 }
-#entity tr.even {
+.aspect tr.even {
     background-color: #FDFDFD;
 }
-#entity tr.odd {
-
-}
-#entity table {
-    width: 100%;
+.aspect tr.odd {
 }
 
 #plan-map {
-    z-index: 1;
+    background: #C3D9FF;
+    border: 1px outset #C3DEDE;
+    padding: 5px;
+
     position: absolute;
     right: 2em;
-    bottom: 2em;
-    padding: 5px;
+    top: 7em;
+    bottom: 7em;
     width: 50%;
-    background: #C3D9FF;
-    border: 1px outset #c3dede;
-    max-height: 75%;
-}
-
-#plan-map span.menubar {
-    float: right;
-    position: static;
-}
-
-#plan-map tr.headers th  {
-    text-align: left;
-    font-weight: bold;
-}
-#plan-map tr.even {
-    background-color: #FDFDFD;
-}
-#plan-map tr.odd {
-
-}
-#plan-map table {
-    width: 100%;
-}
-
-#plan-map .picture {
-    overflow: auto;
-}
-
-.header .button {
-
+    min-height: 14em;
+    z-index: 1;
+    overflow: hidden;
 }
 

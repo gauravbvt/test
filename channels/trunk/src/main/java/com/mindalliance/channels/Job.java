@@ -52,6 +52,7 @@ public class Job implements Serializable {
         title = "";
     }
 
+    @Transient
     public String getActorName() {
         if ( actor == null ) return "";
         else return actor.getName();
@@ -61,6 +62,7 @@ public class Job implements Serializable {
         this.actor = actor;
     }
 
+    @Transient
     public String getRoleName() {
         if ( role == null ) return "";
         else return role.getName();
@@ -70,6 +72,7 @@ public class Job implements Serializable {
         this.role = role;
     }
 
+    @Transient
     public String getJurisdictionName() {
         if ( jurisdiction == null ) return "";
         else return jurisdiction.getName();
