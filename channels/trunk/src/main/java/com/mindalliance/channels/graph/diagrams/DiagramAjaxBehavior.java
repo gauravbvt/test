@@ -15,15 +15,34 @@ import java.util.regex.Matcher;
  * Time: 1:12:51 PM
  */
 public abstract class DiagramAjaxBehavior extends AbstractDefaultAjaxBehavior {
-
+    /**
+     * A string builder on an image map.
+     */
     private StringBuilder imageMapHolder;
+    /**
+     * CSS dom element identifier for diagram container.
+     */
+    private String domIdentifier;
+    /**
+     * Pattern for url in image map.
+     */
     private static Pattern HREF = Pattern.compile( "href=\"\\?(.*?)\"" );
+    /**
+     * Pattern for graph parameter in url.
+     */
     private static Pattern GRAPH = Pattern.compile( "graph=(\\d+)" );
+    /**
+     * Pattern for vertex parameter in url.
+     */
     private static Pattern VERTEX = Pattern.compile( "graph=(\\d+)&amp;vertex=(\\d+)" );
+    /**
+     * Pattern for edge parameter in url.
+     */
     private static Pattern EDGE = Pattern.compile( "graph=(\\d+)&amp;edge=([\\d,]+)" );
 
-    public DiagramAjaxBehavior( StringBuilder imageMapHolder ) {
+    public DiagramAjaxBehavior( StringBuilder imageMapHolder, String domIdentifier ) {
         this.imageMapHolder = imageMapHolder;
+        this.domIdentifier = domIdentifier;
     }
 
     /**
@@ -75,9 +94,16 @@ public abstract class DiagramAjaxBehavior extends AbstractDefaultAjaxBehavior {
                         + (graphId != null ? "&graph=" + graphId : "")
                         + (vertexId != null ? "&vertex=" + vertexId : "")
                         + (edgeId != null ? "&edge=" + edgeId : "")
-                       // + "')";
-                        + "'";
-        cb.append(generateCallbackScript(script));
+                        + (domIdentifier != null
+                                ? "&width='+$('"+domIdentifier+"').width()+'"
+                                : "")
+                        + (domIdentifier != null
+                                ? "&height='+$('"+domIdentifier+"').height()"
+                                : "")
+                                                                                    // + "')";
+                        + (domIdentifier == null ? "'" : "");
+        CharSequence callbackScript = generateCallbackScript(script);
+        cb.append(callbackScript);
         return cb.toString().replaceAll("&amp;","&");
     }
 

@@ -88,21 +88,47 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
         update( target, new Change( Change.Type.Selected, Project.getProject() ) );
     }
 
-    protected void onSelectGraph( String graphId, AjaxRequestTarget target ) {
+    /**
+     * {@inheritDoc}
+     */
+    protected void onSelectGraph(
+            String graphId,
+            String domIdentifier,
+            int scrollTop,
+            int scrollLeft,
+            AjaxRequestTarget target ) {
         // Do nothing -- never called
     }
 
-    protected void onSelectVertex( String graphId, String vertexId, AjaxRequestTarget target ) {
+    /**
+     * {@inheritDoc}
+     */
+    protected void onSelectVertex(
+            String graphId,
+            String vertexId,
+            String domIdentifier,
+            int scrollTop,
+            int scrollLeft,
+            AjaxRequestTarget target ) {
         try {
-            T entity = (T)getDqo().find( ModelObject.class, Long.valueOf( vertexId ) );
-            if (entity != getEntity())
+            T entity = (T) getDqo().find( ModelObject.class, Long.valueOf( vertexId ) );
+            if ( entity != getEntity() )
                 update( target, new Change( Change.Type.Selected, entity ) );
         } catch ( NotFoundException e ) {
             LOG.warn( "Not found", e );
         }
-     }
+    }
 
-    protected void onSelectEdge( String graphId, String edgeId, AjaxRequestTarget target ) {
+    /**
+     * {@inheritDoc}
+     */
+    protected void onSelectEdge(
+            String graphId,
+            String edgeId,
+            String domIdentifier,
+            int scrollTop,
+            int scrollLeft,
+           AjaxRequestTarget target ) {
         EntityRelationship<T> entityRelationship = new EntityRelationship<T>();
         entityRelationship.setId( Long.valueOf( edgeId ), getDqo() );
         update( target, new Change( Change.Type.Selected, entityRelationship ) );

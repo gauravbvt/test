@@ -48,7 +48,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
                                 double[] diagramSize,
                                 String orientation,
                                 boolean withImageMap ) {
-        super( id, diagramSize, orientation, withImageMap );
+        super( id, diagramSize, orientation, withImageMap, "#graph" );
         this.scenarioModel = scenariomodel;
         this.partModel = partModel;
         init();
@@ -108,7 +108,12 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc }
      */
-    protected void onSelectGraph( String graphId, AjaxRequestTarget target ) {
+    protected void onSelectGraph(
+            String graphId,
+            String domIdentifier,
+            int scrollTop,
+            int scrollLeft,
+            AjaxRequestTarget target ) {
         try {
             Scenario scenario = getDqo().find( Scenario.class, Long.valueOf( graphId ) );
             this.update( target, new Change( Change.Type.Selected, scenario ) );
@@ -120,12 +125,22 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc }
      */
-    protected void onSelectVertex( String graphId, String vertexId, AjaxRequestTarget target ) {
+    protected void onSelectVertex(
+            String graphId,
+            String vertexId,
+            String domIdentifier,
+            int scrollTop,
+            int scrollLeft,
+            AjaxRequestTarget target ) {
         try {
             Scenario scenario = getDqo().find( Scenario.class, Long.valueOf( graphId ) );
             Part part = (Part) scenario.getNode( Long.valueOf( vertexId ) );
             if ( part != null ) {
-                this.update( target, new Change( Change.Type.Selected, part ) );
+                String js = scroll( domIdentifier, scrollTop, scrollLeft, target );
+                Change change = new Change( Change.Type.Selected, part );
+                change.setScript( js );
+                this.update( target, change );
+
             } else {
                 throw new NotFoundException();
             }
@@ -137,7 +152,13 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc }
      */
-    protected void onSelectEdge( String graphId, String edgeId, AjaxRequestTarget target ) {
+    protected void onSelectEdge(
+            String graphId,
+            String edgeId,
+            String domIdentifier,
+            int scrollTop,
+            int scrollLeft,
+            AjaxRequestTarget target ) {
         // do nothing - never called
     }
 

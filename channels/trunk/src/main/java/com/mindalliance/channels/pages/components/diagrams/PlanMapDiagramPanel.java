@@ -120,14 +120,25 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc}
      */
-    protected void onSelectGraph( String graphId, AjaxRequestTarget target ) {
+    protected void onSelectGraph(
+            String graphId,
+            String domIdentifier,
+            int scrollTop,
+            int scrollLeft,
+            AjaxRequestTarget target ) {
         // Do nothing -- never called
     }
 
     /**
      * {@inheritDoc}
      */
-    protected void onSelectVertex( String graphId, String vertexId, AjaxRequestTarget target ) {
+    protected void onSelectVertex(
+            String graphId,
+            String vertexId,
+            String domIdentifier,
+            int scrollTop,
+            int scrollLeft,
+            AjaxRequestTarget target ) {
         try {
             Scenario scenario = getDqo().find( Scenario.class, Long.valueOf( vertexId ) );
             update( target, new Change( Change.Type.Selected, scenario ) );
@@ -139,7 +150,13 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc}
      */
-    protected void onSelectEdge( String graphId, String edgeId, AjaxRequestTarget target ) {
+    protected void onSelectEdge(
+            String graphId,
+            String edgeId,
+            String domIdentifier,
+            int scrollTop,
+            int scrollLeft,
+            AjaxRequestTarget target ) {
         ScenarioRelationship scRel = new ScenarioRelationship();
         scRel.setId( Long.valueOf( edgeId ), getDqo() );
         update( target, new Change( Change.Type.Selected, scRel ) );

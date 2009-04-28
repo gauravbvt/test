@@ -64,7 +64,10 @@ import java.util.Set;
  * The project's home page.
  */
 public final class ProjectPage extends WebPage implements Updatable {
-
+    /**
+     * Delay between refresh check callbacks.
+     */
+    public static final int REFRESH_DELAY = 3000;
     /**
      * The 'expand' parameter in the URL.
      */
@@ -314,7 +317,7 @@ public final class ProjectPage extends WebPage implements Updatable {
             }
         } );
         // Put timer on form since it is never updated or replaced
-        form.add( new AbstractAjaxTimerBehavior( Duration.seconds( 10 ) ) {
+        form.add( new AbstractAjaxTimerBehavior( Duration.seconds( REFRESH_DELAY ) ) {
             @Override
             protected void onTimer( AjaxRequestTarget target ) {
                 doTimedUpdate( target );
@@ -1007,6 +1010,9 @@ public final class ProjectPage extends WebPage implements Updatable {
                 }
 
             }
+        }
+        if ( !change.getScript().isEmpty() ) {
+            target.appendJavascript( change.getScript() );
         }
     }
 

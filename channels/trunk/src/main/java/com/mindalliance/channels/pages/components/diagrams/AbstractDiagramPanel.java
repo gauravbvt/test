@@ -17,6 +17,9 @@ import org.apache.wicket.markup.MarkupStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
 
 /**
  * Abstract Diagram Panel
@@ -31,6 +34,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
      * Class logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( AbstractDiagramPanel.class );
+
     /**
      * The flow diagram
      */
@@ -47,21 +51,36 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
      * The orientation of the diagram.
      */
     private String orientation;
-
+    /**
+     * IMage map holder.
+     */
     private StringBuilder imageMapHolder;
+    /**
+     * Unique CSS identifier to image container.
+     */
+    private String domIdentifier;
 
     public AbstractDiagramPanel( String id ) {
-        this( id, null, null, true );
+        this( id, null, null, true, null );
     }
 
     public AbstractDiagramPanel( String id,
                                  double[] diagramSize,
                                  String orientation,
                                  boolean withImageMap ) {
+        this( id, diagramSize, orientation, withImageMap, null );
+    }
+
+    public AbstractDiagramPanel( String id,
+                                 double[] diagramSize,
+                                 String orientation,
+                                 boolean withImageMap,
+                                 String domIdentifier ) {
         super( id );
         this.diagramSize = diagramSize;
         this.orientation = orientation;
         this.withImageMap = withImageMap;
+        this.domIdentifier = domIdentifier;
     }
 
     public Diagram getDiagram() {
@@ -103,19 +122,23 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
         if ( withImageMap ) {
             imageMapHolder = new StringBuilder();
             updateImageMap();
-            add( new DiagramAjaxBehavior( imageMapHolder ) {
+            add( new DiagramAjaxBehavior( imageMapHolder, domIdentifier ) {
                 protected void respond( AjaxRequestTarget target ) {
                     RequestCycle requestCycle = RequestCycle.get();
                     String graphId = requestCycle.getRequest().getParameter( "graph" );
                     String vertexId = requestCycle.getRequest().getParameter( "vertex" );
                     String edgeId = requestCycle.getRequest().getParameter( "edge" );
+                    String width = requestCycle.getRequest().getParameter( "width" );
+                    String height = requestCycle.getRequest().getParameter( "height" );
                     if ( graphId != null ) {
                         if ( vertexId == null && edgeId == null ) {
-                            onSelectGraph( graphId, target );
+                            onSelectGraph( graphId, domIdentifier, 0, 0, target );
                         } else if ( vertexId != null ) {
-                            onSelectVertex( graphId, vertexId, target );
+                            int[] scroll = calculateVertexScroll( imageMapHolder, vertexId, width, height );
+                            onSelectVertex( graphId, vertexId, domIdentifier, scroll[0], scroll[1], target );
                         } else {
-                            onSelectEdge( graphId, edgeId, target );
+                            int[] scroll = calculateEdgeScroll( imageMapHolder, edgeId, width, height );
+                            onSelectEdge( graphId, edgeId, domIdentifier, scroll[0], scroll[1], target );
                         }
                     }
                 }
@@ -151,6 +174,43 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
         } );
         graph.setOutputMarkupId( true );
         add( graph );
+    }
+
+    private int[] calculateVertexScroll(
+            StringBuilder imageMapHolder,
+            String vertexId,
+            String swidth,
+            String sheight ) {
+        int[] scroll = new int[2];
+        String imageMap = imageMapHolder.toString();
+        String s = "<area.*?vertex="
+                + vertexId
+                + "&.*?coords=\"(\\d+),(\\d+),(\\d+),(\\d+)\"";
+        Pattern pattern = Pattern.compile( s );
+        Matcher matcher = pattern.matcher( imageMap );
+        if ( matcher.find() ) {
+            int x1 = Integer.parseInt( matcher.group( 1 ) );
+            int y1 = Integer.parseInt( matcher.group( 2 ) );
+            int x2 = Integer.parseInt( matcher.group( 3 ) );
+            int y2 = Integer.parseInt( matcher.group( 4 ) );
+            int centerX = x2 - ( ( x2 - x1 ) / 2 );
+            int centerY = y2 - ( ( y2 - y1 ) / 2 );
+            int width = Integer.parseInt( swidth );
+            int height = Integer.parseInt( sheight );
+            scroll[1] = Math.max( 0, centerX - ( width / 2 ) );
+            scroll[0] = Math.max( 0, centerY - ( height / 2 ) );
+        }
+        return scroll;
+    }
+
+    private int[] calculateEdgeScroll(
+            StringBuilder imageMapHolder,
+            String edgeId,
+            String width,
+            String height ) {
+        int[] scroll = new int[2];
+        // TODO
+        return scroll;
     }
 
     private void updateImageMap() {
@@ -206,28 +266,82 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
     /**
      * Graph selected event.
      *
-     * @param graphId a string
-     * @param target  an ajax request target
+     * @param graphId       a string
+     * @param domIdentifier -- dom identifier of diagram container - can be null
+     * @param scrollTop     where to scroll to top
+     * @param scrollLeft    where to scroll to left                         in
+     * @param target        an ajax request target
      */
-    protected abstract void onSelectGraph( String graphId, AjaxRequestTarget target );
+    protected abstract void onSelectGraph(
+            String graphId,
+            String domIdentifier,
+            int scrollTop,
+            int scrollLeft,
+            AjaxRequestTarget target );
 
     /**
      * Vertex selected event.
      *
-     * @param graphId  a string
-     * @param vertexId a string
-     * @param target   an ajax request target
+     * @param graphId       a string
+     * @param vertexId      a string
+     * @param domIdentifier -- dom identifier of diagram container - can be null
+     * @param scrollTop     where to scroll to top
+     * @param scrollLeft    where to scroll to left
+     * @param target        an ajax request target
      */
-    protected abstract void onSelectVertex( String graphId, String vertexId, AjaxRequestTarget target );
+    protected abstract void onSelectVertex(
+            String graphId,
+            String vertexId,
+            String domIdentifier,
+            int scrollTop,
+            int scrollLeft,
+            AjaxRequestTarget target );
 
     /**
      * Edge selected event.
      *
-     * @param graphId a string
-     * @param edgeId  a string
-     * @param target  an ajax request target
+     * @param graphId       a string
+     * @param edgeId        a string
+     * @param domIdentifier -- dom identifier of diagram container - can be null
+     * @param scrollTop     where to scroll to top
+     * @param scrollLeft    where to scroll to left
+     * @param target        an ajax request target
      */
-    protected abstract void onSelectEdge( String graphId, String edgeId, AjaxRequestTarget target );
+    protected abstract void onSelectEdge(
+            String graphId,
+            String edgeId,
+            String domIdentifier,
+            int scrollTop,
+            int scrollLeft,
+            AjaxRequestTarget target );
 
+
+    /**
+     * Append javascript to cause scrolling.
+     *
+     * @param domIdentifier a CSS path to a dom element
+     * @param scrollTop     an int
+     * @param scrollLeft    an int
+     * @param target        a an ajax request target
+     * @return a script that will cause scrolling
+     */
+    protected String scroll(
+            String domIdentifier,
+            int scrollTop,
+            int scrollLeft,
+            AjaxRequestTarget target ) {
+        String script = null;
+        if ( domIdentifier != null ) {
+            // Timeout needed to let document fully update.
+            script = "{ setTimeout(\"$('"
+                    + domIdentifier
+                    + "').scrollTop("
+                    + scrollTop
+                    + ").scrollLeft("
+                    + scrollLeft
+                    + ")\", 500) }";
+        }
+        return script;
+    }
 
 }

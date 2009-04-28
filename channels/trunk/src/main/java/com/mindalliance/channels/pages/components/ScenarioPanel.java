@@ -289,6 +289,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
      * @param target ajax request target
      */
     public void refresh( AjaxRequestTarget target ) {
+        // this.target = target;
         adjustComponents();
         addPartActionsMenu();
         target.addComponent( partShowMenu );

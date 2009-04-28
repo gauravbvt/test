@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 /**
  * A description of state change.
@@ -82,6 +83,10 @@ public class Change implements Serializable {
      * The change is caused by undoing or redoing.
      */
     private boolean undoing;
+    /**
+     * A script to run because of the change.
+     */
+    private String script;
 
     public Change() {
     }
@@ -126,6 +131,14 @@ public class Change implements Serializable {
 
     public void setUndoing( boolean undoing ) {
         this.undoing = undoing;
+    }
+
+    public String getScript() {
+        return script;
+    }
+
+    public void setScript( String script ) {
+        this.script = script;
     }
 
     /**
