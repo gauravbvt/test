@@ -33,8 +33,9 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
     public EntityNetworkDiagramPanel(
             String id,
             IModel<T> entityModel,
-            EntityRelationship<T> selectedEntityRel ) {
-        this( id, entityModel, selectedEntityRel, null, null, true );
+            EntityRelationship<T> selectedEntityRel,
+            String domIdentifier) {
+        this( id, entityModel, selectedEntityRel, null, null, true, domIdentifier );
     }
 
     public EntityNetworkDiagramPanel(
@@ -43,8 +44,9 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
             EntityRelationship<T> selectedEntityRel,
             double[] diagramSize,
             String orientation,
-            boolean withImageMap ) {
-        super( id, diagramSize, orientation, withImageMap );
+            boolean withImageMap,
+            String domIdentifier) {
+        super( id, diagramSize, orientation, withImageMap, domIdentifier );
         this.entityModel = entityModel;
         this.selectedEntityRel = selectedEntityRel;
         init();
@@ -55,10 +57,12 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
         return "entity-network";
     }
 
-    protected Diagram makeDiagram() {
+    protected Diagram makeDiagram( double[] diagramSize, String orientation ) {
         return getDiagramFactory().newEntityNetworkDiagram(
                 entityModel.getObject(),
-                selectedEntityRel );
+                selectedEntityRel,
+                diagramSize,
+                orientation );
     }
 
     protected String makeDiagramUrl() {
@@ -112,8 +116,12 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
             AjaxRequestTarget target ) {
         try {
             T entity = (T) getDqo().find( ModelObject.class, Long.valueOf( vertexId ) );
-            if ( entity != getEntity() )
-                update( target, new Change( Change.Type.Selected, entity ) );
+            if ( entity != getEntity() ) {
+                String js = scroll( domIdentifier, scrollTop, scrollLeft );
+                Change change = new Change( Change.Type.Selected, entity );
+                change.setScript( js );
+                update( target, change );
+            }
         } catch ( NotFoundException e ) {
             LOG.warn( "Not found", e );
         }
@@ -131,7 +139,10 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
            AjaxRequestTarget target ) {
         EntityRelationship<T> entityRelationship = new EntityRelationship<T>();
         entityRelationship.setId( Long.valueOf( edgeId ), getDqo() );
-        update( target, new Change( Change.Type.Selected, entityRelationship ) );
+        String js = scroll( domIdentifier, scrollTop, scrollLeft );
+        Change change = new Change( Change.Type.Selected, entityRelationship );
+        change.setScript( js );
+        update( target, change );
     }
 
     private T getEntity() {

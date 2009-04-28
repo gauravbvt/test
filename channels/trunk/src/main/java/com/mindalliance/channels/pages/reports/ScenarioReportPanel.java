@@ -57,7 +57,8 @@ public class ScenarioReportPanel extends Panel {
                         null,
                         size,
                         DiagramFactory.TOP_BOTTOM,
-                        false ) );
+                        false,
+                        null) );
 
         List<Organization> organizations = findOrganizationsInScenario();
         add( new ListView<Organization>( "organizations", organizations ) {               // NON-NLS

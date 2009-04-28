@@ -29,7 +29,9 @@ public abstract class AbstractDiagram<V, E> implements Diagram {
      */
     private String imageMap = null;
 
-    public AbstractDiagram() {
+    public AbstractDiagram( double[] diagramSize, String orientation ) {
+        this.diagramSize = diagramSize;
+        this.orientation = orientation;
     }
 
 

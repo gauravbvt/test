@@ -69,7 +69,8 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
                 "plan-map",
                 new PropertyModel<ArrayList<Scenario>>( this, "scenarios" ),
                 selectedScenario,
-                selectedScRel );
+                selectedScRel,
+                "#plan-map .picture");
         planMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( planMapDiagramPanel );
     }
@@ -294,6 +295,10 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
             // Don't percolate update on selection unless a part was selected.
             if ( change.getSubject() instanceof Part ) {
                 super.updateWith( target, change );
+            } else {
+                if ( change.getScript() != null ) {
+                    target.appendJavascript( change.getScript() );
+                }
             }
         } else {
             super.updateWith( target, change );

@@ -92,8 +92,15 @@ public abstract class PngWebPage extends WebPage {
      */
     @Override
     protected void onRender( MarkupStream markupStream ) {
-        //TODO - is rendered twice (select part in flow map)
-        Diagram diagram = makeDiagram();
+        double[] size = null;
+        String orientation = null;
+        if ( parameters.containsKey( "size" ) ) {
+            size = convertSize( parameters.getString( "size" ) );
+        }
+        if ( parameters.containsKey( "orientation" ) ) {
+            orientation = parameters.getString( "orientation" );
+        }
+        Diagram diagram = makeDiagram( size, orientation );
         configureDiagram( diagram );
         try {
             final Response resp = getWebRequestCycle().getResponse();
@@ -108,9 +115,11 @@ public abstract class PngWebPage extends WebPage {
 
     /**
      * Create the diagram.
+     * @param size width and height as double array. Can be null.
+     * @param orientation string
      * @return a diagram
      */
-    abstract protected Diagram makeDiagram();
+    abstract protected Diagram makeDiagram( double[] size, String orientation );
 
 
 }

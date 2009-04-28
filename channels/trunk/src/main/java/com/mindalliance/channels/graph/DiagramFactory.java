@@ -55,28 +55,34 @@ public interface DiagramFactory<Vertex, Edge> {
      *
      * @param scenario a scenario
      * @param node     a selected node
+     * @param diagramSize width and height as array of doubles
+     * @param orientation a string
      * @return a flow map diagram
      */
-    Diagram newFlowMapDiagram( Scenario scenario, Node node );
+    Diagram newFlowMapDiagram( Scenario scenario, Node node, double[] diagramSize, String orientation );
 
     /**
      * Instantiate a plan map diagram.
      * @param scenarios list of scenarios
      * @param scRel selected scenario relationship
      * @param scenario selected scenario
+     * @param diagramSize width and height as array of doubles
+     * @param orientation a string
      * @return a plan map diagram
      */
-    Diagram newPlanMapDiagram( List<Scenario> scenarios, Scenario scenario, ScenarioRelationship scRel );
+    Diagram newPlanMapDiagram( List<Scenario> scenarios, Scenario scenario, ScenarioRelationship scRel, double[] diagramSize, String orientation );
 
     /**
      * Instantiate an entity network diagram.
      * @param entity the entity at the center of the diagram
      * @param selectedEntityRel an edge selected
+     * @param diagramSize width and height as array of doubles
+     * @param orientation a string
      * @return an entity network diagram
      */
     <T extends ModelObject>Diagram newEntityNetworkDiagram(
             T entity,
-            EntityRelationship<T> selectedEntityRel );
+            EntityRelationship<T> selectedEntityRel, double[] diagramSize, String orientation );
 
     /**
      * Gets the preset graph renderer.

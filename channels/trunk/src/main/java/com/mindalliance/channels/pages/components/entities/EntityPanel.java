@@ -192,17 +192,20 @@ public class EntityPanel extends AbstractCommandablePanel {
             return new EntityNetworkPanel<Actor>(
                     "aspect",
                     new PropertyModel<Actor>( this, "entity" ),
-                    getExpansions() );
+                    getExpansions(),
+                    null);
         } else if ( getEntity() instanceof Role ) {
             return new EntityNetworkPanel<Role>(
                     "aspect",
                     new PropertyModel<Role>( this, "entity" ),
-                    getExpansions() );
+                    getExpansions(),
+                    null );
         } else if ( getEntity() instanceof Organization ) {
             return new EntityNetworkPanel<Organization>(
                     "aspect",
                     new PropertyModel<Organization>( this, "entity" ),
-                    getExpansions() );
+                    getExpansions(),
+                    null );
         } else {
             return new Label( "aspect", "Network is under construction" );
         }

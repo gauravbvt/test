@@ -112,13 +112,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
      * Initialize.
      */
     protected void init() {
-        diagram = makeDiagram();
-        if ( diagramSize != null ) {
-            diagram.setDiagramSize( diagramSize[0], diagramSize[1] );
-        }
-        if ( orientation != null ) {
-            diagram.setOrientation( orientation );
-        }
+        diagram = makeDiagram( diagramSize, orientation );
         if ( withImageMap ) {
             imageMapHolder = new StringBuilder();
             updateImageMap();
@@ -148,7 +142,9 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
             @Override
             protected void onComponentTag( ComponentTag tag ) {
                 super.onComponentTag( tag );
-                tag.put( "src", makeDiagramUrl() + makeSeed() );
+                String url = makeDiagramUrl() + makeSeed();
+                tag.put( "src", url );
+                LOG.info( "Flow map PNG: " + url );
                 if ( withImageMap ) {
                     // TODO may not be unique in the page but should be
                     tag.put( "usemap", "#" + getContainerId() );
@@ -206,14 +202,32 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
     private int[] calculateEdgeScroll(
             StringBuilder imageMapHolder,
             String edgeId,
-            String width,
-            String height ) {
+            String swidth,
+            String sheight ) {
         int[] scroll = new int[2];
-        // TODO
+        String imageMap = imageMapHolder.toString();
+        String s = "<area.*?edge="
+                + edgeId
+                + "&.*?coords=\"(\\d+),(\\d+),(\\d+),(\\d+)\"";
+        Pattern pattern = Pattern.compile( s );
+        Matcher matcher = pattern.matcher( imageMap );
+        if ( matcher.find() ) {
+            int x1 = Integer.parseInt( matcher.group( 1 ) );
+            int y1 = Integer.parseInt( matcher.group( 2 ) );
+            int x2 = Integer.parseInt( matcher.group( 3 ) );
+            int y2 = Integer.parseInt( matcher.group( 4 ) );
+            int centerX = x2 - ( ( x2 - x1 ) / 2 );
+            int centerY = y2 - ( ( y2 - y1 ) / 2 );
+            int width = Integer.parseInt( swidth );
+            int height = Integer.parseInt( sheight );
+            scroll[1] = Math.max( 0, centerX - ( width / 2 ) );
+            scroll[0] = Math.max( 0, centerY - ( height / 2 ) );
+        }
         return scroll;
     }
 
     private void updateImageMap() {
+        LOG.info( "Making image map" );
         String imageMap = diagram.makeImageMap();
         // imageMap = imageMap.replace( "id=\"G\"", "id=\"" + getContainerId() + "\"" );
         imageMap = imageMap.replace( "id=\"G\"", "" );
@@ -245,9 +259,11 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
     /**
      * Instantiate diagram to display.
      *
+     * @param diagramSize width and height as array of doubles
+     * @param orientation a string
      * @return a diagram
      */
-    protected abstract Diagram makeDiagram();
+    protected abstract Diagram makeDiagram( double[] diagramSize, String orientation );
 
     /**
      * Get URL for requesting the image of the diagram.

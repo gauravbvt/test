@@ -34,12 +34,16 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
      */
     private IModel<Part> partModel;
 
-    public FlowMapDiagramPanel( String id, IModel<Scenario> model ) {
-        this( id, model, null, null, null, true );
-    }
+  /*  public FlowMapDiagramPanel( String id, IModel<Scenario> model, String domIdentifier ) {
+        this( id, model, null, null, null, true, domIdentifier );
+    }*/
 
-    public FlowMapDiagramPanel( String id, IModel<Scenario> scenarioModel, IModel<Part> partModel ) {
-        this( id, scenarioModel, partModel, null, null, true );
+    public FlowMapDiagramPanel( String id,
+                                IModel<Scenario> scenarioModel,
+                                IModel<Part> partModel,
+                                double[] diagramSize,
+                                String domIdentifier ) {
+        this( id, scenarioModel, partModel, diagramSize, null, true, domIdentifier );
     }
 
     public FlowMapDiagramPanel( String id,
@@ -47,8 +51,9 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
                                 IModel<Part> partModel,
                                 double[] diagramSize,
                                 String orientation,
-                                boolean withImageMap ) {
-        super( id, diagramSize, orientation, withImageMap, "#graph" );
+                                boolean withImageMap,
+                                String domIdentifier) {
+        super( id, diagramSize, orientation, withImageMap, domIdentifier );
         this.scenarioModel = scenariomodel;
         this.partModel = partModel;
         init();
@@ -64,8 +69,8 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc}
      */
-    protected Diagram makeDiagram() {
-        return getDiagramFactory().newFlowMapDiagram( getScenario(), getPart() );
+    protected Diagram makeDiagram( double[] diagramSize, String orientation ) {
+        return getDiagramFactory().newFlowMapDiagram( getScenario(), getPart(), diagramSize, orientation );
     }
 
     /**

@@ -59,7 +59,7 @@ public class TestScenarioPage extends TestCase {
         DiagramFactory dm = createMock( DiagramFactory.class );
         Diagram fd = createMock(  Diagram.class);
         expect( fd.makeImageMap( ) ).andReturn( "" ).anyTimes();
-        expect( dm.newFlowMapDiagram( (Scenario) anyObject(), null ) )
+        expect( dm.newFlowMapDiagram( (Scenario) anyObject(), null, null, null ) )
                     .andReturn( fd ).anyTimes();
         replay( dm );
         replay( fd );

@@ -37,7 +37,7 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 DiagramFactory diagramFactory = project.getDiagramFactory();
-                Diagram flowDiagram = diagramFactory.newFlowMapDiagram( scenario, selectedNode );
+                Diagram flowDiagram = diagramFactory.newFlowMapDiagram( scenario, selectedNode, null, null );
                 flowDiagram.render( DiagramFactory.SVG, new BufferedOutputStream( baos ) );
                 String svg = baos.toString();
                 assertFalse( svg.isEmpty() );
@@ -55,7 +55,7 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
             try {
                 FileOutputStream fileOut = new FileOutputStream( "target/" + scenario.getName() + ".png" );
                 DiagramFactory diagramFactory = project.getDiagramFactory();
-                Diagram flowDiagram = diagramFactory.newFlowMapDiagram( scenario, selectedNode );
+                Diagram flowDiagram = diagramFactory.newFlowMapDiagram( scenario, selectedNode, null, null );
                 flowDiagram.render( DiagramFactory.PNG, fileOut );
                 fileOut.flush();
                 fileOut.close();
@@ -73,7 +73,7 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
         for ( Scenario scenario : scenarios ) {
             try {
                 DiagramFactory diagramFactory = project.getDiagramFactory();
-                Diagram flowDiagram = diagramFactory.newFlowMapDiagram( scenario, scenario.getDefaultPart() );
+                Diagram flowDiagram = diagramFactory.newFlowMapDiagram( scenario, scenario.getDefaultPart(), null, null );
                 String map = flowDiagram.makeImageMap();
                 System.out.print( map );
                 assertFalse( map.isEmpty() );

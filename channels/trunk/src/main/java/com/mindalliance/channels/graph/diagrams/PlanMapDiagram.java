@@ -36,8 +36,13 @@ public class PlanMapDiagram extends AbstractDiagram<Scenario,ScenarioRelationshi
      */
     private ScenarioRelationship selectedScRel;
 
-    public PlanMapDiagram( List<Scenario> scenarios, Scenario scenario, ScenarioRelationship scRel ) {
-        super();
+    public PlanMapDiagram(
+            List<Scenario> scenarios,
+            Scenario scenario,
+            ScenarioRelationship scRel,
+            double[] diagramSize,
+            String orientation ) {
+        super( diagramSize, orientation );
         this.scenarios = scenarios;
         this.selectedScenario = scenario;
         this.selectedScRel = scRel;

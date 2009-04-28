@@ -32,17 +32,28 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
      * Default page size for external flows panel.
      */
     private static final int PAGE_SIZE = 10;
-
+    /**
+     * Entity model.
+     */
     private IModel<T> entityModel;
+    /**
+     * Selected entity relationship.
+     */
     private EntityRelationship<T> selectedEntityRel;
+    /**
+     * CSS identifier for dom element showing scrollable diagram.
+     */
+    private String domIdentifier;
 
 
     public EntityNetworkPanel(
             String id,
             IModel<T> model,
-            Set<Long> expansions ) {
+            Set<Long> expansions,
+            String domIdentifier ) {
         super( id, model, expansions );
         this.entityModel = model;
+        this.domIdentifier = domIdentifier;
         init();
     }
 
@@ -56,7 +67,8 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
         EntityNetworkDiagramPanel<T> entityRelDiagramPanel = new EntityNetworkDiagramPanel<T>(
                 "diagram",
                 entityModel,
-                selectedEntityRel
+                selectedEntityRel,
+                domIdentifier
         );
         addOrReplace( entityRelDiagramPanel );
     }
@@ -168,22 +180,6 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
         }
     }
 
-/*
-    private ModelObject extractEntityFromPart( Part part ) {
-        ModelObject entity = getEntity();
-        if ( entity instanceof Actor ) {
-            return part.getActor();
-        } else if ( entity instanceof Role ) {
-            return part.getRole();
-        }
-        if ( entity instanceof Organization ) {
-            return part.getOrganization();
-        } else {
-            return null;
-        }
-    }
-*/
-
     /**
      * {@inheritDoc}
      */
@@ -193,6 +189,10 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
             // Don't percolate update on selection unless a part was selected.
             if ( change.getSubject() instanceof Part ) {
                 super.updateWith( target, change );
+            } else {
+                if ( change.getScript() != null ) {
+                    target.appendJavascript( change.getScript() );
+                }
             }
         } else {
             super.updateWith( target, change );

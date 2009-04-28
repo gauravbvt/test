@@ -7,6 +7,8 @@ import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.pages.ProjectPage;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.pages.RedirectPage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
 
@@ -15,6 +17,10 @@ import java.text.MessageFormat;
  */
 public class FlowMapPage extends PngWebPage {
 
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( FlowMapPage.class );
     /**
      * The selected node.
      */
@@ -47,8 +53,9 @@ public class FlowMapPage extends PngWebPage {
     /**
      * {@inheritDoc}
      */
-    protected Diagram makeDiagram(  ) {
-        return getDiagramFactory().newFlowMapDiagram( scenario, node );
+    protected Diagram makeDiagram( double[] diagramSize, String orientation ) {
+        LOG.info("Generating PNG: scenario = " + scenario.getName() + ", node = " + node.getTitle());
+        return getDiagramFactory().newFlowMapDiagram( scenario, node, diagramSize, orientation );
     }
 
 

@@ -26,12 +26,16 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelObject, EntityRel
     private ModelObject entity;
     private EntityRelationship selectedEntityRel;
 
-    public EntityNetworkDiagram( ModelObject entity, EntityRelationship selectedEntityRel ) {
-        super();
+    public EntityNetworkDiagram(
+            ModelObject entity,
+            EntityRelationship selectedEntityRel,
+            double[] diagramSize,
+            String orientation ) {
+        super( diagramSize, orientation );
         this.entity = entity;
         this.selectedEntityRel= selectedEntityRel;
     }
-
+                                                  
     public void render( String outputFormat, OutputStream outputStream ) {
         List<? extends ModelObject> entities = getEntities();
         DiagramFactory<ModelObject,EntityRelationship> diagramFactory = getDiagramFactory();

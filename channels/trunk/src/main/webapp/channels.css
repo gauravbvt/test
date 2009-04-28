@@ -626,6 +626,10 @@ div.wicket-aa ul li.selected {
     overflow: auto;
 }
 
+#entity .picture {
+    overflow: auto;
+}
+
 #entity span.menubar {
     float: right;
     position: static;
@@ -659,12 +663,10 @@ div.wicket-aa ul li.selected {
     right: 2em;
     bottom: 2em;
     padding: 5px;
-
     width: 50%;
     background: #C3D9FF;
     border: 1px outset #c3dede;
     max-height: 75%;
-    overflow: auto;
 }
 
 #plan-map span.menubar {
@@ -684,6 +686,10 @@ div.wicket-aa ul li.selected {
 }
 #plan-map table {
     width: 100%;
+}
+
+#plan-map .picture {
+    overflow: auto;
 }
 
 .header .button {

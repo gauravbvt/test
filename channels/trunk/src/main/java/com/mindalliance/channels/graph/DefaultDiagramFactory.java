@@ -70,21 +70,37 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
     /**
      * {@inheritDoc}
      */
-    public Diagram newFlowMapDiagram( Scenario scenario, Node node ) {
-        return new FlowMapDiagram( scenario, node );
+    public Diagram newFlowMapDiagram(
+            Scenario scenario,
+            Node node,
+            double[] diagramSize,
+            String orientation ) {
+        return new FlowMapDiagram( scenario, node, diagramSize, orientation );
     }
 
-    public Diagram newEntityNetworkDiagram( ModelObject entity, EntityRelationship selectedEntityRel ) {
-        return new EntityNetworkDiagram( entity, selectedEntityRel);
+    public Diagram newEntityNetworkDiagram(
+            ModelObject entity,
+            EntityRelationship selectedEntityRel,
+            double[] diagramSize,
+            String orientation ) {
+        return new EntityNetworkDiagram( entity, selectedEntityRel, diagramSize, orientation );
     }
 
     /**
       * {@inheritDoc}
       */
     // TODO - why can't I say:  List<Scenario> scenarios ?
-    public Diagram newPlanMapDiagram( List scenarios, Scenario scenario, ScenarioRelationship scRel ) {
-        return new PlanMapDiagram( (List<Scenario>)scenarios, scenario, scRel );
+    public Diagram newPlanMapDiagram(
+            List scenarios,
+            Scenario scenario,
+            ScenarioRelationship scRel,
+            double[] diagramSize,
+            String orientation ) {
+        return new PlanMapDiagram( 
+                (List<Scenario>)scenarios,
+                scenario, scRel,
+                diagramSize,
+                orientation );
     }
-
 
 }

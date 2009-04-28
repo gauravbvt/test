@@ -59,7 +59,7 @@ public class PlanMapPage extends PngWebPage {
        /**
      * {@inheritDoc}
      */
-    protected Diagram makeDiagram(  ) {
-       return getDiagramFactory().newPlanMapDiagram(allScenarios, scenario, scRel );
+    protected Diagram makeDiagram( double[] size, String orientation ) {
+       return getDiagramFactory().newPlanMapDiagram( allScenarios, scenario, scRel, size, orientation );
     }
 }

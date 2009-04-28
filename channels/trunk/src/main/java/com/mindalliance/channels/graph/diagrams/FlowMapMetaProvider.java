@@ -228,11 +228,11 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
 
         public List<DOTAttribute> getGraphAttributes() {
             List<DOTAttribute> list = DOTAttribute.emptyList();
+            list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             list.add( new DOTAttribute( "rankdir", getGraphOrientation() ) );
             if ( getGraphSize() != null ) {
                 list.add( new DOTAttribute( "size", getGraphSizeString() ) );
                 list.add( new DOTAttribute( "ratio", "compress" ) );
-                list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             }
             // list.add( new DOTAttribute( "overlap", "false" ) );
             // list.add( new DOTAttribute( "splines", "true" ) );

@@ -47,8 +47,9 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
             String id,
             IModel<ArrayList<Scenario>> model,
             Scenario selectedScenario,
-            ScenarioRelationship selectedScRel ) {
-        this( id, model, selectedScenario, selectedScRel, null, null, true );
+            ScenarioRelationship selectedScRel,
+            String domIdentifier ) {
+        this( id, model, selectedScenario, selectedScRel, null, null, true, domIdentifier );
     }
 
     public PlanMapDiagramPanel(
@@ -58,8 +59,9 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
             ScenarioRelationship selectedScRel,
             double[] diagramSize,
             String orientation,
-            boolean withImageMap ) {
-        super( id, diagramSize, orientation, withImageMap );
+            boolean withImageMap,
+            String domIdentifier ) {
+        super( id, diagramSize, orientation, withImageMap, domIdentifier );
         scenarios = model.getObject();
         this.selectedScenario = selectedScenario;
         this.selectedScRel = selectedScRel;
@@ -70,11 +72,13 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc}
      */
-    protected Diagram makeDiagram() {
+    protected Diagram makeDiagram(double[] diagramSize, String orientation ) {
         return getDiagramFactory().newPlanMapDiagram(
                 scenarios,
                 selectedScenario,
-                selectedScRel );
+                selectedScRel,
+                diagramSize,
+                orientation);
     }
 
     /**
@@ -140,8 +144,11 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
             int scrollLeft,
             AjaxRequestTarget target ) {
         try {
+            String js = scroll( domIdentifier, scrollTop, scrollLeft );
             Scenario scenario = getDqo().find( Scenario.class, Long.valueOf( vertexId ) );
-            update( target, new Change( Change.Type.Selected, scenario ) );
+            Change change = new Change( Change.Type.Selected, scenario );
+            change.setScript( js );
+            update( target, change );
         } catch ( NotFoundException e ) {
             LOG.warn( "Nout found", e );
         }
@@ -159,6 +166,9 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
             AjaxRequestTarget target ) {
         ScenarioRelationship scRel = new ScenarioRelationship();
         scRel.setId( Long.valueOf( edgeId ), getDqo() );
-        update( target, new Change( Change.Type.Selected, scRel ) );
+        String js = scroll( domIdentifier, scrollTop, scrollLeft );
+        Change change = new Change( Change.Type.Selected, scRel );
+        change.setScript( js );
+        update( target, change );
     }
 }

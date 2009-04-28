@@ -34,8 +34,10 @@ public class FlowMapDiagram extends AbstractDiagram<Node,Flow> {
 
     public FlowMapDiagram(
             Scenario scenario,
-            Node selectedNode ) {
-        super( );
+            Node selectedNode,
+            double[] diagramSize,
+            String orientation ) {
+        super( diagramSize, orientation );
         this.scenario = scenario;
         this.selectedNode = selectedNode;
     }

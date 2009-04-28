@@ -14,9 +14,14 @@ import com.mindalliance.channels.pages.components.menus.PartShowMenuPanel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -97,8 +102,16 @@ public class ScenarioPanel extends AbstractCommandablePanel {
      * Requirements flow panel.
      */
     private FlowListPanel reqsFlowPanel;
-
+    /**
+     * Attachement panel.
+     */
     private AttachmentPanel attachments;
+    /**
+     * Width, height dimension contraints on the flow diagram.
+     * In inches.
+     * None if any is 0.
+     */
+    private double[] flowDiagramDim = new double[2];
 
     public ScenarioPanel(
             String id,
@@ -114,6 +127,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     private void init() {
         setOutputMarkupId( true );
         addScenarioEditPanel();
+        addFlowSizing();
         addFlowDiagram();
         addPartContent();
         reqsFlowPanel = new FlowListPanel(
@@ -199,8 +213,58 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         addOrReplace( partActionsMenu );
     }
 
+    private void addFlowSizing() {
+        WebMarkupContainer reduceToFit = new WebMarkupContainer("fit");
+        reduceToFit.add( new AbstractDefaultAjaxBehavior() {
+            protected void onComponentTag( ComponentTag tag) {
+                super.onComponentTag(tag);
+                String domIdentifier = "#graph";
+                String script = "wicketAjaxGet('"
+                                + getCallbackUrl( true )
+                                + "&width='+$('"+domIdentifier+"').width()+'"
+                                + "&height='+$('"+domIdentifier+"').height()";
+                String onclick = ("{" +  generateCallbackScript(script) + " return false;}")
+                                    .replaceAll("&amp;", "&"); 
+                tag.put("onclick", onclick);
+            }
+            protected void respond( AjaxRequestTarget target ) {
+                RequestCycle requestCycle = RequestCycle.get();
+                String swidth = requestCycle.getRequest().getParameter( "width" );
+                String sheight = requestCycle.getRequest().getParameter( "height" );
+                flowDiagramDim[0] = Double.parseDouble( swidth ) / 96.0;
+                flowDiagramDim[1] = Double.parseDouble( sheight ) / 96.0;
+                addFlowDiagram();
+                target.addComponent( flowDiagramContainer );
+            }
+        } );
+        add( reduceToFit );
+        WebMarkupContainer fullSize = new WebMarkupContainer("full");
+        fullSize.add( new AjaxEventBehavior("onclick") {
+            protected void onEvent( AjaxRequestTarget target ) {
+                flowDiagramDim = new double[2];
+                addFlowDiagram();
+                target.addComponent( flowDiagramContainer );
+            }
+        } );
+        add( fullSize );
+    }
+
     private void addFlowDiagram() {
-        flowDiagramContainer = new FlowMapDiagramPanel( "flow-map", scenarioModel, partModel );
+        if (flowDiagramDim[0] <= 0.0 || flowDiagramDim[0] <= 0.0) {
+            flowDiagramContainer = new FlowMapDiagramPanel(
+                    "flow-map",
+                    scenarioModel,
+                    partModel,
+                    null,
+                    "#graph" );
+        } else {
+            flowDiagramContainer = new FlowMapDiagramPanel(
+                    "flow-map",
+                    scenarioModel,
+                    partModel,
+                    flowDiagramDim,
+                    "#graph" );
+        }
         flowDiagramContainer.setOutputMarkupId( true );
         addOrReplace( flowDiagramContainer );
     }

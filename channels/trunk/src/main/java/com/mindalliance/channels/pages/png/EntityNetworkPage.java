@@ -21,9 +21,9 @@ import com.mindalliance.channels.analysis.graph.EntityRelationship;
 public class EntityNetworkPage extends PngWebPage {
 
     /**
-      * The log.
-      */
-     private static final Logger LOG = LoggerFactory.getLogger( EntityNetworkPage.class );
+     * The log.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( EntityNetworkPage.class );
 
     private ModelObject entity;
     private EntityRelationship selectedEntityRel;
@@ -32,22 +32,22 @@ public class EntityNetworkPage extends PngWebPage {
         super( parameters );
         DataQueryObject dqo = getDqo();
         if ( parameters.containsKey( "entity" ) && !parameters.getString( "entity" ).equals( "NONE" ) ) {
-            Long entityId = Long.valueOf(parameters.getString( "entity" ));
+            Long entityId = Long.valueOf( parameters.getString( "entity" ) );
             try {
-                entity = dqo.find( ModelObject.class, entityId);
+                entity = dqo.find( ModelObject.class, entityId );
             } catch ( NotFoundException e ) {
-                LOG.warn("Selected entity not found at :" + entityId, e);
+                LOG.warn( "Selected entity not found at :" + entityId, e );
             }
         }
         if ( parameters.containsKey( "connection" ) && !parameters.getString( "connection" ).equals( "NONE" ) ) {
-            Long scRelId = Long.valueOf(parameters.getString( "connection" ));
+            Long scRelId = Long.valueOf( parameters.getString( "connection" ) );
             selectedEntityRel = new EntityRelationship();
             selectedEntityRel.setId( scRelId, getDqo() );
         }
     }
 
-    protected Diagram makeDiagram() {
+    protected Diagram makeDiagram( double[] size, String orientation ) {
         DiagramFactory<ModelObject, EntityRelationship> factory = getDiagramFactory();
-        return factory.newEntityNetworkDiagram( entity, selectedEntityRel );
+        return factory.newEntityNetworkDiagram( entity, selectedEntityRel, size, orientation );
     }
 }
