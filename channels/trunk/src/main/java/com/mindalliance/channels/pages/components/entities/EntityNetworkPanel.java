@@ -10,9 +10,14 @@ import com.mindalliance.channels.pages.Project;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.diagrams.EntityNetworkDiagramPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.RequestCycle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +49,16 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
      * CSS identifier for dom element showing scrollable diagram.
      */
     private String domIdentifier;
-
+    /**
+     * Width, height dimension contraints on the plan map diagram.
+     * In inches.
+     * None if any is 0.
+     */
+    private double[] diagramSize = new double[2];
+    /**
+     * Entity network diagram panel
+     */
+    private EntityNetworkDiagramPanel<T> entityNetworkDiagramPanel;
 
     public EntityNetworkPanel(
             String id,
@@ -60,17 +74,66 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
     private void init() {
         addEntityNetworkDiagramPanel();
         addFlowsTitleLabel();
+        addDiagramSizing();
         addFlowsPanel();
     }
 
+    private void addDiagramSizing() {
+         WebMarkupContainer reduceToFit = new WebMarkupContainer( "fit" );
+         reduceToFit.add( new AbstractDefaultAjaxBehavior() {
+             protected void onComponentTag( ComponentTag tag ) {
+                 super.onComponentTag( tag );
+                 String script = "wicketAjaxGet('"
+                         + getCallbackUrl( true )
+                         + "&width='+$('" + domIdentifier + "').width()+'"
+                         + "&height='+$('" + domIdentifier + "').height()";
+                 String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
+                         .replaceAll( "&amp;", "&" );
+                 tag.put( "onclick", onclick );
+             }
+
+             protected void respond( AjaxRequestTarget target ) {
+                 RequestCycle requestCycle = RequestCycle.get();
+                 String swidth = requestCycle.getRequest().getParameter( "width" );
+                 String sheight = requestCycle.getRequest().getParameter( "height" );
+                 diagramSize[0] = ( Double.parseDouble( swidth ) - 20 ) / 96.0;
+                 diagramSize[1] = ( Double.parseDouble( sheight ) - 20 ) / 96.0;
+                 addEntityNetworkDiagramPanel();
+                 target.addComponent( entityNetworkDiagramPanel );
+             }
+         } );
+         add( reduceToFit );
+         WebMarkupContainer fullSize = new WebMarkupContainer( "full" );
+         fullSize.add( new AjaxEventBehavior( "onclick" ) {
+             protected void onEvent( AjaxRequestTarget target ) {
+                 diagramSize = new double[2];
+                 addEntityNetworkDiagramPanel();
+                 target.addComponent( entityNetworkDiagramPanel );
+             }
+         } );
+         add( fullSize );
+     }
+
     private void addEntityNetworkDiagramPanel() {
-        EntityNetworkDiagramPanel<T> entityRelDiagramPanel = new EntityNetworkDiagramPanel<T>(
+        if ( diagramSize[0] <= 0.0 || diagramSize[1] <= 0.0 ) {
+        entityNetworkDiagramPanel = new EntityNetworkDiagramPanel<T>(
                 "diagram",
                 entityModel,
                 selectedEntityRel,
+                null,
                 domIdentifier
         );
-        addOrReplace( entityRelDiagramPanel );
+        } else {
+            entityNetworkDiagramPanel = new EntityNetworkDiagramPanel<T>(
+                    "diagram",
+                    entityModel,
+                    selectedEntityRel,
+                    diagramSize,
+                    domIdentifier
+            );
+         }
+        entityNetworkDiagramPanel.setOutputMarkupId( true );
+        addOrReplace( entityNetworkDiagramPanel );
     }
 
     private void addFlowsTitleLabel() {

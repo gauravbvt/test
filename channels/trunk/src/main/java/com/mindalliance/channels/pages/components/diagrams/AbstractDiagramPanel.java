@@ -112,7 +112,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
      * Initialize.
      */
     protected void init() {
-        diagram = makeDiagram( diagramSize, orientation );
+        diagram = makeDiagram();
         if ( withImageMap ) {
             imageMapHolder = new StringBuilder();
             updateImageMap();
@@ -250,7 +250,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
     }
 
     /**
-     * Return the wisket id of the diagram's container.
+     * Return the wicket id of the diagram's container.
      *
      * @return a string
      */
@@ -259,11 +259,9 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
     /**
      * Instantiate diagram to display.
      *
-     * @param diagramSize width and height as array of doubles
-     * @param orientation a string
      * @return a diagram
      */
-    protected abstract Diagram makeDiagram( double[] diagramSize, String orientation );
+    protected abstract Diagram makeDiagram();
 
     /**
      * Get URL for requesting the image of the diagram.

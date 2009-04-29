@@ -10,10 +10,15 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
 import com.mindalliance.channels.pages.Project;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.RequestCycle;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -42,6 +47,16 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
      * Selected scenario relationship in plan.
      */
     private ScenarioRelationship selectedScRel;
+    /**
+     * Plan map diagram panel.
+     */
+    private PlanMapDiagramPanel planMapDiagramPanel;
+    /**
+     * Width, height dimension contraints on the plan map diagram.
+     * In inches.
+     * None if any is 0.
+     */
+    private double[] diagramSize = new double[2];
 
     public PlanMapPanel( String id, Set<Long> expansions ) {
         super( id, null, expansions );
@@ -57,6 +72,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
             }
         };
         add( closeLink );
+        addPlanSizing();
         addPlanMapDiagramPanel();
         addFlowsTitleLabel();
         addExternalFlowsPanel();
@@ -64,13 +80,62 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
         addCausesPanel();
     }
 
+   private void addPlanSizing() {
+        WebMarkupContainer reduceToFit = new WebMarkupContainer( "fit" );
+        reduceToFit.add( new AbstractDefaultAjaxBehavior() {
+            protected void onComponentTag( ComponentTag tag ) {
+                super.onComponentTag( tag );
+                String domIdentifier = "#plan-map .picture";
+                String script = "wicketAjaxGet('"
+                        + getCallbackUrl( true )
+                        + "&width='+$('" + domIdentifier + "').width()+'"
+                        + "&height='+$('" + domIdentifier + "').height()";
+                String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
+                        .replaceAll( "&amp;", "&" );
+                tag.put( "onclick", onclick );
+            }
+
+            protected void respond( AjaxRequestTarget target ) {
+                RequestCycle requestCycle = RequestCycle.get();
+                String swidth = requestCycle.getRequest().getParameter( "width" );
+                String sheight = requestCycle.getRequest().getParameter( "height" );
+                diagramSize[0] = ( Double.parseDouble( swidth ) - 20 ) / 96.0;
+                diagramSize[1] = ( Double.parseDouble( sheight ) - 20 ) / 96.0;
+                addPlanMapDiagramPanel();
+                target.addComponent( planMapDiagramPanel );
+            }
+        } );
+        add( reduceToFit );
+        WebMarkupContainer fullSize = new WebMarkupContainer( "full" );
+        fullSize.add( new AjaxEventBehavior( "onclick" ) {
+            protected void onEvent( AjaxRequestTarget target ) {
+                diagramSize = new double[2];
+                addPlanMapDiagramPanel();
+                target.addComponent( planMapDiagramPanel );
+            }
+        } );
+        add( fullSize );
+    }
+
+
     private void addPlanMapDiagramPanel() {
-        PlanMapDiagramPanel planMapDiagramPanel = new PlanMapDiagramPanel(
+        if ( diagramSize[0] <= 0.0 || diagramSize[1] <= 0.0 ) {
+            planMapDiagramPanel = new PlanMapDiagramPanel(
                 "plan-map",
                 new PropertyModel<ArrayList<Scenario>>( this, "scenarios" ),
                 selectedScenario,
                 selectedScRel,
+                null,
+                "#plan-map .picture");            
+        } else {
+            planMapDiagramPanel = new PlanMapDiagramPanel(
+                "plan-map",
+                new PropertyModel<ArrayList<Scenario>>( this, "scenarios" ),
+                selectedScenario,
+                selectedScRel,
+                    diagramSize,
                 "#plan-map .picture");
+        }
         planMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( planMapDiagramPanel );
     }

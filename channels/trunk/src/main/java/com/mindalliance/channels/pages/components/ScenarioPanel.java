@@ -56,7 +56,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     /**
      * Flow diagram panel.
      */
-    private FlowMapDiagramPanel flowDiagramContainer;
+    private FlowMapDiagramPanel flowMapDiagramPanel;
 
     /**
      * Scenario model.
@@ -235,7 +235,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
                 flowDiagramDim[0] = ( Double.parseDouble( swidth ) - 20 ) / 96.0;
                 flowDiagramDim[1] = ( Double.parseDouble( sheight ) - 20 ) / 96.0;
                 addFlowDiagram();
-                target.addComponent( flowDiagramContainer );
+                target.addComponent( flowMapDiagramPanel );
             }
         } );
         add( reduceToFit );
@@ -244,7 +244,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
             protected void onEvent( AjaxRequestTarget target ) {
                 flowDiagramDim = new double[2];
                 addFlowDiagram();
-                target.addComponent( flowDiagramContainer );
+                target.addComponent( flowMapDiagramPanel );
             }
         } );
         add( fullSize );
@@ -252,22 +252,22 @@ public class ScenarioPanel extends AbstractCommandablePanel {
 
     private void addFlowDiagram() {
         if ( flowDiagramDim[0] <= 0.0 || flowDiagramDim[0] <= 0.0 ) {
-            flowDiagramContainer = new FlowMapDiagramPanel(
+            flowMapDiagramPanel = new FlowMapDiagramPanel(
                     "flow-map",
                     scenarioModel,
                     partModel,
                     null,
                     "#graph" );
         } else {
-            flowDiagramContainer = new FlowMapDiagramPanel(
+            flowMapDiagramPanel = new FlowMapDiagramPanel(
                     "flow-map",
                     scenarioModel,
                     partModel,
                     flowDiagramDim,
                     "#graph" );
         }
-        flowDiagramContainer.setOutputMarkupId( true );
-        addOrReplace( flowDiagramContainer );
+        flowMapDiagramPanel.setOutputMarkupId( true );
+        addOrReplace( flowMapDiagramPanel );
     }
 
     /**
@@ -333,7 +333,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
 
             if ( identifiable instanceof Issue || identifiable instanceof ScenarioObject ) {
                 if ( !change.isDisplay() ) {
-                    target.addComponent( flowDiagramContainer );
+                    target.addComponent( flowMapDiagramPanel );
                     makeVisible( target, partIssuesPanel,
                             Project.analyst().hasIssues( getPart(), false ) );
                     target.addComponent( partIssuesPanel );
@@ -361,7 +361,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         target.addComponent( partActionsMenu );
         partPanel.refresh( target );
         addFlowDiagram();
-        target.addComponent( flowDiagramContainer );
+        target.addComponent( flowMapDiagramPanel );
         adjustComponents();
         target.addComponent( scenarioEditPanel );
         target.addComponent( partDescription );
@@ -376,6 +376,6 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     }
 
     public void refreshFlowMapImage( AjaxRequestTarget target ) {
-        flowDiagramContainer.refreshImage( target );
+        flowMapDiagramPanel.refreshImage( target );
     }
 }

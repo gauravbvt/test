@@ -69,8 +69,12 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc}
      */
-    protected Diagram makeDiagram( double[] diagramSize, String orientation ) {
-        return getDiagramFactory().newFlowMapDiagram( getScenario(), getPart(), diagramSize, orientation );
+    protected Diagram makeDiagram( ) {
+        return getDiagramFactory().newFlowMapDiagram(
+                getScenario(),
+                getPart(),
+                getDiagramSize(),
+                getOrientation() );
     }
 
     /**

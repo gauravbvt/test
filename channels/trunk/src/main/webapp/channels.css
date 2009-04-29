@@ -67,12 +67,18 @@ div.section-content {
     overflow: auto;
 }
 
-#contents div.zoom {
-    top: 10px;
-    left: 10px;
+div.zoom {
+    opacity: .5;
+    top: 5px;
+    left: 5px;
     position: inherit;
     z-index: 1000;
     cursor: pointer;
+}
+
+#contents div.zoom {
+    top: 10px;
+    left: 10px;
 }
 
 div.section-title {
@@ -118,6 +124,7 @@ div.section, div.form {
     position: relative;
     max-width: 80em;
 }
+
 div.section input[type='submit'] {
     position: absolute;
     bottom: 5px;
@@ -136,6 +143,7 @@ div.section input[type='submit'] {
     padding: 0;
     text-align: left;
 }
+
 #sc-sel li {
     font-size: 8pt;
 }
@@ -144,26 +152,30 @@ input, textarea, select, div.flow-details {
     padding-left: 0.3em;
     margin: 0;
 }
+
 input[type='checkbox'], input[type='radio'] {
     padding: 0;
     margin: 0;
     vertical-align: middle;
 }
-input[type='submit'], input[type='button'],input[type='file'] {
+
+input[type='submit'], input[type='button'], input[type='file'] {
     font-size: 8pt;
 }
+
 input[type='file'] {
     margin-top: 2px;
 }
+
 input[type='text'], textarea {
     width: 96%;
 }
 
-input[type="text"].no-expand  {
+input[type="text"].no-expand {
     width: 5em;
 }
 
-input[type="text"].address  {
+input[type="text"].address {
     width: 12em;
 }
 
@@ -172,7 +184,6 @@ input[type="text"].invalid-address {
     background-color: bisque;
     border: 1px inset gray;
 }
-
 
 .float {
     float: right;
@@ -184,57 +195,66 @@ div.issues {
     padding: 5px 5px 0 5px;
     margin-top: 5px;
 }
+
 #part div.issues {
     margin-right: 7px;
 }
+
 div.issues h4 {
-    background: transparent url('images/warning.png') no-repeat 0 0;
+    background: transparent url( 'images/warning.png' ) no-repeat 0 0;
     padding-left: 20px;
     border-bottom: 1px solid #730A0A;
 }
+
 div.issues li {
     line-height: 1.25em;
     margin-bottom: 0.5em;
 }
+
 div.issue-details {
     margin-top: 5px;
 }
+
 div.issue-details table {
 }
 
 input.error, div.issues {
     background-color: bisque;
 }
+
 span.error, li.error {
-    background: transparent url('images/warning.png') no-repeat 100% 0;
+    background: transparent url( 'images/warning.png' ) no-repeat 100% 0;
     padding-right: 20px;
 }
 
 span.waived, li.waived {
-    background: transparent url('images/waived.png') no-repeat 100% 0;
+    background: transparent url( 'images/waived.png' ) no-repeat 100% 0;
     padding-right: 20px;
 }
-
 
 h1, h2, h3, h4 {
     margin: 0 0 0.4em 0;
     padding-right: 4em;
 }
+
 h1 {
-    padding: 0.5em 5px 5px 0;
-    font-size: 2em;
+    padding: 0.8em 5px 5px 0;
+    font-size: 1.6em;
     margin: 0;
     float: left;
 }
+
 h2, h3 {
     border-bottom: 1px solid #4d8222;
     line-height: 20px;
 }
+
 h2 {
     padding: 0 0 1px 0;
-    font-size: 1.4em;
+    font-size: 1.2em;
     white-space: nowrap;
 }
+
 h3 {
     padding: 1px 0 0 0;
     font-size: 1.1em;
@@ -248,10 +268,12 @@ body, ul.menu, span.menubar {
 table {
     border-collapse: collapse;
 }
+
 #part td {
     width: 100%;
     padding-right: 0;
 }
+
 #part table {
     width: 98%;
 }
@@ -268,15 +290,17 @@ div.flow-details {
 textarea, select, input[type='text'], td, th {
     font: inherit;
     margin: 0;
-  }
+}
 
 th {
     white-space: nowrap;
 }
+
 td, th {
     padding: 0 5px 2px 0;
     vertical-align: baseline;
 }
+
 th.area {
     vertical-align: top;
     padding-top: 1px;
@@ -286,10 +310,12 @@ th.area {
 td span.timing:first-child {
     margin-bottom: 2px;
 }
+
 span.timing {
     display: block;
     white-space: nowrap;
 }
+
 span.timing input:first-child {
     margin-right: 2px;
 }
@@ -328,6 +354,7 @@ ol {
 #reqs ol, #outcomes ol {
     width: 95%;
 }
+
 #reqs ol > li, #outcomes ol > li {
     position: relative;
     margin: 0 0 0.6em 0;
@@ -359,17 +386,20 @@ ul.menu, span.menubar {
     position: absolute;
     top: 0;
     right: 0;
-  }
+}
+
 ul.menu li {
     display: inline;
-  }
+}
+
 ul.menu li:before {
     content: " \2015  ";
-  }
+}
 
 #part ul.menu li:first-child:before, #sc-details ul.menu li:first-child:before {
     content: " ";
-  }
+}
+
 div.section-title ul.menu {
     padding-left: 5px;
     z-index: 1;
@@ -378,9 +408,11 @@ div.section-title ul.menu {
     bottom: 2px;
     margin: 0;
 }
+
 ul.attach ul.menu {
     padding-top: 2px;
 }
+
 .header ul.menu, .header span.menubar {
     display: block;
     margin: 0;
@@ -396,6 +428,7 @@ ul.attach ul.menu {
 h2 ul.menu, h3 ul.menu {
     margin: 2px 5px 0 0;
 }
+
 ol > li > ul.menu {
     margin: 1px 0 0 5px;
     position: static;
@@ -408,9 +441,11 @@ ul.attach, ul.call-list {
     list-style: outside;
     line-height: 1.5em;
 }
+
 ul.call-list {
     padding-bottom: 5px;
 }
+
 ul.attach li {
     position: relative;
 }
@@ -422,9 +457,11 @@ span.suggest {
 div.picture {
     background: white;
 }
+
 div.picture img {
     border: none;
 }
+
 p.caption {
     padding: 0;
     margin: 0;
@@ -451,16 +488,21 @@ html, #sc-details {
 }
 
 div.header {
-    background: transparent url('images/logo.png') no-repeat 5px 2px;
+    background: transparent url( 'images/logo.png' ) no-repeat 5px 2px;
 }
+
 .role .header {
-    background: transparent url('images/role.png') no-repeat 5px 2px;
+    background: transparent url( 'images/role.png' ) no-repeat 5px 2px;
 }
+
 .actor .header {
-    background: transparent url('images/actor.png') no-repeat 5px 2px;
-}.organization .header {
-    background: transparent url('images/organization.png') no-repeat 5px 2px;
+    background: transparent url( 'images/actor.png' ) no-repeat 5px 2px;
 }
+
+.organization .header {
+    background: transparent url( 'images/organization.png' ) no-repeat 5px 2px;
+}
+
 #footer {
     border: 1px outset #6fafaf;
 }
@@ -468,9 +510,11 @@ div.header {
 #graph {
     background: white;
 }
+
 #part-header, #reqs, #outcomes, div.section, #graph, div.aspect {
     border: 1px inset #c3dede;
 }
+
 #part-header, #reqs, #outcomes, div.section, div.aspect {
     background: #f6f6f6;
     padding: 5px;
@@ -481,28 +525,32 @@ div.header {
 }
 
 td.link.notify, td.link.answer {
-    background: transparent url('images/arrow_right_blue.png') no-repeat 0 50%;
+    background: transparent url( 'images/arrow_right_blue.png' ) no-repeat 0 50%;
     padding-left: 25px;
 }
+
 #reqs h3 span {
-    background: transparent url('images/arrow_left_blue.png') no-repeat 100% 50%;
+    background: transparent url( 'images/arrow_left_blue.png' ) no-repeat 100% 50%;
     padding-right: 25px;
 }
+
 td.link.ask, td.link.receive {
-    background: transparent url('images/arrow_left_blue.png') no-repeat 0 50%;
+    background: transparent url( 'images/arrow_left_blue.png' ) no-repeat 0 50%;
     padding-left: 25px;
 }
+
 #outcomes h3 span {
-    background: transparent url('images/arrow_right_blue.png') no-repeat 100% 50%;
+    background: transparent url( 'images/arrow_right_blue.png' ) no-repeat 100% 50%;
     padding-right: 25px;
 }
 
 th.wicket_orderDown a {
-    background: transparent url('images/navigate_open.png') no-repeat 100% 0;
+    background: transparent url( 'images/navigate_open.png' ) no-repeat 100% 0;
     padding-right: 16px;
 }
+
 th.wicket_orderUp a {
-    background: transparent url('images/navigate_close.png') no-repeat 100% 0;
+    background: transparent url( 'images/navigate_close.png' ) no-repeat 100% 0;
     padding-right: 16px;
 }
 
@@ -527,19 +575,22 @@ div.form th {
 
 li.doc_Document {
     padding-left: 20px;
-    background: transparent url('images/document.png') no-repeat 0;
+    background: transparent url( 'images/document.png' ) no-repeat 0;
 }
+
 li.doc_MOU {
     padding-left: 20px;
-    background: transparent url('images/handshake.png') no-repeat 0;
+    background: transparent url( 'images/handshake.png' ) no-repeat 0;
 }
+
 li.doc_PolicyMust {
     padding-left: 20px;
-    background: transparent url('images/scroll_ok.png') no-repeat 0;
+    background: transparent url( 'images/scroll_ok.png' ) no-repeat 0;
 }
+
 li.doc_PolicyCant {
     padding-left: 20px;
-    background: transparent url('images/scroll_error.png') no-repeat 0;
+    background: transparent url( 'images/scroll_error.png' ) no-repeat 0;
 }
 
 div.wicket-aa-container {
@@ -547,28 +598,33 @@ div.wicket-aa-container {
     border: 1px outset gray;
     margin: 2px;
 }
+
 div.wicket-aa {
 }
+
 div.wicket-aa ul {
     margin: 0;
     padding: 2px;
     list-style: none;
 }
+
 div.wicket-aa ul li {
     cursor: pointer;
 }
+
 div.wicket-aa ul li:hover {
     background: #C3D9FF;
 }
+
 div.wicket-aa ul li.selected {
 }
 
 .menubar .dropmenu {
-  width: auto;
-  cursor: default;
-  background: transparent url(images/dropmenu.png) no-repeat scroll 100% 50%;
-  padding: 0 12px 0 5px;
-  position: relative;
+    width: auto;
+    cursor: default;
+    background: transparent url( images/dropmenu.png ) no-repeat scroll 100% 50%;
+    padding: 0 12px 0 5px;
+    position: relative;
 }
 
 .menubar .dropmenu:hover {
@@ -576,22 +632,22 @@ div.wicket-aa ul li.selected {
 }
 
 .menubar .dropmenu ul {
-  display: none;
-  position: absolute;
-  top: 1.1em;
-  right: 0;
-  background-color: #e6e6e6;
-  color: black;
-  list-style: none;
-  margin: 0;
-  padding: 3px;
-  z-index: 100000;
+    display: none;
+    position: absolute;
+    top: 1.1em;
+    right: 0;
+    background-color: #e6e6e6;
+    color: black;
+    list-style: none;
+    margin: 0;
+    padding: 3px;
+    z-index: 100000;
 }
 
 .menubar span.dropmenu ul li {
-  display: block;
-  padding: 0.2em;
-  z-index: 100000;
+    display: block;
+    padding: 0.2em;
+    z-index: 100000;
 }
 
 #part .menubar span.dropmenu.first:before {
@@ -608,11 +664,11 @@ div.wicket-aa ul li.selected {
 }
 
 .menubar span.dropmenu:hover ul {
-  display: block;
+    display: block;
 }
 
 .menubar span.dropmenu ul li:hover {
-  background-color: #ccf;
+    background-color: #ccf;
 }
 
 .menubar span.menuitem {
@@ -625,10 +681,10 @@ div.wicket-aa ul li.selected {
     padding: 5px;
 
     position: absolute;
-    top: 7em;
+    top: 7.5em;
     bottom: 7em;
     left: 2em;
-    width: 50%;
+    width: 40%;
     min-height: 14em;
     z-index: 1;
     overflow: hidden;
@@ -651,18 +707,22 @@ div.aspect {
     width: 100%;
     border-collapse: separate;
 }
+
 .aspect thead td {
     border-bottom: 1px solid #4d8222;
     font-weight: bold;
     padding: 0 10px 0 0
 }
-.aspect tr.headers th  {
+
+.aspect tr.headers th {
     text-align: left;
     font-weight: bold;
 }
+
 .aspect tr.even {
     background-color: #FDFDFD;
 }
+
 .aspect tr.odd {
 }
 
@@ -675,13 +735,17 @@ div.aspect {
     right: 2em;
     top: 7em;
     bottom: 7em;
-    width: 50%;
+    width: 40%;
     min-height: 14em;
     z-index: 1;
     overflow: hidden;
 }
 
-.button {
-    cursor: pointer;    
-}
-
+.refresh {
+    cursor: pointer;
+    float: left;
+    position: inherit;
+    top: 5px;
+    z-index: 1000;
+    padding-top: 1.1em;
+    padding-right: 5px;

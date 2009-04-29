@@ -34,8 +34,9 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
             String id,
             IModel<T> entityModel,
             EntityRelationship<T> selectedEntityRel,
-            String domIdentifier) {
-        this( id, entityModel, selectedEntityRel, null, null, true, domIdentifier );
+            double[] diagramSize,
+            String domIdentifier ) {
+        this( id, entityModel, selectedEntityRel, diagramSize, null, true, domIdentifier );
     }
 
     public EntityNetworkDiagramPanel(
@@ -45,7 +46,7 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
             double[] diagramSize,
             String orientation,
             boolean withImageMap,
-            String domIdentifier) {
+            String domIdentifier ) {
         super( id, diagramSize, orientation, withImageMap, domIdentifier );
         this.entityModel = entityModel;
         this.selectedEntityRel = selectedEntityRel;
@@ -57,12 +58,15 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
         return "entity-network";
     }
 
-    protected Diagram makeDiagram( double[] diagramSize, String orientation ) {
+    /**
+     * {@inheritDoc}
+     */
+    protected Diagram makeDiagram() {
         return getDiagramFactory().newEntityNetworkDiagram(
                 entityModel.getObject(),
                 selectedEntityRel,
-                diagramSize,
-                orientation );
+                getDiagramSize(),
+                getOrientation() );
     }
 
     protected String makeDiagramUrl() {
@@ -136,7 +140,7 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
-           AjaxRequestTarget target ) {
+            AjaxRequestTarget target ) {
         EntityRelationship<T> entityRelationship = new EntityRelationship<T>();
         entityRelationship.setId( Long.valueOf( edgeId ), getDqo() );
         String js = scroll( domIdentifier, scrollTop, scrollLeft );

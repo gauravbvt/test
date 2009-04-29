@@ -48,8 +48,9 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
             IModel<ArrayList<Scenario>> model,
             Scenario selectedScenario,
             ScenarioRelationship selectedScRel,
+            double[] diagramSize,
             String domIdentifier ) {
-        this( id, model, selectedScenario, selectedScRel, null, null, true, domIdentifier );
+        this( id, model, selectedScenario, selectedScRel, diagramSize, null, true, domIdentifier );
     }
 
     public PlanMapDiagramPanel(
@@ -72,13 +73,13 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc}
      */
-    protected Diagram makeDiagram(double[] diagramSize, String orientation ) {
+    protected Diagram makeDiagram() {
         return getDiagramFactory().newPlanMapDiagram(
                 scenarios,
                 selectedScenario,
                 selectedScRel,
-                diagramSize,
-                orientation);
+                getDiagramSize(),
+                getOrientation() );
     }
 
     /**

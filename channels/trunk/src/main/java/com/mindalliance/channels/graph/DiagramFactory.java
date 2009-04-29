@@ -59,7 +59,11 @@ public interface DiagramFactory<Vertex, Edge> {
      * @param orientation a string
      * @return a flow map diagram
      */
-    Diagram newFlowMapDiagram( Scenario scenario, Node node, double[] diagramSize, String orientation );
+    Diagram newFlowMapDiagram(
+            Scenario scenario,
+            Node node,
+            double[] diagramSize,
+            String orientation );
 
     /**
      * Instantiate a plan map diagram.
@@ -70,7 +74,12 @@ public interface DiagramFactory<Vertex, Edge> {
      * @param orientation a string
      * @return a plan map diagram
      */
-    Diagram newPlanMapDiagram( List<Scenario> scenarios, Scenario scenario, ScenarioRelationship scRel, double[] diagramSize, String orientation );
+    Diagram newPlanMapDiagram(
+            List<Scenario> scenarios,
+            Scenario scenario,
+            ScenarioRelationship scRel,
+            double[] diagramSize,
+            String orientation );
 
     /**
      * Instantiate an entity network diagram.
@@ -82,7 +91,9 @@ public interface DiagramFactory<Vertex, Edge> {
      */
     <T extends ModelObject>Diagram newEntityNetworkDiagram(
             T entity,
-            EntityRelationship<T> selectedEntityRel, double[] diagramSize, String orientation );
+            EntityRelationship<T> selectedEntityRel,
+            double[] diagramSize,
+            String orientation );
 
     /**
      * Gets the preset graph renderer.
