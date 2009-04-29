@@ -1,5 +1,7 @@
 package com.mindalliance.channels.attachments;
 
+import com.mindalliance.channels.ModelObject;
+
 import java.io.Serializable;
 import java.text.MessageFormat;
 
@@ -42,16 +44,26 @@ public interface Attachment extends Serializable {
     }
 
     /**
+     * @return the model object to which this attachment belongs to.
+     */
+    ModelObject getObject();
+
+    /**
      * The text of the link to this attachment.
      * @return a label
      */
     String getLabel();
 
     /**
-     * The actual url of the attachment.
-     * @return a url, local or not
+     * @return the key to use in the file map.
      */
-    String getLink();
+    String getKey();
+
+    /**
+     * The actual url of the attachment.
+     * @return a url string, local or not
+     */
+    String getUrl();
 
     /**
      * @return the type of this attachment
@@ -64,4 +76,6 @@ public interface Attachment extends Serializable {
      */
     boolean isPolicyViolation();
 
+    /** Get rid of persistent part, if any. */
+    void delete();
 }

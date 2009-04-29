@@ -20,8 +20,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import com.mindalliance.channels.query.DataQueryObjectImpl;
-
 /**
  * A scenario in the project.
  * Provides an iterator on its nodes.
@@ -523,10 +521,15 @@ public class Scenario extends ModelObject {
 
         private FlowIterator() {
             nodeIterator = nodes();
-            setIterators( nodeIterator.next() );
+            if ( nodeIterator.hasNext() )
+                setIterators( nodeIterator.next() );
+            else {
+                outcomeIterator = Collections.<Flow>emptyList().iterator();
+                reqIterator = Collections.<Flow>emptyList().iterator();
+            }
         }
 
-        @SuppressWarnings( {"unchecked"} )
+        @SuppressWarnings( { "unchecked" } )
         private void setIterators( Node node ) {
             outcomeIterator = node.outcomes();
             reqIterator = (Iterator<Flow>) new FilterIterator(

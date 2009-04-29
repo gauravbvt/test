@@ -46,13 +46,14 @@ public class AttachmentPanel extends Panel {
         super( id, model );
         setOutputMarkupId( true );
 
-        add( new ListView<Wrapper>( "attachments",
-                                    new PropertyModel<List<Wrapper>>( this, "attachments" ) ) {                           // NON-NLS
+        add( new ListView<Wrapper>( "attachments",                                        // NON-NLS
+                new PropertyModel<List<Wrapper>>( this, "attachments" ) ) {               // NON-NLS
             @Override
             protected void populateItem( ListItem<Wrapper> item ) {
                 Wrapper wrapper = item.getModelObject();
                 Attachment a = wrapper.getAttachment();
-                item.add( new ExternalLink( "attachment", a.getLink(), a.getLabel() ) );  // NON-NLS
+                item.add( new ExternalLink( "attachment",                                 // NON-NLS
+                                            a.getUrl().toString(), a.getLabel() ) );
                 item.add( new CheckBox( "delete",                                         // NON-NLS
                         new PropertyModel<Boolean>( wrapper, "markedForDeletion" ) ) );   // NON-NLS
                 item.add( new AttributeModifier(

@@ -301,9 +301,7 @@ public final class ProjectPage extends WebPage implements Updatable {
         form.add( new Label( "user", Project.getUserName() ) );                           // NON-NLS
 
         // Form submission without it being the default for <return>
-        SubmitLink submitLink = new SubmitLink( "submit" );                               // NON-NLS
-        submitLink.setRedirect( false );
-        form.add( submitLink );
+        form.add( new SubmitLink( "submit" ) );                                           // NON-NLS
     }
 
     private void addRefresh() {

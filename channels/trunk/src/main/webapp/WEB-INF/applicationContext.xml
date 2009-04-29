@@ -15,9 +15,12 @@
     </bean>
 
     <bean id="serializer" class="com.mindalliance.channels.export.xml.XmlStreamer"/>
-    <bean id="attachmentManager" class="com.mindalliance.channels.attachments.FileBasedManager">
+
+    <bean id="attachmentManager" class="com.mindalliance.channels.attachments.FileBasedManager"
+          init-method="start" destroy-method="stop">
         <property name="directory" value="target/channels-1.0-SNAPSHOT/uploads"/>
-        <property name="path" value="uploads"/>
+        <property name="path" value="uploads/"/>
+        <property name="dqo" ref="dqo"/>
     </bean>
 
     <!-- setup wicket application -->

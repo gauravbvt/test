@@ -1,6 +1,6 @@
 package com.mindalliance.channels.attachments;
 
-import java.net.URL;
+import com.mindalliance.channels.ModelObject;
 
 /**
  * An URL attachment...
@@ -8,17 +8,21 @@ import java.net.URL;
 public class UrlAttachment implements Attachment {
 
     /** The actual URL. */
-    private URL url;
+    private String url;
 
     /** The type. */
     private Type type;
 
+    /** The object. */
+    private ModelObject object;
+
     public UrlAttachment() {
     }
 
-    public UrlAttachment( Type type, URL url ) {
+    public UrlAttachment( ModelObject object, Type type, String url ) {
         this.type = type;
         this.url = url;
+        this.object = object;
     }
 
     /**
@@ -26,19 +30,33 @@ public class UrlAttachment implements Attachment {
      * @return a label
      */
     public String getLabel() {
-        return url.toString();
+        return url;
     }
 
     /**
-     * The actual url of the attachment.
-     * @return a url, local or not
+     * {@inheritDoc}
      */
-    public String getLink() {
-        return url.toString();
+    public String getKey() {
+        return FileBasedManager.escape( url );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl( String url ) {
+        this.url = url;
     }
 
     public Type getType() {
         return type;
+    }
+
+    public void setType( Type type ) {
+        this.type = type;
     }
 
     /**
@@ -48,15 +66,13 @@ public class UrlAttachment implements Attachment {
         return getType() == Type.PolicyCant;
     }
 
-    public void setType( Type type ) {
-        this.type = type;
+    /**
+     * {@inheritDoc}
+     */
+    public void delete() {
     }
 
-    public URL getUrl() {
-        return url;
-    }
-
-    public void setUrl( URL url ) {
-        this.url = url;
+    public ModelObject getObject() {
+        return object;
     }
 }
