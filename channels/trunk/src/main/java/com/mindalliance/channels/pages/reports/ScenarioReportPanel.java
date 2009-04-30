@@ -4,7 +4,7 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.graph.DiagramFactory;
+import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;

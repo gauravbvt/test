@@ -4,6 +4,7 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.Commander;
 import org.apache.commons.beanutils.PropertyUtils;
 
 import java.lang.reflect.InvocationTargetException;

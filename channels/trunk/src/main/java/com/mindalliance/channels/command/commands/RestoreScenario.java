@@ -3,12 +3,12 @@ package com.mindalliance.channels.command.commands;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.Commander;
+import com.mindalliance.channels.Importer;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.export.Importer;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

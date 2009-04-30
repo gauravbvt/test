@@ -7,7 +7,7 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.Commander;
 
 import java.util.HashMap;
 import java.util.Map;

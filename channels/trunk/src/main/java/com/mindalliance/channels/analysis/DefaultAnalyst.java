@@ -6,6 +6,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.util.Play;
 
 import java.util.List;

@@ -9,7 +9,7 @@ import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Medium;
 import com.mindalliance.channels.DataQueryObject;
-import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.command.Change;
 
 import java.util.ArrayList;

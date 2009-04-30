@@ -3,6 +3,7 @@ package com.mindalliance.channels.graph;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;

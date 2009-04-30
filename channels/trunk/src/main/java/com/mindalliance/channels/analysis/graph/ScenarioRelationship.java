@@ -5,8 +5,8 @@ import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.analysis.Analyst;
 
 import java.util.List;
 import java.util.ArrayList;

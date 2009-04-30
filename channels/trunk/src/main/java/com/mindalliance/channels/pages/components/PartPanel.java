@@ -8,7 +8,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.Channels;

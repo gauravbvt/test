@@ -3,6 +3,8 @@ package com.mindalliance.channels.export;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.dao.Journal;
+import com.mindalliance.channels.Exporter;
+import com.mindalliance.channels.Importer;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;

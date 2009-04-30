@@ -1,6 +1,7 @@
 package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.DiagramFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.BufferedOutputStream;

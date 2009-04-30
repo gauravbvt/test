@@ -1,6 +1,6 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.Analyst;
 
 /**
  * Abstract meta provider.

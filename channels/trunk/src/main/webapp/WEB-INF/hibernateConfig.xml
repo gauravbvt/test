@@ -31,9 +31,9 @@
                      <!--advice-ref="timingLogger"/>-->
         <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.DataQueryObject.*(..))"
                      advice-ref="cacheSet"/>
-        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.analysis.Analyst.*(..))"
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.Analyst.*(..))"
                      advice-ref="cacheSet"/>
-        <aop:advisor pointcut="execution(com.mindalliance.channels.graph.Diagram com.mindalliance.channels.graph.DiagramFactory.*(..))"
+        <aop:advisor pointcut="execution(com.mindalliance.channels.graph.Diagram com.mindalliance.channels.DiagramFactory.*(..))"
                      advice-ref="cacheSet"/>
 
         <aop:advisor pointcut="execution(* com.mindalliance.channels.Dao.onAfterCommand(..))"

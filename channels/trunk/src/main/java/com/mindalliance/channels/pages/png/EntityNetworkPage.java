@@ -7,7 +7,7 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.graph.DiagramFactory;
+import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 
 /**

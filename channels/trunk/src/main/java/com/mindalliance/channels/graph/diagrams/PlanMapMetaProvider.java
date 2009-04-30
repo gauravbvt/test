@@ -5,7 +5,7 @@ import com.mindalliance.channels.graph.DOTAttributeProvider;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;

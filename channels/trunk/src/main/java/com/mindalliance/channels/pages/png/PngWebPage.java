@@ -9,8 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.DiagramException;
 
 /**

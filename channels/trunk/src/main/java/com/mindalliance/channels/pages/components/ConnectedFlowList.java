@@ -5,7 +5,7 @@ import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.Channels;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.iterators.TransformIterator;

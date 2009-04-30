@@ -8,6 +8,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mindalliance.channels.Commander;
+
 /**
  * A command composed of other commands.
  * A best effort is made at executing as many of the component commands as possible.

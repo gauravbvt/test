@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
-import com.mindalliance.channels.graph.DiagramFactory;
+import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.graph.diagrams.DiagramAjaxBehavior;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;

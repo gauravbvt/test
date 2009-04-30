@@ -6,8 +6,8 @@ import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Change;
 

@@ -4,7 +4,7 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.analysis.graph.EntityNetworkGraphBuilder;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.graph.AbstractDiagram;
-import com.mindalliance.channels.graph.DiagramFactory;
+import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.Channels;

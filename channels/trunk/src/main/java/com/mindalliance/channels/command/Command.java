@@ -1,5 +1,7 @@
 package com.mindalliance.channels.command;
 
+import com.mindalliance.channels.Commander;
+
 import java.util.Map;
 import java.util.Set;
 import java.io.Serializable;

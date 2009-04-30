@@ -4,6 +4,7 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.LockManager;
 import com.mindalliance.channels.model.Identifiable;
 
 import java.util.List;

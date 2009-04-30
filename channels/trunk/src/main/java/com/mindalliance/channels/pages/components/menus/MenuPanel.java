@@ -4,7 +4,7 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
