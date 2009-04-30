@@ -1,14 +1,14 @@
 package com.mindalliance.channels.dao;
 
-import com.mindalliance.channels.Connector;
+import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.Dao;
-import com.mindalliance.channels.ExternalFlow;
-import com.mindalliance.channels.InternalFlow;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Node;
+import com.mindalliance.channels.model.InternalFlow;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.command.Command;
 import org.slf4j.LoggerFactory;
 import org.springframework.orm.jpa.JpaCallback;

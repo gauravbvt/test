@@ -4,10 +4,10 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.mindalliance.channels.Job;
-import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Role;
-import com.mindalliance.channels.Place;
+import com.mindalliance.channels.model.Job;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Place;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

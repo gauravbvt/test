@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Scenario;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;

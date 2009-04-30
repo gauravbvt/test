@@ -1,7 +1,7 @@
 package com.mindalliance.channels.export;
 
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Connector;
+import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.dao.Journal;
 
 import java.io.IOException;

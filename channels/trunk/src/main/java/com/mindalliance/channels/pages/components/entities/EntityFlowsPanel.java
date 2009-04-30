@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
-import com.mindalliance.channels.Identifiable;
-import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Role;
-import com.mindalliance.channels.Organization;
+import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.util.Play;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;

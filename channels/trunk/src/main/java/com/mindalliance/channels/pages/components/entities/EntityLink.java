@@ -1,13 +1,12 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 

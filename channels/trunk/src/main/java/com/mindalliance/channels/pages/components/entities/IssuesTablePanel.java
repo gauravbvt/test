@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
-import com.mindalliance.channels.Issue;
-import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;

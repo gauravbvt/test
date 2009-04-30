@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Job;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Organization;
-import com.mindalliance.channels.Place;
-import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.Role;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Job;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.commands.UpdateObject;

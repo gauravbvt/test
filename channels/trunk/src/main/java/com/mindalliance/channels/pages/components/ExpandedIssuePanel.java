@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.Issue;
-import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.pages.components.menus.IssueActionsMenuPanel;
 import org.apache.wicket.AttributeModifier;

@@ -1,16 +1,16 @@
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Channel;
-import com.mindalliance.channels.Connector;
-import com.mindalliance.channels.ExternalFlow;
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Medium;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Channel;
+import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.ExternalFlow;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Medium;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.Channels;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;

@@ -1,14 +1,14 @@
 package com.mindalliance.channels.pages.components;
 
 
-import com.mindalliance.channels.Identifiable;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.ExternalFlow;
-import com.mindalliance.channels.Part;
+import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.ExternalFlow;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;

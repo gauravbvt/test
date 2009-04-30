@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.Issue;
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.menus;
 
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.command.Change;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.PopupSettings;

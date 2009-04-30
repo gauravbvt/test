@@ -1,12 +1,12 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.export.ScenarioSpecification;
 import com.mindalliance.channels.export.PartSpecification;
 import com.mindalliance.channels.util.SemMatch;
-import com.mindalliance.channels.pages.Channels;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.util.List;

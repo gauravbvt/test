@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.model.ResourceSpec;
 
 /**
  * A link to the profile of all resources matching a resource specification

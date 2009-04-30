@@ -1,13 +1,13 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.Identifiable;
-import com.mindalliance.channels.Issue;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.ScenarioObject;
+import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.ScenarioObject;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.menus.PartActionsMenuPanel;
 import com.mindalliance.channels.pages.components.menus.PartShowMenuPanel;

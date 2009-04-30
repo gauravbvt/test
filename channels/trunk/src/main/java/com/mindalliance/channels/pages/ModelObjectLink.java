@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.command.Change;
 import org.apache.wicket.ajax.AjaxRequestTarget;

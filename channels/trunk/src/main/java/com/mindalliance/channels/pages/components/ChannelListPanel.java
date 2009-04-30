@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.Channel;
-import com.mindalliance.channels.Channelable;
-import com.mindalliance.channels.Medium;
-import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.model.Channel;
+import com.mindalliance.channels.model.Channelable;
+import com.mindalliance.channels.model.Medium;
+import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import org.apache.commons.collections.Predicate;

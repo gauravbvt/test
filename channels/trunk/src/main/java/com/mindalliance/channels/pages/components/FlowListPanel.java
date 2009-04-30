@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Identifiable;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AddCapability;

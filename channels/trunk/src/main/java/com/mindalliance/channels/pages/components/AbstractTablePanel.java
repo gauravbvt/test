@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.Identifiable;
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.entities.EntityLink;

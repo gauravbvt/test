@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.components.entities;
 
 import org.apache.wicket.model.IModel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
-import com.mindalliance.channels.Identifiable;
+import com.mindalliance.channels.model.Identifiable;
 
 import java.util.Set;
 

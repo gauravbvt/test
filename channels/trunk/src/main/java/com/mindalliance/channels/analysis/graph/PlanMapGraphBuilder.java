@@ -1,6 +1,6 @@
 package com.mindalliance.channels.analysis.graph;
 
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.graph.GraphBuilder;
 

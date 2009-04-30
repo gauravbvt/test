@@ -1,7 +1,7 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.Channel;
-import com.mindalliance.channels.Medium;
+import com.mindalliance.channels.model.Channel;
+import com.mindalliance.channels.model.Medium;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;

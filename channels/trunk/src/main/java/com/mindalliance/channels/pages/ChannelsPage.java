@@ -1,16 +1,17 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.DataQueryObject;
-import com.mindalliance.channels.ExternalFlow;
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Identifiable;
-import com.mindalliance.channels.Issue;
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.model.ExternalFlow;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.ScenarioObject;
-import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Commander;

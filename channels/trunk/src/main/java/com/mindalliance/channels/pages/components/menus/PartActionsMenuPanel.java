@@ -1,10 +1,10 @@
 package com.mindalliance.channels.pages.components.menus;
 
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Role;
-import com.mindalliance.channels.Place;
-import com.mindalliance.channels.Organization;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.RemovePart;
 import com.mindalliance.channels.command.commands.DuplicatePart;

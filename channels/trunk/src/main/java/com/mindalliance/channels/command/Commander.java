@@ -1,8 +1,8 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.DataQueryObject;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Identifiable;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Identifiable;
 
 import java.util.Map;
 

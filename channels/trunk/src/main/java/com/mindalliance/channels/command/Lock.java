@@ -1,6 +1,6 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 
 import java.util.Date;
 

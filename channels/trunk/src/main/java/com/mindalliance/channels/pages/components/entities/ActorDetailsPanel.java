@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Channelable;
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Channelable;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.components.entities.EntityDetailsPanel;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;

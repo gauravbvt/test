@@ -10,9 +10,9 @@ import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
 
-import com.mindalliance.channels.ExternalFlow;
+import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.util.SortableBeanProvider;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 
 /**
  * A panel with a table of external flows.

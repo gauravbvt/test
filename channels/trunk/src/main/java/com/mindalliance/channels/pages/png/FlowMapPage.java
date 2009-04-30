@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.png;
 
 import com.mindalliance.channels.DataQueryObject;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.pages.ChannelsPage;
 import org.apache.wicket.PageParameters;

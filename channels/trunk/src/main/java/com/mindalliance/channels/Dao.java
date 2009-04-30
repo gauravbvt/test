@@ -1,6 +1,13 @@
 package com.mindalliance.channels;
 
 import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.ExternalFlow;
+import com.mindalliance.channels.model.InternalFlow;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Scenario;
 
 import java.util.List;
 

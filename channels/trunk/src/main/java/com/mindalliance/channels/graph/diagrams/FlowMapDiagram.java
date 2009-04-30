@@ -1,14 +1,14 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.analysis.graph.FlowMapGraphBuilder;
 import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.graph.GraphRenderer;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 import org.jgrapht.Graph;
 
 import java.io.OutputStream;

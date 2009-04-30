@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.menus;
 
-import com.mindalliance.channels.Issue;
-import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.command.commands.RemoveIssue;
 import com.mindalliance.channels.command.Change;
 import org.apache.wicket.Component;

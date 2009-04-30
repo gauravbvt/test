@@ -5,8 +5,8 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.Channels;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

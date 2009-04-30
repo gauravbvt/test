@@ -8,10 +8,10 @@ import org.apache.wicket.protocol.http.WebResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.DiagramException;
-import com.mindalliance.channels.pages.Channels;
 
 /**
  * Abstract superclass for all PNG-generating pages.

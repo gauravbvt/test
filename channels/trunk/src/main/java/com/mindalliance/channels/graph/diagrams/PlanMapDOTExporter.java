@@ -1,6 +1,6 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
 import com.mindalliance.channels.graph.MetaProvider;

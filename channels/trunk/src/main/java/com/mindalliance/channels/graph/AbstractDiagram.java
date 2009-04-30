@@ -1,6 +1,6 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 
 import java.io.ByteArrayOutputStream;
 import java.io.BufferedOutputStream;

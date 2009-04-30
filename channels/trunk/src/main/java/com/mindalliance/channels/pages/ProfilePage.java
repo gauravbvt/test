@@ -1,15 +1,16 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Node;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Organization;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Place;
-import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.Role;
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.pages.components.ResourceProfilePanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;

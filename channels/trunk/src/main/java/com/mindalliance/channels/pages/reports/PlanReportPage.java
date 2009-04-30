@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;

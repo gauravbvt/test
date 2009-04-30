@@ -1,13 +1,12 @@
 package com.mindalliance.channels.util;
 
-import com.mindalliance.channels.Place;
-import com.mindalliance.channels.Role;
+import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Role;
 
 import java.text.Collator;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.collections.CollectionUtils;

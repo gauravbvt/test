@@ -2,8 +2,7 @@ package com.mindalliance.channels.pages.components;
 
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.model.ResourceSpec;
 
 /**
  * A resource's profile

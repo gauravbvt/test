@@ -1,9 +1,9 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Node;
+import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 
 import java.util.Iterator;
 import java.util.List;

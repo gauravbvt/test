@@ -1,17 +1,17 @@
 package com.mindalliance.channels.dao;
 
-import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Channel;
-import com.mindalliance.channels.Delay;
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Issue;
-import com.mindalliance.channels.Medium;
-import com.mindalliance.channels.Organization;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Role;
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Channel;
+import com.mindalliance.channels.model.Delay;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Medium;
+import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.DataQueryObject;
-import com.mindalliance.channels.UserIssue;
+import com.mindalliance.channels.model.UserIssue;
 
 /**
  * The fire in the building scenario...

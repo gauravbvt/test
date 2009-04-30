@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.pages.ProfileLink;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.wicket.AttributeModifier;

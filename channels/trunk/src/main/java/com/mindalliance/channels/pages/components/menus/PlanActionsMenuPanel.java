@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.menus;
 
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AddPart;
 import com.mindalliance.channels.command.commands.AddScenario;

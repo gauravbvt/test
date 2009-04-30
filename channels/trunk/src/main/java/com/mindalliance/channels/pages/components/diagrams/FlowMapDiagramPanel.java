@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Part;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.graph.Diagram;
 import org.apache.wicket.model.IModel;

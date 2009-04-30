@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components.menus;
 
-import com.mindalliance.channels.Identifiable;
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;

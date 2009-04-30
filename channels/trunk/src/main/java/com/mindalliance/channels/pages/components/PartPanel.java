@@ -1,17 +1,17 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Delay;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Organization;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Place;
-import com.mindalliance.channels.Role;
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Delay;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;

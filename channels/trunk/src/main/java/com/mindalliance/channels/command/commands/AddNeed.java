@@ -6,10 +6,10 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.Part;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.DataQueryObject;
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.NotFoundException;
 
 import java.util.Map;

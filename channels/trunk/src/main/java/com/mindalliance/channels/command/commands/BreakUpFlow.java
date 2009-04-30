@@ -1,10 +1,10 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.DataQueryObject;
-import com.mindalliance.channels.Node;
+import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;

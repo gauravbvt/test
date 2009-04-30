@@ -1,17 +1,17 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Delay;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.ExternalFlow;
-import com.mindalliance.channels.Identifiable;
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Delay;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.ExternalFlow;
+import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.DataQueryObject;
-import com.mindalliance.channels.Connector;
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.InternalFlow;
+import com.mindalliance.channels.model.InternalFlow;
 
 import java.util.Map;
 import java.util.HashMap;

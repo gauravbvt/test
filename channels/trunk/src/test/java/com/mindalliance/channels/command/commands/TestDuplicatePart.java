@@ -1,9 +1,9 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.DataQueryObject;
-import com.mindalliance.channels.Part;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Change;

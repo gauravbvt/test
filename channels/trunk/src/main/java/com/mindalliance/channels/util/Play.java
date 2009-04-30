@@ -1,8 +1,8 @@
 package com.mindalliance.channels.util;
 
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.ResourceSpec;
 
 import java.io.Serializable;
 

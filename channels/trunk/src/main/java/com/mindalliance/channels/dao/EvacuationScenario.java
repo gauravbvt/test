@@ -1,11 +1,11 @@
 package com.mindalliance.channels.dao;
 
-import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Channel;
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Medium;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Channel;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Medium;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.DataQueryObject;
 
 /**

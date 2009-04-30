@@ -1,9 +1,9 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Part;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.MetaProvider;

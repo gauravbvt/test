@@ -1,9 +1,9 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.Identifiable;
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.DataQueryObject;
-import com.mindalliance.channels.ScenarioObject;
+import com.mindalliance.channels.model.ScenarioObject;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;

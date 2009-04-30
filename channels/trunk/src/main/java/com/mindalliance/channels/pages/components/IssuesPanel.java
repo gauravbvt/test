@@ -1,13 +1,13 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Issue;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AddUserIssue;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.export;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.DataQueryObject;
 
 import java.io.BufferedReader;

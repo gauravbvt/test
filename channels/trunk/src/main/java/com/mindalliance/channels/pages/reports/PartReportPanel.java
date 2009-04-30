@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Scenario;
 import org.apache.commons.collections.iterators.IteratorChain;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;

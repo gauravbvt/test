@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.Organization;
-import com.mindalliance.channels.Role;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.Channels;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;

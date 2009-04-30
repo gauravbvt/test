@@ -6,9 +6,9 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import com.mindalliance.channels.util.SortableBeanProvider;
-import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.Issue;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.Channels;
 
 import java.util.List;
 import java.util.ArrayList;

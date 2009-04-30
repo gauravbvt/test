@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.menus;
 
-import com.mindalliance.channels.Identifiable;
+import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;

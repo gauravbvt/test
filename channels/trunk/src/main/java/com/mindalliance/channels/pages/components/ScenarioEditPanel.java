@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Place;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.util.SemMatch;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;

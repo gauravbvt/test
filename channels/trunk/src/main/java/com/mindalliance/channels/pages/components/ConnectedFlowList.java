@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.Connector;
-import com.mindalliance.channels.ExternalFlow;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.Channel;
+import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.ExternalFlow;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.iterators.TransformIterator;
 import org.apache.wicket.AttributeModifier;

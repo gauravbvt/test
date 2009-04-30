@@ -1,6 +1,6 @@
 package com.mindalliance.channels.analysis;
 
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.model.ModelObject;
 
 import java.io.Serializable;
 

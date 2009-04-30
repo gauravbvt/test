@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.Identifiable;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.Actor;
+import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;

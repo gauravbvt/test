@@ -1,7 +1,7 @@
 package com.mindalliance.channels.analysis;
 
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Issue;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Issue;
 
 import java.util.Iterator;
 import java.util.List;

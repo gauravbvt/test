@@ -2,7 +2,7 @@ package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.graph.AbstractDOTExporter;
 import com.mindalliance.channels.graph.MetaProvider;
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 
 /**

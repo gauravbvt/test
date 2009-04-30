@@ -24,7 +24,7 @@
     </bean>
 
     <!-- setup wicket application -->
-    <bean id="wicketApplication" class="com.mindalliance.channels.pages.Channels">
+    <bean id="wicketApplication" class="com.mindalliance.channels.Channels">
         <property name="uri" value="mindalliance.com/channels/demo"/>
         <property name="dqo" ref="dqo"/>
         <property name="attachmentManager" ref="attachmentManager"/>

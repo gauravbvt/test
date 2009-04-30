@@ -1,8 +1,8 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.Place;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.Channels;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.converters.MarshallingContext;

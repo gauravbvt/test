@@ -1,8 +1,9 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.pages.components.ResourceSpecsPanel;
 import com.mindalliance.channels.pages.components.ScenariosPanel;
 import org.apache.wicket.PageParameters;

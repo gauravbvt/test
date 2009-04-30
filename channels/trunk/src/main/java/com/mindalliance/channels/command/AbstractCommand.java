@@ -1,9 +1,9 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.Identifiable;
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 import org.apache.commons.beanutils.PropertyUtils;
 
 import java.lang.reflect.InvocationTargetException;

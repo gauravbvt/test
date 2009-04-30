@@ -1,10 +1,10 @@
 package com.mindalliance.channels.analysis.graph;
 
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.InternalFlow;
-import com.mindalliance.channels.Part;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.InternalFlow;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.graph.GraphBuilder;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;

@@ -4,7 +4,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
-import com.mindalliance.channels.Deletable;
+import com.mindalliance.channels.model.Deletable;
 
 /**
  * Checkbox on a deletable

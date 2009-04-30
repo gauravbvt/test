@@ -2,7 +2,8 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.export.Exporter;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.MarkupStream;

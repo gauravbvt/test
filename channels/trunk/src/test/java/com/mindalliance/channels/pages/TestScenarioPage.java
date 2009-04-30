@@ -1,10 +1,11 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.Issue;
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Part;
+import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.attachments.BitBucket;
 import com.mindalliance.channels.dao.Memory;

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.util.SemMatch;

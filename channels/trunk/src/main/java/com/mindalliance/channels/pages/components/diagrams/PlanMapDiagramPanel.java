@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.graph.Diagram;

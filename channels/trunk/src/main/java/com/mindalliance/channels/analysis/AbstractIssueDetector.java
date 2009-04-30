@@ -1,9 +1,9 @@
 package com.mindalliance.channels.analysis;
 
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Issue;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.DataQueryObject;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 
 import java.util.List;
 /**

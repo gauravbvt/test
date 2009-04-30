@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.Channelable;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Organization;
-import com.mindalliance.channels.Place;
+import com.mindalliance.channels.model.Channelable;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.command.commands.UpdateObject;

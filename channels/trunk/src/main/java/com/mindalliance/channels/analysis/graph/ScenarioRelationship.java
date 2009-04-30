@@ -1,11 +1,11 @@
 package com.mindalliance.channels.analysis.graph;
 
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.ExternalFlow;
-import com.mindalliance.channels.Identifiable;
+import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.ExternalFlow;
+import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Part;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.analysis.Analyst;
 
 import java.util.List;

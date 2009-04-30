@@ -1,14 +1,14 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.DataQueryObject;
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.Role;
-import com.mindalliance.channels.Organization;
-import com.mindalliance.channels.Place;
-import com.mindalliance.channels.Identifiable;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Identifiable;
 
 import java.util.Collection;
 import java.util.Map;

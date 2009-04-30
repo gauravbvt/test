@@ -5,11 +5,11 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.mindalliance.channels.DataQueryObject;
-import com.mindalliance.channels.Identifiable;
-import com.mindalliance.channels.Connector;
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.export.ConnectionSpecification;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 
 import java.util.Map;
 import java.util.HashMap;

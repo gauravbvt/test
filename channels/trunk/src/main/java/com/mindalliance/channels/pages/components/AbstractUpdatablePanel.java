@@ -7,9 +7,9 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.Component;
 import org.apache.wicket.AttributeModifier;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.Identifiable;
+import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.DataQueryObject;
 
 import java.text.Collator;

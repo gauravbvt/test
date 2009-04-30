@@ -1,10 +1,10 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.UserIssue;
-import com.mindalliance.channels.Issue;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.model.UserIssue;
+import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.Channels;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;

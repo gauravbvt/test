@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.components;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.util.SortableBeanProvider;
 
 import java.util.ArrayList;

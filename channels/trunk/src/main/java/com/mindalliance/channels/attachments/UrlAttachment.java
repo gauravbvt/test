@@ -1,6 +1,6 @@
 package com.mindalliance.channels.attachments;
 
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.model.ModelObject;
 
 /**
  * An URL attachment...

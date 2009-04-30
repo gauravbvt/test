@@ -1,13 +1,13 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.analysis.graph.EntityNetworkGraphBuilder;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.graph.GraphRenderer;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 import org.jgrapht.Graph;
 
 import java.io.OutputStream;

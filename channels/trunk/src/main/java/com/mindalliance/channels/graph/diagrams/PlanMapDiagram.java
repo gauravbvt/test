@@ -4,8 +4,8 @@ import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.graph.GraphBuilder;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.analysis.graph.PlanMapGraphBuilder;
 

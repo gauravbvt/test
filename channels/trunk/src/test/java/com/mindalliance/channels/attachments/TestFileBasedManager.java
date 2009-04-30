@@ -1,8 +1,8 @@
 package com.mindalliance.channels.attachments;
 
 import com.mindalliance.channels.DataQueryObject;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.query.DataQueryObjectImpl;
 import junit.framework.TestCase;

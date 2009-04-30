@@ -1,7 +1,7 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.model.ModelObject;
 
 import java.io.Serializable;
 

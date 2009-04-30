@@ -1,18 +1,18 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.Connector;
+import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.DataQueryObject;
-import com.mindalliance.channels.ExternalFlow;
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.ScenarioObject;
+import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.model.ExternalFlow;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.ScenarioObject;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.SatisfyNeed;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
-import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.menus.FlowActionsMenuPanel;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.wicket.AttributeModifier;

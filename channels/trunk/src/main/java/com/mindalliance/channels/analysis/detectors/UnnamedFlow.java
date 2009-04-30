@@ -2,9 +2,9 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Issue;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Issue;
 
 import java.util.List;
 import java.util.ArrayList;

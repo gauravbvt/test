@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.Channel;
-import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.model.Channel;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.pages.components.menus.FlowActionsMenuPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;

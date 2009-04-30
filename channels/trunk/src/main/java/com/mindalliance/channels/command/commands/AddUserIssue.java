@@ -1,15 +1,15 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.DataQueryObject;
-import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 
 import java.util.Map;
 

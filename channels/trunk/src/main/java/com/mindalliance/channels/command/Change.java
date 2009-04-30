@@ -1,13 +1,12 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.Identifiable;
+import com.mindalliance.channels.model.Identifiable;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 
 /**
  * A description of state change.

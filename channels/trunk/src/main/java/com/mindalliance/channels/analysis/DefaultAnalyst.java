@@ -1,12 +1,12 @@
 package com.mindalliance.channels.analysis;
 
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.Part;
-import com.mindalliance.channels.Issue;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.util.Play;
-import com.mindalliance.channels.pages.Channels;
 
 import java.util.List;
 import java.util.Iterator;

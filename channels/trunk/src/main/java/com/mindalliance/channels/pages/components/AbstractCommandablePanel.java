@@ -7,8 +7,8 @@ import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.pages.Channels;
-import com.mindalliance.channels.Identifiable;
+import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.model.Identifiable;
 
 import java.util.Set;
 

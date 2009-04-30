@@ -1,17 +1,17 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Organization;
-import com.mindalliance.channels.Actor;
-import com.mindalliance.channels.UserIssue;
-import com.mindalliance.channels.Role;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.UserIssue;
+import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.menus.EntityActionsMenuPanel;
 import com.mindalliance.channels.pages.components.menus.EntityShowMenuPanel;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;

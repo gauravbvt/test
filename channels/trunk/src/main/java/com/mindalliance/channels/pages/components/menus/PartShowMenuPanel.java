@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.menus;
 
-import com.mindalliance.channels.Part;
+import com.mindalliance.channels.model.Part;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;

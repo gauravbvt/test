@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.Deletable;
-import com.mindalliance.channels.ResourceSpec;
+import com.mindalliance.channels.model.Deletable;
+import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.pages.ProfileLink;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;

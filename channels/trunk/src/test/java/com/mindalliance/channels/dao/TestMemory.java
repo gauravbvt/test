@@ -2,7 +2,7 @@ package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.DuplicateKeyException;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Scenario;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.query.DataQueryObjectImpl;
 import junit.framework.TestCase;
 

@@ -1,11 +1,10 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.analysis.DetectedIssue;
-import com.mindalliance.channels.Issue;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Part;
+import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Scenario;
 
 import java.util.List;
 import java.util.ArrayList;

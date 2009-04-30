@@ -1,11 +1,11 @@
 package com.mindalliance.channels.analysis;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Issue;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Issue;
 
 import java.util.ArrayList;
 import java.util.Iterator;

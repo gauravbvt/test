@@ -1,7 +1,7 @@
 package com.mindalliance.channels.attachments;
 
 import com.mindalliance.channels.DataQueryObject;
-import com.mindalliance.channels.ModelObject;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.NotFoundException;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.slf4j.Logger;

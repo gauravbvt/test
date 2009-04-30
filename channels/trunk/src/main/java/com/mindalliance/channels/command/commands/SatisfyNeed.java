@@ -7,12 +7,12 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.Flow;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.Node;
-import com.mindalliance.channels.Part;
+import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Part;
 
 import java.util.HashMap;
 import java.util.Map;

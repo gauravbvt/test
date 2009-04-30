@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.menus;
 
-import com.mindalliance.channels.Flow;
-import com.mindalliance.channels.Part;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.BreakUpFlow;
 import com.mindalliance.channels.command.commands.DuplicateFlow;

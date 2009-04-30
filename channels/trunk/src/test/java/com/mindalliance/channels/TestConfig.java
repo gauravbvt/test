@@ -1,6 +1,6 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.Channels;
 import org.springframework.context.ApplicationContext;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.ContextLoader;
