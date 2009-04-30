@@ -8,7 +8,7 @@ import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.PastePart;
 import com.mindalliance.channels.command.commands.RemoveScenario;
 import com.mindalliance.channels.pages.ExportPage;
-import com.mindalliance.channels.pages.ChannelsPage;
+import com.mindalliance.channels.pages.PlanPage;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -68,7 +68,7 @@ public class PlanActionsMenuPanel extends MenuPanel {
                 new BookmarkablePageLink<Scenario>(
                         "link",
                         ExportPage.class,
-                        ChannelsPage.getParameters( (Scenario) getModel().getObject(), null ) ) ) );
+                        PlanPage.getParameters( (Scenario) getModel().getObject(), null ) ) ) );
 
         return menuItems;
     }

@@ -4,7 +4,7 @@ import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.pages.ChannelsPage;
+import com.mindalliance.channels.pages.PlanPage;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.slf4j.Logger;
@@ -34,7 +34,7 @@ public class FlowMapPage extends PngWebPage {
         super( parameters );
 
         DataQueryObject dqo = getDqo();
-        scenario = ChannelsPage.findScenario( dqo, parameters );
+        scenario = PlanPage.findScenario( dqo, parameters );
 
         if ( scenario == null )
             redirectTo( dqo.getDefaultScenario() );
@@ -43,7 +43,7 @@ public class FlowMapPage extends PngWebPage {
             if ( parameters.containsKey( "node" ) && parameters.getString( "node" ).equals( "NONE" ) ) {
                 node = null;
             } else {
-                node = ChannelsPage.findPart( scenario, parameters );
+                node = PlanPage.findPart( scenario, parameters );
                 if ( node == null )
                     redirectTo( scenario );
             }

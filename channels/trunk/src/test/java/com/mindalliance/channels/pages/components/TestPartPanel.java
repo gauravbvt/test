@@ -17,7 +17,7 @@ import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.pages.ChannelsPage;
+import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.TestScenarioPage;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.util.tester.FormTester;
@@ -260,9 +260,9 @@ public class TestPartPanel extends AbstractChannelsTest {
      * @throws java.io.IOException if fails
      */
     public void testForm() throws IOException {
-        ChannelsPage page = new ChannelsPage( scenario, part );
+        PlanPage page = new PlanPage( scenario, part );
         tester.startPage( page );
-        tester.assertRenderedPage( ChannelsPage.class );
+        tester.assertRenderedPage( PlanPage.class );
         tester.assertNoErrorMessage();
 
         FormTester ft = tester.newFormTester( "big-form" );

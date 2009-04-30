@@ -14,7 +14,7 @@ import com.mindalliance.channels.pages.png.PlanMapPage;
 import com.mindalliance.channels.pages.png.FlowMapPage;
 import com.mindalliance.channels.pages.png.EntityNetworkPage;
 import com.mindalliance.channels.pages.IndexPage;
-import com.mindalliance.channels.pages.ChannelsPage;
+import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.ExportPage;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.context.SecurityContextHolder;
@@ -121,7 +121,7 @@ public final class Channels extends WebApplication implements Identifiable {    
 //        getRequestCycleSettings().setRenderStrategy( IRequestCycleSettings.REDIRECT_TO_RENDER );
         mount( new QueryStringUrlCodingStrategy( "index.html", IndexPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "report.html", PlanReportPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "node.html", ChannelsPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "node.html", PlanPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.xml", ExportPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.png", FlowMapPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "plan.png", PlanMapPage.class ) );
@@ -142,8 +142,8 @@ public final class Channels extends WebApplication implements Identifiable {    
     }
 
     @Override
-    public Class<ChannelsPage> getHomePage() {
-        return ChannelsPage.class;
+    public Class<PlanPage> getHomePage() {
+        return PlanPage.class;
     }
 
     /**
