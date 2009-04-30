@@ -4,7 +4,7 @@ import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.pages.ProjectPage;
+import com.mindalliance.channels.pages.ChannelsPage;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.slf4j.Logger;
@@ -34,7 +34,7 @@ public class FlowMapPage extends PngWebPage {
         super( parameters );
 
         DataQueryObject dqo = getDqo();
-        scenario = ProjectPage.findScenario( dqo, parameters );
+        scenario = ChannelsPage.findScenario( dqo, parameters );
 
         if ( scenario == null )
             redirectTo( dqo.getDefaultScenario() );
@@ -43,7 +43,7 @@ public class FlowMapPage extends PngWebPage {
             if ( parameters.containsKey( "node" ) && parameters.getString( "node" ).equals( "NONE" ) ) {
                 node = null;
             } else {
-                node = ProjectPage.findPart( scenario, parameters );
+                node = ChannelsPage.findPart( scenario, parameters );
                 if ( node == null )
                     redirectTo( scenario );
             }
@@ -54,7 +54,7 @@ public class FlowMapPage extends PngWebPage {
      * {@inheritDoc}
      */
     protected Diagram makeDiagram( double[] diagramSize, String orientation ) {
-        LOG.info("Generating PNG: scenario = " + scenario.getName() + ", node = " + node.getTitle());
+        LOG.info("Generating PNG: scenario = " + scenario + ", node = " + node);
         return getDiagramFactory().newFlowMapDiagram( scenario, node, diagramSize, orientation );
     }
 

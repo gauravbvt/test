@@ -4,7 +4,7 @@ import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Role;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -54,7 +54,7 @@ public class RoleDirectoryPanel extends Panel {
         add( descLabel );
 
         // Find all actors in role for organization
-        List<Actor> actors = Project.getProject().getDqo().findActors( organization, role );
+        List<Actor> actors = Channels.instance().getDqo().findActors( organization, role );
         if ( actors.isEmpty() )
             actors.add( Actor.UNKNOWN );
         add( new ListView<Actor>( "actors", actors ) {                                    // NON-NLS

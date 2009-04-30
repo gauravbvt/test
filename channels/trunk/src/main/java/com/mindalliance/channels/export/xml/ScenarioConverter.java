@@ -12,7 +12,7 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.Delay;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -59,11 +59,11 @@ public class ScenarioConverter extends AbstractChannelsConverter {
     public void marshal( Object object, HierarchicalStreamWriter writer,
                          MarshallingContext context ) {
         Scenario scenario = (Scenario) object;
-        Project project = Project.getProject();
+        Channels app = Channels.instance();
         DataQueryObject dqo = getDqo();
         context.put( "scenario", scenario );
-        writer.addAttribute( "project", project.getUri() );
-        writer.addAttribute( "version", project.getExporter().getVersion() );
+        writer.addAttribute( "app", app.getUri() );
+        writer.addAttribute( "version", app.getExporter().getVersion() );
         writer.addAttribute( "date", new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( new Date() ) );
         writer.addAttribute( "id", String.valueOf( scenario.getId() ) );
         writer.addAttribute( "name", scenario.getName() );
@@ -95,8 +95,8 @@ public class ScenarioConverter extends AbstractChannelsConverter {
             ConverterUtils.writePartSpecification( initiator, writer );
             writer.endNode();
         }
-        // All entities if not within a project export
-        if ( context.get( "project" ) == null ) {
+        // All entities if not within a app export
+        if ( context.get( "app" ) == null ) {
             Iterator<ModelObject> entities = dqo.iterateEntities();
             while ( entities.hasNext() ) {
                 ModelObject entity = entities.next();
@@ -138,7 +138,7 @@ public class ScenarioConverter extends AbstractChannelsConverter {
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
         Map<String, Long> idMap = getIdMap( context );
         getProxyConnectors( context );
-        DataQueryObject dqo = Project.dqo();
+        DataQueryObject dqo = Channels.dqo();
         Scenario scenario = dqo.createScenario();
         Part defaultPart = scenario.getDefaultPart();
         context.put( "scenario", scenario );

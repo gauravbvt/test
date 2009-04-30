@@ -6,7 +6,7 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.util.Play;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 
 import java.util.List;
 import java.util.Iterator;
@@ -215,7 +215,7 @@ public class DefaultAnalyst implements Analyst {
      * {@inheritDoc}
      */
     public DataQueryObject getDqo() {
-        return Project.getProject().getDqo();
+        return Channels.instance().getDqo();
     }
 
     /**
@@ -227,7 +227,7 @@ public class DefaultAnalyst implements Analyst {
      */
     private List<Issue> findAllIssuesInPlays( ResourceSpec resourceSpec, boolean specific ) {
         List<Issue> issues = new ArrayList<Issue>();
-        List<Play> plays = Project.dqo().findAllPlays( resourceSpec, specific );
+        List<Play> plays = Channels.dqo().findAllPlays( resourceSpec, specific );
         Set<Part> parts = new HashSet<Part>();
         for ( Play play : plays ) {
             parts.add( play.getPartFor( resourceSpec ) );

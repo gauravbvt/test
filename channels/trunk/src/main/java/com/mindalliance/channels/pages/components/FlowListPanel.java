@@ -79,7 +79,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
     }
 
     private ListView<Flow> createFlowPanels( final boolean outcomes ) {
-        // final Set<Long> expansions = ( (ProjectPage) getPage() ).findExpansions();
+        // final Set<Long> expansions = ( (ChannelsPage) getPage() ).findExpansions();
         return new ListView<Flow>( "flows", new PropertyModel<List<Flow>>( this, "flows" ) ) {
             protected void populateItem( ListItem<Flow> item ) {
                 Flow flow = item.getModelObject();

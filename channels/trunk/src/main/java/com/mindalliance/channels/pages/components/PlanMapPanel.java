@@ -8,7 +8,7 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -67,7 +67,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
         AjaxFallbackLink<?> closeLink = new AjaxFallbackLink( "close" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                Change change = new Change( Change.Type.Collapsed, Project.getProject() );
+                Change change = new Change( Change.Type.Collapsed, Channels.instance() );
                 update( target, change );
             }
         };
@@ -157,7 +157,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     private void addExternalFlowsPanel() {
         ExternalFlowsPanel externalFlowsPanel = new ExternalFlowsPanel(
                 "flows",
-                new Model<Project>( Project.getProject() ),
+                new Model<Channels>( Channels.instance() ),
                 new PropertyModel<ArrayList<ExternalFlow>>( this, "externalFlows" ),
                 PAGE_SIZE,
                 getExpansions()
@@ -169,7 +169,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     private void addCausesPanel() {
         ScenarioCausesPanel scenarioCausesPanel = new ScenarioCausesPanel(
                 "causes",
-                new Model<Project>( Project.getProject() ),
+                new Model<Channels>( Channels.instance() ),
                 new PropertyModel<ArrayList<ScenarioRelationship>>( this, "scenarioRelationships" ),
                 PAGE_SIZE,
                 getExpansions()
@@ -331,7 +331,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     public void changed( Change change ) {
         if ( change.isSelected() ) {
             Identifiable changed = change.getSubject();
-            if ( changed instanceof Project ) {
+            if ( changed instanceof Channels ) {
                 selectedScenario = null;
                 selectedScRel = null;
             } else if ( changed instanceof Scenario ) {
@@ -341,7 +341,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
                 selectedScenario = null;
                 selectedScRel = (ScenarioRelationship) changed;
             }
-            // Don't percolate chane on selection of project, scenario or scenario relationship.
+            // Don't percolate chane on selection of app, scenario or scenario relationship.
             else {
                 super.changed( change );
             }

@@ -4,7 +4,7 @@ import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -40,7 +40,7 @@ public class ActorConverter extends EntityConverter {
      */
     @Override
     ModelObject findOrMakeEntity( String name ) {
-        return Project.dqo().findOrCreate( Actor.class, name );
+        return Channels.dqo().findOrCreate( Actor.class, name );
     }
 
     /**

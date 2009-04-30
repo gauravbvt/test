@@ -1,6 +1,6 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Entity;
@@ -56,7 +56,7 @@ public class UserIssue extends ModelObject implements Issue {
     public UserIssue( ModelObject mo ) {
         this.about = mo;
         setDescription( "(No description)" );
-        setReportedBy( Project.getUserName() );
+        setReportedBy( Channels.getUserName() );
     }
 
     @ManyToOne( fetch = FetchType.LAZY )

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 import com.mindalliance.channels.ExternalFlow;
 import com.mindalliance.channels.util.SortableBeanProvider;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 
 /**
  * A panel with a table of external flows.
@@ -28,7 +28,7 @@ public class ExternalFlowsPanel extends AbstractTablePanel<ExternalFlow> {
 
     public ExternalFlowsPanel(
             String id,
-            IModel<Project> model,
+            IModel<Channels> model,
             IModel<ArrayList<ExternalFlow>> externalFlowsModel,
             int pageSize,
             Set<Long> expansions ) {

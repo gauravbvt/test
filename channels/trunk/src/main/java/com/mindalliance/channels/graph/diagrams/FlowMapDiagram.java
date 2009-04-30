@@ -8,7 +8,7 @@ import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.graph.GraphRenderer;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import org.jgrapht.Graph;
 
 import java.io.OutputStream;
@@ -62,7 +62,7 @@ public class FlowMapDiagram extends AbstractDiagram<Node,Flow> {
                 scenario,
                 outputFormat,
                 diagramFactory.getImageDirectory(),
-                Project.analyst() );
+                Channels.analyst() );
         if ( diagramSize != null ) {
             metaProvider.setGraphSize( diagramSize );
         }

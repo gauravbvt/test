@@ -4,7 +4,7 @@ import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.command.Change;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
@@ -93,7 +93,7 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
     }
 
     protected void onClick( AjaxRequestTarget target ) {
-        update( target, new Change( Change.Type.Selected, Project.getProject() ) );
+        update( target, new Change( Change.Type.Selected, Channels.instance() ) );
     }
 
     /**

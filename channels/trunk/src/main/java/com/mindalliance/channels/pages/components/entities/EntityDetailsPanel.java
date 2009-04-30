@@ -4,7 +4,7 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.util.SemMatch;
-import com.mindalliance.channels.command.commands.UpdateProjectObject;
+import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.Change;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -134,7 +134,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
                     uniqueName = name + "(" + count++ + ")";
                 }
                 doCommand(
-                        new UpdateProjectObject(
+                        new UpdatePlanObject(
                                 getEntity(),
                                 "name",
                                 uniqueName,
@@ -162,7 +162,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
     public void setDescription( String desc ) {
         if ( desc != null )
             doCommand(
-                    new UpdateProjectObject(
+                    new UpdatePlanObject(
                             getEntity(),
                             "description",
                             desc,

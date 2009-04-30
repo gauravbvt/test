@@ -26,8 +26,8 @@ public class TestAddRemovePart extends AbstractChannelsTest {
 
     protected void setUp() {
         super.setUp();
-        dqo = project.getDqo();
-        commander = project.getCommander();
+        dqo = app.getDqo();
+        commander = app.getCommander();
         scenario = dqo.createScenario();
         part = scenario.getDefaultPart();
         Part other = dqo.createPart( scenario );

@@ -30,9 +30,9 @@ public class TestExportImport extends AbstractChannelsTest {
     @Override
     protected void setUp() {
         super.setUp();
-        dqo = project.getDqo();
+        dqo = app.getDqo();
         scenarioNames = new ArrayList<String>();
-        for ( Scenario scenario : project.getDqo().list( Scenario.class ) ) {
+        for ( Scenario scenario : app.getDqo().list( Scenario.class ) ) {
             scenarioNames.add( scenario.getName() );
         }
     }
@@ -87,7 +87,7 @@ public class TestExportImport extends AbstractChannelsTest {
             ByteArrayOutputStream out;
             Scenario scenario = dqo.findScenario( name );
             out = new ByteArrayOutputStream();
-            project.getExporter().exportScenario( scenario, out );
+            app.getExporter().exportScenario( scenario, out );
             String xml = out.toString();
             // System.out.println( xml );
             exported.put(name,xml);
@@ -105,7 +105,7 @@ public class TestExportImport extends AbstractChannelsTest {
         for ( String name : scenarioNames ) {
             String xml = exported.get( name );
             ByteArrayInputStream in = new ByteArrayInputStream( xml.getBytes() );
-            Scenario scenario = project.getImporter().importScenario( in );
+            Scenario scenario = app.getImporter().importScenario( in );
             assertTrue(name.equals(scenario.getName()));
         }
     }

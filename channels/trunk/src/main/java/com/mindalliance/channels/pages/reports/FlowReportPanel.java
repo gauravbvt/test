@@ -10,7 +10,7 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -162,7 +162,7 @@ public class FlowReportPanel extends Panel {
                 localizedActors.addAll( findActors( f, b, u ) );
             }
         } else
-            for ( Actor a : Project.getProject().getDqo().findAllActors( part.resourceSpec() ) )
+            for ( Actor a : Channels.instance().getDqo().findAllActors( part.resourceSpec() ) )
                 localizedActors.add( new LocalizedActor( a, part, unicasts, broadcasts ) );
 
         List<LocalizedActor> result = new ArrayList<LocalizedActor>( localizedActors );

@@ -1,12 +1,11 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.attachments.Attachment;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public class FlowViolatesPolicy extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        Iterator<Attachment> attachments = Project.attachmentManager().attachments( flow );
+        Iterator<Attachment> attachments = Channels.attachmentManager().attachments( flow );
         while ( attachments.hasNext() ) {
             Attachment attachment = attachments.next();
             if ( attachment.isPolicyViolation() ) {

@@ -76,7 +76,7 @@ public class ProfilePage extends WebPage {
     }
 
     private DataQueryObject getDqo() {
-        return ( (Project) getApplication() ).getDqo();
+        return ( (Channels) getApplication() ).getDqo();
     }
 
     private ResourceSpec makeResource( PageParameters params ) throws NotFoundException {

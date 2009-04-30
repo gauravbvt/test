@@ -32,7 +32,7 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
 
     protected void setUp() {
         super.setUp();
-        DataQueryObject dqo = project.getDqo();
+        DataQueryObject dqo = app.getDqo();
         scenario = dqo.createScenario();
         source = scenario.getDefaultPart();
         source.setRole( dqo.findOrCreate( Role.class, "Manager" ) );
@@ -49,11 +49,11 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
             }
         } );
         command = new BreakUpFlow( flow );
-        commander = project.getCommander();
+        commander = app.getCommander();
     }
 
     protected void tearDown() {
-        project.getDqo().remove( scenario );
+        app.getDqo().remove( scenario );
     }
 
     public void testInternalBreakUp() throws Exception {

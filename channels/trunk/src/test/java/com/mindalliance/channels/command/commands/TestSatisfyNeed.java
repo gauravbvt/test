@@ -33,8 +33,8 @@ public class TestSatisfyNeed extends AbstractChannelsTest {
 
     protected void setUp() {
         super.setUp();
-        dqo = project.getDqo();
-        commander = project.getCommander();
+        dqo = app.getDqo();
+        commander = app.getCommander();
         scenario = dqo.createScenario();
         source = scenario.getDefaultPart();
         source.setRole( dqo.findOrCreate( Role.class, "source" ) );

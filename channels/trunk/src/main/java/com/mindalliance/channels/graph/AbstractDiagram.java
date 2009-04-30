@@ -1,6 +1,6 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 
 import java.io.ByteArrayOutputStream;
 import java.io.BufferedOutputStream;
@@ -56,7 +56,7 @@ public abstract class AbstractDiagram<V, E> implements Diagram {
      */
     @SuppressWarnings( "unchecked" )
     public DiagramFactory<V, E> getDiagramFactory() {
-        return Project.diagramFactory();
+        return Channels.diagramFactory();
     }
 
     /**

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 
 import java.util.Date;
 
@@ -35,7 +35,7 @@ public class Lock {
      */
     public Lock( long id ) {
         this.id = id;
-        userName = Project.getUserName();
+        userName = Channels.getUserName();
         date = new Date();
     }
 

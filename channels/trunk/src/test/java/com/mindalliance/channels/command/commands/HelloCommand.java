@@ -6,7 +6,7 @@ import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -43,7 +43,7 @@ public class HelloCommand extends AbstractCommand {
 
     static public AbstractCommand makeCommand( String greeting ) {
         AbstractCommand command = new HelloCommand( greeting );
-        Scenario scenario = Project.getProject().getDqo().getDefaultScenario();
+        Scenario scenario = Channels.instance().getDqo().getDefaultScenario();
         command.addConflicting( scenario );
         return command;
     }

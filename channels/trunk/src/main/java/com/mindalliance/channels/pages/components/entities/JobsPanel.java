@@ -10,7 +10,7 @@ import com.mindalliance.channels.Role;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.commands.UpdateObject;
-import com.mindalliance.channels.command.commands.UpdateProjectObject;
+import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.wicket.Component;
@@ -251,7 +251,7 @@ public class JobsPanel extends AbstractCommandablePanel {
         public void setConfirmed( boolean confirmed ) {
             this.confirmed = confirmed;
             if ( confirmed ) {
-                doCommand( new UpdateProjectObject(
+                doCommand( new UpdatePlanObject(
                         getOrganization(),
                         "jobs",
                         job,
@@ -259,7 +259,7 @@ public class JobsPanel extends AbstractCommandablePanel {
                 ) );
 
             } else if ( !markedForCreation ) {
-                doCommand( new UpdateProjectObject(
+                doCommand( new UpdatePlanObject(
                         getOrganization(),
                         "jobs",
                         job,
@@ -287,7 +287,7 @@ public class JobsPanel extends AbstractCommandablePanel {
                 if ( !isSame( title, oldTitle ) ) {
                     int index = getOrganization().getJobs().indexOf( job );
                     if ( index >= 0 ) {
-                        doCommand( new UpdateProjectObject(
+                        doCommand( new UpdatePlanObject(
                                 getOrganization(),
                                 "jobs[" + index + "].title",
                                 title,
@@ -314,7 +314,7 @@ public class JobsPanel extends AbstractCommandablePanel {
                 } else {
                     int index = getOrganization().getJobs().indexOf( job );
                     if ( index >= 0 ) {
-                        doCommand( new UpdateProjectObject(
+                        doCommand( new UpdatePlanObject(
                                 getOrganization(),
                                 "jobs[" + index + "].actorName",
                                 name,
@@ -339,7 +339,7 @@ public class JobsPanel extends AbstractCommandablePanel {
                 } else {
                     int index = getOrganization().getJobs().indexOf( job );
                     if ( index >= 0 ) {
-                        doCommand( new UpdateProjectObject(
+                        doCommand( new UpdatePlanObject(
                                 getOrganization(),
                                 "jobs[" + index + "].roleName",
                                 name,
@@ -363,7 +363,7 @@ public class JobsPanel extends AbstractCommandablePanel {
                 } else {
                     int index = getOrganization().getJobs().indexOf( job );
                     if ( index >= 0 ) {
-                        doCommand( new UpdateProjectObject(
+                        doCommand( new UpdatePlanObject(
                                 getOrganization(),
                                 "jobs[" + index + "].jurisdictionName",
                                 name,

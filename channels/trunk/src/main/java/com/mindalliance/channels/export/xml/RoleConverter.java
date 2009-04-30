@@ -2,7 +2,7 @@ package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -30,7 +30,7 @@ public class RoleConverter extends EntityConverter {
      */
     @Override
     ModelObject findOrMakeEntity( String name ) {
-        return Project.dqo().findOrCreate( Role.class, name );
+        return Channels.dqo().findOrCreate( Role.class, name );
     }
 
     /**

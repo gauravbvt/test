@@ -12,7 +12,7 @@ import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.SatisfyNeed;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.menus.FlowActionsMenuPanel;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.wicket.AttributeModifier;
@@ -212,7 +212,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         terminatesSourceContainer.setVisible( f.canGetTerminatesSource() );
         terminatesSourceCheckBox.setEnabled( lockedByUser && f.canSetTerminatesSource() );
         otherChoice.setEnabled( lockedByUser );
-        makeVisible( issuesPanel, Project.analyst().hasIssues( model.getObject(), false ) );
+        makeVisible( issuesPanel, Channels.analyst().hasIssues( model.getObject(), false ) );
     }
 
     private void addNameField() {
@@ -454,7 +454,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
             FormComponent<?> component,
             ModelObject object,
             String property ) {
-        Analyst analyst = ( (Project) getApplication() ).getAnalyst();
+        Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
         String summary = property == null ?
                 analyst.getIssuesSummary( object, false ) :
                 analyst.getIssuesSummary( object, property );
@@ -618,7 +618,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
             }
         }
         // Add inputs/outputs of other scenarios
-        DataQueryObject dqo = ( (Project) getApplication() ).getDqo();
+        DataQueryObject dqo = ( (Channels) getApplication() ).getDqo();
         for ( Scenario s : dqo.list( Scenario.class ) ) {
             if ( !scenario.equals( s ) ) {
                 Iterator<Connector> c = isOutcome() ? s.inputs() : s.outputs();
@@ -643,7 +643,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
 
     private List<Connector> findAllRelevantConnectors() {
         List<Connector> result = new ArrayList<Connector>();
-        DataQueryObject dqo = ( (Project) getApplication() ).getDqo();
+        DataQueryObject dqo = ( (Channels) getApplication() ).getDqo();
         for ( Scenario s : dqo.list( Scenario.class ) ) {
             Iterator<Connector> connectorIterator = isOutcome()
                     ? s.inputs()

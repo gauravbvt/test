@@ -6,7 +6,7 @@ import com.mindalliance.channels.Job;
 import com.mindalliance.channels.Medium;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 
@@ -83,7 +83,7 @@ public class ActorReportPanel extends Panel {
     }
 
     private String getTitle( Actor actor ) {
-        for ( Job job : ( (Project) getApplication() ).getDqo().findAllJobs( actor ) ) {
+        for ( Job job : ( (Channels) getApplication() ).getDqo().findAllJobs( actor ) ) {
             String title = job.getTitle().trim();
             if ( !title.isEmpty() )
                 return title;

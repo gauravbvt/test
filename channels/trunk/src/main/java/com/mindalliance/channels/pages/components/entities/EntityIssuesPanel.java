@@ -5,7 +5,7 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -69,7 +69,7 @@ public class EntityIssuesPanel extends AbstractTablePanel {
                 getExpansions() );
         entityIssues.setOutputMarkupId( true );
         add( entityIssues );
-        makeVisible( entityIssues, Project.analyst().hasIssues( getEntity(), false ) );
+        makeVisible( entityIssues, Channels.analyst().hasIssues( getEntity(), false ) );
     }
 
     private void addIssuesTable() {
@@ -108,7 +108,7 @@ public class EntityIssuesPanel extends AbstractTablePanel {
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change ) {
-        makeVisible( target, entityIssues, Project.analyst().hasIssues( getEntity(), false ) );
+        makeVisible( target, entityIssues, Channels.analyst().hasIssues( getEntity(), false ) );
         super.updateWith( target, change );
     }
 

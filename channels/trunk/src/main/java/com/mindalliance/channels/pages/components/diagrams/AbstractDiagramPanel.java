@@ -4,7 +4,7 @@ import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.diagrams.DiagramAjaxBehavior;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.RequestCycle;
@@ -105,7 +105,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
      * @return diagram factory
      */
     protected DiagramFactory getDiagramFactory() {
-        return Project.diagramFactory();
+        return Channels.diagramFactory();
     }
 
     /**

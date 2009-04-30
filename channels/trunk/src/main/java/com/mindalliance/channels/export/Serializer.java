@@ -64,14 +64,14 @@ public class Serializer implements Importer, Exporter {
     /**
      * {@inheritDoc}
      */
-    public void exportProject( OutputStream stream ) throws IOException {
+    public void exportAll( OutputStream stream ) throws IOException {
         // TODO
     }
 
     /**
      * {@inheritDoc}
      */
-    public Map<Long,Long> importProject( FileInputStream stream ) throws IOException {
+    public Map<Long,Long> importAll( FileInputStream stream ) throws IOException {
         return null; //Todo
     }
 

@@ -5,8 +5,8 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Place;
 import com.mindalliance.channels.util.SemMatch;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.UpdateProjectObject;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.pages.Channels;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -110,7 +110,7 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
                 expansions );
         issuesPanel.setOutputMarkupId( true );
         add( issuesPanel );
-        makeVisible( issuesPanel, Project.analyst().hasIssues( model.getObject(), false ) );
+        makeVisible( issuesPanel, Channels.analyst().hasIssues( model.getObject(), false ) );
     }
 
     private void addLocationField() {
@@ -183,7 +183,7 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
      * @param name a string
      */
     public void setName( String name ) {
-        doCommand( new UpdateProjectObject( getScenario(), "name", name ) );
+        doCommand( new UpdatePlanObject( getScenario(), "name", name ) );
     }
 
     /**
@@ -201,7 +201,7 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
      * @param desc a string
      */
     public void setDescription( String desc ) {
-        doCommand( new UpdateProjectObject( getScenario(), "description", desc ) );
+        doCommand( new UpdatePlanObject( getScenario(), "description", desc ) );
     }
 
     /**
@@ -219,7 +219,7 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
      * @param val a boolean
      */
     public void setIncident( boolean val ) {
-        doCommand( new UpdateProjectObject( getScenario(), "incident", val ) );
+        doCommand( new UpdatePlanObject( getScenario(), "incident", val ) );
     }
 
     /**
@@ -247,7 +247,7 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
             if ( oldPlace == null || !isSame( name, oldName ) )
                 newPlace = getDqo().findOrCreate( Place.class, name );
         }
-        doCommand( new UpdateProjectObject( getScenario(), "location", newPlace ) );
+        doCommand( new UpdatePlanObject( getScenario(), "location", newPlace ) );
         getCommander().cleanup( Place.class, oldName );
     }
 
@@ -266,14 +266,14 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
      * @param val a boolean
      */
     public void setSelfTerminating( boolean val ) {
-        doCommand( new UpdateProjectObject( getScenario(), "selfTerminating", val ) );
+        doCommand( new UpdatePlanObject( getScenario(), "selfTerminating", val ) );
     }
 
     /**
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change ) {
-        makeVisible( target, issuesPanel, Project.analyst().hasIssues( model.getObject(), false ) );
+        makeVisible( target, issuesPanel, Channels.analyst().hasIssues( model.getObject(), false ) );
         target.addComponent( issuesPanel );
         super.updateWith( target, change );
     }
@@ -287,11 +287,11 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
     public void setVisibility( AjaxRequestTarget target, boolean visible ) {
         makeVisible( target, this, visible );
         if ( visible )
-            makeVisible( issuesPanel, Project.analyst().hasIssues( model.getObject(), false ) );
+            makeVisible( issuesPanel, Channels.analyst().hasIssues( model.getObject(), false ) );
     }
 
     public void refresh( AjaxRequestTarget target ) {
-        makeVisible( target, issuesPanel, Project.analyst().hasIssues( model.getObject(), false ) );
+        makeVisible( target, issuesPanel, Channels.analyst().hasIssues( model.getObject(), false ) );
         target.addComponent( issuesPanel );
         completionTimePanel.enable( getScenario().isSelfTerminating() );
         target.addComponent( completionTimePanel );

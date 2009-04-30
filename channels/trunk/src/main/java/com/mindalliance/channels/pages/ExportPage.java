@@ -28,10 +28,10 @@ public class ExportPage extends WebPage {
         super( parameters );
 
         final DataQueryObject dqo = getDqo();
-        if ( parameters.containsKey( ProjectPage.SCENARIO_PARM ) )
+        if ( parameters.containsKey( ChannelsPage.SCENARIO_PARM ) )
             try {
                 scenario = dqo.find( Scenario.class,
-                        parameters.getLong( ProjectPage.SCENARIO_PARM ) );
+                        parameters.getLong( ChannelsPage.SCENARIO_PARM ) );
 
             } catch ( StringValueConversionException ignored ) {
                 LOG.warn( "Bad scenario specified. Exporting default scenario.", ignored );
@@ -47,11 +47,11 @@ public class ExportPage extends WebPage {
     }
 
     private DataQueryObject getDqo() {
-        return ( (Project) getApplication() ).getDqo();
+        return ( (Channels) getApplication() ).getDqo();
     }
 
     private Exporter getExporter() {
-        return ( (Project) getApplication() ).getExporter();
+        return ( (Channels) getApplication() ).getExporter();
     }
 
     @Override

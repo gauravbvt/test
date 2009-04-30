@@ -11,7 +11,7 @@ import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.DiagramException;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 
 /**
  * Abstract superclass for all PNG-generating pages.
@@ -41,7 +41,7 @@ public abstract class PngWebPage extends WebPage {
      * @return a data query object
      */
     protected DataQueryObject getDqo() {
-        return ( (Project) getApplication() ).getDqo();
+        return ( (Channels) getApplication() ).getDqo();
     }
 
     /**
@@ -49,7 +49,7 @@ public abstract class PngWebPage extends WebPage {
      * @return a diagram factory
      */
     protected DiagramFactory getDiagramFactory() {
-        return Project.diagramFactory();
+        return Channels.diagramFactory();
     }
 
     @Override

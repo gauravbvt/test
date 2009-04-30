@@ -5,7 +5,7 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Place;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.UpdateProjectObject;
+import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
@@ -150,7 +150,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                 }
             }
         }
-        doCommand( new UpdateProjectObject( getOrganization(), "parent", newOrg ) );
+        doCommand( new UpdatePlanObject( getOrganization(), "parent", newOrg ) );
         getCommander().cleanup( Organization.class, oldName );
     }
 
@@ -180,7 +180,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
             if ( oldPlace == null || !isSame( name, oldName ) )
                 newPlace = getDqo().findOrCreate( Place.class, name );
         }
-        doCommand( new UpdateProjectObject( org, "location", newPlace ) );
+        doCommand( new UpdatePlanObject( org, "location", newPlace ) );
         getCommander().cleanup( Place.class, oldName );
     }
 
@@ -214,7 +214,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
      */
     public void setActorsRequired( boolean val ) {
         doCommand(
-                new UpdateProjectObject(
+                new UpdatePlanObject(
                         getOrganization(),
                         "actorsRequired",
                         val,

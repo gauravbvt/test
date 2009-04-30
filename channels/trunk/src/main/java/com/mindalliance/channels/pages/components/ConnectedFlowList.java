@@ -6,7 +6,7 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.iterators.TransformIterator;
 import org.apache.wicket.AttributeModifier;
@@ -98,7 +98,7 @@ public class ConnectedFlowList extends Panel {
          */
         protected void addIssues( Component component, ModelObject object, String property ) {
 
-            final Analyst analyst = Project.analyst();
+            final Analyst analyst = Channels.analyst();
             final String summary = property == null ? analyst.getIssuesSummary( object, false )
                     : analyst.getIssuesSummary( object, property );
             boolean hasIssues = analyst.hasIssues( object, Analyst.INCLUDE_PROPERTY_SPECIFIC );

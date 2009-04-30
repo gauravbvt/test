@@ -6,7 +6,7 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Scenario;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -56,7 +56,7 @@ public class RoleReportPanel extends Panel {
         Label descLabel = new Label( "description", desc );                               // NON-NLS
         descLabel.setVisible( desc != null && !desc.isEmpty() );
         add( descLabel );
-        List<Actor> actors = Project.getProject().getDqo().findActors(
+        List<Actor> actors = Channels.instance().getDqo().findActors(
                 organization, role, scenario );
         if ( actors.isEmpty() )
             actors.add( Actor.UNKNOWN );

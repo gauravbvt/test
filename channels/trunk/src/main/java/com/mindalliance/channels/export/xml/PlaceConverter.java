@@ -2,7 +2,7 @@ package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.Place;
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -32,7 +32,7 @@ public class PlaceConverter extends EntityConverter {
      * {@inheritDoc}
      */
     ModelObject findOrMakeEntity( String name ) {
-        return Project.dqo().findOrCreate( Place.class, name );
+        return Channels.dqo().findOrCreate( Place.class, name );
     }
 
     /**

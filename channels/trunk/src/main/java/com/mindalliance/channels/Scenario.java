@@ -21,7 +21,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
- * A scenario in the project.
+ * A scenario in the plan.
  * Provides an iterator on its nodes.
  */
 @Entity

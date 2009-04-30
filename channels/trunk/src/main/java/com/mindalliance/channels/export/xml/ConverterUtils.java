@@ -6,7 +6,7 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.export.ScenarioSpecification;
 import com.mindalliance.channels.export.PartSpecification;
 import com.mindalliance.channels.util.SemMatch;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.util.List;
@@ -58,7 +58,7 @@ public class ConverterUtils {
                                                         String scenarioDescription ) {
         List<Scenario> scenarios = new ArrayList<Scenario>();
         try {
-            scenarios.add( Project.dqo().findScenario( scenarioName ) );
+            scenarios.add( Channels.dqo().findScenario( scenarioName ) );
         } catch ( NotFoundException e ) {
             LoggerFactory.getLogger( ConverterUtils.class ).info(
                     "No scenario found matching name ["

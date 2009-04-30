@@ -8,7 +8,7 @@ import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Place;
 import com.mindalliance.channels.Identifiable;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 
 import java.util.Collection;
 import java.util.Map;
@@ -79,11 +79,11 @@ public class DefaultCommander implements Commander {
     }
 
     public Map<String, Object> getCopy() {
-        return copy.get( Project.getUserName() );
+        return copy.get( Channels.getUserName() );
     }
 
     public void setCopy( Map<String, Object> state ) {
-        copy.put( Project.getUserName(), state );
+        copy.put( Channels.getUserName(), state );
     }
 
     /**
@@ -394,7 +394,7 @@ public class DefaultCommander implements Commander {
      */
     public boolean requestLockOn( Identifiable identifiable ) {
         if ( isTimedOut() ) return false;
-        updateUserActive( Project.getUserName() );
+        updateUserActive( Channels.getUserName() );
         return lockManager.requestLockOn( identifiable );
     }
 
@@ -403,7 +403,7 @@ public class DefaultCommander implements Commander {
      */
     public boolean requestLockOn( Long id ) {
         if ( isTimedOut() ) return false;
-        updateUserActive( Project.getUserName() );
+        updateUserActive( Channels.getUserName() );
         return lockManager.requestLockOn( id );
     }
 
@@ -472,14 +472,14 @@ public class DefaultCommander implements Commander {
      * {@inheritDoc}
      */
     public synchronized boolean isTimedOut() {
-        return timedOut.contains( Project.getUserName() );
+        return timedOut.contains( Channels.getUserName() );
     }
 
     /**
      * {@inheritDoc}
      */
     public synchronized void clearTimeOut() {
-        timedOut.remove( Project.getUserName() );
+        timedOut.remove( Channels.getUserName() );
     }
 
     /**

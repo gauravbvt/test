@@ -3,7 +3,7 @@ package com.mindalliance.channels.analysis.detectors;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 
 import java.util.List;
 
@@ -35,6 +35,6 @@ public class FromUser extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     public List<Issue> detectIssues( ModelObject modelObject ) {
-        return Project.dqo().findAllUserIssues( modelObject );
+        return Channels.dqo().findAllUserIssues( modelObject );
     }
 }

@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.Flow;
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.menus.FlowActionsMenuPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
@@ -44,7 +44,7 @@ public class CollapsedFlowPanel extends AbstractCommandablePanel {
         add( channel );
 
         // Add style mods from analyst.
-        Analyst analyst = ( (Project) getApplication() ).getAnalyst();
+        Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
         String summary = analyst.getIssuesSummary( flow, Analyst.INCLUDE_PROPERTY_SPECIFIC );
         boolean hasIssues = analyst.hasIssues( flow, Analyst.INCLUDE_PROPERTY_SPECIFIC );
         if ( !summary.isEmpty() ) {

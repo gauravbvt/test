@@ -11,7 +11,7 @@ import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.menus.EntityActionsMenuPanel;
 import com.mindalliance.channels.pages.components.menus.EntityShowMenuPanel;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -123,7 +123,7 @@ public class EntityPanel extends AbstractCommandablePanel {
     }
 
     private void annotateEntityName() {
-        Analyst analyst = ( (Project) getApplication() ).getAnalyst();
+        Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
         String summary = analyst.getIssuesSummary(
                 getEntity(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
         boolean hasIssues = analyst.hasIssues( getEntity(), Analyst.INCLUDE_PROPERTY_SPECIFIC );

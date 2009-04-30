@@ -1,1 +1,1 @@
-This directory holds the file attachment of the project.
+This directory holds the file attachments.

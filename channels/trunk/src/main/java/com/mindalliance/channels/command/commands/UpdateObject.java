@@ -10,9 +10,7 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.Change;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Abstract property update command.
@@ -85,7 +83,7 @@ public abstract class UpdateObject extends AbstractCommand {
         if ( identifiable instanceof ScenarioObject ) {
             return new UpdateScenarioObject( identifiable, property, value, action );
         } else {
-            return new UpdateProjectObject( identifiable, property, value, action );
+            return new UpdatePlanObject( identifiable, property, value, action );
         }
     }
 

@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.reports;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -31,7 +31,7 @@ public class IssuesReportPanel extends Panel {
         super( id, model );
         setRenderBodyOnly( true );
         modelObject = model.getObject();
-        init( Project.analyst() );
+        init( Channels.analyst() );
     }
 
     private void init( Analyst analyst ) {

@@ -1,0 +1,24 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html
+        xmlns:wicket="http://wicket.apache.org/"
+        lang="en">
+<head>
+    <title wicket:id="title">[Title]</title>
+    <link rel="stylesheet" href="report.css" type="text/css">
+</head>
+
+<body class="report">
+<div id="plan">
+    <h1 wicket:id="plan-name">plan name</h1>
+    <p class="client" wicket:id="plan-client">client</p>
+    <p class="description" wicket:id="plan-description">description</p>
+    <div class="flow-map" wicket:id="planMap">[flow diagram panel]</div>
+    <p class="date" wicket:id="date">date</p>
+</div>
+
+<div class="scenario" wicket:id="scenarios">
+    <span wicket:id="scenario">[scenario report panel]</span>
+</div>
+</body>
+</html>

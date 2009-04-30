@@ -12,11 +12,10 @@ import com.mindalliance.channels.Delay;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.ScenarioObject;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
-import com.mindalliance.channels.command.commands.UpdateProjectObject;
+import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.command.Change;
 
 import java.util.List;
-import java.util.Set;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -141,7 +140,7 @@ public class DelayPanel extends AbstractCommandablePanel {
         if ( model.getObject() instanceof ScenarioObject ) {
             doCommand( new UpdateScenarioObject( model.getObject(), property + "." + prop, val ) );
         } else {
-            doCommand( new UpdateProjectObject( model.getObject(), property + "." + prop, val ) );
+            doCommand( new UpdatePlanObject( model.getObject(), property + "." + prop, val ) );
         }
     }
 

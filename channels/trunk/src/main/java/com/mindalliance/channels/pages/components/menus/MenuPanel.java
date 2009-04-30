@@ -6,7 +6,7 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -22,7 +22,6 @@ import org.apache.wicket.model.PropertyModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.Map;
 import java.io.Serializable;
 
 /**
@@ -111,7 +110,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
     }
 
     protected Commander getCommander() {
-        return Project.getProject().getCommander();
+        return Channels.instance().getCommander();
     }
 
     /**

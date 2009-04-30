@@ -4,7 +4,7 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.DataQueryObject;
 import com.mindalliance.channels.Identifiable;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 
 import java.util.List;
 import java.util.Map;
@@ -60,7 +60,7 @@ public class DefaultLockManager implements LockManager {
                 ModelObject mo = dqo.find( ModelObject.class, id );
                 Lock lock = getLock( id );
                 if ( lock != null ) {
-                    String userName = Project.getUserName();
+                    String userName = Channels.getUserName();
                     if ( !lock.isOwnedBy( userName ) ) {
                         throw new LockingException(
                                 userName + " is making changes to " + mo.getName() + "." );
@@ -90,7 +90,7 @@ public class DefaultLockManager implements LockManager {
         synchronized ( this ) {
             Lock lock = getLock( id );
             if ( lock != null ) {
-                String userName = Project.getUserName();
+                String userName = Channels.getUserName();
                 if ( !lock.isOwnedBy( userName ) )
                     throw new LockingException(
                             userName + " does not own the lock. " + userName + " does." );
@@ -150,7 +150,7 @@ public class DefaultLockManager implements LockManager {
      */
     public boolean isUserLocking( long id ) {
         Lock lock = getLock( id );
-        return lock != null && lock.isOwnedBy( Project.getUserName() );
+        return lock != null && lock.isOwnedBy( Channels.getUserName() );
     }
 
     /**
@@ -230,7 +230,7 @@ public class DefaultLockManager implements LockManager {
      * {@inheritDoc}
      */
     public boolean canGrabLocksOn( Collection<Long> ids ) {
-        String userName = Project.getUserName();
+        String userName = Channels.getUserName();
         for ( long id : ids ) {
             Lock lock = getLock( id );
             if ( lock != null && !lock.isOwnedBy( userName ) )

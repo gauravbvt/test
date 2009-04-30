@@ -38,7 +38,7 @@ public class TestScenarioPage extends TestCase {
     private WicketTester tester;
     private Scenario scenario;
     private Memory dao;
-    private Project project;
+    private Channels app;
 
     public TestScenarioPage() {
     }
@@ -48,14 +48,14 @@ public class TestScenarioPage extends TestCase {
         super.setUp();
 
         dao = new Memory();
-        project = new Project();
+        app = new Channels();
         DataQueryObjectImpl dqo = new DataQueryObjectImpl();
         dqo.setAddingSamples( true );
         dqo.setDao( dao );
         dqo.initialize();
 
-        project.setDqo( dqo );
-        project.setAttachmentManager( new BitBucket() );
+        app.setDqo( dqo );
+        app.setAttachmentManager( new BitBucket() );
         DiagramFactory dm = createMock( DiagramFactory.class );
         Diagram fd = createMock(  Diagram.class);
         expect( fd.makeImageMap( ) ).andReturn( "" ).anyTimes();
@@ -63,7 +63,7 @@ public class TestScenarioPage extends TestCase {
                     .andReturn( fd ).anyTimes();
         replay( dm );
         replay( fd );
-        project.setDiagramFactory( dm );
+        app.setDiagramFactory( dm );
 
         Analyst sa = createNiceMock( Analyst.class );
         expect( sa.getIssuesSummary( (ModelObject) anyObject(), anyBoolean() ) )
@@ -73,10 +73,10 @@ public class TestScenarioPage extends TestCase {
         expect( sa.findIssues( (ModelObject) anyObject(), anyBoolean() ))
                 .andReturn( new ArrayList<Issue>().iterator() ).anyTimes();
         replay( sa );
-        project.setAnalyst( sa );
+        app.setAnalyst( sa );
 
-        scenario = project.getDqo().getDefaultScenario();
-        tester = new WicketTester( project );
+        scenario = app.getDqo().getDefaultScenario();
+        tester = new WicketTester( app );
         tester.setParametersForNextRequest( new HashMap<String,String[]>() );
     }
 
@@ -84,19 +84,19 @@ public class TestScenarioPage extends TestCase {
      * otherwise all fields set to null. Resolved in wickets 1.4-RC2, coming out
      * soon to a theater near you...
      * @param ft the tester to fix
-     * @param project
+     * @param app
      * @see {https://issues.apache.org/jira/browse/WICKET-1931}
      * @todo remove when moving to Wickets 1.4-RC2
      * @throws java.io.IOException
      */
-    public static void setFiles( FormTester ft, Project project ) throws IOException {
+    public static void setFiles( FormTester ft, Channels app ) throws IOException {
 
         Importer importer = createMock( Importer.class );
         expect( importer.importScenario( (InputStream) notNull() ) )
-                .andReturn( project.getDqo().createScenario() );
+                .andReturn( app.getDqo().createScenario() );
 
         replay( importer );
-        project.setImporter( importer );
+        app.setImporter( importer );
 
         File file = new File( TestScenarioPage.class.getResource( "test.txt" ).getFile() );
         assertTrue( "Can't find " + file.getAbsolutePath(), file.exists() );
@@ -105,59 +105,59 @@ public class TestScenarioPage extends TestCase {
     }
 
     /**
-     * @param project a Project
+     * @param app the Channels app
      * @todo remove when moving to Wickets 1.4-RC2
      */
-    public static void checkFiles( Project project ) {
-        verify( project.getImporter() );
+    public static void checkFiles( Channels app ) {
+        verify( app.getImporter() );
     }
 
     public void testParms() {
-        tester.startPage( ProjectPage.class );
+        tester.startPage( ChannelsPage.class );
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
         PageParameters parms = new PageParameters();
-        parms.put( ProjectPage.SCENARIO_PARM, Long.toString( scenario.getId() ) );
+        parms.put( ChannelsPage.SCENARIO_PARM, Long.toString( scenario.getId() ) );
 
-        tester.startPage( ProjectPage.class, parms );
+        tester.startPage( ChannelsPage.class, parms );
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
-        parms.put( ProjectPage.SCENARIO_PARM, "-1" );
-        tester.startPage( ProjectPage.class, parms );
+        parms.put( ChannelsPage.SCENARIO_PARM, "-1" );
+        tester.startPage( ChannelsPage.class, parms );
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
-        parms.put( ProjectPage.SCENARIO_PARM, "bla" );
-        tester.startPage( ProjectPage.class, parms );
+        parms.put( ChannelsPage.SCENARIO_PARM, "bla" );
+        tester.startPage( ChannelsPage.class, parms );
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
-        parms.put( ProjectPage.SCENARIO_PARM, Long.toString( scenario.getId() ) );
-        parms.put( ProjectPage.PART_PARM, "-1" );
-        tester.startPage( ProjectPage.class, parms );
+        parms.put( ChannelsPage.SCENARIO_PARM, Long.toString( scenario.getId() ) );
+        parms.put( ChannelsPage.PART_PARM, "-1" );
+        tester.startPage( ChannelsPage.class, parms );
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
-        parms.put( ProjectPage.PART_PARM, "bla" );
-        tester.startPage( ProjectPage.class, parms );
+        parms.put( ChannelsPage.PART_PARM, "bla" );
+        tester.startPage( ChannelsPage.class, parms );
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
-        parms.put( ProjectPage.PART_PARM, Long.toString( scenario.getDefaultPart().getId() ) );
-        tester.startPage( ProjectPage.class, parms );
-        tester.assertRenderedPage( ProjectPage.class );
+        parms.put( ChannelsPage.PART_PARM, Long.toString( scenario.getDefaultPart().getId() ) );
+        tester.startPage( ChannelsPage.class, parms );
+        tester.assertRenderedPage( ChannelsPage.class );
         tester.assertNoErrorMessage();
 
-        parms.put( ProjectPage.EXPAND_PARM, "bla" );
-        tester.startPage( ProjectPage.class, parms );
-        tester.assertRenderedPage( ProjectPage.class );
+        parms.put( ChannelsPage.EXPAND_PARM, "bla" );
+        tester.startPage( ChannelsPage.class, parms );
+        tester.assertRenderedPage( ChannelsPage.class );
         tester.assertNoErrorMessage();
 
-        parms.add( ProjectPage.EXPAND_PARM, "burp" );
-        tester.startPage( ProjectPage.class, parms );
-        tester.assertRenderedPage( ProjectPage.class );
+        parms.add( ChannelsPage.EXPAND_PARM, "burp" );
+        tester.startPage( ChannelsPage.class, parms );
+        tester.assertRenderedPage( ChannelsPage.class );
         tester.assertNoErrorMessage();
     }
 
@@ -165,14 +165,14 @@ public class TestScenarioPage extends TestCase {
     public void testNodes() {
         Iterator<Part> parts = scenario.parts();
         while ( parts.hasNext() ) {
-            tester.startPage( new ProjectPage( scenario, parts.next() ) );
-            tester.assertRenderedPage( ProjectPage.class );
+            tester.startPage( new ChannelsPage( scenario, parts.next() ) );
+            tester.assertRenderedPage( ChannelsPage.class );
             tester.assertNoErrorMessage();
         }
     }
 
     public void testNewScenario() throws NotFoundException {
-        tester.startPage( new ProjectPage( scenario ) );
+        tester.startPage( new ChannelsPage( scenario ) );
 
         long size = dao.getScenarioCount();
         tester.clickLink( "big-form:sc-new" );
@@ -181,7 +181,7 @@ public class TestScenarioPage extends TestCase {
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
-        tester.startPage( new ProjectPage( scenario ) );
+        tester.startPage( new ChannelsPage( scenario ) );
         tester.clickLink( "big-form:sc-new" );
         assertEquals( size + 2, dao.getScenarioCount() );
         tester.assertRenderedPage( RedirectPage.class );
@@ -193,18 +193,18 @@ public class TestScenarioPage extends TestCase {
     public void testEmptySubmit() throws NotFoundException, IOException {
         Part part = scenario.getDefaultPart();
 
-        tester.startPage( new ProjectPage( scenario, part ) );
+        tester.startPage( new ChannelsPage( scenario, part ) );
         tester.setupRequestAndResponse();
-        tester.assertRenderedPage( ProjectPage.class );
+        tester.assertRenderedPage( ChannelsPage.class );
         tester.assertNoErrorMessage();
 
         FormTester ft = tester.newFormTester( "big-form" );
-        setFiles( ft, project );
+        setFiles( ft, app );
         ft.submit();
 
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
-        checkFiles( project );
+        checkFiles( app );
     }
 
     /** Test submit with part modifications.
@@ -214,22 +214,22 @@ public class TestScenarioPage extends TestCase {
         part.setDescription( "" );
         assertEquals( "", part.getDescription() );
 
-        tester.startPage( new ProjectPage( scenario, part ) );
+        tester.startPage( new ChannelsPage( scenario, part ) );
         tester.setupRequestAndResponse();
-        tester.assertRenderedPage( ProjectPage.class );
+        tester.assertRenderedPage( ChannelsPage.class );
         tester.assertNoErrorMessage();
 
         FormTester ft = tester.newFormTester( "big-form" );
         String desc = "New value";
         ft.setValue( "description", desc );
-        setFiles( ft, project );
+        setFiles( ft, app );
         ft.submit();
 
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
         assertEquals( desc, part.getDescription() );
-        checkFiles( project );
+        checkFiles( app );
     }
 
     /** Test submit with part modifications.
@@ -238,38 +238,38 @@ public class TestScenarioPage extends TestCase {
         Part part = scenario.getDefaultPart();
         part.setDescription( "something" );
 
-        tester.startPage( new ProjectPage( scenario, part ) );
+        tester.startPage( new ChannelsPage( scenario, part ) );
         tester.setupRequestAndResponse();
-        tester.assertRenderedPage( ProjectPage.class );
+        tester.assertRenderedPage( ChannelsPage.class );
         tester.assertNoErrorMessage();
 
         FormTester ft = tester.newFormTester( "big-form" );
         String desc = "";
         ft.setValue( "description", desc );
-        setFiles( ft, project );
+        setFiles( ft, app );
         ft.submit();
 
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
         assertEquals( desc, part.getDescription() );
-        checkFiles( project );
+        checkFiles( app );
     }
 
     public void testDeleteScenario() throws IOException, NotFoundException {
         assertEquals( 2, dao.getScenarioCount() );
-        Scenario sc2 = project.getDqo().createScenario();
+        Scenario sc2 = app.getDqo().createScenario();
         sc2.setName( "Test" );
         assertEquals( 3, dao.getScenarioCount() );
 
-        tester.startPage( new ProjectPage( scenario ) );
+        tester.startPage( new ChannelsPage( scenario ) );
         tester.setupRequestAndResponse();
-        tester.assertRenderedPage( ProjectPage.class );
+        tester.assertRenderedPage( ChannelsPage.class );
         tester.assertNoErrorMessage();
         assertEquals( 3, dao.getScenarioCount() );
 
         FormTester ft = tester.newFormTester( "big-form" );
-        setFiles( ft, project );
+        setFiles( ft, app );
         ft.setValue( "sc-del", "true" );
 
         ft.submit();
@@ -285,7 +285,7 @@ public class TestScenarioPage extends TestCase {
 
     public void testGetParameters1() {
         Part part = scenario.getDefaultPart();
-        PageParameters parms = ProjectPage.getParameters( scenario, part );
+        PageParameters parms = ChannelsPage.getParameters( scenario, part );
 
         assertEquals( scenario.getId(), (long) parms.getAsLong( "scenario" ) );
         assertEquals( part.getId(), (long) parms.getAsLong( "part" ) );
@@ -295,7 +295,7 @@ public class TestScenarioPage extends TestCase {
         Part part = scenario.getDefaultPart();
 
         Set<Long> expand = new HashSet<Long>( Arrays.asList( 1L, 2L ) );
-        PageParameters parms = ProjectPage.getParameters( scenario, part, expand );
+        PageParameters parms = ChannelsPage.getParameters( scenario, part, expand );
 
         assertEquals( scenario.getId(), (long) parms.getAsLong( "scenario" ) );
         assertEquals( part.getId(), (long) parms.getAsLong( "part" ) );

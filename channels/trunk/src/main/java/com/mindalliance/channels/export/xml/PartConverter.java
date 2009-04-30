@@ -14,7 +14,7 @@ import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.Delay;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 
 import java.util.Map;
 import java.util.List;
@@ -109,7 +109,7 @@ public class PartConverter extends AbstractChannelsConverter {
             writer.endNode();
         }
         // Part user issues
-        List<Issue> issues = Project.dqo().findAllUserIssues( part );
+        List<Issue> issues = Channels.dqo().findAllUserIssues( part );
         for ( Issue issue : issues ) {
             writer.startNode( "issue" );
             context.convertAnother( issue );
@@ -123,7 +123,7 @@ public class PartConverter extends AbstractChannelsConverter {
     @SuppressWarnings( "unchecked" )
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
         Scenario scenario = (Scenario) context.get( "scenario" );
-        Part part = Project.dqo().createPart( scenario );
+        Part part = Channels.dqo().createPart( scenario );
         Map<String, Long> idMap = (Map<String, Long>) context.get( "idMap" );
         String id = reader.getAttribute( "id" );
         idMap.put( id, part.getId() );

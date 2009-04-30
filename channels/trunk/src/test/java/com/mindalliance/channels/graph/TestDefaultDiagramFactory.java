@@ -3,7 +3,7 @@ package com.mindalliance.channels.graph;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Node;
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +27,7 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
     @Override
     protected void setUp() {
         super.setUp();
-        scenarios = Project.dqo().list( Scenario.class );
+        scenarios = Channels.dqo().list( Scenario.class );
 
     }
 
@@ -36,7 +36,7 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
             Node selectedNode = findSelected( scenario );
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                DiagramFactory diagramFactory = project.getDiagramFactory();
+                DiagramFactory diagramFactory = app.getDiagramFactory();
                 Diagram flowDiagram = diagramFactory.newFlowMapDiagram( scenario, selectedNode, null, null );
                 flowDiagram.render( DiagramFactory.SVG, new BufferedOutputStream( baos ) );
                 String svg = baos.toString();
@@ -54,7 +54,7 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
             Node selectedNode = findSelected( scenario );
             try {
                 FileOutputStream fileOut = new FileOutputStream( "target/" + scenario.getName() + ".png" );
-                DiagramFactory diagramFactory = project.getDiagramFactory();
+                DiagramFactory diagramFactory = app.getDiagramFactory();
                 Diagram flowDiagram = diagramFactory.newFlowMapDiagram( scenario, selectedNode, null, null );
                 flowDiagram.render( DiagramFactory.PNG, fileOut );
                 fileOut.flush();
@@ -72,7 +72,7 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
     public void testGetImageMap() {
         for ( Scenario scenario : scenarios ) {
             try {
-                DiagramFactory diagramFactory = project.getDiagramFactory();
+                DiagramFactory diagramFactory = app.getDiagramFactory();
                 Diagram flowDiagram = diagramFactory.newFlowMapDiagram( scenario, scenario.getDefaultPart(), null, null );
                 String map = flowDiagram.makeImageMap();
                 System.out.print( map );

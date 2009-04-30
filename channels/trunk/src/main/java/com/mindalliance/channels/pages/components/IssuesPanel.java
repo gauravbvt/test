@@ -7,7 +7,7 @@ import com.mindalliance.channels.Part;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AddUserIssue;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -61,7 +61,7 @@ public class IssuesPanel extends AbstractCommandablePanel {
             public void onClick( AjaxRequestTarget target ) {
                 Change change = doCommand( new AddUserIssue( model.getObject() ) );
 /*
-                makeVisible( this, Project.analyst().hasIssues( model.getObject(), false ) );
+                makeVisible( this, Channels.analyst().hasIssues( model.getObject(), false ) );
                 target.addComponent( this );
 */
                 update( target, change );
@@ -112,7 +112,7 @@ public class IssuesPanel extends AbstractCommandablePanel {
      * @return list of issues
      */
     public List<Issue> getModelObjectIssues() {
-        return Project.analyst().listIssues( model.getObject(), false );
+        return Channels.analyst().listIssues( model.getObject(), false );
     }
 
     /**

@@ -38,13 +38,13 @@ public interface Importer {
     String getVersion();
 
     /**
-     * Import a project from a stream.
+     * Import all persisted data from a stream.
      *
      * @param stream an input stream
      * @return an id translation map
      * @throws java.io.IOException on errors
      */
-    Map<Long, Long> importProject( FileInputStream stream ) throws IOException;
+    Map<Long, Long> importAll( FileInputStream stream ) throws IOException;
 
     /**
      * Import a journal from a stream.

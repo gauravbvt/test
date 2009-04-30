@@ -15,7 +15,7 @@ import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.export.ConnectionSpecification;
 import com.mindalliance.channels.export.PartSpecification;
 import com.mindalliance.channels.export.ScenarioSpecification;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -94,7 +94,7 @@ public class FlowConverter extends AbstractChannelsConverter {
         }
         // Flow user issues (exported only if an internal flow)
         if ( flow.isInternal() ) {
-            for ( Issue issue : Project.dqo().findAllUserIssues( flow ) ) {
+            for ( Issue issue : Channels.dqo().findAllUserIssues( flow ) ) {
                 writer.startNode( "issue" );
                 context.convertAnother( issue );
                 writer.endNode();
@@ -257,7 +257,7 @@ public class FlowConverter extends AbstractChannelsConverter {
     private Connector resolveConnector( HierarchicalStreamReader reader,
                                         Scenario scenario,
                                         boolean isSource ) {
-        Connector connector = Project.dqo().createConnector( scenario );
+        Connector connector = Channels.dqo().createConnector( scenario );
         String externalScenarioName = reader.getAttribute( "scenario" );
         if ( externalScenarioName != null ) {
             // Connector is in other scenario

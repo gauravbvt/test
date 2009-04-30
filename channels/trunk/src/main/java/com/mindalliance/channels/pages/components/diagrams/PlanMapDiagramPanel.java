@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.graph.Diagram;
@@ -119,7 +119,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
      * {@inheritDoc }
      */
     protected void onClick( AjaxRequestTarget target ) {
-        update( target, new Change( Change.Type.Selected, Project.getProject() ) );
+        update( target, new Change( Change.Type.Selected, Channels.instance() ) );
     }
 
     /**

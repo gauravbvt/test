@@ -7,7 +7,7 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.ScenarioObject;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.menus.PartActionsMenuPanel;
 import com.mindalliance.channels.pages.components.menus.PartShowMenuPanel;
@@ -179,7 +179,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
 
     private void adjustComponents() {
         partDescription.setEnabled( isLockedByUser( getPart() ) );
-        boolean partHasIssues = Project.analyst().hasIssues( getPart(), false );
+        boolean partHasIssues = Channels.analyst().hasIssues( getPart(), false );
         makeVisible( partIssuesPanel, partHasIssues );
         makeVisible( scenarioEditPanel, getExpansions().contains( getScenario().getId() ) );
     }
@@ -335,7 +335,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
                 if ( !change.isDisplay() ) {
                     target.addComponent( flowMapDiagramPanel );
                     makeVisible( target, partIssuesPanel,
-                            Project.analyst().hasIssues( getPart(), false ) );
+                            Channels.analyst().hasIssues( getPart(), false ) );
                     target.addComponent( partIssuesPanel );
                     // target.addComponent( attachments );
                 }

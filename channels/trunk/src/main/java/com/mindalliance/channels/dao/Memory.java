@@ -16,7 +16,7 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.export.Exporter;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
@@ -43,11 +43,11 @@ public final class Memory implements Dao {
      */
     public static final Logger LOG = LoggerFactory.getLogger( Memory.class );
     /**
-     * Name of project data file.
+     * Name of persisted data file.
      */
-    private static final String DATA_FILE = "project.xml";
+    private static final String DATA_FILE = "data.xml";
     /**
-     * Name of project data file.
+     * Name of command journal file.
      */
     private static final String JOURNAL_FILE = "journal.xml";
     /**
@@ -59,7 +59,7 @@ public final class Memory implements Dao {
      */
     private Journal journal = new Journal();
     /**
-     * Directory where to persist project data.
+     * Directory where to persist all data.
      */
     private String dataDirectoryPath;
 
@@ -245,18 +245,18 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     public void load() {
-        // Load project data
+        // Load app data
         try {
             Map<Long, Long> idMap = new HashMap<Long, Long>();
-            Importer importer = Project.getProject().getImporter();
+            Importer importer = Channels.instance().getImporter();
             File dataFile = getDataFile();
             if ( dataFile.length() > 0 ) {
-                LOG.info( "Importing project snapshot" );
-                idMap = importer.importProject( new FileInputStream( dataFile ) );
+                LOG.info( "Importing app snapshot" );
+                idMap = importer.importAll( new FileInputStream( dataFile ) );
             }
             // Load and run journaled commands
             Journal journal = loadJournal();
-            Commander commander = Project.getProject().getCommander();
+            Commander commander = Channels.instance().getCommander();
             commander.setReplaying( true );
             commander.setIdMap( idMap );
             if ( !journal.isEmpty() ) {
@@ -267,7 +267,7 @@ public final class Memory implements Dao {
             }
             journal.reset();
             commander.reset();
-            LOG.info( "Persisted project reloaded." );
+            LOG.info( "Persisted app reloaded." );
         } catch ( IOException e ) {
             LOG.error( "Failed to load snapshot", e );
         } catch ( CommandException e ) {
@@ -296,11 +296,11 @@ public final class Memory implements Dao {
 
     private File getDataFile() throws IOException {
         File dataDirectory = getDataDirectory();
-        File projectFile = new File( dataDirectory.getPath() + File.separator + DATA_FILE );
-        if ( !projectFile.exists() ) {
-            projectFile.createNewFile();
+        File dataFile = new File( dataDirectory.getPath() + File.separator + DATA_FILE );
+        if ( !dataFile.exists() ) {
+            dataFile.createNewFile();
         }
-        return projectFile;
+        return dataFile;
     }
 
     private File getDataDirectory() {
@@ -329,7 +329,7 @@ public final class Memory implements Dao {
         Journal journal;
         try {
             File journalFile = getJournalFile();
-            Importer importer = Project.getProject().getImporter();
+            Importer importer = Channels.instance().getImporter();
             if ( journalFile.length() > 0 )
                 journal = importer.importJournal( new FileInputStream( journalFile ) );
             else
@@ -370,7 +370,7 @@ public final class Memory implements Dao {
     }
 
     private void takeSnapshot() throws IOException {
-        LOG.info( "Taking project snapshot" );
+        LOG.info( "Taking app snapshot" );
         // Make backup
         File dataFile = getDataFile();
         if ( dataFile.length() > 0 ) {
@@ -381,8 +381,8 @@ public final class Memory implements Dao {
         // snap
         dataFile = getDataFile();
         assert dataFile.length() == 0;
-        Exporter exporter = Project.getProject().getExporter();
-        exporter.exportProject( new FileOutputStream( dataFile ) );
+        Exporter exporter = Channels.instance().getExporter();
+        exporter.exportAll( new FileOutputStream( dataFile ) );
     }
 
     private void saveJournal() throws IOException {
@@ -390,7 +390,7 @@ public final class Memory implements Dao {
         journalFile.delete();
         journalFile = getJournalFile();
         assert journalFile.length() == 0;
-        Exporter exporter = Project.getProject().getExporter();
+        Exporter exporter = Channels.instance().getExporter();
         exporter.exportJournal( journal, new FileOutputStream( journalFile ) );
     }
 
@@ -405,6 +405,20 @@ public final class Memory implements Dao {
             dataFile.delete();
         } catch ( IOException e ) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    // Not used yet
+    public void stop() {
+        try {
+            takeSnapshot();
+            getJournalFile().delete();
+            LOG.info("Pre-shutdown snapshot taken.");
+        } catch ( IOException e ) {
+            LOG.warn( "Failed to take snapshot", e );
         }
     }
 

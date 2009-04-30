@@ -18,8 +18,8 @@ public class TestDefaultCommander extends AbstractChannelsTest {
 
     protected void setUp() {
         super.setUp();
-        commander = project.getCommander();
-        lockManager = project.getLockManager();
+        commander = app.getCommander();
+        lockManager = app.getLockManager();
         commander.reset();
     }
 
@@ -43,7 +43,7 @@ public class TestDefaultCommander extends AbstractChannelsTest {
 
     public void testCommandLocking() throws Exception {
         AbstractCommand command = HelloCommand.makeCommand( "hello" );
-        Scenario scenario = project.getDqo().getDefaultScenario();
+        Scenario scenario = app.getDqo().getDefaultScenario();
         Lock lock = lockManager.grabLockOn( scenario.getId() );
         lock.setUserName( "bob" );
         command.needLockOn( scenario );

@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.UserIssue;
-import com.mindalliance.channels.command.commands.UpdateProjectObject;
+import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.pages.components.menus.IssueActionsMenuPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -107,7 +107,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
      * @param desc a string
      */
     public void setDescription( String desc ) {
-        doCommand( new UpdateProjectObject( getIssue(), "description", desc ) );
+        doCommand( new UpdatePlanObject( getIssue(), "description", desc ) );
     }
 
     public String getRemediation() {
@@ -120,7 +120,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
      * @param rem a string
      */
     public void setRemediation( String rem ) {
-        doCommand( new UpdateProjectObject( getIssue(), "remediation", rem ) );
+        doCommand( new UpdatePlanObject( getIssue(), "remediation", rem ) );
     }
 
     public Issue.Level getSeverity() {
@@ -133,7 +133,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
      * @param severity an issue severity level
      */
     public void setSeverity( Issue.Level severity ) {
-        doCommand( new UpdateProjectObject( getIssue(), "severity", severity ) );
+        doCommand( new UpdatePlanObject( getIssue(), "severity", severity ) );
     }
 
 }

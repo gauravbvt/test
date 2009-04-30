@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.Organization;
 import com.mindalliance.channels.Role;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -40,7 +40,7 @@ public class OrganizationDirectoryPanel extends Panel {
         add( new Label( "description", organization.getDescription() ) );                 // NON-NLS
 
         add( new ListView<Role>( "roles",                                                 // NON-NLS
-                                 Project.getProject().getDqo().findRolesIn( organization ) ) {
+                                 Channels.instance().getDqo().findRolesIn( organization ) ) {
             @Override
             protected void populateItem( ListItem<Role> item ) {
                 Role role = item.getModelObject();

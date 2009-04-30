@@ -3,7 +3,7 @@ package com.mindalliance.channels.command;
 import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import org.apache.commons.beanutils.PropertyUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -57,7 +57,7 @@ public abstract class AbstractCommand implements Command {
     private Command undoCommand;
 
     public AbstractCommand() {
-        userName = Project.getUserName();
+        userName = Channels.getUserName();
     }
 
     public String getUserName() {

@@ -2,7 +2,7 @@ package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.Issue;
 import com.mindalliance.channels.ModelObject;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -42,7 +42,7 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
         exportDetectionWaivers( entity, writer );
         writeSpecifics( entity, writer, context );
         // User issues
-        List<Issue> issues = Project.dqo().findAllUserIssues( entity );
+        List<Issue> issues = Channels.dqo().findAllUserIssues( entity );
         for ( Issue issue : issues ) {
             writer.startNode( "issue" );
             context.convertAnother( issue );

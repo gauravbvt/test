@@ -34,7 +34,7 @@ import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.export.xml.XmlStreamer;
 import com.mindalliance.channels.graph.GraphvizRenderer;
 import com.mindalliance.channels.graph.DefaultDiagramFactory;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.command.DefaultCommander;
 import com.mindalliance.channels.command.DefaultLockManager;
 import junit.framework.TestCase;
@@ -54,14 +54,14 @@ import java.util.HashMap;
  */
 public class AbstractChannelsTest extends TestCase {
 
-    protected Project project;
+    protected Channels app;
     protected WicketTester tester;
 
     @Override
     protected void setUp() {
         XmlStreamer xmlStreamer = new XmlStreamer();
-        project = new Project();
-        project.setUri( "mindalliance.com/channels/demo" );
+        app = new Channels();
+        app.setUri( "mindalliance.com/channels/demo" );
 
         Memory dao = new Memory();
         dao.setDataDirectoryPath( "target/data" );
@@ -69,19 +69,19 @@ public class AbstractChannelsTest extends TestCase {
         dao.reset();
         DataQueryObjectImpl dqo = new DataQueryObjectImpl( dao );
 
-        project.setDqo( dqo );
-        project.setExporter( xmlStreamer );
-        project.setImporter( xmlStreamer );
+        app.setDqo( dqo );
+        app.setExporter( xmlStreamer );
+        app.setImporter( xmlStreamer );
         DefaultCommander commander = new DefaultCommander();
         DefaultLockManager lockManager = new DefaultLockManager();
         lockManager.setDqo( dqo );
-        project.setLockManager( lockManager );
+        app.setLockManager( lockManager );
         commander.setLockManager( lockManager );
         commander.setDqo( dqo );
-        project.setCommander( commander );
-        project.setProjectName( "Test" );
-        project.setClient( "Mind-Alliance" );
-        project.setDescription( "This is a test project" );
+        app.setCommander( commander );
+        app.setPlanName( "Test" );
+        app.setClient( "Mind-Alliance" );
+        app.setDescription( "This is a test" );
         FileBasedManager attachmentManager = new FileBasedManager();
         /*  <bean id="attachmentManager" class="com.mindalliance.channels.attachments.FileBasedManager">
             <property name="directory" value="target/channels-1.0-SNAPSHOT/uploads"/>
@@ -89,9 +89,9 @@ public class AbstractChannelsTest extends TestCase {
         </bean>*/
         attachmentManager.setDirectory( new File( "target/channels-1.0-SNAPSHOT/uploads" ) );
         attachmentManager.setPath( "uploads" );
-        project.setAttachmentManager( attachmentManager );
+        app.setAttachmentManager( attachmentManager );
         // Set default scenario
-        // project.getScenarioDao().addScenario(new FireScenario());
+        // app.getScenarioDao().addScenario(new FireScenario());
         // Set flow diagram
         GraphvizRenderer<Node, Flow> graphRenderer = new GraphvizRenderer<Node, Flow>();
         graphRenderer.setDotPath( "/usr/bin" );
@@ -101,7 +101,7 @@ public class AbstractChannelsTest extends TestCase {
         diagramFactory.setGraphRenderer( graphRenderer );
         diagramFactory.setImageDirectory( "src/site/resources/images" );
         diagramFactory.setDqo( dqo );
-        project.setDiagramFactory( diagramFactory );
+        app.setDiagramFactory( diagramFactory );
         // Set scenario analyst
         // Initialize analyst
         DefaultAnalyst analyst = new DefaultAnalyst();
@@ -133,9 +133,9 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new FlowViolatesPolicy() );
         detectors.add( new UnconfirmedJob() );
         analyst.setIssueDetectors( detectors );
-        project.setAnalyst( analyst );
+        app.setAnalyst( analyst );
 
-        tester = new WicketTester( project );
+        tester = new WicketTester( app );
         tester.setParametersForNextRequest( new HashMap<String, String[]>() );
     }
 

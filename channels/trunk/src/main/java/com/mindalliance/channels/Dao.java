@@ -118,7 +118,7 @@ public interface Dao {
     void onAfterCommand( Command command );
 
     /**
-     * Load persisted project data, if any.
+     * Load persisted data, if any.
      */
     void load();
 

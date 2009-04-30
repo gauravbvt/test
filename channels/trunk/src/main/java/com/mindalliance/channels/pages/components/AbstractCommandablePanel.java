@@ -7,7 +7,7 @@ import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.Identifiable;
 
 import java.util.Set;
@@ -46,7 +46,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
     }
 
     protected Commander getCommander() {
-        return Project.getProject().getCommander();
+        return Channels.instance().getCommander();
     }
 
     /**
@@ -55,7 +55,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      * @return a lock manager
      */
     protected LockManager getLockManager() {
-        return Project.getProject().getLockManager();
+        return Channels.instance().getLockManager();
     }
 
     /**

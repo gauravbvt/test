@@ -16,8 +16,8 @@ import com.mindalliance.channels.query.DataQueryObjectImpl;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.pages.ProjectPage;
+import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.pages.ChannelsPage;
 import com.mindalliance.channels.pages.TestScenarioPage;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.util.tester.FormTester;
@@ -40,7 +40,7 @@ public class TestPartPanel extends AbstractChannelsTest {
     private Part part;
     private WicketTester tester;
     private Scenario scenario;
-    private Project project;
+    private Channels channelsApp;
 
     public TestPartPanel() {
     }
@@ -48,13 +48,13 @@ public class TestPartPanel extends AbstractChannelsTest {
     @Override
     protected void setUp() {
         super.setUp();
-        project = new Project();
+        channelsApp = new Channels();
         DataQueryObjectImpl dqo = new DataQueryObjectImpl();
 
         dqo.setAddingSamples( true );
         dqo.setDao( new Memory() );
-        project.setDqo( dqo );
-        project.setAttachmentManager( new BitBucket() );
+        channelsApp.setDqo( dqo );
+        channelsApp.setAttachmentManager( new BitBucket() );
         DiagramFactory dm = createMock( DiagramFactory.class );
          Diagram fd = createMock(  Diagram.class);
          expect( fd.makeImageMap( ) ).andReturn( "" ).anyTimes();
@@ -62,7 +62,7 @@ public class TestPartPanel extends AbstractChannelsTest {
                      .andReturn( fd ).anyTimes();
          replay( dm );
          replay( fd );
-         project.setDiagramFactory( dm );
+         channelsApp.setDiagramFactory( dm );
 
         Analyst sa = createNiceMock( Analyst.class );
         expect( sa.getIssuesSummary( (ModelObject) anyObject(), anyBoolean()) ).andReturn( "" ).anyTimes();
@@ -71,13 +71,13 @@ public class TestPartPanel extends AbstractChannelsTest {
         expect( sa.findIssues( (ModelObject) anyObject(), anyBoolean() ))
                 .andReturn( new ArrayList<Issue>().iterator() ).anyTimes();
         replay( sa );
-        project.setAnalyst( sa );
+        channelsApp.setAnalyst( sa );
 
-        tester = new WicketTester( project );
+        tester = new WicketTester( channelsApp );
         tester.setParametersForNextRequest( new HashMap<String,String[]>() );
 
         // Find first part in scenario
-        scenario = project.getDqo().getDefaultScenario();
+        scenario = channelsApp.getDqo().getDefaultScenario();
         Iterator<Node> nodes = scenario.nodes();
         part = null;
         while ( part == null && nodes.hasNext() ) {
@@ -260,13 +260,13 @@ public class TestPartPanel extends AbstractChannelsTest {
      * @throws java.io.IOException if fails
      */
     public void testForm() throws IOException {
-        ProjectPage page = new ProjectPage( scenario, part );
+        ChannelsPage page = new ChannelsPage( scenario, part );
         tester.startPage( page );
-        tester.assertRenderedPage( ProjectPage.class );
+        tester.assertRenderedPage( ChannelsPage.class );
         tester.assertNoErrorMessage();
 
         FormTester ft = tester.newFormTester( "big-form" );
-        TestScenarioPage.setFiles( ft, project );
+        TestScenarioPage.setFiles( ft, channelsApp );
         ft.setValue( "description", "some description" );
         ft.setValue( "specialty:task", "multitasking" );
         ft.setValue( "specialty:actor", "Bob" );
@@ -288,6 +288,6 @@ public class TestPartPanel extends AbstractChannelsTest {
         assertEquals( "World", part.getJurisdiction().getName() );
         assertNotNull( part.getLocation() );
         assertEquals( "Somewhere", part.getLocation().getName() );
-        TestScenarioPage.checkFiles( project );
+        TestScenarioPage.checkFiles( channelsApp );
     }
 }

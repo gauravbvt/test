@@ -6,7 +6,7 @@ import com.mindalliance.channels.Place;
 import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.Job;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -44,7 +44,7 @@ public class OrganizationConverter extends EntityConverter {
      * {@inheritDoc}
      */
     ModelObject findOrMakeEntity( String name ) {
-        return Project.dqo().findOrCreate( Organization.class, name );
+        return Channels.dqo().findOrCreate( Organization.class, name );
     }
 
     /**
@@ -98,10 +98,10 @@ public class OrganizationConverter extends EntityConverter {
             org.setActorsRequired( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals( "parent" ) ) {
             org = (Organization) entity;
-            org.setParent( Project.dqo().findOrCreate( Organization.class, reader.getValue() ) );
+            org.setParent( Channels.dqo().findOrCreate( Organization.class, reader.getValue() ) );
         } else if ( nodeName.equals( "location" ) ) {
             org = (Organization) entity;
-            org.setLocation( Project.dqo().findOrCreate( Place.class, reader.getValue() ) );
+            org.setLocation( Channels.dqo().findOrCreate( Place.class, reader.getValue() ) );
         } else if ( nodeName.equals( "channel" ) ) {
             Channel channel = (Channel) context.convertAnother( scenario, Channel.class );
             org.addChannel( channel );

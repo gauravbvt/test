@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.attachments.AttachmentManager;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -96,8 +96,8 @@ public class AttachmentPanel extends Panel {
     }
 
     private AttachmentManager getAttachmentManager() {
-        Project project = (Project) getApplication();
-        return project.getAttachmentManager();
+        Channels app = (Channels) getApplication();
+        return app.getAttachmentManager();
     }
 
     public FileUpload getUpload() {
@@ -147,7 +147,7 @@ public class AttachmentPanel extends Panel {
             this.markedForDeletion = markedForDeletion;
             if ( markedForDeletion ) {
                 ModelObject object = (ModelObject) getDefaultModelObject();
-                Project.getProject().getAttachmentManager().detach( object, attachment );
+                Channels.instance().getAttachmentManager().detach( object, attachment );
             }
         }
 

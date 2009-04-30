@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.Deletable;
 import com.mindalliance.channels.ResourceSpec;
 import com.mindalliance.channels.pages.ProfileLink;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
@@ -127,7 +127,7 @@ public class ResourceSpecsPanel extends AbstractTablePanel {
         public void setMarkedForDeletion( boolean delete ) {
             markedForDeletion = delete;
             if ( delete ) {
-                Project.dqo().remove( resourceSpec );
+                Channels.dqo().remove( resourceSpec );
             }
         }
 

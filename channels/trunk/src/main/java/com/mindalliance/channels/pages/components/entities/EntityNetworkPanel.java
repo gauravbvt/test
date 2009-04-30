@@ -6,7 +6,7 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Part;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.diagrams.EntityNetworkDiagramPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -220,7 +220,7 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
     public void changed( Change change ) {
         if ( change.isSelected() ) {
             Identifiable changed = change.getSubject();
-            if ( changed instanceof Project ) {
+            if ( changed instanceof Channels ) {
                 selectedEntityRel = null;
             } else if ( changed instanceof ModelObject
                     && ((ModelObject)changed).isEntity()) {
@@ -234,7 +234,7 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
             } else if ( changed instanceof EntityRelationship ) {
                 selectedEntityRel = (EntityRelationship<T>) changed;
             }
-            // Don't percolate change on selection of project, entity or entity relationship.
+            // Don't percolate change on selection of app, entity or entity relationship.
             else {
                 super.changed( change );
             }

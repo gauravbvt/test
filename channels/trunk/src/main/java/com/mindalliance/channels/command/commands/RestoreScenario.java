@@ -8,13 +8,11 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.export.Importer;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Restore a delete scenario.
@@ -41,7 +39,7 @@ public class RestoreScenario extends AbstractCommand {
      */
     public Change execute( Commander commander ) throws CommandException {
         DataQueryObject dqo = commander.getDqo();
-        Importer importer = Project.getProject().getImporter();
+        Importer importer = Channels.instance().getImporter();
         String xml = (String) get( "xml" );
         if ( xml != null ) {
             try {

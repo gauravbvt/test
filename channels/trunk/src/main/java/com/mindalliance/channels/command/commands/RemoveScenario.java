@@ -9,7 +9,7 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.export.Exporter;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -52,7 +52,7 @@ public class RemoveScenario extends AbstractCommand {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Exporter exporter = Project.getProject().getExporter();
+            Exporter exporter = Channels.instance().getExporter();
             exporter.exportScenario( scenario, bos );
             set( "xml", bos.toString() );
             if ( dqo.list( Scenario.class ).size() == 1 ) {

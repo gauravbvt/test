@@ -9,7 +9,7 @@ import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.Connector;
 import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.export.ConnectionSpecification;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -29,7 +29,7 @@ public abstract class AbstractChannelsConverter implements Converter {
      * @return a data query object
      */
     protected DataQueryObject getDqo() {
-        return Project.getProject().getDqo();
+        return Channels.instance().getDqo();
     }
 
     /**

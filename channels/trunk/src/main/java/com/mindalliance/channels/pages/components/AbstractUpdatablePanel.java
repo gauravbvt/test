@@ -6,10 +6,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.Component;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Application;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.pages.Project;
-import com.mindalliance.channels.pages.ProjectPage;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.Identifiable;
 import com.mindalliance.channels.DataQueryObject;
@@ -60,7 +58,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @return a data query object
      */
     protected DataQueryObject getDqo() {
-        return Project.getProject().getDqo();
+        return Channels.instance().getDqo();
     }
 
     /**

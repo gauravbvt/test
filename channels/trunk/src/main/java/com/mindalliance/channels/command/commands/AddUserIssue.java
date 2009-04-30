@@ -9,7 +9,7 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 
 import java.util.Map;
 
@@ -48,7 +48,7 @@ public class AddUserIssue extends AbstractCommand {
                 ModelObject.class,
                 (Long) get( "modelObject" ) ) );
         Map<String, Object> state = (Map<String, Object>) get( "state" );
-        issue.setReportedBy( Project.getUserName() );
+        issue.setReportedBy( Channels.getUserName() );
         if ( state != null ) {
             CommandUtils.initialize( issue, state );
         }

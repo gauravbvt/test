@@ -10,7 +10,7 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.Actor;
 import com.mindalliance.channels.Role;
 import com.mindalliance.channels.Organization;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.apache.commons.lang.StringUtils;
@@ -45,7 +45,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
     }
 
     public Object getContext() {
-        return Project.getProject();
+        return Channels.instance();
     }
 
     public URLProvider getURLProvider() {

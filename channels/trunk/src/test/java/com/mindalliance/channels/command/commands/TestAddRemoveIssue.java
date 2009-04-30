@@ -27,9 +27,9 @@ public class TestAddRemoveIssue extends AbstractChannelsTest {
 
     protected void setUp() {
         super.setUp();
-        dqo = project.getDqo();
-        commander = project.getCommander();
-        analyst = project.getAnalyst();
+        dqo = app.getDqo();
+        commander = app.getCommander();
+        analyst = app.getAnalyst();
         scenario = dqo.createScenario();
     }
 

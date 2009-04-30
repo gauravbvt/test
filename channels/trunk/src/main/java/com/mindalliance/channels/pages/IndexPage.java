@@ -36,7 +36,7 @@ public class IndexPage extends WebPage {
     public IndexPage( PageParameters parameters ) {
         super( parameters );
 
-        final DataQueryObject dqo = ( (Project) getApplication() ).getDqo();
+        final DataQueryObject dqo = ( (Channels) getApplication() ).getDqo();
         resourceSpecs = dqo.findAllResourceSpecs();
         init( dqo );
     }

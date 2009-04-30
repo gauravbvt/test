@@ -255,7 +255,7 @@ public interface DataQueryObject {
     List<String> findAllJobTitles();
 
     /**
-     * Find all tasks in a project, sorted.
+     * Find all tasks in a plan, sorted.
      *
      * @return a list of strings
      */
@@ -287,7 +287,7 @@ public interface DataQueryObject {
     List<Role> findRolesIn( Organization organization );
 
     /**
-     * Find all organization in project, including the UNKNOWN organization, if need be.
+     * Find all organizations in plan, including the UNKNOWN organization, if need be.
      *
      * @return a sorted list of organizations
      */
@@ -298,7 +298,7 @@ public interface DataQueryObject {
      *
      * @param part the part
      * @param flow a flow of the part
-     * @return list of actors in project that applies
+     * @return list of actors in plan that applies
      */
     List<Actor> findRelevantActors( Part part, Flow flow );
 

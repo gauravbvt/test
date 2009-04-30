@@ -4,7 +4,7 @@ import com.mindalliance.channels.ModelObject;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.UserIssue;
 import com.mindalliance.channels.Issue;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -72,7 +72,7 @@ public class UserIssueConverter extends AbstractChannelsConverter {
             String idString = reader.getAttribute( "about" );
             Long id = idMap.get( idString );
             if ( id != null ) {
-                ModelObject about = Project.dqo().find( ModelObject.class, id );
+                ModelObject about = Channels.dqo().find( ModelObject.class, id );
                 issue = new UserIssue( about );
                 while ( reader.hasMoreChildren() ) {
                     reader.moveDown();
@@ -88,7 +88,7 @@ public class UserIssueConverter extends AbstractChannelsConverter {
                     }
                     reader.moveUp();
                 }
-                Project.dqo().add( issue );
+                Channels.dqo().add( issue );
                 idMap.put( issueId, issue.getId() );                
             } else {
                 LOG.warn( "Issue's model object not found at " + id );

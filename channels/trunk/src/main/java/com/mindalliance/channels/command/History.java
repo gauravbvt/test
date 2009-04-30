@@ -1,6 +1,6 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,7 +129,7 @@ public class History {
      * @return a memento
      */
     public Memento getUndo() {
-        String userName = Project.getUserName();
+        String userName = Channels.getUserName();
         Memento memento = findLastBy( done, userName );
         if ( memento != null && !hasConflict( memento ) )
             return memento;
@@ -143,7 +143,7 @@ public class History {
      * @return a memento
      */
     public Memento getRedo() {
-        String userName = Project.getUserName();
+        String userName = Channels.getUserName();
         Memento memento = findLastBy( undone, userName );
         if ( memento != null && !hasConflict( memento ) )
             return memento;
@@ -175,7 +175,7 @@ public class History {
         return new FilterIterator( done.iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {
                 Memento memento = (Memento) obj;
-                return !memento.getUserName().equals( Project.getUserName() )
+                return !memento.getUserName().equals( Channels.getUserName() )
                         && memento.getTimestamp() >= timestamp;
             }
         } );

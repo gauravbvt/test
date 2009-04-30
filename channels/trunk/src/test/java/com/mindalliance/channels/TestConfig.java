@@ -1,6 +1,6 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import org.springframework.context.ApplicationContext;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.ContextLoader;
@@ -20,7 +20,7 @@ public class TestConfig extends AbstractChannelsTest {
                 "WEB-INF/applicationContext.xml WEB-INF/hibernateConfig.xml" );           // NON-NLS
         ApplicationContext ctx = new ContextLoader().initWebApplicationContext( context );
 
-        Project p = (Project) ctx.getBean( "wicketApplication" );                         // NON-NLS
+        Channels p = (Channels) ctx.getBean( "wicketApplication" );                         // NON-NLS
         assertNotNull( p );
     }
 

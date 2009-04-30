@@ -26,7 +26,7 @@ import com.mindalliance.channels.dao.EvacuationScenario;
 import com.mindalliance.channels.dao.FireScenario;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.export.ConnectionSpecification;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.util.Play;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.commons.collections.Predicate;
@@ -280,7 +280,7 @@ public class DataQueryObjectImpl implements DataQueryObject {
                         return name.endsWith( ".xml" );
                     }
                 } );
-                Importer importer = Project.getProject().getImporter();
+                Importer importer = Channels.instance().getImporter();
                 Map<String, Long> idMap = new HashMap<String, Long>();
                 Map<Connector, ConnectionSpecification> proxyConnectors =
                         new HashMap<Connector, ConnectionSpecification>();
@@ -471,7 +471,7 @@ public class DataQueryObjectImpl implements DataQueryObject {
      * {@inheritDoc}
      */
     public List<Issue> findAllIssuesFor( ResourceSpec resourceSpec, boolean specific ) {
-        return Project.getProject().getAnalyst().findAllIssuesFor(
+        return Channels.instance().getAnalyst().findAllIssuesFor(
                 resourceSpec,
                 specific );
     }
@@ -584,7 +584,7 @@ public class DataQueryObjectImpl implements DataQueryObject {
     public List<Actor> findAllActors( ResourceSpec resourceSpec ) {
         Set<Actor> actors = new HashSet<Actor>();
         // If the resource spec is anyone, then return no actor,
-        // else it would return every actor known to the project
+        // else it would return every actor known to the app
         if ( !resourceSpec.isAnyone() ) {
             Iterator<ResourceSpec> actorResourceSpecs = new FilterIterator(
                     findAllResourceSpecs().iterator(),

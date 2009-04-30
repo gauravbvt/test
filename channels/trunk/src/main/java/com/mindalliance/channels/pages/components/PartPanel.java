@@ -11,7 +11,7 @@ import com.mindalliance.channels.Scenario;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -179,7 +179,7 @@ public class PartPanel extends AbstractCommandablePanel {
      * @param property  the property of concern. If null, get issues of object
      */
     protected void addIssues( FormComponent<?> component, ModelObject object, String property ) {
-        Analyst analyst = ( (Project) getApplication() ).getAnalyst();
+        Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
         String summary = property == null ?
                 analyst.getIssuesSummary( object, false ) :
                 analyst.getIssuesSummary( object, property );

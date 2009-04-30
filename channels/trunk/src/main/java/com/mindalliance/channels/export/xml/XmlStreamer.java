@@ -22,7 +22,7 @@ import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.export.Exporter;
 import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.export.ConnectionSpecification;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import com.thoughtworks.xstream.XStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +84,7 @@ public class XmlStreamer implements Importer, Exporter {
         private void configure() {
             xstream.alias( "command", AbstractCommand.class );
             xstream.alias( "journal", Journal.class );
-            xstream.alias( "project", Project.class );
+            xstream.alias( "app", Channels.class );
             xstream.alias( "actor", Actor.class );
             xstream.aliasType( "flow", Flow.class );
             xstream.alias( "jurisdiction", Place.class );
@@ -97,7 +97,7 @@ public class XmlStreamer implements Importer, Exporter {
             xstream.alias( "scenario", Scenario.class );
             xstream.alias( "channel", Channel.class );
             xstream.alias( "job", Job.class );
-            xstream.registerConverter( new ProjectConverter() );
+            xstream.registerConverter( new PlanConverter() );
             xstream.registerConverter( new JournalConverter() );
             xstream.registerConverter( new CommandConverter() );
             xstream.registerConverter( new ScenarioConverter() );
@@ -189,10 +189,10 @@ public class XmlStreamer implements Importer, Exporter {
     /**
      * {@inheritDoc}
      */
-    public void exportProject( OutputStream stream ) throws IOException {
+    public void exportAll( OutputStream stream ) throws IOException {
         ObjectOutputStream out = configuredXStream.get()
                 .createObjectOutputStream( stream, "export" );
-        out.writeObject( Project.getProject() );
+        out.writeObject( Channels.instance() );
         out.close();
     }
 
@@ -200,7 +200,7 @@ public class XmlStreamer implements Importer, Exporter {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    public Map<Long, Long> importProject( FileInputStream stream ) throws IOException {
+    public Map<Long, Long> importAll( FileInputStream stream ) throws IOException {
         Map<Long, Long> idMap;
         ObjectInputStream in = configuredXStream.get().createObjectInputStream( stream );
         try {
@@ -214,7 +214,7 @@ public class XmlStreamer implements Importer, Exporter {
                 idMap.put( Long.valueOf( key ), map.get( key ) );
             }
         } catch ( ClassNotFoundException e ) {
-            throw new IOException( "Failed to import project", e );
+            throw new IOException( "Failed to import app", e );
         }
         return idMap;
     }
@@ -369,7 +369,7 @@ public class XmlStreamer implements Importer, Exporter {
      * @return a data query object
      */
     protected DataQueryObject getDqo() {
-        return Project.getProject().getDqo();
+        return Channels.instance().getDqo();
     }
 
 

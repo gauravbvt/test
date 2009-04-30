@@ -24,8 +24,8 @@ public class TestAddRemoveRestoreScenario extends AbstractChannelsTest {
 
     protected void setUp() {
         super.setUp();
-        dqo = project.getDqo();
-        commander = project.getCommander();
+        dqo = app.getDqo();
+        commander = app.getCommander();
     }
 
     protected void tearDown() {

@@ -24,7 +24,7 @@
     </bean>
 
     <!-- setup wicket application -->
-    <bean id="wicketApplication" class="com.mindalliance.channels.pages.Project">
+    <bean id="wicketApplication" class="com.mindalliance.channels.pages.Channels">
         <property name="uri" value="mindalliance.com/channels/demo"/>
         <property name="dqo" ref="dqo"/>
         <property name="attachmentManager" ref="attachmentManager"/>
@@ -33,7 +33,7 @@
         <property name="analyst" ref="analyst"/>
         <property name="commander" ref="commander"/>
         <property name="lockManager" ref="lockManager"/>
-        <property name="projectName" value="Emergency Communications Plan"/>
+        <property name="planName" value="Emergency Communications Plan"/>
         <property name="client" value="Strategic Content Imaging, Inc."/>
         <property name="description" value="Communications planning for responding and recovering from business interruptions due fire and power outage."/>
     </bean>

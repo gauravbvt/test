@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.reports;
 import com.mindalliance.channels.Channel;
 import com.mindalliance.channels.Medium;
 import com.mindalliance.channels.ResourceSpec;
-import com.mindalliance.channels.pages.Project;
+import com.mindalliance.channels.pages.Channels;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -82,8 +82,8 @@ public class ChannelsReportPanel extends Panel {
     private List<Channel> getChannels() {
         List<Channel> result = new ArrayList<Channel>();
 
-        Project project = (Project) getApplication();
-        List<Channel> manualChannels = project.getDqo().findAllChannelsFor( spec );
+        Channels app = (Channels) getApplication();
+        List<Channel> manualChannels = app.getDqo().findAllChannelsFor( spec );
 
         if ( unicasts == null )
             result.addAll( manualChannels );
