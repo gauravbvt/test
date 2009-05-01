@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.png;
 
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.graph.Diagram;
@@ -33,11 +33,11 @@ public class FlowMapPage extends PngWebPage {
     public FlowMapPage( PageParameters parameters ) {
         super( parameters );
 
-        DataQueryObject dqo = getDqo();
-        scenario = PlanPage.findScenario( dqo, parameters );
+        QueryService queryService = getQueryService();
+        scenario = PlanPage.findScenario( queryService, parameters );
 
         if ( scenario == null )
-            redirectTo( dqo.getDefaultScenario() );
+            redirectTo( queryService.getDefaultScenario() );
 
         else {
             if ( parameters.containsKey( "node" ) && parameters.getString( "node" ).equals( "NONE" ) ) {

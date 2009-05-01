@@ -4,7 +4,7 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ModelObject;
@@ -24,12 +24,12 @@ import java.util.HashMap;
  */
 public abstract class AbstractChannelsConverter implements Converter {
     /**
-     * Get Data Query Object
+     * Get query service
      *
-     * @return a data query object
+     * @return a query service
      */
-    protected DataQueryObject getDqo() {
-        return Channels.instance().getDqo();
+    protected QueryService getQueryService() {
+        return Channels.instance().getQueryService();
     }
 
     /**

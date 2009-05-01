@@ -2,7 +2,7 @@ package com.mindalliance.channels;
 
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.model.ModelObject;
@@ -112,9 +112,9 @@ public interface DiagramFactory<Vertex, Edge> {
     String getImageDirectory();
 
     /**
-     * Get data query object.
-     * @return a data query object
+     * Get query service.
+     * @return a query service
      */
-    DataQueryObject getDqo();
+    QueryService getQueryService();
 
 }

@@ -21,7 +21,7 @@ public class TestUpdatePlanObject extends AbstractChannelsTest {
     protected void setUp() {
         super.setUp();
         commander = app.getCommander();
-        scenario = app.getDqo().getDefaultScenario();
+        scenario = app.getQueryService().getDefaultScenario();
         command = new UpdatePlanObject( scenario, "description", "ipso lorem etc." );
         commander.reset();
     }

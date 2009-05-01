@@ -1,7 +1,7 @@
 package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.graph.GraphBuilder;
 
 import java.util.List;
@@ -22,11 +22,11 @@ public class PlanMapGraphBuilder implements GraphBuilder<Scenario, ScenarioRelat
 
     private List<Scenario> scenarios;
 
-    private DataQueryObject dqo;
+    private QueryService queryService;
 
-    public PlanMapGraphBuilder( List<Scenario> scenarios, DataQueryObject dqo ) {
+    public PlanMapGraphBuilder( List<Scenario> scenarios, QueryService queryService ) {
         this.scenarios = scenarios;
-        this.dqo = dqo;
+        this.queryService = queryService;
     }
 
     /**
@@ -55,7 +55,7 @@ public class PlanMapGraphBuilder implements GraphBuilder<Scenario, ScenarioRelat
         for ( Scenario scenario : scenarios ) {
             for ( Scenario other : scenarios ) {
                 if ( scenario != other ) {
-                    ScenarioRelationship scRel = dqo.findScenarioRelationship( scenario, other );
+                    ScenarioRelationship scRel = queryService.findScenarioRelationship( scenario, other );
                     if ( scRel != null ) {
                         digraph.addEdge( other, scenario, scRel );
                     }

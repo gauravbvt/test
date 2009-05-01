@@ -1,7 +1,7 @@
 package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.graph.GraphBuilder;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
@@ -22,12 +22,15 @@ public class EntityNetworkGraphBuilder implements GraphBuilder<ModelObject, Enti
 
     private ModelObject entity;
     private List<? extends ModelObject> entities;
-    private DataQueryObject dqo;
+    private QueryService queryService;
 
-    public EntityNetworkGraphBuilder( ModelObject entity, List<? extends ModelObject> entities, DataQueryObject dqo ) {
+    public EntityNetworkGraphBuilder(
+            ModelObject entity,
+            List<? extends ModelObject> entities,
+            QueryService queryService ) {
         this.entity = entity;
         this.entities = entities;
-        this.dqo = dqo;
+        this.queryService = queryService;
     }
 
     public DirectedGraph<ModelObject, EntityRelationship> buildDirectedGraph() {
@@ -35,7 +38,9 @@ public class EntityNetworkGraphBuilder implements GraphBuilder<ModelObject, Enti
                 new DirectedMultigraph<ModelObject, EntityRelationship>(
                         new EdgeFactory<ModelObject, EntityRelationship>() {
 
-                            public EntityRelationship createEdge( ModelObject entity, ModelObject otherEntity ) {
+                            public EntityRelationship createEdge(
+                                    ModelObject entity,
+                                    ModelObject otherEntity ) {
                                 return new EntityRelationship( entity, otherEntity );
                             }
 
@@ -52,23 +57,23 @@ public class EntityNetworkGraphBuilder implements GraphBuilder<ModelObject, Enti
         List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
         for ( ModelObject otherEntity : entities ) {
             if ( otherEntity != entity ) {
-                EntityRelationship sendRel = dqo.findEntityRelationship( entity, otherEntity );
+                EntityRelationship sendRel = queryService.findEntityRelationship( entity, otherEntity );
                 if ( sendRel != null ) {
                     rels.add( sendRel );
                 }
-                EntityRelationship receiveRel = dqo.findEntityRelationship( otherEntity, entity );
+                EntityRelationship receiveRel = queryService.findEntityRelationship( otherEntity, entity );
                 if ( receiveRel != null ) {
                     rels.add( receiveRel );
                 }
             }
         }
         for ( EntityRelationship entityRel : rels ) {
-            digraph.addVertex( entityRel.getToEntity( dqo ) );
-            digraph.addVertex( entityRel.getFromEntity( dqo ) );
+            digraph.addVertex( entityRel.getToEntity( queryService ) );
+            digraph.addVertex( entityRel.getFromEntity( queryService ) );
         }
         for ( EntityRelationship entityRel : rels ) {
             if ( entityRel != null ) {
-                digraph.addEdge( entityRel.getFromEntity( dqo ), entityRel.getToEntity( dqo ), entityRel );
+                digraph.addEdge( entityRel.getFromEntity( queryService ), entityRel.getToEntity( queryService ), entityRel );
             }
         }
     }

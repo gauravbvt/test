@@ -7,7 +7,7 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.NotFoundException;
@@ -282,13 +282,16 @@ public final class CommandUtils {
         if ( isOutcome ) {
             Node source = flow.getSource();
             Scenario scenario = flow.getSource().getScenario();
-            DataQueryObject dqo = scenario.getDqo();
-            duplicate = dqo.connect( source, dqo.createConnector( scenario ), flow.getName() );
+            QueryService queryService = scenario.getQueryService();
+            duplicate = queryService.connect( source, queryService.createConnector( scenario ), flow.getName() );
         } else {
             Node target = flow.getTarget();
             Scenario scenario = target.getScenario();
-            DataQueryObject dqo = scenario.getDqo();
-            duplicate = dqo.connect( dqo.createConnector( scenario ), target, flow.getName() );
+            QueryService queryService = scenario.getQueryService();
+            duplicate = queryService.connect(
+                    queryService.createConnector( scenario ),
+                    target,
+                    flow.getName() );
         }
         duplicate.initFrom( flow );
         return duplicate;
@@ -312,17 +315,20 @@ public final class CommandUtils {
      * Resolve a node from an id.
      * @param id a long
      * @param scenario a scenario in context
-     * @param dqo a data query object
+     * @param queryService a query service
      * @return a node
      * @throws CommandException if not found
      */
-    public static Node resolveNode( Long id, Scenario scenario, DataQueryObject dqo ) throws CommandException {
+    public static Node resolveNode(
+            Long id,
+            Scenario scenario,
+            QueryService queryService ) throws CommandException {
         Node node;
         // null id represents a local connector
         if ( id != null ) {
             ModelObject mo;
             try {
-                mo = dqo.find( ModelObject.class, id );
+                mo = queryService.find( ModelObject.class, id );
             } catch ( NotFoundException e ) {
                 throw new CommandException( "You need to refresh.", e );
             }
@@ -338,7 +344,7 @@ public final class CommandUtils {
             }
 
         } else {
-            node = dqo.createConnector( scenario );
+            node = queryService.createConnector( scenario );
         }
         return node;
     }

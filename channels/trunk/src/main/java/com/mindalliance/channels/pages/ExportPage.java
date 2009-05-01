@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Exporter;
@@ -28,27 +28,27 @@ public class ExportPage extends WebPage {
     public ExportPage( PageParameters parameters ) {
         super( parameters );
 
-        final DataQueryObject dqo = getDqo();
+        final QueryService queryService = getQueryService();
         if ( parameters.containsKey( PlanPage.SCENARIO_PARM ) )
             try {
-                scenario = dqo.find( Scenario.class,
+                scenario = queryService.find( Scenario.class,
                         parameters.getLong( PlanPage.SCENARIO_PARM ) );
 
             } catch ( StringValueConversionException ignored ) {
                 LOG.warn( "Bad scenario specified. Exporting default scenario.", ignored );
-                scenario = dqo.getDefaultScenario();
+                scenario = queryService.getDefaultScenario();
             } catch ( NotFoundException ignored ) {
                 LOG.warn( "Unknown scenario specified. Exporting default scenario.", ignored );
-                scenario = dqo.getDefaultScenario();
+                scenario = queryService.getDefaultScenario();
             }
         else {
             LOG.warn( "No scenario specified. Exporting default scenario." );
-            scenario = dqo.getDefaultScenario();
+            scenario = queryService.getDefaultScenario();
         }
     }
 
-    private DataQueryObject getDqo() {
-        return ( (Channels) getApplication() ).getDqo();
+    private QueryService getQueryService() {
+        return ( (Channels) getApplication() ).getQueryService();
     }
 
     private Exporter getExporter() {

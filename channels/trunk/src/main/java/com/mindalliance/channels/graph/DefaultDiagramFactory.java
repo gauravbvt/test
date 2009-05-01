@@ -2,7 +2,7 @@ package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
@@ -34,9 +34,9 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
      */
     private String imageDirectory;
     /**
-     * Data query object.
+     * Query service.
      */
-    private DataQueryObject dqo;
+    private QueryService queryService;
 
     public DefaultDiagramFactory() {
     }
@@ -60,12 +60,12 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
         this.imageDirectory = imageDirectory;
     }
 
-    public DataQueryObject getDqo() {
-        return dqo;
+    public QueryService getQueryService() {
+        return queryService;
     }
 
-    public void setDqo( DataQueryObject dqo ) {
-        this.dqo = dqo;
+    public void setQueryService( QueryService queryService ) {
+        this.queryService = queryService;
     }
 
     /**

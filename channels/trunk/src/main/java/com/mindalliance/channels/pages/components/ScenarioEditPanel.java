@@ -114,7 +114,7 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
     }
 
     private void addLocationField() {
-        final List<String> choices = getDqo().findAllNames( Place.class ) ;
+        final List<String> choices = getQueryService().findAllNames( Place.class ) ;
         AutoCompleteTextField<String> locationField = new AutoCompleteTextField<String>(
                 "location",
                 new PropertyModel<String>( this, "location" ) ) {
@@ -245,7 +245,7 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
             newPlace = null;
         else {
             if ( oldPlace == null || !isSame( name, oldName ) )
-                newPlace = getDqo().findOrCreate( Place.class, name );
+                newPlace = getQueryService().findOrCreate( Place.class, name );
         }
         doCommand( new UpdatePlanObject( getScenario(), "location", newPlace ) );
         getCommander().cleanup( Place.class, oldName );

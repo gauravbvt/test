@@ -1,7 +1,7 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.dao.Memory;
-import com.mindalliance.channels.query.DataQueryObjectImpl;
+import com.mindalliance.channels.query.DefaultQueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Flow;
@@ -25,7 +25,7 @@ public class TestNode extends TestCase {
     private Part p1;
     private Part p2;
     private Scenario scenario;
-    private DataQueryObjectImpl dqo;
+    private DefaultQueryService queryService;
 
     public TestNode() {
     }
@@ -33,18 +33,18 @@ public class TestNode extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        dqo = new DataQueryObjectImpl( new Memory() );
-        scenario = dqo.createScenario();
-        p1 = dqo.createPart( scenario );
-            p1.setActor( dqo.findOrCreate( Actor.class, "p1" ) );
-        p2 = dqo.createPart( scenario );
-            p2.setActor( dqo.findOrCreate( Actor.class, "p2" ) );
+        queryService = new DefaultQueryService( new Memory() );
+        scenario = queryService.createScenario();
+        p1 = queryService.createPart( scenario );
+            p1.setActor( queryService.findOrCreate( Actor.class, "p1" ) );
+        p2 = queryService.createPart( scenario );
+            p2.setActor( queryService.findOrCreate( Actor.class, "p2" ) );
 
-        f1 = p1.createOutcome( dqo );
+        f1 = p1.createOutcome( queryService );
                 f1.setName( "A" );
-        f2 = p2.createRequirement( dqo );
+        f2 = p2.createRequirement( queryService );
                 f2.setName( "B" );
-        f3 = dqo.connect( p1, p2, "message" );
+        f3 = queryService.connect( p1, p2, "message" );
     }
 
     public void testSetOutcomes() {
@@ -102,10 +102,10 @@ public class TestNode extends TestCase {
     }
 
     public void testIsness() {
-        Part part = dqo.createPart( scenario );
+        Part part = queryService.createPart( scenario );
         assertTrue( part.isPart() );
         assertFalse( part.isConnector() );
-        Connector c = dqo.createConnector( scenario );
+        Connector c = queryService.createConnector( scenario );
         assertFalse( c.isPart() );
         assertTrue( c.isConnector() );
     }

@@ -62,7 +62,7 @@ public class ScenarioCausesPanel extends AbstractTablePanel<ScenarioRelationship
     private List<Causation> getCausations() {
         List<Causation> causations = new ArrayList<Causation>();
         for ( ScenarioRelationship scRel : scRels.getObject() ) {
-            Scenario caused = scRel.getToScenario( getDqo() );
+            Scenario caused = scRel.getToScenario( getQueryService() );
             for ( Part part : scRel.getInitiators() ) {
                 causations.add( new Causation( part, caused ) );
             }

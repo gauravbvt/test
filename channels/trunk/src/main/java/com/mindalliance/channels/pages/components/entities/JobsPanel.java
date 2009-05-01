@@ -146,7 +146,7 @@ public class JobsPanel extends AbstractCommandablePanel {
 
     private void addTitleCell( final ListItem<JobWrapper> item ) {
         final JobWrapper jobWrapper = item.getModel().getObject();
-        final List<String> choices = getDqo().findAllJobTitles();
+        final List<String> choices = getQueryService().findAllJobTitles();
         TextField<String> titleField = new AutoCompleteTextField<String>(
                 "title",
                 new PropertyModel<String>( jobWrapper, "title" ) ) {
@@ -197,7 +197,7 @@ public class JobsPanel extends AbstractCommandablePanel {
             jobWrappers.add( new JobWrapper( job, true ) );
         }
         // Unconfirmed jobs
-        for ( Job job : getDqo().findUnconfirmedJobs( getOrganization() ) ) {
+        for ( Job job : getQueryService().findUnconfirmedJobs( getOrganization() ) ) {
             jobWrappers.add( new JobWrapper( job, false ) );
         }
         Collections.sort( jobWrappers, new Comparator<JobWrapper>() {
@@ -299,7 +299,7 @@ public class JobsPanel extends AbstractCommandablePanel {
         }
 
         private String getNormalizedActorName() {
-            return getDqo().findOrCreate( Actor.class, getActorName() ).normalize();
+            return getQueryService().findOrCreate( Actor.class, getActorName() ).normalize();
         }
 
         public String getActorName() {
@@ -310,7 +310,7 @@ public class JobsPanel extends AbstractCommandablePanel {
             String oldName = getActorName();
             if ( name != null && !isSame( name, oldName ) ) {
                 if ( markedForCreation ) {
-                    job.setActor( getDqo().findOrCreate(  Actor.class , name ) );
+                    job.setActor( getQueryService().findOrCreate(  Actor.class , name ) );
                 } else {
                     int index = getOrganization().getJobs().indexOf( job );
                     if ( index >= 0 ) {
@@ -335,7 +335,7 @@ public class JobsPanel extends AbstractCommandablePanel {
             String oldName = getRoleName();
             if ( name != null && !isSame( name, oldName ) ) {
                 if ( markedForCreation ) {
-                    job.setRole( getDqo().findOrCreate( Role.class, name ) );
+                    job.setRole( getQueryService().findOrCreate( Role.class, name ) );
                 } else {
                     int index = getOrganization().getJobs().indexOf( job );
                     if ( index >= 0 ) {
@@ -359,7 +359,7 @@ public class JobsPanel extends AbstractCommandablePanel {
             String oldName = getJurisdictionName();
             if ( name != null && !isSame( name, oldName ) ) {
                 if ( markedForCreation ) {
-                    job.setJurisdiction( getDqo().findOrCreate( Place.class, name ) );
+                    job.setJurisdiction( getQueryService().findOrCreate( Place.class, name ) );
                 } else {
                     int index = getOrganization().getJobs().indexOf( job );
                     if ( index >= 0 ) {
@@ -382,7 +382,7 @@ public class JobsPanel extends AbstractCommandablePanel {
         }
 
         public boolean hasFlows() {
-            return !getDqo().findAllPlays(
+            return !getQueryService().findAllPlays(
                     job.resourceSpec( getOrganization() ) ).isEmpty();
         }
 
@@ -393,7 +393,7 @@ public class JobsPanel extends AbstractCommandablePanel {
          */
         public Actor getActor() {
             if (!getActorName().isEmpty())
-                return getDqo().findOrCreate( Actor.class, getActorName() );
+                return getQueryService().findOrCreate( Actor.class, getActorName() );
             else
                 return null;
         }
@@ -405,7 +405,7 @@ public class JobsPanel extends AbstractCommandablePanel {
           */
          public Role getRole() {
              if (!getRoleName().isEmpty())
-                 return getDqo().findOrCreate( Role.class, getRoleName() );
+                 return getQueryService().findOrCreate( Role.class, getRoleName() );
              else
                  return null;
          }
@@ -416,7 +416,7 @@ public class JobsPanel extends AbstractCommandablePanel {
           */
          public Place getJurisdiction() {
              if (!getJurisdictionName().isEmpty())
-                 return getDqo().findOrCreate( Place.class, getJurisdictionName() );
+                 return getQueryService().findOrCreate( Place.class, getJurisdictionName() );
              else
                  return null;
          }
@@ -457,7 +457,7 @@ public class JobsPanel extends AbstractCommandablePanel {
                             : ( property.equals( "role" )
                             ? Role.class
                             : Place.class );
-            final List<String> choices = getDqo().findAllNames( moClass );
+            final List<String> choices = getQueryService().findAllNames( moClass );
             // text field
             TextField<String> entityField = new AutoCompleteTextField<String>(
                     "entity-field",

@@ -10,7 +10,7 @@ import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 
 import java.text.Collator;
 import java.util.Set;
@@ -53,12 +53,12 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     }
 
     /**
-     * Get the data query object.
+     * Get the query service.
      *
-     * @return a data query object
+     * @return a query service
      */
-    protected DataQueryObject getDqo() {
-        return Channels.instance().getDqo();
+    protected QueryService getQueryService() {
+        return Channels.instance().getQueryService();
     }
 
     /**

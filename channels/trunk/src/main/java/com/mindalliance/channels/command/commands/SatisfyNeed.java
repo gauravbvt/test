@@ -8,7 +8,7 @@ import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.Node;
@@ -59,12 +59,14 @@ public class SatisfyNeed extends AbstractCommand {
      */
     public Change execute( Commander commander ) throws CommandException {
         Flow newFlow;
-        DataQueryObject dqo = commander.getDqo();
+        QueryService queryService = commander.getQueryService();
         try {
             Scenario context = commander.resolve( Scenario.class, (Long) get( "context" ) );
             Scenario needScenario = commander.resolve( Scenario.class, (Long) get( "needScenario" ) );
             Flow need = needScenario.findFlow( commander.resolveId( (Long) get( "need" ) ) );
-            Scenario capabilityScenario = commander.resolve( Scenario.class, (Long) get( "capabilityScenario" ) );
+            Scenario capabilityScenario = commander.resolve(
+                    Scenario.class,
+                    (Long) get( "capabilityScenario" ) );
             Flow capability = capabilityScenario.findFlow(
                     commander.resolveId( (Long) get( "capability" ) ) );
             Node fromNode;
@@ -84,7 +86,7 @@ public class SatisfyNeed extends AbstractCommand {
                     toNode = need.getTarget();
                 }
             }
-            newFlow = dqo.connect( fromNode, toNode, need.getName() );
+            newFlow = queryService.connect( fromNode, toNode, need.getName() );
             newFlow.setSignificanceToSource( capability.getSignificanceToSource() );
             newFlow.setSignificanceToTarget( need.getSignificanceToTarget() );
             newFlow.setChannels( need.isAskedFor() ? capability.getChannels() : need.getChannels() );

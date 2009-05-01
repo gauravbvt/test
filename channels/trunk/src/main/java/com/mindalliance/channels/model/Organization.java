@@ -13,7 +13,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 
 /**
  * A company, agency, social club, etc.
@@ -187,10 +187,10 @@ public class Organization extends AbstractUnicastChannelable {
     /**
      * Return resources specs from jobs.
      *
-     * @param dqo a data query object
+     * @param queryService a query service
      * @return a list of resource specs
      */
-    public List<ResourceSpec> jobResourceSpecs( DataQueryObject dqo ) {
+    public List<ResourceSpec> jobResourceSpecs( QueryService queryService ) {
         List<ResourceSpec> resourceSpecs = new ArrayList<ResourceSpec>();
         for ( Job job : jobs ) {
             resourceSpecs.add( job.resourceSpec( this ) );

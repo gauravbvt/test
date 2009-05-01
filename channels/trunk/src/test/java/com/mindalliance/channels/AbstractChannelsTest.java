@@ -29,7 +29,7 @@ import com.mindalliance.channels.analysis.detectors.ScenarioNeverTerminates;
 import com.mindalliance.channels.analysis.detectors.NonIncidentScenarioNeverInitiated;
 import com.mindalliance.channels.analysis.detectors.InitiatedScenarioNeverStarted;
 import com.mindalliance.channels.attachments.FileBasedManager;
-import com.mindalliance.channels.query.DataQueryObjectImpl;
+import com.mindalliance.channels.query.DefaultQueryService;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.export.xml.XmlStreamer;
 import com.mindalliance.channels.graph.GraphvizRenderer;
@@ -69,17 +69,17 @@ public class AbstractChannelsTest extends TestCase {
         dao.setDataDirectoryPath( "target/data" );
         dao.setSnapshotThreshold( 10 );
         dao.reset();
-        DataQueryObjectImpl dqo = new DataQueryObjectImpl( dao );
+        DefaultQueryService queryService = new DefaultQueryService( dao );
 
-        app.setDqo( dqo );
+        app.setQueryService( queryService );
         app.setExporter( xmlStreamer );
         app.setImporter( xmlStreamer );
         DefaultCommander commander = new DefaultCommander();
         DefaultLockManager lockManager = new DefaultLockManager();
-        lockManager.setDqo( dqo );
+        lockManager.setQueryService( queryService );
         app.setLockManager( lockManager );
         commander.setLockManager( lockManager );
-        commander.setDqo( dqo );
+        commander.setQueryService( queryService );
         app.setCommander( commander );
         app.setPlanName( "Test" );
         app.setClient( "Mind-Alliance" );
@@ -102,7 +102,7 @@ public class AbstractChannelsTest extends TestCase {
         DefaultDiagramFactory<Node, Flow> diagramFactory = new DefaultDiagramFactory<Node, Flow>();
         diagramFactory.setGraphRenderer( graphRenderer );
         diagramFactory.setImageDirectory( "src/site/resources/images" );
-        diagramFactory.setDqo( dqo );
+        diagramFactory.setQueryService( queryService );
         app.setDiagramFactory( diagramFactory );
         // Set scenario analyst
         // Initialize analyst

@@ -3,7 +3,7 @@ package com.mindalliance.channels;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 
 import java.util.Iterator;
 import java.util.List;
@@ -150,10 +150,10 @@ public interface Analyst {
     List<Issue> findAllIssuesFor( ResourceSpec resource, boolean specific );
 
     /**
-     * Get data query object.
+     * Get query service.
      *
-     * @return a data query object
+     * @return a query service
      */
-    DataQueryObject getDqo();
+    QueryService getQueryService();
 
 }

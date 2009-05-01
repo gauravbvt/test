@@ -1,6 +1,6 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
@@ -63,11 +63,11 @@ public class Actor extends AbstractUnicastChannelable {
     /**
      * {@inheritDoc}
      */
-    public void beforeRemove( DataQueryObject dqo ) {
-        for ( Job job : dqo.findAllConfirmedJobs( ResourceSpec.with( this ) ) ) {
+    public void beforeRemove( QueryService queryService ) {
+        for ( Job job : queryService.findAllConfirmedJobs( ResourceSpec.with( this ) ) ) {
             job.setActor( null );
         }
-        for ( Part part : dqo.findAllPartsWith( ResourceSpec.with( this ) ) ) {
+        for ( Part part : queryService.findAllPartsWith( ResourceSpec.with( this ) ) ) {
             part.setActor( null );
         }
     }

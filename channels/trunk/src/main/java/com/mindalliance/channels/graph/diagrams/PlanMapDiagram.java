@@ -53,7 +53,7 @@ public class PlanMapDiagram extends AbstractDiagram<Scenario,ScenarioRelationshi
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
         GraphBuilder<Scenario, ScenarioRelationship> planMapGraphBuilder =
-                new PlanMapGraphBuilder( scenarios, getDiagramFactory().getDqo() );
+                new PlanMapGraphBuilder( scenarios, getDiagramFactory().getQueryService() );
         Graph<Scenario,ScenarioRelationship> graph =
                 planMapGraphBuilder.buildDirectedGraph();
         GraphRenderer<Scenario,ScenarioRelationship> graphRenderer =

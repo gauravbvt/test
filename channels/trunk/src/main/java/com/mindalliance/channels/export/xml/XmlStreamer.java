@@ -14,7 +14,7 @@ import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.util.SemMatch;
@@ -288,11 +288,11 @@ public class XmlStreamer implements Importer, Exporter {
                 : (Part) proxyConnector.getInnerFlow().getSource();
         ExternalFlow externalFlow;
         if ( isSource ) {
-            externalFlow = (ExternalFlow) getDqo().connect(
+            externalFlow = (ExternalFlow) getQueryService().connect(
                     externalConnector, part, localInnerFlow.getName()
             );
         } else {
-            externalFlow = (ExternalFlow) getDqo().connect(
+            externalFlow = (ExternalFlow) getQueryService().connect(
                     part, externalConnector, localInnerFlow.getName() );
         }
         externalFlow.setChannels( localInnerFlow.getChannels() );
@@ -364,12 +364,12 @@ public class XmlStreamer implements Importer, Exporter {
     }
 
     /**
-     * Get Data Query Object
+     * Get query service
      *
-     * @return a data query object
+     * @return a query service
      */
-    protected DataQueryObject getDqo() {
-        return Channels.instance().getDqo();
+    protected QueryService getQueryService() {
+        return Channels.instance().getQueryService();
     }
 
 

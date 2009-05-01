@@ -28,7 +28,7 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
     @Override
     protected void setUp() {
         super.setUp();
-        scenarios = Channels.dqo().list( Scenario.class );
+        scenarios = Channels.queryService().list( Scenario.class );
 
     }
 

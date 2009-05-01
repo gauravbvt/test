@@ -4,7 +4,7 @@ import org.apache.wicket.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.DiagramFactory;
@@ -30,11 +30,11 @@ public class EntityNetworkPage extends PngWebPage {
 
     public EntityNetworkPage( PageParameters parameters ) {
         super( parameters );
-        DataQueryObject dqo = getDqo();
+        QueryService queryService = getQueryService();
         if ( parameters.containsKey( "entity" ) && !parameters.getString( "entity" ).equals( "NONE" ) ) {
             Long entityId = Long.valueOf( parameters.getString( "entity" ) );
             try {
-                entity = dqo.find( ModelObject.class, entityId );
+                entity = queryService.find( ModelObject.class, entityId );
             } catch ( NotFoundException e ) {
                 LOG.warn( "Selected entity not found at :" + entityId, e );
             }
@@ -42,7 +42,7 @@ public class EntityNetworkPage extends PngWebPage {
         if ( parameters.containsKey( "connection" ) && !parameters.getString( "connection" ).equals( "NONE" ) ) {
             Long scRelId = Long.valueOf( parameters.getString( "connection" ) );
             selectedEntityRel = new EntityRelationship();
-            selectedEntityRel.setId( scRelId, getDqo() );
+            selectedEntityRel.setId( scRelId, getQueryService() );
         }
     }
 

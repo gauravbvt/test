@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.pages.components.ResourceSpecsPanel;
 import com.mindalliance.channels.pages.components.ScenariosPanel;
@@ -37,16 +37,16 @@ public class IndexPage extends WebPage {
     public IndexPage( PageParameters parameters ) {
         super( parameters );
 
-        final DataQueryObject dqo = ( (Channels) getApplication() ).getDqo();
-        resourceSpecs = dqo.findAllResourceSpecs();
-        init( dqo );
+        final QueryService queryService = ( (Channels) getApplication() ).getQueryService();
+        resourceSpecs = queryService.findAllResourceSpecs();
+        init( queryService );
     }
 
     @SuppressWarnings( {"unchecked"} )
-    private void init( DataQueryObject dqo ) {
+    private void init( QueryService queryService ) {
         add( new Label( "title", "Index" ) );
 
-        List<Scenario> scenarios = dqo.list( Scenario.class );
+        List<Scenario> scenarios = queryService.list( Scenario.class );
 
         add( new ScenariosPanel( "all-scenarios",
                 new Model<ArrayList<Scenario>>( (ArrayList) scenarios ), null ) );

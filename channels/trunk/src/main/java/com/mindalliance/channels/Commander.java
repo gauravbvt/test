@@ -1,6 +1,6 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.CommandException;
@@ -74,11 +74,11 @@ public interface Commander {
     void reset();
 
     /**
-     * Get a data query object
+     * Get a query service
      *
-     * @return a data query object
+     * @return a query service
      */
-    DataQueryObject getDqo();
+    QueryService getQueryService();
 
     /**
      * Resets history for current user.

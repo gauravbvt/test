@@ -1,7 +1,7 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.Importer;
@@ -38,7 +38,7 @@ public class RestoreScenario extends AbstractCommand {
      * {@inheritDoc}
      */
     public Change execute( Commander commander ) throws CommandException {
-        DataQueryObject dqo = commander.getDqo();
+        QueryService queryService = commander.getQueryService();
         Importer importer = Channels.instance().getImporter();
         String xml = (String) get( "xml" );
         if ( xml != null ) {
@@ -47,7 +47,7 @@ public class RestoreScenario extends AbstractCommand {
                 Scenario defaultScenario = null;
                 if ( defaultScenarioId != null ) {
                     // a default scenario was added before removing the one to be restored.
-                    List<Scenario> scenarios = dqo.list( Scenario.class );
+                    List<Scenario> scenarios = queryService.list( Scenario.class );
                     assert scenarios.size() == 1;
                     defaultScenario = scenarios.get( 0 );
                     commander.mapId( defaultScenarioId, defaultScenario.getId() );
@@ -56,7 +56,7 @@ public class RestoreScenario extends AbstractCommand {
                         new ByteArrayInputStream( xml.getBytes() ) );
                 commander.mapId( (Long) get( "scenario" ), scenario.getId() );
                 set( "scenario", scenario.getId() );
-                if ( defaultScenario != null ) dqo.remove( defaultScenario );
+                if ( defaultScenario != null ) queryService.remove( defaultScenario );
                 return new Change( Change.Type.Added, scenario );
             } catch ( IOException e ) {
                 throw new CommandException( "Can't restore scenario.", e );

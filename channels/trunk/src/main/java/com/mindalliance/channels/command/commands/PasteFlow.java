@@ -7,7 +7,7 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.model.Flow;
@@ -52,7 +52,7 @@ public class PasteFlow extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
-        DataQueryObject dqo = commander.getDqo();
+        QueryService queryService = commander.getQueryService();
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Part part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
@@ -67,13 +67,13 @@ public class PasteFlow extends AbstractCommand {
             boolean isOutcome = (Boolean) flowState.get( "isOutcome" );
             Flow flow;
             if ( isOutcome ) {
-                flow = dqo.connect(
+                flow = queryService.connect(
                         part,
-                        dqo.createConnector( scenario ),
+                        queryService.createConnector( scenario ),
                         (String) flowState.get( "name" ) );
             } else {
-                flow = dqo.connect(
-                        dqo.createConnector( scenario ),
+                flow = queryService.connect(
+                        queryService.createConnector( scenario ),
                         part,
                         (String) flowState.get( "name" ) );
             }

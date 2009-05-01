@@ -8,7 +8,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Medium;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.command.Change;
 
@@ -32,12 +32,12 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
 
     protected void setUp() {
         super.setUp();
-        DataQueryObject dqo = app.getDqo();
-        scenario = dqo.createScenario();
+        QueryService queryService = app.getQueryService();
+        scenario = queryService.createScenario();
         source = scenario.getDefaultPart();
-        source.setRole( dqo.findOrCreate( Role.class, "Manager" ) );
-        target = scenario.createPart( dqo, dqo.findOrCreate( Role.class, "Employee" ), "nodding" );
-        Flow flow = dqo.connect( source, target, "bizspeak" );
+        source.setRole( queryService.findOrCreate( Role.class, "Manager" ) );
+        target = scenario.createPart( queryService, queryService.findOrCreate( Role.class, "Employee" ), "nodding" );
+        Flow flow = queryService.connect( source, target, "bizspeak" );
         flow.setDescription( "Leveraging core values" );
         flow.setMaxDelay( new Delay( 5, Delay.Unit.minutes ) );
         flow.setSignificanceToSource( Flow.Significance.Terminates );
@@ -53,7 +53,7 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
     }
 
     protected void tearDown() {
-        app.getDqo().remove( scenario );
+        app.getQueryService().remove( scenario );
     }
 
     public void testInternalBreakUp() throws Exception {

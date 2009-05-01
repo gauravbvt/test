@@ -83,7 +83,7 @@ public class ChannelsReportPanel extends Panel {
         List<Channel> result = new ArrayList<Channel>();
 
         Channels app = (Channels) getApplication();
-        List<Channel> manualChannels = app.getDqo().findAllChannelsFor( spec );
+        List<Channel> manualChannels = app.getQueryService().findAllChannelsFor( spec );
 
         if ( unicasts == null )
             result.addAll( manualChannels );

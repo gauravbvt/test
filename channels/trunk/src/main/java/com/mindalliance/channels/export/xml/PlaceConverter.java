@@ -32,7 +32,7 @@ public class PlaceConverter extends EntityConverter {
      * {@inheritDoc}
      */
     ModelObject findOrMakeEntity( String name ) {
-        return Channels.dqo().findOrCreate( Place.class, name );
+        return Channels.queryService().findOrCreate( Place.class, name );
     }
 
     /**

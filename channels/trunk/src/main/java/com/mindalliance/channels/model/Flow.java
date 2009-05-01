@@ -1,6 +1,6 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -307,7 +307,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      * Note: this method should not be called directly.
      *
      * @param source the source node.
-     * @see com.mindalliance.channels.DataQueryObject#connect(Node, Node, String)
+     * @see com.mindalliance.channels.QueryService#connect(Node, Node, String)
      */
     abstract void setSource( Node source );
 
@@ -316,7 +316,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      * Note: this method should not be called directly.
      *
      * @param target the target node.
-     * @see com.mindalliance.channels.DataQueryObject#connect(Node, Node, String)
+     * @see com.mindalliance.channels.QueryService#connect(Node, Node, String)
      */
     abstract void setTarget( Node target );
 
@@ -569,13 +569,13 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         if ( isOutcome ) {
             Node source = getSource();
             Scenario scenario = getSource().getScenario();
-            DataQueryObject dqo = scenario.getDqo();
-            flow = dqo.connect( source, dqo.createConnector( scenario ), getName() );
+            QueryService queryService = scenario.getQueryService();
+            flow = queryService.connect( source, queryService.createConnector( scenario ), getName() );
         } else {
             Node target = getTarget();
             Scenario scenario = target.getScenario();
-            DataQueryObject dqo = scenario.getDqo();
-            flow = dqo.connect( dqo.createConnector( scenario ), target, getName() );
+            QueryService queryService = scenario.getQueryService();
+            flow = queryService.connect( queryService.createConnector( scenario ), target, getName() );
         }
         flow.initFrom( this );
         return flow;

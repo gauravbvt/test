@@ -137,7 +137,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
      */
     public Set<Channel> getCandidateChannels() {
         return new HashSet<Channel>(
-                getDqo().findAllChannelsFor( new ResourceSpec( getChannelable() ) ) );
+                getQueryService().findAllChannelsFor( new ResourceSpec( getChannelable() ) ) );
     }
 
     //====================================================

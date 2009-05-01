@@ -160,8 +160,8 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
      */
     public String getFlowsTitle() {
         if ( selectedEntityRel != null ) {
-            T fromEntity = selectedEntityRel.getFromEntity( getDqo() );
-            T toEntity = selectedEntityRel.getToEntity( getDqo() );
+            T fromEntity = selectedEntityRel.getFromEntity( getQueryService() );
+            T toEntity = selectedEntityRel.getToEntity( getQueryService() );
             if ( fromEntity == null || toEntity == null ) {
                 return "*** You need to refresh ***";
             } else {
@@ -190,9 +190,9 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
             List<Flow> flows = new ArrayList<Flow>();
             for ( T other : getEntities() ) {
                 if ( getEntity() != other ) {
-                    EntityRelationship<T> sendRel = getDqo().findEntityRelationship( getEntity(), other );
+                    EntityRelationship<T> sendRel = getQueryService().findEntityRelationship( getEntity(), other );
                     if ( sendRel != null ) flows.addAll( sendRel.getFlows() );
-                    EntityRelationship<T> receiveRel = getDqo().findEntityRelationship( other, getEntity() );
+                    EntityRelationship<T> receiveRel = getQueryService().findEntityRelationship( other, getEntity() );
                     if ( receiveRel != null ) flows.addAll( receiveRel.getFlows() );
                 }
             }
@@ -205,7 +205,7 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
     }
 
     private List<T> getEntities() {
-        return (List<T>) getDqo().list( getEntity().getClass() );
+        return (List<T>) getQueryService().list( getEntity().getClass() );
     }
 
     public void refresh( AjaxRequestTarget target ) {

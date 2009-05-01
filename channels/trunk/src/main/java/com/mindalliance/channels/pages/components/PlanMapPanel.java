@@ -184,7 +184,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
      * @return an array list of scenarios
      */
     public List<Scenario> getScenarios() {
-        return getDqo().list( Scenario.class );
+        return getQueryService().list( Scenario.class );
     }
 
     /**
@@ -198,8 +198,8 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
                     + selectedScenario.getName()
                     + "\" connecting to other scenarios";
         } else if ( selectedScRel != null ) {
-            Scenario fromScenario = selectedScRel.getFromScenario( getDqo() );
-            Scenario toScenario = selectedScRel.getToScenario( getDqo() );
+            Scenario fromScenario = selectedScRel.getFromScenario( getQueryService() );
+            Scenario toScenario = selectedScRel.getToScenario( getQueryService() );
             if ( fromScenario == null || toScenario == null ) {
                 return "*** You need to refresh ***";
             } else {
@@ -225,8 +225,8 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
                     + selectedScenario.getName()
                     + " causes";
         } else if ( selectedScRel != null ) {
-            Scenario fromScenario = selectedScRel.getFromScenario( getDqo() );
-            Scenario toScenario = selectedScRel.getToScenario( getDqo() );
+            Scenario fromScenario = selectedScRel.getFromScenario( getQueryService() );
+            Scenario toScenario = selectedScRel.getToScenario( getQueryService() );
             if ( fromScenario == null || toScenario == null ) {
                 return "*** You need to refresh ***";
             } else {
@@ -254,7 +254,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
             List<Scenario> allScenarios = getScenarios();
             for ( Scenario other : allScenarios ) {
                 if ( selectedScenario != other ) {
-                    ScenarioRelationship scRel = getDqo().findScenarioRelationship( selectedScenario, other );
+                    ScenarioRelationship scRel = getQueryService().findScenarioRelationship( selectedScenario, other );
                     if ( scRel != null ) externalFlows.addAll( scRel.getExternalFlows() );
                 }
             }
@@ -265,7 +265,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
             for ( Scenario scenario : allScenarios ) {
                 for ( Scenario other : allScenarios ) {
                     if ( scenario != other ) {
-                        ScenarioRelationship scRel = getDqo().findScenarioRelationship( scenario, other );
+                        ScenarioRelationship scRel = getQueryService().findScenarioRelationship( scenario, other );
                         if ( scRel != null ) externalFlows.addAll( scRel.getExternalFlows() );
                     }
                 }
@@ -286,7 +286,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
             List<Scenario> allScenarios = getScenarios();
             for ( Scenario other : allScenarios ) {
                 if ( selectedScenario != other ) {
-                    ScenarioRelationship scRel = getDqo().findScenarioRelationship( selectedScenario, other );
+                    ScenarioRelationship scRel = getQueryService().findScenarioRelationship( selectedScenario, other );
                     if ( scRel != null ) scRels.add( scRel );
                 }
             }
@@ -295,7 +295,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
             for ( Scenario scenario : allScenarios ) {
                 for ( Scenario other : allScenarios ) {
                     if ( scenario != other ) {
-                        ScenarioRelationship scRel = getDqo().findScenarioRelationship( scenario, other );
+                        ScenarioRelationship scRel = getQueryService().findScenarioRelationship( scenario, other );
                         if ( scRel != null ) scRels.add( scRel );
                     }
                 }
@@ -311,7 +311,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
      */
     public Scenario getToScenario() {
         if ( selectedScRel != null ) {
-            return selectedScRel.getToScenario( getDqo() );
+            return selectedScRel.getToScenario( getQueryService() );
         } else {
             return null;
         }

@@ -8,7 +8,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.model.Flow;
@@ -55,7 +55,7 @@ public class SatisfyAllNeeds extends AbstractCommand {
             if ( part == null ) {
                 return false;
             } else {
-                List<Flow> unsatisfiedNeeds = commander.getDqo().findUnsatisfiedNeeds( part );
+                List<Flow> unsatisfiedNeeds = commander.getQueryService().findUnsatisfiedNeeds( part );
                 return !unsatisfiedNeeds.isEmpty();
             }
         } catch ( CommandException e ) {
@@ -67,21 +67,21 @@ public class SatisfyAllNeeds extends AbstractCommand {
      * {@inheritDoc}
      */
     public Change execute( Commander commander ) throws CommandException {
-        DataQueryObject dqo = commander.getDqo();
+        QueryService queryService = commander.getQueryService();
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Part part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
             if ( part == null ) throw new NotFoundException();
-            List<Flow> unsatisfiedNeeds = dqo.findUnsatisfiedNeeds( part );
+            List<Flow> unsatisfiedNeeds = queryService.findUnsatisfiedNeeds( part );
             List<Long> addedFlows = new ArrayList<Long>();
             List<Map<String, Object>> removedNeeds = new ArrayList<Map<String, Object>>();
             for ( Flow need : unsatisfiedNeeds ) {
-                List<Connector> connectors = dqo.findAllSatificers( need );
+                List<Connector> connectors = queryService.findAllSatificers( need );
                 for ( Connector connector : connectors ) {
                     Node source = connector.getScenario() != scenario
                             ? connector
                             : connector.getInnerFlow().getSource();
-                    Flow satisfaction = dqo.connect( source, part, need.getName() );
+                    Flow satisfaction = queryService.connect( source, part, need.getName() );
                     satisfaction.initFrom( need );
                     addedFlows.add( satisfaction.getId() );
                 }

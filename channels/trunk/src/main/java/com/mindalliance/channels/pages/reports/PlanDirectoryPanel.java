@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.reports;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.Channels;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -32,7 +32,7 @@ public class PlanDirectoryPanel extends Panel {
     }
 
     private void init() {
-        List<Organization> orgs = Channels.instance().getDqo().findOrganizations();
+        List<Organization> orgs = Channels.instance().getQueryService().findOrganizations();
         add( new ListView<Organization>( "organizations", orgs ) {                        // NON-NLS
             @Override
             protected void populateItem( ListItem<Organization> item ) {
@@ -50,13 +50,13 @@ public class PlanDirectoryPanel extends Panel {
     }
 
     private static List<Role> findRolesOutOfOrganization() {
-        DataQueryObject dqo = Channels.dqo();
+        QueryService queryService = Channels.queryService();
         List<Role> rolesWithoutOrg = new ArrayList<Role>();
-        for ( Role role : dqo.list( Role.class ) ) {
+        for ( Role role : queryService.list( Role.class ) ) {
             ResourceSpec roleSpec = ResourceSpec.with( role );
             boolean inOrganization = false;
             Iterator<ResourceSpec> roleSpecs =
-                    dqo.findAllResourcesNarrowingOrEqualTo( roleSpec ).iterator();
+                    queryService.findAllResourcesNarrowingOrEqualTo( roleSpec ).iterator();
             while ( !inOrganization && roleSpecs.hasNext() ) {
                 if ( !roleSpecs.next().isAnyOrganization() ) {
                     inOrganization = true;

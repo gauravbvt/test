@@ -30,7 +30,7 @@ public class TriggeredButNeverStartedDefinedTask extends AbstractIssueDetector {
         if ( !part.hasDefaultTask() ) {
             if ( !part.isStartsWithScenario() ) {
                 if ( part.isTriggered() ) {
-                    boolean started = getDqo().findIfPartStarted( part );
+                    boolean started = getQueryService().findIfPartStarted( part );
                     if ( !started ) {
                         Issue issue = makeIssue( Issue.STRUCTURAL, part );
                         issue.setDescription( "This task is triggered but any flow that triggers it"
@@ -41,7 +41,7 @@ public class TriggeredButNeverStartedDefinedTask extends AbstractIssueDetector {
                     }
                 }
             } else {
-                boolean started = getDqo().findIfScenarioStarted( part.getScenario() );
+                boolean started = getQueryService().findIfScenarioStarted( part.getScenario() );
                 if ( !started ) {
                     Issue issue = makeIssue( Issue.STRUCTURAL, part );
                     issue.setDescription( "This task starts with the scenario but no task"

@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.NotFoundException;
 
 /**
@@ -72,9 +72,9 @@ public class Scenario extends ModelObject {
     private Delay completionTime = new Delay();
 
     /**
-     * The data query object in charge of this scenario.
+     * The query service in charge of this scenario.
      */
-    private transient DataQueryObject dqo;
+    private transient QueryService queryService;
 
     public Scenario() {
         setNodeIndex( new HashMap<Long, Node>( INITIAL_CAPACITY ) );
@@ -166,13 +166,13 @@ public class Scenario extends ModelObject {
     /**
      * Convenience accessor for tests.
      *
-     * @param dqo   the underlying store
+     * @param queryService   the underlying store
      * @param actor the actor for the new part
      * @param task  the task of the new part
      * @return the new part
      */
-    public Part createPart( DataQueryObject dqo, Actor actor, String task ) {
-        Part result = dqo.createPart( this );
+    public Part createPart( QueryService queryService, Actor actor, String task ) {
+        Part result = queryService.createPart( this );
         result.setActor( actor );
         result.setTask( task );
         addNode( result );
@@ -182,13 +182,13 @@ public class Scenario extends ModelObject {
     /**
      * Convenience accessor for tests.
      *
-     * @param dqo  the underlying store
+     * @param queryService  the underlying store
      * @param role the role for the new part
      * @param task the task of the new part
      * @return the new part
      */
-    public Part createPart( DataQueryObject dqo, Role role, String task ) {
-        Part result = dqo.createPart( this );
+    public Part createPart( QueryService queryService, Role role, String task ) {
+        Part result = queryService.createPart( this );
         result.setRole( role );
         result.setTask( task );
         addNode( result );
@@ -235,7 +235,7 @@ public class Scenario extends ModelObject {
                 }
             }
 
-            dqo.remove( node );
+            queryService.remove( node );
             nodeIndex.remove( node.getId() );
             node.setScenario( null );
         }
@@ -439,12 +439,12 @@ public class Scenario extends ModelObject {
     }
 
     @Transient
-    public DataQueryObject getDqo() {
-        return dqo;
+    public QueryService getQueryService() {
+        return queryService;
     }
 
-    public void setDqo( DataQueryObject dqo ) {
-        this.dqo = dqo;
+    public void setQueryService( QueryService queryService ) {
+        this.queryService = queryService;
     }
 
     /**
@@ -484,7 +484,7 @@ public class Scenario extends ModelObject {
         }
     }
 
-    public void beforeRemove( DataQueryObject dataQueryObject ) {
+    public void beforeRemove( QueryService dataQueryObject ) {
         for ( Part part : initiators ) {
             part.setInitiatedScenario( null );
         }

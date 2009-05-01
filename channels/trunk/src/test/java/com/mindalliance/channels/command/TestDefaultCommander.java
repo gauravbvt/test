@@ -45,7 +45,7 @@ public class TestDefaultCommander extends AbstractChannelsTest {
 
     public void testCommandLocking() throws Exception {
         AbstractCommand command = HelloCommand.makeCommand( "hello" );
-        Scenario scenario = app.getDqo().getDefaultScenario();
+        Scenario scenario = app.getQueryService().getDefaultScenario();
         Lock lock = lockManager.grabLockOn( scenario.getId() );
         lock.setUserName( "bob" );
         command.needLockOn( scenario );

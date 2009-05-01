@@ -79,7 +79,7 @@ public class ContactInfoPanel extends AbstractTablePanel<ResourceSpec> {
             }
         } );
         // table with provider of resources here specified
-        List<ResourceSpec> resourceSpecs = getDqo().findAllContacts( resourceSpec, true );
+        List<ResourceSpec> resourceSpecs = getQueryService().findAllContacts( resourceSpec, true );
         add( new AjaxFallbackDefaultDataTable<ResourceSpec>(
                 "contactInfo",
                 columns,

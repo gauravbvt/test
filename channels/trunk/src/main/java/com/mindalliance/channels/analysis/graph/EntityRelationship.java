@@ -1,7 +1,7 @@
 package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.model.Flow;
@@ -63,15 +63,15 @@ public class EntityRelationship<T extends ModelObject> implements Identifiable {
         return Long.valueOf( fromId + toId );
     }
 
-    public void setId( long id, DataQueryObject dqo ) {
+    public void setId( long id, QueryService queryService ) {
         String s = Long.toString( id );
         String toId = s.substring( s.length() - 9 );
         String fromId = s.substring( 0, s.length() - 9 );
         fromEntityId = Long.valueOf( fromId );
         toEntityId = Long.valueOf( toId );
-        EntityRelationship entityRel = dqo.findEntityRelationship(
-                getFromEntity( dqo ),
-                getToEntity( dqo ) );
+        EntityRelationship entityRel = queryService.findEntityRelationship(
+                getFromEntity( queryService ),
+                getToEntity( queryService ) );
         if ( entityRel != null ) flows = entityRel.getFlows();
     }
 
@@ -102,12 +102,12 @@ public class EntityRelationship<T extends ModelObject> implements Identifiable {
     /**
      * Get from-entity.
      *
-     * @param dqo a data query object
+     * @param queryService a query service
      * @return an entity
      */
-    public T getFromEntity( DataQueryObject dqo ) {
+    public T getFromEntity( QueryService queryService ) {
         try {
-            return (T)dqo.find( ModelObject.class, fromEntityId );
+            return (T)queryService.find( ModelObject.class, fromEntityId );
         } catch ( NotFoundException e ) {
             LOG.warn( "From-entity not found", e );
             return null;
@@ -117,12 +117,12 @@ public class EntityRelationship<T extends ModelObject> implements Identifiable {
     /**
      * Get to-entity.
      *
-     * @param dqo a data query object
+     * @param queryService a query service
      * @return an entity
      */
-    public T getToEntity( DataQueryObject dqo ) {
+    public T getToEntity( QueryService queryService ) {
         try {
-            return (T)dqo.find( ModelObject.class, toEntityId );
+            return (T)queryService.find( ModelObject.class, toEntityId );
         } catch ( NotFoundException e ) {
             LOG.warn( "To-entity not found", e );
             return null;

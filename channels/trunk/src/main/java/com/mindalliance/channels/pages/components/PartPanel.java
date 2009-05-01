@@ -110,12 +110,12 @@ public class PartPanel extends AbstractCommandablePanel {
         super.setOutputMarkupPlaceholderTag( false );
         this.model = model;
 
-        addField( TASK_PROPERTY, getDqo().findAllTasks() );
-        addField( ACTOR_PROPERTY, getDqo().findAllNames( Actor.class ) );
-        addField( ROLE_PROPERTY, getDqo().findAllNames( Role.class ) );
-        addField( ORG_PROPERTY, getDqo().findAllNames( Organization.class ) );
-        addField( JURISDICTION_PROPERTY, getDqo().findAllNames( Place.class ) );
-        addField( LOCATION_PROPERTY, getDqo().findAllNames( Place.class ) );
+        addField( TASK_PROPERTY, getQueryService().findAllTasks() );
+        addField( ACTOR_PROPERTY, getQueryService().findAllNames( Actor.class ) );
+        addField( ROLE_PROPERTY, getQueryService().findAllNames( Role.class ) );
+        addField( ORG_PROPERTY, getQueryService().findAllNames( Organization.class ) );
+        addField( JURISDICTION_PROPERTY, getQueryService().findAllNames( Place.class ) );
+        addField( LOCATION_PROPERTY, getQueryService().findAllNames( Place.class ) );
         addTimingFields();
         adjustFields();
     }
@@ -304,7 +304,7 @@ public class PartPanel extends AbstractCommandablePanel {
      */
     public List<Scenario> getInitiatableScenarios() {
         List<Scenario> scenarios = new ArrayList<Scenario>();
-        for ( Scenario sc : getDqo().list( Scenario.class ) ) {
+        for ( Scenario sc : getQueryService().list( Scenario.class ) ) {
             if ( sc != getPart().getScenario() ) scenarios.add( sc );
         }
         Collections.sort( scenarios, new Comparator<Scenario>() {
@@ -382,7 +382,7 @@ public class PartPanel extends AbstractCommandablePanel {
             newActor = null;
         else {
             if ( oldActor == null || !isSame( name, oldName ) )
-                newActor = getDqo().findOrCreate( Actor.class, name );
+                newActor = getQueryService().findOrCreate( Actor.class, name );
         }
         doCommand( new UpdateScenarioObject( getPart(), "actor", newActor ) );
         getCommander().cleanup( Actor.class, oldName );
@@ -401,7 +401,7 @@ public class PartPanel extends AbstractCommandablePanel {
             newPlace = null;
         else {
             if ( oldPlace == null || !isSame( name, oldName ) )
-                newPlace = getDqo().findOrCreate( Place.class, name );
+                newPlace = getQueryService().findOrCreate( Place.class, name );
         }
         doCommand( new UpdateScenarioObject( getPart(), "jurisdiction", newPlace ) );
         getCommander().cleanup( Place.class, oldName );
@@ -420,7 +420,7 @@ public class PartPanel extends AbstractCommandablePanel {
             newPlace = null;
         else {
             if ( oldPlace == null || !isSame( name, oldName ) )
-                newPlace = getDqo().findOrCreate( Place.class, name );
+                newPlace = getQueryService().findOrCreate( Place.class, name );
         }
         doCommand( new UpdateScenarioObject( getPart(), "location", newPlace ) );
         getCommander().cleanup( Place.class, oldName );
@@ -439,7 +439,7 @@ public class PartPanel extends AbstractCommandablePanel {
             newOrg = null;
         else {
             if ( oldOrg == null || !isSame( name, oldName ) )
-                newOrg = getDqo().findOrCreate( Organization.class, name );
+                newOrg = getQueryService().findOrCreate( Organization.class, name );
         }
         doCommand( new UpdateScenarioObject( getPart(), "organization", newOrg ) );
         getCommander().cleanup( Organization.class, oldName );
@@ -458,7 +458,7 @@ public class PartPanel extends AbstractCommandablePanel {
             newRole = null;
         else {
             if ( oldRole == null || !isSame( name, oldName ) )
-                newRole = getDqo().findOrCreate( Role.class, name );
+                newRole = getQueryService().findOrCreate( Role.class, name );
         }
         doCommand( new UpdateScenarioObject( getPart(), "role", newRole ) );
         getCommander().cleanup( Role.class, oldName );

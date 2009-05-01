@@ -58,11 +58,11 @@ public class JobConverter extends AbstractChannelsConverter {
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "actor" ) ) {
-                job.setActor( getDqo().findOrCreate( Actor.class, reader.getValue() ) );
+                job.setActor( getQueryService().findOrCreate( Actor.class, reader.getValue() ) );
             } else if ( nodeName.equals( "role" ) ) {
-                job.setRole( getDqo().findOrCreate( Role.class, reader.getValue() ) );
+                job.setRole( getQueryService().findOrCreate( Role.class, reader.getValue() ) );
             } else if ( nodeName.equals( "jurisdiction" ) ) {
-                job.setJurisdiction( getDqo().findOrCreate( Place.class, reader.getValue() ) );
+                job.setJurisdiction( getQueryService().findOrCreate( Place.class, reader.getValue() ) );
             } else if ( nodeName.equals( "title" ) ) {
                 job.setTitle( reader.getValue() );
             } else {

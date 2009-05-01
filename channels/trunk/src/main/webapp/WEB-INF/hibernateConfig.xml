@@ -29,7 +29,7 @@
     <aop:config>
         <!--<aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.DataQueryObjectryObject.*(..))"-->
                      <!--advice-ref="timingLogger"/>-->
-        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.DataQueryObject.*(..))"
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.QueryService.*(..))"
                      advice-ref="cacheSet"/>
         <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.Analyst.*(..))"
                      advice-ref="cacheSet"/>

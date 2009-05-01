@@ -42,7 +42,7 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
         exportDetectionWaivers( entity, writer );
         writeSpecifics( entity, writer, context );
         // User issues
-        List<Issue> issues = Channels.dqo().findAllUserIssues( entity );
+        List<Issue> issues = Channels.queryService().findAllUserIssues( entity );
         for ( Issue issue : issues ) {
             writer.startNode( "issue" );
             context.convertAnother( issue );

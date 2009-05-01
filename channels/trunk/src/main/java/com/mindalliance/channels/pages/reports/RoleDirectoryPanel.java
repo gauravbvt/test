@@ -54,7 +54,7 @@ public class RoleDirectoryPanel extends Panel {
         add( descLabel );
 
         // Find all actors in role for organization
-        List<Actor> actors = Channels.instance().getDqo().findActors( organization, role );
+        List<Actor> actors = Channels.instance().getQueryService().findActors( organization, role );
         if ( actors.isEmpty() )
             actors.add( Actor.UNKNOWN );
         add( new ListView<Actor>( "actors", actors ) {                                    // NON-NLS

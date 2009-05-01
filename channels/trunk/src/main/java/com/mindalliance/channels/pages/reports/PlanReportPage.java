@@ -40,7 +40,7 @@ public class PlanReportPage extends WebPage {
         add( new Label( "plan-description", app.getDescription() ) );              // NON-NLS
         add( new Label( "date", DateFormat.getDateTimeInstance(                           // NON-NLS
             DateFormat.LONG, DateFormat.LONG ).format( new Date() ) ) );
-        List<Scenario> scenarios = Channels.dqo().list( Scenario.class );
+        List<Scenario> scenarios = Channels.queryService().list( Scenario.class );
         Collections.sort( scenarios, new Comparator<Scenario>() {
             public int compare( Scenario o1, Scenario o2 ) {
                 return Collator.getInstance().compare( o1.getName(), o2.getName() );

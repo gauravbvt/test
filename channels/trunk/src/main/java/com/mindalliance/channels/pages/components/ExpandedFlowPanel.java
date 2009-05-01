@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.model.ExternalFlow;
@@ -618,8 +618,8 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
             }
         }
         // Add inputs/outputs of other scenarios
-        DataQueryObject dqo = ( (Channels) getApplication() ).getDqo();
-        for ( Scenario s : dqo.list( Scenario.class ) ) {
+        QueryService queryService = Channels.queryService();
+        for ( Scenario s : queryService.list( Scenario.class ) ) {
             if ( !scenario.equals( s ) ) {
                 Iterator<Connector> c = isOutcome() ? s.inputs() : s.outputs();
                 while ( c.hasNext() ) {
@@ -643,8 +643,8 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
 
     private List<Connector> findAllRelevantConnectors() {
         List<Connector> result = new ArrayList<Connector>();
-        DataQueryObject dqo = ( (Channels) getApplication() ).getDqo();
-        for ( Scenario s : dqo.list( Scenario.class ) ) {
+        QueryService queryService = Channels.queryService();
+        for ( Scenario s : queryService.list( Scenario.class ) ) {
             Iterator<Connector> connectorIterator = isOutcome()
                     ? s.inputs()
                     : s.outputs();

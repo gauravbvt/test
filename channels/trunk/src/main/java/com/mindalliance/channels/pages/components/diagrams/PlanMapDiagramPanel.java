@@ -146,7 +146,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
             AjaxRequestTarget target ) {
         try {
             String js = scroll( domIdentifier, scrollTop, scrollLeft );
-            Scenario scenario = getDqo().find( Scenario.class, Long.valueOf( vertexId ) );
+            Scenario scenario = getQueryService().find( Scenario.class, Long.valueOf( vertexId ) );
             Change change = new Change( Change.Type.Selected, scenario );
             change.setScript( js );
             update( target, change );
@@ -166,7 +166,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
             int scrollLeft,
             AjaxRequestTarget target ) {
         ScenarioRelationship scRel = new ScenarioRelationship();
-        scRel.setId( Long.valueOf( edgeId ), getDqo() );
+        scRel.setId( Long.valueOf( edgeId ), getQueryService() );
         String js = scroll( domIdentifier, scrollTop, scrollLeft );
         Change change = new Change( Change.Type.Selected, scRel );
         change.setScript( js );

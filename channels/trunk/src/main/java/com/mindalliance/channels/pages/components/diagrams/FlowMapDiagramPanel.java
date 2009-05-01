@@ -124,7 +124,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             int scrollLeft,
             AjaxRequestTarget target ) {
         try {
-            Scenario scenario = getDqo().find( Scenario.class, Long.valueOf( graphId ) );
+            Scenario scenario = getQueryService().find( Scenario.class, Long.valueOf( graphId ) );
             this.update( target, new Change( Change.Type.Selected, scenario ) );
         } catch ( NotFoundException e ) {
             LOG.warn( "Selection not found", e );
@@ -142,7 +142,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             int scrollLeft,
             AjaxRequestTarget target ) {
         try {
-            Scenario scenario = getDqo().find( Scenario.class, Long.valueOf( graphId ) );
+            Scenario scenario = getQueryService().find( Scenario.class, Long.valueOf( graphId ) );
             Part part = (Part) scenario.getNode( Long.valueOf( vertexId ) );
             if ( part != null ) {
                 String js = scroll( domIdentifier, scrollTop, scrollLeft );

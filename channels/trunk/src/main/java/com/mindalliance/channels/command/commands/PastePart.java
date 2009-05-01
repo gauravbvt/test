@@ -9,7 +9,7 @@ import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.NotFoundException;
 
@@ -63,7 +63,7 @@ public class PastePart extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
-        DataQueryObject dqo = commander.getDqo();
+        QueryService queryService = commander.getQueryService();
         Map<String, Object> copy;
         if ( commander.isReplaying() ) {
             copy = (Map<String, Object>) get( "copy" );
@@ -73,7 +73,7 @@ public class PastePart extends AbstractCommand {
         }
         Map<String, Object> partState = (Map<String, Object>)copy.get( "partState" );
         Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-        Part part = dqo.createPart( scenario );
+        Part part = queryService.createPart( scenario );
         if ( get( "part" ) != null )
             commander.mapId( (Long) get( "part" ), part.getId() );
         set( "part", part.getId() );
@@ -81,8 +81,8 @@ public class PastePart extends AbstractCommand {
         List<Map<String, Object>> needStates = (List<Map<String, Object>>) copy.get( "needs" );
         List<Long> addedNeeds = new ArrayList<Long>();
         for ( Map<String, Object> needState : needStates ) {
-            Flow need = dqo.connect(
-                    dqo.createConnector( scenario ),
+            Flow need = queryService.connect(
+                    queryService.createConnector( scenario ),
                     part,
                     (String) needState.get( "name" ) );
             CommandUtils.initialize( need, (Map<String, Object>) needState.get( "attributes" ) );
@@ -93,9 +93,9 @@ public class PastePart extends AbstractCommand {
                 (List<Map<String, Object>>) copy.get( "capabilities" );
         List<Long> addedCapabilities = new ArrayList<Long>();
         for ( Map<String, Object> capabilityState : capabilityStates ) {
-            Flow capability = dqo.connect(
+            Flow capability = queryService.connect(
                     part,
-                    dqo.createConnector( scenario ),
+                    queryService.createConnector( scenario ),
                     (String) capabilityState.get( "name" ) );
             CommandUtils.initialize(
                     capability,

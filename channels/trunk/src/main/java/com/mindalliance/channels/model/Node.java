@@ -1,7 +1,7 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.util.SemMatch;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import org.apache.commons.collections.iterators.IteratorChain;
 
 import javax.persistence.CascadeType;
@@ -122,11 +122,14 @@ public abstract class Node extends ModelObject implements ScenarioObject {
 
     /**
      * Create a new outcome for this node.
-     * @param dqo the underlying store
+     * @param queryService the underlying store
      * @return an internal flow to a new connector
      */
-    public Flow createOutcome( DataQueryObject dqo ) {
-        return dqo.connect( this, dqo.createConnector( getScenario() ), DEFAULT_FLOW_NAME );
+    public Flow createOutcome( QueryService queryService ) {
+        return queryService.connect(
+                this,
+                queryService.createConnector( getScenario() ),
+                DEFAULT_FLOW_NAME );
     }
 
     /**
@@ -191,11 +194,11 @@ public abstract class Node extends ModelObject implements ScenarioObject {
 
     /**
      * Create and add a new requirement.
-     * @param dqo the underyling store
+     * @param queryService the underyling store
      * @return a flow from a new connector to this node
      */
-    public Flow createRequirement( DataQueryObject dqo ) {
-        return dqo.connect( dqo.createConnector( getScenario() ), this, DEFAULT_FLOW_NAME );
+    public Flow createRequirement( QueryService queryService ) {
+        return queryService.connect( queryService.createConnector( getScenario() ), this, DEFAULT_FLOW_NAME );
     }
 
     /**

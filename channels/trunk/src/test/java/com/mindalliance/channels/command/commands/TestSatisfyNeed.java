@@ -2,7 +2,7 @@ package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Connector;
@@ -24,7 +24,7 @@ public class TestSatisfyNeed extends AbstractChannelsTest {
 
     private Commander commander;
     private Scenario scenario;
-    private DataQueryObject dqo;
+    private QueryService queryService;
     Part source;
     Part target;
     Part otherTarget;
@@ -33,25 +33,25 @@ public class TestSatisfyNeed extends AbstractChannelsTest {
 
     protected void setUp() {
         super.setUp();
-        dqo = app.getDqo();
+        queryService = app.getQueryService();
         commander = app.getCommander();
-        scenario = dqo.createScenario();
+        scenario = queryService.createScenario();
         source = scenario.getDefaultPart();
-        source.setRole( dqo.findOrCreate( Role.class, "source" ) );
+        source.setRole( queryService.findOrCreate( Role.class, "source" ) );
         source.setTask( "doing source things" );
-        target = dqo.createPart( scenario );
+        target = queryService.createPart( scenario );
         target.setTask( "doing target things" );
-        target.setRole( dqo.findOrCreate( Role.class, "target" ) );
-        flow = dqo.connect( source, target, "info" );
-        otherTarget = dqo.createPart( scenario );
+        target.setRole( queryService.findOrCreate( Role.class, "target" ) );
+        flow = queryService.connect( source, target, "info" );
+        otherTarget = queryService.createPart( scenario );
         otherTarget.setTask( "doing other things" );
-        otherTarget.setRole( dqo.findOrCreate( Role.class, "other target" ) );
-        connector = dqo.createConnector( scenario );
-        dqo.connect( connector, otherTarget, "info" );
+        otherTarget.setRole( queryService.findOrCreate( Role.class, "other target" ) );
+        connector = queryService.createConnector( scenario );
+        queryService.connect( connector, otherTarget, "info" );
     }
 
     protected void tearDown() {
-        dqo.remove( scenario );
+        queryService.remove( scenario );
     }
 
     public void testSatisfyNeed() throws CommandException {

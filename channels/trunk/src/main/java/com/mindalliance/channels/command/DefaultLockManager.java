@@ -2,7 +2,7 @@ package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.LockManager;
 import com.mindalliance.channels.model.Identifiable;
@@ -31,9 +31,9 @@ public class DefaultLockManager implements LockManager {
      */
     private static final Logger LOG = LoggerFactory.getLogger( DefaultLockManager.class );
     /**
-     * Data query object.
+     * Query service.
      */
-    private DataQueryObject dqo;
+    private QueryService queryService;
 
     /**
      * The managed locks.
@@ -47,8 +47,8 @@ public class DefaultLockManager implements LockManager {
     public DefaultLockManager() {
     }
 
-    public void setDqo( DataQueryObject dqo ) {
-        this.dqo = dqo;
+    public void setQueryService( QueryService queryService ) {
+        this.queryService = queryService;
     }
 
     /**
@@ -58,7 +58,7 @@ public class DefaultLockManager implements LockManager {
         synchronized ( this ) {
             // Warn if id is stale but don't fail since the model object is gone so there can be no conflict.
             try {
-                ModelObject mo = dqo.find( ModelObject.class, id );
+                ModelObject mo = queryService.find( ModelObject.class, id );
                 Lock lock = getLock( id );
                 if ( lock != null ) {
                     String userName = Channels.getUserName();
@@ -196,7 +196,7 @@ public class DefaultLockManager implements LockManager {
         Lock lock = locks.get( id );
         if ( lock != null ) {
             try {
-                dqo.find( ModelObject.class, id );
+                queryService.find( ModelObject.class, id );
             }
             catch ( NotFoundException e ) {
                 // Clean up obsolete lock

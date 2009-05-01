@@ -1,10 +1,10 @@
 package com.mindalliance.channels.attachments;
 
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.dao.Memory;
-import com.mindalliance.channels.query.DataQueryObjectImpl;
+import com.mindalliance.channels.query.DefaultQueryService;
 import junit.framework.TestCase;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.util.file.File;
@@ -49,10 +49,10 @@ public class TestFileBasedManager extends TestCase {
         map = new File( mgr.getDirectory(), "index.properties" );
 
 
-        DataQueryObject dqo = new DataQueryObjectImpl( new Memory() );
-        mgr.setDqo( dqo );
+        QueryService queryService = new DefaultQueryService( new Memory() );
+        mgr.setQueryService( queryService );
 
-        object = dqo.findOrCreate( Scenario.class, "test" );
+        object = queryService.findOrCreate( Scenario.class, "test" );
 
         fileItem = EasyMock.createMock( FileItem.class );
         upload = new FileUpload( fileItem );

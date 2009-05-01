@@ -2,7 +2,7 @@ package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.command.Command;
@@ -21,17 +21,17 @@ public class TestDuplicatePart extends AbstractChannelsTest {
 
     private Commander commander;
     private Scenario scenario;
-    private DataQueryObject dqo;
+    private QueryService queryService;
 
     protected void setUp() {
         super.setUp();
-        dqo = app.getDqo();
+        queryService = app.getQueryService();
         commander = app.getCommander();
-        scenario = dqo.createScenario();
+        scenario = queryService.createScenario();
     }
 
     protected void tearDown() {
-        dqo.remove( scenario );
+        queryService.remove( scenario );
     }
 
     public void testDuplicatePart() throws Exception {

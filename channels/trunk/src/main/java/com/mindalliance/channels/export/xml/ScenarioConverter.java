@@ -9,7 +9,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.model.Delay;
@@ -60,7 +60,7 @@ public class ScenarioConverter extends AbstractChannelsConverter {
                          MarshallingContext context ) {
         Scenario scenario = (Scenario) object;
         Channels app = Channels.instance();
-        DataQueryObject dqo = getDqo();
+        QueryService queryService = getQueryService();
         context.put( "scenario", scenario );
         writer.addAttribute( "app", app.getUri() );
         writer.addAttribute( "version", app.getExporter().getVersion() );
@@ -97,7 +97,7 @@ public class ScenarioConverter extends AbstractChannelsConverter {
         }
         // All entities if not within a app export
         if ( context.get( "app" ) == null ) {
-            Iterator<ModelObject> entities = dqo.iterateEntities();
+            Iterator<ModelObject> entities = queryService.iterateEntities();
             while ( entities.hasNext() ) {
                 ModelObject entity = entities.next();
                 writer.startNode( entity.getClass().getSimpleName().toLowerCase() );
@@ -106,7 +106,7 @@ public class ScenarioConverter extends AbstractChannelsConverter {
             }
         }
         // Scenario user issues
-        List<Issue> issues = dqo.findAllUserIssues( scenario );
+        List<Issue> issues = queryService.findAllUserIssues( scenario );
         for ( Issue issue : issues ) {
             writer.startNode( "issue" );
             context.convertAnother( issue );
@@ -138,8 +138,8 @@ public class ScenarioConverter extends AbstractChannelsConverter {
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
         Map<String, Long> idMap = getIdMap( context );
         getProxyConnectors( context );
-        DataQueryObject dqo = Channels.dqo();
-        Scenario scenario = dqo.createScenario();
+        QueryService queryService = Channels.queryService();
+        Scenario scenario = queryService.createScenario();
         Part defaultPart = scenario.getDefaultPart();
         context.put( "scenario", scenario );
         scenario.setName( reader.getAttribute( "name" ) );
@@ -153,7 +153,7 @@ public class ScenarioConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "detection-waivers" ) ) {
                 importDetectionWaivers( scenario, reader );
             } else if ( nodeName.equals( "location" ) ) {
-                scenario.setLocation( dqo.findOrCreate( Place.class, reader.getValue() ) );
+                scenario.setLocation( queryService.findOrCreate( Place.class, reader.getValue() ) );
             } else if ( nodeName.equals( "incident" ) ) {
                 scenario.setIncident( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "expected-duration" ) ) {

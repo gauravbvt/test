@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
@@ -190,8 +190,8 @@ public final class PlanPage extends WebPage implements Updatable {
     public PlanPage( PageParameters parameters ) {
         // Call super to remember parameters in links
         super( parameters );
-        DataQueryObject dqo = getDqo();
-        Scenario sc = findScenario( dqo, parameters );
+        QueryService queryService = getQueryService();
+        Scenario sc = findScenario( queryService, parameters );
         Part p = findPart( scenario, parameters );
         init( sc, p, findExpansions( parameters ) );
     }
@@ -372,7 +372,7 @@ public final class PlanPage extends WebPage implements Updatable {
         Set<ModelObject> editables = new HashSet<ModelObject>();
         for ( Long id : expansions ) {
             try {
-                ModelObject mo = getDqo().find( ModelObject.class, id );
+                ModelObject mo = getQueryService().find( ModelObject.class, id );
                 editables.add( mo );
             } catch ( NotFoundException ignored ) {
                 // ignore
@@ -469,7 +469,7 @@ public final class PlanPage extends WebPage implements Updatable {
     private ModelObject findExpandedEntity() {
         for ( long id : expansions ) {
             try {
-                ModelObject mo = getDqo().find( ModelObject.class, id );
+                ModelObject mo = getQueryService().find( ModelObject.class, id );
                 if ( mo.isEntity() ) return mo;
             }
             catch ( NotFoundException ignored ) {
@@ -481,7 +481,7 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     public List<Scenario> getAllScenarios() {
-        List<Scenario> allScenarios = getApp().getDqo().list( Scenario.class );
+        List<Scenario> allScenarios = getApp().getQueryService().list( Scenario.class );
         Collections.sort( allScenarios, new Comparator<Scenario>() {
             public int compare( Scenario o1, Scenario o2 ) {
                 return Collator.getInstance().compare( o1.getName(), o2.getName() );
@@ -494,14 +494,14 @@ public final class PlanPage extends WebPage implements Updatable {
     /**
      * Find scenario specified in parameters.
      *
-     * @param dqo        data query object
+     * @param queryService        query service
      * @param parameters the page parameters
      * @return a scenario, or null if not found
      */
-    public static Scenario findScenario( DataQueryObject dqo, PageParameters parameters ) {
+    public static Scenario findScenario( QueryService queryService, PageParameters parameters ) {
         if ( parameters.containsKey( SCENARIO_PARM ) )
             try {
-                return dqo.find( Scenario.class, parameters.getLong( SCENARIO_PARM ) );
+                return queryService.find( Scenario.class, parameters.getLong( SCENARIO_PARM ) );
             } catch ( StringValueConversionException ignored ) {
                 LOG.warn( "Invalid scenario specified in parameters. Using default." );
             } catch ( NotFoundException ignored ) {
@@ -648,12 +648,12 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     /**
-     * Get the channels data query object from the application.
+     * Get the channels query service from the application.
      *
-     * @return the data query object
+     * @return the query service
      */
-    private DataQueryObject getDqo() {
-        return getApp().getDqo();
+    private QueryService getQueryService() {
+        return getApp().getQueryService();
     }
 
     private Channels getApp() {
@@ -752,7 +752,7 @@ public final class PlanPage extends WebPage implements Updatable {
         }
         scenario = sc;
         if ( scenario == null )
-            scenario = getDqo().getDefaultScenario();
+            scenario = getQueryService().getDefaultScenario();
     }
 
     private void collapseScenarioObjects() {
@@ -760,7 +760,7 @@ public final class PlanPage extends WebPage implements Updatable {
         // List<Identifiable> toReexpand = new ArrayList<Identifiable>();
         for ( long id : expansions ) {
             try {
-                ModelObject expanded = getDqo().find( ModelObject.class, id );
+                ModelObject expanded = getQueryService().find( ModelObject.class, id );
 /*
                 if ( expanded instanceof Scenario ) {
                     toCollapse.add( expanded );
@@ -790,7 +790,7 @@ public final class PlanPage extends WebPage implements Updatable {
         List<Identifiable> toCollapse = new ArrayList<Identifiable>();
         for ( long id : expansions ) {
             try {
-                ModelObject expanded = getDqo().find( ModelObject.class, id );
+                ModelObject expanded = getQueryService().find( ModelObject.class, id );
                 if ( expanded instanceof Flow ) {
                     toCollapse.add( expanded );
                 } else {

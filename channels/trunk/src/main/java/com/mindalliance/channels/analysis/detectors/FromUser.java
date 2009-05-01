@@ -35,6 +35,6 @@ public class FromUser extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     public List<Issue> detectIssues( ModelObject modelObject ) {
-        return Channels.dqo().findAllUserIssues( modelObject );
+        return Channels.queryService().findAllUserIssues( modelObject );
     }
 }

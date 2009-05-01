@@ -1,6 +1,6 @@
 package com.mindalliance.channels.attachments;
 
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.NotFoundException;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
@@ -63,7 +63,7 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     private Properties fileMap = new Properties();
 
     /** The data manager. */
-    private DataQueryObject dqo;
+    private QueryService queryService;
 
     /**
      * List of attachments, indexed by object ids. Reverse index of fileMap.
@@ -197,7 +197,7 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
             Attachment.Type type = Attachment.Type.valueOf( value.substring( comma + 1 ) );
 
             try {
-                ModelObject object = dqo.find( ModelObject.class, id );
+                ModelObject object = queryService.find( ModelObject.class, id );
 
                 URI uri = new URI( unescape( uriString ) );
                 Attachment attachment = uri.getScheme() == null ?
@@ -279,13 +279,13 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
         return isRunning;
     }
 
-    public DataQueryObject getDqo() {
-        return dqo;
+    public QueryService getQueryService() {
+        return queryService;
     }
 
     @Required
-    public void setDqo( DataQueryObject dqo ) {
-        this.dqo = dqo;
+    public void setQueryService( QueryService queryService ) {
+        this.queryService = queryService;
     }
 
     /**

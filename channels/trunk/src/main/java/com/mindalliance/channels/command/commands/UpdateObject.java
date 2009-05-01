@@ -2,7 +2,7 @@ package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.model.ScenarioObject;
 import com.mindalliance.channels.command.AbstractCommand;
@@ -108,7 +108,7 @@ public abstract class UpdateObject extends AbstractCommand {
      * {@inheritDoc}
      */
     public Change execute( Commander commander ) throws CommandException {
-        DataQueryObject dqo = commander.getDqo();
+        QueryService queryService = commander.getQueryService();
         Identifiable identifiable = getIdentifiable( commander );
         switch ( action() ) {
             case Set:
@@ -142,7 +142,7 @@ public abstract class UpdateObject extends AbstractCommand {
             default:
                 throw new IllegalArgumentException( "Unknown action " + action() );
         }
-        if ( identifiable instanceof ModelObject ) dqo.update( (ModelObject) identifiable );
+        if ( identifiable instanceof ModelObject ) queryService.update( (ModelObject) identifiable );
         return new Change( Change.Type.Updated, identifiable, (String) get( "property" ) );
     }
 

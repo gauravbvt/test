@@ -12,7 +12,7 @@ import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.attachments.BitBucket;
-import com.mindalliance.channels.query.DataQueryObjectImpl;
+import com.mindalliance.channels.query.DefaultQueryService;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.graph.Diagram;
@@ -49,11 +49,11 @@ public class TestPartPanel extends AbstractChannelsTest {
     protected void setUp() {
         super.setUp();
         channelsApp = new Channels();
-        DataQueryObjectImpl dqo = new DataQueryObjectImpl();
+        DefaultQueryService queryService = new DefaultQueryService();
 
-        dqo.setAddingSamples( true );
-        dqo.setDao( new Memory() );
-        channelsApp.setDqo( dqo );
+        queryService.setAddingSamples( true );
+        queryService.setDao( new Memory() );
+        channelsApp.setQueryService( queryService );
         channelsApp.setAttachmentManager( new BitBucket() );
         DiagramFactory dm = createMock( DiagramFactory.class );
          Diagram fd = createMock(  Diagram.class);
@@ -77,7 +77,7 @@ public class TestPartPanel extends AbstractChannelsTest {
         tester.setParametersForNextRequest( new HashMap<String,String[]>() );
 
         // Find first part in scenario
-        scenario = channelsApp.getDqo().getDefaultScenario();
+        scenario = channelsApp.getQueryService().getDefaultScenario();
         Iterator<Node> nodes = scenario.nodes();
         part = null;
         while ( part == null && nodes.hasNext() ) {

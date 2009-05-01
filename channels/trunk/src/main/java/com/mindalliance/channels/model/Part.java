@@ -1,7 +1,7 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.util.SemMatch;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 
@@ -353,7 +353,7 @@ public class Part extends Node {
      * {@inheritDoc}
      * @param dataQueryObject
      */
-    public void beforeRemove( DataQueryObject dataQueryObject ) {
+    public void beforeRemove( QueryService dataQueryObject ) {
         if ( initiatedScenario != null ) {
             initiatedScenario.removeInitiator( this );
         }

@@ -61,8 +61,8 @@ public class FlowToSelf extends AbstractIssueDetector {
                 issue.setSeverity( Issue.Level.Major );
                 issues.add(issue);
             } else {
-                List<Actor> possibleSourceActors = getDqo().findAllActors( source.resourceSpec() );
-                List<Actor> possibleTargetActors = getDqo().findAllActors( target.resourceSpec() );
+                List<Actor> possibleSourceActors = getQueryService().findAllActors( source.resourceSpec() );
+                List<Actor> possibleTargetActors = getQueryService().findAllActors( target.resourceSpec() );
                 if ( possibleSourceActors.size() == 1
                         && possibleTargetActors.size() == 1
                         && possibleSourceActors.get(0) == possibleTargetActors.get(0)) {

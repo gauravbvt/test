@@ -7,7 +7,7 @@ import org.apache.wicket.Response;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.graph.Diagram;
@@ -37,11 +37,11 @@ public abstract class PngWebPage extends WebPage {
     }
 
     /**
-     * Get data query object.
-     * @return a data query object
+     * Get query service.
+     * @return a query service
      */
-    protected DataQueryObject getDqo() {
-        return ( (Channels) getApplication() ).getDqo();
+    protected QueryService getQueryService() {
+        return ( (Channels) getApplication() ).getQueryService();
     }
 
     /**

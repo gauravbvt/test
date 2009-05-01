@@ -2,7 +2,7 @@ package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.ExternalFlow;
@@ -94,7 +94,7 @@ public class FlowConverter extends AbstractChannelsConverter {
         }
         // Flow user issues (exported only if an internal flow)
         if ( flow.isInternal() ) {
-            for ( Issue issue : Channels.dqo().findAllUserIssues( flow ) ) {
+            for ( Issue issue : Channels.queryService().findAllUserIssues( flow ) ) {
                 writer.startNode( "issue" );
                 context.convertAnother( issue );
                 writer.endNode();
@@ -224,8 +224,8 @@ public class FlowConverter extends AbstractChannelsConverter {
             String name,
             String idValue ) {
 
-        DataQueryObject dqo = getDqo();
-        Flow flow = dqo.connect( source, target, name );
+        QueryService queryService = getQueryService();
+        Flow flow = queryService.connect( source, target, name );
         assert idMap.get( idValue ) == null;
         idMap.put( idValue, flow.getId() );
         return flow;
@@ -257,7 +257,7 @@ public class FlowConverter extends AbstractChannelsConverter {
     private Connector resolveConnector( HierarchicalStreamReader reader,
                                         Scenario scenario,
                                         boolean isSource ) {
-        Connector connector = Channels.dqo().createConnector( scenario );
+        Connector connector = Channels.queryService().createConnector( scenario );
         String externalScenarioName = reader.getAttribute( "scenario" );
         if ( externalScenarioName != null ) {
             // Connector is in other scenario

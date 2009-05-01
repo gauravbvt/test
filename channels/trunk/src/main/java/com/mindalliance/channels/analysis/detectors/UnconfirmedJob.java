@@ -42,7 +42,7 @@ public class UnconfirmedJob extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Organization org = (Organization) modelObject;
-        for ( Job job : getDqo().findUnconfirmedJobs( org ) ) {
+        for ( Job job : getQueryService().findUnconfirmedJobs( org ) ) {
             Issue issue = makeIssue( Issue.DEFINITION, org );
             issue.setDescription( "Job " + job + " is implied from scenarios and not confirmed." );
             issue.setRemediation( "Edit organization " + org + " and confirm the job (under \"details\")." );

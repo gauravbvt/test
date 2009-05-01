@@ -4,7 +4,7 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.util.Play;
@@ -215,8 +215,8 @@ public class DefaultAnalyst implements Analyst {
     /**
      * {@inheritDoc}
      */
-    public DataQueryObject getDqo() {
-        return Channels.instance().getDqo();
+    public QueryService getQueryService() {
+        return Channels.instance().getQueryService();
     }
 
     /**
@@ -228,7 +228,7 @@ public class DefaultAnalyst implements Analyst {
      */
     private List<Issue> findAllIssuesInPlays( ResourceSpec resourceSpec, boolean specific ) {
         List<Issue> issues = new ArrayList<Issue>();
-        List<Play> plays = Channels.dqo().findAllPlays( resourceSpec, specific );
+        List<Play> plays = Channels.queryService().findAllPlays( resourceSpec, specific );
         Set<Part> parts = new HashSet<Part>();
         for ( Play play : plays ) {
             parts.add( play.getPartFor( resourceSpec ) );

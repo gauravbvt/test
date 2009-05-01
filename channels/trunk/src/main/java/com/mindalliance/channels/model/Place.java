@@ -1,6 +1,6 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
@@ -30,14 +30,14 @@ public class Place extends ModelObject {
     /**
      * {@inheritDoc}
      */
-    public void beforeRemove( DataQueryObject dqo ) {
-        for ( Job job : dqo.findAllConfirmedJobs( ResourceSpec.with( this ) ) ) {
+    public void beforeRemove( QueryService queryService ) {
+        for ( Job job : queryService.findAllConfirmedJobs( ResourceSpec.with( this ) ) ) {
            job.setJurisdiction( null );
        }
-       for (Part part : dqo.findAllPartsWith( ResourceSpec.with( this ) )) {
+       for (Part part : queryService.findAllPartsWith( ResourceSpec.with( this ) )) {
            part.setJurisdiction( null );
        }
-        for (Part part : dqo.findAllPartsWithLocation( this )) {
+        for (Part part : queryService.findAllPartsWithLocation( this )) {
             part.setLocation( null );
         }
     }

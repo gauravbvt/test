@@ -7,7 +7,7 @@
            http://www.springframework.org/schema/context
            http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
-    <bean id="dqo" class="com.mindalliance.channels.query.DataQueryObjectImpl">
+    <bean id="queryService" class="com.mindalliance.channels.query.DefaultQueryService">
         <property name="addingSamples" value="false"/>
         <property name="importingScenarios" value="true"/>
         <property name="importDirectory" value="target/import"/>
@@ -20,13 +20,13 @@
           init-method="start" destroy-method="stop">
         <property name="directory" value="target/channels-1.0-SNAPSHOT/uploads"/>
         <property name="path" value="uploads/"/>
-        <property name="dqo" ref="dqo"/>
+        <property name="queryService" ref="queryService"/>
     </bean>
 
     <!-- setup wicket application -->
     <bean id="wicketApplication" class="com.mindalliance.channels.Channels">
         <property name="uri" value="mindalliance.com/channels/demo"/>
-        <property name="dqo" ref="dqo"/>
+        <property name="queryService" ref="queryService"/>
         <property name="attachmentManager" ref="attachmentManager"/>
         <property name="importer" ref="serializer"/>
         <property name="exporter" ref="serializer"/>
@@ -42,7 +42,7 @@
     <bean id="diagramFactory" class="com.mindalliance.channels.graph.DefaultDiagramFactory" scope="prototype">
         <property name="graphRenderer" ref="graphvizRenderer"/>
         <property name="imageDirectory" value="src/site/resources/images"/>
-        <property name="dqo" ref="dqo"/>
+        <property name="queryService" ref="queryService"/>
     </bean>
 
     <bean id="graphvizRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
@@ -87,14 +87,14 @@
 
     <!-- Lock manager -->
     <bean id="lockManager" class="com.mindalliance.channels.command.DefaultLockManager">
-        <property name="dqo" ref="dqo"/>
+        <property name="queryService" ref="queryService"/>
     </bean>
 
     <!-- Commander -->
     <bean id="commander" class="com.mindalliance.channels.command.DefaultCommander">
         <property name="timeout" value="300"/>
         <property name="lockManager" ref="lockManager"/>
-        <property name="dqo" ref="dqo"/>
+        <property name="queryService" ref="queryService"/>
     </bean>
 
 </beans>

@@ -60,7 +60,7 @@ public class IssuesTablePanel extends AbstractTablePanel {
         columns.add( makeColumn( "Remediation", "remediation", "remediation", EMPTY ) );
         columns.add( makeColumn( "Reported by", "reportedBy", "reportedBy", EMPTY ) );
         // provider and table
-        List<Issue> issues = getDqo().findAllIssuesFor( resourceSpec, specific );
+        List<Issue> issues = getQueryService().findAllIssuesFor( resourceSpec, specific );
         add( new AjaxFallbackDefaultDataTable<Issue>(
                 "issues-table",
                 columns,

@@ -44,7 +44,7 @@ public class OrganizationConverter extends EntityConverter {
      * {@inheritDoc}
      */
     ModelObject findOrMakeEntity( String name ) {
-        return Channels.dqo().findOrCreate( Organization.class, name );
+        return Channels.queryService().findOrCreate( Organization.class, name );
     }
 
     /**
@@ -98,10 +98,10 @@ public class OrganizationConverter extends EntityConverter {
             org.setActorsRequired( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals( "parent" ) ) {
             org = (Organization) entity;
-            org.setParent( Channels.dqo().findOrCreate( Organization.class, reader.getValue() ) );
+            org.setParent( Channels.queryService().findOrCreate( Organization.class, reader.getValue() ) );
         } else if ( nodeName.equals( "location" ) ) {
             org = (Organization) entity;
-            org.setLocation( Channels.dqo().findOrCreate( Place.class, reader.getValue() ) );
+            org.setLocation( Channels.queryService().findOrCreate( Place.class, reader.getValue() ) );
         } else if ( nodeName.equals( "channel" ) ) {
             Channel channel = (Channel) context.convertAnother( scenario, Channel.class );
             org.addChannel( channel );

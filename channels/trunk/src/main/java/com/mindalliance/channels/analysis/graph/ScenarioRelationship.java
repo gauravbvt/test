@@ -3,7 +3,7 @@ package com.mindalliance.channels.analysis.graph;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.model.Part;
@@ -70,15 +70,15 @@ public class ScenarioRelationship implements Identifiable {
         return Long.valueOf( fromId + toId );
     }
 
-    public void setId( long id, DataQueryObject dqo ) {
+    public void setId( long id, QueryService queryService ) {
         String s = Long.toString( id );
         String toId = s.substring( s.length() - 9 );
         String fromId = s.substring( 0, s.length() - 9 );
         fromScenarioId = Long.valueOf( fromId );
         toScenarioId = Long.valueOf( toId );
-        ScenarioRelationship scRel = dqo.findScenarioRelationship(
-                getFromScenario( dqo ),
-                getToScenario( dqo ) );
+        ScenarioRelationship scRel = queryService.findScenarioRelationship(
+                getFromScenario( queryService ),
+                getToScenario( queryService ) );
         if ( scRel != null ) {
             externalFlows = scRel.getExternalFlows();
             initiators = scRel.getInitiators();
@@ -120,12 +120,12 @@ public class ScenarioRelationship implements Identifiable {
     /**
      * Get from-scenario.
      *
-     * @param dqo a data query object
+     * @param queryService a query service
      * @return a scenario
      */
-    public Scenario getFromScenario( DataQueryObject dqo ) {
+    public Scenario getFromScenario( QueryService queryService ) {
         try {
-            return dqo.find( Scenario.class, fromScenarioId );
+            return queryService.find( Scenario.class, fromScenarioId );
         } catch ( NotFoundException e ) {
             LOG.warn( "From-scenario not found", e );
             return null;
@@ -135,12 +135,12 @@ public class ScenarioRelationship implements Identifiable {
     /**
      * Get to-scenario.
      *
-     * @param dqo a data query object
+     * @param queryService a query service
      * @return a scenario
      */
-    public Scenario getToScenario( DataQueryObject dqo ) {
+    public Scenario getToScenario( QueryService queryService ) {
         try {
-            return dqo.find( Scenario.class, toScenarioId );
+            return queryService.find( Scenario.class, toScenarioId );
         } catch ( NotFoundException e ) {
             LOG.warn( "To-scenario not found", e );
             return null;

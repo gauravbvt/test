@@ -119,7 +119,7 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
             int scrollLeft,
             AjaxRequestTarget target ) {
         try {
-            T entity = (T) getDqo().find( ModelObject.class, Long.valueOf( vertexId ) );
+            T entity = (T) getQueryService().find( ModelObject.class, Long.valueOf( vertexId ) );
             if ( entity != getEntity() ) {
                 String js = scroll( domIdentifier, scrollTop, scrollLeft );
                 Change change = new Change( Change.Type.Selected, entity );
@@ -142,7 +142,7 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
             int scrollLeft,
             AjaxRequestTarget target ) {
         EntityRelationship<T> entityRelationship = new EntityRelationship<T>();
-        entityRelationship.setId( Long.valueOf( edgeId ), getDqo() );
+        entityRelationship.setId( Long.valueOf( edgeId ), getQueryService() );
         String js = scroll( domIdentifier, scrollTop, scrollLeft );
         Change change = new Change( Change.Type.Selected, entityRelationship );
         change.setScript( js );

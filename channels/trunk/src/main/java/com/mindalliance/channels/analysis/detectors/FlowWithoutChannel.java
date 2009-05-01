@@ -53,7 +53,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
                 ResourceSpec partSpec = flow.getContactedPart().resourceSpec();
                 // If both any actor and any organization, don't bother with missing addresses
                 if ( !( partSpec.getActor() == null && partSpec.getOrganization() == null ) ) {
-                    List<Actor> actors = getDqo().findAllActors( partSpec );
+                    List<Actor> actors = getQueryService().findAllActors( partSpec );
                     if ( actors.isEmpty() ) {
                         issues.addAll( findIssues( modelObject, partSpec, media ) );
                     } else
@@ -72,7 +72,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
             ModelObject modelObject, ResourceSpec actorSpec, Set<Medium> media ) {
 
         List<Issue> result = new ArrayList<Issue>();
-        for ( Channel channel : getDqo().findAllChannelsFor( actorSpec ) ) {
+        for ( Channel channel : getQueryService().findAllChannelsFor( actorSpec ) ) {
             Medium channelMedium = channel.getMedium();
             if ( media.contains( channelMedium ) && !channel.isValid() ) {
                 result.add( createIssue(

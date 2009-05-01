@@ -8,7 +8,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.NotFoundException;
 
 import java.util.Map;
@@ -44,7 +44,7 @@ public class AddPart extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
-        DataQueryObject dqo = commander.getDqo();
+        QueryService queryService = commander.getQueryService();
 
         Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
         // Identify any undefined part likely created to be the lone default part.
@@ -57,7 +57,7 @@ public class AddPart extends AbstractCommand {
                 // commander.mapId( defaultPartId, defaultPart.getId() );
             }
         }
-        Part part = dqo.createPart( scenario );
+        Part part = queryService.createPart( scenario );
         if ( get( "part" ) != null )
             commander.mapId( (Long) get( "part" ), part.getId() );
         set( "part", part.getId() );

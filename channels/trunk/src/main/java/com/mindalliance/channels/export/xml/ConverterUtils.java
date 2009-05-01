@@ -58,7 +58,7 @@ public class ConverterUtils {
                                                         String scenarioDescription ) {
         List<Scenario> scenarios = new ArrayList<Scenario>();
         try {
-            scenarios.add( Channels.dqo().findScenario( scenarioName ) );
+            scenarios.add( Channels.queryService().findScenario( scenarioName ) );
         } catch ( NotFoundException e ) {
             LoggerFactory.getLogger( ConverterUtils.class ).info(
                     "No scenario found matching name ["

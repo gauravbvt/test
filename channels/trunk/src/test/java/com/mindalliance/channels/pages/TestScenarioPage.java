@@ -12,7 +12,7 @@ import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.attachments.BitBucket;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.query.DataQueryObjectImpl;
+import com.mindalliance.channels.query.DefaultQueryService;
 import junit.framework.TestCase;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.pages.RedirectPage;
@@ -50,12 +50,12 @@ public class TestScenarioPage extends TestCase {
 
         dao = new Memory();
         app = new Channels();
-        DataQueryObjectImpl dqo = new DataQueryObjectImpl();
-        dqo.setAddingSamples( true );
-        dqo.setDao( dao );
-        dqo.initialize();
+        DefaultQueryService queryService = new DefaultQueryService();
+        queryService.setAddingSamples( true );
+        queryService.setDao( dao );
+        queryService.initialize();
 
-        app.setDqo( dqo );
+        app.setQueryService( queryService );
         app.setAttachmentManager( new BitBucket() );
         DiagramFactory dm = createMock( DiagramFactory.class );
         Diagram fd = createMock(  Diagram.class);
@@ -76,7 +76,7 @@ public class TestScenarioPage extends TestCase {
         replay( sa );
         app.setAnalyst( sa );
 
-        scenario = app.getDqo().getDefaultScenario();
+        scenario = app.getQueryService().getDefaultScenario();
         tester = new WicketTester( app );
         tester.setParametersForNextRequest( new HashMap<String,String[]>() );
     }
@@ -94,7 +94,7 @@ public class TestScenarioPage extends TestCase {
 
         Importer importer = createMock( Importer.class );
         expect( importer.importScenario( (InputStream) notNull() ) )
-                .andReturn( app.getDqo().createScenario() );
+                .andReturn( app.getQueryService().createScenario() );
 
         replay( importer );
         app.setImporter( importer );
@@ -259,7 +259,7 @@ public class TestScenarioPage extends TestCase {
 
     public void testDeleteScenario() throws IOException, NotFoundException {
         assertEquals( 2, dao.getScenarioCount() );
-        Scenario sc2 = app.getDqo().createScenario();
+        Scenario sc2 = app.getQueryService().createScenario();
         sc2.setName( "Test" );
         assertEquals( 3, dao.getScenarioCount() );
 

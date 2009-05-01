@@ -83,7 +83,7 @@ public class ActorReportPanel extends Panel {
     }
 
     private String getTitle( Actor actor ) {
-        for ( Job job : ( (Channels) getApplication() ).getDqo().findAllJobs( actor ) ) {
+        for ( Job job : ( (Channels) getApplication() ).getQueryService().findAllJobs( actor ) ) {
             String title = job.getTitle().trim();
             if ( !title.isEmpty() )
                 return title;

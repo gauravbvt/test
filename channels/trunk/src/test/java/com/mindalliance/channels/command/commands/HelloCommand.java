@@ -43,7 +43,7 @@ public class HelloCommand extends AbstractCommand {
 
     static public AbstractCommand makeCommand( String greeting ) {
         AbstractCommand command = new HelloCommand( greeting );
-        Scenario scenario = Channels.instance().getDqo().getDefaultScenario();
+        Scenario scenario = Channels.instance().getQueryService().getDefaultScenario();
         command.addConflicting( scenario );
         return command;
     }

@@ -174,7 +174,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
             if ( part.getRole() != null ) {
                 if ( !label.isEmpty() ) label += "|";
                 if ( part.getActor() == null ) {
-                    List<Actor> partActors = getAnalyst().getDqo().findAllActors( part.resourceSpec() );
+                    List<Actor> partActors = getAnalyst().getQueryService().findAllActors( part.resourceSpec() );
                     if ( partActors.size() == 1 ) {
                         label += partActors.get( 0 ).getName();
                         label += " ";
@@ -288,7 +288,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
             } else {
                 String tooltip = vertex.getTitle();
                 if ( vertex.isPart() ) {
-                    List<Actor> partActors = getAnalyst().getDqo().findAllActors(
+                    List<Actor> partActors = getAnalyst().getQueryService().findAllActors(
                             ( (Part) vertex ).resourceSpec() );
                     if ( partActors.size() > 1 ) {
                         tooltip = sanitize( listActors( partActors ) );
@@ -411,7 +411,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
             if ( part.getActor() != null ) {
                 iconName = part.isSystem() ? "system" : "person";
             } else if ( part.getRole() != null ) {
-                List<Actor> partActors = getAnalyst().getDqo().findAllActors( part.resourceSpec() );
+                List<Actor> partActors = getAnalyst().getQueryService().findAllActors( part.resourceSpec() );
                 boolean onePlayer = partActors.size() == 1;
                 iconName = part.isSystem()
                         ? "system"

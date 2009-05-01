@@ -27,7 +27,7 @@ public class TestDefaultAnalyst extends AbstractChannelsTest {
     @Override
     protected void setUp() {
         super.setUp();
-        scenarios = app.getDqo().list( Scenario.class ).iterator();
+        scenarios = app.getQueryService().list( Scenario.class ).iterator();
         analyst = app.getAnalyst();
     }
 

@@ -72,7 +72,7 @@ public class ModelObjectRef implements Serializable {
             mo = commander.resolve( getModelObjectClass(), id );
         }
         else {
-            mo = commander.getDqo().findOrCreate( getModelObjectClass(), entityName );
+            mo = commander.getQueryService().findOrCreate( getModelObjectClass(), entityName );
         }
         return mo;
     }

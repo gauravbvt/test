@@ -9,7 +9,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.NotFoundException;
 
 import java.util.Map;
@@ -44,14 +44,14 @@ public class AddCapability extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
-        DataQueryObject dqo = commander.getDqo();
+        QueryService queryService = commander.getQueryService();
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Part part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
             if ( part == null ) throw new NotFoundException();
-            Flow flow = dqo.connect(
+            Flow flow = queryService.connect(
                     part,
-                    dqo.createConnector( scenario ),
+                    queryService.createConnector( scenario ),
                     (String) get( "name" ) );
             Map<String, Object> flowAttributes = (Map<String, Object>) get( "attributes" );
             if ( flowAttributes != null ) {

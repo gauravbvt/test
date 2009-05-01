@@ -1,6 +1,6 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Channels;
@@ -43,9 +43,9 @@ public class DefaultCommander implements Commander {
      */
     private History history = new History();
     /**
-     * Data query object.
+     * Query service.
      */
-    private DataQueryObject dqo;
+    private QueryService queryService;
 
     private boolean replaying = false;
     /**
@@ -108,12 +108,12 @@ public class DefaultCommander implements Commander {
         this.lockManager = lockManager;
     }
 
-    public void setDqo( DataQueryObject dqo ) {
-        this.dqo = dqo;
+    public void setQueryService( QueryService queryService ) {
+        this.queryService = queryService;
     }
 
-    public DataQueryObject getDqo() {
-        return dqo;
+    public QueryService getQueryService() {
+        return queryService;
     }
 
     public int getTimeout() {
@@ -141,7 +141,7 @@ public class DefaultCommander implements Commander {
      */
     public <T extends ModelObject> T resolve( Class<T> clazz, Long id ) throws CommandException {
         try {
-            return getDqo().find( clazz, resolveId( id ) );
+            return getQueryService().find( clazz, resolveId( id ) );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
         }
@@ -241,7 +241,7 @@ public class DefaultCommander implements Commander {
                 Collection<Lock> grabbedLocks = lockManager.grabLocksOn( resolveIds( command.getLockingSet() ) );
                 change = command.execute( this );
                 lockManager.releaseLocks( grabbedLocks );
-                if ( !isReplaying() ) getDqo().getDao().onAfterCommand( command );
+                if ( !isReplaying() ) getQueryService().getDao().onAfterCommand( command );
             } catch ( LockingException e ) {
                 throw new CommandException( e.getMessage(), e );
             }
@@ -365,19 +365,23 @@ public class DefaultCommander implements Commander {
      */
     public void cleanup( Class<? extends ModelObject> clazz, String name ) {
         synchronized ( this ) {
-            DataQueryObject dqo = getDqo();
+            QueryService queryService = getQueryService();
             if ( name != null && !name.trim().isEmpty() ) {
-                ModelObject mo = dqo.getDao().find( clazz, name.trim() );
+                ModelObject mo = queryService.getDao().find( clazz, name.trim() );
                 if ( mo != null && mo.isUndefined() ) {
                     boolean garbage;
-                    if ( mo instanceof Actor ) garbage = !dqo.isReferenced( (Actor) mo );
-                    else if ( mo instanceof Role ) garbage = !dqo.isReferenced( (Role) mo );
-                    else if ( mo instanceof Organization ) garbage = !dqo.isReferenced( (Organization) mo );
-                    else if ( mo instanceof Place ) garbage = !dqo.isReferenced( (Place) mo );
+                    if ( mo instanceof Actor )
+                        garbage = !queryService.isReferenced( (Actor) mo );
+                    else if ( mo instanceof Role )
+                        garbage = !queryService.isReferenced( (Role) mo );
+                    else if ( mo instanceof Organization )
+                        garbage = !queryService.isReferenced( (Organization) mo );
+                    else if ( mo instanceof Place )
+                        garbage = !queryService.isReferenced( (Place) mo );
                     else throw new IllegalArgumentException( "Can't clean up something of class " + clazz );
                     if ( garbage ) {
                         LOG.info( "Removing unused " + mo.getClass().getSimpleName() + " " + mo );
-                        dqo.remove( mo );
+                        queryService.remove( mo );
                     }
                 }
             }

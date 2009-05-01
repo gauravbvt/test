@@ -22,7 +22,7 @@ public class TestUpdateScenarioObject extends AbstractChannelsTest {
     protected void setUp() {
         super.setUp();
         commander = app.getCommander();
-        Scenario scenario = app.getDqo().getDefaultScenario();
+        Scenario scenario = app.getQueryService().getDefaultScenario();
         part = scenario.getDefaultPart();
         command = new UpdateScenarioObject( part, "description", "ipso lorem etc." );
         commander.reset();

@@ -1,6 +1,6 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.DataQueryObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.attachments.AttachmentManager;
@@ -55,7 +55,7 @@ public final class Channels extends WebApplication implements Identifiable {    
     /**
      * The underlying service.
      */
-    private DataQueryObject dqo;
+    private QueryService queryService;
 
     /**
      * A diagram factory  - for testing only
@@ -133,12 +133,12 @@ public final class Channels extends WebApplication implements Identifiable {    
         mount( new QueryStringUrlCodingStrategy( "resource.html", ProfilePage.class ) );
         */
 
-        dqo.initialize();
+        queryService.initialize();
     }
 
     protected void onDestroy() {
         LOG.info( "Goodbye!" );
-        dqo.onDestroy();
+        queryService.onDestroy();
     }
 
     @Override
@@ -169,12 +169,12 @@ public final class Channels extends WebApplication implements Identifiable {    
         this.uri = uri;
     }
 
-    public DataQueryObject getDqo() {
-        return dqo;
+    public QueryService getQueryService() {
+        return queryService;
     }
 
-    public void setDqo( DataQueryObject dqo ) {
-        this.dqo = dqo;
+    public void setQueryService( QueryService queryService ) {
+        this.queryService = queryService;
     }
 
     public DiagramFactory getDiagramFactory() {
@@ -277,8 +277,8 @@ public final class Channels extends WebApplication implements Identifiable {    
      *
      * @return a Dao
      */
-    public static DataQueryObject dqo() {
-        return instance().getDqo();
+    public static QueryService queryService() {
+        return instance().getQueryService();
     }
 
     /**

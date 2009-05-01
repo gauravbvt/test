@@ -162,7 +162,7 @@ public class FlowReportPanel extends Panel {
                 localizedActors.addAll( findActors( f, b, u ) );
             }
         } else
-            for ( Actor a : Channels.instance().getDqo().findAllActors( part.resourceSpec() ) )
+            for ( Actor a : Channels.instance().getQueryService().findAllActors( part.resourceSpec() ) )
                 localizedActors.add( new LocalizedActor( a, part, unicasts, broadcasts ) );
 
         List<LocalizedActor> result = new ArrayList<LocalizedActor>( localizedActors );

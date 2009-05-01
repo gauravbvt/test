@@ -88,13 +88,13 @@ public class EntityFlowsPanel extends AbstractCommandablePanel {
 
     private List<Play> getActorPlays() {
         List<Play> plays = new ArrayList<Play>();
-        plays.addAll( getDqo().findAllPlays( ResourceSpec.with( getEntity() ), false ) );
+        plays.addAll( getQueryService().findAllPlays( ResourceSpec.with( getEntity() ), false ) );
         if ( !isRestricted() ) {
             // Include all plays for responsibilities of actor
-            List<ResourceSpec> responsibilities = getDqo()
+            List<ResourceSpec> responsibilities = getQueryService()
                     .findAllResponsibilitiesOf( (Actor) getEntity() );
             for ( ResourceSpec resourceSpec : responsibilities ) {
-                plays.addAll( getDqo().findAllPlays( resourceSpec, false ) );
+                plays.addAll( getQueryService().findAllPlays( resourceSpec, false ) );
             }
         }
         return plays;
@@ -102,7 +102,7 @@ public class EntityFlowsPanel extends AbstractCommandablePanel {
 
     private List<Play> getRolePlays() {
         List<Play> plays = new ArrayList<Play>();
-        for ( Play play : getDqo().findAllPlays( ResourceSpec.with( getEntity() ), false ) ) {
+        for ( Play play : getQueryService().findAllPlays( ResourceSpec.with( getEntity() ), false ) ) {
             // Don't include play if list is restricted and play involve an actor
             if ( !( isRestricted() && play.getPart().getActor() != null ) ) {
                 plays.add( play );
@@ -113,7 +113,7 @@ public class EntityFlowsPanel extends AbstractCommandablePanel {
 
     private List<Play> getOrganizationPlays() {
         List<Play> plays = new ArrayList<Play>();
-        for ( Play play : getDqo().findAllPlays( ResourceSpec.with( getEntity() ), false ) ) {
+        for ( Play play : getQueryService().findAllPlays( ResourceSpec.with( getEntity() ), false ) ) {
             // Don't include play if list is restricted and play involve an actor or a role
             if ( !( isRestricted()
                     && ( play.getPart().getActor() != null || play.getPart().getRole() != null ) ) ) {
@@ -125,7 +125,7 @@ public class EntityFlowsPanel extends AbstractCommandablePanel {
 
     private List<Play> getPlacePlays() {
         // TODO - restricted means necessarily within place, and not including what contains the place
-        return getDqo().findAllPlays( ResourceSpec.with( getEntity() ), isRestricted() );
+        return getQueryService().findAllPlays( ResourceSpec.with( getEntity() ), isRestricted() );
     }
 
 /*
