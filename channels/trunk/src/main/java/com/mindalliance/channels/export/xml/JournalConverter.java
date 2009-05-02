@@ -1,12 +1,13 @@
 package com.mindalliance.channels.export.xml;
 
+import com.mindalliance.channels.Exporter;
+import com.mindalliance.channels.command.AbstractCommand;
+import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.dao.Journal;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.mindalliance.channels.dao.Journal;
-import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.command.AbstractCommand;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +25,8 @@ public class JournalConverter extends AbstractChannelsConverter {
      */
     public static final Logger LOG = LoggerFactory.getLogger( JournalConverter.class );
 
-    public JournalConverter() {
+    public JournalConverter( Exporter exporter ) {
+        super( exporter );
     }
 
     /**

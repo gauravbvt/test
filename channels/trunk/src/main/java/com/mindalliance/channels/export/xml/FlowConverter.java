@@ -1,9 +1,12 @@
 package com.mindalliance.channels.export.xml;
 
+import com.mindalliance.channels.Exporter;
+import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.export.ConnectionSpecification;
+import com.mindalliance.channels.export.PartSpecification;
+import com.mindalliance.channels.export.ScenarioSpecification;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
@@ -13,9 +16,6 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.UserIssue;
-import com.mindalliance.channels.export.ConnectionSpecification;
-import com.mindalliance.channels.export.PartSpecification;
-import com.mindalliance.channels.export.ScenarioSpecification;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -43,7 +43,8 @@ public class FlowConverter extends AbstractChannelsConverter {
      */
     private Map<Connector, ConnectionSpecification> proxyConnectors;
 
-    public FlowConverter() {
+    public FlowConverter( Exporter exporter ) {
+        super( exporter );
     }
 
     /**
@@ -94,7 +95,7 @@ public class FlowConverter extends AbstractChannelsConverter {
         }
         // Flow user issues (exported only if an internal flow)
         if ( flow.isInternal() ) {
-            for ( Issue issue : Channels.queryService().findAllUserIssues( flow ) ) {
+            for ( Issue issue : getQueryService().findAllUserIssues( flow ) ) {
                 writer.startNode( "issue" );
                 context.convertAnother( issue );
                 writer.endNode();
@@ -257,7 +258,7 @@ public class FlowConverter extends AbstractChannelsConverter {
     private Connector resolveConnector( HierarchicalStreamReader reader,
                                         Scenario scenario,
                                         boolean isSource ) {
-        Connector connector = Channels.queryService().createConnector( scenario );
+        Connector connector = getQueryService().createConnector( scenario );
         String externalScenarioName = reader.getAttribute( "scenario" );
         if ( externalScenarioName != null ) {
             // Connector is in other scenario

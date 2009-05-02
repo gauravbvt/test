@@ -3,7 +3,6 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.model.Deletable;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.pages.ProfileLink;
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
@@ -98,7 +97,7 @@ public class ResourceSpecsPanel extends AbstractTablePanel {
     /**
      * A wrapper to keep track of the deletion state of an attachment.
      */
-    public static class DeletableWrapper implements Deletable {
+    public class DeletableWrapper implements Deletable {
 
         /**
          * The underlying attachment.
@@ -127,7 +126,7 @@ public class ResourceSpecsPanel extends AbstractTablePanel {
         public void setMarkedForDeletion( boolean delete ) {
             markedForDeletion = delete;
             if ( delete ) {
-                Channels.queryService().remove( resourceSpec );
+                getQueryService().remove( resourceSpec );
             }
         }
 

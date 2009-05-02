@@ -1,15 +1,14 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Scenario;
 
 import java.util.Iterator;
 
@@ -22,7 +21,6 @@ import java.util.Iterator;
  */
 public class TestSatisfyNeed extends AbstractChannelsTest {
 
-    private Commander commander;
     private Scenario scenario;
     private QueryService queryService;
     Part source;
@@ -34,7 +32,6 @@ public class TestSatisfyNeed extends AbstractChannelsTest {
     protected void setUp() {
         super.setUp();
         queryService = app.getQueryService();
-        commander = app.getCommander();
         scenario = queryService.createScenario();
         source = scenario.getDefaultPart();
         source.setRole( queryService.findOrCreate( Role.class, "source" ) );

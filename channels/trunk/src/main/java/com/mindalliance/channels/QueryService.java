@@ -1,8 +1,7 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.util.Play;
-import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;
@@ -17,6 +16,7 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.util.Play;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Iterator;
@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Data query interface.
  */
-public interface QueryService {
+public interface QueryService extends Service {
 
     /**
      * Get the persistence store accessor.

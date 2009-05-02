@@ -1,17 +1,17 @@
 package com.mindalliance.channels.pages.png;
 
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.MarkupStream;
+import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.DiagramFactory;
+import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.graph.Diagram;
+import com.mindalliance.channels.graph.DiagramException;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Response;
+import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.DiagramFactory;
-import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.graph.DiagramException;
 
 /**
  * Abstract superclass for all PNG-generating pages.
@@ -24,9 +24,9 @@ import com.mindalliance.channels.graph.DiagramException;
 public abstract class PngWebPage extends WebPage {
 
     /**
-      * The log.
-      */
-     private static final Logger LOG = LoggerFactory.getLogger( PngWebPage.class );
+     * The log.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( PngWebPage.class );
 
     private PageParameters parameters;
 
@@ -38,18 +38,24 @@ public abstract class PngWebPage extends WebPage {
 
     /**
      * Get query service.
+     *
      * @return a query service
      */
     protected QueryService getQueryService() {
-        return ( (Channels) getApplication() ).getQueryService();
+        return getChannels().getQueryService();
     }
 
     /**
      * Get a diagram factory.
+     *
      * @return a diagram factory
      */
     protected DiagramFactory getDiagramFactory() {
-        return Channels.diagramFactory();
+        return getChannels().getDiagramFactory();
+    }
+
+    private Channels getChannels() {
+        return Channels.instance();
     }
 
     @Override
@@ -59,6 +65,7 @@ public abstract class PngWebPage extends WebPage {
 
     /**
      * COnvert size parameter.
+     *
      * @param s size parameter value
      * @return an array of two double values
      */
@@ -73,16 +80,17 @@ public abstract class PngWebPage extends WebPage {
 
     /**
      * Configure diagram for size and orientation.
+     *
      * @param diagram a diagram
      */
     protected void configureDiagram( Diagram diagram ) {
         if ( parameters.containsKey( "size" ) ) {
             double[] size = convertSize( parameters.getString( "size" ) );
-            diagram.setDiagramSize( size[0], size[1] );                                
+            diagram.setDiagramSize( size[0], size[1] );
         }
         if ( parameters.containsKey( "orientation" ) ) {
             diagram.setOrientation( parameters.getString( "orientation" ) );
-        }        
+        }
     }
 
     /**
@@ -115,7 +123,8 @@ public abstract class PngWebPage extends WebPage {
 
     /**
      * Create the diagram.
-     * @param size width and height as double array. Can be null.
+     *
+     * @param size        width and height as double array. Can be null.
      * @param orientation string
      * @return a diagram
      */

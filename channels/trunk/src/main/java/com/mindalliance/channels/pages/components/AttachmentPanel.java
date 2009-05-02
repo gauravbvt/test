@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.attachments.AttachmentManager;
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.model.ModelObject;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -147,7 +147,7 @@ public class AttachmentPanel extends Panel {
             this.markedForDeletion = markedForDeletion;
             if ( markedForDeletion ) {
                 ModelObject object = (ModelObject) getDefaultModelObject();
-                Channels.instance().getAttachmentManager().detach( object, attachment );
+                getAttachmentManager().detach( object, attachment );
             }
         }
 

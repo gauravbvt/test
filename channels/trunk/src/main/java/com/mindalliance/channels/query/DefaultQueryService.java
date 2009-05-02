@@ -1,10 +1,18 @@
 package com.mindalliance.channels.query;
 
+import com.mindalliance.channels.AbstractService;
+import com.mindalliance.channels.Dao;
+import com.mindalliance.channels.Importer;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
+import com.mindalliance.channels.dao.EvacuationScenario;
+import com.mindalliance.channels.dao.FireScenario;
+import com.mindalliance.channels.export.ConnectionSpecification;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.Dao;
-import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
@@ -12,21 +20,14 @@ import com.mindalliance.channels.model.Job;
 import com.mindalliance.channels.model.Medium;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.Importer;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.UserIssue;
-import com.mindalliance.channels.analysis.graph.EntityRelationship;
-import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
-import com.mindalliance.channels.dao.EvacuationScenario;
-import com.mindalliance.channels.dao.FireScenario;
-import com.mindalliance.channels.export.ConnectionSpecification;
 import com.mindalliance.channels.util.Play;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.commons.collections.Predicate;
@@ -42,17 +43,17 @@ import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Query service instance.
  */
-public class DefaultQueryService implements QueryService {
+public class DefaultQueryService extends AbstractService implements QueryService {
 
     /**
      * Class logger.
@@ -82,8 +83,222 @@ public class DefaultQueryService implements QueryService {
     }
 
     public DefaultQueryService( Dao dao ) {
-        setAddingSamples( false );
         setDao( dao );
+    }
+
+    // PROPERTIES
+
+    public Dao getDao() {
+        return dao;
+    }
+
+    /**
+     * Use a specific dao.
+     *
+     * @param dao the dao
+     */
+    public void setDao( Dao dao ) {
+        this.dao = dao;
+        dao.setChannels( getChannels() );
+    }
+
+    public boolean isImportingScenarios() {
+        return importingScenarios;
+    }
+
+    public void setImportingScenarios( boolean importingScenarios ) {
+        this.importingScenarios = importingScenarios;
+    }
+
+    public String getImportDirectory() {
+        return importDirectory;
+    }
+
+    public void setImportDirectory( String importDirectory ) {
+        this.importDirectory = importDirectory;
+    }
+
+    public boolean isAddingSamples() {
+        return addingSamples;
+    }
+
+    public void setAddingSamples( boolean addingSamples ) {
+        this.addingSamples = addingSamples;
+    }
+
+    // LIFECYCLE
+
+    /**
+     * {@inheritDoc}
+     */
+    public void flush() {
+        getDao().flush();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onDestroy() {
+        getDao().onDestroy();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void initialize() {
+        getDao().load();
+        // Make sure there is at least one plan, if not create it, optionally adding/import scenarios into it.
+        List<Plan> plans = getChannels().getPlans();
+        if ( plans.isEmpty() ) {
+            Plan plan = getDao().makePlan();
+            plans.add( plan );
+        }
+        if ( plans.size() == 1 && plans.get( 0 ).getScenarios().isEmpty() ) {
+            try {
+                getChannels().beginUsingPlan( plans.get( 0 ) );
+                if ( addingSamples ) {
+                    LOG.info( "Adding sample models to default plan" );
+                    Scenario evac = createScenario();
+                    EvacuationScenario.initialize( evac, this );
+                    Scenario fireScenario = createScenario();
+                    FireScenario.initialize( fireScenario, this, evac );
+                }
+                if ( importingScenarios ) {
+                    LOG.info( "Importing default models to default plan" );
+                    loadScenarios();
+                }
+            } finally {
+                getChannels().endUsingPlan();
+            }
+        }
+        for ( Plan plan : getChannels().getPlans() ) {
+            getChannels().beginUsingPlan( plan );
+            try {
+                // Make sure there is at least one scenario per plan
+                if ( !getDao().list( Scenario.class ).iterator().hasNext() ) {
+                    createScenario();
+                }
+            } finally {
+                getChannels().endUsingPlan();
+            }
+        }
+        getDao().afterInitialize();
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private void loadScenarios() {
+        if ( importDirectory != null ) {
+            File directory = new File( importDirectory );
+            if ( directory.exists() && directory.isDirectory() ) {
+                File[] files = directory.listFiles( new FilenameFilter() {
+                    /** {@inheritDoc} */
+                    public boolean accept( File dir, String name ) {
+                        return name.endsWith( ".xml" );
+                    }
+                } );
+                Importer importer = getChannels().getImporter();
+                Map<String, Long> idMap = new HashMap<String, Long>();
+                Map<Connector, ConnectionSpecification> proxyConnectors =
+                        new HashMap<Connector, ConnectionSpecification>();
+                for ( File file : files ) {
+                    try {
+                        Map<String, Object> results = importer.loadScenario(
+                                new FileInputStream( file ) );
+                        // Cumulate results
+                        idMap.putAll( (Map<String, Long>) results.get( "idMap" ) );
+                        proxyConnectors.putAll(
+                                (Map<Connector, ConnectionSpecification>) results.get( "proxyConnectors" ) );
+                        Scenario scenario = (Scenario) results.get( "scenario" );
+                        LOG.info(
+                                "Imported scenario "
+                                        + scenario.getName()
+                                        + " from "
+                                        + file.getPath() );
+                    } catch ( IOException e ) {
+                        LOG.warn( "Failed to import " + file.getPath(), e );
+                    }
+                }
+                // Reconnect external links
+                importer.reconnectExternalFlows( idMap, proxyConnectors );
+            } else {
+                LOG.warn( "Directory " + importDirectory + " does not exist." );
+            }
+        } else {
+            LOG.warn( "Import directory is not set." );
+        }
+    }
+
+    // CRUD
+
+    /**
+     * {@inheritDoc}
+     */
+    public <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException {
+        return getDao().find( clazz, id );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public <T extends ModelObject> List<T> list( Class<T> clazz ) {
+        return getDao().list( clazz );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( {"unchecked"} )
+    public Iterator<ModelObject> iterateEntities() {
+        return new FilterIterator( getDao().list( ModelObject.class ).iterator(), new Predicate() {
+            public boolean evaluate( Object object ) {
+                return ( (ModelObject) object ).isEntity();
+            }
+        } );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public <T extends ModelObject> T findOrCreate( Class<T> clazz, String name ) {
+        if ( name == null || name.isEmpty() )
+            return null;
+
+        T result = getDao().find( clazz, name );
+        if ( result == null ) {
+            try {
+                result = clazz.newInstance();
+                result.setName( name );
+                getDao().add( result );
+            } catch ( InstantiationException e ) {
+                throw new RuntimeException( e );
+            } catch ( IllegalAccessException e ) {
+                throw new RuntimeException( e );
+            }
+        }
+        return result;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public void add( ModelObject object ) {
+        getDao().add( object );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void update( ModelObject object ) {
+        getDao().update( object );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void remove( ModelObject object ) {
+        object.beforeRemove( this );
+        getDao().remove( object );
     }
 
     /**
@@ -146,6 +361,45 @@ public class DefaultQueryService implements QueryService {
         return result;
     }
 
+    private static void addUniqueChannels( Set<Channel> result, List<Channel> candidates ) {
+        for ( Channel channel : candidates ) {
+            Medium medium = channel.getMedium();
+            if ( containsInvalidChannel( result, medium ) )
+                result.remove( new Channel( medium, "" ) );
+            if ( medium.isBroadcast() || !containsValidChannel( result, medium ) )
+                result.add( channel );
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Flow replicate( Flow flow, boolean isOutcome ) {
+        Flow result = isOutcome ? connect( flow.getSource(),
+                createConnector( flow.getSource().getScenario() ),
+                flow.getName() )
+                : connect( createConnector( flow.getTarget().getScenario() ),
+                flow.getTarget(),
+                flow.getName() );
+        result.initFrom( flow );
+        return result;
+    }
+
+    // QUERIES (no change to model)
+
+    /**
+     * {@inheritDoc}
+     */
+    public Scenario getDefaultScenario() {
+        List<Scenario> allScenarios = list( Scenario.class );
+        Collections.sort( allScenarios, new Comparator<Scenario>() {
+            public int compare( Scenario o1, Scenario o2 ) {
+                return Collator.getInstance().compare( o1.getName(), o2.getName() );
+            }
+        } );
+        return allScenarios.get( 0 );
+    }
+
     private static boolean isInternal( Node source, Node target ) {
         Scenario scenario = source.getScenario();
         return scenario != null && scenario.equals( target.getScenario() );
@@ -161,6 +415,82 @@ public class DefaultQueryService implements QueryService {
     /**
      * {@inheritDoc}
      */
+    public boolean isReferenced( Actor actor ) {
+        for ( Organization org : list( Organization.class ) ) {
+            for ( Job job : org.getJobs() ) {
+                if ( job.getActor() == actor ) return true;
+            }
+        }
+        // Look in parts
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                if ( parts.next().getActor() == actor ) return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isReferenced( Role role ) {
+        for ( Organization org : list( Organization.class ) ) {
+            for ( Job job : org.getJobs() ) {
+                if ( job.getRole() == role ) return true;
+            }
+        }
+        // Look in parts
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                if ( parts.next().getRole() == role ) return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isReferenced( Organization organization ) {
+        for ( Organization org : list( Organization.class ) ) {
+            if ( org.getParent() == organization ) return true;
+        }
+        // Look in parts
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                if ( parts.next().getOrganization() == organization ) return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isReferenced( Place place ) {
+        for ( Organization org : list( Organization.class ) ) {
+            if ( org.getLocation() == place ) return true;
+            else for ( Job job : org.getJobs() ) {
+                if ( job.getJurisdiction() == place ) return true;
+            }
+        }
+        // Look in parts
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                Part part = parts.next();
+                if ( part.getLocation() == place || part.getJurisdiction() == place ) return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public Scenario findScenario( String name ) throws NotFoundException {
         for ( Scenario s : getDao().list( Scenario.class ) ) {
             if ( name.equals( s.getName() ) )
@@ -168,178 +498,6 @@ public class DefaultQueryService implements QueryService {
         }
 
         throw new NotFoundException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException {
-        return getDao().find( clazz, id );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public <T extends ModelObject> List<T> list( Class<T> clazz ) {
-        return getDao().list( clazz );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings( {"unchecked"} )
-    public Iterator<ModelObject> iterateEntities() {
-        return new FilterIterator( getDao().list( ModelObject.class ).iterator(), new Predicate() {
-            public boolean evaluate( Object object ) {
-                return ( (ModelObject) object ).isEntity();
-            }
-        } );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void add( ModelObject object ) {
-        getDao().add( object );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void update( ModelObject object ) {
-        getDao().update( object );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void remove( ModelObject object ) {
-        object.beforeRemove( this );
-        getDao().remove( object );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Scenario getDefaultScenario() {
-        List<Scenario> allScenarios = list( Scenario.class );
-        Collections.sort( allScenarios, new Comparator<Scenario>() {
-            public int compare( Scenario o1, Scenario o2 ) {
-                return Collator.getInstance().compare( o1.getName(), o2.getName() );
-            }
-        } );
-        return allScenarios.get( 0 );
-    }
-
-    public Dao getDao() {
-        return dao;
-    }
-
-    /**
-     * Use a specific dao.
-     *
-     * @param dao the dao
-     */
-    public void setDao( Dao dao ) {
-        this.dao = dao;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void initialize() {
-        getDao().load();
-        if ( !getDao().list( Scenario.class ).iterator().hasNext() ) {
-            if ( addingSamples ) {
-                LOG.info( "Adding sample models" );
-                Scenario evac = createScenario();
-                EvacuationScenario.initialize( evac, this );
-                Scenario fireScenario = createScenario();
-                FireScenario.initialize( fireScenario, this, evac );
-            }
-            if ( importingScenarios ) {
-                LOG.info( "Importing default models" );
-                loadScenarios();
-            }
-            // Make sure there is at least one scenario
-            if ( !getDao().list( Scenario.class ).iterator().hasNext() ) {
-                createScenario();
-            }
-        }
-        getDao().afterInitialize();
-    }
-
-    @SuppressWarnings( "unchecked" )
-    private void loadScenarios() {
-        if ( importDirectory != null ) {
-            File directory = new File( importDirectory );
-            if ( directory.exists() && directory.isDirectory() ) {
-                File[] files = directory.listFiles( new FilenameFilter() {
-                    /** {@inheritDoc} */
-                    public boolean accept( File dir, String name ) {
-                        return name.endsWith( ".xml" );
-                    }
-                } );
-                Importer importer = Channels.instance().getImporter();
-                Map<String, Long> idMap = new HashMap<String, Long>();
-                Map<Connector, ConnectionSpecification> proxyConnectors =
-                        new HashMap<Connector, ConnectionSpecification>();
-                for ( File file : files ) {
-                    try {
-                        Map<String, Object> results = importer.loadScenario(
-                                new FileInputStream( file ) );
-                        // Cumulate results
-                        idMap.putAll( (Map<String, Long>) results.get( "idMap" ) );
-                        proxyConnectors.putAll(
-                                (Map<Connector, ConnectionSpecification>) results.get( "proxyConnectors" ) );
-                        Scenario scenario = (Scenario) results.get( "scenario" );
-                        LOG.info(
-                                "Imported scenario "
-                                        + scenario.getName()
-                                        + " from "
-                                        + file.getPath() );
-                    } catch ( IOException e ) {
-                        LOG.warn( "Failed to import " + file.getPath(), e );
-                    }
-                }
-                // Reconnect external links
-                importer.reconnectExternalFlows( idMap, proxyConnectors );
-            } else {
-                LOG.warn( "Directory " + importDirectory + " does not exist." );
-            }
-        } else {
-            LOG.warn( "Import directory is not set." );
-        }
-    }
-
-    public boolean isAddingSamples() {
-        return addingSamples;
-    }
-
-    public void setAddingSamples( boolean addingSamples ) {
-        this.addingSamples = addingSamples;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public <T extends ModelObject> T findOrCreate( Class<T> clazz, String name ) {
-        if ( name == null || name.isEmpty() )
-            return null;
-
-        T result = getDao().find( clazz, name );
-        if ( result == null ) {
-            try {
-                result = clazz.newInstance();
-                result.setName( name );
-                getDao().add( result );
-            } catch ( InstantiationException e ) {
-                throw new RuntimeException( e );
-            } catch ( IllegalAccessException e ) {
-                throw new RuntimeException( e );
-            }
-        }
-        return result;
     }
 
     /**
@@ -471,7 +629,7 @@ public class DefaultQueryService implements QueryService {
      * {@inheritDoc}
      */
     public List<Issue> findAllIssuesFor( ResourceSpec resourceSpec, boolean specific ) {
-        return Channels.instance().getAnalyst().findAllIssuesFor(
+        return getChannels().getAnalyst().findAllIssuesFor(
                 resourceSpec,
                 specific );
     }
@@ -654,16 +812,6 @@ public class DefaultQueryService implements QueryService {
         return result;
     }
 
-    private static void addUniqueChannels( Set<Channel> result, List<Channel> candidates ) {
-        for ( Channel channel : candidates ) {
-            Medium medium = channel.getMedium();
-            if ( containsInvalidChannel( result, medium ) )
-                result.remove( new Channel( medium, "" ) );
-            if ( medium.isBroadcast() || !containsValidChannel( result, medium ) )
-                result.add( channel );
-        }
-    }
-
     private static boolean containsValidChannel( Set<Channel> channels, Medium medium ) {
         for ( Channel channel : channels )
             if ( channel.getMedium() == medium && channel.isValid() )
@@ -694,43 +842,6 @@ public class DefaultQueryService implements QueryService {
             }
         }
         return flows;
-    }
-
-    public boolean isImportingScenarios() {
-        return importingScenarios;
-    }
-
-    public void setImportingScenarios( boolean importingScenarios ) {
-        this.importingScenarios = importingScenarios;
-    }
-
-    public String getImportDirectory() {
-        return importDirectory;
-    }
-
-    public void setImportDirectory( String importDirectory ) {
-        this.importDirectory = importDirectory;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Flow replicate( Flow flow, boolean isOutcome ) {
-        Flow result = isOutcome ? connect( flow.getSource(),
-                createConnector( flow.getSource().getScenario() ),
-                flow.getName() )
-                : connect( createConnector( flow.getTarget().getScenario() ),
-                flow.getTarget(),
-                flow.getName() );
-        result.initFrom( flow );
-        return result;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void flush() {
-        getDao().flush();
     }
 
     /**
@@ -1163,89 +1274,6 @@ public class DefaultQueryService implements QueryService {
             started = doFindIfPartStarted( initiators.next(), visited );
         }
         return started;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isReferenced( Actor actor ) {
-        for ( Organization org : list( Organization.class ) ) {
-            for ( Job job : org.getJobs() ) {
-                if ( job.getActor() == actor ) return true;
-            }
-        }
-        // Look in parts
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Part> parts = scenario.parts();
-            while ( parts.hasNext() ) {
-                if ( parts.next().getActor() == actor ) return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isReferenced( Role role ) {
-        for ( Organization org : list( Organization.class ) ) {
-            for ( Job job : org.getJobs() ) {
-                if ( job.getRole() == role ) return true;
-            }
-        }
-        // Look in parts
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Part> parts = scenario.parts();
-            while ( parts.hasNext() ) {
-                if ( parts.next().getRole() == role ) return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isReferenced( Organization organization ) {
-        for ( Organization org : list( Organization.class ) ) {
-            if ( org.getParent() == organization ) return true;
-        }
-        // Look in parts
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Part> parts = scenario.parts();
-            while ( parts.hasNext() ) {
-                if ( parts.next().getOrganization() == organization ) return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isReferenced( Place place ) {
-        for ( Organization org : list( Organization.class ) ) {
-            if ( org.getLocation() == place ) return true;
-            else for ( Job job : org.getJobs() ) {
-                if ( job.getJurisdiction() == place ) return true;
-            }
-        }
-        // Look in parts
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Part> parts = scenario.parts();
-            while ( parts.hasNext() ) {
-                Part part = parts.next();
-                if ( part.getLocation() == place || part.getJurisdiction() == place ) return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void onDestroy() {
-        getDao().onDestroy();
     }
 
 

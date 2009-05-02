@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -32,7 +32,7 @@ public class ScenarioCausesPanel extends AbstractTablePanel<ScenarioRelationship
 
     public ScenarioCausesPanel(
             String id,
-            IModel<Channels> model,
+            IModel<Plan> model,
             IModel<ArrayList<ScenarioRelationship>> scRels,
             int pageSize,
             Set<Long> expansions ) {

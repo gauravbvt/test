@@ -1,12 +1,11 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.Channels;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.iterators.TransformIterator;
 import org.apache.wicket.AttributeModifier;
@@ -26,13 +25,12 @@ import java.util.Iterator;
  */
 public class ConnectedFlowList extends Panel {
 
-    public ConnectedFlowList( String id, Connector connector ) {
+    public ConnectedFlowList( String id, Connector connector, Analyst analyst ) {
         super( id );
         setRenderBodyOnly( true );
         final boolean input = connector.isSource();
         add( new Label( "label", "" ) );                                                  // NON-NLS
-
-        add( new ConnectionView( "list", connector, input ) );                            // NON-NLS
+        add( new ConnectionView( "list", connector, input, analyst ) );                            // NON-NLS
     }
 
     /**
@@ -46,14 +44,20 @@ public class ConnectedFlowList extends Panel {
         private final Connector connector;
 
         /**
+         * An analyst.
+         */
+        private Analyst analyst;
+
+        /**
          * True if connector is an imput connector.
          */
         private final boolean input;
 
-        private ConnectionView( String id, Connector connector, boolean input ) {
+        private ConnectionView( String id, Connector connector, boolean input, Analyst analyst ) {
             super( id );
             this.connector = connector;
             this.input = input;
+            this.analyst = analyst;
         }                                  // NON-NLS
 
         @Override
@@ -94,11 +98,10 @@ public class ConnectedFlowList extends Panel {
          * @param component the component
          * @param object    the object of the issues
          * @param property  the property of concern. If null, get issues of object
-         * @todo refactor this here and there
+         * todo refactor this here and there
          */
         protected void addIssues( Component component, ModelObject object, String property ) {
 
-            final Analyst analyst = Channels.analyst();
             final String summary = property == null ? analyst.getIssuesSummary( object, false )
                     : analyst.getIssuesSummary( object, property );
             boolean hasIssues = analyst.hasIssues( object, Analyst.INCLUDE_PROPERTY_SPECIFIC );
@@ -108,14 +111,14 @@ public class ConnectedFlowList extends Panel {
                 component.add( new AttributeModifier(
                         "title", true, new Model<String>( summary ) ) );                    // NON-NLS
             } else {
-            if ( hasIssues ) {
-                // All waived issues
-                component.add(
-                        new AttributeModifier( "class", true, new Model<String>( "waived" ) ) );
-                component.add(
-                        new AttributeModifier( "title", true, new Model<String>( "All issues waived" ) ) );
+                if ( hasIssues ) {
+                    // All waived issues
+                    component.add(
+                            new AttributeModifier( "class", true, new Model<String>( "waived" ) ) );
+                    component.add(
+                            new AttributeModifier( "title", true, new Model<String>( "All issues waived" ) ) );
+                }
             }
-        }
         }
     }
 

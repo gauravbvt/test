@@ -1,13 +1,12 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.AddUserIssue;
-import com.mindalliance.channels.Channels;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -112,7 +111,7 @@ public class IssuesPanel extends AbstractCommandablePanel {
      * @return list of issues
      */
     public List<Issue> getModelObjectIssues() {
-        return Channels.analyst().listIssues( model.getObject(), false );
+        return getAnalyst().listIssues( model.getObject(), false );
     }
 
     /**

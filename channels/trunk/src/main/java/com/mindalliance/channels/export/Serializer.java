@@ -1,24 +1,25 @@
 package com.mindalliance.channels.export;
 
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.dao.Journal;
+import com.mindalliance.channels.AbstractService;
 import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.Importer;
+import com.mindalliance.channels.dao.Journal;
+import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.Scenario;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.FileInputStream;
 import java.util.Map;
 
 /**
  * Import/Export scenarios using serialization.
  */
-public class Serializer implements Importer, Exporter {
+public class Serializer extends AbstractService implements Importer, Exporter {
 
     private static final String IMPORT_FAILED = "Import failed";
 

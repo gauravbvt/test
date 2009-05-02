@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.reports;
 
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;
@@ -10,14 +11,12 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.Channels;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
 import java.io.Serializable;
@@ -40,7 +39,7 @@ import java.util.Set;
  * Date: Feb 6, 2009
  * Time: 2:06:55 PM
  */
-public class FlowReportPanel extends Panel {
+public class FlowReportPanel extends AbstractReportPanel {
     /**
      * A flow
      */
@@ -68,7 +67,7 @@ public class FlowReportPanel extends Panel {
         List<Channel> channels = flow.getChannels();
         Set<Medium> unicasts = getUnicasts( flow );
         Collection<Channel> broadcasts = getBroadcasts( flow );
-        List<LocalizedActor> actors = findActors( flow, broadcasts, unicasts );
+        List<LocalizedActor> actors = findActors( flow, broadcasts, unicasts, getQueryService() );
 
         ResourceSpec spec = new ResourceSpec( flow.getContactedPart() );
         Component channelsPanel = new ChannelsReportPanel(
@@ -147,7 +146,10 @@ public class FlowReportPanel extends Panel {
     }
 
     private static List<LocalizedActor> findActors(
-            Flow flow, Collection<Channel> broadcasts, Set<Medium> unicasts ) {
+            Flow flow,
+            Collection<Channel> broadcasts,
+            Set<Medium> unicasts,
+            QueryService queryService) {
 
         Set<LocalizedActor> localizedActors = new HashSet<LocalizedActor>();
 
@@ -159,10 +161,10 @@ public class FlowReportPanel extends Panel {
                 ExternalFlow f = flows.next();
                 Collection<Channel> b = getBroadcasts( f );
                 Set<Medium> u = getUnicasts( f );
-                localizedActors.addAll( findActors( f, b, u ) );
+                localizedActors.addAll( findActors( f, b, u, queryService ) );
             }
         } else
-            for ( Actor a : Channels.instance().getQueryService().findAllActors( part.resourceSpec() ) )
+            for ( Actor a : queryService.findAllActors( part.resourceSpec() ) )
                 localizedActors.add( new LocalizedActor( a, part, unicasts, broadcasts ) );
 
         List<LocalizedActor> result = new ArrayList<LocalizedActor>( localizedActors );

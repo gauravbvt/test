@@ -1,15 +1,14 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.Commander;
+import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.Exporter;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Scenario;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -52,7 +51,7 @@ public class RemoveScenario extends AbstractCommand {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Exporter exporter = Channels.instance().getExporter();
+            Exporter exporter = commander.getChannels().getExporter();
             exporter.exportScenario( scenario, bos );
             set( "xml", bos.toString() );
             if ( queryService.list( Scenario.class ).size() == 1 ) {

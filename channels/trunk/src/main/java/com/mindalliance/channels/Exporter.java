@@ -1,17 +1,16 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.dao.Journal;
+import com.mindalliance.channels.model.Scenario;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Serializable;
 
 /**
  * Scenario export mechanism.
  * @see Importer
  */
-public interface Exporter extends Serializable {
+public interface Exporter extends Service {
 
     /**
      * Export a scenario on the given stream.

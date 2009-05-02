@@ -1,7 +1,8 @@
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
@@ -32,15 +33,15 @@ public class PlanReportPage extends WebPage {
     public PlanReportPage( PageParameters parameters ) {
         super( parameters );
 
-        Channels app = Channels.instance();
+        Plan plan = Channels.getPlan();
         add( new Label( "title",                                                          // NON-NLS
-                        MessageFormat.format( "Report: {0}", app.getPlanName() ) ) );
-        add( new Label( "plan-name", app.getPlanName() ) );                     // NON-NLS
-        add( new Label( "plan-client", app.getClient() ) );                        // NON-NLS
-        add( new Label( "plan-description", app.getDescription() ) );              // NON-NLS
+                        MessageFormat.format( "Report: {0}", plan.getName() ) ) );
+        add( new Label( "plan-name", plan.getName() ) );                     // NON-NLS
+        add( new Label( "plan-client", plan.getClient() ) );                        // NON-NLS
+        add( new Label( "plan-description", plan.getDescription() ) );              // NON-NLS
         add( new Label( "date", DateFormat.getDateTimeInstance(                           // NON-NLS
             DateFormat.LONG, DateFormat.LONG ).format( new Date() ) ) );
-        List<Scenario> scenarios = Channels.queryService().list( Scenario.class );
+        List<Scenario> scenarios = Channels.instance().getQueryService().list( Scenario.class );
         Collections.sort( scenarios, new Comparator<Scenario>() {
             public int compare( Scenario o1, Scenario o2 ) {
                 return Collator.getInstance().compare( o1.getName(), o2.getName() );

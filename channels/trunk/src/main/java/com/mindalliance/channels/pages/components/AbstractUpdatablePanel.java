@@ -1,16 +1,20 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.Commander;
+import com.mindalliance.channels.DiagramFactory;
+import com.mindalliance.channels.LockManager;
+import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.pages.Updatable;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.Component;
-import org.apache.wicket.AttributeModifier;
-import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.QueryService;
 
 import java.text.Collator;
 import java.util.Set;
@@ -58,7 +62,46 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @return a query service
      */
     protected QueryService getQueryService() {
-        return Channels.instance().getQueryService();
+        return getChannels().getQueryService();
+    }
+
+    /**
+     * Get an analyst.
+     *
+     * @return an analyst
+     */
+    protected Analyst getAnalyst() {
+        return getChannels().getAnalyst();
+    }
+
+    /**
+     * Get diagram factory.
+     *
+     * @return diagram factory
+     */
+    protected DiagramFactory getDiagramFactory() {
+        return getChannels().getDiagramFactory();
+    }
+
+    /**
+     * Get the active plan's commander.
+     * @return a commander
+     */
+    protected Commander getCommander() {
+        return getChannels().getCommander();
+    }
+
+    /**
+     * Get the lock manager.
+     *
+     * @return a lock manager
+     */
+    protected LockManager getLockManager() {
+        return getChannels().getLockManager();
+    }
+
+    private Channels getChannels() {
+        return Channels.instance();
     }
 
     /**

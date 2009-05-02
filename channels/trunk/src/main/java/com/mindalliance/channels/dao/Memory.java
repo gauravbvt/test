@@ -1,22 +1,24 @@
 package com.mindalliance.channels.dao;
 
-import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.AbstractService;
+import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.DuplicateKeyException;
+import com.mindalliance.channels.Exporter;
+import com.mindalliance.channels.Importer;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.InternalFlow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.Importer;
-import com.mindalliance.channels.Exporter;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
@@ -24,19 +26,17 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * An in-memory, no-transactions implementation of a store.
  */
-public final class Memory implements Dao {
+public final class Memory extends AbstractService implements Dao {
 
     /**
      * Class logger.
@@ -71,13 +71,17 @@ public final class Memory implements Dao {
     /**
      * The scenarios, for convenience...
      */
-    private Set<Scenario> scenarios = new HashSet<Scenario>();
+    // private Set<Scenario> scenarios = new HashSet<Scenario>();
+
+    /**
+     * For each plan id, ModelObjects indexed by plan.
+     */
+    private Map<Long, Map<Long, ModelObject>> idIndexMaps = new HashMap<Long, Map<Long, ModelObject>>();
 
     /**
      * ModelObjects, indexed by id.
      */
-    private Map<Long, ModelObject> idIndex = new HashMap<Long, ModelObject>( INITIAL_CAPACITY );
-
+    // private Map<Long, ModelObject> idIndex = new HashMap<Long, ModelObject>( INITIAL_CAPACITY );
     public Memory() {
     }
 
@@ -104,28 +108,43 @@ public final class Memory implements Dao {
      */
     public void load() {
         // Load app data
+        for ( Plan plan : getChannels().getPlans() ) {
+            try {
+                getChannels().beginUsingPlan( plan );
+                loadPlan( plan );
+            } finally {
+                getChannels().endUsingPlan();
+            }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void loadPlan( Plan plan ) {
+        // Load plan data
         try {
             Map<Long, Long> idMap = new HashMap<Long, Long>();
-            Importer importer = Channels.instance().getImporter();
-            File dataFile = getDataFile();
+            Importer importer = getChannels().getImporter();
+            File dataFile = getDataFile( plan );
             if ( dataFile.length() > 0 ) {
-                LOG.info( "Importing app snapshot" );
+                LOG.info( "Importing snapshot for plan " + plan );
                 idMap = importer.importAll( new FileInputStream( dataFile ) );
             }
             // Load and run journaled commands
-            Journal journal = loadJournal();
-            Commander commander = Channels.instance().getCommander();
+            Journal journal = loadJournal( plan );
+            Commander commander = getChannels().getCommander();
             commander.setReplaying( true );
             commander.setIdMap( idMap );
             if ( !journal.isEmpty() ) {
-                LOG.info( "Replaying journaled commands" );
+                LOG.info( "Replaying journaled commands for plan " + plan );
                 for ( Command command : journal.getCommands() ) {
                     commander.doCommand( command );
                 }
             }
             journal.reset();
             commander.reset();
-            LOG.info( "Persisted app reloaded." );
+            LOG.info( "Persisted plan reloaded." );
         } catch ( IOException e ) {
             LOG.error( "Failed to load snapshot", e );
         } catch ( CommandException e ) {
@@ -137,11 +156,13 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     public void afterInitialize() {
-        try {
-            takeSnapshot();
-            getJournalFile().delete();
-        } catch ( IOException e ) {
-            throw new RuntimeException( e );
+        for ( Plan plan : getChannels().getPlans() ) {
+            try {
+                takeSnapshot( plan );
+                getJournalFile( plan ).delete();
+            } catch ( IOException e ) {
+                throw new RuntimeException( e );
+            }
         }
     }
 
@@ -152,8 +173,8 @@ public final class Memory implements Dao {
         afterInitialize();
     }
 
-    private File getDataFile() throws IOException {
-        File dataDirectory = getDataDirectory();
+    private File getDataFile( Plan plan ) throws IOException {
+        File dataDirectory = getDataDirectory( plan );
         File dataFile = new File( dataDirectory.getPath() + File.separator + DATA_FILE );
         if ( !dataFile.exists() ) {
             dataFile.createNewFile();
@@ -161,10 +182,14 @@ public final class Memory implements Dao {
         return dataFile;
     }
 
-    private File getDataDirectory() {
+    private File getDataDirectory( Plan plan ) {
         File directory;
         if ( dataDirectoryPath != null ) {
             directory = new File( dataDirectoryPath );
+            if ( !directory.exists() ) {
+                directory.mkdir();
+            }
+            directory = new File( dataDirectoryPath + "/" + sanitize( plan.getName() ) );
             if ( !directory.exists() ) {
                 directory.mkdir();
             }
@@ -174,8 +199,12 @@ public final class Memory implements Dao {
         return directory;
     }
 
-    private File getJournalFile() throws IOException {
-        File dataDirectory = getDataDirectory();
+    private String sanitize( String name ) {
+        return name.replaceAll( "\\W", "_" );
+    }
+
+    private File getJournalFile( Plan plan ) throws IOException {
+        File dataDirectory = getDataDirectory( plan );
         File journalFile = new File( dataDirectory.getPath() + File.separator + JOURNAL_FILE );
         if ( !journalFile.exists() ) {
             journalFile.createNewFile();
@@ -183,11 +212,11 @@ public final class Memory implements Dao {
         return journalFile;
     }
 
-    private Journal loadJournal() {
+    private Journal loadJournal( Plan plan ) {
         Journal journal;
         try {
-            File journalFile = getJournalFile();
-            Importer importer = Channels.instance().getImporter();
+            File journalFile = getJournalFile( plan );
+            Importer importer = getChannels().getImporter();
             if ( journalFile.length() > 0 )
                 journal = importer.importJournal( new FileInputStream( journalFile ) );
             else
@@ -203,12 +232,13 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     public void onAfterCommand( Command command ) {
+        Plan plan = Channels.getPlan();
         if ( command.isMemorable() ) {
             // Update snapshot if required
             if ( journal.size() >= snapshotThreshold ) {
                 try {
-                    takeSnapshot();
-                    getJournalFile().delete();
+                    takeSnapshot( plan );
+                    getJournalFile( plan ).delete();
                     journal.reset();
                 } catch ( IOException e ) {
                     throw new RuntimeException( "Failed to take snapshot", e );
@@ -219,7 +249,7 @@ public final class Memory implements Dao {
             else {
                 journal.addCommand( command );
                 try {
-                    saveJournal();
+                    saveJournal( plan );
                 } catch ( IOException e ) {
                     throw new RuntimeException( "Failed to save journal", e );
                 }
@@ -227,28 +257,28 @@ public final class Memory implements Dao {
         }
     }
 
-    private void takeSnapshot() throws IOException {
-        LOG.info( "Taking app snapshot" );
+    private void takeSnapshot( Plan plan ) throws IOException {
+        LOG.info( "Taking snapshot of plan " + plan );
         // Make backup
-        File dataFile = getDataFile();
+        File dataFile = getDataFile( plan );
         if ( dataFile.length() > 0 ) {
             String backupPath = dataFile.getAbsolutePath() + "_" + System.currentTimeMillis();
             File backup = new File( backupPath );
             dataFile.renameTo( backup );
         }
         // snap
-        dataFile = getDataFile();
+        dataFile = getDataFile( plan );
         assert dataFile.length() == 0;
-        Exporter exporter = Channels.instance().getExporter();
+        Exporter exporter = getChannels().getExporter();
         exporter.exportAll( new FileOutputStream( dataFile ) );
     }
 
-    private void saveJournal() throws IOException {
-        File journalFile = getJournalFile();
+    private void saveJournal( Plan plan ) throws IOException {
+        File journalFile = getJournalFile( plan );
         journalFile.delete();
-        journalFile = getJournalFile();
+        journalFile = getJournalFile( plan );
         assert journalFile.length() == 0;
-        Exporter exporter = Channels.instance().getExporter();
+        Exporter exporter = getChannels().getExporter();
         exporter.exportJournal( journal, new FileOutputStream( journalFile ) );
     }
 
@@ -256,13 +286,15 @@ public final class Memory implements Dao {
      * For testing.
      */
     public void reset() {
-        try {
-            File journalFile = getJournalFile();
-            journalFile.delete();
-            File dataFile = getDataFile();
-            dataFile.delete();
-        } catch ( IOException e ) {
-            e.printStackTrace();
+        for ( Plan plan : getChannels().getPlans() ) {
+            try {
+                File journalFile = getJournalFile( plan );
+                journalFile.delete();
+                File dataFile = getDataFile( plan );
+                dataFile.delete();
+            } catch ( IOException e ) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -271,23 +303,46 @@ public final class Memory implements Dao {
      */
     // Not used yet
     public void stop() {
-        try {
-            takeSnapshot();
-            getJournalFile().delete();
-            LOG.info("Pre-shutdown snapshot taken.");
-        } catch ( IOException e ) {
-            LOG.warn( "Failed to take snapshot", e );
+        for ( Plan plan : getChannels().getPlans() ) {
+            try {
+                takeSnapshot( plan );
+                getJournalFile( plan ).delete();
+                LOG.info( "Pre-shutdown snapshot taken." );
+            } catch ( IOException e ) {
+                LOG.warn( "Failed to take snapshot", e );
+            }
         }
     }
 
     /// CRUD
+
+    private Map<Long, ModelObject> getIdIndex() {
+        Map<Long, ModelObject> idIndex = idIndexMaps.get( Channels.getPlan().getId() );
+        if ( idIndex == null ) {
+            synchronized ( this ) {
+                idIndex = new HashMap<Long, ModelObject>();
+                idIndexMaps.put( Channels.getPlan().getId(), idIndex );
+            }
+        }
+        return idIndex;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Plan makePlan() {
+        Plan plan = new Plan();
+        plan.setName( "UNNAMED" );
+        plan.setId( newId() );
+        return plan;
+    }
 
     /**
      * {@inheritDoc}
      */
     @SuppressWarnings( {"unchecked"} )
     public <T extends ModelObject> List<T> list( final Class<T> clazz ) {
-        return (List<T>) CollectionUtils.select( idIndex.values(), new Predicate() {
+        return (List<T>) CollectionUtils.select( getIdIndex().values(), new Predicate() {
             public boolean evaluate( Object object ) {
                 return clazz.isAssignableFrom( object.getClass() );
             }
@@ -298,14 +353,14 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     public void add( ModelObject object ) {
-        if ( idIndex.containsKey( object.getId() ) )
+        if ( getIdIndex().containsKey( object.getId() ) )
             throw new DuplicateKeyException();
 
         object.setId( newId() );
-        idIndex.put( object.getId(), object );
+        getIdIndex().put( object.getId(), object );
 
         if ( object instanceof Scenario )
-            scenarios.add( (Scenario) object );
+            Channels.getPlan().getScenarios().add( (Scenario) object );
 
     }
 
@@ -319,7 +374,7 @@ public final class Memory implements Dao {
      * {@inheritDoc}
      */
     public long getScenarioCount() {
-        return (long) scenarios.size();
+        return (long) Channels.getPlan().getScenarios().size();
     }
 
     /**
@@ -379,13 +434,13 @@ public final class Memory implements Dao {
         if ( object instanceof Scenario )
             remove( (Scenario) object );
         else
-            idIndex.remove( object.getId() );
+            getIdIndex().remove( object.getId() );
     }
 
     private void remove( Scenario scenario ) {
-        if ( scenarios.size() > 1 ) {
-            scenarios.remove( scenario );
-            idIndex.remove( scenario.getId() );
+        if ( Channels.getPlan().getScenarios().size() > 1 ) {
+            Channels.getPlan().getScenarios().remove( scenario );
+            getIdIndex().remove( scenario.getId() );
 
             scenario.disconnect();
         }
@@ -393,7 +448,7 @@ public final class Memory implements Dao {
 
 
     private ModelObject find( long id ) throws NotFoundException {
-        ModelObject result = idIndex.get( id );
+        ModelObject result = getIdIndex().get( id );
         if ( result == null ) {
             Iterator<Scenario> iterator = list( Scenario.class ).iterator();
             while ( result == null && iterator.hasNext() ) {

@@ -1,16 +1,15 @@
 package com.mindalliance.channels.pages.reports;
 
+import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -31,7 +30,7 @@ import java.util.Set;
  * Date: Feb 5, 2009
  * Time: 7:18:56 PM
  */
-public class ScenarioReportPanel extends Panel {
+public class ScenarioReportPanel extends AbstractReportPanel {
 
     /**
      * A scenario

@@ -1,27 +1,26 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.util.SemMatch;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.util.SemMatch;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.FormComponentLabel;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 
-import java.util.Set;
-import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Editor on the details of a scenario (name, description, etc).
@@ -110,7 +109,7 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
                 expansions );
         issuesPanel.setOutputMarkupId( true );
         add( issuesPanel );
-        makeVisible( issuesPanel, Channels.analyst().hasIssues( model.getObject(), false ) );
+        makeVisible( issuesPanel, getAnalyst().hasIssues( model.getObject(), false ) );
     }
 
     private void addLocationField() {
@@ -273,7 +272,7 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change ) {
-        makeVisible( target, issuesPanel, Channels.analyst().hasIssues( model.getObject(), false ) );
+        makeVisible( target, issuesPanel, getAnalyst().hasIssues( model.getObject(), false ) );
         target.addComponent( issuesPanel );
         super.updateWith( target, change );
     }
@@ -287,11 +286,11 @@ public class ScenarioEditPanel extends AbstractCommandablePanel {
     public void setVisibility( AjaxRequestTarget target, boolean visible ) {
         makeVisible( target, this, visible );
         if ( visible )
-            makeVisible( issuesPanel, Channels.analyst().hasIssues( model.getObject(), false ) );
+            makeVisible( issuesPanel, getAnalyst().hasIssues( model.getObject(), false ) );
     }
 
     public void refresh( AjaxRequestTarget target ) {
-        makeVisible( target, issuesPanel, Channels.analyst().hasIssues( model.getObject(), false ) );
+        makeVisible( target, issuesPanel, getAnalyst().hasIssues( model.getObject(), false ) );
         target.addComponent( issuesPanel );
         completionTimePanel.enable( getScenario().isSelfTerminating() );
         target.addComponent( completionTimePanel );

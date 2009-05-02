@@ -1,17 +1,16 @@
 package com.mindalliance.channels.pages.components;
 
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.util.SortableBeanProvider;
+import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
-import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
-import com.mindalliance.channels.util.SortableBeanProvider;
-import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.Channels;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -47,7 +46,7 @@ public class ResourceIssuesTablePanel extends AbstractTablePanel {
         columns.add( makeColumn( "Remediation", "remediation", "remediation", EMPTY ) );
         columns.add( makeColumn( "Reported by", "reportedBy", "reportedBy", EMPTY ) );
         // provider and table
-        List<Issue> issues = Channels.analyst().findAllIssuesFor( resourceSpec );
+        List<Issue> issues = getAnalyst().findAllIssuesFor( resourceSpec );
         add( new AjaxFallbackDefaultDataTable<Issue>(
                 "issues",
                 columns,

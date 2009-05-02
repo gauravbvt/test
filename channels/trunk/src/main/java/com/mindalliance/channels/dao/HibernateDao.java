@@ -1,15 +1,17 @@
 package com.mindalliance.channels.dao;
 
+import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.Dao;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;
-import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.model.InternalFlow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.command.Command;
 import org.slf4j.LoggerFactory;
 import org.springframework.orm.jpa.JpaCallback;
 import org.springframework.orm.jpa.support.JpaDaoSupport;
@@ -23,7 +25,17 @@ import java.util.List;
  */
 public class HibernateDao extends JpaDaoSupport implements Dao {
 
+    private Channels channels;
+
     public HibernateDao() {
+    }
+
+    public Channels getChannels() {
+        return channels;
+    }
+
+    public void setChannels( Channels channels ) {
+        this.channels = channels;
     }
 
     /**
@@ -81,6 +93,10 @@ public class HibernateDao extends JpaDaoSupport implements Dao {
     private void remove( Scenario scenario ) {
         if ( getScenarioCount() > 1L )
             getJpaTemplate().remove( scenario );
+    }
+
+    public Plan makePlan() {
+        return new Plan();
     }
 
     /** {@inheritDoc} */

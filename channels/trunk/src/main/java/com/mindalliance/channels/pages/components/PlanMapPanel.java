@@ -1,28 +1,29 @@
 package com.mindalliance.channels.pages.components;
 
 
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.ExternalFlow;
-import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.model.ExternalFlow;
+import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
-import com.mindalliance.channels.Channels;
-import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.RequestCycle;
 
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -67,7 +68,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
         AjaxFallbackLink<?> closeLink = new AjaxFallbackLink( "close" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                Change change = new Change( Change.Type.Collapsed, Channels.instance() );
+                Change change = new Change( Change.Type.Collapsed, Channels.getPlan() );
                 update( target, change );
             }
         };
@@ -157,7 +158,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     private void addExternalFlowsPanel() {
         ExternalFlowsPanel externalFlowsPanel = new ExternalFlowsPanel(
                 "flows",
-                new Model<Channels>( Channels.instance() ),
+                new Model<Plan>( Channels.getPlan() ),
                 new PropertyModel<ArrayList<ExternalFlow>>( this, "externalFlows" ),
                 PAGE_SIZE,
                 getExpansions()
@@ -169,7 +170,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     private void addCausesPanel() {
         ScenarioCausesPanel scenarioCausesPanel = new ScenarioCausesPanel(
                 "causes",
-                new Model<Channels>( Channels.instance() ),
+                new Model<Plan>( Channels.getPlan() ),
                 new PropertyModel<ArrayList<ScenarioRelationship>>( this, "scenarioRelationships" ),
                 PAGE_SIZE,
                 getExpansions()
@@ -331,7 +332,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     public void changed( Change change ) {
         if ( change.isSelected() ) {
             Identifiable changed = change.getSubject();
-            if ( changed instanceof Channels ) {
+            if ( changed instanceof Plan ) {
                 selectedScenario = null;
                 selectedScRel = null;
             } else if ( changed instanceof Scenario ) {

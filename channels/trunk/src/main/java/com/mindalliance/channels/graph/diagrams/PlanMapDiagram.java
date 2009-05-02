@@ -1,18 +1,16 @@
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.DiagramFactory;
-import com.mindalliance.channels.graph.AbstractDiagram;
-import com.mindalliance.channels.graph.GraphRenderer;
-import com.mindalliance.channels.graph.GraphBuilder;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.analysis.graph.PlanMapGraphBuilder;
+import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
+import com.mindalliance.channels.graph.AbstractDiagram;
+import com.mindalliance.channels.graph.GraphBuilder;
+import com.mindalliance.channels.graph.GraphRenderer;
+import com.mindalliance.channels.model.Scenario;
+import org.jgrapht.Graph;
 
 import java.io.OutputStream;
 import java.util.List;
-
-import org.jgrapht.Graph;
 
 /**
  * A plan map diagram.
@@ -69,7 +67,7 @@ public class PlanMapDiagram extends AbstractDiagram<Scenario,ScenarioRelationshi
                 scenarios,
                 outputFormat,
                 diagramFactory.getImageDirectory(),
-                Channels.analyst() );
+                getAnalyst() );
         if ( diagramSize != null ) {
             metaProvider.setGraphSize( diagramSize );
         }

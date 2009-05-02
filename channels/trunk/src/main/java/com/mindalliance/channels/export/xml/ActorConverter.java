@@ -1,14 +1,14 @@
 package com.mindalliance.channels.export.xml;
 
+import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Channel;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.Channels;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +28,8 @@ public class ActorConverter extends EntityConverter {
      */
     public static final Logger LOG = LoggerFactory.getLogger( ActorConverter.class );
 
-    public ActorConverter() {
+    public ActorConverter( Exporter exporter ) {
+        super( exporter );
     }
 
     public boolean canConvert( Class aClass ) {
@@ -40,7 +41,7 @@ public class ActorConverter extends EntityConverter {
      */
     @Override
     ModelObject findOrMakeEntity( String name ) {
-        return Channels.queryService().findOrCreate( Actor.class, name );
+        return getQueryService().findOrCreate( Actor.class, name );
     }
 
     /**

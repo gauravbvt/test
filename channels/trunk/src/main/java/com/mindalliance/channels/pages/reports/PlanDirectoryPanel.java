@@ -1,18 +1,11 @@
 package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.Channels;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -23,7 +16,7 @@ import java.util.List;
  * Date: Feb 9, 2009
  * Time: 11:19:13 AM
  */
-public class PlanDirectoryPanel extends Panel {
+public class PlanDirectoryPanel extends AbstractReportPanel {
 
     public PlanDirectoryPanel( String id ) {
         super( id );
@@ -32,7 +25,7 @@ public class PlanDirectoryPanel extends Panel {
     }
 
     private void init() {
-        List<Organization> orgs = Channels.instance().getQueryService().findOrganizations();
+        List<Organization> orgs = getQueryService().findOrganizations();
         add( new ListView<Organization>( "organizations", orgs ) {                        // NON-NLS
             @Override
             protected void populateItem( ListItem<Organization> item ) {
@@ -49,8 +42,8 @@ public class PlanDirectoryPanel extends Panel {
         } );
     }
 
-    private static List<Role> findRolesOutOfOrganization() {
-        QueryService queryService = Channels.queryService();
+/*    private List<Role> findRolesOutOfOrganization() {
+        QueryService queryService = getQueryService();
         List<Role> rolesWithoutOrg = new ArrayList<Role>();
         for ( Role role : queryService.list( Role.class ) ) {
             ResourceSpec roleSpec = ResourceSpec.with( role );
@@ -67,6 +60,6 @@ public class PlanDirectoryPanel extends Panel {
             }
         }
         return rolesWithoutOrg;
-    }
+    }*/
 
 }

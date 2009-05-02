@@ -1,18 +1,17 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.DiagramFactory;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Scenario;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-import java.io.ByteArrayOutputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -28,7 +27,7 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
     @Override
     protected void setUp() {
         super.setUp();
-        scenarios = Channels.queryService().list( Scenario.class );
+        scenarios = app.getQueryService().list( Scenario.class );
 
     }
 

@@ -1,14 +1,12 @@
 package com.mindalliance.channels.pages.reports;
 
+import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.Channels;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -21,7 +19,7 @@ import java.util.List;
  * Date: Feb 6, 2009
  * Time: 9:51:11 AM
  */
-public class IssuesReportPanel extends Panel {
+public class IssuesReportPanel extends AbstractReportPanel {
     /**
      *  The model object with issues
      */
@@ -31,7 +29,7 @@ public class IssuesReportPanel extends Panel {
         super( id, model );
         setRenderBodyOnly( true );
         modelObject = model.getObject();
-        init( Channels.analyst() );
+        init( getAnalyst() );
     }
 
     private void init( Analyst analyst ) {

@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.InternalFlow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
 
 import java.util.List;
@@ -15,13 +16,19 @@ import java.util.List;
  * Protocol for manipulating objects.
  * Implementations should ensure that there is at least one scenario available.
  */
-public interface Dao {
+public interface Dao extends Service {
 
     /**
      * The initial number of scenario slots.
      * This should be close to the observed average scenarios.
      */
     int INITIAL_CAPACITY = 10;
+
+    /**
+     * Make a plan with unique id.
+     * @return
+     */
+    Plan makePlan();
 
     /**
      * @return the total number of scenarios.

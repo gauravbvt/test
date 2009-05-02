@@ -5,7 +5,6 @@ import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -16,7 +15,7 @@ import org.apache.wicket.model.Model;
  * Date: Feb 6, 2009
  * Time: 11:46:56 AM
  */
-public class OrganizationReportPanel extends Panel {
+public class OrganizationReportPanel extends AbstractReportPanel {
 
     /**
      * An organization.

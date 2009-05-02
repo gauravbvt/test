@@ -1,19 +1,19 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.graph.Diagram;
+import com.mindalliance.channels.model.Scenario;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.text.MessageFormat;
 
 /**
  * Plan map diagram panel.
@@ -119,7 +119,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
      * {@inheritDoc }
      */
     protected void onClick( AjaxRequestTarget target ) {
-        update( target, new Change( Change.Type.Selected, Channels.instance() ) );
+        update( target, new Change( Change.Type.Selected, Channels.getPlan() ) );
     }
 
     /**

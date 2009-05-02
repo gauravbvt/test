@@ -1,9 +1,9 @@
 package com.mindalliance.channels;
 
 
-import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.command.Lock;
 import com.mindalliance.channels.command.LockingException;
+import com.mindalliance.channels.model.Identifiable;
 
 import java.util.Collection;
 
@@ -15,7 +15,7 @@ import java.util.Collection;
  * Date: Feb 28, 2009
  * Time: 2:20:28 PM
  */
-public interface LockManager {
+public interface LockManager extends Service {
     /**
      * Grab an exclusive, write lock on a model object.
      * The operation is idempotent if the lock is already grabbed by the user.

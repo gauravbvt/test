@@ -1,9 +1,9 @@
 package com.mindalliance.channels.analysis;
 
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.attachments.AttachmentManager;
+import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelObject;
 
 import java.util.List;
 /**
@@ -15,7 +15,10 @@ import java.util.List;
  * Time: 1:39:47 PM
  */
 public abstract class AbstractIssueDetector implements IssueDetector {
-
+    /**
+     * A query service
+     */
+    private QueryService queryService;
 
     /**
      * {@inheritDoc}
@@ -56,13 +59,27 @@ public abstract class AbstractIssueDetector implements IssueDetector {
                 && property.equals( getTestedProperty() );
     }
 
+    public void setQueryService( QueryService queryService ) {
+        this.queryService = queryService;
+    }
+
     /**
      * Get query service.
      * @return a query service
      */
     protected QueryService getQueryService() {
-        return Channels.instance().getQueryService();
+        return queryService;
     }
+
+    /**
+     * Get attachment manager.
+     * @return an attachment manager
+     */
+    protected AttachmentManager getAttachmentManager() {
+         return queryService.getChannels().getAttachmentManager();
+     }
+
+
 
     /**
      * Make detected issue.

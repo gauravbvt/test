@@ -1,0 +1,23 @@
+package com.mindalliance.channels;
+
+/**
+ * A service in Channels.
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: May 1, 2009
+ * Time: 3:39:11 PM
+ */
+public interface Service {
+    /**
+     * Get a Channels instance.
+     * @return s Channels instance
+     */
+    Channels getChannels();
+
+    /**
+     * Set an instance of Channels.
+     * @param channels a Channels instance
+     */
+    void setChannels( Channels channels );
+}

@@ -1,14 +1,12 @@
 package com.mindalliance.channels.pages.components;
 
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.WicketRuntimeException;
-import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.LockManager;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Identifiable;
+import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.model.IModel;
 
 import java.util.Set;
 
@@ -43,19 +41,6 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
         } catch ( CommandException e ) {
             throw new WicketRuntimeException( e );
         }
-    }
-
-    protected Commander getCommander() {
-        return Channels.instance().getCommander();
-    }
-
-    /**
-     * Get the lock manager.
-     *
-     * @return a lock manager
-     */
-    protected LockManager getLockManager() {
-        return Channels.instance().getLockManager();
     }
 
     /**

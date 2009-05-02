@@ -1,16 +1,16 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.Job;
-import com.mindalliance.channels.Channels;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Scenario;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +30,8 @@ public class OrganizationConverter extends EntityConverter {
     public static final Logger LOG = LoggerFactory.getLogger( OrganizationConverter.class );
 
 
-    public OrganizationConverter() {
+    public OrganizationConverter( Exporter exporter ) {
+        super( exporter );
     }
 
     /**
@@ -44,7 +45,7 @@ public class OrganizationConverter extends EntityConverter {
      * {@inheritDoc}
      */
     ModelObject findOrMakeEntity( String name ) {
-        return Channels.queryService().findOrCreate( Organization.class, name );
+        return getQueryService().findOrCreate( Organization.class, name );
     }
 
     /**
@@ -98,10 +99,10 @@ public class OrganizationConverter extends EntityConverter {
             org.setActorsRequired( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals( "parent" ) ) {
             org = (Organization) entity;
-            org.setParent( Channels.queryService().findOrCreate( Organization.class, reader.getValue() ) );
+            org.setParent( getQueryService().findOrCreate( Organization.class, reader.getValue() ) );
         } else if ( nodeName.equals( "location" ) ) {
             org = (Organization) entity;
-            org.setLocation( Channels.queryService().findOrCreate( Place.class, reader.getValue() ) );
+            org.setLocation( getQueryService().findOrCreate( Place.class, reader.getValue() ) );
         } else if ( nodeName.equals( "channel" ) ) {
             Channel channel = (Channel) context.convertAnother( scenario, Channel.class );
             org.addChannel( channel );

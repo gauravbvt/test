@@ -1,18 +1,18 @@
 package com.mindalliance.channels.export.xml;
 
+import com.mindalliance.channels.Exporter;
+import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.export.ConnectionSpecification;
+import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelObject;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.export.ConnectionSpecification;
-import com.mindalliance.channels.Channels;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Abstract XStream converter base class for Channels.
@@ -24,12 +24,30 @@ import java.util.HashMap;
  */
 public abstract class AbstractChannelsConverter implements Converter {
     /**
+     * An xmlStreamer.
+     */
+    private Exporter exporter;
+
+
+    public AbstractChannelsConverter( Exporter exporter ) {
+        this.exporter = exporter;
+    }
+
+    protected String getVersion() {
+        return exporter.getVersion();
+    }
+
+    public Exporter getExporter() {
+        return exporter;
+    }
+
+    /**
      * Get query service
      *
      * @return a query service
      */
     protected QueryService getQueryService() {
-        return Channels.instance().getQueryService();
+        return exporter.getChannels().getQueryService();
     }
 
     /**

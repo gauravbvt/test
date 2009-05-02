@@ -1,10 +1,8 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.LockManager;
-import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.command.commands.HelloCommand;
+import com.mindalliance.channels.model.Scenario;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,18 +13,13 @@ import com.mindalliance.channels.command.commands.HelloCommand;
  */
 public class TestDefaultCommander extends AbstractChannelsTest {
 
-    private Commander commander;
-    private LockManager lockManager;
-
     protected void setUp() {
         super.setUp();
-        commander = app.getCommander();
-        lockManager = app.getLockManager();
         commander.reset();
     }
 
     public void testExecuteSimpleCommand() {
-        AbstractCommand command = HelloCommand.makeCommand( "hello" );
+        AbstractCommand command = HelloCommand.makeCommand( "hello", commander );
         try {
             assertTrue( commander.canDo( command ) );
             assertFalse( commander.canUndo() );
@@ -44,7 +37,7 @@ public class TestDefaultCommander extends AbstractChannelsTest {
     }
 
     public void testCommandLocking() throws Exception {
-        AbstractCommand command = HelloCommand.makeCommand( "hello" );
+        AbstractCommand command = HelloCommand.makeCommand( "hello", commander );
         Scenario scenario = app.getQueryService().getDefaultScenario();
         Lock lock = lockManager.grabLockOn( scenario.getId() );
         lock.setUserName( "bob" );
@@ -68,8 +61,8 @@ public class TestDefaultCommander extends AbstractChannelsTest {
     }
 
     public void testUndoingConflicts() throws Exception {
-        AbstractCommand command = HelloCommand.makeCommand( "hello" );
-        AbstractCommand otherUserCommand = HelloCommand.makeCommand( "hello" );
+        AbstractCommand command = HelloCommand.makeCommand( "hello", commander );
+        AbstractCommand otherUserCommand = HelloCommand.makeCommand( "hello", commander );
         otherUserCommand.setUserName( "bob" );
         commander.doCommand( command );
         Thread.sleep( 10 );

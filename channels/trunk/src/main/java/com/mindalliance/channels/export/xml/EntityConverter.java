@@ -1,8 +1,8 @@
 package com.mindalliance.channels.export.xml;
 
+import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.Channels;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -21,8 +21,8 @@ import java.util.Map;
  */
 public abstract class EntityConverter extends AbstractChannelsConverter {
 
-    public EntityConverter() {
-
+    public EntityConverter( Exporter exporter ) {
+        super( exporter );
     }
 
     /**
@@ -42,7 +42,7 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
         exportDetectionWaivers( entity, writer );
         writeSpecifics( entity, writer, context );
         // User issues
-        List<Issue> issues = Channels.queryService().findAllUserIssues( entity );
+        List<Issue> issues = getQueryService().findAllUserIssues( entity );
         for ( Issue issue : issues ) {
             writer.startNode( "issue" );
             context.convertAnother( issue );

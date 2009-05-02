@@ -1,26 +1,27 @@
 package com.mindalliance.channels.export.xml;
 
+import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.Exporter;
+import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Scenario;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Place;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Map;
 
 /**
  * Plan XML converter.
@@ -37,7 +38,8 @@ public class PlanConverter extends AbstractChannelsConverter {
      */
     public static final Logger LOG = LoggerFactory.getLogger( PlanConverter.class );
 
-    public PlanConverter() {
+    public PlanConverter( Exporter exporter ) {
+        super( exporter );
     }
 
 
@@ -45,7 +47,7 @@ public class PlanConverter extends AbstractChannelsConverter {
      * {@inheritDoc}
      */
     public boolean canConvert( Class aClass ) {
-        return Channels.class.isAssignableFrom( aClass );
+        return Plan.class.isAssignableFrom( aClass );
     }
 
     /**
@@ -55,21 +57,21 @@ public class PlanConverter extends AbstractChannelsConverter {
             Object obj,
             HierarchicalStreamWriter writer,
             MarshallingContext context ) {
-        Channels app = (Channels) obj;
+        Plan plan = (Plan) obj;
         QueryService queryService = getQueryService();
-        writer.addAttribute( "uri", app.getUri() );
-        writer.addAttribute( "version", app.getExporter().getVersion() );
+        writer.addAttribute( "uri", plan.getUri() );
+        writer.addAttribute( "version", getVersion() );
         writer.addAttribute( "date", new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( new Date() ) );
         writer.startNode( "name" );
-        writer.setValue( app.getPlanName() );
+        writer.setValue( plan.getName() );
         writer.endNode();
         writer.startNode( "client" );
-        writer.setValue( app.getClient() );
+        writer.setValue( plan.getClient() );
         writer.endNode();
         writer.startNode( "description" );
-        writer.setValue( app.getDescription() );
+        writer.setValue( plan.getDescription() );
         writer.endNode();
-        context.put( "app", "true" );
+        context.put( "exporting-plan", "true" );
         // All entities
         Iterator<ModelObject> entities = queryService.iterateEntities();
         while ( entities.hasNext() ) {
@@ -79,9 +81,9 @@ public class PlanConverter extends AbstractChannelsConverter {
             writer.endNode();
         }
         // All scenarios
-        for ( Scenario scenario : queryService.list( Scenario.class ) ) {
+        for ( Scenario scenario : plan.getScenarios() ) {
             writer.startNode( "scenario" );
-            context.convertAnother( scenario, new ScenarioConverter() );
+            context.convertAnother( scenario, new ScenarioConverter( getExporter() ) );
             writer.endNode();
         }
     }
@@ -95,30 +97,30 @@ public class PlanConverter extends AbstractChannelsConverter {
         getIdMap( context );
         getProxyConnectors( context );
         // getPortalConnectors( context );
-        Channels app = Channels.instance();
+        Plan plan = Channels.getPlan();
         String uri = reader.getAttribute( "uri" );
-        app.setUri( uri );
+        plan.setUri( uri );
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "name" ) ) {
-                app.setPlanName( reader.getValue() );
+                plan.setName( reader.getValue() );
             } else if ( nodeName.equals( "client" ) ) {
-                app.setClient( reader.getValue() );
+                plan.setClient( reader.getValue() );
             } else if ( nodeName.equals( "description" ) ) {
-                app.setDescription( reader.getValue() );
+                plan.setDescription( reader.getValue() );
                 // Entities
             } else if ( nodeName.equals( "actor" ) ) {
-                context.convertAnother( app, Actor.class );
+                context.convertAnother( plan, Actor.class );
             } else if ( nodeName.equals( "organization" ) ) {
-                context.convertAnother( app, Organization.class );
+                context.convertAnother( plan, Organization.class );
             } else if ( nodeName.equals( "role" ) ) {
-                context.convertAnother( app, Role.class );
+                context.convertAnother( plan, Role.class );
             } else if ( nodeName.equals( "place" ) ) {
-                context.convertAnother( app, Place.class );
+                context.convertAnother( plan, Place.class );
                 // Scenarios
             } else if ( nodeName.equals( "scenario" ) ) {
-                context.convertAnother( app, Scenario.class );
+                context.convertAnother( plan, Scenario.class );
             } else {
                 LOG.warn( "Unknown element " + nodeName );
             }

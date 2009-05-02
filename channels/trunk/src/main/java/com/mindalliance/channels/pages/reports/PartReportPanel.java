@@ -10,7 +10,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -27,7 +26,7 @@ import java.util.List;
  * Date: Feb 5, 2009
  * Time: 9:35:15 PM
  */
-public class PartReportPanel extends Panel {
+public class PartReportPanel extends AbstractReportPanel {
 
     /**
      * A part.

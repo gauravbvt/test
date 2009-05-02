@@ -1,12 +1,10 @@
 package com.mindalliance.channels.pages.components.menus;
 
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -19,10 +17,10 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.io.Serializable;
 
 /**
  * An abstract base class for menu panel.
@@ -107,10 +105,6 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
             menuItem = label;
         }
         return menuItem;
-    }
-
-    protected Commander getCommander() {
-        return Channels.instance().getCommander();
     }
 
     /**

@@ -1,15 +1,14 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.UserIssue;
-import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.UserIssue;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -20,7 +19,6 @@ import com.mindalliance.channels.command.Change;
  */
 public class TestAddRemoveIssue extends AbstractChannelsTest {
 
-    private Commander commander;
     private Scenario scenario;
     private QueryService queryService;
     private Analyst analyst;
@@ -28,7 +26,6 @@ public class TestAddRemoveIssue extends AbstractChannelsTest {
     protected void setUp() {
         super.setUp();
         queryService = app.getQueryService();
-        commander = app.getCommander();
         analyst = app.getAnalyst();
         scenario = queryService.createScenario();
     }

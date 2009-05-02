@@ -1,23 +1,23 @@
 package com.mindalliance.channels.pages.components.entities;
 
+import com.mindalliance.channels.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.analysis.graph.EntityRelationship;
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.diagrams.EntityNetworkDiagramPanel;
-import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.RequestCycle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -220,7 +220,7 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
     public void changed( Change change ) {
         if ( change.isSelected() ) {
             Identifiable changed = change.getSubject();
-            if ( changed instanceof Channels ) {
+            if ( changed instanceof Plan ) {
                 selectedEntityRel = null;
             } else if ( changed instanceof ModelObject
                     && ((ModelObject)changed).isEntity()) {

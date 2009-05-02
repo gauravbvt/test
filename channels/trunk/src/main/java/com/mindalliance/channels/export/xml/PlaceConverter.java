@@ -1,12 +1,12 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.Channels;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.mindalliance.channels.model.Place;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 /**
  * XStream place converter
@@ -18,7 +18,8 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
  */
 public class PlaceConverter extends EntityConverter {
 
-    public PlaceConverter() {
+    public PlaceConverter( Exporter exporter ) {
+        super( exporter );
     }
 
     /**
@@ -32,7 +33,7 @@ public class PlaceConverter extends EntityConverter {
      * {@inheritDoc}
      */
     ModelObject findOrMakeEntity( String name ) {
-        return Channels.queryService().findOrCreate( Place.class, name );
+        return getQueryService().findOrCreate( Place.class, name );
     }
 
     /**

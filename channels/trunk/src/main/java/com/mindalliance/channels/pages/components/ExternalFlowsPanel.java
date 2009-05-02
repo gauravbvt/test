@@ -1,18 +1,17 @@
 package com.mindalliance.channels.pages.components;
 
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import com.mindalliance.channels.model.ExternalFlow;
+import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.util.SortableBeanProvider;
+import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
-import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
-import java.util.Set;
-import java.util.List;
 import java.util.ArrayList;
-
-import com.mindalliance.channels.model.ExternalFlow;
-import com.mindalliance.channels.util.SortableBeanProvider;
-import com.mindalliance.channels.Channels;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A panel with a table of external flows.
@@ -28,7 +27,7 @@ public class ExternalFlowsPanel extends AbstractTablePanel<ExternalFlow> {
 
     public ExternalFlowsPanel(
             String id,
-            IModel<Channels> model,
+            IModel<Plan> model,
             IModel<ArrayList<ExternalFlow>> externalFlowsModel,
             int pageSize,
             Set<Long> expansions ) {

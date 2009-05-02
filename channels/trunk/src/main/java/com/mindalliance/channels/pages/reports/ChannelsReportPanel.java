@@ -1,14 +1,13 @@
 package com.mindalliance.channels.pages.reports;
 
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Medium;
 import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.Channels;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ import java.util.Set;
  * Date: Feb 6, 2009
  * Time: 10:55:29 AM
  */
-public class ChannelsReportPanel extends Panel {
+public class ChannelsReportPanel extends AbstractReportPanel {
 
     /**
      * A resource spec.

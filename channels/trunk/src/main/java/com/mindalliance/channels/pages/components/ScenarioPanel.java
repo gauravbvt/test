@@ -1,13 +1,12 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.ScenarioObject;
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.UpdateScenarioObject;
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.menus.PartActionsMenuPanel;
 import com.mindalliance.channels.pages.components.menus.PartShowMenuPanel;
@@ -15,13 +14,13 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.RequestCycle;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -179,7 +178,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
 
     private void adjustComponents() {
         partDescription.setEnabled( isLockedByUser( getPart() ) );
-        boolean partHasIssues = Channels.analyst().hasIssues( getPart(), false );
+        boolean partHasIssues = getAnalyst().hasIssues( getPart(), false );
         makeVisible( partIssuesPanel, partHasIssues );
         makeVisible( scenarioEditPanel, getExpansions().contains( getScenario().getId() ) );
     }
@@ -335,7 +334,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
                 if ( !change.isDisplay() ) {
                     target.addComponent( flowMapDiagramPanel );
                     makeVisible( target, partIssuesPanel,
-                            Channels.analyst().hasIssues( getPart(), false ) );
+                            getAnalyst().hasIssues( getPart(), false ) );
                     target.addComponent( partIssuesPanel );
                     // target.addComponent( attachments );
                 }

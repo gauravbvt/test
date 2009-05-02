@@ -1,12 +1,12 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.Channels;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.mindalliance.channels.model.Role;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 /**
  * XStream Role converter
@@ -18,7 +18,8 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
  */
 public class RoleConverter extends EntityConverter {
 
-    public RoleConverter() {
+    public RoleConverter( Exporter exporter ) {
+        super( exporter );
     }
 
     public boolean canConvert( Class aClass ) {
@@ -30,7 +31,7 @@ public class RoleConverter extends EntityConverter {
      */
     @Override
     ModelObject findOrMakeEntity( String name ) {
-        return Channels.queryService().findOrCreate( Role.class, name );
+        return getQueryService().findOrCreate( Role.class, name );
     }
 
     /**

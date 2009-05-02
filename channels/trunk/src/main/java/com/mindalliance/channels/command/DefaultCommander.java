@@ -1,26 +1,26 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.AbstractService;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.LockManager;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Identifiable;
-
-import java.util.Collection;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collections;
-
+import com.mindalliance.channels.model.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  * Date: Mar 3, 2009
  * Time: 1:47:58 PM
  */
-public class DefaultCommander implements Commander {
+public class DefaultCommander  extends AbstractService implements Commander {
     /**
      * Logger.
      */

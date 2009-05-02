@@ -1,21 +1,22 @@
 package com.mindalliance.channels.pages;
 
+import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.Commander;
+import com.mindalliance.channels.Importer;
+import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.ScenarioObject;
 import com.mindalliance.channels.model.UserIssue;
-import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.Importer;
 import com.mindalliance.channels.pages.components.PlanMapPanel;
 import com.mindalliance.channels.pages.components.ScenarioLink;
 import com.mindalliance.channels.pages.components.ScenarioPanel;
@@ -227,7 +228,7 @@ public final class PlanPage extends WebPage implements Updatable {
         setVersioned( false );
         setStatelessHint( true );
         add( new Label( "sc-title",
-                new Model<String>( "Channels: " + Channels.instance().getPlanName() ) ) );
+                new Model<String>( "Channels: " + Channels.getPlan().getName() ) ) );
 
         form = new Form( "big-form" ) {
             @Override
@@ -257,7 +258,7 @@ public final class PlanPage extends WebPage implements Updatable {
         FileUpload fileUpload = scenarioImport.getFileUpload();
         if ( fileUpload != null ) {
             // Import and switch to scenario
-            Importer importer = Channels.instance().getImporter();
+            Importer importer = getApp().getImporter();
             try {
                 InputStream inputStream = fileUpload.getInputStream();
                 Scenario imported = importer.importScenario(
@@ -456,7 +457,7 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void addPlanMapPanel() {
-        boolean showPlanMap = expansions.contains( Channels.instance().getId() );
+        boolean showPlanMap = expansions.contains( Channels.getPlan().getId() );
 
         planMapPanel = showPlanMap ? new PlanMapPanel( "plan-map", getReadOnlyExpansions() )
                 : new Label( "plan-map", "" );
@@ -657,7 +658,7 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private Channels getApp() {
-        return (Channels) getApplication();
+        return Channels.instance();
     }
 
     private Commander getCommander() {
@@ -838,8 +839,8 @@ public final class PlanPage extends WebPage implements Updatable {
             }
             // expandedEntities.remove( identifiable.getId() );
         }
-        // Never lock a scenario
-        if ( !( identifiable instanceof Scenario || identifiable instanceof Channels ) ) {
+        // Never lock a scenario or plan
+        if ( !( identifiable instanceof Scenario || identifiable instanceof Plan ) ) {
             getCommander().requestLockOn( identifiable );
         }
         expansions.add( identifiable.getId() );
@@ -937,7 +938,7 @@ public final class PlanPage extends WebPage implements Updatable {
                         && change.getProperty().equals( "waivedIssueDetections" ) ) ) {
             refreshAll( target );
         } else {
-            if ( identifiable instanceof Channels ) {
+            if ( identifiable instanceof Plan ) {
                 if ( change.isDisplay() ) {
                     addPlanMapPanel();
                     target.addComponent( planMapPanel );

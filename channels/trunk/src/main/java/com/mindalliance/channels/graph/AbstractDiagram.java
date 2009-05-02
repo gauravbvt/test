@@ -1,10 +1,11 @@
 package com.mindalliance.channels.graph;
 
+import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.DiagramFactory;
 
-import java.io.ByteArrayOutputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -35,6 +36,9 @@ public abstract class AbstractDiagram<V, E> implements Diagram {
         this.orientation = orientation;
     }
 
+    public Analyst getAnalyst() {
+        return Channels.instance().getAnalyst();
+    }
 
     /**
      * {@inheritDoc}
@@ -57,7 +61,7 @@ public abstract class AbstractDiagram<V, E> implements Diagram {
      */
     @SuppressWarnings( "unchecked" )
     public DiagramFactory<V, E> getDiagramFactory() {
-        return Channels.diagramFactory();
+        return Channels.instance().getDiagramFactory();
     }
 
     /**

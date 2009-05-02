@@ -1,26 +1,25 @@
 package com.mindalliance.channels.export.xml;
 
-import com.thoughtworks.xstream.converters.MarshallingContext;
-import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Delay;
-import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.UserIssue;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.Channels;
-
-import java.util.Map;
-import java.util.List;
-
+import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.UserIssue;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * An XStream Part converter.
@@ -37,7 +36,8 @@ public class PartConverter extends AbstractChannelsConverter {
      */
     public static final Logger LOG = LoggerFactory.getLogger( PartConverter.class );
 
-    public PartConverter() {
+    public PartConverter( Exporter exporter ) {
+        super( exporter );
     }
 
     /**
@@ -109,7 +109,7 @@ public class PartConverter extends AbstractChannelsConverter {
             writer.endNode();
         }
         // Part user issues
-        List<Issue> issues = Channels.queryService().findAllUserIssues( part );
+        List<Issue> issues = getQueryService().findAllUserIssues( part );
         for ( Issue issue : issues ) {
             writer.startNode( "issue" );
             context.convertAnother( issue );
@@ -123,7 +123,7 @@ public class PartConverter extends AbstractChannelsConverter {
     @SuppressWarnings( "unchecked" )
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
         Scenario scenario = (Scenario) context.get( "scenario" );
-        Part part = Channels.queryService().createPart( scenario );
+        Part part = getQueryService().createPart( scenario );
         Map<String, Long> idMap = (Map<String, Long>) context.get( "idMap" );
         String id = reader.getAttribute( "id" );
         idMap.put( id, part.getId() );
@@ -166,7 +166,8 @@ public class PartConverter extends AbstractChannelsConverter {
                 String externalScenarioDescription = reader.getValue();
                 List<Scenario> externalScenarios = ConverterUtils.findMatchingScenarios(
                         externalScenarioName,
-                        externalScenarioDescription );
+                        externalScenarioDescription,
+                        getQueryService() );
                 if ( !externalScenarios.isEmpty() ) {
                     part.setInitiatedScenario( externalScenarios.get( 0 ) );
                     if ( externalScenarios.size() > 1 ) {

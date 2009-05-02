@@ -1,18 +1,18 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.commands.SatisfyNeed;
+import com.mindalliance.channels.command.commands.UpdateScenarioObject;
+import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.ScenarioObject;
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.SatisfyNeed;
-import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.pages.components.menus.FlowActionsMenuPanel;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.wicket.AttributeModifier;
@@ -165,7 +165,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
 
         Node node = getOther();
         if ( node.isConnector() && node.getScenario().equals( getNode().getScenario() ) ) {
-            add( new ConnectedFlowList( "others", (Connector) node ) );                   // NON-NLS
+            add( new ConnectedFlowList( "others", (Connector) node, getAnalyst() ) );                   // NON-NLS
         } else {
             add( new Label( "others", "" ) );                                             // NON-NLS
         }
@@ -212,7 +212,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         terminatesSourceContainer.setVisible( f.canGetTerminatesSource() );
         terminatesSourceCheckBox.setEnabled( lockedByUser && f.canSetTerminatesSource() );
         otherChoice.setEnabled( lockedByUser );
-        makeVisible( issuesPanel, Channels.analyst().hasIssues( model.getObject(), false ) );
+        makeVisible( issuesPanel, getAnalyst().hasIssues( model.getObject(), false ) );
     }
 
     private void addNameField() {
@@ -466,7 +466,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
             component.add(
                     new AttributeModifier(
                             "title", true, new Model<String>( summary ) ) );                // NON-NLS
-        }  else {
+        } else {
             if ( hasIssues ) {
                 // All waived issues
                 component.add(
@@ -618,7 +618,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
             }
         }
         // Add inputs/outputs of other scenarios
-        QueryService queryService = Channels.queryService();
+        QueryService queryService = getQueryService();
         for ( Scenario s : queryService.list( Scenario.class ) ) {
             if ( !scenario.equals( s ) ) {
                 Iterator<Connector> c = isOutcome() ? s.inputs() : s.outputs();
@@ -643,7 +643,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
 
     private List<Connector> findAllRelevantConnectors() {
         List<Connector> result = new ArrayList<Connector>();
-        QueryService queryService = Channels.queryService();
+        QueryService queryService = getQueryService();
         for ( Scenario s : queryService.list( Scenario.class ) ) {
             Iterator<Connector> connectorIterator = isOutcome()
                     ? s.inputs()

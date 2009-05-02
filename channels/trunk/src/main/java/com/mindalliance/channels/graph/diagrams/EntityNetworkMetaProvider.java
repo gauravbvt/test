@@ -1,22 +1,22 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.graph.AbstractMetaProvider;
-import com.mindalliance.channels.graph.URLProvider;
-import com.mindalliance.channels.graph.DOTAttributeProvider;
-import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.analysis.graph.EntityRelationship;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.graph.AbstractMetaProvider;
+import com.mindalliance.channels.graph.DOTAttribute;
+import com.mindalliance.channels.graph.DOTAttributeProvider;
+import com.mindalliance.channels.graph.URLProvider;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Role;
+import org.apache.commons.lang.StringUtils;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
-import org.apache.commons.lang.StringUtils;
 
-import java.util.List;
 import java.text.MessageFormat;
+import java.util.List;
 
 /**
  * Entity network meta provider.
@@ -45,7 +45,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
     }
 
     public Object getContext() {
-        return Channels.instance();
+        return Channels.getPlan();
     }
 
     public URLProvider getURLProvider() {

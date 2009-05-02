@@ -1,5 +1,6 @@
 package com.mindalliance.channels.query;
 
+import com.mindalliance.channels.Channels;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
@@ -98,7 +99,9 @@ public class ResultCache {
                 key.append( String.valueOf( methodArgs[i] ) );
             }
             key.append( ')' );
-
+            // Add plan id to key
+            key.append( " in ");
+            key.append( Channels.getPlan().getId() );
             return key.toString();
         }
         else

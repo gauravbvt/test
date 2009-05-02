@@ -1,15 +1,14 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.attachments.Attachment;
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelObject;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -32,7 +31,7 @@ public class FlowViolatesPolicy extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        Iterator<Attachment> attachments = Channels.attachmentManager().attachments( flow );
+        Iterator<Attachment> attachments = getAttachmentManager().attachments( flow );
         while ( attachments.hasNext() ) {
             Attachment attachment = attachments.next();
             if ( attachment.isPolicyViolation() ) {
@@ -46,7 +45,7 @@ public class FlowViolatesPolicy extends AbstractIssueDetector {
         return issues;
     }
 
-    /**
+     /**
      * {@inheritDoc}
      */
     public boolean appliesTo( ModelObject modelObject ) {

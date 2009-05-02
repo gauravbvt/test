@@ -1,14 +1,13 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.Importer;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.model.Scenario;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -39,7 +38,7 @@ public class RestoreScenario extends AbstractCommand {
      */
     public Change execute( Commander commander ) throws CommandException {
         QueryService queryService = commander.getQueryService();
-        Importer importer = Channels.instance().getImporter();
+        Importer importer = commander.getChannels().getImporter();
         String xml = (String) get( "xml" );
         if ( xml != null ) {
             try {

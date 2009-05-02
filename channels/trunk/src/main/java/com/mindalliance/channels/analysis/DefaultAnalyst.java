@@ -1,22 +1,21 @@
 package com.mindalliance.channels.analysis;
 
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.AbstractService;
 import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.util.Play;
-
-import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
-
-import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Default implementation of Analyst.
@@ -26,7 +25,7 @@ import org.apache.commons.collections.CollectionUtils;
  * Date: Nov 26, 2008
  * Time: 10:07:27 AM
  */
-public class DefaultAnalyst implements Analyst {
+public class DefaultAnalyst  extends AbstractService implements Analyst {
 
     private static final String DESCRIPTION_SEPARATOR = " -- ";
 
@@ -216,7 +215,7 @@ public class DefaultAnalyst implements Analyst {
      * {@inheritDoc}
      */
     public QueryService getQueryService() {
-        return Channels.instance().getQueryService();
+        return getChannels().getQueryService();
     }
 
     /**
@@ -228,7 +227,7 @@ public class DefaultAnalyst implements Analyst {
      */
     private List<Issue> findAllIssuesInPlays( ResourceSpec resourceSpec, boolean specific ) {
         List<Issue> issues = new ArrayList<Issue>();
-        List<Play> plays = Channels.queryService().findAllPlays( resourceSpec, specific );
+        List<Play> plays = getChannels().getQueryService().findAllPlays( resourceSpec, specific );
         Set<Part> parts = new HashSet<Part>();
         for ( Play play : plays ) {
             parts.add( play.getPartFor( resourceSpec ) );

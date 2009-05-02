@@ -1,15 +1,16 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.AbstractService;
 import com.mindalliance.channels.DiagramFactory;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
+import com.mindalliance.channels.graph.diagrams.EntityNetworkDiagram;
 import com.mindalliance.channels.graph.diagrams.FlowMapDiagram;
 import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
-import com.mindalliance.channels.graph.diagrams.EntityNetworkDiagram;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Scenario;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ import java.util.List;
  * @param <V> a vertex class
  * @param <E> an edge class
  */
-public class DefaultDiagramFactory<V, E> implements DiagramFactory {
+public class DefaultDiagramFactory<V, E> extends AbstractService implements DiagramFactory {
 
     /**
      * A GraphRenderer for nodes and flows
@@ -97,7 +98,7 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
             ScenarioRelationship scRel,
             double[] diagramSize,
             String orientation ) {
-        return new PlanMapDiagram( 
+        return new PlanMapDiagram(
                 (List<Scenario>)scenarios,
                 scenario, scRel,
                 diagramSize,

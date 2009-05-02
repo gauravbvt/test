@@ -1,10 +1,10 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.UserIssue;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -29,7 +29,8 @@ public class UserIssueConverter extends AbstractChannelsConverter {
      */
     private static final Logger LOG = LoggerFactory.getLogger( UserIssueConverter.class );
 
-    public UserIssueConverter() {
+    public UserIssueConverter( Exporter exporter ) {
+        super( exporter );
     }
 
     /**
@@ -72,7 +73,7 @@ public class UserIssueConverter extends AbstractChannelsConverter {
             String idString = reader.getAttribute( "about" );
             Long id = idMap.get( idString );
             if ( id != null ) {
-                ModelObject about = Channels.queryService().find( ModelObject.class, id );
+                ModelObject about = getQueryService().find( ModelObject.class, id );
                 issue = new UserIssue( about );
                 while ( reader.hasMoreChildren() ) {
                     reader.moveDown();
@@ -88,7 +89,7 @@ public class UserIssueConverter extends AbstractChannelsConverter {
                     }
                     reader.moveUp();
                 }
-                Channels.queryService().add( issue );
+                getQueryService().add( issue );
                 idMap.put( issueId, issue.getId() );                
             } else {
                 LOG.warn( "Issue's model object not found at " + id );

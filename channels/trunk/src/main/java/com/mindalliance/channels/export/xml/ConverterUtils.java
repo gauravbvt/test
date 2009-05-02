@@ -1,21 +1,20 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.export.ScenarioSpecification;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.export.PartSpecification;
+import com.mindalliance.channels.export.ScenarioSpecification;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.util.SemMatch;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.iterators.FilterIterator;
+import org.slf4j.LoggerFactory;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import org.slf4j.LoggerFactory;
-import org.apache.commons.collections.iterators.FilterIterator;
-import org.apache.commons.collections.Predicate;
+import java.util.List;
 
 /**
  * XML conversion utils.
@@ -49,16 +48,17 @@ public class ConverterUtils {
         }
     }
 
-    public static List<Scenario> findMatchingScenarios( ScenarioSpecification scSpec ) {
-         return findMatchingScenarios(scSpec.getName(), scSpec.getDescription());
+    public static List<Scenario> findMatchingScenarios( ScenarioSpecification scSpec, QueryService queryService ) {
+         return findMatchingScenarios(scSpec.getName(), scSpec.getDescription(), queryService);
     }
 
     // TODO do semantic match on scenario name and description
     public static List<Scenario> findMatchingScenarios( String scenarioName,
-                                                        String scenarioDescription ) {
+                                                        String scenarioDescription,
+                                                        QueryService queryService) {
         List<Scenario> scenarios = new ArrayList<Scenario>();
         try {
-            scenarios.add( Channels.queryService().findScenario( scenarioName ) );
+            scenarios.add( queryService.findScenario( scenarioName ) );
         } catch ( NotFoundException e ) {
             LoggerFactory.getLogger( ConverterUtils.class ).info(
                     "No scenario found matching name ["

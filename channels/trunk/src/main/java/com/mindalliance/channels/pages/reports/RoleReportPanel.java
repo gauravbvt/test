@@ -6,11 +6,9 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.Channels;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
 import java.util.List;
@@ -23,7 +21,7 @@ import java.util.List;
  * Date: Feb 5, 2009
  * Time: 8:10:03 PM
  */
-public class RoleReportPanel extends Panel {
+public class RoleReportPanel extends AbstractReportPanel {
 
     /** A role. */
     private Role role;
@@ -56,7 +54,7 @@ public class RoleReportPanel extends Panel {
         Label descLabel = new Label( "description", desc );                               // NON-NLS
         descLabel.setVisible( desc != null && !desc.isEmpty() );
         add( descLabel );
-        List<Actor> actors = Channels.instance().getQueryService().findActors(
+        List<Actor> actors = getQueryService().findActors(
                 organization, role, scenario );
         if ( actors.isEmpty() )
             actors.add( Actor.UNKNOWN );

@@ -1,32 +1,33 @@
 package com.mindalliance.channels.export.xml;
 
+import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.Exporter;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.model.UserIssue;
-import com.mindalliance.channels.model.Delay;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * XStream scenario converter.
@@ -43,7 +44,8 @@ public class ScenarioConverter extends AbstractChannelsConverter {
      */
     private static final Logger LOG = LoggerFactory.getLogger( ScenarioConverter.class );
 
-    public ScenarioConverter() {
+    public ScenarioConverter( Exporter exporter ) {
+        super( exporter );
     }
 
     /**
@@ -59,11 +61,11 @@ public class ScenarioConverter extends AbstractChannelsConverter {
     public void marshal( Object object, HierarchicalStreamWriter writer,
                          MarshallingContext context ) {
         Scenario scenario = (Scenario) object;
-        Channels app = Channels.instance();
+        Plan plan = Channels.getPlan();
         QueryService queryService = getQueryService();
         context.put( "scenario", scenario );
-        writer.addAttribute( "app", app.getUri() );
-        writer.addAttribute( "version", app.getExporter().getVersion() );
+        writer.addAttribute( "plan", plan.getUri() );
+        writer.addAttribute( "version", getVersion() );
         writer.addAttribute( "date", new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( new Date() ) );
         writer.addAttribute( "id", String.valueOf( scenario.getId() ) );
         writer.addAttribute( "name", scenario.getName() );
@@ -95,8 +97,8 @@ public class ScenarioConverter extends AbstractChannelsConverter {
             ConverterUtils.writePartSpecification( initiator, writer );
             writer.endNode();
         }
-        // All entities if not within a app export
-        if ( context.get( "app" ) == null ) {
+        // All entities if not within a plan export
+        if ( context.get( "exporting-plan" ) == null ) {
             Iterator<ModelObject> entities = queryService.iterateEntities();
             while ( entities.hasNext() ) {
                 ModelObject entity = entities.next();
@@ -138,7 +140,7 @@ public class ScenarioConverter extends AbstractChannelsConverter {
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
         Map<String, Long> idMap = getIdMap( context );
         getProxyConnectors( context );
-        QueryService queryService = Channels.queryService();
+        QueryService queryService = getQueryService();
         Scenario scenario = queryService.createScenario();
         Part defaultPart = scenario.getDefaultPart();
         context.put( "scenario", scenario );
@@ -205,7 +207,7 @@ public class ScenarioConverter extends AbstractChannelsConverter {
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "scenario-description" ) ) {
                 externalScenarioDescription = reader.getValue();
-            } else if (!nodeName.equals("part-id")) {
+            } else if ( !nodeName.equals( "part-id" ) ) {
                 String name = reader.getAttribute( "name" ).trim();
                 if ( nodeName.equals( "part-role" ) ) {
                     roleName = name;
@@ -220,7 +222,8 @@ public class ScenarioConverter extends AbstractChannelsConverter {
         }
         List<Scenario> externalScenarios = ConverterUtils.findMatchingScenarios(
                 externalScenarioName,
-                externalScenarioDescription );
+                externalScenarioDescription,
+                getQueryService() );
         for ( Scenario externalScenario : externalScenarios ) {
             List<Part> externalParts = ConverterUtils.findMatchingParts(
                     externalScenario,

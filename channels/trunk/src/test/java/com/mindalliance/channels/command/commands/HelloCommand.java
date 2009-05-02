@@ -1,12 +1,11 @@
 package com.mindalliance.channels.command.commands;
 
+import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.Channels;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -38,12 +37,12 @@ public class HelloCommand extends AbstractCommand {
     }
 
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        return makeCommand( "not " + get( "greeting" ) );
+        return makeCommand( "not " + get( "greeting" ), commander );
     }
 
-    static public AbstractCommand makeCommand( String greeting ) {
+    static public AbstractCommand makeCommand( String greeting, Commander commander ) {
         AbstractCommand command = new HelloCommand( greeting );
-        Scenario scenario = Channels.instance().getQueryService().getDefaultScenario();
+        Scenario scenario = commander.getQueryService().getDefaultScenario();
         command.addConflicting( scenario );
         return command;
     }

@@ -14,7 +14,9 @@
         <property name="dao" ref="dao"/>
     </bean>
 
-    <bean id="serializer" class="com.mindalliance.channels.export.xml.XmlStreamer"/>
+    <bean id="serializer" class="com.mindalliance.channels.export.xml.XmlStreamer">
+        <property name="version" value="1.0"/>
+    </bean>
 
     <bean id="attachmentManager" class="com.mindalliance.channels.attachments.FileBasedManager"
           init-method="start" destroy-method="stop">
@@ -25,17 +27,32 @@
 
     <!-- setup wicket application -->
     <bean id="wicketApplication" class="com.mindalliance.channels.Channels">
-        <property name="uri" value="mindalliance.com/channels/demo"/>
-        <property name="queryService" ref="queryService"/>
         <property name="attachmentManager" ref="attachmentManager"/>
         <property name="importer" ref="serializer"/>
         <property name="exporter" ref="serializer"/>
         <property name="analyst" ref="analyst"/>
-        <property name="commander" ref="commander"/>
-        <property name="lockManager" ref="lockManager"/>
-        <property name="planName" value="Emergency Communications Plan"/>
-        <property name="client" value="Strategic Content Imaging, Inc."/>
-        <property name="description" value="Communications planning for responding and recovering from business interruptions due fire and power outage."/>
+        <property name="queryService" ref="queryService"/>
+        <property name="plans">
+            <list value-type="java.util.ArrayList">
+                <bean class="com.mindalliance.channels.model.Plan">
+                    <property name="uri" value="mindalliance.com/channels/demo"/>
+                    <property name="name" value="SCI Emergency Communications Plan"/>
+                    <property name="client" value="Strategic Content Imaging, Inc."/>
+                    <property name="description"
+                              value="Communications planning for responding and recovering from business interruptions due fire or power outage."/>
+                    <property name="events">
+                        <list value-type="java.util.ArrayList">
+                            <bean class="com.mindalliance.channels.model.PlanEvent">
+                                <property name="name" value="fire"/>
+                            </bean>
+                            <bean class="com.mindalliance.channels.model.PlanEvent">
+                                <property name="name" value="power outage"/>
+                            </bean>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
     </bean>
 
     <!-- Flow diagram factory : a prototype -->
@@ -55,45 +72,94 @@
     <bean id="analyst" class="com.mindalliance.channels.analysis.DefaultAnalyst">
         <property name="issueDetectors">
             <list value-type="java.util.ArrayList">
-                <bean class="com.mindalliance.channels.analysis.detectors.FromUser"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.StartedOrTerminatedPartWithoutTask"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.PartWithoutRole"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.FlowWithoutChannel"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.InvalidChannel"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.FromUser">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.StartedOrTerminatedPartWithoutTask">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.PartWithoutRole">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.FlowWithoutChannel">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.InvalidChannel">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.UnnamedFlow"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedSource"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedTarget"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.PartWithInvalidTiming"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.OrphanedPart"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.RedundantPart"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.RedundantFlow"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.UnconnectedConnector"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.FlowViolatesPolicy"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.UnconfirmedJob"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.FlowToSelf"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.PartWithRoleWithNoKnownActor"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.ScenarioNeverTerminates"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.TriggeredButNeverStartedDefinedTask"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.NeverTriggeredSpecifiedTask"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.AutoStartPartAlsoTriggered"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.NonIncidentScenarioNeverInitiated"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.InitiatedScenarioNeverStarted"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.CyclicTriggering"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.NoRedundancy"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.PotentialDeadlock"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedSource">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedTarget">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.PartWithInvalidTiming">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.OrphanedPart">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.RedundantPart">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.RedundantFlow">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.UnconnectedConnector">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.FlowViolatesPolicy">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.UnconfirmedJob">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.FlowToSelf">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.PartWithRoleWithNoKnownActor">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.ScenarioNeverTerminates">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.TriggeredButNeverStartedDefinedTask">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.NeverTriggeredSpecifiedTask">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.AutoStartPartAlsoTriggered">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.NonIncidentScenarioNeverInitiated">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.InitiatedScenarioNeverStarted">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.CyclicTriggering">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.NoRedundancy">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.PotentialDeadlock">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
             </list>
         </property>
     </bean>
 
     <!-- Lock manager -->
-    <bean id="lockManager" class="com.mindalliance.channels.command.DefaultLockManager">
+    <bean id="lockManager" class="com.mindalliance.channels.command.DefaultLockManager" scope="prototype">
         <property name="queryService" ref="queryService"/>
     </bean>
 
     <!-- Commander -->
-    <bean id="commander" class="com.mindalliance.channels.command.DefaultCommander">
+    <bean id="commander" class="com.mindalliance.channels.command.DefaultCommander" scope="prototype">
         <property name="timeout" value="300"/>
-        <property name="lockManager" ref="lockManager"/>
         <property name="queryService" ref="queryService"/>
     </bean>
 

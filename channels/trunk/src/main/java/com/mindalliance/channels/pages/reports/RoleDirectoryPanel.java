@@ -4,11 +4,9 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.Channels;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
 import java.text.MessageFormat;
@@ -22,7 +20,7 @@ import java.util.List;
  * Date: Feb 9, 2009
  * Time: 11:52:19 AM
  */
-public class RoleDirectoryPanel extends Panel {
+public class RoleDirectoryPanel extends AbstractReportPanel {
 
     /**
      * A role.
@@ -54,7 +52,7 @@ public class RoleDirectoryPanel extends Panel {
         add( descLabel );
 
         // Find all actors in role for organization
-        List<Actor> actors = Channels.instance().getQueryService().findActors( organization, role );
+        List<Actor> actors = getQueryService().findActors( organization, role );
         if ( actors.isEmpty() )
             actors.add( Actor.UNKNOWN );
         add( new ListView<Actor>( "actors", actors ) {                                    // NON-NLS

@@ -1,10 +1,9 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Scenario;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,12 +15,10 @@ import com.mindalliance.channels.command.Change;
 public class TestUpdateScenarioObject extends AbstractChannelsTest {
 
     private UpdateScenarioObject command;
-    private Commander commander;
     private Part part;
 
     protected void setUp() {
         super.setUp();
-        commander = app.getCommander();
         Scenario scenario = app.getQueryService().getDefaultScenario();
         part = scenario.getDefaultPart();
         command = new UpdateScenarioObject( part, "description", "ipso lorem etc." );

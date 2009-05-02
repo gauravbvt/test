@@ -1,16 +1,15 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.model.Channel;
+import com.mindalliance.channels.model.Delay;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Medium;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Delay;
-import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.model.Medium;
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.model.Scenario;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,7 +27,6 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
     private Part source;
     private Part target;
     private BreakUpFlow command;
-    private Commander commander;
 
     protected void setUp() {
         super.setUp();
@@ -49,7 +47,6 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
             }
         } );
         command = new BreakUpFlow( flow );
-        commander = app.getCommander();
     }
 
     protected void tearDown() {

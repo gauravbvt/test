@@ -1,13 +1,12 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.analysis.graph.EntityNetworkGraphBuilder;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.graph.AbstractDiagram;
-import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.graph.GraphRenderer;
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.model.ModelObject;
 import org.jgrapht.Graph;
 
 import java.io.OutputStream;
@@ -55,7 +54,7 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelObject, EntityRel
         EntityNetworkMetaProvider metaProvider = new EntityNetworkMetaProvider(
                 outputFormat,
                 diagramFactory.getImageDirectory(),
-                Channels.analyst() );
+                getAnalyst() );
         if ( diagramSize != null ) {
             metaProvider.setGraphSize( diagramSize );
         }

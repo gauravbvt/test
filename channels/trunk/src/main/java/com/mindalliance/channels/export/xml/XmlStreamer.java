@@ -1,33 +1,35 @@
 package com.mindalliance.channels.export.xml;
 
+import com.mindalliance.channels.AbstractService;
+import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.Exporter;
+import com.mindalliance.channels.Importer;
+import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.command.AbstractCommand;
+import com.mindalliance.channels.dao.Journal;
+import com.mindalliance.channels.export.ConnectionSpecification;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Job;
+import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.UserIssue;
-import com.mindalliance.channels.model.ExternalFlow;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.util.SemMatch;
-import com.mindalliance.channels.command.AbstractCommand;
-import com.mindalliance.channels.dao.Journal;
-import com.mindalliance.channels.Exporter;
-import com.mindalliance.channels.Importer;
-import com.mindalliance.channels.export.ConnectionSpecification;
 import com.thoughtworks.xstream.XStream;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.iterators.FilterIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.collections.iterators.FilterIterator;
-import org.apache.commons.collections.Predicate;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -35,13 +37,13 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * XML scenario importer.
@@ -51,12 +53,16 @@ import java.util.HashSet;
  * Date: Dec 16, 2008
  * Time: 9:12:25 PM
  */
-public class XmlStreamer implements Importer, Exporter {
+public class XmlStreamer extends AbstractService implements Importer, Exporter {
 
     /**
      * Class logger.
      */
     public static final Logger LOG = LoggerFactory.getLogger( XmlStreamer.class );
+    /**
+     * Version number.
+     */
+    private String version = "0.0";
 
 
     /**
@@ -84,7 +90,7 @@ public class XmlStreamer implements Importer, Exporter {
         private void configure() {
             xstream.alias( "command", AbstractCommand.class );
             xstream.alias( "journal", Journal.class );
-            xstream.alias( "app", Channels.class );
+            xstream.alias( "plan", Plan.class );
             xstream.alias( "actor", Actor.class );
             xstream.aliasType( "flow", Flow.class );
             xstream.alias( "jurisdiction", Place.class );
@@ -97,19 +103,19 @@ public class XmlStreamer implements Importer, Exporter {
             xstream.alias( "scenario", Scenario.class );
             xstream.alias( "channel", Channel.class );
             xstream.alias( "job", Job.class );
-            xstream.registerConverter( new PlanConverter() );
-            xstream.registerConverter( new JournalConverter() );
-            xstream.registerConverter( new CommandConverter() );
-            xstream.registerConverter( new ScenarioConverter() );
-            xstream.registerConverter( new PartConverter() );
-            xstream.registerConverter( new FlowConverter() );
-            xstream.registerConverter( new ActorConverter() );
-            xstream.registerConverter( new RoleConverter() );
-            xstream.registerConverter( new OrganizationConverter() );
-            xstream.registerConverter( new PlaceConverter() );
-            xstream.registerConverter( new UserIssueConverter() );
-            xstream.registerConverter( new ChannelConverter() );
-            xstream.registerConverter( new JobConverter() );
+            xstream.registerConverter( new PlanConverter( XmlStreamer.this ) );
+            xstream.registerConverter( new JournalConverter( XmlStreamer.this ) );
+            xstream.registerConverter( new CommandConverter(XmlStreamer.this) );
+            xstream.registerConverter( new ScenarioConverter( XmlStreamer.this ) );
+            xstream.registerConverter( new PartConverter( XmlStreamer.this ) );
+            xstream.registerConverter( new FlowConverter( XmlStreamer.this ) );
+            xstream.registerConverter( new ActorConverter( XmlStreamer.this ) );
+            xstream.registerConverter( new RoleConverter( XmlStreamer.this ) );
+            xstream.registerConverter( new OrganizationConverter( XmlStreamer.this ) );
+            xstream.registerConverter( new PlaceConverter( XmlStreamer.this ) );
+            xstream.registerConverter( new UserIssueConverter( XmlStreamer.this ) );
+            xstream.registerConverter( new ChannelConverter( XmlStreamer.this ) );
+            xstream.registerConverter( new JobConverter( XmlStreamer.this ) );
         }
 
         /**
@@ -139,7 +145,11 @@ public class XmlStreamer implements Importer, Exporter {
      * {@inheritDoc}
      */
     public String getVersion() {
-        return "0.1";
+        return version;
+    }
+
+    public void setVersion( String version ) {
+        this.version = version;
     }
 
     /**
@@ -192,7 +202,7 @@ public class XmlStreamer implements Importer, Exporter {
     public void exportAll( OutputStream stream ) throws IOException {
         ObjectOutputStream out = configuredXStream.get()
                 .createObjectOutputStream( stream, "export" );
-        out.writeObject( Channels.instance() );
+        out.writeObject( Channels.getPlan() );
         out.close();
     }
 
@@ -329,7 +339,8 @@ public class XmlStreamer implements Importer, Exporter {
             final Map<String, Long> idMap ) {
         List<Connector> connectors = new ArrayList<Connector>();
         List<Scenario> scenarios = ConverterUtils.findMatchingScenarios(
-                conSpec.getScenarioSpecification() );
+                conSpec.getScenarioSpecification(),
+                getQueryService() );
         for ( Scenario scenario : scenarios ) {
             Iterator<Connector> iterator =
                     (Iterator<Connector>) new FilterIterator( scenario.nodes(), new Predicate() {
@@ -356,9 +367,9 @@ public class XmlStreamer implements Importer, Exporter {
         Part part = (Part) ( conSpec.isSource() ? externalInnerFlow.getSource() : externalInnerFlow.getTarget() );
         String partIdValue = conSpec.getPartSpecification().getId();
         Long mappedPartId = idMap.get( partIdValue );
-        boolean partIdMatches = partIdValue != null 
-                                    && mappedPartId != null
-                                    && mappedPartId == part.getId();
+        boolean partIdMatches = partIdValue != null
+                && mappedPartId != null
+                && mappedPartId == part.getId();
         return SemMatch.same( externalInnerFlow.getName(), conSpec.getFlowName() )
                 && ( partIdMatches || ConverterUtils.partMatches( part, conSpec.getPartSpecification() ) );
     }
@@ -369,7 +380,7 @@ public class XmlStreamer implements Importer, Exporter {
      * @return a query service
      */
     protected QueryService getQueryService() {
-        return Channels.instance().getQueryService();
+        return getChannels().getQueryService();
     }
 
 

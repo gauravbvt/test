@@ -1,19 +1,19 @@
 package com.mindalliance.channels.export.xml;
 
+import com.mindalliance.channels.Exporter;
+import com.mindalliance.channels.command.AbstractCommand;
+import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.MultiCommand;
+import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
-import com.thoughtworks.xstream.XStream;
-import com.mindalliance.channels.command.AbstractCommand;
-import com.mindalliance.channels.command.MultiCommand;
-import com.mindalliance.channels.command.Command;
-
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
  * Command XML converter.
@@ -32,7 +32,8 @@ public class CommandConverter extends AbstractChannelsConverter {
 
     private XStream jsonDriver;
 
-    public CommandConverter() {
+    public CommandConverter( Exporter exporter ) {
+        super( exporter );
         jsonDriver = new XStream( new JettisonMappedXmlDriver() );
     }
 

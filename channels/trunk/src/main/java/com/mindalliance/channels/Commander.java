@@ -1,11 +1,10 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelObject;
 
 import java.util.Map;
 
@@ -18,7 +17,7 @@ import java.util.Map;
  * Date: Feb 28, 2009
  * Time: 2:20:10 PM
  */
-public interface Commander {
+public interface Commander extends Service {
     /**
      * Whether the command could be executed right now.
      * The user is authorized and all required locks could be taken.
@@ -260,4 +259,10 @@ public interface Commander {
      * @return a boolean
      */
     boolean isFlowCopied();
+
+    /**
+     * Sets the commander's lock manager.
+     * @param lockManager a lock manager
+     */
+    void setLockManager( LockManager lockManager );
 }

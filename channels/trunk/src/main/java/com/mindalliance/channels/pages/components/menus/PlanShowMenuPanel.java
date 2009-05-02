@@ -1,22 +1,22 @@
 package com.mindalliance.channels.pages.components.menus;
 
-import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.command.Change;
-import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.link.PopupSettings;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.Model;
+import com.mindalliance.channels.model.Scenario;
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.PopupSettings;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -82,10 +82,10 @@ public class PlanShowMenuPanel extends MenuPanel {
                 "menuItem",
                 new Model<String>( "Playbook" ),
                 reportLink ) );
-        if ( getExpansions().contains( Channels.instance().getId() ) ) {
+        if ( getExpansions().contains( Channels.getPlan().getId() ) ) {
             AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {
-                    update( target, new Change( Change.Type.Collapsed, Channels.instance() ) );
+                    update( target, new Change( Change.Type.Collapsed, Channels.getPlan() ) );
                 }
             };
             menuItems.add( new LinkMenuItem(
@@ -95,7 +95,7 @@ public class PlanShowMenuPanel extends MenuPanel {
         } else {
             AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {
-                    update( target, new Change( Change.Type.Expanded, Channels.instance() ) );
+                    update( target, new Change( Change.Type.Expanded, Channels.getPlan() ) );
                 }
             };
             menuItems.add( new LinkMenuItem(

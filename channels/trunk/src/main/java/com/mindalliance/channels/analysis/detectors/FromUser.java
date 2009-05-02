@@ -1,9 +1,8 @@
 package com.mindalliance.channels.analysis.detectors;
 
+import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.Channels;
 
 import java.util.List;
 
@@ -35,6 +34,6 @@ public class FromUser extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     public List<Issue> detectIssues( ModelObject modelObject ) {
-        return Channels.queryService().findAllUserIssues( modelObject );
+        return getQueryService().findAllUserIssues( modelObject );
     }
 }

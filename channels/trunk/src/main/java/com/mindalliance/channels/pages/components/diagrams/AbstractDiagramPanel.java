@@ -2,23 +2,21 @@ package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
-import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.graph.diagrams.DiagramAjaxBehavior;
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.RequestCycle;
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -99,14 +97,6 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
         return orientation;
     }
 
-    /**
-     * Get diagram factory.
-     *
-     * @return diagram factory
-     */
-    protected DiagramFactory getDiagramFactory() {
-        return Channels.diagramFactory();
-    }
 
     /**
      * Initialize.

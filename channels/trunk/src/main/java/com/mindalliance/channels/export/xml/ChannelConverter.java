@@ -1,5 +1,6 @@
 package com.mindalliance.channels.export.xml;
 
+import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Medium;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -16,7 +17,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class ChannelConverter extends AbstractChannelsConverter {
 
-    public ChannelConverter() {
+    public ChannelConverter( Exporter exporter ) {
+        super( exporter );
     }
 
     public boolean canConvert( Class type ) {

@@ -2,11 +2,9 @@ package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.Channels;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -20,7 +18,7 @@ import java.text.MessageFormat;
  * Date: Feb 9, 2009
  * Time: 11:37:11 AM
  */
-public class OrganizationDirectoryPanel extends Panel {
+public class OrganizationDirectoryPanel extends AbstractReportPanel {
     /**
      * An organization
      */
@@ -40,7 +38,7 @@ public class OrganizationDirectoryPanel extends Panel {
         add( new Label( "description", organization.getDescription() ) );                 // NON-NLS
 
         add( new ListView<Role>( "roles",                                                 // NON-NLS
-                                 Channels.instance().getQueryService().findRolesIn( organization ) ) {
+                                 getQueryService().findRolesIn( organization ) ) {
             @Override
             protected void populateItem( ListItem<Role> item ) {
                 Role role = item.getModelObject();

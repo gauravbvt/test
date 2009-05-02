@@ -1,19 +1,19 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.export.ConnectionSpecification;
+import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.Scenario;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.FileInputStream;
 import java.util.Map;
 
 /**
  * Scenario import mechanism.
  */
-public interface Importer {
+public interface Importer extends Service {
 
     /**
      * Import a scenario from a stream.

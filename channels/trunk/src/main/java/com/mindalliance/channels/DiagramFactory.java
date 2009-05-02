@@ -1,13 +1,12 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
-import com.mindalliance.channels.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Scenario;
 
 import java.util.List;
 
@@ -21,7 +20,7 @@ import java.util.List;
  * @param <Vertex> a vertex class
  * @param <Edge> an edge class
  */
-public interface DiagramFactory<Vertex, Edge> {
+public interface DiagramFactory<Vertex, Edge> extends Service {
 
     /**
      * The PNG format

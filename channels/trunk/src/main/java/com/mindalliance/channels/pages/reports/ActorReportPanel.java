@@ -1,14 +1,13 @@
 package com.mindalliance.channels.pages.reports;
 
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Job;
 import com.mindalliance.channels.model.Medium;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.Channels;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Panel;
 
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -22,7 +21,7 @@ import java.util.Set;
  * Date: Feb 5, 2009
  * Time: 9:05:57 PM
  */
-public class ActorReportPanel extends Panel {
+public class ActorReportPanel extends AbstractReportPanel {
 
     /** A scenario. */
     private Scenario scenario;

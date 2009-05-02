@@ -1,18 +1,17 @@
 package com.mindalliance.channels.pages.components.entities;
 
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -69,7 +68,7 @@ public class EntityIssuesPanel extends AbstractTablePanel {
                 getExpansions() );
         entityIssues.setOutputMarkupId( true );
         add( entityIssues );
-        makeVisible( entityIssues, Channels.analyst().hasIssues( getEntity(), false ) );
+        makeVisible( entityIssues, getAnalyst().hasIssues( getEntity(), false ) );
     }
 
     private void addIssuesTable() {
@@ -108,7 +107,7 @@ public class EntityIssuesPanel extends AbstractTablePanel {
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change ) {
-        makeVisible( target, entityIssues, Channels.analyst().hasIssues( getEntity(), false ) );
+        makeVisible( target, entityIssues, getAnalyst().hasIssues( getEntity(), false ) );
         super.updateWith( target, change );
     }
 
