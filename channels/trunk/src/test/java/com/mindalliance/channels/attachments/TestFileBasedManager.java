@@ -135,8 +135,8 @@ public class TestFileBasedManager extends TestCase {
 
         mgr.attach( id, Attachment.Type.Document, new URL( "http://localhost/" ) );
 
-        Map<String,Long> remap = new HashMap<String,Long>();
-        remap.put( Long.toString( id ), 456L );
+        Map<Long,Long> remap = new HashMap<Long,Long>();
+        remap.put( id, 456L );
 
         assertTrue( mgr.attachments( id ).hasNext() );
 

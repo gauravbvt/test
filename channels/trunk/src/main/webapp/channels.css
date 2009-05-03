@@ -450,8 +450,10 @@ ul.attach li {
     position: relative;
 }
 
-ul.attach input {
+ul.attach input[type='text'] {
+    height: 1.1em;
     margin-top: 2px;
+    width: 20em;
 }
 
 span.suggest {
