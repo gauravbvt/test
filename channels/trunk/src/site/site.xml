@@ -1,18 +1,22 @@
-<project>
+<project xmlns="http://maven.apache.org/DECORATION/1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
+
     <bannerLeft>
       <name>Channels</name>
       <src>channels-logo-name.png</src>
       <href></href>
     </bannerLeft>
 
-    <body>
+    <publishDate position="left" format="yyyy-MM-dd HH:mm z "/>
+    <version position="left"/>
 
+    <body>
         <menu name="Developer's Guide">
             <item name="Coding standards" href="standards.html"/>
             <item name="IDE settings" href="ide.html"/>
         </menu>
 
         <menu ref="reports" />
-
     </body>
 </project>
