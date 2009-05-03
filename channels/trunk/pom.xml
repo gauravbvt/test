@@ -189,10 +189,6 @@
                     <groupId>org.springframework</groupId>
                     <artifactId>spring</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>cglib</groupId>
-                    <artifactId>cglib-nodep</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
 
@@ -373,7 +369,7 @@
             <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-jxr-plugin</artifactId>
-            </plugin>            
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
