@@ -1,6 +1,6 @@
 package com.mindalliance.channels.query;
 
-import com.mindalliance.channels.AbstractService;
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.Importer;
 import com.mindalliance.channels.NotFoundException;
@@ -48,17 +48,21 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
 import java.util.Set;
 
 /**
  * Query service instance.
  */
-public class DefaultQueryService extends AbstractService implements QueryService {
+public class DefaultQueryService extends Observable implements QueryService {
 
     /**
      * Class logger.
      */
     public static final Logger LOG = LoggerFactory.getLogger( DefaultQueryService.class );
+
+    private Channels channels;
+
     /**
      * The implementation dao.
      */
@@ -220,6 +224,8 @@ public class DefaultQueryService extends AbstractService implements QueryService
                 }
                 // Reconnect external links
                 importer.reconnectExternalFlows( idMap, proxyConnectors );
+                setChanged();
+                notifyObservers( idMap );
             } else {
                 LOG.warn( "Directory " + importDirectory + " does not exist." );
             }
@@ -1276,6 +1282,12 @@ public class DefaultQueryService extends AbstractService implements QueryService
         return started;
     }
 
+    public Channels getChannels() {
+        return channels;
+    }
 
+    public void setChannels( Channels channels ) {
+        this.channels = channels;
+    }
 }
 

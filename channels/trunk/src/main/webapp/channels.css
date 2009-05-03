@@ -450,6 +450,10 @@ ul.attach li {
     position: relative;
 }
 
+ul.attach input {
+    margin-top: 2px;
+}
+
 span.suggest {
     font-style: italic;
 }

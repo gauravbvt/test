@@ -1,7 +1,5 @@
 package com.mindalliance.channels.attachments;
 
-import com.mindalliance.channels.model.ModelObject;
-
 import java.io.File;
 
 /**
@@ -18,15 +16,11 @@ public class FileAttachment implements Attachment {
     /** The external link to this file. Set by the manager. */
     private String url;
 
-    /** The model object of the attachment. */
-    private ModelObject object;
-
     public FileAttachment() {
     }
 
-    public FileAttachment( ModelObject object, Type type, File file, String url ) {
+    public FileAttachment( Type type, File file, String url ) {
         this();
-        this.object = object;
         setType( type );
         setFile( file );
         setUrl( url );
@@ -76,9 +70,5 @@ public class FileAttachment implements Attachment {
 
     public final void setUrl( String url ) {
         this.url = url;
-    }
-
-    public final ModelObject getObject() {
-        return object;
     }
 }

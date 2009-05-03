@@ -59,11 +59,13 @@ public class XmlStreamer extends AbstractService implements Importer, Exporter {
      * Class logger.
      */
     public static final Logger LOG = LoggerFactory.getLogger( XmlStreamer.class );
+
     /**
      * Version number.
      */
     private String version = "0.0";
 
+    private Channels channels;
 
     /**
      * Holder of a configured XStream instance.
@@ -383,5 +385,11 @@ public class XmlStreamer extends AbstractService implements Importer, Exporter {
         return getChannels().getQueryService();
     }
 
+    public Channels getChannels() {
+        return channels;
+    }
 
+    public void setChannels( Channels channels ) {
+        this.channels = channels;
+    }
 }

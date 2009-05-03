@@ -31,7 +31,7 @@ public class FlowViolatesPolicy extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        Iterator<Attachment> attachments = getAttachmentManager().attachments( flow );
+        Iterator<Attachment> attachments = getAttachmentManager().attachments( flow.getId() );
         while ( attachments.hasNext() ) {
             Attachment attachment = attachments.next();
             if ( attachment.isPolicyViolation() ) {
@@ -45,7 +45,7 @@ public class FlowViolatesPolicy extends AbstractIssueDetector {
         return issues;
     }
 
-     /**
+    /**
      * {@inheritDoc}
      */
     public boolean appliesTo( ModelObject modelObject ) {

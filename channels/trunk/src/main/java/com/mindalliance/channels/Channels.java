@@ -17,6 +17,7 @@ import org.apache.commons.collections.Predicate;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.target.coding.MixedParamUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
+import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
@@ -35,7 +36,7 @@ import java.util.Map;
  *
  * @TODO split into a bonified service-level object
  */
-public final class Channels extends WebApplication {                                   // NON-NLS
+public final class Channels extends WebApplication {
 
     /**
      * Class logger.
@@ -120,8 +121,7 @@ public final class Channels extends WebApplication {                            
     protected void init() {
         super.init();
 
-// TODO enable @Javabean in wicket components
-//        addComponentInstantiationListener( new SpringComponentInjector( this ) );
+        addComponentInstantiationListener( new SpringComponentInjector( this ) );
 
         getMarkupSettings().setStripWicketTags( true );
 //        getRequestCycleSettings().setRenderStrategy( IRequestCycleSettings.REDIRECT_TO_RENDER );
@@ -135,8 +135,6 @@ public final class Channels extends WebApplication {                            
 
         queryService.initialize();
     }
-
-
 
     protected void onDestroy() {
         LOG.info( "Goodbye!" );

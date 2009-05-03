@@ -1,7 +1,5 @@
 package com.mindalliance.channels.attachments;
 
-import com.mindalliance.channels.model.ModelObject;
-
 /**
  * An URL attachment...
  */
@@ -13,16 +11,12 @@ public class UrlAttachment implements Attachment {
     /** The type. */
     private Type type;
 
-    /** The object. */
-    private ModelObject object;
-
     public UrlAttachment() {
     }
 
-    public UrlAttachment( ModelObject object, Type type, String url ) {
+    public UrlAttachment( Type type, String url ) {
         this.type = type;
         this.url = url;
-        this.object = object;
     }
 
     /**
@@ -70,9 +64,5 @@ public class UrlAttachment implements Attachment {
      * {@inheritDoc}
      */
     public void delete() {
-    }
-
-    public ModelObject getObject() {
-        return object;
     }
 }

@@ -1,6 +1,5 @@
 package com.mindalliance.channels.attachments;
 
-import com.mindalliance.channels.model.ModelObject;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 
 import java.util.Collections;
@@ -20,23 +19,23 @@ public class BitBucket implements AttachmentManager {
     }
 
     /** {@inheritDoc} */
-    public Iterator<Attachment> attachments( ModelObject object ) {
+    public Iterator<Attachment> attachments( long id ) {
         return attachments.iterator();
     }
 
     /** {@inheritDoc} */
-    public void attach( ModelObject object, Attachment.Type type, FileUpload fileUpload ) {
+    public void attach( long id, Attachment.Type type, FileUpload fileUpload ) {
     }
 
     /** {@inheritDoc} */
-    public void attach( ModelObject object, Attachment.Type type, URL url ) {
+    public void attach( long id, Attachment.Type type, URL url ) {
     }
 
     /** {@inheritDoc} */
-    public void detach( ModelObject object, Attachment attachment ) {
+    public void detach( long id, Attachment attachment ) {
     }
 
     /** {@inheritDoc} */
-    public void detachAll( ModelObject object ) {
+    public void detachAll( long id ) {
     }
 }

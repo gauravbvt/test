@@ -1,12 +1,8 @@
 package com.mindalliance.channels.attachments;
 
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.NotFoundException;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.Lifecycle;
 
 import java.io.File;
@@ -27,13 +23,18 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Observer;
 import java.util.Properties;
+import java.util.Observable;
 
 /**
  * An attachment manager that keeps uploaded files in a directory.
  * An index file is kept to maintain the association between model objects and files.
  */
-public class FileBasedManager implements AttachmentManager, Lifecycle {
+public class FileBasedManager implements AttachmentManager, Lifecycle, Observer {
+
+    /** Separator used for value in map file. */
+    private static final int COMMA = (int) ',';
 
     /** Character used to escape funny characters. */
     private static final char ESCAPE = '%';
@@ -62,9 +63,6 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     /** "id,type", indexed by URI. */
     private Properties fileMap = new Properties();
 
-    /** The data manager. */
-    private QueryService queryService;
-
     /**
      * List of attachments, indexed by object ids. Reverse index of fileMap.
      */
@@ -91,8 +89,8 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
 
     /** {@inheritDoc} */
     @SuppressWarnings( { "unchecked" } )
-    public Iterator<Attachment> attachments( ModelObject object ) {
-        return getAttachments( object.getId() ).iterator();
+    public Iterator<Attachment> attachments( long id ) {
+        return getAttachments( id ).iterator();
     }
 
     private synchronized List<Attachment> getAttachments( Long id ) {
@@ -104,30 +102,29 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
         return attachments;
     }
 
-    private synchronized void index( ModelObject object, Attachment attachment ) {
-        Long id = object.getId();
+    private synchronized void index( Long id, Attachment attachment ) {
         fileMap.setProperty( attachment.getKey(),
                              MessageFormat.format( "{0,number,0},{1}",                    // NON-NLS
-                                    id, attachment.getType().name() ) );
+                                                   id, attachment.getType().name() ) );
         getAttachments( id ).add( attachment );
     }
 
-    private synchronized void deindex( ModelObject object, Attachment attachment ) {
+    private synchronized void deindex( long id, Attachment attachment ) {
         fileMap.remove( attachment.getKey() );
-        getAttachments( object.getId() ).remove( attachment );
+        getAttachments( id ).remove( attachment );
     }
 
     /** {@inheritDoc} */
-    public void attach( ModelObject object, Attachment.Type type, FileUpload fileUpload ) {
+    public void attach( long id, Attachment.Type type, FileUpload fileUpload ) {
         String fileName = fileUpload.getClientFileName();
         String escaped = escape( fileName );
 
         try {
             File file = createFile( escaped );
-            FileAttachment fileAttachment = new FileAttachment(
-                    object, type, file, path + escaped );
+            FileAttachment fileAttachment = new FileAttachment( type, file, path + escaped );
             fileUpload.writeTo( file );
-            index( object, fileAttachment );
+            index( id, fileAttachment );
+            save();
 
         } catch ( IOException e ) {
             log.error( MessageFormat.format( "Error while uploading file: {0}", fileName ), e );
@@ -135,23 +132,28 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     }
 
     /** {@inheritDoc} */
-    public void attach( ModelObject object, Attachment.Type type, URL url ) {
-        index( object, new UrlAttachment( object, type, url.toString() ) );
+    public void attach( long id, Attachment.Type type, URL url ) {
+        index( id, new UrlAttachment( type, url.toString() ) );
+        save();
     }
 
     /** {@inheritDoc} */
-    public void detach( ModelObject object, Attachment attachment ) {
-        deindex( object, attachment );
+    public void detach( long id, Attachment attachment ) {
+        deindex( id, attachment );
         attachment.delete();
+        save();
     }
 
     /** {@inheritDoc} */
-    public void detachAll( ModelObject object ) {
-        for ( Attachment a : new ArrayList<Attachment>( getAttachments( object.getId() ) ) )
-                detach( a.getObject(), a );
+    public void detachAll( long id ) {
+        for ( Attachment a : new ArrayList<Attachment>( getAttachments( id ) ) ) {
+            deindex( id, a );
+            a.delete();
+        }
+        save();
     }
 
-    public File getDirectory() {
+    public synchronized File getDirectory() {
         return directory;
     }
 
@@ -160,16 +162,16 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
      * Files in the directory can be removed independently.
      * @param directory a directory
      */
-    public void setDirectory( File directory ) {
+    public synchronized void setDirectory( File directory ) {
         log.info( "Upload directory: {}", directory.getAbsolutePath() );
         this.directory = directory;
     }
 
-    public String getPath() {
+    public synchronized String getPath() {
         return path;
     }
 
-    public void setPath( String path ) {
+    public synchronized void setPath( String path ) {
         this.path = path;
     }
 
@@ -191,28 +193,23 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
         objectMap = new HashMap<Long,List<Attachment>>();
         for ( String uriString : fileMap.stringPropertyNames() ) {
             String value = fileMap.getProperty( uriString );
-            int comma = value.indexOf( ',' );
+            int comma = value.indexOf( COMMA );
 
             long id = Long.parseLong( value.substring( 0, comma ) );
             Attachment.Type type = Attachment.Type.valueOf( value.substring( comma + 1 ) );
 
             try {
-                ModelObject object = queryService.find( ModelObject.class, id );
-
                 URI uri = new URI( unescape( uriString ) );
                 Attachment attachment = uri.getScheme() == null ?
-                            new FileAttachment( object, type,
+                            new FileAttachment( type,
                                                 new File( directory, uriString ),
                                                 path + uriString )
-                          : new UrlAttachment( object, type, uri.toURL().toString() );
+                          : new UrlAttachment( type, uri.toURL().toString() );
 
                 getAttachments( id ).add( attachment );
 
             } catch ( URISyntaxException ignored ) {
                 log.warn( "Malformed key in file map: {}. Ignored.", uriString );
-            } catch ( NotFoundException ignored ) {
-                log.warn( "No matching object of id {} found for {}. Ignored.",
-                          id, unescape( uriString ) );
             } catch ( MalformedURLException ignored ) {
                 log.warn( "Malformed url in file map: {}. Ignored.", uriString );
             }
@@ -228,13 +225,23 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     }
 
     /** Load file map and compute reverse index. */
-    public synchronized void start() {
+    public void start() {
         log.info( "Starting file attachments manager" );
-        File file = new File( directory, mapFileName );
+        load();
+        isRunning = true;
+    }
+
+    /** Save map file to upload directory. */
+    public void stop() {
+        log.info( "Stopping file attachments manager" );
+        isRunning = false;
+    }
+
+    private synchronized void load() {
         Properties result = new Properties();
         Reader in = null;
         try {
-            in = new FileReader( file );
+            in = new FileReader( new File( directory, mapFileName ) );
             result.load( in );
 
         } catch ( FileNotFoundException ignored ) {
@@ -249,19 +256,15 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
                     log.error( "Unable to close file map.", e );
                 }
         }
-
         setFileMap( result );
-        isRunning = true;
     }
 
-    /** Save map file to upload directory. */
-    public synchronized void stop() {
-        log.info( "Stopping file attachments manager" );
+    private synchronized void save() {
         File file = new File( directory, mapFileName );
         Writer out = null;
         try {
             out = new FileWriter( file );
-            fileMap.store( out, "Files/objects association file. Edit with care..." );
+            fileMap.store( out, " Files-objects association file. Edit with care..." );
         } catch ( IOException e ) {
             log.error( "Unable to save file map.", e );
         } finally {
@@ -272,20 +275,10 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
                     log.error( "Unable to close file map.", e );
                 }
         }
-        isRunning = false;
     }
 
     public boolean isRunning() {
         return isRunning;
-    }
-
-    public QueryService getQueryService() {
-        return queryService;
-    }
-
-    @Required
-    public void setQueryService( QueryService queryService ) {
-        this.queryService = queryService;
     }
 
     /**
@@ -341,16 +334,27 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
         for ( String key : original.stringPropertyNames() ) {
             String value = original.getProperty( key );
 
-            int comma = value.indexOf( ',' );
-            long oldId = Long.parseLong( value.substring( 0, comma ) );
-
+            int comma = value.indexOf( COMMA );
+            Long oldId = Long.parseLong( value.substring( 0, comma ) );
             Long newId = idMap.get( oldId );
             if ( newId == null )
                 log.warn( "Missing remapping for old id {}", oldId );
-            else
+            else {
+                log.debug( "Remapping id {} --> {}", oldId, newId );
                 remapped.setProperty( key, Long.toString( newId ) + value.substring( comma ) );
+            }
         }
 
         setFileMap( remapped );
+        save();
+    }
+
+    /**
+     * Potentially called when ids were remapped.
+     * @param o an Importer
+     * @param arg an id map
+     */
+    public void update( Observable o, Object arg ) {
+        remap( (Map<Long,Long>) arg );
     }
 }

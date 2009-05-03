@@ -1,6 +1,7 @@
 package com.mindalliance.channels.model;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,10 +36,14 @@ public class Plan extends ModelObject {
     public Plan() {
     }
 
+    // TODO fix persistence, eventually
+    @Transient
     public Set<Scenario> getScenarios() {
         return scenarios;
     }
 
+    // TODO fix persistence, eventually
+    @Transient
     public Set<PlanEvent> getEvents() {
         return events;
     }

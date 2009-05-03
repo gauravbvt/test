@@ -22,8 +22,12 @@
                 </li>
 
                 <li>Attach: <select wicket:id="type">
-                    <option>Document</option>
-                </select><label class="attach-ctl"><input class="file" type="file" wicket:id="upload" value="Upload"></label>
+                        <option>Document</option>
+                        </select><br>
+                    <span wicket:id="radios">
+                    </span>
+                    <label class="attach-ctl"><input class="file" type="file" wicket:id="upload" value="Upload"></label>
+                    <input wicket:id="url" value="url">
                 </li>
             </ul>
         </td>

@@ -1,6 +1,5 @@
 package com.mindalliance.channels.dao;
 
-import com.mindalliance.channels.AbstractService;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.Dao;
@@ -32,11 +31,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
 
 /**
  * An in-memory, no-transactions implementation of a store.
  */
-public final class Memory extends AbstractService implements Dao {
+public class Memory extends Observable implements Dao {
 
     /**
      * Class logger.
@@ -50,6 +50,9 @@ public final class Memory extends AbstractService implements Dao {
      * Name of command journal file.
      */
     private static final String JOURNAL_FILE = "journal.xml";
+
+    private Channels channels;
+
     /**
      * Number of commands journaled before a snapshot is taken on next command.
      */
@@ -142,6 +145,8 @@ public final class Memory extends AbstractService implements Dao {
                     commander.doCommand( command );
                 }
             }
+            setChanged();
+            notifyObservers( idMap );
             journal.reset();
             commander.reset();
             LOG.info( "Persisted plan reloaded." );
@@ -479,5 +484,11 @@ public final class Memory extends AbstractService implements Dao {
         return null;
     }
 
+    public Channels getChannels() {
+        return channels;
+    }
 
+    public void setChannels( Channels channels ) {
+        this.channels = channels;
+    }
 }

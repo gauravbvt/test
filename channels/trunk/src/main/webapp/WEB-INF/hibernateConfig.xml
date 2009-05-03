@@ -26,7 +26,7 @@
         <property name="cache" ref="resultCache"/>
     </bean>
 
-    <aop:config>
+    <aop:config proxy-target-class="true">
         <!--<aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.DataQueryObjectryObject.*(..))"-->
                      <!--advice-ref="timingLogger"/>-->
         <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.QueryService.*(..))"
@@ -70,4 +70,12 @@
         <property name="dataDirectoryPath" value="target/data"/>
         <property name="snapshotThreshold" value="10"/>
     </bean>
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="dao"/>
+        <property name="targetMethod" value="addObserver"/>
+        <property name="arguments">
+            <list value-type="java.util.Observer"><ref bean="attachmentManager"/></list>
+        </property>
+    </bean>
+
 </beans>

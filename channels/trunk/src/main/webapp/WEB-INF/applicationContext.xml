@@ -13,6 +13,13 @@
         <property name="importDirectory" value="target/import"/>
         <property name="dao" ref="dao"/>
     </bean>
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="queryService"/>
+        <property name="targetMethod" value="addObserver"/>
+        <property name="arguments">
+            <list value-type="java.util.Observer"><ref bean="attachmentManager"/></list>
+        </property>
+    </bean>
 
     <bean id="serializer" class="com.mindalliance.channels.export.xml.XmlStreamer">
         <property name="version" value="1.0"/>
@@ -22,7 +29,6 @@
           init-method="start" destroy-method="stop">
         <property name="directory" value="target/channels-1.0-SNAPSHOT/uploads"/>
         <property name="path" value="uploads/"/>
-        <property name="queryService" ref="queryService"/>
     </bean>
 
     <!-- setup wicket application -->

@@ -1,10 +1,5 @@
 package com.mindalliance.channels.attachments;
 
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.dao.Memory;
-import com.mindalliance.channels.query.DefaultQueryService;
 import junit.framework.TestCase;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.util.file.File;
@@ -30,10 +25,10 @@ public class TestFileBasedManager extends TestCase {
 
     private FileBasedManager mgr;
     private File testFile;
-    private ModelObject object;
     private FileUpload upload;
     private FileItem fileItem;
     private File map;
+    private long id;
 
     public TestFileBasedManager() {
         testFile = new File( getClass().getResource( UPLOAD_TXT ).getFile() );
@@ -42,20 +37,16 @@ public class TestFileBasedManager extends TestCase {
     @Override
     protected void setUp() throws Exception {
         mgr = new FileBasedManager();
-        File directory = new File( System.getProperty( "user.dir" ), "target/upload-test" );
+        File directory = new File( System.getProperty( "user.dir" ),
+                                "target" + System.getProperty( "file.separator" )+ "upload-test" );
         if ( !directory.exists() )
             directory.mkdir();
         mgr.setDirectory( directory );
-        map = new File( mgr.getDirectory(), "index.properties" );
-
-
-        QueryService queryService = new DefaultQueryService( new Memory() );
-        mgr.setQueryService( queryService );
-
-        object = queryService.findOrCreate( Scenario.class, "test" );
+        map = new File( mgr.getDirectory(), mgr.getMapFileName() );
 
         fileItem = EasyMock.createMock( FileItem.class );
         upload = new FileUpload( fileItem );
+        id = 123L;
     }
 
     public void testAttach() throws IOException {
@@ -66,12 +57,11 @@ public class TestFileBasedManager extends TestCase {
         String[] filenames = mgr.getDirectory().list();
         assertNotNull( "Test directory does not exist", filenames );
         assertEquals( "Leftovers from previous test errors", 0, filenames.length );
-
-        mgr.attach( object, Attachment.Type.MOU, upload );
-        assertEquals( 1, mgr.getDirectory().list().length );
+        mgr.attach( id, Attachment.Type.MOU, upload );
+        assertEquals( 2, mgr.getDirectory().list().length );
         verify( fileItem );
 
-        Iterator<Attachment> it = mgr.attachments( object );
+        Iterator<Attachment> it = mgr.attachments( id );
         assertTrue( it.hasNext() );
         FileAttachment fa = (FileAttachment) it.next();
         assertFalse( it.hasNext() );
@@ -79,9 +69,9 @@ public class TestFileBasedManager extends TestCase {
         assertSame( Attachment.Type.MOU, fa.getType() );
         assertEquals( UPLOAD_TXT, fa.getLabel() );
 
-        mgr.detach( object, fa );
+        mgr.detach( id, fa );
+        map.delete();
         assertEquals( 0, mgr.getDirectory().list().length );
-
     }
 
     public void testDetachAll() throws IOException {
@@ -91,12 +81,13 @@ public class TestFileBasedManager extends TestCase {
         expect( fileItem.getInputStream() ).andReturn( new FileInputStream( testFile ) );
         replay( fileItem );
 
-        mgr.attach( object, Attachment.Type.MOU, upload );
-        mgr.attach( object, Attachment.Type.Document, upload );
-        assertEquals( 2, mgr.getDirectory().list().length );
+        mgr.attach( id, Attachment.Type.MOU, upload );
+        mgr.attach( id, Attachment.Type.Document, upload );
+        assertEquals( 3, mgr.getDirectory().list().length );
         verify( fileItem );
 
-        mgr.detachAll( object );
+        mgr.detachAll( id );
+        map.delete();
         assertEquals( 0, mgr.getDirectory().list().length );
     }
 
@@ -108,18 +99,17 @@ public class TestFileBasedManager extends TestCase {
         assertFalse( map.exists() );
         mgr.stop();
         assertFalse( mgr.isRunning() );
-        assertTrue( map.exists() );
-        map.delete();
     }
 
     public void testUrl() throws MalformedURLException {
         assertFalse( map.exists() );
         mgr.start();
-        assertFalse( mgr.attachments( object ).hasNext() );
-        String spec = "http://localhost:8081";
-        mgr.attach( object, Attachment.Type.PolicyMust, new URL( spec ) );
 
-        Iterator<Attachment> as = mgr.attachments( object );
+        assertFalse( mgr.attachments( id ).hasNext() );
+        String spec = "http://localhost:8081";
+        mgr.attach( id, Attachment.Type.PolicyMust, new URL( spec ) );
+
+        Iterator<Attachment> as = mgr.attachments( id );
         assertTrue( as.hasNext() );
         Attachment a = as.next();
         assertFalse( as.hasNext() );
@@ -128,7 +118,7 @@ public class TestFileBasedManager extends TestCase {
         mgr.stop();
         mgr.start();
 
-        Iterator<Attachment> as2 = mgr.attachments( object );
+        Iterator<Attachment> as2 = mgr.attachments( id );
         assertTrue( as2.hasNext() );
         Attachment a2 = as2.next();
         assertFalse( as2.hasNext() );
@@ -140,16 +130,18 @@ public class TestFileBasedManager extends TestCase {
 
     public void testRemap() throws MalformedURLException {
         mgr.start();
-        assertFalse( mgr.attachments( object ).hasNext() );
 
-        mgr.attach( object, Attachment.Type.Document, new URL( "http://localhost/" ) );
+        assertFalse( mgr.attachments( id ).hasNext() );
 
-        Map<Long,Long> remap = new HashMap<Long,Long>();
-        remap.put( object.getId(), 456L );
+        mgr.attach( id, Attachment.Type.Document, new URL( "http://localhost/" ) );
 
-        assertTrue( mgr.attachments( object ).hasNext() );
+        Map<String,Long> remap = new HashMap<String,Long>();
+        remap.put( Long.toString( id ), 456L );
+
+        assertTrue( mgr.attachments( id ).hasNext() );
 
         mgr.remap( remap );
-        assertFalse( mgr.attachments( object ).hasNext() );
+        assertFalse( mgr.attachments( id ).hasNext() );
+        map.delete();
     }
 }

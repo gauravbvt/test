@@ -1,7 +1,5 @@
 package com.mindalliance.channels.attachments;
 
-import com.mindalliance.channels.model.ModelObject;
-
 import java.io.Serializable;
 import java.text.MessageFormat;
 
@@ -42,11 +40,6 @@ public interface Attachment extends Serializable {
         }
 
     }
-
-    /**
-     * @return the model object to which this attachment belongs to.
-     */
-    ModelObject getObject();
 
     /**
      * The text of the link to this attachment.
