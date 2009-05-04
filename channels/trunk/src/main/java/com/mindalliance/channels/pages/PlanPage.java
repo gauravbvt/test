@@ -38,7 +38,6 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.pages.RedirectPage;
@@ -306,9 +305,6 @@ public final class PlanPage extends WebPage implements Updatable {
         scenarioDescriptionLabel.setOutputMarkupId( true );
         form.add( scenarioDescriptionLabel );
         form.add( new Label( "user", user.getName() ) );                                  // NON-NLS
-
-        // Form submission without it being the default for <return>
-        form.add( new SubmitLink( "submit" ) );                                           // NON-NLS
     }
 
     private void addRefresh() {

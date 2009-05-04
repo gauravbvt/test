@@ -6,10 +6,12 @@ import com.mindalliance.channels.model.ModelObject;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.RadioChoice;
+import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
@@ -36,6 +38,8 @@ import java.util.List;
  * File attachments for a given model object.
  */
 public class AttachmentPanel extends Panel {
+
+    private SubmitLink submit;
 
     /** Available attachment kind. Each kind should have a corresponding field. */
     public enum Kind {
@@ -69,7 +73,61 @@ public class AttachmentPanel extends Panel {
         super( id, model );
         setOutputMarkupId( true );
 
-        add( new ListView<Wrapper>( "attachments",                                        // NON-NLS
+        add( createAttachmentList() );
+
+        add( createTypeSelector() );
+        add( createKindSelector() );
+
+        uploadField = new FileUploadField(
+                "upload", new PropertyModel<FileUpload>( this, "upload" ) );
+        uploadField.setVisible( Kind.File.equals( kind ) );
+        uploadField.setOutputMarkupId( true );
+        uploadField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                submit.setEnabled( true );
+                target.addComponent( submit );
+            }
+        } );
+        add( uploadField );
+
+        urlField = new TextField<String>(
+                "url", new PropertyModel<String>( this, "url" ) );
+        urlField.setVisible( Kind.URL.equals( kind ) );
+        urlField.setOutputMarkupId( true );
+        urlField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                submit.setEnabled( true );
+                target.addComponent( submit );
+            }
+        } );
+        add( urlField );
+
+        submit = new SubmitLink( "submit" );
+        submit.setOutputMarkupId( true );
+        submit.setEnabled( false );
+        add( submit );
+    }
+
+    private DropDownChoice<Attachment.Type> createTypeSelector() {
+        return new DropDownChoice<Attachment.Type>( "type",                                 // NON-NLS
+                new PropertyModel<Attachment.Type>( this, "selectedType" ),               // NON-NLS
+                Arrays.asList( Attachment.Type.values() ),
+                new IChoiceRenderer<Attachment.Type>() {
+                    public Object getDisplayValue( Attachment.Type object ) {
+                        return object.getLabel();
+                    }
+
+                    public String getIdValue( Attachment.Type object, int index ) {
+                        return Integer.toString( index );
+                    }
+                }
+        );
+    }
+
+    private ListView<Wrapper> createAttachmentList() {
+        return new ListView<Wrapper>( "attachments",                                      // NON-NLS
                 new PropertyModel<List<Wrapper>>( this, "attachments" ) ) {               // NON-NLS
             @Override
             protected void populateItem( ListItem<Wrapper> item ) {
@@ -84,22 +142,10 @@ public class AttachmentPanel extends Panel {
                 item.add( new AttributeModifier(
                         "title", true, new Model<String>( a.getType().getLabel() ) ) );   // NON-NLS
             }
-        } );
+        };
+    }
 
-        add( new DropDownChoice<Attachment.Type>( "type",                                 // NON-NLS
-                new PropertyModel<Attachment.Type>( this, "selectedType" ),               // NON-NLS
-                Arrays.asList( Attachment.Type.values() ),
-                new IChoiceRenderer<Attachment.Type>() {
-                    public Object getDisplayValue( Attachment.Type object ) {
-                        return object.getLabel();
-                    }
-
-                    public String getIdValue( Attachment.Type object, int index ) {
-                        return Integer.toString( index );
-                    }
-                }
-        ) );
-
+    private RadioChoice<Kind> createKindSelector() {
         RadioChoice<Kind> kindSelector = new RadioChoice<Kind>(
                 "radios",                                                                 // NON-NLS
                 new PropertyModel<Kind>( this, "kind" ),                                  // NON-NLS
@@ -124,19 +170,7 @@ public class AttachmentPanel extends Panel {
                 target.addComponent( AttachmentPanel.this );
             }
         } );
-        add( kindSelector );
-
-        uploadField = new FileUploadField(
-                "upload", new PropertyModel<FileUpload>( this, "upload" ) );              // NON-NLS
-        uploadField.setVisible( Kind.File.equals( kind ) );
-        uploadField.setOutputMarkupId( true );
-        add( uploadField );
-
-        urlField = new TextField<String>(
-                "url", new PropertyModel<String>( this, "url" ) );                        // NON-NLS
-        urlField.setVisible( Kind.URL.equals( kind ) );
-        urlField.setOutputMarkupId( true );
-        add( urlField );
+        return kindSelector;
     }
 
     /**
