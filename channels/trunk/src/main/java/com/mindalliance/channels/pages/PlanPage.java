@@ -16,6 +16,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.pages.components.PlanMapPanel;
 import com.mindalliance.channels.pages.components.ScenarioLink;
@@ -44,6 +45,7 @@ import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
@@ -99,6 +101,9 @@ public final class PlanPage extends WebPage implements Updatable {
      * Length a scenario title is abbreviated to
      */
     private static final int SCENARIO_DESCRIPTION_MAX_LENGTH = 94;
+
+    @SpringBean
+    private User user;
 
     /**
      * Id of components that are expanded.
@@ -218,7 +223,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
 
     private void init( Scenario sc, Part p, Set<Long> expanded ) {
-        getCommander().releaseAllLocks( Channels.getUserName() );
+        getCommander().releaseAllLocks( user.getName() );
         setScenario( sc );
         setPart( p );
         expansions = expanded;
@@ -234,7 +239,7 @@ public final class PlanPage extends WebPage implements Updatable {
             @Override
             protected void onSubmit() {
                 LOG.debug( "Form submitted" );
-                getApp().getCommander().resetUserHistory( Channels.getUserName() );
+                getApp().getCommander().resetUserHistory( user.getName() );
                 importScenario();
             }
         };
@@ -300,7 +305,7 @@ public final class PlanPage extends WebPage implements Updatable {
         );
         scenarioDescriptionLabel.setOutputMarkupId( true );
         form.add( scenarioDescriptionLabel );
-        form.add( new Label( "user", Channels.getUserName() ) );                           // NON-NLS
+        form.add( new Label( "user", user.getName() ) );                                  // NON-NLS
 
         // Form submission without it being the default for <return>
         form.add( new SubmitLink( "submit" ) );                                           // NON-NLS
@@ -356,7 +361,7 @@ public final class PlanPage extends WebPage implements Updatable {
         long lastModified = getCommander().getLastModified();
         if ( lastModified > lastRefreshed
                 && !lastModifier.isEmpty()
-                && !lastModifier.equals( Channels.getUserName() ) ) {
+                && !lastModifier.equals( user.getName() ) ) {
             reasons = " -- Plan was modified by " + lastModifier;
         }
         // Find expansions that were locked and are not unlocked
@@ -879,7 +884,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
         if ( identifiable instanceof Scenario ) {
             if ( change.isExists() ) {
-                getCommander().resetUserHistory( Channels.getUserName() );
+                getCommander().resetUserHistory( user.getName() );
                 if ( change.isAdded() ) {
                     setScenario( (Scenario) identifiable );
                     setPart( null );

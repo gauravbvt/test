@@ -1,11 +1,14 @@
 package com.mindalliance.channels.command;
 
+import com.mindalliance.channels.Commander;
+import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.Commander;
+import com.mindalliance.channels.model.User;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -13,10 +16,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -58,7 +57,7 @@ public abstract class AbstractCommand implements Command {
     private Command undoCommand;
 
     public AbstractCommand() {
-        userName = Channels.getUserName();
+        userName = User.current().getName();
     }
 
     public String getUserName() {

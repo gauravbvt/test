@@ -1,6 +1,6 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.model.User;
 
 import java.util.Date;
 
@@ -35,7 +35,7 @@ public class Lock {
      */
     public Lock( long id ) {
         this.id = id;
-        userName = Channels.getUserName();
+        userName = User.current().getName();
         date = new Date();
     }
 
@@ -46,7 +46,7 @@ public class Lock {
     public String getUserName() {
         return userName;
     }
-    
+
     // For debugging use only
     public void setUserName( String userName ) {
         this.userName = userName;

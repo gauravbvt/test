@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
@@ -10,6 +11,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.text.Collator;
 import java.text.DateFormat;
@@ -30,10 +32,15 @@ import java.util.List;
  */
 public class PlanReportPage extends WebPage {
 
+    /** The query service. */
+    @SpringBean
+    private QueryService queryService;
+
     public PlanReportPage( PageParameters parameters ) {
         super( parameters );
 
         Plan plan = Channels.getPlan();
+        
         add( new Label( "title",                                                          // NON-NLS
                         MessageFormat.format( "Report: {0}", plan.getName() ) ) );
         add( new Label( "plan-name", plan.getName() ) );                     // NON-NLS
@@ -41,7 +48,8 @@ public class PlanReportPage extends WebPage {
         add( new Label( "plan-description", plan.getDescription() ) );              // NON-NLS
         add( new Label( "date", DateFormat.getDateTimeInstance(                           // NON-NLS
             DateFormat.LONG, DateFormat.LONG ).format( new Date() ) ) );
-        List<Scenario> scenarios = Channels.instance().getQueryService().list( Scenario.class );
+
+        List<Scenario> scenarios = queryService.list( Scenario.class );
         Collections.sort( scenarios, new Comparator<Scenario>() {
             public int compare( Scenario o1, Scenario o2 ) {
                 return Collator.getInstance().compare( o1.getName(), o2.getName() );
@@ -54,7 +62,7 @@ public class PlanReportPage extends WebPage {
             }
         } );
         add( new PlanMapDiagramPanel( "planMap",                                          // NON-NLS
-            new Model<ArrayList<Scenario>>( (ArrayList) scenarios ),
+            new Model<ArrayList<Scenario>>( (ArrayList<Scenario>) scenarios ),
             null, null, null, null, false, null ) );
     }
 }

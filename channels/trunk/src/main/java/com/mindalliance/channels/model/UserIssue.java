@@ -1,12 +1,11 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.Channels;
 import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
-import javax.persistence.FetchType;
 import java.text.MessageFormat;
 
 /**
@@ -56,7 +55,7 @@ public class UserIssue extends ModelObject implements Issue {
     public UserIssue( ModelObject mo ) {
         this.about = mo;
         setDescription( "(No description)" );
-        setReportedBy( Channels.getUserName() );
+        setReportedBy( User.current().getName() );
     }
 
     @ManyToOne( fetch = FetchType.LAZY )

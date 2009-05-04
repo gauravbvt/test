@@ -1,7 +1,6 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.AbstractService;
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.LockManager;
 import com.mindalliance.channels.NotFoundException;
@@ -12,6 +11,7 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,11 +81,11 @@ public class DefaultCommander  extends AbstractService implements Commander {
     }
 
     public Map<String, Object> getCopy() {
-        return copy.get( Channels.getUserName() );
+        return copy.get( User.current().getName() );
     }
 
     public void setCopy( Map<String, Object> state ) {
-        copy.put( Channels.getUserName(), state );
+        copy.put( User.current().getName(), state );
     }
 
     /**
@@ -400,7 +400,7 @@ public class DefaultCommander  extends AbstractService implements Commander {
      */
     public boolean requestLockOn( Identifiable identifiable ) {
         if ( isTimedOut() ) return false;
-        updateUserActive( Channels.getUserName() );
+        updateUserActive( User.current().getName() );
         return lockManager.requestLockOn( identifiable );
     }
 
@@ -409,7 +409,7 @@ public class DefaultCommander  extends AbstractService implements Commander {
      */
     public boolean requestLockOn( Long id ) {
         if ( isTimedOut() ) return false;
-        updateUserActive( Channels.getUserName() );
+        updateUserActive( User.current().getName() );
         return lockManager.requestLockOn( id );
     }
 
@@ -478,14 +478,14 @@ public class DefaultCommander  extends AbstractService implements Commander {
      * {@inheritDoc}
      */
     public synchronized boolean isTimedOut() {
-        return timedOut.contains( Channels.getUserName() );
+        return timedOut.contains( User.current().getName() );
     }
 
     /**
      * {@inheritDoc}
      */
     public synchronized void clearTimeOut() {
-        timedOut.remove( Channels.getUserName() );
+        timedOut.remove( User.current().getName() );
     }
 
     /**

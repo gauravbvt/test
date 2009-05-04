@@ -2,6 +2,7 @@ package com.mindalliance.channels;
 
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.pages.ExportPage;
 import com.mindalliance.channels.pages.IndexPage;
 import com.mindalliance.channels.pages.PlanPage;
@@ -9,9 +10,6 @@ import com.mindalliance.channels.pages.png.EntityNetworkPage;
 import com.mindalliance.channels.pages.png.FlowMapPage;
 import com.mindalliance.channels.pages.png.PlanMapPage;
 import com.mindalliance.channels.pages.reports.PlanReportPage;
-import org.acegisecurity.Authentication;
-import org.acegisecurity.context.SecurityContextHolder;
-import org.acegisecurity.userdetails.UserDetails;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -144,21 +142,6 @@ public final class Channels extends WebApplication {
     @Override
     public Class<PlanPage> getHomePage() {
         return PlanPage.class;
-    }
-
-    /**
-     * @return the user name of the current user (or "Anonymous").
-     */
-    public static String getUserName() {
-        String result = "Anonymous";
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if ( authentication != null ) {
-            Object obj = authentication.getPrincipal();
-            result = obj instanceof UserDetails ? ( (UserDetails) obj ).getUsername()
-                    : obj.toString();
-        }
-
-        return result;
     }
 
     public QueryService getQueryService() {
@@ -307,7 +290,7 @@ public final class Channels extends WebApplication {
      * @param plan a plan
      */
     public void beginUsingPlan( Plan plan ) {
-        assert ( Channels.getUserName() == null );
+        assert ( User.current().isAnonymous() );
         currentPlan = plan;
     }
 
@@ -315,7 +298,7 @@ public final class Channels extends WebApplication {
      * Exit plan loading mode.
      */
     public void endUsingPlan() {
-        assert ( Channels.getUserName() == null );
+        assert ( User.current().isAnonymous() );
         assert ( currentPlan != null );
         currentPlan = null;
     }

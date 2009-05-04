@@ -1,14 +1,13 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.Channels;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Iterator;
-
+import com.mindalliance.channels.model.User;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Stacks of done and undone commands recorded as mementoes.
@@ -129,7 +128,7 @@ public class History {
      * @return a memento
      */
     public Memento getUndo() {
-        String userName = Channels.getUserName();
+        String userName = User.current().getName();
         Memento memento = findLastBy( done, userName );
         if ( memento != null && !hasConflict( memento ) )
             return memento;
@@ -143,7 +142,7 @@ public class History {
      * @return a memento
      */
     public Memento getRedo() {
-        String userName = Channels.getUserName();
+        String userName = User.current().getName();
         Memento memento = findLastBy( undone, userName );
         if ( memento != null && !hasConflict( memento ) )
             return memento;
@@ -175,7 +174,7 @@ public class History {
         return new FilterIterator( done.iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {
                 Memento memento = (Memento) obj;
-                return !memento.getUserName().equals( Channels.getUserName() )
+                return !memento.getUserName().equals( User.current().getName() )
                         && memento.getTimestamp() >= timestamp;
             }
         } );
