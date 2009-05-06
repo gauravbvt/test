@@ -1289,5 +1289,16 @@ public class DefaultQueryService extends Observable implements QueryService {
     public void setChannels( Channels channels ) {
         this.channels = channels;
     }
+
+    /** {@inheritsDoc} */
+    public String getTitle( Actor actor ) {
+        for ( Job job : findAllJobs( actor ) ) {
+            String title = job.getTitle().trim();
+            if ( !title.isEmpty() )
+                return title;
+        }
+
+        return "";
+    }
 }
 

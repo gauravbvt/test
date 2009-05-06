@@ -1,93 +1,80 @@
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.model.Job;
-import com.mindalliance.channels.model.Medium;
+import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Scenario;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import java.text.MessageFormat;
-import java.util.Collection;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
- * Actor report panel.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Feb 5, 2009
- * Time: 9:05:57 PM
+ * Describe the parts played by an actor in an organization in a scenario.
  */
-public class ActorReportPanel extends AbstractReportPanel {
+public class ActorReportPanel extends Panel {
 
-    /** A scenario. */
+    /** The actor. */
+    private Actor actor;
+
+    /** The scenario. */
     private Scenario scenario;
 
-    /** An actor. */
-    private ResourceSpec spec;
+    /** The organization. */
+    private Organization organization;
 
-    /** True if scenario should be displayed. */
-    private boolean showScenario;
-
-    /** Restrict shown media to these. If null, show everything. */
-    private final Set<Medium> unicasts;
-    private final Collection<Channel> broadcasts;
+    @SpringBean
+    private QueryService queryService;
 
     public ActorReportPanel(
-            String id, Scenario scenario, ResourceSpec spec, boolean showScenario ) {
-
-        this( id, scenario, spec, showScenario, null, null );
-        this.spec = spec;
-    }
-
-    public ActorReportPanel(
-            String id, Scenario scenario, ResourceSpec spec, boolean showScenario,
-            Set<Medium> unicasts, Collection<Channel> broadcasts ) {
-
+            String id, Actor actor, Scenario scenario, Organization organization ) {
         super( id );
-        this.spec = spec;
-        this.scenario = scenario;
-        this.showScenario = showScenario;
-        this.unicasts = unicasts;
-        this.broadcasts = broadcasts;
         setRenderBodyOnly( true );
-        init();
-    }
 
-    private void init() {
-        Actor actor = spec.getActor() == null ? Actor.UNKNOWN : spec.getActor();
+        this.actor = actor;
+        this.organization = organization;
+        this.scenario = scenario;
+
+        add( new Label( "sc-name", scenario.getName() ) );                                // NON-NLS
+        add( new Label( "title", queryService.getTitle( actor ) ) );                      // NON-NLS
+        add( new Label( "org", organization.toString() ) );                               // NON-NLS
         add( new Label( "name", actor.getName() ) );                                      // NON-NLS
 
-        String title = getTitle( actor );
-        Label titleLabel = new Label( "title", title );                                   // NON-NLS
-        titleLabel.setVisible( !title.isEmpty() );
-        add( titleLabel );
-
-        boolean canShowScenario = showScenario && scenario != null;
-        Label scenarioLabel = new Label( "scenario", canShowScenario ?                    // NON-NLS
-                                MessageFormat.format( "(from {0})", scenario.getName() ) : "" );
-        scenarioLabel.setVisible( canShowScenario );
-        add( scenarioLabel );
-
-        String desc = spec.getDescription();
+        String desc = actor.getDescription();
         Label descLabel = new Label( "description", desc );                               // NON-NLS
         descLabel.setVisible( desc != null && !desc.isEmpty() );
         add( descLabel );
 
-        add( new ChannelsReportPanel( "channels",                                         // NON-NLS
-                                      spec, unicasts, broadcasts ) );
+        ResourceSpec spec = new ResourceSpec();
+        spec.setActor( actor );
+        spec.setOrganization( organization );
+        add( new ChannelsBannerPanel( "channels", spec, null, null ) );
+
+        List<Part> parts = getParts();
+        add( new ListView<Part>( "parts", parts ) {                                       // NON-NLS
+            @Override
+            protected void populateItem( ListItem<Part> item ) {
+                item.add( new PartReportPanel( "part", item.getModel(), true ) );         // NON-NLS
+            }
+        } );
     }
 
-    private String getTitle( Actor actor ) {
-        for ( Job job : ( (Channels) getApplication() ).getQueryService().findAllJobs( actor ) ) {
-            String title = job.getTitle().trim();
-            if ( !title.isEmpty() )
-                return title;
+    private List<Part> getParts() {
+        List<Part> result = new ArrayList<Part>();
+        Iterator<Part> partIterator = scenario.parts();
+        while ( partIterator.hasNext() ) {
+            Part part = partIterator.next();
+            if ( queryService.findAllActors( part.resourceSpec() ).contains( actor ) )
+                result.add( part );
         }
 
-        return "";
+        return result;
     }
 }

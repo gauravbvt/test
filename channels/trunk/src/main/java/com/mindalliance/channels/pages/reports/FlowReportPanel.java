@@ -17,7 +17,9 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
 import java.text.Collator;
@@ -39,11 +41,16 @@ import java.util.Set;
  * Date: Feb 6, 2009
  * Time: 2:06:55 PM
  */
-public class FlowReportPanel extends AbstractReportPanel {
+public class FlowReportPanel extends Panel {
+
+    @SpringBean
+    private QueryService queryService;
+
     /**
      * A flow
      */
     private Flow flow;
+
     /**
      * The part from which perspective the flow is reported on
      */
@@ -67,10 +74,10 @@ public class FlowReportPanel extends AbstractReportPanel {
         List<Channel> channels = flow.getChannels();
         Set<Medium> unicasts = getUnicasts( flow );
         Collection<Channel> broadcasts = getBroadcasts( flow );
-        List<LocalizedActor> actors = findActors( flow, broadcasts, unicasts, getQueryService() );
+        List<LocalizedActor> actors = findActors( flow, broadcasts, unicasts, queryService );
 
         ResourceSpec spec = new ResourceSpec( flow.getContactedPart() );
-        Component channelsPanel = new ChannelsReportPanel(
+        Component channelsPanel = new ChannelsBannerPanel(
                 "channels", spec, unicasts, broadcasts );
         channelsPanel.setVisible( showContacts && !channels.isEmpty() && actors.isEmpty() );
         add( channelsPanel );
@@ -132,7 +139,7 @@ public class FlowReportPanel extends AbstractReportPanel {
 
                 Scenario scenario = p.getScenario().equals( part.getScenario() ) ? null
                                                                                  : p.getScenario();
-                item.add( new ActorReportPanel(
+                item.add( new ActorBannerPanel(
                         "actor", scenario, spec, true,
                         localizedActor.getUnicasts(), localizedActor.getBroadcasts() ) );
             }
@@ -149,7 +156,7 @@ public class FlowReportPanel extends AbstractReportPanel {
             Flow flow,
             Collection<Channel> broadcasts,
             Set<Medium> unicasts,
-            QueryService queryService) {
+            QueryService queryService ) {
 
         Set<LocalizedActor> localizedActors = new HashSet<LocalizedActor>();
 

@@ -462,4 +462,11 @@ public interface QueryService extends Service {
      * @return a list of connectors
      */
     List<Connector> findAllSatificers( Flow need );
+
+    /**
+     * Find the first title associated to an actor in any jobs.
+     * @param actor yhe actor
+     * @return a title or the empty string, when no title was found
+     */
+    String getTitle( Actor actor );
 }

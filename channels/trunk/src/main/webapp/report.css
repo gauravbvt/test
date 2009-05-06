@@ -3,7 +3,7 @@
     @page {
         margin: 0;
     }
-    div.scenario, .scenario div.role, #directory {
+    div.scenario, .scenario div.section, #directory {
         page-break-before: always;
     }
 
@@ -27,7 +27,7 @@
         font-size: 100%;
     }
 
-    div.scenario, .scenario div.role, #directory {
+    div.scenario, .scenario div.section, #directory {
         border-top: 2px solid black;
         margin-top: 1em;
         padding-top: 3em;
@@ -35,7 +35,7 @@
 }
 
 
-div.flow-map:after, .scenario div.role:after, #directory:after {
+div.flow-map:after, .scenario div.section:after, #directory:after {
     content: "Copyright (C) 2009 Mind-Alliance Systems. All Rights Reserved.";
     font-size: 0.625em;
     font-style: italic;
@@ -44,10 +44,10 @@ div.flow-map:after, .scenario div.role:after, #directory:after {
     display: block;
 }
 
-.role div.header ul.contacts, .tasks td, table.tasks th {
+.section div.header ul.contacts, .tasks td, table.tasks th {
     width: 61.8%;
 }
-.role div.header div.role-head, .tasks td:first-child, .tasks th:first-child {
+.section div.header div.section-head, .tasks td:first-child, .tasks th:first-child {
     width: 38.2%;
 }
 
@@ -62,7 +62,7 @@ div.organization > h3, div.organization > p.description {
     display: none;
 }
 
-.role div.header {
+.section div.header {
     display: table;
     width: 100%;
     border-spacing: 0.5em 0;
@@ -71,37 +71,37 @@ div.organization > h3, div.organization > p.description {
     position: relative;
 }
 
-.role div.header > div {
+.section div.header > div {
     display: table-row;
 }
 
-.role div.header div.role-head {
+.section div.header div.section-head {
     display: table-cell;
 }
 
-.role div.header div.role-head h4 {
+.section div.header div.section-head h4 {
     font-size: 1.3125em;
     margin: 0;
 }
 
-.role div.header div.role-head ul {
+.section div.header div.section-head ul {
     margin: 0.5em 0;
     padding: 0 0 0 1em;
 }
 
-.role div.header div.role-head ul li {
+.section div.header div.section-head ul li {
 }
 
-.role div.header div.role-head ul li.organization:before {
+.section div.header div.section-head ul li.organization:before {
     content: "Organization: ";
 }
 
-.role div.header div.role-head ul li.scenario:before {
+.section div.header div.section-head ul li.scenario:before {
     content: "Scenario: ";
 }
 
 
-.role div.header ul.contacts {
+.section div.header ul.contacts {
     display: table-cell;
 }
 
@@ -155,7 +155,7 @@ ul.channels li.channel, ul.channels-only li.channel {
     padding-right: 2em;
 }
 
-div.role > ul.contacts {
+div.section > ul.contacts {
     width: 61.8%;
     margin: 0 auto;
 }

@@ -7,8 +7,10 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.List;
 
@@ -19,7 +21,12 @@ import java.util.List;
  * Date: Feb 6, 2009
  * Time: 9:51:11 AM
  */
-public class IssuesReportPanel extends AbstractReportPanel {
+public class IssuesReportPanel extends Panel {
+
+    /** The issue analyst. */
+    @SpringBean
+    private Analyst analyst;
+
     /**
      *  The model object with issues
      */
@@ -29,10 +36,10 @@ public class IssuesReportPanel extends AbstractReportPanel {
         super( id, model );
         setRenderBodyOnly( true );
         modelObject = model.getObject();
-        init( getAnalyst() );
+        init();
     }
 
-    private void init( Analyst analyst ) {
+    private void init() {
         List<Issue> issues = analyst.listUnwaivedIssues( modelObject, true );
         add( new ListView<Issue>( "issues", issues ) {
             @Override

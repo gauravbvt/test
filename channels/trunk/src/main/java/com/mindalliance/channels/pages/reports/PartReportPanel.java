@@ -10,6 +10,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -26,22 +27,28 @@ import java.util.List;
  * Date: Feb 5, 2009
  * Time: 9:35:15 PM
  */
-public class PartReportPanel extends AbstractReportPanel {
+public class PartReportPanel extends Panel {
 
     /**
      * A part.
      */
     private Part part;
 
-    public PartReportPanel( String id, IModel<Part> model ) {
+    public PartReportPanel( String id, IModel<Part> model, boolean showRole ) {
         super( id, model );
         setRenderBodyOnly( true );
         part = model.getObject();
-        init();
+        init( showRole );
     }
 
-    private void init() {
+    private void init( boolean showRole ) {
         add( new Label( "task", uppercasedName( part.getTask() ) ) );                     // NON-NLS
+
+        WebMarkupContainer roleContainer = new WebMarkupContainer( "role-container" );
+        String roleString = part.getRole() == null ? "" : part.getRole().toString();
+        roleContainer.add( new Label( "role", roleString ) );
+        roleContainer.setVisible( showRole && part.getRole() != null );
+        add( roleContainer );
 
         String desc = part.getDescription();
         Label descLabel = new Label( "description", desc );                               // NON-NLS

@@ -40,12 +40,12 @@ public class PlanReportPage extends WebPage {
         super( parameters );
 
         Plan plan = Channels.getPlan();
-        
+
         add( new Label( "title",                                                          // NON-NLS
                         MessageFormat.format( "Report: {0}", plan.getName() ) ) );
-        add( new Label( "plan-name", plan.getName() ) );                     // NON-NLS
-        add( new Label( "plan-client", plan.getClient() ) );                        // NON-NLS
-        add( new Label( "plan-description", plan.getDescription() ) );              // NON-NLS
+        add( new Label( "plan-name", plan.getName() ) );                                  // NON-NLS
+        add( new Label( "plan-client", plan.getClient() ) );                              // NON-NLS
+        add( new Label( "plan-description", plan.getDescription() ) );                    // NON-NLS
         add( new Label( "date", DateFormat.getDateTimeInstance(                           // NON-NLS
             DateFormat.LONG, DateFormat.LONG ).format( new Date() ) ) );
 

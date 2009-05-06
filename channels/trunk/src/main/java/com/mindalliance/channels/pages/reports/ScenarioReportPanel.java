@@ -10,6 +10,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -30,7 +31,7 @@ import java.util.Set;
  * Date: Feb 5, 2009
  * Time: 7:18:56 PM
  */
-public class ScenarioReportPanel extends AbstractReportPanel {
+public class ScenarioReportPanel extends Panel {
 
     /**
      * A scenario
@@ -57,7 +58,7 @@ public class ScenarioReportPanel extends AbstractReportPanel {
                         size,
                         DiagramFactory.TOP_BOTTOM,
                         false,
-                        null) );
+                        null ) );
 
         List<Organization> organizations = findOrganizationsInScenario();
         add( new ListView<Organization>( "organizations", organizations ) {               // NON-NLS
@@ -68,9 +69,7 @@ public class ScenarioReportPanel extends AbstractReportPanel {
                         organization.getParent() == null ? "top organization"             // NON-NLS
                                                          : "sub organization" ) ) );      // NON-NLS
                 item.add( new OrganizationReportPanel(
-                        "organization",                                                   // NON-NLS
-                        new Model<Organization>( organization ),
-                        scenario ) );
+                        "organization", organization, scenario, true ) );                 // NON-NLS                       
             }
         } );
         add( new IssuesReportPanel( "issues", new Model<ModelObject>( scenario ) ) );     // NON-NLS

@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.reports;
 
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
@@ -9,7 +10,8 @@ import com.mindalliance.channels.model.Scenario;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.List;
 
@@ -21,7 +23,11 @@ import java.util.List;
  * Date: Feb 5, 2009
  * Time: 8:10:03 PM
  */
-public class RoleReportPanel extends AbstractReportPanel {
+public class RoleReportPanel extends Panel {
+
+    /** The query service. */
+    @SpringBean
+    private QueryService queryService;
 
     /** A role. */
     private Role role;
@@ -33,11 +39,11 @@ public class RoleReportPanel extends AbstractReportPanel {
     private Organization organization;
 
     public RoleReportPanel(
-            String id, IModel<Role> model, Scenario scenario, Organization organization ) {
+            String id, Role role, Scenario scenario, Organization organization ) {
 
-        super( id, model );
+        super( id );
         setRenderBodyOnly( true );
-        role = model.getObject();
+        this.role = role;
         this.scenario = scenario;
         this.organization = organization;
         init();
@@ -54,8 +60,8 @@ public class RoleReportPanel extends AbstractReportPanel {
         Label descLabel = new Label( "description", desc );                               // NON-NLS
         descLabel.setVisible( desc != null && !desc.isEmpty() );
         add( descLabel );
-        List<Actor> actors = getQueryService().findActors(
-                organization, role, scenario );
+
+        List<Actor> actors = queryService.findActors( organization, role, scenario );
         if ( actors.isEmpty() )
             actors.add( Actor.UNKNOWN );
         add( new ListView<Actor>( "actors", actors ) {                                    // NON-NLS
@@ -69,13 +75,13 @@ public class RoleReportPanel extends AbstractReportPanel {
                     spec.setRole( role );
                 if ( !actor.equals( Actor.UNKNOWN ) )
                     spec.setActor( actor );
-                item.add( new ActorReportPanel( "actor", scenario, spec, false ) );       // NON-NLS
+                item.add( new ActorBannerPanel( "actor", scenario, spec, false ) );       // NON-NLS
             }
         } );
         add( new ListView<Part>( "parts", scenario.findParts( organization, role ) ) {    // NON-NLS
             @Override
             protected void populateItem( ListItem<Part> item ) {
-                item.add( new PartReportPanel( "part", item.getModel() ) );               // NON-NLS
+                item.add( new PartReportPanel( "part", item.getModel(), false ) );               // NON-NLS
             }
         } );
     }

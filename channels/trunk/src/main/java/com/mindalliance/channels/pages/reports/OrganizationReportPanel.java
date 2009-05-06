@@ -1,12 +1,22 @@
 package com.mindalliance.channels.pages.reports;
 
+import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,7 +25,7 @@ import org.apache.wicket.model.Model;
  * Date: Feb 6, 2009
  * Time: 11:46:56 AM
  */
-public class OrganizationReportPanel extends AbstractReportPanel {
+public class OrganizationReportPanel extends Panel {
 
     /**
      * An organization.
@@ -27,20 +37,47 @@ public class OrganizationReportPanel extends AbstractReportPanel {
      */
     private Scenario scenario;
 
-    public OrganizationReportPanel( String id, IModel<Organization> model, Scenario scenario ) {
-        super( id, model );
+    @SpringBean
+    private QueryService queryService;
+
+    public OrganizationReportPanel( String id, Organization organization, Scenario scenario,
+                                    boolean showActors ) {
+        super( id );
         setRenderBodyOnly( true );
-        organization = model.getObject();
+        this.organization = organization;
         this.scenario = scenario;
 
-        add( new ListView<Role>( "roles", scenario.findRoles( organization ) ) {          // NON-NLS
-            @Override
-            protected void populateItem( ListItem<Role> item ) {
-                Role role = item.getModelObject();
-                item.add( new RoleReportPanel( "role",                                    // NON-NLS
-                                   new Model<Role>( role ),
-                                   OrganizationReportPanel.this.scenario, organization ) );
-            }
-        } );
+        if ( showActors )
+            add( new ListView<Actor>( "sections", getActors() ) {
+                @Override
+                protected void populateItem( ListItem<Actor> item ) {
+                    item.add( new ActorReportPanel( "section", item.getModelObject(),
+                                        OrganizationReportPanel.this.scenario,
+                                        OrganizationReportPanel.this.organization ) );
+                }
+            } );
+        else
+            add( new ListView<Role>( "sections", scenario.findRoles( organization ) ) {
+                @Override
+                protected void populateItem( ListItem<Role> item ) {
+                    item.add( new RoleReportPanel( "section", item.getModelObject(),
+                                       OrganizationReportPanel.this.scenario,
+                                       OrganizationReportPanel.this.organization ) );
+                }
+            } );
+    }
+
+    private List<Actor> getActors() {
+        Set<Actor> actors = new HashSet<Actor>();
+        Iterator<Part> partIterator = scenario.parts();
+        while ( partIterator.hasNext() ) {
+            Part part = partIterator.next();
+            if ( part.isIn( organization ) )
+                actors.addAll( queryService.findAllActors( part.resourceSpec() ) );
+        }
+
+        List<Actor> result = new ArrayList<Actor>( actors );
+        Collections.sort( result );
+        return result;
     }
 }

@@ -7,13 +7,32 @@
         lang="en">
 <body>
 <wicket:panel>
-    <p class="name">
-        <b><span wicket:id="name">name</span>:</b>
-        <span class="sub" wicket:id="title">, title</span>
-        <span class="sub" wicket:id="scenario">(from scenario)</span>
-    </p>
-    <p class="description" wicket:id="description">description</p>
-    <ul class="channels" wicket:id="channels">[channels report panel]</ul>
+    <div class="header">
+        <div>
+            <div class="section-head">
+                <h4 wicket:id="name">name</h4>
+                <ul>
+                    <li wicket:id="title" class="title">(title)</li>
+                    <li wicket:id="org" class="organization">(organization)</li>
+                    <li wicket:id="sc-name" class="scenario">(scenario)</li>
+                </ul>
+                <p class="description" wicket:id="description">description</p>
+            </div>
+            <ul class="channels-only" wicket:id="channels">
+            </ul>
+        </div>
+    </div>
+
+    <table class="tasks">
+        <thead>
+            <tr><th><h4>Tasks</h4></th><th><h4>Communication Actions</h4></th></tr>
+        </thead>
+        <tbody>
+            <tr class="task" wicket:id="parts">
+                <div wicket:id="part">[part report panel]</div>
+            </tr>
+        </tbody>
+    </table>
 </wicket:panel>
 </body>
 </html>

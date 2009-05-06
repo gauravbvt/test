@@ -1,5 +1,7 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.QueryService;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 
@@ -19,9 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
-
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.NotFoundException;
 
 /**
  * A scenario in the plan.
@@ -213,7 +212,8 @@ public class Scenario extends ModelObject {
      */
     public void removeNode( Node node ) {
         if ( getNodeIndex().containsKey( node.getId() )
-                && ( node.isConnector() || hasMoreThanOnePart() ) ) {
+                && ( node.isConnector() || hasMoreThanOnePart() ) )
+        {
             Iterator<Flow> ins = node.requirements();
             while ( ins.hasNext() ) {
                 ins.next().disconnect();
@@ -227,10 +227,10 @@ public class Scenario extends ModelObject {
                 List<ExternalFlow> toDisconnect = new ArrayList<ExternalFlow>();
                 Iterator<ExternalFlow> xf = ( (Connector) node ).externalFlows();
                 while ( xf.hasNext() ) {
-                    toDisconnect.add(xf.next());
+                    toDisconnect.add( xf.next() );
                 }
                 // Avoid ConcurrentModificationException
-                for (ExternalFlow flow : toDisconnect) {
+                for ( ExternalFlow flow : toDisconnect ) {
                     flow.disconnect();
                 }
             }
@@ -275,7 +275,7 @@ public class Scenario extends ModelObject {
      *
      * @return an iterator on connectors having outcomes
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public Iterator<Connector> inputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -290,7 +290,7 @@ public class Scenario extends ModelObject {
      *
      * @return an iterator on parts
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public Iterator<Part> parts() {
         return (Iterator<Part>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -305,7 +305,7 @@ public class Scenario extends ModelObject {
      *
      * @return an iterator on connectors having requirements
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public Iterator<Connector> outputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -425,7 +425,7 @@ public class Scenario extends ModelObject {
      *
      * @param id a long
      * @return a flow
-     * @throws com.mindalliance.channels.NotFoundException if not found
+     * @throws NotFoundException if not found
      */
     public Flow findFlow( long id ) throws NotFoundException {
         Flow flow = null;
@@ -484,6 +484,8 @@ public class Scenario extends ModelObject {
         }
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void beforeRemove( QueryService dataQueryObject ) {
         for ( Part part : initiators ) {
             part.setInitiatedScenario( null );
@@ -492,7 +494,7 @@ public class Scenario extends ModelObject {
 
     /**
      * Whether this scenario has initiators.
-     * @return
+     * @return true if the scenario was initiated
      */
     @Transient
     public boolean isInitiated() {
