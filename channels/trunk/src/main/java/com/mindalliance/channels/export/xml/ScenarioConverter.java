@@ -83,6 +83,11 @@ public class ScenarioConverter extends AbstractChannelsConverter {
                 context.convertAnother( entity );
                 writer.endNode();
             }
+            for ( Event incident : plan.getIncidents() ) {
+                writer.startNode( "incident" );
+                writer.setValue( incident.getName() );
+                writer.endNode();
+            }
         }
         // Trigger event
         if ( scenario.getEvent() != null ) {
@@ -154,6 +159,10 @@ public class ScenarioConverter extends AbstractChannelsConverter {
                 context.convertAnother( scenario, Role.class );
             } else if ( nodeName.equals( "place" ) ) {
                 context.convertAnother( scenario, Place.class );
+                // Incident
+            } else if ( nodeName.equals( "incident" ) ) {
+                Event event = getQueryService().findOrCreate( Event.class, reader.getValue() );
+                Channels.getPlan().addIncident( event );
                 // Event
             } else if ( nodeName.equals( "trigger-event" ) ) {
                 Event event = getQueryService().findOrCreate( Event.class, reader.getValue() );

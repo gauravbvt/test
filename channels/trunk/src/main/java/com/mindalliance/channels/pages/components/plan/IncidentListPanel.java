@@ -218,15 +218,13 @@ public class IncidentListPanel extends AbstractCommandablePanel {
         public void setConfirmed( boolean confirmed ) {
             this.confirmed = confirmed;
             if ( confirmed ) {
-                if ( event.getId() == 0 ) {
-                    Event confirmedEvent = getQueryService().findOrCreate( Event.class, getName() );
-                    doCommand( new UpdatePlanObject(
-                            Channels.getPlan(),
-                            "incidents",
-                            confirmedEvent,
-                            UpdateObject.Action.Add
-                    ) );
-                }
+                Event confirmedEvent = getQueryService().findOrCreate( Event.class, getName() );
+                doCommand( new UpdatePlanObject(
+                        Channels.getPlan(),
+                        "incidents",
+                        confirmedEvent,
+                        UpdateObject.Action.Add
+                ) );
 
             } else if ( !markedForCreation ) {
                 Event confirmedEvent = getQueryService().findOrCreate( Event.class, getName() );

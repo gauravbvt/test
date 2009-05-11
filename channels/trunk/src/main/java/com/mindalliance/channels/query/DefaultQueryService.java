@@ -62,6 +62,10 @@ public class DefaultQueryService extends Observable implements QueryService {
      * Class logger.
      */
     public static final Logger LOG = LoggerFactory.getLogger( DefaultQueryService.class );
+    /**
+     * Name of the default event.
+     */
+    public static final String DEFAULT_EVENT_NAME = "UNNAMED";
 
     private Channels channels;
 
@@ -167,7 +171,8 @@ public class DefaultQueryService extends Observable implements QueryService {
         // make sure each plan has at least one event
         for ( Plan plan : getChannels().getPlans() ) {
             if ( plan.getIncidents().isEmpty() ) {
-                plan.addIncident( findOrCreate( Event.class, "UNNAMED" ) );
+                Event unnamedEvent = findOrCreate( Event.class, DEFAULT_EVENT_NAME );
+                plan.addIncident( unnamedEvent );
             }
         }
         if ( plans.size() == 1 && plans.get( 0 ).getScenarios().isEmpty() ) {
@@ -194,6 +199,12 @@ public class DefaultQueryService extends Observable implements QueryService {
                 // Make sure there is at least one scenario per plan
                 if ( !getDao().list( Scenario.class ).iterator().hasNext() ) {
                     createScenario();
+                }
+                // Remove UNNAMED event if not referenced
+                Event event = findOrCreate( Event.class, DEFAULT_EVENT_NAME );
+                if ( getReferenceCount( event ) <= 1 ) {
+                    plan.getIncidents().remove( event );
+                    remove( event );
                 }
             } finally {
                 getChannels().endUsingPlan();
@@ -540,6 +551,9 @@ public class DefaultQueryService extends Observable implements QueryService {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isReferenced( Event event ) {
         for ( Event incident : Channels.getPlan().getIncidents() ) {
             if ( incident == event ) return true;
@@ -554,6 +568,26 @@ public class DefaultQueryService extends Observable implements QueryService {
             }
         }
         return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public int getReferenceCount( Event event ) {
+        int count = 0;
+        for ( Event incident : Channels.getPlan().getIncidents() ) {
+            if ( incident == event ) count++;
+        }
+        // look in scenarios
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            if ( scenario.getEvent() == event ) count++;
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                Part part = parts.next();
+                if ( part.getInitiatedEvent() == event ) count++;
+            }
+        }
+        return count;
     }
 
     /**

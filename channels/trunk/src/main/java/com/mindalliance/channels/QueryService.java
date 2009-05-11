@@ -370,6 +370,13 @@ public interface QueryService extends Service {
     boolean isReferenced( Event event );
 
     /**
+     * Get reference count for event.
+     * @param event an event
+     * @return an int
+     */
+    int getReferenceCount( Event event );
+
+    /**
      * Called when application is terminated.
      */
     void onDestroy();
