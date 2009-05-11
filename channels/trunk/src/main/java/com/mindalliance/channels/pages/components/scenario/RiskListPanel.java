@@ -208,7 +208,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
     }
 
     private void addConfirmedCell( ListItem<RiskWrapper> item ) {
-        final RiskWrapper wrapper = item.getModel().getObject();
+        final RiskWrapper wrapper = item.getModelObject();
         final CheckBox confirmedCheckBox = new CheckBox(
                 "confirmed",
                 new PropertyModel<Boolean>( wrapper, "confirmed" ) );

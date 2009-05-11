@@ -37,10 +37,6 @@ public class ScenarioEditDetailsPanel extends AbstractCommandablePanel {
      */
     private IssuesPanel issuesPanel;
     /**
-     * Responded-to event.
-     */
-    private TextField<String> eventField;
-    /**
      * Link to event.
      */
     private ModelObjectLink eventLink;
@@ -95,18 +91,18 @@ public class ScenarioEditDetailsPanel extends AbstractCommandablePanel {
 
         private void addEventField() {
         final List<String> choices = getQueryService().findAllNames( Event.class );
-        eventField = new AutoCompleteTextField<String>(
-                "event",
-                new PropertyModel<String>( this, "eventName" ) ) {
-            protected Iterator<String> getChoices( String s ) {
-                List<String> candidates = new ArrayList<String>();
-                for ( String choice : choices ) {
-                    if ( SemMatch.matches( s, choice ) ) candidates.add( choice );
-                }
-                return candidates.iterator();
+            TextField<String> eventField = new AutoCompleteTextField<String>(
+                    "event",
+                    new PropertyModel<String>( this, "eventName" ) ) {
+                protected Iterator<String> getChoices( String s ) {
+                    List<String> candidates = new ArrayList<String>();
+                    for ( String choice : choices ) {
+                        if ( SemMatch.matches( s, choice ) ) candidates.add( choice );
+                    }
+                    return candidates.iterator();
 
-            }
-        };
+                }
+            };
         eventField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addEventLink();

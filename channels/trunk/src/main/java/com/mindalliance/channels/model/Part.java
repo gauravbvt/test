@@ -13,9 +13,9 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import java.text.MessageFormat;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 /**
  * A part in a scenario.
@@ -95,7 +95,7 @@ public class Part extends Node {
     /**
      * Scenario risks mitigated.
      */
-    private Set<Risk> mitigations = new HashSet<Risk>();
+    private List<Risk> mitigations = new ArrayList<Risk>();
 
     public Part() {
         adjustName();
@@ -343,11 +343,11 @@ public class Part extends Node {
         this.initiatedEvent = initiatedEvent;
     }
 
-    public Set<Risk> getMitigations() {
+    public List<Risk> getMitigations() {
         return mitigations;
     }
 
-    public void setMitigations( Set<Risk> mitigations ) {
+    public void setMitigations( List<Risk> mitigations ) {
         this.mitigations = mitigations;
     }
 

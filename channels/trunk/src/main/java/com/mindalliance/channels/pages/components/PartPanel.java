@@ -12,6 +12,7 @@ import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -115,6 +116,10 @@ public class PartPanel extends AbstractCommandablePanel {
      * Whether terminates event scenario responds to.
      */
     private CheckBox terminatesScenarioCheckBox;
+    /**
+     * Mitigations by part.
+     */
+    private MitigationsPanel mitigationsPanel;
 
     //====================================
     public PartPanel( String id, IModel<Part> model ) {
@@ -130,6 +135,7 @@ public class PartPanel extends AbstractCommandablePanel {
         addField( LOCATION_PROPERTY, getQueryService().findAllNames( Place.class ) );
         addEventInitiation();
         addTimingFields();
+        addMitigations();
         adjustFields();
     }
 
@@ -287,6 +293,9 @@ public class PartPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getPart(), "startsWithScenario" ) );
             }
         } );
+        add( new ModelObjectLink( "event-link",
+                new PropertyModel<Event>( this, "part.scenario.event" ),
+                new PropertyModel<String>( this, "part.scenario.event.name" ) ) );
         terminatesScenarioCheckBox = new CheckBox(
                 "terminatesEvent",
                 new PropertyModel<Boolean>( this, "terminatesEvent" ) );
@@ -296,6 +305,15 @@ public class PartPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getPart(), "terminatesEvent" ) );
             }
         } );
+    }
+
+    private void addMitigations() {
+        mitigationsPanel = new MitigationsPanel(
+                "mitigations",
+                new PropertyModel<Part>( this, "part" ),
+                getExpansions() );
+        mitigationsPanel.setOutputMarkupId( true );
+        addOrReplace( mitigationsPanel );
     }
 
     //====================================
@@ -623,6 +641,10 @@ public class PartPanel extends AbstractCommandablePanel {
             for ( TextField<String> field : textFields ) {
                 if ( field.getId().equals( property ) )
                     addIssues( field, getPart(), property );
+            }
+            if (property.equals("mitigations")) {
+                addMitigations();
+                target.addComponent( mitigationsPanel );
             }
             target.addComponent( initiatedEventField );
         }

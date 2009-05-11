@@ -459,7 +459,7 @@ public class Scenario extends ModelObject {
      * @return a risk or null if none matching
      */
     public Risk getRisk( final Risk.Type type, final String organizationName ) {
-        return (Risk) CollectionUtils.select( risks, new Predicate() {
+        return (Risk) CollectionUtils.find( risks, new Predicate() {
             public boolean evaluate( Object obj ) {
                 Risk risk = (Risk) obj;
                 return risk.getType() == type
