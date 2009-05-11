@@ -15,9 +15,11 @@ import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
@@ -119,7 +121,7 @@ public class PartPanel extends AbstractCommandablePanel {
     /**
      * Mitigations by part.
      */
-    private MitigationsPanel mitigationsPanel;
+    private Component mitigationsPanel;
 
     //====================================
     public PartPanel( String id, IModel<Part> model ) {
@@ -308,10 +310,14 @@ public class PartPanel extends AbstractCommandablePanel {
     }
 
     private void addMitigations() {
-        mitigationsPanel = new MitigationsPanel(
-                "mitigations",
-                new PropertyModel<Part>( this, "part" ),
-                getExpansions() );
+        if ( getPart().getScenario().getRisks().isEmpty() ) {
+            mitigationsPanel = new Label( "mitigations", new Model<String>( "(No managed risks)" ) );
+        } else {
+            mitigationsPanel = new MitigationsPanel(
+                    "mitigations",
+                    new PropertyModel<Part>( this, "part" ),
+                    getExpansions() );
+        }
         mitigationsPanel.setOutputMarkupId( true );
         addOrReplace( mitigationsPanel );
     }
@@ -629,6 +635,7 @@ public class PartPanel extends AbstractCommandablePanel {
      */
     public void refresh( AjaxRequestTarget target ) {
         adjustFields();
+        addMitigations();
         target.addComponent( this );
     }
 
@@ -642,7 +649,7 @@ public class PartPanel extends AbstractCommandablePanel {
                 if ( field.getId().equals( property ) )
                     addIssues( field, getPart(), property );
             }
-            if (property.equals("mitigations")) {
+            if ( property.equals( "mitigations" ) ) {
                 addMitigations();
                 target.addComponent( mitigationsPanel );
             }
