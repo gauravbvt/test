@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Channelable;
 import com.mindalliance.channels.model.Medium;
 import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.UpdateObject;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.apache.wicket.AttributeModifier;
@@ -325,8 +325,9 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             final Set<Medium> candidateMedia = getCandidateMedia();
 
             final DropDownChoice<Medium> result = new DropDownChoice<Medium>(
-                    "medium",                                                             // NON-NLS
-                    new PropertyModel<Medium>( wrapper, "medium" ), getMedia( wrapper ),  // NON-NLS
+                    "medium",
+                    new PropertyModel<Medium>( wrapper, "medium" ),
+                    getMedia( wrapper ),
                     new IChoiceRenderer<Medium>() {
                         public Object getDisplayValue( Medium object ) {
                             return object == null ? "Select a medium"
@@ -341,7 +342,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                     } );
 
             result.add(
-                    new AjaxFormComponentUpdatingBehavior( "onchange" ) {                 // NON-NLS
+                    new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                         @Override
                         protected void onUpdate( AjaxRequestTarget target ) {
                             addressField.setEnabled( ChannelListPanel.this.isEnabled() );

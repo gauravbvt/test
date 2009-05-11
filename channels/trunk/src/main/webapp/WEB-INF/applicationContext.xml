@@ -41,21 +41,11 @@
         <property name="plans">
             <list value-type="java.util.ArrayList">
                 <bean class="com.mindalliance.channels.model.Plan">
-                    <property name="uri" value="mindalliance.com/channels/demo"/>
+                    <property name="uri" value="mindalliance.com/channels/plans/sci"/>
                     <property name="name" value="SCI Emergency Communications Plan"/>
                     <property name="client" value="Strategic Content Imaging, Inc."/>
                     <property name="description"
                               value="Communications planning for responding and recovering from business interruptions due fire or power outage."/>
-                    <property name="events">
-                        <list value-type="java.util.ArrayList">
-                            <bean class="com.mindalliance.channels.model.PlanEvent">
-                                <property name="name" value="fire"/>
-                            </bean>
-                            <bean class="com.mindalliance.channels.model.PlanEvent">
-                                <property name="name" value="power outage"/>
-                            </bean>
-                        </list>
-                    </property>
                 </bean>
             </list>
         </property>

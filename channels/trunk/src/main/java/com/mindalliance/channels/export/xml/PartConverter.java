@@ -3,11 +3,13 @@ package com.mindalliance.channels.export.xml;
 import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Delay;
+import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.UserIssue;
@@ -99,13 +101,19 @@ public class PartConverter extends AbstractChannelsConverter {
         writer.startNode( "startsWithScenario" );
         writer.setValue( "" + part.isStartsWithScenario() );
         writer.endNode();
-        writer.startNode( "terminatesScenario" );
-        writer.setValue( "" + part.isTerminatesScenario() );
+        writer.startNode( "terminatesEvent" );
+        writer.setValue( "" + part.isTerminatesEvent() );
         writer.endNode();
-        if ( part.getInitiatedScenario() != null ) {
-            writer.startNode( "initiatedScenario" );
-            writer.addAttribute( "scenario", part.getInitiatedScenario().getName() );
-            writer.setValue( part.getInitiatedScenario().getDescription() );
+        if ( part.getInitiatedEvent() != null ) {
+            writer.startNode( "initiatedEvent" );
+            writer.setValue( part.getInitiatedEvent().getName() );
+            writer.endNode();
+        }
+        // Part mitigations
+        for ( Risk risk : part.getMitigations() ) {
+            writer.startNode( "mitigation" );
+            writer.addAttribute( "type", risk.getType().name() );
+            writer.setValue( risk.getOrganization().getName() );
             writer.endNode();
         }
         // Part user issues
@@ -159,23 +167,20 @@ public class PartConverter extends AbstractChannelsConverter {
                 part.setRepeatsEvery( Delay.parse( reader.getValue() ) );
             } else if ( nodeName.equals( "startsWithScenario" ) ) {
                 part.setStartsWithScenario( reader.getValue().equals( "true" ) );
-            } else if ( nodeName.equals( "terminatesScenario" ) ) {
-                part.setTerminatesScenario( reader.getValue().equals( "true" ) );
-            } else if ( nodeName.equals( "initiatedScenario" ) ) {
-                String externalScenarioName = reader.getAttribute( "scenario" );
-                String externalScenarioDescription = reader.getValue();
-                List<Scenario> externalScenarios = ConverterUtils.findMatchingScenarios(
-                        externalScenarioName,
-                        externalScenarioDescription,
-                        getQueryService() );
-                if ( !externalScenarios.isEmpty() ) {
-                    part.setInitiatedScenario( externalScenarios.get( 0 ) );
-                    if ( externalScenarios.size() > 1 ) {
-                        LOG.warn( "More than one candidate scenarios for initiation by part " + id );
-                    }
-                }
+            } else if ( nodeName.equals( "terminatesEvent" ) ) {
+                part.setTerminatesEvent( reader.getValue().equals( "true" ) );
+            } else if ( nodeName.equals( "initiatedEvent" ) ) {
+                String eventName = reader.getValue();
+                Event event = getQueryService().findOrCreate( Event.class, eventName );
+                if ( event == null ) LOG.warn( "Plan has no event named " + eventName );
+                part.setInitiatedEvent( event );
             } else if ( nodeName.equals( "flow" ) ) {
                 context.convertAnother( scenario, Flow.class );
+            } else if ( nodeName.equals( "mitigation" ) ) {
+                Risk.Type type = Risk.Type.valueOf( reader.getAttribute( "type" ) );
+                String orgName = reader.getValue();
+                Risk risk = scenario.getRisk( type, orgName );
+                part.getMitigations().add( risk );
             } else if ( nodeName.equals( "issue" ) ) {
                 context.convertAnother( scenario, UserIssue.class );
             } else {

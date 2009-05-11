@@ -1,12 +1,14 @@
 package com.mindalliance.channels.analysis.detectors;
 
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A scenario that is not an incident is never initiated by a part form another scenario.
@@ -27,11 +29,12 @@ public class NonIncidentScenarioNeverInitiated extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Scenario scenario = (Scenario) modelObject;
-        if ( !scenario.isIncident() && !scenario.isInitiated() ) {
+        Plan plan = Channels.getPlan();
+        if ( !plan.isIncident( scenario.getEvent() ) && !getQueryService().isInitiated( scenario ) ) {
             Issue issue = makeIssue( Issue.STRUCTURAL, scenario );
-            issue.setDescription( "The scenario is never caused by a task even though"
-                    + " it is expected to be (it is not an incident)." );
-            issue.setRemediation( "Make the scenario an incident, or make sure at least one"
+            issue.setDescription( "The scenario is in response to an event that is expected to be caused"
+                    + " by a task in another scenario, but there is no such task." );
+            issue.setRemediation( "Make the event in question an incident, or make sure at least one"
                     + " task in another scenario causes it." );
             issue.setSeverity( Issue.Level.Major );
             issues.add( issue );

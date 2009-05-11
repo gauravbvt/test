@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.components;
+package com.mindalliance.channels.pages.components.plan;
 
 
 import com.mindalliance.channels.Channels;
@@ -9,15 +9,18 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import com.mindalliance.channels.pages.components.ExternalFlowsPanel;
+import com.mindalliance.channels.pages.components.ScenarioCausesPanel;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
@@ -59,34 +62,28 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
      */
     private double[] diagramSize = new double[2];
 
-    public PlanMapPanel( String id, Set<Long> expansions ) {
-        super( id, null, expansions );
+    public PlanMapPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
+        super( id, model, expansions );
         init();
     }
 
     private void init() {
-        AjaxFallbackLink<?> closeLink = new AjaxFallbackLink( "close" ) {
-            @Override
-            public void onClick( AjaxRequestTarget target ) {
-                Change change = new Change( Change.Type.Collapsed, Channels.getPlan() );
-                update( target, change );
-            }
-        };
-        add( closeLink );
+        Channels.instance().beginUsingPlan( getPlan() );
         addPlanSizing();
         addPlanMapDiagramPanel();
         addFlowsTitleLabel();
         addExternalFlowsPanel();
         addCausesTitleLabel();
         addCausesPanel();
+        Channels.instance().endUsingPlan( );
     }
 
-   private void addPlanSizing() {
+    private void addPlanSizing() {
         WebMarkupContainer reduceToFit = new WebMarkupContainer( "fit" );
         reduceToFit.add( new AbstractDefaultAjaxBehavior() {
             protected void onComponentTag( ComponentTag tag ) {
                 super.onComponentTag( tag );
-                String domIdentifier = "#plan-map .picture";
+                String domIdentifier = ".plan .picture";
                 String script = "wicketAjaxGet('"
                         + getCallbackUrl( true )
                         + "&width='+$('" + domIdentifier + "').width()+'"
@@ -97,6 +94,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
             }
 
             protected void respond( AjaxRequestTarget target ) {
+                Channels.instance().beginUsingPlan( getPlan() );
                 RequestCycle requestCycle = RequestCycle.get();
                 String swidth = requestCycle.getRequest().getParameter( "width" );
                 String sheight = requestCycle.getRequest().getParameter( "height" );
@@ -104,15 +102,18 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
                 diagramSize[1] = ( Double.parseDouble( sheight ) - 20 ) / 96.0;
                 addPlanMapDiagramPanel();
                 target.addComponent( planMapDiagramPanel );
+                Channels.instance().endUsingPlan( );
             }
         } );
         add( reduceToFit );
         WebMarkupContainer fullSize = new WebMarkupContainer( "full" );
         fullSize.add( new AjaxEventBehavior( "onclick" ) {
             protected void onEvent( AjaxRequestTarget target ) {
+                Channels.instance().beginUsingPlan( getPlan() );
                 diagramSize = new double[2];
                 addPlanMapDiagramPanel();
                 target.addComponent( planMapDiagramPanel );
+                Channels.instance().endUsingPlan( );
             }
         } );
         add( fullSize );
@@ -122,20 +123,20 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     private void addPlanMapDiagramPanel() {
         if ( diagramSize[0] <= 0.0 || diagramSize[1] <= 0.0 ) {
             planMapDiagramPanel = new PlanMapDiagramPanel(
-                "plan-map",
-                new PropertyModel<ArrayList<Scenario>>( this, "scenarios" ),
-                selectedScenario,
-                selectedScRel,
-                null,
-                "#plan-map .picture");            
+                    "plan-map",
+                    new PropertyModel<ArrayList<Scenario>>( this, "scenarios" ),
+                    selectedScenario,
+                    selectedScRel,
+                    null,
+                    ".plan .picture" );
         } else {
             planMapDiagramPanel = new PlanMapDiagramPanel(
-                "plan-map",
-                new PropertyModel<ArrayList<Scenario>>( this, "scenarios" ),
-                selectedScenario,
-                selectedScRel,
+                    "plan-map",
+                    new PropertyModel<ArrayList<Scenario>>( this, "scenarios" ),
+                    selectedScenario,
+                    selectedScRel,
                     diagramSize,
-                "#plan-map .picture");
+                    ".plan .picture" );
         }
         planMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( planMapDiagramPanel );
@@ -143,14 +144,14 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
 
     private void addFlowsTitleLabel() {
         Label flowsTitleLabel = new Label( "flows-title",
-                                           new PropertyModel<String>( this, "flowsTitle" ) );
+                new PropertyModel<String>( this, "flowsTitle" ) );
         flowsTitleLabel.setOutputMarkupId( true );
         add( flowsTitleLabel );
     }
 
     private void addCausesTitleLabel() {
         Label causesTitleLabel = new Label( "causes-title",
-                                            new PropertyModel<String>( this, "causesTitle" ) );
+                new PropertyModel<String>( this, "causesTitle" ) );
         causesTitleLabel.setOutputMarkupId( true );
         add( causesTitleLabel );
     }
@@ -277,12 +278,13 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
 
     /**
      * Get scenario relationships.
+     *
      * @return a list of scenario relationships
      */
     public List<ScenarioRelationship> getScenarioRelationships() {
         List<ScenarioRelationship> scRels = new ArrayList<ScenarioRelationship>();
         if ( selectedScRel != null ) {
-            scRels.add(selectedScRel);
+            scRels.add( selectedScRel );
         } else if ( selectedScenario != null ) {
             List<Scenario> allScenarios = getScenarios();
             for ( Scenario other : allScenarios ) {
@@ -370,4 +372,9 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
             super.updateWith( target, change );
         }
     }
+
+    private Plan getPlan() {
+        return (Plan) getModel().getObject();
+    }
+
 }

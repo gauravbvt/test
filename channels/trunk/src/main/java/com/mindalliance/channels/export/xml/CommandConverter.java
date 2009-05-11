@@ -112,18 +112,18 @@ public class CommandConverter extends AbstractChannelsConverter {
                 command.setArguments( (Map) fromJSON( reader.getValue() ) );
             } else if ( nodeName.equals( "multi" ) ) {
                 MultiCommand multi = (MultiCommand) command;
-                while( reader.hasMoreChildren() ) {
+                while ( reader.hasMoreChildren() ) {
                     reader.moveDown();
                     String multiNodeName = reader.getNodeName();
-                    if (multiNodeName.equals("name")) {
-                        multi.setName(reader.getValue());
-                    } else if ( multiNodeName.equals( "undoes" )) {
+                    if ( multiNodeName.equals( "name" ) ) {
+                        multi.setName( reader.getValue() );
+                    } else if ( multiNodeName.equals( "undoes" ) ) {
                         multi.setUndoes( reader.getValue() );
-                    } else if (multiNodeName.equals("command")) {
-                        Command subCommand = (Command)context.convertAnother( command, AbstractCommand.class );
+                    } else if ( multiNodeName.equals( "command" ) ) {
+                        Command subCommand = (Command) context.convertAnother( command, AbstractCommand.class );
                         multi.addCommand( subCommand );
                     } else {
-                      LOG.warn( "Unknown element " + multiNodeName );
+                        LOG.warn( "Unknown element " + multiNodeName );
                     }
                     reader.moveUp();
                 }

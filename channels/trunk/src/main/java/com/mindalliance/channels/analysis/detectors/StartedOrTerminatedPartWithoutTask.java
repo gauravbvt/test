@@ -2,12 +2,12 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
+import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Issue;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Detects the issue where a part has no given task and yet is started.
@@ -32,9 +32,9 @@ public class StartedOrTerminatedPartWithoutTask extends AbstractIssueDetector {
                 issue.setSeverity( Issue.Level.Minor );
                 issues.add( issue );
             }
-            if ( part.isTerminatesScenario() ) {
+            if ( part.isTerminatesEvent() ) {
                 DetectedIssue issue = makeIssue( DetectedIssue.DEFINITION, modelObject, getTestedProperty() );
-                issue.setDescription( "The task terminates the scenario but is not specified." );
+                issue.setDescription( "The task terminates the event responded to but the task is not specified." );
                 issue.setRemediation( "Specify a task." );
                 issue.setSeverity( Issue.Level.Minor );
                 issues.add( issue );

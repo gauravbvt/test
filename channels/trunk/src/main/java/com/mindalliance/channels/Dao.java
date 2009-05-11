@@ -28,7 +28,7 @@ public interface Dao extends Service {
      * Make a plan with unique id.
      * @return
      */
-    Plan makePlan();
+    Plan createPlan();
 
     /**
      * @return the total number of scenarios.

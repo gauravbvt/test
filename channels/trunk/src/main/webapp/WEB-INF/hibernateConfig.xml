@@ -27,7 +27,7 @@
     </bean>
 
     <aop:config proxy-target-class="true">
-        <!--<aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.DataQueryObjectryObject.*(..))"-->
+        <!--<aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.QueryService.*(..))"-->
                      <!--advice-ref="timingLogger"/>-->
         <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.QueryService.*(..))"
                      advice-ref="cacheSet"/>

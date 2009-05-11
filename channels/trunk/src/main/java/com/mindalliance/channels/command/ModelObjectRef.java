@@ -1,7 +1,7 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Commander;
+import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.model.ModelObject;
 
 import java.io.Serializable;
@@ -64,7 +64,7 @@ public class ModelObjectRef implements Serializable {
      * @param commander a commander
      * @return a model object
      * @throws NotFoundException if not found
-     * @throws CommandException if commander fails to resolve
+     * @throws com.mindalliance.channels.command.CommandException if commander fails to resolve
      */
     public ModelObject resolve( Commander commander ) throws NotFoundException, CommandException {
         ModelObject mo;

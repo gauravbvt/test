@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components.entities;
 
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.commands.UpdateObject;
+import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Channelable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.util.SemMatch;
@@ -15,8 +15,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Organization details panel.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf

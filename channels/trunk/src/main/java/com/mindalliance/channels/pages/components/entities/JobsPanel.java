@@ -1,5 +1,9 @@
 package com.mindalliance.channels.pages.components.entities;
 
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.CommandUtils;
+import com.mindalliance.channels.command.commands.UpdateObject;
+import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Job;
 import com.mindalliance.channels.model.ModelObject;
@@ -7,10 +11,6 @@ import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.CommandUtils;
-import com.mindalliance.channels.command.commands.UpdateObject;
-import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.wicket.Component;
@@ -47,10 +47,21 @@ import java.util.Set;
  * Time: 7:45:01 PM
  */
 public class JobsPanel extends AbstractCommandablePanel {
-
+    /**
+     * Collator.
+     */
     private static Collator collator = Collator.getInstance();
+    /**
+     * Jobs container.
+     */
     private WebMarkupContainer jobsDiv;
+    /**
+     * Selected job.
+     */
     private Job selectedJob;
+    /**
+     * Flows container.
+     */
     private WebMarkupContainer flowsDiv;
 
     public JobsPanel( String id, IModel<Organization> model, Set<Long> expansions ) {
@@ -80,6 +91,7 @@ public class JobsPanel extends AbstractCommandablePanel {
                 "jobs",
                 jobWrappers
         ) {
+            /** {@inheritDoc} */
             protected void populateItem( ListItem<JobWrapper> item ) {
                 addConfirmedCell( item );
                 addEntityCell( item, "actor" );
@@ -103,7 +115,7 @@ public class JobsPanel extends AbstractCommandablePanel {
             jobPlaybook = new PlaysTablePanel(
                     "playbook",
                     new PropertyModel<ResourceSpec>( this, "jobResourceSpec" ),
-                    getExpansions());
+                    getExpansions() );
         }
         flowsDiv.addOrReplace( jobLabel );
         flowsDiv.addOrReplace( jobPlaybook );
@@ -216,10 +228,21 @@ public class JobsPanel extends AbstractCommandablePanel {
         return (Organization) getModel().getObject();
     }
 
+    /**
+     * Job wrapper.
+     */
     public class JobWrapper implements Serializable {
-
+        /**
+         * Job.
+         */
         private Job job;
+        /**
+         * Whether to be created.
+         */
         private boolean markedForCreation;
+        /**
+         * Whether confirmed.
+         */
         private boolean confirmed;
 
         protected JobWrapper( Job job, boolean confirmed ) {
@@ -266,7 +289,7 @@ public class JobsPanel extends AbstractCommandablePanel {
                         UpdateObject.Action.Remove
                 ) );
                 ResourceSpec resourceSpec = job.resourceSpec( getOrganization() );
-                if ( resourceSpec.getActor( ) != null )
+                if ( resourceSpec.getActor() != null )
                     getCommander().cleanup( Actor.class, resourceSpec.getActor().getName() );
                 if ( resourceSpec.getRole() != null )
                     getCommander().cleanup( Role.class, resourceSpec.getRole().getName() );
@@ -310,7 +333,7 @@ public class JobsPanel extends AbstractCommandablePanel {
             String oldName = getActorName();
             if ( name != null && !isSame( name, oldName ) ) {
                 if ( markedForCreation ) {
-                    job.setActor( getQueryService().findOrCreate(  Actor.class , name ) );
+                    job.setActor( getQueryService().findOrCreate( Actor.class, name ) );
                 } else {
                     int index = getOrganization().getJobs().indexOf( job );
                     if ( index >= 0 ) {
@@ -375,10 +398,15 @@ public class JobsPanel extends AbstractCommandablePanel {
             }
         }
 
+        /**
+         * Wrapped job can be confirmed?
+         *
+         * @return a boolean
+         */
         public boolean canBeConfirmed() {
             return !job.getActorName().isEmpty()
                     && !job.getRoleName().isEmpty();
-                    // && !job.getTitle().isEmpty();
+            // && !job.getTitle().isEmpty();
         }
 
         public boolean hasFlows() {
@@ -389,37 +417,41 @@ public class JobsPanel extends AbstractCommandablePanel {
         /**
          * Get actor from its name.
          * Returns null if name is empty.
+         *
          * @return an actor
          */
         public Actor getActor() {
-            if (!getActorName().isEmpty())
+            if ( !getActorName().isEmpty() )
                 return getQueryService().findOrCreate( Actor.class, getActorName() );
             else
                 return null;
         }
 
         /**
-          * Get role from its name.
-          * Returns null if name is empty.
-          * @return a role
-          */
-         public Role getRole() {
-             if (!getRoleName().isEmpty())
-                 return getQueryService().findOrCreate( Role.class, getRoleName() );
-             else
-                 return null;
-         }
+         * Get role from its name.
+         * Returns null if name is empty.
+         *
+         * @return a role
+         */
+        public Role getRole() {
+            if ( !getRoleName().isEmpty() )
+                return getQueryService().findOrCreate( Role.class, getRoleName() );
+            else
+                return null;
+        }
+
         /**
-          * Get jurisdiction place from its name.
-          * Returns null if name is empty.
-          * @return a place
-          */
-         public Place getJurisdiction() {
-             if (!getJurisdictionName().isEmpty())
-                 return getQueryService().findOrCreate( Place.class, getJurisdictionName() );
-             else
-                 return null;
-         }
+         * Get jurisdiction place from its name.
+         * Returns null if name is empty.
+         *
+         * @return a place
+         */
+        public Place getJurisdiction() {
+            if ( !getJurisdictionName().isEmpty() )
+                return getQueryService().findOrCreate( Place.class, getJurisdictionName() );
+            else
+                return null;
+        }
     }
 
     public class JobEntityPanel extends Panel {
@@ -443,7 +475,7 @@ public class JobsPanel extends AbstractCommandablePanel {
                     ModelObject mo = (ModelObject) CommandUtils.getProperty( jobWrapper, property, null );
                     if ( mo != null ) {
                         // setResponsePage(  new RedirectPage( ModelObjectLink.linkForEntity( mo ) ) );
-                        update(target, new Change(Change.Type.Expanded, mo));
+                        update( target, new Change( Change.Type.Expanded, mo ) );
                     }
                 }
             };

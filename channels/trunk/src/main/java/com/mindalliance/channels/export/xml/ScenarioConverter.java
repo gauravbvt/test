@@ -4,7 +4,7 @@ import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Delay;
+import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
@@ -12,6 +12,7 @@ import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.UserIssue;
@@ -73,32 +74,8 @@ public class ScenarioConverter extends AbstractChannelsConverter {
         writer.setValue( scenario.getDescription() );
         writer.endNode();
         exportDetectionWaivers( scenario, writer );
-        if ( scenario.getLocation() != null ) {
-            writer.startNode( "location" );
-            writer.setValue( scenario.getLocation().getName() );
-            writer.endNode();
-        }
-        if ( scenario.isIncident() ) {
-            writer.startNode( "incident" );
-            writer.setValue( "" + scenario.isIncident() );
-            writer.endNode();
-        }
-        if ( scenario.isSelfTerminating() ) {
-            writer.startNode( "expected-duration" );
-            writer.setValue( scenario.getCompletionTime().toString() );
-            writer.endNode();
-        }
-        for ( Part initiator : scenario.getInitiators() ) {
-            writer.startNode( "initiator" );
-            writer.addAttribute( "scenario", initiator.getScenario().getName() );
-            writer.startNode( "scenario-description" );
-            writer.setValue( initiator.getScenario().getDescription() );
-            writer.endNode();
-            ConverterUtils.writePartSpecification( initiator, writer );
-            writer.endNode();
-        }
-        // All entities if not within a plan export
         if ( context.get( "exporting-plan" ) == null ) {
+            // All entities if not within a plan export
             Iterator<ModelObject> entities = queryService.iterateEntities();
             while ( entities.hasNext() ) {
                 ModelObject entity = entities.next();
@@ -107,11 +84,23 @@ public class ScenarioConverter extends AbstractChannelsConverter {
                 writer.endNode();
             }
         }
+        // Trigger event
+        if ( scenario.getEvent() != null ) {
+            writer.startNode( "trigger-event" );
+            writer.setValue( scenario.getEvent().getName() );
+            writer.endNode();
+        }
         // Scenario user issues
         List<Issue> issues = queryService.findAllUserIssues( scenario );
         for ( Issue issue : issues ) {
             writer.startNode( "issue" );
             context.convertAnother( issue );
+            writer.endNode();
+        }
+        // Risks in scope
+        for ( Risk risk : scenario.getRisks() ) {
+            writer.startNode( "risk" );
+            context.convertAnother( risk );
             writer.endNode();
         }
         // Parts
@@ -121,6 +110,7 @@ public class ScenarioConverter extends AbstractChannelsConverter {
             context.convertAnother( parts.next() );
             writer.endNode();
         }
+        // Flows
         Iterator<Flow> flows = scenario.flows();
         while ( flows.hasNext() ) {
             writer.startNode( "flow" );
@@ -154,16 +144,8 @@ public class ScenarioConverter extends AbstractChannelsConverter {
                 scenario.setDescription( reader.getValue() );
             } else if ( nodeName.equals( "detection-waivers" ) ) {
                 importDetectionWaivers( scenario, reader );
-            } else if ( nodeName.equals( "location" ) ) {
-                scenario.setLocation( queryService.findOrCreate( Place.class, reader.getValue() ) );
-            } else if ( nodeName.equals( "incident" ) ) {
-                scenario.setIncident( reader.getValue().equals( "true" ) );
-            } else if ( nodeName.equals( "expected-duration" ) ) {
-                scenario.setSelfTerminating( true );
-                scenario.setCompletionTime( Delay.parse( reader.getValue() ) );
-            } else if ( nodeName.equals( "initiator" ) ) {
-                resolveInitiator( reader, scenario );
-                // Entities
+            } else if ( nodeName.equals( "event" ) ) {
+                context.convertAnother( scenario, Event.class );
             } else if ( nodeName.equals( "actor" ) ) {
                 context.convertAnother( scenario, Actor.class );
             } else if ( nodeName.equals( "organization" ) ) {
@@ -172,11 +154,19 @@ public class ScenarioConverter extends AbstractChannelsConverter {
                 context.convertAnother( scenario, Role.class );
             } else if ( nodeName.equals( "place" ) ) {
                 context.convertAnother( scenario, Place.class );
+                // Event
+            } else if ( nodeName.equals( "trigger-event" ) ) {
+                Event event = getQueryService().findOrCreate( Event.class, reader.getValue() );
+                scenario.setEvent( event );
                 // Parts and flows
             } else if ( nodeName.equals( "part" ) ) {
                 context.convertAnother( scenario, Part.class );
             } else if ( nodeName.equals( "flow" ) ) {
                 context.convertAnother( scenario, Flow.class );
+                // Risks
+            } else if ( nodeName.equals( "risk" ) ) {
+                Risk risk = (Risk) context.convertAnother( scenario, Risk.class );
+                scenario.addRisk( risk );
                 // Issues
             } else if ( nodeName.equals( "issue" ) ) {
                 context.convertAnother( scenario, UserIssue.class );
@@ -191,51 +181,7 @@ public class ScenarioConverter extends AbstractChannelsConverter {
         state.put( "scenario", scenario );
         state.put( "idMap", context.get( "idMap" ) );
         state.put( "proxyConnectors", context.get( "proxyConnectors" ) );
-        state.put( "portalConnectors", context.get( "portalConnectors" ) );
         return state;
-    }
-
-    private void resolveInitiator( HierarchicalStreamReader reader, Scenario scenario ) {
-        String externalScenarioName = reader.getAttribute( "scenario" );
-        String externalScenarioDescription = "";
-        String roleName = null;
-        String organizationName = null;
-        String task = null;
-        String taskDescription = "";
-        while ( reader.hasMoreChildren() ) {
-            reader.moveDown();
-            String nodeName = reader.getNodeName();
-            if ( nodeName.equals( "scenario-description" ) ) {
-                externalScenarioDescription = reader.getValue();
-            } else if ( !nodeName.equals( "part-id" ) ) {
-                String name = reader.getAttribute( "name" ).trim();
-                if ( nodeName.equals( "part-role" ) ) {
-                    roleName = name;
-                } else if ( nodeName.equals( "part-task" ) ) {
-                    task = name;
-                    taskDescription = reader.getValue();
-                } else if ( nodeName.equals( "part-organization" ) ) {
-                    organizationName = name;
-                }
-            }
-            reader.moveUp();
-        }
-        List<Scenario> externalScenarios = ConverterUtils.findMatchingScenarios(
-                externalScenarioName,
-                externalScenarioDescription,
-                getQueryService() );
-        for ( Scenario externalScenario : externalScenarios ) {
-            List<Part> externalParts = ConverterUtils.findMatchingParts(
-                    externalScenario,
-                    roleName,
-                    organizationName,
-                    task,
-                    taskDescription );
-            for ( Part externalPart : externalParts ) {
-                scenario.addInitiator( externalPart );
-            }
-        }
-
     }
 
 }

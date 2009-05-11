@@ -1,30 +1,32 @@
-package com.mindalliance.channels.pages.components.menus;
+package com.mindalliance.channels.pages.components.plan.menus;
 
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AddUserIssue;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
+import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.pages.components.menus.CommandWrapper;
+import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.PropertyModel;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Entity panel actions menu.
+ * Plan edit action menu.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: Mar 24, 2009
- * Time: 12:57:11 PM
+ * Date: May 7, 2009
+ * Time: 5:07:23 AM
  */
-public class EntityActionsMenuPanel extends MenuPanel {
+public class PlanEditActionsMenuPanel extends MenuPanel {
 
-    public EntityActionsMenuPanel( String id, IModel<? extends Identifiable> model ) {
+    public PlanEditActionsMenuPanel( String id, IModel<? extends Identifiable> model ) {
         super( id, model, null );
         init();
     }

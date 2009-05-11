@@ -7,19 +7,19 @@
         lang="en">
 <body>
 <wicket:panel>
-    <div id="entity">
-        <div class="header">
-            <div wicket:id="banner">
+    <div wicket:id="mo">  <!-- class="entity" or "plan" etc. added programmatically -->
+        <div wicket:id="banner">
+            <div class="header">
                 <h1 wicket:id="header-title">[Entity name]</h1>
                 <span class="menubar">
-                    <span wicket:id="entityShowMenu">[entity pages menu]</span>
-                    <span wicket:id="entityActionsMenu">[entity action menu]</span>
+                    <span wicket:id="showMenu">[show menu]</span>
+                    <span wicket:id="actionMenu">[action menu]</span>
                     <span class="menuitem"><a wicket:id="close" href="#">Close</a></span>
                 </span>
             </div>
         </div>
         <div class="aspect" wicket:id="aspect">[aspect panel]</div>
-   </div>
+    </div>
 </wicket:panel>
 </body>
 </html>

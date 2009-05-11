@@ -5,6 +5,7 @@ import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Job;
@@ -14,6 +15,7 @@ import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.util.Play;
@@ -188,7 +190,7 @@ public interface QueryService extends Service {
      * Find all plays for the resource
      *
      * @param resourceSpec a resource
-     * @param specific whether the plays are specific to the resourceSpec
+     * @param specific     whether the plays are specific to the resourceSpec
      * @return a list of plays
      */
     List<Play> findAllPlays( ResourceSpec resourceSpec, boolean specific );
@@ -212,6 +214,7 @@ public interface QueryService extends Service {
 
     /**
      * Find all relevant channels for a given resource spec.
+     *
      * @param spec the spec
      * @return the channels
      */
@@ -290,7 +293,7 @@ public interface QueryService extends Service {
      * @param role         the role, possibly Role.UNKNOWN
      * @return a sorted list of actors
      */
-     List<Actor> findActors( Organization organization, Role role );
+    List<Actor> findActors( Organization organization, Role role );
 
     /**
      * Find all roles in given organization across all scenarios.
@@ -307,7 +310,7 @@ public interface QueryService extends Service {
      */
     List<Organization> findOrganizations();
 
-        /**
+    /**
      * Find actors that should be included in a flow of a part.
      *
      * @param part the part
@@ -328,6 +331,7 @@ public interface QueryService extends Service {
 
     /**
      * Whether the actor is referenced in another model object.
+     *
      * @param actor an actor
      * @return a boolean
      */
@@ -335,6 +339,7 @@ public interface QueryService extends Service {
 
     /**
      * Whether the role is referenced in another model object.
+     *
      * @param role a role
      * @return a boolean
      */
@@ -342,6 +347,7 @@ public interface QueryService extends Service {
 
     /**
      * Whether the organization is referenced in another model object.
+     *
      * @param organization an organization
      * @return a boolean
      */
@@ -349,10 +355,19 @@ public interface QueryService extends Service {
 
     /**
      * Whether the place is referenced in another model object.
+     *
      * @param place a place
      * @return a boolean
      */
     boolean isReferenced( Place place );
+
+    /**
+     * Whether the plan event is referenced in another model object.
+     *
+     * @param event a plan event
+     * @return a boolean
+     */
+    boolean isReferenced( Event event );
 
     /**
      * Called when application is terminated.
@@ -361,8 +376,9 @@ public interface QueryService extends Service {
 
     /**
      * Find all issues attributable to entities and parts matching a resource spec.
+     *
      * @param resourceSpec a resource spec
-     * @param specific a boolean -- true -> equality match, false -> marrow or equals
+     * @param specific     a boolean -- true -> equality match, false -> marrow or equals
      * @return a list of issues
      */
     List<Issue> findAllIssuesFor( ResourceSpec resourceSpec, boolean specific );
@@ -370,6 +386,7 @@ public interface QueryService extends Service {
     /**
      * Find all responsibilities of an actor.
      * A responsibility is a found resourceSpec that includes the actor, but with the actor removed.
+     *
      * @param actor an actor
      * @return a list of resource specifications
      */
@@ -378,8 +395,9 @@ public interface QueryService extends Service {
     /**
      * Find any relationship between a scenario and another.
      * A relationship is one or more external flow in the from-scenario referencing a connector in the to-scenario.
+     *
      * @param fromScenario a scenario
-     * @param toScenario a scenario
+     * @param toScenario   a scenario
      * @return a scenario relationship or null if no link exists
      */
     ScenarioRelationship findScenarioRelationship( Scenario fromScenario, Scenario toScenario );
@@ -387,14 +405,16 @@ public interface QueryService extends Service {
     /**
      * Find any relationship between an entity and an other.
      * A relationship is one or more flow from the entity to the other.
+     *
      * @param fromEntity an entity
-     * @param toEntity an entity
+     * @param toEntity   an entity
      * @return an entity relationship or null if no link exists
      */
-    <T extends ModelObject>EntityRelationship<T> findEntityRelationship( T fromEntity, T toEntity );
+    <T extends ModelObject> EntityRelationship<T> findEntityRelationship( T fromEntity, T toEntity );
 
     /**
      * Find all jobs, confirmed or not, of an actor.
+     *
      * @param actor an actor
      * @return a list of jobs
      */
@@ -402,6 +422,7 @@ public interface QueryService extends Service {
 
     /**
      * Find all confirmed jobs with resource spec
+     *
      * @param resourceSpec a resource spec
      * @return a list of jobs
      */
@@ -409,6 +430,7 @@ public interface QueryService extends Service {
 
     /**
      * Find all job titles of an actor.
+     *
      * @param actor an actor
      * @return a list of strings
      */
@@ -416,6 +438,7 @@ public interface QueryService extends Service {
 
     /**
      * Find if part is ever started.
+     *
      * @param part a part
      * @return a boolean
      */
@@ -423,6 +446,7 @@ public interface QueryService extends Service {
 
     /**
      * Whether the scenario can ever start.
+     *
      * @param scenario a scenario
      * @return a boolean
      */
@@ -430,6 +454,7 @@ public interface QueryService extends Service {
 
     /**
      * Find all parts that has the specified resource.
+     *
      * @param resourceSpec a resource spec
      * @return a list of parts
      */
@@ -437,6 +462,7 @@ public interface QueryService extends Service {
 
     /**
      * Find all parts located at a given place.
+     *
      * @param place a place
      * @return a list of parts
      */
@@ -444,6 +470,7 @@ public interface QueryService extends Service {
 
     /**
      * Find the unsatisfied needs of a part.
+     *
      * @param part a part
      * @return list of needs (flows with connectors as sources)
      */
@@ -451,6 +478,7 @@ public interface QueryService extends Service {
 
     /**
      * Find the unused capabilities of a part.
+     *
      * @param part a part
      * @return list of capabilities (flows with connectors as targets)
      */
@@ -458,15 +486,48 @@ public interface QueryService extends Service {
 
     /**
      * Find all connectors for capabilities that match a need.
+     *
      * @param need a flow
      * @return a list of connectors
      */
     List<Connector> findAllSatificers( Flow need );
 
     /**
-     * Find the first title associated to an actor in any jobs.
-     * @param actor yhe actor
-     * @return a title or the empty string, when no title was found
+     * Find all parts in a plan that cause the event to which a given scenario responds.
+     *
+     * @param scenario a scenario
+     * @return a list of parts
+     */
+    public List<Part> findInitiators( Scenario scenario );
+
+    /**
+     * Whether a task in another scenario causes the event the given scenario responds to.
+     *
+     * @param scenario a scenario
+     * @return a boolean
+     */
+    boolean isInitiated( Scenario scenario );
+
+    /**
+     * Get title for actor.
+     *
+     * @param actor an actor
+     * @return a string
      */
     String getTitle( Actor actor );
+
+    /**
+     * Find all events that are not an incident.
+     *
+     * @return a list of plan events
+     */
+    List<Event> findPlannedEvents();
+
+    /**
+     * Find all parts that mitigate a risk or terminate the event cause.
+     * @param scenario
+     * @param risk
+     * @return a list of parts
+     */
+    List<Part> findMitigations( Scenario scenario, Risk risk );
 }

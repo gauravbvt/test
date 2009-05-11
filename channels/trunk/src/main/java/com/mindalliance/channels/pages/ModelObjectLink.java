@@ -1,14 +1,14 @@
 package com.mindalliance.channels.pages;
 
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.command.Change;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.AttributeModifier;
 
 /**
  * A link to a model object.
@@ -39,7 +39,14 @@ public class ModelObjectLink extends AbstractUpdatablePanel {
     private void init() {
         AjaxFallbackLink link = new AjaxFallbackLink( "link" ) {
             public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Selected, moModel.getObject() ) );
+                ModelObject mo = moModel.getObject();
+                if ( mo != null ) {
+                    if ( mo.isEntity() ) {
+                        update( target, new Change( Change.Type.Expanded, mo ) );
+                    } else {
+                        update( target, new Change( Change.Type.Selected, mo ) );
+                    }
+                }
             }
         };
         add( link );

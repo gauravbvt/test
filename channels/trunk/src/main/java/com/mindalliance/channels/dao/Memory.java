@@ -10,6 +10,7 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.InternalFlow;
@@ -110,7 +111,7 @@ public class Memory extends Observable implements Dao {
      * {@inheritDoc}
      */
     public void load() {
-        // Load app data
+        // Load plan data
         for ( Plan plan : getChannels().getPlans() ) {
             try {
                 getChannels().beginUsingPlan( plan );
@@ -194,7 +195,7 @@ public class Memory extends Observable implements Dao {
             if ( !directory.exists() ) {
                 directory.mkdir();
             }
-            directory = new File( dataDirectoryPath + "/" + sanitize( plan.getName() ) );
+            directory = new File( dataDirectoryPath + "/" + sanitize( plan.getUri() ) );
             if ( !directory.exists() ) {
                 directory.mkdir();
             }
@@ -263,7 +264,7 @@ public class Memory extends Observable implements Dao {
     }
 
     private void takeSnapshot( Plan plan ) throws IOException {
-        LOG.info( "Taking snapshot of plan " + plan );
+        LOG.info( "Taking snapshot of plan " + plan.getUri() );
         // Make backup
         File dataFile = getDataFile( plan );
         if ( dataFile.length() > 0 ) {
@@ -335,10 +336,13 @@ public class Memory extends Observable implements Dao {
     /**
      * {@inheritDoc}
      */
-    public Plan makePlan() {
+    public Plan createPlan() {
         Plan plan = new Plan();
         plan.setName( "UNNAMED" );
         plan.setId( newId() );
+        Event event = new Event();
+        event.setId( newId() );
+        plan.addIncident( event );
         return plan;
     }
 
@@ -360,13 +364,11 @@ public class Memory extends Observable implements Dao {
     public void add( ModelObject object ) {
         if ( getIdIndex().containsKey( object.getId() ) )
             throw new DuplicateKeyException();
-
         object.setId( newId() );
         getIdIndex().put( object.getId(), object );
-
-        if ( object instanceof Scenario )
+        if ( object instanceof Scenario ) {
             Channels.getPlan().getScenarios().add( (Scenario) object );
-
+        }
     }
 
     /**

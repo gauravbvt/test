@@ -1,7 +1,7 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.util.SemMatch;
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.util.SemMatch;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 
@@ -13,15 +13,15 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import java.text.MessageFormat;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * A part in a scenario.
  */
 @Entity
 public class Part extends Node {
-
-    // TODO Should describe severity level of failure
 
     /**
      * Default actor label, when unknown.
@@ -85,13 +85,17 @@ public class Part extends Node {
      */
     private boolean startsWithScenario;
     /**
-     * Whether the part can terminate the scenario.
+     * Whether the part can terminate the event the scenario responds to.
      */
-    private boolean terminatesScenario;
+    private boolean terminatesEvent;
     /**
-     * The scenario, if any, this part can initiate.
+     * Event this part initiates.
      */
-    private Scenario initiatedScenario;
+    private Event initiatedEvent;
+    /**
+     * Scenario risks mitigated.
+     */
+    private Set<Risk> mitigations = new HashSet<Risk>();
 
     public Part() {
         adjustName();
@@ -268,11 +272,7 @@ public class Part extends Node {
      */
     public boolean isImpliedBy( ResourceSpec resourceSpec ) {
         ResourceSpec partResourceSpec = resourceSpec();
-        if ( partResourceSpec.isAnyone() ) {
-            return false;
-        } else {
-            return resourceSpec.narrowsOrEquals( partResourceSpec );
-        }
+        return !partResourceSpec.isAnyone() && resourceSpec.narrowsOrEquals( partResourceSpec );
     }
 
     /**
@@ -327,26 +327,28 @@ public class Part extends Node {
         this.startsWithScenario = startsWithScenario;
     }
 
-    public boolean isTerminatesScenario() {
-        return terminatesScenario;
+    public boolean isTerminatesEvent() {
+        return terminatesEvent;
     }
 
-    public void setTerminatesScenario( boolean terminatesScenario ) {
-        this.terminatesScenario = terminatesScenario;
+    public void setTerminatesEvent( boolean terminatesEvent ) {
+        this.terminatesEvent = terminatesEvent;
     }
 
-    public Scenario getInitiatedScenario() {
-        return initiatedScenario;
+    public Event getInitiatedEvent() {
+        return initiatedEvent;
     }
 
-    public void setInitiatedScenario( Scenario sc ) {
-        Scenario priorInitiated = initiatedScenario;
-        if ( priorInitiated != null ) {
-            initiatedScenario = null;
-            priorInitiated.removeInitiator( this );
-        }
-        initiatedScenario = sc;
-        if ( sc != null ) sc.addInitiator( this );
+    public void setInitiatedEvent( Event initiatedEvent ) {
+        this.initiatedEvent = initiatedEvent;
+    }
+
+    public Set<Risk> getMitigations() {
+        return mitigations;
+    }
+
+    public void setMitigations( Set<Risk> mitigations ) {
+        this.mitigations = mitigations;
     }
 
     /**
@@ -354,9 +356,7 @@ public class Part extends Node {
      * @param dataQueryObject
      */
     public void beforeRemove( QueryService dataQueryObject ) {
-        if ( initiatedScenario != null ) {
-            initiatedScenario.removeInitiator( this );
-        }
+        // do nothing
     }
 
     /**

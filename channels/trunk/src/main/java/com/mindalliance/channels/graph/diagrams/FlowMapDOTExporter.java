@@ -1,13 +1,14 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
+import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.MetaProvider;
-import com.mindalliance.channels.graph.AbstractMetaProvider;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Scenario;
 import org.jgrapht.Graph;
 
 import java.io.PrintWriter;
@@ -63,11 +64,12 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         for ( Node node : g.vertexSet() ) {
             if ( node.isPart() ) {
                 Part part = (Part) node;
-                if ( part.getInitiatedScenario() == scenario ) {
+                assert scenario.getEvent() != null;
+                if ( part.getInitiatedEvent() == scenario.getEvent() ) {
                     assert ( part.getScenario() != scenario );
                     initiators.add( part );
                 } else if ( part.getScenario() == scenario ) {
-                    if ( part.isTerminatesScenario() ) {
+                    if ( part.isTerminatesEvent() ) {
                         terminators.add( part );
                     }
                     if ( part.isStartsWithScenario() ) {
@@ -127,9 +129,11 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         attributes.add( new DOTAttribute( "fontsize", FlowMapMetaProvider.NODE_FONT_SIZE ) );
         attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
-        attributes.add( new DOTAttribute( "label", "Scenario begins" ) );
+        Scenario scenario = (Scenario)metaProvider.getContext();
+        String label = scenario.getEvent().getName() + " starts";
+        attributes.add( new DOTAttribute( "label", label ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
-        attributes.add( new DOTAttribute( "tooltip", "Scenario begins" ) );
+        attributes.add( new DOTAttribute( "tooltip", label ) );
         attributes.add( new DOTAttribute( "image", metaProvider.getImageDirectory() + "/" + "start.png" ) );
         out.print( getIndent() );
         out.print( START );
@@ -144,9 +148,11 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         attributes.add( new DOTAttribute( "fontsize", FlowMapMetaProvider.NODE_FONT_SIZE ) );
         attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
-        attributes.add( new DOTAttribute( "label", "Scenario ends" ) );
+        Scenario scenario = (Scenario)metaProvider.getContext();
+        String label = scenario.getEvent().getName() + " ends";
+        attributes.add( new DOTAttribute( "label", label ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
-        attributes.add( new DOTAttribute( "tooltip", "Scenario ends" ) );
+        attributes.add( new DOTAttribute( "tooltip", label ) );
         attributes.add( new DOTAttribute( "image", metaProvider.getImageDirectory() + "/" + "stop.png" ) );
         out.print( getIndent() );
         out.print( STOP );
@@ -165,13 +171,13 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     private void exportInitiations( PrintWriter out, Graph<Node, Flow> g ) {
         for ( Part initiator : initiators ) {
             List<DOTAttribute> attributes = getTimingEdgeAttributes();
-            attributes.add( new DOTAttribute( "label", makeLabelAboutScenario(
+            attributes.add( new DOTAttribute( "label", makeLabelAboutModelObject(
                     "Causes",
-                    initiator.getInitiatedScenario() ) ) );
+                    initiator.getInitiatedEvent() ) ) );
             attributes.add( new DOTAttribute(
                     "tooltip",
                     sanitize( "Causes "
-                    + initiator.getInitiatedScenario().getName().toLowerCase() ) ) );
+                    + initiator.getInitiatedEvent().getName().toLowerCase() ) ) );
             String initiatorId = getVertexID( initiator );
             out.print( getIndent() + initiatorId + getArrow( g ) + START );
             out.print( "[" );
@@ -199,13 +205,13 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     private void exportTerminations( PrintWriter out, Graph<Node, Flow> g ) {
         for ( Part terminator : terminators ) {
             List<DOTAttribute> attributes = getTimingEdgeAttributes();
-            attributes.add( new DOTAttribute( "label", makeLabelAboutScenario(
+            attributes.add( new DOTAttribute( "label", makeLabelAboutModelObject(
                     "Ends",
                     terminator.getScenario() ) ) );
             attributes.add( new DOTAttribute(
                     "tooltip",
                     sanitize( "Ends "
-                    + terminator.getScenario().getName().toLowerCase() ) ) );
+                    + terminator.getScenario().getEvent().getName().toLowerCase() ) ) );
             String terminatorId = getVertexID( terminator );
             out.print( getIndent() + terminatorId + getArrow( g ) + STOP );
             out.print( "[" );
@@ -216,9 +222,9 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         }
     }
 
-    private String makeLabelAboutScenario( String s, Scenario scenario ) {
+    private String makeLabelAboutModelObject( String s, ModelObject mo ) {
         return AbstractMetaProvider.separate(
-                s + " " + scenario.getName().toLowerCase(),
+                s + " " + mo.getName().toLowerCase(),
                 AbstractMetaProvider.LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" );
     }
 

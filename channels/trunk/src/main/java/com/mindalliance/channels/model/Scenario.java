@@ -2,6 +2,7 @@ package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 
@@ -37,7 +38,7 @@ public class Scenario extends ModelObject {
     /**
      * The default description for new scenarios.
      */
-    public static final String DEFAULT_DESCRIPTION = "A scenario";
+    public static final String DEFAULT_DESCRIPTION = "No description";
 
     /**
      * Initial node capacity.
@@ -49,26 +50,13 @@ public class Scenario extends ModelObject {
      */
     private Map<Long, Node> nodeIndex;
     /**
-     * Whether not meant to be caused during the plan.
+     * Plan event responded to by this scenario.
      */
-    private boolean incident;
+    private Event event;
     /**
-     * Parts that can initiate this scenario.
+     * Risks to be mitigated in this scenario.
      */
-    private Set<Part> initiators = new HashSet<Part>();
-    /**
-     * The spatial scope of the scenario.
-     * Everywhere if null.
-     */
-    private Place location;
-    /**
-     * Whether the scenario can terminate on its own.
-     */
-    private boolean selfTerminating;
-    /**
-     * How long it usually takes for the scenario to terminate on its own, if it does.
-     */
-    private Delay completionTime = new Delay();
+    private List<Risk> risks = new ArrayList<Risk>();
 
     /**
      * The query service in charge of this scenario.
@@ -89,45 +77,42 @@ public class Scenario extends ModelObject {
         this.nodeIndex = nodeIndex;
     }
 
-    public boolean isIncident() {
-        return incident;
+    public Event getEvent() {
+        return event;
     }
 
-    public void setIncident( boolean incident ) {
-        this.incident = incident;
+    public void setEvent( Event event ) {
+        this.event = event;
     }
 
-    @OneToMany
-    public Set<Part> getInitiators() {
-        return initiators;
+    public List<Risk> getRisks() {
+        return risks;
     }
 
-    public void setInitiators( Set<Part> initiators ) {
-        this.initiators = initiators;
+    public void setRisks( List<Risk> risks ) {
+        this.risks = risks;
     }
 
-    public Place getLocation() {
-        return location;
+    /**
+     * Add a risk.
+     *
+     * @param risk a risk
+     */
+    public void addRisk( Risk risk ) {
+        risks.add( risk );
     }
 
-    public void setLocation( Place location ) {
-        this.location = location;
-    }
-
-    public boolean isSelfTerminating() {
-        return selfTerminating;
-    }
-
-    public void setSelfTerminating( boolean selfTerminating ) {
-        this.selfTerminating = selfTerminating;
-    }
-
-    public Delay getCompletionTime() {
-        return completionTime;
-    }
-
-    public void setCompletionTime( Delay completionTime ) {
-        this.completionTime = completionTime;
+    /**
+     * Remove a risk.
+     *
+     * @param risk a risk
+     */
+    public void removeRisk( Risk risk ) {
+        List<Part> mitigators = getMitigators( risk );
+        for ( Part part : mitigators ) {
+            part.getMitigations().remove( risk );
+        }
+        risks.remove( risk );
     }
 
     /**
@@ -165,9 +150,9 @@ public class Scenario extends ModelObject {
     /**
      * Convenience accessor for tests.
      *
-     * @param queryService   the underlying store
-     * @param actor the actor for the new part
-     * @param task  the task of the new part
+     * @param queryService the underlying store
+     * @param actor        the actor for the new part
+     * @param task         the task of the new part
      * @return the new part
      */
     public Part createPart( QueryService queryService, Actor actor, String task ) {
@@ -181,9 +166,9 @@ public class Scenario extends ModelObject {
     /**
      * Convenience accessor for tests.
      *
-     * @param queryService  the underlying store
-     * @param role the role for the new part
-     * @param task the task of the new part
+     * @param queryService the underlying store
+     * @param role         the role for the new part
+     * @param task         the task of the new part
      * @return the new part
      */
     public Part createPart( QueryService queryService, Role role, String task ) {
@@ -212,8 +197,7 @@ public class Scenario extends ModelObject {
      */
     public void removeNode( Node node ) {
         if ( getNodeIndex().containsKey( node.getId() )
-                && ( node.isConnector() || hasMoreThanOnePart() ) )
-        {
+                && ( node.isConnector() || hasMoreThanOnePart() ) ) {
             Iterator<Flow> ins = node.requirements();
             while ( ins.hasNext() ) {
                 ins.next().disconnect();
@@ -275,7 +259,7 @@ public class Scenario extends ModelObject {
      *
      * @return an iterator on connectors having outcomes
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<Connector> inputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -290,7 +274,7 @@ public class Scenario extends ModelObject {
      *
      * @return an iterator on parts
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<Part> parts() {
         return (Iterator<Part>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -305,7 +289,7 @@ public class Scenario extends ModelObject {
      *
      * @return an iterator on connectors having requirements
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<Connector> outputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -425,7 +409,8 @@ public class Scenario extends ModelObject {
      *
      * @param id a long
      * @return a flow
-     * @throws NotFoundException if not found
+     * @throws com.mindalliance.channels.NotFoundException
+     *          if not found
      */
     public Flow findFlow( long id ) throws NotFoundException {
         Flow flow = null;
@@ -444,6 +429,7 @@ public class Scenario extends ModelObject {
     }
 
     public void setQueryService( QueryService queryService ) {
+        assert queryService != null;
         this.queryService = queryService;
     }
 
@@ -460,46 +446,45 @@ public class Scenario extends ModelObject {
         return count;
     }
 
-    /**
-     * Add part as initiator.
-     *
-     * @param part a part
-     */
-    public void addInitiator( Part part ) {
-        initiators.add( part );
-        if ( part.getInitiatedScenario() != this ) {
-            part.setInitiatedScenario( this );
-        }
-    }
 
-    /**
-     * Remove part as initiator.
-     *
-     * @param part a part
-     */
-    public void removeInitiator( Part part ) {
-        initiators.remove( part );
-        if ( part.getInitiatedScenario() == this ) {
-            part.setInitiatedScenario( null );
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void beforeRemove( QueryService dataQueryObject ) {
-        for ( Part part : initiators ) {
-            part.setInitiatedScenario( null );
-        }
+        // do nothing
     }
 
     /**
-     * Whether this scenario has initiators.
-     * @return true if the scenario was initiated
+     * Get risk given type and name of organization.
+     *
+     * @param type             a risk type
+     * @param organizationName a string
+     * @return a risk or null if none matching
      */
-    @Transient
-    public boolean isInitiated() {
-        return !getInitiators().isEmpty();
+    public Risk getRisk( final Risk.Type type, final String organizationName ) {
+        return (Risk) CollectionUtils.select( risks, new Predicate() {
+            public boolean evaluate( Object obj ) {
+                Risk risk = (Risk) obj;
+                return risk.getType() == type
+                        && risk.getOrganization().getName().equals( organizationName );
+            }
+        } );
     }
+
+    /**
+     * Find all parts that mitigate a given risk.
+     *
+     * @param risk a risk
+     * @return a list of parts
+     */
+    public List<Part> getMitigators( Risk risk ) {
+        List<Part> mitigators = new ArrayList<Part>();
+        Iterator<Part> parts = parts();
+        while ( parts.hasNext() ) {
+            Part part = parts.next();
+            if ( part.getMitigations().contains( risk ) ) mitigators.add( part );
+        }
+        return mitigators;
+    }
+
+
 
     //=================================================
     /**
@@ -534,7 +519,7 @@ public class Scenario extends ModelObject {
             }
         }
 
-        @SuppressWarnings( { "unchecked" } )
+        @SuppressWarnings( {"unchecked"} )
         private void setIterators( Node node ) {
             outcomeIterator = node.outcomes();
             reqIterator = (Iterator<Flow>) new FilterIterator(

@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.reports;
 
+import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
 import org.apache.commons.collections.iterators.IteratorChain;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -84,14 +84,14 @@ public class PartReportPanel extends Panel {
         add( starts );
 
         WebMarkupContainer terminates = new WebMarkupContainer( "terminates" );           // NON-NLS
-        terminates.setVisible( part.isTerminatesScenario() );
+        terminates.setVisible( part.isTerminatesEvent() );
         add( terminates );
 
-        Scenario initiatedScenario = part.getInitiatedScenario();
+        Event initiatedEvent = part.getInitiatedEvent();
         WebMarkupContainer starting = new WebMarkupContainer( "starting" );               // NON-NLS
-        String name = initiatedScenario == null ? "" : initiatedScenario.getName();
-        starting.add( new Label( "started-scenario", name ) );                            // NON-NLS
-        starting.setVisible( initiatedScenario != null );
+        String name = initiatedEvent == null ? "" : initiatedEvent.getName();
+        starting.add( new Label( "started-event", name ) );                            // NON-NLS
+        starting.setVisible( initiatedEvent != null );
         add( starting );
     }
 

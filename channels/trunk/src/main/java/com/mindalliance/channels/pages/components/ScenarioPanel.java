@@ -10,6 +10,7 @@ import com.mindalliance.channels.model.ScenarioObject;
 import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.menus.PartActionsMenuPanel;
 import com.mindalliance.channels.pages.components.menus.PartShowMenuPanel;
+import com.mindalliance.channels.pages.components.scenario.ScenarioEditPanel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -102,10 +103,6 @@ public class ScenarioPanel extends AbstractCommandablePanel {
      */
     private FlowListPanel reqsFlowPanel;
     /**
-     * Attachement panel.
-     */
-    private AttachmentPanel attachments;
-    /**
      * Width, height dimension contraints on the flow diagram.
      * In inches.
      * None if any is 0.
@@ -168,7 +165,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         partDescription.setOutputMarkupId( true );
         add( partDescription );
 
-        attachments = new AttachmentPanel( "attachments", partModel );                    // NON-NLS
+        AttachmentPanel attachments = new AttachmentPanel( "attachments", partModel );
         add( attachments );
 
         partIssuesPanel = new IssuesPanel( "issues", partModel, getExpansions() );        // NON-NLS
@@ -320,7 +317,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         if ( !change.isNone() ) {
             Identifiable identifiable = change.getSubject();
             if ( identifiable == getScenario() && change.isDisplay() ) {
-                scenarioEditPanel.setVisibility(
+                scenarioEditPanel.setVisibility(       // TODO - needed?
                         target, getExpansions().contains( getScenario().getId() ) );
                 target.addComponent( scenarioEditPanel );
 
@@ -368,13 +365,31 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         target.addComponent( partIssuesPanel );
     }
 
+    /**
+     * Reset scenario edit panel to show details.
+     * @param target an ajax request target
+     */
+    public void resetScenarioEditPanel( AjaxRequestTarget target ) {
+        scenarioEditPanel.setAspectShown( target, ScenarioEditPanel.DETAILS );
+        refreshScenarioEditPanel( target );
+    }
+
+    /**
+     * Refresh the scenario edit panel.
+     * @param target an ajax request target
+     */
     public void refreshScenarioEditPanel( AjaxRequestTarget target ) {
         scenarioEditPanel.refresh( target );
         makeVisible( scenarioEditPanel, getExpansions().contains( getScenario().getId() ) );
         target.addComponent( scenarioEditPanel );
     }
 
+    /**
+     * Refresh the flow map
+     * @param target  an ajax request target
+     */
     public void refreshFlowMapImage( AjaxRequestTarget target ) {
         flowMapDiagramPanel.refreshImage( target );
     }
+
 }

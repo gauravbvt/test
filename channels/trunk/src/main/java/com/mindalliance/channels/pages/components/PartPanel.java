@@ -1,17 +1,17 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Delay;
+import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.UpdateScenarioObject;
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -20,20 +20,15 @@ import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTe
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.commons.lang.StringUtils;
 
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Collections;
-import java.util.Comparator;
 
 /**
  * A view on a Part.
@@ -93,16 +88,33 @@ public class PartPanel extends AbstractCommandablePanel {
      */
     private List<TextField<String>> textFields = new ArrayList<TextField<String>>();
     /**
-     * Initiated scenario choice.
+     * Initiated event.
      */
-    private DropDownChoice initiatedScenarioChoice;
+    private TextField<String> initiatedEventField;
+    /**
+     * Repetition.
+     */
     private DelayPanel repeatsEveryPanel;
+    /**
+     * Completion.
+     */
     private DelayPanel completionTimePanel;
+    /**
+     * Self-termination.
+     */
     private CheckBox selfTerminatingCheckBox;
+    /**
+     * Whether repeating.
+     */
     private CheckBox repeatingCheckBox;
+    /**
+     * Whether starts with scenario.
+     */
     private CheckBox startWithScenarioCheckBox;
+    /**
+     * Whether terminates event scenario responds to.
+     */
     private CheckBox terminatesScenarioCheckBox;
-    private CheckBox initiatesScenarioCheckBox;
 
     //====================================
     public PartPanel( String id, IModel<Part> model ) {
@@ -116,6 +128,7 @@ public class PartPanel extends AbstractCommandablePanel {
         addField( ORG_PROPERTY, getQueryService().findAllNames( Organization.class ) );
         addField( JURISDICTION_PROPERTY, getQueryService().findAllNames( Place.class ) );
         addField( LOCATION_PROPERTY, getQueryService().findAllNames( Place.class ) );
+        addEventInitiation();
         addTimingFields();
         adjustFields();
     }
@@ -132,9 +145,7 @@ public class PartPanel extends AbstractCommandablePanel {
         repeatingCheckBox.setEnabled( isLockedByUser( getPart() ) );
         startWithScenarioCheckBox.setEnabled( isLockedByUser( getPart() ) );
         terminatesScenarioCheckBox.setEnabled( isLockedByUser( getPart() ) );
-        initiatesScenarioCheckBox.setEnabled( isLockedByUser( getPart() ) );
-        initiatedScenarioChoice.setEnabled(
-                getPart().getInitiatedScenario() != null && isLockedByUser( getPart() ) );
+        initiatedEventField.setEnabled( isLockedByUser( getPart() ) );
     }
 
     private void addField( final String property, final Collection<String> choices ) {
@@ -209,6 +220,27 @@ public class PartPanel extends AbstractCommandablePanel {
         }
     }
 
+    private void addEventInitiation() {
+        final List<String> choices = getQueryService().findAllNames( Event.class );
+        initiatedEventField = new AutoCompleteTextField<String>(
+                "initiatedEvent",
+                new PropertyModel<String>( this, "initiatedEventName" ) ) {
+            protected Iterator<String> getChoices( String s ) {
+                List<String> candidates = new ArrayList<String>();
+                for ( String choice : choices ) {
+                    if ( SemMatch.matches( s, choice ) ) candidates.add( choice );
+                }
+                return candidates.iterator();
+
+            }
+        };
+        initiatedEventField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getPart(), "initiatedEvent" ) );
+            }
+        } );
+        add( initiatedEventField );
+    }
 
     private void addTimingFields() {
         repeatsEveryPanel = new DelayPanel(
@@ -256,64 +288,17 @@ public class PartPanel extends AbstractCommandablePanel {
             }
         } );
         terminatesScenarioCheckBox = new CheckBox(
-                "terminatesScenario",
-                new PropertyModel<Boolean>( this, "terminatesScenario" ) );
+                "terminatesEvent",
+                new PropertyModel<Boolean>( this, "terminatesEvent" ) );
         add( terminatesScenarioCheckBox );
         terminatesScenarioCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getPart(), "terminatesScenario" ) );
+                update( target, new Change( Change.Type.Updated, getPart(), "terminatesEvent" ) );
             }
         } );
-        initiatesScenarioCheckBox = new CheckBox(
-                "initiatesScenario",
-                new PropertyModel<Boolean>( this, "initiatesScenario" ) );
-        add( initiatesScenarioCheckBox );
-        initiatesScenarioCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
-                initiatedScenarioChoice.setEnabled( initiatesScenarioCheckBox.getInput() != null );
-                target.addComponent( initiatedScenarioChoice );
-            }
-        } );
-        initiatedScenarioChoice = new DropDownChoice<Scenario>(
-                "initiatedScenario",
-                new PropertyModel<Scenario>( this, "initiatedScenario" ),
-                new PropertyModel<List<? extends Scenario>>( this, "initiatableScenarios" ),
-                new IChoiceRenderer<Scenario>() {
-                    public Object getDisplayValue( Scenario scenario ) {
-                        return StringUtils.abbreviate( scenario.getName(), 20 );
-                    }
-
-                    public String getIdValue( Scenario scenario, int i ) {
-                        return Long.toString( scenario.getId() );
-                    }
-                }
-        );
-        initiatedScenarioChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getPart(), "initiatedScenario" ) );
-            }
-        } );
-        add( initiatedScenarioChoice );
     }
 
     //====================================
-    /**
-     * Get all scenarios that could be initiated by this part.
-     *
-     * @return a list of scenarios
-     */
-    public List<Scenario> getInitiatableScenarios() {
-        List<Scenario> scenarios = new ArrayList<Scenario>();
-        for ( Scenario sc : getQueryService().list( Scenario.class ) ) {
-            if ( sc != getPart().getScenario() ) scenarios.add( sc );
-        }
-        Collections.sort( scenarios, new Comparator<Scenario>() {
-            public int compare( Scenario o1, Scenario o2 ) {
-                return Collator.getInstance().compare( o1.getName(), o2.getName() );
-            }
-        } );
-        return scenarios;
-    }
 
     /**
      * Get the actor string.
@@ -554,60 +539,59 @@ public class PartPanel extends AbstractCommandablePanel {
     }
 
     /**
-     * Does part terminate scenario?
+     * Does part terminate event?
      *
      * @return a boolean
      */
-    public boolean isTerminatesScenario() {
-        return getPart().isTerminatesScenario();
+    public boolean isTerminatesEvent() {
+        return getPart().isTerminatesEvent();
     }
 
     /**
-     * Sets whether terminates scenario.
+     * Sets whether terminates event.
      *
      * @param val a boolean
      */
-    public void setTerminatesScenario( boolean val ) {
-        doCommand( new UpdateScenarioObject( getPart(), "terminatesScenario", val ) );
+    public void setTerminatesEvent( boolean val ) {
+        doCommand( new UpdateScenarioObject( getPart(), "terminatesEvent", val ) );
     }
 
     /**
-     * Does part initiates a scenario?
+     * Event initiated by part, if any.
      *
-     * @return a boolean
+     * @return a plan event
      */
-    public boolean isInitiatesScenario() {
-        return getPart().getInitiatedScenario() != null;
+    public Event getInitiatedEvent() {
+        return getPart().getInitiatedEvent();
     }
 
     /**
-     * Sets whether part initiates a scenario.
+     * Name of event initiated by part, if any.
      *
-     * @param initiates a boolean
+     * @return a plan event name
      */
-    public void setInitiatesScenario( boolean initiates ) {
-        if ( !initiates ) {
-            doCommand( new UpdateScenarioObject( getPart(), "initiatedScenario", null ) );
+    public String getInitiatedEventName() {
+        Event event = getInitiatedEvent();
+        return event != null ? event.getName() : "";
+    }
+
+    /**
+     * Sets whether terminates the scenario's event.
+     *
+     * @param name a plan event name
+     */
+    public void setInitiatedEventName( String name ) {
+        Event oldEvent = getPart().getInitiatedEvent();
+        String oldName = oldEvent == null ? "" : oldEvent.getName();
+        Event newEvent = null;
+        if ( name == null || name.trim().isEmpty() )
+            newEvent = null;
+        else {
+            if ( oldEvent == null || !isSame( name, oldName ) )
+                newEvent = getQueryService().findOrCreate( Event.class, name );
         }
-    }
-
-
-    /**
-     * Scenario initiated by part, if any.
-     *
-     * @return a scenario
-     */
-    public Scenario getInitiatedScenario() {
-        return getPart().getInitiatedScenario();
-    }
-
-    /**
-     * Sets whether terminates scenario.
-     *
-     * @param sc a scenario
-     */
-    public void setInitiatedScenario( Scenario sc ) {
-        doCommand( new UpdateScenarioObject( getPart(), "initiatedScenario", sc ) );
+        doCommand( new UpdateScenarioObject( getPart(), "initiatedEvent", newEvent ) );
+        getCommander().cleanup( Event.class, oldName );
     }
 
 
@@ -640,7 +624,7 @@ public class PartPanel extends AbstractCommandablePanel {
                 if ( field.getId().equals( property ) )
                     addIssues( field, getPart(), property );
             }
-            target.addComponent( initiatedScenarioChoice );
+            target.addComponent( initiatedEventField );
         }
         super.updateWith( target, change );
     }

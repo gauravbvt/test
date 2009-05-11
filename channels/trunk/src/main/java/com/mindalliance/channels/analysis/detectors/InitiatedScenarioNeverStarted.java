@@ -1,12 +1,14 @@
 package com.mindalliance.channels.analysis.detectors;
 
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An initiated scenario can never be caused according to the plan.
@@ -27,13 +29,14 @@ public class InitiatedScenarioNeverStarted extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Scenario scenario = (Scenario) modelObject;
-        if ( !scenario.isIncident() && scenario.isInitiated() ) {
+        Plan plan = Channels.getPlan();
+        if ( !plan.isIncident( scenario.getEvent() ) && getQueryService().isInitiated( scenario ) ) {
             if ( !getQueryService().findIfScenarioStarted( scenario ) ) {
                 Issue issue = makeIssue( Issue.STRUCTURAL, scenario );
-                issue.setDescription( "The scenario can not be caused by planned tasks"
-                        + " because none of the tasks that cause it are started." );
-                issue.setRemediation( "Ensure that tasks that cause this scenario can start,"
-                        + " or make this scenario an unplanned incident or situation." );
+                issue.setDescription( "The scenario would never start"
+                        + " because no other scenario causes the event it responds to." );
+                issue.setRemediation( "Ensure that tasks that cause the event in question are actually started,"
+                        + " or make the event unplanned by adding it to the plan as an incident." );
                 issue.setSeverity( Issue.Level.Major );
                 issues.add( issue );
             }

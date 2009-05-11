@@ -1,5 +1,6 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -12,8 +13,6 @@ import javax.persistence.Transient;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.mindalliance.channels.QueryService;
 
 /**
  * A company, agency, social club, etc.
@@ -44,8 +43,6 @@ public class Organization extends AbstractUnicastChannelable {
      * Whether reoles must have associated actors, else issues.
      */
     private boolean actorsRequired;
-
-    // private List<Job> jobs = new ArrayList<Job>(); // TODO - reflect in DataQueryObject.FindAllResourceSpecs()
 
     public Organization() {
     }

@@ -2,7 +2,9 @@ package com.mindalliance.channels.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,17 +23,18 @@ public class Plan extends ModelObject {
      */
     private Set<Scenario> scenarios = new HashSet<Scenario>();
     /**
-     * Planned-for events.
+     * Unplanned-for events.
      */
-    private Set<PlanEvent> events = new HashSet<PlanEvent>();
+    private List<Event> incidents = new ArrayList<Event>();
     /**
      * Name of client sponsoring the plan.
      */
     private String client = "Unnamed";
     /**
      * Unique resource identifier for the plan.
+     * Always set when application loads.
      */
-    private String uri = "";
+    private String uri;
 
     public Plan() {
     }
@@ -44,12 +47,12 @@ public class Plan extends ModelObject {
 
     // TODO fix persistence, eventually
     @Transient
-    public Set<PlanEvent> getEvents() {
-        return events;
+    public List<Event> getIncidents() {
+        return incidents;
     }
 
-    public void setEvents( Set<PlanEvent> events ) {
-        this.events = events;
+    public void setIncidents( List<Event> incidents ) {
+        this.incidents = incidents;
     }
 
     public String getClient() {
@@ -66,5 +69,34 @@ public class Plan extends ModelObject {
 
     public void setUri( String uri ) {
         this.uri = uri;
+    }
+
+    /**
+     * Add event.
+     *
+     * @param event an event
+     */
+    public void addIncident( Event event ) {
+        if ( !incidents.contains( event ) ) incidents.add( event );
+    }
+
+    /**
+     * Get default event.
+     *
+     * @return a plan event
+     */
+    public Event getDefaultEvent() {
+        assert incidents != null && !incidents.isEmpty();
+        return incidents.iterator().next();
+    }
+
+    /**
+     * Whether an event is an incident.
+     *
+     * @param event a plan event
+     * @return a boolean
+     */
+    public boolean isIncident( Event event ) {
+        return incidents.contains( event );
     }
 }

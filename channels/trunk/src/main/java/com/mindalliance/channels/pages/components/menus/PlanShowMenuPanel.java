@@ -90,7 +90,7 @@ public class PlanShowMenuPanel extends MenuPanel {
             };
             menuItems.add( new LinkMenuItem(
                     "menuItem",
-                    new Model<String>( "Hide plan map" ),
+                    new Model<String>( "Hide plan details" ),
                     planMapLink ) );
         } else {
             AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {
@@ -100,7 +100,7 @@ public class PlanShowMenuPanel extends MenuPanel {
             };
             menuItems.add( new LinkMenuItem(
                     "menuItem",
-                    new Model<String>( "Plan map" ),
+                    new Model<String>( "Plan details" ),
                     planMapLink ) );
         }
         return menuItems;

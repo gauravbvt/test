@@ -1,5 +1,7 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.command.MappedObject;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -15,7 +17,7 @@ import java.io.Serializable;
  * Time: 3:17:00 PM
  */
 @Entity
-public class Job implements Serializable {
+public class Job implements Serializable, Mappable {
 
     /**
      * An actor.
@@ -194,5 +196,18 @@ public class Job implements Serializable {
     @Transient
     public boolean isDefined() {
         return actor != null && role != null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public MappedObject map() {
+        MappedObject mappedObject = new MappedObject( Job.class );
+        mappedObject.set( "id", id );
+        mappedObject.set( "actor", actor );
+        mappedObject.set( "role", role );
+        mappedObject.set( "jurisdiction", jurisdiction );
+        mappedObject.set( "title", title );
+        return mappedObject;
     }
 }

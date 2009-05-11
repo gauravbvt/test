@@ -6,9 +6,9 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Scenario does not terminate on its own and no part terminates it.
@@ -36,18 +36,18 @@ public class ScenarioNeverTerminates extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Scenario scenario = (Scenario) modelObject;
-        if ( !scenario.isSelfTerminating() ) {
+        if ( !scenario.getEvent().isSelfTerminating() ) {
             boolean terminated = false;
             Iterator<Part> parts = scenario.parts();
             while ( !terminated && parts.hasNext() ) {
                 Part part = parts.next();
-                terminated = part.isTerminatesScenario();
+                terminated = part.isTerminatesEvent();
             }
             if ( !terminated ) {
                 Issue issue = makeIssue( Issue.STRUCTURAL, scenario );
-                issue.setDescription( "The scenario never ends." );
-                issue.setRemediation( "Have the scenario end on its own"
-                        + " or make sure at least one task terminates it." );
+                issue.setDescription( "The scenario never ends the event it responds to." );
+                issue.setRemediation( "Have the event end on its own"
+                        + " or have at least one task in the scenario terminate it." );
                 issue.setSeverity( Issue.Level.Major );
                 issues.add( issue );
             }

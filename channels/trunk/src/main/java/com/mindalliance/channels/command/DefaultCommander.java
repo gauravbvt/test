@@ -6,6 +6,7 @@ import com.mindalliance.channels.LockManager;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
@@ -29,7 +30,7 @@ import java.util.Set;
  * Date: Mar 3, 2009
  * Time: 1:47:58 PM
  */
-public class DefaultCommander  extends AbstractService implements Commander {
+public class DefaultCommander extends AbstractService implements Commander {
     /**
      * Logger.
      */
@@ -52,15 +53,15 @@ public class DefaultCommander  extends AbstractService implements Commander {
      * An id translation map.
      */
     // TODO - this could grow unchecked
-    private Map<Long, Long> idMap = Collections.synchronizedMap(new HashMap<Long, Long>());
+    private Map<Long, Long> idMap = Collections.synchronizedMap( new HashMap<Long, Long>() );
     /**
      * Record of when users were most recently active.
      */
-    private Map<String, Long> whenLastActive = Collections.synchronizedMap(new HashMap<String, Long>());
+    private Map<String, Long> whenLastActive = Collections.synchronizedMap( new HashMap<String, Long>() );
     /**
      * Users who timed out but have yet to be refreshed.
      */
-    private Set<String> timedOut = Collections.synchronizedSet(new HashSet<String>());
+    private Set<String> timedOut = Collections.synchronizedSet( new HashSet<String>() );
     /**
      * Default timeout period  in seconds = 5 minutes
      */
@@ -70,7 +71,7 @@ public class DefaultCommander  extends AbstractService implements Commander {
      * A user's copied state of eiher a model object.
      */
     private Map<String, Map<String, Object>> copy = Collections.synchronizedMap(
-            new HashMap<String, Map<String, Object>>());
+            new HashMap<String, Map<String, Object>>() );
 
     /**
      * When timeouts were last checked.
@@ -378,6 +379,8 @@ public class DefaultCommander  extends AbstractService implements Commander {
                         garbage = !queryService.isReferenced( (Organization) mo );
                     else if ( mo instanceof Place )
                         garbage = !queryService.isReferenced( (Place) mo );
+                    else if ( mo instanceof com.mindalliance.channels.model.Event )
+                        garbage = !queryService.isReferenced( (Event) mo );
                     else throw new IllegalArgumentException( "Can't clean up something of class " + clazz );
                     if ( garbage ) {
                         LOG.info( "Removing unused " + mo.getClass().getSimpleName() + " " + mo );

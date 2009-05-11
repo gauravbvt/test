@@ -13,6 +13,7 @@ import com.mindalliance.channels.export.ConnectionSpecification;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
@@ -25,6 +26,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.UserIssue;
@@ -150,12 +152,23 @@ public class DefaultQueryService extends Observable implements QueryService {
      * {@inheritDoc}
      */
     public void initialize() {
+        // TODO - conflict between loaded plan and context-created plan? (ids referenced by plan issues)
+        // First make plans initialized from application context persistent
+        for ( Plan plan : Channels.instance().getPlans() ) {
+            add( plan );
+        }
         getDao().load();
         // Make sure there is at least one plan, if not create it, optionally adding/import scenarios into it.
         List<Plan> plans = getChannels().getPlans();
         if ( plans.isEmpty() ) {
-            Plan plan = getDao().makePlan();
+            Plan plan = getDao().createPlan();
             plans.add( plan );
+        }
+        // make sure each plan has at least one event
+        for ( Plan plan : getChannels().getPlans() ) {
+            if ( plan.getIncidents().isEmpty() ) {
+                plan.addIncident( findOrCreate( Event.class, "UNNAMED" ) );
+            }
         }
         if ( plans.size() == 1 && plans.get( 0 ).getScenarios().isEmpty() ) {
             try {
@@ -313,13 +326,38 @@ public class DefaultQueryService extends Observable implements QueryService {
     public Scenario createScenario() {
         Scenario result = new Scenario();
         getDao().add( result );
-
         result.setName( Scenario.DEFAULT_NAME );
         result.setDescription( Scenario.DEFAULT_DESCRIPTION );
+        // Make sure a scenario responds to an event.
+        result.setEvent( Channels.getPlan().getDefaultEvent() );
         result.setQueryService( this );
         createPart( result );
-
         return result;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isInitiated( Scenario scenario ) {
+        return !findInitiators( scenario ).isEmpty();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Part> findInitiators( Scenario scenario ) {
+        List<Part> initiators = new ArrayList<Part>();
+        Event event = scenario.getEvent();
+        for ( Scenario sc : list( Scenario.class ) ) {
+            if ( sc != scenario ) {
+                Iterator<Part> parts = sc.parts();
+                while ( parts.hasNext() ) {
+                    Part part = parts.next();
+                    if ( part.getInitiatedEvent() == event ) initiators.add( part );
+                }
+            }
+        }
+        return initiators;
     }
 
     /**
@@ -463,11 +501,15 @@ public class DefaultQueryService extends Observable implements QueryService {
         for ( Organization org : list( Organization.class ) ) {
             if ( org.getParent() == organization ) return true;
         }
-        // Look in parts
         for ( Scenario scenario : list( Scenario.class ) ) {
+            // Look in parts
             Iterator<Part> parts = scenario.parts();
             while ( parts.hasNext() ) {
                 if ( parts.next().getOrganization() == organization ) return true;
+            }
+            // Look in scenario risks
+            for ( Risk risk : scenario.getRisks() ) {
+                if ( risk.getOrganization() == organization ) return true;
             }
         }
         return false;
@@ -489,6 +531,26 @@ public class DefaultQueryService extends Observable implements QueryService {
             while ( parts.hasNext() ) {
                 Part part = parts.next();
                 if ( part.getLocation() == place || part.getJurisdiction() == place ) return true;
+            }
+        }
+        // Look in plan events
+        for ( Event event : list( Event.class ) ) {
+            if ( event.getScope() == place ) return true;
+        }
+        return false;
+    }
+
+    public boolean isReferenced( Event event ) {
+        for ( Event incident : Channels.getPlan().getIncidents() ) {
+            if ( incident == event ) return true;
+        }
+        // look in scenarios
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            if ( scenario.getEvent() == event ) return true;
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                Part part = parts.next();
+                if ( part.getInitiatedEvent() == event ) return true;
             }
         }
         return false;
@@ -677,7 +739,7 @@ public class DefaultQueryService extends Observable implements QueryService {
                 }
             }
         }
-        for ( Part part : toScenario.getInitiators() ) {
+        for ( Part part : findInitiators( toScenario ) ) {
             if ( part.getScenario() == fromScenario ) initiators.add( part );
         }
         if ( externalFlows.isEmpty() && initiators.isEmpty() ) {
@@ -691,7 +753,6 @@ public class DefaultQueryService extends Observable implements QueryService {
             return scenarioRelationship;
         }
     }
-
 
     /**
      * {@inheritDoc}
@@ -1271,11 +1332,11 @@ public class DefaultQueryService extends Observable implements QueryService {
     }
 
     private boolean doFindIfScenarioStarted( Scenario scenario, Set<ModelObject> visited ) {
-        if ( scenario.isIncident() ) return true;
+        if ( Channels.getPlan().isIncident( scenario.getEvent() ) ) return true;
         if ( visited.contains( scenario ) ) return false;
         visited.add( scenario );
         boolean started = false;
-        Iterator<Part> initiators = scenario.getInitiators().iterator();
+        Iterator<Part> initiators = findInitiators( scenario ).iterator();
         while ( !started && initiators.hasNext() ) {
             started = doFindIfPartStarted( initiators.next(), visited );
         }
@@ -1290,7 +1351,9 @@ public class DefaultQueryService extends Observable implements QueryService {
         this.channels = channels;
     }
 
-    /** {@inheritsDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public String getTitle( Actor actor ) {
         for ( Job job : findAllJobs( actor ) ) {
             String title = job.getTitle().trim();
@@ -1299,6 +1362,33 @@ public class DefaultQueryService extends Observable implements QueryService {
         }
 
         return "";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Event> findPlannedEvents() {
+        Plan plan = Channels.getPlan();
+        List<Event> plannedEvents = new ArrayList<Event>();
+        for ( Event event : list( Event.class ) ) {
+            if ( !plan.isIncident( event ) ) plannedEvents.add( event );
+        }
+        return plannedEvents;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Part> findMitigations( Scenario scenario, Risk risk ) {
+        List<Part> mitigators = new ArrayList<Part>();
+        Iterator<Part> parts = scenario.parts();
+        while ( parts.hasNext() ) {
+            Part part = parts.next();
+            if ( part.isTerminatesEvent() || part.getMitigations().contains( risk ) ) {
+                mitigators.add( part );
+            }
+        }
+        return mitigators;
     }
 }
 

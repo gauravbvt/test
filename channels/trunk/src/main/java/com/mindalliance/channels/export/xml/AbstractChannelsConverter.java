@@ -66,16 +66,6 @@ public abstract class AbstractChannelsConverter implements Converter {
         return idMap;
     }
 
-/*    protected Map<Connector, List<ConnectionSpecification>> getPortalConnectors( UnmarshallingContext context ) {
-    Map<Connector, List<ConnectionSpecification>> portalConnectors =
-            (Map<Connector, List<ConnectionSpecification>>) context.get( "portalConnectors" );
-    if ( portalConnectors == null ) {
-        portalConnectors = new HashMap<Connector, List<ConnectionSpecification>>();
-        context.put( "portalConnectors", portalConnectors );
-    }
-    return portalConnectors;
-}*/
-
     /**
      * Get proxy connectors: connectors meant to be replaced by external connectors.
      *

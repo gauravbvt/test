@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <h3> Risks managed by the scenario </h3>
+    <div class="risks" wicket:id = incidentsDiv>
+        <table>
+            <thead>
+                <tr>
+                    <td>Event name</td>
+                    <td>Confirmed</td>
+                    <td/>
+                </tr>
+            </thead>
+            <tr wicket:id="incident">
+                <td wicket:id="name-container">
+                    <input wicket:id="name-input" type="text" size="25" title = "Enter event name"/>
+                    <span wicket:id="name-label">name</span>
+                </td>
+                <td><input wicket:id="confirmed" type="checkbox"/></td>
+                <td><a wicket:id="show-link" href="#">Show</a></td>
+            </tr>
+        </table>
+    </div>
+</wicket:panel>
+</body>
+</html>

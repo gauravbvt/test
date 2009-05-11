@@ -98,10 +98,8 @@ public class OrganizationConverter extends EntityConverter {
         if ( nodeName.equals( "actorsRequired" ) ) {
             org.setActorsRequired( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals( "parent" ) ) {
-            org = (Organization) entity;
             org.setParent( getQueryService().findOrCreate( Organization.class, reader.getValue() ) );
         } else if ( nodeName.equals( "location" ) ) {
-            org = (Organization) entity;
             org.setLocation( getQueryService().findOrCreate( Place.class, reader.getValue() ) );
         } else if ( nodeName.equals( "channel" ) ) {
             Channel channel = (Channel) context.convertAnother( scenario, Channel.class );

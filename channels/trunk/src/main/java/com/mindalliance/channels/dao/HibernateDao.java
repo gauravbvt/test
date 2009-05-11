@@ -95,7 +95,7 @@ public class HibernateDao extends JpaDaoSupport implements Dao {
             getJpaTemplate().remove( scenario );
     }
 
-    public Plan makePlan() {
+    public Plan createPlan() {
         return new Plan();
     }
 

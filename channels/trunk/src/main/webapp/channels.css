@@ -21,14 +21,6 @@ body.profile {
     height: 100%;
 }
 
-#sc-details {
-    z-index: 1;
-    position: absolute;
-    right: 2em;
-    top: 6em;
-    padding: 5px;
-}
-
 #contents {
     position: absolute;
     top: 5em;
@@ -109,7 +101,7 @@ div.section-title {
     margin-left: 2px;
 }
 
-#sc-details {
+#scenario {
     width: 32%;
 }
 
@@ -396,7 +388,7 @@ ul.menu li:before {
     content: " \2015  ";
 }
 
-#part ul.menu li:first-child:before, #sc-details ul.menu li:first-child:before {
+#part ul.menu li:first-child:before {
     content: " ";
 }
 
@@ -489,7 +481,7 @@ h1 a, div.caption a {
 }
 
 /** Backgrounds & borders */
-html, #sc-details {
+html {
     background: #C3D9FF;
 }
 
@@ -524,10 +516,6 @@ div.header {
 #part-header, #reqs, #outcomes, div.section, div.aspect {
     background: #f6f6f6;
     padding: 5px;
-}
-
-#sc-details {
-    border: 1px outset #c3dede;
 }
 
 td.link.notify, td.link.answer {
@@ -681,22 +669,36 @@ div.wicket-aa ul li.selected {
     padding-left: 5px;
 }
 
-#entity {
+div.scenario, div.entity, div.plan {
     background: #C3D9FF;
-    border: 1px outset #C3DEDE;
+    border: 1px outset #c3dede;
     padding: 5px;
-
+    width: 40%;
     position: absolute;
+    z-index: 10;
+    overflow: auto;
+}
+
+div.scenario {
+    top: 6em;
+    right: 2em;
+    min-height: 32em;
+}
+
+div.entity {
     top: 7.5em;
     bottom: 7em;
     left: 2em;
-    width: 40%;
-    min-height: 14em;
-    z-index: 1;
-    overflow: hidden;
 }
 
-#entity span.menubar, #plan-map span.menubar {
+div.plan {
+    right: 2em;
+    top: 7em;
+    bottom: 7em;
+    min-height: 14em;
+}
+
+.entity span.menubar, .scenario span.menubar, .plan span.menubar {
     float: right;
 }
 
@@ -730,21 +732,6 @@ div.aspect {
 }
 
 .aspect tr.odd {
-}
-
-#plan-map {
-    background: #C3D9FF;
-    border: 1px outset #C3DEDE;
-    padding: 5px;
-
-    position: absolute;
-    right: 2em;
-    top: 7em;
-    bottom: 7em;
-    width: 40%;
-    min-height: 14em;
-    z-index: 1;
-    overflow: hidden;
 }
 
 .refresh {

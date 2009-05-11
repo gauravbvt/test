@@ -18,13 +18,13 @@ import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.ScenarioObject;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
-import com.mindalliance.channels.pages.components.PlanMapPanel;
 import com.mindalliance.channels.pages.components.ScenarioLink;
 import com.mindalliance.channels.pages.components.ScenarioPanel;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.menus.PlanActionsMenuPanel;
 import com.mindalliance.channels.pages.components.menus.PlanShowMenuPanel;
+import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -170,7 +170,7 @@ public final class PlanPage extends WebPage implements Updatable {
     /**
      * The scenarios map panel.
      */
-    private Component planMapPanel;
+    private Component planEditPanel;
     /**
      * The aspect for entity panel.
      */
@@ -254,7 +254,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 getReadOnlyExpansions() );
         form.add( scenarioPanel );
         addEntityPanel();
-        addPlanMapPanel();
+        addPlanEditPanel();
         LOG.debug( "Scenario page generated" );
     }
 
@@ -363,7 +363,8 @@ public final class PlanPage extends WebPage implements Updatable {
         // Find expansions that were locked and are not unlocked
         Set<ModelObject> editables = getEditableModelObjects();
         for ( ModelObject mo : editables ) {
-            if ( !( mo instanceof Scenario ) && getCommander().isUnlocked( mo ) ) {
+            if ( !( mo instanceof Scenario || mo instanceof Plan )
+                    && getCommander().isUnlocked( mo ) ) {
                 reasons += " -- " + mo.getName() + " can now be edited.";
             }
         }
@@ -457,15 +458,19 @@ public final class PlanPage extends WebPage implements Updatable {
         form.addOrReplace( entityPanel );
     }
 
-    private void addPlanMapPanel() {
-        boolean showPlanMap = expansions.contains( Channels.getPlan().getId() );
+    private void addPlanEditPanel() {
+        boolean showPlanEdit = expansions.contains( Channels.getPlan().getId() );
 
-        planMapPanel = showPlanMap ? new PlanMapPanel( "plan-map", getReadOnlyExpansions() )
-                : new Label( "plan-map", "" );
+        planEditPanel = showPlanEdit
+                ? new PlanEditPanel(
+                    "plan",
+                    new Model<Plan>( Channels.getPlan() ),
+                    getReadOnlyExpansions() )
+                : new Label( "plan", "" );
 
-        makeVisible( planMapPanel, showPlanMap );
-        planMapPanel.setOutputMarkupId( true );
-        form.addOrReplace( planMapPanel );
+        makeVisible( planEditPanel, showPlanEdit );
+        planEditPanel.setOutputMarkupId( true );
+        form.addOrReplace( planEditPanel );
     }
 
     private ModelObject findExpandedEntity() {
@@ -496,8 +501,8 @@ public final class PlanPage extends WebPage implements Updatable {
     /**
      * Find scenario specified in parameters.
      *
-     * @param queryService        query service
-     * @param parameters the page parameters
+     * @param queryService query service
+     * @param parameters   the page parameters
      * @return a scenario, or null if not found
      */
     public static Scenario findScenario( QueryService queryService, PageParameters parameters ) {
@@ -935,29 +940,22 @@ public final class PlanPage extends WebPage implements Updatable {
         if ( change.isUndoing()
                 || change.isUnknown()
                 || ( identifiable instanceof ModelObject
-                        && change.isUpdated()
-                        && change.getProperty().equals( "waivedIssueDetections" ) ) ) {
+                && change.isUpdated()
+                && change.getProperty().equals( "waivedIssueDetections" ) ) ) {
             refreshAll( target );
         } else {
             if ( identifiable instanceof Plan ) {
                 if ( change.isDisplay() ) {
-                    addPlanMapPanel();
-                    target.addComponent( planMapPanel );
+                    addPlanEditPanel();
+                    target.addComponent( planEditPanel );
                 }
             }
             if ( identifiable instanceof Scenario ) {
                 if ( change.isDisplay() ) {
-                    scenarioPanel.refreshScenarioEditPanel( target );
+                    scenarioPanel.resetScenarioEditPanel( target );
                 }
                 if ( change.isUpdated() ) {
-                    annotateScenarioName();
-                    target.addComponent( scenarioNameLabel );
-                    target.addComponent( planMapPanel );
-                    if ( change.getProperty().equals( "name" ) ) {
-                        target.addComponent( scenarioDropDownChoice );
-                    } else if ( change.getProperty().equals( "description" ) ) {
-                        target.addComponent( scenarioDescriptionLabel );
-                    }
+                   refreshAll( target );
                 } else if ( change.isAdded() || change.isSelected() ) {
                     refreshAll( target );
                 } else if ( change.isRemoved() ) {
@@ -984,7 +982,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 if ( !change.isDisplay() ) refreshAll( target );
             }
             if ( identifiable instanceof ExternalFlow && !change.isDisplay() ) {
-                target.addComponent( planMapPanel );
+                target.addComponent( planEditPanel );
             }
             if ( identifiable instanceof ScenarioObject
                     || identifiable instanceof Issue
@@ -998,8 +996,8 @@ public final class PlanPage extends WebPage implements Updatable {
                 annotateScenarioName();
                 target.addComponent( scenarioNameLabel );
                 scenarioPanel.expandScenarioEditPanel( target );
-                addPlanMapPanel();
-                target.addComponent( planMapPanel );
+                addPlanEditPanel();
+                target.addComponent( planEditPanel );
             }
             if ( identifiable instanceof ModelObject
                     && ( (ModelObject) identifiable ).isEntity() ) {
@@ -1007,7 +1005,7 @@ public final class PlanPage extends WebPage implements Updatable {
                     addEntityPanel();
                     target.addComponent( entityPanel );
                 } else {
-                    target.addComponent( scenarioPanel );
+                    refreshAll( target );
                 }
 
             }
@@ -1030,8 +1028,8 @@ public final class PlanPage extends WebPage implements Updatable {
         scenarioPanel.refresh( target );
         target.addComponent( scenarioPanel );
         target.addComponent( entityPanel );
-        if ( planMapPanel instanceof PlanMapPanel )
-            ( (PlanMapPanel) planMapPanel ).refresh( target );
+        if ( planEditPanel instanceof PlanEditPanel )
+            ( (PlanEditPanel) planEditPanel ).refresh( target );
         updateRefreshNotice();
         target.addComponent( refreshNeededContainer );
         getCommander().clearTimeOut();

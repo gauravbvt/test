@@ -1,28 +1,26 @@
 package com.mindalliance.channels.pages.components.entities;
 
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.commands.UpdateObject;
+import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.util.SemMatch;
-import com.mindalliance.channels.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.command.commands.UpdateObject;
-import com.mindalliance.channels.command.Change;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 
-import java.util.List;
-import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -37,8 +35,6 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
      */
     private IModel<? extends ModelObject> model;
 
-    private Pattern namePattern = Pattern.compile( "^.*?(\\(\\d+\\))?$" );
-
     public EntityDetailsPanel( String id, IModel<? extends ModelObject> model, Set<Long> expansions ) {
         super( id, model, expansions );
         this.model = model;
@@ -49,7 +45,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
         ModelObject mo = getEntity();
         WebMarkupContainer moDetailsDiv = new WebMarkupContainer( "mo-details" );
         add( moDetailsDiv );
-        final List<String> choices = getNameChoices();
+        final List<String> choices = getUniqueNameChoices( getEntity() );
         TextField<String> nameField = new AutoCompleteTextField<String>( "name",
                 new PropertyModel<String>( this, "name" ) ) {
             protected Iterator<String> getChoices( String s ) {
@@ -76,28 +72,6 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
         moDetailsDiv.add( descriptionField );
         moDetailsDiv.add( new AttachmentPanel( "attachments", new Model<ModelObject>( mo ) ) );
         addSpecifics( moDetailsDiv );
-    }
-
-    private List<String> getNameChoices() {
-        List<String> choices = new ArrayList<String>();
-        List<String> namesTaken = getQueryService().findAllNames( getEntity().getClass() );
-        for ( String taken : namesTaken ) {
-            if ( taken.equals( getEntity().getName() ) ) {
-                choices.add( taken );
-            } else {
-                Matcher matcher = namePattern.matcher( taken );
-                int count = matcher.groupCount();
-                if ( count > 1 ) {
-                    String group = matcher.group( 0 );
-                    int index = Integer.valueOf( group.substring( 1, group.length() - 2 ) );
-                    String newTaken = taken.substring( 0, taken.lastIndexOf( '(' ) - 1 ) + "(" + ( index + 1 ) + ")";
-                    choices.add( newTaken );
-                } else {
-                    choices.add( taken + "(2)" );
-                }
-            }
-        }
-        return choices;
     }
 
     /**

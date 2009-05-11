@@ -4,6 +4,7 @@ import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
@@ -59,6 +60,7 @@ public class PlanConverter extends AbstractChannelsConverter {
             MarshallingContext context ) {
         Plan plan = (Plan) obj;
         QueryService queryService = getQueryService();
+        writer.addAttribute( "id", "" + plan.getId() );
         writer.addAttribute( "uri", plan.getUri() );
         writer.addAttribute( "version", getVersion() );
         writer.addAttribute( "date", new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( new Date() ) );
@@ -80,6 +82,12 @@ public class PlanConverter extends AbstractChannelsConverter {
             context.convertAnother( entity );
             writer.endNode();
         }
+        // All incidents
+        for ( Event event : plan.getIncidents() ) {
+            writer.startNode( "incident" );
+            writer.setValue( event.getName() );
+            writer.endNode();
+        }
         // All scenarios
         for ( Scenario scenario : plan.getScenarios() ) {
             writer.startNode( "scenario" );
@@ -94,12 +102,14 @@ public class PlanConverter extends AbstractChannelsConverter {
     public Object unmarshal(
             HierarchicalStreamReader reader,
             UnmarshallingContext context ) {
-        getIdMap( context );
+        Map<String, Long> idMap = getIdMap( context );
         getProxyConnectors( context );
-        // getPortalConnectors( context );
         Plan plan = Channels.getPlan();
+        QueryService queryService = getQueryService();
         String uri = reader.getAttribute( "uri" );
         plan.setUri( uri );
+        String id = reader.getAttribute( "id" );
+        idMap.put( id, plan.getId() );
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
@@ -118,6 +128,11 @@ public class PlanConverter extends AbstractChannelsConverter {
                 context.convertAnother( plan, Role.class );
             } else if ( nodeName.equals( "place" ) ) {
                 context.convertAnother( plan, Place.class );
+            } else if ( nodeName.equals( "event" ) ) {
+                context.convertAnother( plan, Event.class );
+            } else if ( nodeName.equals( "incident" ) ) {
+                Event event = queryService.findOrCreate( Event.class, reader.getValue() );
+                plan.addIncident( event );
                 // Scenarios
             } else if ( nodeName.equals( "scenario" ) ) {
                 context.convertAnother( plan, Scenario.class );
@@ -129,7 +144,6 @@ public class PlanConverter extends AbstractChannelsConverter {
         Map<String, Object> state = new HashMap<String, Object>();
         state.put( "idMap", context.get( "idMap" ) );
         state.put( "proxyConnectors", context.get( "proxyConnectors" ) );
-        state.put( "portalConnectors", context.get( "portalConnectors" ) );
         return state;
     }
 

@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <h3> Risks managed by this scenario </h3>
+    <div class="risks" wicket:id = risksDiv>
+        <table>
+            <thead>
+                <tr>
+                    <td>Severity</td>
+                    <td>Type</td>
+                    <td>Organization</td>
+                    <td>Confirmed</td>
+                    <td/>
+                </tr>
+            </thead>
+            <tr wicket:id="risk">
+                <td>
+                    <select wicket:id="severity">
+                        <option>severity</option>
+                    </select>
+                </td>
+                <td>
+                    <select wicket:id="type">
+                        <option>type</option>
+                    </select>
+                </td>
+                <td>
+                    <input wicket:id="organization" type="text" size="25" title = "Enter organization name"/>
+                </td>
+                <td><input wicket:id="confirmed" type="checkbox"/></td>
+                <td><a wicket:id="mitigations-link" href="#" title = "Show mitigations">Mitigations</a></td>
+            </tr>
+        </table>
+    </div>
+    <div wicket:id="mitigationsDiv">
+        <h3> Managing the <span wicket:id="riskLabel">[risk label]</span></h3>
+        <table wicket:id="mitigations">[mitigations table]</table>
+    </div>
+</wicket:panel>
+</body>
+</html>

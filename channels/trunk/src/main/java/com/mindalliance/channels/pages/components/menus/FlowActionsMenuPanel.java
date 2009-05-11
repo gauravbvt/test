@@ -1,24 +1,24 @@
 package com.mindalliance.channels.pages.components.menus;
 
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.BreakUpFlow;
-import com.mindalliance.channels.command.commands.DuplicateFlow;
-import com.mindalliance.channels.command.commands.DisconnectFlow;
 import com.mindalliance.channels.command.commands.CopyFlow;
-import com.mindalliance.channels.command.Change;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.Model;
+import com.mindalliance.channels.command.commands.DisconnectFlow;
+import com.mindalliance.channels.command.commands.DuplicateFlow;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Part;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

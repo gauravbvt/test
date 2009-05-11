@@ -87,7 +87,7 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
         else if ( entity instanceof Place )
             resourceSpec.setJurisdiction( (Place) entity );
         else {
-            throw new IllegalArgumentException( "Not an entity: " + entity );
+            throw new IllegalArgumentException( "Not a resource entity: " + entity );
         }
         return resourceSpec;
     }
@@ -298,7 +298,8 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
 
     /**
      * Whether this resource spec matches another.
-     * @param other a resource spec
+     *
+     * @param other     a resource spec
      * @param precisely a boolean - true -> must be equal, false -> must be equal or more narrow
      * @return a boolean
      */
@@ -388,18 +389,19 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
 
     /**
      * WHether the source spec contains an entity in its definition.
+     *
      * @param entity an entity
      * @return a boolean
      */
     public boolean hasEntity( ModelObject entity ) {
         assert entity.isEntity();
-        if (entity instanceof Actor) {
+        if ( entity instanceof Actor ) {
             return actor == entity;
-        } else if (entity instanceof Role) {
+        } else if ( entity instanceof Role ) {
             return role == entity;
-        } else if (entity instanceof Organization) {
+        } else if ( entity instanceof Organization ) {
             return organization == entity;
-        } else  {
+        } else {
             return jurisdiction == entity;
         }
     }

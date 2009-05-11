@@ -8,6 +8,7 @@ import com.mindalliance.channels.LockManager;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.Updatable;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -17,7 +18,11 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import java.text.Collator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Abstract base class of updatable panels.
@@ -41,6 +46,11 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * Ids of expanded model objects.
      */
     private Set<Long> expansions;
+
+    /**
+     * Name pattern.
+     */
+    private Pattern namePattern = Pattern.compile( "^.*?(\\(\\d+\\))?$" );
 
     public AbstractUpdatablePanel( String id ) {
         super( id );
@@ -85,6 +95,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     /**
      * Get the active plan's commander.
+     *
      * @return a commander
      */
     protected Commander getCommander() {
@@ -174,10 +185,35 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     /**
      * Get the expansions.
+     *
      * @return a set of Longs
      */
     protected Set<Long> getExpansions() {
         return expansions;
     }
+
+    protected List<String> getUniqueNameChoices( ModelObject mo ) {
+     List<String> choices = new ArrayList<String>();
+     List<String> namesTaken = getQueryService().findAllNames( mo.getClass() );
+     for ( String taken : namesTaken ) {
+         if ( taken.equals( mo.getName() ) ) {
+             choices.add( taken );
+         } else {
+             Matcher matcher = namePattern.matcher( taken );
+             int count = matcher.groupCount();
+             if ( count > 1 ) {
+                 String group = matcher.group( 0 );
+                 int index = Integer.valueOf( group.substring( 1, group.length() - 2 ) );
+                 String newTaken = taken.substring( 0, taken.lastIndexOf( '(' ) - 1 ) + "(" + ( index + 1 ) + ")";
+                 choices.add( newTaken );
+             } else {
+                 choices.add( taken + "(2)" );
+             }
+         }
+     }
+     return choices;
+ }
+
+
 
 }

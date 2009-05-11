@@ -2,9 +2,9 @@ package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.Commander;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
-import java.io.Serializable;
 
 /**
  * A command that can be done, undone and redone.
@@ -52,8 +52,9 @@ public interface Command extends Serializable {
       * @param argumentName a string
       * @param commander a commander
      * @return an object
+     * @throws CommandException if getting argument fails
       */
-    Object get( String argumentName, Commander commander );
+    Object get( String argumentName, Commander commander ) throws CommandException;
     /**
      * Get the value of named argument.
      *

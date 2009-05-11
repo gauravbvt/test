@@ -108,8 +108,12 @@ public final class Channels extends WebApplication {
         return plans;
     }
 
-    public void setPlans( List<Plan> plans ) {
-        this.plans = plans;
+    /**
+     * Plans set from application context only.
+     * @param contextPlans a list of plans.
+     */
+    public void setPlans( List<Plan> contextPlans ) {
+        plans = contextPlans;
     }
 
     /**
@@ -279,7 +283,7 @@ public final class Channels extends WebApplication {
         if ( instance().currentPlan != null ) {
             return instance().currentPlan;
         } else {
-            // TODO - temporary - change to reading from ThreadLocal set by login
+            // TODO - temporary - change to session-scoped plan set at login
             return instance().plans.get( 0 );
         }
     }
@@ -290,6 +294,7 @@ public final class Channels extends WebApplication {
      * @param plan a plan
      */
     public void beginUsingPlan( Plan plan ) {
+        // TODO - temporarily modify session-scoped plan
         assert ( User.current().isAnonymous() );
         currentPlan = plan;
     }
@@ -298,6 +303,7 @@ public final class Channels extends WebApplication {
      * Exit plan loading mode.
      */
     public void endUsingPlan() {
+        // TODO - reset session-scope plan
         assert ( User.current().isAnonymous() );
         assert ( currentPlan != null );
         currentPlan = null;

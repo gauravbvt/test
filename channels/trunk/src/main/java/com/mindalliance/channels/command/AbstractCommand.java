@@ -3,6 +3,7 @@ package com.mindalliance.channels.command;
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.Mappable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.User;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -89,24 +90,24 @@ public abstract class AbstractCommand implements Command {
      */
     public Object get( String key ) {
         Object value = arguments.get( key );
-        assert !( value instanceof ModelObjectRef || value instanceof Identifiable );
+        assert !( value instanceof ModelObjectRef || value instanceof ModelObject );
         return value;
     }
 
     /**
      * {@inheritDoc}
      */
-    public Object get( String key, Commander commander ) {
+    public Object get( String key, Commander commander ) throws CommandException {
         Object value = arguments.get( key );
         if ( value instanceof ModelObjectRef ) {
             ModelObjectRef moRef = (ModelObjectRef) value;
             try {
                 value = moRef.resolve( commander );
-            } catch ( CommandException e ) {
-                LOG.warn( " Can't dereference " + moRef, e );
             } catch ( NotFoundException e ) {
-                LOG.warn( " Can't dereference " + moRef, e );
+                throw new CommandException( " Can't dereference " + moRef, e );
             }
+        } else if ( value instanceof MappedObject ) {
+            value = ( (MappedObject) value).fromMap( commander );
         }
         return value;
     }
@@ -116,10 +117,13 @@ public abstract class AbstractCommand implements Command {
      */
     public void set( String key, Object value ) {
         Object val;
-        if ( value instanceof Identifiable )
+        if ( value instanceof ModelObject )
             val = new ModelObjectRef( (ModelObject) value );
-        else
+        else if ( value instanceof Mappable ) {
+            val = ( (Mappable) value ).map();
+        } else {
             val = value;
+        }
         arguments.put( key, val );
     }
 
