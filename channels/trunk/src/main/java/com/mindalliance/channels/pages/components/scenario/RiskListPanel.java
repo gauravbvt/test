@@ -492,11 +492,11 @@ public class RiskListPanel extends AbstractCommandablePanel {
             columns.add( makeLinkColumn( "Actor", "part.actor", "part.actor.name", EMPTY ) );
             columns.add( makeLinkColumn( "Role", "part.role", "part.role.name", EMPTY ) );
             columns.add( makeLinkColumn( "Organization", "part.organization", "part.organization.name", EMPTY ) );
-            columns.add( makeLinkColumn( "Task", "", "part.task", EMPTY ) );
+            columns.add( makeLinkColumn( "Task", "part", "part.task", EMPTY ) );
             add( new AjaxFallbackDefaultDataTable<Mitigator>(
                     "mitigations",
                     columns,
-                    new SortableBeanProvider<Mitigator>( mitigators, "task" ),
+                    new SortableBeanProvider<Mitigator>( mitigators, "part.task" ),
                     getPageSize() ) );
         }
     }
@@ -536,7 +536,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
             if ( part.isTerminatesEvent() ) {
                 return "Ends event causing risk";
             } else if ( part.getMitigations().contains( risk ) ) {
-                return "Mitigates risk";
+                return "Reduces risk";
             } else {
                 return "";
             }
