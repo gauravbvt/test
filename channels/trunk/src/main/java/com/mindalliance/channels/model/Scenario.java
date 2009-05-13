@@ -1,5 +1,6 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import org.apache.commons.collections.CollectionUtils;
@@ -448,7 +449,7 @@ public class Scenario extends ModelObject {
 
 
     public void beforeRemove( QueryService dataQueryObject ) {
-        // do nothing
+        Channels.getPlan().removeScenario( this );
     }
 
     /**

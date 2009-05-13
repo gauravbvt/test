@@ -52,8 +52,6 @@ public class Memory extends Observable implements Dao {
      */
     private static final String JOURNAL_FILE = "journal.xml";
 
-    private Channels channels;
-
     /**
      * Number of commands journaled before a snapshot is taken on next command.
      */
@@ -486,11 +484,13 @@ public class Memory extends Observable implements Dao {
         return null;
     }
 
+    /**
+     * Get Channels instance.
+     *
+     * @return a Channels instance
+     */
     public Channels getChannels() {
-        return channels;
+        return Channels.instance();
     }
 
-    public void setChannels( Channels channels ) {
-        this.channels = channels;
-    }
 }

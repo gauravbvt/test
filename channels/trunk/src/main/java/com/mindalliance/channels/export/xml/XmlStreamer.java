@@ -391,11 +391,5 @@ public class XmlStreamer extends AbstractService implements Importer, Exporter {
         return getChannels().getQueryService();
     }
 
-    public Channels getChannels() {
-        return channels;
-    }
 
-    public void setChannels( Channels channels ) {
-        this.channels = channels;
-    }
 }

@@ -889,6 +889,10 @@ public final class PlanPage extends WebPage implements Updatable {
                 if ( change.isAdded() ) {
                     setScenario( (Scenario) identifiable );
                     setPart( null );
+                } else {
+                    assert change.isRemoved();
+                    collapseScenarioObjects();
+                    setScenario( null );
                 }
             } else if ( change.isRecomposed() ) {
                 collapseScenarioObjects();

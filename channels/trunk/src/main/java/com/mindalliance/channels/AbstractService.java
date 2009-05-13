@@ -9,16 +9,9 @@ package com.mindalliance.channels;
  * Time: 3:41:14 PM
  */
 public class AbstractService implements Service {
-    /**
-     * An instance of Channels.
-     */
-    private Channels channels;
 
     public Channels getChannels() {
-        return channels;
+        return Channels.instance();
     }
 
-    public void setChannels( Channels channels ) {
-        this.channels = channels;
-    }
 }

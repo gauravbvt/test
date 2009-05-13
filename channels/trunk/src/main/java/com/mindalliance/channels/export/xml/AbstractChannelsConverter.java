@@ -1,5 +1,6 @@
 package com.mindalliance.channels.export.xml;
 
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.export.ConnectionSpecification;
@@ -47,7 +48,7 @@ public abstract class AbstractChannelsConverter implements Converter {
      * @return a query service
      */
     protected QueryService getQueryService() {
-        return exporter.getChannels().getQueryService();
+        return Channels.instance().getQueryService();
     }
 
     /**

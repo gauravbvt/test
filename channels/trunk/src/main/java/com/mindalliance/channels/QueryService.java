@@ -542,8 +542,8 @@ public interface QueryService extends Service {
     /**
      * Find all parts that mitigate a risk or terminate the event cause.
      *
-     * @param scenario
-     * @param risk
+     * @param scenario a scenario
+     * @param risk a risk
      * @return a list of parts
      */
     List<Part> findMitigations( Scenario scenario, Risk risk );

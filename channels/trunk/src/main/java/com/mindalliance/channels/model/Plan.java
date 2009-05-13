@@ -99,4 +99,12 @@ public class Plan extends ModelObject {
     public boolean isIncident( Event event ) {
         return incidents.contains( event );
     }
+
+    /**
+     * Remove deleted scenario from list.
+     * @param scenario a scenario
+     */
+    public void removeScenario( Scenario scenario ) {
+        scenarios.remove( scenario );
+    }
 }

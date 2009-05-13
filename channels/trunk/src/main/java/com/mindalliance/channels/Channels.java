@@ -153,8 +153,6 @@ public final class Channels extends WebApplication {
     }
 
     public void setQueryService( QueryService queryService ) {
-        queryService.setChannels( this );
-        queryService.getDao().setChannels( this );
         this.queryService = queryService;
     }
 
@@ -174,7 +172,6 @@ public final class Channels extends WebApplication {
 
     // FOR TESTING ONLY
     public void setDiagramFactory( DiagramFactory dm ) {
-        dm.setChannels( this );
         diagramFactory = dm;
     }
 
@@ -191,7 +188,6 @@ public final class Channels extends WebApplication {
     }
 
     public void setExporter( Exporter exporter ) {
-        exporter.setChannels( this );
         this.exporter = exporter;
     }
 
@@ -200,7 +196,6 @@ public final class Channels extends WebApplication {
     }
 
     public void setImporter( Importer importer ) {
-        importer.setChannels( this );
         this.importer = importer;
     }
 
@@ -209,7 +204,6 @@ public final class Channels extends WebApplication {
     }
 
     public void setAnalyst( Analyst analyst ) {
-        analyst.setChannels( this );
         this.analyst = analyst;
     }
 

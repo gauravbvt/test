@@ -67,8 +67,6 @@ public class DefaultQueryService extends Observable implements QueryService {
      */
     public static final String DEFAULT_EVENT_NAME = "UNNAMED";
 
-    private Channels channels;
-
     /**
      * The implementation dao.
      */
@@ -109,7 +107,6 @@ public class DefaultQueryService extends Observable implements QueryService {
      */
     public void setDao( Dao dao ) {
         this.dao = dao;
-        dao.setChannels( getChannels() );
     }
 
     public boolean isImportingScenarios() {
@@ -1394,11 +1391,7 @@ public class DefaultQueryService extends Observable implements QueryService {
     }
 
     public Channels getChannels() {
-        return channels;
-    }
-
-    public void setChannels( Channels channels ) {
-        this.channels = channels;
+        return Channels.instance();
     }
 
     /**

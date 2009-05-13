@@ -71,6 +71,9 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.FromUser">
                     <property name="queryService" ref="queryService"/>
                 </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.NoScenarioRepondsToIncident">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.ScenarioWithoutManagedRisk">
                      <property name="queryService" ref="queryService"/>
                  </bean>

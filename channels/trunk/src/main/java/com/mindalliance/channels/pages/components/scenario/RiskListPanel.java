@@ -330,7 +330,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
      */
     public void setDescription( String value ) {
         if ( selectedRisk != null ) {
-            selectedRisk.setDescription( value );
+            selectedRisk.setDescription( value != null ? value : "" );
         }
     }
 

@@ -15,6 +15,7 @@ import com.mindalliance.channels.analysis.detectors.FromUser;
 import com.mindalliance.channels.analysis.detectors.InvalidChannel;
 import com.mindalliance.channels.analysis.detectors.NeverTriggeredSpecifiedTask;
 import com.mindalliance.channels.analysis.detectors.NoRedundancy;
+import com.mindalliance.channels.analysis.detectors.NoScenarioRepondsToIncident;
 import com.mindalliance.channels.analysis.detectors.OrphanedPart;
 import com.mindalliance.channels.analysis.detectors.PartWithInvalidTiming;
 import com.mindalliance.channels.analysis.detectors.PartWithRoleWithNoKnownActor;
@@ -73,7 +74,6 @@ public class AbstractChannelsTest extends TestCase {
         app = new Channels();
 
         Memory dao = new Memory();
-        dao.setChannels( app );
         dao.setDataDirectoryPath( "target/data" );
         dao.setSnapshotThreshold( 10 );
         dao.reset();
@@ -111,6 +111,7 @@ public class AbstractChannelsTest extends TestCase {
         // Initialize analyst
         DefaultAnalyst analyst = new DefaultAnalyst();
         List<IssueDetector> detectors = new ArrayList<IssueDetector>();
+        detectors.add( new NoScenarioRepondsToIncident() );
         detectors.add( new ScenarioWithoutManagedRisk() );
         detectors.add( new FromUser() );
         detectors.add( new FlowWithoutChannel() );

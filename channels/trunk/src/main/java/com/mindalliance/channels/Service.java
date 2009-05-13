@@ -15,9 +15,4 @@ public interface Service {
      */
     Channels getChannels();
 
-    /**
-     * Set an instance of Channels.
-     * @param channels a Channels instance
-     */
-    void setChannels( Channels channels );
 }
