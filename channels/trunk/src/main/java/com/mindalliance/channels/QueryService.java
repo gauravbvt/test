@@ -371,6 +371,7 @@ public interface QueryService extends Service {
 
     /**
      * Get reference count for event.
+     *
      * @param event an event
      * @return an int
      */
@@ -442,6 +443,14 @@ public interface QueryService extends Service {
      * @return a list of strings
      */
     List<String> findJobTitles( Actor actor );
+
+    /**
+     * Find all organizations employing a given actor.
+     *
+     * @param actor an actor
+     * @return a list of organizations
+     */
+    List<Organization> findEmployers( Actor actor );
 
     /**
      * Find if part is ever started.
@@ -532,6 +541,7 @@ public interface QueryService extends Service {
 
     /**
      * Find all parts that mitigate a risk or terminate the event cause.
+     *
      * @param scenario
      * @param risk
      * @return a list of parts

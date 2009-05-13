@@ -18,9 +18,9 @@ import java.util.List;
  * Date: Apr 11, 2009
  * Time: 2:41:55 PM
  */
-public class NonIncidentScenarioNeverInitiated extends AbstractIssueDetector {
+public class ScenarioEventNeverStarts extends AbstractIssueDetector {
 
-    public NonIncidentScenarioNeverInitiated() {
+    public ScenarioEventNeverStarts() {
     }
 
     /**
@@ -32,8 +32,7 @@ public class NonIncidentScenarioNeverInitiated extends AbstractIssueDetector {
         Plan plan = Channels.getPlan();
         if ( !plan.isIncident( scenario.getEvent() ) && !getQueryService().isInitiated( scenario ) ) {
             Issue issue = makeIssue( Issue.STRUCTURAL, scenario );
-            issue.setDescription( "The scenario is in response to an event that is expected to be caused"
-                    + " by a task in another scenario, but there is no such task." );
+            issue.setDescription( "The scenario is in response to an event that never happens." );
             issue.setRemediation( "Make the event in question an incident, or make sure at least one"
                     + " task in another scenario causes it." );
             issue.setSeverity( Issue.Level.Major );

@@ -71,6 +71,9 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.FromUser">
                     <property name="queryService" ref="queryService"/>
                 </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.ScenarioWithoutManagedRisk">
+                     <property name="queryService" ref="queryService"/>
+                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.StartedOrTerminatedPartWithoutTask">
                     <property name="queryService" ref="queryService"/>
                 </bean>
@@ -117,7 +120,7 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.PartWithRoleWithNoKnownActor">
                     <property name="queryService" ref="queryService"/>
                 </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.ScenarioNeverTerminates">
+                <bean class="com.mindalliance.channels.analysis.detectors.ScenarioEventNeverEnds">
                     <property name="queryService" ref="queryService"/>
                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.TriggeredButNeverStartedDefinedTask">
@@ -129,10 +132,10 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.AutoStartPartAlsoTriggered">
                     <property name="queryService" ref="queryService"/>
                 </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.NonIncidentScenarioNeverInitiated">
+                <bean class="com.mindalliance.channels.analysis.detectors.ScenarioEventNeverStarts">
                     <property name="queryService" ref="queryService"/>
                 </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.InitiatedScenarioNeverStarted">
+                <bean class="com.mindalliance.channels.analysis.detectors.ScenarioEventNotStarted">
                     <property name="queryService" ref="queryService"/>
                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.CyclicTriggering">
@@ -142,6 +145,15 @@
                     <property name="queryService" ref="queryService"/>
                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.PotentialDeadlock">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.ActorNotInOneOrganization">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.ScenarioWithSameRisk">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.UselessPart">
                     <property name="queryService" ref="queryService"/>
                 </bean>
             </list>

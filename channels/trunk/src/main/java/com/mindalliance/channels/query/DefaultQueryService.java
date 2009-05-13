@@ -1212,6 +1212,22 @@ public class DefaultQueryService extends Observable implements QueryService {
     }
 
     /**
+     * {@inheritDoc
+     */
+    public List<Organization> findEmployers( Actor actor ) {
+        List<Organization> employers = new ArrayList<Organization>();
+        String actorName = actor.getName();
+        for ( Organization org : list( Organization.class ) ) {
+            for ( Job job : org.getJobs() ) {
+                if ( job.getActorName().equals( actorName ) ) {
+                    if ( !employers.contains( org ) ) employers.add( org );
+                }
+            }
+        }
+        return employers;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public boolean findIfPartStarted( Part part ) {

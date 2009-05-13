@@ -49,6 +49,27 @@ public class PlanShowMenuPanel extends MenuPanel {
         List<Component> menuItems = new ArrayList<Component>();
         // Edit<->Hide
         Link editLink;
+        if ( getExpansions().contains( Channels.getPlan().getId() ) ) {
+             AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {
+                 public void onClick( AjaxRequestTarget target ) {
+                     update( target, new Change( Change.Type.Collapsed, Channels.getPlan() ) );
+                 }
+             };
+             menuItems.add( new LinkMenuItem(
+                     "menuItem",
+                     new Model<String>( "Hide plan details" ),
+                     planMapLink ) );
+         } else {
+             AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {
+                 public void onClick( AjaxRequestTarget target ) {
+                     update( target, new Change( Change.Type.Expanded, Channels.getPlan() ) );
+                 }
+             };
+             menuItems.add( new LinkMenuItem(
+                     "menuItem",
+                     new Model<String>( "Plan details" ),
+                     planMapLink ) );
+         }
         if ( getExpansions().contains( getScenario().getId() ) ) {
             editLink =
                     new AjaxFallbackLink( "link" ) {
@@ -82,28 +103,7 @@ public class PlanShowMenuPanel extends MenuPanel {
                 "menuItem",
                 new Model<String>( "Playbook" ),
                 reportLink ) );
-        if ( getExpansions().contains( Channels.getPlan().getId() ) ) {
-            AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {
-                public void onClick( AjaxRequestTarget target ) {
-                    update( target, new Change( Change.Type.Collapsed, Channels.getPlan() ) );
-                }
-            };
-            menuItems.add( new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( "Hide plan details" ),
-                    planMapLink ) );
-        } else {
-            AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {
-                public void onClick( AjaxRequestTarget target ) {
-                    update( target, new Change( Change.Type.Expanded, Channels.getPlan() ) );
-                }
-            };
-            menuItems.add( new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( "Plan details" ),
-                    planMapLink ) );
-        }
-        return menuItems;
+         return menuItems;
     }
 
     private Scenario getScenario() {

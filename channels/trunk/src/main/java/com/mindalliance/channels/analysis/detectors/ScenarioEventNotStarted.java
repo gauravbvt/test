@@ -1,34 +1,27 @@
 package com.mindalliance.channels.analysis.detectors;
 
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
- * Scenario does not terminate on its own and no part terminates it.
+ * An initiated scenario can never be caused according to the plan.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: Apr 10, 2009
- * Time: 3:01:54 PM
+ * Date: Apr 11, 2009
+ * Time: 2:52:56 PM
  */
-public class ScenarioNeverTerminates extends AbstractIssueDetector {
+public class ScenarioEventNotStarted extends AbstractIssueDetector {
 
-    public ScenarioNeverTerminates() {
+    public ScenarioEventNotStarted() {
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean canBeWaived() {
-        return true;
-    }    
 
     /**
      * {@inheritDoc}
@@ -36,18 +29,14 @@ public class ScenarioNeverTerminates extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Scenario scenario = (Scenario) modelObject;
-        if ( !scenario.getEvent().isSelfTerminating() ) {
-            boolean terminated = false;
-            Iterator<Part> parts = scenario.parts();
-            while ( !terminated && parts.hasNext() ) {
-                Part part = parts.next();
-                terminated = part.isTerminatesEvent();
-            }
-            if ( !terminated ) {
+        Plan plan = Channels.getPlan();
+        if ( !plan.isIncident( scenario.getEvent() ) && getQueryService().isInitiated( scenario ) ) {
+            if ( !getQueryService().findIfScenarioStarted( scenario ) ) {
                 Issue issue = makeIssue( Issue.STRUCTURAL, scenario );
-                issue.setDescription( "The scenario never ends the event it responds to." );
-                issue.setRemediation( "Have the event end on its own"
-                        + " or have at least one task in the scenario terminate it." );
+                issue.setDescription( "The scenario would never start"
+                        + " because no other scenario causes the event it responds to." );
+                issue.setRemediation( "Ensure that tasks that cause the event in question are actually started,"
+                        + " or make the event unplanned by adding it to the plan as an incident." );
                 issue.setSeverity( Issue.Level.Major );
                 issues.add( issue );
             }

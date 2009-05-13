@@ -1,11 +1,9 @@
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -51,6 +49,7 @@ public class ScenarioReportPanel extends Panel {
         add( new Label( "description", scenario.getDescription() ) );                     // NON-NLS
 
         double[] size = { 7.5, 9.0 };
+/*
         add( new FlowMapDiagramPanel(
                         "flowMap",                                                        // NON-NLS
                         new Model<Scenario>( scenario ),
@@ -59,6 +58,7 @@ public class ScenarioReportPanel extends Panel {
                         DiagramFactory.TOP_BOTTOM,
                         false,
                         null ) );
+*/
 
         List<Organization> organizations = findOrganizationsInScenario();
         add( new ListView<Organization>( "organizations", organizations ) {               // NON-NLS

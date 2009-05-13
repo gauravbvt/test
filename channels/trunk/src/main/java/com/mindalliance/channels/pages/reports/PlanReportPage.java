@@ -4,19 +4,16 @@ import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.text.Collator;
 import java.text.DateFormat;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -61,8 +58,8 @@ public class PlanReportPage extends WebPage {
                 item.add( new ScenarioReportPanel( "scenario", item.getModel() ) );       // NON-NLS
             }
         } );
-        add( new PlanMapDiagramPanel( "planMap",                                          // NON-NLS
+/*        add( new PlanMapDiagramPanel( "planMap",                                          // NON-NLS
             new Model<ArrayList<Scenario>>( (ArrayList<Scenario>) scenarios ),
-            null, null, null, null, false, null ) );
+            null, null, null, null, false, null ) );*/
     }
 }
