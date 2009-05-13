@@ -25,6 +25,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -61,17 +62,13 @@ public class RiskListPanel extends AbstractCommandablePanel {
      */
     private WebMarkupContainer risksContainer;
     /**
-     * Mitigations container.
+     * More... container.
      */
-    private WebMarkupContainer mitigationsContainer;
+    private WebMarkupContainer moreContainer;
     /**
      * Risk for which mitigations are shown.
      */
     private RiskWrapper selectedRisk;
-    /**
-     * Risk label.
-     */
-    private Label riskLabel;
 
     public RiskListPanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
         super( id, iModel, expansions );
@@ -83,18 +80,19 @@ public class RiskListPanel extends AbstractCommandablePanel {
         risksContainer.setOutputMarkupId( true );
         add( risksContainer );
         risksContainer.add( makeRisksTable() );
-        mitigationsContainer = new WebMarkupContainer( "mitigationsDiv" );
-        mitigationsContainer.setOutputMarkupId( true );
-        add( mitigationsContainer );
+        moreContainer = new WebMarkupContainer( "moreDiv" );
+        moreContainer.setOutputMarkupId( true );
+        add( moreContainer );
         initLabel();
-        mitigationsContainer.add( makeMitigationsTable() );
-        makeVisible( mitigationsContainer, false );
+        addDescriptionField();
+        moreContainer.add( makeMitigationsTable() );
+        makeVisible( moreContainer, false );
     }
 
     private void initLabel() {
-        riskLabel = new Label( "riskLabel", new PropertyModel<String>( this, "riskLabel" ) );
+        Label riskLabel = new Label( "riskLabel", new PropertyModel<String>( this, "riskLabel" ) );
         riskLabel.setOutputMarkupId( true );
-        mitigationsContainer.addOrReplace( riskLabel );
+        moreContainer.addOrReplace( riskLabel );
     }
 
 
@@ -107,7 +105,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
                 addTypeCell( item );
                 addOrganizationCell( item );
                 addConfirmedCell( item );
-                addShowMitigationsCell( item );
+                addShowMoreCell( item );
             }
         };
     }
@@ -225,21 +223,39 @@ public class RiskListPanel extends AbstractCommandablePanel {
         } );
     }
 
-    private void addShowMitigationsCell( ListItem<RiskWrapper> item ) {
+    private void addShowMoreCell( ListItem<RiskWrapper> item ) {
         final RiskWrapper wrapper = item.getModel().getObject();
-        AjaxFallbackLink<String> mitigationsLink = new AjaxFallbackLink<String>(
-                "mitigations-link",
-                new Model<String>( "Show mitigations" ) ) {
+        AjaxFallbackLink<String> moreLink = new AjaxFallbackLink<String>(
+                "more-link",
+                new Model<String>( "More..." ) ) {
             public void onClick( AjaxRequestTarget target ) {
                 selectedRisk = wrapper;
-                mitigationsContainer.addOrReplace( makeMitigationsTable() );
-                target.addComponent( riskLabel );
-                makeVisible( mitigationsContainer, selectedRisk != null );
-                target.addComponent( mitigationsContainer );
+                moreContainer.addOrReplace( makeMitigationsTable() );
+                // target.addComponent( riskLabel );
+                // target.addComponent( descriptionField );
+                makeVisible( moreContainer, selectedRisk != null );
+                target.addComponent( moreContainer );
             }
         };
-        makeVisible( mitigationsLink, !wrapper.isMarkedForCreation() );
-        item.add( mitigationsLink );
+        makeVisible( moreLink, !wrapper.isMarkedForCreation() );
+        item.add( moreLink );
+    }
+
+    private void addDescriptionField() {
+        TextArea<String> descriptionField = new TextArea<String>(
+                "description",
+                new PropertyModel<String>( this, "description" ) );
+        descriptionField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+/*
+                if ( selectedRisk != null && !selectedRisk.isMarkedForCreation() ) {
+                    update( target, new Change( Change.Type.Updated, getScenario(), "risks" ) );
+                }
+*/
+            }
+        } );
+        descriptionField.setOutputMarkupId( true );
+        moreContainer.add( descriptionField );
     }
 
     private Component makeMitigationsTable() {
@@ -260,10 +276,10 @@ public class RiskListPanel extends AbstractCommandablePanel {
     }
 
     private List<Risk.Type> getCandidateTypes() {
-        List<Risk.Type> types =  Arrays.asList( Risk.Type.values() );
+        List<Risk.Type> types = Arrays.asList( Risk.Type.values() );
         Collections.sort( types, new Comparator<Risk.Type>() {
             public int compare( Risk.Type r1, Risk.Type r2 ) {
-                return collator.compare( r1.toString(), r2.toString()  );
+                return collator.compare( r1.toString(), r2.toString() );
             }
         } );
         return types;
@@ -296,6 +312,28 @@ public class RiskListPanel extends AbstractCommandablePanel {
                 : "no risk is selected";
     }
 
+    /**
+     * Get selected risk's description.
+     *
+     * @return a string
+     */
+    public String getDescription() {
+        return selectedRisk != null
+                ? selectedRisk.getDescription()
+                : "";
+    }
+
+    /**
+     * Set selected risk's description.
+     *
+     * @param value a string
+     */
+    public void setDescription( String value ) {
+        if ( selectedRisk != null ) {
+            selectedRisk.setDescription( value );
+        }
+    }
+
     private Scenario getScenario() {
         return (Scenario) getModel().getObject();
     }
@@ -306,10 +344,10 @@ public class RiskListPanel extends AbstractCommandablePanel {
     public void updateWith( AjaxRequestTarget target, Change change ) {
         risksContainer.addOrReplace( makeRisksTable() );
         initLabel();
-        mitigationsContainer.addOrReplace( makeMitigationsTable() );
-        makeVisible( mitigationsContainer, selectedRisk != null );
+        moreContainer.addOrReplace( makeMitigationsTable() );
+        makeVisible( moreContainer, selectedRisk != null );
         target.addComponent( risksContainer );
-        target.addComponent( mitigationsContainer );
+        target.addComponent( moreContainer );
         super.updateWith( target, change );
     }
 
@@ -454,6 +492,29 @@ public class RiskListPanel extends AbstractCommandablePanel {
                     }
                 }
                 getCommander().cleanup( Organization.class, oldName );
+            }
+        }
+
+        public String getDescription() {
+            return risk.getDescription();
+        }
+
+        public void setDescription( String value ) {
+            String oldValue = risk.getDescription();
+            if ( !oldValue.equals( value ) ) {
+                if ( markedForCreation ) {
+                    risk.setDescription( value );
+                } else {
+                    int index = getScenario().getRisks().indexOf( risk );
+                    if ( index >= 0 ) {
+                        doCommand( new UpdatePlanObject(
+                                getScenario(),
+                                "risks[" + index + "].description",
+                                value,
+                                UpdateObject.Action.Set
+                        ) );
+                    }
+                }
             }
         }
     }
