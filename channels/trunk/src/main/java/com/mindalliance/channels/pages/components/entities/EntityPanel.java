@@ -153,19 +153,19 @@ public class EntityPanel extends AbstractMultiAspectPanel {
                     "aspect",
                     new PropertyModel<Actor>( this, "object" ),
                     getExpansions(),
-                    "#entity .picture" );
+                    ".entity .picture" );
         } else if ( getObject() instanceof Role ) {
             return new EntityNetworkPanel<Role>(
                     "aspect",
                     new PropertyModel<Role>( this, "object" ),
                     getExpansions(),
-                    "#entity .picture" );
+                    ".entity .picture" );
         } else if ( getObject() instanceof Organization ) {
             return new EntityNetworkPanel<Organization>(
                     "aspect",
                     new PropertyModel<Organization>( this, "object" ),
                     getExpansions(),
-                    "#entity .picture" );
+                    ".entity .picture" );
         } else {
             return new Label( "aspect", "Under construction" );
         }

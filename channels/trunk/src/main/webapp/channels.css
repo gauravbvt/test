@@ -673,7 +673,7 @@ div.scenario, div.entity, div.plan {
     background: #C3D9FF;
     border: 1px outset #c3dede;
     padding: 5px;
-    width: 40%;
+    width: 47%;
     position: absolute;
     z-index: 10;
     overflow: auto;
@@ -688,7 +688,7 @@ div.scenario {
 div.entity {
     top: 7.5em;
     bottom: 7em;
-    left: 2em;
+    left: 1em;
 }
 
 div.plan {
