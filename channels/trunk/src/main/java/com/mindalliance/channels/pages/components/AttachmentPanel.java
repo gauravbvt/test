@@ -8,8 +8,8 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.RadioChoice;
@@ -194,7 +194,7 @@ public class AttachmentPanel extends AbstractUpdatablePanel {
                 Attachment a = wrapper.getAttachment();
                 item.add( new ExternalLink( "attachment",                                 // NON-NLS
                         a.getUrl(), a.getLabel() ) );
-                addDeleteCheckBox( item );
+                addDeleteImage( item );
                 item.add( new AttributeModifier(
                         "class", true, new Model<String>( a.getType().getStyle() ) ) );   // NON-NLS
                 item.add( new AttributeModifier(
@@ -204,12 +204,11 @@ public class AttachmentPanel extends AbstractUpdatablePanel {
         attachmentsContainer.add( attachmentList );
     }
 
-    private void addDeleteCheckBox( ListItem<Wrapper> item ) {
-        Wrapper wrapper = item.getModelObject();
-        CheckBox deleteCheckBox = new CheckBox( "confirmed",                                         // NON-NLS
-                new PropertyModel<Boolean>( wrapper, "confirmed" ) );
-        deleteCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
+    private void addDeleteImage( ListItem<Wrapper> item ) {
+        final Wrapper wrapper = item.getModelObject();
+        AjaxFallbackLink deletelink = new AjaxFallbackLink( "delete" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                wrapper.deleteAttachment();
                 refresh( target );
                 update( target, new Change(
                         Change.Type.Updated,
@@ -217,8 +216,8 @@ public class AttachmentPanel extends AbstractUpdatablePanel {
                         "attachments"
                 ) );
             }
-        } );
-        item.add( deleteCheckBox );
+        };
+        item.add( deletelink );
     }
 
     private void addKindSelector() {
@@ -342,26 +341,15 @@ public class AttachmentPanel extends AbstractUpdatablePanel {
          */
         private Attachment attachment;
 
-        /**
-         * Unconfirming detaches the attachment.
-         */
-        private boolean confirmed;
 
         private Wrapper( Attachment attachment ) {
             this.attachment = attachment;
-            confirmed = true;
         }
 
-        public boolean isConfirmed() {
-            return confirmed;
-        }
 
-        public void setConfirmed( boolean confirmed ) {
-            this.confirmed = confirmed;
-            if ( !confirmed ) {
-                ModelObject object = (ModelObject) getDefaultModelObject();
-                attachmentManager.detach( object.getId(), attachment );
-            }
+        public void deleteAttachment() {
+            ModelObject object = (ModelObject) getDefaultModelObject();
+            attachmentManager.detach( object.getId(), attachment );
         }
 
         public Attachment getAttachment() {

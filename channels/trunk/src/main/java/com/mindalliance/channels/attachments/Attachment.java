@@ -12,7 +12,7 @@ public interface Attachment extends Serializable {
     enum Type {
 
         /** A miscellaneous attachment. */
-        Document( "Document" ),
+        Document( "Reference" ),
 
         /** A policy document that mandates whatever the attachment is attached to. */
         PolicyMust( "Mandating policy" ),

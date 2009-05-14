@@ -13,15 +13,17 @@
             <th align="right" valign="top">&nbsp;</th>
             <td>
                 <ul class="attach">
-                <span wicket:id="attachments-container">
-                <li wicket:id="attachments">
-                    <a wicket:id="attachment" href="#">Fire Safety Precautions</a>
+                    <span wicket:id="attachments-container">
+                        <li wicket:id="attachments">
+                            <a wicket:id="attachment" href="#">Fire Safety Precautions</a>
 
-                    <ul class="menu">
-                        <li><input wicket:id="confirmed" type="checkbox" value="doc_1">
+                            <ul class="menu">
+                                <li><a wicket:id="delete" href="#">
+                                    <img style="border:0" src="/images/delete.png" title="Delete" alt="Delete attachment"/>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
-                    </ul>
-                </li>
                     </span>
                     <li>Attach: <select wicket:id="type">
                         <option>Document</option>
