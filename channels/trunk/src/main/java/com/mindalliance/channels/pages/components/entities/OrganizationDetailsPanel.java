@@ -227,7 +227,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
      */
     public void updateWith( AjaxRequestTarget target, Change change ) {
         // Don't propagate UI updates because of changes to jobs
-        if ( !change.getProperty().equals( "jobs" )) {
+        if ( change.getProperty() == null || !change.getProperty().equals( "jobs" )) {
             super.updateWith( target, change );
         }
     }

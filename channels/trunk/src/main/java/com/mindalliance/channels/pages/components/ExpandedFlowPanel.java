@@ -165,7 +165,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
 
         Node node = getOther();
         if ( node.isConnector() && node.getScenario().equals( getNode().getScenario() ) ) {
-            add( new ConnectedFlowList( "others", (Connector) node, getAnalyst() ) );                   // NON-NLS
+            add( new ConnectedFlowList( "others", (Connector) node) );                   // NON-NLS
         } else {
             add( new Label( "others", "" ) );                                             // NON-NLS
         }

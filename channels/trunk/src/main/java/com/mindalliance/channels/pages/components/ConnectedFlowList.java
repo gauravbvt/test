@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;
@@ -25,12 +26,12 @@ import java.util.Iterator;
  */
 public class ConnectedFlowList extends Panel {
 
-    public ConnectedFlowList( String id, Connector connector, Analyst analyst ) {
+    public ConnectedFlowList( String id, Connector connector ) {
         super( id );
         setRenderBodyOnly( true );
         final boolean input = connector.isSource();
         add( new Label( "label", "" ) );                                                  // NON-NLS
-        add( new ConnectionView( "list", connector, input, analyst ) );                            // NON-NLS
+        add( new ConnectionView( "list", connector, input ) );                            // NON-NLS
     }
 
     /**
@@ -44,20 +45,14 @@ public class ConnectedFlowList extends Panel {
         private final Connector connector;
 
         /**
-         * An analyst.
-         */
-        private Analyst analyst;
-
-        /**
          * True if connector is an imput connector.
          */
         private final boolean input;
 
-        private ConnectionView( String id, Connector connector, boolean input, Analyst analyst ) {
+        private ConnectionView( String id, Connector connector, boolean input ) {
             super( id );
             this.connector = connector;
             this.input = input;
-            this.analyst = analyst;
         }                                  // NON-NLS
 
         @Override
@@ -101,7 +96,7 @@ public class ConnectedFlowList extends Panel {
          * todo refactor this here and there
          */
         protected void addIssues( Component component, ModelObject object, String property ) {
-
+            Analyst analyst = Channels.instance().getAnalyst();
             final String summary = property == null ? analyst.getIssuesSummary( object, false )
                     : analyst.getIssuesSummary( object, property );
             boolean hasIssues = analyst.hasIssues( object, Analyst.INCLUDE_PROPERTY_SPECIFIC );
