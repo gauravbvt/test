@@ -2,11 +2,13 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.attachments.AttachmentManager;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.ModelObject;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
@@ -40,77 +42,131 @@ public class AttachmentPanel extends AbstractUpdatablePanel {
 
     private SubmitLink submit;
 
-    /** Available attachment kind. Each kind should have a corresponding field. */
+    /**
+     * Available attachment kind. Each kind should have a corresponding field.
+     */
     public enum Kind {
         File,
         URL
     }
 
-    /** The attachment manager. */
+    /**
+     * The attachment manager.
+     */
     @SpringBean
     private AttachmentManager attachmentManager;
 
-    /** The upload field. */
+    /**
+     * The upload field.
+     */
     private FileUploadField uploadField;
 
-    /** The url field. */
+    /**
+     * The url field.
+     */
     private TextField<String> urlField;
 
-    /** The file upload received from the client. */
+    /**
+     * The file upload received from the client.
+     */
     private FileUpload upload;
 
-    /** The attachment kind (e.g. file or url) */
+    /**
+     * The attachment kind (e.g. file or url)
+     */
     private Kind kind = Kind.File;
 
-    /** The selected type for the upload. */
+    /**
+     * The selected type for the upload.
+     */
     private Attachment.Type selectedType = Attachment.Type.Document;
+    /**
+     * Attachments list container.
+     */
 
-    /** The content of the url field. */
+    private WebMarkupContainer attachmentsContainer;
+
+    /**
+     * The content of the url field.
+     */
     private String url;
 
     public AttachmentPanel( String id, IModel<? extends ModelObject> model ) {
         super( id, model, null );
         setOutputMarkupId( true );
+        addAttachmentList();
+        addTypeSelector();
+        addKindSelector();
+        addUploadField();
+        addUrlField();
+        addSubmit();
+        adjustFields();
+    }
 
-        add( createAttachmentList() );
+    /**
+     * {@inheritDoc}
+     */
+    protected void onBeforeRender() {
+        super.onBeforeRender();
+        makeVisible( submit, false );
+    }
 
-        add( createTypeSelector() );
-        add( createKindSelector() );
-
-        uploadField = new FileUploadField(
-                "upload", new PropertyModel<FileUpload>( this, "upload" ) );
-        uploadField.setVisible( Kind.File.equals( kind ) );
-        uploadField.setOutputMarkupId( true );
-        uploadField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                submit.setEnabled( true );
-                target.addComponent( submit );
-            }
-        } );
-        add( uploadField );
-
-        urlField = new TextField<String>(
-                "url", new PropertyModel<String>( this, "url" ) );
-        urlField.setVisible( Kind.URL.equals( kind ) );
-        urlField.setOutputMarkupId( true );
-        urlField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                submit.setEnabled( true );
-                target.addComponent( submit );
-            }
-        } );
-        add( urlField );
-
+    private void addSubmit() {
         submit = new SubmitLink( "submit" );
         submit.setOutputMarkupId( true );
         submit.setEnabled( false );
         add( submit );
     }
 
-    private DropDownChoice<Attachment.Type> createTypeSelector() {
-        return new DropDownChoice<Attachment.Type>( "type",                                 // NON-NLS
+    private void adjustFields() {
+        makeVisible( submit, false );
+        makeVisible( uploadField, Kind.File.equals( kind ) );
+        makeVisible( urlField, Kind.URL.equals( kind ) );
+    }
+
+    private void refresh( AjaxRequestTarget target ) {
+        adjustFields();
+        target.addComponent( uploadField );
+        target.addComponent( urlField );
+        target.addComponent( submit );
+        target.addComponent( attachmentsContainer );
+    }
+
+    private void addUrlField() {
+        urlField = new TextField<String>(
+                "url", new PropertyModel<String>( this, "url" ) );
+        urlField.setOutputMarkupId( true );
+        urlField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                refresh( target );
+                update( target, new Change(
+                        Change.Type.Updated,
+                        (ModelObject) getDefaultModelObject(),
+                        "attachments"
+                ) );
+            }
+        } );
+        add( urlField );
+    }
+
+    private void addUploadField() {
+        uploadField = new FileUploadField(
+                "upload", new PropertyModel<FileUpload>( this, "upload" ) );
+        uploadField.setOutputMarkupId( true );
+        uploadField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                makeVisible( submit, true );
+                submit.setEnabled( true );
+                target.addComponent( submit );
+            }
+        } );
+        add( uploadField );
+    }
+
+    private void addTypeSelector() {
+        add( new DropDownChoice<Attachment.Type>( "type",                                 // NON-NLS
                 new PropertyModel<Attachment.Type>( this, "selectedType" ),               // NON-NLS
                 Arrays.asList( Attachment.Type.values() ),
                 new IChoiceRenderer<Attachment.Type>() {
@@ -122,29 +178,50 @@ public class AttachmentPanel extends AbstractUpdatablePanel {
                         return Integer.toString( index );
                     }
                 }
-        );
+        ) );
     }
 
-    private ListView<Wrapper> createAttachmentList() {
-        return new ListView<Wrapper>( "attachments",                                      // NON-NLS
+    private void addAttachmentList() {
+        attachmentsContainer = new WebMarkupContainer( "attachments-container" );
+        attachmentsContainer.setOutputMarkupId( true );
+        add( attachmentsContainer );
+        ListView<Wrapper> attachmentList = new ListView<Wrapper>( "attachments",           // NON-NLS
                 new PropertyModel<List<Wrapper>>( this, "attachments" ) ) {               // NON-NLS
+
             @Override
             protected void populateItem( ListItem<Wrapper> item ) {
                 Wrapper wrapper = item.getModelObject();
                 Attachment a = wrapper.getAttachment();
                 item.add( new ExternalLink( "attachment",                                 // NON-NLS
-                                            a.getUrl(), a.getLabel() ) );
-                item.add( new CheckBox( "delete",                                         // NON-NLS
-                        new PropertyModel<Boolean>( wrapper, "markedForDeletion" ) ) );   // NON-NLS
+                        a.getUrl(), a.getLabel() ) );
+                addDeleteCheckBox( item );
                 item.add( new AttributeModifier(
                         "class", true, new Model<String>( a.getType().getStyle() ) ) );   // NON-NLS
                 item.add( new AttributeModifier(
                         "title", true, new Model<String>( a.getType().getLabel() ) ) );   // NON-NLS
             }
         };
+        attachmentsContainer.add( attachmentList );
     }
 
-    private RadioChoice<Kind> createKindSelector() {
+    private void addDeleteCheckBox( ListItem<Wrapper> item ) {
+        Wrapper wrapper = item.getModelObject();
+        CheckBox deleteCheckBox = new CheckBox( "confirmed",                                         // NON-NLS
+                new PropertyModel<Boolean>( wrapper, "confirmed" ) );
+        deleteCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                refresh( target );
+                update( target, new Change(
+                        Change.Type.Updated,
+                        (ModelObject) getDefaultModelObject(),
+                        "attachments"
+                ) );
+            }
+        } );
+        item.add( deleteCheckBox );
+    }
+
+    private void addKindSelector() {
         RadioChoice<Kind> kindSelector = new RadioChoice<Kind>(
                 "radios",                                                                 // NON-NLS
                 new PropertyModel<Kind>( this, "kind" ),                                  // NON-NLS
@@ -164,16 +241,18 @@ public class AttachmentPanel extends AbstractUpdatablePanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 Kind k = (Kind) getComponent().getDefaultModelObject();
-                uploadField.setVisible( Kind.File.equals( k ) );
-                urlField.setVisible( Kind.URL.equals( k ) );
+                makeVisible( uploadField, Kind.File.equals( k ) );
+                makeVisible( urlField, Kind.URL.equals( k ) );
+                makeVisible( submit, Kind.File.equals( kind ) );
                 target.addComponent( AttachmentPanel.this );
             }
         } );
-        return kindSelector;
+        add( kindSelector );
     }
 
     /**
      * Get current attachments to list. Called by component.
+     *
      * @return a list of wrapped attachments
      */
     public List<Wrapper> getAttachments() {
@@ -195,13 +274,14 @@ public class AttachmentPanel extends AbstractUpdatablePanel {
 
     /**
      * Set an upload. Called when user attached a file and then submitted.
+     *
      * @param upload the uploaded file info
      */
     public void setUpload( FileUpload upload ) {
         this.upload = upload;
         if ( upload != null ) {
             ModelObject object = (ModelObject) getDefaultModelObject();
-            LoggerFactory.getLogger( getClass() ).info(  "Attaching file to {}", object );
+            LoggerFactory.getLogger( getClass() ).info( "Attaching file to {}", object );
             attachmentManager.attach( object.getId(), getSelectedType(), upload );
         }
     }
@@ -226,7 +306,9 @@ public class AttachmentPanel extends AbstractUpdatablePanel {
         return url;
     }
 
-    /** Set content of url field. Creates an attachment. Called on submit.
+    /**
+     * Set content of url field. Creates an attachment. Called on submit.
+     *
      * @param url the url string
      */
     public void setUrl( String url ) {
@@ -236,37 +318,47 @@ public class AttachmentPanel extends AbstractUpdatablePanel {
             ModelObject object = (ModelObject) getDefaultModelObject();
             Logger logger = LoggerFactory.getLogger( getClass() );
 
-            logger.info(  "Attaching URL to {}", object );
+            logger.info( "Attaching URL to {}", object );
             try {
                 attachmentManager.attach( object.getId(), getSelectedType(), new URL( url ) );
                 this.url = null;
             } catch ( MalformedURLException e ) {
-                logger.warn(  "Invalid URL: " + url, e );
+                logger.warn( "Invalid URL: " + url );
+                if ( url.indexOf( "://" ) < 0 ) {
+                    setUrl( "http://" + url );
+                }
             }
         }
     }
 
     //==================================================
-    /** A wrapper to keep track of the deletion state of an attachment. */
+    /**
+     * A wrapper to keep track of the deletion state of an attachment.
+     */
     private final class Wrapper implements Serializable {
 
-        /** The underlying attachment. */
+        /**
+         * The underlying attachment.
+         */
         private Attachment attachment;
 
-        /** True if user marked item for deletion. */
-        private boolean markedForDeletion;
+        /**
+         * Unconfirming detaches the attachment.
+         */
+        private boolean confirmed;
 
         private Wrapper( Attachment attachment ) {
             this.attachment = attachment;
+            confirmed = true;
         }
 
-        public boolean isMarkedForDeletion() {
-            return markedForDeletion;
+        public boolean isConfirmed() {
+            return confirmed;
         }
 
-        public void setMarkedForDeletion( boolean markedForDeletion ) {
-            this.markedForDeletion = markedForDeletion;
-            if ( markedForDeletion ) {
+        public void setConfirmed( boolean confirmed ) {
+            this.confirmed = confirmed;
+            if ( !confirmed ) {
                 ModelObject object = (ModelObject) getDefaultModelObject();
                 attachmentManager.detach( object.getId(), attachment );
             }
