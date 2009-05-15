@@ -1,26 +1,25 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Delay;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.ExternalFlow;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.model.Delay;
+import com.mindalliance.channels.model.ExternalFlow;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.InternalFlow;
-
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.lang.reflect.InvocationTargetException;
-
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Scenario;
 import org.apache.commons.beanutils.PropertyUtils;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Command framework utilities.
@@ -49,6 +48,7 @@ public final class CommandUtils {
         attributes.put( "all", flow.isAll() );
         attributes.put( "maxDelay", new Delay( flow.getMaxDelay() ) );
         attributes.put( "channels", flow.getChannelsCopy() );
+        attributes.put( "attachmentTickets", new ArrayList<String>( flow.getAttachmentTickets() ) );
         attributes.put( "significanceToTarget", flow.getSignificanceToTarget() );
         attributes.put( "significanceToSource", flow.getSignificanceToSource() );
         return attributes;
@@ -123,6 +123,7 @@ public final class CommandUtils {
         state.put( "location", part.getLocation() );
         state.put( "repeatsEvery", part.getRepeatsEvery() );
         state.put( "completionTime", part.getCompletionTime() );
+        state.put( "attachmentTickets", new ArrayList<String>( part.getAttachmentTickets() ) );
         return state;
     }
 
@@ -313,8 +314,9 @@ public final class CommandUtils {
 
     /**
      * Resolve a node from an id.
-     * @param id a long
-     * @param scenario a scenario in context
+     *
+     * @param id           a long
+     * @param scenario     a scenario in context
      * @param queryService a query service
      * @return a node
      * @throws CommandException if not found

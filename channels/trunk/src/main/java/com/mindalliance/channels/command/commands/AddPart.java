@@ -1,15 +1,15 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.AbstractCommand;
-import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.CommandUtils;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.command.AbstractCommand;
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.CommandUtils;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Scenario;
 
 import java.util.Map;
 
@@ -63,7 +63,10 @@ public class AddPart extends AbstractCommand {
         set( "part", part.getId() );
         if ( defaultPart != null ) scenario.removeNode( defaultPart );
         Map<String, Object> partState = (Map<String, Object>) get( "partState" );
-        if ( partState != null ) CommandUtils.initialize( part, partState );
+        if ( partState != null ) {
+            CommandUtils.initialize( part, partState );
+            commander.getAttachmentManager().reattachAll( part.getAttachmentTickets() );
+        }
         return new Change( Change.Type.Added, part );
     }
 

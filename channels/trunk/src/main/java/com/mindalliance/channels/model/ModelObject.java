@@ -44,6 +44,10 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
      * List of waived issue detections (issue detector class simple names)
      */
     private List<String> waivedIssueDetections = new ArrayList<String>();
+    /**
+     * List of attachment tickets.
+     */
+    private List<String> attachmentTickets = new ArrayList<String>();
 
     //=============================
     protected ModelObject() {
@@ -155,7 +159,15 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
     }
 
     public void setWaivedIssueDetections( List<String> waivedIssueDetections ) {
-        this.waivedIssueDetections = waivedIssueDetections ;
+        this.waivedIssueDetections = waivedIssueDetections;
+    }
+
+    public List<String> getAttachmentTickets() {
+        return attachmentTickets;
+    }
+
+    public void setAttachmentTickets( List<String> attachmentTickets ) {
+        this.attachmentTickets = attachmentTickets;
     }
 
     /**
@@ -214,9 +226,27 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
     /**
      * Executed just before the model object is removed.
      *
-     * @param dataQueryObject a query service
+     * @param queryService a query service
      */
-    public void beforeRemove( QueryService dataQueryObject ) {
-        // default is to do nothing
+    public void beforeRemove( QueryService queryService ) {
+        queryService.getAttachmentManager().detachAll( getAttachmentTickets() );
+    }
+
+    /**
+     * Add attachment ticket.
+     *
+     * @param ticket a string
+     */
+    public void addAttachmentTicket( String ticket ) {
+        if ( !attachmentTickets.contains( ticket ) ) attachmentTickets.add( ticket );
+    }
+
+    /**
+     * Remove attachment ticket.
+     *
+     * @param ticket a string
+     */
+    public void removeAttachmentTicket( String ticket ) {
+        attachmentTickets.remove( ticket );
     }
 }

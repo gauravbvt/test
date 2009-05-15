@@ -80,6 +80,12 @@ public interface Commander extends Service {
     QueryService getQueryService();
 
     /**
+     * Get the attachment manager.
+     * @return an attachment manager
+     */
+    AttachmentManager getAttachmentManager();
+
+    /**
      * Resets history for current user.
      *
      * @param userName a string
@@ -265,4 +271,5 @@ public interface Commander extends Service {
      * @param lockManager a lock manager
      */
     void setLockManager( LockManager lockManager );
+
 }

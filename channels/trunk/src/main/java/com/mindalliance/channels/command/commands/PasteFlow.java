@@ -1,16 +1,16 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.AbstractCommand;
-import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.CommandUtils;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.command.AbstractCommand;
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Scenario;
 
 import java.util.Map;
 
@@ -80,6 +80,7 @@ public class PasteFlow extends AbstractCommand {
             Map<String, Object> flowAttributes = (Map<String, Object>) flowState.get( "attributes" );
             if ( flowAttributes != null ) {
                 CommandUtils.initialize( flow, flowAttributes );
+                commander.getAttachmentManager().reattachAll( flow.getAttachmentTickets() );
             }
             if ( get( "flow" ) != null ) {
                 commander.mapId( (Long) get( "flow" ), flow.getId() );

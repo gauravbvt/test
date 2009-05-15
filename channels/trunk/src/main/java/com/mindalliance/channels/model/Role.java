@@ -11,7 +11,9 @@ import javax.persistence.Transient;
 @Entity
 public class Role extends ModelObject {
 
-    /** The undefined role. */
+    /**
+     * The undefined role.
+     */
     public static final Role UNKNOWN = new Role( "(Unknown role)" );
 
     public Role() {
@@ -29,7 +31,8 @@ public class Role extends ModelObject {
     /**
      * {@inheritDoc}
      */
-    @Transient @Override
+    @Transient
+    @Override
     public boolean isEntity() {
         return true;
     }
@@ -38,12 +41,13 @@ public class Role extends ModelObject {
      * {@inheritDoc}
      */
     public void beforeRemove( QueryService queryService ) {
+        super.beforeRemove( queryService );
         for ( Job job : queryService.findAllConfirmedJobs( ResourceSpec.with( this ) ) ) {
-           job.setRole( null );
-       }
-       for (Part part : queryService.findAllPartsWith( ResourceSpec.with( this ) )) {
-           part.setRole( null );
-       }
+            job.setRole( null );
+        }
+        for ( Part part : queryService.findAllPartsWith( ResourceSpec.with( this ) ) ) {
+            part.setRole( null );
+        }
     }
 
 

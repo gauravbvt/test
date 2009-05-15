@@ -52,6 +52,7 @@ public class RemoveScenario extends AbstractCommand {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+            scenario.setBeingDeleted( true );
             Exporter exporter = Channels.instance().getExporter();
             exporter.exportScenario( scenario, bos );
             set( "xml", bos.toString() );

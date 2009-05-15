@@ -5,10 +5,14 @@ package com.mindalliance.channels.attachments;
  */
 public class UrlAttachment implements Attachment {
 
-    /** The actual URL. */
+    /**
+     * The actual URL.
+     */
     private String url;
 
-    /** The type. */
+    /**
+     * The type.
+     */
     private Type type;
 
     public UrlAttachment() {
@@ -21,6 +25,7 @@ public class UrlAttachment implements Attachment {
 
     /**
      * The text of the link to this attachment.
+     *
      * @return a label
      */
     public String getLabel() {
@@ -64,5 +69,19 @@ public class UrlAttachment implements Attachment {
      * {@inheritDoc}
      */
     public void delete() {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isUrl() {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isFile() {
+        return false;
     }
 }

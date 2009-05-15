@@ -71,4 +71,16 @@ public interface Attachment extends Serializable {
 
     /** Get rid of persistent part, if any. */
     void delete();
+
+    /**
+     * Is URL attachment?
+     * @return a boolean
+     */
+    boolean isUrl();
+
+    /**
+     * Is file attachment?
+     * @return a boolean
+     */
+    boolean isFile();
 }

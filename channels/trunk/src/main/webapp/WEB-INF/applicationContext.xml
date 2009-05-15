@@ -12,7 +12,9 @@
         <property name="importingScenarios" value="true"/>
         <property name="importDirectory" value="target/import"/>
         <property name="dao" ref="dao"/>
+        <property name="attachmentManager" ref="attachmentManager"/>
     </bean>
+<!--
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
         <property name="targetObject" ref="queryService"/>
         <property name="targetMethod" value="addObserver"/>
@@ -20,6 +22,7 @@
             <list value-type="java.util.Observer"><ref bean="attachmentManager"/></list>
         </property>
     </bean>
+-->
 
     <bean id="serializer" class="com.mindalliance.channels.export.xml.XmlStreamer">
         <property name="version" value="1.0"/>
@@ -172,6 +175,7 @@
     <bean id="commander" class="com.mindalliance.channels.command.DefaultCommander" scope="prototype">
         <property name="timeout" value="300"/>
         <property name="queryService" ref="queryService"/>
+        <property name="attachmentManager" ref="attachmentManager"/>
     </bean>
 
 </beans>

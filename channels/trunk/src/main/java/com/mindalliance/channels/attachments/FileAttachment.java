@@ -60,6 +60,20 @@ public class FileAttachment implements Attachment {
         file.delete();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isUrl() {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isFile() {
+        return true;
+    }
+
     public final void setType( Type type ) {
         this.type = type;
     }

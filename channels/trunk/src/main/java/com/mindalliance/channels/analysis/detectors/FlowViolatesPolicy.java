@@ -7,7 +7,6 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -31,9 +30,8 @@ public class FlowViolatesPolicy extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        Iterator<Attachment> attachments = getAttachmentManager().attachments( flow.getId() );
-        while ( attachments.hasNext() ) {
-            Attachment attachment = attachments.next();
+        List<Attachment> attachments = getAttachmentManager().getAttachments( flow.getAttachmentTickets() );
+        for ( Attachment attachment : attachments ) {
             if ( attachment.isPolicyViolation() ) {
                 Issue issue = makeIssue( Issue.FLOW, flow );
                 issue.setDescription( "Violates policy per \"" + attachment.getLabel() + "\"." );

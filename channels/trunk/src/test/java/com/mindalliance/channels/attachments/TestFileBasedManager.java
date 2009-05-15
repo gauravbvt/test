@@ -5,15 +5,16 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.upload.FileItem;
 import org.easymock.EasyMock;
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ...
@@ -28,7 +29,6 @@ public class TestFileBasedManager extends TestCase {
     private FileUpload upload;
     private FileItem fileItem;
     private File map;
-    private long id;
 
     public TestFileBasedManager() {
         testFile = new File( getClass().getResource( UPLOAD_TXT ).getFile() );
@@ -46,7 +46,6 @@ public class TestFileBasedManager extends TestCase {
 
         fileItem = EasyMock.createMock( FileItem.class );
         upload = new FileUpload( fileItem );
-        id = 123L;
     }
 
     public void testAttach() throws IOException {
@@ -57,19 +56,18 @@ public class TestFileBasedManager extends TestCase {
         String[] filenames = mgr.getDirectory().list();
         assertNotNull( "Test directory does not exist", filenames );
         assertEquals( "Leftovers from previous test errors", 0, filenames.length );
-        mgr.attach( id, Attachment.Type.MOU, upload );
+        String ticket = mgr.attach( Attachment.Type.MOU, upload );
         assertEquals( 2, mgr.getDirectory().list().length );
         verify( fileItem );
 
-        Iterator<Attachment> it = mgr.attachments( id );
-        assertTrue( it.hasNext() );
-        FileAttachment fa = (FileAttachment) it.next();
-        assertFalse( it.hasNext() );
+        Attachment it = mgr.getAttachment( ticket );
+        assertNotNull( it );
+        FileAttachment fa = (FileAttachment) it;
         assertEquals( testFile.length(), fa.getFile().length() );
         assertSame( Attachment.Type.MOU, fa.getType() );
         assertEquals( UPLOAD_TXT, fa.getLabel() );
 
-        mgr.detach( id, fa );
+        mgr.detach( ticket );
         map.delete();
         assertEquals( 0, mgr.getDirectory().list().length );
     }
@@ -80,13 +78,13 @@ public class TestFileBasedManager extends TestCase {
         expect( fileItem.getInputStream() ).andReturn( new FileInputStream( testFile ) );
         expect( fileItem.getInputStream() ).andReturn( new FileInputStream( testFile ) );
         replay( fileItem );
-
-        mgr.attach( id, Attachment.Type.MOU, upload );
-        mgr.attach( id, Attachment.Type.Document, upload );
+        List<String> tickets = new ArrayList<String>();
+        tickets.add(mgr.attach( Attachment.Type.MOU, upload ));
+        tickets.add(mgr.attach( Attachment.Type.Document, upload ));
         assertEquals( 3, mgr.getDirectory().list().length );
         verify( fileItem );
 
-        mgr.detachAll( id );
+        mgr.detachAll( tickets );
         map.delete();
         assertEquals( 0, mgr.getDirectory().list().length );
     }
@@ -104,31 +102,25 @@ public class TestFileBasedManager extends TestCase {
     public void testUrl() throws MalformedURLException {
         assertFalse( map.exists() );
         mgr.start();
-
-        assertFalse( mgr.attachments( id ).hasNext() );
         String spec = "http://localhost:8081";
-        mgr.attach( id, Attachment.Type.PolicyMust, new URL( spec ) );
+        String ticket = mgr.attach( Attachment.Type.PolicyMust, new URL( spec ) );
 
-        Iterator<Attachment> as = mgr.attachments( id );
-        assertTrue( as.hasNext() );
-        Attachment a = as.next();
-        assertFalse( as.hasNext() );
+        Attachment a = mgr.getAttachment( ticket );
+        assertNotNull( a );
         assertEquals( spec, a.getUrl() );
 
         mgr.stop();
         mgr.start();
 
-        Iterator<Attachment> as2 = mgr.attachments( id );
-        assertTrue( as2.hasNext() );
-        Attachment a2 = as2.next();
-        assertFalse( as2.hasNext() );
+        Attachment a2 = mgr.getAttachment( ticket );
+        assertNotNull( a2 );
         assertEquals( spec, a2.getUrl() );
 
         mgr.stop();
         map.delete();
     }
 
-    public void testRemap() throws MalformedURLException {
+/*    public void testRemap() throws MalformedURLException {
         mgr.start();
 
         assertFalse( mgr.attachments( id ).hasNext() );
@@ -143,5 +135,5 @@ public class TestFileBasedManager extends TestCase {
         mgr.remap( remap );
         assertFalse( mgr.attachments( id ).hasNext() );
         map.delete();
-    }
+    }*/
 }

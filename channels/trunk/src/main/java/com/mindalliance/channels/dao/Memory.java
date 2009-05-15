@@ -1,5 +1,6 @@
 package com.mindalliance.channels.dao;
 
+import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.Dao;
@@ -32,12 +33,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Observable;
 
 /**
  * An in-memory, no-transactions implementation of a store.
  */
-public class Memory extends Observable implements Dao {
+public class Memory implements Dao {
 
     /**
      * Class logger.
@@ -51,6 +51,10 @@ public class Memory extends Observable implements Dao {
      * Name of command journal file.
      */
     private static final String JOURNAL_FILE = "journal.xml";
+    /**
+     * Attachment manager.
+     */
+    private AttachmentManager attachmentManager;
 
     /**
      * Number of commands journaled before a snapshot is taken on next command.
@@ -85,6 +89,10 @@ public class Memory extends Observable implements Dao {
      */
     // private Map<Long, ModelObject> idIndex = new HashMap<Long, ModelObject>( INITIAL_CAPACITY );
     public Memory() {
+    }
+
+    public void setAttachmentManager( AttachmentManager attachmentManager ) {
+        this.attachmentManager = attachmentManager;
     }
 
     public void setDataDirectoryPath( String dataDirectoryPath ) {
@@ -144,8 +152,8 @@ public class Memory extends Observable implements Dao {
                     commander.doCommand( command );
                 }
             }
-            setChanged();
-            notifyObservers( idMap );
+            // setChanged();
+            // notifyObservers( idMap );
             journal.reset();
             commander.reset();
             LOG.info( "Persisted plan reloaded." );
@@ -275,6 +283,7 @@ public class Memory extends Observable implements Dao {
         assert dataFile.length() == 0;
         Exporter exporter = getChannels().getExporter();
         exporter.exportAll( new FileOutputStream( dataFile ) );
+        attachmentManager.emptyTrash();
     }
 
     private void saveJournal( Plan plan ) throws IOException {

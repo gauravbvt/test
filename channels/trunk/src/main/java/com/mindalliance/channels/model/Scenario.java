@@ -63,6 +63,11 @@ public class Scenario extends ModelObject {
      * The query service in charge of this scenario.
      */
     private transient QueryService queryService;
+    /**
+     * Whether this scenario is in the process of being deleted.
+     * Used by xml export only.
+     */
+    private boolean beingDeleted = false;
 
     public Scenario() {
         setNodeIndex( new HashMap<Long, Node>( INITIAL_CAPACITY ) );
@@ -447,8 +452,11 @@ public class Scenario extends ModelObject {
         return count;
     }
 
-
-    public void beforeRemove( QueryService dataQueryObject ) {
+    /**
+     * {@inheritDoc}
+     */
+    public void beforeRemove( QueryService queryService ) {
+        super.beforeRemove( queryService );
         Channels.getPlan().removeScenario( this );
     }
 
@@ -484,7 +492,6 @@ public class Scenario extends ModelObject {
         }
         return mitigators;
     }
-
 
 
     //=================================================
@@ -550,5 +557,13 @@ public class Scenario extends ModelObject {
         public void remove() {
             throw new UnsupportedOperationException();
         }
+    }
+    @Transient
+    public boolean isBeingDeleted() {
+        return beingDeleted;
+    }
+
+    public void setBeingDeleted( boolean beingDeleted ) {
+        this.beingDeleted = beingDeleted;
     }
 }

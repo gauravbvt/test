@@ -40,6 +40,7 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
         writer.setValue( entity.getDescription() == null ? "" : entity.getDescription() );
         writer.endNode();
         exportDetectionWaivers( entity, writer );
+        exportAttachmentTickets( entity, writer, this.isExportingPlan( context ));
         writeSpecifics( entity, writer, context );
         // User issues
         List<Issue> issues = getQueryService().findAllUserIssues( entity );
@@ -79,7 +80,9 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
                 entity.setDescription( reader.getValue() );
             }  else if ( nodeName.equals( "detection-waivers" ) ) {
                 importDetectionWaivers( entity, reader );
-            } else {
+            }  else if ( nodeName.equals( "attachments" ) ) {
+                importAttachmentTickets( entity, reader );
+            }  else {
                 setSpecific( entity, nodeName, reader, context );
             }
             reader.moveUp();

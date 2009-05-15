@@ -64,6 +64,7 @@ public class ScenarioConverter extends AbstractChannelsConverter {
         Scenario scenario = (Scenario) object;
         Plan plan = Channels.getPlan();
         QueryService queryService = getQueryService();
+        boolean exportingInPlan = isExportingPlan( context )  || scenario.isBeingDeleted();
         context.put( "scenario", scenario );
         writer.addAttribute( "plan", plan.getUri() );
         writer.addAttribute( "version", getVersion() );
@@ -74,7 +75,8 @@ public class ScenarioConverter extends AbstractChannelsConverter {
         writer.setValue( scenario.getDescription() );
         writer.endNode();
         exportDetectionWaivers( scenario, writer );
-        if ( context.get( "exporting-plan" ) == null ) {
+        exportAttachmentTickets( scenario, writer, exportingInPlan );
+        if ( !exportingInPlan ) {
             // All entities if not within a plan export
             Iterator<ModelObject> entities = queryService.iterateEntities();
             while ( entities.hasNext() ) {
@@ -149,6 +151,8 @@ public class ScenarioConverter extends AbstractChannelsConverter {
                 scenario.setDescription( reader.getValue() );
             } else if ( nodeName.equals( "detection-waivers" ) ) {
                 importDetectionWaivers( scenario, reader );
+            }  else if ( nodeName.equals( "attachments" ) ) {
+                importAttachmentTickets( scenario, reader );
             } else if ( nodeName.equals( "event" ) ) {
                 context.convertAnother( scenario, Event.class );
             } else if ( nodeName.equals( "actor" ) ) {

@@ -353,10 +353,10 @@ public class Part extends Node {
 
     /**
      * {@inheritDoc}
-     * @param dataQueryObject
+     * @param queryService
      */
-    public void beforeRemove( QueryService dataQueryObject ) {
-        // do nothing
+    public void beforeRemove( QueryService queryService ) {
+        super.beforeRemove( queryService );
     }
 
     /**

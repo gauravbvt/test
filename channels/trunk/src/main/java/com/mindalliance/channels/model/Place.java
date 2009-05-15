@@ -31,6 +31,7 @@ public class Place extends ModelObject {
      * {@inheritDoc}
      */
     public void beforeRemove( QueryService queryService ) {
+        super.beforeRemove( queryService );
         for ( Job job : queryService.findAllConfirmedJobs( ResourceSpec.with( this ) ) ) {
            job.setJurisdiction( null );
        }

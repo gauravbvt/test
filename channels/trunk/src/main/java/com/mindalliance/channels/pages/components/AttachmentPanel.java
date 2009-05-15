@@ -1,8 +1,10 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.attachments.Attachment;
-import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.commands.AttachDocument;
+import com.mindalliance.channels.command.commands.DetachDocument;
 import com.mindalliance.channels.model.ModelObject;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -32,13 +34,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 /**
  * File attachments for a given model object.
  */
-public class AttachmentPanel extends AbstractUpdatablePanel {
+public class AttachmentPanel extends AbstractCommandablePanel {
 
     private SubmitLink submit;
 
@@ -143,7 +144,7 @@ public class AttachmentPanel extends AbstractUpdatablePanel {
                 update( target, new Change(
                         Change.Type.Updated,
                         (ModelObject) getDefaultModelObject(),
-                        "attachments"
+                        "attachmentTickets"
                 ) );
             }
         } );
@@ -213,7 +214,7 @@ public class AttachmentPanel extends AbstractUpdatablePanel {
                 update( target, new Change(
                         Change.Type.Updated,
                         (ModelObject) getDefaultModelObject(),
-                        "attachments"
+                        "attachmentTickets"
                 ) );
             }
         };
@@ -256,14 +257,12 @@ public class AttachmentPanel extends AbstractUpdatablePanel {
      */
     public List<Wrapper> getAttachments() {
         List<Wrapper> result = new ArrayList<Wrapper>();
-
-        if ( attachmentManager != null ) {
-            ModelObject object = (ModelObject) getDefaultModelObject();
-            Iterator<Attachment> iterator = attachmentManager.attachments( object.getId() );
-            while ( iterator.hasNext() )
-                result.add( new Wrapper( iterator.next() ) );
+        ModelObject object = (ModelObject) getDefaultModelObject();
+        for ( String ticket : object.getAttachmentTickets() ) {
+            Attachment attachment = attachmentManager.getAttachment( ticket );
+            if ( attachment != null )
+                result.add( new Wrapper( ticket, attachment ) );
         }
-
         return result;
     }
 
@@ -281,7 +280,8 @@ public class AttachmentPanel extends AbstractUpdatablePanel {
         if ( upload != null ) {
             ModelObject object = (ModelObject) getDefaultModelObject();
             LoggerFactory.getLogger( getClass() ).info( "Attaching file to {}", object );
-            attachmentManager.attach( object.getId(), getSelectedType(), upload );
+            String ticket = attachmentManager.attach( getSelectedType(), upload );
+            doCommand( new AttachDocument( object, ticket ) );
         }
     }
 
@@ -319,7 +319,8 @@ public class AttachmentPanel extends AbstractUpdatablePanel {
 
             logger.info( "Attaching URL to {}", object );
             try {
-                attachmentManager.attach( object.getId(), getSelectedType(), new URL( url ) );
+                String ticket = attachmentManager.attach( getSelectedType(), new URL( url ) );
+                doCommand( new AttachDocument( object, ticket ) );
                 this.url = null;
             } catch ( MalformedURLException e ) {
                 logger.warn( "Invalid URL: " + url );
@@ -335,21 +336,26 @@ public class AttachmentPanel extends AbstractUpdatablePanel {
      * A wrapper to keep track of the deletion state of an attachment.
      */
     private final class Wrapper implements Serializable {
-
+        /**
+         * The attachment's ticket.
+         */
+        private String ticket;
         /**
          * The underlying attachment.
          */
         private Attachment attachment;
 
 
-        private Wrapper( Attachment attachment ) {
+        private Wrapper( String ticket, Attachment attachment ) {
+            this.ticket = ticket;
             this.attachment = attachment;
         }
 
 
         public void deleteAttachment() {
             ModelObject object = (ModelObject) getDefaultModelObject();
-            attachmentManager.detach( object.getId(), attachment );
+            attachmentManager.detach( ticket );
+            doCommand( new DetachDocument( object, ticket ) );
         }
 
         public Attachment getAttachment() {

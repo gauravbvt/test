@@ -69,13 +69,14 @@
     <bean id="dao" class="com.mindalliance.channels.dao.Memory">
         <property name="dataDirectoryPath" value="target/data"/>
         <property name="snapshotThreshold" value="10"/>
+        <property name="attachmentManager" ref="attachmentManager"/>
     </bean>
-    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+<!--    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
         <property name="targetObject" ref="dao"/>
         <property name="targetMethod" value="addObserver"/>
         <property name="arguments">
             <list value-type="java.util.Observer"><ref bean="attachmentManager"/></list>
         </property>
-    </bean>
+    </bean>-->
 
 </beans>

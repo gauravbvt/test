@@ -58,6 +58,7 @@ public class PartConverter extends AbstractChannelsConverter {
         writer.addAttribute( "id", String.valueOf( part.getId() ) );
 //        writer.addAttribute( "scenario", String.valueOf( part.getScenario().getId() ) );
         exportDetectionWaivers( part, writer );
+        exportAttachmentTickets( part, writer, isExportingPlan( context ) );
         if ( part.getTask() != null ) {
             writer.startNode( "task" );
             writer.setValue( part.getTask() );
@@ -142,6 +143,8 @@ public class PartConverter extends AbstractChannelsConverter {
                 part.setDescription( reader.getValue() );
             } else if ( nodeName.equals( "detection-waivers" ) ) {
                 importDetectionWaivers( part, reader );
+            }  else if ( nodeName.equals( "attachments" ) ) {
+                importAttachmentTickets( part, reader );
             } else if ( nodeName.equals( "task" ) ) {
                 part.setTask( reader.getValue() );
             } else if ( nodeName.equals( "role" ) ) {

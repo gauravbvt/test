@@ -64,6 +64,7 @@ public class Actor extends AbstractUnicastChannelable {
      * {@inheritDoc}
      */
     public void beforeRemove( QueryService queryService ) {
+        super.beforeRemove( queryService );
         for ( Job job : queryService.findAllConfirmedJobs( ResourceSpec.with( this ) ) ) {
             job.setActor( null );
         }

@@ -45,7 +45,7 @@ public class UserIssueConverter extends AbstractChannelsConverter {
      */
     public void marshal( Object object, HierarchicalStreamWriter writer, MarshallingContext context ) {
         UserIssue issue = (UserIssue) object;
-        writer.addAttribute( "id", Long.toString( issue.getId() ));
+        writer.addAttribute( "id", Long.toString( issue.getId() ) );
         writer.addAttribute( "about", Long.toString( issue.getAbout().getId() ) );
         writer.startNode( "description" );
         writer.setValue( issue.getDescription() );
@@ -59,6 +59,7 @@ public class UserIssueConverter extends AbstractChannelsConverter {
         writer.startNode( "reportedBy" );
         writer.setValue( issue.getReportedBy() );
         writer.endNode();
+        exportAttachmentTickets( issue, writer, isExportingPlan( context ) );
     }
 
     /**
@@ -86,11 +87,17 @@ public class UserIssueConverter extends AbstractChannelsConverter {
                         issue.setRemediation( reader.getValue() );
                     } else if ( nodeName.equals( "reportedBy" ) ) {
                         issue.setReportedBy( reader.getValue() );
+                    } else if ( nodeName.equals( "detection-waivers" ) ) {
+                        importDetectionWaivers( issue, reader );
+                    } else if ( nodeName.equals( "attachments" ) ) {
+                        importAttachmentTickets( issue, reader );
+                    } else {
+                        LOG.warn( "Unknown element " + nodeName );
                     }
                     reader.moveUp();
                 }
                 getQueryService().add( issue );
-                idMap.put( issueId, issue.getId() );                
+                idMap.put( issueId, issue.getId() );
             } else {
                 LOG.warn( "Issue's model object not found at " + id );
             }

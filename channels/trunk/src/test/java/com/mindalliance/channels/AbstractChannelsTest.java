@@ -77,9 +77,13 @@ public class AbstractChannelsTest extends TestCase {
         dao.setDataDirectoryPath( "target/data" );
         dao.setSnapshotThreshold( 10 );
         dao.reset();
-        DefaultQueryService queryService = new DefaultQueryService( );
+        DefaultQueryService queryService = new DefaultQueryService();
+        FileBasedManager attachmentManager = new FileBasedManager();
+        attachmentManager.setDirectory( new File( "work/uploads" ) );
+        attachmentManager.setPath( "uploads" );
         app.setQueryService( queryService );
         queryService.setDao( dao );
+        queryService.setAttachmentManager( attachmentManager );
         app.setExporter( xmlStreamer );
         app.setImporter( xmlStreamer );
         commander = new DefaultCommander();
@@ -87,13 +91,7 @@ public class AbstractChannelsTest extends TestCase {
         lockManager.setQueryService( queryService );
         commander.setLockManager( lockManager );
         commander.setQueryService( queryService );
-        FileBasedManager attachmentManager = new FileBasedManager();
-        /*  <bean id="attachmentManager" class="com.mindalliance.channels.attachments.FileBasedManager">
-            <property name="directory" value="target/channels-1.0-SNAPSHOT/uploads"/>
-            <property name="path" value="uploads"/>
-        </bean>*/
-        attachmentManager.setDirectory( new File( "target/channels-1.0-SNAPSHOT/uploads" ) );
-        attachmentManager.setPath( "uploads" );
+        commander.setAttachmentManager( attachmentManager );
         app.setAttachmentManager( attachmentManager );
         // Set default scenario
         // app.getScenarioDao().addScenario(new FireScenario());
@@ -142,8 +140,8 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new ActorNotInOneOrganization() );
         detectors.add( new ScenarioWithSameRisk() );
         detectors.add( new UselessPart() );
-        for (IssueDetector detector : detectors ) {
-            ((AbstractIssueDetector)detector).setQueryService( queryService );
+        for ( IssueDetector detector : detectors ) {
+            ( (AbstractIssueDetector) detector ).setQueryService( queryService );
         }
         analyst.setIssueDetectors( detectors );
         app.setAnalyst( analyst );

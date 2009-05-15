@@ -37,6 +37,13 @@ public interface QueryService extends Service {
     Dao getDao();
 
     /**
+     * Get attachment manager.
+     *
+     * @return an attachment manager
+     */
+    AttachmentManager getAttachmentManager();
+
+    /**
      * Find a scenario given its name.
      *
      * @param name the name
@@ -543,7 +550,7 @@ public interface QueryService extends Service {
      * Find all parts that mitigate a risk or terminate the event cause.
      *
      * @param scenario a scenario
-     * @param risk a risk
+     * @param risk     a risk
      * @return a list of parts
      */
     List<Part> findMitigations( Scenario scenario, Risk risk );

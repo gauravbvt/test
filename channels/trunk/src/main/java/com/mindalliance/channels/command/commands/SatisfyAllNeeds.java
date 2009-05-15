@@ -1,23 +1,23 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.AbstractCommand;
-import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.MultiCommand;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Scenario;
 
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Satisfy as many of a part's needs as possible by creating flow from other parts with matching capabilities.
@@ -83,6 +83,7 @@ public class SatisfyAllNeeds extends AbstractCommand {
                             : connector.getInnerFlow().getSource();
                     Flow satisfaction = queryService.connect( source, part, need.getName() );
                     satisfaction.initFrom( need );
+                    commander.getAttachmentManager().reattachAll( satisfaction.getAttachmentTickets() );
                     addedFlows.add( satisfaction.getId() );
                 }
                 if ( !connectors.isEmpty() ) {

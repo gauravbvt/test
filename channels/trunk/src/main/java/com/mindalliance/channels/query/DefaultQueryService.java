@@ -1,5 +1,6 @@
 package com.mindalliance.channels.query;
 
+import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.Importer;
@@ -86,6 +87,10 @@ public class DefaultQueryService extends Observable implements QueryService {
      * Directory from which to import exported scenarios
      */
     private String importDirectory;
+    /**
+     * An attachment manager.
+     */
+    private AttachmentManager attachmentManager;
 
     public DefaultQueryService() {
     }
@@ -98,6 +103,14 @@ public class DefaultQueryService extends Observable implements QueryService {
 
     public Dao getDao() {
         return dao;
+    }
+
+    public AttachmentManager getAttachmentManager() {
+        return attachmentManager;
+    }
+
+    public void setAttachmentManager( AttachmentManager attachmentManager ) {
+        this.attachmentManager = attachmentManager;
     }
 
     /**

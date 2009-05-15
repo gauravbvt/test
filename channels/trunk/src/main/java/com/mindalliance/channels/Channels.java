@@ -1,6 +1,5 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.pages.ExportPage;

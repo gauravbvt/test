@@ -1,24 +1,23 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.AbstractCommand;
-import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.MultiCommand;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.NotFoundException;
-
-import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
-
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Scenario;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Paste copied part.
@@ -78,6 +77,7 @@ public class PastePart extends AbstractCommand {
             commander.mapId( (Long) get( "part" ), part.getId() );
         set( "part", part.getId() );
         CommandUtils.initialize( part, partState );
+        commander.getAttachmentManager().reattachAll( part.getAttachmentTickets() );
         List<Map<String, Object>> needStates = (List<Map<String, Object>>) copy.get( "needs" );
         List<Long> addedNeeds = new ArrayList<Long>();
         for ( Map<String, Object> needState : needStates ) {
@@ -86,6 +86,7 @@ public class PastePart extends AbstractCommand {
                     part,
                     (String) needState.get( "name" ) );
             CommandUtils.initialize( need, (Map<String, Object>) needState.get( "attributes" ) );
+            commander.getAttachmentManager().reattachAll( need.getAttachmentTickets() );
             addedNeeds.add( need.getId() );
         }
         set( "addedNeeds", addedNeeds );
@@ -100,6 +101,7 @@ public class PastePart extends AbstractCommand {
             CommandUtils.initialize(
                     capability,
                     (Map<String, Object>) capabilityState.get( "attributes" ) );
+            commander.getAttachmentManager().reattachAll( capability.getAttachmentTickets() );
             addedCapabilities.add( capability.getId() );
         }
         set( "addedCapabilities", addedCapabilities );

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.analysis;
 
+import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 

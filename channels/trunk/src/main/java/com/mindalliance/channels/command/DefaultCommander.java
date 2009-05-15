@@ -1,6 +1,7 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.AbstractService;
+import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.LockManager;
 import com.mindalliance.channels.NotFoundException;
@@ -47,6 +48,10 @@ public class DefaultCommander extends AbstractService implements Commander {
      * Query service.
      */
     private QueryService queryService;
+    /**
+     * Attachment manager.
+     */
+    private AttachmentManager attachmentManager;
 
     private boolean replaying = false;
     /**
@@ -115,6 +120,14 @@ public class DefaultCommander extends AbstractService implements Commander {
 
     public QueryService getQueryService() {
         return queryService;
+    }
+
+    public void setAttachmentManager( AttachmentManager attachmentManager ) {
+        this.attachmentManager = attachmentManager;
+    }
+
+    public AttachmentManager getAttachmentManager() {
+        return attachmentManager;
     }
 
     public int getTimeout() {
