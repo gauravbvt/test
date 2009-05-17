@@ -29,18 +29,20 @@ public interface AttachmentManager {
      *
      * @param type       the type of the attachment
      * @param fileUpload the thing
-     * @return a ticket
+     * @param tickets tickets of the model object to which document is to be attached
+     * @return a ticket or null if the attachment would be redundant
      */
-    String attach( Attachment.Type type, FileUpload fileUpload );
+    String attach( Attachment.Type type, FileUpload fileUpload, List<String> tickets );
 
     /**
      * Attach an URL to an object.
      *
      * @param type the type of the attachment
      * @param url  the URL
+     * @param tickets tickets of the model object to which document is to be attached
      * @return a ticket
      */
-    String attach( Attachment.Type type, URL url );
+    String attach( Attachment.Type type, URL url, List<String> tickets );
 
     /**
      * Detach an attachment given its ticket. Should not complain if the attachment is not

@@ -1,13 +1,18 @@
 package com.mindalliance.channels.attachments;
 
 import com.mindalliance.channels.AttachmentManager;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.Lifecycle;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,6 +22,9 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,11 +39,6 @@ import java.util.UUID;
  * An index file is kept to maintain the association between model objects and files.
  */
 public class FileBasedManager implements AttachmentManager, Lifecycle {
-
-    /**
-     * Separator used for value in map file.
-     */
-    private static final int COMMA = (int) ',';
 
     /**
      * Character used to escape funny characters.
@@ -130,7 +133,7 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
         for ( String ticket : tickets ) {
             Attachment attachment = getAttachment( ticket );
             if ( attachment != null )
-                attachments.add( attachment );
+                if ( !attachments.contains( attachment ) ) attachments.add( attachment );
         }
         return attachments;
     }
@@ -141,11 +144,12 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
 
     private void index( String ticket, Attachment attachment ) {
         attachmentMap.put( ticket, attachment );
-        fileMap.setProperty( attachment.getKey(),
+        fileMap.setProperty( ticket,
                 MessageFormat.format(
-                        "{0},{1}",                    // NON-NLS
-                        ticket,
-                        attachment.getType().name() ) );
+                        "{0},{1},{2}",                    // NON-NLS
+                        attachment.getKey(),
+                        attachment.getType().name(),
+                        attachment.getDigest() ) );
     }
 
     private void deindex( String ticket ) {
@@ -153,7 +157,7 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
         if ( attachment != null ) {
             attachmentMap.remove( ticket );
             deletedMap.put( ticket, attachment );
-            fileMap.remove( attachment.getKey() );
+            fileMap.remove( ticket );
         } else {
             log.warn( "Failed to deindex: ticket " + ticket + " not found" );
         }
@@ -162,25 +166,74 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     /**
      * {@inheritDoc}
      */
-    public String attach( Attachment.Type type, FileUpload fileUpload ) {
+    public String attach( Attachment.Type type, FileUpload fileUpload, List<String> tickets ) {
         String ticket = makeTicket();
         String fileName = fileUpload.getClientFileName();
         String escaped = escape( fileName );
-
+        BufferedInputStream in = null;
+        BufferedOutputStream out = null;
         try {
             File file = createFile( escaped );
-            FileAttachment fileAttachment = new FileAttachment( type, file, path + file.getName() );
-            fileUpload.writeTo( file );
+            MessageDigest messageDigest = MessageDigest.getInstance( "SHA" );
+            in = new BufferedInputStream(
+                    new DigestInputStream(
+                            fileUpload.getInputStream(),
+                            messageDigest ) );
+            out = new BufferedOutputStream( new FileOutputStream( file ) );
+            int c;
+            do {
+                c = in.read();
+                if ( c >= 0 ) out.write( c );
+            } while ( c >= 0 );
+            // fileUpload.writeTo( file );
+            String digest = new String( messageDigest.digest() ).replaceAll(",", "\\u002c");
+            FileAttachment fileAttachment = new FileAttachment(
+                    type,
+                    file, path + file.getName(),
+                    digest );
             synchronized ( this ) {
-                index( ticket, fileAttachment );
-                save();
+                Attachment actual = resolve( fileAttachment );
+                if ( !getAttachments( tickets ).contains( actual ) ) {
+                    index( ticket, actual );
+                    save();
+                } else {
+                    ticket = null;
+                }
             }
-
         } catch ( IOException e ) {
             log.error( MessageFormat.format( "Error while uploading file: {0}", fileName ), e );
             ticket = null;
+        } catch ( NoSuchAlgorithmException e ) {
+            log.error( MessageFormat.format( "Error while uploading file: {0}", fileName ), e );
+            ticket = null;
+        } finally {
+            try {
+                if ( in != null ) in.close();
+                if ( out != null ) out.close();
+            } catch ( IOException e ) {
+                e.printStackTrace();
+            }
         }
         return ticket;
+    }
+
+    // Return pre-existing attachment if one exists for the same file.
+    private Attachment resolve( final FileAttachment attachment ) {
+        FileAttachment toSameFile = (FileAttachment) CollectionUtils.find( attachmentMap.values(), new Predicate() {
+            public boolean evaluate( Object obj ) {
+                Attachment prior = (Attachment) obj;
+                return prior.isFile()
+                        && attachment.getFile().getName().
+                        // > 0 -> must not be the exact same file, but a duplicate
+                        indexOf( ( (FileAttachment) prior ).getFile().getName() ) > 0
+                        && attachment.getDigest().equals( prior.getDigest() );
+            }
+        } );
+        if ( toSameFile != null ) {
+            attachment.getFile().delete();
+            attachment.setFile( toSameFile.getFile() );
+        }
+        return attachment;
     }
 
     private String makeTicket() {
@@ -190,11 +243,16 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     /**
      * {@inheritDoc}
      */
-    public String attach( Attachment.Type type, URL url ) {
+    public String attach( Attachment.Type type, URL url, List<String> tickets ) {
         String ticket = makeTicket();
         synchronized ( this ) {
-            index( ticket, new UrlAttachment( type, url.toString() ) );
-            save();
+            UrlAttachment urlAttachment = new UrlAttachment( type, url.toString() );
+            if ( !getAttachments( tickets ).contains( urlAttachment ) ) {
+                index( ticket, urlAttachment );
+                save();
+            } else {
+                ticket = null;
+            }
         }
         return ticket;
     }
@@ -412,21 +470,21 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
      */
     private void setFileMap( Properties index ) {
         this.fileMap = index;
-
         attachmentMap = new HashMap<String, Attachment>();
-        for ( String uriString : index.stringPropertyNames() ) {
-            String value = index.getProperty( uriString );
-            int comma = value.indexOf( COMMA );
+        for ( String ticket : index.stringPropertyNames() ) {
+            String value = index.getProperty( ticket );
+            String[] elements = value.split( "," );
 
-            String ticket = value.substring( 0, comma );
-            Attachment.Type type = Attachment.Type.valueOf( value.substring( comma + 1 ) );
-
+            String uriString = elements[0];
+            Attachment.Type type = Attachment.Type.valueOf( elements[1] );
+            String digest = elements[2];
             try {
                 URI uri = new URI( unescape( uriString ) );
                 Attachment attachment = uri.getScheme() == null ?
                         new FileAttachment( type,
                                 new File( directory, uriString ),
-                                path + uriString )
+                                path + uriString,
+                                digest )
                         : new UrlAttachment( type, uri.toURL().toString() );
 
                 attachmentMap.put( ticket, attachment );
@@ -442,5 +500,4 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     public boolean isRunning() {
         return isRunning;
     }
-
 }

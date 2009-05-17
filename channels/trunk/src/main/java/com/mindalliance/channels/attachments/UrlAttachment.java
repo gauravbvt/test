@@ -54,6 +54,10 @@ public class UrlAttachment implements Attachment {
         return type;
     }
 
+    public String getDigest() {
+        return "";
+    }
+
     public void setType( Type type ) {
         this.type = type;
     }
@@ -83,5 +87,28 @@ public class UrlAttachment implements Attachment {
      */
     public boolean isFile() {
         return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean equals( Object obj ) {
+        if ( obj instanceof UrlAttachment ) {
+            UrlAttachment other = (UrlAttachment) obj;
+            return type == other.getType()
+                    && url.equals( other.getUrl() );
+        }
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        int hash = 1;
+        hash = hash * 31 + type.hashCode();
+        hash = hash * 31 + url.hashCode();
+        return hash;
     }
 }

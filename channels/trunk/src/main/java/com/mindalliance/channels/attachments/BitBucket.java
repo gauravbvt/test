@@ -29,14 +29,14 @@ public class BitBucket implements AttachmentManager {
     /**
      * {@inheritDoc}
      */
-    public String attach( Attachment.Type type, FileUpload fileUpload ) {
+    public String attach( Attachment.Type type, FileUpload fileUpload, List<String> tickets ) {
         return null;
     }
 
     /**
      * {@inheritDoc}
      */
-    public String attach( Attachment.Type type, URL url ) {
+    public String attach( Attachment.Type type, URL url, List<String> tickets ) {
         return null;
     }
 

@@ -107,7 +107,7 @@ public abstract class AbstractCommand implements Command {
                 throw new CommandException( " Can't dereference " + moRef, e );
             }
         } else if ( value instanceof MappedObject ) {
-            value = ( (MappedObject) value).fromMap( commander );
+            value = ( (MappedObject) value ).fromMap( commander );
         }
         return value;
     }

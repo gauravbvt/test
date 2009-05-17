@@ -193,8 +193,10 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             protected void populateItem( ListItem<Wrapper> item ) {
                 Wrapper wrapper = item.getModelObject();
                 Attachment a = wrapper.getAttachment();
-                item.add( new ExternalLink( "attachment",                                 // NON-NLS
-                        a.getUrl(), a.getLabel() ) );
+                ExternalLink documentLink = new ExternalLink( "attachment",                                 // NON-NLS
+                        a.getUrl(), a.getLabel() );
+                documentLink.add( new AttributeModifier( "target", true, new Model<String>( "_" ) ) );
+                item.add( documentLink );
                 addDeleteImage( item );
                 item.add( new AttributeModifier(
                         "class", true, new Model<String>( a.getType().getStyle() ) ) );   // NON-NLS
@@ -278,10 +280,13 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     public void setUpload( FileUpload upload ) {
         this.upload = upload;
         if ( upload != null ) {
-            ModelObject object = (ModelObject) getDefaultModelObject();
-            LoggerFactory.getLogger( getClass() ).info( "Attaching file to {}", object );
-            String ticket = attachmentManager.attach( getSelectedType(), upload );
-            doCommand( new AttachDocument( object, ticket ) );
+            ModelObject mo = (ModelObject) getDefaultModelObject();
+            LoggerFactory.getLogger( getClass() ).info( "Attaching file to {}", mo );
+            String ticket = attachmentManager.attach( getSelectedType(), upload, mo.getAttachmentTickets() );
+            // Only add non-redundant attachment.
+            if ( ticket != null ) {
+                doCommand( new AttachDocument( mo, ticket ) );
+            }
         }
     }
 
@@ -314,13 +319,18 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         this.url = url;
 
         if ( url != null ) {
-            ModelObject object = (ModelObject) getDefaultModelObject();
+            ModelObject mo = (ModelObject) getDefaultModelObject();
             Logger logger = LoggerFactory.getLogger( getClass() );
 
-            logger.info( "Attaching URL to {}", object );
+            logger.info( "Attaching URL to {}", mo );
             try {
-                String ticket = attachmentManager.attach( getSelectedType(), new URL( url ) );
-                doCommand( new AttachDocument( object, ticket ) );
+                String ticket = attachmentManager.attach(
+                        getSelectedType(),
+                        new URL( url ),
+                        mo.getAttachmentTickets() );
+                if ( ticket != null ) {
+                    doCommand( new AttachDocument( mo, ticket ) );
+                }
                 this.url = null;
             } catch ( MalformedURLException e ) {
                 logger.warn( "Invalid URL: " + url );

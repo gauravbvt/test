@@ -64,6 +64,11 @@ public interface Attachment extends Serializable {
     Type getType();
 
     /**
+     * @return the attachment's digest.
+     */
+    String getDigest();
+
+    /**
      * Whether the attachment indicates a policy violation
      * @return a boolean
      */

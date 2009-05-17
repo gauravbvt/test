@@ -7,23 +7,34 @@ import java.io.File;
  */
 public class FileAttachment implements Attachment {
 
-    /** The file on the server side. */
+    /**
+     * The file on the server side.
+     */
     private File file;
 
-    /** The type of this attachment */
+    /**
+     * The type of this attachment
+     */
     private Type type;
 
-    /** The external link to this file. Set by the manager. */
+    /**
+     * The external link to this file. Set by the manager.
+     */
     private String url;
+    /**
+     * The SHA digest value for the file.
+     */
+    private String digest;
 
     public FileAttachment() {
     }
 
-    public FileAttachment( Type type, File file, String url ) {
+    public FileAttachment( Type type, File file, String url, String digest ) {
         this();
         setType( type );
         setFile( file );
         setUrl( url );
+        setDigest( digest );
     }
 
     public final File getFile() {
@@ -84,5 +95,38 @@ public class FileAttachment implements Attachment {
 
     public final void setUrl( String url ) {
         this.url = url;
+    }
+
+    public void setDigest( String digest ) {
+        this.digest = digest;
+    }
+
+    public String getDigest() {
+        return digest;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean equals( Object obj ) {
+        if ( obj instanceof FileAttachment ) {
+            FileAttachment other = (FileAttachment) obj;
+            return type == other.getType()
+                    && url.equals( other.getUrl() )
+                    && digest.equals( other.getDigest() );
+        }
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        int hash = 1;
+        hash = hash * 31 + type.hashCode();
+        hash = hash * 31 + url.hashCode();
+        hash = hash * 31 + digest.hashCode();
+        return hash;
     }
 }
