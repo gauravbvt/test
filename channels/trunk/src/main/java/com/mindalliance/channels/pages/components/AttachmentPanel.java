@@ -167,7 +167,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     }
 
     private void addTypeSelector() {
-        add( new DropDownChoice<Attachment.Type>( "type",                                 // NON-NLS
+        DropDownChoice<Attachment.Type> typeChoice = new DropDownChoice<Attachment.Type>( "type",                                 // NON-NLS
                 new PropertyModel<Attachment.Type>( this, "selectedType" ),               // NON-NLS
                 Arrays.asList( Attachment.Type.values() ),
                 new IChoiceRenderer<Attachment.Type>() {
@@ -179,7 +179,14 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                         return Integer.toString( index );
                     }
                 }
-        ) );
+        );
+        typeChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                // Do nothing
+            }
+        } );
+        add( typeChoice );
     }
 
     private void addAttachmentList() {
@@ -313,29 +320,29 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     /**
      * Set content of url field. Creates an attachment. Called on submit.
      *
-     * @param url the url string
+     * @param value the url string
      */
-    public void setUrl( String url ) {
-        this.url = url;
-
-        if ( url != null ) {
+    public void setUrl( String value ) {
+        Logger logger = LoggerFactory.getLogger( getClass() );
+        this.url = value;
+        if ( value != null ) {
             ModelObject mo = (ModelObject) getDefaultModelObject();
-            Logger logger = LoggerFactory.getLogger( getClass() );
 
             logger.info( "Attaching URL to {}", mo );
+            // URL url;
             try {
                 String ticket = attachmentManager.attach(
                         getSelectedType(),
-                        new URL( url ),
+                        new URL( value ),
                         mo.getAttachmentTickets() );
                 if ( ticket != null ) {
                     doCommand( new AttachDocument( mo, ticket ) );
                 }
                 this.url = null;
             } catch ( MalformedURLException e ) {
-                logger.warn( "Invalid URL: " + url );
-                if ( url.indexOf( "://" ) < 0 ) {
-                    setUrl( "http://" + url );
+                logger.warn( "Invalid URL: " + value );
+                if ( value.indexOf( "://" ) < 0 ) {
+                    setUrl( "http://" + value );
                 }
             }
         }

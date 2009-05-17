@@ -477,14 +477,13 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
 
             String uriString = elements[0];
             Attachment.Type type = Attachment.Type.valueOf( elements[1] );
-            String digest = elements[2];
             try {
                 URI uri = new URI( unescape( uriString ) );
                 Attachment attachment = uri.getScheme() == null ?
                         new FileAttachment( type,
                                 new File( directory, uriString ),
                                 path + uriString,
-                                digest )
+                                elements[2] )
                         : new UrlAttachment( type, uri.toURL().toString() );
 
                 attachmentMap.put( ticket, attachment );
