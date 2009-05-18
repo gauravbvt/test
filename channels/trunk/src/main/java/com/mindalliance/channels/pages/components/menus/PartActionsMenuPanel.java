@@ -1,26 +1,27 @@
 package com.mindalliance.channels.pages.components.menus;
 
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.command.commands.AddUserIssue;
-import com.mindalliance.channels.command.commands.RemovePart;
-import com.mindalliance.channels.command.commands.DuplicatePart;
-import com.mindalliance.channels.command.commands.CopyPart;
-import com.mindalliance.channels.command.commands.PasteFlow;
-import com.mindalliance.channels.command.commands.SatisfyAllNeeds;
 import com.mindalliance.channels.command.Change;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
+import com.mindalliance.channels.command.commands.AddUserIssue;
+import com.mindalliance.channels.command.commands.CopyPart;
+import com.mindalliance.channels.command.commands.DuplicatePart;
+import com.mindalliance.channels.command.commands.PasteAttachment;
+import com.mindalliance.channels.command.commands.PasteFlow;
+import com.mindalliance.channels.command.commands.RemovePart;
+import com.mindalliance.channels.command.commands.SatisfyAllNeeds;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Role;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.PropertyModel;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Actions menu for a part..
@@ -71,6 +72,11 @@ public class PartActionsMenuPanel extends MenuPanel {
                 update( target, change );
             }
         } );
+        commandWrappers.add( new CommandWrapper( new PasteAttachment( getPart() ) ) {
+             public void onExecuted( AjaxRequestTarget target, Change change ) {
+                 update( target, change );
+             }
+         } );
         commandWrappers.add( new CommandWrapper( new PasteFlow( getPart() ) ) {
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 update( target, change );

@@ -38,7 +38,6 @@ public class PastePart extends AbstractCommand {
     }
 
     public PastePart( Scenario scenario ) {
-        super();
         needLockOn( scenario );
         set( "scenario", scenario.getId() );
     }

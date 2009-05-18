@@ -4,6 +4,7 @@ import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AttachDocument;
+import com.mindalliance.channels.command.commands.CopyAttachment;
 import com.mindalliance.channels.command.commands.DetachDocument;
 import com.mindalliance.channels.model.ModelObject;
 import org.apache.wicket.AttributeModifier;
@@ -143,7 +144,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 refresh( target );
                 update( target, new Change(
                         Change.Type.Updated,
-                        (ModelObject) getDefaultModelObject(),
+                        getAttachee(),
                         "attachmentTickets"
                 ) );
             }
@@ -204,6 +205,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                         a.getUrl(), a.getLabel() );
                 documentLink.add( new AttributeModifier( "target", true, new Model<String>( "_" ) ) );
                 item.add( documentLink );
+                addCopyImage( item );
                 addDeleteImage( item );
                 item.add( new AttributeModifier(
                         "class", true, new Model<String>( a.getType().getStyle() ) ) );   // NON-NLS
@@ -214,15 +216,28 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         attachmentsContainer.add( attachmentList );
     }
 
+    private void addCopyImage( ListItem<Wrapper> item ) {
+        final Wrapper wrapper = item.getModelObject();
+        AjaxFallbackLink deletelink = new AjaxFallbackLink( "copy" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                wrapper.copyAttachment();
+                update( target,
+                        new Change( Change.Type.Copied ));
+            }
+        };
+        item.add( deletelink );
+    }
+
     private void addDeleteImage( ListItem<Wrapper> item ) {
         final Wrapper wrapper = item.getModelObject();
         AjaxFallbackLink deletelink = new AjaxFallbackLink( "delete" ) {
             public void onClick( AjaxRequestTarget target ) {
                 wrapper.deleteAttachment();
                 refresh( target );
-                update( target, new Change(
+                update( target,
+                        new Change(
                         Change.Type.Updated,
-                        (ModelObject) getDefaultModelObject(),
+                        getAttachee(),
                         "attachmentTickets"
                 ) );
             }
@@ -266,8 +281,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
      */
     public List<Wrapper> getAttachments() {
         List<Wrapper> result = new ArrayList<Wrapper>();
-        ModelObject object = (ModelObject) getDefaultModelObject();
-        for ( String ticket : object.getAttachmentTickets() ) {
+        for ( String ticket : getAttachee().getAttachmentTickets() ) {
             Attachment attachment = attachmentManager.getAttachment( ticket );
             if ( attachment != null )
                 result.add( new Wrapper( ticket, attachment ) );
@@ -287,7 +301,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     public void setUpload( FileUpload upload ) {
         this.upload = upload;
         if ( upload != null ) {
-            ModelObject mo = (ModelObject) getDefaultModelObject();
+            ModelObject mo = getAttachee();
             LoggerFactory.getLogger( getClass() ).info( "Attaching file to {}", mo );
             String ticket = attachmentManager.attach( getSelectedType(), upload, mo.getAttachmentTickets() );
             // Only add non-redundant attachment.
@@ -326,7 +340,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         Logger logger = LoggerFactory.getLogger( getClass() );
         this.url = value;
         if ( value != null ) {
-            ModelObject mo = (ModelObject) getDefaultModelObject();
+            ModelObject mo = getAttachee();
 
             logger.info( "Attaching URL to {}", mo );
             // URL url;
@@ -346,6 +360,10 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 }
             }
         }
+    }
+
+    private ModelObject getAttachee() {
+        return (ModelObject) getDefaultModelObject();
     }
 
     //==================================================
@@ -368,11 +386,19 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             this.attachment = attachment;
         }
 
-
+        /**
+         * Detach document from model object.
+         */
         public void deleteAttachment() {
-            ModelObject object = (ModelObject) getDefaultModelObject();
             attachmentManager.detach( ticket );
-            doCommand( new DetachDocument( object, ticket ) );
+            doCommand( new DetachDocument( getAttachee(), ticket ) );
+        }
+
+        /**
+         * Copy attachment.
+         */
+        public void copyAttachment() {
+            doCommand( new CopyAttachment( attachment ) );
         }
 
         public Attachment getAttachment() {

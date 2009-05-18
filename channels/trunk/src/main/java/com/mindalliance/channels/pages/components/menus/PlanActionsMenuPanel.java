@@ -1,12 +1,13 @@
 package com.mindalliance.channels.pages.components.menus;
 
-import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AddPart;
 import com.mindalliance.channels.command.commands.AddScenario;
 import com.mindalliance.channels.command.commands.AddUserIssue;
+import com.mindalliance.channels.command.commands.PasteAttachment;
 import com.mindalliance.channels.command.commands.PastePart;
 import com.mindalliance.channels.command.commands.RemoveScenario;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.pages.ExportPage;
 import com.mindalliance.channels.pages.PlanPage;
 import org.apache.wicket.Component;
@@ -77,6 +78,11 @@ public class PlanActionsMenuPanel extends MenuPanel {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
         final Scenario scenario = getScenario();
         commandWrappers.add( new CommandWrapper( new PastePart( getScenario() ) ) {
+             public void onExecuted( AjaxRequestTarget target, Change change ) {
+                 update( target, change );
+             }
+         } );
+        commandWrappers.add( new CommandWrapper( new PasteAttachment( getScenario() ) ) {
              public void onExecuted( AjaxRequestTarget target, Change change ) {
                  update( target, change );
              }

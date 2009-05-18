@@ -1,13 +1,13 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.commands.AddCapability;
 import com.mindalliance.channels.command.commands.AddNeed;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Part;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -16,8 +16,8 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -146,6 +146,15 @@ public class FlowListPanel extends AbstractCommandablePanel {
      * @param target an ajax request target
      */
     public void refresh( AjaxRequestTarget target ) {
+        target.addComponent( flowsDiv );
+    }
+
+    /**
+     * Refresh menus.
+     *
+     * @param target ajax request target
+     */
+    public void refreshMenus( AjaxRequestTarget target ) {
         target.addComponent( flowsDiv );
     }
 }

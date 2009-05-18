@@ -409,6 +409,15 @@ public final class PlanPage extends WebPage implements Updatable {
         form.add( planShowMenu );
     }
 
+    private void addPlanActionsMenu() {
+        planActionsMenu = new PlanActionsMenuPanel(
+                "planActionsMenu",
+                new PropertyModel<Scenario>( this, "scenario" ),
+                getReadOnlyExpansions() );
+        planActionsMenu.setOutputMarkupId( true );
+        form.addOrReplace( planActionsMenu );
+    }
+
     private void addScenarioSelector() {
         scenarioImport = new FileUploadField( "sc-import", new Model<FileUpload>() );     // NON-NLS
         form.add( scenarioImport );
@@ -463,9 +472,9 @@ public final class PlanPage extends WebPage implements Updatable {
 
         planEditPanel = showPlanEdit
                 ? new PlanEditPanel(
-                    "plan",
-                    new Model<Plan>( Channels.getPlan() ),
-                    getReadOnlyExpansions() )
+                "plan",
+                new Model<Plan>( Channels.getPlan() ),
+                getReadOnlyExpansions() )
                 : new Label( "plan", "" );
 
         makeVisible( planEditPanel, showPlanEdit );
@@ -937,8 +946,7 @@ public final class PlanPage extends WebPage implements Updatable {
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change ) {
-        target.addComponent( planActionsMenu );
-        target.addComponent( planShowMenu );
+        refreshMenus( target );
         if ( change.isNone() ) return;
         Identifiable identifiable = change.getSubject();
         if ( change.isUndoing()
@@ -959,7 +967,7 @@ public final class PlanPage extends WebPage implements Updatable {
                     scenarioPanel.resetScenarioEditPanel( target );
                 }
                 if ( change.isUpdated() ) {
-                   refreshAll( target );
+                    refreshAll( target );
                 } else if ( change.isAdded() || change.isSelected() ) {
                     refreshAll( target );
                 } else if ( change.isRemoved() ) {
@@ -1017,6 +1025,17 @@ public final class PlanPage extends WebPage implements Updatable {
         if ( change.getScript() != null ) {
             target.appendJavascript( change.getScript() );
         }
+    }
+
+    private void refreshMenus( AjaxRequestTarget target ) {
+        addPlanActionsMenu();
+        target.addComponent( planActionsMenu );
+        target.addComponent( planShowMenu );
+        scenarioPanel.refreshMenus( target );
+        if ( planEditPanel instanceof PlanEditPanel )
+            ( (PlanEditPanel) planEditPanel ).refreshMenus( target );
+        if ( entityPanel instanceof EntityPanel )
+            ( (EntityPanel) entityPanel ).refreshMenus( target );
     }
 
     private void refreshAll( AjaxRequestTarget target ) {

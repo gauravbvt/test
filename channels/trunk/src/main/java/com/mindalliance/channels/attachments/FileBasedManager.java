@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -186,10 +187,13 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
                 if ( c >= 0 ) out.write( c );
             } while ( c >= 0 );
             // fileUpload.writeTo( file );
-            String digest = new String( messageDigest.digest() ).replaceAll(",", "\\u002c");
+            String digest = URLEncoder.encode(
+                    new String( messageDigest.digest() ).replaceAll( ",", "\\u002c" ),
+                    "UTF-8");
             FileAttachment fileAttachment = new FileAttachment(
                     type,
-                    file, path + file.getName(),
+                    file,
+                    path + file.getName(),
                     digest );
             synchronized ( this ) {
                 Attachment actual = resolve( fileAttachment );
@@ -225,7 +229,7 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
                 return prior.isFile()
                         && attachment.getFile().getName().
                         // > 0 -> must not be the exact same file, but a duplicate
-                        indexOf( ( (FileAttachment) prior ).getFile().getName() ) > 0
+                                indexOf( ( (FileAttachment) prior ).getFile().getName() ) > 0
                         && attachment.getDigest().equals( prior.getDigest() );
             }
         } );
@@ -238,6 +242,51 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
 
     private String makeTicket() {
         return UUID.randomUUID().toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String attach( Attachment.Type type, String url, String digest, List<String> tickets ) {
+        File uploaded = findUploaded( url, digest );
+        String ticket = null;
+        if ( uploaded != null ) {
+            FileAttachment attachment = new FileAttachment(
+                    type,
+                    uploaded,
+                    path + uploaded.getName(),
+                    digest
+            );
+            if ( !getAttachments( tickets ).contains( attachment ) ) {
+                ticket = makeTicket();
+                index( ticket, attachment );
+                save();
+            }
+        } else {
+            log.warn( "Could not find uploaded file " + url );
+        }
+        return ticket;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public File findUploaded( final String url, final String digest ) {
+        FileAttachment attachment = (FileAttachment)CollectionUtils.find(
+            attachmentMap.values(),
+            new Predicate() {
+                public boolean evaluate( Object obj ) {
+                    Attachment attachment = (Attachment)obj;
+                    return attachment.isFile()
+                            && attachment.getUrl().equals( url )
+                            && attachment.getDigest().equals( digest );
+                }
+            });
+        if ( attachment != null ) {
+            return attachment.getFile();
+        } else {
+            return null;
+        }
     }
 
     /**

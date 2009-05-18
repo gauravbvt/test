@@ -384,6 +384,10 @@ ul.menu li {
     display: inline;
 }
 
+ul.attach ul.menu li:before {
+    content: " ";
+}
+
 ul.menu li:before {
     content: " \2015  ";
 }
@@ -403,6 +407,7 @@ div.section-title ul.menu {
 
 ul.attach ul.menu {
     padding-top: 2px;
+    padding-right:8px;
 }
 
 .header ul.menu, .header span.menubar {

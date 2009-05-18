@@ -6,6 +6,7 @@ import com.mindalliance.channels.command.commands.BreakUpFlow;
 import com.mindalliance.channels.command.commands.CopyFlow;
 import com.mindalliance.channels.command.commands.DisconnectFlow;
 import com.mindalliance.channels.command.commands.DuplicateFlow;
+import com.mindalliance.channels.command.commands.PasteAttachment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import org.apache.wicket.Component;
@@ -93,6 +94,11 @@ public class FlowActionsMenuPanel extends MenuPanel {
                 update( target, change );
             }
         } );
+        commandWrappers.add( new CommandWrapper( new PasteAttachment( getFlow() ) ) {
+             public void onExecuted( AjaxRequestTarget target, Change change ) {
+                 update( target, change );
+             }
+         } );
         if ( !isCollapsed )
             commandWrappers.add( new CommandWrapper( new AddUserIssue( flow ) ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {

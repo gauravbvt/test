@@ -1,7 +1,10 @@
 package com.mindalliance.channels.command;
 
+import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.attachments.FileAttachment;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.ExternalFlow;
@@ -13,8 +16,12 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -30,6 +37,11 @@ import java.util.Map;
  * Time: 3:42:39 PM
  */
 public final class CommandUtils {
+
+    /**
+     * The logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( CommandUtils.class );
 
     private CommandUtils() {
 
@@ -109,7 +121,7 @@ public final class CommandUtils {
     /**
      * Capture the state of a part, minus its flows
      *
-     * @param part a part
+     * @param part a part.
      * @return a map of attribute names and values
      */
     public static Map<String, Object> getPartState( final Part part ) {
@@ -124,6 +136,21 @@ public final class CommandUtils {
         state.put( "repeatsEvery", part.getRepeatsEvery() );
         state.put( "completionTime", part.getCompletionTime() );
         state.put( "attachmentTickets", new ArrayList<String>( part.getAttachmentTickets() ) );
+        return state;
+    }
+
+    /**
+     * Capture the state of an attachment.
+     *
+     * @param attachment an attachment
+     * @return a map of attribute names and values
+     */
+    public static Map<String, Object> getAttachmentState( Attachment attachment ) {
+        Map<String, Object> state = new HashMap<String, Object>();
+        state.put( "attachment", attachment.getClass().getSimpleName() );
+        state.put( "type", attachment.getType().name() );
+        state.put( "url", attachment.getUrl() );
+        state.put( "digest", attachment.getDigest() );
         return state;
     }
 
@@ -349,5 +376,26 @@ public final class CommandUtils {
             node = queryService.createConnector( scenario );
         }
         return node;
+    }
+
+    public static String attach(
+            Map<String, Object> attachmentState,
+            List<String> tickets,
+            AttachmentManager attachmentManager ) {
+        String ticket = null;
+        try {
+            boolean isFileAttachment = attachmentState.get( "attachment" ).equals( FileAttachment.class.getSimpleName() );
+            Attachment.Type type = Attachment.Type.valueOf( (String) attachmentState.get( "type" ) );
+            String url = (String) attachmentState.get( "url" );
+            String digest = (String) attachmentState.get( "digest" );
+            if ( isFileAttachment ) {
+                ticket = attachmentManager.attach( type, url, digest, tickets );
+            } else {
+                ticket = attachmentManager.attach( type, new URL( url ), tickets );
+            }
+        } catch ( MalformedURLException e ) {
+            LOG.warn( "Could not attach document.", e);
+        }
+        return ticket;
     }
 }

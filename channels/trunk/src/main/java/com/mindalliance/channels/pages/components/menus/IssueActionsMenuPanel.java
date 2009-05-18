@@ -1,9 +1,10 @@
 package com.mindalliance.channels.pages.components.menus;
 
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.commands.PasteAttachment;
+import com.mindalliance.channels.command.commands.RemoveIssue;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.UserIssue;
-import com.mindalliance.channels.command.commands.RemoveIssue;
-import com.mindalliance.channels.command.Change;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -88,17 +89,21 @@ public class IssueActionsMenuPanel extends MenuPanel {
     }
 
     private List<CommandWrapper> getCommandWrappers() {
-        return new ArrayList<CommandWrapper>() {
-            {
-                final Issue issue = getIssue();
-                if ( !issue.isDetected() )
-                    add( new CommandWrapper( new RemoveIssue( (UserIssue) issue ) ) {
-                        public void onExecuted( AjaxRequestTarget target, Change change ) {
-                            update( target, change );
-                        }
-                    } );
-            }
-        };
+        List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
+        Issue issue = getIssue();
+        if ( !issue.isDetected() ) {
+            commandWrappers.add( new CommandWrapper( new RemoveIssue( (UserIssue) issue ) ) {
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
+            commandWrappers.add( new CommandWrapper( new PasteAttachment( (UserIssue)issue ) ) {
+                 public void onExecuted( AjaxRequestTarget target, Change change ) {
+                     update( target, change );
+                 }
+             } );
+        }
+        return commandWrappers;
     }
 
 

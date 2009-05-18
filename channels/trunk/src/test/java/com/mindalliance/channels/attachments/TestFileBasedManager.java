@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * ...
  */
-@SuppressWarnings( { "HardCodedStringLiteral" } )
+@SuppressWarnings( {"HardCodedStringLiteral"} )
 public class TestFileBasedManager extends TestCase {
 
     private static final String UPLOAD_TXT = "upload.txt";
@@ -38,7 +38,7 @@ public class TestFileBasedManager extends TestCase {
     protected void setUp() throws Exception {
         mgr = new FileBasedManager();
         File directory = new File( System.getProperty( "user.dir" ),
-                                "target" + System.getProperty( "file.separator" )+ "upload-test" );
+                "target" + System.getProperty( "file.separator" ) + "upload-test" );
         if ( !directory.exists() )
             directory.mkdir();
         mgr.setDirectory( directory );
@@ -56,7 +56,7 @@ public class TestFileBasedManager extends TestCase {
         String[] filenames = mgr.getDirectory().list();
         assertNotNull( "Test directory does not exist", filenames );
         assertEquals( "Leftovers from previous test errors", 0, filenames.length );
-        String ticket = mgr.attach( Attachment.Type.MOU, upload );
+        String ticket = mgr.attach( Attachment.Type.MOU, upload, new ArrayList<String>() );
         assertEquals( 2, mgr.getDirectory().list().length );
         verify( fileItem );
 
@@ -79,8 +79,8 @@ public class TestFileBasedManager extends TestCase {
         expect( fileItem.getInputStream() ).andReturn( new FileInputStream( testFile ) );
         replay( fileItem );
         List<String> tickets = new ArrayList<String>();
-        tickets.add(mgr.attach( Attachment.Type.MOU, upload ));
-        tickets.add(mgr.attach( Attachment.Type.Document, upload ));
+        tickets.add( mgr.attach( Attachment.Type.MOU, upload, tickets ) );
+        tickets.add( mgr.attach( Attachment.Type.Document, upload, tickets ) );
         assertEquals( 3, mgr.getDirectory().list().length );
         verify( fileItem );
 
@@ -103,7 +103,10 @@ public class TestFileBasedManager extends TestCase {
         assertFalse( map.exists() );
         mgr.start();
         String spec = "http://localhost:8081";
-        String ticket = mgr.attach( Attachment.Type.PolicyMust, new URL( spec ) );
+        String ticket = mgr.attach(
+                Attachment.Type.PolicyMust,
+                new URL( spec ),
+                new ArrayList<String>() );
 
         Attachment a = mgr.getAttachment( ticket );
         assertNotNull( a );

@@ -7,7 +7,12 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.model.ModelObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
  * Attach if not already done, or re-attach (undoing a detach), and update model object tickets.
@@ -20,11 +25,16 @@ import com.mindalliance.channels.model.ModelObject;
  */
 public class AttachDocument extends AbstractCommand {
 
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( AttachDocument.class );
+
     public AttachDocument() {
     }
 
     public AttachDocument( ModelObject modelObject, String ticket ) {
-        set( "modelObject", modelObject.getId() );
+        set( "attachee", modelObject.getId() );
         set( "ticket", ticket );
     }
 
@@ -38,32 +48,48 @@ public class AttachDocument extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
-        ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "modelObject" ) );
+        ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "attachee" ) );
         String ticket = (String) get( "ticket" );
         AttachmentManager attachmentManager = commander.getAttachmentManager();
         Attachment attachment = attachmentManager.getAttachment( ticket );
-        // Attempt to re-attach if not already attached
         if ( attachment == null ) {
             attachment = attachmentManager.reattach( ticket );
-            if ( attachment == null ) throw new CommandException( " Can't reattach " + ticket + " to " + mo );
+            if ( attachment == null ) {
+                // Attachment needs to be re-created
+                Map<String, Object> attachmentState = (Map<String, Object>) get( "state" );
+                assert attachmentState != null;
+                ticket = CommandUtils.attach(
+                        attachmentState,
+                        mo.getAttachmentTickets(),
+                        commander.getAttachmentManager() );
+            }
         }
-        mo.addAttachmentTicket( ticket );
-        return new Change( Change.Type.Updated, mo, "attachmentTickets" );
+        // avoid duplication
+        mo.removeAttachmentTicket( (String) get( "ticket" ) );
+        set( "ticket", ticket );
+        if ( ticket != null ) {
+            mo.addAttachmentTicket( ticket );
+            return new Change( Change.Type.Updated, mo, "attachmentTickets" );
+        } else {
+            LOG.warn( "Failed to attach document to " + mo );
+            return new Change( Change.Type.None );
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isUndoable() {
-        return true;
+        return get( "ticket" ) != null;
     }
 
     /**
      * {@inheritDoc}
      */
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "modelObject" ) );
+        ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "attachee" ) );
         String ticket = (String) get( "ticket" );
         return new DetachDocument( mo, ticket );
     }

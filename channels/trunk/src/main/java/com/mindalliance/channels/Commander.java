@@ -267,6 +267,12 @@ public interface Commander extends Service {
     boolean isFlowCopied();
 
     /**
+     * Is aan attachment copied?
+     * @return a boolean
+     */
+    boolean isAttachmentCopied();
+
+    /**
      * Sets the commander's lock manager.
      * @param lockManager a lock manager
      */

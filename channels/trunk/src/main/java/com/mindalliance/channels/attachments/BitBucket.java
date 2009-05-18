@@ -3,6 +3,7 @@ package com.mindalliance.channels.attachments;
 import com.mindalliance.channels.AttachmentManager;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,13 @@ public class BitBucket implements AttachmentManager {
      * {@inheritDoc}
      */
     public String attach( Attachment.Type type, FileUpload fileUpload, List<String> tickets ) {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String attach( Attachment.Type type, String url, String digest, List<String> attachmentTickets ) {
         return null;
     }
 
@@ -64,6 +72,13 @@ public class BitBucket implements AttachmentManager {
      */
     public void reattachAll( List<String> tickets ) {
 
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public File findUploaded( String url, String digest ) {
+        return null;
     }
 
     /**

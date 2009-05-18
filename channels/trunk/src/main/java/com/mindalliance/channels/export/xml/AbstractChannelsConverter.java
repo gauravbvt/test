@@ -217,7 +217,8 @@ public abstract class AbstractChannelsConverter implements Converter {
                     url = reader.getValue();
                     String ticket = attachmentManager.attach(
                             Attachment.Type.valueOf( type ),
-                            new URL( url ) );
+                            new URL( url ),
+                            modelObject.getAttachmentTickets() );
                     modelObject.addAttachmentTicket( ticket );
                 } catch ( MalformedURLException e ) {
                     LOG.warn( "Can't attach URL " + url + " to " + modelObject, e);

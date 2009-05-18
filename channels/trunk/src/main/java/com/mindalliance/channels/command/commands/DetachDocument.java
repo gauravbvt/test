@@ -7,6 +7,7 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.model.ModelObject;
 
 /**
@@ -23,7 +24,9 @@ public class DetachDocument extends AbstractCommand {
     }
 
     public DetachDocument( ModelObject modelObject, String ticket ) {
-        set( "modelObject", modelObject.getId() );
+        assert modelObject != null;
+        assert ticket != null;
+        set( "object", modelObject.getId() );
         set( "ticket", ticket );
     }
 
@@ -38,12 +41,13 @@ public class DetachDocument extends AbstractCommand {
      * {@inheritDoc}
      */
     public Change execute( Commander commander ) throws CommandException {
-        ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "modelObject" ) );
+        ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "object" ) );
         String ticket = (String) get( "ticket" );
         AttachmentManager attachmentManager = commander.getAttachmentManager();
         Attachment attachment = attachmentManager.getAttachment( ticket );
         // Don't detach if already detached
         if ( attachment != null ) {
+            set( "state", CommandUtils.getAttachmentState( attachment ) );
             attachmentManager.detach( ticket );
         }
         mo.removeAttachmentTicket( ticket );
@@ -61,8 +65,10 @@ public class DetachDocument extends AbstractCommand {
      * {@inheritDoc}
      */
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "modelObject" ) );
+        ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "object" ) );
         String ticket = (String) get( "ticket" );
-        return new AttachDocument( mo, ticket );
+        AttachDocument command = new AttachDocument( mo, ticket );
+        command.set( "state", get( "state" ) );
+        return command;
     }
 }

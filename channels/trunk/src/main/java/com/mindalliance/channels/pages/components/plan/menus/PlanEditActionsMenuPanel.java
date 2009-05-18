@@ -2,8 +2,9 @@ package com.mindalliance.channels.pages.components.plan.menus;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AddUserIssue;
+import com.mindalliance.channels.command.commands.PasteAttachment;
 import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.components.menus.CommandWrapper;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import org.apache.wicket.Component;
@@ -58,17 +59,24 @@ public class PlanEditActionsMenuPanel extends MenuPanel {
     }
 
     private List<CommandWrapper> getCommandWrappers() {
-        return new ArrayList<CommandWrapper>() {
-            {
-                add( new CommandWrapper( new AddUserIssue( (ModelObject)getModel().getObject() ) ) {
-                    public void onExecuted(
-                            AjaxRequestTarget target,
-                            Change change ) {
-                        update( target, change );
-                    }
-                } );
+        List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
+        commandWrappers.add( new CommandWrapper( new PasteAttachment( getPlan() ) ) {
+             public void onExecuted( AjaxRequestTarget target, Change change ) {
+                 update( target, change );
+             }
+         } );
+        commandWrappers.add( new CommandWrapper( new AddUserIssue( getPlan() ) ) {
+            public void onExecuted(
+                    AjaxRequestTarget target,
+                    Change change ) {
+                update( target, change );
             }
-        };
+        } );
+        return commandWrappers;
+    }
+
+    private Plan getPlan() {
+        return (Plan) getModel().getObject();
     }
 
 }

@@ -352,9 +352,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     public void refresh( AjaxRequestTarget target ) {
         // this.target = target;
         adjustComponents();
-        addPartActionsMenu();
-        target.addComponent( partShowMenu );
-        target.addComponent( partActionsMenu );
+        refreshMenus( target );
         partPanel.refresh( target );
         addFlowDiagram();
         target.addComponent( flowMapDiagramPanel );
@@ -392,4 +390,16 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         flowMapDiagramPanel.refreshImage( target );
     }
 
+    /**
+     * Refresh all menus.
+     * @param target an ajax request target
+     */
+    public void refreshMenus( AjaxRequestTarget target ) {
+        addPartActionsMenu();
+        target.addComponent( partShowMenu );
+        target.addComponent( partActionsMenu );
+        scenarioEditPanel.refreshMenus( target );
+        reqsFlowPanel.refreshMenus( target );
+        outcomesFlowPanel.refreshMenus( target );
+    }
 }
