@@ -1,17 +1,17 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.MultiCommand;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Scenario;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -134,31 +134,6 @@ public class RemovePart extends AbstractCommand {
             // Recreate disconnected flows, possibly external, where possible
             List<Map<String, Object>> removed = (List<Map<String, Object>>) get( "removedFlows" );
             for ( Map<String, Object> identity : removed ) {
-/*
-                Command command;
-                Long removedFlowId = commander.resolveId( (Long) identity.get( "flow " ) );
-                Map<String, Object> state = (Map<String, Object>) identity.get( "state" );
-                Long otherId = (Long) state.get( "other" );
-                Scenario otherScenario = commander.resolve(
-                        Scenario.class,
-                        (Long) state.get( "otherScenario" ) );
-                Node other = CommandUtils.resolveNode( otherId, otherScenario, queryService );
-                if ( otherId != null ) {
-                    // other is a part (part to part flow)
-                    command = new ConnectWithFlow();
-                } else {
-                    // other node is a connector
-                    boolean isOutcome = (Boolean) state.get( "isOutcome" );
-                    if ( isOutcome ) {
-                        command = new AddCapability();
-                    } else {
-                        command = new AddNeed();
-                    }
-                }
-                command.setArguments( state );
-                command.set( "flow", removedFlowId );
-                multi.addCommand( command );
-*/
                 Command connectWithFlow = new ConnectWithFlow();
                 connectWithFlow.setArguments( (Map<String, Object>) identity.get( "state" ) );
                 // Id of deleted flow to be recreated -- passed along for mapping old to new

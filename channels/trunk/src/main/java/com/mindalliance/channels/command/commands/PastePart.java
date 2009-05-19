@@ -75,7 +75,7 @@ public class PastePart extends AbstractCommand {
         if ( get( "part" ) != null )
             commander.mapId( (Long) get( "part" ), part.getId() );
         set( "part", part.getId() );
-        CommandUtils.initialize( part, partState );
+        CommandUtils.initPartFrom( part, partState, commander );
         commander.getAttachmentManager().reattachAll( part.getAttachmentTickets() );
         List<Map<String, Object>> needStates = (List<Map<String, Object>>) copy.get( "needs" );
         List<Long> addedNeeds = new ArrayList<Long>();

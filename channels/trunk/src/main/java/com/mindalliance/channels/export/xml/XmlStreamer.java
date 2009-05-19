@@ -67,8 +67,6 @@ public class XmlStreamer extends AbstractService implements Importer, Exporter {
      */
     private String version = "0.0";
 
-    private Channels channels;
-
     /**
      * Holder of a configured XStream instance.
      */
@@ -92,6 +90,7 @@ public class XmlStreamer extends AbstractService implements Importer, Exporter {
          * Configuration of xstream instance
          */
         private void configure() {
+            xstream.setMode( XStream.NO_REFERENCES );
             xstream.alias( "command", AbstractCommand.class );
             xstream.alias( "journal", Journal.class );
             xstream.alias( "plan", Plan.class );
@@ -112,7 +111,7 @@ public class XmlStreamer extends AbstractService implements Importer, Exporter {
             xstream.registerConverter( new PlanConverter( XmlStreamer.this ) );
             xstream.registerConverter( new EventConverter( XmlStreamer.this ) );
             xstream.registerConverter( new JournalConverter( XmlStreamer.this ) );
-            xstream.registerConverter( new CommandConverter(XmlStreamer.this) );
+            xstream.registerConverter( new CommandConverter( XmlStreamer.this ) );
             xstream.registerConverter( new ScenarioConverter( XmlStreamer.this ) );
             xstream.registerConverter( new RiskConverter( XmlStreamer.this ) );
             xstream.registerConverter( new PartConverter( XmlStreamer.this ) );

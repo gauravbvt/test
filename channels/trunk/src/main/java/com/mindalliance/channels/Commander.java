@@ -117,17 +117,18 @@ public interface Commander extends Service {
      * Find a model object from its id, possibly resolving the id first with idMap.
      *
      * @param clazz a model object class
-     * @param id    a long
+     * @param id    a long or int
      * @return a model object
      * @throws CommandException if not found
      */
     <T extends ModelObject> T resolve( Class<T> clazz, Long id ) throws CommandException;
-    
+
+
     /**
      * Resolves an id.
      *
      * @param id a long
-     * @return a long
+     * @return a long or int
      * @throws CommandException if resolution fails
      */
     Long resolveId( Long id ) throws CommandException;

@@ -1,19 +1,26 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.AttachmentManager;
+import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.attachments.FileAttachment;
+import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Delay;
+import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.InternalFlow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Risk;
+import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
@@ -128,15 +135,67 @@ public final class CommandUtils {
         Map<String, Object> state = new HashMap<String, Object>();
         state.put( "description", part.getDescription() );
         state.put( "task", part.getTask() );
-        state.put( "actor", part.getActor() );
-        state.put( "role", part.getRole() );
-        state.put( "organization", part.getOrganization() );
-        state.put( "jurisdiction", part.getJurisdiction() );
-        state.put( "location", part.getLocation() );
         state.put( "repeatsEvery", part.getRepeatsEvery() );
         state.put( "completionTime", part.getCompletionTime() );
         state.put( "attachmentTickets", new ArrayList<String>( part.getAttachmentTickets() ) );
+        state.put( "selfTerminating", part.isSelfTerminating() );
+        state.put( "repeating", part.isRepeating() );
+        state.put( "terminatesEvent", part.isTerminatesEvent() );
+        state.put( "startsWithScenario", part.isStartsWithScenario() );
+        state.put( "mitigations", new ArrayList<Risk>( part.getMitigations() ) );
+        if ( part.getInitiatedEvent() != null ) state.put( "actor", part.getInitiatedEvent().getName() );
+        if ( part.getActor() != null ) state.put( "actor", part.getActor().getName() );
+        if ( part.getRole() != null ) state.put( "role", part.getRole().getName() );
+        if ( part.getOrganization() != null ) state.put( "organization", part.getOrganization().getName() );
+        if ( part.getJurisdiction() != null ) state.put( "jurisdiction", part.getJurisdiction().getName() );
+        if ( part.getLocation() != null ) state.put( "location", part.getLocation().getName() );
         return state;
+    }
+
+    /**
+     * Initialize a part from a preserved state.
+     *
+     * @param part      a part
+     * @param state     a map
+     * @param commander a commander
+     */
+    @SuppressWarnings( "unchecked" )
+    public static void initPartFrom( Part part, Map<String, Object> state, Commander commander ) {
+        QueryService queryService = commander.getQueryService();
+        part.setDescription( (String) state.get( "description" ) );
+        part.setTask( (String) state.get( "task" ) );
+        part.setRepeating( (Boolean) state.get( "repeating" ) );
+        part.setSelfTerminating( (Boolean) state.get( "selfTerminating" ) );
+        part.setTerminatesEvent( (Boolean) state.get( "terminatesEvent" ) );
+        part.setStartsWithScenario( (Boolean) state.get( "startsWithScenario" ) );
+        part.setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
+        part.setCompletionTime( (Delay) state.get( "completionTime" ) );
+        part.setAttachmentTickets( (ArrayList<String>) state.get( "attachmentTickets" ) );
+        part.setMitigations( (ArrayList<Risk>) state.get( "mitigations" ) );
+        if ( state.get( "initiatedEvent" ) != null )
+            part.setInitiatedEvent( queryService.findOrCreate(
+                    Event.class,
+                    (String) state.get( "initiatedEvent" ) ) );
+        if ( state.get( "actor" ) != null )
+            part.setActor( queryService.findOrCreate(
+                    Actor.class,
+                    (String) state.get( "actor" ) ) );
+        if ( state.get( "role" ) != null )
+            part.setRole( queryService.findOrCreate(
+                    Role.class,
+                    (String) state.get( "role" ) ) );
+        if ( state.get( "organization" ) != null )
+            part.setOrganization( queryService.findOrCreate(
+                    Organization.class,
+                    (String) state.get( "organization" ) ) );
+        if ( state.get( "jurisdiction" ) != null )
+            part.setJurisdiction( queryService.findOrCreate(
+                    Place.class,
+                    (String) state.get( "jurisdiction" ) ) );
+        if ( state.get( "location" ) != null )
+            part.setLocation( queryService.findOrCreate(
+                    Place.class,
+                    (String) state.get( "location" ) ) );
     }
 
     /**
@@ -156,13 +215,14 @@ public final class CommandUtils {
 
     /**
      * Capture the state of an attachment, including attachee.
-     * @param mo a model object
+     *
+     * @param mo         a model object
      * @param attachment an attachment
      * @return a map of attribute names and values
      */
     public static Map<String, Object> getAttachmentState( ModelObject mo, Attachment attachment ) {
         Map<String, Object> state = getAttachmentState( attachment );
-        state.put(  "object", mo.getId() );
+        state.put( "object", mo.getId() );
         return state;
     }
 
@@ -406,7 +466,7 @@ public final class CommandUtils {
                 ticket = attachmentManager.attach( type, new URL( url ), tickets );
             }
         } catch ( MalformedURLException e ) {
-            LOG.warn( "Could not attach document.", e);
+            LOG.warn( "Could not attach document.", e );
         }
         return ticket;
     }

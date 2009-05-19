@@ -1,15 +1,15 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.AbstractCommand;
-import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.Commander;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.command.AbstractCommand;
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.CommandUtils;
-import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.NotFoundException;
 
 import java.util.Map;
 
@@ -52,7 +52,7 @@ public class DuplicatePart extends AbstractCommand {
             if ( part == null ) throw new NotFoundException();
             Map<String, Object> partState = CommandUtils.getPartState( part );
             duplicate = queryService.createPart( scenario );
-            CommandUtils.initialize( duplicate, partState );
+            CommandUtils.initPartFrom( duplicate, partState, commander );
             commander.mapId( (Long) get( "duplicate" ), duplicate.getId() );
             set( "duplicate", duplicate.getId() );
             return new Change( Change.Type.Added, duplicate );

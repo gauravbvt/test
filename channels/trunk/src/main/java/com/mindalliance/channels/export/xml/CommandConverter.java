@@ -4,15 +4,14 @@ import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.MultiCommand;
-import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -30,11 +29,8 @@ public class CommandConverter extends AbstractChannelsConverter {
      */
     public static final Logger LOG = LoggerFactory.getLogger( CommandConverter.class );
 
-    private XStream jsonDriver;
-
     public CommandConverter( Exporter exporter ) {
         super( exporter );
-        jsonDriver = new XStream( new JettisonMappedXmlDriver() );
     }
 
     /**
@@ -61,7 +57,8 @@ public class CommandConverter extends AbstractChannelsConverter {
         writer.endNode();
         // Arguments arguments = new Arguments( command.getArguments() );
         writer.startNode( "arguments" );
-        writer.setValue( toJSON( command.getArguments() ) );
+        // writer.setValue( toJSON( command.getArguments() ) );
+        context.convertAnother( command.getArguments() );
         writer.endNode();
         if ( command instanceof MultiCommand ) {
             writer.startNode( "multi" );
@@ -107,9 +104,9 @@ public class CommandConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "memorable" ) ) {
                 command.setMemorable( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "arguments" ) ) {
-                // Arguments arguments = (Arguments) fromJSON( reader.getValue() );
-                // command.setArguments( arguments.getValue() );
-                command.setArguments( (Map) fromJSON( reader.getValue() ) );
+                // command.setArguments( (Map) fromJSON( reader.getValue() ) );
+                Map arguments = (Map)context.convertAnother( command, HashMap.class );
+                command.setArguments( arguments );
             } else if ( nodeName.equals( "multi" ) ) {
                 MultiCommand multi = (MultiCommand) command;
                 while ( reader.hasMoreChildren() ) {
@@ -135,12 +132,5 @@ public class CommandConverter extends AbstractChannelsConverter {
         return command;
     }
 
-    private String toJSON( Object obj ) {
-        jsonDriver.setMode( XStream.NO_REFERENCES );
-        return jsonDriver.toXML( obj );
-    }
 
-    private Object fromJSON( String json ) {
-        return jsonDriver.fromXML( json );
-    }
 }

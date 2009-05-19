@@ -181,7 +181,6 @@ public class DefaultCommander extends AbstractService implements Commander {
      * {@inheritDoc}
      */
     public Long resolveId( Long id ) throws CommandException {
-        if ( id == null ) return null;
         Long realId = idMap.get( id );
         if ( isReplaying() ) {
             return realId == null ? id : realId;
@@ -189,6 +188,7 @@ public class DefaultCommander extends AbstractService implements Commander {
             return realId == null ? id : resolveRealId( realId );
         }
     }
+
 
     private Long resolveRealId( Long id ) {
         Long realId = idMap.get( id );
