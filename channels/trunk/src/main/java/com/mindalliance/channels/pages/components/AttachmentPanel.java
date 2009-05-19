@@ -390,8 +390,10 @@ public class AttachmentPanel extends AbstractCommandablePanel {
          * Detach document from model object.
          */
         public void deleteAttachment() {
-            attachmentManager.detach( ticket );
-            doCommand( new DetachDocument( getAttachee(), ticket ) );
+            Attachment attachment = attachmentManager.getAttachment( ticket );
+            doCommand( new DetachDocument(
+                    getAttachee(),
+                    attachment  ) );
         }
 
         /**

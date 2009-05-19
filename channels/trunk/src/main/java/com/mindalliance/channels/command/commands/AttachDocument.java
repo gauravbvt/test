@@ -50,7 +50,8 @@ public class AttachDocument extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
-        ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "attachee" ) );
+        ModelObject mo = getAttachee( commander );
+        // commander.resolve( ModelObject.class, (Long) get( "attachee" ) );
         String ticket = (String) get( "ticket" );
         AttachmentManager attachmentManager = commander.getAttachmentManager();
         Attachment attachment = attachmentManager.getAttachment( ticket );
@@ -78,6 +79,17 @@ public class AttachDocument extends AbstractCommand {
         }
     }
 
+    // Work around because of bug in Jettison JSON XML driver
+    @SuppressWarnings( "unchecked" )
+    private ModelObject getAttachee( Commander commander ) throws CommandException {
+        if ( get( "attachee" ) == null ) {
+            Map<String, Object> state = (Map<String, Object>) get( "state" );
+            return commander.resolve( ModelObject.class, (Long) state.get( "object" ) );
+        } else {
+            return commander.resolve( ModelObject.class, (Long) get( "attachee" ) );
+        }
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -91,7 +103,7 @@ public class AttachDocument extends AbstractCommand {
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
         ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "attachee" ) );
         String ticket = (String) get( "ticket" );
-        return new DetachDocument( mo, ticket );
+        return new DetachDocument( mo, commander.getAttachmentManager().getAttachment( ticket ) );
     }
 
 }

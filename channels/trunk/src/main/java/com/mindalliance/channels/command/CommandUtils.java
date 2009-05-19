@@ -155,6 +155,18 @@ public final class CommandUtils {
     }
 
     /**
+     * Capture the state of an attachment, including attachee.
+     * @param mo a model object
+     * @param attachment an attachment
+     * @return a map of attribute names and values
+     */
+    public static Map<String, Object> getAttachmentState( ModelObject mo, Attachment attachment ) {
+        Map<String, Object> state = getAttachmentState( attachment );
+        state.put(  "object", mo.getId() );
+        return state;
+    }
+
+    /**
      * Get the set of identifiables to be locked if a flow and its components are to be locked.
      *
      * @param flow a flow

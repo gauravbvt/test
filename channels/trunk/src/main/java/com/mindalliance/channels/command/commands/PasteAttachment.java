@@ -108,7 +108,7 @@ public class PasteAttachment extends AbstractCommand {
         if ( mo == null || ticket == null ) {
             throw new CommandException( "Can't undo." );
         } else {
-            return new DetachDocument( mo, ticket );
+            return new DetachDocument( mo, commander.getAttachmentManager().getAttachment( ticket ) );
         }
     }
 
