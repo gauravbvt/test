@@ -44,7 +44,7 @@ public class PasteFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     public boolean canDo( Commander commander ) {
-        return commander.isFlowCopied();
+        return super.canDo( commander) && commander.isFlowCopied();
     }
 
     /**

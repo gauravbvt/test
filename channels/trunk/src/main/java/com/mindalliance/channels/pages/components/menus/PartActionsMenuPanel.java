@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.menus;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.CopyPart;
+import com.mindalliance.channels.command.commands.Disintermediate;
 import com.mindalliance.channels.command.commands.DuplicatePart;
 import com.mindalliance.channels.command.commands.PasteAttachment;
 import com.mindalliance.channels.command.commands.PasteFlow;
@@ -64,6 +65,11 @@ public class PartActionsMenuPanel extends ActionMenuPanel {
             }
         } );
         commandWrappers.add( new CommandWrapper( new SatisfyAllNeeds( getPart() ) ) {
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                update( target, change );
+            }
+        } );
+        commandWrappers.add( new CommandWrapper( new Disintermediate( getPart() ) ) {
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 update( target, change );
             }

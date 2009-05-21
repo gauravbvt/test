@@ -41,7 +41,8 @@ public class PasteAttachment extends AbstractCommand {
      * {@inheritDoc}
      */
     public boolean canDo( Commander commander ) {
-        return commander.isAttachmentCopied()
+        return super.canDo( commander)
+                && commander.isAttachmentCopied()
                 && attachmentExists( commander );
     }
 

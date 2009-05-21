@@ -53,7 +53,7 @@ public class PastePart extends AbstractCommand {
      * {@inheritDoc}
      */
     public boolean canDo( Commander commander ) {
-        return commander.isPartCopied();
+        return super.canDo( commander ) && commander.isPartCopied();
     }
 
     /**
@@ -69,7 +69,7 @@ public class PastePart extends AbstractCommand {
             copy = commander.getCopy();
             set( "copy", copy );
         }
-        Map<String, Object> partState = (Map<String, Object>)copy.get( "partState" );
+        Map<String, Object> partState = (Map<String, Object>) copy.get( "partState" );
         Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
         Long priorId = (Long) get( "part" );
         Part part = queryService.createPart( scenario, priorId );

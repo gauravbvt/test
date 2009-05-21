@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.menus;
 
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.commands.AddIntermediate;
 import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.BreakUpFlow;
 import com.mindalliance.channels.command.commands.CopyFlow;
@@ -112,6 +113,11 @@ public class FlowActionsMenuPanel extends MenuPanel {
                 update( target, change );
             }
         } );
+        commandWrappers.add( new CommandWrapper( new AddIntermediate( flow ) ) {
+             public void onExecuted( AjaxRequestTarget target, Change change ) {
+                 update( target, change );
+             }
+         } );
         commandWrappers.add( new CommandWrapper( new BreakUpFlow( flow ) ) {
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 update( target, change );
