@@ -9,11 +9,8 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.link.PopupSettings;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,19 +27,7 @@ import java.util.Set;
 public class PlanShowMenuPanel extends MenuPanel {
 
     public PlanShowMenuPanel( String s, IModel<? extends Scenario> model, Set<Long> expansions ) {
-        super( s, model, expansions );
-        init();
-    }
-
-    private void init() {
-        ListView<Component> menuItems = new ListView<Component>(
-                "items",
-                new PropertyModel<List<Component>>( this, "menuItems" ) ) {
-            protected void populateItem( ListItem<Component> item ) {
-                item.add( item.getModelObject() );
-            }
-        };
-        add( menuItems );
+        super( s, "Show", model, expansions );
     }
 
     public List<Component> getMenuItems() {
@@ -50,26 +35,26 @@ public class PlanShowMenuPanel extends MenuPanel {
         // Edit<->Hide
         Link editLink;
         if ( getExpansions().contains( Channels.getPlan().getId() ) ) {
-             AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {
-                 public void onClick( AjaxRequestTarget target ) {
-                     update( target, new Change( Change.Type.Collapsed, Channels.getPlan() ) );
-                 }
-             };
-             menuItems.add( new LinkMenuItem(
-                     "menuItem",
-                     new Model<String>( "Hide plan details" ),
-                     planMapLink ) );
-         } else {
-             AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {
-                 public void onClick( AjaxRequestTarget target ) {
-                     update( target, new Change( Change.Type.Expanded, Channels.getPlan() ) );
-                 }
-             };
-             menuItems.add( new LinkMenuItem(
-                     "menuItem",
-                     new Model<String>( "Plan details" ),
-                     planMapLink ) );
-         }
+            AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {
+                public void onClick( AjaxRequestTarget target ) {
+                    update( target, new Change( Change.Type.Collapsed, Channels.getPlan() ) );
+                }
+            };
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Hide plan details" ),
+                    planMapLink ) );
+        } else {
+            AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {
+                public void onClick( AjaxRequestTarget target ) {
+                    update( target, new Change( Change.Type.Expanded, Channels.getPlan() ) );
+                }
+            };
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Plan details" ),
+                    planMapLink ) );
+        }
         if ( getExpansions().contains( getScenario().getId() ) ) {
             editLink =
                     new AjaxFallbackLink( "link" ) {
@@ -103,7 +88,7 @@ public class PlanShowMenuPanel extends MenuPanel {
                 "menuItem",
                 new Model<String>( "Playbook" ),
                 reportLink ) );
-         return menuItems;
+        return menuItems;
     }
 
     private Scenario getScenario() {

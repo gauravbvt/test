@@ -1,10 +1,10 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.AbstractCommand;
-import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.Commander;
+import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Scenario;
 
 /**
@@ -31,9 +31,8 @@ public class AddScenario extends AbstractCommand {
      * {@inheritDoc}
      */
     public Change execute( Commander commander ) throws CommandException {
-        Scenario scenario = commander.getQueryService().createScenario();
-        commander.mapId( (Long)get("scenario"), scenario.getId() );
-        commander.mapId( (Long)get("defaultPart"), scenario.getDefaultPart().getId() );
+        Long priorId = (Long) get( "scenario" );
+        Scenario scenario = commander.getQueryService().createScenario( priorId );
         set( "scenario", scenario.getId() );
         set( "defaultPart", scenario.getDefaultPart().getId() );
         return new Change( Change.Type.Added, scenario );

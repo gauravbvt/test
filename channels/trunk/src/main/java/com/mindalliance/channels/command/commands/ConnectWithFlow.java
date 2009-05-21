@@ -80,24 +80,23 @@ public class ConnectWithFlow extends AbstractCommand {
         Scenario scenario = commander.resolve(
                 Scenario.class,
                 (Long) get( "scenario" ) );
-        Part part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
+        Part part = (Part) scenario.getNode( (Long) get( "part" ) );
         Scenario otherScenario = commander.resolve(
                 Scenario.class,
                 (Long) get( "otherScenario" ) );
-        Long nodeId = commander.resolveId( (Long) get( "other" ) );
+        Long nodeId =  (Long) get( "other" );
         Node other = CommandUtils.resolveNode( nodeId, otherScenario, queryService );
         String name = (String) get( "name" );
         boolean isOutcome = (Boolean) get( "isOutcome" );
+        Long priorId = (Long) get( "flow" );
         Flow flow = isOutcome
-                ? queryService.connect( part, other, name )
-                : queryService.connect( other, part, name );
+                ? queryService.connect( part, other, name, priorId )
+                : queryService.connect( other, part, name, priorId );
         Map<String, Object> attributes = (Map<String, Object>) get( "attributes" );
         if ( attributes != null ) {
             CommandUtils.initialize( flow, attributes );
             commander.getAttachmentManager().reattachAll( flow.getAttachmentTickets() );
         }
-        if ( get( "flow" ) != null )
-            commander.mapId( (Long) get( "flow" ), flow.getId() );
         set( "flow", flow.getId() );
         return new Change( Change.Type.Added, flow );
     }
@@ -117,7 +116,7 @@ public class ConnectWithFlow extends AbstractCommand {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Long flowId = (Long) get( "flow" );
             if ( flowId == null ) throw new CommandException( "Can't undo." );
-            Flow flow = scenario.findFlow( commander.resolveId( flowId ) );
+            Flow flow = scenario.findFlow( flowId );
             return new DisconnectFlow( flow );
         } catch ( NotFoundException e ) {
             throw new CommandException( "Can't undo.", e );

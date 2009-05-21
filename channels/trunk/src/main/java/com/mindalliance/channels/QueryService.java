@@ -37,6 +37,20 @@ public interface QueryService extends Service {
     Dao getDao();
 
     /**
+     * Get last assigned id.
+     *
+     * @return a long
+     */
+    Long getLastAssignedId();
+
+    /**
+     * Set last assigned id.
+     *
+     * @param lastId a long
+     */
+    void setLastAssignedId( Long lastId );
+
+    /**
      * Get attachment manager.
      *
      * @return an attachment manager
@@ -87,6 +101,14 @@ public interface QueryService extends Service {
     void add( ModelObject object );
 
     /**
+     * Add a model object to the persistence store.
+     *
+     * @param object the model object.
+     * @param id a Long
+     */
+    void add( ModelObject object, Long id );
+
+    /**
      * Update a model object in the persistence store.
      *
      * @param object the model object
@@ -117,6 +139,17 @@ public interface QueryService extends Service {
     <T extends ModelObject> T findOrCreate( Class<T> clazz, String name );
 
     /**
+      * Find a model object by given name. If none, create it and give it provided id.
+      *
+      * @param clazz the kind of model object
+      * @param name  the name
+      * @param id  a long
+     * @param <T>   a subclass of model object
+      * @return the object or null if name is null or empty
+      */
+     <T extends ModelObject> T findOrCreate( Class<T> clazz, String name, Long id );
+
+    /**
      * Create a connector in a scenario.
      *
      * @param scenario the scenario
@@ -125,12 +158,30 @@ public interface QueryService extends Service {
     Connector createConnector( Scenario scenario );
 
     /**
-     * Create a new part in a scenario.
+     * Create a connector in a scenario, with prior id.
+     *
+     * @param scenario the scenario
+     * @param id a Long
+     * @return the new connector
+     */
+    Connector createConnector( Scenario scenario, Long id );
+
+    /**
+     * Create a new part in a scenario with a new id.
      *
      * @param scenario the scenario
      * @return a new default part.
      */
     Part createPart( Scenario scenario );
+
+    /**
+     * Create a new part in a scenario with given id.
+     *
+     * @param scenario the scenario
+     * @param id  a Long
+     * @return a new default part.
+     */
+    Part createPart( Scenario scenario, Long id );
 
 
     /**
@@ -147,11 +198,33 @@ public interface QueryService extends Service {
     Flow connect( Node source, Node target, String name );
 
     /**
-     * Create a new scenario.
+     * Create a flow between two nodes in this scenario, or between a node in this scenario and a
+     * connector in another scenario. Use provided id.
+     *
+     * @param source the source node.
+     * @param target the target node.
+     * @param name   the name of the flow, possibly empty
+     * @param id a long
+     * @return a new flow.
+     * @throws IllegalArgumentException when nodes are already connected or nodes are not both
+     *                                  in this scenario, or one of the node isn't a connector in a different scenario.
+     */
+    Flow connect( Node source, Node target, String name, Long id );
+
+    /**
+     * Create a new scenario with new id.
      *
      * @return the new scenario.
      */
     Scenario createScenario();
+
+    /**
+      * Create a new scenario with old id.
+      *
+      * @param id a long
+      * @return the new scenario.
+      */
+    Scenario createScenario( Long id );
 
     /**
      * Get all non-empty resource specs, user-entered or not.
@@ -554,4 +627,5 @@ public interface QueryService extends Service {
      * @return a list of parts
      */
     List<Part> findMitigations( Scenario scenario, Risk risk );
+
 }

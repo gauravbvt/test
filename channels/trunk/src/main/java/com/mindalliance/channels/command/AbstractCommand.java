@@ -298,8 +298,6 @@ public abstract class AbstractCommand implements Command {
             throw new RuntimeException( e );
         } catch ( NoSuchMethodException e ) {
             throw new RuntimeException( e );
-        } catch ( RuntimeException e ) {
-            throw e;
         }
     }
 

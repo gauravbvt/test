@@ -7,7 +7,7 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.export.ConnectionSpecification;
 import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -72,8 +73,22 @@ public abstract class AbstractChannelsConverter implements Converter {
         return Channels.instance().getAttachmentManager();
     }
 
+    /**
+     * Is a plan being exported?
+     * @param context marshalling context
+     * @return a boolean
+     */
     protected boolean isExportingPlan( MarshallingContext context ) {
         return context.get( "exporting-plan" ) != null;
+    }
+
+    /**
+     * Is a plan being imported?
+     * @param context unmarshalling context
+     * @return a boolean
+     */
+    protected boolean isImportingPlan( UnmarshallingContext context ) {
+        return context.get( "importing-plan" ) != null;
     }
 
     /**
@@ -83,10 +98,10 @@ public abstract class AbstractChannelsConverter implements Converter {
      * @return a map
      */
     @SuppressWarnings( "unchecked" )
-    protected Map<String, Long> getIdMap( UnmarshallingContext context ) {
-        Map<String, Long> idMap = (Map<String, Long>) context.get( "idMap" );
+    protected Map<Long, Long> getIdMap( UnmarshallingContext context ) {
+        Map<Long, Long> idMap = (Map<Long, Long>) context.get( "idMap" );
         if ( idMap == null ) {
-            idMap = new HashMap<String, Long>();
+            idMap = new HashMap<Long, Long>();
             context.put( "idMap", idMap );
         }
         return idMap;
@@ -99,30 +114,33 @@ public abstract class AbstractChannelsConverter implements Converter {
      * @return a map
      */
     @SuppressWarnings( "unchecked" )
-    protected Map<Connector, ConnectionSpecification> getProxyConnectors( UnmarshallingContext context ) {
-        Map<Connector, ConnectionSpecification> proxyConnectors =
-                (Map<Connector, ConnectionSpecification>) context.get( "proxyConnectors" );
+    protected Map<Connector, List<ConnectionSpecification>> getProxyConnectors( UnmarshallingContext context ) {
+        Map<Connector, List<ConnectionSpecification>> proxyConnectors =
+                (Map<Connector, List<ConnectionSpecification>>) context.get( "proxyConnectors" );
         if ( proxyConnectors == null ) {
-            proxyConnectors = new HashMap<Connector, ConnectionSpecification>();
+            proxyConnectors = new HashMap<Connector, List<ConnectionSpecification>>();
             context.put( "proxyConnectors", proxyConnectors );
         }
         return proxyConnectors;
     }
 
     /**
-     * Make a substitution in the idmap
-     *
-     * @param previous    an identifiable
-     * @param replacement an identifiable
-     * @param idMap       a map
+     * Export a model object's user issues.
+     * @param modelObject a model object
+     * @param writer a writer
+     * @param context  a marshalling context
      */
-    protected void replaceInIdMap( Identifiable previous, Identifiable replacement, Map<String, Long> idMap ) {
-        for ( Map.Entry<String, Long> entry : idMap.entrySet() ) {
-            if ( entry.getValue() == previous.getId() ) {
-                entry.setValue( replacement.getId() );
-                return;
-            }
+    protected void exportUserIssues(
+            ModelObject modelObject,
+            HierarchicalStreamWriter writer,
+            MarshallingContext context  ) {
+        List<Issue> issues = getQueryService().findAllUserIssues( modelObject );
+        for ( Issue issue : issues ) {
+            writer.startNode( "issue" );
+            context.convertAnother( issue );
+            writer.endNode();
         }
+
     }
 
     /**

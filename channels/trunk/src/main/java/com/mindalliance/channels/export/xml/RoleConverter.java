@@ -30,8 +30,10 @@ public class RoleConverter extends EntityConverter {
      * {@inheritDoc}
      */
     @Override
-    ModelObject findOrMakeEntity( String name ) {
-        return getQueryService().findOrCreate( Role.class, name );
+    ModelObject findOrMakeEntity( String name, Long id, boolean importingPlan ) {
+        return importingPlan
+                ? getQueryService().findOrCreate( Role.class, name, id )
+                : getQueryService().findOrCreate( Role.class, name );
     }
 
     /**

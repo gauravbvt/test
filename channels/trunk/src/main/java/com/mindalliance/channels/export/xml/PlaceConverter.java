@@ -32,8 +32,10 @@ public class PlaceConverter extends EntityConverter {
     /**
      * {@inheritDoc}
      */
-    ModelObject findOrMakeEntity( String name ) {
-        return getQueryService().findOrCreate( Place.class, name );
+    ModelObject findOrMakeEntity( String name, Long id, boolean importingPlan ) {
+        return importingPlan
+                ? getQueryService().findOrCreate( Place.class, name, id )
+                : getQueryService().findOrCreate( Place.class, name );
     }
 
     /**

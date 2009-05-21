@@ -1,14 +1,14 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.AbstractCommand;
-import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.Commander;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.command.AbstractCommand;
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.CommandUtils;
-import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.NotFoundException;
 
 import java.util.Map;
 
@@ -30,7 +30,6 @@ public class DisconnectFlow extends AbstractCommand {
         needLocksOn( CommandUtils.getLockingSetFor( flow ) );
         set( "scenario", flow.getScenario().getId() );
         set( "flow", flow.getId() );
-        set( "flowState", CommandUtils.getFlowState( flow ) );
     }
 
     /**
@@ -46,7 +45,8 @@ public class DisconnectFlow extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Flow flow = scenario.findFlow( commander.resolveId( (Long) get( "flow" ) ) );
+            Flow flow = scenario.findFlow( (Long) get( "flow" ) );
+            set( "flowState", CommandUtils.getFlowState( flow ) );
             flow.disconnect();
             commander.releaseAnyLockOn( flow );
             return new Change( Change.Type.Removed, flow );

@@ -6,7 +6,6 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
@@ -27,7 +26,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -98,12 +96,7 @@ public class ScenarioConverter extends AbstractChannelsConverter {
             writer.endNode();
         }
         // Scenario user issues
-        List<Issue> issues = queryService.findAllUserIssues( scenario );
-        for ( Issue issue : issues ) {
-            writer.startNode( "issue" );
-            context.convertAnother( issue );
-            writer.endNode();
-        }
+        exportUserIssues( scenario, writer, context );
         // Risks in scope
         for ( Risk risk : scenario.getRisks() ) {
             writer.startNode( "risk" );
@@ -135,14 +128,17 @@ public class ScenarioConverter extends AbstractChannelsConverter {
      */
     @SuppressWarnings( "unchecked" )
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
-        Map<String, Long> idMap = getIdMap( context );
+        Map<Long, Long> idMap = getIdMap( context );
+        boolean importingPlan = isImportingPlan( context );
         getProxyConnectors( context );
         QueryService queryService = getQueryService();
-        Scenario scenario = queryService.createScenario();
+        Long oldId = Long.parseLong( reader.getAttribute( "id" ) );
+        Scenario scenario = importingPlan
+                                ? queryService.createScenario( oldId )
+                                : queryService.createScenario();
         Part defaultPart = scenario.getDefaultPart();
         context.put( "scenario", scenario );
         scenario.setName( reader.getAttribute( "name" ) );
-        String oldId = reader.getAttribute( "id" );
         idMap.put( oldId, scenario.getId() );
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();

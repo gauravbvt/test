@@ -1,20 +1,17 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.command.AbstractCommand;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.MultiCommand;
-import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Scenario;
 
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -31,13 +28,11 @@ public class BreakUpFlow extends AbstractCommand {
     }
 
     public BreakUpFlow( Flow flow ) {
-        super();
         addConflicting( flow );
         needLocksOn( CommandUtils.getLockingSetFor( flow ) );
         needLockOn( flow.getScenario() );
         set( "flow", flow.getId() );
         set( "scenario", flow.getScenario().getId() );
-        set( "flowState", CommandUtils.getFlowState( flow ) );
     }
 
     /**
@@ -53,9 +48,18 @@ public class BreakUpFlow extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Flow flow = scenario.findFlow( commander.resolveId( (Long) get( "flow" ) ) );
-            breakup( flow, commander );
-            ignoreLock( commander.resolveId( (Long) get( "flow" ) ) );
+            Flow flow = scenario.findFlow( (Long) get( "flow" ) );
+            MultiCommand multi = (MultiCommand) get( "subCommands" );
+            if ( multi == null ) {
+                multi = makeSubCommands( flow );
+                set( "subCommands", multi );
+            }
+            // else this is a replay
+            multi.execute( commander );
+            set( "flowState", CommandUtils.getFlowState( flow ) );
+            flow.disconnect();
+//            breakup( flow, commander );
+            ignoreLock( (Long) get( "flow" ) );
             return new Change( Change.Type.Recomposed, scenario );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
@@ -74,53 +78,44 @@ public class BreakUpFlow extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        MultiCommand multi = new MultiCommand( "unbreak flow" );
+        MultiCommand multi = new MultiCommand( "reconnect flow" );
         multi.setUndoes( getName() );
         ConnectWithFlow connectWithFlow = new ConnectWithFlow();
         connectWithFlow.setArguments( (Map<String, Object>) get( "flowState" ) );
-        connectWithFlow.set( "flow", commander.resolveId( (Long) get( "flow" ) ) );
+        connectWithFlow.set( "flow", get( "flow" ) );
         multi.addCommand( connectWithFlow );
-        List<Long> addedFlows = (List<Long>) get( "addedFlows" );
-        if ( addedFlows != null ) {
-            try {
-                Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-                for ( Long id : addedFlows ) {
-                    Flow addedFlow = scenario.findFlow( commander.resolveId( id ) );
-                    DisconnectFlow disconnectFlow = new DisconnectFlow( addedFlow );
-                    multi.addCommand( disconnectFlow );
-                }
-            } catch ( NotFoundException e ) {
-                throw new CommandException( "You need to refresh.", e );
-            }
-        }
+        MultiCommand subCommands = (MultiCommand) get( "subCommands" );
+        subCommands.setMemorable( false );
+        multi.addCommand( subCommands.makeUndoCommand( commander ) );
         return multi;
     }
-
-    private void breakup( Flow flow, Commander commander ) {
-        QueryService queryService = commander.getQueryService();
+    // Create a capability and/or need if not repetitive
+    private MultiCommand makeSubCommands( Flow flow ) {
+        MultiCommand subCommands = new MultiCommand( "breakup flow - extra" );
+        subCommands.setMemorable( false );
         if ( flow.isInternal() ) {
-            List<Long> addedFlows = new ArrayList<Long>();
             Node source = flow.getSource();
             Node target = flow.getTarget();
             if ( !source.isConnector() && !target.isConnector() ) {
                 if ( !source.hasMultipleOutcomes( getName() ) ) {
-                    Flow newFlow = queryService.connect( source,
-                            queryService.createConnector( source.getScenario() ),
-                            getName() );
-                    newFlow.initFrom( flow );
-                    addedFlows.add( newFlow.getId() );
+                    Command addCapability = new AddCapability();
+                    addCapability.set( "scenario", source.getScenario().getId() );
+                    addCapability.set( "part", source.getId() );
+                    addCapability.set( "name", flow.getName() );
+                    addCapability.set( "attributes", CommandUtils.getFlowAttributes( flow ) );
+                    subCommands.addCommand( addCapability );
                 }
                 if ( !target.hasMultipleRequirements( getName() ) ) {
-                    Flow newFlow = queryService.connect( queryService.createConnector( target.getScenario() ),
-                            target,
-                            getName() );
-                    newFlow.initFrom( flow );
-                    addedFlows.add( newFlow.getId() );
+                    Command addNeed = new AddNeed();
+                    addNeed.set( "scenario", target.getScenario().getId() );
+                    addNeed.set( "part", target.getId() );
+                    addNeed.set( "name", flow.getName() );
+                    addNeed.set( "attributes", CommandUtils.getFlowAttributes( flow ) );
+                    subCommands.addCommand( addNeed );
                 }
             }
-            set( "addedFlows", addedFlows );
         }
-        flow.disconnect();
+        return subCommands;
     }
 
 }

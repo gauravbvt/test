@@ -26,6 +26,7 @@ public interface Dao extends Service {
 
     /**
      * Make a plan with unique id.
+     *
      * @return
      */
     Plan createPlan();
@@ -36,36 +37,42 @@ public interface Dao extends Service {
     long getScenarioCount();
 
     /**
+     * Create a part with given id if not null.
+     *
      * @param scenario the scenario that will contain this part
+     * @param id a Long
      * @return a new default part.
      */
-    Part createPart( Scenario scenario );
+    Part createPart( Scenario scenario, Long id );
 
     /**
      * @param scenario the scenario that will contain this connector
+     * @param id a Long
      * @return a new connector.
      */
-    Connector createConnector( Scenario scenario );
+    Connector createConnector( Scenario scenario, Long id );
 
     /**
-     * Create a new internal flow.
+     * Create a new internal flow, giving it provided id if not null.
      *
      * @param source the source
      * @param target the target
      * @param name   the name of the flow
+     * @param id     Long or null
      * @return a new flow.
      */
-    InternalFlow createInternalFlow( Node source, Node target, String name );
+    InternalFlow createInternalFlow( Node source, Node target, String name, Long id );
 
     /**
-     * Create a new external flow.
+     * Create a new external flow, giving it provided id if not null.
      *
      * @param source the source
      * @param target the target
      * @param name   the name of the flow
+     * @param id     Long or null
      * @return a new flow.
      */
-    ExternalFlow createExternalFlow( Node source, Node target, String name );
+    ExternalFlow createExternalFlow( Node source, Node target, String name, Long id );
 
     /**
      * Find a model object given its id.
@@ -88,11 +95,19 @@ public interface Dao extends Service {
     <T extends ModelObject> List<T> list( Class<T> clazz );
 
     /**
-     * Add a model object.
+     * Add a model object with a new id.
      *
      * @param object the model object.
      */
     void add( ModelObject object );
+
+    /**
+     * Add a model object with a given id.
+     *
+     * @param object the model object.
+     * @param id     a long
+     */
+    void add( ModelObject object, Long id );
 
     /**
      * Update a model object.
@@ -125,6 +140,20 @@ public interface Dao extends Service {
     void flush();
 
     /**
+     * Get last assigned id.
+     *
+     * @return a long
+     */
+    Long getLastAssignedId();
+
+    /**
+     * Set last assigned id.
+     *
+     * @param lastId a long
+     */
+    void setLastAssignedId( Long lastId );
+
+    /**
      * Handle post command execution event.
      *
      * @param command a command
@@ -145,4 +174,5 @@ public interface Dao extends Service {
      * Called when application is terminated.
      */
     void onDestroy();
+
 }

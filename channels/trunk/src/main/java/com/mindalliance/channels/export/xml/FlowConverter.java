@@ -11,7 +11,6 @@ import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.InternalFlow;
-import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
@@ -22,6 +21,8 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,11 +38,11 @@ public class FlowConverter extends AbstractChannelsConverter {
     /**
      * The exported-imported id map
      */
-    private Map<String, Long> idMap;
+    private Map<Long, Long> idMap;
     /**
      * Local connectors that stand for external connectors.
      */
-    private Map<Connector, ConnectionSpecification> proxyConnectors;
+    private Map<Connector, List<ConnectionSpecification>> proxyConnectors;
 
     public FlowConverter( Exporter exporter ) {
         super( exporter );
@@ -96,11 +97,7 @@ public class FlowConverter extends AbstractChannelsConverter {
         }
         // Flow user issues (exported only if an internal flow)
         if ( flow.isInternal() ) {
-            for ( Issue issue : getQueryService().findAllUserIssues( flow ) ) {
-                writer.startNode( "issue" );
-                context.convertAnother( issue );
-                writer.endNode();
-            }
+            exportUserIssues( flow, writer, context );
         }
     }
 
@@ -146,6 +143,7 @@ public class FlowConverter extends AbstractChannelsConverter {
                                  HierarchicalStreamWriter writer,
                                  Scenario currentScenario ) {
         writer.startNode( "connector" );
+        writer.addAttribute( "id", "" + connector.getId() );
         // Connector is in other scenario -- an external flow
         if ( connector.getScenario() != currentScenario ) {
             writer.addAttribute( "scenario", connector.getScenario().getName() );
@@ -172,18 +170,20 @@ public class FlowConverter extends AbstractChannelsConverter {
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
         idMap = getIdMap( context );
         proxyConnectors = getProxyConnectors( context );
+        boolean importingPlan = this.isImportingPlan( context );
         Scenario scenario = (Scenario) context.get( "scenario" );
         String flowName = reader.getAttribute( "name" );
-        String flowId = reader.getAttribute( "id" );
+        Long flowId = Long.parseLong( reader.getAttribute( "id" ) );
         reader.moveDown();
         assert reader.getNodeName().equals( "source" );
-        Node source = resolveNode( reader, scenario, true );
+        Node source = resolveNode( reader, scenario, true, flowId, importingPlan );
         reader.moveUp();
         reader.moveDown();
         assert reader.getNodeName().equals( "target" );
-        Node target = resolveNode( reader, scenario, false );
+        Node target = resolveNode( reader, scenario, false, flowId, importingPlan );
         reader.moveUp();
-        Flow flow = makeFlow( source, target, flowName, flowId );
+        boolean preserveFlowId = importingPlan && !( isProxy( target ) || isProxy( source ) );
+        Flow flow = makeFlow( source, target, flowName, flowId, preserveFlowId );
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
@@ -192,7 +192,7 @@ public class FlowConverter extends AbstractChannelsConverter {
                 flow.setDescription( description );
             } else if ( nodeName.equals( "detection-waivers" ) ) {
                 importDetectionWaivers( flow, reader );
-            }  else if ( nodeName.equals( "attachments" ) ) {
+            } else if ( nodeName.equals( "attachments" ) ) {
                 importAttachmentTickets( flow, reader );
             } else if ( nodeName.equals( "channel" ) ) {
                 Channel channel = (Channel) context.convertAnother( scenario, Channel.class );
@@ -222,23 +222,33 @@ public class FlowConverter extends AbstractChannelsConverter {
         return flow;
     }
 
+    private boolean isProxy( Node node ) {
+        return node.isConnector() && proxyConnectors.containsKey( (Connector) node );
+    }
+
     private Flow makeFlow(
             Node source,
             Node target,
             String name,
-            String idValue ) {
+            Long flowId,
+            boolean preserveId ) {
 
         QueryService queryService = getQueryService();
-        Flow flow = queryService.connect( source, target, name );
-        assert idMap.get( idValue ) == null;
-        idMap.put( idValue, flow.getId() );
+        Flow flow = queryService.connect(
+                source,
+                target,
+                name,
+                preserveId ? flowId : null );
+        idMap.put( flowId, flow.getId() );
         return flow;
     }
 
 
     private Node resolveNode( HierarchicalStreamReader reader,
                               Scenario scenario,
-                              boolean isSource ) {
+                              boolean isSource,
+                              Long flowId,
+                              boolean importingPlan ) {
         Node node;
         reader.moveDown();
         String nodeName = reader.getNodeName();
@@ -246,7 +256,7 @@ public class FlowConverter extends AbstractChannelsConverter {
             node = resolvePart( reader, scenario );
         } else {
             assert nodeName.equals( "connector" );
-            node = resolveConnector( reader, scenario, isSource );
+            node = resolveConnector( reader, scenario, isSource, flowId, importingPlan );
         }
         reader.moveUp();
         return node;
@@ -254,18 +264,29 @@ public class FlowConverter extends AbstractChannelsConverter {
 
     private Part resolvePart( HierarchicalStreamReader reader,
                               Scenario scenario ) {
-        String id = reader.getAttribute( "id" );
+        Long id = Long.parseLong( reader.getAttribute( "id" ) );
+        // When importing a scenario (vs reloading a plan), ids are re-assigned
         return (Part) scenario.getNode( idMap.get( id ) );
     }
 
     private Connector resolveConnector( HierarchicalStreamReader reader,
                                         Scenario scenario,
-                                        boolean isSource ) {
-        Connector connector = getQueryService().createConnector( scenario );
+                                        boolean isSource,
+                                        Long flowId,
+                                        boolean importingPlan ) {
+        Connector connector;
         String externalScenarioName = reader.getAttribute( "scenario" );
+        if ( importingPlan && externalScenarioName == null ) {
+            // reuse prior id
+            Long id = Long.parseLong( reader.getAttribute( "id" ) );
+            connector = getQueryService().createConnector( scenario, id );
+        } else {
+            // use new id
+            connector = getQueryService().createConnector( scenario );
+        }
         if ( externalScenarioName != null ) {
             // Connector is in other scenario
-            registerAsProxy( connector, reader, isSource, externalScenarioName );
+            registerAsProxy( connector, reader, isSource, externalScenarioName, flowId );
         }
         return connector;
     }
@@ -273,7 +294,8 @@ public class FlowConverter extends AbstractChannelsConverter {
     private void registerAsProxy( Connector connector,
                                   HierarchicalStreamReader reader,
                                   boolean isSource,
-                                  String externalScenarioName ) {
+                                  String externalScenarioName,
+                                  Long flowId ) {
         String externalScenarioDescription = "";
         String flowName = null;
         String roleName = null;
@@ -316,7 +338,17 @@ public class FlowConverter extends AbstractChannelsConverter {
                 taskDescription,
                 roleName,
                 organizationName ) );
-        proxyConnectors.put( connector, conSpec );
+        conSpec.setExternalFlowId( flowId );
+        addConnectionSpec( connector, conSpec );
+    }
+
+    private void addConnectionSpec( Connector connector, ConnectionSpecification conSpec ) {
+        List<ConnectionSpecification> conSpecs = proxyConnectors.get( connector );
+        if ( conSpecs == null ) {
+            conSpecs = new ArrayList<ConnectionSpecification>();
+            proxyConnectors.put(  connector, conSpecs );
+        }
+        conSpecs.add( conSpec );
     }
 
 }

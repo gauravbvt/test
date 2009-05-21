@@ -35,6 +35,7 @@ public class DetachDocument extends AbstractCommand {
     public DetachDocument( ModelObject modelObject, Attachment attachment ) {
         assert modelObject != null;
         assert attachment != null;
+        needLockOn( modelObject );
         set( "state", CommandUtils.getAttachmentState( modelObject, attachment ) );
     }
 
@@ -98,7 +99,7 @@ public class DetachDocument extends AbstractCommand {
         ModelObject mo = commander.resolve( ModelObject.class, (Long) state.get( "object" ) );
         String ticket = (String) get( "ticket" );
         AttachDocument command = new AttachDocument( mo, ticket );
-        command.set( "state", get( "state" ) );
+        command.set( "state", state );
         return command;
     }
 }

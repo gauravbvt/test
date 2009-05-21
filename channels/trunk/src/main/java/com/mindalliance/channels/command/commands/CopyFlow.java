@@ -1,15 +1,15 @@
 package com.mindalliance.channels.command.commands;
 
+import com.mindalliance.channels.Commander;
+import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.Commander;
+import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.CommandUtils;
-import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Scenario;
 
 /**
  * Copy a flow.
@@ -49,8 +49,8 @@ public class CopyFlow extends AbstractCommand {
         Flow flow;
         Part part;
         try {
-            part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
-            flow = scenario.findFlow( commander.resolveId( (Long) get( "flow" ) ) );
+            part = (Part) scenario.getNode( (Long) get( "part" ) );
+            flow = scenario.findFlow( (Long) get( "flow" ) );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh", e );
         }

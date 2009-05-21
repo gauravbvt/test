@@ -43,7 +43,7 @@ public class AddUserIssue extends AbstractCommand {
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
         QueryService queryService = commander.getQueryService();
-
+        Long priorId = (Long) get( "issue" );
         UserIssue issue = new UserIssue( commander.resolve(
                 ModelObject.class,
                 (Long) get( "modelObject" ) ) );
@@ -53,9 +53,7 @@ public class AddUserIssue extends AbstractCommand {
             CommandUtils.initialize( issue, state );
             commander.getAttachmentManager().reattachAll( issue.getAttachmentTickets() );
         }
-        queryService.add( issue );
-        if ( get( "issue" ) != null )
-            commander.mapId( (Long) get( "issue" ), issue.getId() );
+        queryService.add( issue, priorId );
         set( "issue", issue.getId() );
         return new Change( Change.Type.Added, issue );
 

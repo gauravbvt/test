@@ -29,7 +29,11 @@ public class ConnectionSpecification implements Serializable {
     /**
      * Proxy connector is source, or external connector is source.
      */
-    boolean isSource;
+    private boolean isSource;
+    /**
+     * External flow id.
+     */
+    private Long externalFlowId;
 
     public ConnectionSpecification() {
     }
@@ -64,5 +68,13 @@ public class ConnectionSpecification implements Serializable {
 
     public void setSource( boolean source ) {
         isSource = source;
+    }
+
+    public Long getExternalFlowId() {
+        return externalFlowId;
+    }
+
+    public void setExternalFlowId( Long externalFlowId ) {
+        this.externalFlowId = externalFlowId;
     }
 }

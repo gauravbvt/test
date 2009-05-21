@@ -13,11 +13,8 @@ import com.mindalliance.channels.pages.PlanPage;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,39 +28,20 @@ import java.util.Set;
  * Date: Mar 10, 2009
  * Time: 8:58:39 AM
  */
-public class PlanActionsMenuPanel extends MenuPanel {
+public class PlanActionsMenuPanel extends ActionMenuPanel {
 
     public PlanActionsMenuPanel(
             String s,
             IModel<? extends Scenario> model,
             Set<Long> expansions ) {
         super( s, model, expansions );
-        init();
-    }
-
-    private void init() {
-        ListView<Component> menuItems = new ListView<Component>(
-                "items",
-                new PropertyModel<List<Component>>( this, "menuItems" ) ) {
-            protected void populateItem( ListItem<Component> item ) {
-                item.add( item.getModelObject() );
-            }
-        };
-        add( menuItems );
     }
 
     /**
-     * Get population of menu items.
-     *
-     * @return a list of menu items
+     * {@inheritDoc}
      */
     public List<Component> getMenuItems() {
-        List<Component> menuItems = new ArrayList<Component>();
-        // Undo and redo
-        menuItems.add( this.getUndoMenuItem( "menuItem" ) );
-        menuItems.add( this.getRedoMenuItem( "menuItem" ) );
-        // Commands
-        menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
+        List<Component> menuItems = super.getMenuItems();
         // Export
         menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Export to XML" ),
                 new BookmarkablePageLink<Scenario>(
@@ -74,7 +52,10 @@ public class PlanActionsMenuPanel extends MenuPanel {
         return menuItems;
     }
 
-    private List<CommandWrapper> getCommandWrappers() {
+    /**
+     * {@inheritDoc}
+     */
+    protected List<CommandWrapper> getCommandWrappers() {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
         final Scenario scenario = getScenario();
         commandWrappers.add( new CommandWrapper( new PastePart( getScenario() ) ) {

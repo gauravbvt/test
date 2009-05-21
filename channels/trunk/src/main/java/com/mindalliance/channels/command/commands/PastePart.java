@@ -71,9 +71,8 @@ public class PastePart extends AbstractCommand {
         }
         Map<String, Object> partState = (Map<String, Object>)copy.get( "partState" );
         Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-        Part part = queryService.createPart( scenario );
-        if ( get( "part" ) != null )
-            commander.mapId( (Long) get( "part" ), part.getId() );
+        Long priorId = (Long) get( "part" );
+        Part part = queryService.createPart( scenario, priorId );
         set( "part", part.getId() );
         CommandUtils.initPartFrom( part, partState, commander );
         commander.getAttachmentManager().reattachAll( part.getAttachmentTickets() );
@@ -128,33 +127,29 @@ public class PastePart extends AbstractCommand {
             if ( partId == null ) {
                 throw new CommandException( "Can't undo." );
             } else {
-                part = (Part) scenario.getNode( commander.resolveId( partId ) );
+                part = (Part) scenario.getNode( partId );
                 if ( part == null ) throw new NotFoundException();
             }
             // Disconnect any added needs and capabilities - don't fail if not found
             List<Long> addedNeeds = (List<Long>) get( "addedNeeds" );
             if ( addedNeeds != null ) {
-                for ( long id : addedNeeds ) {
-                    // It may not have been put in snapshot yet.
-                    Long flowId = commander.resolveId( id );
+                for ( Long flowId : addedNeeds ) {
                     if ( flowId != null ) {
                         Flow flow = scenario.findFlow( flowId );
                         multi.addCommand( new RemoveNeed( flow ) );
                     } else {
-                        LOG.info( "Info need not found at " + id );
+                        LOG.info( "Info need not found at " + flowId );
                     }
                 }
             }
             List<Long> addedCapabilities = (List<Long>) get( "addedCapabilities" );
             if ( addedCapabilities != null ) {
-                for ( long id : addedCapabilities ) {
-                    // It may not have been put in snapshot yet.
-                    Long flowId = commander.resolveId( id );
+                for ( Long flowId : addedCapabilities ) {
                     if ( flowId != null ) {
                         Flow flow = scenario.findFlow( flowId );
                         multi.addCommand( new RemoveCapability( flow ) );
                     } else {
-                        LOG.info( "Info capability not found at " + id );
+                        LOG.info( "Info capability not found at " + flowId );
                     }
                 }
             }

@@ -68,6 +68,7 @@ public final class CommandUtils {
         attributes.put( "maxDelay", new Delay( flow.getMaxDelay() ) );
         attributes.put( "channels", flow.getChannelsCopy() );
         attributes.put( "attachmentTickets", new ArrayList<String>( flow.getAttachmentTickets() ) );
+        attributes.put( "waivedIssueDetections", new ArrayList<String>( flow.getWaivedIssueDetections() ) );
         attributes.put( "significanceToTarget", flow.getSignificanceToTarget() );
         attributes.put( "significanceToSource", flow.getSignificanceToSource() );
         return attributes;
@@ -108,6 +109,7 @@ public final class CommandUtils {
             other = externalFlow.getConnector();
         }
         Map<String, Object> state = new HashMap<String, Object>();
+        // state.put( "id", flow.getId() );
         state.put( "name", flow.getName() );
         state.put( "isOutcome", isOutcome );
         state.put( "scenario", part.getScenario().getId() );
@@ -138,6 +140,7 @@ public final class CommandUtils {
         state.put( "repeatsEvery", part.getRepeatsEvery() );
         state.put( "completionTime", part.getCompletionTime() );
         state.put( "attachmentTickets", new ArrayList<String>( part.getAttachmentTickets() ) );
+        state.put( "waivedIssueDetections", new ArrayList<String>( part.getWaivedIssueDetections() ) );
         state.put( "selfTerminating", part.isSelfTerminating() );
         state.put( "repeating", part.isRepeating() );
         state.put( "terminatesEvent", part.isTerminatesEvent() );
@@ -375,15 +378,20 @@ public final class CommandUtils {
      *
      * @param flow      a flow to duplicate
      * @param isOutcome whether to replicate as outcome or requirement
+     * @param priorId   Long or null
      * @return a created flow
      */
-    public static Flow duplicate( Flow flow, boolean isOutcome ) {
+    public static Flow duplicate( Flow flow, boolean isOutcome, Long priorId ) {
         Flow duplicate;
         if ( isOutcome ) {
             Node source = flow.getSource();
             Scenario scenario = flow.getSource().getScenario();
             QueryService queryService = scenario.getQueryService();
-            duplicate = queryService.connect( source, queryService.createConnector( scenario ), flow.getName() );
+            duplicate = queryService.connect(
+                    source,
+                    queryService.createConnector( scenario ),
+                    flow.getName(),
+                    priorId );
         } else {
             Node target = flow.getTarget();
             Scenario scenario = target.getScenario();
@@ -391,7 +399,8 @@ public final class CommandUtils {
             duplicate = queryService.connect(
                     queryService.createConnector( scenario ),
                     target,
-                    flow.getName() );
+                    flow.getName(),
+                    priorId );
         }
         duplicate.initFrom( flow );
         return duplicate;

@@ -45,7 +45,6 @@ public class AddPart extends AbstractCommand {
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
         QueryService queryService = commander.getQueryService();
-
         Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
         // Identify any undefined part likely created to be the lone default part.
         Long defaultPartId = (Long) get( "defaultPart" );
@@ -54,12 +53,10 @@ public class AddPart extends AbstractCommand {
             // A default part was added before removing the one being restored by adding it.
             if ( scenario.countParts() == 1 && scenario.getDefaultPart().isUndefined() ) {
                 defaultPart = scenario.getDefaultPart();
-                // commander.mapId( defaultPartId, defaultPart.getId() );
             }
         }
-        Part part = queryService.createPart( scenario );
-        if ( get( "part" ) != null )
-            commander.mapId( (Long) get( "part" ), part.getId() );
+        Long priorId = (Long) get( "part" );
+        Part part = queryService.createPart( scenario, priorId );
         set( "part", part.getId() );
         if ( defaultPart != null ) scenario.removeNode( defaultPart );
         Map<String, Object> partState = (Map<String, Object>) get( "partState" );
@@ -83,14 +80,9 @@ public class AddPart extends AbstractCommand {
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Long partId = (Long) get( "part" );
-            if ( partId == null ) {
-                throw new CommandException( "Can't undo." );
-            } else {
-                Part part = (Part) scenario.getNode( commander.resolveId( partId ) );
-                if ( part == null ) throw new NotFoundException();
-                return new RemovePart( part );
-            }
+            Part part = (Part) scenario.getNode( (Long) get( "part" ) );
+            if ( part == null ) throw new NotFoundException();
+            return new RemovePart( part );
         } catch ( NotFoundException e ) {
             throw new CommandException( "Can't undo", e );
         }

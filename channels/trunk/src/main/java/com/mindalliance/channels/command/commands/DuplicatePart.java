@@ -48,12 +48,12 @@ public class DuplicatePart extends AbstractCommand {
         Part duplicate;
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Part part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
+            Part part = (Part) scenario.getNode( (Long) get( "part" ) );
             if ( part == null ) throw new NotFoundException();
             Map<String, Object> partState = CommandUtils.getPartState( part );
-            duplicate = queryService.createPart( scenario );
+            Long priorId = (Long) get( "duplicate" );
+            duplicate = queryService.createPart( scenario, priorId );
             CommandUtils.initPartFrom( duplicate, partState, commander );
-            commander.mapId( (Long) get( "duplicate" ), duplicate.getId() );
             set( "duplicate", duplicate.getId() );
             return new Change( Change.Type.Added, duplicate );
         } catch ( NotFoundException e ) {
@@ -78,7 +78,7 @@ public class DuplicatePart extends AbstractCommand {
         if ( partId == null ) {
             throw new CommandException( "Can't undo." );
         } else {
-            Part part = (Part) scenario.getNode( commander.resolveId( partId ) );
+            Part part = (Part) scenario.getNode( partId );
             return new RemovePart( part );
         }
     }

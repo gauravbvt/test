@@ -1,7 +1,6 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
@@ -12,14 +11,8 @@ import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Command to remove a part from a scenario.
@@ -34,14 +27,11 @@ public class RemovePart extends AbstractCommand {
     /**
      * Logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger( RemovePart.class );
-
-
+    // private static final Logger LOG = LoggerFactory.getLogger( RemovePart.class );
     public RemovePart() {
     }
 
     public RemovePart( final Part part ) {
-        super();
         addConflicting( part );
         needLocksOn( CommandUtils.getLockingSetFor( part ) );
         set( "part", part.getId() );
@@ -61,19 +51,22 @@ public class RemovePart extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         QueryService queryService = commander.getQueryService();
         Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-        Part part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
-        // Double check in case this is an undo-undo
-        if ( !commander.canDo( this ) )
-            throw new CommandException( "Someone is making changes." );
-        set( "part", part.getId() );
-        set( "partState", CommandUtils.getPartState( part ) );
+        Part part = (Part) scenario.getNode( (Long) get( "part" ) );
+        MultiCommand multi = (MultiCommand) get( "subCommands" );
+        if ( multi == null ) {
+            multi = makeSubCommands( part );
+            set( "subCommands", multi );
+        }
+        // else this is a replay
+        multi.execute( commander );
         if ( scenario.countParts() == 1 ) {
             Part defaultPart = queryService.createPart( scenario );
             set( "defaultPart", defaultPart.getId() );
         }
-        removePart( part, queryService );
+        set( "partState", CommandUtils.getPartState( part ) );
+        scenario.removeNode( part );
         commander.releaseAnyLockOn( part );
-        ignoreLock( commander.resolveId( (Long) get( "part" ) ) );
+        ignoreLock( (Long) get( "part" ) );
         return new Change( Change.Type.Recomposed, scenario );
     }
 
@@ -92,132 +85,65 @@ public class RemovePart extends AbstractCommand {
         MultiCommand multi = new MultiCommand( "add part" );
         multi.setUndoes( getName() );
         // Reconstitute part
-        try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            AddPart addPart = new AddPart( scenario );
-            Map<String, Object> partState = (Map<String, Object>) get( "partState" );
-            addPart.set( "part", commander.resolveId( (Long) get( "part" ) ) );
-            if ( get( "defaultPart" ) != null ) {
-                addPart.set( "defaultPart", get( "defaultPart" ) );
-            }
-            addPart.set( "partState", partState );
-            multi.addCommand( addPart );
-            // Disconnect any added needs and capabilities - don't fail if not found
-            List<Long> addedNeeds = (List<Long>) get( "addedNeeds" );
-            if ( addedNeeds != null ) {
-                for ( long id : addedNeeds ) {
-                    // It may not have been put in snapshot yet.
-                    Long flowId = commander.resolveId( id );
-                    if ( flowId != null )  {
-                        Flow flow = scenario.findFlow( flowId );
-                        multi.addCommand( new RemoveNeed( flow ) );
-                    }
-                    else {
-                        LOG.info( "Info need not found at " + id );
-                    }
-                }
-            }
-            List<Long> addedCapabilities = (List<Long>) get( "addedCapabilities" );
-            if ( addedCapabilities != null ) {
-                for ( long id : addedCapabilities ) {
-                    // It may not have been put in snapshot yet.
-                    Long flowId = commander.resolveId( id );
-                    if ( flowId != null )  {
-                        Flow flow = scenario.findFlow( flowId );
-                        multi.addCommand( new RemoveCapability( flow ) );
-                    }
-                    else {
-                        LOG.info( "Info capability not found at " + id );
-                    }
-                }
-            }
-            // Recreate disconnected flows, possibly external, where possible
-            List<Map<String, Object>> removed = (List<Map<String, Object>>) get( "removedFlows" );
-            for ( Map<String, Object> identity : removed ) {
-                Command connectWithFlow = new ConnectWithFlow();
-                connectWithFlow.setArguments( (Map<String, Object>) identity.get( "state" ) );
-                // Id of deleted flow to be recreated -- passed along for mapping old to new
-                connectWithFlow.set( "flow", identity.get( "flow" ) );
-                multi.addCommand( connectWithFlow );
-                // Missing arguments scenario and part.
-                // Use the result of command addPart to supply missing arguments to connectWithFlow
-                multi.addLink( addPart, "id", connectWithFlow, "part" );
-                multi.addLink( addPart, "scenario.id", connectWithFlow, "scenario" );
-            }
-
-            // the undo of this multi is a RemovePart with argument
-            // part = id of part created by multi's addPart
-            Command undoUndo = new RemovePart();
-            multi.addLink( addPart, "id", undoUndo, "part" );
-            multi.addLink( addPart, "scenario.id", undoUndo, "scenario" );
-            multi.setUndoCommand( undoUndo );
-            return multi;
-        } catch ( NotFoundException e ) {
-            throw new CommandException( "You need to refresh.", e );
+        Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+        AddPart addPart = new AddPart( scenario );
+        addPart.set( "part", get( "part" ) );
+        if ( get( "defaultPart" ) != null ) {
+            addPart.set( "defaultPart", get( "defaultPart" ) );
         }
+        addPart.set( "partState", get( "partState" ) );
+        multi.addCommand( addPart );
+        MultiCommand subCommands = (MultiCommand) get( "subCommands" );
+        subCommands.setMemorable( false );
+        multi.addCommand( subCommands.makeUndoCommand( commander ) );
+        return multi;
+
     }
 
     /**
-     * Remove a part after making sure that needs and capabilities are preserved.
+     * Make multi command for adding capabilities and needs in the wake of the part's removal.
      *
-     * @param part    a part
-     * @param queryService a query service
+     * @param part         a part
+     * @return a multi command
      */
-    private void removePart( Part part, QueryService queryService ) {
-        List<Long> addedNeeds = new ArrayList<Long>();
-        List<Long> addedCapabilities = new ArrayList<Long>();
-        List<Map<String, Object>> removedFlows = new ArrayList<Map<String, Object>>();
-        Scenario scenario = part.getScenario();
+    private MultiCommand makeSubCommands( Part part ) {
+        MultiCommand subCommands = new MultiCommand( "remove part - extra" );
         Iterator<Flow> ins = part.requirements();
         while ( ins.hasNext() ) {
             Flow in = ins.next();
-            Map<String, Object> flowState = CommandUtils.getFlowState( in, part );
-            flowState.remove( "part" );
-            flowState.remove( "scenario" );
-            Map<String, Object> flowSnapshot = new HashMap<String, Object>();
-            flowSnapshot.put( "flow", in.getId() );
-            flowSnapshot.put( "state", flowState );
-            removedFlows.add( flowSnapshot );
-            // If the node to be removed is a part,
+            subCommands.addCommand( new DisconnectFlow( in ) );
+             // If the node to be removed is a part,
             // preserve the outcome of the source the flow represents
             if ( in.isInternal()
                     && in.getSource().isPart()
                     && !in.getSource().hasMultipleOutcomes( in.getName() ) ) {
-                Flow flow = queryService.connect(
-                        in.getSource(),
-                        queryService.createConnector( scenario ), in.getName() );
-                flow.initFrom( in );
-                addedCapabilities.add( flow.getId() );
-            }
+                Command addCapability = new AddCapability();
+                addCapability.set( "scenario", in.getSource().getScenario().getId() );
+                addCapability.set( "part", in.getSource().getId() );
+                addCapability.set( "name", in.getName() );
+                addCapability.set( "attributes", CommandUtils.getFlowAttributes( in ));
+                subCommands.addCommand( addCapability );
+             }
         }
         Iterator<Flow> outs = part.outcomes();
         while ( outs.hasNext() ) {
             Flow out = outs.next();
-            Map<String, Object> flowState = CommandUtils.getFlowState( out, part );
-            flowState.remove( "part" );
-            flowState.remove( "scenario" );
-            Map<String, Object> flowSnapshot = new HashMap<String, Object>();
-            flowSnapshot.put( "flow", out.getId() );
-            flowSnapshot.put( "state", flowState );
-            removedFlows.add( flowSnapshot );
+            subCommands.addCommand( new DisconnectFlow( out ));
             // If the node to be removed is a part,
             // preserve the outcome of the source the flow represents
             if ( out.isInternal()
                     && out.getTarget().isPart()
                     && !out.getSource().hasMultipleRequirements( out.getName() ) ) {
-                Flow flow = queryService.connect(
-                        queryService.createConnector( scenario ),
-                        out.getTarget(), out.getName() );
-                flow.initFrom( out );
-                addedNeeds.add( flow.getId() );
+                Command addNeed = new AddNeed();
+                addNeed.set( "scenario", out.getTarget().getScenario().getId() );
+                addNeed.set( "part", out.getTarget().getId() );
+                addNeed.set( "name", out.getName() );
+                addNeed.set( "attributes", CommandUtils.getFlowAttributes( out ));
+                subCommands.addCommand( addNeed );
             }
         }
-        // Disconnects all requirements and outcomes of the part,
-        // and removes the part from the scenario.
-        scenario.removeNode( part );
-        set( "addedNeeds", addedNeeds );
-        set( "addedCapabilities", addedCapabilities );
-        set( "removedFlows", removedFlows );
+        return subCommands;
+
     }
 
 }

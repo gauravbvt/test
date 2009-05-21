@@ -15,9 +15,7 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Satisfy as many of a part's needs as possible by creating flow from other parts with matching capabilities.
@@ -51,7 +49,7 @@ public class SatisfyAllNeeds extends AbstractCommand {
     public boolean canDo( Commander commander ) {
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Part part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
+            Part part = (Part) scenario.getNode( (Long) get( "part" ) );
             if ( part == null ) {
                 return false;
             } else {
@@ -70,33 +68,40 @@ public class SatisfyAllNeeds extends AbstractCommand {
         QueryService queryService = commander.getQueryService();
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Part part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
+            Part part = (Part) scenario.getNode( (Long) get( "part" ) );
             if ( part == null ) throw new NotFoundException();
-            List<Flow> unsatisfiedNeeds = queryService.findUnsatisfiedNeeds( part );
-            List<Long> addedFlows = new ArrayList<Long>();
-            List<Map<String, Object>> removedNeeds = new ArrayList<Map<String, Object>>();
-            for ( Flow need : unsatisfiedNeeds ) {
-                List<Connector> connectors = queryService.findAllSatificers( need );
-                for ( Connector connector : connectors ) {
-                    Node source = connector.getScenario() != scenario
-                            ? connector
-                            : connector.getInnerFlow().getSource();
-                    Flow satisfaction = queryService.connect( source, part, need.getName() );
-                    satisfaction.initFrom( need );
-                    commander.getAttachmentManager().reattachAll( satisfaction.getAttachmentTickets() );
-                    addedFlows.add( satisfaction.getId() );
-                }
-                if ( !connectors.isEmpty() ) {
-                    removedNeeds.add( CommandUtils.getFlowIdentity( need, part ) );
-                    need.disconnect();
-                }
+            MultiCommand multi = (MultiCommand) get( "subCommands" );
+            if ( multi == null ) {
+                multi = makeSubCommands( part, queryService );
+                set( "subCommands", multi );
             }
-            set( "addedFlows", addedFlows );
-            set( "removedNeeds", removedNeeds );
+            // else command replay
+            multi.execute( commander );
             return new Change( Change.Type.Recomposed, part.getScenario() );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
         }
+    }
+
+    private MultiCommand makeSubCommands( Part part, QueryService queryService ) {
+        MultiCommand subCommands = new MultiCommand( "satisfy needs - extra" );
+        subCommands.setMemorable( false );
+        List<Flow> unsatisfiedNeeds = queryService.findUnsatisfiedNeeds( part );
+        for ( Flow need : unsatisfiedNeeds ) {
+            List<Connector> connectors = queryService.findAllSatificers( need );
+            for ( Connector connector : connectors ) {
+                Node source = connector.getScenario() != part.getScenario()
+                        ? connector
+                        : connector.getInnerFlow().getSource();
+                Command connectWithFlow = new ConnectWithFlow( source, part, need.getName() );
+                connectWithFlow.set( "attributes", CommandUtils.getFlowAttributes( need ) );
+                subCommands.addCommand( connectWithFlow );
+            }
+            if ( !connectors.isEmpty() ) {
+                subCommands.addCommand( new RemoveNeed( need ) );
+            }
+        }
+        return subCommands;
     }
 
     /**
@@ -109,43 +114,13 @@ public class SatisfyAllNeeds extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( "unchecked" )
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        MultiCommand multi = new MultiCommand( "satisfy needs" );
+        MultiCommand multi = new MultiCommand( "unsatisfy needs" );
         multi.setUndoes( getName() );
-        try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Part part = commander.resolve( Part.class, (Long) get( "part" ) );
-            if ( part == null ) throw new NotFoundException();
-            // remove added flows
-            List<Long> addedFlows = (List<Long>) get( "addedFlows" );
-            if ( addedFlows != null ) {
-                for ( Long id : addedFlows ) {
-                    Flow addedFlow = scenario.findFlow( commander.resolveId( id ) );
-                    DisconnectFlow disconnectFlow = new DisconnectFlow( addedFlow );
-                    multi.addCommand( disconnectFlow );
-                }
-            }
-            // add removed needs
-            List<Map<String, Object>> removedNeeds = (List<Map<String, Object>>) get( "removedNeeds" );
-            for ( Map<String, Object> flowIdentity : removedNeeds ) {
-                Long removedNeedId = commander.resolveId( (Long) flowIdentity.get( "flow" ) );
-                Map<String, Object> state = (Map<String, Object>) flowIdentity.get( "state" );
-                Long otherId = (Long) state.get( "other" );
-                // other node is a local connector
-                assert (otherId == null);
-                boolean isOutcome = (Boolean) state.get( "isOutcome" );
-                // it's a need
-                assert (!isOutcome);
-                Command command = new AddNeed();
-                command.setArguments( state );
-                command.set( "flow", removedNeedId );
-                multi.addCommand( command );
-            }
-            return multi;
-        } catch ( NotFoundException e ) {
-            throw new CommandException( "You need to refresh.", e );
-        }
+        MultiCommand subCommands = (MultiCommand) get( "subCommands" );
+        subCommands.setMemorable( false );
+        multi.addCommand( subCommands.makeUndoCommand( commander ) );
+        return multi;
     }
 
 

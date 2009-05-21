@@ -2,10 +2,7 @@ package com.mindalliance.channels.pages.components.menus;
 
 import com.mindalliance.channels.model.Part;
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,19 +18,7 @@ import java.util.List;
 public class PartShowMenuPanel extends MenuPanel {
 
     public PartShowMenuPanel( String s, IModel<? extends Part> model ) {
-        super( s, model, null );
-        init();
-    }
-
-    private void init() {
-        ListView<Component> menuItems = new ListView<Component>(
-                "items",
-                new PropertyModel<List<Component>>( this, "menuItems" ) ) {
-            protected void populateItem( ListItem<Component> item ) {
-                item.add( item.getModelObject() );
-            }
-        };
-        add( menuItems );
+        super( s, "Show", model, null );
     }
 
     /**

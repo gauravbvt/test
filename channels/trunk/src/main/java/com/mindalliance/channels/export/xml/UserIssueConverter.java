@@ -67,12 +67,14 @@ public class UserIssueConverter extends AbstractChannelsConverter {
      */
     @SuppressWarnings( "unchecked" )
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
-        Map<String, Long> idMap = (Map<String, Long>) context.get( "idMap" );
+        Map<Long, Long> idMap = getIdMap( context );
+        boolean importingPlan = isImportingPlan( context );
         UserIssue issue = null;
         try {
-            String issueId = reader.getAttribute( "id" );
-            String idString = reader.getAttribute( "about" );
-            Long id = idMap.get( idString );
+            Long issueId = Long.parseLong( reader.getAttribute( "id" ) );
+            Long aboutId = Long.parseLong( reader.getAttribute( "about" ) );
+            // When importing a scenario (vs reloading a plan), ids are re-assigned
+            Long id = idMap.get( aboutId );
             if ( id != null ) {
                 ModelObject about = getQueryService().find( ModelObject.class, id );
                 issue = new UserIssue( about );
@@ -96,7 +98,12 @@ public class UserIssueConverter extends AbstractChannelsConverter {
                     }
                     reader.moveUp();
                 }
-                getQueryService().add( issue );
+                if ( importingPlan ) {
+                    getQueryService().add( issue, issueId );
+                }
+                else {
+                    getQueryService().add( issue );
+                }
                 idMap.put( issueId, issue.getId() );
             } else {
                 LOG.warn( "Issue's model object not found at " + id );

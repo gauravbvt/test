@@ -34,6 +34,7 @@ public class AttachDocument extends AbstractCommand {
     }
 
     public AttachDocument( ModelObject modelObject, String ticket ) {
+        needLockOn( modelObject );
         set( "attachee", modelObject.getId() );
         set( "ticket", ticket );
     }

@@ -105,6 +105,20 @@ public class DefaultQueryService extends Observable implements QueryService {
         return dao;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public Long getLastAssignedId() {
+        return getDao().getLastAssignedId();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setLastAssignedId( Long lastId ) {
+        getDao().setLastAssignedId( lastId );
+    }
+
     public AttachmentManager getAttachmentManager() {
         return attachmentManager;
     }
@@ -236,8 +250,8 @@ public class DefaultQueryService extends Observable implements QueryService {
                 } );
                 Importer importer = getChannels().getImporter();
                 Map<String, Long> idMap = new HashMap<String, Long>();
-                Map<Connector, ConnectionSpecification> proxyConnectors =
-                        new HashMap<Connector, ConnectionSpecification>();
+                Map<Connector, List<ConnectionSpecification>> proxyConnectors =
+                        new HashMap<Connector, List<ConnectionSpecification>>();
                 for ( File file : files ) {
                     try {
                         Map<String, Object> results = importer.loadScenario(
@@ -245,7 +259,7 @@ public class DefaultQueryService extends Observable implements QueryService {
                         // Cumulate results
                         idMap.putAll( (Map<String, Long>) results.get( "idMap" ) );
                         proxyConnectors.putAll(
-                                (Map<Connector, ConnectionSpecification>) results.get( "proxyConnectors" ) );
+                                (Map<Connector, List<ConnectionSpecification>>) results.get( "proxyConnectors" ) );
                         Scenario scenario = (Scenario) results.get( "scenario" );
                         LOG.info(
                                 "Imported scenario "
@@ -257,7 +271,7 @@ public class DefaultQueryService extends Observable implements QueryService {
                     }
                 }
                 // Reconnect external links
-                importer.reconnectExternalFlows( idMap, proxyConnectors );
+                importer.reconnectExternalFlows( proxyConnectors, false );
                 setChanged();
                 notifyObservers( idMap );
             } else {
@@ -300,6 +314,13 @@ public class DefaultQueryService extends Observable implements QueryService {
      * {@inheritDoc}
      */
     public <T extends ModelObject> T findOrCreate( Class<T> clazz, String name ) {
+        return findOrCreate( clazz, name, null );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public <T extends ModelObject> T findOrCreate( Class<T> clazz, String name, Long id ) {
         if ( name == null || name.isEmpty() )
             return null;
 
@@ -308,7 +329,7 @@ public class DefaultQueryService extends Observable implements QueryService {
             try {
                 result = clazz.newInstance();
                 result.setName( name );
-                getDao().add( result );
+                getDao().add( result, id );
             } catch ( InstantiationException e ) {
                 throw new RuntimeException( e );
             } catch ( IllegalAccessException e ) {
@@ -324,6 +345,13 @@ public class DefaultQueryService extends Observable implements QueryService {
      */
     public void add( ModelObject object ) {
         getDao().add( object );
+    }
+
+    /**
+      * {@inheritDoc}
+      */
+    public void add( ModelObject object, Long id ) {
+        getDao().add( object, id );
     }
 
     /**
@@ -345,8 +373,18 @@ public class DefaultQueryService extends Observable implements QueryService {
      * {@inheritDoc}
      */
     public Scenario createScenario() {
+        return createScenario( null );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Scenario createScenario( Long id ) {
         Scenario result = new Scenario();
-        getDao().add( result );
+        if (id == null)
+            getDao().add( result );
+        else
+            getDao().add( result, id );
         result.setName( Scenario.DEFAULT_NAME );
         result.setDescription( Scenario.DEFAULT_DESCRIPTION );
         // Make sure a scenario responds to an event.
@@ -385,7 +423,14 @@ public class DefaultQueryService extends Observable implements QueryService {
      * {@inheritDoc}
      */
     public Connector createConnector( Scenario scenario ) {
-        Connector result = getDao().createConnector( scenario );
+        return createConnector( scenario, null );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Connector createConnector( Scenario scenario, Long id ) {
+        Connector result = getDao().createConnector( scenario, id );
         scenario.addNode( result );
         return result;
     }
@@ -394,7 +439,14 @@ public class DefaultQueryService extends Observable implements QueryService {
      * {@inheritDoc}
      */
     public Part createPart( Scenario scenario ) {
-        Part result = getDao().createPart( scenario );
+        return createPart( scenario, null );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Part createPart( Scenario scenario, Long id ) {
+        Part result = getDao().createPart( scenario, id );
         scenario.addNode( result );
         return result;
     }
@@ -403,15 +455,22 @@ public class DefaultQueryService extends Observable implements QueryService {
      * {@inheritDoc}
      */
     public Flow connect( Node source, Node target, String name ) {
+        return connect( source, target, name, null );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Flow connect( Node source, Node target, String name, Long id ) {
         Flow result;
 
         if ( isInternal( source, target ) ) {
-            result = getDao().createInternalFlow( source, target, name );
+            result = getDao().createInternalFlow( source, target, name, id );
             source.addOutcome( result );
             target.addRequirement( result );
 
         } else if ( isExternal( source, target ) ) {
-            result = getDao().createExternalFlow( source, target, name );
+            result = getDao().createExternalFlow( source, target, name, id );
             if ( source.isConnector() ) {
                 target.addRequirement( result );
                 ( (Connector) source ).addExternalFlow( (ExternalFlow) result );

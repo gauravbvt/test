@@ -13,12 +13,8 @@ import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,41 +27,16 @@ import java.util.List;
  * Date: Mar 11, 2009
  * Time: 1:30:09 PM
  */
-public class PartActionsMenuPanel extends MenuPanel {
+public class PartActionsMenuPanel extends ActionMenuPanel {
 
     public PartActionsMenuPanel( String s, IModel<? extends Part> model ) {
         super( s, model, null );
-        init();
-    }
-
-    private void init() {
-        ListView<Component> menuItems = new ListView<Component>(
-                "items",
-                new PropertyModel<List<Component>>( this, "menuItems" ) ) {
-            protected void populateItem( ListItem<Component> item ) {
-                item.add( item.getModelObject() );
-            }
-        };
-        add( menuItems );
-
     }
 
     /**
-     * Get population of menu items.
-     *
-     * @return a list of menu items
+     * {@inheritDoc}
      */
-    public List<Component> getMenuItems() {
-        List<Component> menuItems = new ArrayList<Component>();
-        // Undo and redo
-        menuItems.add( this.getUndoMenuItem( "menuItem" ) );
-        menuItems.add( this.getRedoMenuItem( "menuItem" ) );
-        // Commands
-        menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
-        return menuItems;
-    }
-
-    private List<CommandWrapper> getCommandWrappers() {
+    protected List<CommandWrapper> getCommandWrappers() {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
         commandWrappers.add( new CommandWrapper( new CopyPart( getPart() ) ) {
             public void onExecuted( AjaxRequestTarget target, Change change ) {
@@ -73,10 +44,10 @@ public class PartActionsMenuPanel extends MenuPanel {
             }
         } );
         commandWrappers.add( new CommandWrapper( new PasteAttachment( getPart() ) ) {
-             public void onExecuted( AjaxRequestTarget target, Change change ) {
-                 update( target, change );
-             }
-         } );
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                update( target, change );
+            }
+        } );
         commandWrappers.add( new CommandWrapper( new PasteFlow( getPart() ) ) {
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 update( target, change );

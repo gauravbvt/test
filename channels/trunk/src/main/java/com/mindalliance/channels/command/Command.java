@@ -13,7 +13,6 @@ import java.util.Set;
  * User: jf
  * Date: Feb 28, 2009
  * Time: 2:20:01 PM
- *
  */
 public interface Command extends Serializable {
     /**
@@ -47,14 +46,15 @@ public interface Command extends Serializable {
     Object get( String argumentName );
 
     /**
-      * Get the value of named argument, allowing for resoluton of ModelObjectRef values.
-      *
-      * @param argumentName a string
-      * @param commander a commander
+     * Get the value of named argument, allowing for resoluton of ModelObjectRef values.
+     *
+     * @param argumentName a string
+     * @param commander    a commander
      * @return an object
      * @throws CommandException if getting argument fails
-      */
+     */
     Object get( String argumentName, Commander commander ) throws CommandException;
+
     /**
      * Get the value of named argument.
      *
@@ -129,30 +129,35 @@ public interface Command extends Serializable {
 
     /**
      * Preset the undo command.
+     *
      * @param command a command
      */
     void setUndoCommand( Command command );
 
     /**
      * Whether no lock is required by the nature of the command.
+     *
      * @return a boolean
      */
     boolean noLockRequired();
 
     /**
      * Set arguments.
+     *
      * @param fs attributes
      */
     void setArguments( Map<String, Object> fs );
 
     /**
      * Formatted description.
+     *
      * @return a string
      */
     String getTitle();
 
     /**
      * Return the name of the command it undoes.
+     *
      * @param commander a commander
      * @return a string
      */
@@ -160,12 +165,14 @@ public interface Command extends Serializable {
 
     /**
      * Whether the command modifies the contents of a scenario.
+     *
      * @return a boolean
      */
     boolean isScenarioSpecific();
 
     /**
      * Can execute irrespective of locking.
+     *
      * @param commander a commander
      * @return a boolean
      */

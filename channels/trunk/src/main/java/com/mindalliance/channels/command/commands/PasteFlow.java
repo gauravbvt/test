@@ -55,7 +55,7 @@ public class PasteFlow extends AbstractCommand {
         QueryService queryService = commander.getQueryService();
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Part part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
+            Part part = (Part) scenario.getNode( (Long) get( "part" ) );
             if ( part == null ) throw new NotFoundException();
             Map<String, Object> flowState;
             if ( commander.isReplaying() ) {
@@ -64,26 +64,26 @@ public class PasteFlow extends AbstractCommand {
                 flowState = commander.getCopy();
                 set( "copy", flowState );
             }
+            Long priorId = (Long) get( "flow" );
             boolean isOutcome = (Boolean) flowState.get( "isOutcome" );
             Flow flow;
             if ( isOutcome ) {
                 flow = queryService.connect(
                         part,
                         queryService.createConnector( scenario ),
-                        (String) flowState.get( "name" ) );
+                        (String) flowState.get( "name" ),
+                        priorId );
             } else {
                 flow = queryService.connect(
                         queryService.createConnector( scenario ),
                         part,
-                        (String) flowState.get( "name" ) );
+                        (String) flowState.get( "name" ),
+                        priorId );
             }
             Map<String, Object> flowAttributes = (Map<String, Object>) flowState.get( "attributes" );
             if ( flowAttributes != null ) {
                 CommandUtils.initialize( flow, flowAttributes );
                 commander.getAttachmentManager().reattachAll( flow.getAttachmentTickets() );
-            }
-            if ( get( "flow" ) != null ) {
-                commander.mapId( (Long) get( "flow" ), flow.getId() );
             }
             set( "flow", flow.getId() );
             return new Change( Change.Type.Added, flow );
@@ -109,7 +109,7 @@ public class PasteFlow extends AbstractCommand {
             if ( flowId == null ) {
                 throw new CommandException( "Can't undo." );
             } else {
-                Flow flow = scenario.findFlow( commander.resolveId( flowId ) );
+                Flow flow = scenario.findFlow( flowId );
                 return new DisconnectFlow( flow );
             }
         } catch ( NotFoundException e ) {

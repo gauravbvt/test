@@ -12,11 +12,8 @@ import com.mindalliance.channels.model.Part;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,21 +35,18 @@ public class FlowActionsMenuPanel extends MenuPanel {
             IModel<? extends Flow> model,
             boolean isOutcome,
             boolean isCollapsed ) {
-        super( s, model, null );
+        super( s, "Menu", model, null );
         this.isOutcome = isOutcome;
         this.isCollapsed = isCollapsed;
-        init();
+        doInit();
     }
 
-    private void init() {
-        ListView<Component> menuItems = new ListView<Component>(
-                "items",
-                new PropertyModel<List<Component>>( this, "menuItems" ) ) {
-            protected void populateItem( ListItem<Component> item ) {
-                item.add( item.getModelObject() );
-            }
-        };
-        add( menuItems );
+    protected void init() {
+        // do nothing
+    }
+
+    private void doInit() {
+        super.init();
     }
 
     /**

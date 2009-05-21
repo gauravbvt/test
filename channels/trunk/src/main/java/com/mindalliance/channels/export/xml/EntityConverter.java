@@ -1,14 +1,13 @@
 package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.Exporter;
-import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.UserIssue;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,15 +39,10 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
         writer.setValue( entity.getDescription() == null ? "" : entity.getDescription() );
         writer.endNode();
         exportDetectionWaivers( entity, writer );
-        exportAttachmentTickets( entity, writer, this.isExportingPlan( context ));
+        exportAttachmentTickets( entity, writer, this.isExportingPlan( context ) );
         writeSpecifics( entity, writer, context );
         // User issues
-        List<Issue> issues = getQueryService().findAllUserIssues( entity );
-        for ( Issue issue : issues ) {
-            writer.startNode( "issue" );
-            context.convertAnother( issue );
-            writer.endNode();
-        }
+        exportUserIssues( entity, writer, context );
     }
 
     /**
@@ -68,25 +62,33 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
     @SuppressWarnings( "unchecked" )
     public Object unmarshal( HierarchicalStreamReader reader,
                              UnmarshallingContext context ) {
-        Map<String, Long> idMap = (Map<String, Long>) context.get( "idMap" );
+        Map<Long, Long> idMap = getIdMap( context );
+        boolean importingPlan = isImportingPlan( context );
         String name = reader.getAttribute( "name" );
-        String id = reader.getAttribute( "id" );
-        ModelObject entity = findOrMakeEntity( name );
-        idMap.put( id, entity.getId() );
+        Long id = Long.parseLong( reader.getAttribute( "id" ) );
+        ModelObject entity = getEntity( name, id, importingPlan, idMap );
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "description" ) ) {
                 entity.setDescription( reader.getValue() );
-            }  else if ( nodeName.equals( "detection-waivers" ) ) {
+            } else if ( nodeName.equals( "detection-waivers" ) ) {
                 importDetectionWaivers( entity, reader );
-            }  else if ( nodeName.equals( "attachments" ) ) {
+            } else if ( nodeName.equals( "attachments" ) ) {
                 importAttachmentTickets( entity, reader );
-            }  else {
+            } else if ( nodeName.equals( "issue" ) ) {
+                context.convertAnother( entity, UserIssue.class );
+            }else {
                 setSpecific( entity, nodeName, reader, context );
             }
             reader.moveUp();
         }
+        return entity;
+    }
+
+    private ModelObject getEntity( String name, Long id, boolean importingPlan, Map<Long, Long> idMap ) {
+        ModelObject entity = findOrMakeEntity( name, id, importingPlan );
+        idMap.put( id, entity.getId() );
         return entity;
     }
 
@@ -105,11 +107,13 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
             UnmarshallingContext context );
 
     /**
-     * Find or make an entity.
+     * Find or make an entity with id if importing plan.
      *
      * @param name entity's name
+     * @param id a Long
+     *@param importingPlan a boolean
      * @return an entity
      */
-    abstract ModelObject findOrMakeEntity( String name );
+    abstract ModelObject findOrMakeEntity( String name, Long id, boolean importingPlan );
 
 }

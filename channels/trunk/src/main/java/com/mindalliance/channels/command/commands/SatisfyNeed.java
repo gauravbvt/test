@@ -1,23 +1,20 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.AbstractCommand;
-import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.Commander;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.command.AbstractCommand;
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.MultiCommand;
-import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Scenario;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  * Set the node at the other side of this flow by connecting "through" a connector
@@ -63,12 +60,11 @@ public class SatisfyNeed extends AbstractCommand {
         try {
             Scenario context = commander.resolve( Scenario.class, (Long) get( "context" ) );
             Scenario needScenario = commander.resolve( Scenario.class, (Long) get( "needScenario" ) );
-            Flow need = needScenario.findFlow( commander.resolveId( (Long) get( "need" ) ) );
+            Flow need = needScenario.findFlow( (Long) get( "need" ) );
             Scenario capabilityScenario = commander.resolve(
                     Scenario.class,
                     (Long) get( "capabilityScenario" ) );
-            Flow capability = capabilityScenario.findFlow(
-                    commander.resolveId( (Long) get( "capability" ) ) );
+            Flow capability = capabilityScenario.findFlow( (Long) get( "capability" ) );
             Node fromNode;
             Node toNode;
             if ( needScenario == capabilityScenario ) {
@@ -86,33 +82,32 @@ public class SatisfyNeed extends AbstractCommand {
                     toNode = need.getTarget();
                 }
             }
-            newFlow = queryService.connect( fromNode, toNode, need.getName() );
+            Long priorId = (Long) get( "satisfy" );
+            newFlow = queryService.connect( fromNode, toNode, need.getName(), priorId );
             newFlow.setSignificanceToSource( capability.getSignificanceToSource() );
             newFlow.setSignificanceToTarget( need.getSignificanceToTarget() );
             newFlow.setChannels( need.isAskedFor() ? capability.getChannels() : need.getChannels() );
             newFlow.setMaxDelay( need.getMaxDelay() );
-            commander.mapId( (Long) get( "satisfy" ), newFlow.getId() );
             set( "satisfy", newFlow.getId() );
-            List<Map<String, Object>> removed = new ArrayList<Map<String, Object>>();
-            if ( needScenario == capabilityScenario ) {
-                removed.add( CommandUtils.getFlowIdentity( capability, (Part) fromNode ) );
-                capability.disconnect();
-                removed.add( CommandUtils.getFlowIdentity( need, (Part) toNode ) );
-                need.disconnect();
-            } else {
-                // External - which connector to use depends on context
-                if ( context == capabilityScenario ) {
-                    // from capability's part to need's connector
-                    removed.add( CommandUtils.getFlowIdentity( capability, (Part) fromNode ) );
-                    capability.disconnect();
+            MultiCommand multi = (MultiCommand) get( "subCommands" );
+            if ( multi == null ) {
+                multi = new MultiCommand( "satisfy need - extra" );
+                if ( needScenario == capabilityScenario ) {
+                    multi.addCommand( new RemoveCapability( capability ) );
+                    multi.addCommand( new RemoveNeed( need ) );
                 } else {
-                    // from capability's connector to need's part
-                    removed.add( CommandUtils.getFlowIdentity( need, (Part) toNode ) );
-                    need.disconnect();
+                    // External - which connector to use depends on context
+                    if ( context == capabilityScenario ) {
+                        // from capability's part to need's connector
+                        multi.addCommand( new RemoveCapability( capability ) );
+                    } else {
+                        // from capability's connector to need's part
+                        multi.addCommand( new RemoveNeed( need ) );
+                    }
                 }
+                set( "subCommands", multi );
             }
-            set( "removedFlows", removed );
-            // What about reporting the removal of the disconnected flow?
+            multi.execute( commander );
             return new Change( Change.Type.Added, newFlow );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
@@ -131,25 +126,19 @@ public class SatisfyNeed extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        MultiCommand multi = new MultiCommand( getName() );
-        multi.setUndoes( getName() );
         try {
-            // Recreate deleted need and/or capability
-            List<Map<String, Object>> removed = (List<Map<String, Object>>) get( "removedFlows" );
-            for ( Map<String, Object> identity : removed ) {
-                Command connectWithFlow = new ConnectWithFlow();
-                connectWithFlow.setArguments( (Map<String, Object>) identity.get( "state" ) );
-                connectWithFlow.set( "flow", identity.get( "flow" ) );
-                multi.addCommand( connectWithFlow );
-            }
+            MultiCommand multi = new MultiCommand( "unsatisfy need" );
+            multi.setUndoes( getName() );
+            MultiCommand subCommands = (MultiCommand) get( "subCommands" );
+            subCommands.setMemorable( false );
+            multi.addCommand( subCommands.makeUndoCommand( commander ) );
             // Disconnect need satisfying flow
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "context" ) );
-            Flow newFlow = scenario.findFlow( commander.resolveId( (Long) get( "satisfy" ) ) );
-            Command disconnectFlow = new DisconnectFlow( newFlow );
-            multi.addCommand( disconnectFlow );
+            Flow newFlow = scenario.findFlow( (Long) get( "satisfy" ) );
+            multi.addCommand( new DisconnectFlow( newFlow ) );
             return multi;
         } catch ( NotFoundException e ) {
-            throw new CommandException( "You need to refresh.", e );
+            throw new CommandException("You need to refresh.", e);
         }
     }
 

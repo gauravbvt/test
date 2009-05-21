@@ -14,7 +14,6 @@ import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Job;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Organization;
@@ -28,6 +27,8 @@ import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.util.SemMatch;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.DataHolder;
+import com.thoughtworks.xstream.io.xml.XppReader;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.slf4j.Logger;
@@ -39,8 +40,8 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -178,6 +179,25 @@ public class XmlStreamer extends AbstractService implements Importer, Exporter {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
+    public Scenario restoreScenario( String xml ) {
+        // MUST set to importingPlan
+        XStream xstream = configuredXStream.get();
+        DataHolder dataHolder = xstream.newDataHolder();
+        dataHolder.put( "importing-plan", true );
+        Map<String, Object> results = (Map<String, Object>) xstream.unmarshal(
+                new XppReader( new StringReader( xml ) ),
+                null,
+                dataHolder );
+        Map<Connector, List<ConnectionSpecification>> proxyConnectors =
+                (Map<Connector, List<ConnectionSpecification>>) results.get( "proxyConnectors" );
+        reconnectExternalFlows( proxyConnectors, false );
+        return (Scenario) results.get( "scenario" );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
     public Scenario importScenario( InputStream stream ) throws IOException {
         ObjectInputStream in = configuredXStream.get().createObjectInputStream( stream );
         Map<String, Object> results;
@@ -186,10 +206,9 @@ public class XmlStreamer extends AbstractService implements Importer, Exporter {
         } catch ( ClassNotFoundException e ) {
             throw new IOException( "Failed to import scenario", e );
         }
-        Map<String, Long> idMap = (Map<String, Long>) results.get( "idMap" );
-        Map<Connector, ConnectionSpecification> proxyConnectors =
-                (Map<Connector, ConnectionSpecification>) results.get( "proxyConnectors" );
-        reconnectExternalFlows( idMap, proxyConnectors );
+        Map<Connector, List<ConnectionSpecification>> proxyConnectors =
+                (Map<Connector, List<ConnectionSpecification>>) results.get( "proxyConnectors" );
+        reconnectExternalFlows( proxyConnectors, false );
         return (Scenario) results.get( "scenario" );
     }
 
@@ -217,23 +236,17 @@ public class XmlStreamer extends AbstractService implements Importer, Exporter {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    public Map<Long, Long> importAll( FileInputStream stream ) throws IOException {
-        Map<Long, Long> idMap;
+    public void importAll( FileInputStream stream ) throws IOException {
         ObjectInputStream in = configuredXStream.get().createObjectInputStream( stream );
         try {
             Map<String, Object> results = (Map<String, Object>) in.readObject();
-            Map<String, Long> map = (Map<String, Long>) results.get( "idMap" );
-            Map<Connector, ConnectionSpecification> proxyConnectors =
-                    (Map<Connector, ConnectionSpecification>) results.get( "proxyConnectors" );
-            reconnectExternalFlows( map, proxyConnectors );
-            idMap = new HashMap<Long, Long>();
-            for ( String key : map.keySet() ) {
-                idMap.put( Long.valueOf( key ), map.get( key ) );
-            }
+            Map<Connector, List<ConnectionSpecification>> proxyConnectors =
+                    (Map<Connector, List<ConnectionSpecification>>) results.get( "proxyConnectors" );
+            reconnectExternalFlows( proxyConnectors, true );
+            // Do nothing with idMap also in results.
         } catch ( ClassNotFoundException e ) {
-            throw new IOException( "Failed to import app", e );
+            throw new IOException( "Failed to import plan.", e );
         }
-        return idMap;
     }
 
     /**
@@ -272,19 +285,29 @@ public class XmlStreamer extends AbstractService implements Importer, Exporter {
      * {@inheritDoc}
      */
     public void reconnectExternalFlows(
-            Map<String, Long> idMap,
-            Map<Connector, ConnectionSpecification> proxyConnectors ) {
+            Map<Connector, List<ConnectionSpecification>> proxyConnectors,
+            boolean loadingPlan ) {
         Set<Connector> toDelete = new HashSet<Connector>();
         for ( Connector proxyConnector : proxyConnectors.keySet() ) {
-            ConnectionSpecification conSpec = proxyConnectors.get( proxyConnector );
-            List<Connector> externalConnectors = findMatchingConnectors( conSpec, idMap );
-            if ( externalConnectors.size() > 1 ) {
-                LOG.warn( "Proxy connector in "
-                        + conSpec.getFlowName()
-                        + " matched multiple external connectors (expecting one)." );
-            }
-            for ( Connector externalConnector : externalConnectors ) {
-                reconnectProxyConnector( proxyConnector, externalConnector, conSpec.isSource(), idMap );
+            List<ConnectionSpecification> conSpecs = proxyConnectors.get( proxyConnector );
+            for ( ConnectionSpecification conSpec : conSpecs ) {
+                List<Connector> externalConnectors = findMatchingConnectors( conSpec );
+                if ( externalConnectors.size() > 1 ) {
+                    LOG.warn( "Proxy connector in "
+                            + conSpec.getFlowName()
+                            + " matched multiple external connectors (expecting and using only one)." );
+                }
+                if ( externalConnectors.isEmpty() ) {
+                    LOG.warn( "Proxy connector in "
+                            + conSpec.getFlowName()
+                            + " matched no external connector (expecting one)." );
+                } else {
+                    reconnectProxyConnector(
+                            proxyConnector,
+                            externalConnectors.get( 0 ),
+                            conSpec,
+                            loadingPlan );
+                }
                 toDelete.add( proxyConnector );
             }
         }
@@ -293,24 +316,36 @@ public class XmlStreamer extends AbstractService implements Importer, Exporter {
         }
     }
 
+    // Make sure the reconnected external flow has its pre-export id if importing a plan.
     private void reconnectProxyConnector(
             Connector proxyConnector,
             Connector externalConnector,
             // proxyConnector is source?
-            boolean isSource,
-            Map<String, Long> idMap ) {
+            ConnectionSpecification conSpec,
+            boolean loadingPlan ) {
         Flow localInnerFlow = proxyConnector.getInnerFlow();
-        Part part = isSource
+        Part part = conSpec.isSource()
                 ? (Part) proxyConnector.getInnerFlow().getTarget()
                 : (Part) proxyConnector.getInnerFlow().getSource();
         ExternalFlow externalFlow;
-        if ( isSource ) {
-            externalFlow = (ExternalFlow) getQueryService().connect(
-                    externalConnector, part, localInnerFlow.getName()
-            );
+        if ( loadingPlan ) {
+            if ( conSpec.isSource() ) {
+                externalFlow = (ExternalFlow) getQueryService().connect(
+                        externalConnector, part, localInnerFlow.getName(), conSpec.getExternalFlowId()
+                );
+            } else {
+                externalFlow = (ExternalFlow) getQueryService().connect(
+                        part, externalConnector, localInnerFlow.getName(), conSpec.getExternalFlowId() );
+            }
         } else {
-            externalFlow = (ExternalFlow) getQueryService().connect(
-                    part, externalConnector, localInnerFlow.getName() );
+            if ( conSpec.isSource() ) {
+                externalFlow = (ExternalFlow) getQueryService().connect(
+                        externalConnector, part, localInnerFlow.getName()
+                );
+            } else {
+                externalFlow = (ExternalFlow) getQueryService().connect(
+                        part, externalConnector, localInnerFlow.getName() );
+            }
         }
         externalFlow.setChannels( localInnerFlow.getChannels() );
         externalFlow.setMaxDelay( localInnerFlow.getMaxDelay() );
@@ -320,30 +355,13 @@ public class XmlStreamer extends AbstractService implements Importer, Exporter {
         externalFlow.setAskedFor( localInnerFlow.isAskedFor() );
         externalFlow.setDescription( localInnerFlow.getDescription() );
         externalFlow.setWaivedIssueDetections( localInnerFlow.getWaivedIssueDetections() );
-        replaceInIdMap( localInnerFlow, externalFlow, idMap );
+        externalFlow.setAttachmentTickets( localInnerFlow.getAttachmentTickets() );
         localInnerFlow.disconnect();
-    }
-
-    /**
-     * Make a substitution in the idmap
-     *
-     * @param previous    an identifiable
-     * @param replacement an identifiable
-     * @param idMap       a map
-     */
-    protected void replaceInIdMap( Identifiable previous, Identifiable replacement, Map<String, Long> idMap ) {
-        for ( Map.Entry<String, Long> entry : idMap.entrySet() ) {
-            if ( entry.getValue() == previous.getId() ) {
-                entry.setValue( replacement.getId() );
-                return;
-            }
-        }
     }
 
     @SuppressWarnings( "unchecked" )
     private List<Connector> findMatchingConnectors(
-            final ConnectionSpecification conSpec,
-            final Map<String, Long> idMap ) {
+            final ConnectionSpecification conSpec ) {
         List<Connector> connectors = new ArrayList<Connector>();
         List<Scenario> scenarios = ConverterUtils.findMatchingScenarios(
                 conSpec.getScenarioSpecification(),
@@ -355,7 +373,7 @@ public class XmlStreamer extends AbstractService implements Importer, Exporter {
                             Node node = (Node) obj;
                             return node.isConnector() &&
                                     connectorMatches( (Connector) node,
-                                            conSpec, idMap );
+                                            conSpec );
                         }
                     }
                     );
@@ -365,18 +383,15 @@ public class XmlStreamer extends AbstractService implements Importer, Exporter {
     }
 
     private boolean connectorMatches( Connector externalConnector,
-                                      ConnectionSpecification conSpec,
-                                      Map<String, Long> idMap ) {
+                                      ConnectionSpecification conSpec ) {
         // we are matching the part attached to the connector,
         // so it's input-edness is the reverse of that of the connector
         if ( externalConnector.isSource() == conSpec.isSource() ) return false;
         Flow externalInnerFlow = externalConnector.getInnerFlow();
         Part part = (Part) ( conSpec.isSource() ? externalInnerFlow.getSource() : externalInnerFlow.getTarget() );
-        String partIdValue = conSpec.getPartSpecification().getId();
-        Long mappedPartId = idMap.get( partIdValue );
+        Long partIdValue = Long.parseLong( conSpec.getPartSpecification().getId() );
         boolean partIdMatches = partIdValue != null
-                && mappedPartId != null
-                && mappedPartId == part.getId();
+                && partIdValue == part.getId();
         return SemMatch.same( externalInnerFlow.getName(), conSpec.getFlowName() )
                 && ( partIdMatches || ConverterUtils.partMatches( part, conSpec.getPartSpecification() ) );
     }

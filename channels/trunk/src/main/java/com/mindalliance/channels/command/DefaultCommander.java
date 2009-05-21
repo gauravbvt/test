@@ -58,7 +58,7 @@ public class DefaultCommander extends AbstractService implements Commander {
      * An id translation map.
      */
     // TODO - this could grow unchecked
-    private Map<Long, Long> idMap = Collections.synchronizedMap( new HashMap<Long, Long>() );
+    // private Map<Long, Long> idMap = Collections.synchronizedMap( new HashMap<Long, Long>() );
     /**
      * Record of when users were most recently active.
      */
@@ -73,7 +73,7 @@ public class DefaultCommander extends AbstractService implements Commander {
     private int timeout = 300;
 
     /**
-     * A user's copied state of eiher a model object.
+     * A user's copied state of eiher a part, flow or attachment.
      */
     private Map<String, Map<String, Object>> copy = Collections.synchronizedMap(
             new HashMap<String, Map<String, Object>>() );
@@ -151,63 +151,16 @@ public class DefaultCommander extends AbstractService implements Commander {
         this.replaying = replaying;
     }
 
-    public void setIdMap( Map<Long, Long> idMap ) {
-        this.idMap = idMap;
-    }
-
     /**
      * {@inheritDoc}
      */
     public <T extends ModelObject> T resolve( Class<T> clazz, Long id ) throws CommandException {
         try {
-            return getQueryService().find( clazz, resolveId( id ) );
+            return getQueryService().find( clazz, id );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
         }
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void mapId( Long oldId, Long newId ) {
-        if ( oldId != null && newId != null ) {
-            idMap.put( oldId, newId );
-        } else {
-            LOG.warn( "Attempt to map " + oldId + " and " + newId );
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Long resolveId( Long id ) throws CommandException {
-        Long realId = idMap.get( id );
-        if ( isReplaying() ) {
-            return realId == null ? id : realId;
-        } else {
-            return realId == null ? id : resolveRealId( realId );
-        }
-    }
-
-
-    private Long resolveRealId( Long id ) {
-        Long realId = idMap.get( id );
-        if ( realId == null )
-            return id;
-        else {
-            // any number of jumps
-            return resolveRealId( realId );
-        }
-    }
-
-    private Set<Long> resolveIds( Set<Long> ids ) throws CommandException {
-        Set<Long> resolvedIds = new HashSet<Long>();
-        for ( Long id : ids ) {
-            resolvedIds.add( resolveId( id ) );
-        }
-        return resolvedIds;
-    }
-
 
     /**
      * {@inheritDoc}
@@ -235,7 +188,7 @@ public class DefaultCommander extends AbstractService implements Commander {
      */
     public String getRedoTitle() {
         String title = "Redo";
-        // memento of a command done to undo another
+        // memento of a command undoing another
         Memento memento = history.getRedo();
         if ( memento != null ) {
             title = title + " " + memento.getCommand().getUndoes( this );
@@ -257,7 +210,7 @@ public class DefaultCommander extends AbstractService implements Commander {
         Change change;
         if ( command.isAuthorized() ) {
             try {
-                Collection<Lock> grabbedLocks = lockManager.grabLocksOn( resolveIds( command.getLockingSet() ) );
+                Collection<Lock> grabbedLocks = lockManager.grabLocksOn( command.getLockingSet() );
                 change = command.execute( this );
                 lockManager.releaseLocks( grabbedLocks );
                 if ( !isReplaying() ) getQueryService().getDao().onAfterCommand( command );
@@ -374,7 +327,6 @@ public class DefaultCommander extends AbstractService implements Commander {
      */
     public void reset() {
         replaying = false;
-        idMap.clear();
         history.reset();
         lockManager.reset();
     }

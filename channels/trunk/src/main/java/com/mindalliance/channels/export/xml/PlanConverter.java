@@ -11,6 +11,7 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.UserIssue;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -64,6 +65,9 @@ public class PlanConverter extends AbstractChannelsConverter {
         writer.addAttribute( "uri", plan.getUri() );
         writer.addAttribute( "version", getVersion() );
         writer.addAttribute( "date", new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( new Date() ) );
+        writer.startNode( "lastId" );
+        writer.setValue( "" + getQueryService().getLastAssignedId() );
+        writer.endNode();
         writer.startNode( "name" );
         writer.setValue( plan.getName() );
         writer.endNode();
@@ -96,6 +100,8 @@ public class PlanConverter extends AbstractChannelsConverter {
             context.convertAnother( scenario, new ScenarioConverter( getExporter() ) );
             writer.endNode();
         }
+        // Export plan issues
+        exportUserIssues( plan, writer, context );
     }
 
     /**
@@ -104,18 +110,21 @@ public class PlanConverter extends AbstractChannelsConverter {
     public Object unmarshal(
             HierarchicalStreamReader reader,
             UnmarshallingContext context ) {
-        Map<String, Long> idMap = getIdMap( context );
         getProxyConnectors( context );
+        context.put( "importing-plan", "true" );
         Plan plan = Channels.getPlan();
         QueryService queryService = getQueryService();
         String uri = reader.getAttribute( "uri" );
         plan.setUri( uri );
-        String id = reader.getAttribute( "id" );
-        idMap.put( id, plan.getId() );
+        Long id = Long.parseLong( reader.getAttribute( "id" ) );
+        plan.setId( id );
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
-            if ( nodeName.equals( "name" ) ) {
+            if ( nodeName.equals( "lastId" ) ) {
+                Long lastId = Long.parseLong( reader.getValue() );
+                queryService.setLastAssignedId( lastId );
+            } else if ( nodeName.equals( "name" ) ) {
                 plan.setName( reader.getValue() );
             } else if ( nodeName.equals( "client" ) ) {
                 plan.setClient( reader.getValue() );
@@ -140,8 +149,10 @@ public class PlanConverter extends AbstractChannelsConverter {
                 context.convertAnother( plan, Scenario.class );
             } else if ( nodeName.equals( "detection-waivers" ) ) {
                 importDetectionWaivers( plan, reader );
-            }  else if ( nodeName.equals( "attachments" ) ) {
+            } else if ( nodeName.equals( "attachments" ) ) {
                 importAttachmentTickets( plan, reader );
+            } else if ( nodeName.equals( "issue" ) ) {
+                context.convertAnother( plan, UserIssue.class );
             } else {
                 LOG.warn( "Unknown element " + nodeName );
             }

@@ -110,6 +110,20 @@ public class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
+    public Long getLastAssignedId() {
+        return idCounter;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setLastAssignedId( Long lastId ) {
+        idCounter = lastId;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public void flush() {
     }
 
@@ -134,26 +148,22 @@ public class Memory implements Dao {
     public void loadPlan( Plan plan ) {
         // Load plan data
         try {
-            Map<Long, Long> idMap = new HashMap<Long, Long>();
             Importer importer = getChannels().getImporter();
             File dataFile = getDataFile( plan );
             if ( dataFile.length() > 0 ) {
                 LOG.info( "Importing snapshot for plan " + plan );
-                idMap = importer.importAll( new FileInputStream( dataFile ) );
+                importer.importAll( new FileInputStream( dataFile ) );
             }
             // Load and run journaled commands
             Journal journal = loadJournal( plan );
             Commander commander = getChannels().getCommander();
             commander.setReplaying( true );
-            commander.setIdMap( idMap );
             if ( !journal.isEmpty() ) {
                 LOG.info( "Replaying journaled commands for plan " + plan );
                 for ( Command command : journal.getCommands() ) {
                     commander.doCommand( command );
                 }
             }
-            // setChanged();
-            // notifyObservers( idMap );
             journal.reset();
             commander.reset();
             LOG.info( "Persisted plan reloaded." );
@@ -369,9 +379,16 @@ public class Memory implements Dao {
      * {@inheritDoc}
      */
     public void add( ModelObject object ) {
+        add( object, null );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void add( ModelObject object, Long id ) {
         if ( getIdIndex().containsKey( object.getId() ) )
             throw new DuplicateKeyException();
-        object.setId( newId() );
+        object.setId( id != null ? id : newId() );
         getIdIndex().put( object.getId(), object );
         if ( object instanceof Scenario ) {
             Channels.getPlan().getScenarios().add( (Scenario) object );
@@ -394,9 +411,9 @@ public class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    public Part createPart( Scenario scenario ) {
+    public Part createPart( Scenario scenario, Long id ) {
         Part part = new Part();
-        part.setId( newId() );
+        part.setId( id != null ? id : newId() );
         part.setScenario( scenario );
         return part;
     }
@@ -404,9 +421,9 @@ public class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    public Connector createConnector( Scenario scenario ) {
+    public Connector createConnector( Scenario scenario, Long id ) {
         Connector connector = new Connector();
-        connector.setId( newId() );
+        connector.setId( id != null ? id : newId() );
         connector.setScenario( scenario );
         return connector;
     }
@@ -414,18 +431,18 @@ public class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    public ExternalFlow createExternalFlow( Node source, Node target, String name ) {
+    public ExternalFlow createExternalFlow( Node source, Node target, String name, Long id ) {
         ExternalFlow externalFlow = new ExternalFlow( source, target, name );
-        externalFlow.setId( newId() );
+        externalFlow.setId( id != null ? id : newId() );
         return externalFlow;
     }
 
     /**
      * {@inheritDoc}
      */
-    public InternalFlow createInternalFlow( Node source, Node target, String name ) {
+    public InternalFlow createInternalFlow( Node source, Node target, String name, Long id ) {
         InternalFlow internalFlow = new InternalFlow( source, target, name );
-        internalFlow.setId( newId() );
+        internalFlow.setId( id != null ? id : newId() );
         return internalFlow;
     }
 

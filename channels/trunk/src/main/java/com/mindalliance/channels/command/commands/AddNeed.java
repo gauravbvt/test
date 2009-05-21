@@ -47,18 +47,19 @@ public class AddNeed extends AbstractCommand {
         QueryService queryService = commander.getQueryService();
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Part part = (Part) scenario.getNode( commander.resolveId( (Long) get( "part" ) ) );
+            Part part = (Part) scenario.getNode( (Long) get( "part" ) );
             if ( part == null ) throw new NotFoundException();
+            Long priorId = (Long) get( "flow" );
             Flow flow = queryService.connect(
                     queryService.createConnector( scenario ),
                     part,
-                    (String) get( "name" ) );
+                    (String) get( "name" ),
+                    priorId );
             Map<String, Object> flowAttributes = (Map<String, Object>) get( "attributes" );
             if ( flowAttributes != null ) {
                 CommandUtils.initialize( flow, flowAttributes );
                 commander.getAttachmentManager().reattachAll( flow.getAttachmentTickets() );
             }
-            commander.mapId( (Long) get( "flow" ), flow.getId() );
             set( "flow", flow.getId() );
             return new Change( Change.Type.Added, flow );
         } catch ( NotFoundException e ) {
@@ -79,7 +80,7 @@ public class AddNeed extends AbstractCommand {
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Flow flow = scenario.findFlow( commander.resolveId( (Long) get( "flow" ) ) );
+            Flow flow = scenario.findFlow( (Long) get( "flow" ) );
             return new RemoveNeed( flow );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh", e );

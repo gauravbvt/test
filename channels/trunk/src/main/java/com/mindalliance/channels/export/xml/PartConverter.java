@@ -5,7 +5,6 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
@@ -20,7 +19,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -118,12 +116,7 @@ public class PartConverter extends AbstractChannelsConverter {
             writer.endNode();
         }
         // Part user issues
-        List<Issue> issues = getQueryService().findAllUserIssues( part );
-        for ( Issue issue : issues ) {
-            writer.startNode( "issue" );
-            context.convertAnother( issue );
-            writer.endNode();
-        }
+        exportUserIssues( part, writer, context );
     }
 
     /**
@@ -132,9 +125,12 @@ public class PartConverter extends AbstractChannelsConverter {
     @SuppressWarnings( "unchecked" )
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
         Scenario scenario = (Scenario) context.get( "scenario" );
-        Part part = getQueryService().createPart( scenario );
-        Map<String, Long> idMap = (Map<String, Long>) context.get( "idMap" );
-        String id = reader.getAttribute( "id" );
+        Map<Long, Long> idMap = getIdMap( context );
+        boolean importingPlan = isImportingPlan( context );
+        Long id = Long.parseLong( reader.getAttribute( "id" ) );
+        Part part = importingPlan
+                ? getQueryService().createPart( scenario, id )
+                : getQueryService().createPart( scenario );
         idMap.put( id, part.getId() );
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
@@ -143,7 +139,7 @@ public class PartConverter extends AbstractChannelsConverter {
                 part.setDescription( reader.getValue() );
             } else if ( nodeName.equals( "detection-waivers" ) ) {
                 importDetectionWaivers( part, reader );
-            }  else if ( nodeName.equals( "attachments" ) ) {
+            } else if ( nodeName.equals( "attachments" ) ) {
                 importAttachmentTickets( part, reader );
             } else if ( nodeName.equals( "task" ) ) {
                 part.setTask( reader.getValue() );

@@ -67,6 +67,11 @@ public class HibernateDao extends JpaDaoSupport implements Dao {
         getJpaTemplate().persist( object );
     }
 
+    public void add( ModelObject object, Long id ) {
+        //Todo
+        add( object );
+    }
+
     /** {@inheritDoc} */
     public void update( ModelObject object ) {
         LoggerFactory.getLogger( getClass() ).debug(
@@ -106,7 +111,8 @@ public class HibernateDao extends JpaDaoSupport implements Dao {
     }
 
     /** {@inheritDoc} */
-    public Part createPart( Scenario scenario ) {
+    public Part createPart( Scenario scenario, Long id ) {
+        // TODO - account for id
         Part part = new Part();
         part.setScenario( scenario );
         getJpaTemplate().persist( part );
@@ -114,7 +120,8 @@ public class HibernateDao extends JpaDaoSupport implements Dao {
     }
 
     /** {@inheritDoc} */
-    public Connector createConnector( Scenario scenario ) {
+    public Connector createConnector( Scenario scenario, Long id ) {
+        // TODO - account for id
         Connector connector = new Connector();
         connector.setScenario( scenario );
         getJpaTemplate().persist( connector );
@@ -122,15 +129,17 @@ public class HibernateDao extends JpaDaoSupport implements Dao {
     }
 
     /** {@inheritDoc} */
-    public ExternalFlow createExternalFlow( Node source, Node target, String name ) {
+    public ExternalFlow createExternalFlow( Node source, Node target, String name, Long id ) {
         ExternalFlow externalFlow = new ExternalFlow( source, target, name );
+        // TODO - set id if not null
         getJpaTemplate().persist( externalFlow );
         return externalFlow;
     }
 
     /** {@inheritDoc} */
-    public InternalFlow createInternalFlow( Node source, Node target, String name ) {
+    public InternalFlow createInternalFlow( Node source, Node target, String name, Long id ) {
         InternalFlow internalFlow = new InternalFlow( source, target, name );
+        // TODO - set id if not null
         getJpaTemplate().persist( internalFlow );
         return internalFlow;
     }
@@ -181,6 +190,21 @@ public class HibernateDao extends JpaDaoSupport implements Dao {
     public void onDestroy() {
         // TODO - Do nothing for now
     }
+
+    /**
+      * {@inheritDoc}
+      */
+    public Long getLastAssignedId() {
+        // TODO
+        return null;
+    }
+
+    /**
+       * {@inheritDoc}
+       */
+     public void setLastAssignedId( Long lastId ) {
+         // TODO
+     }
 
     /**
      * {@inheritDoc}

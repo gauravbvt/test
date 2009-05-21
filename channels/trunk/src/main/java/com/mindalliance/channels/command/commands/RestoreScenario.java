@@ -9,8 +9,6 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Scenario;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -41,26 +39,19 @@ public class RestoreScenario extends AbstractCommand {
         Importer importer = commander.getChannels().getImporter();
         String xml = (String) get( "xml" );
         if ( xml != null ) {
-            try {
-                Long defaultScenarioId = (Long) get( "defaultScenario" );
-                Scenario defaultScenario = null;
-                if ( defaultScenarioId != null ) {
-                    // a default scenario was added before removing the one to be restored.
-                    List<Scenario> scenarios = queryService.list( Scenario.class );
-                    assert scenarios.size() == 1;
-                    defaultScenario = scenarios.get( 0 );
-                    commander.mapId( defaultScenarioId, defaultScenario.getId() );
-                }
-                Scenario scenario = importer.importScenario(
-                        new ByteArrayInputStream( xml.getBytes() ) );
-                commander.getAttachmentManager().reattachAll( scenario.getAttachmentTickets() );
-                commander.mapId( (Long) get( "scenario" ), scenario.getId() );
-                set( "scenario", scenario.getId() );
-                if ( defaultScenario != null ) queryService.remove( defaultScenario );
-                return new Change( Change.Type.Added, scenario );
-            } catch ( IOException e ) {
-                throw new CommandException( "Can't restore scenario.", e );
+            Long defaultScenarioId = (Long) get( "defaultScenario" );
+            Scenario defaultScenario = null;
+            if ( defaultScenarioId != null ) {
+                // a default scenario was added before removing the one to be restored.
+                List<Scenario> scenarios = queryService.list( Scenario.class );
+                assert scenarios.size() == 1;
+                defaultScenario = scenarios.get( 0 );
             }
+            Scenario scenario = importer.restoreScenario( xml );
+            commander.getAttachmentManager().reattachAll( scenario.getAttachmentTickets() );
+            set( "scenario", scenario.getId() );
+            if ( defaultScenario != null ) queryService.remove( defaultScenario );
+            return new Change( Change.Type.Added, scenario );
         } else {
             throw new CommandException( "Can't restore scenario." );
         }

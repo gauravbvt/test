@@ -10,11 +10,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,22 +29,13 @@ public class EntityShowMenuPanel extends MenuPanel {
     private EntityPanel entityPanel;
 
     public EntityShowMenuPanel( String id, IModel<? extends Identifiable> model ) {
-        super( id, model, null );
-        init();
+        super( id, "Show", model, null );
     }
 
-    private void init() {
-        ListView<Component> menuItems = new ListView<Component>(
-                "items",
-                new PropertyModel<List<Component>>( this, "menuItems" ) ) {
-            protected void populateItem( ListItem<Component> item ) {
-                item.add( item.getModelObject() );
-            }
-        };
-        add( menuItems );
-    }
-
-    public List<Component> getMenuItems() {
+    /**
+     * {@inheritDoc}
+     */
+   public List<Component> getMenuItems() {
         List<Component> menuItems = new ArrayList<Component>();
         Link detailsLink = new AjaxFallbackLink( "link" ) {
             public void onClick( AjaxRequestTarget target ) {

@@ -8,6 +8,7 @@ import com.mindalliance.channels.model.Scenario;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,11 +20,19 @@ public interface Importer extends Service {
      * Import a scenario from a stream.
      *
      * @param stream an input stream
-     * @return a map with scenario, idMap and proxy connectors
+     * @return a map with scenario and proxy connectors
      * @throws IOException on errors
      */
     Scenario importScenario( InputStream stream ) throws IOException;
 
+    /**
+     * Reload a scenario from xml.
+     *
+     * @param xml an xml string
+     * @return a map with scenario and proxy connectors
+     */
+    Scenario restoreScenario( String xml );
+    
     /**
      * The mime type of files from which scenarios are imported.
      *
@@ -42,10 +51,9 @@ public interface Importer extends Service {
      * Import all persisted data from a stream.
      *
      * @param stream an input stream
-     * @return an id translation map
      * @throws java.io.IOException on errors
      */
-    Map<Long, Long> importAll( FileInputStream stream ) throws IOException;
+    void importAll( FileInputStream stream ) throws IOException;
 
     /**
      * Import a journal from a stream.
@@ -68,12 +76,12 @@ public interface Importer extends Service {
     /**
      * Reconnect external flows given proxy connectors and idMap
      *
-     * @param idMap a map of exported to imported ids
      * @param proxyConnectors a map of proxy connectors
      * (external connectors stand-ins) with specs of external connectors
+     * @param loadingPlan is a plan being loaded
      */
     void reconnectExternalFlows(
-            Map<String, Long> idMap,
-            Map<Connector, ConnectionSpecification> proxyConnectors );
+            Map<Connector, List<ConnectionSpecification>> proxyConnectors,
+            boolean loadingPlan);
 }
 

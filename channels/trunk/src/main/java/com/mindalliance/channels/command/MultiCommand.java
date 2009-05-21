@@ -1,14 +1,15 @@
 package com.mindalliance.channels.command;
 
+import com.mindalliance.channels.Commander;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
-import com.mindalliance.channels.Commander;
+import java.util.Set;
 
 /**
  * A command composed of other commands.
@@ -106,6 +107,28 @@ public class MultiCommand extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
+    public Set<Long> getLockingSet() {
+        Set<Long> lockingSet = new HashSet<Long>();
+        for ( Command command : commands ) {
+            lockingSet.addAll( command.getLockingSet() );
+        }
+        return lockingSet;
+    }
+
+    /**
+      * {@inheritDoc}
+      */
+     public Set<Long> getConflictSet() {
+         Set<Long> conflictSet = new HashSet<Long>();
+         for ( Command command : commands ) {
+             conflictSet.addAll( command.getConflictSet() );
+         }
+         return conflictSet;
+     }
+
+    /**
+     * {@inheritDoc}
+     */
     public String getName() {
         return name;
     }
@@ -165,7 +188,8 @@ public class MultiCommand extends AbstractCommand {
      * {@inheritDoc}
      */
     protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
-        MultiCommand undoMulti = new MultiCommand( getName() );
+        MultiCommand undoMulti = new MultiCommand( getUndoes() );
+        undoMulti.setUndoes( getName() );
         // Add undoes of executed commands in reverse order of their execution.
         for ( int i = executed.size() - 1; i >= 0; i-- ) {
             Command command = executed.get( i );

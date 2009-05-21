@@ -8,12 +8,14 @@ import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Scenario;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,6 +38,17 @@ public class Serializer extends AbstractService implements Importer, Exporter {
         } catch ( ClassNotFoundException e ) {
             LoggerFactory.getLogger( getClass() ).error( IMPORT_FAILED, e );
             throw new IOException( IMPORT_FAILED, e );
+        }
+    }
+
+    /**
+      * {@inheritDoc}
+      */
+    public Scenario restoreScenario( String xml ) {
+        try {
+            return importScenario( new ByteArrayInputStream( xml.getBytes()) );
+        } catch ( IOException e ) {
+            throw new RuntimeException( e );
         }
     }
 
@@ -74,8 +87,8 @@ public class Serializer extends AbstractService implements Importer, Exporter {
     /**
      * {@inheritDoc}
      */
-    public Map<Long,Long> importAll( FileInputStream stream ) throws IOException {
-        return null; //Todo
+    public void importAll( FileInputStream stream ) throws IOException {
+        //Todo
     }
 
     /**
@@ -97,9 +110,13 @@ public class Serializer extends AbstractService implements Importer, Exporter {
         return null;
     }
 
-    public void reconnectExternalFlows( Map<String, Long> idMap, Map<Connector, ConnectionSpecification> proxyConnectors ) {
-        // TODO
+    public void reconnectExternalFlows(
+            Map<Connector,
+            List<ConnectionSpecification>> proxyConnectors, 
+            boolean importingPlan ) {
+        //Todo
     }
+
 
     /**
      * {@inheritDoc}

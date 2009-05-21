@@ -1,12 +1,12 @@
 package com.mindalliance.channels.command.commands;
 
+import com.mindalliance.channels.Commander;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.ScenarioObject;
-import com.mindalliance.channels.command.CommandException;
 
 /**
  * Command to update a model object contained in a scenario.
@@ -54,9 +54,9 @@ public class UpdateScenarioObject extends UpdateObject {
             boolean isNode = (Boolean) get( "isNode" );
             ScenarioObject scenarioObject;
             if ( isNode ) {
-                scenarioObject = scenario.getNode( commander.resolveId( (Long) get( "object" ) ) );
+                scenarioObject = scenario.getNode( (Long) get( "object" ) );
             } else {
-                scenarioObject = scenario.findFlow( commander.resolveId( (Long) get( "object" ) ) );
+                scenarioObject = scenario.findFlow( (Long) get( "object" ) );
             }
             return scenarioObject;
         } catch ( NotFoundException e ) {

@@ -44,8 +44,10 @@ public class OrganizationConverter extends EntityConverter {
     /**
      * {@inheritDoc}
      */
-    ModelObject findOrMakeEntity( String name ) {
-        return getQueryService().findOrCreate( Organization.class, name );
+    ModelObject findOrMakeEntity( String name, Long id, boolean importingPlan ) {
+        return importingPlan
+                ? getQueryService().findOrCreate( Organization.class, name, id )
+                : getQueryService().findOrCreate( Organization.class, name );
     }
 
     /**

@@ -8,6 +8,7 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
 
@@ -34,6 +35,10 @@ public class RemoveScenario extends AbstractCommand {
         Iterator<Part> parts = scenario.parts();
         while ( parts.hasNext() ) {
             addConflicting( parts.next() );
+        }
+        Iterator<Flow> flows = scenario.flows();
+        while( flows.hasNext() ) {
+            addConflicting( flows.next() );
         }
     }
 

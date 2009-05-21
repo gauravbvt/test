@@ -106,12 +106,7 @@ public interface Commander extends Service {
      */
     String getRedoTitle();
 
-    /**
-     * Set id translation map.
-     *
-     * @param idMap an id translation map
-     */
-    void setIdMap( Map<Long, Long> idMap );
+
 
     /**
      * Find a model object from its id, possibly resolving the id first with idMap.
@@ -121,24 +116,29 @@ public interface Commander extends Service {
      * @return a model object
      * @throws CommandException if not found
      */
+
     <T extends ModelObject> T resolve( Class<T> clazz, Long id ) throws CommandException;
 
 
-    /**
+/**
      * Resolves an id.
      *
      * @param id a long
      * @return a long or int
      * @throws CommandException if resolution fails
      */
+/*
     Long resolveId( Long id ) throws CommandException;
 
-    /**
+    */
+/**
      * Map id translation for replay.
      * @param oldId a Long or null
      * @param newId a Long
      */
+/*
     void mapId( Long oldId, Long newId );
+*/
 
     /**
      * Whether commander is in journal replay mode.

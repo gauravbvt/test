@@ -40,8 +40,10 @@ public class ActorConverter extends EntityConverter {
      * {@inheritDoc}
      */
     @Override
-    ModelObject findOrMakeEntity( String name ) {
-        return getQueryService().findOrCreate( Actor.class, name );
+    ModelObject findOrMakeEntity( String name, Long id, boolean importingPlan ) {
+        return importingPlan
+                ? getQueryService().findOrCreate( Actor.class, name, id )
+                : getQueryService().findOrCreate( Actor.class, name );
     }
 
     /**

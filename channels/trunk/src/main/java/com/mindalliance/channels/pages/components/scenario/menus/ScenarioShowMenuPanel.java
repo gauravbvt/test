@@ -9,11 +9,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,21 +29,12 @@ public class ScenarioShowMenuPanel extends MenuPanel {
     private ScenarioEditPanel scenarioEditPanel;
 
     public ScenarioShowMenuPanel( String s, IModel<? extends Identifiable> model, Set<Long> expansions ) {
-        super( s, model, expansions );
-        init();
+        super( s, "Show", model, expansions );
     }
 
-    private void init() {
-        ListView<Component> menuItems = new ListView<Component>(
-                "items",
-                new PropertyModel<List<Component>>( this, "menuItems" ) ) {
-            protected void populateItem( ListItem<Component> item ) {
-                item.add( item.getModelObject() );
-            }
-        };
-        add( menuItems );
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     public List<Component> getMenuItems() {
         List<Component> menuItems = new ArrayList<Component>();
         // Details
