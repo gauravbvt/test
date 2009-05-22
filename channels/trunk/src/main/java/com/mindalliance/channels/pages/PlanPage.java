@@ -905,6 +905,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 }
             } else if ( change.isRecomposed() ) {
                 collapseScenarioObjects();
+                setPart( getPart() );
             } else if ( change.isSelected() ) {
                 collapseScenarioObjects();
                 setScenario( (Scenario) identifiable );
