@@ -76,7 +76,7 @@ public class BreakUpFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+    protected Command makeUndoCommand( Commander commander ) throws CommandException {
         MultiCommand multi = new MultiCommand( "reconnect flow" );
         multi.setUndoes( getName() );
         ConnectWithFlow connectWithFlow = new ConnectWithFlow();
@@ -85,7 +85,7 @@ public class BreakUpFlow extends AbstractCommand {
         multi.addCommand( connectWithFlow );
         MultiCommand subCommands = (MultiCommand) get( "subCommands" );
         subCommands.setMemorable( false );
-        multi.addCommand( subCommands.makeUndoCommand( commander ) );
+        multi.addCommand( subCommands.getUndoCommand( commander ) );
         return multi;
     }
     // Create a capability and/or need if not repetitive

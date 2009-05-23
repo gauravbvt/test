@@ -101,7 +101,7 @@ public class AttachDocument extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+    protected Command makeUndoCommand( Commander commander ) throws CommandException {
         ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "attachee" ) );
         String ticket = (String) get( "ticket" );
         return new DetachDocument( mo, commander.getAttachmentManager().getAttachment( ticket ) );

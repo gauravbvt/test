@@ -11,7 +11,6 @@ import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,8 +97,6 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
         sb.append( selectedScenario == null ? "NONE" : selectedScenario.getId() );
         sb.append( "&connection=" );
         sb.append( selectedScRel == null ? "NONE" : selectedScRel.getId() );
-        sb.append( "&time=" );
-        sb.append( MessageFormat.format( "{2,number,0}", System.currentTimeMillis() ) );
         double[] diagramSize = getDiagramSize();
         if ( diagramSize != null ) {
             sb.append( "&size=" );

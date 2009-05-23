@@ -5,6 +5,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -50,7 +51,7 @@ public class MultiCommand extends AbstractCommand {
     /**
      * A source-sink link between two commands.
      */
-    private final class Link {
+    private final class Link implements Serializable {
         /**
          * Command which result is used as argument value in sink command.
          */
@@ -98,9 +99,11 @@ public class MultiCommand extends AbstractCommand {
     }
 
     public MultiCommand() {
+        setTop( false );
     }
 
     public MultiCommand( String name ) {
+        this();
         this.name = name;
     }
 
@@ -116,15 +119,15 @@ public class MultiCommand extends AbstractCommand {
     }
 
     /**
-      * {@inheritDoc}
-      */
-     public Set<Long> getConflictSet() {
-         Set<Long> conflictSet = new HashSet<Long>();
-         for ( Command command : commands ) {
-             conflictSet.addAll( command.getConflictSet() );
-         }
-         return conflictSet;
-     }
+     * {@inheritDoc}
+     */
+    public Set<Long> getConflictSet() {
+        Set<Long> conflictSet = new HashSet<Long>();
+        for ( Command command : commands ) {
+            conflictSet.addAll( command.getConflictSet() );
+        }
+        return conflictSet;
+    }
 
     /**
      * {@inheritDoc}
@@ -187,15 +190,16 @@ public class MultiCommand extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+    protected Command makeUndoCommand( Commander commander ) throws CommandException {
         MultiCommand undoMulti = new MultiCommand( getUndoes() );
         undoMulti.setUndoes( getName() );
         // Add undoes of executed commands in reverse order of their execution.
         for ( int i = executed.size() - 1; i >= 0; i-- ) {
             Command command = executed.get( i );
-            Command undoCommand = command.makeUndoCommand( commander );
-            undoMulti.addCommand( undoCommand );
-            // TODO - what about links?
+            if ( command.isUndoable() ) {
+                Command undoCommand = command.getUndoCommand( commander );
+                undoMulti.addCommand( undoCommand );
+            }
         }
         return undoMulti;
     }
@@ -206,6 +210,7 @@ public class MultiCommand extends AbstractCommand {
      * @param command a Command
      */
     public void addCommand( Command command ) {
+        command.setTop( false );
         commands.add( command );
         command.setMemorable( false );
     }

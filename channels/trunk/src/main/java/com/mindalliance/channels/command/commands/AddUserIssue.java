@@ -70,7 +70,7 @@ public class AddUserIssue extends AbstractCommand {
      * {@inheritDoc}
      */
     @Override
-    protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+    protected Command makeUndoCommand( Commander commander ) throws CommandException {
         UserIssue issue = commander.resolve( UserIssue.class, (Long) get( "issue" ) );
         return new RemoveIssue( issue );
     }

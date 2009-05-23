@@ -92,12 +92,12 @@ public class AddIntermediate extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+    protected Command makeUndoCommand( Commander commander ) throws CommandException {
         MultiCommand multi = new MultiCommand( "disintermediate" );
         multi.setUndoes( getName() );
         MultiCommand subCommands = (MultiCommand) get( "subCommands" );
         subCommands.setMemorable( false );
-        multi.addCommand( subCommands.makeUndoCommand( commander ) );
+        multi.addCommand( subCommands.getUndoCommand( commander ) );
         return multi;
     }
 

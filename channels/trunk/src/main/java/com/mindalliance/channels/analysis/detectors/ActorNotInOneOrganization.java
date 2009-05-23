@@ -43,7 +43,7 @@ public class ActorNotInOneOrganization extends AbstractIssueDetector {
         List<Organization> employers = getQueryService().findEmployers( actor );
         if ( employers.size() != 1 ) {
             if ( employers.size() == 0 ) {
-                DetectedIssue issue = new DetectedIssue( Issue.STRUCTURAL, actor );
+                DetectedIssue issue = makeIssue( Issue.STRUCTURAL, actor );
                 issue.setSeverity( Issue.Level.Minor );
                 issue.setDescription( actor + " does not belong to any organization." );
                 issue.setRemediation( "Specify an organization in parts played by the actor." );
@@ -60,7 +60,7 @@ public class ActorNotInOneOrganization extends AbstractIssueDetector {
                                 }
                             } );
                     for ( Organization ancestor : ancestors ) {
-                        DetectedIssue issue = new DetectedIssue( Issue.STRUCTURAL, actor );
+                        DetectedIssue issue = makeIssue( Issue.STRUCTURAL, actor );
                         issue.setSeverity( Issue.Level.Minor );
                         issue.setDescription( actor
                                 + " belongs to " + org.getName()

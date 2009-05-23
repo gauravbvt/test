@@ -57,30 +57,30 @@ public class PasteFlow extends AbstractCommand {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Part part = (Part) scenario.getNode( (Long) get( "part" ) );
             if ( part == null ) throw new NotFoundException();
-            Map<String, Object> flowState;
-            if ( commander.isReplaying() ) {
-                flowState = (Map<String, Object>) get( "copy" );
-            } else {
-                flowState = commander.getCopy();
-                set( "copy", flowState );
+            Map<String, Object> copy;
+            copy = (Map<String, Object>) get( "copy" );
+            if ( copy == null ) {
+                // not replaying or redoing
+                copy = commander.getCopy();
+                set( "copy", copy );
             }
-            Long priorId = (Long) get( "flow" );
-            boolean isOutcome = (Boolean) flowState.get( "isOutcome" );
+           Long priorId = (Long) get( "flow" );
+            boolean isOutcome = (Boolean) copy.get( "isOutcome" );
             Flow flow;
             if ( isOutcome ) {
                 flow = queryService.connect(
                         part,
                         queryService.createConnector( scenario ),
-                        (String) flowState.get( "name" ),
+                        (String) copy.get( "name" ),
                         priorId );
             } else {
                 flow = queryService.connect(
                         queryService.createConnector( scenario ),
                         part,
-                        (String) flowState.get( "name" ),
+                        (String) copy.get( "name" ),
                         priorId );
             }
-            Map<String, Object> flowAttributes = (Map<String, Object>) flowState.get( "attributes" );
+            Map<String, Object> flowAttributes = (Map<String, Object>) copy.get( "attributes" );
             if ( flowAttributes != null ) {
                 CommandUtils.initialize( flow, flowAttributes );
                 commander.getAttachmentManager().reattachAll( flow.getAttachmentTickets() );
@@ -102,7 +102,7 @@ public class PasteFlow extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+    protected Command makeUndoCommand( Commander commander ) throws CommandException {
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Long flowId = (Long) get( "flow" );

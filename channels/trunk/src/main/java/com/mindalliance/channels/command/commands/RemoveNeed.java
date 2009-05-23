@@ -61,7 +61,7 @@ public class RemoveNeed extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+    protected Command makeUndoCommand( Commander commander ) throws CommandException {
         AddNeed command = new AddNeed();
         command.setArguments( getArguments() );
         return command;

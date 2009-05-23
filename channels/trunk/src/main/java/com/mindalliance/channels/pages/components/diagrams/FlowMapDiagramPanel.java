@@ -1,16 +1,14 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.graph.Diagram;
-import org.apache.wicket.model.IModel;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Scenario;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.text.MessageFormat;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -90,8 +88,6 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
         } else {
             sb.append( "NONE" );
         }
-        sb.append( "&time=" );
-        sb.append( MessageFormat.format( "{2,number,0}", System.currentTimeMillis() ) );
         double[] diagramSize = getDiagramSize();
         if ( diagramSize != null ) {
             sb.append( "&size=" );

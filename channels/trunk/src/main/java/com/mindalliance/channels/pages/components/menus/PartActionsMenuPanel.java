@@ -9,6 +9,7 @@ import com.mindalliance.channels.command.commands.PasteAttachment;
 import com.mindalliance.channels.command.commands.PasteFlow;
 import com.mindalliance.channels.command.commands.RemovePart;
 import com.mindalliance.channels.command.commands.SatisfyAllNeeds;
+import com.mindalliance.channels.command.commands.SetPartFromCopy;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
@@ -44,6 +45,27 @@ public class PartActionsMenuPanel extends ActionMenuPanel {
                 update( target, change );
             }
         } );
+        commandWrappers.add( new CommandWrapper( new SetPartFromCopy( getPart() ) ) {
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                update( target, change );
+            }
+        } );
+        commandWrappers.add( new CommandWrapper( new RemovePart( getPart() ) ) {
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                Part part = getPart();
+                update( target, change );
+                if ( part.getActor() != null )
+                    getCommander().cleanup( Actor.class, part.getActor().getName() );
+                if ( part.getRole() != null )
+                    getCommander().cleanup( Role.class, part.getRole().getName() );
+                if ( part.getOrganization() != null )
+                    getCommander().cleanup( Organization.class, part.getOrganization().getName() );
+                if ( part.getJurisdiction() != null )
+                    getCommander().cleanup( Place.class, part.getJurisdiction().getName() );
+                if ( part.getLocation() != null )
+                    getCommander().cleanup( Place.class, part.getLocation().getName() );
+            }
+        } );
         commandWrappers.add( new CommandWrapper( new PasteAttachment( getPart() ) ) {
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 update( target, change );
@@ -72,22 +94,6 @@ public class PartActionsMenuPanel extends ActionMenuPanel {
         commandWrappers.add( new CommandWrapper( new Disintermediate( getPart() ) ) {
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 update( target, change );
-            }
-        } );
-        commandWrappers.add( new CommandWrapper( new RemovePart( getPart() ) ) {
-            public void onExecuted( AjaxRequestTarget target, Change change ) {
-                Part part = getPart();
-                update( target, change );
-                if ( part.getActor() != null )
-                    getCommander().cleanup( Actor.class, part.getActor().getName() );
-                if ( part.getRole() != null )
-                    getCommander().cleanup( Role.class, part.getRole().getName() );
-                if ( part.getOrganization() != null )
-                    getCommander().cleanup( Organization.class, part.getOrganization().getName() );
-                if ( part.getJurisdiction() != null )
-                    getCommander().cleanup( Place.class, part.getJurisdiction().getName() );
-                if ( part.getLocation() != null )
-                    getCommander().cleanup( Place.class, part.getLocation().getName() );
             }
         } );
         return commandWrappers;

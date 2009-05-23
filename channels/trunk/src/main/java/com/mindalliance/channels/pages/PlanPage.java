@@ -956,7 +956,11 @@ public final class PlanPage extends WebPage implements Updatable {
                 && change.isUpdated()
                 && change.getProperty().equals( "waivedIssueDetections" ) ) ) {
             refreshAll( target );
+        }
+        if ( change.isUpdated() ) {
+            refreshAll( target );
         } else {
+
             if ( identifiable instanceof Plan ) {
                 if ( change.isDisplay() ) {
                     addPlanEditPanel();
@@ -967,9 +971,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 if ( change.isDisplay() ) {
                     scenarioPanel.resetScenarioEditPanel( target );
                 }
-                if ( change.isUpdated() ) {
-                    refreshAll( target );
-                } else if ( change.isAdded() || change.isSelected() ) {
+                if ( change.isAdded() || change.isSelected() ) {
                     refreshAll( target );
                 } else if ( change.isRemoved() ) {
                     refreshAll( target );

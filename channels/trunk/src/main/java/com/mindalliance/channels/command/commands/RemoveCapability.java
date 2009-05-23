@@ -61,7 +61,7 @@ public class RemoveCapability extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+    protected Command makeUndoCommand( Commander commander ) throws CommandException {
         AddCapability command = new AddCapability();
         command.setArguments( getArguments() );
         return command;

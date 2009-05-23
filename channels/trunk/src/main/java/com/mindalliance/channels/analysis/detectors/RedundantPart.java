@@ -2,14 +2,14 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
-import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.util.SemMatch;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Detects that a part has a duplicate.
@@ -56,9 +56,9 @@ public class RedundantPart extends AbstractIssueDetector {
         if ( count > 0 ) {
             DetectedIssue issue = makeIssue( DetectedIssue.DEFINITION, part );
             issue.setDescription(
-                    "This part is restated "
+                    "This task is restated "
                             + ( ( count == 1 ) ? "once." : count + " times." ) );
-            issue.setRemediation( "Remove redundant parts, or make them different." );
+            issue.setRemediation( "Remove redundant task, or make the repeated tasks different." );
             issue.setSeverity( Issue.Level.Minor );
             issues.add( issue );
         }

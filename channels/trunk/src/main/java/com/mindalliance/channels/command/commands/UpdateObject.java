@@ -1,14 +1,14 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ScenarioObject;
 
 import java.util.List;
 
@@ -194,7 +194,7 @@ public abstract class UpdateObject extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+    protected Command makeUndoCommand( Commander commander ) throws CommandException {
         Identifiable identifiable = getIdentifiable( commander );
         String property = (String) get( "property" );
         Object value;

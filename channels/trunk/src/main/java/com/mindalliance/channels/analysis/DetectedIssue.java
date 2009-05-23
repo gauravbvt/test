@@ -1,7 +1,7 @@
 package com.mindalliance.channels.analysis;
 
-import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelObject;
 import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Transient;
@@ -16,18 +16,21 @@ import javax.persistence.Transient;
  */
 public class DetectedIssue extends AnalysisObject implements Issue {
 
+    /**
+     * Id counter.
+     */
     private static long NEGATIVE_COUNTER = Long.MAX_VALUE;
     /**
      * The kind of detector that found this issue.
      */
     private String kind;
     /**
-     * Type of issue
+     * Type of issue.
      */
     private String type;
 
     /**
-     * How to resolve the issue
+     * How to resolve the issue.
      */
     private String remediation;
     /**
@@ -36,12 +39,12 @@ public class DetectedIssue extends AnalysisObject implements Issue {
      */
     private boolean canBeWaived;
     /**
-     * The issue's severity
+     * The issue's severity.
      */
     private Issue.Level severity = Issue.Level.Minor;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param type -- the type of issue
      * @param mo   -- the ModelObject the issue is about
@@ -52,7 +55,7 @@ public class DetectedIssue extends AnalysisObject implements Issue {
     }
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param type     -- the type of issue
      * @param mo       -- the ModelObject the issue is about

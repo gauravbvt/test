@@ -103,7 +103,7 @@ public class PasteAttachment extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+    protected Command makeUndoCommand( Commander commander ) throws CommandException {
         ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "attachee" ) );
         String ticket = (String) get( "ticket" );
         if ( mo == null || ticket == null ) {

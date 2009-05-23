@@ -111,7 +111,7 @@ public interface Command extends Serializable {
      * @return a command
      * @throws CommandException if undo command can not be made
      */
-    Command makeUndoCommand( Commander commander ) throws CommandException;
+    Command getUndoCommand( Commander commander ) throws CommandException;
 
     /**
      * Whether the command's execution should be remembered.
@@ -126,13 +126,6 @@ public interface Command extends Serializable {
      * @param value a boolean
      */
     void setMemorable( boolean value );
-
-    /**
-     * Preset the undo command.
-     *
-     * @param command a command
-     */
-    void setUndoCommand( Command command );
 
     /**
      * Whether no lock is required by the nature of the command.
@@ -177,4 +170,16 @@ public interface Command extends Serializable {
      * @return a boolean
      */
     boolean canDo( Commander commander );
+
+    /**
+     * Not a sub-command,
+     * @return  a boolean
+     */
+    boolean isTop();
+
+    /**
+     * Whether a command is top command.
+     * @param val a boolean
+     */
+    void setTop( boolean val);
 }

@@ -68,7 +68,7 @@ public class RestoreScenario extends AbstractCommand {
      * {@inheritDoc}
      */
     @Override
-    protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+    protected Command makeUndoCommand( Commander commander ) throws CommandException {
         Scenario scenario = commander.resolve(
                 Scenario.class,
                 (Long) get( "scenario" ) );

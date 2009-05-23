@@ -125,13 +125,13 @@ public class SatisfyNeed extends AbstractCommand {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+    protected Command makeUndoCommand( Commander commander ) throws CommandException {
         try {
             MultiCommand multi = new MultiCommand( "unsatisfy need" );
             multi.setUndoes( getName() );
             MultiCommand subCommands = (MultiCommand) get( "subCommands" );
             subCommands.setMemorable( false );
-            multi.addCommand( subCommands.makeUndoCommand( commander ) );
+            multi.addCommand( subCommands.getUndoCommand( commander ) );
             // Disconnect need satisfying flow
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "context" ) );
             Flow newFlow = scenario.findFlow( (Long) get( "satisfy" ) );

@@ -66,7 +66,7 @@ public class RemoveIssue extends AbstractCommand {
      * {@inheritDoc}
      */
     @Override
-    protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+    protected Command makeUndoCommand( Commander commander ) throws CommandException {
         ModelObject modelObject = commander.resolve(
                 ModelObject.class,
                 (Long) get( "modelObject" ) );

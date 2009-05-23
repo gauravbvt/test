@@ -66,7 +66,7 @@ public class DisconnectFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+    protected Command makeUndoCommand( Commander commander ) throws CommandException {
         Command connectWithFlow = new ConnectWithFlow();
         connectWithFlow.setArguments( (Map<String, Object>) get( "flowState" ) );
         // The previous id of the flow being re-connected

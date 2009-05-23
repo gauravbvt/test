@@ -53,9 +53,13 @@ public abstract class AbstractCommand implements Command {
      */
     private boolean memorable = true;
     /**
-     * Optionally preset undo command.
+     * Undo command.
      */
     private Command undoCommand;
+    /**
+     * Whether this is a top-most command (not some other command's sub-command).
+     */
+    private boolean top = true;
 
     public AbstractCommand() {
         userName = User.current().getName();
@@ -209,13 +213,6 @@ public abstract class AbstractCommand implements Command {
     /**
      * {@inheritDoc}
      */
-    public void setUndoCommand( Command undoCommand ) {
-        this.undoCommand = undoCommand;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public String toString() {
         return getName();
     }
@@ -241,17 +238,19 @@ public abstract class AbstractCommand implements Command {
      * @return a command
      * @throws CommandException if failed to make undo command
      */
-    public Command makeUndoCommand( Commander commander ) throws CommandException {
-        if ( undoCommand != null )
-            return undoCommand;
-        else
+    public Command getUndoCommand( Commander commander ) throws CommandException {
+        if ( undoCommand == null )
             try {
-                return doMakeUndoCommand( commander );
+                Command undo = makeUndoCommand( commander );
+                undo.setMemorable( isMemorable() );
+                undo.setTop( isTop() );
+                undoCommand = undo;
             }
             catch ( RuntimeException e ) {
                 LOG.warn( "Runtime exception while making undo command.", e );
                 throw new CommandException( "Runtime exception while making undo command.", e );
             }
+        return undoCommand;
     }
 
     /**
@@ -261,7 +260,7 @@ public abstract class AbstractCommand implements Command {
      * @return a command
      * @throws CommandException if failed to make undo command
      */
-    protected abstract Command doMakeUndoCommand( Commander commander ) throws CommandException;
+    protected abstract Command makeUndoCommand( Commander commander ) throws CommandException;
 
     /**
      * Get a model object's property value.
@@ -332,7 +331,7 @@ public abstract class AbstractCommand implements Command {
      */
     public String getUndoes( Commander commander ) {
         try {
-            return makeUndoCommand( commander ).getName();
+            return getUndoCommand( commander ).getName();
         } catch ( CommandException e ) {
             LOG.warn( "Can't make undo command.", e );
             return "?";
@@ -354,4 +353,11 @@ public abstract class AbstractCommand implements Command {
         return true;
     }
 
+    public boolean isTop() {
+        return top;
+    }
+
+    public void setTop( boolean top ) {
+        this.top = top;
+    }
 }

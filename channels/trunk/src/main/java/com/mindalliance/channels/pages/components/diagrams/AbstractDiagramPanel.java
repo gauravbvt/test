@@ -134,7 +134,6 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
                 super.onComponentTag( tag );
                 String url = makeDiagramUrl() + makeSeed();
                 tag.put( "src", url );
-                LOG.info( "Flow map PNG: " + url );
                 if ( withImageMap ) {
                     // TODO may not be unique in the page but should be
                     tag.put( "usemap", "#" + getContainerId() );
@@ -146,6 +145,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
                 super.onRender( markupStream );
                 if ( withImageMap ) {
                     try {
+                        LOG.info( "Rendering image map ");
                         getResponse().write( imageMapHolder.toString() );
                     } catch ( DiagramException e ) {
                         LOG.error( "Can't generate image map", e );
@@ -217,7 +217,6 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
     }
 
     private void updateImageMap() {
-        LOG.info( "Making image map" );
         String imageMap = diagram.makeImageMap();
         // imageMap = imageMap.replace( "id=\"G\"", "id=\"" + getContainerId() + "\"" );
         imageMap = imageMap.replace( "id=\"G\"", "" );
@@ -226,6 +225,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
     }
 
     private String makeSeed() {
+        // LOG.info("***Seed = " + getCommander().getLastModified() );
         return "&_modified=" + getCommander().getLastModified();
     }
 

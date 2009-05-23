@@ -66,7 +66,7 @@ public class ResultCache {
      * Forget all cached results.
      */
     public void forgetAll() {
-        log.debug( "Clearing cache" );
+        log.info( "***Clearing cache" );
         getCache().removeAll();
     }
 

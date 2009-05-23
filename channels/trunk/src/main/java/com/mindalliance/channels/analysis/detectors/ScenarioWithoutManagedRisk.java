@@ -29,7 +29,7 @@ public class ScenarioWithoutManagedRisk extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Scenario scenario = (Scenario) modelObject;
         if ( scenario.getRisks().isEmpty() ) {
-            DetectedIssue issue = new DetectedIssue( Issue.DEFINITION, scenario );
+            DetectedIssue issue = makeIssue( Issue.DEFINITION, scenario );
             issue.setSeverity( Issue.Level.Major );
             issue.setDescription( "The scenario does not address any risk." );
             issue.setRemediation( "Identify one or more risks this scenario is meant to eliminate or mitigate" );

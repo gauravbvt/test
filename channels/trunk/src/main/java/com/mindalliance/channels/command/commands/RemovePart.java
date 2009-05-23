@@ -15,7 +15,7 @@ import com.mindalliance.channels.model.Scenario;
 import java.util.Iterator;
 
 /**
- * Command to remove a part from a scenario.
+ * Command to remove a part from a scenario after taking a copy.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -42,8 +42,25 @@ public class RemovePart extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "remove part";
+        return "cut part";
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canDo( Commander commander ) {
+        return super.canDo( commander ) && isNotDefaultPart( commander );
+    }
+
+    private boolean isNotDefaultPart( Commander commander ) {
+        try {
+            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+            return scenario.countParts() > 1;
+        } catch ( CommandException e ) {
+            return false;
+        }
+    }
+
 
     /**
      * {@inheritDoc}
@@ -52,6 +69,7 @@ public class RemovePart extends AbstractCommand {
         QueryService queryService = commander.getQueryService();
         Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
         Part part = (Part) scenario.getNode( (Long) get( "part" ) );
+        set( "partState", CommandUtils.getPartState( part ) );
         MultiCommand multi = (MultiCommand) get( "subCommands" );
         if ( multi == null ) {
             multi = makeSubCommands( part );
@@ -63,7 +81,6 @@ public class RemovePart extends AbstractCommand {
             Part defaultPart = queryService.createPart( scenario );
             set( "defaultPart", defaultPart.getId() );
         }
-        set( "partState", CommandUtils.getPartState( part ) );
         scenario.removeNode( part );
         commander.releaseAnyLockOn( part );
         ignoreLock( (Long) get( "part" ) );
@@ -81,7 +98,7 @@ public class RemovePart extends AbstractCommand {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+    protected Command makeUndoCommand( Commander commander ) throws CommandException {
         MultiCommand multi = new MultiCommand( "add part" );
         multi.setUndoes( getName() );
         // Reconstitute part
@@ -95,7 +112,7 @@ public class RemovePart extends AbstractCommand {
         multi.addCommand( addPart );
         MultiCommand subCommands = (MultiCommand) get( "subCommands" );
         subCommands.setMemorable( false );
-        multi.addCommand( subCommands.makeUndoCommand( commander ) );
+        multi.addCommand( subCommands.getUndoCommand( commander ) );
         return multi;
 
     }
@@ -103,16 +120,17 @@ public class RemovePart extends AbstractCommand {
     /**
      * Make multi command for adding capabilities and needs in the wake of the part's removal.
      *
-     * @param part         a part
+     * @param part a part
      * @return a multi command
      */
     private MultiCommand makeSubCommands( Part part ) {
-        MultiCommand subCommands = new MultiCommand( "remove part - extra" );
+        MultiCommand subCommands = new MultiCommand( "cut part - extra" );
+        subCommands.addCommand( new CopyPart( part ) );
         Iterator<Flow> ins = part.requirements();
         while ( ins.hasNext() ) {
             Flow in = ins.next();
             subCommands.addCommand( new DisconnectFlow( in ) );
-             // If the node to be removed is a part,
+            // If the node to be removed is a part,
             // preserve the outcome of the source the flow represents
             if ( in.isInternal()
                     && in.getSource().isPart()
@@ -121,14 +139,14 @@ public class RemovePart extends AbstractCommand {
                 addCapability.set( "scenario", in.getSource().getScenario().getId() );
                 addCapability.set( "part", in.getSource().getId() );
                 addCapability.set( "name", in.getName() );
-                addCapability.set( "attributes", CommandUtils.getFlowAttributes( in ));
+                addCapability.set( "attributes", CommandUtils.getFlowAttributes( in ) );
                 subCommands.addCommand( addCapability );
-             }
+            }
         }
         Iterator<Flow> outs = part.outcomes();
         while ( outs.hasNext() ) {
             Flow out = outs.next();
-            subCommands.addCommand( new DisconnectFlow( out ));
+            subCommands.addCommand( new DisconnectFlow( out ) );
             // If the node to be removed is a part,
             // preserve the outcome of the source the flow represents
             if ( out.isInternal()
@@ -138,7 +156,7 @@ public class RemovePart extends AbstractCommand {
                 addNeed.set( "scenario", out.getTarget().getScenario().getId() );
                 addNeed.set( "part", out.getTarget().getId() );
                 addNeed.set( "name", out.getName() );
-                addNeed.set( "attributes", CommandUtils.getFlowAttributes( out ));
+                addNeed.set( "attributes", CommandUtils.getFlowAttributes( out ) );
                 subCommands.addCommand( addNeed );
             }
         }

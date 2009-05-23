@@ -132,21 +132,21 @@ public class DefaultAnalyst  extends AbstractService implements Analyst {
      * {@inheritDoc}
      */
     public boolean hasUnwaivedIssues( ModelObject modelObject, String property ) {
-        return findUnwaivedIssues( modelObject, property ).hasNext();
+        return !listUnwaivedIssues( modelObject, property ).isEmpty();
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean hasUnwaivedIssues( ModelObject modelObject, boolean includingPropertySpecific ) {
-        return findUnwaivedIssues( modelObject, includingPropertySpecific ).hasNext();
+        return !listUnwaivedIssues( modelObject, includingPropertySpecific ).isEmpty();
     }
 
     /**
      * {@inheritDoc}
      */
     public String getIssuesSummary( ModelObject modelObject, boolean includingPropertySpecific ) {
-        Iterator<Issue> issues = findUnwaivedIssues( modelObject, includingPropertySpecific );
+        List<Issue> issues = listUnwaivedIssues( modelObject, includingPropertySpecific );
         return summarize( issues );
     }
 
@@ -154,7 +154,7 @@ public class DefaultAnalyst  extends AbstractService implements Analyst {
      * {@inheritDoc}
      */
     public String getIssuesSummary( ModelObject modelObject, String property ) {
-        Iterator<Issue> issues = findUnwaivedIssues( modelObject, property );
+        List<Issue> issues = listUnwaivedIssues( modelObject, property );
         return summarize( issues );
     }
 
@@ -164,12 +164,11 @@ public class DefaultAnalyst  extends AbstractService implements Analyst {
      * @param issues -- an iterator on issues
      * @return a string summarizing the issues
      */
-    private String summarize( Iterator<Issue> issues ) {
+    private String summarize( List<Issue> issues ) {
         StringBuilder sb = new StringBuilder();
-        while ( issues.hasNext() ) {
-            Issue issue = issues.next();
+        for ( Issue issue : issues ) {
             sb.append( issue.getDescription() );
-            if ( issues.hasNext() ) sb.append( DESCRIPTION_SEPARATOR );
+            if ( issues.indexOf( issue ) != issues.size() -1 ) sb.append( DESCRIPTION_SEPARATOR );
         }
         return sb.toString();
     }

@@ -33,6 +33,10 @@
                      advice-ref="cacheSet"/>
         <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.Analyst.*(..))"
                      advice-ref="cacheSet"/>
+        <aop:advisor pointcut="execution(String com.mindalliance.channels.Analyst.*(..))"
+                     advice-ref="cacheSet"/>
+        <aop:advisor pointcut="execution(boolean com.mindalliance.channels.Analyst.*(..))"
+                     advice-ref="cacheSet"/>
         <aop:advisor pointcut="execution(com.mindalliance.channels.graph.Diagram com.mindalliance.channels.DiagramFactory.*(..))"
                      advice-ref="cacheSet"/>
 

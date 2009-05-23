@@ -11,6 +11,8 @@ import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Scenario;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -26,6 +28,10 @@ import java.util.List;
  */
 public class DefaultDiagramFactory<V, E> extends AbstractService implements DiagramFactory {
 
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( DefaultDiagramFactory.class );
     /**
      * A GraphRenderer for nodes and flows
      */
@@ -77,6 +83,7 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
             Node node,
             double[] diagramSize,
             String orientation ) {
+        LOG.info("Making flow map on " + scenario + "/" + node);
         return new FlowMapDiagram( scenario, node, diagramSize, orientation );
     }
 
@@ -85,6 +92,7 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
             EntityRelationship selectedEntityRel,
             double[] diagramSize,
             String orientation ) {
+        LOG.info("Making entity network diagram on " + entity);
         return new EntityNetworkDiagram( entity, selectedEntityRel, diagramSize, orientation );
     }
 
@@ -98,6 +106,7 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
             ScenarioRelationship scRel,
             double[] diagramSize,
             String orientation ) {
+        LOG.info("Making plan diagram");
         return new PlanMapDiagram(
                 (List<Scenario>)scenarios,
                 scenario, scRel,

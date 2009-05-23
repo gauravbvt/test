@@ -3,6 +3,8 @@ package com.mindalliance.channels.graph;
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.DiagramFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,10 +19,13 @@ import java.io.ByteArrayOutputStream;
 public abstract class AbstractDiagram<V, E> implements Diagram {
 
     /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( AbstractDiagram.class );
+    /**
      * Whether the direction is LR or top-bottom
      */
     private String orientation;
-
     /**
      * Diagram size constraint.
      * Diagram takes natural size if null.
@@ -83,6 +88,7 @@ public abstract class AbstractDiagram<V, E> implements Diagram {
      */
     public String makeImageMap() {
         if ( imageMap == null ) {
+            LOG.info( "Making image map for " + this.getClass().getSimpleName() );
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             render( DiagramFactory.IMAGE_MAP, new BufferedOutputStream( baos ) );
             // System.out.println( "*** Image map generated at " + System.currentTimeMillis() );

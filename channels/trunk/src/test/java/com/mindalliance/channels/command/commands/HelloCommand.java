@@ -36,7 +36,7 @@ public class HelloCommand extends AbstractCommand {
         return true;
     }
 
-    protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+    protected Command makeUndoCommand( Commander commander ) throws CommandException {
         return makeCommand( "not " + get( "greeting" ), commander );
     }
 

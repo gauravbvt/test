@@ -94,7 +94,7 @@ public class DetachDocument extends AbstractCommand {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+    protected Command makeUndoCommand( Commander commander ) throws CommandException {
         Map<String, Object> state = (Map<String, Object>) get( "state" );
         ModelObject mo = commander.resolve( ModelObject.class, (Long) state.get( "object" ) );
         String ticket = (String) get( "ticket" );

@@ -4,6 +4,8 @@ import com.mindalliance.channels.model.User;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,6 +20,10 @@ import java.util.List;
  * Time: 2:24:34 PM
  */
 public class History {
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( History.class );
     /**
      * Maximum size of the done list.
      */
@@ -229,6 +235,7 @@ public class History {
     private void updateLastModified( Command command ) {
         lastModified = System.currentTimeMillis();
         lastModifier = command.getUserName();
+        LOG.info("***Last modified: " + lastModified + " from " + command.getName() + " by " + command.getUserName() );
     }
 
     /**

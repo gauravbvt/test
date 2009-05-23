@@ -4,8 +4,11 @@ import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
+
 /**
  * Abstract IssueDetector class.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,6 +18,10 @@ import java.util.List;
  * Time: 1:39:47 PM
  */
 public abstract class AbstractIssueDetector implements IssueDetector {
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( AbstractIssueDetector.class );
     /**
      * A query service
      */
@@ -65,6 +72,7 @@ public abstract class AbstractIssueDetector implements IssueDetector {
 
     /**
      * Get query service.
+     *
      * @return a query service
      */
     protected QueryService getQueryService() {
@@ -73,17 +81,18 @@ public abstract class AbstractIssueDetector implements IssueDetector {
 
     /**
      * Get attachment manager.
+     *
      * @return an attachment manager
      */
     protected AttachmentManager getAttachmentManager() {
-         return queryService.getChannels().getAttachmentManager();
-     }
-
+        return queryService.getChannels().getAttachmentManager();
+    }
 
 
     /**
      * Make detected issue.
-     * @param type a string
+     *
+     * @param type  a string
      * @param about a model object
      * @return a detected issue
      */
@@ -91,19 +100,28 @@ public abstract class AbstractIssueDetector implements IssueDetector {
         DetectedIssue issue = new DetectedIssue( type, about );
         issue.setKind( getKind() );
         issue.setCanBeWaived( canBeWaived() );
+        if ( !about.isWaived( getKind() ))
+            LOG.info( "Detected issue: "
+                    + getKind()
+                    + " on " + issue.getAbout() + "(" + issue.getAbout().getId() + ")" );
         return issue;
     }
 
     /**
      * Make detected issue.
-     * @param type a string
-     * @param about a model object
+     *
+     * @param type     a string
+     * @param about    a model object
      * @param property a string
      * @return a detected issue
      */
     protected DetectedIssue makeIssue( String type, ModelObject about, String property ) {
         DetectedIssue issue = new DetectedIssue( type, about, property );
         issue.setKind( getClass().getSimpleName() );
+        if ( !about.isWaived( getKind() ))
+            LOG.info( "Detected issue: "
+                    + getKind()
+                    + " on " + issue.getAbout() + "(" + issue.getAbout().getId() + ")" + ":" + issue.getProperty() );
         return issue;
     }
 

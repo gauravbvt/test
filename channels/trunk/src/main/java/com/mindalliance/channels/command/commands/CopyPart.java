@@ -19,6 +19,9 @@ import com.mindalliance.channels.model.Scenario;
  */
 public class CopyPart extends AbstractCommand {
 
+    public CopyPart() {
+    }
+
     public CopyPart( Part part ) {
         set( "part", part.getId() );
         set( "scenario", part.getScenario().getId() );
@@ -58,7 +61,7 @@ public class CopyPart extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    protected Command doMakeUndoCommand( Commander commander ) throws CommandException {
+    protected Command makeUndoCommand( Commander commander ) throws CommandException {
         return null;
     }
 

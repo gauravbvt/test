@@ -11,8 +11,6 @@ import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.MessageFormat;
-
 /**
  * Entity network diagram panel.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -75,8 +73,6 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
         sb.append( getEntity().getId() );
         sb.append( "&connection=" );
         sb.append( selectedEntityRel == null ? "NONE" : selectedEntityRel.getId() );
-        sb.append( "&time=" );
-        sb.append( MessageFormat.format( "{2,number,0}", System.currentTimeMillis() ) );
         double[] diagramSize = getDiagramSize();
         if ( diagramSize != null ) {
             sb.append( "&size=" );

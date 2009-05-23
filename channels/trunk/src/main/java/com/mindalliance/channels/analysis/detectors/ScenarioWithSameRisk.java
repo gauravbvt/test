@@ -47,7 +47,7 @@ public class ScenarioWithSameRisk extends AbstractIssueDetector {
                     }
                 }
                 for ( Risk sharedRisk : sharedRisks ) {
-                    DetectedIssue issue = new DetectedIssue( Issue.STRUCTURAL, scenario );
+                    DetectedIssue issue = makeIssue( Issue.STRUCTURAL, scenario );
                     issue.setDescription( "This scenario responds to the same event as scenario \""
                             + other.getName()
                             + "\" and both address the same risk: \"" + sharedRisk.getLabel()

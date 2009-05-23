@@ -137,8 +137,8 @@ public final class CommandUtils {
         Map<String, Object> state = new HashMap<String, Object>();
         state.put( "description", part.getDescription() );
         state.put( "task", part.getTask() );
-        state.put( "repeatsEvery", part.getRepeatsEvery() );
-        state.put( "completionTime", part.getCompletionTime() );
+        state.put( "repeatsEvery", new Delay( part.getRepeatsEvery() ) );
+        state.put( "completionTime", new Delay( part.getCompletionTime() ) );
         state.put( "attachmentTickets", new ArrayList<String>( part.getAttachmentTickets() ) );
         state.put( "waivedIssueDetections", new ArrayList<String>( part.getWaivedIssueDetections() ) );
         state.put( "selfTerminating", part.isSelfTerminating() );
@@ -173,32 +173,44 @@ public final class CommandUtils {
         part.setStartsWithScenario( (Boolean) state.get( "startsWithScenario" ) );
         part.setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
         part.setCompletionTime( (Delay) state.get( "completionTime" ) );
-        part.setAttachmentTickets( (ArrayList<String>) state.get( "attachmentTickets" ) );
-        part.setMitigations( (ArrayList<Risk>) state.get( "mitigations" ) );
+        part.setAttachmentTickets( new ArrayList<String>( (ArrayList<String>) state.get( "attachmentTickets" ) ) );
+        part.setMitigations( new ArrayList<Risk>( (ArrayList<Risk>) state.get( "mitigations" ) ) );
         if ( state.get( "initiatedEvent" ) != null )
             part.setInitiatedEvent( queryService.findOrCreate(
                     Event.class,
                     (String) state.get( "initiatedEvent" ) ) );
+        else
+            part.setInitiatedEvent( null );
         if ( state.get( "actor" ) != null )
             part.setActor( queryService.findOrCreate(
                     Actor.class,
                     (String) state.get( "actor" ) ) );
+        else
+            part.setActor( null );
         if ( state.get( "role" ) != null )
             part.setRole( queryService.findOrCreate(
                     Role.class,
                     (String) state.get( "role" ) ) );
+        else
+            part.setRole( null );
         if ( state.get( "organization" ) != null )
             part.setOrganization( queryService.findOrCreate(
                     Organization.class,
                     (String) state.get( "organization" ) ) );
+        else
+            part.setOrganization( null );
         if ( state.get( "jurisdiction" ) != null )
             part.setJurisdiction( queryService.findOrCreate(
                     Place.class,
                     (String) state.get( "jurisdiction" ) ) );
+        else
+            part.setJurisdiction( null );
         if ( state.get( "location" ) != null )
             part.setLocation( queryService.findOrCreate(
                     Place.class,
                     (String) state.get( "location" ) ) );
+        else
+            part.setLocation( null );
     }
 
     /**
@@ -277,16 +289,24 @@ public final class CommandUtils {
      * @param object     an object
      * @param attributes attributes
      */
+    @SuppressWarnings( "unchecked" )
     public static void initialize( Object object, Map<String, Object> attributes ) {
         for ( String property : attributes.keySet() ) {
             Object value = attributes.get( property );
             try {
+                if ( value instanceof List ) {
+                    List copy = (List) value.getClass().newInstance();
+                    copy.addAll( (List) value );
+                    value = copy;
+                }
                 PropertyUtils.setProperty( object, property, value );
             } catch ( IllegalAccessException e ) {
                 throw new RuntimeException( e );
             } catch ( InvocationTargetException e ) {
                 throw new RuntimeException( e );
             } catch ( NoSuchMethodException e ) {
+                throw new RuntimeException( e );
+            } catch ( InstantiationException e ) {
                 throw new RuntimeException( e );
             }
         }

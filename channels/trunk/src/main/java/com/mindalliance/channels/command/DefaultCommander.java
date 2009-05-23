@@ -52,13 +52,10 @@ public class DefaultCommander extends AbstractService implements Commander {
      * Attachment manager.
      */
     private AttachmentManager attachmentManager;
-
-    private boolean replaying = false;
     /**
-     * An id translation map.
+     * Whether in reloading mode, i.e. replaying journaled commands.
      */
-    // TODO - this could grow unchecked
-    // private Map<Long, Long> idMap = Collections.synchronizedMap( new HashMap<Long, Long>() );
+    private boolean replaying = false;
     /**
      * Record of when users were most recently active.
      */
@@ -213,7 +210,10 @@ public class DefaultCommander extends AbstractService implements Commander {
                 Collection<Lock> grabbedLocks = lockManager.grabLocksOn( command.getLockingSet() );
                 change = command.execute( this );
                 lockManager.releaseLocks( grabbedLocks );
-                if ( !isReplaying() ) getQueryService().getDao().onAfterCommand( command );
+                if ( !isReplaying() && command.isTop() && !change.isNone() ) {
+                    LOG.info( "***After command");
+                    getQueryService().getDao().onAfterCommand( command );
+                }
             } catch ( LockingException e ) {
                 throw new CommandException( e.getMessage(), e );
             }
@@ -236,7 +236,7 @@ public class DefaultCommander extends AbstractService implements Commander {
                 if ( command.isUndoable() ) {
                     try {
                         canUndo = command.noLockRequired()
-                                || canDo( command.makeUndoCommand( this ) );
+                                || canDo( command.getUndoCommand( this ) );
                     } catch ( CommandException e ) {
                         e.printStackTrace();
                         canUndo = false;
@@ -259,7 +259,7 @@ public class DefaultCommander extends AbstractService implements Commander {
                 if ( command.isUndoable() ) {
                     try {
                         canRedo = command.noLockRequired()
-                                || canDo( command.makeUndoCommand( this ) );
+                                || canDo( command.getUndoCommand( this ) );
                     } catch ( CommandException e ) {
                         e.printStackTrace();
                         canRedo = false;
@@ -293,7 +293,7 @@ public class DefaultCommander extends AbstractService implements Commander {
             // Get memento of command to undo
             Memento memento = history.getUndo();
             if ( memento == null ) throw new CommandException( "Nothing can be undone right now." );
-            Command undoCommand = memento.getCommand().makeUndoCommand( this );
+            Command undoCommand = memento.getCommand().getUndoCommand( this );
             if ( undoCommand instanceof MultiCommand ) LOG.info( "*** START multicommand ***" );
             LOG.info( "Undoing: " + undoCommand.toString() );
             Change change = execute( undoCommand );
@@ -313,7 +313,7 @@ public class DefaultCommander extends AbstractService implements Commander {
             Memento memento = history.getRedo();
             if ( memento == null ) throw new CommandException( "Nothing can be redone right now." );
             // undo the undoing
-            Command redoCommand = memento.getCommand().makeUndoCommand( this );
+            Command redoCommand = memento.getCommand().getUndoCommand( this );
             LOG.info( "Redoing: " + redoCommand.toString() );
             Change change = execute( redoCommand );
             change.setUndoing( true );
