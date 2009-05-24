@@ -1,6 +1,7 @@
 package com.mindalliance.channels.query;
 
 import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.model.ModelObject;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
@@ -17,13 +18,19 @@ public class ResultCache {
 
     private Logger log = LoggerFactory.getLogger( getClass() );
 
-    /** The manager for the internal cache. */
+    /**
+     * The manager for the internal cache.
+     */
     private CacheManager cacheManager;
 
-    /** The cache key, from the point of view of the manager. */
+    /**
+     * The cache key, from the point of view of the manager.
+     */
     private String cacheKey;
 
-    /** The actual cache, lazy-inited. */
+    /**
+     * The actual cache, lazy-inited.
+     */
     private Cache cache;
 
     public ResultCache() {
@@ -31,8 +38,9 @@ public class ResultCache {
 
     /**
      * Cache the result of a method invocation.
+     *
      * @param invocation the invocation, used as key for the caching
-     * @param result the result.
+     * @param result     the result.
      */
     public void cache( MethodInvocation invocation, Object result ) {
         String key = getKey( invocation );
@@ -43,6 +51,7 @@ public class ResultCache {
 
     /**
      * Return a cached value for an invocation.
+     *
      * @param invocation the invocation
      * @return null when no previous value was found
      */
@@ -56,6 +65,7 @@ public class ResultCache {
 
     /**
      * Forget the result of one invocation.
+     *
      * @param invocation the invocation
      */
     public void forget( MethodInvocation invocation ) {
@@ -96,16 +106,28 @@ public class ResultCache {
             for ( int i = 0; i < methodArgs.length; i++ ) {
                 if ( i != 0 )
                     key.append( ',' );
-                key.append( String.valueOf( methodArgs[i] ) );
+                key.append( argumentToString( methodArgs[i] ) );
             }
             key.append( ')' );
             // Add plan id to key
-            key.append( " in ");
+            key.append( " in " );
             key.append( Channels.getPlan().getId() );
             return key.toString();
-        }
-        else
+        } else
             return targetMethodName;
+    }
+
+    private static String argumentToString( Object arg ) {
+        if ( arg instanceof ModelObject ) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(String.valueOf( arg ));
+            sb.append("[");
+            sb.append(((ModelObject) arg ).getId());
+            sb.append("]");
+            return sb.toString();
+        } else {
+            return String.valueOf( arg );
+        }
     }
 
     public synchronized String getCacheKey() {

@@ -27,6 +27,7 @@ public class SetPartFromCopy extends AbstractCommand {
     }
 
     public SetPartFromCopy( Part part ) {
+        addConflicting( part );
         set( "part", part.getId() );
         set( "scenario", part.getScenario().getId() );
         set( "state", CommandUtils.getPartCopy( part ) );
@@ -116,6 +117,5 @@ public class SetPartFromCopy extends AbstractCommand {
         reset.set( "subCommands", subCommands.getUndoCommand( commander ) );
         return reset;
     }
-
 
 }

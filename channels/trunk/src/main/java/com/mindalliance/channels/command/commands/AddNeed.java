@@ -55,12 +55,12 @@ public class AddNeed extends AbstractCommand {
                     part,
                     (String) get( "name" ),
                     priorId );
+            set( "flow", flow.getId() );
             Map<String, Object> flowAttributes = (Map<String, Object>) get( "attributes" );
             if ( flowAttributes != null ) {
                 CommandUtils.initialize( flow, flowAttributes );
                 commander.getAttachmentManager().reattachAll( flow.getAttachmentTickets() );
             }
-            set( "flow", flow.getId() );
             return new Change( Change.Type.Added, flow );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
