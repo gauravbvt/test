@@ -104,7 +104,7 @@ public interface QueryService extends Service {
      * Add a model object to the persistence store.
      *
      * @param object the model object.
-     * @param id a Long
+     * @param id     a Long
      */
     void add( ModelObject object, Long id );
 
@@ -139,15 +139,15 @@ public interface QueryService extends Service {
     <T extends ModelObject> T findOrCreate( Class<T> clazz, String name );
 
     /**
-      * Find a model object by given name. If none, create it and give it provided id.
-      *
-      * @param clazz the kind of model object
-      * @param name  the name
-      * @param id  a long
+     * Find a model object by given name. If none, create it and give it provided id.
+     *
+     * @param clazz the kind of model object
+     * @param name  the name
+     * @param id    a long
      * @param <T>   a subclass of model object
-      * @return the object or null if name is null or empty
-      */
-     <T extends ModelObject> T findOrCreate( Class<T> clazz, String name, Long id );
+     * @return the object or null if name is null or empty
+     */
+    <T extends ModelObject> T findOrCreate( Class<T> clazz, String name, Long id );
 
     /**
      * Create a connector in a scenario.
@@ -161,7 +161,7 @@ public interface QueryService extends Service {
      * Create a connector in a scenario, with prior id.
      *
      * @param scenario the scenario
-     * @param id a Long
+     * @param id       a Long
      * @return the new connector
      */
     Connector createConnector( Scenario scenario, Long id );
@@ -178,7 +178,7 @@ public interface QueryService extends Service {
      * Create a new part in a scenario with given id.
      *
      * @param scenario the scenario
-     * @param id  a Long
+     * @param id       a Long
      * @return a new default part.
      */
     Part createPart( Scenario scenario, Long id );
@@ -204,7 +204,7 @@ public interface QueryService extends Service {
      * @param source the source node.
      * @param target the target node.
      * @param name   the name of the flow, possibly empty
-     * @param id a long
+     * @param id     a long
      * @return a new flow.
      * @throws IllegalArgumentException when nodes are already connected or nodes are not both
      *                                  in this scenario, or one of the node isn't a connector in a different scenario.
@@ -219,12 +219,21 @@ public interface QueryService extends Service {
     Scenario createScenario();
 
     /**
-      * Create a new scenario with old id.
-      *
-      * @param id a long
-      * @return the new scenario.
-      */
+     * Create a new scenario with old id.
+     *
+     * @param id a long
+     * @return the new scenario.
+     */
     Scenario createScenario( Long id );
+
+    /**
+     * Create a new scenario with given id and given id for default part.
+     *
+     * @param id            a long
+     * @param defaultPartId a long
+     * @return the new scenario.
+     */
+    Scenario createScenario( Long id, Long defaultPartId );
 
     /**
      * Get all non-empty resource specs, user-entered or not.

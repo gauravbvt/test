@@ -83,7 +83,7 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
             Node node,
             double[] diagramSize,
             String orientation ) {
-        LOG.info("Making flow map on " + scenario + "/" + node);
+        LOG.debug("Making flow map on " + scenario + "/" + node);
         return new FlowMapDiagram( scenario, node, diagramSize, orientation );
     }
 
@@ -92,7 +92,7 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
             EntityRelationship selectedEntityRel,
             double[] diagramSize,
             String orientation ) {
-        LOG.info("Making entity network diagram on " + entity);
+        LOG.debug("Making entity network diagram on " + entity);
         return new EntityNetworkDiagram( entity, selectedEntityRel, diagramSize, orientation );
     }
 
@@ -106,7 +106,7 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
             ScenarioRelationship scRel,
             double[] diagramSize,
             String orientation ) {
-        LOG.info("Making plan diagram");
+        LOG.debug("Making plan diagram");
         return new PlanMapDiagram(
                 (List<Scenario>)scenarios,
                 scenario, scRel,

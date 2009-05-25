@@ -32,7 +32,10 @@ public class AddScenario extends AbstractCommand {
      */
     public Change execute( Commander commander ) throws CommandException {
         Long priorId = (Long) get( "scenario" );
-        Scenario scenario = commander.getQueryService().createScenario( priorId );
+        Long priorDefaultPartId = (Long) get("defaultPart");
+        Scenario scenario = commander.getQueryService().createScenario(
+                priorId,
+                priorDefaultPartId);
         set( "scenario", scenario.getId() );
         set( "defaultPart", scenario.getDefaultPart().getId() );
         return new Change( Change.Type.Added, scenario );

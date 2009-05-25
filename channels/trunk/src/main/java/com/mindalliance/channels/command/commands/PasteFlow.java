@@ -64,6 +64,7 @@ public class PasteFlow extends AbstractCommand {
                 copy = commander.getCopy();
                 set( "copy", copy );
             }
+            
            Long priorId = (Long) get( "flow" );
             boolean isOutcome = (Boolean) copy.get( "isOutcome" );
             Flow flow;

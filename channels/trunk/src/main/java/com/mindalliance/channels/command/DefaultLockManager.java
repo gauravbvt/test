@@ -69,7 +69,7 @@ public class DefaultLockManager extends AbstractService implements LockManager {
                     // Grab the lock
                 } else {
                     lock = new Lock( id );
-                    LOG.info( lock.getUserName() + " grabs lock on " + id);
+                    LOG.debug( lock.getUserName() + " grabs lock on " + id);
                     addLock( lock );
                 }
                 return lock;
@@ -96,7 +96,7 @@ public class DefaultLockManager extends AbstractService implements LockManager {
                     throw new LockingException(
                             userName + " does not own the lock. " + userName + " does." );
                 else {
-                    LOG.info( lock.getUserName() + " releases lock on " + id);
+                    LOG.debug( lock.getUserName() + " releases lock on " + id);
                     locks.remove( id );
                 }
             }

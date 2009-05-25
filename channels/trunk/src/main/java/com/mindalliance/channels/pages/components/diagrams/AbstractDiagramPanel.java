@@ -145,7 +145,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
                 super.onRender( markupStream );
                 if ( withImageMap ) {
                     try {
-                        LOG.info( "Rendering image map ");
+                        LOG.debug( "Rendering image map ");
                         getResponse().write( imageMapHolder.toString() );
                     } catch ( DiagramException e ) {
                         LOG.error( "Can't generate image map", e );

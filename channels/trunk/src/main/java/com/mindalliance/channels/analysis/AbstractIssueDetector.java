@@ -101,7 +101,7 @@ public abstract class AbstractIssueDetector implements IssueDetector {
         issue.setKind( getKind() );
         issue.setCanBeWaived( canBeWaived() );
         if ( !about.isWaived( getKind() ))
-            LOG.info( "Detected issue: "
+            LOG.debug( "Detected issue: "
                     + getKind()
                     + " on " + issue.getAbout() + "(" + issue.getAbout().getId() + ")" );
         return issue;
@@ -119,7 +119,7 @@ public abstract class AbstractIssueDetector implements IssueDetector {
         DetectedIssue issue = new DetectedIssue( type, about, property );
         issue.setKind( getClass().getSimpleName() );
         if ( !about.isWaived( getKind() ))
-            LOG.info( "Detected issue: "
+            LOG.debug( "Detected issue: "
                     + getKind()
                     + " on " + issue.getAbout() + "(" + issue.getAbout().getId() + ")" + ":" + issue.getProperty() );
         return issue;

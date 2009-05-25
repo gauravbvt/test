@@ -114,7 +114,7 @@ public abstract class PngWebPage extends WebPage {
             final Response resp = getWebRequestCycle().getResponse();
             if ( resp instanceof WebResponse )
                 setHeaders( (WebResponse) resp );
-            LOG.info( "Rendering PNG" );
+            LOG.debug( "Rendering PNG" );
             diagram.render( DiagramFactory.PNG, getResponse().getOutputStream() );
         } catch ( DiagramException e ) {
             LOG.error( "Error while generating diagram", e );

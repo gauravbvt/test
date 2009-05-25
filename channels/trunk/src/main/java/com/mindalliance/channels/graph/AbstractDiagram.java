@@ -88,7 +88,7 @@ public abstract class AbstractDiagram<V, E> implements Diagram {
      */
     public String makeImageMap() {
         if ( imageMap == null ) {
-            LOG.info( "Making image map for " + this.getClass().getSimpleName() );
+            LOG.debug( "Making image map for " + this.getClass().getSimpleName() );
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             render( DiagramFactory.IMAGE_MAP, new BufferedOutputStream( baos ) );
             // System.out.println( "*** Image map generated at " + System.currentTimeMillis() );

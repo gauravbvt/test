@@ -380,6 +380,13 @@ public class DefaultQueryService extends Observable implements QueryService {
      * {@inheritDoc}
      */
     public Scenario createScenario( Long id ) {
+        return createScenario( id, null );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Scenario createScenario( Long id, Long defaultPartId ) {
         Scenario result = new Scenario();
         if (id == null)
             getDao().add( result );
@@ -390,7 +397,7 @@ public class DefaultQueryService extends Observable implements QueryService {
         // Make sure a scenario responds to an event.
         result.setEvent( Channels.getPlan().getDefaultEvent() );
         result.setQueryService( this );
-        createPart( result );
+        createPart( result, defaultPartId );
         return result;
     }
 

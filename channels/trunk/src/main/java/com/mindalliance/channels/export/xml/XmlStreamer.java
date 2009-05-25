@@ -109,6 +109,7 @@ public class XmlStreamer extends AbstractService implements Importer, Exporter {
             xstream.alias( "risk", Risk.class );
             xstream.alias( "channel", Channel.class );
             xstream.alias( "job", Job.class );
+            xstream.alias( "export", Export.class);
             xstream.registerConverter( new PlanConverter( XmlStreamer.this ) );
             xstream.registerConverter( new EventConverter( XmlStreamer.this ) );
             xstream.registerConverter( new JournalConverter( XmlStreamer.this ) );
@@ -124,6 +125,7 @@ public class XmlStreamer extends AbstractService implements Importer, Exporter {
             xstream.registerConverter( new UserIssueConverter( XmlStreamer.this ) );
             xstream.registerConverter( new ChannelConverter( XmlStreamer.this ) );
             xstream.registerConverter( new JobConverter( XmlStreamer.this ) );
+            xstream.registerConverter( new ExportConverter( XmlStreamer.this ) );
         }
 
         /**
