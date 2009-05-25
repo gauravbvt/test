@@ -69,7 +69,7 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
 
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "network.png?entity=" );
+        sb.append( "/network.png?entity=" );
         sb.append( getEntity().getId() );
         sb.append( "&connection=" );
         sb.append( selectedEntityRel == null ? "NONE" : selectedEntityRel.getId() );

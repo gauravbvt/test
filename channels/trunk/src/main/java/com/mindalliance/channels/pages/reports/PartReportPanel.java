@@ -45,8 +45,7 @@ public class PartReportPanel extends Panel {
         add( new Label( "task", uppercasedName( part.getTask() ) ) );                     // NON-NLS
 
         WebMarkupContainer roleContainer = new WebMarkupContainer( "role-container" );
-        String roleString = part.getRole() == null ? "" : part.getRole().toString();
-        roleContainer.add( new Label( "role", roleString ) );
+        roleContainer.add( new Label( "role", part.getRoleString() ) );
         roleContainer.setVisible( showRole && part.getRole() != null );
         add( roleContainer );
 
@@ -147,7 +146,7 @@ public class PartReportPanel extends Panel {
                 if ( s.equals( Flow.Significance.Triggers ) )
                     type += " trigger" ;                                                  // NON-NLS
                 if ( s.equals( Flow.Significance.Terminates ) )
-                    type += " terminate" ;                                               // NON-NLS
+                    type += " terminate" ;                                                // NON-NLS
 
                 item.add( new AttributeModifier(
                         "class", true, new Model<String>( type ) ) );                     // NON-NLS

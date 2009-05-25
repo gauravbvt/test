@@ -93,7 +93,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
      */
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "plan.png?scenario=" );
+        sb.append( "/plan.png?scenario=" );
         sb.append( selectedScenario == null ? "NONE" : selectedScenario.getId() );
         sb.append( "&connection=" );
         sb.append( selectedScRel == null ? "NONE" : selectedScRel.getId() );

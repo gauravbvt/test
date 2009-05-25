@@ -85,6 +85,7 @@ public class Plan extends ModelObject {
      *
      * @return a plan event
      */
+    @Transient
     public Event getDefaultEvent() {
         assert incidents != null && !incidents.isEmpty();
         return incidents.iterator().next();

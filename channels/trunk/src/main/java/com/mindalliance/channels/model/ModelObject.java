@@ -162,6 +162,7 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
         this.waivedIssueDetections = waivedIssueDetections;
     }
 
+    @Transient
     public List<String> getAttachmentTickets() {
         return attachmentTickets;
     }

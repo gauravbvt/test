@@ -501,14 +501,6 @@ public interface QueryService extends Service {
     <T extends ModelObject> EntityRelationship<T> findEntityRelationship( T fromEntity, T toEntity );
 
     /**
-     * Find all jobs, confirmed or not, of an actor.
-     *
-     * @param actor an actor
-     * @return a list of jobs
-     */
-    List<Job> findAllJobs( Actor actor );
-
-    /**
      * Find all confirmed jobs with resource spec
      *
      * @param resourceSpec a resource spec
@@ -554,7 +546,7 @@ public interface QueryService extends Service {
      * @param resourceSpec a resource spec
      * @return a list of parts
      */
-    List<Part> findAllPartsWith( ResourceSpec resourceSpec );
+    List<Part> findAllParts( Scenario scenario, ResourceSpec resourceSpec );
 
     /**
      * Find all parts located at a given place.

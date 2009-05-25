@@ -35,7 +35,7 @@ public class Place extends ModelObject {
         for ( Job job : queryService.findAllConfirmedJobs( ResourceSpec.with( this ) ) ) {
            job.setJurisdiction( null );
        }
-       for (Part part : queryService.findAllPartsWith( ResourceSpec.with( this ) )) {
+       for (Part part : queryService.findAllParts( null, ResourceSpec.with( this ) )) {
            part.setJurisdiction( null );
        }
         for (Part part : queryService.findAllPartsWithLocation( this )) {

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * The channels-only banner.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf

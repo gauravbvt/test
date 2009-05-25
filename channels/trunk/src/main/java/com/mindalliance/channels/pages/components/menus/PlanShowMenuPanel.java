@@ -3,12 +3,12 @@ package com.mindalliance.channels.pages.components.menus;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.pages.reports.PlanReportPage;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -79,11 +79,11 @@ public class PlanShowMenuPanel extends MenuPanel {
                     new Model<String>( "Scenario details" ),
                     editLink ) );
         }
-        ExternalLink reportLink = new ExternalLink( "link", "report.html" );
-        reportLink.setPopupSettings( new PopupSettings(
-                PopupSettings.RESIZABLE |
-                        PopupSettings.SCROLLBARS |
-                        PopupSettings.MENU_BAR ) );
+        BookmarkablePageLink<?> reportLink = new BookmarkablePageLink( "link", PlanReportPage.class );
+//        reportLink.setPopupSettings( new PopupSettings(
+//                PopupSettings.RESIZABLE |
+//                        PopupSettings.SCROLLBARS |
+//                        PopupSettings.MENU_BAR ) );
         menuItems.add( new LinkMenuItem(
                 "menuItem",
                 new Model<String>( "Playbook" ),

@@ -170,9 +170,13 @@ public class FlowReportPanel extends Panel {
                 Set<Medium> u = getUnicasts( f );
                 localizedActors.addAll( findActors( f, b, u, queryService ) );
             }
-        } else
-            for ( Actor a : queryService.findAllActors( part.resourceSpec() ) )
+        } else {
+            ResourceSpec spec = part.resourceSpec();
+            if ( spec.isOrganization() )
+                spec.setActor( Actor.UNKNOWN );
+            for ( Actor a : queryService.findAllActors( spec ) )
                 localizedActors.add( new LocalizedActor( a, part, unicasts, broadcasts ) );
+        }
 
         List<LocalizedActor> result = new ArrayList<LocalizedActor>( localizedActors );
         Collections.sort( result, new Comparator<LocalizedActor>() {

@@ -70,8 +70,8 @@ public class ProfilePage extends WebPage {
 
     private void init( PageParameters params ) throws NotFoundException {
         ResourceSpec resourceSpec = makeResource( params );
-        add( new Label( "title", new Model<String>( "Profile: " + resourceSpec.getName() ) ) );
-        add ( new ExternalLink("index", "index.html"));
+        add( new Label( "title", new Model<String>( "Profile: " + resourceSpec ) ) );
+        add( new ExternalLink( "index", "index.html" ) );
         add( new Label( "resourceSpec-name", new Model<String>( resourceSpec.getName() ) ) );
         add( new ResourceProfilePanel( "profile", new Model<ResourceSpec>( resourceSpec ) ) );
     }

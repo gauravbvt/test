@@ -1,6 +1,7 @@
 package com.mindalliance.channels.model;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 /**
  * A plan event.
@@ -45,6 +46,7 @@ public class Event extends ModelObject {
     /**
      * {@inheritDoc}
      */
+    @Transient
     public boolean isEntity() {
         return true;
     }

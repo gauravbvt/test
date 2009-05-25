@@ -3,6 +3,7 @@ package com.mindalliance.channels.model;
 import com.mindalliance.channels.command.MappedObject;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.text.Collator;
 import java.util.ArrayList;
@@ -78,6 +79,7 @@ public class Risk implements Serializable, Mappable {
      *
      * @return a string
      */
+    @Transient
     public String getLabel() {
         return toString();
     }
@@ -85,11 +87,12 @@ public class Risk implements Serializable, Mappable {
     /**
      * {inheritDoc}
      */
+    @Override
     public String toString() {
-        return (severity != null ? severity.toString().toLowerCase() : "")
-                + " " + (type != null ? type.getCategory().toLowerCase() : "")
-                + " risk to " + ( organization != null ? organization.getName() : "all" )
-                + ( type != null ? " of " +  type.getLabel() : "" ).toLowerCase();
+        return ( severity != null ? severity.toString().toLowerCase() : "" ) + " "
+               + ( type != null ? type.getCategory().toLowerCase() : "" )
+               + " risk to " + ( organization != null ? organization.getName() : "all" )
+               + ( type != null ? " of " + type.getLabel() : "" ).toLowerCase();
     }
 
     /**

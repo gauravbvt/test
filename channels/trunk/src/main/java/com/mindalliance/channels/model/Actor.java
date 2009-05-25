@@ -68,7 +68,7 @@ public class Actor extends AbstractUnicastChannelable {
         for ( Job job : queryService.findAllConfirmedJobs( ResourceSpec.with( this ) ) ) {
             job.setActor( null );
         }
-        for ( Part part : queryService.findAllPartsWith( ResourceSpec.with( this ) ) ) {
+        for ( Part part : queryService.findAllParts( null, ResourceSpec.with( this ) ) ) {
             part.setActor( null );
         }
     }

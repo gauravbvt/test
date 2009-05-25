@@ -51,7 +51,6 @@ public class RoleReportPanel extends Panel {
 
     private void init() {
         add( new Label( "sc-name", scenario.getName() ) );                                // NON-NLS
-        add( new Label( "sc-description", scenario.getDescription() ) );                  // NON-NLS
         add( new Label( "org", organization.toString() ) );                               // NON-NLS
 
         add( new Label( "name", role.getName() ) );                                       // NON-NLS

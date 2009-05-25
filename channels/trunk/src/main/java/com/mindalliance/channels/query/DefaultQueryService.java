@@ -42,10 +42,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -87,6 +86,7 @@ public class DefaultQueryService extends Observable implements QueryService {
      * Directory from which to import exported scenarios
      */
     private String importDirectory;
+
     /**
      * An attachment manager.
      */
@@ -515,13 +515,7 @@ public class DefaultQueryService extends Observable implements QueryService {
      * {@inheritDoc}
      */
     public Scenario getDefaultScenario() {
-        List<Scenario> allScenarios = list( Scenario.class );
-        Collections.sort( allScenarios, new Comparator<Scenario>() {
-            public int compare( Scenario o1, Scenario o2 ) {
-                return Collator.getInstance().compare( o1.getName(), o2.getName() );
-            }
-        } );
-        return allScenarios.get( 0 );
+        return toSortedList( list( Scenario.class ) ).get( 0 );
     }
 
     private static boolean isInternal( Node source, Node target ) {
@@ -931,6 +925,72 @@ public class DefaultQueryService extends Observable implements QueryService {
         return new ArrayList<Actor>( actors );
     }
 
+    private void visitParts( Set<Part> visited, ResourceSpec spec, Scenario scenario ) {
+        for ( Scenario s : getScenarios( scenario ) )
+            for ( Iterator<Part> partIterator = s.parts(); partIterator.hasNext(); ) {
+                Part part = partIterator.next();
+                if ( spec.matches( part.resourceSpec(), true ) )
+                    visited.add( part );
+            }
+
+        Actor actor = spec.getActor();
+        Organization organization = spec.getOrganization();
+        Role role = spec.getRole();
+        Place jurisdiction = spec.getJurisdiction();
+
+        if ( actor != null && role == null ) {
+            // add parts with actor's roles
+            for ( Job job : findAllJobs( organization, actor ) ) {
+                ResourceSpec s = new ResourceSpec( spec );
+                s.setRole( job.getRole() );
+                s.setJurisdiction( job.getJurisdiction() );
+                visitParts( visited, s, scenario );
+
+                s.setActor( null );
+                visitParts( visited, s, scenario );
+            }
+        }
+
+        if ( organization != null ) {
+
+            if ( role == null && actor == null && jurisdiction == null ) {
+                for ( Role r : findRolesIn( organization ) )
+                    for ( Actor a : findActors( organization, r, scenario ) ) {
+                        ResourceSpec s = new ResourceSpec( spec );
+                        if ( Actor.UNKNOWN.equals( a ) )
+                            s.setRole( r );
+                        else
+                            s.setActor( a );
+                        visitParts( visited, s, scenario );
+                    }
+            }
+
+            ResourceSpec s = new ResourceSpec( spec );
+            s.setOrganization( organization.getParent() );
+            visitParts( visited, s, scenario );
+
+        }
+
+        if ( jurisdiction != null ) {
+            // look for parts with no specific jurisdiction
+            // TODO process geo inclusions
+            ResourceSpec s = new ResourceSpec( spec );
+            s.setJurisdiction( null );
+            visitParts( visited, s, scenario );
+        }
+    }
+
+    private List<Scenario> getScenarios( Scenario scenario ) {
+        List<Scenario> scenarios;
+        if ( scenario == null )
+            scenarios = list( Scenario.class );
+        else {
+            scenarios = new ArrayList<Scenario>();
+            scenarios.add( scenario );
+        }
+        return scenarios;
+    }
+
     /**
      * Find all relevant channels for a given resource spec.
      *
@@ -944,7 +1004,7 @@ public class DefaultQueryService extends Observable implements QueryService {
             for ( Iterator<Flow> flows = scenario.flows(); flows.hasNext(); ) {
                 Flow flow = flows.next();
                 Part p = flow.getContactedPart();
-                if ( p != null && p.resourceSpec().matches( spec, true ) )
+                if ( p != null && spec.equals( p.resourceSpec() ) )
                     addUniqueChannels( channels, flow.getEffectiveChannels() );
             }
 
@@ -977,9 +1037,7 @@ public class DefaultQueryService extends Observable implements QueryService {
             addUniqueChannels( channels, findAllChannelsFor( s ) );
         }
 
-        List<Channel> result = new ArrayList<Channel>( channels );
-        Collections.sort( result );
-        return result;
+        return toSortedList( channels );
     }
 
     private static boolean containsValidChannel( Set<Channel> channels, Medium medium ) {
@@ -1037,6 +1095,12 @@ public class DefaultQueryService extends Observable implements QueryService {
         return new ArrayList<Job>( unconfirmedJobs );
     }
 
+    private static <T extends Comparable> List<T> toSortedList( Collection<T> objects ) {
+        List<T> results = new ArrayList<T>( objects );
+        Collections.sort( results );
+        return results;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -1047,10 +1111,7 @@ public class DefaultQueryService extends Observable implements QueryService {
                 titles.add( job.getTitle() );
             }
         }
-        List<String> allTitles = new ArrayList<String>();
-        allTitles.addAll( titles );
-        Collections.sort( allTitles );
-        return allTitles;
+        return toSortedList( titles );
     }
 
     /**
@@ -1064,22 +1125,18 @@ public class DefaultQueryService extends Observable implements QueryService {
                 tasks.add( parts.next().getTask() );
             }
         }
-        List<String> allTasks = new ArrayList<String>();
-        allTasks.addAll( tasks );
-        Collections.sort( allTasks );
-        return allTasks;
+        return toSortedList( tasks );
     }
 
     /**
      * {@inheritDoc}
      */
     public List<String> findAllNames( Class<? extends ModelObject> aClass ) {
-        List<String> allNames = new ArrayList<String>();
+        Set<String> allNames = new HashSet<String>();
         for ( ModelObject mo : list( aClass ) ) {
             allNames.add( mo.getName() );
         }
-        Collections.sort( allNames );
-        return allNames;
+        return toSortedList( allNames );
     }
 
     /**
@@ -1105,15 +1162,10 @@ public class DefaultQueryService extends Observable implements QueryService {
             }
         }
 
-        List<Actor> list = new ArrayList<Actor>( actors );
-        Collections.sort( list, new Comparator<Actor>() {
-            /** {@inheritDoc} */
-            public int compare( Actor o1, Actor o2 ) {
-                return Collator.getInstance().compare( o1.getName(), o2.getName() );
-            }
-        } );
+        if ( actors.isEmpty() )
+            actors.add( Actor.UNKNOWN );
 
-        return list;
+        return toSortedList( actors );
     }
 
     /**
@@ -1127,13 +1179,7 @@ public class DefaultQueryService extends Observable implements QueryService {
         boolean hasUnknown = roles.contains( Role.UNKNOWN );
         roles.remove( Role.UNKNOWN );
 
-        List<Role> list = new ArrayList<Role>( roles );
-        Collections.sort( list, new Comparator<Role>() {
-            /** {@inheritDoc} */
-            public int compare( Role o1, Role o2 ) {
-                return Collator.getInstance().compare( o1.getName(), o2.getName() );
-            }
-        } );
+        List<Role> list = toSortedList( roles );
         if ( hasUnknown )
             list.add( Role.UNKNOWN );
         return list;
@@ -1143,15 +1189,7 @@ public class DefaultQueryService extends Observable implements QueryService {
      * {@inheritDoc}
      */
     public List<Organization> findOrganizations() {
-        List<Organization> orgs = new ArrayList<Organization>(
-                new HashSet<Organization>( list( Organization.class ) ) );
-
-        Collections.sort( orgs, new Comparator<Organization>() {
-            /** {@inheritDoc} */
-            public int compare( Organization o1, Organization o2 ) {
-                return Collator.getInstance().compare( o1.toString(), o2.toString() );
-            }
-        } );
+        List<Organization> orgs = toSortedList( list( Organization.class ) );
 
         if ( !findRolesIn( Organization.UNKNOWN ).isEmpty() )
             orgs.add( Organization.UNKNOWN );
@@ -1179,14 +1217,7 @@ public class DefaultQueryService extends Observable implements QueryService {
                 actors.addAll( findAllActors( otherPart.resourceSpec() ) );
         }
 
-        List<Actor> list = new ArrayList<Actor>( actors );
-        Collections.sort( list, new Comparator<Actor>() {
-            public int compare( Actor o1, Actor o2 ) {
-                return Collator.getInstance().compare( o1.getName(), o2.getName() );
-            }
-        } );
-
-        return list;
+        return toSortedList( actors );
     }
 
     /**
@@ -1213,34 +1244,28 @@ public class DefaultQueryService extends Observable implements QueryService {
                     noActorRoleFound = true;
             }
         }
-
-        if ( noActorRoleFound )
-            return findActors( organization, role );
-        else {
-            List<Actor> list = new ArrayList<Actor>( actors );
-            Collections.sort( list, new Comparator<Actor>() {
-                /** {@inheritDoc} */
-                public int compare( Actor o1, Actor o2 ) {
-                    return Collator.getInstance().compare( o1.getName(), o2.getName() );
-                }
-            } );
-            return list;
-        }
+        return noActorRoleFound ? findActors( organization, role )
+                                : toSortedList( actors );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Job> findAllJobs( Actor actor ) {
+    private List<Job> findAllJobs( Organization organization, Actor actor ) {
         List<Job> jobs = new ArrayList<Job>();
-        for ( Organization org : list( Organization.class ) ) {
+        List<Organization> orgs;
+        if ( organization == null )
+            orgs = list( Organization.class );
+        else {
+            orgs = new ArrayList<Organization>();
+            orgs.add( organization );
+        }
+
+        for ( Organization org : orgs ) {
             for ( Job job : org.getJobs() ) {
-                if ( job.getActor() == actor ) {
+                if ( actor.equals( job.getActor() ) ) {
                     jobs.add( job );
                 }
             }
             for ( Job job : findUnconfirmedJobs( org ) ) {
-                if ( job.getActor() == actor ) {
+                if ( actor.equals( job.getActor() ) ) {
                     jobs.add( job );
                 }
             }
@@ -1344,17 +1369,11 @@ public class DefaultQueryService extends Observable implements QueryService {
     /**
      * {@inheritDoc}
      */
-    public List<Part> findAllPartsWith( ResourceSpec resourceSpec ) {
-        List<Part> list = new ArrayList<Part>();
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Part> parts = scenario.parts();
-            while ( parts.hasNext() ) {
-                Part part = parts.next();
-                if ( part.resourceSpec().narrowsOrEquals( resourceSpec ) )
-                    list.add( part );
-            }
-        }
-        return list;
+    public List<Part> findAllParts( Scenario scenario, ResourceSpec resourceSpec ) {
+        Set<Part> list = new HashSet<Part>();
+        visitParts( list, resourceSpec, scenario );
+
+        return toSortedList( list );
     }
 
     /**
@@ -1466,11 +1485,9 @@ public class DefaultQueryService extends Observable implements QueryService {
         return Channels.instance();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritsDoc} */
     public String getTitle( Actor actor ) {
-        for ( Job job : findAllJobs( actor ) ) {
+        for ( Job job : findAllJobs( null, actor ) ) {
             String title = job.getTitle().trim();
             if ( !title.isEmpty() )
                 return title;

@@ -203,6 +203,5 @@ public class Organization extends AbstractUnicastChannelable {
     public boolean isUndefined() {
         return super.isUndefined() && parent == null && location == null && jobs.isEmpty();
     }
-
 }
 

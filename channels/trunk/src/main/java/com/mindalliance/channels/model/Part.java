@@ -11,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -343,6 +344,7 @@ public class Part extends Node {
         this.initiatedEvent = initiatedEvent;
     }
 
+    @OneToMany
     public List<Risk> getMitigations() {
         return mitigations;
     }
@@ -456,7 +458,7 @@ public class Part extends Node {
             Flow req = reqs.next();
             terminated = req.isTerminatingToTarget();
         }
-        if (!terminated) {
+        if ( !terminated ) {
             Iterator<Flow> outs = outcomes();
             while ( !terminated && outs.hasNext() ) {
                 Flow req = outs.next();
@@ -464,5 +466,34 @@ public class Part extends Node {
             }
         }
         return terminated;
+    }
+
+    /**
+     * @return shorthand for role for jurisdiction
+     */
+    @Transient
+    public String getRoleString() {
+        StringBuilder b = new StringBuilder( 64 );
+
+        if ( role != null )
+            b.append( role );
+        if ( jurisdiction != null ) {
+            b.append( " for " );
+            b.append( jurisdiction );
+        }
+
+        return b.toString();
+    }
+
+    /**
+     * A part describes a Resource is not all of actor, roel and organization are null.
+     *
+     * @return boolean whether this part describes a resource
+     */
+    public boolean hasResource() {
+        return !( actor == null
+                && role == null
+                && organization == null
+                && jurisdiction == null );
     }
 }

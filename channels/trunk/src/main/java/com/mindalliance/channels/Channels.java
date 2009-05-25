@@ -12,6 +12,7 @@ import com.mindalliance.channels.pages.reports.PlanReportPage;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.target.coding.IndexedParamUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.MixedParamUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
@@ -127,7 +128,9 @@ public final class Channels extends WebApplication {
         getMarkupSettings().setStripWicketTags( true );
 //        getRequestCycleSettings().setRenderStrategy( IRequestCycleSettings.REDIRECT_TO_RENDER );
         mount( new QueryStringUrlCodingStrategy( "index.html", IndexPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "report.html", PlanReportPage.class ) );
+
+        mount( new IndexedParamUrlCodingStrategy( "report", PlanReportPage.class ) );
+
         mount( new QueryStringUrlCodingStrategy( "node.html", PlanPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.xml", ExportPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.png", FlowMapPage.class ) );

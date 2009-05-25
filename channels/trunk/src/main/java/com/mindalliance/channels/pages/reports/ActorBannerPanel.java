@@ -24,20 +24,6 @@ import java.util.Set;
  */
 public class ActorBannerPanel extends Panel {
 
-    /** A scenario. */
-    private Scenario scenario;
-
-    /** An actor. */
-    private ResourceSpec spec;
-
-    /** True if scenario should be displayed. */
-    private boolean showScenario;
-
-    /** Restrict shown media to these. If null, show everything. */
-    private final Set<Medium> unicasts;
-
-    private final Collection<Channel> broadcasts;
-
     @SpringBean
     private QueryService queryService;
 
@@ -45,7 +31,6 @@ public class ActorBannerPanel extends Panel {
             String id, Scenario scenario, ResourceSpec spec, boolean showScenario ) {
 
         this( id, scenario, spec, showScenario, null, null );
-        this.spec = spec;
     }
 
     public ActorBannerPanel(
@@ -53,17 +38,11 @@ public class ActorBannerPanel extends Panel {
             Set<Medium> unicasts, Collection<Channel> broadcasts ) {
 
         super( id );
-        this.spec = spec;
-        this.scenario = scenario;
-        this.showScenario = showScenario;
-        this.unicasts = unicasts;
-        this.broadcasts = broadcasts;
         setRenderBodyOnly( true );
-        init();
-    }
 
-    private void init() {
-        Actor actor = spec.getActor() == null ? Actor.UNKNOWN : spec.getActor();
+        if ( spec.getActor() == null )
+            spec.setActor( Actor.UNKNOWN );
+        Actor actor = spec.getActor();
         add( new Label( "name", actor.getName() ) );                                      // NON-NLS
 
         String title = queryService.getTitle( actor );
@@ -73,14 +52,9 @@ public class ActorBannerPanel extends Panel {
 
         boolean canShowScenario = showScenario && scenario != null;
         Label scenarioLabel = new Label( "scenario", canShowScenario ?                    // NON-NLS
-                                MessageFormat.format( "(from {0})", scenario.getName() ) : "" );
+                        MessageFormat.format( "(from {0})", scenario.getName() ) : "" );
         scenarioLabel.setVisible( canShowScenario );
         add( scenarioLabel );
-
-        String desc = spec.getDescription();
-        Label descLabel = new Label( "description", desc );                               // NON-NLS
-        descLabel.setVisible( desc != null && !desc.isEmpty() );
-        add( descLabel );
 
         add( new ChannelsBannerPanel( "channels",                                         // NON-NLS
                                       spec, unicasts, broadcasts ) );

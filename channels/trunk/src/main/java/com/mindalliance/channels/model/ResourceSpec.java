@@ -150,27 +150,13 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
         return hash;
     }
 
-
-    /**
-     * A part describes a Resource is not all of actor, roel and organization are null.
-     *
-     * @param part a part
-     * @return boolean whether the part describes a resource
-     */
-    public static boolean hasResource( Part part ) {
-        return !( part.getActor() == null
-                && part.getRole() == null
-                && part.getOrganization() == null
-                && part.getJurisdiction() == null );
-    }
-
     /**
      * Gets the actor's name or an empty string if no actor
      *
      * @return a string
      */
     public String getActorName() {
-        return actor == null ? "" : actor.getName();
+        return actor == null ? Actor.UNKNOWN.getName() : actor.getName();
     }
 
     /**
@@ -179,7 +165,7 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      * @return a string
      */
     public String getOrganizationName() {
-        return organization == null ? "" : organization.getName();
+        return organization == null ? Organization.UNKNOWN.getName() : organization.getName();
     }
 
     /**
@@ -264,28 +250,36 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
         return isAnyActor() && isAnyRole() && isAnyOrganization() /*&& isAnyJurisdiction()*/;
     }
 
-    /**
-     * Composes a name for the resource spec
-     *
-     * @return a string
-     */
+    /** {@inheritDoc} */
+    @Override
     public String getName() {
         StringBuilder sb = new StringBuilder();
-        if ( !isAnyRole() ) {
+        if ( isAnyRole() )
+            sb.append( isAnyActor() ? "Someone" : actor.getName() );
+        else {
             sb.append( isAnyActor() ? "Any " : actor.getName() + " as " );
             sb.append( role.getName() );
-        } else {
-            sb.append( isAnyActor() ? "Anyone" : actor.getName() );
         }
         if ( !isAnyOrganization() ) {
-            sb.append( " for " );
+            sb.append( " from " );
             sb.append( organization.getName() );
         }
         if ( !isAnyJurisdiction() ) {
-            sb.append( " in " );
+            sb.append( " for " );
             sb.append( jurisdiction.getName() );
         }
         return sb.toString();
+    }
+
+    /**
+     * Return the title of a report page on this spec.
+     * @return a concise title for a report page
+     */
+    public String getReportTitle() {
+        return actor        != null ? actor.getName()
+             : role         != null ? role.getName()
+             : organization != null ? organization.getName()
+             : "Someone";
     }
 
     /**
@@ -304,9 +298,27 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      * @return a boolean
      */
     public boolean matches( ResourceSpec other, boolean precisely ) {
-        return precisely
-                ? equals( other )
-                : narrowsOrEquals( other );
+        if ( precisely ) {
+
+            boolean sameActor = actor == other.getActor()
+                 || actor == null && Actor.UNKNOWN.equals( other.getActor() )
+                 || other.getActor() == null && Actor.UNKNOWN.equals( actor );
+
+            boolean sameRole = role == other.getRole()
+                 || role == null && Role.UNKNOWN.equals( other.getRole() )
+                 || other.getRole() == null && Role.UNKNOWN.equals( role );
+
+            boolean sameOrganization = organization == other.getOrganization()
+                 || organization == null && Organization.UNKNOWN.equals( other.getOrganization() )
+                 || other.getOrganization() == null && Organization.UNKNOWN.equals( organization );
+
+            return sameActor
+                 && sameRole
+                 && sameOrganization
+                 && SemMatch.samePlace( jurisdiction, other.getJurisdiction() );
+        }
+        else
+            return narrowsOrEquals( other );
     }
 
     /**
@@ -330,10 +342,15 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
             return false;
 
          */
-        if ( organization != other.getOrganization() && !other.isAnyOrganization() )
-            return false;
+
+        if ( organization != other.getOrganization() ) {
+            if ( organization != null || !Organization.UNKNOWN.equals( other.getOrganization() ) )
+                return false;
+        }
+
         // Todo compare inclusion, not equality
-        return !( jurisdiction != other.getJurisdiction() && !other.isAnyJurisdiction() );
+        return jurisdiction != null && jurisdiction.equals( other.getJurisdiction() )
+            || other.isAnyJurisdiction();
     }
 
     /**
@@ -404,5 +421,13 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
         } else {
             return jurisdiction == entity;
         }
+    }
+
+    @Override
+    public String getDescription() {
+        return actor != null ? actor.getDescription()
+             : role != null  ? role.getDescription()
+             : organization == null ? ""
+                                    : organization.getDescription();
     }
 }
