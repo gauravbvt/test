@@ -1,20 +1,19 @@
 package com.mindalliance.channels.analysis.graph;
 
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.model.Part;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-
+import com.mindalliance.channels.model.Scenario;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A link from a scenario to another composed of aggregated external flows.
@@ -45,7 +44,7 @@ public class ScenarioRelationship implements Identifiable {
      */
     private List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
     /**
-     * Parts in fromscenario that initiate th to-scenario
+     * Parts in fromscenario that initiate the to-scenario
      */
     private List<Part> initiators = new ArrayList<Part>();
 

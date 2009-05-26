@@ -1,14 +1,13 @@
 package com.mindalliance.channels.analysis.graph;
 
-import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.graph.GraphBuilder;
-
-import java.util.List;
-
+import com.mindalliance.channels.model.Scenario;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;
+
+import java.util.List;
 
 /**
  * Plan map graph builder.
@@ -57,7 +56,7 @@ public class PlanMapGraphBuilder implements GraphBuilder<Scenario, ScenarioRelat
                 if ( scenario != other ) {
                     ScenarioRelationship scRel = queryService.findScenarioRelationship( scenario, other );
                     if ( scRel != null ) {
-                        digraph.addEdge( other, scenario, scRel );
+                        digraph.addEdge( scenario, other, scRel );
                     }
                 }
             }

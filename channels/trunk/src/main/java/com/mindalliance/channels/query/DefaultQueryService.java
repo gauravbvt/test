@@ -348,8 +348,8 @@ public class DefaultQueryService extends Observable implements QueryService {
     }
 
     /**
-      * {@inheritDoc}
-      */
+     * {@inheritDoc}
+     */
     public void add( ModelObject object, Long id ) {
         getDao().add( object, id );
     }
@@ -388,7 +388,7 @@ public class DefaultQueryService extends Observable implements QueryService {
      */
     public Scenario createScenario( Long id, Long defaultPartId ) {
         Scenario result = new Scenario();
-        if (id == null)
+        if ( id == null )
             getDao().add( result );
         else
             getDao().add( result, id );
@@ -838,7 +838,19 @@ public class DefaultQueryService extends Observable implements QueryService {
             Flow flow = flows.next();
             if ( !flow.isInternal() ) {
                 ExternalFlow externalFlow = (ExternalFlow) flow;
-                if ( externalFlow.getConnector().getScenario() == toScenario ) {
+                if ( externalFlow.getConnector().getScenario() == toScenario
+                        && !externalFlow.isPartTargeted() ) {
+                    externalFlows.add( externalFlow );
+                }
+            }
+        }
+        flows = toScenario.flows();
+        while ( flows.hasNext() ) {
+            Flow flow = flows.next();
+            if ( !flow.isInternal() ) {
+                ExternalFlow externalFlow = (ExternalFlow) flow;
+                if ( externalFlow.getConnector().getScenario() == fromScenario
+                        && externalFlow.isPartTargeted() ) {
                     externalFlows.add( externalFlow );
                 }
             }
@@ -1252,7 +1264,7 @@ public class DefaultQueryService extends Observable implements QueryService {
             }
         }
         return noActorRoleFound ? findActors( organization, role )
-                                : toSortedList( actors );
+                : toSortedList( actors );
     }
 
     private List<Job> findAllJobs( Organization organization, Actor actor ) {
@@ -1492,7 +1504,9 @@ public class DefaultQueryService extends Observable implements QueryService {
         return Channels.instance();
     }
 
-    /** {@inheritsDoc} */
+    /**
+     * {@inheritsDoc}
+     */
     public String getTitle( Actor actor ) {
         for ( Job job : findAllJobs( null, actor ) ) {
             String title = job.getTitle().trim();

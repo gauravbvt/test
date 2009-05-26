@@ -1,18 +1,18 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.graph.URLProvider;
-import com.mindalliance.channels.graph.DOTAttributeProvider;
-import com.mindalliance.channels.graph.AbstractMetaProvider;
-import com.mindalliance.channels.graph.DOTAttribute;
-import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
+import com.mindalliance.channels.graph.AbstractMetaProvider;
+import com.mindalliance.channels.graph.DOTAttribute;
+import com.mindalliance.channels.graph.DOTAttributeProvider;
+import com.mindalliance.channels.graph.URLProvider;
+import com.mindalliance.channels.model.Scenario;
+import org.apache.commons.lang.StringUtils;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
-import org.apache.commons.lang.StringUtils;
 
-import java.util.List;
 import java.text.MessageFormat;
+import java.util.List;
 
 /**
  * Plan meta provider.
@@ -94,9 +94,9 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
                     name = name + count + ( count > 1 ? " flows" : " flow" );
                 }
                 if ( scenarioRel.hasInitiators() ) {
-                    name = name + (name.isEmpty() ? "" : " and ");
+                    name = name + (name.isEmpty() ? " " : " and ");
                     int count = scenarioRel.getInitiators().size();
-                    name = name + " caused by";// count + ( count > 1 ? " causes" : " cause" );
+                    name = name + count + ( count > 1 ? " causes" : " cause");
                 }
                 return name;
             }

@@ -43,12 +43,17 @@ public class ScenarioCausesPanel extends AbstractTablePanel<ScenarioRelationship
 
     private void init() {
         final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
-        columns.add( makeLinkColumn( "Part", "part", "part.title", EMPTY ) );
+        columns.add( makeLinkColumn( "Task", "part", "part.title", EMPTY ) );
         columns.add( new PropertyColumn<String>(
                 new Model<String>( "in scenario" ),
                 "part.scenario.name", "part.scenario.name" ) );
+        columns.add( makeLinkColumn(
+                "causes event",
+                "part.initiatedEvent",
+                "part.initiatedEvent.name",
+                EMPTY ) );
         columns.add( new PropertyColumn<String>(
-                new Model<String>( "causes scenario" ),
+                new Model<String>( "triggering scenario" ),
                 "caused.name", "caused.name" ) );
         List<Causation> causations = getCausations();
         add( new AjaxFallbackDefaultDataTable<Causation>(

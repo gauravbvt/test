@@ -38,15 +38,15 @@ public class ExternalFlowsPanel extends AbstractTablePanel<ExternalFlow> {
 
     private void init() {
         final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+        columns.add( makeLinkColumn( "Task", "externalPart", "externalPart.title", EMPTY ) );
         columns.add( new PropertyColumn<String>(
-                new Model<String>( "Scenario" ),
-                "scenario.name", "scenario.name" ) );
-        columns.add( makeLinkColumn( "Part", "part", "part.title", EMPTY ) );
-        columns.add( makeColumn( "Info", "name", "@kind", "?", "description" ) );
-        columns.add( new PropertyColumn<String>(
-                new Model<String>( "Connected scenario" ),
+                new Model<String>( " in scenario" ),
                 "externalPart.scenario.name", "externalPart.scenario.name" ) );
-        columns.add( makeLinkColumn( "Connected part", "externalPart", "externalPart.title", EMPTY ) );
+        columns.add( makeColumn( "produces info", "name", "@kind", "?", "description" ) );
+        columns.add( makeLinkColumn( "consumed by task", "part", "part.title", EMPTY ) );
+        columns.add( new PropertyColumn<String>(
+                new Model<String>( "in scenario" ),
+                "scenario.name", "scenario.name" ) );
         List<ExternalFlow> externalFlows = externalFlowsModel.getObject();
         add( new AjaxFallbackDefaultDataTable<ExternalFlow>(
                 "flows",
