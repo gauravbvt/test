@@ -169,4 +169,13 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
         change.setScript( js );
         update( target, change );
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected String makeSeed() {
+        // Force regeneration
+        return "&_modified=" + System.currentTimeMillis();
+    }
+
 }

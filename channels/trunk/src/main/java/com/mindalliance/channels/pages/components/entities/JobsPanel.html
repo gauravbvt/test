@@ -5,9 +5,9 @@
         xmlns:wicket="http://wicket.apache.org/"
         xml:lang="en"
         lang="en">
-<body>
+
 <wicket:panel>
-    <div class="jobs" wicket:id="jobsDiv">
+    <div wicket:id="jobsDiv">
         <table>
             <thead>
                 <tr>
@@ -25,7 +25,7 @@
                 <td><input wicket:id="title" type="text" size="25"/></td>
                 <td><span wicket:id="role">[entity cell panel]</span></td>
                 <td><span wicket:id="jurisdiction">[entity cell panel]</span></td>
-                <td><a wicket:id="flows-link" href="#">Show</a></td>
+                <td><a wicket:id="flows-link" href="#">Flows</a></td>
             </tr>
         </table>
     </div>
@@ -36,5 +36,5 @@
         <span wicket:id="playbook">[job flows panel]</span>
     </span>
 </wicket:panel>
-</body>
+
 </html>

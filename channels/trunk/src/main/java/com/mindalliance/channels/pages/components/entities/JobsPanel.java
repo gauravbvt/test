@@ -224,7 +224,7 @@ public class JobsPanel extends AbstractCommandablePanel {
         return jobWrappers;
     }
 
-    private Organization getOrganization() {
+    public Organization getOrganization() {
         return (Organization) getModel().getObject();
     }
 

@@ -14,9 +14,13 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
+import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
+import org.apache.wicket.extensions.markup.html.tabs.ITab;
+import org.apache.wicket.extensions.markup.html.tabs.TabbedPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -111,8 +115,30 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         } );
         actorsRequiredCheckBox.setEnabled( isLockedByUser( getOrganization() ) );
         moDetailsDiv.add( actorsRequiredCheckBox );
-        moDetailsDiv.add( new JobsPanel( "jobs", new Model<Organization>( organization ), getExpansions() ) );
+        moDetailsDiv.add( new TabbedPanel( "tabs", getTabs() ) );
+//        moDetailsDiv.add( new JobsPanel( "jobs", new Model<Organization>( organization ), getExpansions() ) );
 
+    }
+
+    private List<ITab> getTabs() {
+        List<ITab> tabs = new ArrayList<ITab>();
+        tabs.add( new AbstractTab( new Model<String>( "Jobs" ) ) {
+            public Panel getPanel( String id ) {
+                return new JobsPanel(
+                        id,
+                        new PropertyModel<Organization>( OrganizationDetailsPanel.this, "organization" ),
+                        getExpansions() );
+            }
+        } );
+        tabs.add( new AbstractTab( new Model<String>( "Chart" ) ) {
+            public Panel getPanel( String id ) {
+                return new OrgChartPanel(
+                        id,
+                        new PropertyModel<Organization>( OrganizationDetailsPanel.this, "organization" ),
+                        getExpansions() );
+            }
+        } );
+        return tabs;
     }
 
     @SuppressWarnings( "unchecked" )
@@ -195,7 +221,12 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         return location == null ? "" : location.getName();
     }
 
-    private Organization getOrganization() {
+    /**
+     * Get edited organization.
+     *
+     * @return an organization
+     */
+    public Organization getOrganization() {
         return (Organization) getEntity();
     }
 
@@ -227,7 +258,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
      */
     public void updateWith( AjaxRequestTarget target, Change change ) {
         // Don't propagate UI updates because of changes to jobs
-        if ( change.getProperty() == null || !change.getProperty().equals( "jobs" )) {
+        if ( change.getProperty() == null || !change.getProperty().equals( "jobs" ) ) {
             super.updateWith( target, change );
         }
     }

@@ -224,7 +224,11 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
         imageMapHolder.replace( 0, imageMapHolder.length(), imageMap );
     }
 
-    private String makeSeed() {
+    /**
+     * Add a parameter to the URL to control browser caching.
+     * @return a string
+     */
+    protected String makeSeed() {
         // LOG.info("***Seed = " + getCommander().getLastModified() );
         return "&_modified=" + getCommander().getLastModified();
     }

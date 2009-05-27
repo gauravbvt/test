@@ -88,6 +88,14 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
         return sb.toString();
     }
 
+    /**
+      * {@inheritDoc}
+      */
+     protected String makeSeed() {
+         // Force regeneration
+         return "&_modified=" + System.currentTimeMillis();
+     }
+
     protected void onClick( AjaxRequestTarget target ) {
         update( target, new Change( Change.Type.Selected, Channels.getPlan() ) );
     }
