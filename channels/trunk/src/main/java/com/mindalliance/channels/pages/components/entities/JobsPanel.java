@@ -12,6 +12,9 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import com.mindalliance.channels.pages.components.NameRangePanel;
+import com.mindalliance.channels.pages.components.NameRangeable;
+import com.mindalliance.channels.util.NameRange;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -46,7 +49,11 @@ import java.util.Set;
  * Date: Mar 18, 2009
  * Time: 7:45:01 PM
  */
-public class JobsPanel extends AbstractCommandablePanel {
+public class JobsPanel extends AbstractCommandablePanel implements NameRangeable {
+    /**
+     * Maximum number of jobs to show at a time.
+     */
+    private static final int MAX_JOB_ROWS = 10;
     /**
      * Collator.
      */
@@ -63,6 +70,14 @@ public class JobsPanel extends AbstractCommandablePanel {
      * Flows container.
      */
     private WebMarkupContainer flowsDiv;
+    /**
+     * The range of names of actors which jobs to display.
+     */
+    private NameRange jobActorRange;
+    /**
+     * A name range panel.
+     */
+    private NameRangePanel rangePanel;
 
     public JobsPanel( String id, IModel<Organization> model, Set<Long> expansions ) {
         super( id, model, expansions );
@@ -70,7 +85,7 @@ public class JobsPanel extends AbstractCommandablePanel {
     }
 
     private void init() {
-        addJobsTable();
+        addJobs();
         flowsDiv = new WebMarkupContainer( "flows" );
         flowsDiv.setOutputMarkupId( true );
         add( flowsDiv );
@@ -78,10 +93,24 @@ public class JobsPanel extends AbstractCommandablePanel {
         setOutputMarkupId( true );
     }
 
-    private void addJobsTable() {
+    public void setNameRange( AjaxRequestTarget target, NameRange range ) {
+        jobActorRange = range;
+        jobsDiv.addOrReplace( makeJobsTable() );
+        rangePanel.setSelected( target, range );
+        target.addComponent( jobsDiv );
+    }
+
+    private void addJobs() {
         jobsDiv = new WebMarkupContainer( "jobsDiv" );
         jobsDiv.setOutputMarkupId( true );
-        addOrReplace( jobsDiv );
+        add( jobsDiv );
+        rangePanel = new NameRangePanel(
+                "ranges",
+                new PropertyModel<List<String>>( this, "jobActorLastNames" ),
+                MAX_JOB_ROWS,
+                this,
+                "All last names");
+        jobsDiv.add( rangePanel );
         jobsDiv.addOrReplace( makeJobsTable() );
     }
 
@@ -201,16 +230,37 @@ public class JobsPanel extends AbstractCommandablePanel {
 
     }
 
+    /**
+     * Get the list of all job actor names.
+     *
+     * @return a list of strings
+     */
+    public List<String> getJobActorLastNames() {
+        List<String> names = new ArrayList<String>();
+        for ( Job job : getOrganization().getJobs() ) {
+            names.add( job.getActorLastName() );
+        }
+        for ( Job job : getQueryService().findUnconfirmedJobs( getOrganization() ) ) {
+            names.add( job.getActorLastName() );
+        }
+        return names;
+    }
+
+
     // Used by PropertyModel
     private List<JobWrapper> getJobWrappers() {
         List<JobWrapper> jobWrappers = new ArrayList<JobWrapper>();
         // Confirmed jobs
         for ( Job job : getOrganization().getJobs() ) {
-            jobWrappers.add( new JobWrapper( job, true ) );
+            if ( jobActorRange == null
+                    || jobActorRange.contains( job.getActorLastName().trim().toLowerCase() ) )
+                jobWrappers.add( new JobWrapper( job, true ) );
         }
         // Unconfirmed jobs
         for ( Job job : getQueryService().findUnconfirmedJobs( getOrganization() ) ) {
-            jobWrappers.add( new JobWrapper( job, false ) );
+            if ( jobActorRange == null
+                    || jobActorRange.contains( job.getActorLastName().trim().toLowerCase() ) )
+                jobWrappers.add( new JobWrapper( job, false ) );
         }
         Collections.sort( jobWrappers, new Comparator<JobWrapper>() {
             public int compare( JobWrapper jw1, JobWrapper jw2 ) {
@@ -226,6 +276,16 @@ public class JobsPanel extends AbstractCommandablePanel {
 
     public Organization getOrganization() {
         return (Organization) getModel().getObject();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void updateWith( AjaxRequestTarget target, Change change ) {
+        if ( change.isUpdated() ) {
+            setNameRange( target, rangePanel.getRangeFor( selectedJob.getActorLastName() ) );
+        }
+        super.updateWith( target, change );
     }
 
     /**
@@ -274,13 +334,14 @@ public class JobsPanel extends AbstractCommandablePanel {
         public void setConfirmed( boolean confirmed ) {
             this.confirmed = confirmed;
             if ( confirmed ) {
+                assert markedForCreation;
                 doCommand( new UpdatePlanObject(
                         getOrganization(),
                         "jobs",
                         job,
                         UpdateObject.Action.Add
                 ) );
-
+                selectedJob = job;
             } else if ( !markedForCreation ) {
                 doCommand( new UpdatePlanObject(
                         getOrganization(),

@@ -73,4 +73,16 @@ public class Actor extends AbstractUnicastChannelable {
         }
     }
 
+    @Transient
+    public String getLastName() {
+        String name = getName().trim();
+        if ( this == UNKNOWN || name.indexOf( ',' ) >= 0 ) return name;
+        else {
+            int index = name.lastIndexOf( ' ' );
+            if ( index >= 0 ) {
+                return name.substring( index + 1 );
+            } else
+                return name;
+        }
+    }
 }

@@ -60,6 +60,12 @@ public class Job implements Serializable, Mappable {
         else return actor.getName();
     }
 
+    @Transient
+    public String getActorLastName() {
+        if ( actor == null ) return "";
+        else return actor.getLastName();
+    }
+
     public void setActor( Actor actor ) {
         this.actor = actor;
     }
@@ -210,4 +216,5 @@ public class Job implements Serializable, Mappable {
         mappedObject.set( "title", title );
         return mappedObject;
     }
+
 }
