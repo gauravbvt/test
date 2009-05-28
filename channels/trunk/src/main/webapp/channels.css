@@ -316,7 +316,7 @@ div.section td, div.section th {
     padding-right: 2em;
 }
 
-ul.menu, div.caption, span.menubar {
+ul.menu, div.caption, span.menubar, ul.ranges {
     font-size: 8pt;
 }
 
@@ -798,6 +798,29 @@ div.tabpanel div.tab-row li.selected a {
 div.tabpanel table {
   border: 1px solid transparent;
   display: block;
+}
+
+ul.ranges {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: right;
+}
+
+ul.ranges li {
+    display: inline;
+}
+
+ul.ranges li:before {
+    content: "  \2015   ";
+}
+ul.ranges li:first-child:before {
+    content: " ";
+}
+
+ul.ranges li a.selected {
+    background-color: #C3D9FF;
+    color: black;
 }
 
 

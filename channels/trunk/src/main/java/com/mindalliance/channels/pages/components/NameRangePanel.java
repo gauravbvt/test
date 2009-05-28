@@ -48,6 +48,7 @@ public class NameRangePanel extends Panel {
         this.maxSize = Math.max( 1, maxSize );
         this.rangeable = rangeable;
         this.fullRangeLabel = fullRangeLabel;
+        selectedRange = getNameRanges().get( 0 );
         init();
     }
 
@@ -132,7 +133,8 @@ public class NameRangePanel extends Panel {
         int highCut = cut;
         while ( lowCut > start
                 && lowCut < size - 1
-                && domain.get( lowCut ).equals( domain.get( lowCut + 1 ) ) ) {
+                && domain.get( lowCut ).equals( domain.get( lowCut + 1 ) ) )
+        {
             lowCut--;
         }
         while ( highCut < size - 1 && domain.get( highCut ).equals( domain.get( highCut + 1 ) ) ) {
