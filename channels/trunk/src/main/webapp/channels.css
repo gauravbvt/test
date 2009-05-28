@@ -795,3 +795,9 @@ div.tabpanel div.tab-row li.selected a {
   padding-bottom:5px;
   }
 
+div.tabpanel table {
+  border: 1px solid transparent;
+  display: block;
+}
+
+
