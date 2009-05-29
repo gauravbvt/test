@@ -33,7 +33,7 @@ public class NameRange implements Serializable {
     /**
      * Boundaries as smallest possible strings.
      */
-    private String[] bounds;
+    private String[] boundLabels;
     /**
      * COllator.
      */
@@ -76,16 +76,16 @@ public class NameRange implements Serializable {
     }
 
     public String getLowerBound() {
-        return getBounds()[0];
+        return getBoundLabels()[0];
     }
 
 
     public String getUpperBound() {
-        return getBounds()[1];
+        return getBoundLabels()[1];
     }
 
-    private String[] getBounds() {
-        if ( bounds == null ) {
+    private String[] getBoundLabels() {
+        if ( boundLabels == null ) {
             StringBuilder lowerBound = new StringBuilder();
             StringBuilder upperBound = new StringBuilder();
             int index = 0;
@@ -98,21 +98,26 @@ public class NameRange implements Serializable {
                 index++;
 
             } while ( !done );
-            index = 0;
-            do {
-                upperBound.append( upper.charAt( index ) );
-                done = lower.length() <= index
-                        || posterior.length() <= index
-                        || upper.length() == index + 1
-                        || ( upper.charAt( index ) != lower.charAt( index )
-                        && ( upper.charAt( index ) != posterior.charAt( index ) ) );
-                index++;
-            } while ( !done );
-            bounds = new String[2];
-            bounds[0] = StringUtils.capitalize( lowerBound.toString() );
-            bounds[1] = StringUtils.capitalize( upperBound.toString() );
+            if ( upper.equals( lower ) ) {
+                upperBound.append( lowerBound.toString() );
+            } else {
+                index = 0;
+                do {
+                    upperBound.append( upper.charAt( index ) );
+                    done = lower.length() <= index
+                            || upper.length() == index + 1
+                            || (
+                            upper.charAt( index ) != lower.charAt( index )
+                                    && ( posterior.length() <= index || upper.charAt( index ) != posterior.charAt( index ) )
+                    );
+                    index++;
+                } while ( !done );
+            }
+            boundLabels = new String[2];
+            boundLabels[0] = StringUtils.capitalize( lowerBound.toString() );
+            boundLabels[1] = StringUtils.capitalize( upperBound.toString() );
         }
-        return bounds;
+        return boundLabels;
     }
 
     /**
@@ -124,9 +129,9 @@ public class NameRange implements Serializable {
         if ( isEmpty() ) {
             return null;
         } else {
-            return getBounds()[0]
+            return getBoundLabels()[0]
                     + "-"
-                    + getBounds()[1];
+                    + getBoundLabels()[1];
         }
     }
 

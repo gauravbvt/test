@@ -18,6 +18,7 @@ import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.ScenarioObject;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
+import com.mindalliance.channels.pages.components.IndicatorAwareForm;
 import com.mindalliance.channels.pages.components.ScenarioLink;
 import com.mindalliance.channels.pages.components.ScenarioPanel;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
@@ -37,7 +38,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.pages.RedirectPage;
@@ -155,7 +155,7 @@ public final class PlanPage extends WebPage implements Updatable {
     /**
      * the big form
      */
-    private Form<?> form;
+    private IndicatorAwareForm form;
 
     /**
      * The scenario panel.
@@ -234,7 +234,7 @@ public final class PlanPage extends WebPage implements Updatable {
         add( new Label( "sc-title",
                 new Model<String>( "Channels: " + Channels.getPlan().getName() ) ) );
 
-        form = new Form( "big-form" ) {
+        form = new IndicatorAwareForm( "big-form" ) {
             @Override
             protected void onSubmit() {
                 LOG.debug( "Form submitted" );

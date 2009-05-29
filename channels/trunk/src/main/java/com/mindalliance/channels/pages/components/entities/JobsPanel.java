@@ -15,6 +15,7 @@ import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
 import com.mindalliance.channels.util.NameRange;
+import com.mindalliance.channels.util.Play;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -53,7 +54,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
     /**
      * Maximum number of jobs to show at a time.
      */
-    private static final int MAX_JOB_ROWS = 10;
+    private static final int MAX_JOB_ROWS = 5;
     /**
      * Collator.
      */
@@ -109,7 +110,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 new PropertyModel<List<String>>( this, "jobActorLastNames" ),
                 MAX_JOB_ROWS,
                 this,
-                "All last names");
+                "All last names" );
         jobsDiv.add( rangePanel );
         jobsDiv.addOrReplace( makeJobsTable() );
     }
@@ -144,6 +145,8 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             jobPlaybook = new PlaysTablePanel(
                     "playbook",
                     new PropertyModel<ResourceSpec>( this, "jobResourceSpec" ),
+                    new Model<Boolean>(false),
+                    5,
                     getExpansions() );
         }
         flowsDiv.addOrReplace( jobLabel );
@@ -151,8 +154,15 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         makeVisible( flowsDiv, job != null );
     }
 
+    /**
+     * Get resource spec of selected job.
+     *
+     * @return a resource spec
+     */
     public ResourceSpec getJobResourceSpec() {
-        return selectedJob.resourceSpec( getOrganization() );
+        ResourceSpec spec = selectedJob.resourceSpec( getOrganization() );
+        spec.setActor( null );
+        return spec;
     }
 
     private void addConfirmedCell( ListItem<JobWrapper> item ) {
@@ -274,8 +284,20 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         return jobWrappers;
     }
 
+    /**
+     * Get edited organization.
+     *
+     * @return an organization
+     */
     public Organization getOrganization() {
         return (Organization) getModel().getObject();
+    }
+
+    private List<Play> findAllPlays( Job job ) {
+        ResourceSpec spec = job.resourceSpec( getOrganization() );
+        spec.setActor( null );
+        return getQueryService().findAllPlays( spec, false );
+
     }
 
     /**
@@ -470,9 +492,12 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             // && !job.getTitle().isEmpty();
         }
 
+        /**
+         * Whether the job has flows.
+         * @return a boolean
+         */
         public boolean hasFlows() {
-            return !getQueryService().findAllPlays(
-                    job.resourceSpec( getOrganization() ) ).isEmpty();
+            return !findAllPlays(job).isEmpty();
         }
 
         /**
@@ -515,10 +540,21 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         }
     }
 
+    /**
+     * Job entity panel.
+     */
     public class JobEntityPanel extends Panel {
-
+        /**
+         * The property of the value edited.
+         */
         private String property;
+        /**
+         *  Job wrapper.
+         */
         private JobWrapper jobWrapper;
+        /**
+         * Item in which the property value appears.
+         */
         private ListItem<JobWrapper> item;
 
         public JobEntityPanel( String property, ListItem<JobWrapper> item ) {

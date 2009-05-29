@@ -28,13 +28,33 @@ import java.util.List;
  * Time: 3:51:04 PM
  */
 public class NameRangePanel extends Panel {
-
+    /**
+     * Desired maximum size for a name range.
+     */
     private int maxSize;
+    /**
+     * Who to inform of a range selection.
+     */
     private final NameRangeable rangeable;
+    /**
+     * Model for a list of strings.
+     */
     private IModel<List<String>> domainModel;
+    /**
+     * The ranges that partition the list of strings.
+     */
     private List<NameRange> ranges;
+    /**
+     * What to call the empty range that "contains" the whole list.
+     */
     private String fullRangeLabel;
+    /**
+     * Currently selected range, if any.
+     */
     private NameRange selectedRange;
+    /**
+     * Container for the list of ranges.
+     */
     private WebMarkupContainer rangesDiv;
 
     public NameRangePanel(
@@ -72,7 +92,7 @@ public class NameRangePanel extends Panel {
                 };
                 item.add( link );
                 String rangeLabel = range.getLabel();
-                if ( range == selectedRange ) {
+                if ( range == selectedRange || ( range.isEmpty() && selectedRange == null ) ) {
                     link.add( new AttributeModifier( "class", true, new Model<String>( "selected" ) ) );
                 }
                 link.add( new Label(
@@ -83,6 +103,10 @@ public class NameRangePanel extends Panel {
 
     }
 
+    /**
+     * Get the name ranges.
+     * @return a list of name ranges
+     */
     @SuppressWarnings( "unchecked" )
     public List<NameRange> getNameRanges() {
         if ( ranges == null ) {
@@ -121,7 +145,13 @@ public class NameRangePanel extends Panel {
         return ranges;
     }
 
-    // bounds are inclusive
+    /**
+     * Find bounds for the next range.
+     *
+     * @param start  starting index
+     * @param domain list of names
+     * @return an interge array with low and high bound (inclusive)
+     */
     private int[] getNextRangeBounds( int start, List<String> domain ) {
         int size = domain.size();
         assert start < size;
@@ -160,6 +190,12 @@ public class NameRangePanel extends Panel {
         return null;
     }
 
+    /**
+     * Set selected name range.
+     *
+     * @param target an ajax request target
+     * @param range  a name range
+     */
     public void setSelected( AjaxRequestTarget target, NameRange range ) {
         selectedRange = range;
         addRangeList();
