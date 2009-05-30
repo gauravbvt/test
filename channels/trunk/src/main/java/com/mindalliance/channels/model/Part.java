@@ -496,4 +496,14 @@ public class Part extends Node {
                 && organization == null
                 && jurisdiction == null );
     }
+
+    /**
+     * Return the significance of a flow for this part.
+     * @param flow the flow
+     * @return the significance
+     */
+    public Flow.Significance getSignificance( Flow flow ) {
+        return equals( flow.getSource() ) ?
+                flow.getSignificanceToSource() : flow.getSignificanceToTarget();
+    }
 }

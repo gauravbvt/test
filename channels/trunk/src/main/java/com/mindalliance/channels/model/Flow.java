@@ -17,6 +17,10 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Collection;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.EnumSet;
 
 /**
  * An arrow between two nodes in the information flow graph.
@@ -697,7 +701,34 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         return isAskedFor() ? "answer" : "notify";
     }
 
+    /**
+     * Get the broadcast channels associated with this flow.
+     * @return a collection of channels
+     */
+    @Transient
+    public Collection<Channel> getBroadcasts() {
+        Set<Channel> broadcasts = new HashSet<Channel>();
+        for ( Channel c : getEffectiveChannels() )
+            if ( c.isBroadcast() )
+                broadcasts.add( c );
+        return broadcasts;
+    }
 
+    /**
+     * Get the unicast media used by this flow.
+     * @return a set of media
+     */
+    @Transient
+    public Set<Medium> getUnicasts() {
+        Set<Medium> result = EnumSet.noneOf( Medium.class );
+
+        for ( Channel c : getEffectiveChannels() ) {
+            Medium medium = c.getMedium();
+            if ( medium.isUnicast() )
+                result.add( medium );
+        }
+        return result;
+    }
 
     /**
      * The significance of a flow.

@@ -1,9 +1,14 @@
 package com.mindalliance.channels.pages.reports;
 
+import com.mindalliance.channels.DiagramFactory;
+import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -12,6 +17,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import java.text.MessageFormat;
+import java.util.List;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -39,17 +45,34 @@ public class ScenarioReportPanel extends Panel {
                         "Scenario: {0}", scenario.getName() ) ) );
         add( new Label( "description", scenario.getDescription() ) );                     // NON-NLS
 
-        double[] size = { 7.5, 9.0 };
-/*
+        WebMarkupContainer eventSection = new WebMarkupContainer( "event-section" );
+        Event event = scenario.getEvent();
+        eventSection.add( new Label( "event", event == null ? "" : event.getName().toLowerCase() ) );
+        eventSection.setVisible( event != null );
+        add( eventSection );
+
+        WebMarkupContainer risks = new WebMarkupContainer( "risk-section" );
+        List<Risk> riskList = scenario.getRisks();
+        risks.add( new ListView<Risk>( "risks", riskList ) {
+            @Override
+            protected void populateItem( ListItem<Risk> item ) {
+                Risk risk = item.getModelObject();
+                item.add( new Label( "risk", risk.getLabel() ) );
+                item.add( new Label( "risk-desc", item.getModelObject().getDescription() ) );
+            }
+        } );
+        risks.setVisible( !riskList.isEmpty() );
+        add( risks );
+
+//        double[] size = { 7.5, 9.0 };
         add( new FlowMapDiagramPanel(
                         "flowMap",                                                        // NON-NLS
                         new Model<Scenario>( scenario ),
                         null,
-                        size,
+                        null, //size,
                         DiagramFactory.TOP_BOTTOM,
                         false,
                         null ) );
-*/
 
         add( new ListView<Organization>( "organizations", scenario.getOrganizations() ) { // NON-NLS
             @Override

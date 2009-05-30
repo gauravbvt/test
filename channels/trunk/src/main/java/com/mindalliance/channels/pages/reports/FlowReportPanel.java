@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -72,8 +71,8 @@ public class FlowReportPanel extends Panel {
         addFlowPropertyFields( partIsSource );
 
         List<Channel> channels = flow.getChannels();
-        Set<Medium> unicasts = getUnicasts( flow );
-        Collection<Channel> broadcasts = getBroadcasts( flow );
+        Set<Medium> unicasts = flow.getUnicasts();
+        Collection<Channel> broadcasts = flow.getBroadcasts();
         List<LocalizedActor> actors = findActors( flow, broadcasts, unicasts, queryService );
 
         ResourceSpec spec = new ResourceSpec( flow.getContactedPart() );
@@ -89,25 +88,6 @@ public class FlowReportPanel extends Panel {
         add( new IssuesReportPanel( "issues", new Model<ModelObject>( flow ) ) );
     }
 
-    private static Collection<Channel> getBroadcasts( Flow flow ) {
-        Set<Channel> broadcasts = new HashSet<Channel>();
-        for ( Channel c : flow.getEffectiveChannels() )
-            if ( c.isBroadcast() )
-                broadcasts.add( c );
-        return broadcasts;
-    }
-
-    private static Set<Medium> getUnicasts( Flow flow ) {
-        Set<Medium> result = EnumSet.noneOf( Medium.class );
-
-        for ( Channel c : flow.getEffectiveChannels() ) {
-            Medium medium = c.getMedium();
-            if ( medium.isUnicast() )
-                result.add( medium );
-        }
-        return result;
-    }
-
     private void addFlowPropertyFields( boolean partIsSource ) {
         String classes = flow.isRequired() ? "required-information" : "information";      // NON-NLS
 
@@ -118,6 +98,12 @@ public class FlowReportPanel extends Panel {
         add( informationLabel );
 
         add( new Label( "urgency", flow.getMaxDelay().toString() ) );                     // NON-NLS
+
+        Flow.Significance significance = part.getSignificance( flow );
+        add( new Label( "start-stop",
+              significance.equals( Flow.Significance.Triggers   ) ? "Starts this task."
+            : significance.equals( Flow.Significance.Terminates ) ? "Ends this task."
+            : "" ) );
 
         String desc = flow.getDescription();
         Label descLabel = new Label( "description", desc );                               // NON-NLS
@@ -166,8 +152,8 @@ public class FlowReportPanel extends Panel {
 
             for ( Iterator<ExternalFlow> flows = connector.externalFlows(); flows.hasNext(); ) {
                 ExternalFlow f = flows.next();
-                Collection<Channel> b = getBroadcasts( f );
-                Set<Medium> u = getUnicasts( f );
+                Collection<Channel> b = f.getBroadcasts();
+                Set<Medium> u = f.getUnicasts();
                 localizedActors.addAll( findActors( f, b, u, queryService ) );
             }
         } else {

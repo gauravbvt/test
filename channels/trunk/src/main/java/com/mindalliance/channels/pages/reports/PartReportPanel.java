@@ -4,6 +4,7 @@ import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Risk;
 import org.apache.commons.collections.iterators.IteratorChain;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -57,12 +58,25 @@ public class PartReportPanel extends Panel {
         add( new Label( "location", part.getLocation() == null ?                          // NON-NLS
                             "Unspecified" : part.getLocation().toString() ) );
 
-        add( new Label( "jurisdiction", part.getJurisdiction() == null ?                  // NON-NLS
-                            "Unspecified" : part.getJurisdiction().toString() ) );
         addTimingInfo();
+        addRisks();
 
         addFlows( getSortedFlows( part ) );
         add( new IssuesReportPanel( "issues", new Model<ModelObject>( part ) ) );         // NON-NLS
+    }
+
+    private void addRisks() {
+        WebMarkupContainer risks = new WebMarkupContainer( "mitigates" );
+        List<Risk> riskList = part.getMitigations();
+        risks.add( new ListView<Risk>( "risks", riskList ) {
+            @Override
+            protected void populateItem( ListItem<Risk> item ) {
+                item.add( new Label( "risk", item.getModelObject().getLabel() ) );
+                item.add( new Label( "risk-desc", item.getModelObject().getDescription() ) );
+            }
+        } );
+        risks.setVisible( !riskList.isEmpty() );
+        add( risks );
     }
 
     private void addTimingInfo() {
@@ -89,7 +103,7 @@ public class PartReportPanel extends Panel {
         Event initiatedEvent = part.getInitiatedEvent();
         WebMarkupContainer starting = new WebMarkupContainer( "starting" );               // NON-NLS
         String name = initiatedEvent == null ? "" : initiatedEvent.getName();
-        starting.add( new Label( "started-event", name ) );                            // NON-NLS
+        starting.add( new Label( "started-event", name ) );                               // NON-NLS
         starting.setVisible( initiatedEvent != null );
         add( starting );
     }
@@ -141,8 +155,7 @@ public class PartReportPanel extends Panel {
                 String type = incoming ? "receive" : "send";                              // NON-NLS
                 type += flow.isAskedFor() ? "-answer" : "-notification";                  // NON-NLS
 
-                Flow.Significance s = part.equals( flow.getSource() ) ?
-                        flow.getSignificanceToSource() : flow.getSignificanceToTarget();
+                Flow.Significance s = part.getSignificance( flow );
                 if ( s.equals( Flow.Significance.Triggers ) )
                     type += " trigger" ;                                                  // NON-NLS
                 if ( s.equals( Flow.Significance.Terminates ) )
