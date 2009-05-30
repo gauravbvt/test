@@ -10,13 +10,13 @@
 <body>
 <form wicket:id="big-form" class="stretch" action="#">
     <div class="header">
-        <span class="refresh" wicket:id="refresh-needed">
-            <img src="/images/refresh_needed.png" alt="Refresh needed"/>
-        </span>
         <h1><span wicket:id="header">Title</span></h1>
         <span class="menubar">
             <span wicket:id="planShowMenu">[show menu]</span>
             <span wicket:id="planActionsMenu">[action menu]</span>
+        </span>
+        <span class="refresh" wicket:id="refresh-needed">
+            <img src="/images/refresh_needed.png" alt="Refresh needed"/>
         </span>
         <span id="spinner" class="spinner"><img src="images/ajax-loader.gif"></span>
         <p class="caption" wicket:id="sc-desc">A description.</p>
