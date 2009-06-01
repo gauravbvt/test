@@ -629,4 +629,17 @@ public interface QueryService extends Service {
      */
     List<Part> findMitigations( Scenario scenario, Risk risk );
 
+    /**
+     * Find scenarios in which an actor is involved.
+     * @param actor an actor
+     * @return a list of scenario
+     */
+    List<Scenario> findScenarios( Actor actor );
+
+    /**
+     * Find all actors participating in a scenario.
+     * @param scenario the scenario
+     * @return a sorted list of actors.
+     */
+    List<Actor> findActors( Scenario scenario );
 }

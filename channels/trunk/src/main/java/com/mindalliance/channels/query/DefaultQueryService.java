@@ -959,10 +959,11 @@ public class DefaultQueryService extends Observable implements QueryService {
 
         if ( actor != null && role == null ) {
             // add parts with actor's roles
-            for ( Job job : findAllJobs( organization, actor ) ) {
+            for ( ResourceSpec job : findAllJobSpecs( organization, actor ) ) {
                 ResourceSpec s = new ResourceSpec( spec );
                 s.setRole( job.getRole() );
                 s.setJurisdiction( job.getJurisdiction() );
+                s.setOrganization( job.getOrganization() );
                 visitParts( visited, s, scenario );
 
                 s.setActor( null );
@@ -1292,6 +1293,31 @@ public class DefaultQueryService extends Observable implements QueryService {
         return jobs;
     }
 
+    private List<ResourceSpec> findAllJobSpecs( Organization organization, Actor actor ) {
+        List<ResourceSpec> jobs = new ArrayList<ResourceSpec>();
+        List<Organization> orgs;
+        if ( organization == null )
+            orgs = list( Organization.class );
+        else {
+            orgs = new ArrayList<Organization>();
+            orgs.add( organization );
+        }
+
+        for ( Organization org : orgs ) {
+            for ( Job job : org.getJobs() ) {
+                if ( actor.equals( job.getActor() ) ) {
+                    jobs.add( job.resourceSpec( org ) );
+                }
+            }
+            for ( Job job : findUnconfirmedJobs( org ) ) {
+                if ( actor.equals( job.getActor() ) ) {
+                    jobs.add( job.resourceSpec( org ) );
+                }
+            }
+        }
+        return jobs;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -1504,9 +1530,6 @@ public class DefaultQueryService extends Observable implements QueryService {
         return Channels.instance();
     }
 
-    /**
-     * {@inheritsDoc}
-     */
     public String getTitle( Actor actor ) {
         for ( Job job : findAllJobs( null, actor ) ) {
             String title = job.getTitle().trim();
@@ -1542,6 +1565,37 @@ public class DefaultQueryService extends Observable implements QueryService {
             }
         }
         return mitigators;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Scenario> findScenarios( Actor actor ) {
+        List<Scenario> result = new ArrayList<Scenario>();
+
+        ResourceSpec spec = ResourceSpec.with( actor );
+        for ( Scenario s : list( Scenario.class ) ) {
+            List<Part> parts = findAllParts( s, spec );
+            if ( !parts.isEmpty() )
+                result.add( s );
+        }
+
+        return result;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Actor> findActors( Scenario scenario ) {
+        Set<Actor> actors = new HashSet<Actor>();
+        for ( Iterator<Part> pi = scenario.parts() ; pi.hasNext() ; ) {
+            Part p = pi.next();
+            actors.addAll( findAllActors( p.resourceSpec() ) );
+        }
+
+        List<Actor> result = new ArrayList<Actor>( actors );
+        Collections.sort( result );
+        return result;
     }
 }
 

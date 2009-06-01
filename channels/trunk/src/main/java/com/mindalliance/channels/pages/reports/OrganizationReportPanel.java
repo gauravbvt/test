@@ -41,9 +41,14 @@ public class OrganizationReportPanel extends Panel {
     @SpringBean
     private QueryService queryService;
 
-    public OrganizationReportPanel( String id, Organization organization, Scenario scenario,
-                                    boolean showActors ) {
+    private Actor actor;
+
+    public OrganizationReportPanel(
+            String id, Organization organization, Scenario scenario, Actor actor,
+            boolean showActors ) {
+
         super( id );
+        this.actor = actor;
         setRenderBodyOnly( true );
         this.organization = organization;
         this.scenario = scenario;
@@ -77,10 +82,13 @@ public class OrganizationReportPanel extends Panel {
             if ( spec.isOrganization() )
                 spec.setActor( Actor.UNKNOWN );
             List<Actor> a = queryService.findAllActors( spec );
-            if ( a.isEmpty() )
-                specs.add( spec );
-            else
-                actors.addAll( a );
+            if ( actor == null ) {
+                if ( a.isEmpty() )
+                    specs.add( spec );
+                else
+                    actors.addAll( a );
+            } else if ( a.contains( actor ) )
+                actors.add( actor );
         }
 
         List<ResourceSpec> result = new ArrayList<ResourceSpec>( specs );

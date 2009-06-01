@@ -129,7 +129,7 @@ public final class Channels extends WebApplication {
 //        getRequestCycleSettings().setRenderStrategy( IRequestCycleSettings.REDIRECT_TO_RENDER );
         mount( new QueryStringUrlCodingStrategy( "index.html", IndexPage.class ) );
 
-        mount( new IndexedParamUrlCodingStrategy( "report", PlanReportPage.class ) );
+        mount( new IndexedParamUrlCodingStrategy( "playbook", PlanReportPage.class ) );
 
         mount( new QueryStringUrlCodingStrategy( "node.html", PlanPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.xml", ExportPage.class ) );
@@ -140,6 +140,7 @@ public final class Channels extends WebApplication {
         queryService.initialize();
     }
 
+    @Override
     protected void onDestroy() {
         LOG.info( "Goodbye!" );
         queryService.onDestroy();
