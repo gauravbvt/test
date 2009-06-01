@@ -92,7 +92,8 @@ public class SelectorPanel extends Panel {
         List<Scenario> result;
 
         if ( isAllScenarios() ) {
-            result = queryService.list( Scenario.class );
+            result = isAllActors() ? queryService.list( Scenario.class )
+                                   : queryService.findScenarios( actor );
             Collections.sort( result );
         } else {
             result = new ArrayList<Scenario>();
@@ -110,7 +111,8 @@ public class SelectorPanel extends Panel {
         List<Actor> result;
 
         if ( isAllActors() ) {
-            result = queryService.list( Actor.class );
+            result = isAllScenarios() ? queryService.list( Actor.class )
+                                      : queryService.findActors( scenario );
             Collections.sort( result );
         } else {
             result = new ArrayList<Actor>();

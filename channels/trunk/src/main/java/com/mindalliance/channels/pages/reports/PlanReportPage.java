@@ -50,7 +50,6 @@ public class PlanReportPage extends WebPage {
             throw new RestartResponseException( getClass(), selector.getParameters() );
         }
 
-
         add( new Label( "title",                                                          // NON-NLS
                         MessageFormat.format( "Report: {0}", plan.getName() ) ) );
         add( new Label( "plan-name", plan.getName() ) );                                  // NON-NLS
