@@ -1,14 +1,14 @@
 package com.mindalliance.channels.analysis.detectors;
 
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.util.SemMatch;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.graph.FlowMapGraphBuilder;
 import com.mindalliance.channels.graph.GraphBuilder;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.util.SemMatch;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.jgrapht.DirectedGraph;
@@ -51,6 +51,8 @@ public class PotentialDeadlock extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Scenario scenario = (Scenario) modelObject;
+        // TODO -- Patch: sometimes a scenario has no query service set.
+        scenario.setQueryService( getQueryService() );
         GraphBuilder<Node,Flow> graphBuilder = new FlowMapGraphBuilder( scenario );
         DirectedGraph<Node, Flow> digraph = graphBuilder.buildDirectedGraph( );
         StrongConnectivityInspector<Node, Flow> sci =

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.AttachmentManager;
-import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.attachments.Document;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AttachDocument;
 import com.mindalliance.channels.command.commands.CopyAttachment;
@@ -81,7 +81,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     /**
      * The selected type for the upload.
      */
-    private Attachment.Type selectedType = Attachment.Type.Document;
+    private Document.Type selectedType = Document.Type.Reference;
     /**
      * Attachments list container.
      */
@@ -168,15 +168,15 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     }
 
     private void addTypeSelector() {
-        DropDownChoice<Attachment.Type> typeChoice = new DropDownChoice<Attachment.Type>( "type",                                 // NON-NLS
-                new PropertyModel<Attachment.Type>( this, "selectedType" ),               // NON-NLS
-                Arrays.asList( Attachment.Type.values() ),
-                new IChoiceRenderer<Attachment.Type>() {
-                    public Object getDisplayValue( Attachment.Type object ) {
+        DropDownChoice<Document.Type> typeChoice = new DropDownChoice<Document.Type>( "type",                                 // NON-NLS
+                new PropertyModel<Document.Type>( this, "selectedType" ),               // NON-NLS
+                Arrays.asList( Document.Type.values() ),
+                new IChoiceRenderer<Document.Type>() {
+                    public Object getDisplayValue( Document.Type object ) {
                         return object.getLabel();
                     }
 
-                    public String getIdValue( Attachment.Type object, int index ) {
+                    public String getIdValue( Document.Type object, int index ) {
                         return Integer.toString( index );
                     }
                 }
@@ -200,7 +200,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             @Override
             protected void populateItem( ListItem<Wrapper> item ) {
                 Wrapper wrapper = item.getModelObject();
-                Attachment a = wrapper.getAttachment();
+                Document a = wrapper.getAttachment();
                 ExternalLink documentLink = new ExternalLink( "attachment",                                 // NON-NLS
                         a.getUrl(), a.getLabel() );
                 documentLink.add( new AttributeModifier( "target", true, new Model<String>( "_" ) ) );
@@ -282,7 +282,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     public List<Wrapper> getAttachments() {
         List<Wrapper> result = new ArrayList<Wrapper>();
         for ( String ticket : getAttachee().getAttachmentTickets() ) {
-            Attachment attachment = attachmentManager.getAttachment( ticket );
+            Document attachment = attachmentManager.getDocument( ticket );
             if ( attachment != null )
                 result.add( new Wrapper( ticket, attachment ) );
         }
@@ -311,11 +311,11 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         }
     }
 
-    public Attachment.Type getSelectedType() {
+    public Document.Type getSelectedType() {
         return selectedType;
     }
 
-    public void setSelectedType( Attachment.Type selectedType ) {
+    public void setSelectedType( Document.Type selectedType ) {
         this.selectedType = selectedType;
     }
 
@@ -378,10 +378,10 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         /**
          * The underlying attachment.
          */
-        private Attachment attachment;
+        private Document attachment;
 
 
-        private Wrapper( String ticket, Attachment attachment ) {
+        private Wrapper( String ticket, Document attachment ) {
             this.ticket = ticket;
             this.attachment = attachment;
         }
@@ -390,7 +390,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
          * Detach document from model object.
          */
         public void deleteAttachment() {
-            Attachment attachment = attachmentManager.getAttachment( ticket );
+            Document attachment = attachmentManager.getDocument( ticket );
             doCommand( new DetachDocument(
                     getAttachee(),
                     attachment  ) );
@@ -403,7 +403,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             doCommand( new CopyAttachment( attachment ) );
         }
 
-        public Attachment getAttachment() {
+        public Document getAttachment() {
             return attachment;
         }
     }

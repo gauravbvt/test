@@ -405,7 +405,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         }
 
         private String getNormalizedActorName() {
-            return getQueryService().findOrCreate( Actor.class, getActorName() ).normalize();
+            return getQueryService().findOrCreate( Actor.class, getActorName() ).getNormalizedName();
         }
 
         public String getActorName() {

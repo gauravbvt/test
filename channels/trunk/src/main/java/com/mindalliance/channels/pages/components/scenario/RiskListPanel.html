@@ -8,14 +8,15 @@
 <body>
 <wicket:panel>
     <h3> Risks managed by this scenario </h3>
-    <div class="risks" wicket:id = risksDiv>
+
+    <div class="risks" wicket:id=risksDiv>
         <table>
             <thead>
                 <tr>
                     <td>Severity</td>
                     <td>Type</td>
                     <td>Organization</td>
-                    <td>Confirmed</td>
+                    <td/>
                     <td/>
                 </tr>
             </thead>
@@ -31,17 +32,21 @@
                     </select>
                 </td>
                 <td>
-                    <input wicket:id="organization" type="text" size="25" title = "Enter organization name"/>
+                    <input wicket:id="organization" type="text" size="25" title="Enter organization name"/>
                 </td>
-                <td><input wicket:id="confirmed" type="checkbox"/></td>
-                <td><a wicket:id="more-link" href="#" title = "Show more">More...</a></td>
+                <td><a wicket:id="more-link" href="#" title="Show more">More...</a></td>
+                <td>
+                    <a wicket:id="delete" href="#">
+                        <img style="border:0" src="/images/delete.png" title="Delete" alt="Delete attachment"/>
+                    </a>
+                </td>
             </tr>
         </table>
     </div>
     <div wicket:id="moreDiv">
         <h3> About the <span wicket:id="riskLabel">[risk label]</span></h3>
         <h4>Description</h4>
-        <textarea wicket:id="description" rows="3" cols="40">description</textarea>
+        <textarea wicket:id="description" rows="2" cols="40">description</textarea>
         <h4> Mitigations </h4>
         <table wicket:id="mitigations">[mitigations table]</table>
     </div>

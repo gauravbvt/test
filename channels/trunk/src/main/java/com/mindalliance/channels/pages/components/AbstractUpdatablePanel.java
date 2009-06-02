@@ -56,7 +56,16 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         super( id );
     }
 
-    public AbstractUpdatablePanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
+    public AbstractUpdatablePanel(
+             String id,
+             IModel<? extends Identifiable> model) {
+        this(id, model, null);
+    }
+    
+    public AbstractUpdatablePanel(
+            String id,
+            IModel<? extends Identifiable> model,
+            Set<Long> expansions ) {
         super( id, model );
         this.model = model;
         this.expansions = expansions;

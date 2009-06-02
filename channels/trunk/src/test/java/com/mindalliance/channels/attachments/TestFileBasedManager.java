@@ -56,15 +56,15 @@ public class TestFileBasedManager extends TestCase {
         String[] filenames = mgr.getDirectory().list();
         assertNotNull( "Test directory does not exist", filenames );
         assertEquals( "Leftovers from previous test errors", 0, filenames.length );
-        String ticket = mgr.attach( Attachment.Type.MOU, upload, new ArrayList<String>() );
+        String ticket = mgr.attach( Document.Type.MOU, upload, new ArrayList<String>() );
         assertEquals( 2, mgr.getDirectory().list().length );
         verify( fileItem );
 
-        Attachment it = mgr.getAttachment( ticket );
+        Document it = mgr.getDocument( ticket );
         assertNotNull( it );
-        FileAttachment fa = (FileAttachment) it;
+        FileDocument fa = (FileDocument) it;
         assertEquals( testFile.length(), fa.getFile().length() );
-        assertSame( Attachment.Type.MOU, fa.getType() );
+        assertSame( Document.Type.MOU, fa.getType() );
         assertEquals( UPLOAD_TXT, fa.getLabel() );
 
         mgr.detach( ticket );
@@ -79,8 +79,8 @@ public class TestFileBasedManager extends TestCase {
         expect( fileItem.getInputStream() ).andReturn( new FileInputStream( testFile ) );
         replay( fileItem );
         List<String> tickets = new ArrayList<String>();
-        tickets.add( mgr.attach( Attachment.Type.MOU, upload, tickets ) );
-        tickets.add( mgr.attach( Attachment.Type.Document, upload, tickets ) );
+        tickets.add( mgr.attach( Document.Type.MOU, upload, tickets ) );
+        tickets.add( mgr.attach( Document.Type.Reference, upload, tickets ) );
         assertEquals( 3, mgr.getDirectory().list().length );
         verify( fileItem );
 
@@ -104,18 +104,18 @@ public class TestFileBasedManager extends TestCase {
         mgr.start();
         String spec = "http://localhost:8081";
         String ticket = mgr.attach(
-                Attachment.Type.PolicyMust,
+                Document.Type.PolicyMust,
                 new URL( spec ),
                 new ArrayList<String>() );
 
-        Attachment a = mgr.getAttachment( ticket );
+        Document a = mgr.getDocument( ticket );
         assertNotNull( a );
         assertEquals( spec, a.getUrl() );
 
         mgr.stop();
         mgr.start();
 
-        Attachment a2 = mgr.getAttachment( ticket );
+        Document a2 = mgr.getDocument( ticket );
         assertNotNull( a2 );
         assertEquals( spec, a2.getUrl() );
 

@@ -4,6 +4,7 @@ import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.pages.reports.PlanReportPage;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -30,6 +31,10 @@ public class PlanShowMenuPanel extends MenuPanel {
         super( s, "Show", model, expansions );
     }
 
+    /**
+     * {@inheritDoc
+     */
+    @SuppressWarnings( "unchecked" )
     public List<Component> getMenuItems() {
         List<Component> menuItems = new ArrayList<Component>();
         // Edit<->Hide
@@ -42,7 +47,7 @@ public class PlanShowMenuPanel extends MenuPanel {
             };
             menuItems.add( new LinkMenuItem(
                     "menuItem",
-                    new Model<String>( "Hide plan details" ),
+                    new Model<String>( "Hide about plan" ),
                     planMapLink ) );
         } else {
             AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {
@@ -52,7 +57,7 @@ public class PlanShowMenuPanel extends MenuPanel {
             };
             menuItems.add( new LinkMenuItem(
                     "menuItem",
-                    new Model<String>( "Plan details" ),
+                    new Model<String>( "About plan" ),
                     planMapLink ) );
         }
         if ( getExpansions().contains( getScenario().getId() ) ) {
@@ -64,7 +69,7 @@ public class PlanShowMenuPanel extends MenuPanel {
                     };
             menuItems.add( new LinkMenuItem(
                     "menuItem",
-                    new Model<String>( "Hide scenario details" ),
+                    new Model<String>( "Hide about scenario" ),
                     editLink ) );
 
         } else {
@@ -76,10 +81,11 @@ public class PlanShowMenuPanel extends MenuPanel {
                     };
             menuItems.add( new LinkMenuItem(
                     "menuItem",
-                    new Model<String>( "Scenario details" ),
+                    new Model<String>( "About scenario" ),
                     editLink ) );
         }
         BookmarkablePageLink<?> reportLink = new BookmarkablePageLink( "link", PlanReportPage.class );
+        reportLink.add( new AttributeModifier( "target", true, new Model<String>( "report" ) ) );
 //        reportLink.setPopupSettings( new PopupSettings(
 //                PopupSettings.RESIZABLE |
 //                        PopupSettings.SCROLLBARS |

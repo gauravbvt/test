@@ -34,6 +34,18 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
      * Map aspect.
      */
     public static final String MAP = "map";
+    /**
+     * Who's who aspect.
+     */
+    public static final String WHOSWHO = "who's who";
+    /**
+     * All issues aspect.
+     */
+    public static final String ISSUES = "all issues";
+    /**
+     * Index aspect.
+     */
+    public static final String INDEX = "index";
 
     public PlanEditPanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
         super( id, iModel, expansions );
@@ -108,6 +120,12 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
             return getPlanMapPanel();
         } else if ( aspect.equals( INCIDENTS ) ) {
             return getPlanIncidentsPanel();
+        } else if ( aspect.equals( WHOSWHO ) ) {
+            return getPlanWhoswhoPanel();
+        } else if ( aspect.equals( ISSUES ) ) {
+            return getPlanIssuesPanel();
+        } else if ( aspect.equals( INDEX ) ) {
+            return getPlanIndexPanel();
         } else {
             // Should never happen
             throw new RuntimeException( "Unknown aspect " + aspect );
@@ -124,6 +142,18 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
 
     private Component getPlanIncidentsPanel() {
         return new PlanIncidentsPanel( "aspect", getModel(), getExpansions() );
+    }
+
+    private Component getPlanIndexPanel() {
+        return new PlanIndexPanel( "aspect", getModel(), getExpansions() );
+    }
+
+    private Component getPlanIssuesPanel() {
+        return new PlanIssuesPanel( "aspect", getModel(), getExpansions() );
+    }
+
+    private Component getPlanWhoswhoPanel() {
+        return new PlanWhosWhoPanel( "aspect", getModel(), getExpansions() );
     }
 
     public Plan getPlan() {

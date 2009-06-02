@@ -22,7 +22,6 @@ import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFal
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -52,7 +51,10 @@ import java.util.Set;
  * Time: 3:02:51 PM
  */
 public class RiskListPanel extends AbstractCommandablePanel {
-
+    /**
+     * Maximum number of rows in mitigations table before paging.
+     */
+    private static final int MAX_MITIGATION_ROWS = 5;
     /**
      * Collator.
      */
@@ -104,7 +106,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
                 addSeverityCell( item );
                 addTypeCell( item );
                 addOrganizationCell( item );
-                addConfirmedCell( item );
+                addDeleteImage( item );
                 addShowMoreCell( item );
             }
         };
@@ -133,7 +135,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
                         if ( !wrapper.isMarkedForCreation() ) {
                             update( target, new Change( Change.Type.Updated, getScenario(), "risks" ) );
                         } else {
-                            addConfirmedCell( item );
+                            addDeleteImage( item );
                             target.addComponent( item );
                         }
                     }
@@ -167,7 +169,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
                         if ( !wrapper.isMarkedForCreation() ) {
                             update( target, new Change( Change.Type.Updated, getScenario(), "risks" ) );
                         } else {
-                            addConfirmedCell( item );
+                            addDeleteImage( item );
                             target.addComponent( item );
                         }
 
@@ -197,7 +199,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
                 if ( !wrapper.isMarkedForCreation() ) {
                     update( target, new Change( Change.Type.Updated, getScenario(), "risks" ) );
                 } else {
-                    addConfirmedCell( item );
+                    addDeleteImage( item );
                     target.addComponent( item );
                 }
             }
@@ -205,22 +207,21 @@ public class RiskListPanel extends AbstractCommandablePanel {
         item.add( orgNameField );
     }
 
-    private void addConfirmedCell( ListItem<RiskWrapper> item ) {
+    private void addDeleteImage( ListItem<RiskWrapper> item ) {
         final RiskWrapper wrapper = item.getModelObject();
-        final CheckBox confirmedCheckBox = new CheckBox(
-                "confirmed",
-                new PropertyModel<Boolean>( wrapper, "confirmed" ) );
-        makeVisible( confirmedCheckBox, wrapper.canBeConfirmed() );
-        item.addOrReplace( confirmedCheckBox );
-        confirmedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change(
+        AjaxFallbackLink deleteLink = new AjaxFallbackLink( "delete" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                wrapper.deleteRisk();
+                update( target,
+                        new Change(
                         Change.Type.Updated,
                         getScenario(),
                         "risks"
                 ) );
             }
-        } );
+        };
+        makeVisible( deleteLink, wrapper.canBeDeleted() );
+        item.addOrReplace( deleteLink );
     }
 
     private void addShowMoreCell( ListItem<RiskWrapper> item ) {
@@ -265,7 +266,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
             return new MitigationsTable(
                     "mitigations",
                     new Model<Scenario>( getScenario() ),
-                    10,
+                    MAX_MITIGATION_ROWS,
                     selectedRisk.getRisk()
             );
         }
@@ -396,11 +397,23 @@ public class RiskListPanel extends AbstractCommandablePanel {
          *
          * @return a boolean
          */
-        public boolean canBeConfirmed() {
+        public boolean canBeDeleted() {
             return risk.getType() != null && risk.getSeverity() != null;
         }
 
-        public void setConfirmed( boolean confirmed ) {
+        public void deleteRisk() {
+            selectedRisk = null;
+             if ( getScenario().getRisks().contains( risk ) ) {
+                 doCommand( new UpdatePlanObject(
+                         getScenario(),
+                         "risks",
+                         risk,
+                         UpdateObject.Action.Remove
+                 ) );
+             }
+        }
+
+ /*       public void setConfirmed( boolean confirmed ) {
             this.confirmed = confirmed;
             if ( confirmed ) {
                 assert markedForCreation;
@@ -424,7 +437,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
                 }
             }
         }
-
+*/
         public Issue.Level getSeverity() {
             return risk.getSeverity();
         }

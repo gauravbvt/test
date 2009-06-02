@@ -31,9 +31,12 @@ import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.UserIssue;
+import com.mindalliance.channels.util.Employment;
 import com.mindalliance.channels.util.Play;
 import com.mindalliance.channels.util.SemMatch;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1588,7 +1591,7 @@ public class DefaultQueryService extends Observable implements QueryService {
      */
     public List<Actor> findActors( Scenario scenario ) {
         Set<Actor> actors = new HashSet<Actor>();
-        for ( Iterator<Part> pi = scenario.parts() ; pi.hasNext() ; ) {
+        for ( Iterator<Part> pi = scenario.parts(); pi.hasNext(); ) {
             Part p = pi.next();
             actors.addAll( findAllActors( p.resourceSpec() ) );
         }
@@ -1596,6 +1599,44 @@ public class DefaultQueryService extends Observable implements QueryService {
         List<Actor> result = new ArrayList<Actor>( actors );
         Collections.sort( result );
         return result;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<String> findAllActorLastNames() {
+        return (List<String>) CollectionUtils.collect(
+                list( Actor.class ),
+                new Transformer() {
+                    public Object transform( Object obj ) {
+                        return ( (Actor) obj ).getLastName();
+                    }
+                } );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Employment> findAllEmployments() {
+        Set<Actor> employed = new HashSet<Actor>();
+        List<Employment> employments = new ArrayList<Employment>();
+        for ( Organization org : list( Organization.class ) ) {
+            for ( Job job : org.getJobs() ) {
+                employments.add( new Employment( job.getActor(), org, job ) );
+                employed.add( job.getActor() );
+            }
+            for ( Job job : findUnconfirmedJobs( org ) ) {
+                employments.add( new Employment( job.getActor(), org, job ) );
+                employed.add( job.getActor() );
+            }
+        }
+        for ( Actor actor : list( Actor.class ) ) {
+            if ( !employed.contains( actor ) ) {
+                employments.add( new Employment( actor ) );
+            }
+        }
+        return employments;
     }
 }
 

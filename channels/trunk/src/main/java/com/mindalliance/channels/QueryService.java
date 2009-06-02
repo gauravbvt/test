@@ -18,6 +18,7 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.util.Employment;
 import com.mindalliance.channels.util.Play;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -552,6 +553,7 @@ public interface QueryService extends Service {
     /**
      * Find all parts that has the specified resource.
      *
+     * @param scenario     a scenario
      * @param resourceSpec a resource spec
      * @return a list of parts
      */
@@ -631,6 +633,7 @@ public interface QueryService extends Service {
 
     /**
      * Find scenarios in which an actor is involved.
+     *
      * @param actor an actor
      * @return a list of scenario
      */
@@ -638,8 +641,23 @@ public interface QueryService extends Service {
 
     /**
      * Find all actors participating in a scenario.
+     *
      * @param scenario the scenario
      * @return a sorted list of actors.
      */
     List<Actor> findActors( Scenario scenario );
+
+    /**
+     * Find all actor last names.
+     *
+     * @return a list of all actor last names (with repetitions)
+     */
+    List<String> findAllActorLastNames();
+
+    /**
+     * Find all jobs, confirmed or not.
+     *
+     * @return a list of jobs
+     */
+    List<Employment> findAllEmployments();
 }

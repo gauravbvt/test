@@ -1,7 +1,7 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.attachments.FileAttachment;
+import com.mindalliance.channels.attachments.FileDocument;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
@@ -59,7 +59,7 @@ public class PasteAttachment extends AbstractCommand {
     }
 
     private boolean isFileAttachmentCopied( Map<String, Object> copy ) {
-        return copy.get( "attachment" ).equals( FileAttachment.class.getSimpleName() );
+        return copy.get( "attachment" ).equals( FileDocument.class.getSimpleName() );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -109,7 +109,7 @@ public class PasteAttachment extends AbstractCommand {
         if ( mo == null || ticket == null ) {
             throw new CommandException( "Can't undo." );
         } else {
-            return new DetachDocument( mo, commander.getAttachmentManager().getAttachment( ticket ) );
+            return new DetachDocument( mo, commander.getAttachmentManager().getDocument( ticket ) );
         }
     }
 

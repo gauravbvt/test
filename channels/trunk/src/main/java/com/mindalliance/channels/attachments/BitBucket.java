@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A bogus attachment manager that drops everything.
+ * A bogus document manager that drops everything.
  */
 public class BitBucket implements AttachmentManager {
 
@@ -19,32 +19,32 @@ public class BitBucket implements AttachmentManager {
     /**
       * {@inheritDoc}
       */
-    public Attachment getAttachment( String ticket ) {
+    public Document getDocument( String ticket ) {
         return null;
     }
 
-    public List<Attachment> getAttachments( List<String> attachmentTickets ) {
-        return new ArrayList<Attachment>();
+    public List<Document> getDocuments( List<String> attachmentTickets ) {
+        return new ArrayList<Document>();
     }
 
     /**
      * {@inheritDoc}
      */
-    public String attach( Attachment.Type type, FileUpload fileUpload, List<String> tickets ) {
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String attach( Attachment.Type type, String url, String digest, List<String> attachmentTickets ) {
+    public String attach( Document.Type type, FileUpload fileUpload, List<String> tickets ) {
         return null;
     }
 
     /**
      * {@inheritDoc}
      */
-    public String attach( Attachment.Type type, URL url, List<String> tickets ) {
+    public String attach( Document.Type type, String url, String digest, List<String> attachmentTickets ) {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String attach( Document.Type type, URL url, List<String> tickets ) {
         return null;
     }
 
@@ -63,7 +63,7 @@ public class BitBucket implements AttachmentManager {
     /**
      * {@inheritDoc}
      */
-    public Attachment reattach( String ticket ) {
+    public Document reattach( String ticket ) {
         return null;
     }
 

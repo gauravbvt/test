@@ -5,7 +5,7 @@ import java.io.File;
 /**
  * An actual file.
  */
-public class FileAttachment implements Attachment {
+public class FileDocument implements Document {
 
     /**
      * The file on the server side.
@@ -13,7 +13,7 @@ public class FileAttachment implements Attachment {
     private File file;
 
     /**
-     * The type of this attachment
+     * The type of this document
      */
     private Type type;
 
@@ -26,10 +26,10 @@ public class FileAttachment implements Attachment {
      */
     private String digest;
 
-    public FileAttachment() {
+    public FileDocument() {
     }
 
-    public FileAttachment( Type type, File file, String url, String digest ) {
+    public FileDocument( Type type, File file, String url, String digest ) {
         this();
         setType( type );
         setFile( file );
@@ -109,8 +109,8 @@ public class FileAttachment implements Attachment {
      * {@inheritDoc}
      */
     public boolean equals( Object obj ) {
-        if ( obj instanceof FileAttachment ) {
-            FileAttachment other = (FileAttachment) obj;
+        if ( obj instanceof FileDocument ) {
+            FileDocument other = (FileDocument) obj;
             return type == other.getType()
                     && url.equals( other.getUrl() )
                     && digest.equals( other.getDigest() );

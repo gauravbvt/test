@@ -4,8 +4,8 @@ import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.attachments.Attachment;
-import com.mindalliance.channels.attachments.FileAttachment;
+import com.mindalliance.channels.attachments.Document;
+import com.mindalliance.channels.attachments.FileDocument;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Delay;
@@ -22,6 +22,7 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
+import org.apache.commons.beanutils.NestedNullException;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -216,15 +217,15 @@ public final class CommandUtils {
     /**
      * Capture the state of an attachment.
      *
-     * @param attachment an attachment
+     * @param document an attachment
      * @return a map of attribute names and values
      */
-    public static Map<String, Object> getAttachmentState( Attachment attachment ) {
+    public static Map<String, Object> getAttachmentState( Document document ) {
         Map<String, Object> state = new HashMap<String, Object>();
-        state.put( "attachment", attachment.getClass().getSimpleName() );
-        state.put( "type", attachment.getType().name() );
-        state.put( "url", attachment.getUrl() );
-        state.put( "digest", attachment.getDigest() );
+        state.put( "attachment", document.getClass().getSimpleName() );
+        state.put( "type", document.getType().name() );
+        state.put( "url", document.getUrl() );
+        state.put( "digest", document.getDigest() );
         return state;
     }
 
@@ -232,11 +233,11 @@ public final class CommandUtils {
      * Capture the state of an attachment, including attachee.
      *
      * @param mo         a model object
-     * @param attachment an attachment
+     * @param document a document
      * @return a map of attribute names and values
      */
-    public static Map<String, Object> getAttachmentState( ModelObject mo, Attachment attachment ) {
-        Map<String, Object> state = getAttachmentState( attachment );
+    public static Map<String, Object> getAttachmentState( ModelObject mo, Document document ) {
+        Map<String, Object> state = getAttachmentState( document );
         state.put( "object", mo.getId() );
         return state;
     }
@@ -330,6 +331,9 @@ public final class CommandUtils {
             throw new RuntimeException( e );
         } catch ( NoSuchMethodException e ) {
             throw new RuntimeException( e );
+        } catch (NestedNullException e ) {
+            LOG.debug( "Nested null on " + property + " for " + bean );
+            value = null;
         }
         return value != null ? value : defaultValue;
     }
@@ -485,8 +489,8 @@ public final class CommandUtils {
             AttachmentManager attachmentManager ) {
         String ticket = null;
         try {
-            boolean isFileAttachment = attachmentState.get( "attachment" ).equals( FileAttachment.class.getSimpleName() );
-            Attachment.Type type = Attachment.Type.valueOf( (String) attachmentState.get( "type" ) );
+            boolean isFileAttachment = attachmentState.get( "attachment" ).equals( FileDocument.class.getSimpleName() );
+            Document.Type type = Document.Type.valueOf( (String) attachmentState.get( "type" ) );
             String url = (String) attachmentState.get( "url" );
             String digest = (String) attachmentState.get( "digest" );
             if ( isFileAttachment ) {

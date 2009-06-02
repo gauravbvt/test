@@ -3,7 +3,7 @@ package com.mindalliance.channels.attachments;
 /**
  * An URL attachment...
  */
-public class UrlAttachment implements Attachment {
+public class UrlDocument implements Document {
 
     /**
      * The actual URL.
@@ -15,10 +15,10 @@ public class UrlAttachment implements Attachment {
      */
     private Type type;
 
-    public UrlAttachment() {
+    public UrlDocument() {
     }
 
-    public UrlAttachment( Type type, String url ) {
+    public UrlDocument( Type type, String url ) {
         this.type = type;
         this.url = url;
     }
@@ -93,8 +93,8 @@ public class UrlAttachment implements Attachment {
      * {@inheritDoc}
      */
     public boolean equals( Object obj ) {
-        if ( obj instanceof UrlAttachment ) {
-            UrlAttachment other = (UrlAttachment) obj;
+        if ( obj instanceof UrlDocument ) {
+            UrlDocument other = (UrlDocument) obj;
             return type == other.getType()
                     && url.equals( other.getUrl() );
         }

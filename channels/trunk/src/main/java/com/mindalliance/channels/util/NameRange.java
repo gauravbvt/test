@@ -70,9 +70,10 @@ public class NameRange implements Serializable {
     }
 
     public boolean contains( String name ) {
+        String lcName = name.toLowerCase();
         return isEmpty() ||
-                ( collator.compare( lower, name ) <= 0
-                        && collator.compare( name, upper ) <= 0 );
+                ( collator.compare( lower, lcName ) <= 0
+                        && collator.compare( lcName, upper ) <= 0 );
     }
 
     public String getLowerBound() {

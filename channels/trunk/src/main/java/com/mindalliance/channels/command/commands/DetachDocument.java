@@ -2,7 +2,7 @@ package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.attachments.Document;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
@@ -32,11 +32,11 @@ public class DetachDocument extends AbstractCommand {
     public DetachDocument() {
     }
 
-    public DetachDocument( ModelObject modelObject, Attachment attachment ) {
+    public DetachDocument( ModelObject modelObject, Document document ) {
         assert modelObject != null;
-        assert attachment != null;
+        assert document != null;
         needLockOn( modelObject );
-        set( "state", CommandUtils.getAttachmentState( modelObject, attachment ) );
+        set( "state", CommandUtils.getAttachmentState( modelObject, document ) );
     }
 
     /**
@@ -73,10 +73,10 @@ public class DetachDocument extends AbstractCommand {
             Map<String, Object> state,
             AttachmentManager attachmentManager ) {
         for ( String ticket : mo.getAttachmentTickets() ) {
-            Attachment attachment = attachmentManager.getAttachment( ticket );
-            if ( attachment.getType().name().equals( state.get( "type" ) )
-                    && attachment.getUrl().equals( state.get( "url" ) )
-                    && attachment.getDigest().equals( state.get( "digest" ) ) ) {
+            Document document = attachmentManager.getDocument( ticket );
+            if ( document.getType().name().equals( state.get( "type" ) )
+                    && document.getUrl().equals( state.get( "url" ) )
+                    && document.getDigest().equals( state.get( "digest" ) ) ) {
                 return ticket;
             }
         }

@@ -2,7 +2,7 @@ package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.attachments.Document;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
@@ -55,10 +55,10 @@ public class AttachDocument extends AbstractCommand {
         // commander.resolve( ModelObject.class, (Long) get( "attachee" ) );
         String ticket = (String) get( "ticket" );
         AttachmentManager attachmentManager = commander.getAttachmentManager();
-        Attachment attachment = attachmentManager.getAttachment( ticket );
-        if ( attachment == null ) {
-            attachment = attachmentManager.reattach( ticket );
-            if ( attachment == null ) {
+        Document document = attachmentManager.getDocument( ticket );
+        if ( document == null ) {
+            document = attachmentManager.reattach( ticket );
+            if ( document == null ) {
                 // Attachment needs to be re-created
                 Map<String, Object> attachmentState = (Map<String, Object>) get( "state" );
                 assert attachmentState != null;
@@ -104,7 +104,7 @@ public class AttachDocument extends AbstractCommand {
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "attachee" ) );
         String ticket = (String) get( "ticket" );
-        return new DetachDocument( mo, commander.getAttachmentManager().getAttachment( ticket ) );
+        return new DetachDocument( mo, commander.getAttachmentManager().getDocument( ticket ) );
     }
 
 }

@@ -47,7 +47,8 @@ public class Actor extends AbstractUnicastChannelable {
      *
      * @return a string
      */
-    public String normalize() {
+    @Transient
+    public String getNormalizedName() {
         String name = getName().trim();
         if ( this == UNKNOWN || name.indexOf( ',' ) >= 0 ) return name;
         else {
@@ -85,4 +86,5 @@ public class Actor extends AbstractUnicastChannelable {
                 return name;
         }
     }
+
 }

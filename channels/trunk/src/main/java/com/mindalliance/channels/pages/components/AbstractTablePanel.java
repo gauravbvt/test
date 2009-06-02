@@ -1,8 +1,9 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.command.CommandUtils;
+import com.mindalliance.channels.pages.FilterableModelObjectLink;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.entities.EntityLink;
 import org.apache.wicket.AttributeModifier;
@@ -154,7 +155,13 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
                                       final IModel<T> model ) {
-                cellItem.add( cellLinkContent( id, model.getObject(), moProperty, labelProperty, defaultText ) );
+                cellItem.add( cellLinkContent(
+                        id,
+                        model.getObject(),
+                        moProperty,
+                        labelProperty,
+                        defaultText,
+                        null ) );
                 String classes = "link";
                 if ( style != null ) {
                     String styleClass = findStyleClass( model.getObject(), style );
@@ -167,7 +174,13 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
     }
 
 
-    private Component cellLinkContent( String id, T bean, String moProperty, String labelProperty, String defaultText ) {
+    private Component cellLinkContent(
+            String id,
+            T bean,
+            String moProperty,
+            String labelProperty,
+            String defaultText,
+            Filterable filterable ) {
         final ModelObject mo = (ModelObject) CommandUtils.getProperty( bean, moProperty, null );
         if ( mo != null ) {
             String labelText = (String) CommandUtils.getProperty(
@@ -177,13 +190,23 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             labelText = ( labelText == null || labelText.isEmpty() )
                     ? ( defaultText == null ? "" : defaultText )
                     : labelText;
-            if ( mo.isEntity() ) {
-                return new EntityLink( id, new Model<ModelObject>( mo ) );
+            if ( filterable != null ) {
+               return new FilterableModelObjectLink(
+                       id,
+                       new Model<ModelObject>( mo ),
+                       new Model<String>( labelText ),
+                       "", // hint
+                       filterable
+               );
             } else {
-                return new ModelObjectLink(
-                        id,
-                        new Model<ModelObject>( mo ),
-                        new Model<String>( labelText ) );
+                if ( mo.isEntity() ) {
+                    return new EntityLink( id, new Model<ModelObject>( mo ) );
+                } else {
+                    return new ModelObjectLink(
+                            id,
+                            new Model<ModelObject>( mo ),
+                            new Model<String>( labelText ) );
+                }
             }
         } else {
             return new Label( id, new Model<String>( ( defaultText == null ? "" : defaultText ) ) );
@@ -198,6 +221,29 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             styleClass = style;
         }
         return styleClass;
+    }
+
+    protected AbstractColumn<T> makeFilterableLinkColumn( String name,
+                                                          final String moProperty,
+                                                          final String labelProperty,
+                                                          final String defaultText,
+                                                          final Filterable filterable) {
+        return new AbstractColumn<T>( new Model<String>( name ), labelProperty ) {              
+
+            public void populateItem( Item<ICellPopulator<T>> cellItem,
+                                      String id,
+                                      final IModel<T> model ) {
+                cellItem.add( cellLinkContent(
+                        id,
+                        model.getObject(),
+                        moProperty,
+                        labelProperty,
+                        defaultText,
+                        filterable ) );
+                String classes = "link";
+                cellItem.add( new AttributeModifier( "class", true, new Model<String>( classes ) ) );
+            }
+        };
     }
 
 

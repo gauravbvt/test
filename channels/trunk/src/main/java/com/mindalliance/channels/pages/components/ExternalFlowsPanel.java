@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.model.ExternalFlow;
-import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -27,7 +26,6 @@ public class ExternalFlowsPanel extends AbstractTablePanel<ExternalFlow> {
 
     public ExternalFlowsPanel(
             String id,
-            IModel<Plan> model,
             IModel<ArrayList<ExternalFlow>> externalFlowsModel,
             int pageSize,
             Set<Long> expansions ) {

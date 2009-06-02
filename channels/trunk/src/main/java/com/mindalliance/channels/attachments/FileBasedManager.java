@@ -92,16 +92,16 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     private Properties fileMap = new Properties();
 
     /**
-     * List of attachments, indexed by tickets. Reverse index of fileMap.
+     * List of documents, indexed by tickets. Reverse index of fileMap.
      */
-    private Map<String, Attachment> attachmentMap = Collections.synchronizedMap(
-            new HashMap<String, Attachment>() );
+    private Map<String, Document> documentMap = Collections.synchronizedMap(
+            new HashMap<String, Document>() );
 
     /**
-     * List of deleted attachments, indexed by attchment tickets.
+     * List of deleted documents, indexed by attchment tickets.
      */
-    private Map<String, Attachment> deletedMap = Collections.synchronizedMap(
-            new HashMap<String, Attachment>() );
+    private Map<String, Document> deletedMap = Collections.synchronizedMap(
+            new HashMap<String, Document>() );
 
     public FileBasedManager() {
     }
@@ -122,42 +122,42 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     /**
      * {@inheritDoc}
      */
-    public Attachment getAttachment( String ticket ) {
-        return attachmentMap.get( ticket );
+    public Document getDocument( String ticket ) {
+        return documentMap.get( ticket );
     }
 
     /**
      * {@inheritDoc}
      */
-    public List<Attachment> getAttachments( List<String> tickets ) {
-        List<Attachment> attachments = new ArrayList<Attachment>();
+    public List<Document> getDocuments( List<String> tickets ) {
+        List<Document> documents = new ArrayList<Document>();
         for ( String ticket : tickets ) {
-            Attachment attachment = getAttachment( ticket );
-            if ( attachment != null )
-                if ( !attachments.contains( attachment ) ) attachments.add( attachment );
+            Document document = getDocument( ticket );
+            if ( document != null )
+                if ( !documents.contains( document ) ) documents.add( document );
         }
-        return attachments;
+        return documents;
     }
 
-    private Attachment getDeletedAttachment( String ticket ) {
+    private Document getDeletedDocument( String ticket ) {
         return deletedMap.get( ticket );
     }
 
-    private void index( String ticket, Attachment attachment ) {
-        attachmentMap.put( ticket, attachment );
+    private void index( String ticket, Document document ) {
+        documentMap.put( ticket, document );
         fileMap.setProperty( ticket,
                 MessageFormat.format(
                         "{0},{1},{2}",                    // NON-NLS
-                        attachment.getKey(),
-                        attachment.getType().name(),
-                        attachment.getDigest() ) );
+                        document.getKey(),
+                        document.getType().name(),
+                        document.getDigest() ) );
     }
 
     private void deindex( String ticket ) {
-        Attachment attachment = attachmentMap.get( ticket );
-        if ( attachment != null ) {
-            attachmentMap.remove( ticket );
-            deletedMap.put( ticket, attachment );
+        Document document = documentMap.get( ticket );
+        if ( document != null ) {
+            documentMap.remove( ticket );
+            deletedMap.put( ticket, document );
             fileMap.remove( ticket );
         } else {
             log.warn( "Failed to deindex: ticket " + ticket + " not found" );
@@ -167,7 +167,7 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     /**
      * {@inheritDoc}
      */
-    public String attach( Attachment.Type type, FileUpload fileUpload, List<String> tickets ) {
+    public String attach( Document.Type type, FileUpload fileUpload, List<String> tickets ) {
         String ticket = makeTicket();
         String fileName = fileUpload.getClientFileName();
         String escaped = escape( fileName );
@@ -190,14 +190,14 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
             String digest = URLEncoder.encode(
                     new String( messageDigest.digest() ).replaceAll( ",", "\\u002c" ),
                     "UTF-8");
-            FileAttachment fileAttachment = new FileAttachment(
+            FileDocument fileDocument = new FileDocument(
                     type,
                     file,
                     path + file.getName(),
                     digest );
             synchronized ( this ) {
-                Attachment actual = resolve( fileAttachment );
-                if ( !getAttachments( tickets ).contains( actual ) ) {
+                Document actual = resolve( fileDocument );
+                if ( !getDocuments( tickets ).contains( actual ) ) {
                     index( ticket, actual );
                     save();
                 } else {
@@ -221,23 +221,23 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
         return ticket;
     }
 
-    // Return pre-existing attachment if one exists for the same file.
-    private Attachment resolve( final FileAttachment attachment ) {
-        FileAttachment toSameFile = (FileAttachment) CollectionUtils.find( attachmentMap.values(), new Predicate() {
+    // Return pre-existing document if one exists for the same file.
+    private Document resolve( final FileDocument document ) {
+        FileDocument toSameFile = (FileDocument) CollectionUtils.find( documentMap.values(), new Predicate() {
             public boolean evaluate( Object obj ) {
-                Attachment prior = (Attachment) obj;
+                Document prior = (Document) obj;
                 return prior.isFile()
-                        && attachment.getFile().getName().
+                        && document.getFile().getName().
                         // > 0 -> must not be the exact same file, but a duplicate
-                                indexOf( ( (FileAttachment) prior ).getFile().getName() ) > 0
-                        && attachment.getDigest().equals( prior.getDigest() );
+                                indexOf( ( (FileDocument) prior ).getFile().getName() ) > 0
+                        && document.getDigest().equals( prior.getDigest() );
             }
         } );
         if ( toSameFile != null ) {
-            attachment.getFile().delete();
-            attachment.setFile( toSameFile.getFile() );
+            document.getFile().delete();
+            document.setFile( toSameFile.getFile() );
         }
-        return attachment;
+        return document;
     }
 
     private String makeTicket() {
@@ -247,19 +247,19 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     /**
      * {@inheritDoc}
      */
-    public String attach( Attachment.Type type, String url, String digest, List<String> tickets ) {
+    public String attach( Document.Type type, String url, String digest, List<String> tickets ) {
         File uploaded = findUploaded( url, digest );
         String ticket = null;
         if ( uploaded != null ) {
-            FileAttachment attachment = new FileAttachment(
+            FileDocument document = new FileDocument(
                     type,
                     uploaded,
                     path + uploaded.getName(),
                     digest
             );
-            if ( !getAttachments( tickets ).contains( attachment ) ) {
+            if ( !getDocuments( tickets ).contains( document ) ) {
                 ticket = makeTicket();
-                index( ticket, attachment );
+                index( ticket, document );
                 save();
             }
         } else {
@@ -272,18 +272,18 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
      * {@inheritDoc}
      */
     public File findUploaded( final String url, final String digest ) {
-        FileAttachment attachment = (FileAttachment)CollectionUtils.find(
-            attachmentMap.values(),
+        FileDocument document = (FileDocument)CollectionUtils.find(
+            documentMap.values(),
             new Predicate() {
                 public boolean evaluate( Object obj ) {
-                    Attachment attachment = (Attachment)obj;
-                    return attachment.isFile()
-                            && attachment.getUrl().equals( url )
-                            && attachment.getDigest().equals( digest );
+                    Document doc = (Document)obj;
+                    return doc.isFile()
+                            && doc.getUrl().equals( url )
+                            && doc.getDigest().equals( digest );
                 }
             });
-        if ( attachment != null ) {
-            return attachment.getFile();
+        if ( document != null ) {
+            return document.getFile();
         } else {
             return null;
         }
@@ -292,12 +292,12 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     /**
      * {@inheritDoc}
      */
-    public String attach( Attachment.Type type, URL url, List<String> tickets ) {
+    public String attach( Document.Type type, URL url, List<String> tickets ) {
         String ticket = makeTicket();
         synchronized ( this ) {
-            UrlAttachment urlAttachment = new UrlAttachment( type, url.toString() );
-            if ( !getAttachments( tickets ).contains( urlAttachment ) ) {
-                index( ticket, urlAttachment );
+            UrlDocument urlDocument = new UrlDocument( type, url.toString() );
+            if ( !getDocuments( tickets ).contains( urlDocument ) ) {
+                index( ticket, urlDocument );
                 save();
             } else {
                 ticket = null;
@@ -319,18 +319,18 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     /**
      * {@inheritDoc}
      */
-    public Attachment reattach( String ticket ) {
-        Attachment attachment = getDeletedAttachment( ticket );
-        if ( attachment != null ) {
+    public Document reattach( String ticket ) {
+        Document document = getDeletedDocument( ticket );
+        if ( document != null ) {
             deletedMap.remove( ticket );
             synchronized ( this ) {
-                index( ticket, attachment );
+                index( ticket, document );
                 save();
             }
         } else {
             log.warn( "Failed to re-attach ticket " + ticket );
         }
-        return attachment;
+        return document;
     }
 
     /**
@@ -338,10 +338,10 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
      */
     public synchronized void reattachAll( List<String> tickets ) {
         for ( String ticket : tickets ) {
-            Attachment attachment = getDeletedAttachment( ticket );
-            if ( attachment != null ) {
+            Document document = getDeletedDocument( ticket );
+            if ( document != null ) {
                 deletedMap.remove( ticket );
-                index( ticket, attachment );
+                index( ticket, document );
             } else {
                 log.warn( "Failed to re-attach ticket " + ticket );
             }
@@ -363,8 +363,8 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
      * {@inheritDoc}
      */
     public void emptyTrash() {
-        for ( Attachment attachment : deletedMap.values() ) {
-            attachment.delete();
+        for ( Document document : deletedMap.values() ) {
+            document.delete();
         }
     }
 
@@ -416,13 +416,13 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
             out = new FileWriter( file );
             fileMap.store( out, " Files-objects association file. Edit with care..." );
         } catch ( IOException e ) {
-            log.error( "Unable to save attachment map " + mapFileName + ".", e );
+            log.error( "Unable to save document map " + mapFileName + ".", e );
         } finally {
             if ( out != null )
                 try {
                     out.close();
                 } catch ( IOException e ) {
-                    log.error( "Unable to close attachment map" + mapFileName + ".", e );
+                    log.error( "Unable to close document map" + mapFileName + ".", e );
                 }
         }
     }
@@ -477,7 +477,7 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
      * Load file map.
      */
     public void start() {
-        log.info( "Starting file attachments manager" );
+        log.info( "Starting file attachment manager" );
         load();
         isRunning = true;
     }
@@ -486,7 +486,7 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
      * Save map file to upload directory.
      */
     public void stop() {
-        log.info( "Stopping file attachments manager" );
+        log.info( "Stopping file attachment manager" );
         isRunning = false;
     }
 
@@ -513,29 +513,29 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     }
 
     /**
-     * Reconstruct the attachment map.
+     * Reconstruct the document map.
      *
-     * @param index the stored attachment index
+     * @param index the stored document index
      */
     private void setFileMap( Properties index ) {
         this.fileMap = index;
-        attachmentMap = new HashMap<String, Attachment>();
+        documentMap = new HashMap<String, Document>();
         for ( String ticket : index.stringPropertyNames() ) {
             String value = index.getProperty( ticket );
             String[] elements = value.split( "," );
 
             String uriString = elements[0];
-            Attachment.Type type = Attachment.Type.valueOf( elements[1] );
+            Document.Type type = Document.Type.valueOf( elements[1] );
             try {
                 URI uri = new URI( unescape( uriString ) );
-                Attachment attachment = uri.getScheme() == null ?
-                        new FileAttachment( type,
+                Document document = uri.getScheme() == null ?
+                        new FileDocument( type,
                                 new File( directory, uriString ),
                                 path + uriString,
                                 elements[2] )
-                        : new UrlAttachment( type, uri.toURL().toString() );
+                        : new UrlDocument( type, uri.toURL().toString() );
 
-                attachmentMap.put( ticket, attachment );
+                documentMap.put( ticket, document );
 
             } catch ( URISyntaxException ignored ) {
                 log.warn( "Malformed key in file map: {}. Ignored.", uriString );

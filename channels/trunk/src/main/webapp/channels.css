@@ -686,7 +686,7 @@ div.scenario, div.entity, div.plan {
 div.scenario {
     top: 6em;
     right: 2em;
-    min-height: 32em;
+    min-height: 42em;
 }
 
 div.entity {
@@ -819,6 +819,11 @@ span.spinner {
 }
 
 span.spinner img {
+}
+
+img.filter {
+    opacity: .35;
+    cursor: pointer;
 }
 
 

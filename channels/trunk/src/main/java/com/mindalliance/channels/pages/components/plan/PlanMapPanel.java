@@ -159,7 +159,6 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     private void addExternalFlowsPanel() {
         ExternalFlowsPanel externalFlowsPanel = new ExternalFlowsPanel(
                 "flows",
-                new Model<Plan>( Channels.getPlan() ),
                 new PropertyModel<ArrayList<ExternalFlow>>( this, "externalFlows" ),
                 PAGE_SIZE,
                 getExpansions()

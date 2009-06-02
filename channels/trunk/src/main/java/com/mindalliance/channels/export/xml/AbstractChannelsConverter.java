@@ -4,7 +4,7 @@ import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.attachments.Document;
 import com.mindalliance.channels.export.ConnectionSpecification;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Issue;
@@ -183,7 +183,7 @@ public abstract class AbstractChannelsConverter implements Converter {
             } else {
                 // only export attached URLs directly (file attachments are not portables)
                 for ( String ticket : modelObject.getAttachmentTickets() ) {
-                    Attachment attachment = getAttachmentManager().getAttachment( ticket );
+                    Document attachment = getAttachmentManager().getDocument( ticket );
                     if ( attachment.isUrl() ) {
                         writer.startNode( "url" );
                         writer.addAttribute( "type", attachment.getType().name() );
@@ -234,7 +234,7 @@ public abstract class AbstractChannelsConverter implements Converter {
                     String type = reader.getAttribute( "type" );
                     url = reader.getValue();
                     String ticket = attachmentManager.attach(
-                            Attachment.Type.valueOf( type ),
+                            Document.Type.valueOf( type ),
                             new URL( url ),
                             modelObject.getAttachmentTickets() );
                     modelObject.addAttachmentTicket( ticket );
