@@ -187,7 +187,7 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
 
     /**
      * Find all names to be indexed.
-     * @return
+     * @return a list of strings
      */
     @SuppressWarnings( "unchecked" )
     public List<String> getIndexedNames() {

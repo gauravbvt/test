@@ -174,4 +174,11 @@ public interface Issue extends Identifiable, Serializable {
      * @return a string
      */
     String waivedString();
+
+    /**
+     * Get a string denoting whether this issues is waived.
+     *
+     * @return a string
+     */
+    String getWaivedString();
 }

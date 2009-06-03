@@ -1,5 +1,6 @@
 package com.mindalliance.channels.query;
 
+import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Dao;
@@ -1651,6 +1652,27 @@ public class DefaultQueryService extends Observable implements QueryService {
             }
         }
         return new ArrayList<String>( names );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Issue> findAllIssues( Analyst analyst ) {
+        List<Issue> allIssues = new ArrayList<Issue>();
+        for ( ModelObject mo : list( ModelObject.class ) ) {
+            allIssues.addAll( analyst.listIssues( mo, true ) );
+        }
+        for (Scenario scenario : list( Scenario.class)) {
+            Iterator<Part> parts = scenario.parts();
+            while( parts.hasNext() ) {
+                allIssues.addAll( analyst.listIssues( parts.next(), true));
+            }
+            Iterator<Flow> flows = scenario.flows();
+            while( flows.hasNext() ) {
+                allIssues.addAll( analyst.listIssues( flows.next(), true));
+            }
+        }
+        return allIssues;
     }
 }
 

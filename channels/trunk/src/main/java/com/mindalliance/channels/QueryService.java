@@ -667,4 +667,12 @@ public interface QueryService extends Service {
      * @return a list of strings
      */
     List<String> findAllFlowNames();
+
+    /**
+     * Find all issues on all model objects in the plan.
+     *
+     * @param analyst an analyst
+     * @return a list of issues.
+     */
+    List<Issue> findAllIssues(Analyst analyst);
 }

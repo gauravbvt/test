@@ -71,10 +71,17 @@ public class DetectedIssue extends AnalysisObject implements Issue {
     }
 
     /**
-     * {inheritDoc}
+     * {@inheritDoc}
      */
     public String waivedString() {
         return isWaived() ? "waived" : "";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getWaivedString() {
+        return Boolean.toString( isWaived() );
     }
 
     public void setKind( String kind ) {

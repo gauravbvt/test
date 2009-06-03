@@ -153,6 +153,14 @@ public class UserIssue extends ModelObject implements Issue {
      * {@inheritDoc}
      */
     @Transient
+    public String getWaivedString() {
+        return Boolean.toString( isWaived() );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
     public boolean isUndefined() {
         return super.isUndefined()
                 && remediation.isEmpty();
