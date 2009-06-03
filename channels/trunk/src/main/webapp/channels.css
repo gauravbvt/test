@@ -826,4 +826,27 @@ img.filter {
     cursor: pointer;
 }
 
+ul.index-counter {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+
+ul.index-counter li {
+    display: inline;
+}
+
+ul.index-counter li:before {
+    content: "-";
+}
+ul.index-counter li:first-child:before {
+    content: ":";
+}
+
+input.filter {
+    width: 30em
+}
+
+
 

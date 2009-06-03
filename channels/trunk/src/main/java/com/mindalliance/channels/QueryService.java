@@ -650,7 +650,7 @@ public interface QueryService extends Service {
     /**
      * Find all actor last names.
      *
-     * @return a list of all actor last names (with repetitions)
+     * @return a list of all actor last names (with duplicates)
      */
     List<String> findAllActorLastNames();
 
@@ -660,4 +660,11 @@ public interface QueryService extends Service {
      * @return a list of jobs
      */
     List<Employment> findAllEmployments();
+
+    /**
+     * Find all distinct flow names.
+     *
+     * @return a list of strings
+     */
+    List<String> findAllFlowNames();
 }

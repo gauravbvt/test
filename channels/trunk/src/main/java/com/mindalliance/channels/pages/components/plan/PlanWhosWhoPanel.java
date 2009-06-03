@@ -57,7 +57,7 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
     /**
      * Indexing choices.
      */
-    private static final String[] indexingChoices = {ACTORS, ROLES, ORGANIZATIONS, LOCATIONS};
+    private static final String[] indexingChoices = {ACTORS, LOCATIONS, ORGANIZATIONS, ROLES};
     /**
      * Maximum number of rows shown in table at a time.
      */

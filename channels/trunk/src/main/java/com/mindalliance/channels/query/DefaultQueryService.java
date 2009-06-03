@@ -1638,5 +1638,19 @@ public class DefaultQueryService extends Observable implements QueryService {
         }
         return employments;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<String> findAllFlowNames() {
+        Set<String> names = new HashSet<String>();
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            Iterator<Flow> flows = scenario.flows();
+            while ( flows.hasNext() ) {
+                names.add( flows.next().getName() );
+            }
+        }
+        return new ArrayList<String>( names );
+    }
 }
 
