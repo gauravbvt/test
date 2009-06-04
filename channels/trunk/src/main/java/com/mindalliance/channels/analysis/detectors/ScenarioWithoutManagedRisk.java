@@ -51,4 +51,11 @@ public class ScenarioWithoutManagedRisk extends AbstractIssueDetector {
     public String getTestedProperty() {
         return null;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected String getLabel() {
+        return "No risk addressed by scenario";
+    }
 }

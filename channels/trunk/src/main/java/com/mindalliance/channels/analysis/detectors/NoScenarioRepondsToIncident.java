@@ -63,4 +63,11 @@ public class NoScenarioRepondsToIncident extends AbstractIssueDetector {
     public String getTestedProperty() {
         return null;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected String getLabel() {
+        return "No scenario for event";
+    }
 }

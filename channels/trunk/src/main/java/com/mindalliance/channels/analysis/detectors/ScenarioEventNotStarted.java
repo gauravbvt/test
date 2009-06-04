@@ -57,4 +57,11 @@ public class ScenarioEventNotStarted extends AbstractIssueDetector {
     public String getTestedProperty() {
         return null;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected String getLabel() {
+        return "Event never caused";
+    }
 }

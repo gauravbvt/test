@@ -5,8 +5,8 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A part that starts with a scenario is also triggered by a flow.
@@ -51,5 +51,12 @@ public class AutoStartPartAlsoTriggered extends AbstractIssueDetector {
      */
     public String getTestedProperty() {
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected String getLabel() {
+        return "Needlessly triggered task";
     }
 }

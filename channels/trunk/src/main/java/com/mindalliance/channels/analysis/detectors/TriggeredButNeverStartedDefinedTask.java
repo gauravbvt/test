@@ -5,8 +5,8 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A defined task is triggered but the triggering task is never started.
@@ -69,5 +69,12 @@ public class TriggeredButNeverStartedDefinedTask extends AbstractIssueDetector {
      */
     public String getTestedProperty() {
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected String getLabel() {
+        return "Task triggered by never starting task";
     }
 }

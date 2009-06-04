@@ -28,7 +28,14 @@ public class ScenarioEventNeverEnds extends AbstractIssueDetector {
      */
     public boolean canBeWaived() {
         return true;
-    }    
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected String getLabel() {
+        return "Event never ended";
+    }
 
     /**
      * {@inheritDoc}

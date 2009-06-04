@@ -3,23 +3,23 @@ package com.mindalliance.channels.analysis.detectors;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.analysis.graph.FlowMapGraphBuilder;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.util.SimpleCache;
-import com.mindalliance.channels.graph.GraphBuilder;
-import org.jgrapht.alg.BlockCutpointGraph;
 import org.jgrapht.DirectedGraph;
+import org.jgrapht.alg.BlockCutpointGraph;
 import org.jgrapht.graph.AsUndirectedGraph;
 
-import java.util.Set;
-import java.util.Iterator;
-import java.util.HashSet;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Detects single points of failure in a scenario.
@@ -51,7 +51,14 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
      */
     public boolean canBeWaived() {
         return true;
-    }    
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected String getLabel() {
+        return "Single point of failure";
+    }
 
     /**
      * Detects one or more actors who play parts where they are bottlenecks.

@@ -99,6 +99,7 @@ public abstract class AbstractIssueDetector implements IssueDetector {
     protected DetectedIssue makeIssue( String type, ModelObject about ) {
         DetectedIssue issue = new DetectedIssue( type, about );
         issue.setKind( getKind() );
+        issue.setDetectorLabel( getLabel() );
         issue.setCanBeWaived( canBeWaived() );
         if ( !about.isWaived( getKind() ))
             LOG.debug( "Detected issue: "
@@ -106,6 +107,8 @@ public abstract class AbstractIssueDetector implements IssueDetector {
                     + " on " + issue.getAbout() + "(" + issue.getAbout().getId() + ")" );
         return issue;
     }
+
+    protected abstract String getLabel();
 
     /**
      * Make detected issue.

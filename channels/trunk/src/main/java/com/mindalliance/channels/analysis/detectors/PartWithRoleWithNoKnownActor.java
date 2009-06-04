@@ -1,13 +1,13 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Actor;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Part has a role but there is no known actor in that role.
@@ -27,7 +27,14 @@ public class PartWithRoleWithNoKnownActor extends AbstractIssueDetector {
      */
     public boolean canBeWaived() {
         return true;
-    }    
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected String getLabel() {
+        return "No actor in task role";
+    }
 
     /**
      * {@inheritDoc}

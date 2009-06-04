@@ -156,6 +156,13 @@ public class UserIssue extends ModelObject implements Issue {
     public String getWaivedString() {
         return Boolean.toString( isWaived() );
     }
+    /**
+      * {@inheritDoc}
+      */
+    @Transient
+    public String getDetectorLabel() {
+        return "User defined";
+    }
 
     /**
      * {@inheritDoc}

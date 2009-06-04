@@ -35,6 +35,13 @@ public class ScenarioWithSameRisk extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
+    protected String getLabel() {
+        return "Another scenario addresses risk";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Scenario scenario = (Scenario) modelObject;

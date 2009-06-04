@@ -36,7 +36,14 @@ public class RedundantPart extends AbstractIssueDetector {
      */
     public boolean canBeWaived() {
         return true;
-    }    
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected String getLabel() {
+        return "Redundant task";
+    }
 
     /**
      * {@inheritDoc}

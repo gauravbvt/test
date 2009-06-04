@@ -33,6 +33,13 @@ public class FromUser extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
+    protected String getLabel() {
+        return "User defined";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public List<Issue> detectIssues( ModelObject modelObject ) {
         return getQueryService().findAllUserIssues( modelObject );
     }

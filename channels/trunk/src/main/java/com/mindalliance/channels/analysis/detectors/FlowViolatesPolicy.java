@@ -57,4 +57,11 @@ public class FlowViolatesPolicy extends AbstractIssueDetector {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    protected String getLabel() {
+        return "Flow violates policy";
+    }
+
 }

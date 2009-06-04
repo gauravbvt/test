@@ -37,6 +37,13 @@ public class UselessPart extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
+    protected String getLabel() {
+        return "Useless task";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public boolean appliesTo( ModelObject modelObject ) {
         return modelObject instanceof Part;
     }

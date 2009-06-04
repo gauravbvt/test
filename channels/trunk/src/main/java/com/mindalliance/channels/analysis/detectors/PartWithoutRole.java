@@ -2,12 +2,12 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
+import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Issue;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Detects the issue where a part has no given role but has actor and organization.
@@ -24,6 +24,13 @@ public class PartWithoutRole extends AbstractIssueDetector {
      */
     public boolean canBeWaived() {
         return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected String getLabel() {
+        return "Task without role";
     }
 
     /** {@inheritDoc} */

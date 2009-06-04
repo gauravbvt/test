@@ -1,14 +1,14 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Actor;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A flow that is or can only be from one actor to itself.
@@ -35,6 +35,13 @@ public class FlowToSelf extends AbstractIssueDetector {
      */
     public boolean canBeWaived() {
         return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected String getLabel() {
+        return "Communicating to self";
     }
 
 

@@ -36,6 +36,13 @@ public class ActorNotInOneOrganization extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
+    protected String getLabel() {
+        return "Actor in no organization or in too many";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings( "unchecked" )
     public List<Issue> detectIssues( ModelObject modelObject ) {
         Actor actor = (Actor) modelObject;

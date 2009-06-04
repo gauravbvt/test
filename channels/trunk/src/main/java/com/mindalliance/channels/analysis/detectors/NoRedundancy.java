@@ -2,19 +2,18 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.util.SemMatch;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.iterators.FilterIterator;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import org.apache.commons.collections.iterators.FilterIterator;
-import org.apache.commons.collections.Predicate;
+import java.util.List;
 
 /**
  * Detects whether a critical requirement from an actor (singleton source) has no alternate source.
@@ -40,6 +39,13 @@ public class NoRedundancy extends AbstractIssueDetector {
      */
     public boolean canBeWaived() {
         return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected String getLabel() {
+        return "Only one source of critical information";
     }
 
     /**

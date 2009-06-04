@@ -1,5 +1,7 @@
 package com.mindalliance.channels.analysis.detectors;
 
+import com.mindalliance.channels.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Flow;
@@ -7,8 +9,6 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Medium;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.analysis.DetectedIssue;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -130,5 +130,12 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
     @Override
     public String getTestedProperty() {
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected String getLabel() {
+        return "Flow with no channel";
     }
 }

@@ -25,6 +25,10 @@ public class DetectedIssue extends AnalysisObject implements Issue {
      */
     private String kind;
     /**
+     * Label for the detector.
+     */
+    private String detectorLabel;
+    /**
      * Type of issue.
      */
     private String type;
@@ -68,6 +72,14 @@ public class DetectedIssue extends AnalysisObject implements Issue {
 
     public String getKind() {
         return kind;
+    }
+
+    public String getDetectorLabel() {
+        return detectorLabel;
+    }
+
+    public void setDetectorLabel( String detectorLabel ) {
+        this.detectorLabel = detectorLabel;
     }
 
     /**

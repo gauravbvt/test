@@ -2,19 +2,18 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.graph.TriggerGraphBuilder;
+import com.mindalliance.channels.graph.GraphBuilder;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.graph.GraphBuilder;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
-
+import com.mindalliance.channels.model.Scenario;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.StrongConnectivityInspector;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Cycle detected in part triggering.
@@ -81,5 +80,11 @@ public class CyclicTriggering extends AbstractIssueDetector {
       */
     public String getTestedProperty() {
         return null;
+    }
+    /**
+     * {@inheritDoc}
+     */
+    protected String getLabel() {
+        return "Cyclic task triggering";
     }
 }

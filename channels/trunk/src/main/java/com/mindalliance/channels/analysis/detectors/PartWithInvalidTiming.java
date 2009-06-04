@@ -2,12 +2,12 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
-import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -29,6 +29,13 @@ public class PartWithInvalidTiming extends AbstractIssueDetector {
      */
     public String getTestedProperty() {
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected String getLabel() {
+        return "Task repeats too soon";
     }
 
     /**

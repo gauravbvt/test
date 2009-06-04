@@ -1,13 +1,13 @@
 package com.mindalliance.channels.analysis.detectors;
 
-import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelObject;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Detects issue where a flow's information property is undefined.
@@ -46,5 +46,9 @@ public class UnnamedFlow extends AbstractIssueDetector {
     /** {@inheritDoc} */
     public String getTestedProperty() {
         return "name";
+    }
+
+    protected String getLabel() {
+        return "Communicated information is unspecified";
     }
 }

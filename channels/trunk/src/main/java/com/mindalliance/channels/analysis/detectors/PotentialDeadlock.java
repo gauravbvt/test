@@ -43,6 +43,13 @@ public class PotentialDeadlock extends AbstractIssueDetector {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    protected String getLabel() {
+        return "Potential deadlock";
+    }
+
+    /**
      * Detect cycles where all flows are critical.
      *
      * @param modelObject -- the ModelObject being analyzed

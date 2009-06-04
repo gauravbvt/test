@@ -102,8 +102,8 @@ public class PlanIssuesPanel extends AbstractUpdatablePanel implements Filterabl
             // columns
             columns.add( makeColumn(
                     "Kind",
-                    "kind",
-                    "kind" ) );
+                    "detectorLabel",
+                    EMPTY ) );
             columns.add( makeFilterableLinkColumn(
                     "About",
                     "about",

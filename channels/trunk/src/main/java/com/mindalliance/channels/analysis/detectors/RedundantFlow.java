@@ -2,15 +2,15 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.util.SemMatch;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Detects redundant flows.
@@ -37,7 +37,14 @@ public class RedundantFlow extends AbstractIssueDetector {
      */
     public boolean canBeWaived() {
         return true;
-    }    
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected String getLabel() {
+        return "Redundant flow";
+    }
 
     /**
      * {@inheritDoc}

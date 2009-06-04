@@ -1,13 +1,13 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Job;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Organization;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Organization has an unconfirmed job.
@@ -34,6 +34,13 @@ public class UnconfirmedJob extends AbstractIssueDetector {
      */
     public String getTestedProperty() {
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected String getLabel() {
+        return "Unconfirmed job";
     }
 
     /**

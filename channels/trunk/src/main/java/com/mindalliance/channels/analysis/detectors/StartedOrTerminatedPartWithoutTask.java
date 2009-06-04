@@ -63,4 +63,11 @@ public class StartedOrTerminatedPartWithoutTask extends AbstractIssueDetector {
     public String getTestedProperty() {
         return "task";
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected String getLabel() {
+        return "Unspecified task started or terminated";
+    }
 }
