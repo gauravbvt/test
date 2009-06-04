@@ -3,7 +3,6 @@ package com.mindalliance.channels;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.pages.ExportPage;
-import com.mindalliance.channels.pages.IndexPage;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.png.EntityNetworkPage;
 import com.mindalliance.channels.pages.png.FlowMapPage;
@@ -127,11 +126,10 @@ public final class Channels extends WebApplication {
 
         getMarkupSettings().setStripWicketTags( true );
 //        getRequestCycleSettings().setRenderStrategy( IRequestCycleSettings.REDIRECT_TO_RENDER );
-        mount( new QueryStringUrlCodingStrategy( "index.html", IndexPage.class ) );
 
         mount( new IndexedParamUrlCodingStrategy( "playbook", PlanReportPage.class ) );
 
-        mount( new QueryStringUrlCodingStrategy( "node.html", PlanPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "plan.html", PlanPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.xml", ExportPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.png", FlowMapPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "plan.png", PlanMapPage.class ) );
