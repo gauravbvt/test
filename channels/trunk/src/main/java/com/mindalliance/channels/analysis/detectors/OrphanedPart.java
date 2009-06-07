@@ -40,7 +40,7 @@ public class OrphanedPart extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Orphan task";
+        return "Task without flows";
     }
 
     /**

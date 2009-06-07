@@ -675,4 +675,11 @@ public interface QueryService extends Service {
      * @return a list of issues.
      */
     List<Issue> findAllIssues(Analyst analyst);
+
+    /**
+     * List all entities of a given class, plus the unmnown entity of this class.
+     * @param clazz a class extending ModelObject
+     * @return a list of entities
+     */
+    <T extends ModelObject> List<T> listEntitiesWithUnknown( Class<T> clazz );
 }

@@ -28,10 +28,6 @@ import java.util.Set;
  */
 public class EntityPanel extends AbstractMultiAspectPanel {
     /**
-     * Flows aspect.
-     */
-    public static final String FLOWS = "flows";
-    /**
      * Network aspect.
      */
     public static final String NETWORK = "network";
@@ -106,8 +102,6 @@ public class EntityPanel extends AbstractMultiAspectPanel {
             return getEntityNetworkPanel();
         } else if ( aspect.equals( MAP ) ) {
             return getEntityMapPanel();
-        } else if ( aspect.equals( FLOWS ) ) {
-            return getEntityFlowsPanel();
         } else if ( aspect.equals( ISSUES ) ) {
             return getEntityIssuesPanel();
         } else {
@@ -173,16 +167,6 @@ public class EntityPanel extends AbstractMultiAspectPanel {
 
     private Component getEntityMapPanel() {
         return new Label( "aspect", "Under construction" );
-    }
-
-    private Component getEntityFlowsPanel() {
-        if ( !( getObject() instanceof com.mindalliance.channels.model.Event ) ) {
-            return new EntityFlowsPanel( "aspect",
-                    new PropertyModel<ModelObject>( this, "object" ),
-                    getExpansions() );
-        } else {
-            return new Label( "aspect", "Under construction" );
-        }
     }
 
     private Component getEntityIssuesPanel() {

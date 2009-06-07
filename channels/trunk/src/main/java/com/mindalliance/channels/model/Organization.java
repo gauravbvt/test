@@ -21,11 +21,6 @@ import java.util.List;
 public class Organization extends AbstractUnicastChannelable {
 
     /**
-     * The unknown organization.
-     */
-    public static final Organization UNKNOWN = new Organization( "(unknown)" );
-
-    /**
      * Parent organization. May be null.
      */
     private Organization parent;
@@ -43,6 +38,16 @@ public class Organization extends AbstractUnicastChannelable {
      * Whether reoles must have associated actors, else issues.
      */
     private boolean actorsRequired;
+
+    /**
+     * Bogus organization used to signify that the organization is not known...
+     */
+    public static final Organization UNKNOWN;
+
+    static {
+        UNKNOWN = new Organization( "(unknown)" );
+        UNKNOWN.setId( 10000000L - 3 );
+    }
 
     public Organization() {
     }

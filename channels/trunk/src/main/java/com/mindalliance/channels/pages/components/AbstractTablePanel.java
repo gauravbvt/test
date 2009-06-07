@@ -191,13 +191,14 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                     ? ( defaultText == null ? "" : defaultText )
                     : labelText;
             if ( filterable != null ) {
-               return new FilterableModelObjectLink(
-                       id,
-                       new Model<ModelObject>( mo ),
-                       new Model<String>( labelText ),
-                       "", // hint
-                       filterable
-               );
+                return new FilterableModelObjectLink(
+                        id,
+                        new Model<ModelObject>( mo ),
+                        new Model<String>( labelText ),
+                        "", // hint
+                        moProperty,
+                        filterable
+                );
             } else {
                 if ( mo.isEntity() ) {
                     return new EntityLink( id, new Model<ModelObject>( mo ) );
@@ -227,8 +228,8 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                                                           final String moProperty,
                                                           final String labelProperty,
                                                           final String defaultText,
-                                                          final Filterable filterable) {
-        return new AbstractColumn<T>( new Model<String>( name ), labelProperty ) {              
+                                                          final Filterable filterable ) {
+        return new AbstractColumn<T>( new Model<String>( name ), labelProperty ) {
 
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
@@ -245,6 +246,5 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             }
         };
     }
-
 
 }

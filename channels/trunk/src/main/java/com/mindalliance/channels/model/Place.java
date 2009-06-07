@@ -11,6 +11,16 @@ import javax.persistence.Transient;
 @Entity
 public class Place extends ModelObject {
 
+    /**
+     * Bogus place used to signify that the place is not known...
+     */
+    public static final Place UNKNOWN;
+
+    static {
+        UNKNOWN = new Place( "(unknown)" );
+        UNKNOWN.setId( 10000000L - 4 );
+    }
+
     public Place() {
     }
 
@@ -22,7 +32,8 @@ public class Place extends ModelObject {
     /**
      * {@inheritDoc}
      */
-    @Transient @Override
+    @Transient
+    @Override
     public boolean isEntity() {
         return true;
     }
@@ -33,16 +44,15 @@ public class Place extends ModelObject {
     public void beforeRemove( QueryService queryService ) {
         super.beforeRemove( queryService );
         for ( Job job : queryService.findAllConfirmedJobs( ResourceSpec.with( this ) ) ) {
-           job.setJurisdiction( null );
-       }
-       for (Part part : queryService.findAllParts( null, ResourceSpec.with( this ) )) {
-           part.setJurisdiction( null );
-       }
-        for (Part part : queryService.findAllPartsWithLocation( this )) {
+            job.setJurisdiction( null );
+        }
+        for ( Part part : queryService.findAllParts( null, ResourceSpec.with( this ) ) ) {
+            part.setJurisdiction( null );
+        }
+        for ( Part part : queryService.findAllPartsWithLocation( this ) ) {
             part.setLocation( null );
         }
     }
-
 
 
 }

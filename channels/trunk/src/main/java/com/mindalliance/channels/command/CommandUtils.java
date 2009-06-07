@@ -322,6 +322,7 @@ public final class CommandUtils {
      * @return an object
      */
     public static Object getProperty( Object bean, String property, Object defaultValue ) {
+        if ( property.isEmpty() ) return bean;
         Object value;
         try {
             value = PropertyUtils.getProperty( bean, property );

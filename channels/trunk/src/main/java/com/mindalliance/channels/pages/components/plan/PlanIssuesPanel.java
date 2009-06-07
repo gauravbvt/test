@@ -56,7 +56,8 @@ public class PlanIssuesPanel extends AbstractUpdatablePanel implements Filterabl
     /**
      * {@inheritDoc}
      */
-    public void toggleFilter( Identifiable identifiable, AjaxRequestTarget target ) {
+    public void toggleFilter( Identifiable identifiable , String property, AjaxRequestTarget target ) {
+        // only about is filtered; property is ignored
         about = ( identifiable == about ) ? null : (ModelObject) identifiable;
         addIssuesTable();
         target.addComponent( issuesTable );
@@ -78,7 +79,7 @@ public class PlanIssuesPanel extends AbstractUpdatablePanel implements Filterabl
     /**
      * {@inheritDoc}
      */
-    public boolean isFiltered( Identifiable identifiable ) {
+    public boolean isFiltered( Identifiable identifiable, String property ) {
         return identifiable == about;
     }
 

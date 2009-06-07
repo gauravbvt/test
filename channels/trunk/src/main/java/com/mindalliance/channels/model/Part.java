@@ -506,4 +506,22 @@ public class Part extends Node {
         return equals( flow.getSource() ) ?
                 flow.getSignificanceToSource() : flow.getSignificanceToTarget();
     }
+
+    /**
+     * Find explicit or implicit actor, if any.
+     * @return an actor or null
+     */
+    @Transient
+    public Actor getKnownActor() {
+        if (actor != null ) {
+            return actor;
+        } else {
+            List<Actor> knownActors = getScenario().getQueryService().findAllActors( resourceSpec() );
+            if ( knownActors.size() == 1 ) {
+                return knownActors.get(0);
+            } else {
+                return null;
+            }
+        }
+    }
 }

@@ -19,7 +19,12 @@ public class Actor extends AbstractUnicastChannelable {
     /**
      * Bogus actor used to signify that the actor is not known...
      */
-    public static final Actor UNKNOWN = new Actor( UnknownName );
+    public static final Actor UNKNOWN;
+
+    static {
+        UNKNOWN = new Actor( UnknownName );
+        UNKNOWN.setId( 10000000L - 1L );
+    }
 
     public Actor() {
     }
@@ -32,7 +37,7 @@ public class Actor extends AbstractUnicastChannelable {
     public Actor( String name ) {
         super( name );
     }
-
+    
     /**
      * {@inheritDoc}
      */

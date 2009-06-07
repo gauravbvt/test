@@ -274,8 +274,9 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
     /**
      * {@inheritDoc}
      */
-    public void toggleFilter( Identifiable identifiable, AjaxRequestTarget target ) {
-        if ( isFiltered( identifiable ) ) {
+    public void toggleFilter( Identifiable identifiable, String property, AjaxRequestTarget target ) {
+        // Property ignored since no two properties filtered are ambiguous on type.
+        if ( isFiltered( identifiable, property ) ) {
             filters.remove( identifiable );
         } else {
             filters.add( identifiable );
@@ -287,7 +288,7 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
     /**
      * {@inheritDoc}
      */
-    public boolean isFiltered( Identifiable identifiable ) {
+    public boolean isFiltered( Identifiable identifiable, String property ) {
         return filters.contains( identifiable );
     }
 

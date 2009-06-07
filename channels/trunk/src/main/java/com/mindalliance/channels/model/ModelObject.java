@@ -63,6 +63,19 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
         setName( name );
     }
 
+    /**
+     * True if both null or they are equal.
+     *
+     * @param modelObject a model object
+     * @param other       an other model object
+     * @return a boolean
+     */
+    public static boolean areEqualOrNull( ModelObject modelObject, ModelObject other ) {
+        return ( modelObject == null && other == null )
+                || ( modelObject != null && other != null && modelObject.equals( other ) );
+    }
+
+
     @Id
     @GeneratedValue
     public long getId() {
@@ -249,5 +262,19 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
      */
     public void removeAttachmentTicket( String ticket ) {
         attachmentTickets.remove( ticket );
+    }
+
+    /**
+     * Whether this is an unknown entity.
+     *
+     * @return aboolean
+     */
+    @Transient
+    public boolean isUnknown() {
+        return equals( Actor.UNKNOWN )
+                || equals( Event.UNKNOWN )
+                || equals( Organization.UNKNOWN )
+                || equals( Place.UNKNOWN )
+                || equals( Role.UNKNOWN );
     }
 }

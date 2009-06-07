@@ -131,9 +131,9 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
     public boolean equals( Object obj ) {
         if ( !( obj instanceof ResourceSpec ) ) return false;
         ResourceSpec resourceSpec = (ResourceSpec) obj;
-        return actor == resourceSpec.getActor()
-                && role == resourceSpec.getRole()
-                && organization == resourceSpec.getOrganization()
+        return ModelObject.areEqualOrNull( actor, resourceSpec.getActor() )
+                && ModelObject.areEqualOrNull( role, resourceSpec.getRole() )
+                && ModelObject.areEqualOrNull( organization, resourceSpec.getOrganization() )
                 && SemMatch.samePlace( jurisdiction, resourceSpec.getJurisdiction() );
     }
 
@@ -210,7 +210,7 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      * @return a boolean
      */
     public boolean isAnyActor() {
-        return actor == null;
+        return actor == null || actor.equals( Actor.UNKNOWN );
     }
 
 
@@ -220,7 +220,7 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      * @return a boolean
      */
     public boolean isAnyOrganization() {
-        return organization == null;
+        return organization == null || organization.equals( Organization.UNKNOWN );
     }
 
     /**
@@ -229,7 +229,7 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      * @return a boolean
      */
     public boolean isAnyRole() {
-        return role == null;
+        return role == null || role.equals( Role.UNKNOWN );
     }
 
     /**
@@ -238,7 +238,7 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      * @return a boolean
      */
     public boolean isAnyJurisdiction() {
-        return jurisdiction == null;
+        return jurisdiction == null || jurisdiction.equals( Place.UNKNOWN );
     }
 
     /**
@@ -250,7 +250,9 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
         return isAnyActor() && isAnyRole() && isAnyOrganization() /*&& isAnyJurisdiction()*/;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         StringBuilder sb = new StringBuilder();
@@ -273,13 +275,14 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
 
     /**
      * Return the title of a report page on this spec.
+     *
      * @return a concise title for a report page
      */
     public String getReportTitle() {
-        return actor        != null ? actor.getName()
-             : role         != null ? role.getName()
-             : organization != null ? organization.getName()
-             : "Someone";
+        return actor != null ? actor.getName()
+                : role != null ? role.getName()
+                : organization != null ? organization.getName()
+                : "Someone";
     }
 
     /**
@@ -300,24 +303,23 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
     public boolean matches( ResourceSpec other, boolean precisely ) {
         if ( precisely ) {
 
-            boolean sameActor = actor == other.getActor()
-                 || actor == null && Actor.UNKNOWN.equals( other.getActor() )
-                 || other.getActor() == null && Actor.UNKNOWN.equals( actor );
+            boolean sameActor = ModelObject.areEqualOrNull( actor, other.getActor() )
+                    || actor == null && Actor.UNKNOWN.equals( other.getActor() )
+                    || other.getActor() == null && Actor.UNKNOWN.equals( actor );
 
-            boolean sameRole = role == other.getRole()
-                 || role == null && Role.UNKNOWN.equals( other.getRole() )
-                 || other.getRole() == null && Role.UNKNOWN.equals( role );
+            boolean sameRole = ModelObject.areEqualOrNull( role, other.getRole() )
+                    || role == null && Role.UNKNOWN.equals( other.getRole() )
+                    || other.getRole() == null && Role.UNKNOWN.equals( role );
 
-            boolean sameOrganization = organization == other.getOrganization()
-                 || organization == null && Organization.UNKNOWN.equals( other.getOrganization() )
-                 || other.getOrganization() == null && Organization.UNKNOWN.equals( organization );
+            boolean sameOrganization = ModelObject.areEqualOrNull( organization, other.getOrganization() )
+                    || organization == null && Organization.UNKNOWN.equals( other.getOrganization() )
+                    || other.getOrganization() == null && Organization.UNKNOWN.equals( organization );
 
             return sameActor
-                 && sameRole
-                 && sameOrganization
-                 && SemMatch.samePlace( jurisdiction, other.getJurisdiction() );
-        }
-        else
+                    && sameRole
+                    && sameOrganization
+                    && SemMatch.samePlace( jurisdiction, other.getJurisdiction() );
+        } else
             return narrowsOrEquals( other );
     }
 
@@ -328,11 +330,12 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      * @return a boolean
      */
     public boolean narrowsOrEquals( ResourceSpec other ) {
+        // Assumes that instance equality works for entities (two instances are necessarily non equal)
         if ( other.isAnyone() ) return false;
         if ( equals( other ) ) return true;
-        if ( actor != other.getActor() && !other.isAnyActor() )
+        if ( !ModelObject.areEqualOrNull( actor, other.getActor() ) && !other.isAnyActor() )
             return false;
-        if ( role != other.getRole() && !other.isAnyRole() )
+        if ( !ModelObject.areEqualOrNull( role, other.getRole() ) && !other.isAnyRole() )
             return false;
         // Todo compare inclusion
         /*
@@ -343,14 +346,13 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
 
          */
 
-        if ( organization != other.getOrganization() ) {
-            if ( organization != null || !Organization.UNKNOWN.equals( other.getOrganization() ) )
-                return false;
-        }
+        if ( !ModelObject.areEqualOrNull( organization, other.getOrganization() )
+                && !other.isAnyOrganization() )
+            return false;
 
         // Todo compare inclusion, not equality
-        return jurisdiction != null && jurisdiction.equals( other.getJurisdiction() )
-            || other.isAnyJurisdiction();
+        return !( !ModelObject.areEqualOrNull( jurisdiction, other.getJurisdiction() )
+                && !other.isAnyJurisdiction() );
     }
 
     /**
@@ -405,7 +407,7 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
     }
 
     /**
-     * WHether the source spec contains an entity in its definition.
+     * Whether the source spec contains an entity in its definition.
      *
      * @param entity an entity
      * @return a boolean
@@ -413,21 +415,25 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
     public boolean hasEntity( ModelObject entity ) {
         assert entity.isEntity();
         if ( entity instanceof Actor ) {
-            return actor == entity;
+            return ( actor != null && actor.equals( entity ) )
+                    || ( actor == null && entity.equals( Actor.UNKNOWN ) );
         } else if ( entity instanceof Role ) {
-            return role == entity;
+            return ( role != null && role.equals( entity ) )
+                    || ( role == null && entity.equals( Role.UNKNOWN ) );
         } else if ( entity instanceof Organization ) {
-            return organization == entity;
+            return ( organization != null && organization.equals( entity ) )
+                    || ( organization == null && entity.equals( Organization.UNKNOWN ) );
         } else {
-            return jurisdiction == entity;
+            return ( jurisdiction != null && jurisdiction.equals( entity ) )
+                    || ( jurisdiction == null && entity.equals( Place.UNKNOWN ) );
         }
     }
 
     @Override
     public String getDescription() {
         return actor != null ? actor.getDescription()
-             : role != null  ? role.getDescription()
-             : organization == null ? ""
-                                    : organization.getDescription();
+                : role != null ? role.getDescription()
+                : organization == null ? ""
+                : organization.getDescription();
     }
 }

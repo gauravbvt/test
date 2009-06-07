@@ -23,6 +23,17 @@ public class Event extends ModelObject {
      */
     private boolean selfTerminating;
 
+    /**
+     * Bogus event used to signify that the event is not known...
+     */
+    public static final Event UNKNOWN;
+
+    static {
+        UNKNOWN = new Event();
+        UNKNOWN.setName( "(unknown)" );
+        UNKNOWN.setId( 10000000L - 2 );
+    }
+
     public Event() {
 
     }

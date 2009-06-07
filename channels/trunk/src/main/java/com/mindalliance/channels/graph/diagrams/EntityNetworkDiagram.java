@@ -32,19 +32,19 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelObject, EntityRel
             String orientation ) {
         super( diagramSize, orientation );
         this.entity = entity;
-        this.selectedEntityRel= selectedEntityRel;
+        this.selectedEntityRel = selectedEntityRel;
     }
-                                                  
+
     public void render( String outputFormat, OutputStream outputStream ) {
         List<? extends ModelObject> entities = getEntities();
-        DiagramFactory<ModelObject,EntityRelationship> diagramFactory = getDiagramFactory();
+        DiagramFactory<ModelObject, EntityRelationship> diagramFactory = getDiagramFactory();
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
-        GraphBuilder<ModelObject,EntityRelationship> entityNetworkGraphBuilder =
+        GraphBuilder<ModelObject, EntityRelationship> entityNetworkGraphBuilder =
                 new EntityNetworkGraphBuilder( entity, entities, getDiagramFactory().getQueryService() );
-        Graph<ModelObject,EntityRelationship> graph =
+        Graph<ModelObject, EntityRelationship> graph =
                 entityNetworkGraphBuilder.buildDirectedGraph();
-        GraphRenderer<ModelObject,EntityRelationship> graphRenderer =
+        GraphRenderer<ModelObject, EntityRelationship> graphRenderer =
                 diagramFactory.getGraphRenderer();
         graphRenderer.resetHighlight();
         graphRenderer.highlightVertex( entity );
@@ -66,10 +66,11 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelObject, EntityRel
                 dotExporter,
                 outputFormat,
                 outputStream
-        );    }
+        );
+    }
 
     private List<? extends ModelObject> getEntities() {
-        return getDiagramFactory().getQueryService().list((Class<? extends ModelObject>)entity.getClass());
+        return getDiagramFactory().getQueryService().listEntitiesWithUnknown( entity.getClass() );
     }
 
 }

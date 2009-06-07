@@ -51,21 +51,25 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
     public URLProvider getURLProvider() {
         return new URLProvider<ModelObject, EntityRelationship>() {
 
-             public String getGraphURL( ModelObject vertex ) {
-                 return null;
-             }
+            public String getGraphURL( ModelObject vertex ) {
+                return null;
+            }
 
-             public String getVertexURL( ModelObject modelObject ) {
-                 Object[] args = {0, modelObject.getId()};
-                 return MessageFormat.format( VERTEX_URL_FORMAT, args );
-             }
+            public String getVertexURL( ModelObject modelObject ) {
+                if ( modelObject.isUnknown() ) {
+                    return null;
+                } else {
+                    Object[] args = {0, modelObject.getId()};
+                    return MessageFormat.format( VERTEX_URL_FORMAT, args );
+                }
+            }
 
-             public String getEdgeURL( EntityRelationship entityRelationship ) {
-                 // Plan id = 0 for now sice there is only one plan
-                 Object[] args = {0, entityRelationship.getId()};
-                 return MessageFormat.format( EDGE_URL_FORMAT, args );
-             }
-         };
+            public String getEdgeURL( EntityRelationship entityRelationship ) {
+                // Plan id = 0 for now sice there is only one plan
+                Object[] args = {0, entityRelationship.getId()};
+                return MessageFormat.format( EDGE_URL_FORMAT, args );
+            }
+        };
     }
 
     public EdgeNameProvider getEdgeLabelProvider() {
@@ -87,21 +91,21 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
     }
 
     private String getEntityLabel( ModelObject modelObject ) {
-        String label = AbstractMetaProvider.separate(modelObject.getName(), LINE_WRAP_SIZE);
-        while (label.split( "\\|" ).length > 3) {
-            label = StringUtils.reverse(label);
+        String label = AbstractMetaProvider.separate( modelObject.getName(), LINE_WRAP_SIZE );
+        while ( label.split( "\\|" ).length > 3 ) {
+            label = StringUtils.reverse( label );
             label = label.replaceFirst( "\\|", " " );
-            label = StringUtils.reverse(label);
+            label = StringUtils.reverse( label );
         }
         return label;
     }
 
     public VertexNameProvider getVertexIDProvider() {
         return new VertexNameProvider<ModelObject>() {
-             public String getVertexName( ModelObject entity ) {
-                 return "" + entity.getId();
-             }
-         };
+            public String getVertexName( ModelObject entity ) {
+                return "" + entity.getId();
+            }
+        };
     }
 
     public DOTAttributeProvider getDOTAttributeProvider() {
@@ -134,16 +138,15 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
             } else {
                 list.add( new DOTAttribute( "shape", "none" ) );
             }
-        list.add( new DOTAttribute( "fontsize", ENTITY_FONT_SIZE ) );
-        list.add( new DOTAttribute( "fontname", ENTITY_FONT ) );
-        if ( getAnalyst().hasUnwaivedIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
-            list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
-            list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( vertex,
-                    Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
-         }
+            list.add( new DOTAttribute( "fontsize", ENTITY_FONT_SIZE ) );
+            list.add( new DOTAttribute( "fontname", ENTITY_FONT ) );
+            if ( getAnalyst().hasUnwaivedIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+                list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
+                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( vertex,
+                        Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
+            }
             return list;
         }
-
 
 
         public List<DOTAttribute> getEdgeAttributes( EntityRelationship edge, boolean highlighted ) {
@@ -170,20 +173,20 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
         private String getIcon( ModelObject modelObject ) {
             String iconName;
             int numLines = 0;
-                String label = getEntityLabel( modelObject );
-                String[] lines = label.split( "\\|" );
-                numLines = Math.min( lines.length, 3 );
-                if ( modelObject instanceof Actor ) {
-                    boolean isSystem = modelObject.getName().toLowerCase().contains( "system" );
-                    iconName = isSystem ? "system" : "person";
-                } else if ( modelObject instanceof Role ) {
-                    boolean isSystem = modelObject.getName().toLowerCase().contains( "system" );
-                    iconName = isSystem ? "system" : "role";
-                } else if ( modelObject instanceof Organization ) {
-                    iconName = "organization";
-                } else {
-                    iconName = "unknown";
-                }
+            String label = getEntityLabel( modelObject );
+            String[] lines = label.split( "\\|" );
+            numLines = Math.min( lines.length, 3 );
+            if ( modelObject instanceof Actor ) {
+                boolean isSystem = modelObject.getName().toLowerCase().contains( "system" );
+                iconName = isSystem ? "system" : "person";
+            } else if ( modelObject instanceof Role ) {
+                boolean isSystem = modelObject.getName().toLowerCase().contains( "system" );
+                iconName = isSystem ? "system" : "role";
+            } else if ( modelObject instanceof Organization ) {
+                iconName = "organization";
+            } else {
+                iconName = "unknown";
+            }
             return getImageDirectory() + "/" + iconName + ( numLines > 0 ? numLines : "" ) + ".png";
         }
 

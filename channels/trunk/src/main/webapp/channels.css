@@ -848,5 +848,9 @@ input.filter {
     width: 30em
 }
 
+input.filter-small {
+    width: 15em
+}
+
 
 

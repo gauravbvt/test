@@ -35,8 +35,8 @@ public class PartShowMenuPanel extends MenuPanel {
     private List<ModelObjectWrapper> getModelObjectWrappers() {
         List<ModelObjectWrapper> modelObjects = new ArrayList<ModelObjectWrapper>();
         Part part = getPart();
-        if ( part.getActor() != null )
-            modelObjects.add( new ModelObjectWrapper( "Actor", part.getActor() ) );
+        if ( part.getKnownActor() != null )
+            modelObjects.add( new ModelObjectWrapper( "Actor", part.getKnownActor() ) );
         if ( part.getRole() != null )
             modelObjects.add( new ModelObjectWrapper( "Role", part.getRole() ) );
         if ( part.getOrganization() != null )

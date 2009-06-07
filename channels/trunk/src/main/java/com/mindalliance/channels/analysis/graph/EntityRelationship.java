@@ -1,18 +1,18 @@
 package com.mindalliance.channels.analysis.graph;
 
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.lang.StringUtils;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Flows between entities of the same kind.
@@ -23,7 +23,7 @@ import java.util.Iterator;
  * Time: 5:03:25 PM
  */
 public class EntityRelationship<T extends ModelObject> implements Identifiable {
-       /**
+    /**
      * Class logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( EntityRelationship.class );
@@ -107,7 +107,7 @@ public class EntityRelationship<T extends ModelObject> implements Identifiable {
      */
     public T getFromEntity( QueryService queryService ) {
         try {
-            return (T)queryService.find( ModelObject.class, fromEntityId );
+            return (T) queryService.find( ModelObject.class, fromEntityId );
         } catch ( NotFoundException e ) {
             LOG.warn( "From-entity not found", e );
             return null;
@@ -120,9 +120,10 @@ public class EntityRelationship<T extends ModelObject> implements Identifiable {
      * @param queryService a query service
      * @return an entity
      */
+    @SuppressWarnings( "unchecked" )
     public T getToEntity( QueryService queryService ) {
         try {
-            return (T)queryService.find( ModelObject.class, toEntityId );
+            return (T) queryService.find( ModelObject.class, toEntityId );
         } catch ( NotFoundException e ) {
             LOG.warn( "To-entity not found", e );
             return null;

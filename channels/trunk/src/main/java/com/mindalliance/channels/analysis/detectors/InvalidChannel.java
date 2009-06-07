@@ -36,7 +36,7 @@ public class InvalidChannel extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Invalid channel in flow";
+        return "Invalid channel";
     }
 
     /**

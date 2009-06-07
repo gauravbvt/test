@@ -45,6 +45,10 @@ public class FilterableModelObjectLink extends AbstractUpdatablePanel {
      * Link to (de)activate filtering.
      */
     private AjaxFallbackLink filterLink;
+    /**
+     * Filter property.
+     */
+    private String filterProperty;
 
     public FilterableModelObjectLink(
             String id,
@@ -52,11 +56,22 @@ public class FilterableModelObjectLink extends AbstractUpdatablePanel {
             IModel<String> textModel,
             String hint,
             Filterable filterable ) {
+        this( id, moModel, textModel, hint, null, filterable );
+    }
+
+    public FilterableModelObjectLink(
+            String id,
+            IModel<? extends ModelObject> moModel,
+            IModel<String> textModel,
+            String hint,
+            String filterProperty,
+            Filterable filterable ) {
         super( id, moModel );
         this.filterable = filterable;
         this.moModel = moModel;
         this.textModel = textModel;
         this.hint = hint;
+        this.filterProperty = filterProperty;
         init();
     }
 
@@ -79,7 +94,7 @@ public class FilterableModelObjectLink extends AbstractUpdatablePanel {
     private void addFilterLink() {
         filterLink = new AjaxFallbackLink( "filterLink" ) {
             public void onClick( AjaxRequestTarget target ) {
-                filterable.toggleFilter( getLinkedObject(), target );
+                filterable.toggleFilter( getLinkedObject(), filterProperty, target );
                 addImage();
                 target.addComponent( image );
             }
@@ -105,7 +120,7 @@ public class FilterableModelObjectLink extends AbstractUpdatablePanel {
      * @return a String
      */
     public String getImageSource() {
-        return ( filterable.isFiltered( getModel().getObject() ) )
+        return ( filterable.isFiltered( getModel().getObject(), filterProperty ) )
                 ? "images/lock.png"
                 : "images/lock_open.png";
     }
@@ -116,7 +131,7 @@ public class FilterableModelObjectLink extends AbstractUpdatablePanel {
       * @return a String
       */
     public String getImageTitle() {
-        return ( filterable.isFiltered( getModel().getObject() ) )
+        return ( filterable.isFiltered( getModel().getObject(), filterProperty ) )
                 ? "release filter"
                 : "filter on this";
     }

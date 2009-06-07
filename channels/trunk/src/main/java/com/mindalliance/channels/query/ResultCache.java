@@ -44,8 +44,9 @@ public class ResultCache {
      */
     public void cache( MethodInvocation invocation, Object result ) {
         String key = getKey( invocation );
+        int count = cache.getSize();
         if ( log.isTraceEnabled() )
-            log.trace( MessageFormat.format( "Caching result of {0}", key ) );
+            log.trace( MessageFormat.format( "Caching result {0} of {1}", count, key ) );
         getCache().put( new Element( key, result ) );
     }
 

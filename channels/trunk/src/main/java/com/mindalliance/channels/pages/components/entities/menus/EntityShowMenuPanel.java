@@ -51,15 +51,6 @@ public class EntityShowMenuPanel extends MenuPanel {
                 changeAspectTo( target, "network" );
             }
         };
-        Link flowsLink = new AjaxFallbackLink( "link" ) {
-            public void onClick( AjaxRequestTarget target ) {
-                changeAspectTo( target, "flows" );
-            }
-        };
-        menuItems.add( new LinkMenuItem(
-                "menuItem",
-                new Model<String>( "Flows" ),
-                flowsLink ) );
         menuItems.add( new LinkMenuItem(
                 "menuItem",
                 new Model<String>( "Network" ),

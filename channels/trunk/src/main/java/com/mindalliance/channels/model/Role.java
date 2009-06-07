@@ -11,8 +11,15 @@ import javax.persistence.Transient;
 @Entity
 public class Role extends ModelObject {
 
-    /** The undefined role. */
-    public static final Role UNKNOWN = new Role( "(Unknown role)" );
+    /**
+      * Bogus role used to signify that the role is not known...
+      */
+     public static final Role UNKNOWN;
+
+     static {
+         UNKNOWN = new Role( "(unknown)" );
+         UNKNOWN.setId( 10000000L - 5 );
+     }
 
     public Role() {
     }

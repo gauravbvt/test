@@ -46,7 +46,7 @@ public class PotentialDeadlock extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Potential deadlock";
+        return "Potential task deadlock";
     }
 
     /**

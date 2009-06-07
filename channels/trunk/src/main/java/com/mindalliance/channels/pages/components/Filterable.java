@@ -12,18 +12,22 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
  * Time: 4:18:30 PM
  */
 public interface Filterable {
+
     /**
-     * Add or remove a filter.
+     * Add or remove a property-qualified filter.
      *
      * @param identifiable an identifiable
-     * @param target an ajax request target
+     * @param property     a string
+     * @param target       an ajax request target
      */
-    void toggleFilter( Identifiable identifiable, AjaxRequestTarget target );
+    void toggleFilter( Identifiable identifiable, String property, AjaxRequestTarget target );
 
     /**
      * Whether an identifiable is a filter.
-     * @param identifiable  an identifiable
+     *
+     * @param identifiable an identifiable
+     * @param property     property the identifiable is filtered in
      * @return a boolean
      */
-    boolean isFiltered( Identifiable identifiable );
+    boolean isFiltered( Identifiable identifiable, String property );
 }

@@ -75,6 +75,7 @@ public abstract class AbstractChannelsConverter implements Converter {
 
     /**
      * Is a plan being exported?
+     *
      * @param context marshalling context
      * @return a boolean
      */
@@ -84,6 +85,7 @@ public abstract class AbstractChannelsConverter implements Converter {
 
     /**
      * Is a plan being imported?
+     *
      * @param context unmarshalling context
      * @return a boolean
      */
@@ -126,14 +128,15 @@ public abstract class AbstractChannelsConverter implements Converter {
 
     /**
      * Export a model object's user issues.
+     *
      * @param modelObject a model object
-     * @param writer a writer
-     * @param context  a marshalling context
+     * @param writer      a writer
+     * @param context     a marshalling context
      */
     protected void exportUserIssues(
             ModelObject modelObject,
             HierarchicalStreamWriter writer,
-            MarshallingContext context  ) {
+            MarshallingContext context ) {
         List<Issue> issues = getQueryService().findAllUserIssues( modelObject );
         for ( Issue issue : issues ) {
             writer.startNode( "issue" );
@@ -176,9 +179,11 @@ public abstract class AbstractChannelsConverter implements Converter {
             writer.startNode( "attachments" );
             if ( exportingPlan ) {
                 for ( String ticket : modelObject.getAttachmentTickets() ) {
-                    writer.startNode( "ticket" );
-                    writer.setValue( ticket );
-                    writer.endNode();
+                    if ( ticket != null ) {
+                        writer.startNode( "ticket" );
+                        writer.setValue( ticket );
+                        writer.endNode();
+                    }
                 }
             } else {
                 // only export attached URLs directly (file attachments are not portables)
@@ -239,7 +244,7 @@ public abstract class AbstractChannelsConverter implements Converter {
                             modelObject.getAttachmentTickets() );
                     modelObject.addAttachmentTicket( ticket );
                 } catch ( MalformedURLException e ) {
-                    LOG.warn( "Can't attach URL " + url + " to " + modelObject, e);
+                    LOG.warn( "Can't attach URL " + url + " to " + modelObject, e );
                 }
             }
             reader.moveUp();

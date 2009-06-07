@@ -292,7 +292,27 @@ public class DefaultQueryService extends Observable implements QueryService {
      * {@inheritDoc}
      */
     public <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException {
-        return getDao().find( clazz, id );
+        try {
+            return getDao().find( clazz, id );
+        } catch ( NotFoundException e ) {
+            return findUnknown( clazz, id );
+        }
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private <T extends ModelObject> T findUnknown( Class<T> clazz, long id ) throws NotFoundException {
+        if ( clazz.isAssignableFrom( Actor.class ) && Actor.UNKNOWN.getId() == id )
+            return (T) Actor.UNKNOWN;
+        else if ( clazz.isAssignableFrom( Event.class ) && Event.UNKNOWN.getId() == id )
+            return (T) Event.UNKNOWN;
+        else if ( clazz.isAssignableFrom( Organization.class ) && Organization.UNKNOWN.getId() == id )
+            return (T) Organization.UNKNOWN;
+        else if ( clazz.isAssignableFrom( Place.class ) && Place.UNKNOWN.getId() == id )
+            return (T) Place.UNKNOWN;
+        else if ( clazz.isAssignableFrom( Role.class ) && Role.UNKNOWN.getId() == id )
+            return (T) Role.UNKNOWN;
+        else
+            throw new NotFoundException();
     }
 
     /**
@@ -886,8 +906,8 @@ public class DefaultQueryService extends Observable implements QueryService {
                 if ( flow.getSource().isPart() && flow.getTarget().isPart() ) {
                     Part sourcePart = (Part) flow.getSource();
                     Part targetPart = (Part) flow.getTarget();
-                    if ( sourcePart.resourceSpec().hasEntity( fromEntity )
-                            && targetPart.resourceSpec().hasEntity( toEntity ) ) {
+                    if ( isExecutedBy( sourcePart, fromEntity )
+                            && isExecutedBy( targetPart, toEntity ) ) {
                         entityFlows.add( flow );
                     }
                 }
@@ -901,6 +921,16 @@ public class DefaultQueryService extends Observable implements QueryService {
             return entityRel;
         }
 
+    }
+
+    private boolean isExecutedBy( Part part, ModelObject entity ) {
+        ResourceSpec partSpec = part.resourceSpec();
+        if ( entity instanceof Actor ) {
+            return partSpec.hasEntity( entity )
+                    || findAllActors( partSpec ).contains( (Actor) entity );
+        } else {
+            return partSpec.hasEntity( entity );
+        }
     }
 
 
@@ -1662,17 +1692,37 @@ public class DefaultQueryService extends Observable implements QueryService {
         for ( ModelObject mo : list( ModelObject.class ) ) {
             allIssues.addAll( analyst.listIssues( mo, true ) );
         }
-        for (Scenario scenario : list( Scenario.class)) {
+        for ( Scenario scenario : list( Scenario.class ) ) {
             Iterator<Part> parts = scenario.parts();
-            while( parts.hasNext() ) {
-                allIssues.addAll( analyst.listIssues( parts.next(), true));
+            while ( parts.hasNext() ) {
+                allIssues.addAll( analyst.listIssues( parts.next(), true ) );
             }
             Iterator<Flow> flows = scenario.flows();
-            while( flows.hasNext() ) {
-                allIssues.addAll( analyst.listIssues( flows.next(), true));
+            while ( flows.hasNext() ) {
+                allIssues.addAll( analyst.listIssues( flows.next(), true ) );
             }
         }
         return allIssues;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
+    public <T extends ModelObject> List<T> listEntitiesWithUnknown( Class<T> entityClass ) {
+        List<T> allEntities = new ArrayList<T>( list( entityClass ) );
+        ModelObject unknown =
+                entityClass == Actor.class
+                        ? Actor.UNKNOWN
+                        : entityClass == Event.class
+                        ? Event.UNKNOWN
+                        : entityClass == Organization.class
+                        ? Organization.UNKNOWN
+                        : entityClass == Place.class
+                        ? Place.UNKNOWN
+                        : Role.UNKNOWN;
+        allEntities.add( (T) unknown );
+        return allEntities;
     }
 }
 
