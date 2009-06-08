@@ -51,7 +51,7 @@ public class ScenarioEventNeverEnds extends AbstractIssueDetector {
                 terminated = part.isTerminatesEvent();
             }
             if ( !terminated ) {
-                Issue issue = makeIssue( Issue.STRUCTURAL, scenario );
+                Issue issue = makeIssue( Issue.COMPLETENESS, scenario );
                 issue.setDescription( "The scenario never ends the event it responds to." );
                 issue.setRemediation( "Have the event end on its own"
                         + " or have at least one task in the scenario terminate it." );

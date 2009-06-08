@@ -32,7 +32,7 @@ public class ScenarioEventNotStarted extends AbstractIssueDetector {
         Plan plan = Channels.getPlan();
         if ( !plan.isIncident( scenario.getEvent() ) && getQueryService().isInitiated( scenario ) ) {
             if ( !getQueryService().findIfScenarioStarted( scenario ) ) {
-                Issue issue = makeIssue( Issue.STRUCTURAL, scenario );
+                Issue issue = makeIssue( Issue.COMPLETENESS, scenario );
                 issue.setDescription( "The scenario would never start"
                         + " because no other scenario causes the event it responds to." );
                 issue.setRemediation( "Ensure that tasks that cause the event in question are actually started,"

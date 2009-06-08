@@ -51,13 +51,13 @@ public class UnconnectedConnector extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         for ( Flow capability : getQueryService().findUnusedCapabilities( part ) ) {
-            DetectedIssue issue = makeIssue( DetectedIssue.STRUCTURAL, part );
+            DetectedIssue issue = makeIssue( DetectedIssue.COMPLETENESS, part );
             issue.setDescription( "'" + capability.getName() + "' is produced but never sent." );
             issue.setSeverity( Issue.Level.Minor );
             issues.add( issue );
         }
         for ( Flow need : getQueryService().findUnsatisfiedNeeds( part ) ) {
-            DetectedIssue issue = makeIssue( DetectedIssue.STRUCTURAL, part );
+            DetectedIssue issue = makeIssue( DetectedIssue.COMPLETENESS, part );
             issue.setDescription(
                     ( need.isRequired() ? "Required " : "" )
                             + "'"

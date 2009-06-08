@@ -46,21 +46,21 @@ public interface Issue extends Identifiable, Serializable {
     }
 
     /**
-     * Type of issue having to do with the definition of a model object
+     * Type of issue having to do with validity
      */
-    String DEFINITION = "Definition";
+    String VALIDITY = "Validity";
     /**
-     * Type of having having to do with a flow of information
+     * Type of having having to do with completeness
      */
-    String FLOW = "Flow";
+    String COMPLETENESS = "Completeness";
     /**
-     * Type of issue having to do with a scenario as a whole
+     * Type of issue having to do with robustness
      */
-    String STRUCTURAL = "Structural";
+    String ROBUSTNESS = "Robustness";
     /**
      * All possible types of issues
      */
-    String[] TYPES = new String[]{DEFINITION, FLOW, STRUCTURAL};
+    String[] TYPES = new String[]{VALIDITY, COMPLETENESS, ROBUSTNESS};
 
     /**
      * The identifiable object the issue is about
@@ -157,7 +157,7 @@ public interface Issue extends Identifiable, Serializable {
     /**
      * This issue is of a kind that can be waived.
      *
-     * @return
+     * @return a boolean
      */
     boolean canBeWaived();
 

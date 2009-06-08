@@ -63,7 +63,7 @@ public class UselessPart extends AbstractIssueDetector {
         Part part = (Part) modelObject;
         if ( part.requirements().hasNext() || part.outcomes().hasNext() ) {
             if ( !isUseful( part, new HashSet<Part>() ) ) {
-                DetectedIssue issue = makeIssue( DetectedIssue.STRUCTURAL, part );
+                DetectedIssue issue = makeIssue( DetectedIssue.COMPLETENESS, part );
                 issue.setDescription( "Not useful: it neither ends or mitigates a risk, "
                         + "nor does it trigger or send information to a useful task." );
                 issue.setRemediation( "Have the task mitigate a risk, or make sure at least one task that it"

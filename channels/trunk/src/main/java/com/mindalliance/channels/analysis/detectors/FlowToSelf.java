@@ -62,7 +62,7 @@ public class FlowToSelf extends AbstractIssueDetector {
             Part source = (Part)flow.getSource();
             Part target = (Part)flow.getTarget();
             if (source.getActor() == target.getActor() && source.getActor() != null ) {
-                Issue issue = makeIssue(Issue.STRUCTURAL, flow);
+                Issue issue = makeIssue(Issue.VALIDITY, flow);
                 issue.setDescription(source.getActor() + " is both the source and target.");
                 issue.setRemediation(" Change either the source or target of this flow.");
                 issue.setSeverity( Issue.Level.Major );
@@ -73,7 +73,7 @@ public class FlowToSelf extends AbstractIssueDetector {
                 if ( possibleSourceActors.size() == 1
                         && possibleTargetActors.size() == 1
                         && possibleSourceActors.get(0) == possibleTargetActors.get(0)) {
-                    Issue issue = makeIssue(Issue.STRUCTURAL, flow);
+                    Issue issue = makeIssue(Issue.VALIDITY, flow);
                     issue.setDescription(possibleSourceActors.get(0)
                             + " is both the only potential source and target.");
                     issue.setRemediation(" If this is not intentional, change either the source or target of this flow, "

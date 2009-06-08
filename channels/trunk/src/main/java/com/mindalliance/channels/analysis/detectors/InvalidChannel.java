@@ -52,7 +52,7 @@ public class InvalidChannel extends AbstractIssueDetector {
         for ( Channel channel : channels ) {
             String problem = channelable.validate( channel );
             if ( problem != null ) {
-                Issue issue = makeIssue( Issue.DEFINITION, modelObject );
+                Issue issue = makeIssue( Issue.VALIDITY, modelObject );
                 issue.setDescription( channel.toString() + ": " + problem );
                 String remediation;
                 if ( channel.getMedium() == null ) {
@@ -65,7 +65,7 @@ public class InvalidChannel extends AbstractIssueDetector {
                 issues.add( issue );
             }
             if ( CollectionUtils.cardinality( channel, channels ) > 1) {
-                Issue issue = makeIssue( Issue.DEFINITION, modelObject );
+                Issue issue = makeIssue( Issue.VALIDITY, modelObject );
                 issue.setDescription( channel.toString() + " is repeated.");
                 issue.setRemediation( "Remove this channel.");
                 issue.setSeverity( Issue.Level.Minor );

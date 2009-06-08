@@ -61,7 +61,7 @@ public class RedundantPart extends AbstractIssueDetector {
         List<Part> equivalentParts = findEquivalentTo( part );
         int count = equivalentParts.size();
         if ( count > 0 ) {
-            DetectedIssue issue = makeIssue( DetectedIssue.DEFINITION, part );
+            DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, part );
             issue.setDescription(
                     "This task is restated "
                             + ( ( count == 1 ) ? "once." : count + " times." ) );

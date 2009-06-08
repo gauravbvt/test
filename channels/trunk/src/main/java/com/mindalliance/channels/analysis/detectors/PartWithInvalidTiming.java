@@ -50,7 +50,7 @@ public class PartWithInvalidTiming extends AbstractIssueDetector {
         if ( part.isRepeating() ) {
             if ( part.isSelfTerminating() ) {
                 if ( part.getCompletionTime().compareTo( part.getRepeatsEvery() ) > 0 ) {
-                   DetectedIssue issue = makeIssue( DetectedIssue.DEFINITION, modelObject );
+                   DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject );
                     issue.setDescription( "The task repeats before it usually completes." );
                     issue.setRemediation( "Make the task complete sooner or wait longer before it repeats." );
                     issue.setSeverity( Issue.Level.Minor );
@@ -58,7 +58,7 @@ public class PartWithInvalidTiming extends AbstractIssueDetector {
                 }
             }
             else {
-                DetectedIssue issue = makeIssue( DetectedIssue.DEFINITION, modelObject );
+                DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject );
                  issue.setDescription( "The task repeats but may not complete beforehand." );
                  issue.setRemediation( "Make the task non-repeating or set a completion time for the task." );
                  issue.setSeverity( Issue.Level.Minor );

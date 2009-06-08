@@ -104,7 +104,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
     private DetectedIssue createIssue(
             ModelObject modelObject, Issue.Level severity, String description,
             String remediation ) {
-        DetectedIssue issue = makeIssue( Issue.DEFINITION, modelObject );
+        DetectedIssue issue = makeIssue( Issue.COMPLETENESS, modelObject );
         issue.setDescription( description );
         issue.setRemediation( remediation );
         issue.setSeverity( severity );

@@ -1708,6 +1708,27 @@ public class DefaultQueryService extends Observable implements QueryService {
     /**
      * {@inheritDoc}
      */
+    public List<Issue> findAllUnwaivedIssues( Analyst analyst ) {
+        List<Issue> allUnwaivedIssues = new ArrayList<Issue>();
+        for ( ModelObject mo : list( ModelObject.class ) ) {
+            allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( mo, true ) );
+        }
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( parts.next(), true ) );
+            }
+            Iterator<Flow> flows = scenario.flows();
+            while ( flows.hasNext() ) {
+                allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( flows.next(), true ) );
+            }
+        }
+        return allUnwaivedIssues;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings( "unchecked" )
     public <T extends ModelObject> List<T> listEntitiesWithUnknown( Class<T> entityClass ) {
         List<T> allEntities = new ArrayList<T>( list( entityClass ) );

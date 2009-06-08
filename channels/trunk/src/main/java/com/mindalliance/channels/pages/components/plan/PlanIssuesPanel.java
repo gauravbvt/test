@@ -7,13 +7,19 @@ import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.util.SortableBeanProvider;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
+import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,8 +31,18 @@ import java.util.List;
  * Time: 11:43:52 AM
  */
 public class PlanIssuesPanel extends AbstractUpdatablePanel implements Filterable {
-
-    private static final int MAX_ROWS = 9;
+    /**
+     * Maximum number of rows of issues to show at a time.
+     */
+    private static final int MAX_ROWS = 12;
+    /**
+     * Category of issues to show.
+     */
+    private String issueType = "All";
+    /**
+     * Whether to show waived issues.
+     */
+    private boolean includeWaived = false;
     /**
      * Model objects filtered on (show only where so and so is the actor etc.)
      */
@@ -42,7 +58,60 @@ public class PlanIssuesPanel extends AbstractUpdatablePanel implements Filterabl
     }
 
     private void init() {
+        addIssueTypeChoice();
+        addIncludeWaived();
         addIssuesTable();
+    }
+
+    private void addIssueTypeChoice() {
+        DropDownChoice<String> issueTypeChoice = new DropDownChoice<String>(
+                "issueType",
+                new PropertyModel<String>( this, "issueType" ),
+                getIssueTypeChoices()
+        );
+        issueTypeChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addIssuesTable();
+                target.addComponent( issuesTable );
+            }
+        } );
+        add( issueTypeChoice );
+    }
+
+    private List<String> getIssueTypeChoices() {
+        List<String> choices = new ArrayList<String>();
+        choices.add( "All" );
+        choices.addAll( Arrays.asList( Issue.TYPES ) );
+        return choices;
+    }
+
+    public String getIssueType() {
+        return issueType;
+    }
+
+    public void setIssueType( String issueType ) {
+        this.issueType = issueType;
+    }
+
+    private void addIncludeWaived() {
+        CheckBox includeWaivedCheckBox = new CheckBox(
+                "includeWaived",
+                new PropertyModel<Boolean>( this, "includeWaived" ) );
+        includeWaivedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addIssuesTable();
+                target.addComponent( issuesTable );
+            }
+        } );
+        add( includeWaivedCheckBox );
+    }
+
+    public boolean isIncludeWaived() {
+        return includeWaived;
+    }
+
+    public void setIncludeWaived( boolean includeWaived ) {
+        this.includeWaived = includeWaived;
     }
 
     private void addIssuesTable() {
@@ -56,7 +125,7 @@ public class PlanIssuesPanel extends AbstractUpdatablePanel implements Filterabl
     /**
      * {@inheritDoc}
      */
-    public void toggleFilter( Identifiable identifiable , String property, AjaxRequestTarget target ) {
+    public void toggleFilter( Identifiable identifiable, String property, AjaxRequestTarget target ) {
         // only about is filtered; property is ignored
         about = ( identifiable == about ) ? null : (ModelObject) identifiable;
         addIssuesTable();
@@ -68,12 +137,31 @@ public class PlanIssuesPanel extends AbstractUpdatablePanel implements Filterabl
      *
      * @return a list of issues
      */
+    @SuppressWarnings( "unchecked" )
     public List<Issue> getIssues() {
+        List<Issue> issues;
         if ( about != null ) {
-            return getAnalyst().listIssues( about, true );
+            if ( includeWaived ) {
+                issues = getAnalyst().listIssues( about, true );
+            } else {
+                issues = getAnalyst().listUnwaivedIssues( about, true );
+            }
         } else {
-            return getQueryService().findAllIssues( getAnalyst() );
+            if ( includeWaived ) {
+                issues = getQueryService().findAllIssues( getAnalyst() );
+            } else {
+                issues = getQueryService().findAllUnwaivedIssues( getAnalyst() );
+            }
         }
+        return (List<Issue>) CollectionUtils.select(
+                issues,
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ( issueType.equals( "All" )
+                                || ( (Issue) obj ).getType().equals( issueType ) );
+                    }
+                }
+        );
     }
 
     /**

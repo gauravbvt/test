@@ -3,10 +3,13 @@ package com.mindalliance.channels.analysis;
 import com.mindalliance.channels.AbstractService;
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.util.Play;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -25,7 +28,7 @@ import java.util.Set;
  * Date: Nov 26, 2008
  * Time: 10:07:27 AM
  */
-public class DefaultAnalyst  extends AbstractService implements Analyst {
+public class DefaultAnalyst extends AbstractService implements Analyst {
 
     private static final String DESCRIPTION_SEPARATOR = " -- ";
 
@@ -168,7 +171,7 @@ public class DefaultAnalyst  extends AbstractService implements Analyst {
         StringBuilder sb = new StringBuilder();
         for ( Issue issue : issues ) {
             sb.append( issue.getDescription() );
-            if ( issues.indexOf( issue ) != issues.size() -1 ) sb.append( DESCRIPTION_SEPARATOR );
+            if ( issues.indexOf( issue ) != issues.size() - 1 ) sb.append( DESCRIPTION_SEPARATOR );
         }
         return sb.toString();
     }
@@ -216,6 +219,116 @@ public class DefaultAnalyst  extends AbstractService implements Analyst {
     public QueryService getQueryService() {
         return getChannels().getQueryService();
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isValid( ModelObject modelObject ) {
+        return test( modelObject, Issue.VALIDITY);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isComplete( ModelObject modelObject ) {
+        return test( modelObject, Issue.COMPLETENESS);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isRobust( ModelObject modelObject ) {
+        return test( modelObject, Issue.ROBUSTNESS);
+    }
+
+    private boolean test( ModelObject modelObject, String test ) {
+        if ( modelObject instanceof Plan ) {
+            return passes( (Plan) modelObject, test );
+        } else if ( modelObject instanceof Scenario ) {
+            return passes( (Scenario) modelObject, test );
+        } else {
+            return hasNoTestedIssue( modelObject, test );
+        }
+    }
+
+    private boolean passes( Plan plan, String test ) {
+        if ( !hasNoTestedIssue( plan, test ) ) return false;
+        for ( Scenario scenario : plan.getScenarios() ) {
+            if ( !passes( scenario, test ) ) return false;
+        }
+        for ( ModelObject mo : getQueryService().list(ModelObject.class)) {
+            if ( mo.isEntity() && !hasNoTestedIssue( mo, test ) ) return false;
+        }
+        return true;
+    }
+
+    private boolean passes( Scenario scenario, String test ) {
+        if ( !hasNoTestedIssue( scenario, test ) ) return false;
+        Iterator<Part> parts = scenario.parts();
+        while ( parts.hasNext() ) {
+            if ( !hasNoTestedIssue( parts.next(), test ) ) return false;
+        }
+        Iterator<Flow> flows = scenario.flows();
+        while ( flows.hasNext() ) {
+            if ( !hasNoTestedIssue( flows.next(), test ) ) return false;
+        }
+        return true;
+    }
+
+    private boolean hasNoTestedIssue( ModelObject modelObject, final String test ) {
+        return CollectionUtils.select(
+                listUnwaivedIssues( modelObject, true ),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ( (Issue) obj ).getType().equals( test );
+                    }
+                } ).isEmpty();
+    }
+
+    /** {@inheritDoc} */
+    public int countTestFailures( ModelObject modelObject, String test ) {
+        if ( modelObject instanceof Plan ) {
+            return countFailures( (Plan) modelObject, test );
+        } else if ( modelObject instanceof Scenario ) {
+            return countFailures( (Scenario) modelObject, test );
+        } else {
+            return countTestIssues( modelObject, test );
+        }
+    }
+
+     private int countFailures( Plan plan, String test ) {
+        int count = countTestIssues( plan, test );
+         for ( Scenario scenario : plan.getScenarios() ) {
+             count += countFailures( scenario, test );
+         }
+         for ( ModelObject mo : getQueryService().list(ModelObject.class)) {
+             if ( mo.isEntity() ) count += countTestIssues( mo, test );
+         }
+         return count;
+    }
+
+    private int countFailures( Scenario scenario, String test ) {
+        int count = countTestIssues( scenario, test );
+         Iterator<Part> parts = scenario.parts();
+         while ( parts.hasNext() ) {
+             count += countTestIssues( parts.next(), test );
+         }
+         Iterator<Flow> flows = scenario.flows();
+         while ( flows.hasNext() ) {
+             count += countTestIssues( flows.next(), test );
+         }
+         return count;
+    }
+
+    private int countTestIssues( ModelObject modelObject, final String test ) {
+         return CollectionUtils.select(
+                 listUnwaivedIssues( modelObject, true ),
+                 new Predicate() {
+                     public boolean evaluate( Object obj ) {
+                         return ((Issue)obj).getType().equals( test );
+                     }
+                 }).size();
+     }
 
     /**
      * Find the issues on parts and flows for all plays of a resource

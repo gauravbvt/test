@@ -91,7 +91,7 @@ public class PotentialDeadlock extends AbstractIssueDetector {
                     }
                     // This is a "critical" cycle
                     if ( allCritical ) {
-                        Issue issue = makeIssue( Issue.STRUCTURAL, scenario );
+                        Issue issue = makeIssue( Issue.ROBUSTNESS, scenario );
                         issue.setDescription( "Potential deadlock if any of "
                                 + getRequirementDescriptions( criticalRequirementsInCycle )
                                 + " fails." );

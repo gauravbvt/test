@@ -155,4 +155,31 @@ public interface Analyst extends Service {
      */
     QueryService getQueryService();
 
+    /**
+     * Whether the model object has no unwaived validity issue.
+     * @param modelObject a model object
+     * @return a boolean
+     */
+    boolean isValid( ModelObject modelObject );
+    /**
+     * Whether the model object has no unwaived completeness issue.
+     * @param modelObject a model object
+     * @return a boolean
+     */
+    boolean isComplete( ModelObject modelObject );
+    /**
+     * Whether the model object has no unwaived robustness issue.
+     * @param modelObject a model object
+     * @return a boolean
+     */
+    boolean isRobust( ModelObject modelObject );
+
+    /**
+     * Count the number of unwaived issues for a model object in a given test.
+     * @param modelObject a model object
+     * @param test a type of issue
+     * @return an int
+     */
+    int countTestFailures( ModelObject modelObject, String test );
+
 }

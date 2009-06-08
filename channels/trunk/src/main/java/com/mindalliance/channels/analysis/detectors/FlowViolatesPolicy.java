@@ -33,7 +33,7 @@ public class FlowViolatesPolicy extends AbstractIssueDetector {
         List<Document> documents = getAttachmentManager().getDocuments( flow.getAttachmentTickets() );
         for ( Document document : documents ) {
             if ( document.isPolicyViolation() ) {
-                Issue issue = makeIssue( Issue.FLOW, flow );
+                Issue issue = makeIssue( Issue.COMPLETENESS, flow );
                 issue.setDescription( "Violates policy per \"" + document.getLabel() + "\"." );
                 issue.setRemediation( "Change or remove flow, or change the policy." );
                 issue.setSeverity( Issue.Level.Severe );

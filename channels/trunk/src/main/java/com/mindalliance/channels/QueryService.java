@@ -677,9 +677,18 @@ public interface QueryService extends Service {
     List<Issue> findAllIssues(Analyst analyst);
 
     /**
+     * Find all unwaived issues on all model objects in the plan.
+     *
+     * @param analyst an analyst
+     * @return a list of issues.
+     */
+    List<Issue> findAllUnwaivedIssues( Analyst analyst );
+
+    /**
      * List all entities of a given class, plus the unmnown entity of this class.
      * @param clazz a class extending ModelObject
      * @return a list of entities
      */
     <T extends ModelObject> List<T> listEntitiesWithUnknown( Class<T> clazz );
+
 }

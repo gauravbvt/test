@@ -87,7 +87,7 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
         }
         // Found single points of failure?
         for ( Node node : actorNodes ) {
-            DetectedIssue issue = makeIssue( DetectedIssue.STRUCTURAL, node );
+            DetectedIssue issue = makeIssue( DetectedIssue.ROBUSTNESS, node );
             issue.setDescription( "Single point of failure." );
             issue.setRemediation( "Delegate responsibilities or add redundancy." );
             issue.setSeverity( Issue.Level.Major );
