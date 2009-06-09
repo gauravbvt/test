@@ -662,6 +662,21 @@ public interface QueryService extends Service {
     List<Employment> findAllEmployments();
 
     /**
+     * Find all employments for a given role.
+     *
+     * @param role a role
+     * @return a list of employments
+     */
+    List<Employment> findAllEmploymentsForRole( Role role );
+
+    /**
+     * Find all employments for a given actor.
+     *
+     * @param actor an actor
+     * @return a list of employments
+     */
+    List<Employment> findAllEmploymentsForActor( Actor actor );
+    /**
      * Find all distinct flow names.
      *
      * @return a list of strings
@@ -674,7 +689,7 @@ public interface QueryService extends Service {
      * @param analyst an analyst
      * @return a list of issues.
      */
-    List<Issue> findAllIssues(Analyst analyst);
+    List<Issue> findAllIssues( Analyst analyst );
 
     /**
      * Find all unwaived issues on all model objects in the plan.
@@ -686,6 +701,7 @@ public interface QueryService extends Service {
 
     /**
      * List all entities of a given class, plus the unmnown entity of this class.
+     *
      * @param clazz a class extending ModelObject
      * @return a list of entities
      */

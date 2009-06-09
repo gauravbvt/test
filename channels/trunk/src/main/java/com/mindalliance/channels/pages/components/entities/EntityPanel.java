@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Role;
@@ -128,7 +129,12 @@ public class EntityPanel extends AbstractMultiAspectPanel {
                     "aspect",
                     new PropertyModel<ModelObject>( this, "object" ),
                     getExpansions() );
-        } else if ( getObject() instanceof com.mindalliance.channels.model.Event ) {
+        }  else if ( getObject() instanceof Role ) {
+            return new RoleDetailsPanel(
+                    "aspect",
+                    new PropertyModel<ModelObject>( this, "object" ),
+                    getExpansions() );
+        } else if ( getObject() instanceof Event ) {
             return new EventDetailsPanel(
                     "aspect",
                     new PropertyModel<ModelObject>( this, "object" ),

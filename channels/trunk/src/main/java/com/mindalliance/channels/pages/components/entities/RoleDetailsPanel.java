@@ -1,13 +1,12 @@
 package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Channelable;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
-import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
@@ -24,7 +23,6 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
@@ -33,17 +31,18 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Role details panel.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: Feb 23, 2009
- * Time: 2:15:22 PM
+ * Date: Jun 9, 2009
+ * Time: 1:30:49 PM
  */
-public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeable, Filterable {
+public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeable, Filterable {
     /**
      * Indexing choice.
      */
-    private static final String ROLES = "Roles";
+    private static final String ACTORS = "Actors";
     /**
      * Indexing choice.
      */
@@ -55,7 +54,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     /**
      * Indexing choices.
      */
-    private static final String[] indexingChoices = {ROLES, LOCATIONS, ORGANIZATIONS};
+    private static final String[] indexingChoices = {ACTORS, LOCATIONS, ORGANIZATIONS};
     /**
      * Maximum number of rows shown in table at a time.
      */
@@ -76,7 +75,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
      * /**
      * Role employment table.
      */
-    private ActorEmploymentTable actorEmploymentTable;
+    private RoleEmploymentTable roleEmploymentTable;
     /**
      * Model objects filtered on (show only where so and so is the actor etc.)
      */
@@ -86,21 +85,24 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
      */
     private WebMarkupContainer moDetailsDiv;
 
-    public ActorDetailsPanel( String id, IModel<? extends ModelObject> model, Set<Long> expansions ) {
+    public RoleDetailsPanel(
+            String id,
+            IModel<? extends ModelObject> model,
+            Set<Long> expansions ) {
         super( id, model, expansions );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
         indexedOn = indexingChoices[0];
         nameRange = new NameRange();
         filters = new ArrayList<Identifiable>();
         this.moDetailsDiv = moDetailsDiv;
-        moDetailsDiv.add( new ChannelListPanel(
-                "channels",
-                new Model<Channelable>( (Actor) getEntity() ) ) );
         addIndexedOnChoice();
         addNameRangePanel();
-        addActorEmploymentTable();
+        addRoleEmploymentTable();
     }
 
     private void addIndexedOnChoice() {
@@ -112,9 +114,9 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
             protected void onUpdate( AjaxRequestTarget target ) {
                 nameRange = new NameRange();
                 addNameRangePanel();
-                addActorEmploymentTable();
+                addRoleEmploymentTable();
                 target.addComponent( nameRangePanel );
-                target.addComponent( actorEmploymentTable );
+                target.addComponent( roleEmploymentTable );
             }
         } );
         moDetailsDiv.add( indexedOnChoices );
@@ -132,14 +134,14 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         moDetailsDiv.addOrReplace( nameRangePanel );
     }
 
-    private void addActorEmploymentTable() {
-        actorEmploymentTable = new ActorEmploymentTable(
-                "actorEmployments",
+    private void addRoleEmploymentTable() {
+        roleEmploymentTable = new RoleEmploymentTable(
+                "roleEmployments",
                 new PropertyModel<List<Employment>>( this, "employments" ),
                 MAX_ROWS
         );
-        actorEmploymentTable.setOutputMarkupId( true );
-        moDetailsDiv.addOrReplace( actorEmploymentTable );
+        roleEmploymentTable.setOutputMarkupId( true );
+        moDetailsDiv.addOrReplace( roleEmploymentTable );
     }
 
     public String getIndexedOn() {
@@ -160,8 +162,8 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         } else {
             filters.add( identifiable );
         }
-        addActorEmploymentTable();
-        target.addComponent( actorEmploymentTable );
+        addRoleEmploymentTable();
+        target.addComponent( roleEmploymentTable );
     }
 
     /**
@@ -180,8 +182,8 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     public void setNameRange( AjaxRequestTarget target, NameRange range ) {
         nameRange = range;
         nameRangePanel.setSelected( target, range );
-        addActorEmploymentTable();
-        target.addComponent( actorEmploymentTable );
+        addRoleEmploymentTable();
+        target.addComponent( roleEmploymentTable );
     }
 
     /**
@@ -191,13 +193,13 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
      */
     @SuppressWarnings( "unchecked" )
     public List<String> getIndexedNames() {
-        List<Employment> employments = getQueryService().findAllEmploymentsForActor( getActor() );
-        if ( indexedOn.equals( ROLES ) ) {
+        List<Employment> employments = getQueryService().findAllEmploymentsForRole( getRole() );
+        if ( indexedOn.equals( ACTORS ) ) {
             return (List<String>) CollectionUtils.collect(
                     employments,
                     new Transformer() {
                         public Object transform( Object obj ) {
-                            return ( (Employment) obj ).getRole().getName();
+                            return ( (Employment) obj ).getActor().getLastName();
                         }
                     } );
         } else if ( indexedOn.equals( ORGANIZATIONS ) ) {
@@ -243,7 +245,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     @SuppressWarnings( "unchecked" )
     public List<Employment> getEmployments() {
         return (List<Employment>) CollectionUtils.select(
-                getQueryService().findAllEmploymentsForActor( getActor() ),
+                getQueryService().findAllEmploymentsForRole( getRole() ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         return !isFilteredOut( (Employment) obj ) && isInNameRange( (Employment) obj );
@@ -265,8 +267,8 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     private boolean isInNameRange( Employment employment ) {
-        if ( indexedOn.equals( ROLES ) ) {
-            return nameRange.contains( employment.getRole().getName() );
+        if ( indexedOn.equals( ACTORS ) ) {
+            return nameRange.contains( employment.getActor().getLastName() );
         } else if ( indexedOn.equals( ORGANIZATIONS ) ) {
             return employment.getOrganization() != null
                     && nameRange.contains( employment.getOrganization().getName() );
@@ -278,21 +280,21 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         }
     }
 
-    private Actor getActor() {
-        return (Actor) getEntity();
+    private Role getRole() {
+        return (Role) getEntity();
     }
 
     /**
-     * Actor employment table panel.
+     * Role employment table panel.
      */
-    public class ActorEmploymentTable extends AbstractTablePanel<Employment> {
+    public class RoleEmploymentTable extends AbstractTablePanel<Employment> {
 
         /**
          * Employment model.
          */
         private IModel<List<Employment>> employmentModel;
 
-        public ActorEmploymentTable(
+        public RoleEmploymentTable(
                 String id,
                 IModel<List<Employment>> employmentModel,
                 int pageSize ) {
@@ -305,23 +307,23 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
             columns.add( makeFilterableLinkColumn(
-                    "Role",
-                    "role",
-                    "role.name",
+                    "Actor",
+                    "actor",
+                    "actor.normalizedName",
                     EMPTY,
-                    ActorDetailsPanel.this ) );
+                    RoleDetailsPanel.this ) );
             columns.add( makeFilterableLinkColumn(
                     "Organization",
                     "organization",
                     "organization.name",
                     EMPTY,
-                    ActorDetailsPanel.this ) );
+                    RoleDetailsPanel.this ) );
             columns.add( makeFilterableLinkColumn(
                     "Location",
                     "organization.location",
                     "organization.location.name",
                     EMPTY,
-                    ActorDetailsPanel.this ) );
+                    RoleDetailsPanel.this ) );
             // provider and table
             add( new AjaxFallbackDefaultDataTable<Employment>(
                     "employments",
@@ -332,6 +334,5 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                     getPageSize() ) );
         }
     }
-
 
 }

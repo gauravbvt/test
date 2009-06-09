@@ -18,6 +18,7 @@ import com.mindalliance.channels.analysis.detectors.NoRedundancy;
 import com.mindalliance.channels.analysis.detectors.NoScenarioRepondsToIncident;
 import com.mindalliance.channels.analysis.detectors.OrphanedPart;
 import com.mindalliance.channels.analysis.detectors.PartWithInvalidTiming;
+import com.mindalliance.channels.analysis.detectors.PartWithRoleButNoOrganization;
 import com.mindalliance.channels.analysis.detectors.PartWithRoleWithNoKnownActor;
 import com.mindalliance.channels.analysis.detectors.PartWithoutRole;
 import com.mindalliance.channels.analysis.detectors.PotentialDeadlock;
@@ -116,6 +117,7 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new InvalidChannel() );
         detectors.add( new StartedOrTerminatedPartWithoutTask() );
         detectors.add( new PartWithoutRole() );
+        detectors.add( new PartWithRoleButNoOrganization() );
         detectors.add( new PartWithInvalidTiming() );
         detectors.add( new UnnamedFlow() );
         detectors.add( new FlowWithUndefinedSource() );

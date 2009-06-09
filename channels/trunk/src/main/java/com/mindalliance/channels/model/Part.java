@@ -355,6 +355,7 @@ public class Part extends Node {
 
     /**
      * {@inheritDoc}
+     *
      * @param queryService
      */
     public void beforeRemove( QueryService queryService ) {
@@ -426,6 +427,7 @@ public class Part extends Node {
 
     /**
      * Whether a flow triggers this part.
+     *
      * @return a boolean
      */
     @Transient
@@ -436,7 +438,7 @@ public class Part extends Node {
             Flow req = reqs.next();
             triggered = req.isTriggeringToTarget();
         }
-        if (!triggered) {
+        if ( !triggered ) {
             Iterator<Flow> outs = outcomes();
             while ( !triggered && outs.hasNext() ) {
                 Flow req = outs.next();
@@ -448,6 +450,7 @@ public class Part extends Node {
 
     /**
      * Whether a flow terminates this part.
+     *
      * @return a boolean
      */
     @Transient
@@ -508,6 +511,7 @@ public class Part extends Node {
 
     /**
      * Return the significance of a flow for this part.
+     *
      * @param flow the flow
      * @return the significance
      */
@@ -518,20 +522,62 @@ public class Part extends Node {
 
     /**
      * Find explicit or implicit actor, if any.
+     *
      * @return an actor or null
      */
     @Transient
     public Actor getKnownActor() {
-        if (actor != null ) {
+        if ( actor != null ) {
             return actor;
         } else {
             List<Actor> knownActors = getScenario().getQueryService().findAllActors( resourceSpec() );
             if ( knownActors.size() == 1 ) {
-                return knownActors.get(0);
+                return knownActors.get( 0 );
             } else {
                 return null;
             }
         }
     }
+
+    /**
+     * Get organization or unknown if null.
+     *
+     * @return an organization or null
+     */
+    @Transient
+    public Organization getOrganizationOrUnknown() {
+        return organization == null ? Organization.UNKNOWN : organization;
+    }
+
+    /**
+     * Get role or unknown if null.
+     *
+     * @return a role or null
+     */
+    @Transient
+    public Role getRoleOrUnknown() {
+        return role == null ? Role.UNKNOWN : role;
+    }
+
+    /**
+     * Get actor or unknown if null.
+     *
+     * @return an actor or null
+     */
+    @Transient
+    public Actor getActorOrUnknown() {
+        return actor == null ? Actor.UNKNOWN : actor;
+    }
+
+    /**
+     * Get jurisdiction or unknown if null.
+     *
+     * @return a place or null
+     */
+    @Transient
+    public Place getJurisdictionOrUnknown() {
+        return jurisdiction == null ? Place.UNKNOWN : jurisdiction;
+    }
+
 
 }

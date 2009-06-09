@@ -399,11 +399,11 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
 
     @SuppressWarnings( "unchecked" )
     private List<T> getEntities() {
-        if ( getEntity() instanceof Actor ) {
+        /*if ( getEntity() instanceof Actor ) {
             return (List<T>) getQueryService().list( getEntity().getClass() );
-        } else {
+        } else {*/
             return (List<T>) getQueryService().listEntitiesWithUnknown( getEntity().getClass() );
-        }
+     //   }
     }
 
     public void refresh( AjaxRequestTarget target ) {

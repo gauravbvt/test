@@ -3,6 +3,8 @@ package com.mindalliance.channels.util;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Job;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Role;
 
 import java.io.Serializable;
 
@@ -40,6 +42,32 @@ public class Employment implements Serializable {
 
     public Organization getOrganization() {
         return organization;
+    }
+
+    /**
+     * Get role from job, if any.
+     *
+     * @return a role or null
+     */
+    public Role getRole() {
+        if ( job != null ) {
+            return job.getRole();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Return location of employing organization, if any.
+     *
+     * @return a place or null
+     */
+    public Place getLocation() {
+        if ( organization != null ) {
+            return organization.getLocation();
+        } else {
+            return null;
+        }
     }
 
     public void setOrganization( Organization organization ) {

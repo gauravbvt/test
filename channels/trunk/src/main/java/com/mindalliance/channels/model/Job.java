@@ -175,7 +175,7 @@ public class Job implements Serializable, Mappable {
         Role role = resourceSpec.getRole();
         Place jurisdiction = resourceSpec.getJurisdiction();
         Organization organization = resourceSpec.getOrganization();
-        if ( actor == null || role == null || organization == null )
+        if ( actor == null || role == null/* || organization == null*/ )
             return null;
         else
             return new Job(

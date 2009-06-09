@@ -926,8 +926,11 @@ public class DefaultQueryService extends Observable implements QueryService {
     private boolean isExecutedBy( Part part, ModelObject entity ) {
         ResourceSpec partSpec = part.resourceSpec();
         if ( entity instanceof Actor ) {
-            return partSpec.hasEntity( entity )
-                    || findAllActors( partSpec ).contains( (Actor) entity );
+            List<Actor> allPlayers = findAllActors( partSpec );
+            if ( allPlayers.isEmpty() )
+                return entity.isUnknown();
+            else
+                return allPlayers.contains( (Actor) entity );
         } else {
             return partSpec.hasEntity( entity );
         }
@@ -1136,7 +1139,7 @@ public class DefaultQueryService extends Observable implements QueryService {
             Iterator<Part> parts = scenario.parts();
             while ( parts.hasNext() ) {
                 Part part = parts.next();
-                if ( organization == part.getOrganization() ) {
+                if ( organization.equals( part.getOrganizationOrUnknown() ) ) {
                     ResourceSpec resourceSpec = part.resourceSpec();
                     if ( resourceSpec.hasJob() ) {
                         Job job = Job.from( resourceSpec );
@@ -1652,7 +1655,9 @@ public class DefaultQueryService extends Observable implements QueryService {
     public List<Employment> findAllEmployments() {
         Set<Actor> employed = new HashSet<Actor>();
         List<Employment> employments = new ArrayList<Employment>();
-        for ( Organization org : list( Organization.class ) ) {
+        List<Organization> orgs = new ArrayList<Organization>( list( Organization.class ) );
+        orgs.add( Organization.UNKNOWN );
+        for ( Organization org : orgs ) {
             for ( Job job : org.getJobs() ) {
                 employments.add( new Employment( job.getActor(), org, job ) );
                 employed.add( job.getActor() );
@@ -1668,6 +1673,38 @@ public class DefaultQueryService extends Observable implements QueryService {
             }
         }
         return employments;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<Employment> findAllEmploymentsForRole( final Role role ) {
+        return (List<Employment>) CollectionUtils.select(
+                findAllEmployments(),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        Role empRole = ( (Employment) obj ).getRole();
+                        return empRole != null && empRole.equals( role );
+                    }
+                }
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<Employment> findAllEmploymentsForActor( final Actor actor ) {
+        return (List<Employment>) CollectionUtils.select(
+                findAllEmployments(),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        Actor empActor = ( (Employment) obj ).getActor();
+                        return empActor != null && empActor.equals( actor );
+                    }
+                }
+        );
     }
 
     /**

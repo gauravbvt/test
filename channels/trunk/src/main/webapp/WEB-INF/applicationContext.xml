@@ -86,6 +86,9 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.PartWithoutRole">
                     <property name="queryService" ref="queryService"/>
                 </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.PartWithRoleButNoOrganization">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowWithoutChannel">
                     <property name="queryService" ref="queryService"/>
                 </bean>

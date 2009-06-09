@@ -7,6 +7,7 @@ import com.mindalliance.channels.pages.components.entities.EntityLink;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -84,7 +85,11 @@ public class FilterableModelObjectLink extends AbstractUpdatablePanel {
     private void addModelObjectLink() {
         ModelObject mo = getLinkedObject();
         if ( mo.isEntity() ) {
-            add( new EntityLink( "moLink", new Model<ModelObject>( mo ) ) );
+            if ( mo.isUnknown() ) {
+                add( new Label( "moLink", new Model<String>( mo.getName() )) );
+            } else {
+                add( new EntityLink( "moLink", new Model<ModelObject>( mo ) ) );
+            }
         } else {
             add( new ModelObjectLink( "moLink", moModel, textModel, hint ) );
         }
@@ -126,10 +131,10 @@ public class FilterableModelObjectLink extends AbstractUpdatablePanel {
     }
 
     /**
-      * Get image title attribute value.
-      *
-      * @return a String
-      */
+     * Get image title attribute value.
+     *
+     * @return a String
+     */
     public String getImageTitle() {
         return ( filterable.isFiltered( getModel().getObject(), filterProperty ) )
                 ? "release filter"

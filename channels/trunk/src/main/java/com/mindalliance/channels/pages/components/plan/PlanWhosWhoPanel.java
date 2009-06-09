@@ -156,12 +156,9 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
         for ( Identifiable filter : filters ) {
             filteredOut = filteredOut ||
                     ( filter instanceof Actor && employment.getActor() != filter )
-                    || ( filter instanceof Role
-                    && ( employment.getJob() == null || employment.getJob().getRole() != filter ) )
+                    || ( filter instanceof Role && employment.getRole() != filter )
                     || ( filter instanceof Organization && employment.getOrganization() != filter )
-                    || ( filter instanceof Place
-                    && ( employment.getOrganization() == null
-                    || employment.getOrganization().getLocation() != filter ) );
+                    || ( filter instanceof Place && ( employment.getLocation() != filter ) );
         }
         return filteredOut;
     }
@@ -170,16 +167,14 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
         if ( indexedOn.equals( ACTORS ) ) {
             return nameRange.contains( employment.getActor().getLastName() );
         } else if ( indexedOn.equals( ROLES ) ) {
-            return employment.getJob() != null
-                    && employment.getJob().getRole() != null
-                    && nameRange.contains( employment.getJob().getRole().getName() );
+            return employment.getRole() != null
+                    && nameRange.contains( employment.getRole().getName() );
         } else if ( indexedOn.equals( ORGANIZATIONS ) ) {
             return employment.getOrganization() != null
                     && nameRange.contains( employment.getOrganization().getName() );
         } else if ( indexedOn.equals( LOCATIONS ) ) {
-            return ( employment.getOrganization() != null
-                    && employment.getOrganization().getLocation() != null
-                    && nameRange.contains( employment.getOrganization().getLocation().getName() ) );
+            return ( employment.getLocation() != null
+                    && nameRange.contains( employment.getLocation().getName() ) );
         } else {
             throw new IllegalStateException( "Can't index on " + indexedOn );
         }
@@ -296,7 +291,9 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
      * Who's who table listing actor employments.
      */
     public class WhosWhoTable extends AbstractTablePanel<Employment> {
-
+        /**
+         * Employment model.
+         */
         private IModel<List<Employment>> employmentModel;
 
         public WhosWhoTable(

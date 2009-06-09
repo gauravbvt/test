@@ -18,7 +18,7 @@ import org.apache.wicket.model.Model;
 import java.util.Set;
 
 /**
- * Abstract panel holding a table showing properties of a model object.
+ * Abstract panel holding a table showing properties of a list of beans.
  *
  * @param <T> Class of item represented by the table's rows
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -162,7 +162,8 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                         labelProperty,
                         defaultText,
                         null ) );
-                String classes = "link";
+                String classes = "";
+//                classes = "link";
                 if ( style != null ) {
                     String styleClass = findStyleClass( model.getObject(), style );
                     if ( styleClass != null )
@@ -201,7 +202,11 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 );
             } else {
                 if ( mo.isEntity() ) {
-                    return new EntityLink( id, new Model<ModelObject>( mo ) );
+                    if ( mo.isUnknown() ) {
+                        return new Label( id, new Model<String>( mo.getName() ) );
+                    } else {
+                        return new EntityLink( id, new Model<ModelObject>( mo ) );
+                    }
                 } else {
                     return new ModelObjectLink(
                             id,
@@ -241,9 +246,9 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                         labelProperty,
                         defaultText,
                         filterable ) );
-                String classes = "link";
-                cellItem.add( new AttributeModifier( "class", true, new Model<String>( classes ) ) );
-            }
+ /*              String classes = "link";
+                 cellItem.add( new AttributeModifier( "class", true, new Model<String>( classes ) ) );
+*/            }
         };
     }
 
