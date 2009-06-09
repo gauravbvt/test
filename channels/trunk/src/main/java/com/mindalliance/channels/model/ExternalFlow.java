@@ -1,9 +1,9 @@
 package com.mindalliance.channels.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
-import javax.persistence.CascadeType;
 import java.util.List;
 
 /**
@@ -51,9 +51,9 @@ public class ExternalFlow extends Flow {
     @Override
     @Transient
     public Node getSource() {
-        return connector == null    ? null
-             : connector.isSource() ? part
-                                    : getConnectorFlow().getSource();
+        return connector == null ? null
+                : connector.isSource() ? part
+                : getConnectorFlow().getSource();
     }
 
     /**
@@ -65,9 +65,9 @@ public class ExternalFlow extends Flow {
     @Override
     @Transient
     public Node getTarget() {
-        return connector == null    ? null
-             : connector.isTarget() ? part
-                                    : getConnectorFlow().getTarget();
+        return connector == null ? null
+                : connector.isTarget() ? part
+                : getConnectorFlow().getTarget();
     }
 
     /**
@@ -172,11 +172,12 @@ public class ExternalFlow extends Flow {
 
     /**
      * Get external part.
+     *
      * @return a part
      */
     @Transient
     public Part getExternalPart() {
-        return (Part)(isPartTargeted() ? getSource() : getTarget());
+        return (Part) ( isPartTargeted() ? getSource() : getTarget() );
     }
 
     @Override
@@ -210,7 +211,9 @@ public class ExternalFlow extends Flow {
             flow.setDescription( description );
     }
 
-    /** {@inheritDoc */
+    /**
+     * {@inheritDoc
+     */
     @Override
     @Transient
     public String getDescription() {
@@ -236,7 +239,7 @@ public class ExternalFlow extends Flow {
     @Transient
     public List<Channel> getEffectiveChannels() {
         return channelsAreInConnectorFlow() ?
-               getConnectorFlow().getChannels() : super.getChannels();
+                getConnectorFlow().getChannels() : super.getChannels();
     }
 
     /**
@@ -254,8 +257,8 @@ public class ExternalFlow extends Flow {
     private boolean channelsAreInConnectorFlow() {
         Connector c = getConnector();
         return c != null &&
-               ( c.isSource() && getConnectorFlow().isNotification()
-                    || c.isTarget() && getConnectorFlow().isAskedFor() );
+                ( c.isSource() && getConnectorFlow().isNotification()
+                        || c.isTarget() && getConnectorFlow().isAskedFor() );
     }
 
     /**
@@ -276,8 +279,8 @@ public class ExternalFlow extends Flow {
         return flow == null
                 ? Significance.None
                 : isPartTargeted()
-                        ? flow.getSignificanceToSource()
-                        : super.getSignificanceToSource();
+                ? flow.getSignificanceToSource()
+                : super.getSignificanceToSource();
     }
 
     /**
@@ -288,10 +291,10 @@ public class ExternalFlow extends Flow {
     public Significance getSignificanceToTarget() {
         Flow flow = getConnectorFlow();
         return flow == null
-                    ? Flow.Significance.None
-                    : isPartTargeted()
-                        ? super.getSignificanceToTarget()
-                        : flow.getSignificanceToTarget();
+                ? Flow.Significance.None
+                : isPartTargeted()
+                ? super.getSignificanceToTarget()
+                : flow.getSignificanceToTarget();
 
     }
 
@@ -338,7 +341,7 @@ public class ExternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
-     public boolean canSetChannels() {
+    public boolean canSetChannels() {
         return !channelsAreInConnectorFlow();
     }
 
@@ -363,7 +366,7 @@ public class ExternalFlow extends Flow {
         // The role-based part in the connector flow is targeted by a notification
         return isNotification()
                 && !isPartTargeted()
-                && ( (Part) getTarget() ).isOnlyRole();
+                && ( (Part) getTarget() ).hasNonActorResource();
     }
 
     /**
@@ -397,7 +400,7 @@ public class ExternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
-     public boolean canSetTriggersSource() {
+    public boolean canSetTriggersSource() {
         return !isPartTargeted() && isAskedFor();
     }
 
@@ -418,7 +421,7 @@ public class ExternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
-     public boolean canGetTerminatesSource() {
+    public boolean canGetTerminatesSource() {
         return canGetSignificanceToSource();
     }
 

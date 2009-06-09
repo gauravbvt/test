@@ -498,6 +498,15 @@ public class Part extends Node {
     }
 
     /**
+     * A part has a defined resource but with actor unknown.
+     *
+     * @return a boolean
+     */
+    public boolean hasNonActorResource() {
+        return hasResource() && actor == null;
+    }
+
+    /**
      * Return the significance of a flow for this part.
      * @param flow the flow
      * @return the significance
@@ -524,4 +533,5 @@ public class Part extends Node {
             }
         }
     }
+
 }
