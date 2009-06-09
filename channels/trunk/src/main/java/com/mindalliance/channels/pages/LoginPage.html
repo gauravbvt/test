@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<head>
+    <title>Channels - Login</title>
+    <link rel="stylesheet" href="channels.css" type="text/css">
+</head>
+<body class="message">
+<div>
+    <h1>Channels</h1>
+    <form action="/login.do" method="POST">
+        <p>Please sign in:</p>
+        <table>
+            <tr><td align="right"><label for="j_username">User name: </label></td>
+                <td><input name="j_username" id="j_username"></td></tr>
+            <tr><td align="right"><label for="j_password">Password: </label></td>
+                <td><input name="j_password" id="j_password" type="password"></td></tr>
+            <tr><td>&nbsp;</td>
+                <td><input type="checkbox" name="_acegi_security_remember_me"/> Remember me on this browser</td></tr>
+        </table>
+        <input type="submit" value="submit">
+    </form>
+</div>
+</body>
+</html>

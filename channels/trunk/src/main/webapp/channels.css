@@ -107,8 +107,8 @@ div.section-title {
 
 div.header {
     height: 5em;
-    padding: 1.6em 0 0 60px;
-    margin-bottom: 5px;
+    padding: 1em 0 0 60px;
+    margin: 5px 0;
 }
 
 div.section, div.form {
@@ -129,7 +129,7 @@ div.section input[type='submit'] {
 
 #sc-sel {
     float: left;
-    line-height: 1em;
+    line-height: 1.6em;
     list-style-position: inside;
     margin: 0 2em 0 0;
     padding: 0;
@@ -328,7 +328,7 @@ ul.menu, div.caption, span.menubar, ul.ranges {
     position: absolute;
     top: 0;
     right: 5em;
-    padding: 5px;
+    padding: 0;
 }
 
 #form-buttons {
@@ -490,7 +490,7 @@ html {
 }
 
 div.header {
-    background: transparent url( 'images/logo.png' ) no-repeat 5px 2px;
+    background: transparent url( 'images/logo.png' ) no-repeat 5px 5px;
 }
 
 .role .header {
@@ -845,12 +845,28 @@ ul.index-counter li:first-child:before {
 }
 
 input.filter {
-    width: 30em
+    width: 30em;
 }
 
 input.filter-small {
     width: 15em
 }
 
+body.message {
+    background: white url("/images/plain-back.png") repeat-y;
+}
+
+body.message div {
+    background: transparent url("/images/plain-head.png") no-repeat 0 -20px;
+    padding: 5px 5px 5px 1in;
+}
+
+.message h1 {
+    padding: 18px 0;
+    border-bottom: 2px solid #4d8222;
+    margin: 0 0 1em 0;
+    display: block;
+    font-size: 2em;
+}
 
 

@@ -433,22 +433,9 @@ public final class PlanPage extends WebPage implements Updatable {
                 update( target, new Change( Change.Type.Selected, getScenario() ) );
             }
         } );
-/*
-        {                            // NON-NLS
-
-            @Override
-            protected boolean wantOnSelectionChangedNotifications() {
-                return true;
-            }
-
-            @Override
-            protected void onSelectionChanged( Scenario newSelection ) {
-                redirectTo( newSelection );
-            }
-        };
-*/
         scenarioDropDownChoice.setOutputMarkupId( true );
         form.add( scenarioDropDownChoice );
+        form.add( new Label( "username", User.current().getName() ) );
     }
 
     private void addEntityPanel() {

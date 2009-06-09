@@ -2,14 +2,21 @@ package com.mindalliance.channels;
 
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.User;
+import com.mindalliance.channels.pages.ErrorPage;
+import com.mindalliance.channels.pages.ExpiredPage;
 import com.mindalliance.channels.pages.ExportPage;
+import com.mindalliance.channels.pages.LoginPage;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.png.EntityNetworkPage;
 import com.mindalliance.channels.pages.png.FlowMapPage;
 import com.mindalliance.channels.pages.png.PlanMapPage;
 import com.mindalliance.channels.pages.reports.PlanReportPage;
+import org.acegisecurity.Authentication;
+import org.acegisecurity.concurrent.SessionIdentifierAware;
+import org.acegisecurity.event.authentication.AbstractAuthenticationEvent;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.target.coding.IndexedParamUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.MixedParamUrlCodingStrategy;
@@ -20,6 +27,8 @@ import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import java.util.ArrayList;
@@ -33,7 +42,7 @@ import java.util.Map;
  *
  * @TODO split into a bonified service-level object
  */
-public final class Channels extends WebApplication {
+public final class Channels extends WebApplication implements ApplicationListener {
 
     /**
      * Class logger.
@@ -125,15 +134,18 @@ public final class Channels extends WebApplication {
         addComponentInstantiationListener( new SpringComponentInjector( this ) );
 
         getMarkupSettings().setStripWicketTags( true );
-//        getRequestCycleSettings().setRenderStrategy( IRequestCycleSettings.REDIRECT_TO_RENDER );
 
         mount( new IndexedParamUrlCodingStrategy( "playbook", PlanReportPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "static/login.html", LoginPage.class ) );
 
         mount( new QueryStringUrlCodingStrategy( "plan.html", PlanPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.xml", ExportPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.png", FlowMapPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "plan.png", PlanMapPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "network.png", EntityNetworkPage.class ) );
+
+        getApplicationSettings().setInternalErrorPage( ErrorPage.class );
+        getApplicationSettings().setPageExpiredErrorPage( ExpiredPage.class );
 
         queryService.initialize();
     }
@@ -145,8 +157,9 @@ public final class Channels extends WebApplication {
     }
 
     @Override
-    public Class<PlanPage> getHomePage() {
-        return PlanPage.class;
+    public Class<? extends WebPage> getHomePage() {
+
+        return User.current().isModeler() ? PlanPage.class : PlanReportPage.class ;
     }
 
     public QueryService getQueryService() {
@@ -317,6 +330,16 @@ public final class Channels extends WebApplication {
         } ) != null;
     }
 
+    public void onApplicationEvent( ApplicationEvent event ) {
+        if ( LOG.isDebugEnabled() && event instanceof AbstractAuthenticationEvent ) {
+            Authentication auth = ( (AbstractAuthenticationEvent) event ).getAuthentication();
+            String name = auth.getName();
+            String session = ( (SessionIdentifierAware) auth.getDetails() ).getSessionId();
+            LOG.debug( event.getClass().getSimpleName() + ": " + name
+                       + ";session=" + session );
+        }
+
+    }
 
     //=========================================================================
     /**

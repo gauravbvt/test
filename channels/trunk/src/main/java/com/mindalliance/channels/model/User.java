@@ -1,5 +1,6 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.util.LoginFilter;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.userdetails.UserDetails;
@@ -25,6 +26,9 @@ public class User {
 
     /** Its email address. */
     private String email;
+
+    /** True if user is a modeler. */
+    private boolean modeler;
 
     public User() {
         anonymous = true;
@@ -76,9 +80,23 @@ public class User {
             Object obj = authentication.getPrincipal();
             String name = obj instanceof UserDetails ? ( (UserDetails) obj ).getUsername()
                                               : obj.toString();
-            return new User( name );
+            User result = new User( name );
+
+            if ( LoginFilter.containsRole( authentication, "ROLE_PLANNER" ) )
+                result.setModeler( true );
+
+            return result;
+
         } else
             return new User();
+    }
+
+    private void setModeler( boolean modeler ) {
+        this.modeler = modeler;
+    }
+
+    public boolean isModeler() {
+        return modeler;
     }
 
     /** {@inheritDoc} */

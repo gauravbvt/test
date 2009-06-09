@@ -17,7 +17,11 @@
             <value>
                 CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
                 PATTERN_TYPE_APACHE_ANT
-                /**=httpSessionContextIntegrationFilter,logoutFilter,basicFilter,exceptionFilter,securityInterceptor
+                /*.ico=#NONE#
+                /*.css=#NONE#
+                /static/**=#NONE#
+                /images/**=#NONE#
+                /**=httpSessionContextIntegrationFilter,rememberMeFilter,loginFilter,logoutFilter,exceptionFilter,securityInterceptor
             </value>
         </property>
      </bean>
@@ -28,25 +32,43 @@
         <property name="forceEagerSessionCreation" value="true"/>
     </bean>
 
+    <!-- remember me processing filter -->
+    <bean id="rememberMeFilter"
+          class="org.acegisecurity.ui.rememberme.RememberMeProcessingFilter">
+        <property name="rememberMeServices" ref="rememberMeServices"/>
+        <property name="authenticationManager" ref="authenticationManager"/>
+    </bean>
+
+    <bean id="rememberMeServices" class="org.acegisecurity.ui.rememberme.TokenBasedRememberMeServices">
+        <property name="userDetailsService" ref="userDetails"/>
+        <property name="key" value="channels"/>
+    </bean>
+
+    <bean id="loginFilter" class="com.mindalliance.channels.util.LoginFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="modelerRole" value="ROLE_PLANNER"/>
+        <property name="modelerUrl" value="/plan.html"/>
+        <property name="defaultTargetUrl" value="/playbook.html"/>
+        <property name="authenticationFailureUrl" value="/static/failed.html"/>
+        <property name="filterProcessesUrl" value="/login.do"/>
+        <property name="rememberMeServices" ref="rememberMeServices"/>
+    </bean>
+
     <bean id="logoutFilter" class="org.acegisecurity.ui.logout.LogoutFilter">
         <constructor-arg value="/"/>
         <constructor-arg><list>
             <bean class="org.acegisecurity.ui.logout.SecurityContextLogoutHandler"/>
+            <ref bean="rememberMeServices"/>
         </list></constructor-arg>
         <property name="filterProcessesUrl" value="/logout"/>
     </bean>
 
-    <bean id="basicFilter" class="org.acegisecurity.ui.basicauth.BasicProcessingFilter">
-        <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="authenticationEntryPoint" ref="basicFilterEP"/>
-    </bean>
-
-    <bean id="basicFilterEP" class="org.acegisecurity.ui.basicauth.BasicProcessingFilterEntryPoint">
-        <property name="realmName" value="channels"/>
+    <bean id="filterEP" class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint">
+        <property name="loginFormUrl" value="/static/login.html"/>
     </bean>
 
     <bean id="exceptionFilter" class="org.acegisecurity.ui.ExceptionTranslationFilter">
-        <property name="authenticationEntryPoint" ref="basicFilterEP"/>
+        <property name="authenticationEntryPoint" ref="filterEP"/>
     </bean>
 
     <bean id="securityInterceptor" class="org.acegisecurity.intercept.web.FilterSecurityInterceptor">
@@ -62,9 +84,14 @@
           <value>
             CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
             PATTERN_TYPE_APACHE_ANT
-            /**=ROLE_USER
+              /plan.html=ROLE_PLANNER
+              /**=ROLE_USER
           </value>
         </property>
+    </bean>
+
+    <bean id="userDetails" class="com.mindalliance.channels.util.FileUserDetailsService">
+        <property name="userDefinitions" value="/WEB-INF/users.properties"/>
     </bean>
 
     <bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
@@ -74,15 +101,11 @@
                     <property name="passwordEncoder">
                         <bean class="org.acegisecurity.providers.encoding.Md5PasswordEncoder"/>
                     </property>
-                    <property name="userDetailsService">
-                        <bean class="org.acegisecurity.userdetails.memory.InMemoryDaoImpl">
-                            <property name="userProperties">
-                                <bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-                                    <property name="location" value="/WEB-INF/users.properties"/>
-                                </bean>
-                            </property>
-                        </bean>
-                    </property>
+                    <property name="userDetailsService" ref="userDetails"/>
+                </bean>
+                <bean id="rememberMeAuthenticationProvider"
+                      class="org.acegisecurity.providers.rememberme.RememberMeAuthenticationProvider">
+                    <property name="key" value="channels"/>
                 </bean>
             </list>
         </property>
