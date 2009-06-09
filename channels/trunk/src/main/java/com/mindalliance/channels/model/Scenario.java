@@ -6,6 +6,8 @@ import com.mindalliance.channels.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -31,6 +33,10 @@ import java.util.Set;
 @Entity
 public class Scenario extends ModelObject {
 
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( Scenario.class );
     /**
      * The default name for new scenarios.
      */
@@ -432,6 +438,10 @@ public class Scenario extends ModelObject {
 
     @Transient
     public QueryService getQueryService() {
+        if ( queryService == null ) {
+            queryService = Channels.instance().getQueryService();
+            LOG.warn( "Query service was not set");
+        }
         return queryService;
     }
 

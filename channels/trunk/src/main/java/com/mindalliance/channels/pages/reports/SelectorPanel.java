@@ -13,8 +13,10 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -33,6 +35,8 @@ public class SelectorPanel extends Panel {
     private Actor actor;
 
     private boolean valid = true;
+
+    static private Collator collator = Collator.getInstance();
 
     @SpringBean
     private QueryService queryService;
@@ -66,7 +70,7 @@ public class SelectorPanel extends Panel {
         DropDownChoice<Actor> actorChoices = new DropDownChoice<Actor>(
                 "actor", getActorsChoices(), new IChoiceRenderer<Actor>() {
                     public Object getDisplayValue( Actor object ) {
-                        return Actor.UNKNOWN.equals( object ) ? "All actors" : object.getName();
+                        return Actor.UNKNOWN.equals( object ) ? "All actors" : object.getNormalizedName();
                     }
 
                     public String getIdValue( Actor object, int index ) {
@@ -184,7 +188,13 @@ public class SelectorPanel extends Panel {
         List<Actor> result = new ArrayList<Actor>(
                 isAllScenarios() ? queryService.list( Actor.class )
                                  : queryService.findActors( scenario ) );
-        Collections.sort( result );
+        Collections.sort(
+                result,
+                new Comparator<Actor>() {
+                    public int compare( Actor actor1, Actor actor2 ) {
+                        return collator.compare( actor1.getNormalizedName(), actor2.getNormalizedName() );
+                    }
+                } );
         result.add( 0, Actor.UNKNOWN );
         return result;
     }
