@@ -676,6 +676,7 @@ public interface QueryService extends Service {
      * @return a list of employments
      */
     List<Employment> findAllEmploymentsForActor( Actor actor );
+
     /**
      * Find all distinct flow names.
      *
@@ -707,4 +708,26 @@ public interface QueryService extends Service {
      */
     <T extends ModelObject> List<T> listEntitiesWithUnknown( Class<T> clazz );
 
+    /**
+     * Find all roles played by an actor.
+     *
+     * @param actor an actor
+     * @return a list of roles
+     */
+    List<Role> findAllRolesOf( Actor actor );
+
+    /**
+     * Find all actors in an organization.
+     *
+     * @param organization an organization
+     * @return a list of organizations
+     */
+    List<Actor> findAllActorsInOrganization( Organization organization );
+
+    /**
+     * Find all parts and flows that directly involve a given entity.
+     * @param entity a model object
+     * @return a list of model objects (parts and flows)
+     */
+    List<ModelObject> findAllScenarioObjectsInvolving( ModelObject entity );
 }

@@ -50,6 +50,16 @@ public interface Analyst extends Service {
     List<Issue> listIssues( ModelObject modelObject, boolean includingPropertySpecific );
 
     /**
+     * Use all applicable issue detectors to find issues about a model object.
+     *
+     * @param modelObject               -- the model object being analyzed
+     * @param includingPropertySpecific -- all issues or only those that are not specific to a property
+     * @param includingWaived           -- whether to also include waived issues
+     * @return a list of issues detected
+     */
+    List<Issue> listIssues( ModelObject modelObject, boolean includingPropertySpecific, boolean includingWaived );
+
+    /**
      * Use all applicable issue detectors to find issues about a model object's property.
      *
      * @param modelObject -- the model object being analyzed

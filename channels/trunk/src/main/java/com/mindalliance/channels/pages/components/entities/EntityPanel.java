@@ -178,8 +178,7 @@ public class EntityPanel extends AbstractMultiAspectPanel {
     private Component getEntityIssuesPanel() {
         return new EntityIssuesPanel(
                 "aspect",
-                new PropertyModel<ModelObject>( this, "object" ),
-                getExpansions() );
+                new PropertyModel<ModelObject>( this, "object" ) );
     }
 
 

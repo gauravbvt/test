@@ -86,6 +86,20 @@ public class DefaultAnalyst extends AbstractService implements Analyst {
     /**
      * {@inheritDoc}
      */
+    public List<Issue> listIssues(
+            ModelObject modelObject,
+            boolean includingPropertySpecific,
+            boolean includingWaived ) {
+        if (includingWaived) {
+            return listIssues( modelObject, includingPropertySpecific );
+        } else {
+            return listUnwaivedIssues( modelObject, includingPropertySpecific );
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public List<Issue> listIssues( ModelObject modelObject, boolean includingPropertySpecific ) {
         List<Issue> issues = new ArrayList<Issue>();
         Iterator<Issue> iterator = findIssues( modelObject, includingPropertySpecific );

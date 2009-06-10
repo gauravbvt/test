@@ -1199,6 +1199,57 @@ public class DefaultQueryService extends Observable implements QueryService {
     /**
      * {@inheritDoc}
      */
+    public List<Role> findAllRolesOf( Actor actor ) {
+        Set<Role> roles = new HashSet<Role>();
+        for ( ResourceSpec spec : findAllResourceSpecs() ) {
+            if ( spec.getRole() != null ) {
+                if ( spec.getActor() != null && actor.equals( spec.getActor() )
+                        || ( actor.isUnknown() && spec.getActor() == null ) )
+                    roles.add( spec.getRole() );
+            }
+        }
+        return new ArrayList<Role>( roles );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Actor> findAllActorsInOrganization( Organization organization ) {
+        Set<Actor> actors = new HashSet<Actor>();
+        for ( ResourceSpec spec : findAllResourceSpecs() ) {
+            if ( spec.getActor() != null ) {
+                if ( spec.getOrganization() != null && organization.equals( spec.getOrganization() )
+                        || ( organization.isUnknown() && spec.getOrganization() == null ) )
+                    actors.add( spec.getActor() );
+            }
+        }
+        return new ArrayList<Actor>( actors );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<ModelObject> findAllScenarioObjectsInvolving( ModelObject entity ) {
+        Set<ModelObject> scenarioObjects = new HashSet<ModelObject>();
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                Part part = parts.next();
+                if ( part.resourceSpec().hasEntity( entity ) ) {
+                    scenarioObjects.add( part );
+                    Iterator<Flow> outcomes = part.outcomes();
+                    while ( outcomes.hasNext() ) scenarioObjects.add( outcomes.next() );
+                    Iterator<Flow> requirements = part.requirements();
+                    while ( requirements.hasNext() ) scenarioObjects.add( requirements.next() );
+                }
+            }
+        }
+        return new ArrayList<ModelObject>( scenarioObjects );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public List<Actor> findActors( Organization organization, Role role ) {
         ResourceSpec resourceSpec = new ResourceSpec();
         resourceSpec.setRole( role );
@@ -1782,5 +1833,6 @@ public class DefaultQueryService extends Observable implements QueryService {
         allEntities.add( (T) unknown );
         return allEntities;
     }
+
 }
 

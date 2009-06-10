@@ -1,21 +1,26 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.pages.components.AbstractTablePanel;
-import com.mindalliance.channels.pages.components.IssuesPanel;
+import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.pages.components.AbstractIssueTablePanel;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -25,91 +30,159 @@ import java.util.Set;
  * Date: Mar 25, 2009
  * Time: 5:39:31 PM
  */
-public class EntityIssuesPanel extends AbstractTablePanel {
+public class EntityIssuesPanel extends AbstractIssueTablePanel {
+
+    private static final int MAX_ROWS = 12;
 
     /**
-     * Whether to include members.
+     * Whether to show waived issues.
      */
-    private boolean membersIncluded = false;
+    private boolean includeWaived = false;
     /**
-     * Issues on entity per se.
+     * Whether to show issues of "contained" entities.
      */
-    private IssuesPanel entityIssues;
+    private boolean includeContained = false;
     /**
-     * Issues table.
+     * Whether to show relevant issues from scenarios.
      */
-    private IssuesTablePanel issuesTable;
+    private boolean includeFromScenarios = false;
 
-    public EntityIssuesPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
-        super( id, model, expansions );
-        init();
-    }
-
-    private void init() {
-        WebMarkupContainer includeContainer = new WebMarkupContainer( "include" );
-        includeContainer.setVisible( !( getEntity() instanceof Actor ) );
-        add( includeContainer );
-        CheckBox specificCheckBox = new CheckBox(
-                "members-included",
-                new PropertyModel<Boolean>( this, "membersIncluded" ) );
-        specificCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
-                addIssuesTable();
-                target.addComponent( issuesTable );
-            }
-        } );
-        includeContainer.add( specificCheckBox );
-        Label entityLabel = new Label( "entity", new PropertyModel( this, "entity.label" ) );
-        includeContainer.add( entityLabel );
-        addIssuesTable();
-        entityIssues = new IssuesPanel(
-                "issues",
-                new Model<ModelObject>( getEntity() ),
-                getExpansions() );
-        entityIssues.setOutputMarkupId( true );
-        add( entityIssues );
-        makeVisible( entityIssues, getAnalyst().hasIssues( getEntity(), false ) );
-    }
-
-    private void addIssuesTable() {
-        issuesTable = new IssuesTablePanel(
-                "issues-table",
-                new PropertyModel<ResourceSpec>( this, "resourceSpec" ),
-                new PropertyModel<Boolean>( this, "membersExcluded" ),
-                20,
-                getExpansions() );
-        issuesTable.setOutputMarkupId( true );
-        addOrReplace( issuesTable );
-    }
-
-    public boolean isMembersExcluded() {
-        return !membersIncluded;
-    }
-
-    public boolean isMembersIncluded() {
-        return membersIncluded;
-    }
-
-
-    public void setMembersIncluded( boolean val ) {
-        membersIncluded = val;
+    public EntityIssuesPanel( String id, IModel<ModelObject> model ) {
+        super( id, model, MAX_ROWS );
     }
 
     public ModelObject getEntity() {
         return (ModelObject) getModel().getObject();
     }
 
-    public ResourceSpec getResourceSpec() {
-        return ResourceSpec.with( getEntity() );
-    }
-
     /**
      * {@inheritDoc}
      */
-    public void updateWith( AjaxRequestTarget target, Change change ) {
-        makeVisible( target, entityIssues, getAnalyst().hasIssues( getEntity(), false ) );
-        super.updateWith( target, change );
+    @SuppressWarnings( "unchecked" )
+    public List<Issue> getIssues() {
+        Set<ModelObject> scope = new HashSet<ModelObject>();
+        List<Issue> issues = new ArrayList<Issue>();
+        ModelObject about = getAbout();
+        final String issueType = getIssueType();
+        Analyst analyst = getAnalyst();
+        if ( about != null ) {
+            scope.add( about );
+        } else {
+            scope.add( getEntity() );
+            if ( includeFromScenarios ) {
+                scope.addAll( findRelatedScenarioObjects( getEntity() ) );
+            }
+            if ( includeContained ) {
+                for ( ModelObject containedEntity : findContainedEntities() ) {
+                    scope.add( containedEntity );
+                    if ( includeFromScenarios ) {
+                        scope.addAll( findRelatedScenarioObjects( containedEntity ) );
+                    }
+                }
+            }
+        }
+        for ( ModelObject mo : scope ) {
+            issues.addAll( analyst.listIssues( mo, true, includeWaived ) );
+        }
+        return (List<Issue>) CollectionUtils.select(
+                issues,
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ( issueType.equals( ALL )
+                                || ( (Issue) obj ).getType().equals( issueType ) );
+                    }
+                }
+        );
+    }
+
+    protected void addIncluded() {
+        CheckBox includeWaivedCheckBox = new CheckBox(
+                "includeWaived",
+                new PropertyModel<Boolean>( this, "includeWaived" ) );
+        includeWaivedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                updateIssuesTable( target );
+            }
+        } );
+        add( includeWaivedCheckBox );
+        CheckBox includeContainedCheckBox = new CheckBox(
+                "includeContained",
+                new PropertyModel<Boolean>( this, "includeContained" ) );
+        includeContainedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                updateIssuesTable( target );
+            }
+        } );
+        Label containmentLabel = new Label( "containment", getContainmentLabel() );
+        add( containmentLabel );
+        add( includeContainedCheckBox );
+        CheckBox includeFromScenario = new CheckBox(
+                "includeFromScenarios",
+                new PropertyModel<Boolean>( this, "includeFromScenarios" ) );
+        includeFromScenario.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                updateIssuesTable( target );
+            }
+        } );
+        add( includeFromScenario );
+    }
+
+    private String getContainmentLabel() {
+        ModelObject entity = getEntity();
+        if ( entity instanceof Actor ) {
+            return "roles played by this actor";
+        } else if ( entity instanceof Role ) {
+            return "actors playing this role";
+        } else if ( entity instanceof Organization ) {
+            return "actors and roles in this organization";
+        } else {
+            throw new IllegalStateException( "Can't diplay issue table for " + entity.getClass().getSimpleName() );
+        }
+    }
+
+    private List<? extends ModelObject> findContainedEntities() {
+        ModelObject entity = getEntity();
+        QueryService queryService = getQueryService();
+        if ( entity instanceof Actor ) {
+            return queryService.findAllRolesOf( (Actor) entity );
+        } else if ( entity instanceof Role ) {
+            return queryService.findAllActors( ResourceSpec.with( entity ) );
+        } else if ( entity instanceof Organization ) {
+            List<ModelObject> inOrg = new ArrayList<ModelObject>();
+            inOrg.addAll( queryService.findRolesIn( (Organization) entity ) );
+            inOrg.addAll( queryService.findAllActorsInOrganization( (Organization) entity ) );
+            return inOrg;
+        } else {
+            throw new IllegalStateException( "Can't diplay issue table for " + entity.getClass().getSimpleName() );
+        }
+    }
+
+    private List<ModelObject> findRelatedScenarioObjects( ModelObject entity ) {
+        return getQueryService().findAllScenarioObjectsInvolving( entity );
     }
 
 
+    public boolean isIncludeWaived() {
+        return includeWaived;
+    }
+
+    public void setIncludeWaived( boolean includeWaived ) {
+        this.includeWaived = includeWaived;
+    }
+
+    public boolean isIncludeContained() {
+        return includeContained;
+    }
+
+    public void setIncludeContained( boolean includeContained ) {
+        this.includeContained = includeContained;
+    }
+
+    public boolean isIncludeFromScenarios() {
+        return includeFromScenarios;
+    }
+
+    public void setIncludeFromScenarios( boolean includeFromScenarios ) {
+        this.includeFromScenarios = includeFromScenarios;
+    }
 }

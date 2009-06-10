@@ -35,7 +35,7 @@ public class EntityShowMenuPanel extends MenuPanel {
     /**
      * {@inheritDoc}
      */
-   public List<Component> getMenuItems() {
+    public List<Component> getMenuItems() {
         List<Component> menuItems = new ArrayList<Component>();
         Link detailsLink = new AjaxFallbackLink( "link" ) {
             public void onClick( AjaxRequestTarget target ) {
@@ -46,15 +46,17 @@ public class EntityShowMenuPanel extends MenuPanel {
                 "menuItem",
                 new Model<String>( "Details" ),
                 detailsLink ) );
-        Link networkLink = new AjaxFallbackLink( "link" ) {
-            public void onClick( AjaxRequestTarget target ) {
-                changeAspectTo( target, "network" );
-            }
-        };
-        menuItems.add( new LinkMenuItem(
-                "menuItem",
-                new Model<String>( "Network" ),
-                networkLink ) );
+        if ( !( getEntity() instanceof Event ) ) {
+            Link networkLink = new AjaxFallbackLink( "link" ) {
+                public void onClick( AjaxRequestTarget target ) {
+                    changeAspectTo( target, "network" );
+                }
+            };
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Network" ),
+                    networkLink ) );
+        }
         Link mapLink = new AjaxFallbackLink( "link" ) {
             public void onClick( AjaxRequestTarget target ) {
                 changeAspectTo( target, "map" );
