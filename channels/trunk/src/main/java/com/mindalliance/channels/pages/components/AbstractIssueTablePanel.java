@@ -24,7 +24,7 @@ import java.util.List;
  * Date: Jun 10, 2009
  * Time: 1:20:17 PM
  */
-public abstract class AbstractIssueTablePanel  extends AbstractUpdatablePanel implements Filterable {
+public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel implements Filterable {
 
     protected static final String ALL = "All";
     /**
@@ -44,7 +44,7 @@ public abstract class AbstractIssueTablePanel  extends AbstractUpdatablePanel im
      */
     private int maxRows;
 
-    public AbstractIssueTablePanel( String id, IModel<ModelObject>model, int maxRows ) {
+    public AbstractIssueTablePanel( String id, IModel<ModelObject> model, int maxRows ) {
         super( id, model );
         this.maxRows = maxRows;
         init();
@@ -90,6 +90,9 @@ public abstract class AbstractIssueTablePanel  extends AbstractUpdatablePanel im
         this.issueType = issueType;
     }
 
+    /**
+     * Add fields that augment the scope for issues.
+     */
     abstract protected void addIncluded();
 
     private void addIssuesTable() {
@@ -124,6 +127,11 @@ public abstract class AbstractIssueTablePanel  extends AbstractUpdatablePanel im
         return identifiable == about;
     }
 
+    /**
+     * Update issues table.
+     *
+     * @param target an ajax request target
+     */
     protected void updateIssuesTable( AjaxRequestTarget target ) {
         addIssuesTable();
         target.addComponent( issuesTable );
@@ -164,6 +172,10 @@ public abstract class AbstractIssueTablePanel  extends AbstractUpdatablePanel im
             columns.add( makeColumn(
                     "Description",
                     "description",
+                    EMPTY ) );
+            columns.add( makeColumn(
+                    "Remediation",
+                    "remediation",
                     EMPTY ) );
             columns.add( makeColumn(
                     "Reported by",

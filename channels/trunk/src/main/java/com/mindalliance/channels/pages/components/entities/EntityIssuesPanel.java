@@ -32,7 +32,7 @@ import java.util.Set;
  */
 public class EntityIssuesPanel extends AbstractIssueTablePanel {
 
-    private static final int MAX_ROWS = 12;
+    private static final int MAX_ROWS = 7;
 
     /**
      * Whether to show waived issues.
@@ -95,6 +95,9 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected void addIncluded() {
         CheckBox includeWaivedCheckBox = new CheckBox(
                 "includeWaived",

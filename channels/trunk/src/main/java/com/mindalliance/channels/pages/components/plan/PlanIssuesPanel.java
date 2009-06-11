@@ -24,7 +24,7 @@ public class PlanIssuesPanel extends AbstractIssueTablePanel {
     /**
      * Maximum number of rows of issues to show at a time.
      */
-    private static final int MAX_ROWS = 12;
+    private static final int MAX_ROWS = 10;
     /**
      * Whether to show waived issues.
      */
