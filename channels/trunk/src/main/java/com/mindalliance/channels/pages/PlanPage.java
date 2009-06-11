@@ -484,7 +484,7 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     public List<Scenario> getAllScenarios() {
-        List<Scenario> allScenarios = getApp().getQueryService().list( Scenario.class );
+        List<Scenario> allScenarios = new ArrayList<Scenario>( getApp().getQueryService().list( Scenario.class ) );
         Collections.sort( allScenarios, new Comparator<Scenario>() {
             public int compare( Scenario o1, Scenario o2 ) {
                 return Collator.getInstance().compare( o1.getName(), o2.getName() );

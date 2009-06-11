@@ -49,55 +49,57 @@ public class SelectorPanel extends Panel {
 
         DropDownChoice<Scenario> scenarioChoices = new DropDownChoice<Scenario>(
                 "scenario", getScenarioChoices(), new IChoiceRenderer<Scenario>() {
-                    public Object getDisplayValue( Scenario object ) {
-                        return AllScenarios == object ? "All scenarios" : object.getName();
-                    }
+            public Object getDisplayValue( Scenario object ) {
+                return AllScenarios == object ? "All scenarios" : object.getName();
+            }
 
-                    public String getIdValue( Scenario object, int index ) {
-                        return AllScenarios == object ? ALL : Long.toString( object.getId() );
-                    }
-                } );
+            public String getIdValue( Scenario object, int index ) {
+                return AllScenarios == object ? ALL : Long.toString( object.getId() );
+            }
+        } );
 
         scenarioChoices.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-                @Override
-                protected void onUpdate( AjaxRequestTarget target ) {
-                    setRedirect( true );
-                    setResponsePage( getPage().getClass(), getParameters() );
-                }
-            } );
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                setRedirect( true );
+                setResponsePage( getPage().getClass(), getParameters() );
+            }
+        } );
         add( scenarioChoices );
 
         DropDownChoice<Actor> actorChoices = new DropDownChoice<Actor>(
                 "actor", getActorsChoices(), new IChoiceRenderer<Actor>() {
-                    public Object getDisplayValue( Actor object ) {
-                        return Actor.UNKNOWN.equals( object ) ? "All actors" : object.getNormalizedName();
-                    }
+            public Object getDisplayValue( Actor object ) {
+                return Actor.UNKNOWN.equals( object ) ? "All actors" : object.getNormalizedName();
+            }
 
-                    public String getIdValue( Actor object, int index ) {
-                        return Actor.UNKNOWN.equals( object ) ?
-                               ALL : Long.toString( object.getId() );
-                    }
-                } );
+            public String getIdValue( Actor object, int index ) {
+                return Actor.UNKNOWN.equals( object ) ?
+                        ALL : Long.toString( object.getId() );
+            }
+        } );
         actorChoices.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-                @Override
-                protected void onUpdate( AjaxRequestTarget target ) {
-                    setRedirect( true );
-                    setResponsePage( getPage().getClass(), getParameters() );
-                }
-            } );
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                setRedirect( true );
+                setResponsePage( getPage().getClass(), getParameters() );
+            }
+        } );
         add( actorChoices );
     }
 
     /**
      * Return all the scenarios selected by this component.
+     *
      * @return a sorted list of scenarios
      */
     public List<Scenario> getScenarios() {
         List<Scenario> result;
 
         if ( isAllScenarios() ) {
-            result = isAllActors() ? queryService.list( Scenario.class )
-                                   : queryService.findScenarios( actor );
+            result = new ArrayList<Scenario>(
+                    isAllActors() ? queryService.list( Scenario.class )
+                            : queryService.findScenarios( actor ) );
             Collections.sort( result );
         } else {
             result = new ArrayList<Scenario>();
@@ -109,14 +111,16 @@ public class SelectorPanel extends Panel {
 
     /**
      * Return all actors selectable by this component.
+     *
      * @return a sorted list of actor.
      */
     public List<Actor> getActors() {
         List<Actor> result;
 
         if ( isAllActors() ) {
-            result = isAllScenarios() ? queryService.list( Actor.class )
-                                      : queryService.findActors( scenario );
+            result = new ArrayList<Actor>(
+                    isAllScenarios() ? queryService.list( Actor.class )
+                            : queryService.findActors( scenario ) );
             Collections.sort( result );
         } else {
             result = new ArrayList<Actor>();
@@ -128,6 +132,7 @@ public class SelectorPanel extends Panel {
 
     /**
      * Set scenario and actor fields given parameters.
+     *
      * @param parameters the parameters
      */
     public final void setParameters( PageParameters parameters ) {
@@ -168,7 +173,7 @@ public class SelectorPanel extends Panel {
 
         } else {
             result.put( SCENARIO_PARM,
-                        isAllScenarios() ? ALL : Long.toString( scenario.getId() ) );
+                    isAllScenarios() ? ALL : Long.toString( scenario.getId() ) );
             result.put( ACTOR_PARM, Long.toString( actor.getId() ) );
         }
 
@@ -178,7 +183,7 @@ public class SelectorPanel extends Panel {
     private List<Scenario> getScenarioChoices() {
         List<Scenario> result = new ArrayList<Scenario>(
                 isAllActors() ? queryService.list( Scenario.class )
-                              : queryService.findScenarios( actor ) );
+                        : queryService.findScenarios( actor ) );
         Collections.sort( result );
         result.add( 0, AllScenarios );
         return result;
@@ -187,7 +192,7 @@ public class SelectorPanel extends Panel {
     private List<Actor> getActorsChoices() {
         List<Actor> result = new ArrayList<Actor>(
                 isAllScenarios() ? queryService.list( Actor.class )
-                                 : queryService.findActors( scenario ) );
+                        : queryService.findActors( scenario ) );
         Collections.sort(
                 result,
                 new Comparator<Actor>() {

@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Generic method result cache.
@@ -47,7 +49,13 @@ public class ResultCache {
         int count = cache.getSize();
         if ( log.isTraceEnabled() )
             log.trace( MessageFormat.format( "Caching result {0} of {1}", count, key ) );
-        getCache().put( new Element( key, result ) );
+        Object cachedResult;
+        if ( result instanceof List ) {
+            cachedResult = Collections.unmodifiableList( (List) result ) ;
+        } else {
+            cachedResult = result;
+        }
+        getCache().put( new Element( key, cachedResult ) );
     }
 
     /**
@@ -121,10 +129,10 @@ public class ResultCache {
     private static String argumentToString( Object arg ) {
         if ( arg instanceof ModelObject ) {
             StringBuilder sb = new StringBuilder();
-            sb.append(String.valueOf( arg ));
-            sb.append("[");
-            sb.append(((ModelObject) arg ).getId());
-            sb.append("]");
+            sb.append( String.valueOf( arg ) );
+            sb.append( "[" );
+            sb.append( ( (ModelObject) arg ).getId() );
+            sb.append( "]" );
             return sb.toString();
         } else {
             return String.valueOf( arg );
