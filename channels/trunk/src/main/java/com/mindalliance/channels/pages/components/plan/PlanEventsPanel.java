@@ -16,15 +16,15 @@ import java.util.Set;
  * Date: May 7, 2009
  * Time: 1:45:18 PM
  */
-public class PlanIncidentsPanel extends AbstractCommandablePanel {
+public class PlanEventsPanel extends AbstractCommandablePanel {
 
-    public PlanIncidentsPanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
+    public PlanEventsPanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
         super( id, iModel, expansions );
         init();
     }
 
     private void init() {
-        IncidentListPanel incidentListPanel = new IncidentListPanel(
+        EventListPanel incidentListPanel = new EventListPanel(
                 "incidents",
                 new PropertyModel<Plan>(this, "plan"),
                 getExpansions() );

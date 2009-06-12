@@ -397,7 +397,7 @@ public class PlanIndexPanel extends AbstractCommandablePanel implements NameRang
     @SuppressWarnings( "unchecked" )
     private List<IndexEntry> getIndicesForAllActors() {
         return (List<IndexEntry>) CollectionUtils.collect(
-                CollectionUtils.select( getQueryService().list( Actor.class ), new Predicate() {
+                CollectionUtils.select( getQueryService().listReferenced( Actor.class ), new Predicate() {
                     public boolean evaluate( Object obj ) {
                         return nameRange.contains( ( (Actor) obj ).getLastName() ) &&
                                 !isFilteredOut( ( (Actor) obj ).getName() );
@@ -415,7 +415,7 @@ public class PlanIndexPanel extends AbstractCommandablePanel implements NameRang
     @SuppressWarnings( "unchecked" )
     private List<IndexEntry> getIndicesForAllEntities( Class entityClass ) {
         return (List<IndexEntry>) CollectionUtils.collect(
-                CollectionUtils.select( getQueryService().list( entityClass ), new Predicate() {
+                CollectionUtils.select( getQueryService().listReferenced( entityClass ), new Predicate() {
                     public boolean evaluate( Object obj ) {
                         return isNameIncluded( ( (ModelObject) obj ).getName() );
                     }

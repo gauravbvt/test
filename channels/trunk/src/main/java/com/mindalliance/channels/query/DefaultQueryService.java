@@ -326,12 +326,33 @@ public class DefaultQueryService extends Observable implements QueryService {
      * {@inheritDoc}
      */
     @SuppressWarnings( {"unchecked"} )
+    public <T extends ModelObject> List<T> listReferenced( Class<T> clazz ) {
+        return (List<T>) CollectionUtils.select( list( clazz ),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return isModelObjectReferenced( (ModelObject) obj );
+                    }
+                } );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<ModelObject> iterateEntities() {
-        return new FilterIterator( getDao().list( ModelObject.class ).iterator(), new Predicate() {
+        return new FilterIterator( listReferenced( ModelObject.class ).iterator(), new Predicate() {
             public boolean evaluate( Object object ) {
                 return ( (ModelObject) object ).isEntity();
             }
         } );
+    }
+
+    private boolean isModelObjectReferenced( ModelObject modelObject ) {
+        if ( modelObject instanceof Actor ) return isReferenced( (Actor) modelObject );
+        if ( modelObject instanceof Role ) return isReferenced( (Role) modelObject );
+        if ( modelObject instanceof Organization ) return isReferenced( (Organization) modelObject );
+        if ( modelObject instanceof Place ) return isReferenced( (Place) modelObject );
+        return !( modelObject instanceof Event ) || isReferenced( (Event) modelObject );
     }
 
     /**
@@ -1190,7 +1211,7 @@ public class DefaultQueryService extends Observable implements QueryService {
      */
     public List<String> findAllNames( Class<? extends ModelObject> aClass ) {
         Set<String> allNames = new HashSet<String>();
-        for ( ModelObject mo : list( aClass ) ) {
+        for ( ModelObject mo : listReferenced( aClass ) ) {
             allNames.add( mo.getName() );
         }
         return toSortedList( allNames );
@@ -1832,6 +1853,67 @@ public class DefaultQueryService extends Observable implements QueryService {
                         : Role.UNKNOWN;
         allEntities.add( (T) unknown );
         return allEntities;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<Scenario> findScenariosRespondingTo( final Event event ) {
+        return (List<Scenario>) CollectionUtils.select(
+                list( Scenario.class ),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        Event repondedEvent = ( (Scenario) obj ).getEvent();
+                        return repondedEvent != null && repondedEvent.equals( event );
+                    }
+                }
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Part> findPartsTerminatingEventIn( Scenario scenario ) {
+        List<Part> terminatingParts = new ArrayList<Part>();
+        Iterator<Part> parts = scenario.parts();
+        while ( parts.hasNext() ) {
+            Part part = parts.next();
+            if ( part.isTerminatesEvent() )
+                terminatingParts.add( part );
+        }
+        return terminatingParts;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Part> findPartsStartingWithEventIn( Scenario scenario ) {
+        List<Part> startedParts = new ArrayList<Part>();
+        Iterator<Part> parts = scenario.parts();
+        while ( parts.hasNext() ) {
+            Part part = parts.next();
+            if ( part.isStartsWithScenario() )
+                startedParts.add( part );
+        }
+        return startedParts;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Part> findPartsInitiatingEvent( Event event ) {
+        List<Part> initiatingParts = new ArrayList<Part>();
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                Part part = parts.next();
+                Event initiatedEvent = part.getInitiatedEvent();
+                if ( initiatedEvent != null && initiatedEvent.equals( event ) )
+                    initiatingParts.add( part );
+            }
+        }
+        return initiatingParts;
     }
 
 }

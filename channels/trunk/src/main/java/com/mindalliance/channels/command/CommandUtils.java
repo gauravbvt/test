@@ -232,7 +232,7 @@ public final class CommandUtils {
     /**
      * Capture the state of an attachment, including attachee.
      *
-     * @param mo         a model object
+     * @param mo       a model object
      * @param document a document
      * @return a map of attribute names and values
      */
@@ -332,7 +332,7 @@ public final class CommandUtils {
             throw new RuntimeException( e );
         } catch ( NoSuchMethodException e ) {
             throw new RuntimeException( e );
-        } catch (NestedNullException e ) {
+        } catch ( NestedNullException e ) {
             LOG.debug( "Nested null on " + property + " for " + bean );
             value = null;
         }
@@ -484,6 +484,26 @@ public final class CommandUtils {
         return node;
     }
 
+    /**
+     * Find flow in scenario given id.
+     *
+     * @param id       a long
+     * @param scenario a scenario
+     * @return a flow
+     * @throws CommandException if not found
+     */
+    public static Flow resolveFlow( Long id, Scenario scenario ) throws CommandException {
+        try {
+            if ( id != null && scenario != null ) {
+                return scenario.findFlow( id );
+            } else {
+                throw new NotFoundException();
+            }
+        } catch ( NotFoundException e ) {
+            throw new CommandException( "Can't find flow", e );
+        }
+    }
+
     public static String attach(
             Map<String, Object> attachmentState,
             List<String> tickets,
@@ -504,4 +524,5 @@ public final class CommandUtils {
         }
         return ticket;
     }
+
 }

@@ -44,6 +44,7 @@ public class ResultCache {
      * @param invocation the invocation, used as key for the caching
      * @param result     the result.
      */
+    @SuppressWarnings( "unchecked" )
     public void cache( MethodInvocation invocation, Object result ) {
         String key = getKey( invocation );
         int count = cache.getSize();
@@ -51,7 +52,7 @@ public class ResultCache {
             log.trace( MessageFormat.format( "Caching result {0} of {1}", count, key ) );
         Object cachedResult;
         if ( result instanceof List ) {
-            cachedResult = Collections.unmodifiableList( (List) result ) ;
+            cachedResult = Collections.unmodifiableList( (List) result );
         } else {
             cachedResult = result;
         }

@@ -105,7 +105,6 @@ public class SelectorPanel extends Panel {
             result = new ArrayList<Scenario>();
             result.add( scenario );
         }
-
         return result;
     }
 
@@ -126,7 +125,6 @@ public class SelectorPanel extends Panel {
             result = new ArrayList<Actor>();
             result.add( actor );
         }
-
         return result;
     }
 

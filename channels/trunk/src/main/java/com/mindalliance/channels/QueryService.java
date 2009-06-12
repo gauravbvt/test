@@ -83,12 +83,21 @@ public interface QueryService extends Service {
      *
      * @param clazz the given subclass of model object.
      * @param <T>   a subclass of model object.
-     * @return an iterator
+     * @return a list
      */
     <T extends ModelObject> List<T> list( Class<T> clazz );
 
     /**
-     * Iterate on ModelObject that are entities.
+     * Get all referenced objects (not orphaned) of the given class.
+     *
+     * @param clazz the given subclass of model object.
+     * @param <T>   a subclass of model object.
+     * @return a list
+     */
+    <T extends ModelObject> List<T> listReferenced( Class<T> clazz );
+
+    /**
+     * Iterate on ModelObject that are referenced entities.
      *
      * @return an iterator on ModelObjects that are entities
      */
@@ -726,8 +735,41 @@ public interface QueryService extends Service {
 
     /**
      * Find all parts and flows that directly involve a given entity.
+     *
      * @param entity a model object
      * @return a list of model objects (parts and flows)
      */
     List<ModelObject> findAllScenarioObjectsInvolving( ModelObject entity );
+
+    /**
+     * Find all scenarios that respond to a given event.
+     *
+     * @param event an event
+     * @return a list of scenarios
+     */
+    List<Scenario> findScenariosRespondingTo( Event event );
+
+    /**
+     * Find all parts that terminate a scenario's event.
+     *
+     * @param scenario a scenario
+     * @return a list of parts
+     */
+    List<Part> findPartsTerminatingEventIn( Scenario scenario );
+
+    /**
+     * Find all parts initiating a given event.
+     *
+     * @param event an event
+     * @return a list of parts
+     */
+    List<Part> findPartsInitiatingEvent( Event event );
+
+    /**
+     * Find all parts that start with a scenario's event.
+     *
+     * @param scenario a scenario
+     * @return a list of parts
+     */
+    List<Part> findPartsStartingWithEventIn( Scenario scenario );
 }

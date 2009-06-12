@@ -4,6 +4,7 @@ import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.commands.RedirectFlow;
 import com.mindalliance.channels.command.commands.SatisfyNeed;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.model.Connector;
@@ -11,6 +12,7 @@ import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.ScenarioObject;
 import com.mindalliance.channels.pages.components.menus.FlowActionsMenuPanel;
@@ -165,7 +167,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
 
         Node node = getOther();
         if ( node.isConnector() && node.getScenario().equals( getNode().getScenario() ) ) {
-            add( new ConnectedFlowList( "others", (Connector) node) );                   // NON-NLS
+            add( new ConnectedFlowList( "others", (Connector) node ) );                   // NON-NLS
         } else {
             add( new Label( "others", "" ) );                                             // NON-NLS
         }
@@ -257,7 +259,13 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                 if ( SemMatch.matches( s, name ) )
                     choices.add( name );
             }
-            // all connectors of the right "polarity"
+            // all name-matching in-scenario flows of the right polarity
+            for ( Flow flow : findRelevantInternalFlows() ) {
+                String name = flow.getName();
+                if ( SemMatch.matches( s, name ) )
+                    choices.add( name );
+            }
+            // all name-matching connector inner flows of the right "polarity"
             for ( Connector connector : findAllRelevantConnectors() ) {
                 String name = connector.getInnerFlow().getName();
                 if ( SemMatch.matches( s, name ) )
@@ -487,11 +495,15 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                 new PropertyModel<List<? extends Node>>( this, "otherNodes" ),            // NON-NLS
                 new IChoiceRenderer<Node>() {
                     public Object getDisplayValue( Node object ) {
-                        Node o = getOther();
+                        Node node = getOther();
                         boolean tbd =
-                                object.equals( o ) && o.isConnector() && o.getScenario().equals(
+                                object.equals( node ) && node.isConnector() && node.getScenario().equals(
                                         getNode().getScenario() );
-                        return tbd ? "* to be determined *" : object.toString();
+                        return tbd
+                                ? "* to be determined *"
+                                : object.isConnector() && object.getScenario().equals( getFlow().getScenario() )
+                                    ? ( (Connector) object ).getInnerFlow().getLocalPart().toString()
+                                    : object.toString();
                     }
 
                     public String getIdValue( Node object, int index ) {
@@ -614,6 +626,9 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                                 result.add( connector );
                         }
                     }
+                } else {
+                    // a part in scenario with same flow to/from part
+                    if ( hasPartFlowWithSameName( n ) ) result.add( n );
                 }
             }
         }
@@ -636,9 +651,35 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         return new ArrayList<Node>( result );
     }
 
+    private boolean hasPartFlowWithSameName( Node n ) {
+        String name = getFlow().getName();
+        Iterator<Flow> flows = isOutcome() ? n.requirements() : n.outcomes();
+        boolean hasSameName = false;
+        while ( !hasSameName && flows.hasNext() ) {
+            Flow otherFlow = flows.next();
+            hasSameName = !otherFlow.hasConnector() && SemMatch.same( otherFlow.getName(), name );
+        }
+        return hasSameName;
+    }
+
     private boolean isEmptyOrEquivalent( ScenarioObject connectorFlow ) {
         return getFlow().getName().isEmpty()
                 || SemMatch.matches( getFlow().getName(), connectorFlow.getName() );
+    }
+
+    private List<Flow> findRelevantInternalFlows() {
+        List<Flow> result = new ArrayList<Flow>();
+        Iterator<Part> parts = getFlow().getScenario().parts();
+        while ( parts.hasNext() ) {
+            Iterator<Flow> flows = isOutcome()
+                    ? parts.next().requirements()
+                    : parts.next().outcomes();
+            while ( flows.hasNext() ) {
+                Flow otherFlow = flows.next();
+                if ( !otherFlow.equals( getFlow() ) ) result.add( otherFlow );
+            }
+        }
+        return result;
     }
 
     private List<Connector> findAllRelevantConnectors() {
@@ -674,15 +715,18 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
      * @param other the new source or target
      */
     public void setOther( Node other ) {
-        if ( other.isConnector() ) {
+        Change change;
+        if ( other.isConnector() && getFlow().hasConnector() ) {
             Connector connector = (Connector) other;
             Flow need = isOutcome() ? connector.getInnerFlow() : getFlow();
             Flow capability = isOutcome() ? getFlow() : connector.getInnerFlow();
-            Change change = doCommand( new SatisfyNeed( need, capability, getFlow().getScenario() ) );
-            Flow newFlow = (Flow) change.getSubject();
-            // requestLockOn( newFlow );
-            setFlow( newFlow );
+            change = doCommand( new SatisfyNeed( need, capability, getFlow().getScenario() ) );
+        } else {
+            change = doCommand( new RedirectFlow( getFlow(), other, isOutcome() ) );
         }
+        Flow newFlow = (Flow) change.getSubject();
+        // requestLockOn( newFlow );
+        setFlow( newFlow );
     }
 
     /**

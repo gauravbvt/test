@@ -48,12 +48,12 @@ public class PlanEditShowMenuPanel extends MenuPanel {
         // Incidents
         Link incidentsLink = new AjaxFallbackLink( "link" ) {
             public void onClick( AjaxRequestTarget target ) {
-                changeAspectTo( target, PlanEditPanel.INCIDENTS );
+                changeAspectTo( target, PlanEditPanel.EVENTS );
             }
         };
         menuItems.add( new LinkMenuItem(
                 "menuItem",
-                new Model<String>( "Incidents" ),
+                new Model<String>( "All events" ),
                 incidentsLink ) );
         // Map
         Link mapLink = new AjaxFallbackLink( "link" ) {
