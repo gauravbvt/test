@@ -2,6 +2,7 @@ package com.mindalliance.channels;
 
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
+import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;
@@ -772,4 +773,18 @@ public interface QueryService extends Service {
      * @return a list of parts
      */
     List<Part> findPartsStartingWithEventIn( Scenario scenario );
+
+    /**
+     * Find all attachments.
+     *
+     * @return a list of attachments.
+     */
+    List<Attachment> findAllAttachments();
+
+    /**
+     * Find urls of all attachments.
+     *
+     * @return a list of strings
+     */
+    List<String> findAllAttached();
 }

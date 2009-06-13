@@ -29,4 +29,9 @@ public interface AttachmentManager {
      * @return a string
      */
     String getLabel( Attachment attachment );
+
+    /**
+     * Remove unattached documents.
+     */
+    void removeUnattached();
 }

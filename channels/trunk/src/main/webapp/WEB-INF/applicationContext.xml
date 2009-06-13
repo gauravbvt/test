@@ -30,6 +30,7 @@
 
     <bean id="attachmentManager" class="com.mindalliance.channels.attachments.FileBasedManager"
           init-method="start" destroy-method="stop">
+        <property name="queryService" ref="queryService"/>
         <property name="directory" value="target/channels-1.0-SNAPSHOT/uploads"/>
         <property name="path" value="uploads/"/>
     </bean>

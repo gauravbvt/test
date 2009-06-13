@@ -32,4 +32,8 @@ public class BitBucket implements AttachmentManager {
         return null;
     }
 
+    public void removeUnattached() {
+        // Do nothing
+    }
+
 }

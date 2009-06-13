@@ -186,6 +186,7 @@ public class Memory implements Dao {
                 throw new RuntimeException( e );
             }
         }
+        attachmentManager.removeUnattached();
     }
 
     /**

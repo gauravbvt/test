@@ -1,6 +1,7 @@
 package com.mindalliance.channels.attachments;
 
 import com.mindalliance.channels.AttachmentManager;
+import com.mindalliance.channels.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -20,13 +21,17 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -37,6 +42,12 @@ import java.util.Properties;
 public class FileBasedManager implements AttachmentManager, Lifecycle {
 
     /**
+     * The logger.
+     */
+    private final Logger LOG = LoggerFactory.getLogger( FileBasedManager.class );
+
+
+    /**
      * Character used to escape funny characters.
      */
     private static final char ESCAPE = '%';
@@ -44,7 +55,7 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     /**
      * Characters to be escaped in file name.
      */
-    private static final String CHARS = "%_/\\:?&=";                                      // NON-NLS
+    private static final String CHARS = "%_/\\:?&=";
 
     /**
      * Default maximum file name length (128).
@@ -80,6 +91,10 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
      * The maximum file name length. Anything above that will get truncated.
      */
     private int maxLength = MAX_LENGTH;
+    /**
+     * Query service.
+     */
+    private QueryService queryService;
 
     /**
      * List of documents, indexed by url.
@@ -91,7 +106,15 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     public FileBasedManager() {
     }
 
-    private File createFile( String name ) { 
+    public QueryService getQueryService() {
+        return queryService;
+    }
+
+    public void setQueryService( QueryService queryService ) {
+        this.queryService = queryService;
+    }
+
+    private File createFile( String name ) {
         String truncatedName = StringUtils.reverse(
                 StringUtils.reverse( name ).substring( 0, Math.min( name.length(), getMaxLength() ) ) );
         String idealName = escape( truncatedName );
@@ -292,8 +315,9 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
                             new File( directory, unescapedUrl ),
                             /*path + */url,
                             digest );
-
-            documentMap.put( unescapedUrl, document );
+            if ( exists( unescapedUrl ) ) {
+                documentMap.put( unescapedUrl, document );
+            }
         }
     }
 
@@ -305,8 +329,22 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     /**
      * {@inheritDoc}
      */
-    public boolean exists( final String url ) {
-        return !isFileDocument( url ) || directory.listFiles( new FilenameFilter() {
+    public boolean exists( String url ) {
+        return isValidUrl( url ) && ( !isFileDocument( url ) || isUploaded( url ) );
+    }
+
+    private boolean isValidUrl( String url ) {
+        if ( url.startsWith( path ) ) return true;
+        try {
+            new URL( url );
+        } catch ( MalformedURLException e ) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isUploaded( final String url ) {
+        return directory.listFiles( new FilenameFilter() {
             public boolean accept( File dir, String name ) {
                 return url.substring( url.lastIndexOf( '/' ) + 1 ).equals( name );
             }
@@ -316,6 +354,7 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     private boolean isFileDocument( String url ) {
         return url.startsWith( path );
     }
+
 
     /**
      * {@inheritDoc}
@@ -374,6 +413,25 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     public String getLabel( Attachment attachment ) {
         FileDocument fileDocument = documentMap.get( attachment.getUrl() );
         return fileDocument == null ? attachment.getUrl() : fileDocument.getFile().getName();
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    public synchronized void removeUnattached() {
+        List<String> attachedUrls = queryService.findAllAttached();
+        List<File> uploadedFiles = Arrays.asList( directory.listFiles() );
+        for ( File file : uploadedFiles ) {
+            if ( !file.getName().equals( "readme.txt" ) ) {
+                String url = path + file.getName();
+                if ( !attachedUrls.contains( url ) ) {
+                    LOG.info( "Removing unattached " + url );
+                    file.delete();
+                    documentMap.remove( url );
+                }
+            }
+        }
+        save();
     }
 
 }

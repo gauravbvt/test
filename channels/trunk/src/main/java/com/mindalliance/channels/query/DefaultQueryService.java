@@ -9,6 +9,7 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
+import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.dao.EvacuationScenario;
 import com.mindalliance.channels.dao.FireScenario;
 import com.mindalliance.channels.export.ConnectionSpecification;
@@ -1915,6 +1916,45 @@ public class DefaultQueryService extends Observable implements QueryService {
         }
         return initiatingParts;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Attachment> findAllAttachments() {
+        List<Attachment> allAttachments = new ArrayList<Attachment>();
+        for ( ModelObject mo : findAllModelObjects() ) {
+            allAttachments.addAll( mo.getAttachments() );
+        }
+        return allAttachments;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<String> findAllAttached() {
+        Set<String> allAttachedUrls = new HashSet<String>();
+        for ( Attachment attachment : findAllAttachments() ) {
+            allAttachedUrls.add( attachment.getUrl() );
+        }
+        return new ArrayList<String>( allAttachedUrls );
+    }
+
+    private List<ModelObject> findAllModelObjects() {
+        List<ModelObject> allModelObjects = new ArrayList<ModelObject>();
+        allModelObjects.addAll( list( ModelObject.class ) );
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                allModelObjects.add( parts.next() );
+            }
+            Iterator<Flow> flows = scenario.flows();
+            while ( flows.hasNext() ) {
+                allModelObjects.add( flows.next() );
+            }
+        }
+        return allModelObjects;
+    }
+
 
 }
 
