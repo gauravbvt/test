@@ -48,7 +48,6 @@ public class RestoreScenario extends AbstractCommand {
                 defaultScenario = scenarios.get( 0 );
             }
             Scenario scenario = importer.restoreScenario( xml );
-            commander.getAttachmentManager().reattachAll( scenario.getAttachmentTickets() );
             set( "scenario", scenario.getId() );
             if ( defaultScenario != null ) queryService.remove( defaultScenario );
             return new Change( Change.Type.Added, scenario );

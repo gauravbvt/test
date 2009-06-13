@@ -59,7 +59,6 @@ public class AddNeed extends AbstractCommand {
             Map<String, Object> flowAttributes = (Map<String, Object>) get( "attributes" );
             if ( flowAttributes != null ) {
                 CommandUtils.initialize( flow, flowAttributes );
-                commander.getAttachmentManager().reattachAll( flow.getAttachmentTickets() );
             }
             return new Change( Change.Type.Added, flow );
         } catch ( NotFoundException e ) {

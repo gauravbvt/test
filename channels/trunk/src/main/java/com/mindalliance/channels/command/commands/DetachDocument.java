@@ -1,21 +1,15 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.attachments.Document;
+import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.model.ModelObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 /**
- * Detach if not already done and update model object tickets.
+ * Remove an attachment from a model object.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -24,19 +18,14 @@ import java.util.Map;
  */
 public class DetachDocument extends AbstractCommand {
 
-    /**
-     * Logger.
-     */
-    private static final Logger LOG = LoggerFactory.getLogger( DetachDocument.class );
-
     public DetachDocument() {
     }
 
-    public DetachDocument( ModelObject modelObject, Document document ) {
-        assert modelObject != null;
-        assert document != null;
+    public DetachDocument( ModelObject modelObject, Attachment attachment ) {
         needLockOn( modelObject );
-        set( "state", CommandUtils.getAttachmentState( modelObject, document ) );
+        set( "attachee", modelObject.getId() );
+        set( "url", attachment.getUrl() );
+        set( "type", attachment.getType().name() );
     }
 
     /**
@@ -51,43 +40,18 @@ public class DetachDocument extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
-        Map<String, Object> state = (Map<String, Object>) get( "state" );
-        ModelObject mo = commander.resolve( ModelObject.class, (Long) state.get( "object" ) );
-        String ticket = findTicket(
-                mo,
-                (Map<String, Object>) get( "state" ),
-                commander.getAttachmentManager() );
-        if ( ticket != null ) {
-            commander.getAttachmentManager().detach( ticket );
-            mo.removeAttachmentTicket( ticket );
-            set( "ticket", ticket );
-            return new Change( Change.Type.Updated, mo, "attachmentTickets" );
-        } else {
-            LOG.warn( "Failed to detach document" );
-            return new Change( Change.Type.None );
-        }
+        ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "attachee" ) );
+        Attachment attachment = getAttachment();
+        mo.getAttachments().remove( attachment );
+        return new Change( Change.Type.Removed, mo, "attachments" );
     }
 
-    private String findTicket(
-            ModelObject mo,
-            Map<String, Object> state,
-            AttachmentManager attachmentManager ) {
-        for ( String ticket : mo.getAttachmentTickets() ) {
-            Document document = attachmentManager.getDocument( ticket );
-            if ( document.getType().name().equals( state.get( "type" ) )
-                    && document.getUrl().equals( state.get( "url" ) )
-                    && document.getDigest().equals( state.get( "digest" ) ) ) {
-                return ticket;
-            }
-        }
-        return null;
-    }
 
     /**
      * {@inheritDoc}
      */
     public boolean isUndoable() {
-        return get( "ticket" ) != null;
+        return true;
     }
 
     /**
@@ -95,11 +59,15 @@ public class DetachDocument extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
-        Map<String, Object> state = (Map<String, Object>) get( "state" );
-        ModelObject mo = commander.resolve( ModelObject.class, (Long) state.get( "object" ) );
-        String ticket = (String) get( "ticket" );
-        AttachDocument command = new AttachDocument( mo, ticket );
-        command.set( "state", state );
-        return command;
+        ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "attachee" ) );
+        Attachment attachment = getAttachment();
+        return new AttachDocument( mo, attachment );
     }
+
+    private Attachment getAttachment() {
+        return new Attachment(
+                (String)get("url"),
+                Attachment.Type.valueOf( (String)get( "type") ));
+    }
+
 }

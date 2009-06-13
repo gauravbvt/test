@@ -84,7 +84,6 @@ public class PasteFlow extends AbstractCommand {
             Map<String, Object> flowAttributes = (Map<String, Object>) copy.get( "attributes" );
             if ( flowAttributes != null ) {
                 CommandUtils.initialize( flow, flowAttributes );
-                commander.getAttachmentManager().reattachAll( flow.getAttachmentTickets() );
             }
             set( "flow", flow.getId() );
             return new Change( Change.Type.Added, flow );

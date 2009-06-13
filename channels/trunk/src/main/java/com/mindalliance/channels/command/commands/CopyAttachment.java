@@ -1,7 +1,7 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.attachments.Document;
+import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
@@ -24,8 +24,8 @@ public class CopyAttachment extends AbstractCommand {
     public CopyAttachment() {
     }
 
-    public CopyAttachment( Document document ) {
-        setArguments( CommandUtils.getAttachmentState( document ));
+    public CopyAttachment( Attachment attachment ) {
+        setArguments( CommandUtils.getAttachmentState( attachment ));
     }
 
     /**

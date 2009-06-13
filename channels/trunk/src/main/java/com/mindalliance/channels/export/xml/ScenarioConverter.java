@@ -73,7 +73,7 @@ public class ScenarioConverter extends AbstractChannelsConverter {
         writer.setValue( scenario.getDescription() );
         writer.endNode();
         exportDetectionWaivers( scenario, writer );
-        exportAttachmentTickets( scenario, writer, exportingInPlan );
+        exportAttachments( scenario, writer );
         if ( !exportingInPlan ) {
             // All entities if not within a plan export
             Iterator<ModelObject> entities = queryService.iterateEntities();
@@ -148,7 +148,7 @@ public class ScenarioConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "detection-waivers" ) ) {
                 importDetectionWaivers( scenario, reader );
             }  else if ( nodeName.equals( "attachments" ) ) {
-                importAttachmentTickets( scenario, reader );
+                importAttachments( scenario, reader );
             } else if ( nodeName.equals( "event" ) ) {
                 context.convertAnother( scenario, Event.class );
             } else if ( nodeName.equals( "actor" ) ) {

@@ -95,7 +95,6 @@ public class ConnectWithFlow extends AbstractCommand {
         Map<String, Object> attributes = (Map<String, Object>) get( "attributes" );
         if ( attributes != null ) {
             CommandUtils.initialize( flow, attributes );
-            commander.getAttachmentManager().reattachAll( flow.getAttachmentTickets() );
         }
         set( "flow", flow.getId() );
         return new Change( Change.Type.Added, flow );

@@ -78,7 +78,7 @@ public class PlanConverter extends AbstractChannelsConverter {
         writer.setValue( plan.getDescription() );
         writer.endNode();
         exportDetectionWaivers( plan, writer );
-        exportAttachmentTickets( plan, writer, isExportingPlan( context ) );
+        exportAttachments( plan, writer );
         context.put( "exporting-plan", "true" );
         // All entities
         Iterator<ModelObject> entities = queryService.iterateEntities();
@@ -150,7 +150,7 @@ public class PlanConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "detection-waivers" ) ) {
                 importDetectionWaivers( plan, reader );
             } else if ( nodeName.equals( "attachments" ) ) {
-                importAttachmentTickets( plan, reader );
+                importAttachments( plan, reader );
             } else if ( nodeName.equals( "issue" ) ) {
                 context.convertAnother( plan, UserIssue.class );
             } else {

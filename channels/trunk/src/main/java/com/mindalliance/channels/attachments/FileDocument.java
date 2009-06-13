@@ -1,21 +1,18 @@
 package com.mindalliance.channels.attachments;
 
 import java.io.File;
+import java.io.Serializable;
 
 /**
- * An actual file.
+ * A file with url and digest.
  */
-public class FileDocument implements Document {
+public class FileDocument implements Serializable {
 
     /**
      * The file on the server side.
      */
     private File file;
 
-    /**
-     * The type of this document
-     */
-    private Type type;
 
     /**
      * The external link to this file. Set by the manager.
@@ -29,9 +26,8 @@ public class FileDocument implements Document {
     public FileDocument() {
     }
 
-    public FileDocument( Type type, File file, String url, String digest ) {
+    public FileDocument( File file, String url, String digest ) {
         this();
-        setType( type );
         setFile( file );
         setUrl( url );
         setDigest( digest );
@@ -53,17 +49,6 @@ public class FileDocument implements Document {
         return FileBasedManager.unescape( file.getName() );
     }
 
-    public final Type getType() {
-        return type;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isPolicyViolation() {
-        return getType() == Type.PolicyCant;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -74,19 +59,8 @@ public class FileDocument implements Document {
     /**
      * {@inheritDoc}
      */
-    public boolean isUrl() {
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public boolean isFile() {
         return true;
-    }
-
-    public final void setType( Type type ) {
-        this.type = type;
     }
 
     public String getUrl() {
@@ -111,8 +85,7 @@ public class FileDocument implements Document {
     public boolean equals( Object obj ) {
         if ( obj instanceof FileDocument ) {
             FileDocument other = (FileDocument) obj;
-            return type == other.getType()
-                    && url.equals( other.getUrl() )
+            return url.equals( other.getUrl() )
                     && digest.equals( other.getDigest() );
         }
         return false;
@@ -124,7 +97,6 @@ public class FileDocument implements Document {
     @Override
     public int hashCode() {
         int hash = 1;
-        hash = hash * 31 + type.hashCode();
         hash = hash * 31 + url.hashCode();
         hash = hash * 31 + digest.hashCode();
         return hash;

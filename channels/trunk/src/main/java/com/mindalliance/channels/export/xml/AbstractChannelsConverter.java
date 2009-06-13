@@ -4,7 +4,7 @@ import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.attachments.Document;
+import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.export.ConnectionSpecification;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Issue;
@@ -17,8 +17,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -165,43 +163,50 @@ public abstract class AbstractChannelsConverter implements Converter {
     }
 
     /**
-     * Export attachmnet tickets.
+     * Export attachments.
      *
-     * @param modelObject   a model object
-     * @param writer        a writer
-     * @param exportingPlan whether exporting a whole plan (vs a single scenario)
+     * @param modelObject a model object
+     * @param writer      a writer
      */
-    protected void exportAttachmentTickets(
+    protected void exportAttachments(
             ModelObject modelObject,
-            HierarchicalStreamWriter writer,
-            boolean exportingPlan ) {
-        if ( !modelObject.getAttachmentTickets().isEmpty() ) {
+            HierarchicalStreamWriter writer ) {
+        if ( !modelObject.getAttachments().isEmpty() ) {
             writer.startNode( "attachments" );
-            if ( exportingPlan ) {
-                for ( String ticket : modelObject.getAttachmentTickets() ) {
-                    if ( ticket != null ) {
-                        writer.startNode( "ticket" );
-                        writer.setValue( ticket );
-                        writer.endNode();
-                    }
-                }
-            } else {
-                // only export attached URLs directly (file attachments are not portables)
-                for ( String ticket : modelObject.getAttachmentTickets() ) {
-                    Document attachment = getAttachmentManager().getDocument( ticket );
-                    if ( attachment.isUrl() ) {
-                        writer.startNode( "url" );
-                        writer.addAttribute( "type", attachment.getType().name() );
-                        writer.setValue( attachment.getUrl() );
-                        writer.endNode();
-                    }
-                }
-
+            for ( Attachment attachment : modelObject.getAttachments() ) {
+                writer.startNode( "attachment" );
+                writer.addAttribute( "type", attachment.getType().name() );
+                writer.setValue( attachment.getUrl() );
+                writer.endNode();
             }
             writer.endNode();
         }
     }
 
+    /**
+     * Import attachment tickets.
+     *
+     * @param modelObject a model object
+     * @param reader      a reader
+     */
+    protected void importAttachments( ModelObject modelObject, HierarchicalStreamReader reader ) {
+        AttachmentManager attachmentManager = getAttachmentManager();
+        while ( reader.hasMoreChildren() ) {
+            reader.moveDown();
+            String nodeName = reader.getNodeName();
+            if ( nodeName.equals( "attachment" ) ) {
+                Attachment.Type type = Attachment.Type.valueOf( reader.getAttribute( "type" ) );
+                String url = reader.getValue();
+                if ( attachmentManager.exists( url ) ) {
+                    modelObject.addAttachment( new Attachment( url, type ) );
+                } else {
+                    LOG.warn( "Dropping attachment to " + url + " (not found)" );
+                }
+            }
+            reader.moveUp();
+        }
+    }
+    
     /**
      * Import issue detection waivers.
      *
@@ -219,35 +224,4 @@ public abstract class AbstractChannelsConverter implements Converter {
         }
     }
 
-    /**
-     * Import attachment tickets.
-     *
-     * @param modelObject a model object
-     * @param reader      a reader
-     */
-    protected void importAttachmentTickets( ModelObject modelObject, HierarchicalStreamReader reader ) {
-        AttachmentManager attachmentManager = getAttachmentManager();
-        while ( reader.hasMoreChildren() ) {
-            reader.moveDown();
-            String nodeName = reader.getNodeName();
-            if ( nodeName.equals( "ticket" ) ) {
-                String ticket = reader.getValue();
-                modelObject.addAttachmentTicket( ticket );
-            } else if ( nodeName.equals( "url" ) ) {
-                String url = null;
-                try {
-                    String type = reader.getAttribute( "type" );
-                    url = reader.getValue();
-                    String ticket = attachmentManager.attach(
-                            Document.Type.valueOf( type ),
-                            new URL( url ),
-                            modelObject.getAttachmentTickets() );
-                    modelObject.addAttachmentTicket( ticket );
-                } catch ( MalformedURLException e ) {
-                    LOG.warn( "Can't attach URL " + url + " to " + modelObject, e );
-                }
-            }
-            reader.moveUp();
-        }
-    }
 }

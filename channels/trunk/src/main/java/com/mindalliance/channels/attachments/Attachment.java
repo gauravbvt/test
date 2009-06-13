@@ -1,12 +1,11 @@
 package com.mindalliance.channels.attachments;
 
-import com.mindalliance.channels.model.ModelObject;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 
 /**
- * A record of a document attached to a model object.
- * Used in analysis.
+ * A record of a document attachment.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -14,34 +13,103 @@ import java.io.Serializable;
  * Time: 2:42:35 PM
  */
 public class Attachment implements Serializable {
+
     /**
-     * A ticket.
+     * The specific kind of document.
      */
-    private String ticket;
+    public enum Type {
+
+        /**
+         * A miscellaneous document.
+         */
+        Reference( "Reference" ),
+
+        /**
+         * A policy document that mandates whatever the document is attached to.
+         */
+        PolicyMust( "Mandating policy" ),
+
+        /**
+         * A policy document that prohibits whatever the document is attached to.
+         */
+        PolicyCant( "Prohibiting policy" ),
+
+        /**
+         * A document that allows whatever the document is attached to.
+         */
+        MOU( "MOU" );
+
+        //--------------------------------
+        /**
+         * A description of the type that will hopefully make sense to the user.
+         */
+        private String label;
+
+        Type( String label ) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public String getStyle() {
+            return MessageFormat.format( "doc_{0}", toString() );                         // NON-NLS
+        }
+
+    }
+
     /**
      * A document.
      */
-    private Document document;
+    private String url;
     /**
-     * A model object.
+     * A type.
      */
-    private ModelObject modelObject;
+    private Type type;
 
-    public Attachment( Document document, ModelObject modelObject, String ticket ) {
-        this.document = document;
-        this.modelObject = modelObject;
-        this.ticket = ticket;
+    public Attachment( String url, Type type ) {
+        this.url = url;
+        this.type = type;
     }
 
-    public String getTicket() {
-        return ticket;
+    public String getUrl() {
+        return url;
     }
 
-    public Document getDocument() {
-        return document;
+    public Type getType() {
+        return type;
     }
 
-    public ModelObject getModelObject() {
-        return modelObject;
+    /**
+     * Represents policy violation.
+     *
+     * @return a boolean
+     */
+    public boolean isPolicyViolation() {
+        return type == Type.PolicyCant;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean equals( Object obj ) {
+        if ( obj instanceof Attachment ) {
+            Attachment other = (Attachment) obj;
+            return type == other.getType()
+                    && url.equals( other.getUrl() );
+        }
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        int hash = 1;
+        hash = hash * 31 + type.hashCode();
+        hash = hash * 31 + url.hashCode();
+        return hash;
     }
 }

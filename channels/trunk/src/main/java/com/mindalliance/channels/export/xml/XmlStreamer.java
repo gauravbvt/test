@@ -357,7 +357,7 @@ public class XmlStreamer extends AbstractService implements Importer, Exporter {
         externalFlow.setAskedFor( localInnerFlow.isAskedFor() );
         externalFlow.setDescription( localInnerFlow.getDescription() );
         externalFlow.setWaivedIssueDetections( localInnerFlow.getWaivedIssueDetections() );
-        externalFlow.setAttachmentTickets( localInnerFlow.getAttachmentTickets() );
+        externalFlow.setAttachments( localInnerFlow.getAttachments() );
         localInnerFlow.disconnect();
     }
 

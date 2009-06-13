@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.AttachmentManager;
-import com.mindalliance.channels.attachments.Document;
+import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AttachDocument;
 import com.mindalliance.channels.command.commands.CopyAttachment;
@@ -30,10 +30,8 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -81,7 +79,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     /**
      * The selected type for the upload.
      */
-    private Document.Type selectedType = Document.Type.Reference;
+    private Attachment.Type selectedType = Attachment.Type.Reference;
     /**
      * Attachments list container.
      */
@@ -168,15 +166,15 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     }
 
     private void addTypeSelector() {
-        DropDownChoice<Document.Type> typeChoice = new DropDownChoice<Document.Type>( "type",                                 // NON-NLS
-                new PropertyModel<Document.Type>( this, "selectedType" ),               // NON-NLS
-                Arrays.asList( Document.Type.values() ),
-                new IChoiceRenderer<Document.Type>() {
-                    public Object getDisplayValue( Document.Type object ) {
+        DropDownChoice<Attachment.Type> typeChoice = new DropDownChoice<Attachment.Type>( "type",
+                new PropertyModel<Attachment.Type>( this, "selectedType" ),
+                Arrays.asList( Attachment.Type.values() ),
+                new IChoiceRenderer<Attachment.Type>() {
+                    public Object getDisplayValue( Attachment.Type object ) {
                         return object.getLabel();
                     }
 
-                    public String getIdValue( Document.Type object, int index ) {
+                    public String getIdValue( Attachment.Type object, int index ) {
                         return Integer.toString( index );
                     }
                 }
@@ -194,33 +192,32 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         attachmentsContainer = new WebMarkupContainer( "attachments-container" );
         attachmentsContainer.setOutputMarkupId( true );
         add( attachmentsContainer );
-        ListView<Wrapper> attachmentList = new ListView<Wrapper>( "attachments",           // NON-NLS
-                new PropertyModel<List<Wrapper>>( this, "attachments" ) ) {               // NON-NLS
+        ListView<Attachment> attachmentList = new ListView<Attachment>( "attachments",
+                new PropertyModel<List<Attachment>>( this, "attachments" ) ) {
 
             @Override
-            protected void populateItem( ListItem<Wrapper> item ) {
-                Wrapper wrapper = item.getModelObject();
-                Document a = wrapper.getAttachment();
-                ExternalLink documentLink = new ExternalLink( "attachment",                                 // NON-NLS
-                        a.getUrl(), a.getLabel() );
+            protected void populateItem( ListItem<Attachment> item ) {
+                Attachment a = item.getModelObject();
+                ExternalLink documentLink = new ExternalLink( "attachment",
+                        a.getUrl(), attachmentManager.getLabel( a ) );
                 documentLink.add( new AttributeModifier( "target", true, new Model<String>( "_" ) ) );
                 item.add( documentLink );
                 addCopyImage( item );
                 addDeleteImage( item );
                 item.add( new AttributeModifier(
-                        "class", true, new Model<String>( a.getType().getStyle() ) ) );   // NON-NLS
+                        "class", true, new Model<String>( a.getType().getStyle() ) ) );
                 item.add( new AttributeModifier(
-                        "title", true, new Model<String>( a.getType().getLabel() ) ) );   // NON-NLS
+                        "title", true, new Model<String>( a.getType().getLabel() ) ) );
             }
         };
         attachmentsContainer.add( attachmentList );
     }
 
-    private void addCopyImage( ListItem<Wrapper> item ) {
-        final Wrapper wrapper = item.getModelObject();
+    private void addCopyImage( ListItem<Attachment> item ) {
+        final Attachment attachment = item.getModelObject();
         AjaxFallbackLink deletelink = new AjaxFallbackLink( "copy" ) {
             public void onClick( AjaxRequestTarget target ) {
-                wrapper.copyAttachment();
+                doCommand( new CopyAttachment( attachment ) );
                 update( target,
                         new Change( Change.Type.Copied ));
             }
@@ -228,17 +225,19 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         item.add( deletelink );
     }
 
-    private void addDeleteImage( ListItem<Wrapper> item ) {
-        final Wrapper wrapper = item.getModelObject();
+    private void addDeleteImage( ListItem<Attachment> item ) {
+        final Attachment attachment = item.getModelObject();
         AjaxFallbackLink deletelink = new AjaxFallbackLink( "delete" ) {
             public void onClick( AjaxRequestTarget target ) {
-                wrapper.deleteAttachment();
+                doCommand( new DetachDocument(
+                        getAttachee(),
+                        attachment  ) );
                 refresh( target );
                 update( target,
                         new Change(
-                        Change.Type.Updated,
+                        Change.Type.Removed,
                         getAttachee(),
-                        "attachmentTickets"
+                        "attachments"
                 ) );
             }
         };
@@ -277,16 +276,10 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     /**
      * Get current attachments to list. Called by component.
      *
-     * @return a list of wrapped attachments
+     * @return a list of attachments
      */
-    public List<Wrapper> getAttachments() {
-        List<Wrapper> result = new ArrayList<Wrapper>();
-        for ( String ticket : getAttachee().getAttachmentTickets() ) {
-            Document attachment = attachmentManager.getDocument( ticket );
-            if ( attachment != null )
-                result.add( new Wrapper( ticket, attachment ) );
-        }
-        return result;
+    public List<Attachment> getAttachments() {
+        return getAttachee().getAttachments();
     }
 
     public FileUpload getUpload() {
@@ -303,19 +296,19 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         if ( upload != null ) {
             ModelObject mo = getAttachee();
             LoggerFactory.getLogger( getClass() ).info( "Attaching file to {}", mo );
-            String ticket = attachmentManager.attach( getSelectedType(), upload, mo.getAttachmentTickets() );
+            Attachment attachment = attachmentManager.upload( getSelectedType(), upload );
             // Only add non-redundant attachment.
-            if ( ticket != null ) {
-                doCommand( new AttachDocument( mo, ticket ) );
+            if ( attachment != null ) {
+                doCommand( new AttachDocument( mo, attachment ) );
             }
         }
     }
 
-    public Document.Type getSelectedType() {
+    public Attachment.Type getSelectedType() {
         return selectedType;
     }
 
-    public void setSelectedType( Document.Type selectedType ) {
+    public void setSelectedType( Attachment.Type selectedType ) {
         this.selectedType = selectedType;
     }
 
@@ -345,13 +338,9 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             logger.info( "Attaching URL to {}", mo );
             // URL url;
             try {
-                String ticket = attachmentManager.attach(
-                        getSelectedType(),
-                        new URL( value ),
-                        mo.getAttachmentTickets() );
-                if ( ticket != null ) {
-                    doCommand( new AttachDocument( mo, ticket ) );
-                }
+                new URL( value );
+                Attachment attachment = new Attachment ( value, getSelectedType() );
+                doCommand( new AttachDocument( mo, attachment ) );
                 this.url = null;
             } catch ( MalformedURLException e ) {
                 logger.warn( "Invalid URL: " + value );
@@ -366,45 +355,5 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         return (ModelObject) getDefaultModelObject();
     }
 
-    //==================================================
-    /**
-     * A wrapper to keep track of the deletion state of an attachment.
-     */
-    private final class Wrapper implements Serializable {
-        /**
-         * The attachment's ticket.
-         */
-        private String ticket;
-        /**
-         * The underlying attachment.
-         */
-        private Document attachment;
 
-
-        private Wrapper( String ticket, Document attachment ) {
-            this.ticket = ticket;
-            this.attachment = attachment;
-        }
-
-        /**
-         * Detach document from model object.
-         */
-        public void deleteAttachment() {
-            Document attachment = attachmentManager.getDocument( ticket );
-            doCommand( new DetachDocument(
-                    getAttachee(),
-                    attachment  ) );
-        }
-
-        /**
-         * Copy attachment.
-         */
-        public void copyAttachment() {
-            doCommand( new CopyAttachment( attachment ) );
-        }
-
-        public Document getAttachment() {
-            return attachment;
-        }
-    }
 }

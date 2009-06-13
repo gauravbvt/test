@@ -293,7 +293,7 @@ public class Memory implements Dao {
         assert dataFile.length() == 0;
         Exporter exporter = getChannels().getExporter();
         exporter.exportAll( new FileOutputStream( dataFile ) );
-        attachmentManager.emptyTrash();
+        // attachmentManager.emptyTrash();
     }
 
     private void saveJournal( Plan plan ) throws IOException {

@@ -59,7 +59,7 @@ public class UserIssueConverter extends AbstractChannelsConverter {
         writer.startNode( "reportedBy" );
         writer.setValue( issue.getReportedBy() );
         writer.endNode();
-        exportAttachmentTickets( issue, writer, isExportingPlan( context ) );
+        exportAttachments( issue, writer );
     }
 
     /**
@@ -92,7 +92,7 @@ public class UserIssueConverter extends AbstractChannelsConverter {
                     } else if ( nodeName.equals( "detection-waivers" ) ) {
                         importDetectionWaivers( issue, reader );
                     } else if ( nodeName.equals( "attachments" ) ) {
-                        importAttachmentTickets( issue, reader );
+                        importAttachments( issue, reader );
                     } else {
                         LOG.warn( "Unknown element " + nodeName );
                     }

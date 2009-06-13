@@ -1,6 +1,7 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.attachments.Attachment;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -45,9 +46,9 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
      */
     private List<String> waivedIssueDetections = new ArrayList<String>();
     /**
-     * List of attachment tickets.
+     * List of attachments.
      */
-    private List<String> attachmentTickets = new ArrayList<String>();
+    private List<Attachment> attachments = new ArrayList<Attachment>();
 
     //=============================
     protected ModelObject() {
@@ -176,12 +177,12 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
     }
 
     @Transient
-    public List<String> getAttachmentTickets() {
-        return attachmentTickets;
+    public List<Attachment> getAttachments() {
+        return attachments;
     }
 
-    public void setAttachmentTickets( List<String> attachmentTickets ) {
-        this.attachmentTickets = attachmentTickets;
+    public void setAttachments( List<Attachment> attachments ) {
+        this.attachments = attachments;
     }
 
     /**
@@ -237,32 +238,6 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
         return description.isEmpty();
     }
 
-    /**
-     * Executed just before the model object is removed.
-     *
-     * @param queryService a query service
-     */
-    public void beforeRemove( QueryService queryService ) {
-        queryService.getAttachmentManager().detachAll( getAttachmentTickets() );
-    }
-
-    /**
-     * Add attachment ticket.
-     *
-     * @param ticket a string
-     */
-    public void addAttachmentTicket( String ticket ) {
-        if ( !attachmentTickets.contains( ticket ) ) attachmentTickets.add( ticket );
-    }
-
-    /**
-     * Remove attachment ticket.
-     *
-     * @param ticket a string
-     */
-    public void removeAttachmentTicket( String ticket ) {
-        attachmentTickets.remove( ticket );
-    }
 
     /**
      * Whether this is an unknown entity.
@@ -276,5 +251,24 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
                 || equals( Organization.UNKNOWN )
                 || equals( Place.UNKNOWN )
                 || equals( Role.UNKNOWN );
+    }
+
+    /**
+     * Add an attachment.
+     *
+     * @param attachment an attachment
+     */
+    public void addAttachment( Attachment attachment ) {
+        if ( !attachments.contains( attachment ) ) {
+            attachments.add( attachment );
+        }
+    }
+
+    /**
+     * Clean up before removal.
+     * @param queryService a query service
+     */
+    public void beforeRemove( QueryService queryService ) {
+        // DO nothing
     }
 }

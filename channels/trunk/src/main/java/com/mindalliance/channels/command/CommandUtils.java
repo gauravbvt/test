@@ -1,11 +1,9 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.attachments.Document;
-import com.mindalliance.channels.attachments.FileDocument;
+import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Delay;
@@ -28,8 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -68,7 +64,7 @@ public final class CommandUtils {
         attributes.put( "all", flow.isAll() );
         attributes.put( "maxDelay", new Delay( flow.getMaxDelay() ) );
         attributes.put( "channels", flow.getChannelsCopy() );
-        attributes.put( "attachmentTickets", new ArrayList<String>( flow.getAttachmentTickets() ) );
+        attributes.put( "attachments", new ArrayList<Attachment>( flow.getAttachments() ) );
         attributes.put( "waivedIssueDetections", new ArrayList<String>( flow.getWaivedIssueDetections() ) );
         attributes.put( "significanceToTarget", flow.getSignificanceToTarget() );
         attributes.put( "significanceToSource", flow.getSignificanceToSource() );
@@ -140,7 +136,7 @@ public final class CommandUtils {
         state.put( "task", part.getTask() );
         state.put( "repeatsEvery", new Delay( part.getRepeatsEvery() ) );
         state.put( "completionTime", new Delay( part.getCompletionTime() ) );
-        state.put( "attachmentTickets", new ArrayList<String>( part.getAttachmentTickets() ) );
+        state.put( "attachments", new ArrayList<Attachment>( part.getAttachments() ) );
         state.put( "waivedIssueDetections", new ArrayList<String>( part.getWaivedIssueDetections() ) );
         state.put( "selfTerminating", part.isSelfTerminating() );
         state.put( "repeating", part.isRepeating() );
@@ -174,7 +170,7 @@ public final class CommandUtils {
         part.setStartsWithScenario( (Boolean) state.get( "startsWithScenario" ) );
         part.setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
         part.setCompletionTime( (Delay) state.get( "completionTime" ) );
-        part.setAttachmentTickets( new ArrayList<String>( (ArrayList<String>) state.get( "attachmentTickets" ) ) );
+        part.setAttachments( new ArrayList<Attachment>( (ArrayList<Attachment>) state.get( "attachments" ) ) );
         part.setMitigations( new ArrayList<Risk>( (ArrayList<Risk>) state.get( "mitigations" ) ) );
         if ( state.get( "initiatedEvent" ) != null )
             part.setInitiatedEvent( queryService.findOrCreate(
@@ -217,28 +213,13 @@ public final class CommandUtils {
     /**
      * Capture the state of an attachment.
      *
-     * @param document an attachment
+     * @param attachment an attachment
      * @return a map of attribute names and values
      */
-    public static Map<String, Object> getAttachmentState( Document document ) {
+    public static Map<String, Object> getAttachmentState( Attachment attachment ) {
         Map<String, Object> state = new HashMap<String, Object>();
-        state.put( "attachment", document.getClass().getSimpleName() );
-        state.put( "type", document.getType().name() );
-        state.put( "url", document.getUrl() );
-        state.put( "digest", document.getDigest() );
-        return state;
-    }
-
-    /**
-     * Capture the state of an attachment, including attachee.
-     *
-     * @param mo       a model object
-     * @param document a document
-     * @return a map of attribute names and values
-     */
-    public static Map<String, Object> getAttachmentState( ModelObject mo, Document document ) {
-        Map<String, Object> state = getAttachmentState( document );
-        state.put( "object", mo.getId() );
+        state.put( "type", attachment.getType().name() );
+        state.put( "url", attachment.getUrl() );
         return state;
     }
 
@@ -504,25 +485,5 @@ public final class CommandUtils {
         }
     }
 
-    public static String attach(
-            Map<String, Object> attachmentState,
-            List<String> tickets,
-            AttachmentManager attachmentManager ) {
-        String ticket = null;
-        try {
-            boolean isFileAttachment = attachmentState.get( "attachment" ).equals( FileDocument.class.getSimpleName() );
-            Document.Type type = Document.Type.valueOf( (String) attachmentState.get( "type" ) );
-            String url = (String) attachmentState.get( "url" );
-            String digest = (String) attachmentState.get( "digest" );
-            if ( isFileAttachment ) {
-                ticket = attachmentManager.attach( type, url, digest, tickets );
-            } else {
-                ticket = attachmentManager.attach( type, new URL( url ), tickets );
-            }
-        } catch ( MalformedURLException e ) {
-            LOG.warn( "Could not attach document.", e );
-        }
-        return ticket;
-    }
 
 }

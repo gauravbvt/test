@@ -68,7 +68,7 @@ public class FlowConverter extends AbstractChannelsConverter {
             writeFlowNodes( (ExternalFlow) flow, writer, currentScenario );
         }
         exportDetectionWaivers( flow, writer );
-        exportAttachmentTickets( flow, writer, isExportingPlan( context ) );
+        exportAttachments( flow, writer );
         writer.startNode( "description" );
         writer.setValue( flow.getDescription() );
         writer.endNode();
@@ -193,7 +193,7 @@ public class FlowConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "detection-waivers" ) ) {
                 importDetectionWaivers( flow, reader );
             } else if ( nodeName.equals( "attachments" ) ) {
-                importAttachmentTickets( flow, reader );
+                importAttachments( flow, reader );
             } else if ( nodeName.equals( "channel" ) ) {
                 Channel channel = (Channel) context.convertAnother( scenario, Channel.class );
                 flow.addChannel( channel );

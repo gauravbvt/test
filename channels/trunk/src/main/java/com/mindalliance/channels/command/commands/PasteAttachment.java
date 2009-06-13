@@ -1,12 +1,11 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.attachments.FileDocument;
+import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.model.ModelObject;
 
 import java.util.Map;
@@ -41,25 +40,14 @@ public class PasteAttachment extends AbstractCommand {
      * {@inheritDoc}
      */
     public boolean canDo( Commander commander ) {
-        return super.canDo( commander)
+        return super.canDo( commander )
                 && commander.isAttachmentCopied()
                 && attachmentExists( commander );
     }
 
     private boolean attachmentExists( Commander commander ) {
         Map<String, Object> copy = getCopy( commander );
-        if ( isFileAttachmentCopied( copy ) ) {
-            return commander.getAttachmentManager().findUploaded(
-                    (String) copy.get( "url" ),
-                    (String) copy.get( "digest" ) ) != null;
-        } else {
-            // Can always paste a url attachment
-            return true;
-        }
-    }
-
-    private boolean isFileAttachmentCopied( Map<String, Object> copy ) {
-        return copy.get( "attachment" ).equals( FileDocument.class.getSimpleName() );
+        return copy.get( "url" ) != null && copy.get( "type" ) != null;
     }
 
     @SuppressWarnings( "unchecked" )
@@ -80,37 +68,32 @@ public class PasteAttachment extends AbstractCommand {
         if ( !commander.isReplaying() ) {
             set( "copy", copy );
         }
-        String ticket = CommandUtils.attach(
-                copy,
-                mo.getAttachmentTickets(),
-                commander.getAttachmentManager() );
-        if ( ticket != null ) {
-            set( "ticket", ticket );
-            mo.addAttachmentTicket( ticket );
-            return new Change( Change.Type.Added, mo, "attachmentTickets" );
-        } else {
-            return new Change ( Change.Type.None );
-        }
+        Attachment attachment = getAttachmentFromCopy( copy );
+        mo.addAttachment( attachment );
+        return new Change( Change.Type.Added, mo, "attachmentTickets" );
+    }
+
+    private Attachment getAttachmentFromCopy( Map<String, Object> copy ) {
+        return new Attachment(
+                (String) copy.get( "url" ),
+                Attachment.Type.valueOf( (String) copy.get( "type" ) ) );
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isUndoable() {
-        return get( "ticket" ) != null;
+        return true;
     }
 
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings( "unchecked" )
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "attachee" ) );
-        String ticket = (String) get( "ticket" );
-        if ( mo == null || ticket == null ) {
-            throw new CommandException( "Can't undo." );
-        } else {
-            return new DetachDocument( mo, commander.getAttachmentManager().getDocument( ticket ) );
-        }
+        Attachment attachment = getAttachmentFromCopy( (Map<String, Object>) get( "copy" ) );
+        return new DetachDocument( mo, attachment );
     }
 
 }

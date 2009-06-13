@@ -62,7 +62,6 @@ public class AddPart extends AbstractCommand {
         Map<String, Object> partState = (Map<String, Object>) get( "partState" );
         if ( partState != null ) {
             CommandUtils.initPartFrom( part, partState, commander );
-            commander.getAttachmentManager().reattachAll( part.getAttachmentTickets() );
         }
         return new Change( Change.Type.Added, part );
     }

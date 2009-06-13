@@ -52,7 +52,6 @@ public class AddUserIssue extends AbstractCommand {
         issue.setReportedBy( User.current().getName() );
         if ( state != null ) {
             CommandUtils.initialize( issue, state );
-            commander.getAttachmentManager().reattachAll( issue.getAttachmentTickets() );
         }
         queryService.add( issue, priorId );
         set( "issue", issue.getId() );

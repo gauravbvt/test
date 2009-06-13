@@ -1,7 +1,7 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.attachments.Document;
+import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
@@ -30,11 +30,11 @@ public class FlowViolatesPolicy extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        List<Document> documents = getAttachmentManager().getDocuments( flow.getAttachmentTickets() );
-        for ( Document document : documents ) {
-            if ( document.isPolicyViolation() ) {
+        List<Attachment> attachments =  flow.getAttachments();
+        for ( Attachment attachment : attachments ) {
+            if ( attachment.isPolicyViolation() ) {
                 Issue issue = makeIssue( Issue.COMPLETENESS, flow );
-                issue.setDescription( "Violates policy per \"" + document.getLabel() + "\"." );
+                issue.setDescription( "Violates policy per \"" + attachment.getUrl() + "\"." );
                 issue.setRemediation( "Change or remove flow, or change the policy." );
                 issue.setSeverity( Issue.Level.Severe );
                 issues.add( issue );

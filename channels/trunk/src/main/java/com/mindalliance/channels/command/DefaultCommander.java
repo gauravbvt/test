@@ -109,7 +109,7 @@ public class DefaultCommander extends AbstractService implements Commander {
 
     public boolean isAttachmentCopied() {
         Map<String, Object> userCopy = getCopy();
-        return userCopy != null && userCopy.get( "attachment" ) != null;
+        return userCopy != null && userCopy.get( "url" ) != null && userCopy.get( "type" ) != null;
     }
 
     public void setLockManager( LockManager lockManager ) {
