@@ -85,6 +85,16 @@ public class PlanEditShowMenuPanel extends MenuPanel {
                 "menuItem",
                 new Model<String>( "All issues" ),
                 issuesLink ) );
+        // Bibliography
+        Link biblioLink = new AjaxFallbackLink( "link" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                changeAspectTo( target, PlanEditPanel.BIBLIOGRAPHY );
+            }
+        };
+        menuItems.add( new LinkMenuItem(
+                "menuItem",
+                new Model<String>( "Bibliography" ),
+                biblioLink ) );
         // Index
         Link indexLink = new AjaxFallbackLink( "link" ) {
             public void onClick( AjaxRequestTarget target ) {
@@ -95,7 +105,7 @@ public class PlanEditShowMenuPanel extends MenuPanel {
                 "menuItem",
                 new Model<String>( "Index" ),
                 indexLink ) );
-        
+
         return menuItems;
     }
 

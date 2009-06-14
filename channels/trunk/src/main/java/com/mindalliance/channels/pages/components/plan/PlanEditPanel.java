@@ -46,6 +46,10 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
      * Index aspect.
      */
     public static final String INDEX = "index";
+    /**
+     * Bibliography aspect.
+     */
+    public static final String BIBLIOGRAPHY = "bibliography";
 
     public PlanEditPanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
         super( id, iModel, expansions );
@@ -124,6 +128,8 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
             return getPlanWhoswhoPanel();
         } else if ( aspect.equals( ISSUES ) ) {
             return getPlanIssuesPanel();
+        } else if ( aspect.equals( BIBLIOGRAPHY ) ) {
+            return getPlanBibliographyPanel();
         } else if ( aspect.equals( INDEX ) ) {
             return getPlanIndexPanel();
         } else {
@@ -150,6 +156,10 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
 
     private Component getPlanIssuesPanel() {
         return new PlanIssuesPanel( "aspect" );
+    }
+
+    private Component getPlanBibliographyPanel() {
+        return new PlanBibliographyPanel( "aspect" );
     }
 
     private Component getPlanWhoswhoPanel() {

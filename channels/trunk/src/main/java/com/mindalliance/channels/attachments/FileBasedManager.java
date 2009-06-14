@@ -422,7 +422,8 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
         List<String> attachedUrls = queryService.findAllAttached();
         List<File> uploadedFiles = Arrays.asList( directory.listFiles() );
         for ( File file : uploadedFiles ) {
-            if ( !file.getName().equals( "readme.txt" ) ) {
+            if ( !( file.getName().equals( "readme.txt" )
+                    || ( file.getName().equals( digestsMapFile ) ) ) ) {
                 String url = path + file.getName();
                 if ( !attachedUrls.contains( url ) ) {
                     LOG.info( "Removing unattached " + url );

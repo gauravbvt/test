@@ -1939,7 +1939,10 @@ public class DefaultQueryService extends Observable implements QueryService {
         return new ArrayList<String>( allAttachedUrls );
     }
 
-    private List<ModelObject> findAllModelObjects() {
+    /**
+     * {@inheritDoc}
+     */
+    public List<ModelObject> findAllModelObjects() {
         List<ModelObject> allModelObjects = new ArrayList<ModelObject>();
         allModelObjects.addAll( list( ModelObject.class ) );
         for ( Scenario scenario : list( Scenario.class ) ) {

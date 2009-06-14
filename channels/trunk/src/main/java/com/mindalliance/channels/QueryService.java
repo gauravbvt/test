@@ -787,4 +787,11 @@ public interface QueryService extends Service {
      * @return a list of strings
      */
     List<String> findAllAttached();
+
+    /**
+     * Find all model objects.
+     *
+     * @return a list of model objects
+     */
+    List<ModelObject> findAllModelObjects();
 }

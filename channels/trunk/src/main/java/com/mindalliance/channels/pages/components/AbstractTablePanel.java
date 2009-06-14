@@ -246,10 +246,49 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                         labelProperty,
                         defaultText,
                         filterable ) );
- /*              String classes = "link";
-                 cellItem.add( new AttributeModifier( "class", true, new Model<String>( classes ) ) );
-*/            }
+                /*              String classes = "link";
+                                 cellItem.add( new AttributeModifier( "class", true, new Model<String>( classes ) ) );
+                */
+            }
         };
     }
+
+    /**
+     * Defines a column containing external links.
+     *
+     * @param name          a string
+     * @param urlProperty   a string
+     * @param labelProperty a string
+     * @param defaultText   a string
+     * @return an abstract column
+     */
+    protected AbstractColumn<T> makeExternalLinkColumn(
+            String name,
+            final String urlProperty,
+            final String labelProperty,
+            final String defaultText ) {
+        return new AbstractColumn<T>( new Model<String>( name ), labelProperty ) {
+            public void populateItem( Item<ICellPopulator<T>> cellItem,
+                                      String id,
+                                      final IModel<T> model ) {
+                T bean = model.getObject();
+                String url = (String) CommandUtils.getProperty( bean, urlProperty, null );
+                Component cellContent;
+                if ( url != null ) {
+                    String labelText = (String) CommandUtils.getProperty( bean, labelProperty, defaultText );
+                    labelText = ( labelText == null || labelText.isEmpty() )
+                            ? ( defaultText == null ? "" : defaultText )
+                            : labelText;
+                    cellContent = new ExternalLinkPanel( id, url, labelText );
+                } else {
+                    cellContent = new Label( id, defaultText == null ? "" : defaultText );
+                }
+                cellItem.add( cellContent );
+            }
+        };
+
+
+    }
+
 
 }
