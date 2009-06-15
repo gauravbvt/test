@@ -5,6 +5,7 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.upload.FileItem;
 import org.easymock.EasyMock;
+import org.springframework.core.io.FileSystemResource;
 
 /**
  * ...
@@ -31,8 +32,8 @@ public class TestFileBasedManager extends TestCase {
                 "target" + System.getProperty( "file.separator" ) + "upload-test" );
         if ( !directory.exists() )
             directory.mkdir();
-        mgr.setDirectory( directory );
-        map = new File( mgr.getDirectory(), mgr.getDigestsMapFile() );
+        mgr.setDirectory( new FileSystemResource( directory ) );
+        map = new File( directory, mgr.getDigestsMapFile() );
 
         fileItem = EasyMock.createMock( FileItem.class );
         upload = new FileUpload( fileItem );

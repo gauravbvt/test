@@ -71,7 +71,7 @@
     <!--</bean>-->
 
     <bean id="dao" class="com.mindalliance.channels.dao.Memory">
-        <property name="dataDirectoryPath" value="target/data"/>
+        <property name="dataDirectory" value="file:${user.home}/channels/data"/>
         <property name="snapshotThreshold" value="10"/>
         <property name="attachmentManager" ref="attachmentManager"/>
     </bean>

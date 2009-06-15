@@ -10,7 +10,7 @@
     <bean id="queryService" class="com.mindalliance.channels.query.DefaultQueryService">
         <property name="addingSamples" value="false"/>
         <property name="importingScenarios" value="true"/>
-        <property name="importDirectory" value="target/import"/>
+        <property name="importDirectory" value="file:${user.home}/channels/import"/>
         <property name="dao" ref="dao"/>
         <property name="attachmentManager" ref="attachmentManager"/>
     </bean>
@@ -31,7 +31,7 @@
     <bean id="attachmentManager" class="com.mindalliance.channels.attachments.FileBasedManager"
           init-method="start" destroy-method="stop">
         <property name="queryService" ref="queryService"/>
-        <property name="directory" value="target/channels-1.0-SNAPSHOT/uploads"/>
+        <property name="directory" value="uploads"/>
         <property name="path" value="uploads/"/>
     </bean>
 
@@ -58,7 +58,7 @@
     <!-- Flow diagram factory : a prototype -->
     <bean id="diagramFactory" class="com.mindalliance.channels.graph.DefaultDiagramFactory" scope="prototype">
         <property name="graphRenderer" ref="graphvizRenderer"/>
-        <property name="imageDirectory" value="src/site/resources/images"/>
+        <property name="imageDirectory" value="WEB-INF/images"/>
         <property name="queryService" ref="queryService"/>
     </bean>
 

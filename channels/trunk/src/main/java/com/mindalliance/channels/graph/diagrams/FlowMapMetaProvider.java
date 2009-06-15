@@ -1,24 +1,26 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import org.jgrapht.ext.EdgeNameProvider;
-import org.jgrapht.ext.VertexNameProvider;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.model.ExternalFlow;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.graph.URLProvider;
-import com.mindalliance.channels.graph.DOTAttributeProvider;
-import com.mindalliance.channels.graph.DOTAttribute;
+import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
-import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.graph.DOTAttribute;
+import com.mindalliance.channels.graph.DOTAttributeProvider;
+import com.mindalliance.channels.graph.URLProvider;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.ExternalFlow;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Scenario;
+import org.jgrapht.ext.EdgeNameProvider;
+import org.jgrapht.ext.VertexNameProvider;
+import org.springframework.core.io.Resource;
 
 import java.text.MessageFormat;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
+import java.io.IOException;
 
 /**
  * Provider of providers for scenarios.
@@ -66,7 +68,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
 
     public FlowMapMetaProvider( Scenario scenario,
                                 String outputFormat,
-                                String imageDirectory,
+                                Resource imageDirectory,
                                 Analyst analyst ) {
         super( outputFormat, imageDirectory, analyst );
         this.scenario = scenario;
@@ -424,7 +426,14 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
                 iconName = "unknown";
             }
         }
-        return getImageDirectory() + "/" + iconName + ( numLines > 0 ? numLines : "" ) + ".png";
+
+        String dirName;
+        try {
+            dirName = getImageDirectory().getFile().getAbsolutePath();
+        } catch ( IOException e ) {
+            throw new RuntimeException( "Unable to get image directory location", e );
+        }
+        return dirName + "/" + iconName + ( numLines > 0 ? numLines : "" ) + ".png";
     }
 
 }

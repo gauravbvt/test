@@ -47,8 +47,8 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.query.DefaultQueryService;
 import junit.framework.TestCase;
-import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.tester.WicketTester;
+import org.springframework.core.io.FileSystemResource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,12 +75,12 @@ public class AbstractChannelsTest extends TestCase {
         app = new Channels();
 
         Memory dao = new Memory();
-        dao.setDataDirectoryPath( "target/data" );
+        dao.setDataDirectory( new FileSystemResource( "target/data" ) );
         dao.setSnapshotThreshold( 10 );
         dao.reset();
         DefaultQueryService queryService = new DefaultQueryService();
         FileBasedManager attachmentManager = new FileBasedManager();
-        attachmentManager.setDirectory( new File( "work/uploads" ) );
+        attachmentManager.setDirectory( new FileSystemResource( "work/uploads" ) );
         attachmentManager.setPath( "uploads" );
         app.setQueryService( queryService );
         queryService.setDao( dao );
@@ -103,7 +103,7 @@ public class AbstractChannelsTest extends TestCase {
         graphRenderer.setTimeout( 5000 );
         DefaultDiagramFactory<Node, Flow> diagramFactory = new DefaultDiagramFactory<Node, Flow>();
         diagramFactory.setGraphRenderer( graphRenderer );
-        diagramFactory.setImageDirectory( "src/site/resources/images" );
+        diagramFactory.setImageDirectory( new FileSystemResource( "src/webapp/WEB-INF/images" ) );
         diagramFactory.setQueryService( queryService );
         app.setDiagramFactory( diagramFactory );
         // Set scenario analyst

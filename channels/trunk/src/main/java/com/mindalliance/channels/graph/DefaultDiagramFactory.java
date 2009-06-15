@@ -13,6 +13,7 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Scenario;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
     /**
      * Path to image directory
      */
-    private String imageDirectory;
+    private Resource imageDirectory;
     /**
      * Query service.
      */
@@ -59,11 +60,11 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
         return graphRenderer;
     }
 
-    public String getImageDirectory() {
+    public Resource getImageDirectory() {
         return imageDirectory;
     }
 
-    public void setImageDirectory( String imageDirectory ) {
+    public void setImageDirectory( Resource imageDirectory ) {
         this.imageDirectory = imageDirectory;
     }
 

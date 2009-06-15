@@ -24,6 +24,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -67,7 +68,7 @@ public class Memory implements Dao {
     /**
      * Directory where to persist all data.
      */
-    private String dataDirectoryPath;
+    private Resource dataDirectory;
 
     /**
      * Counter for generated modelobjects id.
@@ -95,9 +96,25 @@ public class Memory implements Dao {
         this.attachmentManager = attachmentManager;
     }
 
-    public void setDataDirectoryPath( String dataDirectoryPath ) {
-        this.dataDirectoryPath = dataDirectoryPath;
+    public Resource getDataDirectory() {
+        return dataDirectory;
     }
+
+    /**
+     * Set the location for saving files.
+     * @param dataDirectory  a reference to a read/writable directory
+     */
+    public void setDataDirectory( Resource dataDirectory ) {
+        try {
+            LOG.info( "Data will be saved in {}", dataDirectory.getFile().getAbsolutePath() );
+            this.dataDirectory = dataDirectory;
+        } catch ( IOException e ) {
+            LOG.error( "Unable to get reference to data directory", e );
+            throw new RuntimeException( e );
+        }
+    }
+
+
 
     public int getSnapshotThreshold() {
         return snapshotThreshold;
@@ -197,22 +214,23 @@ public class Memory implements Dao {
     }
 
     private File getDataFile( Plan plan ) throws IOException {
-        File dataDirectory = getDataDirectory( plan );
-        File dataFile = new File( dataDirectory.getPath() + File.separator + DATA_FILE );
+        File directory = getDataDirectory( plan );
+        File dataFile = new File( directory, DATA_FILE );
         if ( !dataFile.exists() ) {
             dataFile.createNewFile();
         }
         return dataFile;
     }
 
-    private File getDataDirectory( Plan plan ) {
+    private File getDataDirectory( Plan plan ) throws IOException {
         File directory;
-        if ( dataDirectoryPath != null ) {
-            directory = new File( dataDirectoryPath );
+
+        if ( dataDirectory != null ) {
+            directory = dataDirectory.getFile();
             if ( !directory.exists() ) {
                 directory.mkdir();
             }
-            directory = new File( dataDirectoryPath + "/" + sanitize( plan.getUri() ) );
+            directory = new File( directory, sanitize( plan.getUri() ) );
             if ( !directory.exists() ) {
                 directory.mkdir();
             }

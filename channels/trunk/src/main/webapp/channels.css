@@ -853,11 +853,11 @@ input.filter-small {
 }
 
 body.message {
-    background: white url("/images/plain-back.png") repeat-y;
+    background: white url("images/plain-back.png") repeat-y;
 }
 
 body.message div {
-    background: transparent url("/images/plain-head.png") no-repeat 0 -20px;
+    background: transparent url("images/plain-head.png") no-repeat 0 -20px;
     padding: 5px 5px 5px 1in;
 }
 

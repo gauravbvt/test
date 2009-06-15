@@ -9,6 +9,7 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.Lifecycle;
+import org.springframework.core.io.Resource;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -80,7 +81,7 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     /**
      * The directory to keep files in.
      */
-    private File directory;
+    private Resource directory;
 
     /**
      * The webapp-relative path to file URLs.
@@ -114,15 +115,15 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
         this.queryService = queryService;
     }
 
-    private File createFile( String name ) {
+    private File createFile( String name ) throws IOException {
         String truncatedName = StringUtils.reverse(
                 StringUtils.reverse( name ).substring( 0, Math.min( name.length(), getMaxLength() ) ) );
         String idealName = escape( truncatedName );
-        File result = new File( directory, idealName );
+        File result = new File( directory.getFile(), idealName );
         int i = 0;
         while ( result.exists() ) {
             String actual = ++i + "_" + idealName;
-            result = new File( directory, actual );
+            result = new File( directory.getFile(), actual );
         }
 
         return result;
@@ -150,7 +151,7 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     }
 
 
-    public synchronized File getDirectory() {
+    public synchronized Resource getDirectory() {
         return directory;
     }
 
@@ -160,8 +161,12 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
      *
      * @param directory a directory
      */
-    public synchronized void setDirectory( File directory ) {
-        log.info( "Upload directory: {}", directory.getAbsolutePath() );
+    public synchronized void setDirectory( Resource directory ) {
+        try {
+            log.info( "Upload directory: {}", directory.getFile().getAbsolutePath() );
+        } catch ( IOException e ) {
+            log.error( "Unable to get upload directory path", e );
+        }
         this.directory = directory;
     }
 
@@ -256,9 +261,9 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     }
 
     private void save() {
-        File file = new File( directory, digestsMapFile );
         Writer out = null;
         try {
+            File file = new File( directory.getFile(), digestsMapFile );
             out = new FileWriter( file );
             Properties digests = new Properties();
             for ( String url : documentMap.keySet() ) {
@@ -282,7 +287,7 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
         Properties digests = new Properties();
         Reader in = null;
         try {
-            in = new FileReader( new File( directory, digestsMapFile ) );
+            in = new FileReader( new File( directory.getFile(), digestsMapFile ) );
             digests.load( in );
 
         } catch ( FileNotFoundException ignored ) {
@@ -310,11 +315,15 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
         for ( String url : digests.stringPropertyNames() ) {
             String digest = digests.getProperty( url );
             String unescapedUrl = unescape( url );
-            FileDocument document =
-                    new FileDocument(
-                            new File( directory, unescapedUrl ),
-                            /*path + */url,
-                            digest );
+            FileDocument document = null;
+            try {
+                document = new FileDocument(
+                        new File( directory.getFile(), unescapedUrl ),
+                        /*path + */url,
+                        digest );
+            } catch ( IOException e ) {
+                throw new RuntimeException( e );
+            }
             if ( exists( unescapedUrl ) ) {
                 documentMap.put( unescapedUrl, document );
             }
@@ -344,11 +353,15 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     }
 
     private boolean isUploaded( final String url ) {
-        return directory.listFiles( new FilenameFilter() {
-            public boolean accept( File dir, String name ) {
-                return url.substring( url.lastIndexOf( '/' ) + 1 ).equals( name );
-            }
-        } ).length == 1;
+        try {
+            return directory.getFile().listFiles( new FilenameFilter() {
+                public boolean accept( File dir, String name ) {
+                    return url.substring( url.lastIndexOf( '/' ) + 1 ).equals( name );
+                }
+            } ).length == 1;
+        } catch ( IOException e ) {
+            throw new RuntimeException( e );
+        }
     }
 
     private boolean isFileDocument( String url ) {
@@ -420,11 +433,18 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
      */
     public synchronized void removeUnattached() {
         List<String> attachedUrls = queryService.findAllAttached();
-        List<File> uploadedFiles = Arrays.asList( directory.listFiles() );
+        List<File> uploadedFiles = null;
+        try {
+            uploadedFiles = Arrays.asList( directory.getFile().listFiles() );
+        } catch ( IOException e ) {
+            throw new RuntimeException( e );
+        }
         for ( File file : uploadedFiles ) {
-            if ( !( file.getName().equals( "readme.txt" )
-                    || ( file.getName().equals( digestsMapFile ) ) ) ) {
-                String url = path + file.getName();
+            String name = file.getName();
+            if ( !( name.equals( "readme.txt" )
+                    || name.equals( digestsMapFile ) ) )
+            {
+                String url = path + name;
                 if ( !attachedUrls.contains( url ) ) {
                     LOG.info( "Removing unattached " + url );
                     file.delete();

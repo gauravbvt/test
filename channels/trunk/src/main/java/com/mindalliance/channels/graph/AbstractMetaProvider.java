@@ -1,6 +1,7 @@
 package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.Analyst;
+import org.springframework.core.io.Resource;
 
 /**
  * Abstract meta provider.
@@ -51,7 +52,7 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
     /**
      * Relative path to icon directory
      */
-    private String imageDirectory;
+    private Resource imageDirectory;
     /**
      * Diagram size constraint.
      * Diagram takes natural size if null.
@@ -67,7 +68,7 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
     private Analyst analyst;
 
     public AbstractMetaProvider( String outputFormat,
-                                 String imageDirectory,
+                                 Resource imageDirectory,
                                  Analyst analyst ) {
         this.outputFormat = outputFormat;
         this.imageDirectory = imageDirectory;
@@ -78,7 +79,7 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
         return outputFormat;
     }
 
-    public String getImageDirectory() {
+    public Resource getImageDirectory() {
         return imageDirectory;
     }
 

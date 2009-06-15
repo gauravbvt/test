@@ -14,9 +14,11 @@ import com.mindalliance.channels.model.Role;
 import org.apache.commons.lang.StringUtils;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
+import org.springframework.core.io.Resource;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.io.IOException;
 
 /**
  * Entity network meta provider.
@@ -39,7 +41,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
 
     public EntityNetworkMetaProvider(
             String outputFormat,
-            String imageDirectory,
+            Resource imageDirectory,
             Analyst analyst ) {
         super( outputFormat, imageDirectory, analyst );
     }
@@ -187,7 +189,14 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
             } else {
                 iconName = "unknown";
             }
-            return getImageDirectory() + "/" + iconName + ( numLines > 0 ? numLines : "" ) + ".png";
+            String dirName;
+            try {
+                dirName = getImageDirectory().getFile().getAbsolutePath();
+            } catch ( IOException e ) {
+                throw new RuntimeException( "Unable to get image directory location", e );
+            }
+            return dirName
+                   + "/" + iconName + ( numLines > 0 ? numLines : "" ) + ".png";
         }
 
     }

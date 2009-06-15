@@ -7,6 +7,7 @@ import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Scenario;
+import org.springframework.core.io.Resource;
 
 import java.util.List;
 
@@ -48,7 +49,7 @@ public interface DiagramFactory<Vertex, Edge> extends Service {
      *
      * @param imageDirectory -- where to find images
      */
-    void setImageDirectory( String imageDirectory );
+    void setImageDirectory( Resource imageDirectory );
 
 
     /**
@@ -108,7 +109,7 @@ public interface DiagramFactory<Vertex, Edge> extends Service {
      *
      * @return a String
      */
-    String getImageDirectory();
+    Resource getImageDirectory();
 
     /**
      * Get query service.

@@ -10,6 +10,7 @@ import com.mindalliance.channels.model.Scenario;
 import org.apache.commons.lang.StringUtils;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
+import org.springframework.core.io.Resource;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -49,7 +50,7 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
     public PlanMapMetaProvider(
             List<Scenario> scenarios,
             String outputFormat,
-            String imageDirectory,
+            Resource imageDirectory,
             Analyst analyst ) {
         super( outputFormat, imageDirectory, analyst );
         this.scenarios = scenarios;

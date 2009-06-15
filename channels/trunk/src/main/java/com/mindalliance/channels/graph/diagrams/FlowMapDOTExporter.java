@@ -12,6 +12,7 @@ import com.mindalliance.channels.model.Scenario;
 import org.jgrapht.Graph;
 
 import java.io.PrintWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -134,7 +135,13 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         attributes.add( new DOTAttribute( "label", label ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
         attributes.add( new DOTAttribute( "tooltip", label ) );
-        attributes.add( new DOTAttribute( "image", metaProvider.getImageDirectory() + "/" + "start.png" ) );
+        String dirName;
+        try {
+            dirName = metaProvider.getImageDirectory().getFile().getAbsolutePath();
+        } catch ( IOException e ) {
+            throw new RuntimeException( "Unable to get image directory location", e );
+        }
+        attributes.add( new DOTAttribute( "image", dirName + "/" + "start.png" ) );
         out.print( getIndent() );
         out.print( START );
         out.print( "[" );
@@ -153,7 +160,13 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         attributes.add( new DOTAttribute( "label", label ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
         attributes.add( new DOTAttribute( "tooltip", label ) );
-        attributes.add( new DOTAttribute( "image", metaProvider.getImageDirectory() + "/" + "stop.png" ) );
+        String dirName;
+        try {
+            dirName = metaProvider.getImageDirectory().getFile().getAbsolutePath();
+        } catch ( IOException e ) {
+            throw new RuntimeException( "Unable to get image directory location", e );
+        }
+        attributes.add( new DOTAttribute( "image", dirName + "/" + "stop.png" ) );
         out.print( getIndent() );
         out.print( STOP );
         out.print( "[" );

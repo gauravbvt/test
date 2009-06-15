@@ -42,6 +42,7 @@ import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -90,7 +91,7 @@ public class DefaultQueryService extends Observable implements QueryService {
     /**
      * Directory from which to import exported scenarios
      */
-    private String importDirectory;
+    private Resource importDirectory;
 
     /**
      * An attachment manager.
@@ -149,11 +150,11 @@ public class DefaultQueryService extends Observable implements QueryService {
         this.importingScenarios = importingScenarios;
     }
 
-    public String getImportDirectory() {
+    public Resource getImportDirectory() {
         return importDirectory;
     }
 
-    public void setImportDirectory( String importDirectory ) {
+    public void setImportDirectory( Resource importDirectory ) {
         this.importDirectory = importDirectory;
     }
 
@@ -244,45 +245,49 @@ public class DefaultQueryService extends Observable implements QueryService {
 
     @SuppressWarnings( "unchecked" )
     private void loadScenarios() {
-        if ( importDirectory != null ) {
-            File directory = new File( importDirectory );
-            if ( directory.exists() && directory.isDirectory() ) {
-                File[] files = directory.listFiles( new FilenameFilter() {
-                    /** {@inheritDoc} */
-                    public boolean accept( File dir, String name ) {
-                        return name.endsWith( ".xml" );
+        if ( importDirectory != null )
+            try {
+                File directory = importDirectory.getFile();
+                if ( importDirectory.exists() && directory.isDirectory() ) {
+                    File[] files = directory.listFiles(
+                            new FilenameFilter() {
+                                /** {@inheritDoc} */
+                                public boolean accept( File dir, String name ) {
+                                    return name.endsWith( ".xml" );
+                                }
+                            } );
+                    Importer importer = getChannels().getImporter();
+                    Map<String, Long> idMap = new HashMap<String, Long>();
+                    Map<Connector, List<ConnectionSpecification>> proxyConnectors =
+                            new HashMap<Connector, List<ConnectionSpecification>>();
+                    for ( File file : files ) {
+                        try {
+                            Map<String, Object> results = importer.loadScenario(
+                                    new FileInputStream( file ) );
+                            // Cumulate results
+                            idMap.putAll( (Map<String, Long>) results.get( "idMap" ) );
+                            proxyConnectors.putAll(
+                                    (Map<Connector, List<ConnectionSpecification>>) results.get(
+                                            "proxyConnectors" ) );
+                            Scenario scenario = (Scenario) results.get( "scenario" );
+                            LOG.info(
+                                    "Imported scenario " + scenario.getName() + " from "
+                                    + file.getPath() );
+                        } catch ( IOException e ) {
+                            LOG.warn( "Failed to import " + file.getPath(), e );
+                        }
                     }
-                } );
-                Importer importer = getChannels().getImporter();
-                Map<String, Long> idMap = new HashMap<String, Long>();
-                Map<Connector, List<ConnectionSpecification>> proxyConnectors =
-                        new HashMap<Connector, List<ConnectionSpecification>>();
-                for ( File file : files ) {
-                    try {
-                        Map<String, Object> results = importer.loadScenario(
-                                new FileInputStream( file ) );
-                        // Cumulate results
-                        idMap.putAll( (Map<String, Long>) results.get( "idMap" ) );
-                        proxyConnectors.putAll(
-                                (Map<Connector, List<ConnectionSpecification>>) results.get( "proxyConnectors" ) );
-                        Scenario scenario = (Scenario) results.get( "scenario" );
-                        LOG.info(
-                                "Imported scenario "
-                                        + scenario.getName()
-                                        + " from "
-                                        + file.getPath() );
-                    } catch ( IOException e ) {
-                        LOG.warn( "Failed to import " + file.getPath(), e );
-                    }
+                    // Reconnect external links
+                    importer.reconnectExternalFlows( proxyConnectors, false );
+                    setChanged();
+                    notifyObservers( idMap );
+                } else {
+                    LOG.warn( "Directory " + importDirectory + " does not exist." );
                 }
-                // Reconnect external links
-                importer.reconnectExternalFlows( proxyConnectors, false );
-                setChanged();
-                notifyObservers( idMap );
-            } else {
-                LOG.warn( "Directory " + importDirectory + " does not exist." );
+            } catch ( IOException e ) {
+                LOG.warn( "Unable to read import directory", e );
             }
-        } else {
+        else {
             LOG.warn( "Import directory is not set." );
         }
     }

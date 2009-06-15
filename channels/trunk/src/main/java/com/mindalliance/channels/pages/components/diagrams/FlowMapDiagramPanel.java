@@ -80,7 +80,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
      */
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "/scenario.png?scenario=" );
+        sb.append( "scenario.png?scenario=" );
         sb.append( getScenario().getId() );
         sb.append( "&node=" );
         if ( getPart() != null ) {
