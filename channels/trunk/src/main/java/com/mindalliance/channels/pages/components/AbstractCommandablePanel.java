@@ -5,6 +5,8 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Scenario;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.model.IModel;
 
@@ -52,6 +54,19 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
     protected boolean isLockedByUser( Identifiable identifiable ) {
         return getLockManager().isLockedByUser( identifiable );
     }
+
+    /**
+     * Model object is locked by user if necessary.
+     * @param identifiable  a model object
+     * @return  a boolean
+     */
+    protected boolean isLockedByUserIfNeeded( Identifiable identifiable ) {
+        return identifiable instanceof Scenario
+                || identifiable instanceof Plan
+                || isLockedByUser( identifiable );
+    }
+
+
 
     /**
      * Get name of lock owner.

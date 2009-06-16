@@ -388,6 +388,10 @@ ul.attach ul.menu li:before {
     content: " ";
 }
 
+ul.attach li.controls {
+    list-style: none;
+}
+
 ul.menu li:before {
     content: " \2015  ";
 }

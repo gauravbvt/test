@@ -1,11 +1,9 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.UserIssue;
-import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.pages.components.menus.IssueActionsMenuPanel;
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.basic.Label;
@@ -49,9 +47,10 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
                 // do nothing
             }
         } );
-        descriptionArea.setEnabled( !getIssue().isDetected() && isLockedByUser( getIssue() ) );
+        descriptionArea.setEnabled( !getIssue().isDetected()
+                && isLockedByUserIfNeeded( getIssue() ) );
         add( descriptionArea );
-         // Severity
+        // Severity
         DropDownChoice<Issue.Level> levelChoice = new DropDownChoice<Issue.Level>(
                 "severity",
                 new PropertyModel<Issue.Level>( this, "severity" ),
@@ -61,7 +60,8 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
                 // do nothing
             }
         } );
-        levelChoice.setEnabled( !getIssue().isDetected() && isLockedByUser( getIssue() ) );
+        levelChoice.setEnabled( !getIssue().isDetected()
+                && isLockedByUserIfNeeded( getIssue() ) );
         add( levelChoice );
         // Remediation
         TextArea<String> remediationArea = new TextArea<String>( "remediation",
@@ -71,7 +71,8 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
                 // do nothing
             }
         } );
-        remediationArea.setEnabled( !getIssue().isDetected() && isLockedByUser( getIssue() ) );
+        remediationArea.setEnabled( !getIssue().isDetected()
+                && isLockedByUserIfNeeded( getIssue() ) );
         add( remediationArea );
         add( new AttachmentPanel( "attachments", new Model<UserIssue>( (UserIssue) issue ) ) );
         add( new Label( "reported-by",
@@ -79,18 +80,10 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
     }
 
     private void addIssueActionsMenu() {
-        Component actionsMenu;
-        if ( isLockedByUser( getIssue() ) ) {
-            actionsMenu = new IssueActionsMenuPanel(
-                    "issueActionsMenu",
-                    new Model<Issue>( model.getObject() ),
-                    false );
-        } else {
-            String otherUser = getLockOwner( getIssue() );
-            actionsMenu = new Label( "issueActionsMenu", new Model<String>( "Edited by " + otherUser ) );
-            actionsMenu.add( new AttributeModifier( "class", true, new Model<String>( "locked" ) ) );
-        }
-        add( actionsMenu );
+        add( new IssueActionsMenuPanel(
+                "issueActionsMenu",
+                new Model<Issue>( model.getObject() ),
+                false ) );
     }
 
     private Issue getIssue() {

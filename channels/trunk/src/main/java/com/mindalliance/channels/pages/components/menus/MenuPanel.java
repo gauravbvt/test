@@ -184,14 +184,14 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
                 menuItems.add( new LinkMenuItem( id,
                         new PropertyModel<String>( command, "title" ),
                         link ) );
-            } /*else {
+            } else {
                 Label label = new Label( id, new PropertyModel<String>( command, "title" ) );
                 label.add( new AttributeModifier(
                         "class",
                         true,
                         new Model<String>( "disabled" ) ) );
                 menuItems.add( label );
-            }*/
+            }
         }
         return menuItems;
     }

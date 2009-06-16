@@ -28,15 +28,18 @@
                             </ul>
                         </li>
                     </span>
-                    <li>Attach: <select wicket:id="type">
-                        <option>Reference</option>
-                    </select><br>
-                    <span wicket:id="radios">
-                    </span>
-                        <label class="attach-ctl"><input class="file" type="file" wicket:id="upload"
-                                                         value="Upload"></label>
-                        <input type="text" wicket:id="url" value="url">
-                        <input type="button" value="Attach" wicket:id="submit">
+                    <li class="controls">
+                        <span wicket:id="controls">
+                            Attach: <select wicket:id="type">
+                                <option>Reference</option>
+                            </select><br>
+                            <span wicket:id="radios">
+                            </span>
+                            <label class="attach-ctl"><input class="file" type="file" wicket:id="upload"
+                                                             value="Upload"></label>
+                            <input type="text" wicket:id="url" value="url">
+                            <input type="button" value="Attach" wicket:id="submit">
+                        </span>
                     </li>
                 </ul>
             </td>

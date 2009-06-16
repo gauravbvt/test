@@ -1,13 +1,13 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.pages.components.menus.FlowActionsMenuPanel;
+import com.mindalliance.channels.model.Channel;
+import com.mindalliance.channels.model.Flow;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
@@ -16,22 +16,24 @@ import java.text.MessageFormat;
 /**
  * A collapsed flow.
  */
-public class CollapsedFlowPanel extends AbstractCommandablePanel {
+public class CollapsedFlowPanel extends AbstractFlowPanel {
 
-    /**
-     * The underlying flow.
-     */
-    private Flow flow;
+    public CollapsedFlowPanel( String id, IModel<Flow> flowModel, boolean outcome ) {
+        super( id, flowModel, outcome, true );
+        init();
+    }
 
-    public CollapsedFlowPanel( String id, Flow flow, boolean outcome ) {
-        super( id );
-        this.flow = flow;
+    private void init() {
+        addLabel();
+        addFlowActionMenu();
+    }
 
+    private void addLabel() {
         Label label = new Label( "title",                                                 // NON-NLS
-                new PropertyModel( flow,
-                        outcome ? "outcomeTitle" : "requirementTitle" ) );                // NON-NLS
+                new PropertyModel( getFlow(),
+                        isOutcome() ? "outcomeTitle" : "requirementTitle" ) );                // NON-NLS
 
-        final String c = Channel.toString( flow.getEffectiveChannels() );
+        final String c = Channel.toString( getFlow().getEffectiveChannels() );
         Label channel = new Label( "channels", new AbstractReadOnlyModel() {              // NON-NLS
 
             @Override
@@ -45,8 +47,8 @@ public class CollapsedFlowPanel extends AbstractCommandablePanel {
 
         // Add style mods from analyst.
         Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
-        String summary = analyst.getIssuesSummary( flow, Analyst.INCLUDE_PROPERTY_SPECIFIC );
-        boolean hasIssues = analyst.hasIssues( flow, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        String summary = analyst.getIssuesSummary( getFlow(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        boolean hasIssues = analyst.hasIssues( getFlow(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
         if ( !summary.isEmpty() ) {
             label.add(
                     new AttributeModifier( "class", true, new Model<String>( "error" ) ) );
@@ -63,20 +65,6 @@ public class CollapsedFlowPanel extends AbstractCommandablePanel {
         }
 
         add( label );
-        addFlowActionMenu( outcome );
-    }
-
-    private void addFlowActionMenu( boolean isOutcome ) {
-        FlowActionsMenuPanel flowActionsMenu = new FlowActionsMenuPanel(
-                    "flowActionsMenu",
-                    new PropertyModel<Flow>( this, "flow" ),
-                    isOutcome,
-                    true );
-        add( flowActionsMenu );
-    }
-
-    public Flow getFlow() {
-        return flow;
     }
 
 

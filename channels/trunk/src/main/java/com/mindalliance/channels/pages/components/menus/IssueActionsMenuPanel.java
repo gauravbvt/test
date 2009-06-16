@@ -5,9 +5,11 @@ import com.mindalliance.channels.command.commands.PasteAttachment;
 import com.mindalliance.channels.command.commands.RemoveIssue;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.UserIssue;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -76,8 +78,26 @@ public class IssueActionsMenuPanel extends MenuPanel {
                     new Model<String>( "Hide details" ),
                     hideLink ) );
         }
+        // Undo and redo
+        // Undo and redo
+        menuItems.add( this.getUndoMenuItem( "menuItem" ) );
+        menuItems.add( this.getRedoMenuItem( "menuItem" ) );
         // Commands
-        menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
+        String disablement =
+                isLockedByUser( getIssue() )
+                        ? null
+                        : ( getCommander().isTimedOut() || !isCollapsed && getLockOwner( getIssue() ) == null )
+                        ? "Timed out"
+                        : ( "(Edited by " + getLockOwner( getIssue() ) + ")" );
+        if ( disablement == null ) {
+            // Commands
+            menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
+        } else {
+            // Commands disabled
+            Label label = new Label( "menuItem", disablement );
+            label.add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
+            menuItems.add( label );
+        }
         return menuItems;
     }
 
@@ -94,11 +114,12 @@ public class IssueActionsMenuPanel extends MenuPanel {
                     update( target, change );
                 }
             } );
-            commandWrappers.add( new CommandWrapper( new PasteAttachment( (UserIssue) issue ) ) {
-                public void onExecuted( AjaxRequestTarget target, Change change ) {
-                    update( target, change );
-                }
-            } );
+            if ( !isCollapsed )
+                commandWrappers.add( new CommandWrapper( new PasteAttachment( (UserIssue) issue ) ) {
+                    public void onExecuted( AjaxRequestTarget target, Change change ) {
+                        update( target, change );
+                    }
+                } );
         }
         return commandWrappers;
     }

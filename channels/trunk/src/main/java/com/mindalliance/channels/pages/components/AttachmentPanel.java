@@ -83,8 +83,11 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     /**
      * Attachments list container.
      */
-
     private WebMarkupContainer attachmentsContainer;
+    /**
+     * Attachment controls container.
+     */
+    private WebMarkupContainer controlsContainer;
 
     /**
      * The content of the url field.
@@ -95,12 +98,15 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         super( id, model, null );
         setOutputMarkupId( true );
         addAttachmentList();
-        addTypeSelector();
+        controlsContainer = new WebMarkupContainer( "controls" );
+        controlsContainer.setOutputMarkupId( true );
+        add( controlsContainer );
+        addTypeChoice();
         addKindSelector();
         addUploadField();
         addUrlField();
         addSubmit();
-        adjustFields();
+        // adjustFields();
     }
 
     /**
@@ -108,6 +114,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
      */
     protected void onBeforeRender() {
         super.onBeforeRender();
+        adjustFields();
         makeVisible( submit, false );
     }
 
@@ -115,17 +122,19 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         submit = new SubmitLink( "submit" );
         submit.setOutputMarkupId( true );
         submit.setEnabled( false );
-        add( submit );
+        controlsContainer.add( submit );
     }
 
     private void adjustFields() {
         makeVisible( submit, false );
         makeVisible( uploadField, Kind.File.equals( kind ) );
         makeVisible( urlField, Kind.URL.equals( kind ) );
+        makeVisible( controlsContainer, isLockedByUserIfNeeded( getAttachee() ) );
     }
 
     private void refresh( AjaxRequestTarget target ) {
         adjustFields();
+        target.addComponent( controlsContainer );
         target.addComponent( uploadField );
         target.addComponent( urlField );
         target.addComponent( submit );
@@ -147,7 +156,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 ) );
             }
         } );
-        add( urlField );
+        controlsContainer.add( urlField );
     }
 
     private void addUploadField() {
@@ -162,10 +171,10 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 target.addComponent( submit );
             }
         } );
-        add( uploadField );
+        controlsContainer.add( uploadField );
     }
 
-    private void addTypeSelector() {
+    private void addTypeChoice() {
         DropDownChoice<Attachment.Type> typeChoice = new DropDownChoice<Attachment.Type>( "type",
                 new PropertyModel<Attachment.Type>( this, "selectedType" ),
                 Arrays.asList( Attachment.Type.values() ),
@@ -185,7 +194,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 // Do nothing
             }
         } );
-        add( typeChoice );
+        controlsContainer.add( typeChoice );
     }
 
     private void addAttachmentList() {
@@ -219,7 +228,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             public void onClick( AjaxRequestTarget target ) {
                 doCommand( new CopyAttachment( attachment ) );
                 update( target,
-                        new Change( Change.Type.Copied ));
+                        new Change( Change.Type.Copied ) );
             }
         };
         item.add( deletelink );
@@ -227,21 +236,22 @@ public class AttachmentPanel extends AbstractCommandablePanel {
 
     private void addDeleteImage( ListItem<Attachment> item ) {
         final Attachment attachment = item.getModelObject();
-        AjaxFallbackLink deletelink = new AjaxFallbackLink( "delete" ) {
+        AjaxFallbackLink deleteLink = new AjaxFallbackLink( "delete" ) {
             public void onClick( AjaxRequestTarget target ) {
                 doCommand( new DetachDocument(
                         getAttachee(),
-                        attachment  ) );
+                        attachment ) );
                 refresh( target );
                 update( target,
                         new Change(
-                        Change.Type.Removed,
-                        getAttachee(),
-                        "attachments"
-                ) );
+                                Change.Type.Removed,
+                                getAttachee(),
+                                "attachments"
+                        ) );
             }
         };
-        item.add( deletelink );
+        makeVisible( deleteLink, isLockedByUserIfNeeded( getAttachee() ) );
+        item.add( deleteLink );
     }
 
     private void addKindSelector() {
@@ -270,7 +280,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 target.addComponent( AttachmentPanel.this );
             }
         } );
-        add( kindSelector );
+        controlsContainer.add( kindSelector );
     }
 
     /**
@@ -339,7 +349,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             // URL url;
             try {
                 new URL( value );
-                Attachment attachment = new Attachment ( value, getSelectedType() );
+                Attachment attachment = new Attachment( value, getSelectedType() );
                 doCommand( new AttachDocument( mo, attachment ) );
                 this.url = null;
             } catch ( MalformedURLException e ) {

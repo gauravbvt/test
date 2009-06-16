@@ -10,9 +10,11 @@ import com.mindalliance.channels.command.commands.DuplicateFlow;
 import com.mindalliance.channels.command.commands.PasteAttachment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -27,8 +29,13 @@ import java.util.List;
  * Time: 4:35:49 PM
  */
 public class FlowActionsMenuPanel extends MenuPanel {
-
+    /**
+     * Whether flow viewed as outcome.
+     */
     private boolean isOutcome;
+    /**
+     * Whether flow panel is collapsed.
+     */
     private boolean isCollapsed;
 
     public FlowActionsMenuPanel(
@@ -76,8 +83,21 @@ public class FlowActionsMenuPanel extends MenuPanel {
         // Undo and redo
         menuItems.add( this.getUndoMenuItem( "menuItem" ) );
         menuItems.add( this.getRedoMenuItem( "menuItem" ) );
-        // Commands
-        menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
+        String disablement =
+                ( isLockedByUser( getFlow() ) || isCollapsed && getLockOwner( getFlow() ) == null )
+                        ? null
+                        : ( getCommander().isTimedOut() || !isCollapsed && getLockOwner( getFlow() ) == null )
+                        ? "Timed out"
+                        : ( "(Edited by " + getLockOwner( getFlow() ) + ")" );
+        if ( disablement == null ) {
+            // Commands
+            menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
+        } else {
+            // Commands disabled
+            Label label = new Label( "menuItem", disablement );
+            label.add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
+            menuItems.add( label );
+        }
         return menuItems;
     }
 
@@ -89,17 +109,6 @@ public class FlowActionsMenuPanel extends MenuPanel {
                 update( target, change );
             }
         } );
-        commandWrappers.add( new CommandWrapper( new PasteAttachment( getFlow() ) ) {
-             public void onExecuted( AjaxRequestTarget target, Change change ) {
-                 update( target, change );
-             }
-         } );
-        if ( !isCollapsed )
-            commandWrappers.add( new CommandWrapper( new AddUserIssue( flow ) ) {
-                public void onExecuted( AjaxRequestTarget target, Change change ) {
-                    update( target, change );
-                }
-            } );
         if ( ( isOutcome && getFlow().getTarget().isPart() )
                 || ( !isOutcome && getFlow().getSource().isPart() ) ) {
             commandWrappers.add( new CommandWrapper( new DuplicateFlow( flow, isOutcome ) ) {
@@ -108,29 +117,43 @@ public class FlowActionsMenuPanel extends MenuPanel {
                 }
             } );
         }
-        commandWrappers.add( new CommandWrapper( new DisconnectFlow( flow ) ) {
+        commandWrappers.add( new CommandWrapper( new AddUserIssue( flow ) ) {
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 update( target, change );
             }
         } );
-        commandWrappers.add( new CommandWrapper( new AddIntermediate( flow ) ) {
-             public void onExecuted( AjaxRequestTarget target, Change change ) {
-                 update( target, change );
-             }
-         } );
-        commandWrappers.add( new CommandWrapper( new BreakUpFlow( flow ) ) {
-            public void onExecuted( AjaxRequestTarget target, Change change ) {
-                update( target, change );
-            }
-        } );
+        if ( !isCollapsed )
+            commandWrappers.add( new CommandWrapper( new PasteAttachment( getFlow() ) ) {
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
+        if ( !isCollapsed )
+            commandWrappers.add( new CommandWrapper( new DisconnectFlow( flow ) ) {
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
+        if ( !isCollapsed )
+            commandWrappers.add( new CommandWrapper( new AddIntermediate( flow ) ) {
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
+        if ( !isCollapsed )
+            commandWrappers.add( new CommandWrapper( new BreakUpFlow( flow ) ) {
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
         return commandWrappers;
     }
 
     private Part getPart() {
-        if (isOutcome) {
-            return (Part)getFlow().getSource();
+        if ( isOutcome ) {
+            return (Part) getFlow().getSource();
         } else {
-            return (Part)getFlow().getTarget();
+            return (Part) getFlow().getTarget();
         }
     }
 

@@ -192,11 +192,9 @@ public class ScenarioPanel extends AbstractCommandablePanel {
             partActionsMenu = new PartActionsMenuPanel(
                     "partActionsMenu",
                     partModel );
-        } else if ( getCommander().isTimedOut() ) {
+        } else if ( getCommander().isTimedOut() || getLockOwner( getPart() ) == null ) {
             partActionsMenu = new Label(
                     "partActionsMenu", new Model<String>( "Timed out" ) );
-            partActionsMenu.add(
-                    new AttributeModifier( "class", true, new Model<String>( "locked" ) ) );
 
         } else {
             String otherUser = getLockOwner( getPart() );

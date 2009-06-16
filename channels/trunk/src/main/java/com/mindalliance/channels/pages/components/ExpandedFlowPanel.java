@@ -15,10 +15,8 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.ScenarioObject;
-import com.mindalliance.channels.pages.components.menus.FlowActionsMenuPanel;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -49,17 +47,7 @@ import java.util.TreeSet;
 /**
  * Details of an expanded flow.
  */
-public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
-
-    /**
-     * The flow edited by this panel.
-     */
-    private IModel<Flow> model;
-
-    /**
-     * True if outcome, otherwise a requirement.
-     */
-    private boolean outcome;
+public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     /**
      * True if this flow is marked for deletion.
@@ -139,9 +127,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
             IModel<Flow> model,
             boolean outcome,
             Set<Long> expansions ) {
-        super( id, model, expansions );
-        this.model = model;
-        setOutcome( outcome );
+        super( id, model, outcome, false, expansions );
         init();
     }
 
@@ -199,8 +185,8 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         nameField.setEnabled( lockedByUser && f.canSetNameAndDescription() );
         descriptionField.setEnabled( lockedByUser && f.canSetNameAndDescription() );
         askedForButtons.setEnabled( lockedByUser && f.canSetAskedFor() );
-        allField.setVisible( outcome && f.canGetAll() );
-        allField.setEnabled( lockedByUser && outcome && f.canSetAll() );
+        allField.setVisible( isOutcome() && f.canGetAll() );
+        allField.setEnabled( lockedByUser && isOutcome() && f.canSetAll() );
         significanceToTargetLabel.setVisible( f.canGetSignificanceToTarget() );
         significanceToTargetChoice.setEnabled(
                 lockedByUser && f.canSetSignificanceToTarget() );
@@ -209,12 +195,12 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         delayPanel.enable( lockedByUser && f.canSetMaxDelay() );
         significanceToSourceRow.setVisible( f.canGetSignificanceToSource() );
         triggersSourceContainer.setVisible(
-                ( !outcome || f.isAskedFor() ) && f.canGetTriggersSource() );
+                ( !isOutcome() || f.isAskedFor() ) && f.canGetTriggersSource() );
         triggersSourceCheckBox.setEnabled( lockedByUser && f.canSetTriggersSource() );
         terminatesSourceContainer.setVisible( f.canGetTerminatesSource() );
         terminatesSourceCheckBox.setEnabled( lockedByUser && f.canSetTerminatesSource() );
         otherChoice.setEnabled( lockedByUser );
-        makeVisible( issuesPanel, getAnalyst().hasIssues( model.getObject(), false ) );
+        makeVisible( issuesPanel, getAnalyst().hasIssues( getFlow(), false ) );
     }
 
     private void addNameField() {
@@ -298,7 +284,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         significanceToTargetLabel = new WebMarkupContainer( "target-significance-label" );
         add( significanceToTargetLabel );
         significanceToTargetLabel.add(
-                new Label( "target-label", outcome ? "the recipient's task" : "this task" ) );
+                new Label( "target-label", isOutcome() ? "the recipient's task" : "this task" ) );
         significanceToTargetChoice = new DropDownChoice<Flow.Significance>(
                 "significance-to-target",
                 new PropertyModel<Flow.Significance>( this, "significanceToTarget" ),
@@ -331,7 +317,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         significanceToSourceRow = new WebMarkupContainer( "significance-to-source" );
         add( significanceToSourceRow );
         significanceToSourceRow.add(
-                new Label( "source-task", outcome ? "This task" : "Sender's task" ) );
+                new Label( "source-task", isOutcome() ? "This task" : "Sender's task" ) );
         triggersSourceContainer = new WebMarkupContainer( "triggers-source-container" );
         significanceToSourceRow.add( triggersSourceContainer );
         triggersSourceCheckBox = new CheckBox(
@@ -393,31 +379,14 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                 new AbstractReadOnlyModel<String>() {
                     @Override
                     public String getObject() {
-                        return outcome ? getFlow().getOutcomeTitle()
+                        return isOutcome() ? getFlow().getOutcomeTitle()
                                 : getFlow().getRequirementTitle();
                     }
                 } );
         titleLabel.setOutputMarkupId( true );
         add( titleLabel );
-        addFlowActionMenu( outcome );
+        addFlowActionMenu( );
     }
-
-    private void addFlowActionMenu( boolean isOutcome ) {
-        Component flowActionsMenu;
-        if ( isLockedByUser( getFlow() ) ) {
-            flowActionsMenu = new FlowActionsMenuPanel(
-                    "flowActionsMenu",
-                    new PropertyModel<Flow>( this, "flow" ),
-                    isOutcome,
-                    false );
-        } else {
-            String otherUser = getLockOwner( getFlow() );
-            flowActionsMenu = new Label( "flowActionsMenu", new Model<String>( "Edited by " + otherUser ) );
-            flowActionsMenu.add( new AttributeModifier( "class", true, new Model<String>( "locked" ) ) );
-        }
-        addOrReplace( flowActionsMenu );
-    }
-
 
     private void addAllField() {
         CheckBox checkBox = new CheckBox(
@@ -534,27 +503,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
         add( otherChoice );
     }
 
-    public Flow getFlow() {
-        return model.getObject();
-    }
 
-    /**
-     * Set flow.
-     * (used by PropertyModel)
-     *
-     * @param flow a flow
-     */
-    public void setFlow( Flow flow ) {
-        model.setObject( flow );
-    }
-
-    public final boolean isOutcome() {
-        return outcome;
-    }
-
-    public final void setOutcome( boolean outcome ) {
-        this.outcome = outcome;
-    }
 
     /**
      * @return the node on this side of the flow
@@ -642,7 +591,7 @@ public abstract class ExpandedFlowPanel extends AbstractCommandablePanel {
                     Flow connectorFlow = connector.getInnerFlow();
                     if ( isEmptyOrEquivalent( connectorFlow ) ) {
                         if ( other.equals( connector ) || !node.isConnectedTo(
-                                outcome, connector, getFlow().getName() ) )
+                                isOutcome(), connector, getFlow().getName() ) )
                             result.add( connector );
                     }
                 }

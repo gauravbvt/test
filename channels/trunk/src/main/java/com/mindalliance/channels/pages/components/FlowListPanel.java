@@ -91,7 +91,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
                     item.add( flowPanel );
                 } else {
                     CollapsedFlowPanel flowPanel =
-                            new CollapsedFlowPanel( "flow", flow, outcomes );
+                            new CollapsedFlowPanel( "flow", new Model<Flow>(flow), outcomes );
                     item.add( flowPanel );
                 }
             }

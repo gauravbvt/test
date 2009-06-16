@@ -76,13 +76,18 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         adjustFields();
     }
 
+    private boolean canBeEdited() {
+        Channelable channelable = getChannelable();
+        return isLockedByUser( channelable ) && channelable.canSetChannels() ;
+    }
+
     private void adjustFields() {
         boolean hasChannels = !getWrappedChannels().isEmpty();
         channelsList.setVisible( hasChannels );
         noChannelList.setVisible( !hasChannels );
 
         Channelable channelable = getChannelable();
-        channelsList.setEnabled( isLockedByUser( channelable ) && channelable.canSetChannels() );
+        channelsList.setEnabled( canBeEdited() );
     }
 
     private void doUpdate( AjaxRequestTarget target ) {
@@ -288,6 +293,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             List<Channel> effectiveChannels = getChannelable().getEffectiveChannels();
             result.setVisible(
                     !effectiveChannels.isEmpty()
+                    && canBeEdited()
                     && !wrapper.getChannel().equals( effectiveChannels.get( 0 ) )
                     && !wrapper.isMarkedForCreation() );
             return result;
@@ -408,7 +414,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             result.setVisible( medium != null &&
                                ( medium.isUnicast() && getChannelable().canBeUnicast()
                                  || medium == Medium.Other || medium == Medium.OtherUnicast ) );
-            result.setEnabled( isEnabled() );
+            result.setEnabled( canBeEdited() );
             return result;
         }
 
