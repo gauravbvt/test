@@ -44,7 +44,7 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
         List<Component> menuItems = super.getMenuItems();
         // Export
         menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Export to XML" ),
-                new BookmarkablePageLink<Scenario>(
+                new BookmarkablePageLink(
                         "link",
                         ExportPage.class,
                         PlanPage.getParameters( (Scenario) getModel().getObject(), null ) ) ) );

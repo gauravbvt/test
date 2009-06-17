@@ -333,7 +333,7 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
                     EMPTY,
                     PlanWhosWhoPanel.this ) );
             // provider and table
-            add( new AjaxFallbackDefaultDataTable<Employment>(
+            add( new AjaxFallbackDefaultDataTable(
                     "employments",
                     columns,
                     new SortableBeanProvider<Employment>(

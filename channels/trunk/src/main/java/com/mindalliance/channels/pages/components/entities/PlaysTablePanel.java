@@ -92,7 +92,7 @@ public class PlaysTablePanel extends AbstractTablePanel<Play> {
                 "requiredness", "requiredness" ) );                                 // NON-NLS
         // provider and table
         List<Play> plays = getPlays();
-        add( new AjaxFallbackDefaultDataTable<Play>(
+        add( new AjaxFallbackDefaultDataTable(
                 "plays",
                 columns,
                 new SortableBeanProvider<Play>( plays, "part.scenario.name" ),
@@ -100,10 +100,9 @@ public class PlaysTablePanel extends AbstractTablePanel<Play> {
     }
 
     private List<Play> getPlays() {
-        if (playsModel != null) {
+        if ( playsModel != null ) {
             return playsModel.getObject();
-        }
-        else {
+        } else {
             return getQueryService().findAllPlays( player, specific );
         }
     }

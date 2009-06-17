@@ -153,7 +153,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
         }
 
         private void initialize() {
-            final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
             columns.add( makeColumn(
                     "Kind",
@@ -186,7 +186,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
                     "waivedString",
                     EMPTY ) );
             // provider and table
-            add( new AjaxFallbackDefaultDataTable<Issue>(
+            add( new AjaxFallbackDefaultDataTable(
                     "issues",
                     columns,
                     new SortableBeanProvider<Issue>(

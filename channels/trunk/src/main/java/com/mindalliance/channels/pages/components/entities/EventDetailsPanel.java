@@ -241,7 +241,7 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
                     "relation",
                     EMPTY ) );
             // provider and table
-            add( new AjaxFallbackDefaultDataTable<EventReference>(
+            add( new AjaxFallbackDefaultDataTable(
                     "eventReferences",
                     columns,
                     new SortableBeanProvider<EventReference>(

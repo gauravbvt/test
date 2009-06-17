@@ -35,7 +35,7 @@ public class ExternalFlowsPanel extends AbstractTablePanel<ExternalFlow> {
     }
 
     private void init() {
-        final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+        List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
         columns.add( makeLinkColumn( "Task", "externalPart", "externalPart.title", EMPTY ) );
         columns.add( new PropertyColumn<String>(
                 new Model<String>( " in scenario" ),
@@ -46,7 +46,7 @@ public class ExternalFlowsPanel extends AbstractTablePanel<ExternalFlow> {
                 new Model<String>( "in scenario" ),
                 "scenario.name", "scenario.name" ) );
         List<ExternalFlow> externalFlows = externalFlowsModel.getObject();
-        add( new AjaxFallbackDefaultDataTable<ExternalFlow>(
+        add( new AjaxFallbackDefaultDataTable(
                 "flows",
                 columns,
                 new SortableBeanProvider<ExternalFlow>( externalFlows, "scenario.name" ),

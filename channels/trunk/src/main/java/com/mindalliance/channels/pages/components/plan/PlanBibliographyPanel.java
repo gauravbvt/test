@@ -288,7 +288,7 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
                     EMPTY,
                     PlanBibliographyPanel.this ) );
             // provider and table
-            add( new AjaxFallbackDefaultDataTable<AttachmentRelationship>(
+            add( new AjaxFallbackDefaultDataTable(
                     "attachments",
                     columns,
                     new SortableBeanProvider<AttachmentRelationship>(

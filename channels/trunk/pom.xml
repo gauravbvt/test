@@ -319,6 +319,11 @@
           <artifactId>jdom</artifactId>
           <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.wicketstuff</groupId>
+            <artifactId>wicket-contrib-gmap2</artifactId>
+            <version>1.4-SNAPSHOT</version>
+        </dependency>
 
         <!--  JUNIT DEPENDENCY FOR TESTING -->
         <dependency>
@@ -489,7 +494,7 @@
     </reporting>
 
     <properties>
-        <wicket.version>1.4-rc1</wicket.version>
+        <wicket.version>1.4-SNAPSHOT</wicket.version>
         <jetty.version>6.1.4</jetty.version>
     </properties>
 </project>

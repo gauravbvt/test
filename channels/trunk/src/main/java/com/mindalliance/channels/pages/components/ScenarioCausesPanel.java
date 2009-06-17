@@ -56,7 +56,7 @@ public class ScenarioCausesPanel extends AbstractTablePanel<ScenarioRelationship
                 new Model<String>( "triggering scenario" ),
                 "caused.name", "caused.name" ) );
         List<Causation> causations = getCausations();
-        add( new AjaxFallbackDefaultDataTable<Causation>(
+        add( new AjaxFallbackDefaultDataTable(
                 "causes",
                 columns,
                 new SortableBeanProvider<Causation>( causations, "part.name" ),

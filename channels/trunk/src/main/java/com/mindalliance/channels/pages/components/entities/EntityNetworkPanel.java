@@ -552,7 +552,7 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
                     EMPTY,
                     filterable ) );
             List<Flow> flows = flowsModel.getObject();
-            add( new AjaxFallbackDefaultDataTable<Flow>(
+            add( new AjaxFallbackDefaultDataTable(
                     "flows",
                     columns,
                     new SortableBeanProvider<Flow>( flows, "scenario.name" ),
@@ -631,7 +631,7 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
                     filterable ) );
 
             List<ActorFlow> actorFlows = flowsModel.getObject();
-            add( new AjaxFallbackDefaultDataTable<ActorFlow>(
+            add( new AjaxFallbackDefaultDataTable(
                     "flows",
                     columns,
                     new SortableBeanProvider<ActorFlow>( actorFlows, "flow.scenario.name" ),

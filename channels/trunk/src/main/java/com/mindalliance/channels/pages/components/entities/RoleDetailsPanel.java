@@ -325,7 +325,7 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
                     EMPTY,
                     RoleDetailsPanel.this ) );
             // provider and table
-            add( new AjaxFallbackDefaultDataTable<Employment>(
+            add( new AjaxFallbackDefaultDataTable(
                     "employments",
                     columns,
                     new SortableBeanProvider<Employment>(

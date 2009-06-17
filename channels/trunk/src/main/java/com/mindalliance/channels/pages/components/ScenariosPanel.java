@@ -30,12 +30,12 @@ public class ScenariosPanel extends AbstractTablePanel {
     }
 
     private void init() {
-        final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+        List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
         // columns
         columns.add( makeLinkColumn( "Name", "", "name", "(No name)" ) );
         columns.add( makeColumn( "Description", "description", EMPTY ) );
         // table and providers of resources specified resources need to kwno how to contact
-        add( new AjaxFallbackDefaultDataTable<Scenario>(
+        add( new AjaxFallbackDefaultDataTable(
                 "scenarios",
                 columns,
                 new SortableBeanProvider<Scenario>( scenarios, "name" ),

@@ -20,11 +20,8 @@ import org.apache.commons.collections.Predicate;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.target.coding.IndexedParamUrlCodingStrategy;
-import org.apache.wicket.request.target.coding.MixedParamUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -342,53 +339,4 @@ public final class Channels extends WebApplication implements ApplicationListene
         }
 
     }
-
-    //=========================================================================
-    /**
-     * URL coding strategy
-     */
-    private static final class CodingStrategy extends MixedParamUrlCodingStrategy {
-
-        /**
-         * The suffix for the link.
-         */
-        private String extension;
-
-        private CodingStrategy(
-                String mountPath, Class<?> bookmarkablePageClass, String[] parameterNames,
-                String extension ) {
-            super( mountPath, bookmarkablePageClass, parameterNames );
-            this.extension = extension;
-        }
-
-        /**
-         * Test if a path matches...
-         *
-         * @param path the path to match
-         * @return true if matches, false otherwise
-         */
-        @Override
-        public boolean matches( String path ) {
-            return path.endsWith( extension )
-                    && super.matches( trimmed( path ) );
-        }
-
-        private String trimmed( String path ) {
-            return path.substring( 0, path.length() - extension.length() );
-        }
-
-        @Override
-        protected void appendParameters( AppendingStringBuffer url, Map parameters ) {
-            super.appendParameters( url, parameters );
-            url.append( extension );
-        }
-
-        @Override
-        protected ValueMap decodeParameters( String urlFragment, Map urlParameters ) {
-            return super.decodeParameters( trimmed( urlFragment ), urlParameters );
-        }
-
-
-    }
-
 }

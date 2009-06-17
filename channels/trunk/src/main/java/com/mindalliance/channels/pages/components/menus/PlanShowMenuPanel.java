@@ -84,7 +84,7 @@ public class PlanShowMenuPanel extends MenuPanel {
                     new Model<String>( "About scenario" ),
                     editLink ) );
         }
-        BookmarkablePageLink<?> reportLink = new BookmarkablePageLink( "link", PlanReportPage.class );
+        BookmarkablePageLink reportLink = new BookmarkablePageLink( "link", PlanReportPage.class );
         reportLink.add( new AttributeModifier( "target", true, new Model<String>( "report" ) ) );
 //        reportLink.setPopupSettings( new PopupSettings(
 //                PopupSettings.RESIZABLE |

@@ -302,7 +302,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         }
 
         private void init() {
-            final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
             columns.add( makeFilterableLinkColumn(
                     "Role",
@@ -323,7 +323,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                     EMPTY,
                     ActorDetailsPanel.this ) );
             // provider and table
-            add( new AjaxFallbackDefaultDataTable<Employment>(
+            add( new AjaxFallbackDefaultDataTable(
                     "employments",
                     columns,
                     new SortableBeanProvider<Employment>(
