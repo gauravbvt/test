@@ -1,6 +1,7 @@
 package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.Exporter;
+import com.mindalliance.channels.model.GeoLocation;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Place;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -44,7 +45,34 @@ public class PlaceConverter extends EntityConverter {
     protected void writeSpecifics( ModelObject entity,
                                    HierarchicalStreamWriter writer,
                                    MarshallingContext context ) {
-       // Do nothing
+        Place place = (Place) entity;
+        if ( !place.getStreetAddress().isEmpty() ) {
+            writer.startNode( "streetAddress" );
+            writer.setValue( place.getStreetAddress() );
+            writer.endNode();
+        }
+        if ( !place.getPostalCode().isEmpty() ) {
+            writer.startNode( "postalCode" );
+            writer.setValue( place.getPostalCode() );
+            writer.endNode();
+        }
+        if ( place.getGeoname() != null ) {
+            writer.startNode( "geoname" );
+            writer.setValue( place.getGeoname() );
+            writer.endNode();
+        }
+        if ( place.getGeoLocation() != null ) {
+            writer.startNode( "geoLocation" );
+            context.convertAnother( place.getGeoLocation() );
+            writer.endNode();
+        }
+        if ( place.getGeoLocations() != null ) {
+            for ( GeoLocation geoLoc : place.getGeoLocations() ) {
+                writer.startNode( "alternateGeoLocation");
+                context.convertAnother( geoLoc );
+                writer.endNode();
+            }
+        }
     }
 
     /**
@@ -54,8 +82,19 @@ public class PlaceConverter extends EntityConverter {
             ModelObject entity,
             String nodeName,
             HierarchicalStreamReader reader,
-            UnmarshallingContext context  ) {
-       // Do nothing
+            UnmarshallingContext context ) {
+        Place place = (Place) entity;
+        if (nodeName.equals("streetAddress")) {
+            place.setStreetAddress( reader.getValue() );
+        } else if ( nodeName.equals( "postalCode")) {
+            place.setPostalCode( reader.getValue() );
+        } else if ( nodeName.equals( "geoname")) {
+            place.setGeoname( reader.getValue() );
+        } else if ( nodeName.equals( "geoLocation")) {
+            place.setGeoLocation( (GeoLocation)context.convertAnother( place, GeoLocation.class ));
+        } else if ( nodeName.equals( "alternateGeoLocation")) {
+            place.addGeoLocation( (GeoLocation)context.convertAnother( place, GeoLocation.class ));
+        }
     }
 
 }

@@ -794,4 +794,11 @@ public interface QueryService extends Service {
      * @return a list of model objects
      */
     List<ModelObject> findAllModelObjects();
+
+    /**
+     * Find all geonames in plan.
+     *
+     * @return a list of strings
+     */
+    List<String> findAllGeonames();
 }

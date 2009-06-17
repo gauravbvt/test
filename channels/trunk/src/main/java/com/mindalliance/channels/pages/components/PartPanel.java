@@ -1,7 +1,5 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.model.Actor;
@@ -14,14 +12,12 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.util.SemMatch;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -190,43 +186,6 @@ public class PartPanel extends AbstractCommandablePanel {
         textFields.add( field );
     }
 
-    /**
-     * Add issues annotations to a component.
-     *
-     * @param component the component
-     * @param object    the object of the issues
-     * @param property  the property of concern. If null, get issues of object
-     */
-    protected void addIssues( FormComponent<?> component, ModelObject object, String property ) {
-        Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
-        String summary = property == null ?
-                analyst.getIssuesSummary( object, false ) :
-                analyst.getIssuesSummary( object, property );
-        boolean hasIssues = analyst.hasIssues( object, Analyst.INCLUDE_PROPERTY_SPECIFIC );
-        if ( !summary.isEmpty() ) {
-            component.add(
-                    new AttributeModifier(
-                            "class", true, new Model<String>( "error" ) ) );
-            component.add(
-                    new AttributeModifier(
-                            "title", true, new Model<String>( summary ) ) );                // NON-NLS
-        } else {
-            if ( hasIssues ) {
-                // All waived issues
-                component.add(
-                        new AttributeModifier( "class", true, new Model<String>( "waived" ) ) );
-                component.add(
-                        new AttributeModifier( "title", true, new Model<String>( "All issues waived" ) ) );
-            } else {
-                component.add(
-                        new AttributeModifier(
-                                "class", true, new Model<String>( "no-error" ) ) );
-                component.add(
-                        new AttributeModifier(
-                                "title", true, new Model<String>( "" ) ) );
-            }
-        }
-    }
 
     private void addEventInitiation() {
         final List<String> choices = getQueryService().findAllNames( Event.class );

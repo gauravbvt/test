@@ -13,6 +13,7 @@ import com.mindalliance.channels.pages.Updatable;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -222,6 +223,45 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      }
      return choices;
  }
+
+    /**
+     * Add issues annotations to a component.
+     *
+     * @param component the component
+     * @param object    the object of the issues
+     * @param property  the property of concern. If null, get issues of object
+     */
+    protected void addIssues( FormComponent<?> component, ModelObject object, String property ) {
+        Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
+        String summary = property == null ?
+                analyst.getIssuesSummary( object, false ) :
+                analyst.getIssuesSummary( object, property );
+        boolean hasIssues = analyst.hasIssues( object, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        if ( !summary.isEmpty() ) {
+            component.add(
+                    new AttributeModifier(
+                            "class", true, new Model<String>( "error" ) ) );
+            component.add(
+                    new AttributeModifier(
+                            "title", true, new Model<String>( summary ) ) );                // NON-NLS
+        } else {
+            if ( hasIssues ) {
+                // All waived issues
+                component.add(
+                        new AttributeModifier( "class", true, new Model<String>( "waived" ) ) );
+                component.add(
+                        new AttributeModifier( "title", true, new Model<String>( "All issues waived" ) ) );
+            } else {
+                component.add(
+                        new AttributeModifier(
+                                "class", true, new Model<String>( "no-error" ) ) );
+                component.add(
+                        new AttributeModifier(
+                                "title", true, new Model<String>( "" ) ) );
+            }
+        }
+    }
+    
 
 
 

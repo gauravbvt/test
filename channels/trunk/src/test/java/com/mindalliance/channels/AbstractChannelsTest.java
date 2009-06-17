@@ -12,6 +12,7 @@ import com.mindalliance.channels.analysis.detectors.FlowWithUndefinedSource;
 import com.mindalliance.channels.analysis.detectors.FlowWithUndefinedTarget;
 import com.mindalliance.channels.analysis.detectors.FlowWithoutChannel;
 import com.mindalliance.channels.analysis.detectors.FromUser;
+import com.mindalliance.channels.analysis.detectors.GeonameButNoLocation;
 import com.mindalliance.channels.analysis.detectors.InvalidChannel;
 import com.mindalliance.channels.analysis.detectors.NeverTriggeredSpecifiedTask;
 import com.mindalliance.channels.analysis.detectors.NoRedundancy;
@@ -34,6 +35,7 @@ import com.mindalliance.channels.analysis.detectors.TriggeredButNeverStartedDefi
 import com.mindalliance.channels.analysis.detectors.UnconfirmedJob;
 import com.mindalliance.channels.analysis.detectors.UnconnectedConnector;
 import com.mindalliance.channels.analysis.detectors.UnnamedFlow;
+import com.mindalliance.channels.analysis.detectors.UnverifiedPostalCode;
 import com.mindalliance.channels.analysis.detectors.UselessPart;
 import com.mindalliance.channels.attachments.FileBasedManager;
 import com.mindalliance.channels.command.DefaultCommander;
@@ -142,6 +144,8 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new ActorNotInOneOrganization() );
         detectors.add( new ScenarioWithSameRisk() );
         detectors.add( new UselessPart() );
+        detectors.add( new GeonameButNoLocation() );
+        detectors.add( new UnverifiedPostalCode() );
         for ( IssueDetector detector : detectors ) {
             ( (AbstractIssueDetector) detector ).setQueryService( queryService );
         }

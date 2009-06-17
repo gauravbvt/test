@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+    <tr>
+        <th align="right">Street address:</th>
+        <td><input type="text" size="40" wicket:id="streetAddress" value="" title="Street number and name"></td>
+    </tr>
+    <tr>
+        <th align="right">Postal code:</th>
+        <td><input type="text" size="40" wicket:id="postalCode" value=""></td>
+    </tr>
+    <tr>
+        <th align="right">Geoname:</th>
+        <td><input type="text" size="40" wicket:id="geoname" value="" title="City, county, state and/or country"></td>
+    </tr>
+    <tr>
+        <th align="right">
+            &nbsp;
+        </th>
+        <td>
+            <span wicket:id="geoLocationsContainer">
+                <ul>
+                    <li wicket:id="geoLocations"><span wicket:id="geoLocation">[geolocations panel]</span></li>
+                </ul>
+            </span>
+        </td>
+    </tr>
+</wicket:extend>
+</body>
+</html>

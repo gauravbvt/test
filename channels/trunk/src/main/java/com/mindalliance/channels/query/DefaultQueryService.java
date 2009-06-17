@@ -272,7 +272,7 @@ public class DefaultQueryService extends Observable implements QueryService {
                             Scenario scenario = (Scenario) results.get( "scenario" );
                             LOG.info(
                                     "Imported scenario " + scenario.getName() + " from "
-                                    + file.getPath() );
+                                            + file.getPath() );
                         } catch ( IOException e ) {
                             LOG.warn( "Failed to import " + file.getPath(), e );
                         }
@@ -1961,6 +1961,19 @@ public class DefaultQueryService extends Observable implements QueryService {
             }
         }
         return allModelObjects;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<String> findAllGeonames() {
+        Set<String> geonames = new HashSet<String>();
+        for ( Place place : list( Place.class ) ) {
+            String geoname = place.getGeoname();
+            if ( geoname != null && !geoname.isEmpty() )
+                geonames.add( geoname );
+        }
+        return new ArrayList<String>( geonames );
     }
 
 

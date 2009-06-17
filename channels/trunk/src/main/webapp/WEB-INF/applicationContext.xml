@@ -127,6 +127,9 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowToSelf">
                     <property name="queryService" ref="queryService"/>
                 </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.GeonameButNoLocation">
+                     <property name="queryService" ref="queryService"/>
+                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.PartWithRoleWithNoKnownActor">
                     <property name="queryService" ref="queryService"/>
                 </bean>
@@ -164,6 +167,9 @@
                     <property name="queryService" ref="queryService"/>
                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.UselessPart">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.UnverifiedPostalCode">
                     <property name="queryService" ref="queryService"/>
                 </bean>
             </list>
