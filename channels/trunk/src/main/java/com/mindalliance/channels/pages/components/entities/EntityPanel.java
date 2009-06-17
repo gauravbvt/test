@@ -130,7 +130,7 @@ public class EntityPanel extends AbstractMultiAspectPanel {
                     "aspect",
                     new PropertyModel<ModelObject>( this, "object" ),
                     getExpansions() );
-        }  else if ( getObject() instanceof Role ) {
+        } else if ( getObject() instanceof Role ) {
             return new RoleDetailsPanel(
                     "aspect",
                     new PropertyModel<ModelObject>( this, "object" ),
@@ -178,7 +178,14 @@ public class EntityPanel extends AbstractMultiAspectPanel {
     }
 
     private Component getEntityMapPanel() {
-        return new Label( "aspect", "Under construction" );
+        if ( getObject() instanceof Place ) {
+            return new PlaceMapPanel(
+                    "aspect",
+                    new PropertyModel<ModelObject>( this, "object" ),
+                    getExpansions() );
+        } else {
+            return new Label( "aspect", "Under construction" );
+        }
     }
 
     private Component getEntityIssuesPanel() {

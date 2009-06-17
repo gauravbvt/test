@@ -2,14 +2,13 @@ package com.mindalliance.channels.util;
 
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.text.Collator;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ArrayList;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.collections.CollectionUtils;
 
 /**
  * A matching utility
@@ -59,7 +58,7 @@ public class SemMatch {
     }
 
     /**
-     * Returns whether strings name the same locations.
+     * Returns whether places are exactly the same or both are null.
      *
      * @param place -- a string
      * @param other -- another string
@@ -70,7 +69,6 @@ public class SemMatch {
             return true;
         if ( place == null || other == null )
             return false;
-        // TODO - compare geofeatures
         return same( place.getName(), other.getName() );
     }
 
@@ -93,7 +91,7 @@ public class SemMatch {
      * @return a boolean
      */
     public static boolean matches( String string, String other ) {
-        // TODO - do something a wee bit smarter
+        // TODO - maybe do something a wee bit smarter
         String cleanString = removeNoise( string );
         String cleanOther = removeNoise( other );
         return cleanOther.startsWith( cleanString )
@@ -117,5 +115,15 @@ public class SemMatch {
         words.addAll( Arrays.asList( StringUtils.split( s.toLowerCase(), SEPARATORS ) ) );
         words.removeAll( NOISE_WORDS );
         return StringUtils.join( words, ' ' );
+    }
+
+    /**
+     * Whether a place's geolocation is the same or within another's.
+     * @param place a containing place
+     * @param other a contained place
+     * @return a boolean
+     */
+    public static boolean within( Place place, Place other ) {
+        return !( place == null || other == null ) && place.isWithin( other );
     }
 }

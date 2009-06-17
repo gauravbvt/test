@@ -67,7 +67,7 @@
         <repository>
             <id>org.wicketstuff</id>
             <name>Wicket Stuff Repository</name>
-            <url>http://wicketstuff.org/maven/repository</url>
+            <url>http://wicketstuff.org/maven/repository/</url>
         </repository>
     </repositories>
 
@@ -274,6 +274,7 @@
             </exclusions>
         </dependency>
 
+
         <!-- UTILS -->
         <dependency>
             <groupId>commons-beanutils</groupId>
@@ -315,9 +316,9 @@
             <version>1.0</version>
         </dependency>
         <dependency>
-          <groupId>jdom</groupId>
-          <artifactId>jdom</artifactId>
-          <version>1.0</version>
+            <groupId>jdom</groupId>
+            <artifactId>jdom</artifactId>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>org.wicketstuff</groupId>
@@ -421,18 +422,18 @@
                 </configuration>
             </plugin>
             <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>tomcat-maven-plugin</artifactId>
-                    <configuration>
-                            <server>tomcat</server>
-                    </configuration>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>tomcat-maven-plugin</artifactId>
+                <configuration>
+                    <server>tomcat</server>
+                </configuration>
             </plugin>
             <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-resources-plugin</artifactId>
-                  <configuration>
-                        <encoding>UTF-8</encoding>
-                  </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
             </plugin>
 
         </plugins>

@@ -38,17 +38,17 @@ public class GeoLocation implements Serializable {
     }
 
     public GeoLocation( Toponym topo ) {
-        country = topo.getCountryName( );
+        country = topo.getCountryName();
         state = getStateName( topo );
         county = getCountyName( topo );
         city = getCityName( topo );
-        countryCode = topo.getCountryCode( );
+        countryCode = topo.getCountryCode();
         stateCode = getStateCode( topo );
         countyCode = getCountyCode( topo );
         cityCode = getCityCode( topo );
         population = getPopulation( topo );
-        latitude = topo.getLatitude( );
-        longitude = topo.getLongitude( );
+        latitude = topo.getLatitude();
+        longitude = topo.getLongitude();
         geonameId = topo.getGeoNameId();
     }
 
@@ -106,12 +106,12 @@ public class GeoLocation implements Serializable {
     }
 
     private Integer getPopulation( Toponym topo ) {
-         try {
-             return topo.getPopulation();
-         } catch ( InsufficientStyleException e ) {
-             return null;
-         }
-     }
+        try {
+            return topo.getPopulation();
+        } catch ( InsufficientStyleException e ) {
+            return null;
+        }
+    }
 
     public String getCountry() {
         return country;
@@ -227,24 +227,50 @@ public class GeoLocation implements Serializable {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        if (streetAddress != null) sb.append( streetAddress );
+        if ( streetAddress != null ) sb.append( streetAddress );
         if ( city != null ) {
-            sb.append( ((sb.length() > 0) ? ", " : ""));
+            sb.append( ( ( sb.length() > 0 ) ? ", " : "" ) );
             sb.append( city );
         }
         if ( state != null ) {
-            sb.append( ((sb.length() > 0) ? ", " : ""));
+            sb.append( ( ( sb.length() > 0 ) ? ", " : "" ) );
             sb.append( state );
         }
         if ( county != null ) {
-            sb.append( ((sb.length() > 0) ? ", " : ""));
+            sb.append( ( ( sb.length() > 0 ) ? ", " : "" ) );
             sb.append( county );
         }
         if ( country != null ) {
-            sb.append( ((sb.length() > 0) ? ", " : ""));
+            sb.append( ( ( sb.length() > 0 ) ? ", " : "" ) );
             sb.append( country );
         }
         return sb.toString();
+    }
+
+    /**
+     * Whether this geolocation is the same or within another.
+     *
+     * @param geoLoc a geolocation
+     * @return a boolean
+     */
+    public boolean isWithin( GeoLocation geoLoc ) {
+        return areasMatch( country, geoLoc.getCountry() )
+                && areasMatch( state, geoLoc.getState() )
+                && areasMatch( county, geoLoc.getCounty() )
+                && areasMatch( city, geoLoc.getCity() );
+    }
+
+    private boolean areasMatch( String area, String otherArea ) {
+        return otherArea == null || area != null && area.equals( otherArea );
+    }
+
+    /**
+     * Whether the geolocation has no country.
+     *
+     * @return a boolean
+     */
+    public boolean isAnywhere() {
+        return country == null;
     }
 
     /**

@@ -83,16 +83,16 @@ public class RedundantPart extends AbstractIssueDetector {
         }
         return equivalentParts;
     }
-
+    
+    // One narrows or equls the other
     private boolean isEquivalent( Part part, Part otherPart ) {
         return SemMatch.same( part.getTask(), otherPart.getTask() )
                 && (
                 part.resourceSpec().narrowsOrEquals( otherPart.resourceSpec() )
                         || otherPart.resourceSpec().narrowsOrEquals( part.resourceSpec() )
         )
-                && (
-                part.getLocation() == null
-                        || otherPart.getLocation() == null
-                        || SemMatch.samePlace( part.getLocation(), otherPart.getLocation() ) );
+                && ( SemMatch.samePlace( part.getLocation(), otherPart.getLocation() )
+                || SemMatch.within( part.getLocation(), otherPart.getLocation() )
+                || SemMatch.within( otherPart.getLocation(), part.getLocation() ) );
     }
 }

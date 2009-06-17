@@ -37,6 +37,7 @@
 
     <!-- setup wicket application -->
     <bean id="wicketApplication" class="com.mindalliance.channels.Channels">
+        <property name="googleMapsAPIKey" value="ABQIAAAAOEFNCNhUR4YjTHX0nnN5VRQ-56ktgD2c9Zj4tWZ1ThdIDSrN1hQjqsSnYkJWjbA3CFU077eZT8RNUw" />
         <property name="attachmentManager" ref="attachmentManager"/>
         <property name="importer" ref="serializer"/>
         <property name="exporter" ref="serializer"/>

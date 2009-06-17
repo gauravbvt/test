@@ -220,6 +220,7 @@ public class Place extends ModelObject {
 
     /**
      * Verify the postal code.
+     *
      * @return a boolean
      */
     public boolean verifyPostalCode() {
@@ -233,11 +234,11 @@ public class Place extends ModelObject {
             // criteria.setPostalCode( postalCode );
             criteria.setStyle( Style.FULL );
             List<PostalCode> postalCodes = WebService.findNearbyPostalCodes( criteria );
-            PostalCode match = (PostalCode)CollectionUtils.find(
+            PostalCode match = (PostalCode) CollectionUtils.find(
                     postalCodes,
                     new Predicate() {
                         public boolean evaluate( Object obj ) {
-                            return ((PostalCode)obj).getPostalCode().equals( postalCode );
+                            return ( (PostalCode) obj ).getPostalCode().equals( postalCode );
                         }
                     } );
             return match != null;
@@ -246,4 +247,45 @@ public class Place extends ModelObject {
             return false;
         }
     }
+
+    /**
+     * Whether this place's geolocation is the same or within another's.
+     *
+     * @param place a place
+     * @return a boolean
+     */
+    public boolean isWithin( Place place ) {
+        return !( geoLocation == null || place.getGeoLocation() == null )
+                && geoLocation.isWithin( place.getGeoLocation() );
+    }
+
+    /**
+     * Get latitude.
+     *
+     * @return a double
+     */
+    @Transient
+    public double getLatitude() {
+        return geoLocation != null ? geoLocation.getLatitude()  : 0;
+    }
+
+    /**
+     * Get longitude.
+     *
+     * @return a double
+     */
+    @Transient
+    public double getLongitude() {
+        return geoLocation != null ?  geoLocation.getLongitude() : 0;
+    }
+
+    /**
+     * Whether place has known latitude and longitude.
+     *
+     * @return a boolean
+     */
+    public boolean hasLatLong() {
+        return geoLocation != null;
+    }
+
 }
