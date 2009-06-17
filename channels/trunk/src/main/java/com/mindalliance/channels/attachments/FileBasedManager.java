@@ -115,15 +115,15 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
         this.queryService = queryService;
     }
 
-    private File createFile( String name ) throws IOException {
+    private File createFile( String name ) {
         String truncatedName = StringUtils.reverse(
                 StringUtils.reverse( name ).substring( 0, Math.min( name.length(), getMaxLength() ) ) );
         String idealName = escape( truncatedName );
-        File result = new File( directory.getFile(), idealName );
+        File result = new File( getUploadDirectory(), idealName );
         int i = 0;
         while ( result.exists() ) {
             String actual = ++i + "_" + idealName;
-            result = new File( directory.getFile(), actual );
+            result = new File( getUploadDirectory(), actual );
         }
 
         return result;
@@ -133,12 +133,12 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     // Return pre-existing document if one exists for the same file.
     private FileDocument resolve( final FileDocument document ) {
         FileDocument toSameFile = (FileDocument) CollectionUtils.find( documentMap.values(), new Predicate() {
-            public boolean evaluate( Object obj ) {
-                FileDocument prior = (FileDocument) obj;
+            public boolean evaluate( Object object ) {
+                FileDocument prior = (FileDocument) object;
                 return prior.isFile()
                         && document.getFile().getName().
                         // > 0 -> must not be the exact same file, but a duplicate
-                                indexOf( ( prior ).getFile().getName() ) > 0
+                                indexOf( prior.getFile().getName() ) > 0
                         && document.getDigest().equals( prior.getDigest() );
             }
         } );
@@ -162,12 +162,8 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
      * @param directory a directory
      */
     public synchronized void setDirectory( Resource directory ) {
-        try {
-            log.info( "Upload directory: {}", directory.getFile().getAbsolutePath() );
-        } catch ( IOException e ) {
-            log.error( "Unable to get upload directory path", e );
-        }
         this.directory = directory;
+        log.info( "Upload directory: {}", getUploadDirectory().getAbsolutePath() );
     }
 
 
@@ -263,7 +259,7 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     private void save() {
         Writer out = null;
         try {
-            File file = new File( directory.getFile(), digestsMapFile );
+            File file = new File( getUploadDirectory(), digestsMapFile );
             out = new FileWriter( file );
             Properties digests = new Properties();
             for ( String url : documentMap.keySet() ) {
@@ -287,7 +283,7 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
         Properties digests = new Properties();
         Reader in = null;
         try {
-            in = new FileReader( new File( directory.getFile(), digestsMapFile ) );
+            in = new FileReader( new File( getUploadDirectory(), digestsMapFile ) );
             digests.load( in );
 
         } catch ( FileNotFoundException ignored ) {
@@ -315,15 +311,9 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
         for ( String url : digests.stringPropertyNames() ) {
             String digest = digests.getProperty( url );
             String unescapedUrl = unescape( url );
-            FileDocument document = null;
-            try {
-                document = new FileDocument(
-                        new File( directory.getFile(), unescapedUrl ),
-                        /*path + */url,
-                        digest );
-            } catch ( IOException e ) {
-                throw new RuntimeException( e );
-            }
+            FileDocument document = new FileDocument(
+                    new File( getUploadDirectory(), unescapedUrl ),
+                    /*path + */url, digest );
             if ( exists( unescapedUrl ) ) {
                 documentMap.put( unescapedUrl, document );
             }
@@ -353,15 +343,11 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     }
 
     private boolean isUploaded( final String url ) {
-        try {
-            return directory.getFile().listFiles( new FilenameFilter() {
-                public boolean accept( File dir, String name ) {
-                    return url.substring( url.lastIndexOf( '/' ) + 1 ).equals( name );
-                }
-            } ).length == 1;
-        } catch ( IOException e ) {
-            throw new RuntimeException( e );
-        }
+        return getUploadDirectory().listFiles( new FilenameFilter() {
+            public boolean accept( File dir, String name ) {
+                return url.substring( url.lastIndexOf( '/' ) + 1 ).equals( name );
+            }
+        } ).length == 1;
     }
 
     private boolean isFileDocument( String url ) {
@@ -433,12 +419,7 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
      */
     public synchronized void removeUnattached() {
         List<String> attachedUrls = queryService.findAllAttached();
-        List<File> uploadedFiles = null;
-        try {
-            uploadedFiles = Arrays.asList( directory.getFile().listFiles() );
-        } catch ( IOException e ) {
-            throw new RuntimeException( e );
-        }
+        List<File> uploadedFiles = Arrays.asList( getUploadDirectory().listFiles() );
         for ( File file : uploadedFiles ) {
             String name = file.getName();
             if ( !( name.equals( "readme.txt" )
@@ -455,4 +436,15 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
         save();
     }
 
+    /**
+     * Get the location of the uploaded files.
+     * @return a directory
+     */
+    public File getUploadDirectory() {
+        try {
+            return directory.getFile();
+        } catch ( IOException e ) {
+            throw new RuntimeException( e );
+        }
+    }
 }

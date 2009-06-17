@@ -7,6 +7,7 @@ import com.mindalliance.channels.pages.ExpiredPage;
 import com.mindalliance.channels.pages.ExportPage;
 import com.mindalliance.channels.pages.LoginPage;
 import com.mindalliance.channels.pages.PlanPage;
+import com.mindalliance.channels.pages.UploadPage;
 import com.mindalliance.channels.pages.png.EntityNetworkPage;
 import com.mindalliance.channels.pages.png.FlowMapPage;
 import com.mindalliance.channels.pages.png.PlanMapPage;
@@ -136,6 +137,7 @@ public final class Channels extends WebApplication implements ApplicationListene
         getMarkupSettings().setStripWicketTags( true );
 
         mount( new IndexedParamUrlCodingStrategy( "playbook", PlanReportPage.class ) );
+        mount( new IndexedParamUrlCodingStrategy( "uploads", UploadPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "static/login.html", LoginPage.class ) );
 
         mount( new QueryStringUrlCodingStrategy( "plan.html", PlanPage.class ) );
