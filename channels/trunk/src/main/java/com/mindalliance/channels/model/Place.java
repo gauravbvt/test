@@ -86,6 +86,11 @@ public class Place extends ModelObject {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    @Override
     public void setName( String val ) {
         // If geoname was empty or same as name, reset it to null
         if ( geoname != null && ( geoname.isEmpty() || geoname.equals( getName() ) ) ) {
