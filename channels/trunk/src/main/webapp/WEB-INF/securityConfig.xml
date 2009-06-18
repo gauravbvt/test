@@ -21,6 +21,7 @@
                 /*.css=#NONE#
                 /static/**=#NONE#
                 /images/**=#NONE#
+                /resources/**=#NONE#
                 /**=httpSessionContextIntegrationFilter,rememberMeFilter,loginFilter,logoutFilter,exceptionFilter,securityInterceptor
             </value>
         </property>
