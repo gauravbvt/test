@@ -44,8 +44,10 @@ public class RiskConverter extends AbstractChannelsConverter {
             writer.endNode();
         }
         if ( risk.getOrganization() != null ) {
+            Organization organization = risk.getOrganization();
             writer.startNode( "organization" );
-            writer.setValue( risk.getOrganization().getName() );
+            writer.addAttribute( "id", Long.toString( organization.getId() ) );
+            writer.setValue( organization.getName() );
             writer.endNode();
         }
         writer.startNode( "severity" );
@@ -70,7 +72,8 @@ public class RiskConverter extends AbstractChannelsConverter {
                 Risk.Type type = Risk.Type.valueOf( reader.getValue() );
                 risk.setType( type );
             } else if ( nodeName.equals( "organization" ) ) {
-                Organization org = getQueryService().findOrCreate( Organization.class, reader.getValue() );
+                String id = reader.getAttribute( "id");
+                Organization org = findOrCreate( Organization.class, reader.getValue(), id );
                 risk.setOrganization( org );
             } else if ( nodeName.equals( "severity" ) ) {
                 risk.setSeverity( Issue.Level.valueOf( reader.getValue() ) );

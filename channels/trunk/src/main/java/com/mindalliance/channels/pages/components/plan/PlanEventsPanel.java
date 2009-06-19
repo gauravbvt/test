@@ -1,11 +1,16 @@
 package com.mindalliance.channels.pages.components.plan;
 
+import com.mindalliance.channels.GeoLocatable;
+import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -24,6 +29,19 @@ public class PlanEventsPanel extends AbstractCommandablePanel {
     }
 
     private void init() {
+        addEventsMapLink();
+        addEventList();
+    }
+
+    private void addEventsMapLink() {
+        List<? extends GeoLocatable> geoLocatables = getQueryService().list(Event.class );
+        BookmarkablePageLink<GeoMapPage> eventsMapLink = GeoMapPage.makeLink(
+                "mapLink",
+                geoLocatables );
+        add( eventsMapLink );
+    }
+
+    private void addEventList() {
         EventListPanel incidentListPanel = new EventListPanel(
                 "incidents",
                 new PropertyModel<Plan>(this, "plan"),

@@ -58,6 +58,7 @@ public class EventConverter extends EntityConverter {
         Place scope = event.getScope();
         if ( scope != null && !scope.getName().trim().isEmpty() ) {
             writer.startNode( "scope" );
+            writer.addAttribute( "id", Long.toString( scope.getId() ) );
             writer.setValue( scope.getName() );
             writer.endNode();
         }
@@ -77,12 +78,16 @@ public class EventConverter extends EntityConverter {
                                 UnmarshallingContext context ) {
         Event event = (Event) entity;
         if ( nodeName.equals( "scope" ) ) {
-            event.setScope( getQueryService().findOrCreate( Place.class, reader.getValue() ) );
+            String id = reader.getAttribute( "id");
+            event.setScope( findOrCreate( Place.class, reader.getValue(), id ) );
         } else if ( nodeName.equals( "self-terminating" ) ) {
-            event.setSelfTerminating( reader.getValue().equals("true") );
+            event.setSelfTerminating( reader.getValue().equals( "true" ) );
         } else {
             LOG.warn( "Unknown element " + nodeName );
         }
     }
+
+
+
 
 }

@@ -104,8 +104,10 @@ public class PartConverter extends AbstractChannelsConverter {
         writer.setValue( "" + part.isTerminatesEvent() );
         writer.endNode();
         if ( part.getInitiatedEvent() != null ) {
+            Event initiatedEvent = part.getInitiatedEvent();
             writer.startNode( "initiatedEvent" );
-            writer.setValue( part.getInitiatedEvent().getName() );
+            writer.addAttribute( "id", Long.toString( initiatedEvent.getId() ) );
+            writer.setValue( initiatedEvent.getName() );
             writer.endNode();
         }
         // Part mitigations
@@ -169,8 +171,9 @@ public class PartConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "terminatesEvent" ) ) {
                 part.setTerminatesEvent( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "initiatedEvent" ) ) {
+                String eventId = reader.getAttribute( "id");
                 String eventName = reader.getValue();
-                Event event = getQueryService().findOrCreate( Event.class, eventName );
+                Event event = findOrCreate( Event.class, eventName, eventId );
                 if ( event == null ) LOG.warn( "Plan has no event named " + eventName );
                 part.setInitiatedEvent( event );
             } else if ( nodeName.equals( "flow" ) ) {

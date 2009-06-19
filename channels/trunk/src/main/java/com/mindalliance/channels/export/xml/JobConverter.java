@@ -42,14 +42,19 @@ public class JobConverter extends AbstractChannelsConverter {
             MarshallingContext context ) {
         Job job = (Job) obj;
         writer.startNode( "actor" );
+        writer.addAttribute( "id", Long.toString( job.getActor().getId() ) );
         writer.setValue( job.getActorName() );
         writer.endNode();
         writer.startNode( "role" );
+        writer.addAttribute( "id", Long.toString( job.getRole().getId() ) );
         writer.setValue( job.getRoleName() );
         writer.endNode();
-        writer.startNode( "jurisdiction" );
-        writer.setValue( job.getJurisdictionName() );
-        writer.endNode();
+        if ( job.getJurisdiction() != null ) {
+            writer.startNode( "jurisdiction" );
+            writer.addAttribute( "id", Long.toString( job.getJurisdiction().getId() ) );
+            writer.setValue( job.getJurisdictionName() );
+            writer.endNode();
+        }
         writer.startNode( "title" );
         writer.setValue( job.getTitle() );
         writer.endNode();
@@ -63,11 +68,14 @@ public class JobConverter extends AbstractChannelsConverter {
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "actor" ) ) {
-                job.setActor( getQueryService().findOrCreate( Actor.class, reader.getValue() ) );
+                String id = reader.getAttribute( "id" );
+                job.setActor( findOrCreate( Actor.class, reader.getValue(), id ) );
             } else if ( nodeName.equals( "role" ) ) {
-                job.setRole( getQueryService().findOrCreate( Role.class, reader.getValue() ) );
+                String id = reader.getAttribute( "id" );
+                job.setRole( findOrCreate( Role.class, reader.getValue(), id ) );
             } else if ( nodeName.equals( "jurisdiction" ) ) {
-                job.setJurisdiction( getQueryService().findOrCreate( Place.class, reader.getValue() ) );
+                String id = reader.getAttribute( "id" );
+                job.setJurisdiction( findOrCreate( Place.class, reader.getValue(), id ) );
             } else if ( nodeName.equals( "title" ) ) {
                 job.setTitle( reader.getValue() );
             } else {

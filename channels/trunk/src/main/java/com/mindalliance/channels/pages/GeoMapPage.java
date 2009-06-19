@@ -117,7 +117,7 @@ public class GeoMapPage extends WebPage {
         return makeLink( id, geos );
     }
 
-    public static BookmarkablePageLink<GeoMapPage> makeLink( String id, List<GeoLocatable> geos ) {
+    public static BookmarkablePageLink<GeoMapPage> makeLink( String id, List<? extends GeoLocatable> geos ) {
         PageParameters params = makeGeoMapParameters( geos );
         return makeLink( id, params );
     }
@@ -159,7 +159,7 @@ public class GeoMapPage extends WebPage {
         return sb.toString();
     }
 
-    private static PageParameters makeGeoMapParameters( List<GeoLocatable> geos ) {
+    private static PageParameters makeGeoMapParameters( List<? extends GeoLocatable> geos ) {
         Map<GeoLocation, List<GeoLocatable>> locatedGeos = new HashMap<GeoLocation, List<GeoLocatable>>();
         for ( GeoLocatable geo : new HashSet<GeoLocatable>( geos ) ) {
             GeoLocation geoLocation = geo.getGeoLocation();

@@ -91,6 +91,7 @@ public class PlanConverter extends AbstractChannelsConverter {
         // All incidents
         for ( Event event : plan.getIncidents() ) {
             writer.startNode( "incident" );
+            writer.addAttribute( "id", Long.toString( event.getId() ) );
             writer.setValue( event.getName() );
             writer.endNode();
         }
@@ -142,7 +143,8 @@ public class PlanConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "event" ) ) {
                 context.convertAnother( plan, Event.class );
             } else if ( nodeName.equals( "incident" ) ) {
-                Event event = queryService.findOrCreate( Event.class, reader.getValue() );
+                String eventId = reader.getAttribute( "id");
+                Event event = findOrCreate( Event.class, reader.getValue(), eventId );
                 plan.addIncident( event );
                 // Scenarios
             } else if ( nodeName.equals( "scenario" ) ) {

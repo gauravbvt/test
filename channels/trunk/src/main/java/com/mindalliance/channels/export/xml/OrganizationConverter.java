@@ -65,12 +65,14 @@ public class OrganizationConverter extends EntityConverter {
         }
         if ( parent != null && !parent.getName().trim().isEmpty() ) {
             writer.startNode( "parent" );
+            writer.addAttribute( "id", Long.toString( parent.getId() ) );
             writer.setValue( parent.getName() );
             writer.endNode();
         }
         Place location = org.getLocation();
         if ( location != null && !location.getName().trim().isEmpty() ) {
             writer.startNode( "location" );
+            writer.addAttribute( "id", Long.toString( location.getId() ) );
             writer.setValue( location.getName() );
             writer.endNode();
         }
@@ -100,9 +102,11 @@ public class OrganizationConverter extends EntityConverter {
         if ( nodeName.equals( "actorsRequired" ) ) {
             org.setActorsRequired( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals( "parent" ) ) {
-            org.setParent( getQueryService().findOrCreate( Organization.class, reader.getValue() ) );
+            String id = reader.getAttribute( "id");
+            org.setParent( findOrCreate( Organization.class, reader.getValue(), id ) );
         } else if ( nodeName.equals( "location" ) ) {
-            org.setLocation( getQueryService().findOrCreate( Place.class, reader.getValue() ) );
+            String id = reader.getAttribute( "id");
+            org.setLocation( findOrCreate( Place.class, reader.getValue(), id ) );
         } else if ( nodeName.equals( "channel" ) ) {
             Channel channel = (Channel) context.convertAnother( scenario, Channel.class );
             org.addChannel( channel );

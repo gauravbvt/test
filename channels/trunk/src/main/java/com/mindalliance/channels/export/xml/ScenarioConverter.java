@@ -85,14 +85,17 @@ public class ScenarioConverter extends AbstractChannelsConverter {
             }
             for ( Event incident : plan.getIncidents() ) {
                 writer.startNode( "incident" );
+                writer.addAttribute( "id", Long.toString( incident.getId() ) );
                 writer.setValue( incident.getName() );
                 writer.endNode();
             }
         }
         // Trigger event
         if ( scenario.getEvent() != null ) {
+            Event event = scenario.getEvent();
             writer.startNode( "trigger-event" );
-            writer.setValue( scenario.getEvent().getName() );
+            writer.addAttribute( "id", Long.toString( event.getId() ) );
+            writer.setValue( event.getName() );
             writer.endNode();
         }
         // Scenario user issues
@@ -161,11 +164,13 @@ public class ScenarioConverter extends AbstractChannelsConverter {
                 context.convertAnother( scenario, Place.class );
                 // Incident
             } else if ( nodeName.equals( "incident" ) ) {
-                Event event = getQueryService().findOrCreate( Event.class, reader.getValue() );
+                String id = reader.getAttribute( "id");
+                Event event = findOrCreate( Event.class, reader.getValue(), id );
                 Channels.getPlan().addIncident( event );
                 // Event
             } else if ( nodeName.equals( "trigger-event" ) ) {
-                Event event = getQueryService().findOrCreate( Event.class, reader.getValue() );
+                String id = reader.getAttribute( "id");
+                Event event = findOrCreate( Event.class, reader.getValue(), id );
                 scenario.setEvent( event );
                 // Parts and flows
             } else if ( nodeName.equals( "part" ) ) {

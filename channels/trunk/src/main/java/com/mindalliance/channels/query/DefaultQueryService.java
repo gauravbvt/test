@@ -374,9 +374,23 @@ public class DefaultQueryService extends Observable implements QueryService {
     public <T extends ModelObject> T findOrCreate( Class<T> clazz, String name, Long id ) {
         if ( name == null || name.isEmpty() )
             return null;
-
-        T result = getDao().find( clazz, name );
+        T result = null;
+        if ( id != null ) {
+            try {
+                result = getDao().find( clazz, id );
+            } catch ( NotFoundException exc ) {
+                // do nothing - reference not yet imported
+            }
+        }
         if ( result == null ) {
+            // Try finding one with the name but already created at a different id during import
+            // because of "forward entity reference"
+            // (e.g. an event was imported that references a location as its scope
+            // before the location is imported)
+            result = getDao().find( clazz, name );
+        }
+        if ( result == null ) {
+            // Create new entity with name
             try {
                 result = clazz.newInstance();
                 result.setName( name );

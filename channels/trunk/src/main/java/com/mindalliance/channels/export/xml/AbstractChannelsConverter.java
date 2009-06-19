@@ -92,6 +92,22 @@ public abstract class AbstractChannelsConverter implements Converter {
     }
 
     /**
+     * Find or create an entity given name and possibly an id.
+     * @param entityClass a class extending ModelObject
+     * @param name a string
+     * @param id a string (null or convertible to a long)
+     * @return a model object
+     */
+    protected <T extends ModelObject> T findOrCreate( Class<T> entityClass, String name, String id ) {
+        if ( id == null ) {
+            LOG.warn( "Recreating referenced " + entityClass.getSimpleName() + " without id");
+            return getQueryService().findOrCreate( entityClass, name );
+        } else {
+            return getQueryService().findOrCreate( entityClass, name, Long.valueOf( id ) );
+        }
+    }
+
+    /**
      * Get idMap from context, initializing it if needed.
      *
      * @param context an unmarshalling context

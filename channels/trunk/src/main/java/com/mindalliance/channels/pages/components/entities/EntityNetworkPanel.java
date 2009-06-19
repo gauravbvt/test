@@ -111,6 +111,7 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
         addFlowsPanel();
     }
 
+
     private void addDiagramSizing() {
         WebMarkupContainer reduceToFit = new WebMarkupContainer( "fit" );
         reduceToFit.add( new AbstractDefaultAjaxBehavior() {

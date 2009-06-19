@@ -112,10 +112,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     private void addRolesMap() {
-        List<GeoLocatable> geoLocatables = new ArrayList<GeoLocatable>();
-        for ( Employment employment : getEmployments() ) {
-            geoLocatables.add( employment );
-        }
+        List<? extends GeoLocatable> geoLocatables = getEmployments();
         rolesMapLink = GeoMapPage.makeLink(
                 "mapLink",
                 geoLocatables );
