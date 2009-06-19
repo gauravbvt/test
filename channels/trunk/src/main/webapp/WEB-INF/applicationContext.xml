@@ -14,15 +14,15 @@
         <property name="dao" ref="dao"/>
         <property name="attachmentManager" ref="attachmentManager"/>
     </bean>
-<!--
-    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-        <property name="targetObject" ref="queryService"/>
-        <property name="targetMethod" value="addObserver"/>
-        <property name="arguments">
-            <list value-type="java.util.Observer"><ref bean="attachmentManager"/></list>
-        </property>
-    </bean>
--->
+    <!--
+        <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+            <property name="targetObject" ref="queryService"/>
+            <property name="targetMethod" value="addObserver"/>
+            <property name="arguments">
+                <list value-type="java.util.Observer"><ref bean="attachmentManager"/></list>
+            </property>
+        </bean>
+    -->
 
     <bean id="serializer" class="com.mindalliance.channels.export.xml.XmlStreamer">
         <property name="version" value="1.0"/>
@@ -35,9 +35,14 @@
         <property name="path" value="uploads/"/>
     </bean>
 
+    <bean id="geoService" class="com.mindalliance.channels.geo.DefaultGeoService">
+        <property name="googleMapsAPIKey"
+                  value="ABQIAAAAOEFNCNhUR4YjTHX0nnN5VRR4EqRj3RNZnoYuzojShxUjcPQKRRSLJekGZYEI4kGxmTTJBHr4EJ6Xpg"/>
+    </bean>
+
     <!-- setup wicket application -->
     <bean id="wicketApplication" class="com.mindalliance.channels.Channels">
-        <property name="googleMapsAPIKey" value="ABQIAAAAOEFNCNhUR4YjTHX0nnN5VRR4EqRj3RNZnoYuzojShxUjcPQKRRSLJekGZYEI4kGxmTTJBHr4EJ6Xpg" />
+        <property name="geoService" ref="geoService"/>
         <property name="attachmentManager" ref="attachmentManager"/>
         <property name="importer" ref="serializer"/>
         <property name="exporter" ref="serializer"/>
@@ -80,8 +85,8 @@
                     <property name="queryService" ref="queryService"/>
                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.ScenarioWithoutManagedRisk">
-                     <property name="queryService" ref="queryService"/>
-                 </bean>
+                    <property name="queryService" ref="queryService"/>
+                </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.StartedOrTerminatedPartWithoutTask">
                     <property name="queryService" ref="queryService"/>
                 </bean>
@@ -97,7 +102,9 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.InvalidChannel">
                     <property name="queryService" ref="queryService"/>
                 </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.UnnamedFlow"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.UnnamedFlow">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedSource">
                     <property name="queryService" ref="queryService"/>
                 </bean>
@@ -120,6 +127,7 @@
                     <property name="queryService" ref="queryService"/>
                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowViolatesPolicy">
+                    <property name="attachmentManager" ref="attachmentManager"/>
                     <property name="queryService" ref="queryService"/>
                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.UnconfirmedJob">
@@ -129,8 +137,9 @@
                     <property name="queryService" ref="queryService"/>
                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.GeonameButNoLocation">
-                     <property name="queryService" ref="queryService"/>
-                 </bean>
+                    <property name="geoService" ref="geoService"/>
+                    <property name="queryService" ref="queryService"/>
+                </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.PartWithRoleWithNoKnownActor">
                     <property name="queryService" ref="queryService"/>
                 </bean>
@@ -171,6 +180,7 @@
                     <property name="queryService" ref="queryService"/>
                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.UnverifiedPostalCode">
+                    <property name="geoService" ref="geoService"/>
                     <property name="queryService" ref="queryService"/>
                 </bean>
             </list>

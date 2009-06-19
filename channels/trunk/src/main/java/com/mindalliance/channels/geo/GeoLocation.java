@@ -1,4 +1,4 @@
-package com.mindalliance.channels.model;
+package com.mindalliance.channels.geo;
 
 import org.geonames.InsufficientStyleException;
 import org.geonames.Toponym;

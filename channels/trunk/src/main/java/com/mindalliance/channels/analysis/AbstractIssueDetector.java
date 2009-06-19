@@ -1,6 +1,7 @@
 package com.mindalliance.channels.analysis;
 
 import com.mindalliance.channels.AttachmentManager;
+import com.mindalliance.channels.GeoService;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
@@ -23,9 +24,17 @@ public abstract class AbstractIssueDetector implements IssueDetector {
      */
     private static final Logger LOG = LoggerFactory.getLogger( AbstractIssueDetector.class );
     /**
-     * A query service
+     * A query service.
      */
     private QueryService queryService;
+    /**
+     * A geo service.
+     */
+    private GeoService geoService;
+    /**
+     * Attachment manager.
+     */
+    private AttachmentManager attachmentManager;
 
     /**
      * {@inheritDoc}
@@ -79,15 +88,21 @@ public abstract class AbstractIssueDetector implements IssueDetector {
         return queryService;
     }
 
-    /**
-     * Get attachment manager.
-     *
-     * @return an attachment manager
-     */
-    protected AttachmentManager getAttachmentManager() {
-        return queryService.getChannels().getAttachmentManager();
+    public AttachmentManager getAttachmentManager() {
+        return attachmentManager;
     }
 
+    public void setAttachmentManager( AttachmentManager attachmentManager ) {
+        this.attachmentManager = attachmentManager;
+    }
+
+    public GeoService getGeoService() {
+        return geoService;
+    }
+
+    public void setGeoService( GeoService geoService ) {
+        this.geoService = geoService;
+    }
 
     /**
      * Make detected issue.

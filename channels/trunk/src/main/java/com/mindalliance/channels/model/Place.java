@@ -1,24 +1,14 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.GeoLocatable;
+import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.GeoService;
 import com.mindalliance.channels.QueryService;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
-import org.apache.commons.lang.StringUtils;
-import org.geonames.PostalCode;
-import org.geonames.PostalCodeSearchCriteria;
-import org.geonames.Style;
-import org.geonames.Toponym;
-import org.geonames.ToponymSearchCriteria;
-import org.geonames.ToponymSearchResult;
-import org.geonames.WebService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.mindalliance.channels.geo.GeoLocatable;
+import com.mindalliance.channels.geo.GeoLocation;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,10 +18,6 @@ import java.util.List;
 public class Place extends ModelObject implements GeoLocatable {
 
     /**
-     * Logger.
-     */
-    private static final Logger LOG = LoggerFactory.getLogger( Place.class );
-    /**
      * Bogus place used to signify that the place is not known...
      */
     public static final Place UNKNOWN;
@@ -40,10 +26,6 @@ public class Place extends ModelObject implements GeoLocatable {
      */
     public static final String UnknownPlaceName = "(unknown)";
 
-    /**
-     * Maximum number fo results retrieved from geonames per search.
-     */
-    private static final int MAX_SEARCH_ROWS = 10;
     /**
      * Street address.
      */
@@ -108,29 +90,11 @@ public class Place extends ModelObject implements GeoLocatable {
         super.setName( val );
     }
 
-    private boolean isLikelyGeoname( String val ) {
-        if ( val == null || val.isEmpty() || val.equals( Place.UnknownPlaceName ) ) return false;
-        List<GeoLocation> geoLocs = findGeoLocations( val );
-        final List<String> geonameTokens = Arrays.asList( StringUtils.split( val, ",. :;-'\"" ) );
-        if ( geoLocs.isEmpty() ) return false;
-        GeoLocation match = (GeoLocation) CollectionUtils.find(
-                geoLocs,
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        List<String> geoLocTokens = Arrays.asList( StringUtils.split(
-                                obj.toString(),
-                                ",. :;-'\"" ) );
-                        return !CollectionUtils.intersection( geonameTokens, geoLocTokens ).isEmpty();
-                    }
-                } );
-        return match != null;
-    }
-
     @Transient
     public List<GeoLocation> getGeoLocations() {
         String gn = getGeoname();
         if ( geoLocations == null && gn != null && !gn.isEmpty() ) {
-            geoLocations = findGeoLocations( gn );
+            geoLocations = getGeoService().findGeoLocations( gn );
         }
         return geoLocations;
     }
@@ -160,32 +124,6 @@ public class Place extends ModelObject implements GeoLocatable {
         this.geoLocation = geoLocation;
     }
 
-    // Search geonames.org
-
-    private List<GeoLocation> findGeoLocations( String name ) {
-        List<String> geoLocStrings = new ArrayList<String>();
-        List<GeoLocation> results = new ArrayList<GeoLocation>();
-        try {
-            ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
-            searchCriteria.setQ( name );
-            searchCriteria.setStyle( Style.FULL );
-            searchCriteria.setMaxRows( MAX_SEARCH_ROWS );
-            ToponymSearchResult searchResult = WebService.search( searchCriteria );
-            LOG.debug( "Found " + searchResult.getTotalResultsCount() + " toponyms for " + name );
-            for ( Toponym topo : searchResult.getToponyms() ) {
-                GeoLocation geoLoc = new GeoLocation( topo );
-                String s = geoLoc.toString();
-                if ( !geoLocStrings.contains( s ) ) {
-                    results.add( geoLoc );
-                    geoLocStrings.add( s );
-                }
-            }
-        } catch ( Exception e ) {
-            LOG.warn( "Geonames search failed.", e );
-        }
-        return results;
-    }
-
     public String getStreetAddress() {
         return streetAddress;
     }
@@ -199,7 +137,7 @@ public class Place extends ModelObject implements GeoLocatable {
         if ( geoname == null ) {
             if ( name != null
                     && !name.trim().isEmpty()
-                    && isLikelyGeoname( name ) ) {
+                    && getGeoService().isLikelyGeoname( name ) ) {
                 geoname = name;
             } else {
                 geoname = "";
@@ -225,36 +163,6 @@ public class Place extends ModelObject implements GeoLocatable {
     public void addGeoLocation( GeoLocation geoLocation ) {
         if ( geoLocations == null ) geoLocations = new ArrayList<GeoLocation>();
         geoLocations.add( geoLocation );
-    }
-
-    /**
-     * Verify the postal code.
-     *
-     * @return a boolean
-     */
-    public boolean verifyPostalCode() {
-        if ( postalCode.isEmpty() || geoLocation == null ) return false;
-        try {
-            PostalCodeSearchCriteria criteria = new PostalCodeSearchCriteria();
-//            criteria.setCountryCode( geoLocation.getCountryCode() );
-//            criteria.setAdminCode1( geoLocation.getStateCode() );
-            criteria.setLatitude( geoLocation.getLatitude() );
-            criteria.setLongitude( geoLocation.getLongitude() );
-            // criteria.setPostalCode( postalCode );
-            criteria.setStyle( Style.FULL );
-            List<PostalCode> postalCodes = WebService.findNearbyPostalCodes( criteria );
-            PostalCode match = (PostalCode) CollectionUtils.find(
-                    postalCodes,
-                    new Predicate() {
-                        public boolean evaluate( Object obj ) {
-                            return ( (PostalCode) obj ).getPostalCode().equals( postalCode );
-                        }
-                    } );
-            return match != null;
-        } catch ( Exception e ) {
-            LOG.warn( "Failed to verify postal code " + postalCode + " in " + geoLocation, e );
-            return false;
-        }
     }
 
     /**
@@ -295,6 +203,10 @@ public class Place extends ModelObject implements GeoLocatable {
      */
     public boolean hasLatLong() {
         return geoLocation != null;
+    }
+
+    private GeoService getGeoService() {
+        return Channels.instance().getGeoService();
     }
 
 }

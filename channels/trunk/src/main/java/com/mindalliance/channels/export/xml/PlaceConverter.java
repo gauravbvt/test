@@ -1,7 +1,7 @@
 package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.Exporter;
-import com.mindalliance.channels.model.GeoLocation;
+import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Place;
 import com.thoughtworks.xstream.converters.MarshallingContext;

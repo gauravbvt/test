@@ -1,6 +1,4 @@
-package com.mindalliance.channels;
-
-import com.mindalliance.channels.model.GeoLocation;
+package com.mindalliance.channels.geo;
 
 import java.io.Serializable;
 

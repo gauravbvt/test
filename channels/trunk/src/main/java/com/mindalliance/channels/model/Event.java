@@ -1,6 +1,7 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.GeoLocatable;
+import com.mindalliance.channels.geo.GeoLocatable;
+import com.mindalliance.channels.geo.GeoLocation;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;

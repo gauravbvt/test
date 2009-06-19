@@ -1,7 +1,8 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.GeoLocatable;
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.geo.GeoLocatable;
+import com.mindalliance.channels.geo.GeoLocation;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 

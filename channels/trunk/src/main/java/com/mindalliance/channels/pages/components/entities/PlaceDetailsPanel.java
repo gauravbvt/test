@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.model.GeoLocation;
+import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.pages.GeoMapPage;

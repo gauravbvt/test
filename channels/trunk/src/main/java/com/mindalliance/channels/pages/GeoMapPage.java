@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.GeoLocatable;
+import com.mindalliance.channels.GeoService;
 import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.model.GeoLocation;
+import com.mindalliance.channels.geo.GeoLocatable;
+import com.mindalliance.channels.geo.GeoLocation;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
@@ -48,7 +48,11 @@ public class GeoMapPage extends WebPage {
      */
     @SpringBean
     private QueryService queryService;
-
+    /**
+     * The geo service
+     */
+    @SpringBean
+    private GeoService geoService;
 
     private List<GeoMarker> geoMarkers;
 
@@ -106,9 +110,8 @@ public class GeoMapPage extends WebPage {
         return sb.toString();
     }
 
-    public String getGoogleMapsAPIkey
-            () {
-        return Channels.instance().getGoogleMapsAPIKey();
+    private String getGoogleMapsAPIkey() {
+        return geoService.getGoogleMapsAPIKey();
     }
 
     public static BookmarkablePageLink<GeoMapPage> makeLink( String id, GeoLocatable geo ) {
@@ -189,7 +192,7 @@ public class GeoMapPage extends WebPage {
                     }
                     labels.add( label );
                     sb.append( labels.size() );
-                    sb.append( ". ");
+                    sb.append( ". " );
                     sb.append( label );
                 }
             }

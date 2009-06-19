@@ -62,10 +62,6 @@ public final class Channels extends WebApplication implements ApplicationListene
      * The official manager of attachements.
      */
     private AttachmentManager attachmentManager;
-    /**
-     * Google map's API key.
-     */
-    private String googleMapsAPIKey;
 
     /**
      * Scenario importer.
@@ -81,6 +77,10 @@ public final class Channels extends WebApplication implements ApplicationListene
      * Analyst
      */
     private Analyst analyst;
+    /**
+     * GeoService
+     */
+    private GeoService geoService;
 
     /**
      * One commander per plan
@@ -160,14 +160,6 @@ public final class Channels extends WebApplication implements ApplicationListene
     protected void onDestroy() {
         LOG.info( "Goodbye!" );
         queryService.onDestroy();
-    }
-
-    public String getGoogleMapsAPIKey() {
-       return googleMapsAPIKey;
-    }
-
-    public void setGoogleMapsAPIKey( String googleMapsAPIKey ) {
-        this.googleMapsAPIKey = googleMapsAPIKey;
     }
 
     @Override
@@ -353,5 +345,13 @@ public final class Channels extends WebApplication implements ApplicationListene
                        + ";session=" + session );
         }
 
+    }
+
+    public GeoService getGeoService() {
+        return geoService;
+    }
+
+    public void setGeoService( GeoService geoService ) {
+        this.geoService = geoService;
     }
 }

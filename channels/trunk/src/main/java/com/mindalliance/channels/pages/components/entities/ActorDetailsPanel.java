@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.GeoLocatable;
+import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channelable;
 import com.mindalliance.channels.model.Identifiable;

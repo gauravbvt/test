@@ -1,8 +1,8 @@
 package com.mindalliance.channels.util;
 
-import com.mindalliance.channels.GeoLocatable;
+import com.mindalliance.channels.geo.GeoLocatable;
+import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.GeoLocation;
 import com.mindalliance.channels.model.Job;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;

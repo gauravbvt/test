@@ -36,7 +36,7 @@ public class UnverifiedPostalCode extends AbstractIssueDetector {
                 issue.setRemediation( "Make sure the geoname is set and valid, and choose a geolocation." );
                 issues.add( issue );
             } else {
-                if ( !place.verifyPostalCode() ) {
+                if ( !getGeoService().verifyPostalCode( place.getPostalCode(), place.getGeoLocation() ) ) {
                     Issue issue = makeIssue( Issue.VALIDITY, place, getTestedProperty() );
                     issue.setSeverity( Issue.Level.Minor );
                     issue.setDescription( "Can't verify the postal code for the geolocation." );
