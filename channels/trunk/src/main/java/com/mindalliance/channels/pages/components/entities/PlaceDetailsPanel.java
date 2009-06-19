@@ -5,6 +5,7 @@ import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.GeoLocation;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -14,6 +15,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
@@ -222,6 +224,8 @@ public class PlaceDetailsPanel extends EntityDetailsPanel {
                 }
             } );
             add( selectionCheckBox );
+            BookmarkablePageLink<GeoMapPage> geomapLink = GeoMapPage.makeLink( "mapLink", geoLocation );
+            add( geomapLink );
         }
 
         /**

@@ -1,5 +1,6 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.GeoLocatable;
 import com.mindalliance.channels.command.MappedObject;
 
 import javax.persistence.Entity;
@@ -17,7 +18,7 @@ import java.io.Serializable;
  * Time: 3:17:00 PM
  */
 @Entity
-public class Job implements Serializable, Mappable {
+public class Job implements Serializable, Mappable, GeoLocatable {
 
     /**
      * An actor.
@@ -174,8 +175,7 @@ public class Job implements Serializable, Mappable {
         Actor actor = resourceSpec.getActor();
         Role role = resourceSpec.getRole();
         Place jurisdiction = resourceSpec.getJurisdiction();
-        Organization organization = resourceSpec.getOrganization();
-        if ( actor == null || role == null/* || organization == null*/ )
+        if ( actor == null || role == null )
             return null;
         else
             return new Job(
@@ -216,5 +216,22 @@ public class Job implements Serializable, Mappable {
         mappedObject.set( "title", title );
         return mappedObject;
     }
+
+    /**
+      * {@inheritDoc}
+      */
+     @Transient
+    public GeoLocation getGeoLocation() {
+        return jurisdiction != null ? jurisdiction.getGeoLocation() : null;
+    }
+
+    /**
+      * {@inheritDoc}
+      */
+     @Transient
+    public String getGeoMarkerLabel() {
+        return jurisdiction != null ? jurisdiction.getGeoMarkerLabel() : "";
+    }
+
 
 }

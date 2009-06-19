@@ -1,5 +1,7 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.GeoLocatable;
+
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
@@ -12,7 +14,7 @@ import javax.persistence.Transient;
  * Time: 3:49:53 PM
  */
 @Entity
-public class Event extends ModelObject {
+public class Event extends ModelObject implements GeoLocatable {
     /**
      * Where the event is considered to occur.
      * Null means that its scope is universal.
@@ -62,4 +64,19 @@ public class Event extends ModelObject {
         return true;
     }
 
+    /**
+      * {@inheritDoc}
+      */
+     @Transient
+    public GeoLocation getGeoLocation() {
+        return scope != null ? scope.getGeoLocation() : null;
+    }
+
+    /**
+      * {@inheritDoc}
+      */
+     @Transient
+    public String getGeoMarkerLabel() {
+        return scope != null ? scope.getGeoMarkerLabel() : "";
+    }
 }

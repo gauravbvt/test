@@ -1,5 +1,6 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.GeoLocatable;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.util.SemMatch;
 import org.apache.commons.collections.Predicate;
@@ -22,7 +23,7 @@ import java.util.List;
  * A part in a scenario.
  */
 @Entity
-public class Part extends Node {
+public class Part extends Node implements GeoLocatable {
 
     /**
      * Default actor label, when unknown.
@@ -579,5 +580,20 @@ public class Part extends Node {
         return jurisdiction == null ? Place.UNKNOWN : jurisdiction;
     }
 
+    /**
+      * {@inheritDoc}
+      */
+     @Transient
+    public GeoLocation getGeoLocation() {
+        return location != null ? location.getGeoLocation() : null;
+    }
 
+    /**
+      * {@inheritDoc}
+      */
+     @Transient
+    public String getGeoMarkerLabel() {
+        return getTitle();
+    }
+   
 }

@@ -1,5 +1,6 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.GeoLocatable;
 import com.mindalliance.channels.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -18,7 +19,7 @@ import java.util.List;
  * A company, agency, social club, etc.
  */
 @Entity
-public class Organization extends AbstractUnicastChannelable {
+public class Organization extends AbstractUnicastChannelable implements GeoLocatable {
 
     /**
      * Parent organization. May be null.
@@ -208,5 +209,22 @@ public class Organization extends AbstractUnicastChannelable {
     public boolean isUndefined() {
         return super.isUndefined() && parent == null && location == null && jobs.isEmpty();
     }
+
+    /**
+      * {@inheritDoc}
+      */
+     @Transient
+    public GeoLocation getGeoLocation() {
+        return location != null ? location.getGeoLocation() : null;
+    }
+
+    /**
+      * {@inheritDoc}
+      */
+     @Transient
+    public String getGeoMarkerLabel() {
+        return location != null ? location.getGeoMarkerLabel() : "";
+    }
+    
 }
 

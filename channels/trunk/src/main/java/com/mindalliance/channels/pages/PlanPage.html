@@ -11,6 +11,9 @@
 <form wicket:id="big-form" class="stretch" action="#">
     <div class="header">
         <h1><span wicket:id="header">Title</span></h1>
+        <a wicket:id="mapLink" href="#">
+            <img src="images/map.png" alt="map" style="border:0" title="Show tasks in map"/>
+        </a>
         <span class="menubar">
             <span wicket:id="planShowMenu">[show menu]</span>
             <span wicket:id="planActionsMenu">[action menu]</span>
@@ -19,7 +22,7 @@
             <img src="images/refresh_needed.png" alt="Refresh needed"/>
         </span>
         <span id="spinner" class="spinner"><img src="images/ajax-loader.gif"></span>
-        <p class="caption" wicket:id="sc-desc">A description.</p>
+        <p class="caption" wicket:id="sc-desc">A description.</p>     
     </div>
     <div id="controls">
         <ul id="sc-sel">
@@ -35,7 +38,6 @@
     <span wicket:id="entity">[entity panel]</span>
     <span wicket:id="scenario">[scenario edit panel] </span>
     <span wicket:id="plan">[plan edit panel] </span>
-
     <div id="footer">
         <hr>
         <p id="logout">Logged in as <span wicket:id="user">User</span> &mdash; <a href="logout">Logout</a><br>

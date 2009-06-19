@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Commander;
+import com.mindalliance.channels.GeoLocatable;
 import com.mindalliance.channels.Importer;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
@@ -40,6 +41,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.Model;
@@ -60,8 +62,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 
 /**
  * The plan's home page.
@@ -118,7 +122,10 @@ public final class PlanPage extends WebPage implements Updatable {
      * Label with name of scenario.
      */
     private Label scenarioNameLabel;
-
+    /**
+     * Link to mapping of parts.
+     */
+    private BookmarkablePageLink<GeoMapPage> partsMapLink;
     /**
      * Label with description of scenario.
      */
@@ -292,6 +299,9 @@ public final class PlanPage extends WebPage implements Updatable {
         // Add style mods from scenario analyst.
         annotateScenarioName();
         form.add( scenarioNameLabel );
+        // Add link to map of parts
+        addPartsMapLink();
+        // Scenario description
         scenarioDescriptionLabel = new Label( "sc-desc",                                  // NON-NLS
                 new AbstractReadOnlyModel<String>() {
                     @Override
@@ -305,6 +315,19 @@ public final class PlanPage extends WebPage implements Updatable {
         scenarioDescriptionLabel.setOutputMarkupId( true );
         form.add( scenarioDescriptionLabel );
         form.add( new Label( "user", user.getName() ) );                                  // NON-NLS
+    }
+
+    private void addPartsMapLink() {
+        List<GeoLocatable> geoLocatables = new ArrayList<GeoLocatable>();
+        Iterator<Part> parts = getScenario().parts();
+        while ( parts.hasNext() ) {
+            geoLocatables.add( parts.next() );
+        }
+        partsMapLink = GeoMapPage.makeLink(
+                "mapLink",
+                geoLocatables );
+        partsMapLink.setOutputMarkupId( true );
+        form.addOrReplace( partsMapLink );
     }
 
     private void addRefresh() {
@@ -1045,6 +1068,8 @@ public final class PlanPage extends WebPage implements Updatable {
             ( (PlanEditPanel) planEditPanel ).refresh( target );
         updateRefreshNotice();
         target.addComponent( refreshNeededContainer );
+        addPartsMapLink();
+        target.addComponent( partsMapLink );
         getCommander().clearTimeOut();
     }
 

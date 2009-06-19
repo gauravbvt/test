@@ -280,7 +280,8 @@ public class GeoLocation implements Serializable {
     public boolean equals( Object obj ) {
         return this == obj
                 || obj instanceof GeoLocation
-                && geonameId == ( (GeoLocation) obj ).getGeonameId();
+                && longitude == ( (GeoLocation) obj ).getLongitude()
+                && latitude == ( (GeoLocation) obj ).getLatitude();
     }
 
     /**
@@ -288,7 +289,12 @@ public class GeoLocation implements Serializable {
      */
     @Override
     public int hashCode() {
-        return Integer.valueOf( geonameId ).hashCode();
+        int hash = 1;
+        hash = hash * 31 + Double.toString(longitude).hashCode();
+        hash = hash * 31 + Double.toString(latitude).hashCode();
+        return hash;
     }
+
+
 
 }

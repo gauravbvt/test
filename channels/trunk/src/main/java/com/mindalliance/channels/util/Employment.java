@@ -1,6 +1,8 @@
 package com.mindalliance.channels.util;
 
+import com.mindalliance.channels.GeoLocatable;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.GeoLocation;
 import com.mindalliance.channels.model.Job;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
@@ -20,7 +22,7 @@ import java.io.Serializable;
 /**
  * An actor's job in an organization (or with no job).
  */
-public class Employment implements Serializable {
+public class Employment implements Serializable, GeoLocatable {
 
     private Actor actor;
     private Organization organization;
@@ -103,4 +105,20 @@ public class Employment implements Serializable {
         }
         return sb.toString();
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public GeoLocation getGeoLocation() {
+        return organization.getGeoLocation();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getGeoMarkerLabel() {
+        return organization.getGeoMarkerLabel();
+    }
+
+ 
 }

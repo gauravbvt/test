@@ -178,14 +178,7 @@ public class EntityPanel extends AbstractMultiAspectPanel {
     }
 
     private Component getEntityMapPanel() {
-        if ( getObject() instanceof Place ) {
-            return new PlaceMapPanel(
-                    "aspect",
-                    new PropertyModel<ModelObject>( this, "object" ),
-                    getExpansions() );
-        } else {
-            return new Label( "aspect", "Under construction" );
-        }
+        return new Label( "aspect", "Under construction" );
     }
 
     private Component getEntityIssuesPanel() {
@@ -209,6 +202,9 @@ public class EntityPanel extends AbstractMultiAspectPanel {
     public void updateWith( AjaxRequestTarget target, Change change ) {
         if ( change.getSubject() instanceof UserIssue ) {
             setAspectShown( target, "issues" );
+        } else if ( change.isUpdated() && change.getProperty().equals( "geoLocation" ) ) {
+            addShowMenu();
+            target.addComponent( getShowMenu() );
         }
         super.updateWith( target, change );
     }

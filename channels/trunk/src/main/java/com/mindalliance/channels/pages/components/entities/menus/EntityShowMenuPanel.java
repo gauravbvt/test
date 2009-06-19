@@ -1,14 +1,17 @@
 package com.mindalliance.channels.pages.components.entities.menus;
 
+import com.mindalliance.channels.GeoLocatable;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -57,15 +60,32 @@ public class EntityShowMenuPanel extends MenuPanel {
                     new Model<String>( "Network" ),
                     networkLink ) );
         }
-        Link mapLink = new AjaxFallbackLink( "link" ) {
-            public void onClick( AjaxRequestTarget target ) {
-                changeAspectTo( target, "map" );
+        // Map
+        if ( getEntity() instanceof GeoLocatable ) {
+            GeoLocatable geo = (GeoLocatable)getEntity();
+            BookmarkablePageLink<GeoMapPage> geomapLink = GeoMapPage.makeLink(
+                    "link",
+                    geo );
+            if ( geo.getGeoLocation() == null ) {
+                geomapLink.setEnabled( false );
             }
-        };
-        menuItems.add( new LinkMenuItem(
-                "menuItem",
-                new Model<String>( "Map" ),
-                mapLink ) );
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Map" ),
+                    geomapLink ) );
+        }
+
+        /*       Link mapLink = new AjaxFallbackLink( "link" ) {
+                    public void onClick( AjaxRequestTarget target ) {
+                        changeAspectTo( target, "map" );
+                    }
+                };
+                menuItems.add( new LinkMenuItem(
+                        "menuItem",
+                        new Model<String>( "Map" ),
+                        mapLink ) );
+
+        */
         if ( !( getEntity() instanceof Event ) ) {
             Link issuesLink = new AjaxFallbackLink( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {

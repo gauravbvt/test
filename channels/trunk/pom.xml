@@ -323,7 +323,7 @@
         <dependency>
             <groupId>org.wicketstuff</groupId>
             <artifactId>wicket-contrib-gmap2</artifactId>
-            <version>1.4-SNAPSHOT</version>
+            <version>${wicket.version}</version>
         </dependency>
 
         <!--  JUNIT DEPENDENCY FOR TESTING -->

@@ -5,6 +5,7 @@ import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.pages.ErrorPage;
 import com.mindalliance.channels.pages.ExpiredPage;
 import com.mindalliance.channels.pages.ExportPage;
+import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.LoginPage;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.UploadPage;
@@ -46,6 +47,7 @@ public final class Channels extends WebApplication implements ApplicationListene
      * Class logger.
      */
     public static final Logger LOG = LoggerFactory.getLogger( Channels.class );
+    
     /**
      * The underlying service.
      */
@@ -146,6 +148,7 @@ public final class Channels extends WebApplication implements ApplicationListene
         mount( new QueryStringUrlCodingStrategy( "scenario.png", FlowMapPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "plan.png", PlanMapPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "network.png", EntityNetworkPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "geomap.html", GeoMapPage.class ) );
 
         getApplicationSettings().setInternalErrorPage( ErrorPage.class );
         getApplicationSettings().setPageExpiredErrorPage( ExpiredPage.class );
@@ -160,7 +163,7 @@ public final class Channels extends WebApplication implements ApplicationListene
     }
 
     public String getGoogleMapsAPIKey() {
-        return googleMapsAPIKey;
+       return googleMapsAPIKey;
     }
 
     public void setGoogleMapsAPIKey( String googleMapsAPIKey ) {

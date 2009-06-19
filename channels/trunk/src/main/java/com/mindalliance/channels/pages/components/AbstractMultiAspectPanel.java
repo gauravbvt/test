@@ -104,12 +104,16 @@ abstract public class AbstractMultiAspectPanel extends AbstractCommandablePanel 
             }
         };
         banner.add( closeLink );
-        showMenu = makeShowMenu( "showMenu" );
-        showMenu.setOutputMarkupId( true );
-        banner.add( showMenu );
+        addShowMenu();
         addActionsMenu();
         showAspect( aspectShown );
         adjustComponents();
+    }
+
+    protected void addShowMenu() {
+        showMenu = makeShowMenu( "showMenu" );
+        showMenu.setOutputMarkupId( true );
+        banner.addOrReplace( showMenu );
     }
 
     private void addActionsMenu() {
@@ -310,6 +314,9 @@ abstract public class AbstractMultiAspectPanel extends AbstractCommandablePanel 
         target.addComponent( showMenu );
     }
 
+    public MenuPanel getShowMenu() {
+        return showMenu;
+    }
 
     /**
      * {@inheritDoc}

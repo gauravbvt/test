@@ -1,11 +1,13 @@
 package com.mindalliance.channels.pages.components.entities;
 
+import com.mindalliance.channels.GeoLocatable;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channelable;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.pages.components.Filterable;
@@ -23,6 +25,7 @@ import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFal
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -85,6 +88,10 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
      * Container to add components to.
      */
     private WebMarkupContainer moDetailsDiv;
+    /**
+     * Link to geomap page showing all unfiltered roles in map.
+     */
+    private BookmarkablePageLink<GeoMapPage> rolesMapLink;
 
     public ActorDetailsPanel( String id, IModel<? extends ModelObject> model, Set<Long> expansions ) {
         super( id, model, expansions );
@@ -98,9 +105,21 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         moDetailsDiv.add( new ChannelListPanel(
                 "channels",
                 new Model<Channelable>( (Actor) getEntity() ) ) );
+        addRolesMap();
         addIndexedOnChoice();
         addNameRangePanel();
         addActorEmploymentTable();
+    }
+
+    private void addRolesMap() {
+        List<GeoLocatable> geoLocatables = new ArrayList<GeoLocatable>();
+        for ( Employment employment : getEmployments() ) {
+            geoLocatables.add( employment );
+        }
+        rolesMapLink = GeoMapPage.makeLink(
+                "mapLink",
+                geoLocatables );
+        moDetailsDiv.addOrReplace( rolesMapLink );
     }
 
     private void addIndexedOnChoice() {
@@ -115,6 +134,8 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 addActorEmploymentTable();
                 target.addComponent( nameRangePanel );
                 target.addComponent( actorEmploymentTable );
+                addRolesMap();
+                target.addComponent( rolesMapLink );
             }
         } );
         moDetailsDiv.add( indexedOnChoices );
@@ -182,6 +203,8 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         nameRangePanel.setSelected( target, range );
         addActorEmploymentTable();
         target.addComponent( actorEmploymentTable );
+        addRolesMap();
+        target.addComponent( rolesMapLink );
     }
 
     /**
@@ -301,6 +324,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
             init();
         }
 
+        @SuppressWarnings( "unchecked" )
         private void init() {
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns

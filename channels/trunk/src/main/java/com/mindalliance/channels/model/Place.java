@@ -1,5 +1,6 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.GeoLocatable;
 import com.mindalliance.channels.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -24,7 +25,7 @@ import java.util.List;
  * A location or jurisdiction.
  */
 @Entity
-public class Place extends ModelObject {
+public class Place extends ModelObject implements GeoLocatable {
 
     /**
      * Logger.
@@ -75,6 +76,14 @@ public class Place extends ModelObject {
     public Place( String name ) {
         this();
         setName( name );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    public String getGeoMarkerLabel() {
+        return getName();
     }
 
     /**
