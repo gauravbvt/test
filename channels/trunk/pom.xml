@@ -9,6 +9,7 @@
     <version>1.0-SNAPSHOT</version>
     <name>Channels</name>
     <description>Channels is an information flow modeling tool.</description>
+    <url>https://channels.mind-alliance.net</url>
     <organization>
         <name>Mind-Alliance Systems LLC</name>
         <url>http://www.mind-alliance.com</url>
@@ -54,7 +55,7 @@
     </issueManagement>
     <ciManagement>
         <system>Hudson</system>
-        <url>https://ranger.homelinux.net:8443/hudson/job/channels/</url>
+        <url>/hudson/job/channels/</url>
     </ciManagement>
     <scm>
         <developerConnection>scm:svn:https://wush.net/svn/mindalliance/channels/trunk
