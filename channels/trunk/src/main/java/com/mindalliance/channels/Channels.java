@@ -47,7 +47,7 @@ public final class Channels extends WebApplication implements ApplicationListene
      * Class logger.
      */
     public static final Logger LOG = LoggerFactory.getLogger( Channels.class );
-    
+
     /**
      * The underlying service.
      */
@@ -141,7 +141,7 @@ public final class Channels extends WebApplication implements ApplicationListene
 
         mount( new IndexedParamUrlCodingStrategy( "playbook", PlanReportPage.class ) );
         mount( new IndexedParamUrlCodingStrategy( "uploads", UploadPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "static/login.html", LoginPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "login.html", LoginPage.class ) );
 
         mount( new QueryStringUrlCodingStrategy( "plan.html", PlanPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.xml", ExportPage.class ) );

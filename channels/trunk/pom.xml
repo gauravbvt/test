@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
     <name>Channels</name>
     <description>Channels is an information flow modeling tool.</description>
-    <url>https://channels.mind-alliance.net</url>
+    <url>https://channels.mind-alliance.org</url>
     <organization>
         <name>Mind-Alliance Systems LLC</name>
         <url>http://www.mind-alliance.com</url>
@@ -427,6 +427,7 @@
                 <artifactId>tomcat-maven-plugin</artifactId>
                 <configuration>
                     <server>tomcat</server>
+                    <path>/</path>
                 </configuration>
             </plugin>
             <plugin>
@@ -451,7 +452,6 @@
                         <configuration>
                             <server>tomcat</server>
                             <url>http://localhost:80/manager</url>
-                            <path>/</path>
                         </configuration>
                     </plugin>
                 </plugins>

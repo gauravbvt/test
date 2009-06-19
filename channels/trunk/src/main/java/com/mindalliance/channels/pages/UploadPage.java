@@ -7,6 +7,7 @@ import org.apache.wicket.Response;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.servlet.AbortWithHttpStatusException;
+import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
@@ -34,7 +35,7 @@ public class UploadPage extends Page {
 
         String filename = parameters.getString( "0" );
         if ( filename == null )
-            throw new AbortWithHttpStatusException( 403, false );
+            throw new AbortWithWebErrorCodeException( 403 );
 
         file = new File( attachmentManager.getUploadDirectory(), filename );
         if ( file.exists() ) {

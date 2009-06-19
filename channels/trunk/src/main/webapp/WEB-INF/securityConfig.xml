@@ -22,6 +22,7 @@
                 /static/**=#NONE#
                 /images/**=#NONE#
                 /resources/**=#NONE#
+                /login.html=#NONE#
                 /**=httpSessionContextIntegrationFilter,rememberMeFilter,loginFilter,logoutFilter,exceptionFilter,securityInterceptor
             </value>
         </property>
@@ -65,7 +66,7 @@
     </bean>
 
     <bean id="filterEP" class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint">
-        <property name="loginFormUrl" value="/static/login.html"/>
+        <property name="loginFormUrl" value="/login.html"/>
     </bean>
 
     <bean id="exceptionFilter" class="org.acegisecurity.ui.ExceptionTranslationFilter">
