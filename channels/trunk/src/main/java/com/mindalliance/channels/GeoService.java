@@ -2,6 +2,7 @@ package com.mindalliance.channels;
 
 import com.mindalliance.channels.geo.GeoLocation;
 
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -38,6 +39,24 @@ public interface GeoService extends Service {
      * @return a boolean
      */
     boolean verifyPostalCode( final String postalCode, GeoLocation geoLocation );
+
+    /**
+     * Refine latlong values  from Google geocoder if address or postal code known.
+     *
+     * @param geoLocation   a geolocation
+     * @param streetAddress street address
+     * @param postalCode    postal code
+     */
+    void refineWithAddress( GeoLocation geoLocation, String streetAddress, String postalCode );
+
+    /**
+     * Get CSV result from Google geocoder: "http_code,precision,lat,long".
+     * Example: 200,6,42.730070,-73.690570
+     *
+     * @param restUrl a URL
+     * @return a string
+     */
+    String getGeoCoding( URL restUrl );
 
     /**
      * Get Google map API key.

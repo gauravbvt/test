@@ -594,7 +594,13 @@ public class Part extends Node implements GeoLocatable {
       */
      @Transient
     public String getGeoMarkerLabel() {
-        return getTitle();
+        StringBuilder sb = new StringBuilder();
+        sb.append( getTitle() );
+        if ( location != null ) {
+            sb.append(" at ");
+            sb.append( getLocation().getName() ) ;
+        }
+        return sb.toString();
     }
    
 }

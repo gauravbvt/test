@@ -19,6 +19,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
@@ -111,7 +112,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel {
                 update( target, new Change( Change.Type.Updated, getPlace(), "postalCode" ) );
             }
         } );
-        addIssues( postalCodeField, getPlace(), "postalCode" );        
+        addIssues( postalCodeField, getPlace(), "postalCode" );
         moDetailsDiv.add( postalCodeField );
     }
 
@@ -224,7 +225,10 @@ public class PlaceDetailsPanel extends EntityDetailsPanel {
                 }
             } );
             add( selectionCheckBox );
-            BookmarkablePageLink<GeoMapPage> geomapLink = GeoMapPage.makeLink( "mapLink", geoLocation );
+            BookmarkablePageLink<GeoMapPage> geomapLink = GeoMapPage.makeLink(
+                    "mapLink",
+                    new Model<String>( geoLocation.toString() ),
+                    geoLocation );
             add( geomapLink );
         }
 
@@ -235,7 +239,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel {
          */
         public boolean isSelected() {
             GeoLocation geoLoc = getPlace().getGeoLocation();
-            return ( geoLoc != null && geoLoc.equals( geoLocation ) );
+            return ( geoLoc != null && geoLoc.getGeonameId() == geoLocation.getGeonameId() );
         }
 
         /**

@@ -62,9 +62,10 @@ public class EntityShowMenuPanel extends MenuPanel {
         }
         // Map
         if ( getEntity() instanceof GeoLocatable ) {
-            GeoLocatable geo = (GeoLocatable)getEntity();
+            GeoLocatable geo = (GeoLocatable) getEntity();
             BookmarkablePageLink<GeoMapPage> geomapLink = GeoMapPage.makeLink(
                     "link",
+                    new Model<String>( "Location of " + getEntity().getName() ),
                     geo );
             if ( geo.getGeoLocation() == null ) {
                 geomapLink.setEnabled( false );

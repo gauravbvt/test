@@ -11,8 +11,10 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.PopupSettings;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.collections.ArrayListStack;
 import wicket.contrib.gmap.GMap2;
 import wicket.contrib.gmap.api.GControl;
 import wicket.contrib.gmap.api.GLatLng;
@@ -42,6 +44,7 @@ public class GeoMapPage extends WebPage {
     private static final String MARKER_PARAM = "m";
     private static final String MARKER_SEP = "||";
     private static final int MAX_QUERY_SIZE = 2000;
+    private static final String TITLE_PARAM = "t";
 
     /**
      * The query service.
@@ -56,9 +59,12 @@ public class GeoMapPage extends WebPage {
 
     private List<GeoMarker> geoMarkers;
 
+    private String title;
+
     public GeoMapPage( PageParameters pageParameters ) {
         super( pageParameters );
         geoMarkers = getGeoMarkers( pageParameters );
+        title = pageParameters.getString( TITLE_PARAM );
         init();
     }
 
@@ -79,8 +85,8 @@ public class GeoMapPage extends WebPage {
     }
 
     private void addPageTitle() {
-        String title = getTitle();
         add( new Label( "title", title ) );
+        add( new Label( "caption", title ) );
     }
 
     private void addMap() {
@@ -90,38 +96,45 @@ public class GeoMapPage extends WebPage {
             GMap2 map = new GMap2( "map", getGoogleMapsAPIkey() );
             map.addControl( GControl.GMapTypeControl );
             map.addControl( GControl.GLargeMapControl );
+            List<GLatLng> gLatLngs = new ArrayListStack<GLatLng>();
             for ( GeoMarker geoMarker : geoMarkers ) {
                 GLatLng gLatLng = new GLatLng( geoMarker.getLatitude(), geoMarker.getLongitude() );
                 map.addOverlay( new GMarker( gLatLng, new GMarkerOptions( geoMarker.getLabel() ) ) );
-                // center on last marker
-                map.setCenter( gLatLng );
+                gLatLngs.add( gLatLng );
             }
+            map.fitMarkers( gLatLngs, false );
+            map.setDoubleClickZoomEnabled( true );
+            map.setScrollWheelZoomEnabled( true );
             add( map );
         }
-    }
-
-
-    private String getTitle() {
-        StringBuilder sb = new StringBuilder();
-        for ( GeoMarker geoMarker : geoMarkers ) {
-            sb.append( geoMarker.getLabel() );
-            sb.append( " " );
-        }
-        return sb.toString();
     }
 
     private String getGoogleMapsAPIkey() {
         return geoService.getGoogleMapsAPIKey();
     }
 
-    public static BookmarkablePageLink<GeoMapPage> makeLink( String id, GeoLocatable geo ) {
+    public static BookmarkablePageLink<GeoMapPage> makeLink(
+            String id,
+            IModel<String> titleModel,
+            GeoLocatable geo ) {
         List<GeoLocatable> geos = new ArrayList<GeoLocatable>();
         geos.add( geo );
-        return makeLink( id, geos );
+        return makeLink( id, titleModel, geos );
     }
 
-    public static BookmarkablePageLink<GeoMapPage> makeLink( String id, List<? extends GeoLocatable> geos ) {
-        PageParameters params = makeGeoMapParameters( geos );
+    public static BookmarkablePageLink<GeoMapPage> makeLink(
+            String id,
+            IModel<String> titleModel,
+            List<? extends GeoLocatable> geos ) {
+        PageParameters params = makeGeoMapParameters( titleModel, geos );
+        return makeLink( id, params );
+    }
+
+    public static BookmarkablePageLink<GeoMapPage> makeLink(
+            String id,
+            IModel<String> titleModel,
+            GeoLocation geoLocation ) {
+        PageParameters params = makeGeoMapParameters( titleModel, geoLocation );
         return makeLink( id, params );
     }
 
@@ -136,33 +149,27 @@ public class GeoMapPage extends WebPage {
         popupSettings.setTop( 100 );
         popupSettings.setLeft( 100 );
         geomapLink.setPopupSettings( popupSettings );
-        geomapLink.add( new AttributeModifier( "target", true, new Model<String>( "geomap" ) ) );
+        geomapLink.add( new AttributeModifier(
+                "target",
+                true,
+                new Model<String>( "geomap" ) ) );
         return geomapLink;
     }
 
-    public static BookmarkablePageLink<GeoMapPage> makeLink( String id, GeoLocation geoLocation ) {
-        PageParameters params = makeGeoMapParameters( geoLocation );
-        return makeLink( id, params );
-    }
 
-    private static PageParameters makeGeoMapParameters( GeoLocation geoLocation ) {
+    private static PageParameters makeGeoMapParameters(
+            IModel<String> titleModel,
+            GeoLocation geoLocation ) {
         PageParameters params = new PageParameters();
+        params.put( TITLE_PARAM, titleModel.getObject() );
         String value = makeMarkerParam( geoLocation.toString(), geoLocation );
         params.put( GeoMapPage.MARKER_PARAM, value );
         return params;
     }
 
-    private static String makeMarkerParam( String label, GeoLocation geoLocation ) {
-        StringBuilder sb = new StringBuilder();
-        sb.append( label );
-        sb.append( GeoMapPage.MARKER_SEP );
-        sb.append( geoLocation.getLatitude() );
-        sb.append( GeoMapPage.MARKER_SEP );
-        sb.append( geoLocation.getLongitude() );
-        return sb.toString();
-    }
-
-    private static PageParameters makeGeoMapParameters( List<? extends GeoLocatable> geos ) {
+    private static PageParameters makeGeoMapParameters(
+            IModel<String> titleModel,
+            List<? extends GeoLocatable> geos ) {
         Map<GeoLocation, List<GeoLocatable>> locatedGeos = new HashMap<GeoLocation, List<GeoLocatable>>();
         for ( GeoLocatable geo : new HashSet<GeoLocatable>( geos ) ) {
             GeoLocation geoLocation = geo.getGeoLocation();
@@ -176,6 +183,7 @@ public class GeoMapPage extends WebPage {
             }
         }
         PageParameters params = new PageParameters();
+        params.put( TITLE_PARAM, titleModel.getObject() );
         int querySize = 0;
         Iterator<GeoLocation> iter = locatedGeos.keySet().iterator();
         while ( iter.hasNext() && querySize < MAX_QUERY_SIZE ) {
@@ -204,6 +212,16 @@ public class GeoMapPage extends WebPage {
             }
         }
         return params;
+    }
+
+    private static String makeMarkerParam( String label, GeoLocation geoLocation ) {
+        StringBuilder sb = new StringBuilder();
+        sb.append( label );
+        sb.append( GeoMapPage.MARKER_SEP );
+        sb.append( geoLocation.getLatitude() );
+        sb.append( GeoMapPage.MARKER_SEP );
+        sb.append( geoLocation.getLongitude() );
+        return sb.toString();
     }
 
 

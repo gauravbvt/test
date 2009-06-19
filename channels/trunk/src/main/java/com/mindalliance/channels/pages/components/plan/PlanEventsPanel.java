@@ -8,6 +8,7 @@ import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.List;
@@ -37,6 +38,7 @@ public class PlanEventsPanel extends AbstractCommandablePanel {
         List<? extends GeoLocatable> geoLocatables = getQueryService().list(Event.class );
         BookmarkablePageLink<GeoMapPage> eventsMapLink = GeoMapPage.makeLink(
                 "mapLink",
+                new Model<String>( "All events in plan"),
                 geoLocatables );
         add( eventsMapLink );
     }

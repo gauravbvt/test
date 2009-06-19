@@ -65,7 +65,34 @@ public class Place extends ModelObject implements GeoLocatable {
      */
     @Transient
     public String getGeoMarkerLabel() {
-        return getName();
+        StringBuilder sb = new StringBuilder();
+        sb.append( getName() );
+        String fullAddress = getFullAddress();
+        if ( !fullAddress.isEmpty() ) {
+            sb.append( " at " );
+            sb.append( fullAddress );
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Get full address.
+     *
+     * @return a string
+     */
+    @Transient
+    public String getFullAddress() {
+        StringBuilder sb = new StringBuilder();
+        if ( streetAddress != null ) {
+            sb.append( streetAddress );
+            sb.append( ", " );
+        }
+        sb.append( geoLocation.toString() );
+        if ( postalCode != null ) {
+            sb.append( ", " );
+            sb.append( postalCode );
+        }
+        return sb.toString();
     }
 
     /**
@@ -120,16 +147,30 @@ public class Place extends ModelObject implements GeoLocatable {
         return geoLocation;
     }
 
-    public void setGeoLocation( GeoLocation geoLocation ) {
-        this.geoLocation = geoLocation;
+    public void setGeoLocation( GeoLocation geoLoc ) {
+        geoLocation = geoLoc;
+        if ( geoLocation != null
+                && hasAddress() ) {
+            getGeoService().refineWithAddress( geoLocation, streetAddress, postalCode );
+        }
+    }
+
+    private boolean hasAddress() {
+        return geoLocation != null
+                && ( ( streetAddress != null && !streetAddress.isEmpty() )
+                || ( postalCode != null && !postalCode.isEmpty() ) );
     }
 
     public String getStreetAddress() {
         return streetAddress;
     }
 
-    public void setStreetAddress( String streetAddress ) {
-        this.streetAddress = streetAddress == null ? "" : streetAddress;
+    public void setStreetAddress( String address ) {
+        boolean refine = streetAddress != null && address != null && !streetAddress.equals( address );
+        streetAddress = address == null ? "" : address;
+        if ( refine && hasAddress() ) {
+            getGeoService().refineWithAddress( geoLocation, address, postalCode );
+        }
     }
 
     public String getGeoname() {
@@ -156,8 +197,12 @@ public class Place extends ModelObject implements GeoLocatable {
         return postalCode;
     }
 
-    public void setPostalCode( String postalCode ) {
-        this.postalCode = postalCode == null ? "" : postalCode;
+    public void setPostalCode( String code ) {
+        boolean refine = postalCode != null && code != null && !postalCode.equals( code );
+        this.postalCode = code == null ? "" : code;
+        if ( refine && hasAddress() ) {
+            getGeoService().refineWithAddress( geoLocation, streetAddress, code );
+        }
     }
 
     public void addGeoLocation( GeoLocation geoLocation ) {
@@ -183,7 +228,7 @@ public class Place extends ModelObject implements GeoLocatable {
      */
     @Transient
     public double getLatitude() {
-        return geoLocation != null ? geoLocation.getLatitude()  : 0;
+        return geoLocation != null ? geoLocation.getLatitude() : 0;
     }
 
     /**
@@ -193,7 +238,7 @@ public class Place extends ModelObject implements GeoLocatable {
      */
     @Transient
     public double getLongitude() {
-        return geoLocation != null ?  geoLocation.getLongitude() : 0;
+        return geoLocation != null ? geoLocation.getLongitude() : 0;
     }
 
     /**

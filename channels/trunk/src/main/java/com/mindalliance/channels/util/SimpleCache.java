@@ -1,9 +1,9 @@
 package com.mindalliance.channels.util;
 
-import java.util.Date;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple cache with expiration.
@@ -78,7 +78,7 @@ public class SimpleCache<K, V> {
         V value = null;
         Entry<V> entry = entries.get( key );
         if ( entry != null ) {
-            if ( !entry.getTimestamp().before( validIfAfter ) ) {
+            if ( validIfAfter == null || !entry.getTimestamp().before( validIfAfter ) ) {
                 value = entry.value;
             } else {
                 entries.remove( key );

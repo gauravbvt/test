@@ -325,6 +325,7 @@ public final class PlanPage extends WebPage implements Updatable {
         }
         partsMapLink = GeoMapPage.makeLink(
                 "mapLink",
+                new Model<String>( "Tasks with known locations in scenario " + getScenario().getName() ),
                 geoLocatables );
         partsMapLink.setOutputMarkupId( true );
         form.addOrReplace( partsMapLink );

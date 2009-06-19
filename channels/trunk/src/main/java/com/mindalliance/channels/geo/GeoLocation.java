@@ -28,11 +28,12 @@ public class GeoLocation implements Serializable {
     private String stateCode;
     private String countyCode;
     private String cityCode;
-    private String streetAddress;
-    private String postalCode;
     private Integer population;
     private double latitude;
     private double longitude;
+    private String streetAddress;
+    private String postalCode;
+    private int precision = 0;
 
     public GeoLocation() {
     }
@@ -59,7 +60,6 @@ public class GeoLocation implements Serializable {
             return null;
         }
     }
-
 
     private String getCountyName( Toponym topo ) {
         try {
@@ -177,22 +177,6 @@ public class GeoLocation implements Serializable {
         this.cityCode = cityCode;
     }
 
-    public String getStreetAddress() {
-        return streetAddress;
-    }
-
-    public void setStreetAddress( String streetAddress ) {
-        this.streetAddress = streetAddress;
-    }
-
-    public String getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode( String postalCode ) {
-        this.postalCode = postalCode;
-    }
-
     public Integer getPopulation() {
         return population;
     }
@@ -225,9 +209,32 @@ public class GeoLocation implements Serializable {
         this.geonameId = geonameId;
     }
 
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode( String postalCode ) {
+        this.postalCode =  postalCode ;
+    }
+
+    public String getStreetAddress() {
+        return streetAddress;
+    }
+
+    public void setStreetAddress( String streetAddress ) {
+        this.streetAddress =  streetAddress ;
+    }
+
+    public int getPrecision() {
+        return precision;
+    }
+
+    public void setPrecision( int precision ) {
+        this.precision = precision;
+    }
+
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        if ( streetAddress != null ) sb.append( streetAddress );
         if ( city != null ) {
             sb.append( ( ( sb.length() > 0 ) ? ", " : "" ) );
             sb.append( city );
@@ -290,11 +297,16 @@ public class GeoLocation implements Serializable {
     @Override
     public int hashCode() {
         int hash = 1;
-        hash = hash * 31 + Double.toString(longitude).hashCode();
-        hash = hash * 31 + Double.toString(latitude).hashCode();
+        hash = hash * 31 + Double.toString( longitude ).hashCode();
+        hash = hash * 31 + Double.toString( latitude ).hashCode();
         return hash;
     }
 
 
-
+    public boolean isRefinedTo( String addressOrNull, String codeOrNull ) {
+        if ( streetAddress == null || postalCode == null ) return false;
+        String address = (addressOrNull == null ? "" : addressOrNull);
+        String code = (codeOrNull == null ? "" : codeOrNull);
+        return streetAddress.equals( address ) && postalCode.equals( code );
+    }
 }

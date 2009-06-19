@@ -115,6 +115,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         List<? extends GeoLocatable> geoLocatables = getEmployments();
         rolesMapLink = GeoMapPage.makeLink(
                 "mapLink",
+                new Model<String>( "Where " + getActor().getName() + " is employed" ),
                 geoLocatables );
         moDetailsDiv.addOrReplace( rolesMapLink );
     }

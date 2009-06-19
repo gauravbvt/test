@@ -39,6 +39,8 @@
                      advice-ref="cacheSet"/>
         <aop:advisor pointcut="execution(com.mindalliance.channels.graph.Diagram com.mindalliance.channels.DiagramFactory.*(..))"
                      advice-ref="cacheSet"/>
+        <aop:advisor pointcut="execution(String com.mindalliance.channels.GeoService.getGeoCoding(..))"
+                     advice-ref="cacheSet"/>
 
         <aop:advisor pointcut="execution(* com.mindalliance.channels.Dao.onAfterCommand(..))"
                      advice-ref="cacheClear"/>

@@ -16,6 +16,14 @@ import org.geonames.WebService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,12 +45,16 @@ public class DefaultGeoService extends AbstractService implements GeoService {
     /**
      * Maximum number fo results retrieved from geonames per search.
      */
-    private static final int MAX_SEARCH_ROWS = 10;
+    private static final int MAX_SEARCH_ROWS = 15;
 
     /**
      * Google map's API key.
      */
     private String googleMapsAPIKey;
+    /**
+     * Google maps geocoding uri.
+     */
+    private static final Object GOOGLE_MAP_URI = "http://maps.google.com/maps/geo";
 
     public DefaultGeoService() {
     }
@@ -54,7 +66,6 @@ public class DefaultGeoService extends AbstractService implements GeoService {
     public void setGoogleMapsAPIKey( String googleMapsAPIKey ) {
         this.googleMapsAPIKey = googleMapsAPIKey;
     }
-
 
     /**
      * {@inheritDoc}
@@ -115,7 +126,6 @@ public class DefaultGeoService extends AbstractService implements GeoService {
 //            criteria.setAdminCode1( geoLocation.getStateCode() );
             criteria.setLatitude( geoLocation.getLatitude() );
             criteria.setLongitude( geoLocation.getLongitude() );
-            // criteria.setPostalCode( postalCode );
             criteria.setStyle( Style.FULL );
             List<PostalCode> postalCodes = WebService.findNearbyPostalCodes( criteria );
             PostalCode match = (PostalCode) CollectionUtils.find(
@@ -130,6 +140,82 @@ public class DefaultGeoService extends AbstractService implements GeoService {
             LOG.warn( "Failed to verify postal code " + postalCode + " in " + geoLocation, e );
             return false;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void refineWithAddress( GeoLocation geoLocation, String streetAddress, String postalCode ) {
+        if ( !geoLocation.isRefinedTo( streetAddress, postalCode ) ) {
+            // Lat/Long refinement is obsolete, must re-obtain lat/long for address.
+            String rest = makeGoogleGeocodingURL( geoLocation, streetAddress, postalCode );
+            try {
+                URL url = new URL( rest );
+                String csv = getGeoCoding( url );
+                LOG.debug( rest + " => " + csv );
+                String[] results = csv.split( "," );
+                if ( results[0].equals( "200" ) ) {
+                    int precision = Integer.valueOf( results[1] );
+                    double latitude = Double.valueOf( results[2] );
+                    double longitude = Double.valueOf( results[3] );
+                    geoLocation.setPrecision( precision );
+                    geoLocation.setLatitude( latitude );
+                    geoLocation.setLongitude( longitude );
+                    // Record the fact that refinement was done
+                    geoLocation.setStreetAddress( streetAddress == null ? "" : streetAddress );
+                    geoLocation.setPostalCode( postalCode == null ? "" : postalCode );
+                }
+
+            } catch ( MalformedURLException e ) {
+                throw new RuntimeException( e );
+            } catch ( IOException e ) {
+                throw new RuntimeException( e );
+            }
+        }
+    }
+
+    /**
+      * {@inheritDoc}
+      */
+    public String getGeoCoding( URL restUrl ) {
+        try {
+            InputStream in = restUrl.openStream();
+            BufferedReader reader = new BufferedReader( new InputStreamReader( in ) );
+            String csv = reader.readLine();
+            LOG.debug( restUrl + " => " + csv );
+            return csv;
+        } catch ( IOException e ) {
+            throw new RuntimeException( e );
+        }
+    }
+
+    private String makeGoogleGeocodingURL( GeoLocation geoLocation, String streetAddress, String postalCode ) {
+        // Full address
+        StringBuilder loc = new StringBuilder();
+        if ( streetAddress != null ) {
+            loc.append( streetAddress );
+            loc.append( ", " );
+        }
+        loc.append( geoLocation.toString() );
+        if ( postalCode != null ) {
+            loc.append( ", " );
+            loc.append( postalCode );
+        }
+        // REST query
+        StringBuilder sb = new StringBuilder();
+        sb.append( GOOGLE_MAP_URI );
+        sb.append( "?" );
+        sb.append( "q=" );
+        try {
+            sb.append( URLEncoder.encode( loc.toString(), "UTF-8" ) );
+        } catch ( UnsupportedEncodingException e ) {
+            throw new RuntimeException( e );
+        }
+        sb.append( "&key=" );
+        sb.append( googleMapsAPIKey );
+        sb.append( "&sensor=false" );
+        sb.append( "&output=csv" );
+        return sb.toString();
     }
 
 
