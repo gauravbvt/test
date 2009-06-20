@@ -8,7 +8,7 @@
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>Channels</name>
-    <description>Channels is an information flow modeling tool.</description>
+    <description>Channels is an information sharing planning tool.</description>
     <url>https://channels.mind-alliance.org</url>
     <organization>
         <name>Mind-Alliance Systems LLC</name>

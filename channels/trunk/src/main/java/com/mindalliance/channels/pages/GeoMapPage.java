@@ -144,7 +144,7 @@ public class GeoMapPage extends WebPage {
                 GeoMapPage.class,
                 params );
         PopupSettings popupSettings = new PopupSettings( PopupSettings.LOCATION_BAR );
-        popupSettings.setHeight( 420 );
+        popupSettings.setHeight( 450 );
         popupSettings.setWidth( 620 );
         popupSettings.setTop( 100 );
         popupSettings.setLeft( 100 );
