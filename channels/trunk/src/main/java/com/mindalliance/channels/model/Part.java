@@ -582,25 +582,65 @@ public class Part extends Node implements GeoLocatable {
     }
 
     /**
-      * {@inheritDoc}
-      */
-     @Transient
+     * Get extended title for the part.
+     *
+     * @param sep separator string
+     * @return a string
+     */
+    @Transient
+    public String getFullTitle( String sep ) {
+        String label = "";
+        if ( getActor() != null ) {
+            label += getActor().getName();
+        }
+        if ( getRole() != null ) {
+            if ( !label.isEmpty() ) label += sep;
+            if ( getActor() == null ) {
+                List<Actor> partActors = getScenario().getQueryService().findAllActors( resourceSpec() );
+                if ( partActors.size() == 1 ) {
+                    label += partActors.get( 0 ).getName();
+                    label += " ";
+                }
+            }
+            if ( !label.isEmpty() ) label += "as ";
+            label += getRole().getName();
+        }
+        if ( getJurisdiction() != null ) {
+            if ( !label.isEmpty() ) label += ( sep + "for " );
+            label += getJurisdiction().getName();
+        }
+        if ( getOrganization() != null ) {
+            if ( !label.isEmpty() ) label += ( sep + "in " );
+            label += getOrganization().getName();
+        }
+        if ( !label.isEmpty() ) label += sep;
+        label += getTask();
+        if ( isRepeating() ) {
+            label += " (every " + getRepeatsEvery().toString() + ")";
+        }
+        return label;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
     public GeoLocation getGeoLocation() {
         return location != null ? location.getGeoLocation() : null;
     }
 
     /**
-      * {@inheritDoc}
-      */
-     @Transient
+     * {@inheritDoc}
+     */
+    @Transient
     public String getGeoMarkerLabel() {
         StringBuilder sb = new StringBuilder();
-        sb.append( getTitle() );
+        sb.append( getFullTitle( " " ) );
         if ( location != null ) {
-            sb.append(" at ");
-            sb.append( getLocation().getName() ) ;
+            sb.append( " at " );
+            sb.append( getLocation().getName() );
         }
         return sb.toString();
     }
-   
+
 }

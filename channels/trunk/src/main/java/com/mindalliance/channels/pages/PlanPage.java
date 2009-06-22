@@ -19,6 +19,7 @@ import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.ScenarioObject;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
+import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
 import com.mindalliance.channels.pages.components.ScenarioLink;
 import com.mindalliance.channels.pages.components.ScenarioPanel;
@@ -41,7 +42,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.Model;
@@ -125,7 +125,7 @@ public final class PlanPage extends WebPage implements Updatable {
     /**
      * Link to mapping of parts.
      */
-    private BookmarkablePageLink<GeoMapPage> partsMapLink;
+    private GeomapLinkPanel partsMapLink;
     /**
      * Label with description of scenario.
      */
@@ -323,10 +323,11 @@ public final class PlanPage extends WebPage implements Updatable {
         while ( parts.hasNext() ) {
             geoLocatables.add( parts.next() );
         }
-        partsMapLink = GeoMapPage.makeLink(
-                "mapLink",
+        partsMapLink = new GeomapLinkPanel(
+                "geomapLink",
                 new Model<String>( "Tasks with known locations in scenario " + getScenario().getName() ),
-                geoLocatables );
+                geoLocatables,
+                new Model<String>( "Show parts in map" ) );
         partsMapLink.setOutputMarkupId( true );
         form.addOrReplace( partsMapLink );
     }

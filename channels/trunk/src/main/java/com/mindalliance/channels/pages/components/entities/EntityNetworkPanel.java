@@ -30,10 +30,12 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -309,7 +311,7 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
                     new Predicate() {
                         @SuppressWarnings( "unchecked" )
                         public boolean evaluate( Object obj ) {
-                            return !isFilteredOut( (ActorFlow) obj  );
+                            return !isFilteredOut( (ActorFlow) obj );
                         }
                     } ) );
         }
@@ -403,8 +405,8 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
         /*if ( getEntity() instanceof Actor ) {
             return (List<T>) getQueryService().list( getEntity().getClass() );
         } else {*/
-            return (List<T>) getQueryService().listEntitiesWithUnknown( getEntity().getClass() );
-     //   }
+        return (List<T>) getQueryService().listEntitiesWithUnknown( getEntity().getClass() );
+        //   }
     }
 
     public void refresh( AjaxRequestTarget target ) {
@@ -484,6 +486,19 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
         public Flow getFlow() {
             return flow;
         }
+
+        /**
+         * Get name of actor flow.
+         *
+         * @return a string
+         */
+        public String getName() {
+            return sourceActor.getName()
+                    + ( flow.isAskedFor() ? " answers with " : " sends notification of " )
+                    + flow.getName()
+                    + " to "
+                    + targetActor.getName();
+        }
     }
 
     public class RoleFlowsPanel extends AbstractTablePanel<Flow> {
@@ -507,6 +522,7 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
             init();
         }
 
+        @SuppressWarnings( "unchecked" )
         private void init() {
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             columns.add( makeFilterableLinkColumn(
@@ -552,6 +568,11 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
                     "target.organization.name",
                     EMPTY,
                     filterable ) );
+            columns.add( makeGeomapLinkColumn(
+                    "",
+                    "name",
+                    Arrays.asList( "source", "target" ),
+                    new Model<String>( "Show both tasks in map" ) ) );
             List<Flow> flows = flowsModel.getObject();
             add( new AjaxFallbackDefaultDataTable(
                     "flows",
@@ -585,6 +606,7 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
             init();
         }
 
+        @SuppressWarnings( "unchecked" )
         private void init() {
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             columns.add( makeFilterableLinkColumn(
@@ -630,7 +652,11 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
                     "flow.target.organization.name",
                     EMPTY,
                     filterable ) );
-
+            columns.add( makeGeomapLinkColumn(
+                    "",
+                    "name",
+                    Arrays.asList( "flow.source", "flow.target" ),
+                    new Model<String>( "Show both tasks in map" ) ) );
             List<ActorFlow> actorFlows = flowsModel.getObject();
             add( new AjaxFallbackDefaultDataTable(
                     "flows",

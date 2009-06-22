@@ -7,10 +7,10 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.pages.components.Filterable;
+import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
 import com.mindalliance.channels.util.Employment;
@@ -25,7 +25,6 @@ import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFal
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -91,7 +90,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     /**
      * Link to geomap page showing all unfiltered roles in map.
      */
-    private BookmarkablePageLink<GeoMapPage> rolesMapLink;
+    private GeomapLinkPanel rolesMapLink;
 
     public ActorDetailsPanel( String id, IModel<? extends ModelObject> model, Set<Long> expansions ) {
         super( id, model, expansions );
@@ -113,10 +112,11 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
 
     private void addRolesMap() {
         List<? extends GeoLocatable> geoLocatables = getEmployments();
-        rolesMapLink = GeoMapPage.makeLink(
-                "mapLink",
+        rolesMapLink = new GeomapLinkPanel(
+                "geomapLink",
                 new Model<String>( "Where " + getActor().getName() + " is employed" ),
-                geoLocatables );
+                geoLocatables,
+                new Model<String>("Map actor employments"));
         moDetailsDiv.addOrReplace( rolesMapLink );
     }
 

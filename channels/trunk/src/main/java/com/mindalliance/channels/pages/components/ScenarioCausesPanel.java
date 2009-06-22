@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
@@ -13,6 +12,7 @@ import org.apache.wicket.model.Model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -32,7 +32,6 @@ public class ScenarioCausesPanel extends AbstractTablePanel<ScenarioRelationship
 
     public ScenarioCausesPanel(
             String id,
-            IModel<Plan> model,
             IModel<ArrayList<ScenarioRelationship>> scRels,
             int pageSize,
             Set<Long> expansions ) {
@@ -41,6 +40,7 @@ public class ScenarioCausesPanel extends AbstractTablePanel<ScenarioRelationship
         init();
     }
 
+    @SuppressWarnings( "unchecked" )
     private void init() {
         final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
         columns.add( makeLinkColumn( "Task", "part", "part.title", EMPTY ) );
@@ -55,6 +55,11 @@ public class ScenarioCausesPanel extends AbstractTablePanel<ScenarioRelationship
         columns.add( new PropertyColumn<String>(
                 new Model<String>( "triggering scenario" ),
                 "caused.name", "caused.name" ) );
+        columns.add( makeGeomapLinkColumn(
+                "",
+                "name",
+                Arrays.asList( "part", "caused.event" ),
+                new Model<String>( "Show task and event it causes in map" ) ) );
         List<Causation> causations = getCausations();
         add( new AjaxFallbackDefaultDataTable(
                 "causes",
@@ -100,6 +105,14 @@ public class ScenarioCausesPanel extends AbstractTablePanel<ScenarioRelationship
 
         public Scenario getCaused() {
             return caused;
+        }
+
+        /**
+         * Return name of causation.
+         * @return a string
+         */
+        public String getName() {
+            return part.getTitle() + " causes " + caused.getEvent().getName();
         }
 
     }

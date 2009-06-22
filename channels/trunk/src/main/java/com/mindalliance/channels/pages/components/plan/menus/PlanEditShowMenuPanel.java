@@ -63,7 +63,7 @@ public class PlanEditShowMenuPanel extends MenuPanel {
         };
         menuItems.add( new LinkMenuItem(
                 "menuItem",
-                new Model<String>( "Map" ),
+                new Model<String>( "All scenarios" ),
                 mapLink ) );
         // Who's who
         Link whoswhoLink = new AjaxFallbackLink( "link" ) {

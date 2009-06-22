@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.command.CommandUtils;
+import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.FilterableModelObjectLink;
@@ -10,11 +11,16 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -28,6 +34,12 @@ import java.util.Set;
  * Time: 10:25:30 AM
  */
 public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
+
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( AbstractTablePanel.class );
+
 
     /**
      * Content of an empty cell
@@ -290,5 +302,36 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
 
     }
 
+    protected IColumn<?> makeGeomapLinkColumn(
+            String name,
+            final String titleProperty,
+            final List<String> properties,
+            final IModel<String> hintModel ) {
+        return new AbstractColumn<T>( new Model<String>( name ) ) {
+            public void populateItem(
+                    Item<ICellPopulator<T>> cellItem,
+                    String id,
+                    IModel<T> model ) {
+                T bean = model.getObject();
+                ArrayList<GeoLocatable> geoLocs = new ArrayList<GeoLocatable>();
+                for ( String property : properties ) {
+                    GeoLocatable geoLoc = (GeoLocatable) CommandUtils.getProperty( bean, property, null );
+                    if ( geoLoc != null ) {
+                        geoLocs.add( geoLoc );
+                    } else {
+                        LOG.warn( "No value for property " + property + " in " + bean );
+                    }
+                }
+                Component cellContent;
+                if ( geoLocs.isEmpty() ) {
+                    cellContent = new Label( id, "" );
+                } else {
+                    String title = (String) CommandUtils.getProperty( bean, titleProperty, "" );
+                    cellContent = new GeomapLinkPanel( id, new Model<String>( title ), geoLocs, hintModel );
+                }
+                cellItem.add( cellContent );
+            }
+        };
+    }
 
 }

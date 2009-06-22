@@ -9,6 +9,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -30,10 +31,11 @@ public class ExternalFlowsPanel extends AbstractTablePanel<ExternalFlow> {
             int pageSize,
             Set<Long> expansions ) {
         super( id, null, pageSize, expansions );
-        this.externalFlowsModel =  externalFlowsModel;
+        this.externalFlowsModel = externalFlowsModel;
         init();
     }
 
+    @SuppressWarnings( "unchecked" )
     private void init() {
         List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
         columns.add( makeLinkColumn( "Task", "externalPart", "externalPart.title", EMPTY ) );
@@ -45,6 +47,11 @@ public class ExternalFlowsPanel extends AbstractTablePanel<ExternalFlow> {
         columns.add( new PropertyColumn<String>(
                 new Model<String>( "in scenario" ),
                 "scenario.name", "scenario.name" ) );
+        columns.add( makeGeomapLinkColumn(
+                "",
+                "name",
+                Arrays.asList( "externalPart", "part" ),
+                new Model<String>( "Show both tasks in map" ) ) );
         List<ExternalFlow> externalFlows = externalFlowsModel.getObject();
         add( new AjaxFallbackDefaultDataTable(
                 "flows",
@@ -53,4 +60,6 @@ public class ExternalFlowsPanel extends AbstractTablePanel<ExternalFlow> {
                 getPageSize() ) );
 
     }
+
+
 }

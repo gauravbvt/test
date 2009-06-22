@@ -17,10 +17,10 @@ import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.springframework.core.io.Resource;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
-import java.io.IOException;
 
 /**
  * Provider of providers for scenarios.
@@ -169,43 +169,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
     private String getNodeLabel( Node node ) {
         if ( node.isPart() ) {
             Part part = (Part) node;
-            String label = "";
-            if ( part.getActor() != null ) {
-                label += part.getActor().getName();
-            }
-            if ( part.getRole() != null ) {
-                if ( !label.isEmpty() ) label += "|";
-                if ( part.getActor() == null ) {
-                    List<Actor> partActors = getAnalyst().getQueryService().findAllActors( part.resourceSpec() );
-                    if ( partActors.size() == 1 ) {
-                        label += partActors.get( 0 ).getName();
-                        label += " ";
-                    }
-                }
-                if ( !label.isEmpty() ) label += "as ";
-                label += part.getRole().getName();
-            }
-            if ( part.getJurisdiction() != null ) {
-                if ( !label.isEmpty() ) label += "|for ";
-                label += part.getJurisdiction().getName();
-            }
-            if ( part.getOrganization() != null ) {
-                if ( !label.isEmpty() ) label += "|in ";
-                /*{
-                    if ( part.getActor() == null || part.getRole() == null || part.getJurisdiction() == null ) {
-                        label += "|in ";
-                    } else {
-                        label += " in ";
-                    }
-                }*/
-                label += part.getOrganization().getName();
-            }
-            if ( !label.isEmpty() ) label += "|";
-            label += part.getTask();
-            if ( part.isRepeating() ) {
-                label += " (every " + part.getRepeatsEvery().toString() + ")";
-            }
-            return label;
+            return part.getFullTitle( "|" );
         } else {
             return "c";
             // return node.getName();

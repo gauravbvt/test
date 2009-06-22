@@ -4,9 +4,8 @@ import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -35,28 +34,30 @@ public class PlanEventsPanel extends AbstractCommandablePanel {
     }
 
     private void addEventsMapLink() {
-        List<? extends GeoLocatable> geoLocatables = getQueryService().list(Event.class );
-        BookmarkablePageLink<GeoMapPage> eventsMapLink = GeoMapPage.makeLink(
-                "mapLink",
-                new Model<String>( "All events in plan"),
-                geoLocatables );
+        List<? extends GeoLocatable> geoLocatables = getQueryService().list( Event.class );
+        GeomapLinkPanel eventsMapLink = new GeomapLinkPanel(
+                "geomapLink",
+                new Model<String>( "All events in plan with known locations" ),
+                geoLocatables,
+                new Model<String>( "Show events in plan" ) );
         add( eventsMapLink );
     }
 
     private void addEventList() {
         EventListPanel incidentListPanel = new EventListPanel(
                 "incidents",
-                new PropertyModel<Plan>(this, "plan"),
+                new PropertyModel<Plan>( this, "plan" ),
                 getExpansions() );
-        add(incidentListPanel);
+        add( incidentListPanel );
     }
 
     /**
      * Get the plan being edited.
+     *
      * @return a plan
      */
     public Plan getPlan() {
-        return (Plan)getModel().getObject();
+        return (Plan) getModel().getObject();
     }
 
 

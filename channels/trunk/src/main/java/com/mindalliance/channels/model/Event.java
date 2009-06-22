@@ -78,6 +78,8 @@ public class Event extends ModelObject implements GeoLocatable {
       */
      @Transient
     public String getGeoMarkerLabel() {
-        return scope != null ? scope.getGeoMarkerLabel() : "";
+        return scope != null
+                ? getName() + " in " + scope.getGeoMarkerLabel()
+                : "";
     }
 }
