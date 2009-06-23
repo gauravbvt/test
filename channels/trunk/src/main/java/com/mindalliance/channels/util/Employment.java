@@ -109,8 +109,8 @@ public class Employment implements Serializable, GeoLocatable {
     /**
      * {@inheritDoc}
      */
-    public GeoLocation getGeoLocation() {
-        return organization.getGeoLocation();
+    public GeoLocation geoLocate() {
+        return organization.geoLocate();
     }
 
     /**

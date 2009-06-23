@@ -29,14 +29,14 @@ public class UnverifiedPostalCode extends AbstractIssueDetector {
         Place place = (Place) modelObject;
         String postalCode = place.getPostalCode();
         if ( postalCode != null && !postalCode.isEmpty() ) {
-            if ( place.getGeoLocation() == null ) {
+            if ( place.geoLocate() == null ) {
                 Issue issue = makeIssue( Issue.VALIDITY, place, getTestedProperty() );
                 issue.setSeverity( Issue.Level.Minor );
                 issue.setDescription( "Can't verify the postal code without a geolocation." );
                 issue.setRemediation( "Make sure the geoname is set and valid, and choose a geolocation." );
                 issues.add( issue );
             } else {
-                if ( !getGeoService().verifyPostalCode( place.getPostalCode(), place.getGeoLocation() ) ) {
+                if ( !getGeoService().verifyPostalCode( place.getPostalCode(), place.geoLocate() ) ) {
                     Issue issue = makeIssue( Issue.VALIDITY, place, getTestedProperty() );
                     issue.setSeverity( Issue.Level.Minor );
                     issue.setDescription( "Can't verify the postal code for the geolocation." );

@@ -51,7 +51,7 @@ public class GeomapLinkPanel extends Panel {
                 geoLocatables,
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        return ( (GeoLocatable) obj ).getGeoLocation() != null;
+                        return ( (GeoLocatable) obj ).geoLocate() != null;
                     }
                 } ) != null;
         geomapLink.setVisible( somethingToMap );

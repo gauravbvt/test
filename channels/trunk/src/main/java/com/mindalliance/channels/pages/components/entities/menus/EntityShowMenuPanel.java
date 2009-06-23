@@ -67,7 +67,7 @@ public class EntityShowMenuPanel extends MenuPanel {
                     "link",
                     new Model<String>( "Location of " + getEntity().getName() ),
                     geo );
-            if ( geo.getGeoLocation() == null ) {
+            if ( geo.geoLocate() == null ) {
                 geomapLink.setEnabled( false );
             }
             menuItems.add( new LinkMenuItem(

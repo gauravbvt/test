@@ -69,8 +69,8 @@ public class Event extends ModelObject implements GeoLocatable {
       * {@inheritDoc}
       */
      @Transient
-    public GeoLocation getGeoLocation() {
-        return scope != null ? scope.getGeoLocation() : null;
+    public GeoLocation geoLocate() {
+        return scope != null ? scope.geoLocate() : null;
     }
 
     /**

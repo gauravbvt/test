@@ -215,8 +215,8 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
       * {@inheritDoc}
       */
      @Transient
-    public GeoLocation getGeoLocation() {
-        return location != null ? location.getGeoLocation() : null;
+    public GeoLocation geoLocate() {
+        return location != null ? location.geoLocate() : null;
     }
 
     /**

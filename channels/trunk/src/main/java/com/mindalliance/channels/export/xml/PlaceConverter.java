@@ -46,6 +46,13 @@ public class PlaceConverter extends EntityConverter {
                                    HierarchicalStreamWriter writer,
                                    MarshallingContext context ) {
         Place place = (Place) entity;
+        Place within = place.getWithin();
+        if ( within != null ) {
+            writer.startNode( "within" );
+            writer.addAttribute( "id", Long.toString( within.getId() ) );
+            writer.setValue( within.getName() );
+            writer.endNode();
+        }
         if ( !place.getStreetAddress().isEmpty() ) {
             writer.startNode( "streetAddress" );
             writer.setValue( place.getStreetAddress() );
@@ -61,9 +68,9 @@ public class PlaceConverter extends EntityConverter {
             writer.setValue( place.getGeoname() );
             writer.endNode();
         }
-        if ( place.getGeoLocation() != null ) {
+        if ( place.geoLocate() != null ) {
             writer.startNode( "geoLocation" );
-            context.convertAnother( place.getGeoLocation() );
+            context.convertAnother( place.geoLocate() );
             writer.endNode();
         }
         if ( place.getGeoLocations() != null ) {
@@ -84,7 +91,10 @@ public class PlaceConverter extends EntityConverter {
             HierarchicalStreamReader reader,
             UnmarshallingContext context ) {
         Place place = (Place) entity;
-        if (nodeName.equals("streetAddress")) {
+        if ( nodeName.equals( "within" ) ) {
+            String id = reader.getAttribute( "id");
+            place.setWithin( findOrCreate( Place.class, reader.getValue(), id ) );
+        } else if (nodeName.equals("streetAddress")) {
             place.setStreetAddress( reader.getValue() );
         } else if ( nodeName.equals( "postalCode")) {
             place.setPostalCode( reader.getValue() );

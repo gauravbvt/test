@@ -222,8 +222,8 @@ public class Job implements Serializable, Mappable, GeoLocatable {
       * {@inheritDoc}
       */
      @Transient
-    public GeoLocation getGeoLocation() {
-        return jurisdiction != null ? jurisdiction.getGeoLocation() : null;
+    public GeoLocation geoLocate() {
+        return jurisdiction != null ? jurisdiction.geoLocate() : null;
     }
 
     /**

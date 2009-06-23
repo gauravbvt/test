@@ -172,7 +172,7 @@ public class GeoMapPage extends WebPage {
             List<? extends GeoLocatable> geos ) {
         Map<GeoLocation, List<GeoLocatable>> locatedGeos = new HashMap<GeoLocation, List<GeoLocatable>>();
         for ( GeoLocatable geo : new HashSet<GeoLocatable>( geos ) ) {
-            GeoLocation geoLocation = geo.getGeoLocation();
+            GeoLocation geoLocation = geo.geoLocate();
             if ( geoLocation != null ) {
                 List<GeoLocatable> locs = locatedGeos.get( geoLocation );
                 if ( locs == null ) {

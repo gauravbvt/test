@@ -46,6 +46,10 @@ public class Place extends ModelObject implements GeoLocatable {
      * Candidate geolocations for the geoname, if any.
      */
     private List<GeoLocation> geoLocations;
+    /**
+     * The place, if any, this one is directly in.
+     */
+    private Place within;
 
     static {
         UNKNOWN = new Place( UnknownPlaceName );
@@ -63,10 +67,25 @@ public class Place extends ModelObject implements GeoLocatable {
     /**
      * {@inheritDoc}
      */
+    public GeoLocation geoLocate() {
+        if ( geoLocation != null ) {
+            return geoLocation;
+        } else {
+            if ( within != null ) {
+                return within.geoLocate();
+            } else {
+                return null;
+            }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Transient
     public String getGeoMarkerLabel() {
         StringBuilder sb = new StringBuilder();
-        sb.append( getName() );
+        sb.append( toString() );
         String fullAddress = getFullAddress();
         if ( !fullAddress.isEmpty() ) {
             sb.append( " at " );
@@ -84,13 +103,16 @@ public class Place extends ModelObject implements GeoLocatable {
     public String getFullAddress() {
         StringBuilder sb = new StringBuilder();
         if ( streetAddress != null ) {
-            sb.append( streetAddress );
-            sb.append( ", " );
+            sb.append( streetAddress.trim() );
         }
-        sb.append( geoLocation.toString() );
-        if ( postalCode != null ) {
-            sb.append( ", " );
-            sb.append( postalCode );
+        GeoLocation geoLoc = geoLocate();
+        if ( geoLoc != null ) {
+            if (sb.length() > 0 ) sb.append( ", " );
+            sb.append( geoLoc.toString().trim() );
+        }
+        if ( postalCode != null && postalCode.trim().length() > 0 ) {
+            if (sb.length() > 0 ) sb.append( ", " );
+            sb.append( postalCode.trim() );
         }
         return sb.toString();
     }
@@ -140,10 +162,11 @@ public class Place extends ModelObject implements GeoLocatable {
         for ( Part part : queryService.findAllPartsWithLocation( this ) ) {
             part.setLocation( null );
         }
+        // TODO - cleanup within
     }
 
     @Transient
-    public GeoLocation getGeoLocation() {
+    public GeoLocation getLocation() {
         return geoLocation;
     }
 
@@ -205,6 +228,14 @@ public class Place extends ModelObject implements GeoLocatable {
         }
     }
 
+    public Place getWithin() {
+        return within;
+    }
+
+    public void setWithin( Place within ) {
+        this.within = within;
+    }
+
     public void addGeoLocation( GeoLocation geoLocation ) {
         if ( geoLocations == null ) geoLocations = new ArrayList<GeoLocation>();
         geoLocations.add( geoLocation );
@@ -217,8 +248,57 @@ public class Place extends ModelObject implements GeoLocatable {
      * @return a boolean
      */
     public boolean isWithin( Place place ) {
-        return !( geoLocation == null || place.getGeoLocation() == null )
-                && geoLocation.isWithin( place.getGeoLocation() );
+        return isWithin( place, new ArrayList<Place>() )
+                || isGeoLocatedIn( place.geoLocate() );
+    }
+
+    private boolean isGeoLocatedIn( GeoLocation geoLoc ) {
+        if ( geoLoc == null ) {
+            return false;
+        } else {
+            GeoLocation myGeoLoc = geoLocate();
+            return myGeoLoc != null && myGeoLoc.isWithin( geoLoc );
+        }
+    }
+
+    private boolean isWithin( Place place, List<Place> contained ) {
+        // Protect against circularity
+        if ( contained.contains( this ) ) return false;
+        if ( within != null ) {
+            if ( within.equals( place ) ) {
+                return true;
+            } else {
+                contained.add( this );
+                return within.isWithin( place, contained );
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Get a place transitively containing this place that is also within this place.
+     *
+     * @return a place or null
+     */
+    @Transient
+    public Place getLoopyContainingPlace() {
+        if ( within == null ) {
+            return null;
+        } else
+            return within.getLoopyContainingPlace( this );
+    }
+
+    private Place getLoopyContainingPlace( Place place ) {
+        if ( within != null ) {
+            if ( within.equals( place ) ) {
+                return this;
+            } else {
+                return within.getLoopyContainingPlace( place );
+            }
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -228,7 +308,8 @@ public class Place extends ModelObject implements GeoLocatable {
      */
     @Transient
     public double getLatitude() {
-        return geoLocation != null ? geoLocation.getLatitude() : 0;
+        GeoLocation geoLoc = geoLocate();
+        return geoLoc != null ? geoLoc.getLatitude() : 0;
     }
 
     /**
@@ -238,7 +319,8 @@ public class Place extends ModelObject implements GeoLocatable {
      */
     @Transient
     public double getLongitude() {
-        return geoLocation != null ? geoLocation.getLongitude() : 0;
+        GeoLocation geoLoc = geoLocate();
+        return geoLoc != null ? geoLoc.getLongitude() : 0;
     }
 
     /**
@@ -247,11 +329,25 @@ public class Place extends ModelObject implements GeoLocatable {
      * @return a boolean
      */
     public boolean hasLatLong() {
-        return geoLocation != null;
+        return geoLocate() != null;
     }
 
+    @Transient
     private GeoService getGeoService() {
         return Channels.instance().getGeoService();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append( getName() );
+        if ( within != null ) {
+            sb.append( " in " );
+            sb.append( within.toString() );
+        }
+        return sb.toString();
     }
 
 }

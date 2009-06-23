@@ -52,6 +52,10 @@ public class PlaceDetailsPanel extends EntityDetailsPanel {
      * Geoname field.
      */
     private TextField<String> geonameField;
+    /**
+      * Within field.
+      */
+     private TextField<String> withinField;
 
     public PlaceDetailsPanel(
             String id,
@@ -65,6 +69,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel {
      */
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
         this.moDetailsDiv = moDetailsDiv;
+        addWithinField();
         addStreetAddressField();
         addPostalCodeField();
         addGeonameField();
@@ -72,6 +77,31 @@ public class PlaceDetailsPanel extends EntityDetailsPanel {
         geoLocationsContainer.setOutputMarkupId( true );
         moDetailsDiv.add( geoLocationsContainer );
         addGeoLocationList();
+    }
+
+    private void addWithinField() {
+        final List<String> choices = getQueryService().findAllNames( Place.class );
+        withinField = new AutoCompleteTextField<String>(
+                "within",
+                new PropertyModel<String>( this, "withinName" ) ) {
+            protected Iterator<String> getChoices( String s ) {
+                List<String> candidates = new ArrayList<String>();
+                for ( String choice : choices ) {
+                    if ( SemMatch.matches( s, choice ) ) candidates.add( choice );
+                }
+                return candidates.iterator();
+            }
+        };
+        withinField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addIssues( withinField, getPlace(), "withinName" );
+                target.addComponent( withinField );
+                update( target, new Change( Change.Type.Updated, getPlace(), "within" ) );
+            }
+        } );
+        addIssues( withinField, getPlace(), "within" );
+        withinField.setOutputMarkupId( true );
+        moDetailsDiv.add( withinField );
     }
 
     private void addGeoLocationList() {
@@ -109,6 +139,8 @@ public class PlaceDetailsPanel extends EntityDetailsPanel {
                 target.addComponent( geonameField );
                 addIssues( postalCodeField, getPlace(), "postalCode" );
                 target.addComponent( postalCodeField );
+                addIssues( withinField, getPlace(), "within" );
+                target.addComponent( withinField );
                 update( target, new Change( Change.Type.Updated, getPlace(), "postalCode" ) );
             }
         } );
@@ -135,6 +167,8 @@ public class PlaceDetailsPanel extends EntityDetailsPanel {
                 target.addComponent( geonameField );
                 addIssues( postalCodeField, getPlace(), "postalCode" );
                 target.addComponent( postalCodeField );
+                addIssues( withinField, getPlace(), "within" );
+                target.addComponent( withinField );
                 update( target, new Change( Change.Type.Updated, getPlace(), "geoname" ) );
             }
         } );
@@ -204,6 +238,36 @@ public class PlaceDetailsPanel extends EntityDetailsPanel {
         doCommand( new UpdatePlanObject( getPlace(), "geoname", val ) );
     }
 
+    /**
+     * Return the name of the place containing this place.
+     *
+     * @return a place
+     */
+    public String getWithinName() {
+        Place within = getPlace().getWithin();
+        return within == null ? "" : within.getName();
+    }
+
+    /**
+     * Set the place containing this place given its name.
+     *
+     * @param name a string
+     */
+    public void setWithinName( String name ) {
+        Place place = getPlace();
+        Place oldWithin = place.getWithin();
+        String oldName = ( oldWithin == null ? "" : oldWithin.getName() );
+        Place newPlace = null;
+        if ( name == null || name.trim().isEmpty() )
+            newPlace = null;
+        else {
+            if ( oldWithin == null || !isSame( name, oldName ) )
+                newPlace = getQueryService().findOrCreate( Place.class, name );
+        }
+        doCommand( new UpdatePlanObject( place, "within", newPlace ) );
+        getCommander().cleanup( Place.class, oldName );
+    }
+
     private class GeoLocationPanel extends AbstractUpdatablePanel {
 
         private GeoLocation geoLocation;
@@ -238,7 +302,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel {
          * @return a boolean
          */
         public boolean isSelected() {
-            GeoLocation geoLoc = getPlace().getGeoLocation();
+            GeoLocation geoLoc = getPlace().geoLocate();
             return ( geoLoc != null && geoLoc.getGeonameId() == geoLocation.getGeonameId() );
         }
 

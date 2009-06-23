@@ -625,8 +625,8 @@ public class Part extends Node implements GeoLocatable {
      * {@inheritDoc}
      */
     @Transient
-    public GeoLocation getGeoLocation() {
-        return location != null ? location.getGeoLocation() : null;
+    public GeoLocation geoLocate() {
+        return location != null ? location.geoLocate() : null;
     }
 
     /**

@@ -16,7 +16,7 @@ public interface GeoLocatable extends Serializable {
      *
      * @return a geo location
      */
-    GeoLocation getGeoLocation();
+    GeoLocation geoLocate();
 
     /**
      * Get a geo marker's label.
