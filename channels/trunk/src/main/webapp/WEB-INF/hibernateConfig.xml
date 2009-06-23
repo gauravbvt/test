@@ -26,6 +26,18 @@
         <property name="cache" ref="resultCache"/>
     </bean>
 
+
+    <bean id="permCache" class="com.mindalliance.channels.query.ResultCache">
+        <property name="cacheKey" value="longTerm"/>
+        <property name="cacheManager" ref="cacheManager"/>
+    </bean>
+    <bean id="permSet" class="com.mindalliance.channels.query.CacheAdvice">
+        <property name="cache" ref="permCache"/>
+    </bean>
+    <bean id="permClear" class="com.mindalliance.channels.query.CacheResetAdvice">
+        <property name="cache" ref="permCache"/>
+    </bean>
+
     <aop:config proxy-target-class="true">
         <!--<aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.QueryService.*(..))"-->
                      <!--advice-ref="timingLogger"/>-->
@@ -41,6 +53,8 @@
                      advice-ref="cacheSet"/>
         <aop:advisor pointcut="execution(String com.mindalliance.channels.GeoService.getGeoCoding(..))"
                      advice-ref="cacheSet"/>
+        <!--<aop:advisor pointcut="execution(String com.mindalliance.channels.GeoService.getGeoCoding(..))"-->
+                     <!--advice-ref="permSet"/>-->
 
         <aop:advisor pointcut="execution(* com.mindalliance.channels.Dao.onAfterCommand(..))"
                      advice-ref="cacheClear"/>
