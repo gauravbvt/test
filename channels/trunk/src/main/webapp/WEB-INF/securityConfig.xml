@@ -93,7 +93,8 @@
     </bean>
 
     <bean id="userDetails" class="com.mindalliance.channels.util.FileUserDetailsService">
-        <property name="userDefinitions" value="/WEB-INF/users.properties"/>
+        <property name="userDefinitions" value="channels/users.properties"/>
+        <property name="defaultDefinitions" value="/WEB-INF/users.properties"/>
     </bean>
 
     <bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">

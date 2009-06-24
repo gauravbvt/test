@@ -155,7 +155,7 @@ public final class Channels extends WebApplication implements ApplicationListene
 
         queryService.initialize();
     }
-
+    
     @Override
     protected void onDestroy() {
         LOG.info( "Goodbye!" );
