@@ -643,4 +643,13 @@ public class Part extends Node implements GeoLocatable {
         return sb.toString();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    public String getModelObjectType() {
+        return "Task";
+    }
+
+
 }

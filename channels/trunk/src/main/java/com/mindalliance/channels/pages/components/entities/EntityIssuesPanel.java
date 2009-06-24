@@ -6,6 +6,7 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.pages.components.AbstractIssueTablePanel;
@@ -138,6 +139,8 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
             return "actors playing this role";
         } else if ( entity instanceof Organization ) {
             return "actors and roles in this organization";
+        } else if ( entity instanceof Place ) {
+            return "anything located within this place";
         } else {
             throw new IllegalStateException( "Can't diplay issue table for " + entity.getClass().getSimpleName() );
         }
@@ -155,6 +158,8 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
             inOrg.addAll( queryService.findRolesIn( (Organization) entity ) );
             inOrg.addAll( queryService.findAllActorsInOrganization( (Organization) entity ) );
             return inOrg;
+        } else if ( entity instanceof Place ) {
+            return queryService.findAllModelObjectsIn( (Place)entity );
         } else {
             throw new IllegalStateException( "Can't diplay issue table for " + entity.getClass().getSimpleName() );
         }

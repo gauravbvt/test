@@ -801,4 +801,28 @@ public interface QueryService extends Service {
      * @return a list of strings
      */
     List<String> findAllGeonames();
+
+    /**
+     * Find all places directly or indirectly within a given place.
+     *
+     * @param place a place
+     * @return a list of places
+     */
+    List<Place> findAllPlacesWithin( Place place );
+
+    /**
+     * Find all model objects located inside a given place.
+     *
+     * @param place a place
+     * @return a list of model objects
+     */
+    List<? extends ModelObject> findAllModelObjectsIn( Place place );
+
+    /**
+     * Find all model objects referencing a given place.
+     *
+     * @param place a place
+     * @return a list of model objects
+     */
+    List<ModelObject> findAllReferencesTo( Place place );
 }

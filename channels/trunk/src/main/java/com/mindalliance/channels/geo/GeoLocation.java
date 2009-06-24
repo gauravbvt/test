@@ -260,7 +260,7 @@ public class GeoLocation implements Serializable {
      * @param geoLoc a geolocation
      * @return a boolean
      */
-    public boolean isWithin( GeoLocation geoLoc ) {
+    public boolean isSameAsOrInside( GeoLocation geoLoc ) {
         return areasMatch( country, geoLoc.getCountry() )
                 && areasMatch( state, geoLoc.getState() )
                 && areasMatch( county, geoLoc.getCounty() )

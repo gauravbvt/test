@@ -8,8 +8,13 @@
 <body>
 <wicket:extend>
     <tr>
-        <th align="right">Is within:</th>
-        <td><input type="text" size="40" wicket:id="within" value="" title="The place if any this is part of"></td>
+        <th align="right">
+            <label for="within"><a wicket:id="within-link" href=""
+                                               title="Containing place's details">Is within</a>:</label>
+        </th>
+        <td>
+            <input type="text" size="40" id="within" wicket:id="within" value="" title="The place if any this is part of">
+        </td>
     </tr>
     <tr>
         <th align="right">Street address:</th>
@@ -33,6 +38,25 @@
                     <li wicket:id="geoLocations"><span wicket:id="geoLocation">[geolocations panel]</span></li>
                 </ul>
             </span>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <h3>
+                Places within this one
+                &nbsp;
+                <span wicket:id="geomapLink">[geomap link panel]</span>    
+            </h3>
+            <div>
+                <span wicket:id="nameRanges">[name range panel]</span>
+                <span wicket:id="placesWithin">[places within panel]</span>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <h3>References to this place</h3>
+            <span wicket:id="placeReferences">[place reference table]</span>
         </td>
     </tr>
 </wicket:extend>

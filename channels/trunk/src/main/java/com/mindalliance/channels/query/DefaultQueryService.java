@@ -1990,6 +1990,82 @@ public class DefaultQueryService extends Observable implements QueryService {
         return new ArrayList<String>( geonames );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<Place> findAllPlacesWithin( final Place place ) {
+        return (List<Place>) CollectionUtils.select(
+                list( Place.class ),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        Place other = (Place) obj;
+                        return
+                                !other.equals( place )
+                                        && ( other.isWithin( place )
+                                        || place.isRegion() && other.isGeoLocatedIn( place.geoLocate() ) );
+                    }
+                } );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<? extends ModelObject> findAllModelObjectsIn( Place place ) {
+        List<ModelObject> inPlace = new ArrayList<ModelObject>();
+        for ( Organization org : list( Organization.class ) ) {
+            if ( org.getLocation() != null && org.getLocation().isSameAsOrIn( place ) )
+                inPlace.add( org );
+        }
+        for ( Event event : list( Event.class ) ) {
+            if ( event.getScope() != null && event.getScope().isSameAsOrIn( place ) )
+                inPlace.add( event );
+        }
+        for ( Place p : list( Place.class ) ) {
+            if ( !p.equals( place ) && p.isSameAsOrIn( place ) )
+                inPlace.add( p );
+        }
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                Part part = parts.next();
+                if ( part.getLocation() != null && part.getLocation().isSameAsOrIn( place ) )
+                    inPlace.add( part );
+            }
+        }
+        return inPlace;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<ModelObject> findAllReferencesTo( Place place ) {
+        List<ModelObject> references = new ArrayList<ModelObject>();
+        for ( Organization org : list( Organization.class ) ) {
+            if ( org.getLocation() != null && org.getLocation().equals( place ) )
+                references.add( org );
+        }
+        for ( Event event : list( Event.class ) ) {
+            if ( event.getScope() != null && event.getScope().equals( place ) )
+                references.add( event );
+        }
+        for ( Place p : list( Place.class ) ) {
+            if ( !p.equals( place ) && p.equals( place ) )
+                references.add( p );
+            if ( p.getWithin() != null && p.getWithin().equals( place ) )
+                references.add( p );
+        }
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                Part part = parts.next();
+                if ( part.getLocation() != null && part.getLocation().equals( place ) )
+                    references.add( part );
+            }
+        }
+        return references;
+    }
+
 
 }
 

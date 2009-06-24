@@ -22,9 +22,13 @@ import com.mindalliance.channels.analysis.detectors.PartWithInvalidTiming;
 import com.mindalliance.channels.analysis.detectors.PartWithRoleButNoOrganization;
 import com.mindalliance.channels.analysis.detectors.PartWithRoleWithNoKnownActor;
 import com.mindalliance.channels.analysis.detectors.PartWithoutRole;
+import com.mindalliance.channels.analysis.detectors.PlaceContainedInSelf;
+import com.mindalliance.channels.analysis.detectors.PlaceInheritsDifferentPostalCode;
+import com.mindalliance.channels.analysis.detectors.PlaceInheritsDifferentStreetAddress;
 import com.mindalliance.channels.analysis.detectors.PotentialDeadlock;
 import com.mindalliance.channels.analysis.detectors.RedundantFlow;
 import com.mindalliance.channels.analysis.detectors.RedundantPart;
+import com.mindalliance.channels.analysis.detectors.RedundantPlace;
 import com.mindalliance.channels.analysis.detectors.ScenarioEventNeverEnds;
 import com.mindalliance.channels.analysis.detectors.ScenarioEventNeverStarts;
 import com.mindalliance.channels.analysis.detectors.ScenarioEventNotStarted;
@@ -146,6 +150,10 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new UselessPart() );
         detectors.add( new GeonameButNoLocation() );
         detectors.add( new UnverifiedPostalCode() );
+        detectors.add( new PlaceContainedInSelf() );
+        detectors.add( new PlaceInheritsDifferentStreetAddress() );
+        detectors.add( new PlaceInheritsDifferentPostalCode() );
+        detectors.add( new RedundantPlace() );
         for ( IssueDetector detector : detectors ) {
             ( (AbstractIssueDetector) detector ).setQueryService( queryService );
         }

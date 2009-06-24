@@ -236,7 +236,9 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         String summary = property == null ?
                 analyst.getIssuesSummary( object, false ) :
                 analyst.getIssuesSummary( object, property );
-        boolean hasIssues = analyst.hasIssues( object, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        boolean hasIssues = property == null ?
+                analyst.hasIssues( object, Analyst.INCLUDE_PROPERTY_SPECIFIC ) :
+                analyst.hasIssues( object, property );
         if ( !summary.isEmpty() ) {
             component.add(
                     new AttributeModifier(

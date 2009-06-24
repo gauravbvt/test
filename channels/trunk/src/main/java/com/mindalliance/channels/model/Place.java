@@ -102,19 +102,53 @@ public class Place extends ModelObject implements GeoLocatable {
     @Transient
     public String getFullAddress() {
         StringBuilder sb = new StringBuilder();
-        if ( streetAddress != null ) {
-            sb.append( streetAddress.trim() );
+        String address = getActualStreetAddress();
+        if ( address != null ) {
+            sb.append( address.trim() );
         }
         GeoLocation geoLoc = geoLocate();
         if ( geoLoc != null ) {
-            if (sb.length() > 0 ) sb.append( ", " );
+            if ( sb.length() > 0 ) sb.append( ", " );
             sb.append( geoLoc.toString().trim() );
         }
-        if ( postalCode != null && postalCode.trim().length() > 0 ) {
-            if (sb.length() > 0 ) sb.append( ", " );
-            sb.append( postalCode.trim() );
+        String code = getActualPostalCode();
+        if ( code != null && code.trim().length() > 0 ) {
+            if ( sb.length() > 0 ) sb.append( ", " );
+            sb.append( code.trim() );
         }
         return sb.toString();
+    }
+
+    /**
+     * Get street address, possibly inherited from place it si within.
+     *
+     * @return a string
+     */
+    @Transient
+    public String getActualStreetAddress() {
+        if ( streetAddress != null && !streetAddress.isEmpty() ) {
+            return streetAddress;
+        } else if ( within != null ) {
+            return within.getActualStreetAddress();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Get postal code, possibly inherited from place it si within.
+     *
+     * @return a string
+     */
+    @Transient
+    public String getActualPostalCode() {
+        if ( postalCode != null ) {
+            return postalCode;
+        } else if ( within != null ) {
+            return within.getActualPostalCode();
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -162,11 +196,16 @@ public class Place extends ModelObject implements GeoLocatable {
         for ( Part part : queryService.findAllPartsWithLocation( this ) ) {
             part.setLocation( null );
         }
-        // TODO - cleanup within
+        for ( Place place : queryService.list( Place.class ) ) {
+            Place otherWithin = place.getWithin();
+            if ( otherWithin != null && otherWithin.equals( this ) ) {
+                place.setWithin( null );
+            }
+        }
     }
 
     @Transient
-    public GeoLocation getLocation() {
+    public GeoLocation getGeoLocation() {
         return geoLocation;
     }
 
@@ -185,7 +224,7 @@ public class Place extends ModelObject implements GeoLocatable {
     }
 
     public String getStreetAddress() {
-        return streetAddress;
+        return streetAddress == null ? "" : streetAddress;
     }
 
     public void setStreetAddress( String address ) {
@@ -217,7 +256,7 @@ public class Place extends ModelObject implements GeoLocatable {
     }
 
     public String getPostalCode() {
-        return postalCode;
+        return postalCode == null ? "" : postalCode;
     }
 
     public void setPostalCode( String code ) {
@@ -242,22 +281,29 @@ public class Place extends ModelObject implements GeoLocatable {
     }
 
     /**
-     * Whether this place's geolocation is the same or within another's.
+     * Whether this place is equivalent to or in another.
      *
      * @param place a place
      * @return a boolean
      */
-    public boolean isWithin( Place place ) {
-        return isWithin( place, new ArrayList<Place>() )
+    public boolean isSameAsOrIn( Place place ) {
+        return this.equals( place )
+                || isWithin( place )
                 || isGeoLocatedIn( place.geoLocate() );
     }
 
-    private boolean isGeoLocatedIn( GeoLocation geoLoc ) {
+    /**
+     * Whether this place's geolocation, if any is the same as or contained in a given geolocation.
+     *
+     * @param geoLoc a geo location
+     * @return a boolean
+     */
+    public boolean isGeoLocatedIn( GeoLocation geoLoc ) {
         if ( geoLoc == null ) {
             return false;
         } else {
             GeoLocation myGeoLoc = geoLocate();
-            return myGeoLoc != null && myGeoLoc.isWithin( geoLoc );
+            return myGeoLoc != null && myGeoLoc.isSameAsOrInside( geoLoc );
         }
     }
 
@@ -283,10 +329,7 @@ public class Place extends ModelObject implements GeoLocatable {
      */
     @Transient
     public Place getLoopyContainingPlace() {
-        if ( within == null ) {
-            return null;
-        } else
-            return within.getLoopyContainingPlace( this );
+        return getLoopyContainingPlace( this );
     }
 
     private Place getLoopyContainingPlace( Place place ) {
@@ -343,11 +386,31 @@ public class Place extends ModelObject implements GeoLocatable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append( getName() );
-        if ( within != null ) {
+        if ( within != null && getLoopyContainingPlace() == null ) {
             sb.append( " in " );
             sb.append( within.toString() );
         }
         return sb.toString();
     }
 
+    /**
+     * Whether this place is transitively within another.
+     *
+     * @param place a place
+     * @return a boolean
+     */
+    public boolean isWithin( Place place ) {
+        return isWithin( place, new ArrayList<Place>() );
+    }
+
+    /**
+     * The place defines a geographical area.
+     *
+     * @return a boolean
+     */
+    @Transient
+    public boolean isRegion() {
+        String actualAddress = getActualStreetAddress();
+        return ( actualAddress == null || actualAddress.isEmpty() ) && geoLocate() != null;
+    }
 }

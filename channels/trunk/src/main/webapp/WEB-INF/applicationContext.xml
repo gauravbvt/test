@@ -183,7 +183,19 @@
                     <property name="geoService" ref="geoService"/>
                     <property name="queryService" ref="queryService"/>
                 </bean>
-            </list>
+                <bean class="com.mindalliance.channels.analysis.detectors.PlaceInheritsDifferentPostalCode">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.PlaceInheritsDifferentStreetAddress">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.PlaceContainedInSelf">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.RedundantPlace">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+             </list>
         </property>
     </bean>
 

@@ -266,9 +266,20 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
 
     /**
      * Clean up before removal.
+     *
      * @param queryService a query service
      */
     public void beforeRemove( QueryService queryService ) {
         // DO nothing
+    }
+
+    /**
+     * Get the type of model object.
+     *
+     * @return a string
+     */
+    @Transient
+    public String getModelObjectType() {
+        return getClass().getSimpleName();
     }
 }

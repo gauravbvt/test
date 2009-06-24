@@ -2,15 +2,30 @@ package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
+import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.pages.GeoMapPage;
+import com.mindalliance.channels.pages.ModelObjectLink;
+import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import com.mindalliance.channels.pages.components.Filterable;
+import com.mindalliance.channels.pages.components.GeomapLinkPanel;
+import com.mindalliance.channels.pages.components.NameRangePanel;
+import com.mindalliance.channels.pages.components.NameRangeable;
+import com.mindalliance.channels.util.NameRange;
 import com.mindalliance.channels.util.SemMatch;
+import com.mindalliance.channels.util.SortableBeanProvider;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.Transformer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
+import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -23,6 +38,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -35,7 +51,11 @@ import java.util.Set;
  * Date: Jun 16, 2009
  * Time: 10:53:47 AM
  */
-public class PlaceDetailsPanel extends EntityDetailsPanel {
+public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeable, Filterable {
+    /**
+     * Maximum number of places within to show in table at once.
+     */
+    private static final int MAX_ROWS = 5;
     /**
      * Place detail fields container.
      */
@@ -53,9 +73,30 @@ public class PlaceDetailsPanel extends EntityDetailsPanel {
      */
     private TextField<String> geonameField;
     /**
-      * Within field.
-      */
-     private TextField<String> withinField;
+     * Within field.
+     */
+    private TextField<String> withinField;
+    /**
+     * Geomap link to places within this one.
+     */
+    private GeomapLinkPanel withinPlacesMapLink;
+    /**
+     * Selected name range.
+     */
+    private NameRange nameRange;
+    /**
+     * Name index panel.
+     */
+    private NameRangePanel nameRangePanel;
+    /**
+     * /**
+     * Role employment table.
+     */
+    private PlacesWithinTable placesWithinTable;
+    /**
+     * Model objects filtered on
+     */
+    private List<Identifiable> filters;
 
     public PlaceDetailsPanel(
             String id,
@@ -68,6 +109,8 @@ public class PlaceDetailsPanel extends EntityDetailsPanel {
      * {@inheritDoc}
      */
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
+        filters = new ArrayList<Identifiable>();
+        nameRange = new NameRange();
         this.moDetailsDiv = moDetailsDiv;
         addWithinField();
         addStreetAddressField();
@@ -77,10 +120,18 @@ public class PlaceDetailsPanel extends EntityDetailsPanel {
         geoLocationsContainer.setOutputMarkupId( true );
         moDetailsDiv.add( geoLocationsContainer );
         addGeoLocationList();
+        addPlacesWithinGeomapLink();
+        addNameRangePanel();
+        addPlacesWithinTable();
+        addPlaceReferencesTable();
     }
 
     private void addWithinField() {
-        final List<String> choices = getQueryService().findAllNames( Place.class );
+        moDetailsDiv.add(
+                new ModelObjectLink( "within-link",
+                        new PropertyModel<Place>( getPlace(), "within" ),
+                        new Model<String>( "Is within" ) ) );
+        final List<String> choices = findWithinCandidates();
         withinField = new AutoCompleteTextField<String>(
                 "within",
                 new PropertyModel<String>( this, "withinName" ) ) {
@@ -94,14 +145,45 @@ public class PlaceDetailsPanel extends EntityDetailsPanel {
         };
         withinField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                addIssues( withinField, getPlace(), "withinName" );
+                addIssues( withinField, getPlace(), "within" );
                 target.addComponent( withinField );
+                refreshPlacesWithin( target );
                 update( target, new Change( Change.Type.Updated, getPlace(), "within" ) );
             }
         } );
         addIssues( withinField, getPlace(), "within" );
+        withinField.setEnabled( isLockedByUser( getPlace() ) );
         withinField.setOutputMarkupId( true );
         moDetailsDiv.add( withinField );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<String> findWithinCandidates() {
+        final Place place = getPlace();
+        List<Place> allCandidatePlaces = (List<Place>) CollectionUtils.select(
+                getQueryService().list( Place.class ),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return !( (Place) obj ).isSameAsOrIn( place );
+                    }
+                }
+        );
+        return (List<String>) CollectionUtils.collect(
+                allCandidatePlaces,
+                new Transformer() {
+                    public Object transform( Object obj ) {
+                        return ( (Place) obj ).getName();
+                    }
+                } );
+    }
+
+    private void refreshPlacesWithin( AjaxRequestTarget target ) {
+        addPlacesWithinGeomapLink();
+        addNameRangePanel();
+        addPlacesWithinTable();
+        target.addComponent( withinPlacesMapLink );
+        target.addComponent( nameRangePanel );
+        target.addComponent( placesWithinTable );
     }
 
     private void addGeoLocationList() {
@@ -118,14 +200,18 @@ public class PlaceDetailsPanel extends EntityDetailsPanel {
     }
 
     private void addStreetAddressField() {
-        TextField<String> streetAddressField = new TextField<String>(
+        final TextField<String> streetAddressField = new TextField<String>(
                 "streetAddress",
                 new PropertyModel<String>( this, "streetAddress" ) );
         streetAddressField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
+                refreshPlacesWithin( target );
+                addIssues( streetAddressField, getPlace(), "streetAddress" );
                 update( target, new Change( Change.Type.Updated, getPlace(), "streetAddress" ) );
             }
         } );
+        addIssues( streetAddressField, getPlace(), "streetAddress" );
+        streetAddressField.setEnabled( isLockedByUser( getPlace() ) );
         moDetailsDiv.add( streetAddressField );
     }
 
@@ -141,10 +227,12 @@ public class PlaceDetailsPanel extends EntityDetailsPanel {
                 target.addComponent( postalCodeField );
                 addIssues( withinField, getPlace(), "within" );
                 target.addComponent( withinField );
+                refreshPlacesWithin( target );
                 update( target, new Change( Change.Type.Updated, getPlace(), "postalCode" ) );
             }
         } );
         addIssues( postalCodeField, getPlace(), "postalCode" );
+        postalCodeField.setEnabled( isLockedByUser( getPlace() ) );
         moDetailsDiv.add( postalCodeField );
     }
 
@@ -169,11 +257,136 @@ public class PlaceDetailsPanel extends EntityDetailsPanel {
                 target.addComponent( postalCodeField );
                 addIssues( withinField, getPlace(), "within" );
                 target.addComponent( withinField );
+                refreshPlacesWithin( target );
                 update( target, new Change( Change.Type.Updated, getPlace(), "geoname" ) );
             }
         } );
         addIssues( geonameField, getPlace(), "geoname" );
+        geonameField.setEnabled( isLockedByUser( getPlace() ) );
         moDetailsDiv.add( geonameField );
+    }
+
+    private void addPlacesWithinGeomapLink() {
+        List<? extends GeoLocatable> geoLocatables = getPlacesWithin();
+        withinPlacesMapLink = new GeomapLinkPanel(
+                "geomapLink",
+                new Model<String>( "Places within " + getPlace().getName() ),
+                geoLocatables,
+                new Model<String>( "Show listed places within this one" ) );
+        withinPlacesMapLink.setOutputMarkupId( true );
+        moDetailsDiv.addOrReplace( withinPlacesMapLink );
+    }
+
+    private void addNameRangePanel() {
+        nameRangePanel = new NameRangePanel(
+                "nameRanges",
+                new PropertyModel<List<String>>( this, "indexedNames" ),
+                MAX_ROWS,
+                this,
+                "All names"
+        );
+        nameRangePanel.setOutputMarkupId( true );
+        moDetailsDiv.addOrReplace( nameRangePanel );
+    }
+
+    private void addPlacesWithinTable() {
+        placesWithinTable = new PlacesWithinTable(
+                "placesWithin",
+                new PropertyModel<List<Place>>( this, "placesWithin" ),
+                MAX_ROWS
+        );
+        placesWithinTable.setOutputMarkupId( true );
+        moDetailsDiv.addOrReplace( placesWithinTable );
+    }
+
+    private void addPlaceReferencesTable() {
+        PlaceReferencesTable placeReferencesTable = new PlaceReferencesTable(
+                "placeReferences",
+                new PropertyModel<List<ModelObject>>( this, "placeReferences" ),
+                MAX_ROWS
+        );
+        moDetailsDiv.add( placeReferencesTable );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void toggleFilter( Identifiable identifiable, String property, AjaxRequestTarget target ) {
+        // Property ignored since no two properties filtered are ambiguous on type.
+        if ( isFiltered( identifiable, property ) ) {
+            filters.remove( identifiable );
+        } else {
+            filters.add( identifiable );
+        }
+        refreshPlacesWithin( target );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isFiltered( Identifiable identifiable, String property ) {
+        return filters.contains( identifiable );
+    }
+
+    /**
+     * Change the selected name range.
+     *
+     * @param target an ajax request target
+     * @param range  a name range
+     */
+    public void setNameRange( AjaxRequestTarget target, NameRange range ) {
+        nameRange = range;
+        nameRangePanel.setSelected( target, range );
+        addPlacesWithinTable();
+        target.addComponent( placesWithinTable );
+    }
+
+    /**
+     * Find all names to be indexed.
+     *
+     * @return a list of strings
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<String> getIndexedNames() {
+        List<Place> places = getQueryService().findAllPlacesWithin( getPlace() );
+        return (List<String>) CollectionUtils.collect(
+                places,
+                new Transformer() {
+                    public Object transform( Object obj ) {
+                        return ( (Place) obj ).getName();
+                    }
+                } );
+    }
+
+    /**
+     * Find all employments in the plan that are not filtered out and are within selected name range.
+     *
+     * @return a list of employments.
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<Place> getPlacesWithin() {
+        return (List<Place>) CollectionUtils.select(
+                getQueryService().findAllPlacesWithin( getPlace() ),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return !isFilteredOut( (Place) obj ) && isInNameRange( (Place) obj );
+                    }
+                }
+        );
+
+    }
+
+    private boolean isFilteredOut( Place place ) {
+        boolean filteredOut = false;
+        for ( Identifiable filter : filters ) {
+            filteredOut = filteredOut ||
+                    ( filter instanceof Place && ( place.getWithin() == null || !place.getWithin().equals( filter ) ) );
+        }
+        return filteredOut;
+    }
+
+    private boolean isInNameRange( Place place ) {
+        return nameRange.contains( place.getName() );
     }
 
 
@@ -268,6 +481,15 @@ public class PlaceDetailsPanel extends EntityDetailsPanel {
         getCommander().cleanup( Place.class, oldName );
     }
 
+    /**
+     * Find all model objects that reference this place.
+     *
+     * @return a list of model objects
+     */
+    public List<ModelObject> getPlaceReferences() {
+        return getQueryService().findAllReferencesTo( getPlace() );
+    }
+
     private class GeoLocationPanel extends AbstractUpdatablePanel {
 
         private GeoLocation geoLocation;
@@ -285,9 +507,11 @@ public class PlaceDetailsPanel extends EntityDetailsPanel {
                     addIssues( postalCodeField, getPlace(), "postalCode" );
                     target.addComponent( postalCodeField );
                     target.addComponent( geoLocationsContainer );
+                    refreshPlacesWithin( target );
                     update( target, new Change( Change.Type.Updated, getPlace(), "geoLocation" ) );
                 }
             } );
+            selectionCheckBox.setEnabled( isLockedByUser( getPlace() ) );
             add( selectionCheckBox );
             BookmarkablePageLink<GeoMapPage> geomapLink = GeoMapPage.makeLink(
                     "mapLink",
@@ -319,6 +543,110 @@ public class PlaceDetailsPanel extends EntityDetailsPanel {
                     doCommand( new UpdatePlanObject( getPlace(), "geoLocation", null ) );
                 }
             }
+        }
+    }
+
+    /**
+     * Places within table panel.
+     */
+    public class PlacesWithinTable extends AbstractTablePanel<Place> {
+
+        /**
+         * Employment model.
+         */
+        private IModel<List<Place>> placesModel;
+
+        public PlacesWithinTable(
+                String id,
+                IModel<List<Place>> placesModel,
+                int pageSize ) {
+            super( id, null, pageSize, null );
+            this.placesModel = placesModel;
+            init();
+        }
+
+        @SuppressWarnings( "unchecked" )
+        private void init() {
+            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            // columns
+            columns.add( makeLinkColumn(
+                    "Name",
+                    "",
+                    "name",
+                    EMPTY ) );
+            columns.add( makeFilterableLinkColumn(
+                    "Is within",
+                    "within",
+                    "within.name",
+                    EMPTY,
+                    PlaceDetailsPanel.this ) );
+            columns.add( makeColumn(
+                    "Address",
+                    "fullAddress",
+                    "fullAddress",
+                    EMPTY ) );
+            columns.add( makeGeomapLinkColumn(
+                    "",
+                    "name",
+                    Arrays.asList( "" ),
+                    new Model<String>( "Show place in map" ) ) );
+            // provider and table
+            add( new AjaxFallbackDefaultDataTable(
+                    "places",
+                    columns,
+                    new SortableBeanProvider<Place>(
+                            placesModel.getObject(),
+                            "name" ),
+                    getPageSize() ) );
+        }
+    }
+
+    /**
+     * Event reference table.
+     */
+    public class PlaceReferencesTable extends AbstractTablePanel<ModelObject> {
+        /**
+         * Event reference model.
+         */
+        private IModel<List<ModelObject>> referencesModel;
+
+        public PlaceReferencesTable(
+                String id,
+                IModel<List<ModelObject>> referencesModel,
+                int pageSize ) {
+            super( id, null, pageSize, null );
+            this.referencesModel = referencesModel;
+            initialize();
+        }
+
+        @SuppressWarnings( "unchecked" )
+        private void initialize() {
+            final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            // columns
+            columns.add( makeColumn(
+                    "Kind",
+                    "modelObjectType",
+                    "modelObjectType.name",
+                    EMPTY ) );
+            columns.add( makeLinkColumn(
+                    "Name",
+                    "",
+                    "name",
+                    EMPTY ) );
+            columns.add( makeColumn(
+                    "Description",
+                    "description",
+                    "description",
+                    EMPTY ) );
+            // provider and table
+            add( new AjaxFallbackDefaultDataTable(
+                    "references",
+                    columns,
+                    new SortableBeanProvider<ModelObject>(
+                            referencesModel.getObject(),
+                            "name" ),
+                    getPageSize() ) );
+
         }
     }
 
