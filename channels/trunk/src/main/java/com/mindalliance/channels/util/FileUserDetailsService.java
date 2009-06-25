@@ -313,8 +313,8 @@ public class FileUserDetailsService implements UserDetailsService {
         private void addRole( String roleString ) {
             if ( ROLE_ADMIN.equals( roleString ) )
                 setAdmin( true );
-            else
-                setPlanner( ROLE_PLANNER.equals( roleString ) );
+            else if ( ROLE_PLANNER.equals( roleString ) )
+                setPlanner( true );
         }
 
         /**
