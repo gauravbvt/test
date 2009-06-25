@@ -76,18 +76,6 @@ public class EntityShowMenuPanel extends MenuPanel {
                     new Model<String>( "Map" ),
                     geomapLink ) );
         }
-
-        /*       Link mapLink = new AjaxFallbackLink( "link" ) {
-                    public void onClick( AjaxRequestTarget target ) {
-                        changeAspectTo( target, "map" );
-                    }
-                };
-                menuItems.add( new LinkMenuItem(
-                        "menuItem",
-                        new Model<String>( "Map" ),
-                        mapLink ) );
-
-        */
         if ( !( getEntity() instanceof Event ) ) {
             Link issuesLink = new AjaxFallbackLink( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {

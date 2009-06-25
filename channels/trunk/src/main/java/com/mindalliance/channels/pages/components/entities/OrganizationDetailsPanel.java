@@ -146,7 +146,8 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         Organization organization = getOrganization();
         List<String> candidateNames = new ArrayList<String>();
         List<Organization> ancestors = organization.ancestors();
-        List<Organization> allOrganizations = getQueryService().list( Organization.class );
+        List<Organization> allOrganizations =
+                new ArrayList<Organization>( getQueryService().list( Organization.class ) );
         allOrganizations.remove( organization );
         Collection<Organization> candidates = CollectionUtils.subtract( allOrganizations, ancestors );
         for ( Organization candidate : candidates ) {

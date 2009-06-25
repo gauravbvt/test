@@ -33,7 +33,7 @@ import java.util.Set;
  */
 public class EntityIssuesPanel extends AbstractIssueTablePanel {
 
-    private static final int MAX_ROWS = 7;
+    private static final int MAX_ROWS = 10;
 
     /**
      * Whether to show waived issues.
