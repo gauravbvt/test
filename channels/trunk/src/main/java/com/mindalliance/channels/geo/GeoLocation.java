@@ -28,7 +28,7 @@ public class GeoLocation implements Serializable {
     private String stateCode;
     private String countyCode;
     private String cityCode;
-    private Integer population;
+    private long population;
     private double latitude;
     private double longitude;
     private String streetAddress;
@@ -105,7 +105,7 @@ public class GeoLocation implements Serializable {
         }
     }
 
-    private Integer getPopulation( Toponym topo ) {
+    private Long getPopulation( Toponym topo ) {
         try {
             return topo.getPopulation();
         } catch ( InsufficientStyleException e ) {
@@ -177,7 +177,7 @@ public class GeoLocation implements Serializable {
         this.cityCode = cityCode;
     }
 
-    public Integer getPopulation() {
+    public Long getPopulation() {
         return population;
     }
 

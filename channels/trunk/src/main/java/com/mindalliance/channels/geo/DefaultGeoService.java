@@ -78,6 +78,7 @@ public class DefaultGeoService extends AbstractService implements GeoService {
             searchCriteria.setQ( name );
             searchCriteria.setStyle( Style.FULL );
             searchCriteria.setMaxRows( MAX_SEARCH_ROWS );
+            LOG.debug( "Geonames search: toponyms for " + name );
             ToponymSearchResult searchResult = WebService.search( searchCriteria );
             LOG.debug( "Found " + searchResult.getTotalResultsCount() + " toponyms for " + name );
             for ( Toponym topo : searchResult.getToponyms() ) {
@@ -127,7 +128,9 @@ public class DefaultGeoService extends AbstractService implements GeoService {
             criteria.setLatitude( geoLocation.getLatitude() );
             criteria.setLongitude( geoLocation.getLongitude() );
             criteria.setStyle( Style.FULL );
+            LOG.debug( "Geonames search: finding nearby postal codes for " + geoLocation );
             List<PostalCode> postalCodes = WebService.findNearbyPostalCodes( criteria );
+            LOG.debug( "Found " + postalCodes.size() + " for " + geoLocation );
             PostalCode match = (PostalCode) CollectionUtils.find(
                     postalCodes,
                     new Predicate() {
@@ -148,7 +151,7 @@ public class DefaultGeoService extends AbstractService implements GeoService {
     public void refineWithAddress( GeoLocation geoLocation, String streetAddress, String postalCode ) {
         if ( !geoLocation.isRefinedTo( streetAddress, postalCode ) ) {
             // Lat/Long refinement is obsolete, must re-obtain lat/long for address.
-            String rest = makeGoogleGeocodingURL( geoLocation, streetAddress, postalCode );
+            String rest = makeGoogleGeocodingURL( geoLocation, streetAddress, postalCode, "csv" );
             try {
                 URL url = new URL( rest );
                 String csv = getGeoCoding( url );
@@ -175,22 +178,26 @@ public class DefaultGeoService extends AbstractService implements GeoService {
     }
 
     /**
-      * {@inheritDoc}
-      */
+     * {@inheritDoc}
+     */
     public String getGeoCoding( URL restUrl ) {
         try {
+            LOG.debug( "Google geocoding search:" + restUrl );
             InputStream in = restUrl.openStream();
             BufferedReader reader = new BufferedReader( new InputStreamReader( in ) );
             String csv = reader.readLine();
-            LOG.debug( restUrl + " => " + csv );
+            LOG.debug( "Found " + csv );
             return csv;
         } catch ( IOException e ) {
             throw new RuntimeException( e );
         }
     }
 
-    private String makeGoogleGeocodingURL( GeoLocation geoLocation, String streetAddress, String postalCode ) {
-        // Full address
+    private String makeGoogleGeocodingURL(
+            GeoLocation geoLocation,
+            String streetAddress,
+            String postalCode,
+            String outputFormat ) {
         StringBuilder loc = new StringBuilder();
         if ( streetAddress != null ) {
             loc.append( streetAddress );
@@ -201,20 +208,26 @@ public class DefaultGeoService extends AbstractService implements GeoService {
             loc.append( ", " );
             loc.append( postalCode );
         }
-        // REST query
+        return makeGoogleGeocodingURL( loc.toString(), outputFormat );
+    }
+
+    private String makeGoogleGeocodingURL(
+            String name,
+            String outputFormat ) {
         StringBuilder sb = new StringBuilder();
         sb.append( GOOGLE_MAP_URI );
         sb.append( "?" );
         sb.append( "q=" );
         try {
-            sb.append( URLEncoder.encode( loc.toString(), "UTF-8" ) );
+            sb.append( URLEncoder.encode( name, "UTF-8" ) );
         } catch ( UnsupportedEncodingException e ) {
             throw new RuntimeException( e );
         }
         sb.append( "&key=" );
         sb.append( googleMapsAPIKey );
         sb.append( "&sensor=false" );
-        sb.append( "&output=csv" );
+        sb.append( "&output=" );
+        sb.append( outputFormat );
         return sb.toString();
     }
 
