@@ -226,8 +226,8 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
      */
     public String getFlowsTitle() {
         if ( selectedEntityRel != null ) {
-            T fromEntity = selectedEntityRel.getFromEntity( getQueryService() );
-            T toEntity = selectedEntityRel.getToEntity( getQueryService() );
+            T fromEntity = (T)selectedEntityRel.getFromIdentifiable( getQueryService() );
+            T toEntity = (T)selectedEntityRel.getToIdentifiable( getQueryService() );
             if ( fromEntity == null || toEntity == null ) {
                 return "*** You need to refresh ***";
             } else {
@@ -344,8 +344,8 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
                 new Transformer() {
                     public Object transform( Object obj ) {
                         return new ActorFlow(
-                                (Actor) entityRelationship.getFromEntity( getQueryService() ),
-                                (Actor) entityRelationship.getToEntity( getQueryService() ),
+                                (Actor) entityRelationship.getFromIdentifiable( getQueryService() ),
+                                (Actor) entityRelationship.getToIdentifiable( getQueryService() ),
                                 (Flow) obj
                         );
                     }
@@ -451,7 +451,7 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
     public void updateWith( AjaxRequestTarget target, Change change ) {
         if ( change.isSelected() ) {
             refresh( target );
-            // Don't percolate update on selection unless a part or flowwas selected.
+            // Don't percolate update on selection unless a part or flow was selected.
             if ( change.getSubject() instanceof Part || change.getSubject() instanceof Flow ) {
                 super.updateWith( target, change );
             } else {

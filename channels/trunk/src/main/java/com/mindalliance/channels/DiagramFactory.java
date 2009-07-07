@@ -4,6 +4,7 @@ import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.GraphRenderer;
+import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Scenario;
@@ -96,6 +97,15 @@ public interface DiagramFactory<Vertex, Edge> extends Service {
             EntityRelationship<T> selectedEntityRel,
             double[] diagramSize,
             String orientation );
+
+    /**
+     * Instantiate a hierarchy diagram.
+     * @param hierarchical a hierarchical object
+     * @param diagramSize width and height as array of doubles
+     * @param orientation a string
+     * @return a hierarchy diagram
+      */
+    Diagram newHierarchyDiagram( Hierarchical hierarchical, double[] diagramSize, String orientation );
 
     /**
      * Gets the preset graph renderer.

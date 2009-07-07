@@ -1,14 +1,14 @@
 package com.mindalliance.channels.analysis.graph;
 
-import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.graph.GraphBuilder;
+import com.mindalliance.channels.model.ModelObject;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An entity network graph builder.
@@ -20,8 +20,17 @@ import java.util.ArrayList;
  */
 public class EntityNetworkGraphBuilder implements GraphBuilder<ModelObject, EntityRelationship> {
 
+    /**
+     * A model object.
+     */
     private ModelObject entity;
+    /**
+     * Related entities.
+     */
     private List<? extends ModelObject> entities;
+    /**
+     * A query service.
+     */
     private QueryService queryService;
 
     public EntityNetworkGraphBuilder(
@@ -68,12 +77,14 @@ public class EntityNetworkGraphBuilder implements GraphBuilder<ModelObject, Enti
             }
         }
         for ( EntityRelationship entityRel : rels ) {
-            digraph.addVertex( entityRel.getToEntity( queryService ) );
-            digraph.addVertex( entityRel.getFromEntity( queryService ) );
+            digraph.addVertex( (ModelObject)entityRel.getToIdentifiable( queryService ) );
+            digraph.addVertex( (ModelObject)entityRel.getFromIdentifiable( queryService ) );
         }
         for ( EntityRelationship entityRel : rels ) {
             if ( entityRel != null ) {
-                digraph.addEdge( entityRel.getFromEntity( queryService ), entityRel.getToEntity( queryService ), entityRel );
+                digraph.addEdge( (ModelObject)entityRel.getFromIdentifiable( queryService ),
+                        (ModelObject)entityRel.getToIdentifiable( queryService ),
+                        entityRel );
             }
         }
     }

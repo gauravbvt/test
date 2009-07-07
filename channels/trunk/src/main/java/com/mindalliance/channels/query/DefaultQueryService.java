@@ -19,6 +19,7 @@ import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Job;
 import com.mindalliance.channels.model.Medium;
@@ -2064,6 +2065,69 @@ public class DefaultQueryService extends Observable implements QueryService {
             }
         }
         return references;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Hierarchical> findRoots( Hierarchical hierarchical ) {
+        Set<Hierarchical> roots = findRoots( hierarchical, new HashSet<Hierarchical>() );
+        return new ArrayList<Hierarchical>( roots );
+    }
+
+    private Set<Hierarchical> findRoots(
+            Hierarchical hierarchical,
+            Set<Hierarchical> visited ) {
+        Set<Hierarchical> roots = new HashSet<Hierarchical>();
+        if ( !visited.contains( hierarchical ) ) {
+            visited.add( hierarchical );
+            List<Hierarchical> superiors = hierarchical.getSuperiors();
+            if ( superiors.isEmpty() ) {
+                roots.add( hierarchical );
+            } else {
+                for ( Hierarchical superior : superiors ) {
+                    roots.addAll( findRoots( superior, visited ) );
+                }
+            }
+        }
+        return roots;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Hierarchical> findAllDescendants( Hierarchical hierarchical ) {
+        Set<Hierarchical> descendants = new HashSet<Hierarchical>();
+        for ( ModelObject mo : this.findAllModelObjects() ) {
+            if ( mo instanceof Hierarchical && hasAncestor(
+                    (Hierarchical) mo,
+                    hierarchical,
+                    new HashSet<Hierarchical>() ) ) {
+                descendants.add( (Hierarchical) mo );
+            }
+        }
+        return new ArrayList<Hierarchical>( descendants );
+    }
+
+    private boolean hasAncestor(
+            Hierarchical hierarchical,
+            final Hierarchical other,
+            final Set<Hierarchical> visited ) {
+        if ( !visited.contains( hierarchical ) ) {
+            visited.add( hierarchical );
+            List<Hierarchical> superiors = hierarchical.getSuperiors();
+            return !superiors.isEmpty()
+                    && ( superiors.contains( other )
+                        || CollectionUtils.find(
+                            superiors,
+                            new Predicate() {
+                                public boolean evaluate( Object obj ) {
+                                    return hasAncestor( (Hierarchical) obj, other, visited );
+                                }
+                            } ) != null );
+        } else {
+            return false;
+        }
     }
 
 

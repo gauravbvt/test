@@ -1,6 +1,8 @@
 package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.model.Identifiable;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.core.io.Resource;
 
 /**
@@ -153,8 +155,20 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
         return sb.toString();
     }
 
-
-
+    /**
+     * Get label for identifiable.
+     * @param identifiable an identifiable
+     * @return a string
+     */
+    protected String getIdentifiableLabel( Identifiable identifiable ) {
+         String label = AbstractMetaProvider.separate( identifiable.getName(), LINE_WRAP_SIZE );
+         while ( label.split( "\\|" ).length > 3 ) {
+             label = StringUtils.reverse( label );
+             label = label.replaceFirst( "\\|", " " );
+             label = StringUtils.reverse( label );
+         }
+         return label;
+     }
 
 
 }

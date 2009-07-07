@@ -4,6 +4,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Channelable;
+import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
@@ -41,6 +42,8 @@ import java.util.Set;
  * Time: 2:28:58 PM
  */
 public class OrganizationDetailsPanel extends EntityDetailsPanel {
+
+    private static final String OrgChartDomIdentifier = ".entity .orgchart";
 
     public OrganizationDetailsPanel(
             String id,
@@ -134,8 +137,9 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
             public Panel getPanel( String id ) {
                 return new OrgChartPanel(
                         id,
-                        new PropertyModel<Organization>( OrganizationDetailsPanel.this, "organization" ),
-                        getExpansions() );
+                        new PropertyModel<Hierarchical>( OrganizationDetailsPanel.this, "organization" ),
+                        getExpansions(),
+                        OrgChartDomIdentifier );
             }
         } );
         return tabs;

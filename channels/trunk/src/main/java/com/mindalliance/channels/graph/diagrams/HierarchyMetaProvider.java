@@ -2,12 +2,13 @@ package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.analysis.graph.HierarchyRelationship;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
 import com.mindalliance.channels.graph.URLProvider;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Role;
@@ -20,14 +21,14 @@ import java.text.MessageFormat;
 import java.util.List;
 
 /**
- * Entity network meta provider.
+ * Hierarchy diagram meta provider.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: Apr 6, 2009
- * Time: 8:33:28 PM
+ * Date: Jul 6, 2009
+ * Time: 4:07:33 PM
  */
-public class EntityNetworkMetaProvider extends AbstractMetaProvider {
+public class HierarchyMetaProvider extends AbstractMetaProvider {
 
     /**
      * Font for node labels
@@ -38,7 +39,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
      */
     private static final String ENTITY_FONT_SIZE = "10";
 
-    public EntityNetworkMetaProvider(
+    public HierarchyMetaProvider(
             String outputFormat,
             Resource imageDirectory,
             Analyst analyst ) {
@@ -50,60 +51,53 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
     }
 
     public URLProvider getURLProvider() {
-        return new URLProvider<ModelObject, EntityRelationship>() {
+        return new URLProvider<Hierarchical, HierarchyRelationship>() {
 
-            public String getGraphURL( ModelObject vertex ) {
+            public String getGraphURL( Hierarchical vertex ) {
                 return null;
             }
 
-            public String getVertexURL( ModelObject modelObject ) {
-                if ( modelObject.isUnknown() ) {
-                    return null;
-                } else {
-                    Object[] args = {0, modelObject.getId()};
+            public String getVertexURL( Hierarchical hierarchical ) {
+                Object[] args = {0, hierarchical.getId()};
                     return MessageFormat.format( VERTEX_URL_FORMAT, args );
-                }
             }
 
-            public String getEdgeURL( EntityRelationship entityRelationship ) {
-                // Plan id = 0 for now sice there is only one plan
-                Object[] args = {0, entityRelationship.getId()};
-                return MessageFormat.format( EDGE_URL_FORMAT, args );
+            public String getEdgeURL( HierarchyRelationship hierarchyRelationship ) {
+                return null;
             }
         };
     }
 
-    public EdgeNameProvider getEdgeLabelProvider() {
-        return new EdgeNameProvider<EntityRelationship>() {
-            public String getEdgeName( EntityRelationship entityRelationship ) {
-                int count = entityRelationship.getFlows().size();
-                return count + ( count > 1 ? " flows" : " flow" );
+     public EdgeNameProvider getEdgeLabelProvider() {
+        return new EdgeNameProvider<HierarchyRelationship>() {
+            public String getEdgeName( HierarchyRelationship hierarchyRelationship ) {
+                return "";
             }
         };
     }
 
     public VertexNameProvider getVertexLabelProvider() {
-        return new VertexNameProvider<ModelObject>() {
-            public String getVertexName( ModelObject modelObject ) {
-                String label = getIdentifiableLabel( modelObject ).replaceAll( "\\|", "\\\\n" );
-                return sanitize( label );
-            }
-        };
+        return new VertexNameProvider<Hierarchical>() {
+             public String getVertexName( Hierarchical hierarchical ) {
+                 String label = getIdentifiableLabel( hierarchical ).replaceAll( "\\|", "\\\\n" );
+                 return sanitize( label );
+             }
+         };
     }
 
     public VertexNameProvider getVertexIDProvider() {
-        return new VertexNameProvider<ModelObject>() {
-            public String getVertexName( ModelObject entity ) {
-                return "" + entity.getId();
-            }
+        return new VertexNameProvider<Hierarchical>() {
+             public String getVertexName( Hierarchical hierarchical ) {
+                 return "" + hierarchical.getId();
+             }
         };
     }
 
     public DOTAttributeProvider getDOTAttributeProvider() {
-        return new NetwordDOTAttributeProvider();
-    }
+         return new HierarchyDOTAttributeProvider();
+     }
 
-    private class NetwordDOTAttributeProvider implements DOTAttributeProvider<ModelObject, EntityRelationship> {
+    private class HierarchyDOTAttributeProvider implements DOTAttributeProvider<Hierarchical, HierarchyRelationship> {
         public List<DOTAttribute> getGraphAttributes() {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "rankdir", getGraphOrientation() ) );
@@ -118,7 +112,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
             return DOTAttribute.emptyList();
         }
 
-        public List<DOTAttribute> getVertexAttributes( ModelObject vertex, boolean highlighted ) {
+        public List<DOTAttribute> getVertexAttributes( Hierarchical vertex, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "image", getIcon( vertex ) ) );
             list.add( new DOTAttribute( "labelloc", "b" ) );
@@ -131,16 +125,16 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
             }
             list.add( new DOTAttribute( "fontsize", ENTITY_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", ENTITY_FONT ) );
-            if ( getAnalyst().hasUnwaivedIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+            if ( getAnalyst().hasUnwaivedIssues( (ModelObject)vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( vertex,
+                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( (ModelObject)vertex,
                         Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             }
             return list;
         }
 
 
-        public List<DOTAttribute> getEdgeAttributes( EntityRelationship edge, boolean highlighted ) {
+        public List<DOTAttribute> getEdgeAttributes( HierarchyRelationship edge, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowhead", "vee" ) );
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
@@ -152,18 +146,12 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
             if ( highlighted ) {
                 list.add( new DOTAttribute( "penwidth", "3.0" ) );
             }
-            // Issue coloring
-            if ( edge.hasIssues( getAnalyst() ) ) {
-                list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "color", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", sanitize( edge.getIssuesSummary( getAnalyst() ) ) ) );
-            }
             return list;
         }
 
-        private String getIcon( ModelObject modelObject ) {
+        private String getIcon( Hierarchical modelObject ) {
             String iconName;
-            int numLines = 0;
+            int numLines;
             String label = getIdentifiableLabel( modelObject );
             String[] lines = label.split( "\\|" );
             numLines = Math.min( lines.length, 3 );
@@ -189,4 +177,5 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
         }
 
     }
+
 }

@@ -8,6 +8,7 @@ import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Job;
 import com.mindalliance.channels.model.ModelObject;
@@ -825,4 +826,18 @@ public interface QueryService extends Service {
      * @return a list of model objects
      */
     List<ModelObject> findAllReferencesTo( Place place );
+
+    /**
+     * Find all roots of hierarchy in which a hierarchical object belongs.
+     * @param hierarchical a hierarchical object
+     * @return a list of a hierarchical objects
+     */
+    List<Hierarchical> findRoots( Hierarchical hierarchical );
+
+    /**
+     * Find all descendants of a hierarchical object.
+     * @param hierarchical a hierarchical object
+     * @return a list of a hierarchical objects
+     */
+    List<Hierarchical> findAllDescendants( Hierarchical hierarchical );
 }

@@ -7,7 +7,9 @@ import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.graph.diagrams.EntityNetworkDiagram;
 import com.mindalliance.channels.graph.diagrams.FlowMapDiagram;
+import com.mindalliance.channels.graph.diagrams.HierarchyDiagram;
 import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
+import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Scenario;
@@ -100,7 +102,8 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
     /**
       * {@inheritDoc}
       */
-    // TODO - why can't I say:  List<Scenario> scenarios ?
+    @SuppressWarnings("unchecked")
+    // TODO - why can't I say:  List<Scenario> scenarios ?   -- ? extends...
     public Diagram newPlanMapDiagram(
             List scenarios,
             Scenario scenario,
@@ -114,5 +117,14 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
                 diagramSize,
                 orientation );
     }
+
+    public Diagram newHierarchyDiagram(
+            Hierarchical hierarchical,
+            double[] diagramSize,
+            String orientation ) {
+        LOG.debug("Making hierarchy diagram on " + hierarchical.getName() );
+        return new HierarchyDiagram( hierarchical, diagramSize, orientation );
+    }
+
 
 }

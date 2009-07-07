@@ -25,7 +25,13 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
      * Class logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( EntityNetworkDiagramPanel.class );
+    /**
+     * Entity model.
+     */
     private IModel<T> entityModel;
+    /**
+     * Selected entity relationship.
+     */
     private EntityRelationship<T> selectedEntityRel;
 
     public EntityNetworkDiagramPanel(
@@ -52,6 +58,9 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     protected String getContainerId() {
         return "entity-network";
     }
@@ -59,6 +68,7 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings( "unchecked" )
     protected Diagram makeDiagram() {
         return getDiagramFactory().newEntityNetworkDiagram(
                 entityModel.getObject(),
@@ -89,12 +99,12 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
     }
 
     /**
-      * {@inheritDoc}
-      */
-     protected String makeSeed() {
-         // Force regeneration
-         return "&_modified=" + System.currentTimeMillis();
-     }
+     * {@inheritDoc}
+     */
+    protected String makeSeed() {
+        // Force regeneration
+        return "&_modified=" + System.currentTimeMillis();
+    }
 
     protected void onClick( AjaxRequestTarget target ) {
         update( target, new Change( Change.Type.Selected, Channels.getPlan() ) );
@@ -115,6 +125,7 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings( "unchecked" )
     protected void onSelectVertex(
             String graphId,
             String vertexId,

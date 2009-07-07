@@ -20,7 +20,7 @@ import java.util.List;
  * A company, agency, social club, etc.
  */
 @Entity
-public class Organization extends AbstractUnicastChannelable implements GeoLocatable {
+public class Organization extends AbstractUnicastChannelable implements GeoLocatable, Hierarchical {
 
     /**
      * Parent organization. May be null.
@@ -226,6 +226,15 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
     public String getGeoMarkerLabel() {
         return location != null ? location.getGeoMarkerLabel() : "";
     }
-    
+
+    /**
+       * {@inheritDoc}
+       */
+      @Transient
+    public List<Hierarchical> getSuperiors() {
+        List<Hierarchical> superiors =  new ArrayList<Hierarchical>();
+        if ( parent != null) superiors.add( parent );
+        return superiors;
+    }
 }
 
