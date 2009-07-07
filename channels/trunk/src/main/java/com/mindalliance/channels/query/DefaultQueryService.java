@@ -2062,6 +2062,8 @@ public class DefaultQueryService extends Observable implements QueryService {
                 Part part = parts.next();
                 if ( part.getLocation() != null && part.getLocation().equals( place ) )
                     references.add( part );
+                if ( part.getJurisdiction() != null && part.getJurisdiction().equals( place ) )
+                    references.add( part );
             }
         }
         return references;

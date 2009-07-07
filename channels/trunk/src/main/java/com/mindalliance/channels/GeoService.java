@@ -1,6 +1,7 @@
 package com.mindalliance.channels;
 
 import com.mindalliance.channels.geo.GeoLocation;
+import org.geonames.PostalCode;
 
 import java.net.URL;
 import java.util.List;
@@ -64,4 +65,22 @@ public interface GeoService extends Service {
      * @return a string
      */
     String getGoogleMapsAPIKey();
+
+    /**
+     * Is a postal code nearby a geolocation?
+     *
+     * @param postalCode  a string
+     * @param geoLocation a geo location
+     * @return a boolean
+     */
+    boolean isPostalCodeInGeoLocation( final String postalCode, GeoLocation geoLocation );
+
+    /**
+     * Finds postal codes nearby a geolocation.
+     *
+     * @param geoLocation a geo location
+     * @return a list of postalcodes
+     * @throws Exception if web service request fails
+     */
+    List<PostalCode> findNearbyPostalCodes( GeoLocation geoLocation ) throws Exception;
 }

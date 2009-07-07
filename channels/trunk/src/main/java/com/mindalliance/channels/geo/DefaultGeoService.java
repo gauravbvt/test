@@ -120,7 +120,29 @@ public class DefaultGeoService extends AbstractService implements GeoService {
      * {@inheritDoc}
      */
     public boolean verifyPostalCode( final String postalCode, GeoLocation geoLocation ) {
+        try {
+            return isPostalCodeInGeoLocation( postalCode, geoLocation );
+        } catch ( Exception e ) {
+            LOG.warn( "Failed to verify postal code " + postalCode + " in " + geoLocation, e );
+            return false;
+        }
+    }
+
+    public boolean isPostalCodeInGeoLocation( String postalCode, GeoLocation geoLocation ) {
+        final String code = postalCode;
         if ( postalCode.isEmpty() || geoLocation == null ) return false;
+        List<PostalCode> postalCodes = findNearbyPostalCodes( geoLocation );
+        PostalCode match = (PostalCode) CollectionUtils.find(
+                postalCodes,
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ( (PostalCode) obj ).getPostalCode().equals( code );
+                    }
+                } );
+        return match != null;
+    }
+
+    public List<PostalCode> findNearbyPostalCodes( GeoLocation geoLocation ) {
         try {
             PostalCodeSearchCriteria criteria = new PostalCodeSearchCriteria();
 //            criteria.setCountryCode( geoLocation.getCountryCode() );
@@ -131,17 +153,9 @@ public class DefaultGeoService extends AbstractService implements GeoService {
             LOG.debug( "Geonames search: finding nearby postal codes for " + geoLocation );
             List<PostalCode> postalCodes = WebService.findNearbyPostalCodes( criteria );
             LOG.debug( "Found " + postalCodes.size() + " for " + geoLocation );
-            PostalCode match = (PostalCode) CollectionUtils.find(
-                    postalCodes,
-                    new Predicate() {
-                        public boolean evaluate( Object obj ) {
-                            return ( (PostalCode) obj ).getPostalCode().equals( postalCode );
-                        }
-                    } );
-            return match != null;
+            return postalCodes;
         } catch ( Exception e ) {
-            LOG.warn( "Failed to verify postal code " + postalCode + " in " + geoLocation, e );
-            return false;
+            throw new RuntimeException( e );
         }
     }
 

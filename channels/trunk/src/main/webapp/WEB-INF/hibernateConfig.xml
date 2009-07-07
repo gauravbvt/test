@@ -53,8 +53,8 @@
                      advice-ref="cacheSet"/>
        <aop:advisor pointcut="execution(String com.mindalliance.channels.GeoService.getGeoCoding(..))"
                      advice-ref="permSet"/>
-        <aop:advisor pointcut="execution(boolean com.mindalliance.channels.GeoService.verifyPostalCode(..))"
-                      advice-ref="permSet"/>
+         <aop:advisor pointcut="execution(boolean com.mindalliance.channels.GeoService.isPostalCodeInGeoLocation(..))"
+                       advice-ref="permSet"/>
 
         <aop:advisor pointcut="execution(* com.mindalliance.channels.Dao.onAfterCommand(..))"
                      advice-ref="cacheClear"/>

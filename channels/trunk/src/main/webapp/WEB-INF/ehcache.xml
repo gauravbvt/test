@@ -112,10 +112,11 @@
             eternal="true"
             timeToIdleSeconds="0"
             timeToLiveSeconds="0"
-            overflowToDisk="false"
-            diskPersistent="false"
+            overflowToDisk="true"
+            diskPersistent="true"
             diskExpiryThreadIntervalSeconds="120"
             memoryStoreEvictionPolicy="LRU"
             />
+
 
 </ehcache>
