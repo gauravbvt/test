@@ -59,7 +59,7 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
 
             public String getVertexURL( Hierarchical hierarchical ) {
                 Object[] args = {0, hierarchical.getId()};
-                    return MessageFormat.format( VERTEX_URL_FORMAT, args );
+                return MessageFormat.format( VERTEX_URL_FORMAT, args );
             }
 
             public String getEdgeURL( HierarchyRelationship hierarchyRelationship ) {
@@ -68,7 +68,7 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
         };
     }
 
-     public EdgeNameProvider getEdgeLabelProvider() {
+    public EdgeNameProvider getEdgeLabelProvider() {
         return new EdgeNameProvider<HierarchyRelationship>() {
             public String getEdgeName( HierarchyRelationship hierarchyRelationship ) {
                 return "";
@@ -78,24 +78,32 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
 
     public VertexNameProvider getVertexLabelProvider() {
         return new VertexNameProvider<Hierarchical>() {
-             public String getVertexName( Hierarchical hierarchical ) {
-                 String label = getIdentifiableLabel( hierarchical ).replaceAll( "\\|", "\\\\n" );
-                 return sanitize( label );
-             }
-         };
+            public String getVertexName( Hierarchical hierarchical ) {
+                String label = getIdentifiableLabel( hierarchical ).replaceAll( "\\|", "\\\\n" );
+                return sanitize( label );
+            }
+        };
     }
 
     public VertexNameProvider getVertexIDProvider() {
         return new VertexNameProvider<Hierarchical>() {
-             public String getVertexName( Hierarchical hierarchical ) {
-                 return "" + hierarchical.getId();
-             }
+            public String getVertexName( Hierarchical hierarchical ) {
+                return "" + hierarchical.getId();
+            }
         };
     }
 
     public DOTAttributeProvider getDOTAttributeProvider() {
-         return new HierarchyDOTAttributeProvider();
-     }
+        return new HierarchyDOTAttributeProvider();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getGraphOrientation() {
+        // Hierarchies always displayed top down.
+        return "TB";
+    }
 
     private class HierarchyDOTAttributeProvider implements DOTAttributeProvider<Hierarchical, HierarchyRelationship> {
         public List<DOTAttribute> getGraphAttributes() {
@@ -125,9 +133,9 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
             }
             list.add( new DOTAttribute( "fontsize", ENTITY_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", ENTITY_FONT ) );
-            if ( getAnalyst().hasUnwaivedIssues( (ModelObject)vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+            if ( getAnalyst().hasUnwaivedIssues( (ModelObject) vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( (ModelObject)vertex,
+                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( (ModelObject) vertex,
                         Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             }
             return list;
@@ -136,8 +144,8 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
 
         public List<DOTAttribute> getEdgeAttributes( HierarchyRelationship edge, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-            list.add( new DOTAttribute( "arrowhead", "vee" ) );
-            list.add( new DOTAttribute( "arrowsize", "0.75" ) );
+            list.add( new DOTAttribute( "arrowhead", "none" ) );
+            //  list.add( new DOTAttribute( "arrowsize", "0.75" ) );
             list.add( new DOTAttribute( "fontname", EDGE_FONT ) );
             list.add( new DOTAttribute( "fontsize", EDGE_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );
@@ -173,7 +181,7 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
                 throw new RuntimeException( "Unable to get image directory location", e );
             }
             return dirName
-                   + "/" + iconName + ( numLines > 0 ? numLines : "" ) + ".png";
+                    + "/" + iconName + ( numLines > 0 ? numLines : "" ) + ".png";
         }
 
     }
