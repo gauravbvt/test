@@ -62,8 +62,8 @@ public class HierarchyGraphBuilder implements GraphBuilder<Hierarchical, Hierarc
         if ( !digraph.containsVertex( hierarchical ) ) {
             digraph.addVertex( hierarchical );
             for ( Hierarchical superior : hierarchical.getSuperiors() ) {
-                digraph.addEdge( superior, hierarchical, new HierarchyRelationship( superior, hierarchical ) );
                 populateGraph( digraph, superior );
+                digraph.addEdge( superior, hierarchical, new HierarchyRelationship( superior, hierarchical ) );
             }
         }
     }
