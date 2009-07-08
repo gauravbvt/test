@@ -42,8 +42,22 @@ import java.util.Set;
  * Time: 2:28:58 PM
  */
 public class OrganizationDetailsPanel extends EntityDetailsPanel {
-
+    /**
+     * Dom identifier.
+     */
     private static final String OrgChartDomIdentifier = ".entity .orgchart";
+    /**
+     * Parent name field.
+     */
+    private TextField parentField;
+    /**
+     * Location name field.
+     */
+    private TextField locationField;
+    /**
+     * Whether actors are required for each role in the organization.
+     */
+    CheckBox actorsRequiredCheckBox;
 
     public OrganizationDetailsPanel(
             String id,
@@ -63,7 +77,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                 new PropertyModel<Organization>( organization, "parent" ),
                 new Model<String>( "Parent" ) ) );
         final List<String> parentChoices = findCandidateParents();
-        final TextField parentField = new AutoCompleteTextField<String>( "parent",
+        parentField = new AutoCompleteTextField<String>( "parent",
                 new PropertyModel<String>( this, "parentOrganization" ) ) {
             @Override
             protected Iterator<String> getChoices( String s ) {
@@ -86,7 +100,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                         new PropertyModel<Organization>( organization, "location" ),
                         new Model<String>( "Location" ) ) );
         final List<String> locationChoices = getQueryService().findAllNames( Place.class );
-        TextField locationField = new AutoCompleteTextField<String>( "location",
+        locationField = new AutoCompleteTextField<String>( "location",
                 new PropertyModel<String>( this, "locationName" ) ) {
             @Override
             protected Iterator<String> getChoices( String s ) {
@@ -108,7 +122,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         moDetailsDiv.add( new ChannelListPanel(
                 "channels",
                 new Model<Channelable>( organization ) ) );
-        CheckBox actorsRequiredCheckBox = new CheckBox(
+        actorsRequiredCheckBox = new CheckBox(
                 "actorsRequired",
                 new PropertyModel<Boolean>( this, "actorsRequired" ) );
         actorsRequiredCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
@@ -120,7 +134,13 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         moDetailsDiv.add( actorsRequiredCheckBox );
         moDetailsDiv.add( new AjaxTabbedPanel( "tabs", getTabs() ) );
 //        moDetailsDiv.add( new JobsPanel( "jobs", new Model<Organization>( organization ), getExpansions() ) );
+        adjustFields();
+    }
 
+    private void adjustFields() {
+        parentField.setEnabled( isLockedByUser( getOrganization() ) );
+        locationField.setEnabled( isLockedByUser( getOrganization() ) );
+        actorsRequiredCheckBox.setEnabled( isLockedByUser( getOrganization() ) );
     }
 
     private List<ITab> getTabs() {

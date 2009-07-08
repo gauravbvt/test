@@ -34,6 +34,14 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
      * The model object being edited
      */
     private IModel<? extends ModelObject> model;
+    /**
+     * Name field.
+     */
+    private TextField<String> nameField;
+    /**
+     * Description field.
+     */
+    private TextArea<String> descriptionField;
 
     public EntityDetailsPanel( String id, IModel<? extends ModelObject> model, Set<Long> expansions ) {
         super( id, model, expansions );
@@ -46,7 +54,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
         WebMarkupContainer moDetailsDiv = new WebMarkupContainer( "mo-details" );
         add( moDetailsDiv );
         final List<String> choices = getUniqueNameChoices( getEntity() );
-        TextField<String> nameField = new AutoCompleteTextField<String>( "name",
+        nameField = new AutoCompleteTextField<String>( "name",
                 new PropertyModel<String>( this, "name" ) ) {
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
@@ -62,7 +70,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
             }
         } );
         moDetailsDiv.add( nameField );
-        TextArea<String> descriptionField = new TextArea<String>( "description",
+        descriptionField = new TextArea<String>( "description",
                 new PropertyModel<String>( this, "description" ) );
         descriptionField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
@@ -72,6 +80,12 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
         moDetailsDiv.add( descriptionField );
         moDetailsDiv.add( new AttachmentPanel( "attachments", new Model<ModelObject>( mo ) ) );
         addSpecifics( moDetailsDiv );
+        adjustFields();
+    }
+
+    private void adjustFields() {
+        nameField.setEnabled( isLockedByUser( getEntity() ) );
+        descriptionField.setEnabled( isLockedByUser( getEntity() ) );
     }
 
     /**

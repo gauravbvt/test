@@ -338,6 +338,7 @@ public final class PlanPage extends WebPage implements Updatable {
         refreshNeededContainer.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
+                reacquireLocks();
                 lastRefreshed = System.currentTimeMillis();
                 refreshAll( target );
             }
@@ -853,6 +854,20 @@ public final class PlanPage extends WebPage implements Updatable {
                         new Model<String>( visible ? "display:inline" : "display:none" ) ) );
     }
 
+    private void reacquireLocks() {
+        // Part is always "expanded"
+        getCommander().requestLockOn( getPart() );
+        for ( Long id : expansions ) {
+            try {
+                ModelObject expanded = getQueryService().find( ModelObject.class, id );
+                if ( !( expanded instanceof Scenario || expanded instanceof Plan ) )
+                    getCommander().requestLockOn( expanded );
+            } catch ( NotFoundException e ) {
+                LOG.warn( "Expanded model object not found at: " + id );
+            }
+        }
+    }
+
     private void expand( Identifiable identifiable ) {
         // First collapse any already expanded entity
         if ( identifiable instanceof ModelObject
@@ -1054,7 +1069,8 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void refreshAll( AjaxRequestTarget target ) {
-        setPart( getPart() );
+        // Re-acquire lock
+        // setPart( getPart() );
         target.addComponent( planActionsMenu );
         target.addComponent( planShowMenu );
         target.addComponent( scenarioNameLabel );
@@ -1065,13 +1081,15 @@ public final class PlanPage extends WebPage implements Updatable {
         scenarioPanel.refreshScenarioEditPanel( target );
         scenarioPanel.refresh( target );
         target.addComponent( scenarioPanel );
+        if ( entityPanel instanceof EntityPanel )
+            ( (EntityPanel) entityPanel ).refresh( target );
         target.addComponent( entityPanel );
         if ( planEditPanel instanceof PlanEditPanel )
             ( (PlanEditPanel) planEditPanel ).refresh( target );
-        updateRefreshNotice();
-        target.addComponent( refreshNeededContainer );
         addPartsMapLink();
         target.addComponent( partsMapLink );
+        updateRefreshNotice();
+        target.addComponent( refreshNeededContainer );
         getCommander().clearTimeOut();
     }
 

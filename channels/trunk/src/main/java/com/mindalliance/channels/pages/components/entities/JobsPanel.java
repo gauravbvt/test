@@ -145,7 +145,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             jobPlaybook = new PlaysTablePanel(
                     "playbook",
                     new PropertyModel<ResourceSpec>( this, "jobResourceSpec" ),
-                    new Model<Boolean>(false),
+                    new Model<Boolean>( false ),
                     5,
                     getExpansions() );
         }
@@ -187,6 +187,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 ) );
             }
         } );
+        confirmedCheckBox.setEnabled( isLockedByUser( getOrganization() ) );
     }
 
     private void addEntityCell( ListItem<JobWrapper> item, final String property ) {
@@ -222,6 +223,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 }
             }
         } );
+        titleField.setEnabled( isLockedByUser( getOrganization() ) );
         item.add( titleField );
     }
 
@@ -494,10 +496,11 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
 
         /**
          * Whether the job has flows.
+         *
          * @return a boolean
          */
         public boolean hasFlows() {
-            return !findAllPlays(job).isEmpty();
+            return !findAllPlays( job ).isEmpty();
         }
 
         /**
@@ -549,7 +552,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
          */
         private String property;
         /**
-         *  Job wrapper.
+         * Job wrapper.
          */
         private JobWrapper jobWrapper;
         /**
@@ -612,6 +615,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                     }
                 }
             } );
+            entityField.setEnabled( isLockedByUser( getOrganization() ) );
             add( entityField );
             makeVisible( entityField, jobWrapper.isMarkedForCreation() );
         }

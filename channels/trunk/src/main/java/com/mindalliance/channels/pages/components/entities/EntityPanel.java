@@ -42,7 +42,6 @@ public class EntityPanel extends AbstractMultiAspectPanel {
      */
     public static final String ISSUES = "issues";
 
-
     public EntityPanel( String id, IModel<? extends ModelObject> model, Set<Long> expansions ) {
         this( id, model, expansions, DETAILS );
     }
@@ -89,8 +88,8 @@ public class EntityPanel extends AbstractMultiAspectPanel {
      */
     protected MenuPanel makeActionMenu( String menuId ) {
         return new EntityActionsMenuPanel(
-                menuId,
-                new PropertyModel<ModelObject>( this, "object" ) );
+                    menuId,
+                    new PropertyModel<ModelObject>( this, "object" ) );
     }
 
 
@@ -193,6 +192,15 @@ public class EntityPanel extends AbstractMultiAspectPanel {
      */
     protected String getObjectClassName() {
         return getObject().getClass().getSimpleName().toLowerCase();
+    }
+
+    /**
+     * Get entity being edited.
+     *
+     * @return a model object
+     */
+    protected ModelObject getEntity() {
+        return (ModelObject) getModel().getObject();
     }
 
 

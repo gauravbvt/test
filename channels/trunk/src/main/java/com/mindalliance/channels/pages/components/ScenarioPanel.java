@@ -352,6 +352,8 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         adjustComponents();
         refreshMenus( target );
         partPanel.refresh( target );
+        reqsFlowPanel.refresh( target );
+        outcomesFlowPanel.refresh( target );
         addFlowDiagram();
         target.addComponent( flowMapDiagramPanel );
         adjustComponents();

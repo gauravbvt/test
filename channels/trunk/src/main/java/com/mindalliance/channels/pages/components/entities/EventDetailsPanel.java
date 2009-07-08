@@ -57,6 +57,10 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
      */
     private List<Identifiable> filters;
     /**
+     * Text field for scope as name of place.
+     */
+    private TextField scopeField;
+    /**
      * Maximum number of rows in event references table.
      */
     private static final int MAX_ROWS = 20;
@@ -76,7 +80,7 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
                         new PropertyModel<Organization>( getPlanEvent(), "scope" ),
                         new Model<String>( "Location" ) ) );
         final List<String> choices = getQueryService().findAllNames( Place.class );
-        TextField scopeField = new AutoCompleteTextField<String>( "scope",
+        scopeField = new AutoCompleteTextField<String>( "scope",
                 new PropertyModel<String>( this, "scopeName" ) ) {
             @Override
             protected Iterator<String> getChoices( String s ) {
@@ -95,7 +99,12 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
         } );
         moDetailsDiv.add( scopeField );
         filters = new ArrayList<Identifiable>();
+        adjustFields();
         addEventReferenceTable();
+    }
+
+    private void adjustFields() {
+        scopeField.setEnabled( isLockedByUser( getEvent() ) );
     }
 
     private void addEventReferenceTable() {
@@ -221,6 +230,7 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
             initialize();
         }
 
+        @SuppressWarnings( "unchecked" )
         private void initialize() {
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns

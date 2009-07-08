@@ -164,6 +164,9 @@ abstract public class AbstractMultiAspectPanel extends AbstractCommandablePanel 
         LockManager lockManager = getLockManager();
         if ( !objectNeedsLocking() || lockManager.isLockedByUser( getObject() ) ) {
             menu = makeActionMenu( menuId );
+        } else if ( getCommander().isTimedOut() || getLockOwner( getObject() ) == null ) {
+            menu = new Label(
+                    menuId, new Model<String>( "Timed out" ) );
         } else {
             String otherUser = lockManager.getLockOwner( getObject().getId() );
             menu = new Label(
@@ -185,7 +188,7 @@ abstract public class AbstractMultiAspectPanel extends AbstractCommandablePanel 
      * Make action menu.
      *
      * @param menuId the menu's id
-     * @return a MenuPanel
+     * @return a MenuPanel or some Component
      */
     abstract protected MenuPanel makeActionMenu( String menuId );
 
@@ -296,7 +299,7 @@ abstract public class AbstractMultiAspectPanel extends AbstractCommandablePanel 
      * @param target an ajax request target
      */
     public void refresh( AjaxRequestTarget target ) {
-        target.addComponent( actionsMenu );
+        refreshMenus( target );
         adjustComponents();
         target.addComponent( banner );
         setAspectShown( target, aspectShown );

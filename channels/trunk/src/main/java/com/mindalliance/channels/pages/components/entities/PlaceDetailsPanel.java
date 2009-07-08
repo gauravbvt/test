@@ -124,6 +124,13 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         addNameRangePanel();
         addPlacesWithinTable();
         addPlaceReferencesTable();
+        adjustFields();
+    }
+
+    private void adjustFields() {
+        postalCodeField.setEnabled( isLockedByUser( getPlace() ) );
+        geonameField.setEnabled( isLockedByUser( getPlace() ) );
+        withinField.setEnabled( isLockedByUser( getPlace() ) );
     }
 
     private void addWithinField() {

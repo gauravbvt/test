@@ -72,6 +72,10 @@ public class FlowListPanel extends AbstractCommandablePanel {
             }
         };
         add( newLink );
+        addFlowsDiv();
+    }
+
+    private void addFlowsDiv() {
         flowsDiv = new WebMarkupContainer( "flows-div" );
         flowsDiv.setOutputMarkupId( true );
         add( flowsDiv );
