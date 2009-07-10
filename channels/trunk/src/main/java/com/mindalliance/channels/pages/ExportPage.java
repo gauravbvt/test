@@ -1,10 +1,12 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Exporter;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.export.ImportExportFactory;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.User;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebPage;
@@ -52,7 +54,9 @@ public class ExportPage extends WebPage {
     }
 
     private Exporter getExporter() {
-        return ( (Channels) getApplication() ).getExporter();
+        Channels channels = (Channels) getApplication();
+        ImportExportFactory exportFactory = channels.getImportExportFactory();
+        return exportFactory.createExporter( channels.getQueryService(), User.current().getPlan() );
     }
 
     @Override
@@ -67,7 +71,7 @@ public class ExportPage extends WebPage {
     @Override
     protected void onRender( MarkupStream markupStream ) {
         try {
-            getExporter().exportScenario( scenario, getResponse().getOutputStream() );
+            getExporter().export( scenario, getResponse().getOutputStream() );
         } catch ( IOException e ) {
             LOG.error( "Export error", e );
         }

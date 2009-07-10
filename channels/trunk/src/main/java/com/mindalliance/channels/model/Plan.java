@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Iterator;
 
 /**
  * A plan: events scenarios that respond to events and entities participating in the responses.
@@ -22,20 +23,24 @@ public class Plan extends ModelObject {
      * The scenarios, for convenience...
      */
     private Set<Scenario> scenarios = new HashSet<Scenario>();
+
     /**
      * Unplanned-for events.
      */
     private List<Event> incidents = new ArrayList<Event>();
+
     /**
      * Name of client sponsoring the plan.
      */
     private String client = "Unnamed";
+
     /**
      * Unique resource identifier for the plan.
      * Always set when application loads.
      */
-    private String uri;
+    private String uri = "default";
 
+    //-----------------------------
     public Plan() {
     }
 
@@ -88,7 +93,8 @@ public class Plan extends ModelObject {
     @Transient
     public Event getDefaultEvent() {
         assert incidents != null && !incidents.isEmpty();
-        return incidents.iterator().next();
+        Iterator<Event> eventIterator = incidents.iterator();
+        return eventIterator.hasNext() ? eventIterator.next() : null;
     }
 
     /**
@@ -107,5 +113,14 @@ public class Plan extends ModelObject {
      */
     public void removeScenario( Scenario scenario ) {
         scenarios.remove( scenario );
+    }
+
+    /**
+     * Get the number of scenarios in this plan.
+     * @return the number of scenarios
+     */
+    @Transient
+    public int getScenarioCount() {
+        return scenarios.size();
     }
 }

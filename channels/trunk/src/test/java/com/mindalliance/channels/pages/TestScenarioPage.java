@@ -1,17 +1,20 @@
 package com.mindalliance.channels.pages;
 
+import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.DiagramFactory;
+import com.mindalliance.channels.Importer;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.export.DummyExporter;
+import com.mindalliance.channels.attachments.BitBucket;
+import com.mindalliance.channels.dao.Memory;
+import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.SimpleIdGenerator;
+import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.DiagramFactory;
-import com.mindalliance.channels.Importer;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.attachments.BitBucket;
-import com.mindalliance.channels.dao.Memory;
-import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.query.DefaultQueryService;
 import junit.framework.TestCase;
 import org.apache.wicket.PageParameters;
@@ -47,16 +50,15 @@ public class TestScenarioPage extends TestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-
-        dao = new Memory();
         app = new Channels();
-        DefaultQueryService queryService = new DefaultQueryService();
+        PlanManager planManager = new PlanManager( new DummyExporter(), new SimpleIdGenerator() );
+        planManager.afterPropertiesSet();
+        DefaultQueryService queryService = new DefaultQueryService( planManager, new BitBucket() );
         queryService.setAddingSamples( true );
-        queryService.setDao( dao );
-        queryService.initialize();
+
+        queryService.afterPropertiesSet();
 
         app.setQueryService( queryService );
-        app.setAttachmentManager( new BitBucket() );
         DiagramFactory dm = createMock( DiagramFactory.class );
         Diagram fd = createMock(  Diagram.class);
         expect( fd.makeImageMap( ) ).andReturn( "" ).anyTimes();
@@ -97,7 +99,7 @@ public class TestScenarioPage extends TestCase {
                 .andReturn( app.getQueryService().createScenario() );
 
         replay( importer );
-        app.setImporter( importer );
+//        app.setImporterFactory( importer );
 
         File file = new File( TestScenarioPage.class.getResource( "test.txt" ).getFile() );
         assertTrue( "Can't find " + file.getAbsolutePath(), file.exists() );
@@ -110,7 +112,7 @@ public class TestScenarioPage extends TestCase {
      * @todo remove when moving to Wickets 1.4-RC2
      */
     public static void checkFiles( Channels app ) {
-        verify( app.getImporter() );
+        verify( app.getImportExportFactory() );
     }
 
     public void testParms() {
@@ -172,19 +174,23 @@ public class TestScenarioPage extends TestCase {
         }
     }
 
+    private long getScenarioCount() {
+        return (long) dao.list( Scenario.class ).size();
+    }
+
     public void testNewScenario() throws NotFoundException {
         tester.startPage( new PlanPage( scenario ) );
 
-        long size = dao.getScenarioCount();
+        long size = getScenarioCount();
         tester.clickLink( "big-form:sc-new" );
-        assertEquals( size + 1, dao.getScenarioCount() );
+        assertEquals( size + 1, getScenarioCount() );
 
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
         tester.startPage( new PlanPage( scenario ) );
         tester.clickLink( "big-form:sc-new" );
-        assertEquals( size + 2, dao.getScenarioCount() );
+        assertEquals( size + 2, getScenarioCount() );
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
     }
@@ -258,16 +264,16 @@ public class TestScenarioPage extends TestCase {
     }
 
     public void testDeleteScenario() throws IOException, NotFoundException {
-        assertEquals( 2, dao.getScenarioCount() );
+        assertEquals( 2, getScenarioCount() );
         Scenario sc2 = app.getQueryService().createScenario();
         sc2.setName( "Test" );
-        assertEquals( 3, dao.getScenarioCount() );
+        assertEquals( 3, getScenarioCount() );
 
         tester.startPage( new PlanPage( scenario ) );
         tester.setupRequestAndResponse();
         tester.assertRenderedPage( PlanPage.class );
         tester.assertNoErrorMessage();
-        assertEquals( 3, dao.getScenarioCount() );
+        assertEquals( 3, getScenarioCount() );
 
         FormTester ft = tester.newFormTester( "big-form" );
         setFiles( ft, app );
@@ -279,7 +285,7 @@ public class TestScenarioPage extends TestCase {
             fail();
         } catch ( NotFoundException ignored ) {}
 
-        assertEquals( 3, dao.getScenarioCount() );
+        assertEquals( 3, getScenarioCount() );
         // the setFiles() imports/creates a new scenario...
 
     }

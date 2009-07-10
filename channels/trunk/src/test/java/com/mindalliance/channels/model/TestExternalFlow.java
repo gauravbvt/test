@@ -1,14 +1,10 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.attachments.BitBucket;
+import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.SimpleIdGenerator;
+import com.mindalliance.channels.export.DummyExporter;
 import com.mindalliance.channels.query.DefaultQueryService;
-import com.mindalliance.channels.dao.Memory;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.model.ExternalFlow;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.QueryService;
 import junit.framework.TestCase;
 
 /**
@@ -17,7 +13,7 @@ import junit.framework.TestCase;
 @SuppressWarnings( { "HardCodedStringLiteral" } )
 public class TestExternalFlow extends TestCase {
 
-    private QueryService queryService;
+    private DefaultQueryService queryService;
     private Scenario s1;
     private Scenario s2;
 
@@ -30,8 +26,13 @@ public class TestExternalFlow extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        PlanManager planManager = new PlanManager( new DummyExporter(), new SimpleIdGenerator() );
+        planManager.afterPropertiesSet();
+        User user = new User();
+        user.setPlan( planManager.getPlans().get( 0 ) );
+        queryService = new DefaultQueryService( planManager, new BitBucket() );
+        queryService.afterPropertiesSet();
 
-        queryService = new DefaultQueryService( new Memory() );
         s1 = queryService.createScenario();
         s1p1 = s1.getDefaultPart();
         s1p1.setActor( new Actor( "p1" ) );

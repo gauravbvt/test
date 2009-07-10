@@ -1,7 +1,5 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
@@ -43,8 +41,8 @@ public class ScenarioConverter extends AbstractChannelsConverter {
      */
     private static final Logger LOG = LoggerFactory.getLogger( ScenarioConverter.class );
 
-    public ScenarioConverter( Exporter exporter ) {
-        super( exporter );
+    public ScenarioConverter( XmlStreamer.Context context ) {
+        super( context );
     }
 
     /**
@@ -60,7 +58,7 @@ public class ScenarioConverter extends AbstractChannelsConverter {
     public void marshal( Object object, HierarchicalStreamWriter writer,
                          MarshallingContext context ) {
         Scenario scenario = (Scenario) object;
-        Plan plan = Channels.getPlan();
+        Plan plan = getContext().getPlan();
         QueryService queryService = getQueryService();
         boolean exportingInPlan = isExportingPlan( context )  || scenario.isBeingDeleted();
         context.put( "scenario", scenario );
@@ -166,7 +164,7 @@ public class ScenarioConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "incident" ) ) {
                 String id = reader.getAttribute( "id");
                 Event event = findOrCreate( Event.class, reader.getValue(), id );
-                Channels.getPlan().addIncident( event );
+                getContext().getPlan().addIncident( event );
                 // Event
             } else if ( nodeName.equals( "trigger-event" ) ) {
                 String id = reader.getAttribute( "id");

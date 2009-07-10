@@ -42,10 +42,6 @@ import java.util.Properties;
  */
 public class FileBasedManager implements AttachmentManager, Lifecycle {
 
-    /**
-     * The logger.
-     */
-    private final Logger LOG = LoggerFactory.getLogger( FileBasedManager.class );
 
 
     /**
@@ -92,10 +88,6 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
      * The maximum file name length. Anything above that will get truncated.
      */
     private int maxLength = MAX_LENGTH;
-    /**
-     * Query service.
-     */
-    private QueryService queryService;
 
     /**
      * List of documents, indexed by url.
@@ -105,14 +97,6 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
 
 
     public FileBasedManager() {
-    }
-
-    public QueryService getQueryService() {
-        return queryService;
-    }
-
-    public void setQueryService( QueryService queryService ) {
-        this.queryService = queryService;
     }
 
     private File createFile( String name ) {
@@ -416,24 +400,28 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
 
     /**
      * {@inheritDoc }
+     * @param service
      */
-    public synchronized void removeUnattached() {
-        List<String> attachedUrls = queryService.findAllAttached();
-        List<File> uploadedFiles = Arrays.asList( getUploadDirectory().listFiles() );
-        for ( File file : uploadedFiles ) {
-            String name = file.getName();
-            if ( !( name.equals( "readme.txt" )
-                    || name.equals( digestsMapFile ) ) )
-            {
-                String url = path + name;
-                if ( !attachedUrls.contains( url ) ) {
-                    LOG.info( "Removing unattached " + url );
-                    file.delete();
-                    documentMap.remove( url );
+    public synchronized void removeUnattached( QueryService service ) {
+        List<String> attachedUrls = service.findAllAttached();
+        File[] files = getUploadDirectory().listFiles();
+        if ( files != null ) {
+            List<File> uploadedFiles = Arrays.asList( files );
+            for ( File file : uploadedFiles ) {
+                String name = file.getName();
+                if ( !( name.equals( "readme.txt" )
+                        || name.equals( digestsMapFile ) ) )
+                {
+                    String url = path + name;
+                    if ( !attachedUrls.contains( url ) ) {
+                        log.info( "Removing unattached " + url );
+                        file.delete();
+                        documentMap.remove( url );
+                    }
                 }
             }
+            save();
         }
-        save();
     }
 
     /**

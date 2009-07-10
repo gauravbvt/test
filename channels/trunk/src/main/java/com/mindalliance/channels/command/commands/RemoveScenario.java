@@ -8,9 +8,11 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.export.ImportExportFactory;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.User;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -58,8 +60,9 @@ public class RemoveScenario extends AbstractCommand {
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             scenario.setBeingDeleted( true );
-            Exporter exporter = Channels.instance().getExporter();
-            exporter.exportScenario( scenario, bos );
+            ImportExportFactory factory = Channels.instance().getImportExportFactory();
+            Exporter exporter = factory.createExporter( queryService, User.current().getPlan() );
+            exporter.export( scenario, bos );
             set( "xml", bos.toString() );
             if ( queryService.list( Scenario.class ).size() == 1 ) {
                 // first create a new scenario

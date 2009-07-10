@@ -1,6 +1,5 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Job;
 import com.mindalliance.channels.model.Place;
@@ -22,8 +21,8 @@ import org.slf4j.LoggerFactory;
  */
 public class JobConverter extends AbstractChannelsConverter {
 
-    public JobConverter( Exporter exporter ) {
-        super( exporter );
+    public JobConverter( XmlStreamer.Context context ) {
+        super( context );
     }
 
     /**

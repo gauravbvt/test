@@ -1,6 +1,5 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.MultiCommand;
@@ -29,8 +28,8 @@ public class CommandConverter extends AbstractChannelsConverter {
      */
     public static final Logger LOG = LoggerFactory.getLogger( CommandConverter.class );
 
-    public CommandConverter( Exporter exporter ) {
-        super( exporter );
+    public CommandConverter( XmlStreamer.Context context ) {
+        super( context );
     }
 
     /**

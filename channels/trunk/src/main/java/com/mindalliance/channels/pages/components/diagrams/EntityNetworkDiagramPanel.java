@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.User;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
@@ -107,7 +107,7 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
     }
 
     protected void onClick( AjaxRequestTarget target ) {
-        update( target, new Change( Change.Type.Selected, Channels.getPlan() ) );
+        update( target, new Change( Change.Type.Selected, User.current().getPlan() ) );
     }
 
     /**

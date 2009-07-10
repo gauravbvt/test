@@ -10,6 +10,8 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.UserIssue;
 
+import java.io.IOException;
+
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -23,15 +25,18 @@ public class TestAddRemoveIssue extends AbstractChannelsTest {
     private QueryService queryService;
     private Analyst analyst;
 
-    protected void setUp() {
+    @Override
+    protected void setUp() throws IOException {
         super.setUp();
         queryService = app.getQueryService();
         analyst = app.getAnalyst();
         scenario = queryService.createScenario();
     }
 
-    protected void tearDown() {
+    @Override
+    protected void tearDown() throws Exception {
         queryService.remove( scenario );
+        super.tearDown();
     }
 
     public void testAddRemoveIssue() throws Exception {

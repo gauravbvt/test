@@ -172,7 +172,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
             return part.getFullTitle( "|" );
         } else {
             return "c";
-            // return node.getName();
+            // return node.getUsername();
         }
     }
 

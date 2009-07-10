@@ -4,6 +4,8 @@ import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Scenario;
 
+import java.io.IOException;
+
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -16,7 +18,8 @@ public class TestUpdatePlanObject extends AbstractChannelsTest {
     private UpdatePlanObject command;
     private Scenario scenario;
 
-    protected void setUp() {
+    @Override
+    protected void setUp() throws IOException {
         super.setUp();
         scenario = app.getQueryService().getDefaultScenario();
         command = new UpdatePlanObject( scenario, "description", "ipso lorem etc." );

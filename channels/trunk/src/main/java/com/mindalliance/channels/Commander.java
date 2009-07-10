@@ -5,6 +5,7 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.dao.Journal;
 
 import java.util.Map;
 
@@ -78,12 +79,6 @@ public interface Commander extends Service {
      * @return a query service
      */
     QueryService getQueryService();
-
-    /**
-     * Get the attachment manager.
-     * @return an attachment manager
-     */
-    AttachmentManager getAttachmentManager();
 
     /**
      * Resets history for current user.
@@ -279,4 +274,10 @@ public interface Commander extends Service {
      */
     void setLockManager( LockManager lockManager );
 
+    /**
+     * Replay all commands in a journal.
+     * @param journal the journal
+     * @throws com.mindalliance.channels.command.CommandException on errors
+     */
+    void replay( Journal journal ) throws CommandException;
 }

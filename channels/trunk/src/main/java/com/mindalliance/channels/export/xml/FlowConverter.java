@@ -1,6 +1,5 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.export.ConnectionSpecification;
 import com.mindalliance.channels.export.PartSpecification;
@@ -44,8 +43,8 @@ public class FlowConverter extends AbstractChannelsConverter {
      */
     private Map<Connector, List<ConnectionSpecification>> proxyConnectors;
 
-    public FlowConverter( Exporter exporter ) {
-        super( exporter );
+    public FlowConverter( XmlStreamer.Context context ) {
+        super( context );
     }
 
     /**

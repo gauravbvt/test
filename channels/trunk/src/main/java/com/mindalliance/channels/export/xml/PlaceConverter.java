@@ -1,6 +1,5 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Place;
@@ -19,8 +18,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class PlaceConverter extends EntityConverter {
 
-    public PlaceConverter( Exporter exporter ) {
-        super( exporter );
+    public PlaceConverter( XmlStreamer.Context context ) {
+        super( context );
     }
 
     /**

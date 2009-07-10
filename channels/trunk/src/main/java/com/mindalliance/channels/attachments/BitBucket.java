@@ -1,6 +1,7 @@
 package com.mindalliance.channels.attachments;
 
 import com.mindalliance.channels.AttachmentManager;
+import com.mindalliance.channels.QueryService;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 
 /**
@@ -32,7 +33,7 @@ public class BitBucket implements AttachmentManager {
         return null;
     }
 
-    public void removeUnattached() {
+    public void removeUnattached( QueryService service ) {
         // Do nothing
     }
 

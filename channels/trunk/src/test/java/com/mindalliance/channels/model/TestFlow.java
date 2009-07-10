@@ -1,11 +1,8 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.model.ExternalFlow;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.InternalFlow;
-import com.mindalliance.channels.model.Medium;
 import com.mindalliance.channels.AbstractChannelsTest;
+
+import java.io.IOException;
 
 @SuppressWarnings( { "HardCodedStringLiteral" } )
 public class TestFlow extends AbstractChannelsTest {
@@ -16,7 +13,7 @@ public class TestFlow extends AbstractChannelsTest {
     }
 
     @Override
-    protected void setUp() {
+    protected void setUp() throws IOException {
         super.setUp();
         flow = new InternalFlow();
     }

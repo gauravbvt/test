@@ -1,5 +1,14 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.AbstractChannelsTest;
+import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.DiagramFactory;
+import com.mindalliance.channels.export.DummyExporter;
+import com.mindalliance.channels.attachments.BitBucket;
+import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.SimpleIdGenerator;
+import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
@@ -9,20 +18,14 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.attachments.BitBucket;
-import com.mindalliance.channels.query.DefaultQueryService;
-import com.mindalliance.channels.dao.Memory;
-import com.mindalliance.channels.DiagramFactory;
-import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.TestScenarioPage;
+import com.mindalliance.channels.query.DefaultQueryService;
 import org.apache.wicket.markup.html.pages.RedirectPage;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
-import org.apache.wicket.model.Model;
+import org.easymock.EasyMock;
 import static org.easymock.EasyMock.*;
 
 import java.io.IOException;
@@ -46,19 +49,19 @@ public class TestPartPanel extends AbstractChannelsTest {
     }
 
     @Override
-    protected void setUp() {
+    protected void setUp() throws IOException {
         super.setUp();
         channelsApp = new Channels();
-        DefaultQueryService queryService = new DefaultQueryService();
+        PlanManager planManager = new PlanManager( new DummyExporter(), new SimpleIdGenerator() );
+        planManager.afterPropertiesSet();
+        DefaultQueryService queryService = new DefaultQueryService( planManager, new BitBucket() );
 
         queryService.setAddingSamples( true );
-        queryService.setDao( new Memory() );
         channelsApp.setQueryService( queryService );
-        channelsApp.setAttachmentManager( new BitBucket() );
         DiagramFactory dm = createMock( DiagramFactory.class );
          Diagram fd = createMock(  Diagram.class);
          expect( fd.makeImageMap( ) ).andReturn( "" ).anyTimes();
-         expect( dm.newFlowMapDiagram( (Scenario) anyObject(), null, null, null ) )
+         expect( dm.newFlowMapDiagram( (Scenario) anyObject(), (Node) EasyMock.isNull(), (double[]) EasyMock.isNull(), (String) EasyMock.isNull() ) )
                      .andReturn( fd ).anyTimes();
          replay( dm );
          replay( fd );

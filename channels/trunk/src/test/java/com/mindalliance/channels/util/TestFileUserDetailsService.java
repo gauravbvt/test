@@ -1,5 +1,9 @@
 package com.mindalliance.channels.util;
 
+import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.SimpleIdGenerator;
+import com.mindalliance.channels.model.User;
+import com.mindalliance.channels.export.DummyExporter;
 import junit.framework.TestCase;
 import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.userdetails.UsernameNotFoundException;
@@ -25,7 +29,9 @@ public class TestFileUserDetailsService extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        service = new FileUserDetailsService();
+        PlanManager planManager = new PlanManager( new DummyExporter(), new SimpleIdGenerator() );
+        planManager.afterPropertiesSet();
+        service = new FileUserDetailsService( planManager );
     }
 
     public void testNoData() {
@@ -40,8 +46,7 @@ public class TestFileUserDetailsService extends TestCase {
     public void testDefaultData() {
         service.setDefaultDefinitions( new FileSystemResource( "src/main/webapp/WEB-INF/users.properties" ) );
         String user = "denis";
-        FileUserDetailsService.Details details = (FileUserDetailsService.Details)
-                service.loadUserByUsername( user );
+        User details = (User) service.loadUserByUsername( user );
         assertNotNull( details );
 
         assertEquals( user, details.getUsername() );
@@ -55,7 +60,7 @@ public class TestFileUserDetailsService extends TestCase {
         assertEquals( "ROLE_PLANNER", authorities[1].getAuthority() );
         assertEquals( "ROLE_USER", authorities[2].getAuthority() );
 
-        assertEquals( 0L, details.getDefaultPlan() );
+        assertNull( details.getPlan() );
     }
 
 
@@ -63,8 +68,7 @@ public class TestFileUserDetailsService extends TestCase {
         service.setBase( System.getProperty( "user.dir" ) );
         service.setUserDefinitions( "src/main/webapp/WEB-INF/users.properties" );
         String user = "denis";
-        FileUserDetailsService.Details details = (FileUserDetailsService.Details)
-                service.loadUserByUsername( user );
+        User details = (User) service.loadUserByUsername( user );
         assertNotNull( details );
 
         assertEquals( user, details.getUsername() );
@@ -78,7 +82,7 @@ public class TestFileUserDetailsService extends TestCase {
         assertEquals( "ROLE_PLANNER", authorities[1].getAuthority() );
         assertEquals( "ROLE_USER", authorities[2].getAuthority() );
 
-        assertEquals( 0L, details.getDefaultPlan() );
+        assertNull( details.getPlan() );
     }
 
     public void testInitialCopy() throws IOException {
@@ -97,13 +101,11 @@ public class TestFileUserDetailsService extends TestCase {
         service.setDefaultDefinitions( new FileSystemResource( "src/main/webapp/WEB-INF/users.properties" ) );
         service.setBase( System.getProperty( "user.dir" ) );
         service.setUserDefinitions( "target/users.properties" );
-        FileUserDetailsService.Details jf = (FileUserDetailsService.Details)
-                service.loadUserByUsername( "jf" );
+        User jf = (User) service.loadUserByUsername( "jf" );
         assertTrue( jf.isAdmin() );
         assertTrue( jf.isPlanner() );
 
-        FileUserDetailsService.Details david = (FileUserDetailsService.Details)
-                service.loadUserByUsername( "david" );
+        User david = (User) service.loadUserByUsername( "david" );
         assertFalse( david.isAdmin() );
         assertTrue( david.isPlanner() );
     }

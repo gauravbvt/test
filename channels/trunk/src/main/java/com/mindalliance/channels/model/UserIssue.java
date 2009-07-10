@@ -55,7 +55,7 @@ public class UserIssue extends ModelObject implements Issue {
     public UserIssue( ModelObject mo ) {
         this.about = mo;
         setDescription( "(No description)" );
-        setReportedBy( User.current().getName() );
+        setReportedBy( User.current().getUsername() );
     }
 
     @ManyToOne( fetch = FetchType.LAZY )

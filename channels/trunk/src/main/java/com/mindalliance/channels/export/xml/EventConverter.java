@@ -1,6 +1,5 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Place;
@@ -27,8 +26,8 @@ public class EventConverter extends EntityConverter {
     private static final Logger LOG = LoggerFactory.getLogger( EventConverter.class );
 
 
-    public EventConverter( Exporter exporter ) {
-        super( exporter );
+    public EventConverter( XmlStreamer.Context context ) {
+        super( context );
     }
 
     /**

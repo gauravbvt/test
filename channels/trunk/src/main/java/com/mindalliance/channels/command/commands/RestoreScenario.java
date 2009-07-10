@@ -7,7 +7,9 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.export.ImportExportFactory;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.User;
 
 import java.util.List;
 
@@ -36,7 +38,8 @@ public class RestoreScenario extends AbstractCommand {
      */
     public Change execute( Commander commander ) throws CommandException {
         QueryService queryService = commander.getQueryService();
-        Importer importer = commander.getChannels().getImporter();
+        ImportExportFactory importExportFactory = queryService.getPlanManager().getImportExportFactory();
+        Importer importer = importExportFactory.createImporter( queryService, User.current().getPlan() );
         String xml = (String) get( "xml" );
         if ( xml != null ) {
             Long defaultScenarioId = (Long) get( "defaultScenario" );

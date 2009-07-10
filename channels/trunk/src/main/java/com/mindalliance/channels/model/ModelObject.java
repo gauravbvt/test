@@ -83,7 +83,7 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
         return id;
     }
 
-    public final void setId( long id ) {
+    public void setId( long id ) {
         this.id = id;
     }
 

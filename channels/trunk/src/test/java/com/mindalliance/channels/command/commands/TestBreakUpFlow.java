@@ -13,6 +13,7 @@ import com.mindalliance.channels.model.Scenario;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.io.IOException;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -28,7 +29,8 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
     private Part target;
     private BreakUpFlow command;
 
-    protected void setUp() {
+    @Override
+    protected void setUp() throws IOException {
         super.setUp();
         QueryService queryService = app.getQueryService();
         scenario = queryService.createScenario();

@@ -25,7 +25,7 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
     private List<Scenario> scenarios;
 
     @Override
-    protected void setUp() {
+    protected void setUp() throws IOException {
         super.setUp();
         scenarios = app.getQueryService().list( Scenario.class );
 

@@ -1,6 +1,5 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.dao.Journal;
@@ -25,8 +24,8 @@ public class JournalConverter extends AbstractChannelsConverter {
      */
     public static final Logger LOG = LoggerFactory.getLogger( JournalConverter.class );
 
-    public JournalConverter( Exporter exporter ) {
-        super( exporter );
+    public JournalConverter( XmlStreamer.Context context ) {
+        super( context );
     }
 
     /**

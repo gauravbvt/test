@@ -134,7 +134,7 @@ public class History {
      * @return a memento
      */
     public Memento getUndo() {
-        String userName = User.current().getName();
+        String userName = User.current().getUsername();
         Memento memento = findLastBy( done, userName );
         if ( memento != null && !hasConflict( memento ) )
             return memento;
@@ -148,7 +148,7 @@ public class History {
      * @return a memento
      */
     public Memento getRedo() {
-        String userName = User.current().getName();
+        String userName = User.current().getUsername();
         Memento memento = findLastBy( undone, userName );
         if ( memento != null && !hasConflict( memento ) )
             return memento;
@@ -180,7 +180,7 @@ public class History {
         return new FilterIterator( done.iterator(), new Predicate() {
             public boolean evaluate( Object obj ) {
                 Memento memento = (Memento) obj;
-                return !memento.getUserName().equals( User.current().getName() )
+                return !memento.getUserName().equals( User.current().getUsername() )
                         && memento.getTimestamp() >= timestamp;
             }
         } );

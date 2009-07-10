@@ -1,6 +1,5 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Job;
 import com.mindalliance.channels.model.ModelObject;
@@ -30,8 +29,8 @@ public class OrganizationConverter extends EntityConverter {
     public static final Logger LOG = LoggerFactory.getLogger( OrganizationConverter.class );
 
 
-    public OrganizationConverter( Exporter exporter ) {
-        super( exporter );
+    public OrganizationConverter( XmlStreamer.Context context ) {
+        super( context );
     }
 
     /**

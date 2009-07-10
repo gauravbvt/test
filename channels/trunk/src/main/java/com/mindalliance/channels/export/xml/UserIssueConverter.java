@@ -1,6 +1,5 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
@@ -29,8 +28,8 @@ public class UserIssueConverter extends AbstractChannelsConverter {
      */
     private static final Logger LOG = LoggerFactory.getLogger( UserIssueConverter.class );
 
-    public UserIssueConverter( Exporter exporter ) {
-        super( exporter );
+    public UserIssueConverter( XmlStreamer.Context context ) {
+        super( context );
     }
 
     /**

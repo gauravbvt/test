@@ -44,18 +44,21 @@ import com.mindalliance.channels.analysis.detectors.UselessPart;
 import com.mindalliance.channels.attachments.FileBasedManager;
 import com.mindalliance.channels.command.DefaultCommander;
 import com.mindalliance.channels.command.DefaultLockManager;
-import com.mindalliance.channels.dao.Memory;
+import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.SimpleIdGenerator;
 import com.mindalliance.channels.export.xml.XmlStreamer;
 import com.mindalliance.channels.graph.DefaultDiagramFactory;
 import com.mindalliance.channels.graph.GraphvizRenderer;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.query.DefaultQueryService;
 import junit.framework.TestCase;
 import org.apache.wicket.util.tester.WicketTester;
 import org.springframework.core.io.FileSystemResource;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,30 +79,28 @@ public class AbstractChannelsTest extends TestCase {
     protected WicketTester tester;
 
     @Override
-    protected void setUp() {
-        XmlStreamer xmlStreamer = new XmlStreamer();
-        app = new Channels();
+    protected void setUp() throws IOException {
+        SimpleIdGenerator simpleIdGenerator = new SimpleIdGenerator();
 
-        Memory dao = new Memory();
-        dao.setDataDirectory( new FileSystemResource( "target/data" ) );
-        dao.setSnapshotThreshold( 10 );
-        dao.reset();
-        DefaultQueryService queryService = new DefaultQueryService();
+        XmlStreamer xmlStreamer = new XmlStreamer( simpleIdGenerator );
+
+        commander = new DefaultCommander();
+        PlanManager planManager = new PlanManager( xmlStreamer, simpleIdGenerator );
+        planManager.setDataDirectory( new FileSystemResource( "target/data" ) );
+        planManager.setSnapshotThreshold( 10 );
+
         FileBasedManager attachmentManager = new FileBasedManager();
         attachmentManager.setDirectory( new FileSystemResource( "work/uploads" ) );
         attachmentManager.setPath( "uploads" );
-        app.setQueryService( queryService );
-        queryService.setDao( dao );
-        queryService.setAttachmentManager( attachmentManager );
-        app.setExporter( xmlStreamer );
-        app.setImporter( xmlStreamer );
-        commander = new DefaultCommander();
+
+        DefaultQueryService queryService = new DefaultQueryService( planManager, attachmentManager );
+
         lockManager = new DefaultLockManager();
         lockManager.setQueryService( queryService );
+
         commander.setLockManager( lockManager );
         commander.setQueryService( queryService );
-        commander.setAttachmentManager( attachmentManager );
-        app.setAttachmentManager( attachmentManager );
+
         // Set default scenario
         // app.getScenarioDao().addScenario(new FireScenario());
         // Set flow diagram
@@ -111,10 +112,41 @@ public class AbstractChannelsTest extends TestCase {
         diagramFactory.setGraphRenderer( graphRenderer );
         diagramFactory.setImageDirectory( new FileSystemResource( "src/webapp/WEB-INF/images" ) );
         diagramFactory.setQueryService( queryService );
-        app.setDiagramFactory( diagramFactory );
+
         // Set scenario analyst
         // Initialize analyst
         DefaultAnalyst analyst = new DefaultAnalyst();
+        List<IssueDetector> detectors = createDetectors( queryService );
+        analyst.setIssueDetectors( detectors );
+
+        app = new Channels();
+        app.setQueryService( queryService );
+        app.setImportExportFactory( xmlStreamer );
+        app.setDiagramFactory( diagramFactory );
+        app.setAnalyst( analyst );
+
+        plan = new Plan();
+        plan.setName( "Test" );
+        plan.setClient( "Mind-Alliance" );
+        plan.setDescription( "This is a test" );
+
+        User test = User.current();
+        test.setPlan( plan );
+        planManager.add( plan );
+        planManager.afterPropertiesSet();
+        queryService.afterPropertiesSet();
+        planManager.reset();
+        commander.afterPropertiesSet();
+
+        queryService.createScenario();
+    }
+
+    protected void initTester() {
+        tester = new WicketTester( app );
+        tester.setParametersForNextRequest( new HashMap<String, String[]>() );
+    }
+
+    private List<IssueDetector> createDetectors( DefaultQueryService queryService ) {
         List<IssueDetector> detectors = new ArrayList<IssueDetector>();
         detectors.add( new NoScenarioRepondsToIncident() );
         detectors.add( new ScenarioWithoutManagedRisk() );
@@ -157,18 +189,7 @@ public class AbstractChannelsTest extends TestCase {
         for ( IssueDetector detector : detectors ) {
             ( (AbstractIssueDetector) detector ).setQueryService( queryService );
         }
-        analyst.setIssueDetectors( detectors );
-        app.setAnalyst( analyst );
-
-        tester = new WicketTester( app );
-        tester.setParametersForNextRequest( new HashMap<String, String[]>() );
-        Plan plan = new Plan();
-        plan.setName( "Test" );
-        plan.setClient( "Mind-Alliance" );
-        plan.setDescription( "This is a test" );
-        app.getPlans().add( plan );
-        app.beginUsingPlan( plan );
-        queryService.createScenario();
+        return detectors;
     }
 
     public void testNothing() {

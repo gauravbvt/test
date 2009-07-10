@@ -8,10 +8,27 @@
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
 
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
 
-    <bean name="user" class="com.mindalliance.channels.model.User" scope="session" factory-method="current"/>
+    <bean name="user" class="com.mindalliance.channels.model.User" scope="session" factory-method="current">
+    </bean>
+    <bean name="plan" class="com.mindalliance.channels.model.Plan" scope="session" factory-bean="user" factory-method="getPlan">
+    </bean>
 
-    <!-- Security -->
+    <!-- Internal methods authorization -->
+    <!--<bean id="methodLevelSecurity" class="org.acegisecurity.intercept.method.aspectj.AspectJSecurityInterceptor">-->
+      <!--<property name="validateConfigAttributes" value="true"/>-->
+      <!--<property name="authenticationManager" ref="authenticationManager"/>-->
+      <!--<property name="accessDecisionManager" ref="accessDecisionManager"/>-->
+      <!--<property name="runAsManager"><bean class="org.acegisecurity.runas.RunAsManagerImpl">-->
+          <!--<property name="key" value="bla"/>-->
+      <!--</bean></property>-->
+      <!--<property name="afterInvocationManager"><bean class="org.acegisecurity.afterinvocation.AfterInvocationProviderManager">-->
+          <!--<property name="providers"></property>-->
+      <!--</bean></property>-->
+    <!--</bean>-->
+
+    <!-- Web Security -->
     <bean id="filterChainProxy" class="org.acegisecurity.util.FilterChainProxy">
         <property name="filterInvocationDefinitionSource">
             <value>
@@ -49,8 +66,8 @@
     <bean id="loginFilter" class="com.mindalliance.channels.util.LoginFilter">
         <property name="authenticationManager" ref="authenticationManager"/>
         <property name="modelerRole" value="ROLE_PLANNER"/>
-        <property name="modelerUrl" value="/plan.html"/>
-        <property name="defaultTargetUrl" value="/playbook.html"/>
+        <property name="modelerUrl" value="/plan"/>
+        <property name="defaultTargetUrl" value="/playbook"/>
         <property name="authenticationFailureUrl" value="/static/failed.html"/>
         <property name="filterProcessesUrl" value="/login.do"/>
         <property name="rememberMeServices" ref="rememberMeServices"/>
@@ -73,26 +90,27 @@
         <property name="authenticationEntryPoint" ref="filterEP"/>
     </bean>
 
+    <bean id="accessDecisionManager" class="org.acegisecurity.vote.AffirmativeBased">
+        <property name="decisionVoters">
+            <list><bean class="org.acegisecurity.vote.RoleVoter"/></list>
+        </property>
+    </bean>
+
     <bean id="securityInterceptor" class="org.acegisecurity.intercept.web.FilterSecurityInterceptor">
         <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="accessDecisionManager">
-            <bean class="org.acegisecurity.vote.AffirmativeBased">
-                <property name="decisionVoters">
-                    <list><bean class="org.acegisecurity.vote.RoleVoter"/></list>
-                </property>
-            </bean>
-        </property>
+        <property name="accessDecisionManager" ref="accessDecisionManager"/>
         <property name="objectDefinitionSource">
           <value>
             CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
             PATTERN_TYPE_APACHE_ANT
-              /plan.html=ROLE_PLANNER
+              /plan=ROLE_PLANNER
               /**=ROLE_USER
           </value>
         </property>
     </bean>
 
     <bean id="userDetails" class="com.mindalliance.channels.util.FileUserDetailsService">
+        <constructor-arg ref="planManager"/>
         <property name="userDefinitions" value="channels/users.properties"/>
         <property name="defaultDefinitions" value="/WEB-INF/users.properties"/>
     </bean>

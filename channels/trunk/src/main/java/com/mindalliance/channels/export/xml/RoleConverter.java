@@ -1,6 +1,5 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Role;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -18,8 +17,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class RoleConverter extends EntityConverter {
 
-    public RoleConverter( Exporter exporter ) {
-        super( exporter );
+    public RoleConverter( XmlStreamer.Context context ) {
+        super( context );
     }
 
     public boolean canConvert( Class aClass ) {

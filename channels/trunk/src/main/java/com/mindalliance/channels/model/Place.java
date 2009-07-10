@@ -1,6 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.GeoService;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.geo.GeoLocatable;
@@ -30,10 +29,12 @@ public class Place extends ModelObject implements GeoLocatable {
      * Street address.
      */
     private String streetAddress = "";
+
     /**
      * Postal code
      */
     private String postalCode = "";
+
     /**
      * A string denoting a geolocation. Null if not set. Set if empty.
      */
@@ -60,23 +61,23 @@ public class Place extends ModelObject implements GeoLocatable {
     }
 
     public Place( String name ) {
-        this();
-        setName( name );
+        super( name );
     }
 
     /**
      * {@inheritDoc}
      */
     public GeoLocation geoLocate() {
-        if ( geoLocation != null ) {
-            return geoLocation;
-        } else {
-            if ( within != null ) {
-                return within.geoLocate();
-            } else {
-                return null;
-            }
-        }
+        Place place = this;
+        do {
+            if ( place.getGeoLocation() == null )
+                place = place.getWithin();
+            else
+                return place.getGeoLocation();
+
+        } while ( place != null );
+
+        return null;
     }
 
     /**
@@ -126,29 +127,37 @@ public class Place extends ModelObject implements GeoLocatable {
      */
     @Transient
     public String getActualStreetAddress() {
-        if ( streetAddress != null && !streetAddress.isEmpty() ) {
-            return streetAddress;
-        } else if ( within != null ) {
-            return within.getActualStreetAddress();
-        } else {
-            return null;
-        }
+        Place place = this;
+        do {
+            String address = place.getStreetAddress();
+            if ( address == null || address.isEmpty() )
+                place = place.getWithin();
+            else
+                return address;
+
+        } while ( place != null );
+
+        return null;
     }
 
     /**
-     * Get postal code, possibly inherited from place it si within.
+     * Get postal code, possibly inherited from place it is within.
      *
      * @return a string
      */
     @Transient
     public String getActualPostalCode() {
-        if ( postalCode != null ) {
-            return postalCode;
-        } else if ( within != null ) {
-            return within.getActualPostalCode();
-        } else {
-            return null;
-        }
+        Place place = this;
+        do {
+            String code = place.getPostalCode();
+            if ( code == null ) {
+                place = place.getWithin();
+            } else {
+                return code;
+            }
+        } while ( place != null );
+
+        return null;
     }
 
     /**
@@ -165,20 +174,44 @@ public class Place extends ModelObject implements GeoLocatable {
      */
     @Transient
     @Override
-    public void setName( String val ) {
+    public void setName( String name ) {
         // If geoname was empty or same as name, reset it to null
-        if ( geoname != null && ( geoname.isEmpty() || geoname.equals( getName() ) ) ) {
+        if ( geoname != null && ( geoname.isEmpty() || geoname.equals( getName() ) ) )
             setGeoname( null );
+        super.setName( name );
+    }
+
+    /**
+     * Test if this place has been validated by a geoservice.
+     * @return true when validate() has been called.
+     * @see #validate
+     */
+    @Transient
+    public boolean isValidated() {
+        return !( geoname == null || geoLocations == null ) ;
+    }
+
+    /**
+     * Validate this place using a geoservice.
+     * @param service the service
+     */
+    public void validate( GeoService service ) {
+        if ( geoname == null ) {
+            String n = getName();
+            boolean hasName = !( n == null || n.trim().isEmpty() );
+            setGeoname( hasName && service.isLikelyGeoname( n ) ? n : "" );
         }
-        super.setName( val );
+
+        boolean hasGeoName = !( geoname == null || geoname.trim().isEmpty() );
+        if ( hasGeoName && geoLocations == null )
+            geoLocations = service.findGeoLocations( geoname );
+
+        if ( hasAddress() )
+            service.refineWithAddress( geoLocation, streetAddress, postalCode );
     }
 
     @Transient
     public List<GeoLocation> getGeoLocations() {
-        String gn = getGeoname();
-        if ( geoLocations == null && gn != null && !gn.isEmpty() ) {
-            geoLocations = getGeoService().findGeoLocations( gn );
-        }
         return geoLocations;
     }
 
@@ -211,48 +244,36 @@ public class Place extends ModelObject implements GeoLocatable {
 
     public void setGeoLocation( GeoLocation geoLoc ) {
         geoLocation = geoLoc;
-        if ( geoLocation != null
-                && hasAddress() ) {
-            getGeoService().refineWithAddress( geoLocation, streetAddress, postalCode );
-        }
     }
 
     private boolean hasAddress() {
-        return geoLocation != null
-                && ( ( streetAddress != null && !streetAddress.isEmpty() )
-                || ( postalCode != null && !postalCode.isEmpty() ) );
+        boolean hasStreetAddress = !( streetAddress == null || streetAddress.isEmpty() );
+        boolean hasPostalCode = !( postalCode == null || postalCode.isEmpty() );
+        return geoLocation != null && ( hasStreetAddress || hasPostalCode );
     }
 
     public String getStreetAddress() {
-        return streetAddress == null ? "" : streetAddress;
+        return streetAddress;
     }
 
     public void setStreetAddress( String address ) {
-        boolean refine = streetAddress != null && address != null && !streetAddress.equals( address );
         streetAddress = address == null ? "" : address;
-        if ( refine && hasAddress() ) {
-            getGeoService().refineWithAddress( geoLocation, address, postalCode );
-        }
     }
 
     public String getGeoname() {
-        String name = getName();
-        if ( geoname == null ) {
-            if ( name != null
-                    && !name.trim().isEmpty()
-                    && getGeoService().isLikelyGeoname( name ) ) {
-                geoname = name;
-            } else {
-                geoname = "";
-            }
-        }
         return geoname;
     }
 
-    public void setGeoname( String val ) {
+    /**
+     * Pick a specific geoname for this place.
+     * Assumes a subsequent call to validate().
+     * @param geoname the geoname.
+     * @see #validate
+     */
+    public void setGeoname( String geoname ) {
         geoLocations = null;
         geoLocation = null;
-        geoname = val;
+        this.geoname = geoname;
     }
 
     public String getPostalCode() {
@@ -260,11 +281,7 @@ public class Place extends ModelObject implements GeoLocatable {
     }
 
     public void setPostalCode( String code ) {
-        boolean refine = postalCode != null && code != null && !postalCode.equals( code );
-        this.postalCode = code == null ? "" : code;
-        if ( refine && hasAddress() ) {
-            getGeoService().refineWithAddress( geoLocation, streetAddress, code );
-        }
+        postalCode = code == null ? "" : code;
     }
 
     public Place getWithin() {
@@ -275,9 +292,13 @@ public class Place extends ModelObject implements GeoLocatable {
         this.within = within;
     }
 
-    public void addGeoLocation( GeoLocation geoLocation ) {
+    /**
+     * Add a geolocation to this place.
+     * @param location a location
+     */
+    public void addGeoLocation( GeoLocation location ) {
         if ( geoLocations == null ) geoLocations = new ArrayList<GeoLocation>();
-        geoLocations.add( geoLocation );
+        geoLocations.add( location );
     }
 
     /**
@@ -287,7 +308,7 @@ public class Place extends ModelObject implements GeoLocatable {
      * @return a boolean
      */
     public boolean isSameAsOrIn( Place place ) {
-        return this.equals( place )
+        return equals( place )
                 || isWithin( place )
                 || isGeoLocatedIn( place.geoLocate() );
     }
@@ -352,7 +373,7 @@ public class Place extends ModelObject implements GeoLocatable {
     @Transient
     public double getLatitude() {
         GeoLocation geoLoc = geoLocate();
-        return geoLoc != null ? geoLoc.getLatitude() : 0;
+        return geoLoc != null ? geoLoc.getLatitude() : 0.0;
     }
 
     /**
@@ -363,7 +384,7 @@ public class Place extends ModelObject implements GeoLocatable {
     @Transient
     public double getLongitude() {
         GeoLocation geoLoc = geoLocate();
-        return geoLoc != null ? geoLoc.getLongitude() : 0;
+        return geoLoc != null ? geoLoc.getLongitude() : 0.0;
     }
 
     /**
@@ -375,14 +396,10 @@ public class Place extends ModelObject implements GeoLocatable {
         return geoLocate() != null;
     }
 
-    @Transient
-    private GeoService getGeoService() {
-        return Channels.instance().getGeoService();
-    }
-
     /**
      * {@inheritDoc}
      */
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append( getName() );

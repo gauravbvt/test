@@ -61,7 +61,7 @@ public class DefaultLockManager extends AbstractService implements LockManager {
                 ModelObject mo = queryService.find( ModelObject.class, id );
                 Lock lock = getLock( id );
                 if ( lock != null ) {
-                    String userName = User.current().getName();
+                    String userName = User.current().getUsername();
                     if ( !lock.isOwnedBy( userName ) ) {
                         throw new LockingException(
                                 userName + " is making changes to " + mo.getName() + "." );
@@ -91,7 +91,7 @@ public class DefaultLockManager extends AbstractService implements LockManager {
         synchronized ( this ) {
             Lock lock = getLock( id );
             if ( lock != null ) {
-                String userName = User.current().getName();
+                String userName = User.current().getUsername();
                 if ( !lock.isOwnedBy( userName ) )
                     throw new LockingException(
                             userName + " does not own the lock. " + userName + " does." );
@@ -151,7 +151,7 @@ public class DefaultLockManager extends AbstractService implements LockManager {
      */
     public boolean isUserLocking( long id ) {
         Lock lock = getLock( id );
-        return lock != null && lock.isOwnedBy( User.current().getName() );
+        return lock != null && lock.isOwnedBy( User.current().getUsername() );
     }
 
     /**
@@ -231,7 +231,7 @@ public class DefaultLockManager extends AbstractService implements LockManager {
      * {@inheritDoc}
      */
     public boolean canGrabLocksOn( Collection<Long> ids ) {
-        String userName = User.current().getName();
+        String userName = User.current().getUsername();
         for ( long id : ids ) {
             Lock lock = getLock( id );
             if ( lock != null && !lock.isOwnedBy( userName ) )

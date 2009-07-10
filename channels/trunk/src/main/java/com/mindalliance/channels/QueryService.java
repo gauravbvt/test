@@ -3,6 +3,7 @@ package com.mindalliance.channels;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;
@@ -22,7 +23,6 @@ import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.util.Employment;
 import com.mindalliance.channels.util.Play;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Iterator;
 import java.util.List;
@@ -40,18 +40,10 @@ public interface QueryService extends Service {
     Dao getDao();
 
     /**
-     * Get last assigned id.
-     *
-     * @return a long
+     * Get the plan manager.
+     * @return the plan manager.
      */
-    Long getLastAssignedId();
-
-    /**
-     * Set last assigned id.
-     *
-     * @param lastId a long
-     */
-    void setLastAssignedId( Long lastId );
+    PlanManager getPlanManager();
 
     /**
      * Get attachment manager.
@@ -328,12 +320,6 @@ public interface QueryService extends Service {
      * @return a list of flows
      */
     List<Flow> findAllFlowsContacting( ResourceSpec resourceSpec );
-
-    /**
-     * Add some default scenarios, if needed.
-     */
-    @Transactional
-    void initialize();
 
     /**
      * Find all known actors that belong to a resource spec
@@ -840,4 +826,10 @@ public interface QueryService extends Service {
      * @return a list of a hierarchical objects
      */
     List<Hierarchical> findAllDescendants( Hierarchical hierarchical );
+
+    /**
+     * Replay journals for all plans and save the results.
+     * @param commander the commander for replaying
+     */
+    void replayJournals( Commander commander );
 }

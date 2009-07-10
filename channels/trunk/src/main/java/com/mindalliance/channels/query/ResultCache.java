@@ -1,7 +1,7 @@
 package com.mindalliance.channels.query;
 
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.User;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
@@ -121,7 +121,7 @@ public class ResultCache {
             key.append( ')' );
             // Add plan id to key
             key.append( " in " );
-            key.append( Channels.getPlan().getId() );
+            key.append( User.current().getPlan().getId() );
             return key.toString();
         } else
             return targetMethodName;

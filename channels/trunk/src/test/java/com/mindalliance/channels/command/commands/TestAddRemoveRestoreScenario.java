@@ -7,6 +7,7 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.model.Scenario;
 
 import java.util.List;
+import java.io.IOException;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -20,7 +21,7 @@ public class TestAddRemoveRestoreScenario extends AbstractChannelsTest {
     private Scenario scenario;
     private QueryService queryService;
 
-    protected void setUp() {
+    protected void setUp() throws IOException {
         super.setUp();
         queryService = app.getQueryService();
     }

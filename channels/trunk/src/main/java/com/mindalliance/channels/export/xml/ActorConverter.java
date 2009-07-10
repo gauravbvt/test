@@ -1,6 +1,5 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.ModelObject;
@@ -28,8 +27,8 @@ public class ActorConverter extends EntityConverter {
      */
     public static final Logger LOG = LoggerFactory.getLogger( ActorConverter.class );
 
-    public ActorConverter( Exporter exporter ) {
-        super( exporter );
+    public ActorConverter( XmlStreamer.Context context ) {
+        super( context );
     }
 
     public boolean canConvert( Class aClass ) {

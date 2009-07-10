@@ -6,6 +6,7 @@ import com.mindalliance.channels.Importer;
 import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Plan;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
@@ -55,7 +56,7 @@ public class Serializer extends AbstractService implements Importer, Exporter {
     /**
      * {@inheritDoc}
      */
-    public void exportScenario( Scenario scenario, OutputStream stream ) throws IOException {
+    public void export( Scenario scenario, OutputStream stream ) throws IOException {
         final ObjectOutputStream oos = new ObjectOutputStream( stream );
         oos.writeObject( scenario );
         oos.flush();
@@ -80,21 +81,21 @@ public class Serializer extends AbstractService implements Importer, Exporter {
     /**
      * {@inheritDoc}
      */
-    public void exportAll( OutputStream stream ) throws IOException {
+    public void export( Plan plan, OutputStream stream ) throws IOException {
         // TODO
     }
 
     /**
      * {@inheritDoc}
      */
-    public void importAll( FileInputStream stream ) throws IOException {
+    public void importPlan( FileInputStream stream ) throws IOException {
         //Todo
     }
 
     /**
      * {@inheritDoc}
      */
-   public void exportJournal( Journal journal, OutputStream stream ) throws IOException {
+   public void export( Journal journal, OutputStream stream ) throws IOException {
         //Todo
     }
 
@@ -112,7 +113,7 @@ public class Serializer extends AbstractService implements Importer, Exporter {
 
     public void reconnectExternalFlows(
             Map<Connector,
-            List<ConnectionSpecification>> proxyConnectors, 
+            List<ConnectionSpecification>> proxyConnectors,
             boolean importingPlan ) {
         //Todo
     }

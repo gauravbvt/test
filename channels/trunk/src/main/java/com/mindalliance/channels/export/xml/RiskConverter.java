@@ -1,6 +1,5 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Risk;
@@ -19,8 +18,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class RiskConverter extends AbstractChannelsConverter {
 
-    public RiskConverter( Exporter exporter ) {
-        super( exporter );
+    public RiskConverter( XmlStreamer.Context context ) {
+        super( context );
     }
 
     /**

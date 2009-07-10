@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages.components.plan;
 
 
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.ExternalFlow;
@@ -67,19 +66,18 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     }
 
     private void init() {
-        Channels.instance().beginUsingPlan( getPlan() );
         addPlanSizing();
         addPlanMapDiagramPanel();
         addFlowsTitleLabel();
         addExternalFlowsPanel();
         addCausesTitleLabel();
         addCausesPanel();
-        Channels.instance().endUsingPlan( );
     }
 
     private void addPlanSizing() {
         WebMarkupContainer reduceToFit = new WebMarkupContainer( "fit" );
         reduceToFit.add( new AbstractDefaultAjaxBehavior() {
+            @Override
             protected void onComponentTag( ComponentTag tag ) {
                 super.onComponentTag( tag );
                 String domIdentifier = ".plan .picture";
@@ -92,8 +90,8 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
                 tag.put( "onclick", onclick );
             }
 
+            @Override
             protected void respond( AjaxRequestTarget target ) {
-                Channels.instance().beginUsingPlan( getPlan() );
                 RequestCycle requestCycle = RequestCycle.get();
                 String swidth = requestCycle.getRequest().getParameter( "width" );
                 String sheight = requestCycle.getRequest().getParameter( "height" );
@@ -101,18 +99,16 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
                 diagramSize[1] = ( Double.parseDouble( sheight ) - 20 ) / 96.0;
                 addPlanMapDiagramPanel();
                 target.addComponent( planMapDiagramPanel );
-                Channels.instance().endUsingPlan( );
             }
         } );
         add( reduceToFit );
         WebMarkupContainer fullSize = new WebMarkupContainer( "full" );
         fullSize.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
             protected void onEvent( AjaxRequestTarget target ) {
-                Channels.instance().beginUsingPlan( getPlan() );
                 diagramSize = new double[2];
                 addPlanMapDiagramPanel();
                 target.addComponent( planMapDiagramPanel );
-                Channels.instance().endUsingPlan( );
             }
         } );
         add( fullSize );

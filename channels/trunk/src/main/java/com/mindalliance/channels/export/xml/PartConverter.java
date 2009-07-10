@@ -1,6 +1,5 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.Event;
@@ -36,8 +35,8 @@ public class PartConverter extends AbstractChannelsConverter {
      */
     public static final Logger LOG = LoggerFactory.getLogger( PartConverter.class );
 
-    public PartConverter( Exporter exporter ) {
-        super( exporter );
+    public PartConverter( XmlStreamer.Context context ) {
+        super( context );
     }
 
     /**

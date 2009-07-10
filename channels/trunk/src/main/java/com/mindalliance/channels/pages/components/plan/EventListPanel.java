@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.entities.EntityLink;
 import com.mindalliance.channels.util.SemMatch;
@@ -115,7 +115,7 @@ public class EventListPanel extends AbstractCommandablePanel {
                 new PropertyModel<Boolean>( wrapper, "confirmed" ) );
         makeVisible( confirmedCheckBox, wrapper.canBeConfirmed() );
         item.addOrReplace( confirmedCheckBox );
-        final Plan plan = Channels.getPlan();
+        final Plan plan = User.current().getPlan();
         confirmedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 eventsDiv.addOrReplace( makeEventsTable() );
@@ -206,7 +206,7 @@ public class EventListPanel extends AbstractCommandablePanel {
             if ( confirmed ) {
                 Event confirmedEvent = getQueryService().findOrCreate( Event.class, getName() );
                 doCommand( new UpdatePlanObject(
-                        Channels.getPlan(),
+                        User.current().getPlan(),
                         "incidents",
                         confirmedEvent,
                         UpdateObject.Action.Add
@@ -215,7 +215,7 @@ public class EventListPanel extends AbstractCommandablePanel {
             } else if ( !markedForCreation ) {
                 Event confirmedEvent = getQueryService().findOrCreate( Event.class, getName() );
                 doCommand( new UpdatePlanObject(
-                        Channels.getPlan(),
+                        User.current().getPlan(),
                         "incidents",
                         confirmedEvent,
                         UpdateObject.Action.Remove

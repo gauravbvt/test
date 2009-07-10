@@ -1,11 +1,12 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.AbstractService;
-import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.LockManager;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.dao.Journal;
+import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Identifiable;
@@ -14,8 +15,10 @@ import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.User;
+import com.mindalliance.channels.model.Plan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -31,39 +34,42 @@ import java.util.Set;
  * Date: Mar 3, 2009
  * Time: 1:47:58 PM
  */
-public class DefaultCommander extends AbstractService implements Commander {
+public class DefaultCommander extends AbstractService implements Commander, InitializingBean {
     /**
      * Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( DefaultCommander.class );
+
     /**
      * Lock manager.
      */
     private LockManager lockManager;
+
     /**
      * Done and undone history.
      */
     private History history = new History();
+
     /**
      * Query service.
      */
     private QueryService queryService;
-    /**
-     * Attachment manager.
-     */
-    private AttachmentManager attachmentManager;
+
     /**
      * Whether in reloading mode, i.e. replaying journaled commands.
      */
     private boolean replaying = false;
+
     /**
      * Record of when users were most recently active.
      */
     private Map<String, Long> whenLastActive = Collections.synchronizedMap( new HashMap<String, Long>() );
+
     /**
      * Users who timed out but have yet to be refreshed.
      */
     private Set<String> timedOut = Collections.synchronizedSet( new HashSet<String>() );
+
     /**
      * Default timeout period  in seconds = 5 minutes
      */
@@ -84,11 +90,11 @@ public class DefaultCommander extends AbstractService implements Commander {
     }
 
     public Map<String, Object> getCopy() {
-        return copy.get( User.current().getName() );
+        return copy.get( User.current().getUsername() );
     }
 
     public void setCopy( Map<String, Object> state ) {
-        copy.put( User.current().getName(), state );
+        copy.put( User.current().getUsername(), state );
     }
 
     /**
@@ -124,14 +130,6 @@ public class DefaultCommander extends AbstractService implements Commander {
         return queryService;
     }
 
-    public void setAttachmentManager( AttachmentManager attachmentManager ) {
-        this.attachmentManager = attachmentManager;
-    }
-
-    public AttachmentManager getAttachmentManager() {
-        return attachmentManager;
-    }
-
     public int getTimeout() {
         return timeout;
     }
@@ -153,7 +151,7 @@ public class DefaultCommander extends AbstractService implements Commander {
      */
     public <T extends ModelObject> T resolve( Class<T> clazz, Long id ) throws CommandException {
         try {
-            return getQueryService().find( clazz, id );
+            return queryService.find( clazz, id );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
         }
@@ -200,9 +198,6 @@ public class DefaultCommander extends AbstractService implements Commander {
         return command.canDo( this ) && lockManager.canGrabLocksOn( command.getLockingSet() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     private Change execute( Command command ) throws CommandException {
         Change change;
         if ( command.isAuthorized() ) {
@@ -211,8 +206,11 @@ public class DefaultCommander extends AbstractService implements Commander {
                 change = command.execute( this );
                 lockManager.releaseLocks( grabbedLocks );
                 if ( !isReplaying() && command.isTop() && !change.isNone() ) {
-                    LOG.info( "***After command");
-                    getQueryService().getDao().onAfterCommand( command );
+                    LOG.debug( "***After command" );
+
+                    PlanManager planManager = queryService.getPlanManager();
+                    Plan plan = User.current().getPlan();
+                    planManager.onAfterCommand( queryService, plan, command );
                 }
             } catch ( LockingException e ) {
                 throw new CommandException( e.getMessage(), e );
@@ -336,7 +334,6 @@ public class DefaultCommander extends AbstractService implements Commander {
      */
     public void cleanup( Class<? extends ModelObject> clazz, String name ) {
         synchronized ( this ) {
-            QueryService queryService = getQueryService();
             if ( name != null && !name.trim().isEmpty() ) {
                 ModelObject mo = queryService.getDao().find( clazz, name.trim() );
                 if ( mo != null && mo.isUndefined() ) {
@@ -373,7 +370,7 @@ public class DefaultCommander extends AbstractService implements Commander {
      */
     public boolean requestLockOn( Identifiable identifiable ) {
         if ( isTimedOut() ) return false;
-        updateUserActive( User.current().getName() );
+        updateUserActive( User.current().getUsername() );
         return lockManager.requestLockOn( identifiable );
     }
 
@@ -382,7 +379,7 @@ public class DefaultCommander extends AbstractService implements Commander {
      */
     public boolean requestLockOn( Long id ) {
         if ( isTimedOut() ) return false;
-        updateUserActive( User.current().getName() );
+        updateUserActive( User.current().getUsername() );
         return lockManager.requestLockOn( id );
     }
 
@@ -451,14 +448,14 @@ public class DefaultCommander extends AbstractService implements Commander {
      * {@inheritDoc}
      */
     public synchronized boolean isTimedOut() {
-        return timedOut.contains( User.current().getName() );
+        return timedOut.contains( User.current().getUsername() );
     }
 
     /**
      * {@inheritDoc}
      */
     public synchronized void clearTimeOut() {
-        timedOut.remove( User.current().getName() );
+        timedOut.remove( User.current().getUsername() );
     }
 
     /**
@@ -466,5 +463,24 @@ public class DefaultCommander extends AbstractService implements Commander {
      */
     public boolean isUnlocked( ModelObject mo ) {
         return lockManager.getLock( mo.getId() ) == null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void replay( Journal journal ) throws CommandException {
+        setReplaying( true );
+        if ( !journal.isEmpty() )
+            for ( Command command : journal.getCommands() )
+                doCommand( command );
+        journal.reset();
+        reset();
+    }
+
+    /**
+     * Replay journal for available plans.
+     */
+    public void afterPropertiesSet() {
+        queryService.replayJournals( this );
     }
 }

@@ -14,30 +14,21 @@
     </bean>
 
     <bean id="queryService" class="com.mindalliance.channels.query.DefaultQueryService">
+        <constructor-arg ref="planManager"/>
+        <constructor-arg ref="attachmentManager"/>
         <property name="addingSamples" value="false"/>
         <property name="importingScenarios" value="true"/>
         <property name="importDirectory" value="file:${user.home}/channels/import"/>
-        <property name="dao" ref="dao"/>
-        <property name="attachmentManager" ref="attachmentManager"/>
         <property name="semanticMatcher" ref="semanticMatcher"/>
     </bean>
-    <!--
-        <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-            <property name="targetObject" ref="queryService"/>
-            <property name="targetMethod" value="addObserver"/>
-            <property name="arguments">
-                <list value-type="java.util.Observer"><ref bean="attachmentManager"/></list>
-            </property>
-        </bean>
-    -->
 
     <bean id="serializer" class="com.mindalliance.channels.export.xml.XmlStreamer">
+        <constructor-arg ref="idGenerator"/>
         <property name="version" value="1.0"/>
     </bean>
 
     <bean id="attachmentManager" class="com.mindalliance.channels.attachments.FileBasedManager"
           init-method="start" destroy-method="stop">
-        <property name="queryService" ref="queryService"/>
         <property name="directory" value="file:${user.home}/channels/uploads"/>
         <property name="path" value="uploads/"/>
     </bean>
@@ -47,25 +38,14 @@
                   value="ABQIAAAAOEFNCNhUR4YjTHX0nnN5VRR4EqRj3RNZnoYuzojShxUjcPQKRRSLJekGZYEI4kGxmTTJBHr4EJ6Xpg"/>
     </bean>
 
+    <bean id="idGenerator" class="com.mindalliance.channels.dao.SimpleIdGenerator"/>
+
     <!-- setup wicket application -->
     <bean id="wicketApplication" class="com.mindalliance.channels.Channels">
         <property name="geoService" ref="geoService"/>
-        <property name="attachmentManager" ref="attachmentManager"/>
-        <property name="importer" ref="serializer"/>
-        <property name="exporter" ref="serializer"/>
+        <property name="importExportFactory" ref="serializer"/>
         <property name="analyst" ref="analyst"/>
         <property name="queryService" ref="queryService"/>
-        <property name="plans">
-            <list value-type="java.util.ArrayList">
-                <bean class="com.mindalliance.channels.model.Plan">
-                    <property name="uri" value="mindalliance.com/channels/plans/sci"/>
-                    <property name="name" value="SCI Emergency Communications Plan"/>
-                    <property name="client" value="Strategic Content Imaging, Inc."/>
-                    <property name="description"
-                              value="Communications planning for responding and recovering from business interruptions due fire or power outage."/>
-                </bean>
-            </list>
-        </property>
     </bean>
 
     <!-- Flow diagram factory : a prototype -->
@@ -83,6 +63,7 @@
 
     <!-- Scenario analyst -->
     <bean id="analyst" class="com.mindalliance.channels.analysis.DefaultAnalyst">
+        <property name="queryService" ref="queryService"/>
         <property name="semanticMatcher" ref="semanticMatcher"/>
         <property name="issueDetectors">
             <list value-type="java.util.ArrayList">
@@ -216,7 +197,7 @@
     <bean id="commander" class="com.mindalliance.channels.command.DefaultCommander" scope="prototype">
         <property name="timeout" value="300"/>
         <property name="queryService" ref="queryService"/>
-        <property name="attachmentManager" ref="attachmentManager"/>
+        <property name="lockManager" ref="lockManager"/>
     </bean>
 
 </beans>

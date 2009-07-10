@@ -7,12 +7,16 @@ import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.Importer;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.dao.EvacuationScenario;
 import com.mindalliance.channels.dao.FireScenario;
+import com.mindalliance.channels.dao.PlanDao;
+import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.export.ConnectionSpecification;
+import com.mindalliance.channels.export.ImportExportFactory;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;
@@ -44,6 +48,7 @@ import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 
 import java.io.File;
@@ -64,7 +69,7 @@ import java.util.Set;
 /**
  * Query service instance.
  */
-public class DefaultQueryService extends Observable implements QueryService {
+public class DefaultQueryService extends Observable implements QueryService, InitializingBean {
 
     /**
      * Class logger.
@@ -74,11 +79,6 @@ public class DefaultQueryService extends Observable implements QueryService {
      * Name of the default event.
      */
     public static final String DEFAULT_EVENT_NAME = "UNNAMED";
-
-    /**
-     * The implementation dao.
-     */
-    private Dao dao;
 
     /**
      * True if defaults scenarios will be added when dao is set.
@@ -95,26 +95,38 @@ public class DefaultQueryService extends Observable implements QueryService {
      */
     private Resource importDirectory;
 
+    /** The plan manager. */
+    private PlanManager planManager;
+
     /**
      * An attachment manager.
      */
     private AttachmentManager attachmentManager;
+
     /**
      * Semantic matcher.
      */
     private SemanticMatcher semanticMatcher;
 
-    public DefaultQueryService() {
+    //=============================================
+
+    public DefaultQueryService( PlanManager planManager, AttachmentManager attachmentManager ) {
+        this.planManager = planManager;
+        this.attachmentManager = attachmentManager;
     }
 
-    public DefaultQueryService( Dao dao ) {
-        setDao( dao );
+    /**
+     *  Required for CGLIB proxies...
+     */
+    DefaultQueryService() {
     }
 
-    // PROPERTIES
+    public PlanManager getPlanManager() {
+        return planManager;
+    }
 
-    public Dao getDao() {
-        return dao;
+    public SemanticMatcher getSemanticMatcher() {
+        return semanticMatcher;
     }
 
     public void setSemanticMatcher( SemanticMatcher semanticMatcher ) {
@@ -122,34 +134,20 @@ public class DefaultQueryService extends Observable implements QueryService {
     }
 
     /**
-     * {@inheritDoc}
+     * Find the dao for the selected plan of the current user.
+     * @return the dao
      */
-    public Long getLastAssignedId() {
-        return getDao().getLastAssignedId();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setLastAssignedId( Long lastId ) {
-        getDao().setLastAssignedId( lastId );
+    public Dao getDao() {
+        try {
+            return planManager.getDao( planManager.getCurrentPlan() );
+        } catch ( NotFoundException e ) {
+            LOG.error( "No plan found", e );
+            throw new RuntimeException( e );
+        }
     }
 
     public AttachmentManager getAttachmentManager() {
         return attachmentManager;
-    }
-
-    public void setAttachmentManager( AttachmentManager attachmentManager ) {
-        this.attachmentManager = attachmentManager;
-    }
-
-    /**
-     * Use a specific dao.
-     *
-     * @param dao the dao
-     */
-    public void setDao( Dao dao ) {
-        this.dao = dao;
     }
 
     public boolean isImportingScenarios() {
@@ -189,72 +187,74 @@ public class DefaultQueryService extends Observable implements QueryService {
      * {@inheritDoc}
      */
     public void onDestroy() {
-        getDao().onDestroy();
+        attachmentManager.removeUnattached( this );
+    }
+
+    private void validatePlan( Plan plan ) {
+        try {
+            PlanDao dao = planManager.getDao( plan );
+
+            ImportExportFactory exportFactory = planManager.getImportExportFactory();
+            Importer importer = exportFactory.createImporter( this, plan );
+            dao.load( importer );
+
+            // Make sure there is at least one event per plan
+            List<Event> incidents = plan.getIncidents();
+            if ( incidents.isEmpty() ) {
+                Event unnamedEvent = dao.findOrCreate( Event.class, DEFAULT_EVENT_NAME, null );
+                plan.addIncident( unnamedEvent );
+            } else if ( incidents.size() > 1 ) {
+                // Remove UNNAMED event if not referenced
+                Event event = dao.findOrCreate( Event.class, DEFAULT_EVENT_NAME, null );
+                if ( getReferenceCount( event ) <= 1 ) {
+                    incidents.remove( event );
+                    dao.remove( event );
+                }
+            }
+
+            // Make sure there is at least one scenario per plan
+            if ( !dao.list( Scenario.class ).iterator().hasNext() )
+                createScenario();
+
+//            dao.save( exportFactory.createExporter( this, plan ) );
+
+        } catch ( NotFoundException e ) {
+            throw new RuntimeException( e );
+        } catch ( IOException e ) {
+            throw new RuntimeException( e );
+        }
     }
 
     /**
-     * {@inheritDoc}
+     * Make sure plans are valid initialized with some proper scenarios.
      */
-    public void initialize() {
-        // TODO - conflict between loaded plan and context-created plan? (ids referenced by plan issues)
-        // First make plans initialized from application context persistent
-        for ( Plan plan : Channels.instance().getPlans() ) {
-            add( plan );
-        }
-        getDao().load();
-        // Make sure there is at least one plan, if not create it, optionally adding/import scenarios into it.
-        List<Plan> plans = getChannels().getPlans();
-        if ( plans.isEmpty() ) {
-            Plan plan = getDao().createPlan();
-            plans.add( plan );
-        }
-        // make sure each plan has at least one event
-        for ( Plan plan : getChannels().getPlans() ) {
-            if ( plan.getIncidents().isEmpty() ) {
-                Event unnamedEvent = findOrCreate( Event.class, DEFAULT_EVENT_NAME );
-                plan.addIncident( unnamedEvent );
-            }
-        }
+    public void afterPropertiesSet() {
+
+        List<Plan> plans = planManager.getPlans();
+
+        // Initialize first plan, if needed
         if ( plans.size() == 1 && plans.get( 0 ).getScenarios().isEmpty() ) {
-            try {
-                getChannels().beginUsingPlan( plans.get( 0 ) );
-                if ( addingSamples ) {
-                    LOG.info( "Adding sample models to default plan" );
-                    Scenario evac = createScenario();
-                    EvacuationScenario.initialize( evac, this );
-                    Scenario fireScenario = createScenario();
-                    FireScenario.initialize( fireScenario, this, evac );
-                }
-                if ( importingScenarios ) {
-                    LOG.info( "Importing default models to default plan" );
-                    loadScenarios();
-                }
-            } finally {
-                getChannels().endUsingPlan();
+            if ( addingSamples ) {
+                LOG.info( "Adding sample scenarios to default plan" );
+                Scenario evac = createScenario();
+                EvacuationScenario.initialize( evac, this );
+                Scenario fireScenario = createScenario();
+                FireScenario.initialize( fireScenario, this, evac );
+            }
+            if ( importingScenarios ) {
+                LOG.info( "Importing default scenarios to default plan" );
+                loadScenarios( plans.get( 0 ) );
             }
         }
-        for ( Plan plan : getChannels().getPlans() ) {
-            getChannels().beginUsingPlan( plan );
-            try {
-                // Make sure there is at least one scenario per plan
-                if ( !getDao().list( Scenario.class ).iterator().hasNext() ) {
-                    createScenario();
-                }
-                // Remove UNNAMED event if not referenced
-                Event event = findOrCreate( Event.class, DEFAULT_EVENT_NAME );
-                if ( getReferenceCount( event ) <= 1 ) {
-                    plan.getIncidents().remove( event );
-                    remove( event );
-                }
-            } finally {
-                getChannels().endUsingPlan();
-            }
-        }
-        getDao().afterInitialize();
+
+        for ( Plan plan : plans )
+            validatePlan( plan );
+
+        attachmentManager.removeUnattached( this );
     }
 
     @SuppressWarnings( "unchecked" )
-    private void loadScenarios() {
+    private void loadScenarios( Plan plan ) {
         if ( importDirectory != null )
             try {
                 File directory = importDirectory.getFile();
@@ -266,7 +266,7 @@ public class DefaultQueryService extends Observable implements QueryService {
                                     return name.endsWith( ".xml" );
                                 }
                             } );
-                    Importer importer = getChannels().getImporter();
+                    Importer importer = planManager.getImportExportFactory().createImporter( this, plan );
                     Map<String, Long> idMap = new HashMap<String, Long>();
                     Map<Connector, List<ConnectionSpecification>> proxyConnectors =
                             new HashMap<Connector, List<ConnectionSpecification>>();
@@ -382,38 +382,8 @@ public class DefaultQueryService extends Observable implements QueryService {
      * {@inheritDoc}
      */
     public <T extends ModelObject> T findOrCreate( Class<T> clazz, String name, Long id ) {
-        if ( name == null || name.isEmpty() )
-            return null;
-        T result = null;
-        if ( id != null ) {
-            try {
-                result = getDao().find( clazz, id );
-            } catch ( NotFoundException exc ) {
-                // do nothing - reference not yet imported
-            }
-        }
-        if ( result == null ) {
-            // Try finding one with the name but already created at a different id during import
-            // because of "forward entity reference"
-            // (e.g. an event was imported that references a location as its scope
-            // before the location is imported)
-            result = getDao().find( clazz, name );
-        }
-        if ( result == null ) {
-            // Create new entity with name
-            try {
-                result = clazz.newInstance();
-                result.setName( name );
-                getDao().add( result, id );
-            } catch ( InstantiationException e ) {
-                throw new RuntimeException( e );
-            } catch ( IllegalAccessException e ) {
-                throw new RuntimeException( e );
-            }
-        }
-        return result;
+        return getDao().findOrCreate( clazz, name, id );
     }
-
 
     /**
      * {@inheritDoc}
@@ -470,7 +440,7 @@ public class DefaultQueryService extends Observable implements QueryService {
         result.setName( Scenario.DEFAULT_NAME );
         result.setDescription( Scenario.DEFAULT_DESCRIPTION );
         // Make sure a scenario responds to an event.
-        result.setEvent( Channels.getPlan().getDefaultEvent() );
+        result.setEvent( planManager.getCurrentPlan().getDefaultEvent() );
         result.setQueryService( this );
         createPart( result, defaultPartId );
         return result;
@@ -700,7 +670,7 @@ public class DefaultQueryService extends Observable implements QueryService {
      * {@inheritDoc}
      */
     public boolean isReferenced( Event event ) {
-        for ( Event incident : Channels.getPlan().getIncidents() ) {
+        for ( Event incident : planManager.getCurrentPlan().getIncidents() ) {
             if ( incident == event ) return true;
         }
         // look in scenarios
@@ -720,7 +690,7 @@ public class DefaultQueryService extends Observable implements QueryService {
      */
     public int getReferenceCount( Event event ) {
         int count = 0;
-        for ( Event incident : Channels.getPlan().getIncidents() ) {
+        for ( Event incident : planManager.getCurrentPlan().getIncidents() ) {
             if ( incident == event ) count++;
         }
         // look in scenarios
@@ -876,9 +846,8 @@ public class DefaultQueryService extends Observable implements QueryService {
      * {@inheritDoc}
      */
     public List<Issue> findAllIssuesFor( ResourceSpec resourceSpec, boolean specific ) {
-        return getChannels().getAnalyst().findAllIssuesFor(
-                resourceSpec,
-                specific );
+        Analyst analyst = Channels.instance().getAnalyst();
+        return analyst.findAllIssuesFor( resourceSpec, specific );
     }
 
     /**
@@ -1654,7 +1623,7 @@ public class DefaultQueryService extends Observable implements QueryService {
     }
 
     private boolean doFindIfScenarioStarted( Scenario scenario, Set<ModelObject> visited ) {
-        if ( Channels.getPlan().isIncident( scenario.getEvent() ) ) return true;
+        if ( planManager.getCurrentPlan().isIncident( scenario.getEvent() ) ) return true;
         if ( visited.contains( scenario ) ) return false;
         visited.add( scenario );
         boolean started = false;
@@ -1663,10 +1632,6 @@ public class DefaultQueryService extends Observable implements QueryService {
             started = doFindIfPartStarted( initiators.next(), visited );
         }
         return started;
-    }
-
-    public Channels getChannels() {
-        return Channels.instance();
     }
 
     public String getTitle( Actor actor ) {
@@ -1683,7 +1648,7 @@ public class DefaultQueryService extends Observable implements QueryService {
      * {@inheritDoc}
      */
     public List<Event> findPlannedEvents() {
-        Plan plan = Channels.getPlan();
+        Plan plan = planManager.getCurrentPlan();
         List<Event> plannedEvents = new ArrayList<Event>();
         for ( Event event : list( Event.class ) ) {
             if ( !plan.isIncident( event ) ) plannedEvents.add( event );
@@ -2141,6 +2106,9 @@ public class DefaultQueryService extends Observable implements QueryService {
         }
     }
 
-
+    /** {@inheritDoc} */
+    public void replayJournals( Commander commander ) {
+        getPlanManager().replayJournals( this, commander );
+    }
 }
 

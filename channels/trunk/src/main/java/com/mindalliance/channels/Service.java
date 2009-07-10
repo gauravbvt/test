@@ -9,10 +9,4 @@ package com.mindalliance.channels;
  * Time: 3:39:11 PM
  */
 public interface Service {
-    /**
-     * Get a Channels instance.
-     * @return s Channels instance
-     */
-    Channels getChannels();
-
 }

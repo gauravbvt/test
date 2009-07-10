@@ -35,7 +35,7 @@ public class Lock {
      */
     public Lock( long id ) {
         this.id = id;
-        userName = User.current().getName();
+        userName = User.current().getUsername();
         date = new Date();
     }
 

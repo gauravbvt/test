@@ -40,7 +40,7 @@ public class TestFileBasedManager extends TestCase {
     }
 
  /*   public void testAttach() throws IOException {
-        expect( fileItem.getName() ).andReturn( UPLOAD_TXT );
+        expect( fileItem.getUsername() ).andReturn( UPLOAD_TXT );
         expect( fileItem.getInputStream() ).andReturn( new FileInputStream( testFile ) );
         replay( fileItem );
 
@@ -64,8 +64,8 @@ public class TestFileBasedManager extends TestCase {
     }
 */
  /*   public void testDetachAll() throws IOException {
-        expect( fileItem.getName() ).andReturn( UPLOAD_TXT );
-        expect( fileItem.getName() ).andReturn( UPLOAD_TXT );
+        expect( fileItem.getUsername() ).andReturn( UPLOAD_TXT );
+        expect( fileItem.getUsername() ).andReturn( UPLOAD_TXT );
         expect( fileItem.getInputStream() ).andReturn( new FileInputStream( testFile ) );
         expect( fileItem.getInputStream() ).andReturn( new FileInputStream( testFile ) );
         replay( fileItem );

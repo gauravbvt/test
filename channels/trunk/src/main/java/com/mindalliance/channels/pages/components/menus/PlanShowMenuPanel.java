@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.menus;
 
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.pages.reports.PlanReportPage;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -39,10 +39,10 @@ public class PlanShowMenuPanel extends MenuPanel {
         List<Component> menuItems = new ArrayList<Component>();
         // Edit<->Hide
         Link editLink;
-        if ( getExpansions().contains( Channels.getPlan().getId() ) ) {
+        if ( getExpansions().contains( User.current().getPlan().getId() ) ) {
             AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {
-                    update( target, new Change( Change.Type.Collapsed, Channels.getPlan() ) );
+                    update( target, new Change( Change.Type.Collapsed, User.current().getPlan() ) );
                 }
             };
             menuItems.add( new LinkMenuItem(
@@ -52,7 +52,7 @@ public class PlanShowMenuPanel extends MenuPanel {
         } else {
             AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {
-                    update( target, new Change( Change.Type.Expanded, Channels.getPlan() ) );
+                    update( target, new Change( Change.Type.Expanded, User.current().getPlan() ) );
                 }
             };
             menuItems.add( new LinkMenuItem(

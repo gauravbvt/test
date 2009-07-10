@@ -62,7 +62,7 @@ public abstract class AbstractCommand implements Command {
     private boolean top = true;
 
     public AbstractCommand() {
-        userName = User.current().getName();
+        userName = User.current().getUsername();
     }
 
     public String getUserName() {

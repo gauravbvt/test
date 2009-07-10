@@ -1,7 +1,5 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.model.Scenario;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -19,8 +17,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class ExportConverter extends AbstractChannelsConverter {
 
-    public ExportConverter( Exporter exporter ) {
-        super( exporter );
+    public ExportConverter( XmlStreamer.Context context ) {
+        super( context );
     }
 
     /**
@@ -39,7 +37,7 @@ public class ExportConverter extends AbstractChannelsConverter {
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "scenario" ) ) {
-                results = context.convertAnother( Channels.getPlan(), Scenario.class );
+                results = context.convertAnother( getContext().getPlan(), Scenario.class );
             }
         }
         return results;

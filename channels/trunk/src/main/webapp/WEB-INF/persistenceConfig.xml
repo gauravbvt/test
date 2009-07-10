@@ -8,8 +8,6 @@
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
 
-    <!--<bean id="timingLogger" class="org.springframework.aop.interceptor.JamonPerformanceMonitorInterceptor"/>-->
-
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
         <property name="configLocation" value="/WEB-INF/ehcache.xml"/>
     </bean>
@@ -39,8 +37,6 @@
     </bean>
 
     <aop:config proxy-target-class="true">
-        <!--<aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.QueryService.*(..))"-->
-                     <!--advice-ref="timingLogger"/>-->
         <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.QueryService.*(..))"
                      advice-ref="cacheSet"/>
         <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.Analyst.*(..))"
@@ -49,54 +45,31 @@
                      advice-ref="cacheSet"/>
         <aop:advisor pointcut="execution(boolean com.mindalliance.channels.Analyst.*(..))"
                      advice-ref="cacheSet"/>
-       <aop:advisor pointcut="execution(com.mindalliance.channels.graph.Diagram com.mindalliance.channels.DiagramFactory.*(..))"
+        <aop:advisor pointcut="execution(com.mindalliance.channels.graph.Diagram com.mindalliance.channels.DiagramFactory.*(..))"
                      advice-ref="cacheSet"/>
-       <aop:advisor pointcut="execution(String com.mindalliance.channels.GeoService.getGeoCoding(..))"
+        <aop:advisor pointcut="execution(String com.mindalliance.channels.GeoService.getGeoCoding(..))"
                      advice-ref="permSet"/>
-         <aop:advisor pointcut="execution(boolean com.mindalliance.channels.GeoService.isPostalCodeInGeoLocation(..))"
-                       advice-ref="permSet"/>
 
-        <aop:advisor pointcut="execution(* com.mindalliance.channels.Dao.onAfterCommand(..))"
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.dao.PlanManager.onAfterCommand(..))"
                      advice-ref="cacheClear"/>
     </aop:config>
 
-    <!--<tx:annotation-driven transaction-manager="txManager"/>-->
-
-    <!--<bean id="dao" class="com.mindalliance.channels.dao.HibernateDao">-->
-        <!--<property name="entityManagerFactory" ref="emf"/>-->
-    <!--</bean>-->
-
-    <!--<bean id="emf" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">-->
-        <!--<property name="persistenceUnitName" value="channels"/>-->
-    <!--</bean>-->
-
-    <!--<bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">-->
-        <!--<property name="entityManagerFactory" ref="emf"/>-->
-    <!--</bean>-->
-
-    <!--<bean id="txPerRequest" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">-->
-        <!--<property name="target">-->
-            <!--<bean class="org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter">-->
-                <!--<property name="entityManagerFactoryBeanName" value="emf"/>-->
-            <!--</bean>-->
-        <!--</property>-->
-        <!--<property name="transactionManager" ref="txManager"/>-->
-        <!--<property name="transactionAttributes"><value>-->
-            <!--doFilter=PROPAGATION_REQUIRED-->
-        <!--</value></property>-->
-    <!--</bean>-->
-
-    <bean id="dao" class="com.mindalliance.channels.dao.Memory">
+    <bean id="planManager" class="com.mindalliance.channels.dao.PlanManager">
+        <property name="idGenerator" ref="idGenerator"/>
+        <property name="importExportFactory" ref="serializer"/>
+        <property name="plans">
+            <list value-type="java.util.ArrayList">
+                <bean class="com.mindalliance.channels.model.Plan">
+                    <property name="uri" value="mindalliance.com/channels/plans/sci"/>
+                    <property name="name" value="SCI Emergency Communications Plan"/>
+                    <property name="client" value="Strategic Content Imaging, Inc."/>
+                    <property name="description"
+                              value="Communications planning for responding and recovering from business interruptions due fire or power outage."/>
+                </bean>
+            </list>
+        </property>
         <property name="dataDirectory" value="file:${user.home}/channels/data"/>
         <property name="snapshotThreshold" value="10"/>
-        <property name="attachmentManager" ref="attachmentManager"/>
     </bean>
-<!--    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-        <property name="targetObject" ref="dao"/>
-        <property name="targetMethod" value="addObserver"/>
-        <property name="arguments">
-            <list value-type="java.util.Observer"><ref bean="attachmentManager"/></list>
-        </property>
-    </bean>-->
 
 </beans>

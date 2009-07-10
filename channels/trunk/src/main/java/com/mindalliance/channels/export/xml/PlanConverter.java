@@ -1,7 +1,5 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
@@ -40,10 +38,9 @@ public class PlanConverter extends AbstractChannelsConverter {
      */
     public static final Logger LOG = LoggerFactory.getLogger( PlanConverter.class );
 
-    public PlanConverter( Exporter exporter ) {
-        super( exporter );
+    public PlanConverter( XmlStreamer.Context context ) {
+        super( context );
     }
-
 
     /**
      * {@inheritDoc}
@@ -61,12 +58,12 @@ public class PlanConverter extends AbstractChannelsConverter {
             MarshallingContext context ) {
         Plan plan = (Plan) obj;
         QueryService queryService = getQueryService();
-        writer.addAttribute( "id", "" + plan.getId() );
+        writer.addAttribute( "id", String.valueOf( plan.getId() ) );
         writer.addAttribute( "uri", plan.getUri() );
         writer.addAttribute( "version", getVersion() );
         writer.addAttribute( "date", new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( new Date() ) );
         writer.startNode( "lastId" );
-        writer.setValue( "" + getQueryService().getLastAssignedId() );
+        writer.setValue( String.valueOf( getContext().getIdGenerator().getLastAssignedId() ) );
         writer.endNode();
         writer.startNode( "name" );
         writer.setValue( plan.getName() );
@@ -98,7 +95,7 @@ public class PlanConverter extends AbstractChannelsConverter {
         // All scenarios
         for ( Scenario scenario : plan.getScenarios() ) {
             writer.startNode( "scenario" );
-            context.convertAnother( scenario, new ScenarioConverter( getExporter() ) );
+            context.convertAnother( scenario, new ScenarioConverter( getContext() ) );
             writer.endNode();
         }
         // Export plan issues
@@ -113,7 +110,7 @@ public class PlanConverter extends AbstractChannelsConverter {
             UnmarshallingContext context ) {
         getProxyConnectors( context );
         context.put( "importing-plan", "true" );
-        Plan plan = Channels.getPlan();
+        Plan plan = getContext().getPlan();
         QueryService queryService = getQueryService();
         String uri = reader.getAttribute( "uri" );
         plan.setUri( uri );
@@ -124,7 +121,7 @@ public class PlanConverter extends AbstractChannelsConverter {
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "lastId" ) ) {
                 Long lastId = Long.parseLong( reader.getValue() );
-                queryService.setLastAssignedId( lastId );
+                getContext().getIdGenerator().setLastAssignedId( lastId );
             } else if ( nodeName.equals( "name" ) ) {
                 plan.setName( reader.getValue() );
             } else if ( nodeName.equals( "client" ) ) {

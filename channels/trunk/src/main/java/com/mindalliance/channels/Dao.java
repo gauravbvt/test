@@ -1,13 +1,11 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.InternalFlow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
 
 import java.util.List;
@@ -23,18 +21,6 @@ public interface Dao extends Service {
      * This should be close to the observed average scenarios.
      */
     int INITIAL_CAPACITY = 10;
-
-    /**
-     * Make a plan with unique id.
-     *
-     * @return
-     */
-    Plan createPlan();
-
-    /**
-     * @return the total number of scenarios.
-     */
-    long getScenarioCount();
 
     /**
      * Create a part with given id if not null.
@@ -140,32 +126,6 @@ public interface Dao extends Service {
     void flush();
 
     /**
-     * Get last assigned id.
-     *
-     * @return a long
-     */
-    Long getLastAssignedId();
-
-    /**
-     * Set last assigned id.
-     *
-     * @param lastId a long
-     */
-    void setLastAssignedId( Long lastId );
-
-    /**
-     * Handle post command execution event.
-     *
-     * @param command a command
-     */
-    void onAfterCommand( Command command );
-
-    /**
-     * Load persisted data, if any.
-     */
-    void load();
-
-    /**
      * Called after right after initialization.
      */
     void afterInitialize();
@@ -175,4 +135,13 @@ public interface Dao extends Service {
      */
     void onDestroy();
 
+    /**
+     * Find an existing or create a new model object.
+     * @param clazz the kind of model object
+     * @param name the name to look for, or null if irrelevant
+     * @param id the id to look for, or null if irrelevant
+     * @param <T>   a subclass of model object
+     * @return the relevant model object
+     */
+    <T extends ModelObject> T findOrCreate( Class<T> clazz, String name, Long id );
 }

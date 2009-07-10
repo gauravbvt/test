@@ -3,11 +3,14 @@ package com.mindalliance.channels.export;
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.Importer;
+import com.mindalliance.channels.Exporter;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,7 +31,7 @@ public class TestExportImport extends AbstractChannelsTest {
 
 
     @Override
-    protected void setUp() {
+    protected void setUp() throws IOException {
         super.setUp();
         queryService = app.getQueryService();
         scenarioNames = new ArrayList<String>();
@@ -37,36 +40,31 @@ public class TestExportImport extends AbstractChannelsTest {
         }
     }
 
-    public void testExportImportScenario() {
+    public void testExportImportScenario() throws Exception {
         Map<String,String> exported0 = new HashMap<String,String>();
         Map<String,String> exported1 = new HashMap<String,String>();
         Map<String,String> exported2 = new HashMap<String,String>();
         // allow removal of all named scenarios by creating an empty one
         queryService.createScenario();
         // Export all named scenarios
-        try {
-            exportAll(exported0);
-            removeAll();
-            importAll(exported0);
-            // re-export
-            exportAll(exported1);
-            // Import in reverse order
-            removeAll();
-            Collections.reverse( scenarioNames );
-            importAll(exported0);
-            // re-export
-            exportAll(exported2);
-            // Make sure all xml serializations are similar
-            for (String name : scenarioNames) {
-                // export vs export-import-export
-                compare(exported0.get(name), exported1.get(name));
-                // export vs export-reverse import-export
-                compare(exported1.get(name), exported2.get(name));
-            }
 
-        } catch ( Exception e ) {
-            e.printStackTrace();
-            fail( e.toString() );
+        exportAll(exported0);
+        removeAll();
+        importAll(exported0);
+        // re-export
+        exportAll(exported1);
+        // Import in reverse order
+        removeAll();
+        Collections.reverse( scenarioNames );
+        importAll(exported0);
+        // re-export
+        exportAll(exported2);
+        // Make sure all xml serializations are similar
+        for (String name : scenarioNames) {
+            // export vs export-import-export
+            compare(exported0.get(name), exported1.get(name));
+            // export vs export-reverse import-export
+            compare(exported1.get(name), exported2.get(name));
         }
     }
 
@@ -84,10 +82,11 @@ public class TestExportImport extends AbstractChannelsTest {
 
     private void exportAll(Map<String,String> exported) throws Exception {
         for ( String name : scenarioNames ) {
-            ByteArrayOutputStream out;
             Scenario scenario = queryService.findScenario( name );
-            out = new ByteArrayOutputStream();
-            app.getExporter().exportScenario( scenario, out );
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            ImportExportFactory exportFactory = app.getImportExportFactory();
+            Exporter exporter = exportFactory.createExporter( queryService, plan );
+            exporter.export( scenario, out );
             String xml = out.toString();
             // System.out.println( xml );
             exported.put(name,xml);
@@ -105,7 +104,8 @@ public class TestExportImport extends AbstractChannelsTest {
         for ( String name : scenarioNames ) {
             String xml = exported.get( name );
             ByteArrayInputStream in = new ByteArrayInputStream( xml.getBytes() );
-            Scenario scenario = app.getImporter().importScenario( in );
+            Importer importer = app.getImportExportFactory().createImporter( queryService, plan );
+            Scenario scenario = importer.importScenario( in );
             assertTrue(name.equals(scenario.getName()));
         }
     }

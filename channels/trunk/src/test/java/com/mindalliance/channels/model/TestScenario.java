@@ -1,22 +1,17 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.attachments.BitBucket;
+import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.SimpleIdGenerator;
 import com.mindalliance.channels.query.DefaultQueryService;
-import com.mindalliance.channels.dao.Memory;
-import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.export.DummyExporter;
 import junit.framework.TestCase;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.List;
 
 /**
  * Test a scenario in isolation.
@@ -26,7 +21,7 @@ public class TestScenario extends TestCase {
 
     /** The scenario being tested. */
     private Scenario scenario;
-    private QueryService queryService;
+    private DefaultQueryService queryService;
 
     public TestScenario() {
     }
@@ -34,7 +29,13 @@ public class TestScenario extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        queryService = new DefaultQueryService( new Memory() );
+        PlanManager planManager = new PlanManager( new DummyExporter(), new SimpleIdGenerator() );
+        planManager.afterPropertiesSet();
+        User user = new User();
+        user.setPlan( planManager.getPlans().get( 0 ) );
+
+        queryService = new DefaultQueryService( planManager, new BitBucket() );
+        queryService.afterPropertiesSet();
         scenario = queryService.createScenario();
     }
 

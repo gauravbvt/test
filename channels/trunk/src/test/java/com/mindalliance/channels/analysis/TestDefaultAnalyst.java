@@ -11,6 +11,7 @@ import com.mindalliance.channels.model.Issue;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.io.IOException;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -25,7 +26,7 @@ public class TestDefaultAnalyst extends AbstractChannelsTest {
     Analyst analyst;
 
     @Override
-    protected void setUp() {
+    protected void setUp() throws IOException {
         super.setUp();
         scenarios = app.getQueryService().list( Scenario.class ).iterator();
         analyst = app.getAnalyst();

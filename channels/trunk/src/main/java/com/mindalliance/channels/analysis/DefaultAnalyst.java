@@ -33,10 +33,15 @@ public class DefaultAnalyst extends AbstractService implements Analyst {
 
     private static final String DESCRIPTION_SEPARATOR = " -- ";
 
+    /** The query service. */
+    private QueryService queryService;
+
     /**
      * Issue detectors registered with the scenario analyst.
      */
+
     private List<IssueDetector> issueDetectors = new ArrayList<IssueDetector>();
+
     /**
      * Semantic matcher.
      */
@@ -52,7 +57,8 @@ public class DefaultAnalyst extends AbstractService implements Analyst {
     /**
      * {@inheritDoc}
      */
-    public Iterator<Issue> findIssues( ModelObject modelObject, boolean includingPropertySpecific ) {
+    public Iterator<Issue> findIssues(
+            ModelObject modelObject, boolean includingPropertySpecific ) {
         return new IssueIterator( issueDetectors, modelObject, includingPropertySpecific );
     }
 
@@ -65,41 +71,35 @@ public class DefaultAnalyst extends AbstractService implements Analyst {
 
     @SuppressWarnings( "unchecked" )
     private Iterator<Issue> findUnwaivedIssues(
-            final ModelObject modelObject,
-            boolean includingPropertySpecific ) {
+            final ModelObject modelObject, boolean includingPropertySpecific ) {
         List<IssueDetector> unwaivedDetectors = (List<IssueDetector>) CollectionUtils.select(
-                issueDetectors,
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        IssueDetector issueDetector = (IssueDetector) obj;
-                        return !modelObject.isWaived( issueDetector.getKind() );
-                    }
-                } );
+                issueDetectors, new Predicate() {
+            public boolean evaluate( Object obj ) {
+                IssueDetector issueDetector = (IssueDetector) obj;
+                return !modelObject.isWaived( issueDetector.getKind() );
+            }
+        } );
         return new IssueIterator( unwaivedDetectors, modelObject, includingPropertySpecific );
     }
 
     @SuppressWarnings( "unchecked" )
     private Iterator<Issue> findUnwaivedIssues( final ModelObject modelObject, String property ) {
         List<IssueDetector> unwaivedDetectors = (List<IssueDetector>) CollectionUtils.select(
-                issueDetectors,
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        IssueDetector issueDetector = (IssueDetector) obj;
-                        return !modelObject.isWaived( issueDetector.getKind() );
-                    }
-                } );
+                issueDetectors, new Predicate() {
+            public boolean evaluate( Object obj ) {
+                IssueDetector issueDetector = (IssueDetector) obj;
+                return !modelObject.isWaived( issueDetector.getKind() );
+            }
+        } );
         return new IssueIterator( unwaivedDetectors, modelObject, property );
     }
-
 
     /**
      * {@inheritDoc}
      */
     public List<Issue> listIssues(
-            ModelObject modelObject,
-            boolean includingPropertySpecific,
-            boolean includingWaived ) {
-        if (includingWaived) {
+            ModelObject modelObject, boolean includingPropertySpecific, boolean includingWaived ) {
+        if ( includingWaived ) {
             return listIssues( modelObject, includingPropertySpecific );
         } else {
             return listUnwaivedIssues( modelObject, includingPropertySpecific );
@@ -112,7 +112,8 @@ public class DefaultAnalyst extends AbstractService implements Analyst {
     public List<Issue> listIssues( ModelObject modelObject, boolean includingPropertySpecific ) {
         List<Issue> issues = new ArrayList<Issue>();
         Iterator<Issue> iterator = findIssues( modelObject, includingPropertySpecific );
-        while ( iterator.hasNext() ) issues.add( iterator.next() );
+        while ( iterator.hasNext() )
+            issues.add( iterator.next() );
         return issues;
     }
 
@@ -122,21 +123,25 @@ public class DefaultAnalyst extends AbstractService implements Analyst {
     public List<Issue> listIssues( ModelObject modelObject, String property ) {
         List<Issue> issues = new ArrayList<Issue>();
         Iterator<Issue> iterator = findIssues( modelObject, property );
-        while ( iterator.hasNext() ) issues.add( iterator.next() );
+        while ( iterator.hasNext() )
+            issues.add( iterator.next() );
         return issues;
     }
 
-    public List<Issue> listUnwaivedIssues( ModelObject modelObject, boolean includingPropertySpecific ) {
+    public List<Issue> listUnwaivedIssues(
+            ModelObject modelObject, boolean includingPropertySpecific ) {
         List<Issue> issues = new ArrayList<Issue>();
         Iterator<Issue> iterator = findUnwaivedIssues( modelObject, includingPropertySpecific );
-        while ( iterator.hasNext() ) issues.add( iterator.next() );
+        while ( iterator.hasNext() )
+            issues.add( iterator.next() );
         return issues;
     }
 
     public List<Issue> listUnwaivedIssues( ModelObject modelObject, String property ) {
         List<Issue> issues = new ArrayList<Issue>();
         Iterator<Issue> iterator = findUnwaivedIssues( modelObject, property );
-        while ( iterator.hasNext() ) issues.add( iterator.next() );
+        while ( iterator.hasNext() )
+            issues.add( iterator.next() );
         return issues;
     }
 
@@ -194,7 +199,8 @@ public class DefaultAnalyst extends AbstractService implements Analyst {
         StringBuilder sb = new StringBuilder();
         for ( Issue issue : issues ) {
             sb.append( issue.getDescription() );
-            if ( issues.indexOf( issue ) != issues.size() - 1 ) sb.append( DESCRIPTION_SEPARATOR );
+            if ( issues.indexOf( issue ) != issues.size() - 1 )
+                sb.append( DESCRIPTION_SEPARATOR );
         }
         return sb.toString();
     }
@@ -239,73 +245,69 @@ public class DefaultAnalyst extends AbstractService implements Analyst {
     /**
      * {@inheritDoc}
      */
-    public QueryService getQueryService() {
-        return getChannels().getQueryService();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public boolean isValid( ModelObject modelObject ) {
-        return test( modelObject, Issue.VALIDITY);
+        return test( modelObject, Issue.VALIDITY );
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isComplete( ModelObject modelObject ) {
-        return test( modelObject, Issue.COMPLETENESS);
+        return test( modelObject, Issue.COMPLETENESS );
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isRobust( ModelObject modelObject ) {
-        return test( modelObject, Issue.ROBUSTNESS);
+        return test( modelObject, Issue.ROBUSTNESS );
     }
 
     private boolean test( ModelObject modelObject, String test ) {
         if ( modelObject instanceof Plan ) {
             return passes( (Plan) modelObject, test );
-        } else if ( modelObject instanceof Scenario ) {
-            return passes( (Scenario) modelObject, test );
-        } else {
-            return hasNoTestedIssue( modelObject, test );
-        }
+        } else
+            return modelObject instanceof Scenario ? passes( (Scenario) modelObject, test )
+                                                   : hasNoTestedIssue( modelObject, test );
     }
 
     private boolean passes( Plan plan, String test ) {
-        if ( !hasNoTestedIssue( plan, test ) ) return false;
+        if ( !hasNoTestedIssue( plan, test ) )
+            return false;
         for ( Scenario scenario : plan.getScenarios() ) {
-            if ( !passes( scenario, test ) ) return false;
+            if ( !passes( scenario, test ) )
+                return false;
         }
-        for ( ModelObject mo : getQueryService().list(ModelObject.class)) {
-            if ( mo.isEntity() && !hasNoTestedIssue( mo, test ) ) return false;
+        for ( ModelObject mo : queryService.list( ModelObject.class ) ) {
+            if ( mo.isEntity() && !hasNoTestedIssue( mo, test ) )
+                return false;
         }
         return true;
     }
 
     private boolean passes( Scenario scenario, String test ) {
-        if ( !hasNoTestedIssue( scenario, test ) ) return false;
+        if ( !hasNoTestedIssue( scenario, test ) )
+            return false;
         Iterator<Part> parts = scenario.parts();
         while ( parts.hasNext() ) {
-            if ( !hasNoTestedIssue( parts.next(), test ) ) return false;
+            if ( !hasNoTestedIssue( parts.next(), test ) )
+                return false;
         }
         Iterator<Flow> flows = scenario.flows();
         while ( flows.hasNext() ) {
-            if ( !hasNoTestedIssue( flows.next(), test ) ) return false;
+            if ( !hasNoTestedIssue( flows.next(), test ) )
+                return false;
         }
         return true;
     }
 
     private boolean hasNoTestedIssue( ModelObject modelObject, final String test ) {
         return CollectionUtils.select(
-                listUnwaivedIssues( modelObject, true ),
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return ( (Issue) obj ).getType().equals( test );
-                    }
-                } ).isEmpty();
+                listUnwaivedIssues( modelObject, true ), new Predicate() {
+            public boolean evaluate( Object obj ) {
+                return ( (Issue) obj ).getType().equals( test );
+            }
+        } ).isEmpty();
     }
 
     /** {@inheritDoc} */
@@ -319,39 +321,37 @@ public class DefaultAnalyst extends AbstractService implements Analyst {
         }
     }
 
-     private int countFailures( Plan plan, String test ) {
+    private int countFailures( Plan plan, String test ) {
         int count = countTestIssues( plan, test );
-         for ( Scenario scenario : plan.getScenarios() ) {
-             count += countFailures( scenario, test );
-         }
-         for ( ModelObject mo : getQueryService().list(ModelObject.class)) {
-             if ( mo.isEntity() ) count += countTestIssues( mo, test );
-         }
-         return count;
+        for ( Scenario scenario : plan.getScenarios() ) {
+            count += countFailures( scenario, test );
+        }
+        for ( ModelObject mo : queryService.list( ModelObject.class ) ) {
+            if ( mo.isEntity() )
+                count += countTestIssues( mo, test );
+        }
+        return count;
     }
 
     private int countFailures( Scenario scenario, String test ) {
         int count = countTestIssues( scenario, test );
-         Iterator<Part> parts = scenario.parts();
-         while ( parts.hasNext() ) {
-             count += countTestIssues( parts.next(), test );
-         }
-         Iterator<Flow> flows = scenario.flows();
-         while ( flows.hasNext() ) {
-             count += countTestIssues( flows.next(), test );
-         }
-         return count;
+        Iterator<Part> parts = scenario.parts();
+        while ( parts.hasNext() )
+            count += countTestIssues( parts.next(), test );
+        Iterator<Flow> flows = scenario.flows();
+        while ( flows.hasNext() )
+            count += countTestIssues( flows.next(), test );
+        return count;
     }
 
     private int countTestIssues( ModelObject modelObject, final String test ) {
-         return CollectionUtils.select(
-                 listUnwaivedIssues( modelObject, true ),
-                 new Predicate() {
-                     public boolean evaluate( Object obj ) {
-                         return ((Issue)obj).getType().equals( test );
-                     }
-                 }).size();
-     }
+        return CollectionUtils.select(
+                listUnwaivedIssues( modelObject, true ), new Predicate() {
+            public boolean evaluate( Object object ) {
+                return test.equals( ( (Issue) object ).getType() );
+            }
+        } ).size();
+    }
 
     /**
      * Find the issues on parts and flows for all plays of a resource
@@ -362,19 +362,27 @@ public class DefaultAnalyst extends AbstractService implements Analyst {
      */
     private List<Issue> findAllIssuesInPlays( ResourceSpec resourceSpec, boolean specific ) {
         List<Issue> issues = new ArrayList<Issue>();
-        List<Play> plays = getChannels().getQueryService().findAllPlays( resourceSpec, specific );
+        List<Play> plays = queryService.findAllPlays( resourceSpec, specific );
         Set<Part> parts = new HashSet<Part>();
         for ( Play play : plays ) {
             parts.add( play.getPartFor( resourceSpec ) );
             Iterator<Issue> iterator = findIssues( play.getFlow(), true );
-            while ( iterator.hasNext() ) issues.add( iterator.next() );
+            while ( iterator.hasNext() )
+                issues.add( iterator.next() );
         }
         for ( Part part : parts ) {
             Iterator<Issue> iterator = findIssues( part, true );
-            while ( iterator.hasNext() ) issues.add( iterator.next() );
+            while ( iterator.hasNext() )
+                issues.add( iterator.next() );
         }
         return issues;
     }
 
+    public QueryService getQueryService() {
+        return queryService;
+    }
 
+    public void setQueryService( QueryService queryService ) {
+        this.queryService = queryService;
+    }
 }

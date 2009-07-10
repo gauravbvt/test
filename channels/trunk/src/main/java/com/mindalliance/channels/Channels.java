@@ -1,7 +1,9 @@
 package com.mindalliance.channels;
 
+import com.mindalliance.channels.export.ImportExportFactory;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.User;
+import com.mindalliance.channels.pages.AdminPage;
 import com.mindalliance.channels.pages.ErrorPage;
 import com.mindalliance.channels.pages.ExpiredPage;
 import com.mindalliance.channels.pages.ExportPage;
@@ -17,8 +19,6 @@ import com.mindalliance.channels.pages.reports.PlanReportPage;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.concurrent.SessionIdentifierAware;
 import org.acegisecurity.event.authentication.AbstractAuthenticationEvent;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.target.coding.IndexedParamUrlCodingStrategy;
@@ -60,19 +60,9 @@ public final class Channels extends WebApplication implements ApplicationListene
     private DiagramFactory diagramFactory;
 
     /**
-     * The official manager of attachements.
-     */
-    private AttachmentManager attachmentManager;
-
-    /**
      * Scenario importer.
      */
-    private Importer importer;
-
-    /**
-     * Scenario exporter.
-     */
-    private Exporter exporter;
+    private ImportExportFactory importExportFactory;
 
     /**
      * Analyst
@@ -95,11 +85,6 @@ public final class Channels extends WebApplication implements ApplicationListene
      * Plans.
      */
     private List<Plan> plans = new ArrayList<Plan>();
-    /**
-     * Force this plan as the current one.
-     */
-    private Plan currentPlan;
-
 
     // TODO -- move to Plan
 
@@ -117,18 +102,6 @@ public final class Channels extends WebApplication implements ApplicationListene
         return lockManagers;
     }// TODO - get rid of this
 
-    public List<Plan> getPlans() {
-        return plans;
-    }
-
-    /**
-     * Plans set from application context only.
-     * @param contextPlans a list of plans.
-     */
-    public void setPlans( List<Plan> contextPlans ) {
-        plans = contextPlans;
-    }
-
     /**
      * Set to strip wicket tags from subpanels.
      */
@@ -141,10 +114,12 @@ public final class Channels extends WebApplication implements ApplicationListene
         getMarkupSettings().setStripWicketTags( true );
 
         mount( new IndexedParamUrlCodingStrategy( "playbook", PlanReportPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "plan", PlanPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "admin", AdminPage.class ) );
+
         mount( new IndexedParamUrlCodingStrategy( "uploads", UploadPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "login.html", LoginPage.class ) );
 
-        mount( new QueryStringUrlCodingStrategy( "plan.html", PlanPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.xml", ExportPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "scenario.png", FlowMapPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "plan.png", PlanMapPage.class ) );
@@ -154,20 +129,22 @@ public final class Channels extends WebApplication implements ApplicationListene
 
         getApplicationSettings().setInternalErrorPage( ErrorPage.class );
         getApplicationSettings().setPageExpiredErrorPage( ExpiredPage.class );
-
-        queryService.initialize();
     }
-    
+
     @Override
     protected void onDestroy() {
         LOG.info( "Goodbye!" );
         queryService.onDestroy();
     }
 
+    /**
+     * 
+     */
     @Override
     public Class<? extends WebPage> getHomePage() {
-
-        return User.current().isModeler() ? PlanPage.class : PlanReportPage.class ;
+        User user = User.current();
+        return user.isAdmin() ? AdminPage.class
+             : user.isPlanner() ? PlanPage.class : PlanReportPage.class ;
     }
 
     public QueryService getQueryService() {
@@ -197,28 +174,12 @@ public final class Channels extends WebApplication implements ApplicationListene
         diagramFactory = dm;
     }
 
-    public AttachmentManager getAttachmentManager() {
-        return attachmentManager;
+    public ImportExportFactory getImportExportFactory() {
+        return importExportFactory;
     }
 
-    public void setAttachmentManager( AttachmentManager attachmentManager ) {
-        this.attachmentManager = attachmentManager;
-    }
-
-    public Exporter getExporter() {
-        return exporter;
-    }
-
-    public void setExporter( Exporter exporter ) {
-        this.exporter = exporter;
-    }
-
-    public Importer getImporter() {
-        return importer;
-    }
-
-    public void setImporter( Importer importer ) {
-        this.importer = importer;
+    public void setImportExportFactory( ImportExportFactory importExportFactory ) {
+        this.importExportFactory = importExportFactory;
     }
 
     public Analyst getAnalyst() {
@@ -239,7 +200,7 @@ public final class Channels extends WebApplication implements ApplicationListene
      * @return a commander
      */
     public Commander getCommander() {
-        Plan plan = getPlan();
+        Plan plan = User.current().getPlan();
         return instance().getCommander( plan );
     }
 
@@ -268,7 +229,7 @@ public final class Channels extends WebApplication implements ApplicationListene
      * @return a lock manager
      */
     public LockManager getLockManager() {
-        Plan plan = getPlan();
+        Plan plan = User.current().getPlan();
         return instance().getLockManager( plan );
     }
 
@@ -288,54 +249,6 @@ public final class Channels extends WebApplication implements ApplicationListene
             }
             return lockManager;
         }
-    }
-
-    /**
-     * Get the active plan.
-     *
-     * @return a plan
-     */
-    public static Plan getPlan() {
-        if ( instance().currentPlan != null ) {
-            return instance().currentPlan;
-        } else {
-            // TODO - temporary - change to session-scoped plan set at login
-            return instance().plans.get( 0 );
-        }
-    }
-
-    /**
-     * Enter plan loading mode.
-     *
-     * @param plan a plan
-     */
-    public void beginUsingPlan( Plan plan ) {
-        // TODO - temporarily modify session-scoped plan
-        assert ( User.current().isAnonymous() );
-        currentPlan = plan;
-    }
-
-    /**
-     * Exit plan loading mode.
-     */
-    public void endUsingPlan() {
-        // TODO - reset session-scope plan
-        assert ( User.current().isAnonymous() );
-        assert ( currentPlan != null );
-        currentPlan = null;
-    }
-
-    /**
-     * Tests if a plan name is already taken.
-     * @param name a string
-     * @return a boolean
-     */
-    public boolean isPlanNameTaken( final String name ) {
-        return CollectionUtils.find( plans, new Predicate() {
-            public boolean evaluate( Object obj ) {
-                return ( (Plan) obj ).getName().equals( name );
-            }
-        } ) != null;
     }
 
     public void onApplicationEvent( ApplicationEvent event ) {

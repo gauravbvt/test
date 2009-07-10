@@ -229,7 +229,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
 
     private void init( Scenario sc, Part p, Set<Long> expanded ) {
-        getCommander().releaseAllLocks( user.getName() );
+        getCommander().releaseAllLocks( user.getUsername() );
         setScenario( sc );
         setPart( p );
         expansions = expanded;
@@ -239,13 +239,13 @@ public final class PlanPage extends WebPage implements Updatable {
         setVersioned( false );
         setStatelessHint( true );
         add( new Label( "sc-title",
-                new Model<String>( "Channels: " + Channels.getPlan().getName() ) ) );
+                new Model<String>( "Channels: " + User.current().getPlan().getName() ) ) );
 
         form = new IndicatorAwareForm( "big-form" ) {
             @Override
             protected void onSubmit() {
                 LOG.debug( "Form submitted" );
-                getApp().getCommander().resetUserHistory( user.getName() );
+                getApp().getCommander().resetUserHistory( user.getUsername() );
                 importScenario();
             }
         };
@@ -269,7 +269,7 @@ public final class PlanPage extends WebPage implements Updatable {
         FileUpload fileUpload = scenarioImport.getFileUpload();
         if ( fileUpload != null ) {
             // Import and switch to scenario
-            Importer importer = getApp().getImporter();
+            Importer importer = getApp().getImportExportFactory().createImporter( getApp().getQueryService(), user.getPlan() );
             try {
                 InputStream inputStream = fileUpload.getInputStream();
                 Scenario imported = importer.importScenario(
@@ -314,7 +314,7 @@ public final class PlanPage extends WebPage implements Updatable {
         );
         scenarioDescriptionLabel.setOutputMarkupId( true );
         form.add( scenarioDescriptionLabel );
-        form.add( new Label( "user", user.getName() ) );                                  // NON-NLS
+        form.add( new Label( "user", user.getUsername() ) );                                  // NON-NLS
     }
 
     private void addPartsMapLink() {
@@ -383,7 +383,7 @@ public final class PlanPage extends WebPage implements Updatable {
         long lastModified = getCommander().getLastModified();
         if ( lastModified > lastRefreshed
                 && !lastModifier.isEmpty()
-                && !lastModifier.equals( user.getName() ) ) {
+                && !lastModifier.equals( user.getUsername() ) ) {
             reasons = " -- Plan was modified by " + lastModifier;
         }
         // Find expansions that were locked and are not unlocked
@@ -461,7 +461,7 @@ public final class PlanPage extends WebPage implements Updatable {
         } );
         scenarioDropDownChoice.setOutputMarkupId( true );
         form.add( scenarioDropDownChoice );
-        form.add( new Label( "username", User.current().getName() ) );
+        form.add( new Label( "username", User.current().getUsername() ) );
     }
 
     private void addEntityPanel() {
@@ -481,12 +481,12 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void addPlanEditPanel() {
-        boolean showPlanEdit = expansions.contains( Channels.getPlan().getId() );
+        boolean showPlanEdit = expansions.contains( User.current().getPlan().getId() );
 
         planEditPanel = showPlanEdit
                 ? new PlanEditPanel(
                 "plan",
-                new Model<Plan>( Channels.getPlan() ),
+                new Model<Plan>( User.current().getPlan() ),
                 getReadOnlyExpansions() )
                 : new Label( "plan", "" );
 
@@ -921,7 +921,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
         if ( identifiable instanceof Scenario ) {
             if ( change.isExists() ) {
-                getCommander().resetUserHistory( user.getName() );
+                getCommander().resetUserHistory( user.getUsername() );
                 if ( change.isAdded() ) {
                     setScenario( (Scenario) identifiable );
                     setPart( null );

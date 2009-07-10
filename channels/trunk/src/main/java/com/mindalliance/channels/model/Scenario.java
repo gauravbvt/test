@@ -468,7 +468,7 @@ public class Scenario extends ModelObject {
      */
     public void beforeRemove( QueryService queryService ) {
         super.beforeRemove( queryService );
-        Channels.getPlan().removeScenario( this );
+        User.current().getPlan().removeScenario( this );
     }
 
     /**

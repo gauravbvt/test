@@ -32,6 +32,7 @@ public interface AttachmentManager {
 
     /**
      * Remove unattached documents.
+     * @param service the service to use for finding objects
      */
-    void removeUnattached();
+    void removeUnattached( QueryService service );
 }

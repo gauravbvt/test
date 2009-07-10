@@ -13,7 +13,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
  */
 public interface NameRangeable {
     /**
-     * Set a name ange.
+     * Set a name range.
      * @param target an ajax request target
      * @param range a name range
      */

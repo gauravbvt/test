@@ -1,7 +1,6 @@
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
@@ -11,6 +10,7 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.User;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.springframework.core.io.Resource;
@@ -18,7 +18,6 @@ import org.springframework.core.io.Resource;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
-
 /**
  * Entity network meta provider.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -46,7 +45,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
     }
 
     public Object getContext() {
-        return Channels.getPlan();
+        return User.current().getPlan();
     }
 
     public URLProvider getURLProvider() {

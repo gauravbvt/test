@@ -2,6 +2,7 @@ package com.mindalliance.channels;
 
 import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Plan;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -18,22 +19,23 @@ public interface Exporter extends Service {
      * @param stream the stream
      * @throws IOException on errors
      */
-    void exportScenario( Scenario scenario, OutputStream stream ) throws IOException;
+    void export( Scenario scenario, OutputStream stream ) throws IOException;
 
     /**
      * Export all data on the given stream.
+     * @param plan the plan to export
      * @param stream the stream
      * @throws IOException on errors
      */
-    void exportAll( OutputStream stream ) throws IOException;
+    void export( Plan plan, OutputStream stream ) throws IOException;
 
     /**
-     * Export a scenario on the given stream.
+     * Export a journal on the given stream.
      * @param journal a journal
      * @param stream the stream
      * @throws IOException on errors
      */
-    void exportJournal( Journal journal, OutputStream stream ) throws IOException;
+    void export( Journal journal, OutputStream stream ) throws IOException;
 
     /**
      * The mime type of files to which scenarios are exported.
@@ -42,8 +44,8 @@ public interface Exporter extends Service {
     String getMimeType();
 
     /**
-     * Current version
-     * @return -- a string
+     * Get current version, for upgrading purposes.
+     * @return a string
      */
     String getVersion();
 

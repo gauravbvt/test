@@ -4,6 +4,8 @@ import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.command.commands.HelloCommand;
 import com.mindalliance.channels.model.Scenario;
 
+import java.io.IOException;
+
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -13,7 +15,7 @@ import com.mindalliance.channels.model.Scenario;
  */
 public class TestDefaultCommander extends AbstractChannelsTest {
 
-    protected void setUp() {
+    protected void setUp() throws IOException {
         super.setUp();
         commander.reset();
     }

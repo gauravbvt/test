@@ -1,8 +1,6 @@
 package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.AttachmentManager;
-import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.export.ConnectionSpecification;
@@ -30,6 +28,7 @@ import java.util.Map;
  * Time: 3:52:08 PM
  */
 public abstract class AbstractChannelsConverter implements Converter {
+
     /**
      * The logger.
      */
@@ -38,37 +37,26 @@ public abstract class AbstractChannelsConverter implements Converter {
     /**
      * An xmlStreamer.
      */
-    private Exporter exporter;
+    private XmlStreamer.Context context;
 
-
-    public AbstractChannelsConverter( Exporter exporter ) {
-        this.exporter = exporter;
+    protected AbstractChannelsConverter( XmlStreamer.Context context ) {
+        this.context = context;
     }
 
     protected String getVersion() {
-        return exporter.getVersion();
+        return context.getVersion();
     }
 
-    public Exporter getExporter() {
-        return exporter;
+    public XmlStreamer.Context getContext() {
+        return context;
     }
 
-    /**
-     * Get query service
-     *
-     * @return a query service
-     */
-    protected QueryService getQueryService() {
-        return Channels.instance().getQueryService();
+    public QueryService getQueryService() {
+        return context.getQueryService();
     }
 
-    /**
-     * Get attachment manager service.
-     *
-     * @return an attachment manager
-     */
-    protected AttachmentManager getAttachmentManager() {
-        return Channels.instance().getAttachmentManager();
+    public AttachmentManager getAttachmentManager() {
+        return context.getAttachmentManager();
     }
 
     /**
@@ -222,7 +210,7 @@ public abstract class AbstractChannelsConverter implements Converter {
             reader.moveUp();
         }
     }
-    
+
     /**
      * Import issue detection waivers.
      *

@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.entities;
 
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.geo.GeoLocatable;
@@ -56,6 +57,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
      * Maximum number of places within to show in table at once.
      */
     private static final int MAX_ROWS = 5;
+
     /**
      * Place detail fields container.
      */
@@ -108,6 +110,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
         filters = new ArrayList<Identifiable>();
         nameRange = new NameRange();
@@ -142,15 +145,17 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         withinField = new AutoCompleteTextField<String>(
                 "within",
                 new PropertyModel<String>( this, "withinName" ) ) {
-            protected Iterator<String> getChoices( String s ) {
+            @Override
+            protected Iterator<String> getChoices( String input ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( SemMatch.matches( s, choice ) ) candidates.add( choice );
+                    if ( SemMatch.matches( input, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
             }
         };
         withinField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssues( withinField, getPlace(), "within" );
                 target.addComponent( withinField );
@@ -170,16 +175,16 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         List<Place> allCandidatePlaces = (List<Place>) CollectionUtils.select(
                 getQueryService().list( Place.class ),
                 new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return !( (Place) obj ).isSameAsOrIn( place );
+                    public boolean evaluate( Object object ) {
+                        return !( (Place) object ).isSameAsOrIn( place );
                     }
                 }
         );
         return (List<String>) CollectionUtils.collect(
                 allCandidatePlaces,
                 new Transformer() {
-                    public Object transform( Object obj ) {
-                        return ( (Place) obj ).getName();
+                    public Object transform( Object input ) {
+                        return ( (Place) input ).getName();
                     }
                 } );
     }
@@ -199,6 +204,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 "geoLocations",
                 new PropertyModel<List<GeoLocation>>( getPlace(), "geoLocations" )
         ) {
+            @Override
             protected void populateItem( ListItem<GeoLocation> item ) {
                 item.add( new GeoLocationPanel( "geoLocation", item.getModelObject() ) );
             }
@@ -211,6 +217,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 "streetAddress",
                 new PropertyModel<String>( this, "streetAddress" ) );
         streetAddressField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 refreshPlacesWithin( target );
                 addIssues( streetAddressField, getPlace(), "streetAddress" );
@@ -248,15 +255,17 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         geonameField = new AutoCompleteTextField<String>(
                 "geoname",
                 new PropertyModel<String>( this, "geoname" ) ) {
-            protected Iterator<String> getChoices( String s ) {
+            @Override
+            protected Iterator<String> getChoices( String input ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( SemMatch.matches( s, choice ) ) candidates.add( choice );
+                    if ( SemMatch.matches( input, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
             }
         };
         geonameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssues( geonameField, getPlace(), "geoname" );
                 target.addComponent( geonameField );
@@ -336,10 +345,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     /**
-     * Change the selected name range.
-     *
-     * @param target an ajax request target
-     * @param range  a name range
+     * {@inheritDoc}
      */
     public void setNameRange( AjaxRequestTarget target, NameRange range ) {
         nameRange = range;
@@ -359,14 +365,15 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         return (List<String>) CollectionUtils.collect(
                 places,
                 new Transformer() {
-                    public Object transform( Object obj ) {
-                        return ( (Place) obj ).getName();
+                    public Object transform( Object input ) {
+                        return ( (Place) input ).getName();
                     }
                 } );
     }
 
     /**
-     * Find all employments in the plan that are not filtered out and are within selected name range.
+     * Find all employments in the plan that are not filtered out and are within selected name
+     * range.
      *
      * @return a list of employments.
      */
@@ -375,8 +382,8 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         return (List<Place>) CollectionUtils.select(
                 getQueryService().findAllPlacesWithin( getPlace() ),
                 new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return !isFilteredOut( (Place) obj ) && isInNameRange( (Place) obj );
+                    public boolean evaluate( Object object ) {
+                        return !isFilteredOut( (Place) object ) && isInNameRange( (Place) object );
                     }
                 }
         );
@@ -386,8 +393,9 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
     private boolean isFilteredOut( Place place ) {
         boolean filteredOut = false;
         for ( Identifiable filter : filters ) {
-            filteredOut = filteredOut ||
-                    ( filter instanceof Place && ( place.getWithin() == null || !place.getWithin().equals( filter ) ) );
+            filteredOut = filteredOut
+                        || filter instanceof Place
+                           && ( place.getWithin() == null || !place.getWithin().equals( filter ) );
         }
         return filteredOut;
     }
@@ -417,7 +425,14 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
      * @param val a string
      */
     public void setStreetAddress( String val ) {
-        doCommand( new UpdatePlanObject( getPlace(), "streetAddress", val ) );
+        updatePlace( "streetAddress", val );
+    }
+
+    private void updatePlace( String property, Object value ) {
+        Place place = getPlace();
+        doCommand( new UpdatePlanObject( place, property, value ) );
+        place.validate( Channels.instance().getGeoService() );
+
     }
 
     /**
@@ -436,7 +451,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
      * @param val a string
      */
     public void setPostalCode( String val ) {
-        doCommand( new UpdatePlanObject( getPlace(), "postalCode", val ) );
+        updatePlace( "postalCode", val );
     }
 
     /**
@@ -455,7 +470,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
      * @param val a string
      */
     public void setGeoname( String val ) {
-        doCommand( new UpdatePlanObject( getPlace(), "geoname", val ) );
+        updatePlace( "geoname", val );
     }
 
     /**
@@ -474,9 +489,8 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
      * @param name a string
      */
     public void setWithinName( String name ) {
-        Place place = getPlace();
-        Place oldWithin = place.getWithin();
-        String oldName = ( oldWithin == null ? "" : oldWithin.getName() );
+        Place oldWithin = getPlace().getWithin();
+        String oldName = oldWithin == null ? "" : oldWithin.getName();
         Place newPlace = null;
         if ( name == null || name.trim().isEmpty() )
             newPlace = null;
@@ -484,7 +498,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
             if ( oldWithin == null || !isSame( name, oldName ) )
                 newPlace = getQueryService().findOrCreate( Place.class, name );
         }
-        doCommand( new UpdatePlanObject( place, "within", newPlace ) );
+        updatePlace( "within", newPlace );
         getCommander().cleanup( Place.class, oldName );
     }
 
@@ -510,6 +524,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
                     "selection",
                     new PropertyModel<Boolean>( this, "selected" ) );
             selectionCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+                @Override
                 protected void onUpdate( AjaxRequestTarget target ) {
                     addIssues( postalCodeField, getPlace(), "postalCode" );
                     target.addComponent( postalCodeField );
@@ -534,7 +549,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
          */
         public boolean isSelected() {
             GeoLocation geoLoc = getPlace().geoLocate();
-            return ( geoLoc != null && geoLoc.getGeonameId() == geoLocation.getGeonameId() );
+            return geoLoc != null && geoLoc.getGeonameId() == geoLocation.getGeonameId();
         }
 
         /**
@@ -543,13 +558,10 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
          * @param val a boolean
          */
         public void setSelected( boolean val ) {
-            if ( val ) {
-                doCommand( new UpdatePlanObject( getPlace(), "geoLocation", geoLocation ) );
-            } else {
-                if ( isSelected() ) {
-                    doCommand( new UpdatePlanObject( getPlace(), "geoLocation", null ) );
-                }
-            }
+            if ( val )
+                updatePlace( "geoLocation", geoLocation );
+            else if ( isSelected() )
+                updatePlace( "geoLocation", null );
         }
     }
 

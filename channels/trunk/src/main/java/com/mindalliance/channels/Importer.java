@@ -32,7 +32,7 @@ public interface Importer extends Service {
      * @return a map with scenario and proxy connectors
      */
     Scenario restoreScenario( String xml );
-    
+
     /**
      * The mime type of files from which scenarios are imported.
      *
@@ -50,17 +50,17 @@ public interface Importer extends Service {
     /**
      * Import all persisted data from a stream.
      *
-     * @param stream an input stream
-     * @throws java.io.IOException on errors
+     * @param stream an input stream @throws IOException on errors
+     * @throws IOException on errors
      */
-    void importAll( FileInputStream stream ) throws IOException;
+    void importPlan( FileInputStream stream ) throws IOException;
 
     /**
      * Import a journal from a stream.
      *
      * @param stream an input stream
      * @return a journal
-     * @throws java.io.IOException on errors
+     * @throws IOException on errors
      */
     Journal importJournal( FileInputStream stream ) throws IOException;
 
@@ -69,7 +69,7 @@ public interface Importer extends Service {
      *
      * @param inputStream an input stream
      * @return mapped results
-     * @throws java.io.IOException on errors
+     * @throws IOException on errors
      */
     Map<String, Object> loadScenario( InputStream inputStream ) throws IOException;
 
@@ -82,6 +82,6 @@ public interface Importer extends Service {
      */
     void reconnectExternalFlows(
             Map<Connector, List<ConnectionSpecification>> proxyConnectors,
-            boolean loadingPlan);
+            boolean loadingPlan );
 }
 

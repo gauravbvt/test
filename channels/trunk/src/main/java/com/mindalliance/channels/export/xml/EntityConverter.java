@@ -1,6 +1,5 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.UserIssue;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -20,8 +19,8 @@ import java.util.Map;
  */
 public abstract class EntityConverter extends AbstractChannelsConverter {
 
-    public EntityConverter( Exporter exporter ) {
-        super( exporter );
+    protected EntityConverter( XmlStreamer.Context context ) {
+        super( context );
     }
 
     /**

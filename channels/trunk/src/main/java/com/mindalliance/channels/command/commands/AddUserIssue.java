@@ -49,7 +49,7 @@ public class AddUserIssue extends AbstractCommand {
                 (Long) get( "modelObject" ) ) );
         // State is set when undoing a RemoveIssue
         Map<String, Object> state = (Map<String, Object>) get( "state" );
-        issue.setReportedBy( User.current().getName() );
+        issue.setReportedBy( User.current().getUsername() );
         if ( state != null ) {
             CommandUtils.initialize( issue, state );
         }
