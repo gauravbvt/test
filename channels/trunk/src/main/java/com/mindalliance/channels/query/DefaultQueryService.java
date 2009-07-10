@@ -34,6 +34,7 @@ import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.UserIssue;
+import com.mindalliance.channels.nlp.SemanticMatcher;
 import com.mindalliance.channels.util.Employment;
 import com.mindalliance.channels.util.Play;
 import com.mindalliance.channels.util.SemMatch;
@@ -98,6 +99,10 @@ public class DefaultQueryService extends Observable implements QueryService {
      * An attachment manager.
      */
     private AttachmentManager attachmentManager;
+    /**
+     * Semantic matcher.
+     */
+    private SemanticMatcher semanticMatcher;
 
     public DefaultQueryService() {
     }
@@ -110,6 +115,10 @@ public class DefaultQueryService extends Observable implements QueryService {
 
     public Dao getDao() {
         return dao;
+    }
+
+    public void setSemanticMatcher( SemanticMatcher semanticMatcher ) {
+        this.semanticMatcher = semanticMatcher;
     }
 
     /**
@@ -2120,13 +2129,13 @@ public class DefaultQueryService extends Observable implements QueryService {
             List<Hierarchical> superiors = hierarchical.getSuperiors();
             return !superiors.isEmpty()
                     && ( superiors.contains( other )
-                        || CollectionUtils.find(
-                            superiors,
-                            new Predicate() {
-                                public boolean evaluate( Object obj ) {
-                                    return hasAncestor( (Hierarchical) obj, other, visited );
-                                }
-                            } ) != null );
+                    || CollectionUtils.find(
+                    superiors,
+                    new Predicate() {
+                        public boolean evaluate( Object obj ) {
+                            return hasAncestor( (Hierarchical) obj, other, visited );
+                        }
+                    } ) != null );
         } else {
             return false;
         }

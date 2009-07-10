@@ -10,6 +10,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.nlp.SemanticMatcher;
 import com.mindalliance.channels.util.Play;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -36,8 +37,16 @@ public class DefaultAnalyst extends AbstractService implements Analyst {
      * Issue detectors registered with the scenario analyst.
      */
     private List<IssueDetector> issueDetectors = new ArrayList<IssueDetector>();
+    /**
+     * Semantic matcher.
+     */
+    private SemanticMatcher semanticMatcher;
 
     public DefaultAnalyst() {
+    }
+
+    public void setSemanticMatcher( SemanticMatcher semanticMatcher ) {
+        this.semanticMatcher = semanticMatcher;
     }
 
     /**

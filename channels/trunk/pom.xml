@@ -289,6 +289,24 @@
             </exclusions>
         </dependency>
 
+        <!-- Semantic proximity mantching -->
+        <dependency>
+            <groupId>jwordnetsim</groupId>
+            <artifactId>jwordnetsim</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>postagger</groupId>
+            <artifactId>postagger</artifactId>
+            <version>1.6</version>
+        </dependency>
+        <dependency>
+            <groupId>jwnl</groupId>
+            <artifactId>jwnl</artifactId>
+            <version>14.1</version>
+        </dependency>
+        
+
         <!-- LOGGING DEPENDENCIES -->
         <dependency>
             <groupId>org.slf4j</groupId>
