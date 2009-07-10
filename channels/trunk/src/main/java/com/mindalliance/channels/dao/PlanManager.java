@@ -2,13 +2,18 @@ package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.Exporter;
+import com.mindalliance.channels.Importer;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.export.ConnectionSpecification;
 import com.mindalliance.channels.export.ImportExportFactory;
+import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.User;
+import com.mindalliance.channels.query.DefaultQueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
@@ -18,6 +23,8 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -44,6 +51,9 @@ public class PlanManager implements InitializingBean {
     /** The thing that generates unique ids. */
     private IdGenerator idGenerator;
 
+    /** Where to import initial scenarios from. Don't if null... */
+    private Resource importDirectory;
+
     /**
      * The location of the persisted data.
      * Default: ./channels-data
@@ -62,8 +72,16 @@ public class PlanManager implements InitializingBean {
     }
 
     public PlanManager( ImportExportFactory importExportFactory, IdGenerator idGenerator ) {
-        this.setImportExportFactory( importExportFactory );
+        this.importExportFactory = importExportFactory;
         this.idGenerator = idGenerator;
+    }
+
+    public Resource getImportDirectory() {
+        return importDirectory;
+    }
+
+    public void setImportDirectory( Resource importDirectory ) {
+        this.importDirectory = importDirectory;
     }
 
     /**
@@ -189,19 +207,13 @@ public class PlanManager implements InitializingBean {
             logger.error( "Unable to get reference to data directory", e );
             throw new IllegalStateException( e );
         }
-
-        synchronized ( planIndex ) {
-            if ( planIndex.isEmpty() )
-                createPlan();
-        }
-
     }
 
-    public synchronized ImportExportFactory getImportExportFactory() {
+    public ImportExportFactory getImportExportFactory() {
         return importExportFactory;
     }
 
-    public synchronized void setImportExportFactory( ImportExportFactory importExportFactory ) {
+    public void setImportExportFactory( ImportExportFactory importExportFactory ) {
         this.importExportFactory = importExportFactory;
     }
 
@@ -241,7 +253,7 @@ public class PlanManager implements InitializingBean {
         if ( command.isMemorable() )
             try {
                 PlanDao w = getDao( plan );
-                Exporter exporter = getImportExportFactory().createExporter( queryService, plan );
+                Exporter exporter = importExportFactory.createExporter( queryService, plan );
                 w.onAfterCommand( command, exporter );
             } catch ( NotFoundException e ) {
                 throw new RuntimeException( "Failed to save journal", e );
@@ -268,7 +280,7 @@ public class PlanManager implements InitializingBean {
                 Plan plan = dao.getPlan();
                 try {
                     commander.replay( dao.getJournal() );
-                    dao.save( getImportExportFactory().createExporter( queryService, plan ) );
+                    dao.save( importExportFactory.createExporter( queryService, plan ) );
                     logger.info( "Replayed journal for plan {}", plan );
                 } catch ( CommandException e ) {
                     logger.error(
@@ -292,5 +304,88 @@ public class PlanManager implements InitializingBean {
             plan = getPlans().get( 0 );
         }
         return plan;
+    }
+
+    /**
+     * Check all loaded plans.
+     * @param service the service to use for the checking
+     */
+    public synchronized void validate( DefaultQueryService service ) {
+        if ( planIndex.isEmpty() )
+            createPlan();
+
+        for ( Plan plan : getPlans() )
+            try {
+                PlanDao dao = getDao( plan );
+                Importer importer = importExportFactory.createImporter( service, plan );
+
+                dao.load( importer );
+
+                if ( planIndex.size() == 1 && importDirectory != null
+                     && plan.getScenarioCount() == 0 )
+                    importScenarios( importer );
+
+                dao.validate( service, importExportFactory.createExporter( service, plan ) );
+
+            } catch ( NotFoundException e ) {
+                String msg = MessageFormat.format(
+                        "Unable to find dao for plan {0}", plan.getName() );
+                logger.error( msg, e );
+                throw new RuntimeException( msg, e );
+
+            } catch ( IOException e ) {
+                String msg = MessageFormat.format(
+                        "Unable to import plan {0}", plan.getName() );
+                logger.error( msg, e );
+                throw new RuntimeException( msg, e );
+            }
+    }
+
+    private void importScenarios( Importer importer ) {
+        Map<String, Long> idMap = new HashMap<String, Long>();
+        Map<Connector, List<ConnectionSpecification>> proxyConnectors =
+                new HashMap<Connector, List<ConnectionSpecification>>();
+
+        for ( File file : getImportFiles() ) {
+            try {
+                Map<String, Object> results = importer.loadScenario( new FileInputStream( file ) );
+
+                // Cumulate results
+                idMap.putAll( (Map<String, Long>) results.get( "idMap" ) );
+                proxyConnectors.putAll(
+                        (Map<Connector, List<ConnectionSpecification>>) results.get(
+                                "proxyConnectors" ) );
+
+                Scenario scenario = (Scenario) results.get( "scenario" );
+                logger.info( MessageFormat.format(
+                        "Imported scenario {0} from {1}", scenario.getName(), file.getPath() ) );
+
+            } catch ( IOException e ) {
+                logger.warn( MessageFormat.format( "Failed to import {0}", file.getPath() ), e );
+            }
+        }
+
+        // Reconnect external links
+        importer.reconnectExternalFlows( proxyConnectors, false );
+    }
+
+    private File[] getImportFiles() {
+        if ( importDirectory != null ) {
+            try {
+                File directory = importDirectory.getFile();
+                if ( directory.exists() && directory.isDirectory() )
+                    return directory.listFiles(
+                            new FilenameFilter() {
+                                /** {@inheritDoc} */
+                                public boolean accept( File dir, String name ) {
+                                    return name.endsWith( ".xml" );
+                                }
+                            } );
+            } catch ( IOException e ) {
+                logger.warn( "Unable to read import directory. Skipping import", e );
+            }
+        }
+
+        return new File[0];
     }
 }

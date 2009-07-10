@@ -16,9 +16,6 @@
     <bean id="queryService" class="com.mindalliance.channels.query.DefaultQueryService">
         <constructor-arg ref="planManager"/>
         <constructor-arg ref="attachmentManager"/>
-        <property name="addingSamples" value="false"/>
-        <property name="importingScenarios" value="true"/>
-        <property name="importDirectory" value="file:${user.home}/channels/import"/>
         <property name="semanticMatcher" ref="semanticMatcher"/>
     </bean>
 

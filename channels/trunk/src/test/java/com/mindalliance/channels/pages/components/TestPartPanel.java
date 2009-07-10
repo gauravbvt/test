@@ -56,7 +56,7 @@ public class TestPartPanel extends AbstractChannelsTest {
         planManager.afterPropertiesSet();
         DefaultQueryService queryService = new DefaultQueryService( planManager, new BitBucket() );
 
-        queryService.setAddingSamples( true );
+//        queryService.setAddingSamples( true );
         channelsApp.setQueryService( queryService );
         DiagramFactory dm = createMock( DiagramFactory.class );
          Diagram fd = createMock(  Diagram.class);

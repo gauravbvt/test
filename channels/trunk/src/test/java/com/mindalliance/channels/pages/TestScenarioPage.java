@@ -54,7 +54,7 @@ public class TestScenarioPage extends TestCase {
         PlanManager planManager = new PlanManager( new DummyExporter(), new SimpleIdGenerator() );
         planManager.afterPropertiesSet();
         DefaultQueryService queryService = new DefaultQueryService( planManager, new BitBucket() );
-        queryService.setAddingSamples( true );
+//        queryService.setAddingSamples( true );
 
         queryService.afterPropertiesSet();
 

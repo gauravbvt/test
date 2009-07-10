@@ -24,4 +24,11 @@ public class TestConfig extends TestCase {
         Channels p = (Channels) ctx.getBean( "wicketApplication" );                       // NON-NLS
         assertNotNull( p );
     }
+
+    /**
+     * From a 'mvn clean',  sometimes the subsequent reload fails...
+     */
+    public void testReload() {
+        testContext();
+    }
 }

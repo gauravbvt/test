@@ -3,20 +3,14 @@ package com.mindalliance.channels.query;
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.Dao;
-import com.mindalliance.channels.Importer;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.attachments.Attachment;
-import com.mindalliance.channels.dao.EvacuationScenario;
-import com.mindalliance.channels.dao.FireScenario;
-import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.export.ConnectionSpecification;
-import com.mindalliance.channels.export.ImportExportFactory;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;
@@ -49,20 +43,13 @@ import org.apache.commons.collections.iterators.FilterIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.core.io.Resource;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Observable;
 import java.util.Set;
 
@@ -75,25 +62,6 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
      * Class logger.
      */
     public static final Logger LOG = LoggerFactory.getLogger( DefaultQueryService.class );
-    /**
-     * Name of the default event.
-     */
-    public static final String DEFAULT_EVENT_NAME = "UNNAMED";
-
-    /**
-     * True if defaults scenarios will be added when dao is set.
-     */
-    private boolean addingSamples;
-
-    /**
-     * True if exported scenarios are to be imported when dao is set.
-     */
-    private boolean importingScenarios;
-
-    /**
-     * Directory from which to import exported scenarios
-     */
-    private Resource importDirectory;
 
     /** The plan manager. */
     private PlanManager planManager;
@@ -150,32 +118,6 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
         return attachmentManager;
     }
 
-    public boolean isImportingScenarios() {
-        return importingScenarios;
-    }
-
-    public void setImportingScenarios( boolean importingScenarios ) {
-        this.importingScenarios = importingScenarios;
-    }
-
-    public Resource getImportDirectory() {
-        return importDirectory;
-    }
-
-    public void setImportDirectory( Resource importDirectory ) {
-        this.importDirectory = importDirectory;
-    }
-
-    public boolean isAddingSamples() {
-        return addingSamples;
-    }
-
-    public void setAddingSamples( boolean addingSamples ) {
-        this.addingSamples = addingSamples;
-    }
-
-    // LIFECYCLE
-
     /**
      * {@inheritDoc}
      */
@@ -190,119 +132,13 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
         attachmentManager.removeUnattached( this );
     }
 
-    private void validatePlan( Plan plan ) {
-        try {
-            PlanDao dao = planManager.getDao( plan );
-
-            ImportExportFactory exportFactory = planManager.getImportExportFactory();
-            Importer importer = exportFactory.createImporter( this, plan );
-            dao.load( importer );
-
-            // Make sure there is at least one event per plan
-            List<Event> incidents = plan.getIncidents();
-            if ( incidents.isEmpty() ) {
-                Event unnamedEvent = dao.findOrCreate( Event.class, DEFAULT_EVENT_NAME, null );
-                plan.addIncident( unnamedEvent );
-            } else if ( incidents.size() > 1 ) {
-                // Remove UNNAMED event if not referenced
-                Event event = dao.findOrCreate( Event.class, DEFAULT_EVENT_NAME, null );
-                if ( getReferenceCount( event ) <= 1 ) {
-                    incidents.remove( event );
-                    dao.remove( event );
-                }
-            }
-
-            // Make sure there is at least one scenario per plan
-            if ( !dao.list( Scenario.class ).iterator().hasNext() )
-                createScenario();
-
-//            dao.save( exportFactory.createExporter( this, plan ) );
-
-        } catch ( NotFoundException e ) {
-            throw new RuntimeException( e );
-        } catch ( IOException e ) {
-            throw new RuntimeException( e );
-        }
-    }
-
     /**
      * Make sure plans are valid initialized with some proper scenarios.
      */
     public void afterPropertiesSet() {
-
-        List<Plan> plans = planManager.getPlans();
-
-        // Initialize first plan, if needed
-        if ( plans.size() == 1 && plans.get( 0 ).getScenarios().isEmpty() ) {
-            if ( addingSamples ) {
-                LOG.info( "Adding sample scenarios to default plan" );
-                Scenario evac = createScenario();
-                EvacuationScenario.initialize( evac, this );
-                Scenario fireScenario = createScenario();
-                FireScenario.initialize( fireScenario, this, evac );
-            }
-            if ( importingScenarios ) {
-                LOG.info( "Importing default scenarios to default plan" );
-                loadScenarios( plans.get( 0 ) );
-            }
-        }
-
-        for ( Plan plan : plans )
-            validatePlan( plan );
-
+        planManager.validate( this );
         attachmentManager.removeUnattached( this );
     }
-
-    @SuppressWarnings( "unchecked" )
-    private void loadScenarios( Plan plan ) {
-        if ( importDirectory != null )
-            try {
-                File directory = importDirectory.getFile();
-                if ( importDirectory.exists() && directory.isDirectory() ) {
-                    File[] files = directory.listFiles(
-                            new FilenameFilter() {
-                                /** {@inheritDoc} */
-                                public boolean accept( File dir, String name ) {
-                                    return name.endsWith( ".xml" );
-                                }
-                            } );
-                    Importer importer = planManager.getImportExportFactory().createImporter( this, plan );
-                    Map<String, Long> idMap = new HashMap<String, Long>();
-                    Map<Connector, List<ConnectionSpecification>> proxyConnectors =
-                            new HashMap<Connector, List<ConnectionSpecification>>();
-                    for ( File file : files ) {
-                        try {
-                            Map<String, Object> results = importer.loadScenario(
-                                    new FileInputStream( file ) );
-                            // Cumulate results
-                            idMap.putAll( (Map<String, Long>) results.get( "idMap" ) );
-                            proxyConnectors.putAll(
-                                    (Map<Connector, List<ConnectionSpecification>>) results.get(
-                                            "proxyConnectors" ) );
-                            Scenario scenario = (Scenario) results.get( "scenario" );
-                            LOG.info(
-                                    "Imported scenario " + scenario.getName() + " from "
-                                            + file.getPath() );
-                        } catch ( IOException e ) {
-                            LOG.warn( "Failed to import " + file.getPath(), e );
-                        }
-                    }
-                    // Reconnect external links
-                    importer.reconnectExternalFlows( proxyConnectors, false );
-                    setChanged();
-                    notifyObservers( idMap );
-                } else {
-                    LOG.warn( "Directory " + importDirectory + " does not exist." );
-                }
-            } catch ( IOException e ) {
-                LOG.warn( "Unable to read import directory", e );
-            }
-        else {
-            LOG.warn( "Import directory is not set." );
-        }
-    }
-
-    // CRUD
 
     /**
      * {@inheritDoc}

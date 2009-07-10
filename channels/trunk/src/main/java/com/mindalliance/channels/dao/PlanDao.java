@@ -2,8 +2,11 @@ package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.Importer;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.model.Scenario;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +14,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Wrapper for per-plan dao-related operations.
@@ -22,6 +26,11 @@ public class PlanDao extends Memory {
 
     /** Name of command journal file. */
     private static final String JOURNAL_FILE = "journal.xml";
+
+    /**
+     * Name of the default event.
+     */
+    private static final String DEFAULT_EVENT_NAME = "UNNAMED";
 
     /** The logger. */
     private final Logger logger = LoggerFactory.getLogger( getClass() );
@@ -225,6 +234,39 @@ public class PlanDao extends Memory {
             }
         } catch ( IOException e ) {
             throw new RuntimeException( "Failed to save journal", e );
+        }
+    }
+
+    /**
+     * Validate the underlying plan.
+     * @param queryService to use for validation
+     * @param exporter for saving
+     */
+    public void validate( QueryService queryService, Exporter exporter ) {
+
+        try {
+            // Make sure there is at least one event per plan
+            List<Event> incidents = plan.getIncidents();
+            if ( incidents.isEmpty() ) {
+                Event unnamedEvent = findOrCreate( Event.class, DEFAULT_EVENT_NAME, null );
+                plan.addIncident( unnamedEvent );
+            } else if ( incidents.size() > 1 ) {
+                // Remove UNNAMED event if not referenced
+                Event event = find( Event.class, DEFAULT_EVENT_NAME );
+                if ( event != null && queryService.getReferenceCount( event ) <= 1 ) {
+                    incidents.remove( event );
+                    remove( event );
+                }
+            }
+
+            // Make sure there is at least one scenario per plan
+            if ( !list( Scenario.class ).iterator().hasNext() )
+                queryService.createScenario();
+
+            save( exporter );
+
+        } catch ( IOException e ) {
+            throw new RuntimeException( e );
         }
     }
 }

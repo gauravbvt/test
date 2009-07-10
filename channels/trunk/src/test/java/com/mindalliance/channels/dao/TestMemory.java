@@ -29,7 +29,7 @@ public class TestMemory extends TestCase {
         queryService = new DefaultQueryService( planManager, new BitBucket() );
         User test = new User();
         test.setPlan( plan );
-        queryService.setAddingSamples( true );
+//        queryService.setAddingSamples( true );
         queryService.afterPropertiesSet();
     }
 
