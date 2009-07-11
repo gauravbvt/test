@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Semantic proximity matcher.
+ * Semantic proximity matcher based POS tagging and WordNet similarity measures.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -52,23 +52,68 @@ public class SemanticProximityMatcher implements SemanticMatcher {
     /**
      * Between 0 and 1, lower value lifts asymptotic scoring curve more.
      */
-    private static final double POWER = 0.6; 
-    private static final double BEST_MATCH_FACTOR = 1.00001; // how much weight to give best match vs average match (1.0 -> 1/2, 2.0 -> 2/3 etc.)
+    private static final double POWER = 0.6;
+    /**
+     * How much weight to give best match vs average match (1.0 -> 1/2, 2.0 -> 2/3 etc.)
+     */
+    private static final double BEST_MATCH_FACTOR = 1.00001;
+    /**
+     * POS tags.
+     */
     private static final List<String> PROPER_NOUN_TAGS = Arrays.asList( "NNP", "NNPS" );
+    /**
+      * POS tags.
+      */
     private static final List<String> ADJECTIVE_TAGS = Arrays.asList( "JJ" );
+    /**
+      * POS tags.
+      */
     private static final List<String> VERB_TAGS = Arrays.asList( "VB", "VBD", "VBG", "VBN", "VBP", "VBZ" );
+    /**
+      * POS tags.
+      */
     private static final List<String> COMMON_NOUN_TAGS = Arrays.asList( "NN", "NNS" );
-
-    private Resource taggerData; // "./src/main/webapp/data/left3words-wsj-0-18.tagger"
+    /**
+     * Tagger trained data.
+     * (in "./src/main/webapp/data/left3words-wsj-0-18.tagger")
+     */
+    private Resource taggerData;
+    /**
+     * Wordnet library config.
+     */
     private static final String JWNL_PROPERTIES = "jwnl_properties.xml";
+    /**
+     * Wordnet similarity data.
+     */
     private static final String SIMILARITY_DATA = "ic-bnc-resnik-add1.dat";
-    private Resource wordnetDict; //  "./src/main/webapp/data/wordnet-2.0/dict"
+    /**
+     * WordNet dictionary.
+     * ("./src/main/webapp/data/wordnet-2.0/dict")
+     */
+    private Resource wordnetDict;
+    /**
+     * Similarity algorithm.
+     */
     private String simType = "shef.nlp.wordnet.similarity.JCn";
-
+    /**
+     * Whether the matcher was (lazily) initialized.
+     */
     private boolean initialized;
+    /**
+     * In-memory wordnet dictionary.
+     */
     private Dictionary dictionary;
+    /**
+     * POS tagger.
+     */
     private MaxentTagger tagger;
+    /**
+     * Morphological processor.
+     */
     private MorphologicalProcessor morpher;
+    /**
+     * Similarity meaasure calculator.
+     */
     private SimilarityMeasure similarityMeasure;
 
     public SemanticProximityMatcher() {
