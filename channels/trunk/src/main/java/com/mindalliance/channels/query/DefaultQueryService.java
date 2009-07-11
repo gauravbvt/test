@@ -32,6 +32,7 @@ import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.UserIssue;
+import com.mindalliance.channels.nlp.Proximity;
 import com.mindalliance.channels.nlp.SemanticMatcher;
 import com.mindalliance.channels.util.Employment;
 import com.mindalliance.channels.util.Play;
@@ -63,7 +64,9 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
      */
     public static final Logger LOG = LoggerFactory.getLogger( DefaultQueryService.class );
 
-    /** The plan manager. */
+    /**
+     * The plan manager.
+     */
     private PlanManager planManager;
 
     /**
@@ -84,7 +87,7 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
     }
 
     /**
-     *  Required for CGLIB proxies...
+     * Required for CGLIB proxies...
      */
     DefaultQueryService() {
     }
@@ -103,6 +106,7 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
 
     /**
      * Find the dao for the selected plan of the current user.
+     *
      * @return the dao
      */
     public Dao getDao() {
@@ -1942,9 +1946,19 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void replayJournals( Commander commander ) {
         getPlanManager().replayJournals( this, commander );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean mayBeRelated( String text, String otherText ) {
+        return SemMatch.matches( text, otherText ) ||
+                semanticMatcher.matches( text, otherText, Proximity.MEDIUM );
     }
 }
 

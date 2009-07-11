@@ -41,6 +41,7 @@ public interface QueryService extends Service {
 
     /**
      * Get the plan manager.
+     *
      * @return the plan manager.
      */
     PlanManager getPlanManager();
@@ -815,6 +816,7 @@ public interface QueryService extends Service {
 
     /**
      * Find all roots of hierarchy in which a hierarchical object belongs.
+     *
      * @param hierarchical a hierarchical object
      * @return a list of a hierarchical objects
      */
@@ -822,6 +824,7 @@ public interface QueryService extends Service {
 
     /**
      * Find all descendants of a hierarchical object.
+     *
      * @param hierarchical a hierarchical object
      * @return a list of a hierarchical objects
      */
@@ -829,7 +832,17 @@ public interface QueryService extends Service {
 
     /**
      * Replay journals for all plans and save the results.
+     *
      * @param commander the commander for replaying
      */
     void replayJournals( Commander commander );
+
+    /**
+     * Whether two texts have high semantic proximity.
+     *
+     * @param text      a string
+     * @param otherText a string
+     * @return a boolean
+     */
+    boolean mayBeRelated( String text, String otherText);
 }

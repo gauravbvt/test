@@ -16,6 +16,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import shef.nlp.wordnet.similarity.SimilarityMeasure;
 
 import java.io.BufferedInputStream;
@@ -55,10 +56,10 @@ public class SemanticProximityMatcher implements SemanticMatcher {
     private static final List<String> VERB_TAGS = Arrays.asList( "VB", "VBD", "VBG", "VBN", "VBP", "VBZ" );
     private static final List<String> COMMON_NOUN_TAGS = Arrays.asList( "NN", "NNS" );
 
-    private String taggerData; // "./src/main/webapp/data/left3words-wsj-0-18.tagger"
+    private Resource taggerData; // "./src/main/webapp/data/left3words-wsj-0-18.tagger"
     private static final String JWNL_PROPERTIES = "jwnl_properties.xml";
     private static final String SIMILARITY_DATA = "ic-bnc-resnik-add1.dat";
-    private String wordnetDict; //  "./src/main/webapp/data/wordnet-2.0/dict"
+    private Resource wordnetDict; //  "./src/main/webapp/data/wordnet-2.0/dict"
     private String simType = "shef.nlp.wordnet.similarity.JCn";
 
     private boolean initialized;
@@ -76,17 +77,17 @@ public class SemanticProximityMatcher implements SemanticMatcher {
             initializeJWNL();
             dictionary = Dictionary.getInstance();
             morpher = dictionary.getMorphologicalProcessor();
-            tagger = new MaxentTagger( taggerData );
+            tagger = new MaxentTagger( taggerData.getFile().getAbsolutePath() );
             similarityMeasure = initializeSimilarityMeasure();
             initialized = true;
         }
     }
 
-    public void setTaggerData( String taggerData ) {
+    public void setTaggerData( Resource taggerData ) {
         this.taggerData = taggerData;
     }
 
-    public void setWordnetDict( String wordnetDict ) {
+    public void setWordnetDict( Resource wordnetDict ) {
         this.wordnetDict = wordnetDict;
     }
 
@@ -102,7 +103,8 @@ public class SemanticProximityMatcher implements SemanticMatcher {
         URL url = SemanticProximityMatcher.class.getResource( JWNL_PROPERTIES );
         // Class[] classes = {String.class};
         String template = getText( url );
-        String adjustedTemplate = template.replaceFirst( "_WORDNET_DICT_", wordnetDict );
+        String adjustedTemplate = template.replaceFirst( "_WORDNET_DICT_",
+                wordnetDict.getFile().getAbsolutePath() );
         return new ByteArrayInputStream( adjustedTemplate.getBytes() );
     }
 

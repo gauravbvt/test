@@ -230,31 +230,32 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @return an iterator on strings
      */
     private Iterator<String> getFlowNameChoices( String s ) {
+        QueryService queryService = getQueryService();
         Set<String> choices = new HashSet<String>();
         if ( s.length() > 1 ) {
             Node node = getNode();
             Iterator<Flow> nodeFlows = node.outcomes();
             while ( nodeFlows.hasNext() ) {
                 String name = nodeFlows.next().getName();
-                if ( SemMatch.matches( s, name ) )
+                if ( queryService.mayBeRelated( s, name ) )
                     choices.add( name );
             }
             nodeFlows = node.requirements();
             while ( nodeFlows.hasNext() ) {
                 String name = nodeFlows.next().getName();
-                if ( SemMatch.matches( s, name ) )
+                if ( queryService.mayBeRelated( s, name ) )
                     choices.add( name );
             }
             // all name-matching in-scenario flows of the right polarity
             for ( Flow flow : findRelevantInternalFlows() ) {
                 String name = flow.getName();
-                if ( SemMatch.matches( s, name ) )
+                if ( queryService.mayBeRelated( s, name ) )
                     choices.add( name );
             }
             // all name-matching connector inner flows of the right "polarity"
             for ( Connector connector : findAllRelevantConnectors() ) {
                 String name = connector.getInnerFlow().getName();
-                if ( SemMatch.matches( s, name ) )
+                if ( queryService.mayBeRelated( s, name ) )
                     choices.add( name );
             }
         }
