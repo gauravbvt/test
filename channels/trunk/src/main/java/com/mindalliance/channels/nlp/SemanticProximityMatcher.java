@@ -49,7 +49,10 @@ public class SemanticProximityMatcher implements SemanticMatcher {
      * Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( SemanticProximityMatcher.class );
-    private static final double POWER = 0.6; // between 0 and 1, lower value lifts asymptotic scoring curve more
+    /**
+     * Between 0 and 1, lower value lifts asymptotic scoring curve more.
+     */
+    private static final double POWER = 0.6; 
     private static final double BEST_MATCH_FACTOR = 1.00001; // how much weight to give best match vs average match (1.0 -> 1/2, 2.0 -> 2/3 etc.)
     private static final List<String> PROPER_NOUN_TAGS = Arrays.asList( "NNP", "NNPS" );
     private static final List<String> ADJECTIVE_TAGS = Arrays.asList( "JJ" );
