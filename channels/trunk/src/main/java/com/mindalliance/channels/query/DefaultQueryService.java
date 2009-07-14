@@ -7,6 +7,7 @@ import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.SemanticMatcher;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.attachments.Attachment;
@@ -33,7 +34,6 @@ import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.nlp.Proximity;
-import com.mindalliance.channels.nlp.SemanticMatcher;
 import com.mindalliance.channels.util.Employment;
 import com.mindalliance.channels.util.Play;
 import com.mindalliance.channels.util.SemMatch;
@@ -41,6 +41,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.iterators.FilterIterator;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -1957,8 +1958,12 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
      * {@inheritDoc}
      */
     public boolean mayBeRelated( String text, String otherText ) {
-        return SemMatch.matches( text, otherText ) ||
-                semanticMatcher.matches( text, otherText, Proximity.MEDIUM );
+        return
+                SemMatch.matches( text, otherText ) ||
+                semanticMatcher.matches(
+                        StringUtils.uncapitalize( text.trim() ),
+                        StringUtils.uncapitalize( otherText.trim() ),
+                        Proximity.MEDIUM );
     }
 }
 

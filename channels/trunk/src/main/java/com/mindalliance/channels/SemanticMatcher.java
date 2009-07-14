@@ -1,4 +1,6 @@
-package com.mindalliance.channels.nlp;
+package com.mindalliance.channels;
+
+import com.mindalliance.channels.nlp.Proximity;
 
 import java.util.List;
 

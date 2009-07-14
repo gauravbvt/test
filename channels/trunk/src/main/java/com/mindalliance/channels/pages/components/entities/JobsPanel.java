@@ -17,6 +17,7 @@ import com.mindalliance.channels.pages.components.NameRangeable;
 import com.mindalliance.channels.util.NameRange;
 import com.mindalliance.channels.util.Play;
 import com.mindalliance.channels.util.SemMatch;
+import com.mindalliance.channels.QueryService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -205,7 +206,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( SemMatch.matches( s, choice ) ) candidates.add( choice );
+                    if ( getQueryService().mayBeRelated( s, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
             }

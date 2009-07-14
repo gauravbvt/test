@@ -12,6 +12,7 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.util.SemMatch;
+import com.mindalliance.channels.QueryService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -125,12 +126,12 @@ public class PartPanel extends AbstractCommandablePanel {
         super.setOutputMarkupPlaceholderTag( false );
         this.model = model;
 
-        addField( TASK_PROPERTY, getQueryService().findAllTasks() );
-        addField( ACTOR_PROPERTY, getQueryService().findAllNames( Actor.class ) );
-        addField( ROLE_PROPERTY, getQueryService().findAllNames( Role.class ) );
-        addField( ORG_PROPERTY, getQueryService().findAllNames( Organization.class ) );
-        addField( JURISDICTION_PROPERTY, getQueryService().findAllNames( Place.class ) );
-        addField( LOCATION_PROPERTY, getQueryService().findAllNames( Place.class ) );
+        addField( TASK_PROPERTY, getQueryService().findAllTasks(), true );
+        addField( ACTOR_PROPERTY, getQueryService().findAllNames( Actor.class ), false );
+        addField( ROLE_PROPERTY, getQueryService().findAllNames( Role.class ), true );
+        addField( ORG_PROPERTY, getQueryService().findAllNames( Organization.class ), false );
+        addField( JURISDICTION_PROPERTY, getQueryService().findAllNames( Place.class ), false );
+        addField( LOCATION_PROPERTY, getQueryService().findAllNames( Place.class ), false );
         addEventInitiation();
         addTimingFields();
         addMitigations();
@@ -152,7 +153,10 @@ public class PartPanel extends AbstractCommandablePanel {
         initiatedEventField.setEnabled( isLockedByUser( getPart() ) );
     }
 
-    private void addField( final String property, final Collection<String> choices ) {
+    private void addField(
+            final String property,
+            final Collection<String> choices,
+            final boolean semMatching ) {
         final TextField<String> field;
         if ( choices == null ) {
             field = new TextField<String>(
@@ -165,7 +169,7 @@ public class PartPanel extends AbstractCommandablePanel {
                 protected Iterator<String> getChoices( String s ) {
                     List<String> candidates = new ArrayList<String>();
                     for ( String choice : choices ) {
-                        if ( SemMatch.matches( s, choice ) ) candidates.add( choice );
+                        if ( matches( s, choice, semMatching ) ) candidates.add( choice );
                     }
                     return candidates.iterator();
                 }
@@ -186,6 +190,14 @@ public class PartPanel extends AbstractCommandablePanel {
         textFields.add( field );
     }
 
+    private boolean matches( String text, String otherText, boolean semMatching ) {
+        if ( semMatching ) {
+            return getQueryService().mayBeRelated( text, otherText );
+        } else {
+            return SemMatch.matches( text, otherText );
+        }
+    }
+
 
     private void addEventInitiation() {
         final List<String> choices = getQueryService().findAllNames( Event.class );
@@ -195,7 +207,7 @@ public class PartPanel extends AbstractCommandablePanel {
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( SemMatch.matches( s, choice ) ) candidates.add( choice );
+                    if ( getQueryService().mayBeRelated( s, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
 

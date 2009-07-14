@@ -243,7 +243,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             nodeFlows = node.requirements();
             while ( nodeFlows.hasNext() ) {
                 String name = nodeFlows.next().getName();
-                if ( queryService.mayBeRelated( s, name ) )
+                if ( getQueryService().mayBeRelated( s, name ) )
                     choices.add( name );
             }
             // all name-matching in-scenario flows of the right polarity
