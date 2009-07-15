@@ -8,7 +8,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.util.SemMatch;
+import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.jgrapht.DirectedGraph;
@@ -120,7 +120,7 @@ public class PotentialDeadlock extends AbstractIssueDetector {
                             critical = true;
                             for ( Flow otherFlow : requirements ) {
                                 if ( otherFlow != flow
-                                        && SemMatch.same( otherFlow.getName(), flow.getName() ) )
+                                        && Matcher.same( otherFlow.getName(), flow.getName() ) )
                                     unique = false;
                             }
                         }

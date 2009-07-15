@@ -6,7 +6,7 @@ import com.mindalliance.channels.export.PartSpecification;
 import com.mindalliance.channels.export.ScenarioSpecification;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.util.SemMatch;
+import com.mindalliance.channels.util.Matcher;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
@@ -116,19 +116,19 @@ public class ConverterUtils {
                                        String taskDescription ) {
         if ( roleName != null ) {
             if ( part.getRole() == null
-                    || !SemMatch.same( part.getRole().getName(), roleName ) ) return false;
+                    || !Matcher.same( part.getRole().getName(), roleName ) ) return false;
         }
         if ( organizationName != null ) {
             if ( part.getOrganization() == null
-                    || !SemMatch.same( part.getOrganization().getName(), organizationName ) )
+                    || !Matcher.same( part.getOrganization().getName(), organizationName ) )
                 return false;
         }
         if ( task != null ) {
-            if ( part.getTask() == null || !SemMatch.same( part.getTask(), task ) )
+            if ( part.getTask() == null || !Matcher.same( part.getTask(), task ) )
                 return false;
         }
         if ( taskDescription != null ) {
-            if ( part.getDescription() == null || !SemMatch.same( part.getDescription(), taskDescription ) )
+            if ( part.getDescription() == null || !Matcher.same( part.getDescription(), taskDescription ) )
                 return false;
         }
         return true;

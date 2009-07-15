@@ -14,7 +14,6 @@ import net.didion.jwnl.dictionary.Dictionary;
 import net.didion.jwnl.dictionary.MorphologicalProcessor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -53,10 +52,16 @@ public class SemanticProximityMatcher implements SemanticMatcher {
      */
     private static final Logger LOG = LoggerFactory.getLogger( SemanticProximityMatcher.class );
     /**
-     * Between 0 and 1, lower value lifts asymptotic scoring curve more.
+     * Between 0 and 1, highest value lifts asymptotic scoring curve less.
      */
     private static final double HIGH_POWER = 1.0;
+    /**
+     * Between 0 and 1, lowest value lifts asymptotic scoring curve more.
+     */
     private static final double LOW_POWER = 0.2;
+    /**
+     * Number of words that get the LOW_POWER.
+     */
     private static final int MANY_WORDS = 15;
     /**
      * How much weight to give best match vs average match (1.0 -> 1/2, 2.0 -> 2/3 etc.)
@@ -254,7 +259,6 @@ public class SemanticProximityMatcher implements SemanticMatcher {
             double score = conceptualSimilarity;
             if ( instanceOverlap > 0 ) {
                 // instance overlap is a big deal
-                // TODO boost based on sizes
                 double boost = ( instanceOverlap / maximum( size, otherSize ) ) * INSTANCE_OVERLAP_FACTOR;
                 LOG.trace( boost + " : boost from instance overlap = conceptualSimilarity * instanceOverlap" );
                 score = minimum( 1.0, score + boost );
@@ -266,9 +270,9 @@ public class SemanticProximityMatcher implements SemanticMatcher {
             Proximity matchingLevel = matchingLevel( finalScore );
             LOG.trace( "---- Match is " + matchingLevel );
             LOG.debug( matchingLevel.getLabel()
-                    + "(" + String.format("%.3f", finalScore)
+                    + "(" + String.format( "%.3f", finalScore )
                     + " in " + ( System.currentTimeMillis() - msecs ) + " ms" + "): "
-                    + "\"" + text + "\" <=> " + "\"" + otherText + "\"\n" );
+                    + "\"" + text + "\" <=> " + "\"" + otherText + "\"" );
             return matchingLevel;
         } catch ( Exception e ) {
             LOG.error( "Semantic matching failed", e );
@@ -305,7 +309,7 @@ public class SemanticProximityMatcher implements SemanticMatcher {
     }
 
     // Collect all individual nouns or verbs, all adjective + noun phrases, and all noun + noun phrases
-    private List<HasWord> extractPhrases( List<HasWord> words ) {
+    private List<HasWord> extractPhrases( List<HasWord> words ) throws JWNLException {
         Set<HasWord> phrases = new HashSet<HasWord>();
         String phrase = "";
         for ( HasWord word : words ) {
@@ -321,8 +325,11 @@ public class SemanticProximityMatcher implements SemanticMatcher {
                 if ( phrase.length() > 0 ) {
                     phrase += " " + word.word();
                     TaggedWord taggedWord = new TaggedWord( phrase, ( (TaggedWord) word ).tag() );
-                    LOG.trace( "Found phrase [" + taggedWord + "]" );
-                    phrases.add( taggedWord );
+                    // Only recognize noun phrases that have synsets
+                    if ( hasSynsets( taggedWord ) ) {
+                        LOG.trace( "Found phrase [" + taggedWord + "]" );
+                        phrases.add( taggedWord );
+                    }
                     phrase = "";
                 } else {
                     phrase = word.word(); // start a new phrase with it
@@ -388,24 +395,32 @@ public class SemanticProximityMatcher implements SemanticMatcher {
     }
 
     private List<List<Synset>> findSynsets( List<HasWord> words ) throws JWNLException {
-        List<List<Synset>> synsets = new ArrayList<List<Synset>>();  // should be a set of synsets, not a list
+        List<List<Synset>> allSynsets = new ArrayList<List<Synset>>();
         for ( HasWord word : words ) {
-            List<Synset> wordSynsets = new ArrayList<Synset>();  // should be a set of synsets, not a list
-            POS pos = posOf( word );
-            IndexWord indexWord = morpher.lookupBaseForm( pos, word.word() );
-            if ( indexWord != null ) {
-                for ( Long offset : indexWord.getSynsetOffsets() ) {
-                    Synset synset = dictionary.getSynsetAt( pos, offset );
+            List<Synset> wordSynsets = findSynsets( word );
+            if ( !wordSynsets.isEmpty() ) allSynsets.add( wordSynsets );
+        }
+        return allSynsets;
+    }
 
-                    if ( !isRedundant( wordSynsets, synset ) ) {
-                        wordSynsets.add( synset );
-                        LOG.trace( "[" + word + "] => " + synset );
-                    }
+    private List<Synset> findSynsets( HasWord word ) throws JWNLException {
+        List<Synset> synsets = new ArrayList<Synset>();
+        POS pos = posOf( word );
+        IndexWord indexWord = morpher.lookupBaseForm( pos, word.word() );
+        if ( indexWord != null ) {
+            for ( Long offset : indexWord.getSynsetOffsets() ) {
+                Synset synset = dictionary.getSynsetAt( pos, offset );
+                if ( !isRedundant( synsets, synset ) ) {
+                    synsets.add( synset );
+                    LOG.trace( "[" + word + "] => " + synset );
                 }
             }
-            synsets.add( wordSynsets );
         }
         return synsets;
+    }
+
+    private boolean hasSynsets( HasWord word ) throws JWNLException {
+        return !findSynsets( word ).isEmpty();
     }
 
     private boolean isRedundant( List<Synset> synsets, final Synset synset ) {

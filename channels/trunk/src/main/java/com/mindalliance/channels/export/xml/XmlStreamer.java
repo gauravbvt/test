@@ -27,7 +27,7 @@ import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.UserIssue;
-import com.mindalliance.channels.util.SemMatch;
+import com.mindalliance.channels.util.Matcher;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.io.xml.XppReader;
@@ -402,7 +402,7 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
                                                     : externalInnerFlow.getTarget() );
             Long partIdValue = Long.parseLong( conSpec.getPartSpecification().getId() );
             boolean partIdMatches = partIdValue != null && partIdValue == part.getId();
-            return SemMatch.same( externalInnerFlow.getName(), conSpec.getFlowName() )
+            return Matcher.same( externalInnerFlow.getName(), conSpec.getFlowName() )
                     && ( partIdMatches
                          || ConverterUtils.partMatches( part, conSpec.getPartSpecification() ) );
         }

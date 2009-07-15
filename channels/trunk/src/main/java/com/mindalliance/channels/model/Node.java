@@ -1,6 +1,6 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.util.SemMatch;
+import com.mindalliance.channels.util.Matcher;
 import com.mindalliance.channels.QueryService;
 import org.apache.commons.collections.iterators.IteratorChain;
 
@@ -296,7 +296,7 @@ public abstract class Node extends ModelObject implements ScenarioObject {
     public boolean hasMultipleOutcomes( String name ) {
         int count = 0;
         for ( Flow outcome : outcomes.values() ) {
-            if ( SemMatch.same( outcome.getName(), name ) ) count++;
+            if ( Matcher.same( outcome.getName(), name ) ) count++;
         }
         return count > 1;
     }
@@ -309,7 +309,7 @@ public abstract class Node extends ModelObject implements ScenarioObject {
     public boolean hasMultipleRequirements( String name ) {
         int count = 0;
         for ( Flow req : requirements.values() ) {
-            if ( SemMatch.same( req.getName(), name ) ) count++;
+            if ( Matcher.same( req.getName(), name ) ) count++;
         }
         return count > 1;
     }

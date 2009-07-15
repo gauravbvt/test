@@ -23,6 +23,7 @@ import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.util.Employment;
 import com.mindalliance.channels.util.Play;
+import com.mindalliance.channels.nlp.Proximity;
 
 import java.util.Iterator;
 import java.util.List;
@@ -571,7 +572,7 @@ public interface QueryService extends Service {
      * @param part a part
      * @return list of needs (flows with connectors as sources)
      */
-    List<Flow> findUnsatisfiedNeeds( Part part );
+    List<Flow> findUnconnectedNeeds( Part part );
 
     /**
      * Find the unused capabilities of a part.
@@ -838,11 +839,45 @@ public interface QueryService extends Service {
     void replayJournals( Commander commander );
 
     /**
-     * Whether two texts have high semantic proximity.
+     * Whether two string reach a given level of semantic proximity.
+     *
+     * @param text      a string
+     * @param otherText a string
+     * @param proximity a proximity level
+     * @return a boolean
+     */
+    boolean isSemanticMatch( String text, String otherText, Proximity proximity );
+
+    /**
+     * Whether two texts have high semantic proximity. The texts
      *
      * @param text      a string
      * @param otherText a string
      * @return a boolean
      */
-    boolean mayBeRelated( String text, String otherText);
+    boolean mayBeRelated( String text, String otherText );
+
+    /**
+     * Find all sharing commitments addressing a given information need.
+     *
+     * @param need a flow
+     * @return a list of flows
+     */
+    List<Flow> findAllSharingCommitmentsAddressing( Flow need );
+
+    /**
+     * Find parts with anonymous tasks which resourceSpec is narrowed by that of a given part.
+     *
+     * @param part a part
+     * @return a list of parts
+     */
+    List<Part> findAnonymousPartsMatching( Part part );
+
+    /**
+     * Calculate how important a part is in terms of the risks it mitigates directly or indirectly.
+     *
+     * @param part a part
+     * @return an issue level
+     */
+    Issue.Level getPartPriority( Part part );
 }

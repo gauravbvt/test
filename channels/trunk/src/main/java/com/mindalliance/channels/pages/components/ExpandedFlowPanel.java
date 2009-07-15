@@ -15,7 +15,7 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.ScenarioObject;
-import com.mindalliance.channels.util.SemMatch;
+import com.mindalliance.channels.util.Matcher;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
@@ -607,14 +607,14 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         boolean hasSameName = false;
         while ( !hasSameName && flows.hasNext() ) {
             Flow otherFlow = flows.next();
-            hasSameName = !otherFlow.hasConnector() && SemMatch.same( otherFlow.getName(), name );
+            hasSameName = !otherFlow.hasConnector() && Matcher.same( otherFlow.getName(), name );
         }
         return hasSameName;
     }
 
     private boolean isEmptyOrEquivalent( ScenarioObject connectorFlow ) {
         return getFlow().getName().isEmpty()
-                || SemMatch.matches( getFlow().getName(), connectorFlow.getName() );
+                || Matcher.matches( getFlow().getName(), connectorFlow.getName() );
     }
 
     private List<Flow> findRelevantInternalFlows() {

@@ -5,7 +5,7 @@ import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.util.SemMatch;
+import com.mindalliance.channels.util.Matcher;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -86,13 +86,13 @@ public class RedundantPart extends AbstractIssueDetector {
     
     // One narrows or equls the other
     private boolean isEquivalent( Part part, Part otherPart ) {
-        return SemMatch.same( part.getTask(), otherPart.getTask() )
+        return Matcher.same( part.getTask(), otherPart.getTask() )
                 && (
                 part.resourceSpec().narrowsOrEquals( otherPart.resourceSpec() )
                         || otherPart.resourceSpec().narrowsOrEquals( part.resourceSpec() )
         )
-                && ( SemMatch.samePlace( part.getLocation(), otherPart.getLocation() )
-                || SemMatch.within( part.getLocation(), otherPart.getLocation() )
-                || SemMatch.within( otherPart.getLocation(), part.getLocation() ) );
+                && ( Matcher.samePlace( part.getLocation(), otherPart.getLocation() )
+                || Matcher.within( part.getLocation(), otherPart.getLocation() )
+                || Matcher.within( otherPart.getLocation(), part.getLocation() ) );
     }
 }

@@ -7,7 +7,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.util.SemMatch;
+import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 
@@ -85,7 +85,7 @@ public class NoRedundancy extends AbstractIssueDetector {
                         public boolean evaluate( Object obj ) {
                             Flow otherFlow = (Flow) obj;
                             return otherFlow != criticalRequirement
-                                    && SemMatch.same( otherFlow.getName(), name )
+                                    && Matcher.same( otherFlow.getName(), name )
                                     && otherFlow.getTarget().isPart()
                                     && partsMatch( (Part) otherFlow.getTarget(), part )
                                     && otherFlow.getSource().isPart()
@@ -107,9 +107,9 @@ public class NoRedundancy extends AbstractIssueDetector {
     // Same actors if given, else same roles
     private boolean partsMatch( Part part, Part otherPart ) {
         if ( part.getActor() != null && otherPart.getActor() != null ) {
-            return SemMatch.same( part.getActor().getName(), otherPart.getActor().getName() );
+            return Matcher.same( part.getActor().getName(), otherPart.getActor().getName() );
         } else if ( part.getRole() != null && otherPart.getRole() != null ) {
-            return SemMatch.same( part.getRole().getName(), otherPart.getRole().getName() );
+            return Matcher.same( part.getRole().getName(), otherPart.getRole().getName() );
         } else return false;
     }
 }

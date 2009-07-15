@@ -13,7 +13,7 @@ import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
-import com.mindalliance.channels.util.SemMatch;
+import com.mindalliance.channels.util.Matcher;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -86,7 +86,7 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( SemMatch.matches( s, choice ) ) candidates.add( choice );
+                    if ( Matcher.matches( s, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
             }

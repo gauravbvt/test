@@ -266,7 +266,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
                 Connector connector = (Connector) vertex;
                 Iterator<ExternalFlow> externalFlows = connector.externalFlows();
                 list.add( new DOTAttribute( "fontcolor", "white" ) );
-                if ( externalFlows.hasNext() ) {
+                if ( !connector.isTarget() || externalFlows.hasNext() ) {
                     list.add( new DOTAttribute( "tooltip", "Connected to: " + summarizeExternalFlows( externalFlows ) ) );
                 } else {
                     list.add( new DOTAttribute( "tooltip", "Not connected" ) );
@@ -362,7 +362,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
         int numLines = 0;
         if ( node.isConnector() ) {
             Connector connector = (Connector) node;
-            if ( connector.externalFlows().hasNext() ) {
+            if ( !connector.isTarget() || connector.externalFlows().hasNext() ) {
                 iconName = "connector";
             } else {
                 iconName = "connector_red";

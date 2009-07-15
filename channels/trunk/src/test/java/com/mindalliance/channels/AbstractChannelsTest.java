@@ -41,6 +41,8 @@ import com.mindalliance.channels.analysis.detectors.UnconnectedConnector;
 import com.mindalliance.channels.analysis.detectors.UnnamedFlow;
 import com.mindalliance.channels.analysis.detectors.UnverifiedPostalCode;
 import com.mindalliance.channels.analysis.detectors.UselessPart;
+import com.mindalliance.channels.analysis.detectors.EmptyNeedOrCapability;
+import com.mindalliance.channels.analysis.detectors.UnsatisfiedNeed;
 import com.mindalliance.channels.attachments.FileBasedManager;
 import com.mindalliance.channels.command.DefaultCommander;
 import com.mindalliance.channels.command.DefaultLockManager;
@@ -186,6 +188,8 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new PlaceInheritsDifferentStreetAddress() );
         detectors.add( new PlaceInheritsDifferentPostalCode() );
         detectors.add( new RedundantPlace() );
+        detectors.add( new EmptyNeedOrCapability() );
+        detectors.add( new UnsatisfiedNeed() );
         for ( IssueDetector detector : detectors ) {
             ( (AbstractIssueDetector) detector ).setQueryService( queryService );
         }

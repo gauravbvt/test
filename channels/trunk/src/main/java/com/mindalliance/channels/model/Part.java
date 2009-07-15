@@ -3,7 +3,7 @@ package com.mindalliance.channels.model;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
-import com.mindalliance.channels.util.SemMatch;
+import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 
@@ -397,7 +397,7 @@ public class Part extends Node implements GeoLocatable {
         return new FilterIterator( outcomes(), new Predicate() {
             public boolean evaluate( Object object ) {
                 Flow flow = (Flow) object;
-                return SemMatch.same( flow.getName(), name );
+                return Matcher.same( flow.getName(), name );
             }
         } );
     }
@@ -413,7 +413,7 @@ public class Part extends Node implements GeoLocatable {
         return new FilterIterator( requirements(), new Predicate() {
             public boolean evaluate( Object object ) {
                 Flow flow = (Flow) object;
-                return SemMatch.same( flow.getName(), name );
+                return Matcher.same( flow.getName(), name );
             }
         } );
     }

@@ -11,8 +11,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.pages.ModelObjectLink;
-import com.mindalliance.channels.util.SemMatch;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.util.Matcher;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -194,7 +193,7 @@ public class PartPanel extends AbstractCommandablePanel {
         if ( semMatching ) {
             return getQueryService().mayBeRelated( text, otherText );
         } else {
-            return SemMatch.matches( text, otherText );
+            return Matcher.matches( text, otherText );
         }
     }
 

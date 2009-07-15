@@ -11,7 +11,7 @@ import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
-import com.mindalliance.channels.util.SemMatch;
+import com.mindalliance.channels.util.Matcher;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -188,7 +188,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( SemMatch.matches( s, choice ) ) candidates.add( choice );
+                    if ( Matcher.matches( s, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
 

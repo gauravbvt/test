@@ -53,7 +53,7 @@ public class SatisfyAllNeeds extends AbstractCommand {
             if ( part == null ) {
                 return false;
             } else {
-                List<Flow> unsatisfiedNeeds = commander.getQueryService().findUnsatisfiedNeeds( part );
+                List<Flow> unsatisfiedNeeds = commander.getQueryService().findUnconnectedNeeds( part );
                 return !unsatisfiedNeeds.isEmpty();
             }
         } catch ( CommandException e ) {
@@ -86,7 +86,7 @@ public class SatisfyAllNeeds extends AbstractCommand {
     private MultiCommand makeSubCommands( Part part, QueryService queryService ) {
         MultiCommand subCommands = new MultiCommand( "satisfy needs - extra" );
         subCommands.setMemorable( false );
-        List<Flow> unsatisfiedNeeds = queryService.findUnsatisfiedNeeds( part );
+        List<Flow> unsatisfiedNeeds = queryService.findUnconnectedNeeds( part );
         for ( Flow need : unsatisfiedNeeds ) {
             List<Connector> connectors = queryService.findAllSatificers( need );
             for ( Connector connector : connectors ) {

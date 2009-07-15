@@ -56,7 +56,7 @@ public class UnconnectedConnector extends AbstractIssueDetector {
             issue.setSeverity( Issue.Level.Minor );
             issues.add( issue );
         }
-        for ( Flow need : getQueryService().findUnsatisfiedNeeds( part ) ) {
+        for ( Flow need : getQueryService().findUnconnectedNeeds( part ) ) {
             DetectedIssue issue = makeIssue( DetectedIssue.COMPLETENESS, part );
             issue.setDescription(
                     ( need.isRequired() ? "Required " : "" )

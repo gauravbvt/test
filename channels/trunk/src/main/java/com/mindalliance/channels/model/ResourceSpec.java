@@ -1,6 +1,6 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.util.SemMatch;
+import com.mindalliance.channels.util.Matcher;
 
 /**
  * A Resource is an actor in a role for an organization with a jurisdiction.
@@ -134,7 +134,7 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
         return ModelObject.areEqualOrNull( actor, resourceSpec.getActor() )
                 && ModelObject.areEqualOrNull( role, resourceSpec.getRole() )
                 && ModelObject.areEqualOrNull( organization, resourceSpec.getOrganization() )
-                && SemMatch.samePlace( jurisdiction, resourceSpec.getJurisdiction() );
+                && Matcher.samePlace( jurisdiction, resourceSpec.getJurisdiction() );
     }
 
     /**
@@ -318,7 +318,7 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
             return sameActor
                     && sameRole
                     && sameOrganization
-                    && SemMatch.samePlace( jurisdiction, other.getJurisdiction() );
+                    && Matcher.samePlace( jurisdiction, other.getJurisdiction() );
         } else
             return narrowsOrEquals( other );
     }
@@ -349,8 +349,8 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
         if ( !ModelObject.areEqualOrNull( organization, other.getOrganization() )
                 && !other.isAnyOrganization() )
             return false;
-        if ( SemMatch.samePlace( jurisdiction, other.getJurisdiction() )
-                || SemMatch.within( jurisdiction, other.getJurisdiction() ) )
+        if ( Matcher.samePlace( jurisdiction, other.getJurisdiction() )
+                || Matcher.within( jurisdiction, other.getJurisdiction() ) )
             return true;
         else
             return false;

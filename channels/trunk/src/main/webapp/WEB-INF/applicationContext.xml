@@ -181,6 +181,12 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.RedundantPlace">
                     <property name="queryService" ref="queryService"/>
                 </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.EmptyNeedOrCapability">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.UnsatisfiedNeed">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
              </list>
         </property>
     </bean>

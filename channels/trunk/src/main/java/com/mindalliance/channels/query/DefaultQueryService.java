@@ -36,7 +36,7 @@ import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.nlp.Proximity;
 import com.mindalliance.channels.util.Employment;
 import com.mindalliance.channels.util.Play;
-import com.mindalliance.channels.util.SemMatch;
+import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -1379,7 +1379,7 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
             Iterator<Part> parts = scenario.parts();
             while ( parts.hasNext() ) {
                 Part part = parts.next();
-                if ( SemMatch.samePlace( part.getLocation(), place ) )
+                if ( Matcher.samePlace( part.getLocation(), place ) )
                     list.add( part );
             }
         }
@@ -1389,27 +1389,26 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
     /**
      * {@inheritDoc}
      */
-    public List<Flow> findUnsatisfiedNeeds( Part part ) {
-        List<Flow> unsatisfiedNeeds = new ArrayList<Flow>();
+    public List<Flow> findUnconnectedNeeds( Part part ) {
+        List<Flow> unconnectedNeeds = new ArrayList<Flow>();
         Iterator<Flow> receives = part.requirements();
         while ( receives.hasNext() ) {
             Flow receive = receives.next();
             if ( receive.getSource().isConnector() ) {
                 if ( !( (Connector) receive.getSource() ).externalFlows().hasNext() ) {
                     Iterator<Flow> others = part.requirements();
-                    boolean satisfied = false;
-                    while ( !satisfied && others.hasNext() ) {
+                    boolean connected = false;
+                    while ( !connected && others.hasNext() ) {
                         Flow other = others.next();
                         Node source = other.getSource();
-                        satisfied = !source.isConnector()
-                                && SemMatch.matches( receive.getName(), other.getName() )
-                                && SemMatch.matches( receive.getDescription(), other.getDescription() );
+                        connected = !source.isConnector()
+                                && Matcher.same( receive.getName(), other.getName() );
                     }
-                    if ( !satisfied ) unsatisfiedNeeds.add( receive );
+                    if ( !connected ) unconnectedNeeds.add( receive );
                 }
             }
         }
-        return unsatisfiedNeeds;
+        return unconnectedNeeds;
     }
 
     /**
@@ -1422,14 +1421,14 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
             Flow send = sends.next();
             if ( send.getTarget().isConnector() ) {
                 if ( !( (Connector) send.getTarget() ).externalFlows().hasNext() ) {
+                    // A capability 
                     Iterator<Flow> others = part.outcomes();
                     boolean used = false;
                     while ( !used && others.hasNext() ) {
                         Flow other = others.next();
                         Node target = other.getTarget();
                         used = !target.isConnector()
-                                && SemMatch.matches( send.getName(), other.getName() )
-                                && SemMatch.matches( send.getDescription(), other.getDescription() );
+                                && Matcher.same( send.getName(), other.getName() );
                     }
                     if ( !used ) unusedCapabilities.add( send );
                 }
@@ -1452,8 +1451,7 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
                     while ( outcomes.hasNext() ) {
                         Flow outcome = outcomes.next();
                         if ( outcome.getTarget().isConnector()
-                                && SemMatch.matches( outcome.getName(), need.getName() )
-                                && SemMatch.matches( outcome.getDescription(), need.getDescription() ) ) {
+                                && Matcher.same( outcome.getName(), need.getName() ) ) {
                             connectors.add( (Connector) outcome.getTarget() );
                         }
                     }
@@ -1957,13 +1955,96 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
     /**
      * {@inheritDoc}
      */
+    public boolean isSemanticMatch( String text, String otherText, Proximity proximity ) {
+        return semanticMatcher.matches( text.trim(), otherText.trim(), proximity );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public boolean mayBeRelated( String text, String otherText ) {
         return
-                SemMatch.matches( text, otherText ) ||
-                semanticMatcher.matches(
-                        StringUtils.uncapitalize( text.trim() ),
-                        StringUtils.uncapitalize( otherText.trim() ),
-                        Proximity.MEDIUM );
+                Matcher.matches( text, otherText ) ||
+                        isSemanticMatch(
+                                StringUtils.uncapitalize( text ),
+                                StringUtils.uncapitalize( otherText ),
+                                Proximity.MEDIUM );
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Flow> findAllSharingCommitmentsAddressing( Flow need ) {
+         List<Flow> commitments = new ArrayList<Flow>();
+        assert need.getSource().isConnector();
+        // Find all synonymous commitments to the part
+        Part needyPart = (Part) need.getTarget();
+        commitments.addAll( findMatchingCommitmentsTo( needyPart, need.getName() ) );
+        // Find all synonymous commitments to applicable anonymous parts within the scenario
+        for ( Part part : findAnonymousPartsMatching( needyPart ) ) {
+            commitments.addAll( findMatchingCommitmentsTo( part, need.getName() ) );
+        }
+        return commitments;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Part> findAnonymousPartsMatching( Part part ) {
+        List<Part> anonymousParts = new ArrayList<Part>();
+        Iterator<Part> parts = part.getScenario().parts();
+        while ( parts.hasNext() ) {
+            Part p = parts.next();
+            if ( !part.equals( p )
+                    && p.getTask().isEmpty()
+                    && part.resourceSpec().narrowsOrEquals( p.resourceSpec() ) ) {
+                anonymousParts.add( p );
+            }
+        }
+        return anonymousParts;
+    }
+
+    private List<Flow> findMatchingCommitmentsTo( Part part, String flowName ) {
+        List<Flow> commitments = new ArrayList<Flow>();
+        Iterator<Flow> incoming = part.requirements();
+        while ( incoming.hasNext() ) {
+            Flow in = incoming.next();
+            if ( in.getSource().isPart() && Matcher.matches( in.getName(), flowName ) ) {
+                commitments.add( in );
+            }
+        }
+        return commitments;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    /**
+     * {@inheritDoc}
+     */
+    public Issue.Level getPartPriority( Part part ) {
+        return getPartPriority( part, new ArrayList<Part>() );
+    }
+
+    private Issue.Level getPartPriority( Part part, List<Part> visited ) {
+        Issue.Level max = Issue.Level.Minor;
+        for ( Risk risk : part.getMitigations() ) {
+            if ( risk.getSeverity().getOrdinal() > max.getOrdinal() )
+                max = risk.getSeverity();
+        }
+        visited.add( part );
+        for ( Flow flow : part.requiredOutcomes() ) {
+            if ( flow.getTarget().isPart() ) {
+                Part target = (Part) flow.getTarget();
+                if ( !visited.contains( target ) ) {
+                    Issue.Level priority = getPartPriority( target );
+                    if ( priority.getOrdinal() > max.getOrdinal() )
+                        max = priority;
+                }
+            }
+        }
+        return max;
+    }
+
 }
 

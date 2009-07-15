@@ -17,7 +17,7 @@ import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
 import com.mindalliance.channels.util.NameRange;
-import com.mindalliance.channels.util.SemMatch;
+import com.mindalliance.channels.util.Matcher;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -149,7 +149,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
             protected Iterator<String> getChoices( String input ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( SemMatch.matches( input, choice ) ) candidates.add( choice );
+                    if ( Matcher.matches( input, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
             }
@@ -259,7 +259,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
             protected Iterator<String> getChoices( String input ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( SemMatch.matches( input, choice ) ) candidates.add( choice );
+                    if ( Matcher.matches( input, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
             }
