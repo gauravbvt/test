@@ -58,6 +58,10 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
      * Whether actors are required for each role in the organization.
      */
     CheckBox actorsRequiredCheckBox;
+    /**
+     * Whether agreements are required for each sharing commitment from the organization.
+     */
+    CheckBox agreementsRequiredCheckBox;
 
     public OrganizationDetailsPanel(
             String id,
@@ -132,6 +136,16 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         } );
         actorsRequiredCheckBox.setEnabled( isLockedByUser( getOrganization() ) );
         moDetailsDiv.add( actorsRequiredCheckBox );
+        agreementsRequiredCheckBox = new CheckBox(
+                "agreementsRequired",
+                new PropertyModel<Boolean>( this, "agreementsRequired" ) );
+        agreementsRequiredCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getOrganization(), "agreementsRequired" ) );
+            }
+        } );
+        agreementsRequiredCheckBox.setEnabled( isLockedByUser( getOrganization() ) );
+        moDetailsDiv.add( agreementsRequiredCheckBox );
         moDetailsDiv.add( new AjaxTabbedPanel( "tabs", getTabs() ) );
 //        moDetailsDiv.add( new JobsPanel( "jobs", new Model<Organization>( organization ), getExpansions() ) );
         adjustFields();
@@ -274,6 +288,29 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                 new UpdatePlanObject(
                         getOrganization(),
                         "actorsRequired",
+                        val,
+                        UpdateObject.Action.Set ) );
+    }
+
+    /**
+     * Are actors required in roles?
+     *
+     * @return a boolean
+     */
+    public boolean isAgreementsRequired() {
+        return getOrganization().isAgreementsRequired();
+    }
+
+    /**
+     * Update actors requirement.
+     *
+     * @param val a boolean
+     */
+    public void setAgreementsRequired( boolean val ) {
+        doCommand(
+                new UpdatePlanObject(
+                        getOrganization(),
+                        "agreementsRequired",
                         val,
                         UpdateObject.Action.Set ) );
     }

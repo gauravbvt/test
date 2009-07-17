@@ -190,6 +190,9 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.PersonInSystemRole">
                     <property name="queryService" ref="queryService"/>
                 </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.CommitmentWithoutRequiredAgreement">
+                     <property name="queryService" ref="queryService"/>
+                 </bean>
              </list>
         </property>
     </bean>

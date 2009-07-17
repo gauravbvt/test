@@ -482,5 +482,7 @@ public class DefaultCommander extends AbstractService implements Commander, Init
      */
     public void afterPropertiesSet() {
         queryService.replayJournals( this );
+        queryService.getAttachmentManager().removeUnattached( queryService );
+
     }
 }

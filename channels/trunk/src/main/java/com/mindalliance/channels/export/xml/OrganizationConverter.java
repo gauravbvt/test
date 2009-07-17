@@ -59,7 +59,12 @@ public class OrganizationConverter extends EntityConverter {
         Organization parent = org.getParent();
         if ( org.isActorsRequired() ) {
             writer.startNode( "actorsRequired" );
-            writer.setValue( "" + org.isActorsRequired() );
+            writer.setValue( "true" );
+            writer.endNode();
+        }
+        if ( org.isAgreementsRequired() ) {
+            writer.startNode( "agreementsRequired" );
+            writer.setValue( "true" );
             writer.endNode();
         }
         if ( parent != null && !parent.getName().trim().isEmpty() ) {
@@ -100,6 +105,8 @@ public class OrganizationConverter extends EntityConverter {
         Organization org = (Organization) entity;
         if ( nodeName.equals( "actorsRequired" ) ) {
             org.setActorsRequired( reader.getValue().equals( "true" ) );
+        } else if ( nodeName.equals( "agreementsRequired" ) ) {
+            org.setAgreementsRequired( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals( "parent" ) ) {
             String id = reader.getAttribute( "id");
             org.setParent( findOrCreate( Organization.class, reader.getValue(), id ) );

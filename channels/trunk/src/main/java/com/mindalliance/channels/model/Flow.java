@@ -202,7 +202,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
 
         return MessageFormat.format(
                 isAskedFor() ? "{2} ask {1} about \"{0}\""
-                    //    : isTriggeringToTarget() ? "{1} telling {2} to {0}"
+                        //    : isTriggeringToTarget() ? "{1} telling {2} to {0}"
                         : "{1} notify {2} of \"{0}\"",
 
                 message, getShortName( getSource(), false ), getShortName( getTarget(), false ) );
@@ -222,7 +222,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         if ( source.isConnector() ) {
             return MessageFormat.format(
                     isAskedFor() ? "Needs to ask for \"{0}\""
-                          //  : isTriggeringToTarget() ? "Needs to be told to {0}"
+                            //  : isTriggeringToTarget() ? "Needs to be told to {0}"
                             : "Needs to be notified of \"{0}\"",
                     message.toLowerCase() );
 
@@ -230,7 +230,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
             Part part = (Part) source;
             return MessageFormat.format(
                     isAskedFor() ? "Ask {1}{2}{3} for \"{0}\""
-                         //   : isTriggeringToTarget() ? "Told to {0} by {1}{2}{3}"
+                            //   : isTriggeringToTarget() ? "Told to {0} by {1}{2}{3}"
                             : "Notified of \"{0}\" by {1}{2}{3}",
                     message.toLowerCase(),
                     getShortName( part, false ),
@@ -243,14 +243,14 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
     private static String getOrganizationString( Part part ) {
         Organization organization = part.getOrganization();
         return organization == null || part.getRole() == null && part.getActor() == null ? ""
-             : MessageFormat.format( " in {0}", organization.getLabel() );
+                : MessageFormat.format( " in {0}", organization.getLabel() );
     }
 
     @Transient
     private static String getJurisdictionString( Part part ) {
         Place place = part.getJurisdiction();
         return place == null ? ""
-             : MessageFormat.format( " for {0}", place );
+                : MessageFormat.format( " for {0}", place );
     }
 
     /**
@@ -267,7 +267,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         Node node = getTarget();
         if ( node.isConnector() ) {
             String format = isAskedFor() ? "Can answer with \"{0}\""
-                 //   : isTriggeringToTarget() ? "Can tell to {0}"
+                    //   : isTriggeringToTarget() ? "Can tell to {0}"
                     : "Can notify of \"{0}\"";
 
             return MessageFormat.format( format, message.toLowerCase() );
@@ -275,7 +275,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         } else {
             Part part = (Part) node;
             String format = isAskedFor() ? "Answer {1}{2}{3} with \"{0}\""
-                  //  : isTriggeringToTarget() ? "Tell {1}{2}{3} to {0}"
+                    //  : isTriggeringToTarget() ? "Tell {1}{2}{3} to {0}"
                     : "Notify {1}{2}{3} of \"{0}\"";
 
             return MessageFormat.format(
@@ -665,11 +665,11 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
     public Part getLocalPart() {
         Node source = getSource();
         if ( source.isPart() && source.getScenario() == getScenario() ) {
-            return (Part)source;
+            return (Part) source;
         } else {
             Node target = getTarget();
             if ( target.isPart() && target.getScenario() == getScenario() ) {
-                return (Part)target;
+                return (Part) target;
             } else {
                 // Should never happen?
                 return null;
@@ -703,6 +703,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
 
     /**
      * Get the broadcast channels associated with this flow.
+     *
      * @return a collection of channels
      */
     @Transient
@@ -716,6 +717,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
 
     /**
      * Get the unicast media used by this flow.
+     *
      * @return a set of media
      */
     @Transient
@@ -728,6 +730,16 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
                 result.add( medium );
         }
         return result;
+    }
+
+    /**
+     * Whether this flow represents a sharing commitment.
+     *
+     * @return a boolean
+     */
+    @Transient
+    public boolean isSharingCommitment() {
+        return getSource().isPart() && getTarget().isPart();
     }
 
     /**

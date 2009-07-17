@@ -44,6 +44,7 @@ import com.mindalliance.channels.analysis.detectors.UselessPart;
 import com.mindalliance.channels.analysis.detectors.EmptyNeedOrCapability;
 import com.mindalliance.channels.analysis.detectors.UnsatisfiedNeed;
 import com.mindalliance.channels.analysis.detectors.PersonInSystemRole;
+import com.mindalliance.channels.analysis.detectors.CommitmentWithoutRequiredAgreement;
 import com.mindalliance.channels.attachments.FileBasedManager;
 import com.mindalliance.channels.command.DefaultCommander;
 import com.mindalliance.channels.command.DefaultLockManager;
@@ -192,6 +193,7 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new EmptyNeedOrCapability() );
         detectors.add( new UnsatisfiedNeed() );
         detectors.add( new PersonInSystemRole() );
+        detectors.add( new CommitmentWithoutRequiredAgreement() );
         for ( IssueDetector detector : detectors ) {
             ( (AbstractIssueDetector) detector ).setQueryService( queryService );
         }

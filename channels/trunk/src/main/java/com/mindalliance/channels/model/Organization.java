@@ -37,9 +37,13 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
     private List<Job> jobs = new ArrayList<Job>();
 
     /**
-     * Whether reoles must have associated actors, else issues.
+     * Whether roles must have associated actors, else issues.
      */
     private boolean actorsRequired;
+    /**
+     * Whether each sharing commitments from this organization requires an agreement.
+     */
+    private boolean agreementsRequired;
 
     /**
      * Bogus organization used to signify that the organization is not known...
@@ -78,6 +82,14 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
 
     public void setActorsRequired( boolean actorsRequired ) {
         this.actorsRequired = actorsRequired;
+    }
+
+    public boolean isAgreementsRequired() {
+        return agreementsRequired;
+    }
+
+    public void setAgreementsRequired( boolean agreementsRequired ) {
+        this.agreementsRequired = agreementsRequired;
     }
 
     @ManyToOne( cascade = CascadeType.PERSIST, fetch = FetchType.LAZY )

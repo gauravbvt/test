@@ -142,7 +142,6 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
      */
     public void afterPropertiesSet() {
         planManager.validate( this );
-        attachmentManager.removeUnattached( this );
     }
 
     /**
