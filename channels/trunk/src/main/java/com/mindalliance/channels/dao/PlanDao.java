@@ -244,7 +244,7 @@ public class PlanDao extends Memory {
      */
     public void validate( QueryService queryService, Exporter exporter ) {
 
-        try {
+//        try {
             // Make sure there is at least one event per plan
             List<Event> incidents = plan.getIncidents();
             if ( incidents.isEmpty() ) {
@@ -263,10 +263,10 @@ public class PlanDao extends Memory {
             if ( !list( Scenario.class ).iterator().hasNext() )
                 queryService.createScenario();
 
-            save( exporter );
+            // save( exporter );
 
-        } catch ( IOException e ) {
-            throw new RuntimeException( e );
-        }
+//        } catch ( IOException e ) {
+//            throw new RuntimeException( e );
+//        }
     }
 }

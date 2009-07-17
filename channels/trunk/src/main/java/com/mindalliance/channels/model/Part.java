@@ -245,9 +245,11 @@ public class Part extends Node implements GeoLocatable {
      */
     @Transient
     public boolean isSystem() {
+        Actor a = getActor();
+        if ( a != null && a.isSystem() ) return true;
         Role r = getRole();
         return r != null
-                && r.getName().toLowerCase().contains( "system" );
+                && r.isSystem();
     }
 
     /**

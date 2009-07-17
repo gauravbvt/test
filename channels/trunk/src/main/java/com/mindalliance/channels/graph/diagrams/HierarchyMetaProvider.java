@@ -164,10 +164,10 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
             String[] lines = label.split( "\\|" );
             numLines = Math.min( lines.length, 3 );
             if ( modelObject instanceof Actor ) {
-                boolean isSystem = modelObject.getName().toLowerCase().contains( "system" );
+                boolean isSystem = ((Actor)modelObject).isSystem();
                 iconName = isSystem ? "system" : "person";
             } else if ( modelObject instanceof Role ) {
-                boolean isSystem = modelObject.getName().toLowerCase().contains( "system" );
+                boolean isSystem = ((Role)modelObject).isSystem();
                 iconName = isSystem ? "system" : "role";
             } else if ( modelObject instanceof Organization ) {
                 iconName = "organization";

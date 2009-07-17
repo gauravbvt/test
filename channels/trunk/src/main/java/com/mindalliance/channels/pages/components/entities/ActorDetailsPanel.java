@@ -16,6 +16,8 @@ import com.mindalliance.channels.pages.components.NameRangeable;
 import com.mindalliance.channels.util.Employment;
 import com.mindalliance.channels.util.NameRange;
 import com.mindalliance.channels.util.SortableBeanProvider;
+import com.mindalliance.channels.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.command.Change;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -25,6 +27,7 @@ import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFal
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -63,6 +66,10 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
      */
     private static final int MAX_ROWS = 13;
     /**
+     * Is system checkbox.
+     */
+    private CheckBox systemCheckBox;
+    /**
      * What "column" to index names on.
      */
     private String indexedOn;
@@ -97,6 +104,14 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
+        systemCheckBox = new CheckBox( "system", new PropertyModel<Boolean>( this, "system" ) );
+        systemCheckBox.setOutputMarkupId( true );
+        systemCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getActor(), "system" ) );
+            }
+        } );
+        moDetailsDiv.add( systemCheckBox );
         indexedOn = indexingChoices[0];
         nameRange = new NameRange();
         filters = new ArrayList<Identifiable>();
@@ -108,6 +123,11 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         addIndexedOnChoice();
         addNameRangePanel();
         addActorEmploymentTable();
+        adjustFields();
+    }
+
+    private void adjustFields() {
+        systemCheckBox.setEnabled( isLockedByUser( getActor() ) );
     }
 
     private void addRolesMap() {
@@ -116,7 +136,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 "geomapLink",
                 new Model<String>( "Where " + getActor().getName() + " is employed" ),
                 geoLocatables,
-                new Model<String>("Map actor employments"));
+                new Model<String>( "Map actor employments" ) );
         moDetailsDiv.addOrReplace( rolesMapLink );
     }
 
@@ -297,6 +317,26 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         } else {
             throw new IllegalStateException( "Can't index on " + indexedOn );
         }
+    }
+
+    /**
+     * Run command to change actor system property.
+     *
+     * @param isSystem a boolean
+     */
+    public void setSystem( boolean isSystem ) {
+        Actor actor = getActor();
+        if ( actor.isSystem() != isSystem )
+            doCommand( new UpdatePlanObject( actor, "system", isSystem ) );
+    }
+
+    /**
+     * Whether the actor is a system.
+     *
+     * @return a boolean
+     */
+    public boolean isSystem() {
+        return getActor().isSystem();
     }
 
     private Actor getActor() {

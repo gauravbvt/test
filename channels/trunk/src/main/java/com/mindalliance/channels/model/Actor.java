@@ -21,6 +21,11 @@ public class Actor extends AbstractUnicastChannelable {
      */
     public static final Actor UNKNOWN;
 
+    /**
+     * Whether the actor is a system, vs. a person.
+     */
+    private boolean system;
+
     static {
         UNKNOWN = new Actor( UnknownName );
         UNKNOWN.setId( 10000000L - 1L );
@@ -37,7 +42,15 @@ public class Actor extends AbstractUnicastChannelable {
     public Actor( String name ) {
         super( name );
     }
-    
+
+    public boolean isSystem() {
+        return system;
+    }
+
+    public void setSystem( boolean system ) {
+        this.system = system;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -92,4 +105,12 @@ public class Actor extends AbstractUnicastChannelable {
         }
     }
 
+    /**
+     * Whether the actor is a person (i.e. not a system).
+     * @return a boolean
+     */
+    @Transient
+    public boolean isPerson() {
+        return !isSystem();
+    }
 }

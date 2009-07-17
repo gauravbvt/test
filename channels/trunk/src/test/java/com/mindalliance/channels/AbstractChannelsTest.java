@@ -43,6 +43,7 @@ import com.mindalliance.channels.analysis.detectors.UnverifiedPostalCode;
 import com.mindalliance.channels.analysis.detectors.UselessPart;
 import com.mindalliance.channels.analysis.detectors.EmptyNeedOrCapability;
 import com.mindalliance.channels.analysis.detectors.UnsatisfiedNeed;
+import com.mindalliance.channels.analysis.detectors.PersonInSystemRole;
 import com.mindalliance.channels.attachments.FileBasedManager;
 import com.mindalliance.channels.command.DefaultCommander;
 import com.mindalliance.channels.command.DefaultLockManager;
@@ -190,6 +191,7 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new RedundantPlace() );
         detectors.add( new EmptyNeedOrCapability() );
         detectors.add( new UnsatisfiedNeed() );
+        detectors.add( new PersonInSystemRole() );
         for ( IssueDetector detector : detectors ) {
             ( (AbstractIssueDetector) detector ).setQueryService( queryService );
         }

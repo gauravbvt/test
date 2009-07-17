@@ -42,6 +42,15 @@ public class Role extends ModelObject {
     }
 
     /**
+     * Whether the role is to be played by a system actor.
+     * @return a boolean
+     */
+    @Transient
+    public boolean isSystem() {
+        return getName().toLowerCase().contains( "system" );
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
