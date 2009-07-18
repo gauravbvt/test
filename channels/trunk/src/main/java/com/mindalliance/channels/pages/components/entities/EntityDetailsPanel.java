@@ -6,6 +6,7 @@ import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
+import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -42,6 +43,10 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
      * Description field.
      */
     private TextArea<String> descriptionField;
+    /**
+     * Entity issues panel.
+     */
+    private IssuesPanel issuesPanel;
 
     public EntityDetailsPanel( String id, IModel<? extends ModelObject> model, Set<Long> expansions ) {
         super( id, model, expansions );
@@ -80,12 +85,19 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
         moDetailsDiv.add( descriptionField );
         moDetailsDiv.add( new AttachmentPanel( "attachments", new Model<ModelObject>( mo ) ) );
         addSpecifics( moDetailsDiv );
+        issuesPanel = new IssuesPanel(
+                "issues",
+                new PropertyModel<ModelObject>( this, "entity" ),
+                getExpansions() );
+        issuesPanel.setOutputMarkupId( true );
+        moDetailsDiv.add( issuesPanel );
         adjustFields();
     }
 
     private void adjustFields() {
         nameField.setEnabled( isLockedByUser( getEntity() ) );
         descriptionField.setEnabled( isLockedByUser( getEntity() ) );
+        makeVisible( issuesPanel, getAnalyst().hasIssues( getEntity(), false ) );
     }
 
     /**
@@ -162,7 +174,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
      *
      * @return a model object
      */
-    protected ModelObject getEntity() {
+    public ModelObject getEntity() {
         return model.getObject();
     }
 

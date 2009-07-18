@@ -214,12 +214,12 @@ input.error, div.issues {
     background-color: bisque;
 }
 
-span.error, li.error {
+span.error, li.error, h1.error {
     background: transparent url( 'images/warning.png' ) no-repeat 100% 0;
     padding-right: 20px;
 }
 
-span.waived, li.waived {
+span.waived, li.waived, h1.waived {
     background: transparent url( 'images/waived.png' ) no-repeat 100% 0;
     padding-right: 20px;
 }
@@ -505,6 +505,9 @@ div.header {
     background: transparent url( 'images/actor.png' ) no-repeat 5px 2px;
 }
 
+.system .header {
+    background: transparent url( 'images/system.png' ) no-repeat 5px 2px;
+}
 .organization .header {
     background: transparent url( 'images/organization.png' ) no-repeat 5px 2px;
 }

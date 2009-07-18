@@ -88,8 +88,8 @@ public class EntityPanel extends AbstractMultiAspectPanel {
      */
     protected MenuPanel makeActionMenu( String menuId ) {
         return new EntityActionsMenuPanel(
-                    menuId,
-                    new PropertyModel<ModelObject>( this, "object" ) );
+                menuId,
+                new PropertyModel<ModelObject>( this, "object" ) );
     }
 
 
@@ -191,7 +191,11 @@ public class EntityPanel extends AbstractMultiAspectPanel {
      * {@inheritDoc}
      */
     protected String getObjectClassName() {
-        return getObject().getClass().getSimpleName().toLowerCase();
+        ModelObject entity = getEntity();
+        if ( entity instanceof Actor && ( (Actor) entity ).isSystem() )
+            return "system";
+        else
+            return getObject().getClass().getSimpleName().toLowerCase();
     }
 
     /**
