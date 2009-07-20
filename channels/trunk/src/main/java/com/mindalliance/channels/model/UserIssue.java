@@ -38,6 +38,10 @@ public class UserIssue extends ModelObject implements Issue {
      * Name of user who created or last modified the issue
      */
     private String reportedBy = "";
+    /**
+     * Type of issue.
+     */
+    private String type = Issue.VALIDITY;
 
     /**
      * The issue's severity
@@ -83,9 +87,12 @@ public class UserIssue extends ModelObject implements Issue {
         this.reportedBy = reportedBy;
     }
 
-    @Transient
     public String getType() {
-        return "From user";
+        return type;
+    }
+
+    public void setType( String type ) {
+        this.type = type;
     }
 
     @Override

@@ -28,6 +28,22 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
      * Issue shown in panel
      */
     private IModel<Issue> model;
+    /**
+     * Description text area.
+     */
+    private TextArea<String> descriptionArea;
+    /**
+     * Issue type choice.
+     */
+    private DropDownChoice<String> typeChoice;
+    /**
+     * Severity level choice.
+     */
+    private DropDownChoice<Issue.Level> severityChoice;
+    /**
+     * Remediation text area.
+     */
+    private TextArea<String> remediationArea;
 
     public ExpandedIssuePanel( String id, IModel<Issue> model ) {
         super( id );
@@ -40,43 +56,61 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
         setOutputMarkupId( true );
         addIssueActionsMenu();
         // Description
-        TextArea<String> descriptionArea = new TextArea<String>( "description",
+        descriptionArea = new TextArea<String>( "description",
                 new PropertyModel<String>( this, "description" ) );
         descriptionArea.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 // do nothing
             }
         } );
-        descriptionArea.setEnabled( !getIssue().isDetected()
-                && isLockedByUserIfNeeded( getIssue() ) );
         add( descriptionArea );
-        // Severity
-        DropDownChoice<Issue.Level> levelChoice = new DropDownChoice<Issue.Level>(
-                "severity",
-                new PropertyModel<Issue.Level>( this, "severity" ),
-                Arrays.asList( Issue.Level.values() ) );
-        levelChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        // Type
+        typeChoice = new DropDownChoice<String>(
+                "type",
+                new PropertyModel<String>( this, "type" ),
+                Arrays.asList( Issue.TYPES )
+        );
+        typeChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 // do nothing
             }
         } );
-        levelChoice.setEnabled( !getIssue().isDetected()
-                && isLockedByUserIfNeeded( getIssue() ) );
-        add( levelChoice );
+        add( typeChoice );
+        // Severity
+        severityChoice = new DropDownChoice<Issue.Level>(
+                "severity",
+                new PropertyModel<Issue.Level>( this, "severity" ),
+                Arrays.asList( Issue.Level.values() ) );
+        severityChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                // do nothing
+            }
+        } );
+        add( severityChoice );
         // Remediation
-        TextArea<String> remediationArea = new TextArea<String>( "remediation",
+        remediationArea = new TextArea<String>( "remediation",
                 new PropertyModel<String>( this, "remediation" ) );
         remediationArea.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 // do nothing
             }
         } );
-        remediationArea.setEnabled( !getIssue().isDetected()
-                && isLockedByUserIfNeeded( getIssue() ) );
         add( remediationArea );
         add( new AttachmentPanel( "attachments", new Model<UserIssue>( (UserIssue) issue ) ) );
         add( new Label( "reported-by",
                 new PropertyModel<String>( issue, "reportedBy" ) ) );
+        adjustFields();
+    }
+
+    private void adjustFields() {
+        descriptionArea.setEnabled( !getIssue().isDetected()
+                && isLockedByUserIfNeeded( getIssue() ) );
+        typeChoice.setEnabled( !getIssue().isDetected()
+                && isLockedByUserIfNeeded( getIssue() ) );
+        severityChoice.setEnabled( !getIssue().isDetected()
+                && isLockedByUserIfNeeded( getIssue() ) );
+        remediationArea.setEnabled( !getIssue().isDetected()
+                && isLockedByUserIfNeeded( getIssue() ) );
     }
 
     private void addIssueActionsMenu() {
@@ -116,12 +150,33 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
         doCommand( new UpdatePlanObject( getIssue(), "remediation", rem ) );
     }
 
+    /**
+     * Get the issue's type.
+     * @return an issue type
+     */
+    public String getType() {
+        return getIssue().getType();
+    }
+
+    /**
+     * Sets issue's type.
+     *
+     * @param type an issue severity level
+     */
+    public void setType( String type ) {
+        doCommand( new UpdatePlanObject( getIssue(), "type", type ) );
+    }
+
+    /**
+     * Get the issue's severity.
+     * @return an issue level
+     */
     public Issue.Level getSeverity() {
         return getIssue().getSeverity();
     }
 
     /**
-     * Sets severity.
+     * Sets issue's severity.
      *
      * @param severity an issue severity level
      */

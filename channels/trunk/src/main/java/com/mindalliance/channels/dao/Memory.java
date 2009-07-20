@@ -211,6 +211,10 @@ public abstract class Memory implements Dao {
                 }
             }
         }
+        // Must appear here, else causes errors.
+        if (result == null ) {
+            result = getPlanManager().get( id );
+        }
         if ( result == null ) throw new NotFoundException();
         return result;
     }

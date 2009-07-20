@@ -52,7 +52,7 @@ public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
                     issue.setDescription( "Sharing commitments from "
                             + org.getName()
                             + " to another organization"
-                            + " must be subject to an MOU." );
+                            + " must be backed by an MOU." );
                     issue.setRemediation( "Attach an MOU to this sharing commitment, "
                             + "or remove the requirement for MOUs for "
                             + org.getName() );

@@ -93,10 +93,12 @@ public class IssueActionsMenuPanel extends MenuPanel {
             // Commands
             menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
         } else {
-            // Commands disabled
-            Label label = new Label( "menuItem", disablement );
-            label.add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
-            menuItems.add( label );
+            if ( !isCollapsed ) {
+                // Commands disabled
+                Label label = new Label( "menuItem", disablement );
+                label.add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
+                menuItems.add( label );
+            }
         }
         return menuItems;
     }

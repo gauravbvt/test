@@ -19,6 +19,14 @@
                 <td><textarea wicket:id="description" cols="30" rows="3">Sky is falling</textarea></td>
             </tr>
             <tr>
+                <th class="area" align="right"><label>Type:</label></th>
+                <td><select wicket:id="type">
+                    <option title="Something's incorrect">Validity</option>
+                    <option title="Something's missing">Completeness</option>
+                    <option title="Something's failure prone">Robustness</option>
+                </select></td>
+            </tr>
+            <tr>
                 <th class="area" align="right"><label>Severity:</label></th>
                 <td><select wicket:id="severity">
                     <option>Minor</option>

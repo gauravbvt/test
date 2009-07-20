@@ -19,6 +19,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -50,6 +51,10 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
      * Test failed icon.
      */
     private static final String FAIL_IMAGE = "images/fail.png";
+    /**
+     * Plan evaluation.
+     */
+    private WebMarkupContainer evaluation;
 
     public PlanEditDetailsPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( id, model, expansions );
@@ -57,45 +62,49 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
     }
 
     private void init() {
-        addTestResults();
+        addEvaluation();
         addIdentityFields();
         addIssuesPanel();
         add( new AttachmentPanel( "attachments", new Model<ModelObject>( getPlan() ) ) );
         adjustComponents();
     }
 
-    private void addTestResults() {
+    private void addEvaluation() {
+        evaluation = new WebMarkupContainer( "evaluation" );
+        evaluation.setOutputMarkupId( true );
+        addOrReplace( evaluation );
         // Validity
         Image validityImage = new Image( "validityImage" );
-        validityImage.add( new AttributeModifier("src", new PropertyModel<String>(this, "validityImage") ));
-        validityImage.add( new AttributeModifier("title", new PropertyModel<String>(this, "validityTitle") ));
+        validityImage.add( new AttributeModifier( "src", new PropertyModel<String>( this, "validityImage" ) ) );
+        validityImage.add( new AttributeModifier( "title", new PropertyModel<String>( this, "validityTitle" ) ) );
         validityImage.setOutputMarkupId( true );
-        add( validityImage );
-        Label validityLabel = new Label("validity", new PropertyModel<String>(this, "validityLabel"));
+        evaluation.add( validityImage );
+        Label validityLabel = new Label( "validity", new PropertyModel<String>( this, "validityLabel" ) );
         validityLabel.setOutputMarkupId( true );
-        add( validityLabel );
+        evaluation.add( validityLabel );
         // Completeness
         Image completenessImage = new Image( "completenessImage" );
-        completenessImage.add( new AttributeModifier("src", new PropertyModel<String>(this, "completenessImage") ));
-        completenessImage.add( new AttributeModifier("title", new PropertyModel<String>(this, "completenessTitle") ));
+        completenessImage.add( new AttributeModifier( "src", new PropertyModel<String>( this, "completenessImage" ) ) );
+        completenessImage.add( new AttributeModifier( "title", new PropertyModel<String>( this, "completenessTitle" ) ) );
         completenessImage.setOutputMarkupId( true );
-        add( completenessImage );
-        Label completenessLabel = new Label("completeness", new PropertyModel<String>(this, "completenessLabel"));
+        evaluation.add( completenessImage );
+        Label completenessLabel = new Label( "completeness", new PropertyModel<String>( this, "completenessLabel" ) );
         completenessLabel.setOutputMarkupId( true );
-        add( completenessLabel );
+        evaluation.add( completenessLabel );
         // Robustness
         Image robustnessImage = new Image( "robustnessImage" );
-        robustnessImage.add( new AttributeModifier("src", new PropertyModel<String>(this, "robustnessImage") ));
-        robustnessImage.add( new AttributeModifier("title", new PropertyModel<String>(this, "robustnessTitle") ));
+        robustnessImage.add( new AttributeModifier( "src", new PropertyModel<String>( this, "robustnessImage" ) ) );
+        robustnessImage.add( new AttributeModifier( "title", new PropertyModel<String>( this, "robustnessTitle" ) ) );
         robustnessImage.setOutputMarkupId( true );
-        add( robustnessImage );
-        Label robustnessLabel = new Label("robustness", new PropertyModel<String>(this, "robustnessLabel"));
+        evaluation.add( robustnessImage );
+        Label robustnessLabel = new Label( "robustness", new PropertyModel<String>( this, "robustnessLabel" ) );
         robustnessLabel.setOutputMarkupId( true );
-        add( robustnessLabel );
+        evaluation.add( robustnessLabel );
     }
 
     /**
      * Get image url for validity test.
+     *
      * @return a string
      */
     public String getValidityImage() {
@@ -105,6 +114,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
 
     /**
      * Get image title for validity test.
+     *
      * @return a string
      */
     public String getValidityTitle() {
@@ -114,15 +124,17 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
 
     /**
      * Get label for validity test result.
+     *
      * @return a string
      */
     public String getValidityLabel() {
         int count = getAnalyst().countTestFailures( getPlan(), Issue.VALIDITY );
-        return count == 0 ? "Valid" : ("Not yet valid (" + count + (count == 1 ? " issue)" : " issues)") );
+        return count == 0 ? "Valid" : ( "Not yet valid (" + count + ( count == 1 ? " issue)" : " issues)" ) );
     }
 
     /**
      * Get image url for completeness test.
+     *
      * @return a string
      */
     public String getCompletenessImage() {
@@ -132,6 +144,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
 
     /**
      * Get image title for completeness test.
+     *
      * @return a string
      */
     public String getCompletenessTitle() {
@@ -141,15 +154,17 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
 
     /**
      * Get label for completeness test result.
+     *
      * @return a string
      */
     public String getCompletenessLabel() {
         int count = getAnalyst().countTestFailures( getPlan(), Issue.COMPLETENESS );
-        return count == 0 ? "Complete" : ("Not yet complete (" + count + (count == 1 ? " issue)" : " issues)") );
+        return count == 0 ? "Complete" : ( "Not yet complete (" + count + ( count == 1 ? " issue)" : " issues)" ) );
     }
 
     /**
      * Get image url for robustness test.
+     *
      * @return a string
      */
     public String getRobustnessImage() {
@@ -159,6 +174,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
 
     /**
      * Get image title for robustness test.
+     *
      * @return a string
      */
     public String getRobustnessTitle() {
@@ -168,11 +184,12 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
 
     /**
      * Get label for robustness test result.
+     *
      * @return a string
      */
     public String getRobustnessLabel() {
         int count = getAnalyst().countTestFailures( getPlan(), Issue.ROBUSTNESS );
-        return count == 0 ? "Robust" : ("Not robust (" + count + (count == 1 ? " issue)" : " issues)") );
+        return count == 0 ? "Robust" : ( "Not robust (" + count + ( count == 1 ? " issue)" : " issues)" ) );
     }
 
     private void addIdentityFields() {
@@ -290,9 +307,9 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change ) {
-        if ( change.isUpdated() || change.getSubject() instanceof Issue ) {
-            adjustComponents();
-            target.addComponent( this );
+        if ( change.getSubject() instanceof Issue && !change.isDisplay() ) {
+            addEvaluation();
+            target.addComponent( evaluation );
         }
         super.updateWith( target, change );
     }

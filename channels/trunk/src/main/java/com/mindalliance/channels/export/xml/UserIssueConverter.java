@@ -49,6 +49,9 @@ public class UserIssueConverter extends AbstractChannelsConverter {
         writer.startNode( "description" );
         writer.setValue( issue.getDescription() );
         writer.endNode();
+        writer.startNode( "type" );
+        writer.setValue( issue.getType() );
+        writer.endNode();
         writer.startNode( "severity" );
         writer.setValue( issue.getSeverity().toString() );
         writer.endNode();
@@ -72,16 +75,19 @@ public class UserIssueConverter extends AbstractChannelsConverter {
         try {
             Long issueId = Long.parseLong( reader.getAttribute( "id" ) );
             Long aboutId = Long.parseLong( reader.getAttribute( "about" ) );
-            // When importing a scenario (vs reloading a plan), ids are re-assigned
+            // When importing a scenario (vs reloading a plan), ids may be re-assigned
             Long id = idMap.get( aboutId );
-            if ( id != null ) {
-                ModelObject about = getQueryService().find( ModelObject.class, id );
+            aboutId = (id == null) ? aboutId : id;
+            if ( aboutId != null ) {
+                ModelObject about = getQueryService().find( ModelObject.class, aboutId );
                 issue = new UserIssue( about );
                 while ( reader.hasMoreChildren() ) {
                     reader.moveDown();
                     String nodeName = reader.getNodeName();
                     if ( nodeName.equals( "description" ) ) {
                         issue.setDescription( reader.getValue() );
+                    } else if ( nodeName.equals( "type" ) ) {
+                        issue.setType( reader.getValue()  );
                     } else if ( nodeName.equals( "severity" ) ) {
                         issue.setSeverity( Issue.Level.valueOf( reader.getValue() ) );
                     } else if ( nodeName.equals( "remediation" ) ) {
@@ -105,7 +111,7 @@ public class UserIssueConverter extends AbstractChannelsConverter {
                 }
                 idMap.put( issueId, issue.getId() );
             } else {
-                LOG.warn( "Issue's model object not found at " + id );
+                LOG.warn( "Model object issue " + issueId + " is about is not found" );
             }
         } catch ( NotFoundException e ) {
             XmlStreamer.LOG.warn( "Obsolete issue", e );

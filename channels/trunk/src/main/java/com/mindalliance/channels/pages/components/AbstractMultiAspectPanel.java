@@ -327,6 +327,7 @@ abstract public class AbstractMultiAspectPanel extends AbstractCommandablePanel 
     public void updateWith( AjaxRequestTarget target, Change change ) {
         target.addComponent( actionsMenu );
         adjustComponents();
+        annotateHeaderTitle();
         target.addComponent( banner );
         super.updateWith( target, change );
     }

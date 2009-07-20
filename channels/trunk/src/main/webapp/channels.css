@@ -214,14 +214,26 @@ input.error, div.issues {
     background-color: bisque;
 }
 
-span.error, li.error, h1.error {
+span.error, li.error {
     background: transparent url( 'images/warning.png' ) no-repeat 100% 0;
     padding-right: 20px;
 }
 
-span.waived, li.waived, h1.waived {
+h1.error {
+    background: transparent url( 'images/warning.png' ) no-repeat 100% 0;
+    padding-right: 20px;
+    padding-top: 0;
+}
+
+.waived {
     background: transparent url( 'images/waived.png' ) no-repeat 100% 0;
     padding-right: 20px;
+}
+
+h1.waived {
+   background: transparent url( 'images/waived.png' ) no-repeat 100% 0;
+   padding-right: 20px;
+   padding-top: 0;
 }
 
 h1, h2, h3, h4 {
