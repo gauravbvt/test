@@ -1450,7 +1450,7 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
                     while ( outcomes.hasNext() ) {
                         Flow outcome = outcomes.next();
                         if ( outcome.getTarget().isConnector()
-                                && Matcher.same( outcome.getName(), need.getName() ) ) {
+                                && satisfiesNeed( outcome, need ) ) {
                             connectors.add( (Connector) outcome.getTarget() );
                         }
                     }
@@ -1458,6 +1458,17 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
             }
         }
         return connectors;
+    }
+
+    private boolean satisfiesNeed( Flow outcome, Flow need ) {
+        return Matcher.same( outcome.getName(), need.getName() )
+                &&
+                ( need.getDescription().trim().isEmpty()
+                        ||
+                        Matcher.hasCommonEOIs(
+                                outcome,
+                                need,
+                                this ) );
     }
 
     private boolean doFindIfScenarioStarted( Scenario scenario, Set<ModelObject> visited ) {
@@ -1974,7 +1985,7 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
      * {@inheritDoc}
      */
     public List<Flow> findAllSharingCommitmentsAddressing( Flow need ) {
-         List<Flow> commitments = new ArrayList<Flow>();
+        List<Flow> commitments = new ArrayList<Flow>();
         assert need.getSource().isConnector();
         // Find all synonymous commitments to the part
         Part needyPart = (Part) need.getTarget();
@@ -2026,17 +2037,17 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
     }
 
     private Issue.Level getPartPriority( Part part, List<Part> visited ) {
+        visited.add( part );
         Issue.Level max = Issue.Level.Minor;
         for ( Risk risk : part.getMitigations() ) {
             if ( risk.getSeverity().getOrdinal() > max.getOrdinal() )
                 max = risk.getSeverity();
         }
-        visited.add( part );
         for ( Flow flow : part.requiredOutcomes() ) {
             if ( flow.getTarget().isPart() ) {
                 Part target = (Part) flow.getTarget();
                 if ( !visited.contains( target ) ) {
-                    Issue.Level priority = getPartPriority( target );
+                    Issue.Level priority = getPartPriority( target, visited );
                     if ( priority.getOrdinal() > max.getOrdinal() )
                         max = priority;
                 }

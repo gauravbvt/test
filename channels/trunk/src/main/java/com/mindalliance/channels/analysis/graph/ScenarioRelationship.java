@@ -57,6 +57,13 @@ public class ScenarioRelationship implements Identifiable {
     }
 
     /**
+     * {@inheritDoc }
+     */
+    public String getTypeName() {
+        return "scenario relationship";
+    }
+
+    /**
      * Long value of(<fromScenario id as string>
      * concatenated to  <toScenario id as string of lenght 9, left padded with 0>.
      *

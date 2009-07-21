@@ -40,6 +40,13 @@ public class Relationship<T extends Identifiable> implements Identifiable {
     }
 
     /**
+     * {@inheritDoc }
+     */
+    public String getTypeName() {
+        return getClass().getSimpleName().toLowerCase();
+    }
+
+    /**
      * Long value of(<fromIdentifiable id as string>
      * concatenated to  <toIdentifiable id as string of lenght 9, left padded with 0>.
      *
@@ -111,11 +118,11 @@ public class Relationship<T extends Identifiable> implements Identifiable {
     }
 
     /**
-      * {@inheritDoc}
-      */
-     public String toString() {
-         return getName();
-     }
+     * {@inheritDoc}
+     */
+    public String toString() {
+        return getName();
+    }
 
 
     /**

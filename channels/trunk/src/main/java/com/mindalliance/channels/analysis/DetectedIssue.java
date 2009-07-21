@@ -70,6 +70,13 @@ public class DetectedIssue extends AnalysisObject implements Issue {
         this.type = type;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public String getTypeName() {
+        return "detected issue";
+    }
+
     public String getKind() {
         return kind;
     }

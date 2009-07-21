@@ -5,6 +5,8 @@ import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Channelable;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Part;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
@@ -61,13 +63,13 @@ public class InvalidChannel extends AbstractIssueDetector {
                     remediation = "Provide a correct address, handle, location etc. for " + channel.getMedium() + ".";
                 }
                 issue.setRemediation( remediation );
-                issue.setSeverity( Issue.Level.Major );
+                issue.setSeverity( getSeverity( channelable ) );
                 issues.add( issue );
             }
-            if ( CollectionUtils.cardinality( channel, channels ) > 1) {
+            if ( CollectionUtils.cardinality( channel, channels ) > 1 ) {
                 Issue issue = makeIssue( Issue.VALIDITY, modelObject );
-                issue.setDescription( channel.toString() + " is repeated.");
-                issue.setRemediation( "Remove this channel.");
+                issue.setDescription( channel.toString() + " is repeated." );
+                issue.setRemediation( "Remove this channel." );
                 issue.setSeverity( Issue.Level.Minor );
                 issues.add( issue );
             }
@@ -75,4 +77,18 @@ public class InvalidChannel extends AbstractIssueDetector {
         return issues;
 
     }
+
+    private Issue.Level getSeverity( Channelable channelable ) {
+        if ( channelable instanceof Flow ) {
+            Flow flow = (Flow) channelable;
+            if ( flow.getTarget().isPart() ) {
+                return getQueryService().getPartPriority( (Part) flow.getTarget() );
+            } else {
+                return Issue.Level.Minor;
+            }
+        } else {
+            return Issue.Level.Minor;
+        }
+    }
+
 }

@@ -76,6 +76,12 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
                 || ( modelObject != null && other != null && modelObject.equals( other ) );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public String getTypeName() {
+        return getClass().getSimpleName().toLowerCase();
+    }
 
     @Id
     @GeneratedValue

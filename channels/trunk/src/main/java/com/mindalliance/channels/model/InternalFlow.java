@@ -131,7 +131,7 @@ public class InternalFlow extends Flow {
      */
     @Override
     public boolean canSetMaxDelay() {
-        return !( source.isConnector() || target.isConnector() );
+        return canGetMaxDelay();
     }
 
     /**
@@ -155,7 +155,8 @@ public class InternalFlow extends Flow {
      */
     @Override
     public boolean canGetMaxDelay() {
-        return !( source.isConnector() || target.isConnector() );
+        // return !( source.isConnector() || target.isConnector() );
+        return true;
     }
 
     /**

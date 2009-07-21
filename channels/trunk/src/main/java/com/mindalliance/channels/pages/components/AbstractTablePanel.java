@@ -64,7 +64,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
     }
 
     /**
-     * Defines a column containing text
+     * Defines a column containing text.
      *
      * @param name          the column's name
      * @param labelProperty a property path to the text to display in cell
@@ -78,7 +78,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
     }
 
     /**
-     * Defines a column containing styled text
+     * Defines a column containing styled text.
      *
      * @param name          the column's name
      * @param labelProperty a property path to the text to display in cell
@@ -94,7 +94,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
     }
 
     /**
-     * Defines a column containing styled text
+     * Defines a column containing titled styled text.
      *
      * @param name          the column's name
      * @param labelProperty a property path to the text to display in cell
@@ -108,6 +108,26 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                                             final String style,
                                             final String defaultText,
                                             final String titleProperty ) {
+        return makeColumn( name,  labelProperty, style, defaultText, titleProperty, null );
+    }
+
+    /**
+     * Defines a column containing titled and property-sorted styled text.
+     *
+     * @param name          the column's name
+     * @param labelProperty a property path to the text to display in cell
+     * @param style         a property path to style class name
+     * @param defaultText   default text to show if all else fails
+     * @param titleProperty a property path to tooltip text
+     * @param sortProperty  a property on which to sort the column
+     * @return a column
+     */
+    protected AbstractColumn<T> makeColumn( String name,
+                                            final String labelProperty,
+                                            final String style,
+                                            final String defaultText,
+                                            final String titleProperty,
+                                            final String sortProperty ) {
         return new AbstractColumn<T>( new Model<String>( name ), labelProperty ) {
 
             public void populateItem( Item<ICellPopulator<T>> cellItem,
@@ -127,11 +147,19 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                         cellItem.add( new AttributeModifier( "title", true, new Model<String>( title ) ) );
                 }
             }
+
+            public String getSortProperty() {
+                if ( sortProperty != null ) {
+                    return sortProperty;
+                } else {
+                    return super.getSortProperty();
+                }
+            }
         };
     }
 
     /**
-     * Defines a column containing links to ModelObjects
+     * Defines a column containing links to ModelObjects.
      *
      * @param name          the column's name
      * @param moProperty    a property path from row object to ModelObject-valued property
@@ -148,7 +176,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
 
     /**
      * Defines a styled column containing links to ModelObjects
-     * If a model object is an entity, the link is to its profile
+     * If a model object is an entity, the link is to its profile.
      *
      * @param name          the column's name
      * @param moProperty    a property path from row object to ModelObject-valued property

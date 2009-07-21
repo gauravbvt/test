@@ -2,6 +2,7 @@ package com.mindalliance.channels.util;
 
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.nlp.Proximity;
 import org.apache.commons.collections.CollectionUtils;
@@ -48,16 +49,18 @@ public class Matcher {
     }
 
     /**
-     * Returns whether strings are the same (after trimming blanks and ignoring case).
+     * Returns whether strings are non-empty and equivalent (after trimming blanks and ignoring case).
      *
      * @param string      -- a string
      * @param otherString -- another string
      * @return -- whether they are similar
      */
     public static boolean same( String string, String otherString ) {
-        return COLLATOR.compare(
-                string.toLowerCase().trim(),
-                otherString.toLowerCase().trim() ) == 0;
+        String trimmed = string.trim();
+        String otherTrimmed = otherString.trim();
+        return !trimmed.isEmpty()
+                && !otherTrimmed.isEmpty()
+                && COLLATOR.compare( trimmed.toLowerCase(), otherTrimmed.toLowerCase() ) == 0;
     }
 
     /**
@@ -94,7 +97,7 @@ public class Matcher {
      * @return a boolean
      */
     public static boolean matches( String string, String other ) {
-        if ( string.isEmpty() || other.isEmpty()) return false; 
+        if ( string.isEmpty() || other.isEmpty() ) return false;
         // TODO - maybe do something a wee bit smarter
         String cleanString = removeNoise( string );
         String cleanOther = removeNoise( other );
@@ -135,14 +138,14 @@ public class Matcher {
     /**
      * Whether there are common EOIs in two free-form texts.
      *
-     * @param text         a string
-     * @param otherText    a string
+     * @param flow         a flow
+     * @param otherFlow    a flow
      * @param queryService a query service
      * @return a boolean
      */
-    public static boolean hasCommonEOIs( String text, String otherText, final QueryService queryService ) {
-        List<String> eois = extractEOIs( text );
-        final List<String> otherEois = extractEOIs( otherText );
+    public static boolean hasCommonEOIs( Flow flow, Flow otherFlow, final QueryService queryService ) {
+        List<String> eois = extractEOIs( flow.getDescription() );
+        final List<String> otherEois = extractEOIs( otherFlow.getDescription() );
         return CollectionUtils.exists(
                 eois,
                 new Predicate() {

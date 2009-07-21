@@ -62,6 +62,13 @@ public class UserIssue extends ModelObject implements Issue {
         setReportedBy( User.current().getUsername() );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public String getTypeName() {
+        return "user issue";
+    }
+
     @ManyToOne( fetch = FetchType.LAZY )
     public ModelObject getAbout() {
         return about;
@@ -106,7 +113,7 @@ public class UserIssue extends ModelObject implements Issue {
      */
     public String getLabel( int maxLength ) {
         return StringUtils.abbreviate( MessageFormat.format( "({0}) {1}",
-                                            severity, getDescription() ), maxLength );
+                severity, getDescription() ), maxLength );
     }
 
     /**
@@ -163,9 +170,10 @@ public class UserIssue extends ModelObject implements Issue {
     public String getWaivedString() {
         return Boolean.toString( isWaived() );
     }
+
     /**
-      * {@inheritDoc}
-      */
+     * {@inheritDoc}
+     */
     @Transient
     public String getDetectorLabel() {
         return "User defined";

@@ -195,7 +195,7 @@ public class EntityPanel extends AbstractMultiAspectPanel {
         if ( entity instanceof Actor && ( (Actor) entity ).isSystem() )
             return "system";
         else
-            return getObject().getClass().getSimpleName().toLowerCase();
+            return getObject().getTypeName();
     }
 
     /**

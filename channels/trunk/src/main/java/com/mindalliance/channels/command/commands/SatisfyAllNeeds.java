@@ -97,9 +97,9 @@ public class SatisfyAllNeeds extends AbstractCommand {
                 connectWithFlow.set( "attributes", CommandUtils.getFlowAttributes( need ) );
                 subCommands.addCommand( connectWithFlow );
             }
-            if ( !connectors.isEmpty() ) {
+            /*if ( !connectors.isEmpty() ) {
                 subCommands.addCommand( new RemoveNeed( need ) );
-            }
+            }*/
         }
         return subCommands;
     }

@@ -12,19 +12,29 @@ import java.io.Serializable;
 public interface Identifiable extends Serializable {
     /**
      * Get id
+     *
      * @return an id
      */
     long getId();
 
     /**
      * A short description
+     *
      * @return a String
      */
     String getDescription();
 
     /**
      * A name
+     *
      * @return a String
      */
     String getName();
+
+    /**
+     * Get type of object.
+     *
+     * @return a string
+     */
+    String getTypeName();
 }

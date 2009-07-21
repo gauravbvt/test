@@ -152,6 +152,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
             initialize();
         }
 
+        @SuppressWarnings( "unchecked" )
         private void initialize() {
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
@@ -168,7 +169,10 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
             columns.add( makeColumn(
                     "Severity",
                     "severity.label",
-                    EMPTY ) );
+                    null,
+                    EMPTY,
+                    null,
+                    "severity.ordinal" ) );
             columns.add( makeColumn(
                     "Description",
                     "description",

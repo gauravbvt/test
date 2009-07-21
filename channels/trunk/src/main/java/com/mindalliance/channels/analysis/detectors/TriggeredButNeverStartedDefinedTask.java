@@ -36,7 +36,7 @@ public class TriggeredButNeverStartedDefinedTask extends AbstractIssueDetector {
                         issue.setDescription( "This task is triggered but any flow that triggers it"
                                 + "  comes from a task that is itself never started." );
                         issue.setRemediation( "Make sure a triggering flow comes from a task that is started." );
-                        issue.setSeverity( Issue.Level.Major );
+                        issue.setSeverity( getQueryService().getPartPriority( part ) );
                         issues.add( issue );
                     }
                 }
@@ -49,7 +49,7 @@ public class TriggeredButNeverStartedDefinedTask extends AbstractIssueDetector {
                     issue.setRemediation( "Make sure the scenario is caused by a task"
                             + " that can start (from another scenario),"
                             + " or make the scenario an incident (i.e. happens irrespective of the plan." );
-                    issue.setSeverity( Issue.Level.Major );
+                    issue.setSeverity( getQueryService().getPartPriority( part ) );
                     issues.add( issue );
                 }
             }

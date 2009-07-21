@@ -27,12 +27,12 @@ public class NeverTriggeredSpecifiedTask extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( !part.hasDefaultTask() && !part.isStartsWithScenario() && !part.isTriggered() ) {
-                    Issue issue = makeIssue( Issue.COMPLETENESS, part );
-                    issue.setDescription( "This task, which does not start with the scenario, is never triggered." );
-                    issue.setRemediation( "Start this task with the scenario,"
-                            + " or have an incoming flow trigger it" );
-                    issue.setSeverity( Issue.Level.Major );
-                    issues.add( issue );
+            Issue issue = makeIssue( Issue.COMPLETENESS, part );
+            issue.setDescription( "This task, which does not start with the scenario, is never triggered." );
+            issue.setRemediation( "Start this task with the scenario,"
+                    + " or have an incoming flow trigger it" );
+            issue.setSeverity( getQueryService().getPartPriority( part ) );
+            issues.add( issue );
         }
         return issues;
     }

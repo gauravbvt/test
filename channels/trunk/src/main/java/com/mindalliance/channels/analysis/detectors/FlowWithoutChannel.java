@@ -9,6 +9,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Medium;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Part;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
             List<Channel> flowChannels = flow.getEffectiveChannels();
             if ( flowChannels.isEmpty() ) {
                 issues.add( createIssue( modelObject,
-                        Issue.Level.Severe,
+                        getSeverity( flow ),
                         "Flow requires a channel.",
                         "Provide at least one channel." ) );
 
@@ -68,6 +69,14 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
         return issues;
     }
 
+    private Issue.Level getSeverity( Flow flow ) {
+        if ( flow.getTarget().isPart() ) {
+            return getQueryService().getPartPriority( (Part) flow.getTarget() );
+        } else {
+            return Issue.Level.Minor;
+        }
+    }
+
     private List<Issue> findIssues(
             ModelObject modelObject, ResourceSpec actorSpec, Set<Medium> media ) {
 
@@ -77,7 +86,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
             if ( media.contains( channelMedium ) && !channel.isValid() ) {
                 result.add( createIssue(
                         modelObject,
-                        Issue.Level.Major,
+                        getSeverity( (Flow) modelObject ),
                         MessageFormat.format(
                                 "{0} may be involved and has no valid {1} contact info.",
                                 actorSpec.toString(),
@@ -136,6 +145,6 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Flow with no channel";
+        return "Flow without channel";
     }
 }

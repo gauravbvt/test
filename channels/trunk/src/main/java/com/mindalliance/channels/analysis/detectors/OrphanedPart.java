@@ -53,7 +53,7 @@ public class OrphanedPart extends AbstractIssueDetector {
             DetectedIssue issue = makeIssue( DetectedIssue.COMPLETENESS, part );
             issue.setDescription( "Does not produce or need information." );
             issue.setRemediation( "Add sent or received information." );
-            issue.setSeverity( Issue.Level.Minor );
+            issue.setSeverity( getQueryService().getPartPriority( part ) );
             issues.add( issue );
         }
         return issues;

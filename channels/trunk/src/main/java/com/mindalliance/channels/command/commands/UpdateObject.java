@@ -63,7 +63,7 @@ public abstract class UpdateObject extends AbstractCommand {
         set( "property", property );
         set( "value", value );
         if ( action == Action.Set ) set( "old", getProperty( identifiable, property ) );
-        set( "type", identifiable.getClass().getSimpleName().toLowerCase() );
+        set( "type", identifiable.getTypeName() );
     }
 
     /**

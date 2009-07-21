@@ -5,6 +5,7 @@ import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Part;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +31,17 @@ public class FlowViolatesPolicy extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        List<Attachment> attachments =  flow.getAttachments();
+        List<Attachment> attachments = flow.getAttachments();
         for ( Attachment attachment : attachments ) {
             if ( attachment.isPolicyViolation() ) {
                 Issue issue = makeIssue( Issue.COMPLETENESS, flow );
-                issue.setDescription( "Violates policy per \"" + attachment.getUrl() + "\"." );
-                issue.setRemediation( "Change or remove flow, or change the policy." );
-                issue.setSeverity( Issue.Level.Severe );
+                issue.setDescription( "Could violate policy per \"" + attachment.getUrl() + "\"." );
+                issue.setRemediation( "Change or remove the flow, or change the policy." );
+                if ( flow.getTarget().isPart() ) {
+                    issue.setSeverity( getQueryService().getPartPriority( (Part) flow.getTarget() ) );
+                } else {
+                    issue.setSeverity( Issue.Level.Minor );
+                }
                 issues.add( issue );
             }
         }
@@ -61,7 +66,7 @@ public class FlowViolatesPolicy extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Flow violates policy";
+        return "Policy prohibits flow";
     }
 
 }
