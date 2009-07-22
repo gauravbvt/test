@@ -192,7 +192,19 @@
                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.CommitmentWithoutRequiredAgreement">
                      <property name="queryService" ref="queryService"/>
-                 </bean>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.UntimelyTriggeringCommitment">
+                     <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.UntimelyCriticalCommitment">
+                     <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.InconsistentImpactOnTargetPart">
+                     <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.InconsistentImpactOnSourcePart">
+                     <property name="queryService" ref="queryService"/>
+                </bean>
              </list>
         </property>
     </bean>

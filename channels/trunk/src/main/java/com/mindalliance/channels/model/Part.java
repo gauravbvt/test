@@ -440,7 +440,7 @@ public class Part extends Node implements GeoLocatable {
         boolean triggered = false;
         while ( !triggered && reqs.hasNext() ) {
             Flow req = reqs.next();
-            triggered = req.isTriggeringToTarget();
+            triggered =  req.isTriggeringToTarget() && req.getSource().isPart();
         }
         if ( !triggered ) {
             Iterator<Flow> outs = outcomes();

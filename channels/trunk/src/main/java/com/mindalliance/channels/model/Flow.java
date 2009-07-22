@@ -6,21 +6,21 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
-import javax.persistence.Enumerated;
-import javax.persistence.EnumType;
-import javax.persistence.FetchType;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Collection;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * An arrow between two nodes in the information flow graph.
@@ -740,6 +740,15 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
     @Transient
     public boolean isSharingCommitment() {
         return getSource().isPart() && getTarget().isPart();
+    }
+
+    /**
+     * Flow is an information need.
+     *
+     * @return a boolean
+     */
+    public boolean isNeed() {
+        return getSource().isConnector();
     }
 
     /**
