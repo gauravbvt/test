@@ -39,6 +39,7 @@ import com.mindalliance.channels.analysis.detectors.ScenarioEventNeverStarts;
 import com.mindalliance.channels.analysis.detectors.ScenarioEventNotStarted;
 import com.mindalliance.channels.analysis.detectors.ScenarioWithSameRisk;
 import com.mindalliance.channels.analysis.detectors.ScenarioWithoutManagedRisk;
+import com.mindalliance.channels.analysis.detectors.SinglePointOfFailure;
 import com.mindalliance.channels.analysis.detectors.StartedOrTerminatedPartWithoutTask;
 import com.mindalliance.channels.analysis.detectors.TriggeredButNeverStartedDefinedTask;
 import com.mindalliance.channels.analysis.detectors.UnconfirmedJob;
@@ -202,6 +203,7 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new InconsistentImpactOnSourcePart() );
         detectors.add( new InconsistentImpactOnTargetPart() );
         detectors.add( new UntimelyCriticalCommitment() );
+        detectors.add( new SinglePointOfFailure() );
         for ( IssueDetector detector : detectors ) {
             ( (AbstractIssueDetector) detector ).setQueryService( queryService );
         }

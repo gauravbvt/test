@@ -168,28 +168,28 @@ public interface Analyst extends Service {
     /**
      * Whether the model object has no unwaived validity issue.
      * @param modelObject a model object
-     * @return a boolean
+     * @return a Boolean
      */
-    boolean isValid( ModelObject modelObject );
+    Boolean isValid( ModelObject modelObject );
     /**
      * Whether the model object has no unwaived completeness issue.
      * @param modelObject a model object
-     * @return a boolean
+     * @return a Boolean
      */
-    boolean isComplete( ModelObject modelObject );
+    Boolean isComplete( ModelObject modelObject );
     /**
      * Whether the model object has no unwaived robustness issue.
      * @param modelObject a model object
-     * @return a boolean
+     * @return a Boolean
      */
-    boolean isRobust( ModelObject modelObject );
+    Boolean isRobust( ModelObject modelObject );
 
     /**
      * Count the number of unwaived issues for a model object in a given test.
      * @param modelObject a model object
      * @param test a type of issue
-     * @return an int
+     * @return an Integer
      */
-    int countTestFailures( ModelObject modelObject, String test );
+    Integer countTestFailures( ModelObject modelObject, String test );
 
 }

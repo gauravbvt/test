@@ -2,22 +2,20 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
-import com.mindalliance.channels.analysis.graph.FlowMapGraphBuilder;
+import com.mindalliance.channels.analysis.graph.ActorsNetworkGraphBuilder;
+import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.graph.GraphBuilder;
-import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.util.SimpleCache;
+import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.User;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.BlockCutpointGraph;
 import org.jgrapht.graph.AsUndirectedGraph;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -30,18 +28,12 @@ import java.util.Set;
  * Time: 7:45:00 PM
  */
 
-// NOT USED BECAUSE NOT MEANINGFUL
 public class SinglePointOfFailure extends AbstractIssueDetector {
 
     /**
      * Minimum out degree of a part that is a bottleneck and thus a single point of failure.
      */
-    private static final int MINIMUM_OUT_DEGREE = 2;
-    /**
-     * Cached cutpoints
-     */
-    private SimpleCache<Scenario, Set<Node>> cachedCutpoints =
-            new SimpleCache<Scenario, Set<Node>>();
+    private static final int MINIMUM_DEGREE = 3;
 
     public SinglePointOfFailure() {
     }
@@ -70,26 +62,14 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
      */
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
-        Part part = (Part) modelObject;
-        Scenario scenario = part.getScenario();
-        Iterator<Node> nodes = getCutpoints( scenario );
-        Set<Node> actorNodes = new HashSet<Node>();
-        // Keep only cutpoints (articulation vertices) that are parts with actors
-        // and with a minimum number of outcomes.
-        while ( nodes.hasNext() ) {
-            Node node = nodes.next();
-            // If the target node is one of the cutpoint nodes
-            if ( node == part ) {
-                if ( part.getActor() != null ) {
-                    actorNodes.add( part );
-                }
-            }
-        }
+        Plan plan = (Plan) modelObject;
+        assert plan.equals( User.current().getPlan() );
+        Set<Actor> spofActors = detectSignificantCutpoints( );
         // Found single points of failure?
-        for ( Node node : actorNodes ) {
-            DetectedIssue issue = makeIssue( DetectedIssue.ROBUSTNESS, node );
-            issue.setDescription( "Single point of failure." );
-            issue.setRemediation( "Delegate responsibilities or add redundancy." );
+        for ( Actor actor : spofActors ) {
+            DetectedIssue issue = makeIssue( DetectedIssue.ROBUSTNESS, plan );
+            issue.setDescription( actor.getName() + " appears to be a single point of failure." );
+            issue.setRemediation( "Delegate or duplicate responsibilities of this actor." );
             issue.setSeverity( Issue.Level.Major );
             issues.add( issue );
         }
@@ -100,7 +80,7 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     public boolean appliesTo( ModelObject modelObject ) {
-        return modelObject instanceof Part;
+        return modelObject instanceof Plan;
     }
 
     /**
@@ -110,26 +90,22 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
         return null;
     }
 
-    private Iterator<Node> getCutpoints( Scenario scenario ) {
-        Set<Node> cutpoints = cachedCutpoints.get( scenario, scenario.getLastModified() );
-        if ( cutpoints == null ) {
-            cutpoints = detectSignificantCutpoints( scenario );
-            cachedCutpoints.put( scenario, cutpoints );
-        }
-        return cutpoints.iterator();
-    }
-
-    private Set<Node> detectSignificantCutpoints( Scenario scenario ) {
-        GraphBuilder<Node, Flow> graphBuilder = new FlowMapGraphBuilder( scenario );
-        final DirectedGraph<Node, Flow> digraph = graphBuilder.buildDirectedGraph();
-        BlockCutpointGraph<Node, Flow> bcg = new BlockCutpointGraph<Node, Flow>(
-                new AsUndirectedGraph<Node, Flow>( digraph ) );
-        Set<Node> cutpoints = new HashSet<Node>();
-        for ( Node node : bcg.getCutpoints() ) {
-            if ( digraph.outDegreeOf( node ) >= MINIMUM_OUT_DEGREE ) {
-                cutpoints.add( node );
+    private Set<Actor> detectSignificantCutpoints(  ) {
+        GraphBuilder<Actor, EntityRelationship<Actor>> graphBuilder =
+                new ActorsNetworkGraphBuilder( getQueryService() );
+        final DirectedGraph<Actor, EntityRelationship<Actor>> digraph = graphBuilder.buildDirectedGraph();
+        BlockCutpointGraph<Actor, EntityRelationship<Actor>> bcg =
+                new BlockCutpointGraph<Actor, EntityRelationship<Actor>>(
+                new AsUndirectedGraph<Actor, EntityRelationship<Actor>>( digraph ) );
+        Set<Actor> cutpoints = new HashSet<Actor>();
+        for ( Actor actor : bcg.getCutpoints() ) {
+            if ( digraph.outDegreeOf( actor ) >= MINIMUM_DEGREE
+                    && digraph.inDegreeOf( actor ) >= MINIMUM_DEGREE ) {
+                cutpoints.add( actor );
             }
         }
         return cutpoints;
     }
+
+
 }

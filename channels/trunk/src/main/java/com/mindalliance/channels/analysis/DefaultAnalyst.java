@@ -245,21 +245,21 @@ public class DefaultAnalyst extends AbstractService implements Analyst {
     /**
      * {@inheritDoc}
      */
-    public boolean isValid( ModelObject modelObject ) {
+    public Boolean isValid( ModelObject modelObject ) {
         return test( modelObject, Issue.VALIDITY );
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean isComplete( ModelObject modelObject ) {
+    public Boolean isComplete( ModelObject modelObject ) {
         return test( modelObject, Issue.COMPLETENESS );
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean isRobust( ModelObject modelObject ) {
+    public Boolean isRobust( ModelObject modelObject ) {
         return test( modelObject, Issue.ROBUSTNESS );
     }
 
@@ -311,7 +311,7 @@ public class DefaultAnalyst extends AbstractService implements Analyst {
     }
 
     /** {@inheritDoc} */
-    public int countTestFailures( ModelObject modelObject, String test ) {
+    public Integer countTestFailures( ModelObject modelObject, String test ) {
         if ( modelObject instanceof Plan ) {
             return countFailures( (Plan) modelObject, test );
         } else if ( modelObject instanceof Scenario ) {

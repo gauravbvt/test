@@ -32,6 +32,7 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.nlp.Proximity;
 import com.mindalliance.channels.util.Employment;
@@ -1642,9 +1643,7 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
      */
     public List<Issue> findAllIssues( Analyst analyst ) {
         List<Issue> allIssues = new ArrayList<Issue>();
-        for ( Plan plan : getPlanManager().getPlans() ) {
-            allIssues.addAll( analyst.listIssues( plan, true ) );
-        }
+        allIssues.addAll( analyst.listIssues( User.current().getPlan(), true ) );
         for ( ModelObject mo : list( ModelObject.class ) ) {
             allIssues.addAll( analyst.listIssues( mo, true ) );
         }
@@ -1666,9 +1665,7 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
      */
     public List<Issue> findAllUnwaivedIssues( Analyst analyst ) {
         List<Issue> allUnwaivedIssues = new ArrayList<Issue>();
-        for ( Plan plan : getPlanManager().getPlans() ) {
-            allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( plan, true ) );
-        }
+        allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( User.current().getPlan(), true ) );
         for ( ModelObject mo : list( ModelObject.class ) ) {
             allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( mo, true ) );
         }

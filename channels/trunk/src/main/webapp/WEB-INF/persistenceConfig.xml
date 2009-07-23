@@ -44,7 +44,9 @@
                      advice-ref="cacheSet"/>
         <aop:advisor pointcut="execution(String com.mindalliance.channels.Analyst.*(..))"
                      advice-ref="cacheSet"/>
-        <aop:advisor pointcut="execution(boolean com.mindalliance.channels.Analyst.*(..))"
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.Analyst.*(..))"
+                     advice-ref="cacheSet"/>
+        <aop:advisor pointcut="execution(Integer com.mindalliance.channels.Analyst.*(..))"
                      advice-ref="cacheSet"/>
         <aop:advisor pointcut="execution(com.mindalliance.channels.graph.Diagram com.mindalliance.channels.DiagramFactory.*(..))"
                      advice-ref="cacheSet"/>
