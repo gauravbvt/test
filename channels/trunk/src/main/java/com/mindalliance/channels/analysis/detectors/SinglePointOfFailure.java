@@ -64,7 +64,7 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Plan plan = (Plan) modelObject;
         assert plan.equals( User.current().getPlan() );
-        Set<Actor> spofActors = detectSignificantCutpoints( );
+        Set<Actor> spofActors = detectSignificantCutpoints();
         // Found single points of failure?
         for ( Actor actor : spofActors ) {
             DetectedIssue issue = makeIssue( DetectedIssue.ROBUSTNESS, plan );
@@ -90,18 +90,20 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
         return null;
     }
 
-    private Set<Actor> detectSignificantCutpoints(  ) {
+    private Set<Actor> detectSignificantCutpoints() {
+        Set<Actor> cutpoints = new HashSet<Actor>();
         GraphBuilder<Actor, EntityRelationship<Actor>> graphBuilder =
                 new ActorsNetworkGraphBuilder( getQueryService() );
         final DirectedGraph<Actor, EntityRelationship<Actor>> digraph = graphBuilder.buildDirectedGraph();
-        BlockCutpointGraph<Actor, EntityRelationship<Actor>> bcg =
-                new BlockCutpointGraph<Actor, EntityRelationship<Actor>>(
-                new AsUndirectedGraph<Actor, EntityRelationship<Actor>>( digraph ) );
-        Set<Actor> cutpoints = new HashSet<Actor>();
-        for ( Actor actor : bcg.getCutpoints() ) {
-            if ( digraph.outDegreeOf( actor ) >= MINIMUM_DEGREE
-                    && digraph.inDegreeOf( actor ) >= MINIMUM_DEGREE ) {
-                cutpoints.add( actor );
+        if ( !digraph.edgeSet().isEmpty() ) {
+            BlockCutpointGraph<Actor, EntityRelationship<Actor>> bcg =
+                    new BlockCutpointGraph<Actor, EntityRelationship<Actor>>(
+                            new AsUndirectedGraph<Actor, EntityRelationship<Actor>>( digraph ) );
+            for ( Actor actor : bcg.getCutpoints() ) {
+                if ( digraph.outDegreeOf( actor ) >= MINIMUM_DEGREE
+                        && digraph.inDegreeOf( actor ) >= MINIMUM_DEGREE ) {
+                    cutpoints.add( actor );
+                }
             }
         }
         return cutpoints;

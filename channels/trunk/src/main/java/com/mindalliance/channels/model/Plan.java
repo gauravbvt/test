@@ -4,9 +4,9 @@ import javax.persistence.Entity;
 import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.Iterator;
 
 /**
  * A plan: events scenarios that respond to events and entities participating in the responses.
@@ -109,6 +109,7 @@ public class Plan extends ModelObject {
 
     /**
      * Remove deleted scenario from list.
+     *
      * @param scenario a scenario
      */
     public void removeScenario( Scenario scenario ) {
@@ -117,10 +118,21 @@ public class Plan extends ModelObject {
 
     /**
      * Get the number of scenarios in this plan.
+     *
      * @return the number of scenarios
      */
     @Transient
     public int getScenarioCount() {
         return scenarios.size();
+    }
+
+    /**
+     * Return one of the scenarios.
+     *
+     * @return a scenario
+     */
+    @Transient
+    public Scenario getDefaultScenario() {
+        return getScenarios().iterator().next();
     }
 }

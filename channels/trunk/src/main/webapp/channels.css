@@ -23,7 +23,7 @@ body.profile {
 
 #contents {
     position: absolute;
-    top: 5em;
+    top: 6em;
     bottom: 5px;
     left: 0;
     right: 0;
@@ -138,6 +138,7 @@ div.section input[type='submit'] {
 
 #sc-sel li {
     font-size: 8pt;
+    list-style: none;
 }
 
 input, textarea, select, div.flow-details {

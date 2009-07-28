@@ -4,8 +4,8 @@ import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.Importer;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,10 +21,14 @@ import java.util.List;
  */
 public class PlanDao extends Memory {
 
-    /** Name of persisted data file. */
+    /**
+     * Name of persisted data file.
+     */
     private static final String DATA_FILE = "data.xml";
 
-    /** Name of command journal file. */
+    /**
+     * Name of command journal file.
+     */
     private static final String JOURNAL_FILE = "journal.xml";
 
     /**
@@ -32,16 +36,24 @@ public class PlanDao extends Memory {
      */
     private static final String DEFAULT_EVENT_NAME = "UNNAMED";
 
-    /** The logger. */
+    /**
+     * The logger.
+     */
     private final Logger logger = LoggerFactory.getLogger( getClass() );
 
-    /** The wrapped plan. */
+    /**
+     * The wrapped plan.
+     */
     private final Plan plan;
 
-    /** Pending commands attached to wrapped plan. */
+    /**
+     * Pending commands attached to wrapped plan.
+     */
     private Journal journal = new Journal();
 
-    /** The plan manager. */
+    /**
+     * The plan manager.
+     */
     private final PlanManager planManager;
 
     //-------------------------------------
@@ -74,6 +86,7 @@ public class PlanDao extends Memory {
 
     /**
      * Load plan data.
+     *
      * @param importer the loading mechanism
      * @throws IOException on loading errors
      */
@@ -94,7 +107,22 @@ public class PlanDao extends Memory {
     }
 
     /**
+     * Whether the plan is persisted.
+     *
+     * @return a boolean
+     */
+    public boolean isPersisted() {
+        try {
+            return new File( getDataDirectory(), DATA_FILE ).exists();
+        } catch ( IOException e ) {
+            logger.warn( "IO failure", e );
+            return false;
+        }
+    }
+
+    /**
      * Get the location of the wrapped plan's xml file.
+     *
      * @return a file
      * @throws IOException on errors
      */
@@ -107,15 +135,16 @@ public class PlanDao extends Memory {
 
     /**
      * Get the location of the wrapped plan's data.
+     *
      * @return a directory
      * @throws IOException on error
      */
     private File getDataDirectory() throws IOException {
-        File directory = planManager.getDataDirectory().getFile();
-        if ( !directory.exists() )
-            directory.mkdir();
+        File baseDirectory = planManager.getDataDirectory().getFile();
+        if ( !baseDirectory.exists() )
+            baseDirectory.mkdir();
 
-        directory = new File( directory, sanitize( plan.getUri() ) );
+        File directory = new File( baseDirectory, sanitize( plan.getUri() ) );
         if ( !directory.exists() )
             directory.mkdir();
 
@@ -128,6 +157,7 @@ public class PlanDao extends Memory {
 
     /**
      * Get the location of the journal file for the wrapped plan.
+     *
      * @return a directory
      * @throws IOException on errors
      */
@@ -159,8 +189,9 @@ public class PlanDao extends Memory {
 
     /**
      * Persist all plan data.
-     * @throws IOException on error
+     *
      * @param exporter the save mechanism
+     * @throws IOException on error
      */
     public synchronized void save( Exporter exporter ) throws IOException {
         if ( exporter != null ) {
@@ -194,12 +225,13 @@ public class PlanDao extends Memory {
 
     /**
      * Save outstanding journal entries.
+     *
      * @param exporter the persistence mechanism
      * @throws IOException on errors
      */
     private void saveJournal( Exporter exporter ) throws IOException {
         getJournalFile().delete();
-        FileOutputStream out = null ;
+        FileOutputStream out = null;
         try {
             out = new FileOutputStream( getJournalFile() );
             exporter.export( getJournal(), out );
@@ -211,6 +243,7 @@ public class PlanDao extends Memory {
 
     /**
      * Remove persistent files, for test purposes.
+     *
      * @throws IOException on errors
      */
     public synchronized void reset() throws IOException {
@@ -221,7 +254,8 @@ public class PlanDao extends Memory {
     /**
      * Callback after a command was executed.
      * Update snapshot if needed.
-     * @param command the command
+     *
+     * @param command  the command
      * @param exporter the exporter to use
      */
     public synchronized void onAfterCommand( Command command, Exporter exporter ) {
@@ -239,34 +273,28 @@ public class PlanDao extends Memory {
 
     /**
      * Validate the underlying plan.
+     *
      * @param queryService to use for validation
-     * @param exporter for saving
      */
-    public void validate( QueryService queryService, Exporter exporter ) {
+    public void validate( QueryService queryService ) {
 
-//        try {
-            // Make sure there is at least one event per plan
-            List<Event> incidents = plan.getIncidents();
-            if ( incidents.isEmpty() ) {
-                Event unnamedEvent = findOrCreate( Event.class, DEFAULT_EVENT_NAME, null );
-                plan.addIncident( unnamedEvent );
-            } else if ( incidents.size() > 1 ) {
-                // Remove UNNAMED event if not referenced
-                Event event = find( Event.class, DEFAULT_EVENT_NAME );
-                if ( event != null && queryService.getReferenceCount( event ) <= 1 ) {
-                    incidents.remove( event );
-                    remove( event );
-                }
+        // Make sure there is at least one event per plan
+        List<Event> incidents = plan.getIncidents();
+        if ( incidents.isEmpty() ) {
+            Event unnamedEvent = findOrCreate( Event.class, DEFAULT_EVENT_NAME, null );
+            plan.addIncident( unnamedEvent );
+        } else if ( incidents.size() > 1 ) {
+            // Remove UNNAMED event if not referenced
+            Event event = find( Event.class, DEFAULT_EVENT_NAME );
+            if ( event != null && queryService.getReferenceCount( event ) <= 1 ) {
+                incidents.remove( event );
+                remove( event );
             }
+        }
 
-            // Make sure there is at least one scenario per plan
-            if ( !list( Scenario.class ).iterator().hasNext() )
-                queryService.createScenario();
+        // Make sure there is at least one scenario per plan
+        if ( !list( Scenario.class ).iterator().hasNext() )
+            queryService.createScenario();
 
-            // save( exporter );
-
-//        } catch ( IOException e ) {
-//            throw new RuntimeException( e );
-//        }
     }
 }

@@ -7,6 +7,7 @@ import com.mindalliance.channels.Importer;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
@@ -104,9 +105,16 @@ public final class PlanPage extends WebPage implements Updatable {
      * Length a scenario title is abbreviated to
      */
     private static final int SCENARIO_DESCRIPTION_MAX_LENGTH = 94;
-
+    /**
+     * The current user.
+     */
     @SpringBean
     private User user;
+    /**
+     * The plan manager.
+     */
+    @SpringBean
+    private PlanManager planManager;
 
     /**
      * Id of components that are expanded.
@@ -130,12 +138,22 @@ public final class PlanPage extends WebPage implements Updatable {
      * Label with description of scenario.
      */
     private Label scenarioDescriptionLabel;
-
+    /**
+     * Container of scenario selector.
+     */
+    private WebMarkupContainer selectScenarioContainer;
     /**
      * Choice of scenarios.
      */
     private DropDownChoice<Scenario> scenarioDropDownChoice;
-
+    /**
+     * Container of plan switcher.
+     */
+    private WebMarkupContainer switchPlanContainer;
+    /**
+     * Choice of scenarios.
+     */
+    private DropDownChoice<Plan> planDropDownChoice;
     /**
      * Scenarios action menu.
      */
@@ -239,7 +257,7 @@ public final class PlanPage extends WebPage implements Updatable {
         setVersioned( false );
         setStatelessHint( true );
         add( new Label( "sc-title",
-                new Model<String>( "Channels: " + User.current().getPlan().getName() ) ) );
+                new Model<String>( "Channels: " + getPlan().getName() ) ) );
 
         form = new IndicatorAwareForm( "big-form" ) {
             @Override
@@ -254,6 +272,7 @@ public final class PlanPage extends WebPage implements Updatable {
         addRefresh();
         addScenarioMenubar();
         addScenarioSelector();
+        addPlanSwitcher();
         scenarioPanel = new ScenarioPanel(
                 "scenario",
                 new PropertyModel<Scenario>( this, "scenario" ),
@@ -262,6 +281,7 @@ public final class PlanPage extends WebPage implements Updatable {
         form.add( scenarioPanel );
         addEntityPanel();
         addPlanEditPanel();
+        updateVisibility();
         LOG.debug( "Scenario page generated" );
     }
 
@@ -433,6 +453,7 @@ public final class PlanPage extends WebPage implements Updatable {
         planShowMenu = new PlanShowMenuPanel( "planShowMenu", sc, exps );
         planShowMenu.setOutputMarkupId( true );
         form.add( planShowMenu );
+        form.add( new Label( "username", user.getUsername() ) );
     }
 
     private void addPlanActionsMenu() {
@@ -447,7 +468,9 @@ public final class PlanPage extends WebPage implements Updatable {
     private void addScenarioSelector() {
         scenarioImport = new FileUploadField( "sc-import", new Model<FileUpload>() );     // NON-NLS
         form.add( scenarioImport );
-
+        selectScenarioContainer = new WebMarkupContainer( "select-scenario" );
+        selectScenarioContainer.setOutputMarkupId( true );
+        form.add( selectScenarioContainer );
         scenarioDropDownChoice = new DropDownChoice<Scenario>(
                 "sc-sel",                                                                 // NON-NLS
                 new PropertyModel<Scenario>( this, "scenario" ),                          // NON-NLS
@@ -460,8 +483,24 @@ public final class PlanPage extends WebPage implements Updatable {
             }
         } );
         scenarioDropDownChoice.setOutputMarkupId( true );
-        form.add( scenarioDropDownChoice );
-        form.add( new Label( "username", User.current().getUsername() ) );
+        selectScenarioContainer.add( scenarioDropDownChoice );
+    }
+
+    private void addPlanSwitcher() {
+        switchPlanContainer = new WebMarkupContainer( "switch-plan" );
+        switchPlanContainer.setOutputMarkupId( true );
+        form.add( switchPlanContainer );
+        planDropDownChoice = new DropDownChoice<Plan>(
+                "plan-sel",
+                new PropertyModel<Plan>( this, "plan" ),
+                new PropertyModel<List<? extends Plan>>( this, "writablePlans" ) );
+        planDropDownChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Selected, getPlan() ) );
+            }
+        } );
+        switchPlanContainer.add( planDropDownChoice );
     }
 
     private void addEntityPanel() {
@@ -481,18 +520,36 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void addPlanEditPanel() {
-        boolean showPlanEdit = expansions.contains( User.current().getPlan().getId() );
+        boolean showPlanEdit = expansions.contains( getPlan().getId() );
 
         planEditPanel = showPlanEdit
                 ? new PlanEditPanel(
                 "plan",
-                new Model<Plan>( User.current().getPlan() ),
+                new Model<Plan>( getPlan() ),
                 getReadOnlyExpansions() )
                 : new Label( "plan", "" );
 
         makeVisible( planEditPanel, showPlanEdit );
         planEditPanel.setOutputMarkupId( true );
         form.addOrReplace( planEditPanel );
+    }
+
+    /**
+     * Return current plan.
+     *
+     * @return a plan
+     */
+    public Plan getPlan() {
+        return user.getPlan();
+    }
+
+    /**
+     * Switch the user's current plan.
+     *
+     * @param plan a plan
+     */
+    public void setPlan( Plan plan ) {
+        user.switchPlan( plan );
     }
 
     private ModelObject findExpandedEntity() {
@@ -566,6 +623,11 @@ public final class PlanPage extends WebPage implements Updatable {
      */
     public void redirectTo( Scenario scenario ) {
         redirectTo( scenario.getDefaultPart() );
+    }
+
+    public void redirectTo( Plan plan ) {
+        Set<Long> ids = Collections.emptySet();
+        setResponsePage( new RedirectPage( "plan" ) );
     }
 
     /**
@@ -907,6 +969,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 : EntityPanel.DETAILS;
     }
 
+
     /**
      * {@inheritDoc}
      */
@@ -992,6 +1055,8 @@ public final class PlanPage extends WebPage implements Updatable {
                 if ( change.isDisplay() ) {
                     addPlanEditPanel();
                     target.addComponent( planEditPanel );
+                } else if ( change.isSelected() ) {
+                    redirectTo( getPlan() );
                 }
             }
             if ( identifiable instanceof Scenario ) {
@@ -1071,11 +1136,12 @@ public final class PlanPage extends WebPage implements Updatable {
     private void refreshAll( AjaxRequestTarget target ) {
         // Re-acquire lock
         // setPart( getPart() );
+        updateVisibility();
         target.addComponent( planActionsMenu );
         target.addComponent( planShowMenu );
         target.addComponent( scenarioNameLabel );
         target.addComponent( scenarioDescriptionLabel );
-        target.addComponent( scenarioDropDownChoice );
+        target.addComponent( selectScenarioContainer );
         annotateScenarioName();
         target.addComponent( scenarioNameLabel );
         scenarioPanel.refreshScenarioEditPanel( target );
@@ -1091,6 +1157,24 @@ public final class PlanPage extends WebPage implements Updatable {
         updateRefreshNotice();
         target.addComponent( refreshNeededContainer );
         getCommander().clearTimeOut();
+    }
+
+    private void updateVisibility() {
+        makeVisible( selectScenarioContainer, getAllScenarios().size() > 1 );
+        makeVisible( switchPlanContainer, getWritablePlans().size() > 1 );
+    }
+
+    /**
+     * Get all plans that the current can modify.
+     *
+     * @return a list of plans
+     */
+    public List<Plan> getWritablePlans() {
+        return user.getWritablePlans( getPlanManager() );
+    }
+
+    private PlanManager getPlanManager() {
+        return planManager;
     }
 
     private void update( AjaxRequestTarget target, Change change ) {

@@ -111,7 +111,6 @@ public class PlanConverter extends AbstractChannelsConverter {
         getProxyConnectors( context );
         context.put( "importing-plan", "true" );
         Plan plan = getContext().getPlan();
-        QueryService queryService = getQueryService();
         String uri = reader.getAttribute( "uri" );
         plan.setUri( uri );
         Long id = Long.parseLong( reader.getAttribute( "id" ) );

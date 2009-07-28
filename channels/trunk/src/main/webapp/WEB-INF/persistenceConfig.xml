@@ -66,17 +66,21 @@
         <property name="idGenerator" ref="idGenerator"/>
         <property name="importExportFactory" ref="serializer"/>
         <property name="importDirectory" value="file:${user.home}/channels/import"/>
+        <property name="planDefinitionsFileName" value="channels/plans.properties"/>
+        <property name="defaultPlanDefinitions" value="/WEB-INF/plans.properties"/>
+<!--
         <property name="plans">
             <list value-type="java.util.ArrayList">
                 <bean class="com.mindalliance.channels.model.Plan">
-                    <property name="uri" value="mindalliance.com/channels/plans/sci"/>
-                    <property name="name" value="SCI Emergency Communications Plan"/>
-                    <property name="client" value="Strategic Content Imaging, Inc."/>
+                   <property name="uri" value="mindalliance.com/channels/plans/acme"/>
+                    <property name="name" value="ACME Emergency Communications Plan"/>
+                    <property name="client" value="ACME Manufacturing, Inc."/>
                     <property name="description"
                               value="Communications planning for responding and recovering from business interruptions due fire or power outage."/>
                 </bean>
             </list>
         </property>
+-->
         <property name="dataDirectory" value="file:${user.home}/channels/data"/>
         <property name="snapshotThreshold" value="10"/>
     </bean>

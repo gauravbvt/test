@@ -77,9 +77,9 @@ public class UserIssueConverter extends AbstractChannelsConverter {
             Long aboutId = Long.parseLong( reader.getAttribute( "about" ) );
             // When importing a scenario (vs reloading a plan), ids may be re-assigned
             Long id = idMap.get( aboutId );
-            aboutId = (id == null) ? aboutId : id;
+            aboutId = ( id == null ) ? aboutId : id;
             if ( aboutId != null ) {
-                ModelObject about = getQueryService().find( ModelObject.class, aboutId );
+                ModelObject about = find( ModelObject.class, aboutId );
                 issue = new UserIssue( about );
                 while ( reader.hasMoreChildren() ) {
                     reader.moveDown();
@@ -87,7 +87,7 @@ public class UserIssueConverter extends AbstractChannelsConverter {
                     if ( nodeName.equals( "description" ) ) {
                         issue.setDescription( reader.getValue() );
                     } else if ( nodeName.equals( "type" ) ) {
-                        issue.setType( reader.getValue()  );
+                        issue.setType( reader.getValue() );
                     } else if ( nodeName.equals( "severity" ) ) {
                         issue.setSeverity( Issue.Level.valueOf( reader.getValue() ) );
                     } else if ( nodeName.equals( "remediation" ) ) {
@@ -105,8 +105,7 @@ public class UserIssueConverter extends AbstractChannelsConverter {
                 }
                 if ( importingPlan ) {
                     getQueryService().add( issue, issueId );
-                }
-                else {
+                } else {
                     getQueryService().add( issue );
                 }
                 idMap.put( issueId, issue.getId() );

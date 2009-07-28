@@ -1,6 +1,5 @@
 package com.mindalliance.channels.util;
 
-import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.User;
@@ -29,22 +28,34 @@ import java.util.StringTokenizer;
  */
 public class FileUserDetailsService implements UserDetailsService {
 
-    /** The plan manager. */
+    /**
+     * The plan manager.
+     */
     private final PlanManager planManager;
 
-    /** Users, indexed by username. */
-    private Map<String,User> details;
+    /**
+     * Users, indexed by username.
+     */
+    private Map<String, User> details;
 
-    /** The actual user definitions (file name). */
+    /**
+     * The actual user definitions (file name).
+     */
     private String userDefinitions;
 
-    /** Base for relative user definitions. */
+    /**
+     * Base for relative user definitions.
+     */
     private String base = System.getProperty( "user.home" );
 
-    /** The file for the user definitions. */
+    /**
+     * The file for the user definitions.
+     */
     private File userFile;
 
-    /** Initial data for user definitions, when initializing system. */
+    /**
+     * Initial data for user definitions, when initializing system.
+     */
     private Resource defaultDefinitions;
 
     /**
@@ -53,7 +64,9 @@ public class FileUserDetailsService implements UserDetailsService {
      */
     private long lastModified;
 
-    /** The logger. */
+    /**
+     * The logger.
+     */
     private final Logger logger = LoggerFactory.getLogger( getClass() );
 
     //---------------------------------------------
@@ -63,13 +76,14 @@ public class FileUserDetailsService implements UserDetailsService {
 
     /**
      * Load user details for a given username.
+     *
      * @param username the user name.
      * @return the details
      */
     public synchronized UserDetails loadUserByUsername( String username ) {
         try {
             if ( userFile == null || !userFile.exists()
-                 || userFile.lastModified() > lastModified )
+                    || userFile.lastModified() > lastModified )
                 readUserDefinitions();
 
         } catch ( IOException e ) {
@@ -77,11 +91,11 @@ public class FileUserDetailsService implements UserDetailsService {
             logger.error( msg, e );
             throw new DataRetrievalFailureException( msg, e );
         }
-        User result = details.get( username );
-        if ( result == null )
+        User user = details.get( username );
+        if ( user == null )
             throw new UsernameNotFoundException( MessageFormat.format(
                     "Unknown username: {0}", username ) );
-        return result;
+        return user;
     }
 
     private synchronized void readUserDefinitions() throws IOException {
@@ -94,27 +108,62 @@ public class FileUserDetailsService implements UserDetailsService {
             for ( String username : properties.stringPropertyNames() ) {
                 String values = properties.getProperty( username );
                 StringTokenizer tokens = new StringTokenizer( values, "," );
-                User d = new User( username );
-                d.setPassword( tokens.nextToken() );
-
-                String planId = tokens.nextToken();
-
-                while ( tokens.hasMoreTokens() )
-                    d.addRole( tokens.nextToken() );
-                details.put( username, d );
-                d.setPlan( getPlan( planId, username ) );
+                User user = new User( username );
+                user.setPassword( tokens.nextToken() );
+                while ( tokens.hasMoreTokens() ) {
+                    String token = tokens.nextToken();
+                    if ( token.startsWith( "[" ) ) {
+                        parsePlanAccess( token, user );
+                    } else {
+                        // admin role or default role for all accessible plans
+                        if (token.equals(User.ROLE_ADMIN)) {
+                            for (Plan plan : getPlanManager().getPlans()) {
+                                user.setPlanAccess( plan.getUri(), true);
+                            }
+                        }
+                        user.addRole( token );
+                    }
+                }
+                user.setPlan( getDefaultPlan( user ) );
+                details.put( username, user );
             }
         } finally {
             if ( inputStream != null )
                 inputStream.close();
         }
-
         if ( userFile != null && !userFile.exists() )
             writeUserDefinitions();
-
         lastModified = userFile == null ? System.currentTimeMillis() : userFile.lastModified();
     }
 
+    // e.g. [mindalliance.com/channels/plans/sci|ROLE_PLANNER]
+    // e.g. [mindalliance.com/channels/plans/sci]
+    private void parsePlanAccess( String string, User user ) {
+        assert string.endsWith( "]" );
+        String planAccess = string.substring( 1, string.length() - 1 );
+        StringTokenizer tokens = new StringTokenizer( planAccess, "|" );
+        String uri = tokens.nextToken();
+        boolean planner = false;
+        if ( tokens.hasMoreTokens() ) {
+            planner = tokens.nextToken().equals( User.ROLE_PLANNER );
+        }
+        user.setPlanAccess( uri, planner );
+    }
+
+    private Plan getDefaultPlan( User user ) {
+        Plan plan = null;
+        String uri = user.getDefaultPlanUri();
+        if ( uri != null ) {
+            plan = getPlanManager().getPlanWithUri( uri );
+        }
+        if ( plan == null ) {
+            logger.warn( "Using default plan for user " + user.getUsername() );
+            plan = getPlanManager().getCurrentPlan();
+        }
+        return plan;
+    }
+
+/*
     private Plan getPlan( String planId, String username ) {
         try {
             return planManager.get( Long.parseLong( planId ) );
@@ -123,6 +172,7 @@ public class FileUserDetailsService implements UserDetailsService {
             return planManager.getCurrentPlan();
         }
     }
+*/
 
     private InputStream findInputStream() throws IOException {
         InputStream inputStream;
@@ -142,6 +192,7 @@ public class FileUserDetailsService implements UserDetailsService {
 
     /**
      * Write the user definition in memory to the disk storage.
+     *
      * @throws IOException on write errors
      */
     public synchronized void writeUserDefinitions() throws IOException {
@@ -174,6 +225,7 @@ public class FileUserDetailsService implements UserDetailsService {
 
     /**
      * Set the user definitions location.
+     *
      * @param userDefinitions a file path
      */
     public synchronized void setUserDefinitions( String userDefinitions ) {

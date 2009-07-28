@@ -92,7 +92,7 @@ public class PlanShowMenuPanel extends MenuPanel {
 //                        PopupSettings.MENU_BAR ) );
         menuItems.add( new LinkMenuItem(
                 "menuItem",
-                new Model<String>( "Playbook" ),
+                new Model<String>( "Plan as document" ),
                 reportLink ) );
         return menuItems;
     }

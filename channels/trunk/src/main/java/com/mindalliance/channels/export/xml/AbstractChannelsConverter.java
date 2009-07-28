@@ -1,6 +1,7 @@
 package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.AttachmentManager;
+import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.export.ConnectionSpecification;
@@ -81,14 +82,15 @@ public abstract class AbstractChannelsConverter implements Converter {
 
     /**
      * Find or create an entity given name and possibly an id.
+     *
      * @param entityClass a class extending ModelObject
-     * @param name a string
-     * @param id a string (null or convertible to a long)
+     * @param name        a string
+     * @param id          a string (null or convertible to a long)
      * @return a model object
      */
     protected <T extends ModelObject> T findOrCreate( Class<T> entityClass, String name, String id ) {
         if ( id == null ) {
-            LOG.warn( "Recreating referenced " + entityClass.getSimpleName() + " without id");
+            LOG.warn( "Recreating referenced " + entityClass.getSimpleName() + " without id" );
             return getQueryService().findOrCreate( entityClass, name );
         } else {
             return getQueryService().findOrCreate( entityClass, name, Long.valueOf( id ) );
@@ -226,6 +228,26 @@ public abstract class AbstractChannelsConverter implements Converter {
             modelObject.waiveIssueDetection( detection );
             reader.moveUp();
         }
+    }
+
+    /**
+     * Find model object.
+     *
+     * @param clazz a class
+     * @param id    a long
+     * @return a model object
+     * @throws NotFoundException if not found
+     */
+    @SuppressWarnings( "unchecked" )
+    protected <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException {
+        T about;
+        if ( getContext().getPlan().getId() == id ) {
+            // in case the issue is about the plan being loaded -- it is not yet findable.
+            about = (T) getContext().getPlan();
+        } else {
+            about = getQueryService().find( clazz, id );
+        }
+        return about;
     }
 
 }
