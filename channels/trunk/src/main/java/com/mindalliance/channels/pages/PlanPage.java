@@ -155,6 +155,10 @@ public final class PlanPage extends WebPage implements Updatable {
      */
     private DropDownChoice<Plan> planDropDownChoice;
     /**
+     * Container of link to admin page.
+     */
+    private WebMarkupContainer adminContainer;
+    /**
      * Scenarios action menu.
      */
     private MenuPanel planActionsMenu;
@@ -270,7 +274,7 @@ public final class PlanPage extends WebPage implements Updatable {
         add( form );
         addHeader();
         addRefresh();
-        addScenarioMenubar();
+        addPlanMenubar();
         addScenarioSelector();
         addPlanSwitcher();
         scenarioPanel = new ScenarioPanel(
@@ -442,7 +446,7 @@ public final class PlanPage extends WebPage implements Updatable {
                         new Model<String>( issue.isEmpty() ? "No known issue" : issue ) ) );
     }
 
-    private void addScenarioMenubar() {
+    private void addPlanMenubar() {
         PropertyModel<Scenario> sc = new PropertyModel<Scenario>( this, "scenario" );
         Set<Long> exps = getReadOnlyExpansions();
 
@@ -454,6 +458,8 @@ public final class PlanPage extends WebPage implements Updatable {
         planShowMenu.setOutputMarkupId( true );
         form.add( planShowMenu );
         form.add( new Label( "username", user.getUsername() ) );
+        adminContainer = new WebMarkupContainer("admin");
+        form.add( adminContainer );
     }
 
     private void addPlanActionsMenu() {
@@ -1162,6 +1168,7 @@ public final class PlanPage extends WebPage implements Updatable {
     private void updateVisibility() {
         makeVisible( selectScenarioContainer, getAllScenarios().size() > 1 );
         makeVisible( switchPlanContainer, getWritablePlans().size() > 1 );
+        makeVisible( adminContainer, user.isAdmin() );
     }
 
     /**

@@ -14,8 +14,13 @@
     <h1>Channels Administration</h1>
 
     <ul>
-        <li><a wicket:id="playbook">playbook</a></li>
-        <li><a wicket:id="plan">plan</a></li>
+        <li><label>Switch to plan:
+            <select wicket:id="plan-sel" name="plan">
+                <option>Some plan</option>
+            </select></label>
+        </li>
+        <li><a wicket:id="playbook">Read plan</a></li>
+        <li><a wicket:id="plan">Build plan</a></li>
     </ul>
     <!-- Users -->
 
