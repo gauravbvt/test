@@ -157,6 +157,9 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
             protected void onUpdate( AjaxRequestTarget target ) {
                 makeVisible( userChoice, isParticipant() );
                 target.addComponent( userChoice );
+                if ( !( isParticipant() && getActor().getUserName() == null ) ) {
+                    update( target, new Change( Change.Type.Updated, getActor(), "userName" ) );
+                }
             }
         } );
         moDetailsDiv.add( isParticipantCheckBox );

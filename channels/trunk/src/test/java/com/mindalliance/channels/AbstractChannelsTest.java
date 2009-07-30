@@ -50,6 +50,7 @@ import com.mindalliance.channels.analysis.detectors.UntimelyCriticalCommitment;
 import com.mindalliance.channels.analysis.detectors.UntimelyTriggeringCommitment;
 import com.mindalliance.channels.analysis.detectors.UnverifiedPostalCode;
 import com.mindalliance.channels.analysis.detectors.UselessPart;
+import com.mindalliance.channels.analysis.detectors.UserIsManyActors;
 import com.mindalliance.channels.attachments.FileBasedManager;
 import com.mindalliance.channels.command.DefaultCommander;
 import com.mindalliance.channels.command.DefaultLockManager;
@@ -204,6 +205,7 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new InconsistentImpactOnTargetPart() );
         detectors.add( new UntimelyCriticalCommitment() );
         detectors.add( new SinglePointOfFailure() );
+        detectors.add( new UserIsManyActors() );
         for ( IssueDetector detector : detectors ) {
             ( (AbstractIssueDetector) detector ).setQueryService( queryService );
         }

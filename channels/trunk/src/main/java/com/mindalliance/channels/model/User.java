@@ -410,19 +410,22 @@ public class User implements UserDetails {
     }
 
     /**
-     * Return a normalized version of the full name.
+     * Return a normalized version of the full name with username.
      *
      * @return a string
      */
     @Transient
     public String getNormalizedFullName() {
+        String normalized;
         String name = getFullName().trim();
         int index = name.lastIndexOf( ' ' );
         if ( index >= 0 ) {
             String s = name.substring( 0, index );
-            return name.substring( index + 1 ) + ", " + s;
-        } else
-            return name;
+            normalized = name.substring( index + 1 ) + ", " + s;
+        } else {
+            normalized = name;
+        }
+        return normalized + " (" + username + ")";
     }
 
 

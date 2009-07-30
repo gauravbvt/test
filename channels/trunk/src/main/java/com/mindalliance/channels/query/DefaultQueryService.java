@@ -2039,6 +2039,22 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
         return getPartPriority( part, new ArrayList<Part>() );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<Actor> findAllActorsAsUser( final String userName ) {
+        return (List<Actor>) CollectionUtils.select(
+                list( Actor.class ),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        String name = ( (Actor) obj ).getUserName();
+                        return name != null && name.equals( userName );
+                    }
+                }
+        );
+    }
+
     private Issue.Level getPartPriority( Part part, List<Part> visited ) {
         visited.add( part );
         Issue.Level max = Issue.Level.Minor;

@@ -208,6 +208,9 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.SinglePointOfFailure">
                      <property name="queryService" ref="queryService"/>
                 </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.UserIsManyActors">
+                     <property name="queryService" ref="queryService"/>
+                </bean>
              </list>
         </property>
     </bean>

@@ -21,9 +21,9 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.nlp.Proximity;
 import com.mindalliance.channels.util.Employment;
 import com.mindalliance.channels.util.Play;
-import com.mindalliance.channels.nlp.Proximity;
 
 import java.util.Iterator;
 import java.util.List;
@@ -880,4 +880,12 @@ public interface QueryService extends Service {
      * @return an issue level
      */
     Issue.Level getPartPriority( Part part );
+
+    /**
+     * Find all actors personifying user with given username.
+     *
+     * @param userName a string
+     * @return a list of actors
+     */
+    List<Actor> findAllActorsAsUser( String userName );
 }
