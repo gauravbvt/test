@@ -294,7 +294,6 @@ public class PlanDao extends Memory {
 
         // Make sure there is at least one scenario per plan
         if ( !list( Scenario.class ).iterator().hasNext() )
-            queryService.createScenario();
-
+            plan.addScenario( queryService.createScenario() );
     }
 }

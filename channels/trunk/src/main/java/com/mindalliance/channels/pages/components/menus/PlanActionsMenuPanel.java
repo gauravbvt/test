@@ -59,15 +59,15 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
         final Scenario scenario = getScenario();
         commandWrappers.add( new CommandWrapper( new PastePart( getScenario() ) ) {
-             public void onExecuted( AjaxRequestTarget target, Change change ) {
-                 update( target, change );
-             }
-         } );
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                update( target, change );
+            }
+        } );
         commandWrappers.add( new CommandWrapper( new PasteAttachment( getScenario() ) ) {
-             public void onExecuted( AjaxRequestTarget target, Change change ) {
-                 update( target, change );
-             }
-         } );
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                update( target, change );
+            }
+        } );
         commandWrappers.add( new CommandWrapper( new AddPart( scenario ) ) {
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 update( target, change );

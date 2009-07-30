@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * An in-memory, no-transactions implementation of a store.
@@ -38,7 +37,7 @@ public abstract class Memory implements Dao {
      * ModelObjects indexed by id.
      */
     private final Map<Long, ModelObject> indexMap = Collections.synchronizedMap(
-                                                    new HashMap<Long, ModelObject>() );
+            new HashMap<Long, ModelObject>() );
 
     //=======================================
     /**
@@ -49,12 +48,14 @@ public abstract class Memory implements Dao {
 
     /**
      * The plan manager.
+     *
      * @return The plan manager.
      */
     public abstract PlanManager getPlanManager();
 
     /**
      * The plan for the data managed by this dao.
+     *
      * @return he current plan
      */
     public abstract Plan getPlan();
@@ -87,7 +88,7 @@ public abstract class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public <T extends ModelObject> List<T> list( final Class<T> clazz ) {
         synchronized ( indexMap ) {
             return (List<T>) CollectionUtils.select( indexMap.values(), new Predicate() {
@@ -110,14 +111,13 @@ public abstract class Memory implements Dao {
      */
     public void add( ModelObject object, Long id ) {
         synchronized ( indexMap ) {
-            if ( id != null && indexMap.containsKey( id ) )
+            if ( id != null && indexMap.containsKey( id ) ) {
                 throw new DuplicateKeyException();
-
+            }
             object.setId( getIdGenerator().assignId( id ) );
             indexMap.put( object.getId(), object );
-
             if ( object instanceof Scenario ) {
-                getPlan().getScenarios().add( (Scenario) object );
+                getPlan().addScenario( (Scenario) object );
             }
         }
     }
@@ -169,7 +169,7 @@ public abstract class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException {
         return (T) find( id );
     }
@@ -179,19 +179,14 @@ public abstract class Memory implements Dao {
      */
     public void remove( ModelObject object ) {
         if ( object instanceof Scenario )
-            remove( (Scenario) object );
+            removeScenario( (Scenario) object );
         else
             indexMap.remove( object.getId() );
     }
 
-    private void remove( Scenario scenario ) {
-        Set<Scenario> scenarios = getPlan().getScenarios();
-        if ( scenarios.size() > 1 ) {
-            scenarios.remove( scenario );
-            indexMap.remove( scenario.getId() );
-
-            scenario.disconnect();
-        }
+    private void removeScenario( Scenario scenario ) {
+        indexMap.remove( scenario.getId() );
+        scenario.disconnect();
     }
 
 

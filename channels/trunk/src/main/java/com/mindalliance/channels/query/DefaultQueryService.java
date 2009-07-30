@@ -273,18 +273,22 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
      * {@inheritDoc}
      */
     public Scenario createScenario( Long id, Long defaultPartId ) {
-        Scenario result = new Scenario();
+        Scenario newScenario = new Scenario();
         if ( id == null )
-            getDao().add( result );
+            getDao().add( newScenario );
         else
-            getDao().add( result, id );
-        result.setName( Scenario.DEFAULT_NAME );
-        result.setDescription( Scenario.DEFAULT_DESCRIPTION );
+            getDao().add( newScenario, id );
+        newScenario.setName( Scenario.DEFAULT_NAME );
+        newScenario.setDescription( Scenario.DEFAULT_DESCRIPTION );
         // Make sure a scenario responds to an event.
-        result.setEvent( planManager.getCurrentPlan().getDefaultEvent() );
-        result.setQueryService( this );
-        createPart( result, defaultPartId );
-        return result;
+        newScenario.setEvent( planManager.getCurrentPlan().getDefaultEvent() );
+        newScenario.setQueryService( this );
+        createPart( newScenario, defaultPartId );
+        return newScenario;
+    }
+
+    private Plan getPlan() {
+        return User.current().getPlan();
     }
 
     /**
@@ -1643,7 +1647,7 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
      */
     public List<Issue> findAllIssues( Analyst analyst ) {
         List<Issue> allIssues = new ArrayList<Issue>();
-        allIssues.addAll( analyst.listIssues( User.current().getPlan(), true ) );
+        allIssues.addAll( analyst.listIssues( getPlan(), true ) );
         for ( ModelObject mo : list( ModelObject.class ) ) {
             allIssues.addAll( analyst.listIssues( mo, true ) );
         }
@@ -1665,7 +1669,7 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
      */
     public List<Issue> findAllUnwaivedIssues( Analyst analyst ) {
         List<Issue> allUnwaivedIssues = new ArrayList<Issue>();
-        allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( User.current().getPlan(), true ) );
+        allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( getPlan(), true ) );
         for ( ModelObject mo : list( ModelObject.class ) ) {
             allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( mo, true ) );
         }

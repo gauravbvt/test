@@ -11,6 +11,7 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.export.ImportExportFactory;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.User;
 
@@ -39,7 +40,7 @@ public class RemoveScenario extends AbstractCommand {
             addConflicting( parts.next() );
         }
         Iterator<Flow> flows = scenario.flows();
-        while( flows.hasNext() ) {
+        while ( flows.hasNext() ) {
             addConflicting( flows.next() );
         }
     }
@@ -64,9 +65,11 @@ public class RemoveScenario extends AbstractCommand {
             Exporter exporter = factory.createExporter( queryService, User.current().getPlan() );
             exporter.export( scenario, bos );
             set( "xml", bos.toString() );
-            if ( queryService.list( Scenario.class ).size() == 1 ) {
-                // first create a new scenario
+            Plan plan = User.current().getPlan();
+            if ( plan.getScenarioCount() == 1 ) {
+                // first create a new, replacement scenario
                 Scenario defaultScenario = queryService.createScenario();
+                plan.addScenario( defaultScenario );
                 set( "defaultScenario", defaultScenario.getId() );
             }
             queryService.remove( scenario );
@@ -91,6 +94,10 @@ public class RemoveScenario extends AbstractCommand {
         if ( xml != null ) {
             RestoreScenario restoreScenario = new RestoreScenario();
             restoreScenario.set( "xml", xml );
+            Long defaultScenarioId = (Long) get( "defaultScenario" );
+            if ( defaultScenarioId != null ) {
+                restoreScenario.set( "defaultScenario", defaultScenarioId );
+            }
             return restoreScenario;
         } else {
             throw new CommandException( "Can not restore scenario." );

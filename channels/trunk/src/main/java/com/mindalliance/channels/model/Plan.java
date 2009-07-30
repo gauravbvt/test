@@ -108,6 +108,15 @@ public class Plan extends ModelObject {
     }
 
     /**
+     * Add a scenario to list.
+     *
+     * @param scenario a scenario
+     */
+    public void addScenario( Scenario scenario ) {
+        scenarios.add( scenario );
+    }
+
+    /**
      * Remove deleted scenario from list.
      *
      * @param scenario a scenario
@@ -135,4 +144,5 @@ public class Plan extends ModelObject {
     public Scenario getDefaultScenario() {
         return getScenarios().iterator().next();
     }
+
 }
