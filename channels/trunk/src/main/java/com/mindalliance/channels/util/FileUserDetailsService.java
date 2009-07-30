@@ -110,6 +110,8 @@ public class FileUserDetailsService implements UserDetailsService {
                 StringTokenizer tokens = new StringTokenizer( values, "," );
                 User user = new User( username );
                 user.setPassword( tokens.nextToken() );
+                user.setFullName( tokens.nextToken() );
+                user.setEmail( tokens.nextToken() );
                 while ( tokens.hasMoreTokens() ) {
                     String token = tokens.nextToken();
                     if ( token.startsWith( "[" ) ) {
@@ -119,6 +121,7 @@ public class FileUserDetailsService implements UserDetailsService {
                         if (token.equals(User.ROLE_ADMIN)) {
                             for (Plan plan : getPlanManager().getPlans()) {
                                 user.setPlanAccess( plan.getUri(), true);
+                                planManager.addUser( user );
                             }
                         }
                         user.addRole( token );
@@ -148,6 +151,7 @@ public class FileUserDetailsService implements UserDetailsService {
             planner = tokens.nextToken().equals( User.ROLE_PLANNER );
         }
         user.setPlanAccess( uri, planner );
+        planManager.addUser( user );        
     }
 
     private Plan getDefaultPlan( User user ) {

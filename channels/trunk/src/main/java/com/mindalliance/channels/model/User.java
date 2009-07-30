@@ -51,7 +51,7 @@ public class User implements UserDetails {
     /**
      * Its full name.
      */
-    private String fullName;
+    private String fullName = "";
 
     /**
      * True if user is anonymous.
@@ -61,7 +61,7 @@ public class User implements UserDetails {
     /**
      * Its email address.
      */
-    private String email;
+    private String email = "";
 
     /**
      * True if user is a modeler for plan (URI).
@@ -280,9 +280,24 @@ public class User implements UserDetails {
         );
     }
 
+    /**
+     * User can modify current plan.
+     *
+     * @return a boolean
+     */
     @Transient
     public boolean isPlanner() {
         return canPlan( getPlan() );
+    }
+
+    /**
+     * User can at least view the current plan.
+     *
+     * @return a boolean
+     */
+    @Transient
+    public boolean isParticipant() {
+        return canRead( getPlan() );
     }
 
     private boolean canPlan( Plan plan ) {
@@ -354,6 +369,10 @@ public class User implements UserDetails {
         StringWriter buffer = new StringWriter();
         buffer.write( getPassword() );
         buffer.write( "," );
+        buffer.write( getFullName() );
+        buffer.write( "," );
+        buffer.write( getEmail() );        
+        buffer.write( "," );
         for ( String uri : plans.keySet() ) {
             buffer.write( "[" );
             buffer.write( uri );
@@ -389,5 +408,22 @@ public class User implements UserDetails {
             }
         }
     }
+
+    /**
+     * Return a normalized version of the full name.
+     *
+     * @return a string
+     */
+    @Transient
+    public String getNormalizedFullName() {
+        String name = getFullName().trim();
+        int index = name.lastIndexOf( ' ' );
+        if ( index >= 0 ) {
+            String s = name.substring( 0, index );
+            return name.substring( index + 1 ) + ", " + s;
+        } else
+            return name;
+    }
+
 
 }

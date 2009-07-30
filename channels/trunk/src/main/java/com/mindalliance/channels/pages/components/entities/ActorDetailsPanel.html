@@ -15,6 +15,16 @@
     </tr>
     <tr>
         <th align="right">
+            <label for="user">Is user:</label>
+        </th>
+        <td> <input wicket:id="isParticipant" type="checkbox"/>
+            <select id="user" wicket:id="user">
+                <option>guest</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <th align="right">
             <label for="contact-info">Contact info:</label>
         </th>
         <td><span id="contact-info" wicket:id="channels">[channel list panel]</span></td>
@@ -28,6 +38,7 @@
             <select wicket:id="indexed">
                 <option>Role</option>
             </select>
+
             <div>
                 <span wicket:id="nameRanges">[name range panel]</span>
                 <span wicket:id="actorEmployments">[actor employments panel]</span>

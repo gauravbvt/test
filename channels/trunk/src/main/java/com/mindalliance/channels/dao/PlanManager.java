@@ -14,6 +14,7 @@ import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.query.DefaultQueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.PredicateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -31,9 +32,11 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 /**
@@ -77,6 +80,11 @@ public class PlanManager implements InitializingBean {
      */
     private final Map<String, PlanDao> planIndex =
             Collections.synchronizedMap( new HashMap<String, PlanDao>() );
+    /**
+     * User participations in plans.
+     * plan uri => participation
+     */
+    private Set<User> users = new HashSet<User>();
 
     /**
      * The plan importer.
@@ -148,20 +156,6 @@ public class PlanManager implements InitializingBean {
 
     public synchronized void setBase( String base ) {
         this.base = base;
-    }
-
-    /**
-     * Find a plan given its id.
-     *
-     * @param id the id
-     * @return the plan
-     * @throws NotFoundException when there are no plans with this id
-     */
-    public Plan get( long id ) throws NotFoundException {
-        PlanDao result = planIndex.get( id );
-        if ( result == null )
-            throw new NotFoundException();
-        return result.getPlan();
     }
 
     /**
@@ -426,8 +420,8 @@ public class PlanManager implements InitializingBean {
     /**
      * Replay journaled commands for all plans.
      *
-     * @param queryService the query service
-     * @param commander    the commander
+     * @param queryService a query service
+     * @param commander the commander
      */
     public void replayJournals( QueryService queryService, Commander commander ) {
         synchronized ( planIndex ) {
@@ -437,6 +431,9 @@ public class PlanManager implements InitializingBean {
                 try {
                     commander.replay( dao.getJournal() );
                     logger.info( "Replayed journal for plan {}", plan );
+                    dao.save( importExportFactory.createExporter( queryService, dao.getPlan() ) );
+                } catch ( IOException e ) {
+                    logger.error( MessageFormat.format( "Unable to save plan {0}", dao.getPlan() ), e );
                 } catch ( CommandException e ) {
                     logger.error(
                             MessageFormat.format( "Unable to replay journal for plan {0}", plan ),
@@ -519,9 +516,6 @@ public class PlanManager implements InitializingBean {
             try {
                 currentDao = dao;
                 dao.validate( service );
-                dao.save( importExportFactory.createExporter( service, dao.getPlan() ) );
-            } catch ( IOException e ) {
-                logger.error( MessageFormat.format( "Unable to save plan {0}", dao.getPlan() ), e );
             } finally {
                 currentDao = null;
             }
@@ -607,6 +601,45 @@ public class PlanManager implements InitializingBean {
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         return ( (Plan) obj ).getUri().equals( uri );
+                    }
+                }
+        );
+    }
+
+    /**
+     * Register user.
+     *
+     * @param user a user
+     */
+    public void addUser( User user ) {
+        users.add( user );
+    }
+
+    /**
+     * Get all users participating in the current plan.
+     *
+     * @return a list of users
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<User> getParticipants() {
+        return (List<User>) CollectionUtils.select(
+                new ArrayList<User>( users ),
+                PredicateUtils.invokerPredicate( "isParticipant" )
+        );
+    }
+
+    /**
+     * Find participant given user name.
+     *
+     * @param userName a string
+     * @return a user
+     */
+    public User getParticipant( final String userName ) {
+        return (User) CollectionUtils.find(
+                getParticipants(),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ( (User) obj ).getUsername().equals( userName );
                     }
                 }
         );

@@ -57,6 +57,11 @@ public class ActorConverter extends EntityConverter {
             writer.setValue( "true" );
             writer.endNode();
         }
+        if ( actor.getUserName() != null ) {
+            writer.startNode( "user" );
+            writer.setValue( actor.getUserName() );
+            writer.endNode();
+        }
         // channels
         for ( Channel channel : actor.getChannels() ) {
             writer.startNode( "channel" );
@@ -76,6 +81,8 @@ public class ActorConverter extends EntityConverter {
         if ( nodeName.equals( "channel" ) ) {
             Channel channel = (Channel) context.convertAnother( scenario, Channel.class );
             actor.addChannel( channel );
+        } else if ( nodeName.equals( "user" ) ) {
+            actor.setUserName( reader.getValue() );
         } else if ( nodeName.equals( "system" ) ) {
             boolean isSystem = reader.getValue().equals( "true" );
             actor.setSystem( isSystem );
