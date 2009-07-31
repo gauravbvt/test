@@ -132,11 +132,8 @@ public class RiskListPanel extends AbstractCommandablePanel {
                 new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                     @Override
                     protected void onUpdate( AjaxRequestTarget target ) {
-                        if ( !wrapper.isMarkedForCreation() ) {
+                        if ( !wrapper.isUndergoingCreation() ) {
                             update( target, new Change( Change.Type.Updated, getScenario(), "risks" ) );
-                        } else {
-                            addDeleteImage( item );
-                            target.addComponent( item );
                         }
                     }
                 } );
@@ -166,11 +163,8 @@ public class RiskListPanel extends AbstractCommandablePanel {
                 new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                     @Override
                     protected void onUpdate( AjaxRequestTarget target ) {
-                        if ( !wrapper.isMarkedForCreation() ) {
+                        if ( !wrapper.isUndergoingCreation() ) {
                             update( target, new Change( Change.Type.Updated, getScenario(), "risks" ) );
-                        } else {
-                            addDeleteImage( item );
-                            target.addComponent( item );
                         }
 
                     }
@@ -196,11 +190,8 @@ public class RiskListPanel extends AbstractCommandablePanel {
         };
         orgNameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                if ( !wrapper.isMarkedForCreation() ) {
+                if ( !wrapper.isUndergoingCreation() ) {
                     update( target, new Change( Change.Type.Updated, getScenario(), "risks" ) );
-                } else {
-                    addDeleteImage( item );
-                    target.addComponent( item );
                 }
             }
         } );
@@ -214,13 +205,13 @@ public class RiskListPanel extends AbstractCommandablePanel {
                 wrapper.deleteRisk();
                 update( target,
                         new Change(
-                        Change.Type.Updated,
-                        getScenario(),
-                        "risks"
-                ) );
+                                Change.Type.Updated,
+                                getScenario(),
+                                "risks"
+                        ) );
             }
         };
-        makeVisible( deleteLink, wrapper.canBeDeleted() );
+        makeVisible( deleteLink, wrapper.isComplete() );
         item.addOrReplace( deleteLink );
     }
 
@@ -393,30 +384,29 @@ public class RiskListPanel extends AbstractCommandablePanel {
         }
 
         /**
-         * Can risk be confirmed?
+         * Can risk be deleted?
          *
          * @return a boolean
          */
-        public boolean canBeDeleted() {
-            return risk.getType() != null && risk.getSeverity() != null;
+        public boolean isComplete() {
+            return risk.getType() != null && risk.getSeverity() != null && risk.getOrganization() != null;
         }
 
         public void deleteRisk() {
             selectedRisk = null;
-             if ( getScenario().getRisks().contains( risk ) ) {
-                 doCommand( new UpdatePlanObject(
-                         getScenario(),
-                         "risks",
-                         risk,
-                         UpdateObject.Action.Remove
-                 ) );
-             }
+            if ( getScenario().getRisks().contains( risk ) ) {
+                doCommand( new UpdatePlanObject(
+                        getScenario(),
+                        "risks",
+                        risk,
+                        UpdateObject.Action.Remove
+                ) );
+            }
         }
 
- /*       public void setConfirmed( boolean confirmed ) {
-            this.confirmed = confirmed;
-            if ( confirmed ) {
-                assert markedForCreation;
+        public void addIfComplete() {
+            assert markedForCreation;
+            if ( risk.getType() != null && risk.getSeverity() != null && risk.getOrganization() != null ) {
                 if ( !getScenario().getRisks().contains( risk ) ) {
                     doCommand( new UpdatePlanObject(
                             getScenario(),
@@ -425,19 +415,34 @@ public class RiskListPanel extends AbstractCommandablePanel {
                             UpdateObject.Action.Add
                     ) );
                 }
-            } else if ( !markedForCreation ) {
-                selectedRisk = null;
-                if ( getScenario().getRisks().contains( risk ) ) {
-                    doCommand( new UpdatePlanObject(
-                            getScenario(),
-                            "risks",
-                            risk,
-                            UpdateObject.Action.Remove
-                    ) );
-                }
             }
         }
-*/
+
+        /*       public void setConfirmed( boolean confirmed ) {
+                    this.confirmed = confirmed;
+                    if ( confirmed ) {
+                        assert markedForCreation;
+                        if ( !getScenario().getRisks().contains( risk ) ) {
+                            doCommand( new UpdatePlanObject(
+                                    getScenario(),
+                                    "risks",
+                                    risk,
+                                    UpdateObject.Action.Add
+                            ) );
+                        }
+                    } else if ( !markedForCreation ) {
+                        selectedRisk = null;
+                        if ( getScenario().getRisks().contains( risk ) ) {
+                            doCommand( new UpdatePlanObject(
+                                    getScenario(),
+                                    "risks",
+                                    risk,
+                                    UpdateObject.Action.Remove
+                            ) );
+                        }
+                    }
+                }
+        */
         public Issue.Level getSeverity() {
             return risk.getSeverity();
         }
@@ -445,6 +450,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
         public void setSeverity( Issue.Level value ) {
             if ( markedForCreation ) {
                 risk.setSeverity( value );
+                addIfComplete();
             } else {
                 if ( value != risk.getSeverity() ) {
                     int index = getScenario().getRisks().indexOf( risk );
@@ -467,6 +473,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
         public void setType( Risk.Type value ) {
             if ( markedForCreation ) {
                 risk.setType( value );
+                addIfComplete();
             } else {
                 if ( value != risk.getType() ) {
                     int index = getScenario().getRisks().indexOf( risk );
@@ -493,6 +500,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
                 Organization org = getQueryService().findOrCreate( Organization.class, name );
                 if ( markedForCreation ) {
                     risk.setOrganization( org );
+                    addIfComplete();
                 } else {
                     int index = getScenario().getRisks().indexOf( risk );
                     if ( index >= 0 ) {
@@ -530,6 +538,10 @@ public class RiskListPanel extends AbstractCommandablePanel {
                 }
             }
         }
+
+        private boolean isUndergoingCreation() {
+            return isMarkedForCreation() && !isComplete();
+        }
     }
 
     /**
@@ -556,6 +568,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
             initTable();
         }
 
+        @SuppressWarnings( "unchecked" )
         private void initTable() {
             List<Mitigator> mitigators = new ArrayList<Mitigator>();
             for ( Part part : getQueryService().findMitigations( scenario, risk ) ) {
