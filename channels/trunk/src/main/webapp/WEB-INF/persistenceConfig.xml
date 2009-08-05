@@ -57,6 +57,10 @@
                      advice-ref="permSet"/>
         <aop:advisor pointcut="execution(com.mindalliance.channels.nlp.Proximity com.mindalliance.channels.SemanticMatcher.semanticProximity(..))"
                       advice-ref="permSet"/>
+        <aop:advisor pointcut="execution(Double com.mindalliance.channels.SemanticMatcher.assessSimilarity(..))"
+                       advice-ref="permSet"/>
+        <aop:advisor pointcut="execution(net.didion.jwnl.data.IndexWord com.mindalliance.channels.SemanticMatcher.lookupBaseForm(..))"
+                       advice-ref="permSet"/>
         <!-- Temporary caching trigger -->
         <aop:advisor pointcut="execution(* com.mindalliance.channels.dao.PlanManager.onAfterCommand(..))"
                      advice-ref="cacheClear"/>

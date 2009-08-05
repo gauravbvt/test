@@ -1,6 +1,9 @@
 package com.mindalliance.channels;
 
 import com.mindalliance.channels.nlp.Proximity;
+import net.didion.jwnl.JWNLException;
+import net.didion.jwnl.data.IndexWord;
+import net.didion.jwnl.data.POS;
 
 import java.util.List;
 
@@ -41,4 +44,22 @@ public interface SemanticMatcher {
      * @return a semantic proximity value
      */
     public Proximity semanticProximity( String text, String otherText );
+
+    /**
+     * Assess conceptual similarity between two nouns.
+     * @param noun a string
+     * @param otherNoun a string
+     * @return a Double
+     */
+    Double assessSimilarity( String noun, String otherNoun );
+
+    /**
+     * Lookup base form of a string in WordNet.
+     * Put in interface to allow AOP-based caching.
+     * @param pos a POS
+     * @param word a String
+     * @return an IndexWord
+     * @throws JWNLException if lookup fails
+     */
+    IndexWord lookupBaseForm( POS pos, String word ) throws JWNLException;
 }

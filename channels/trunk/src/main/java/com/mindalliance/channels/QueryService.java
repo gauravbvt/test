@@ -855,7 +855,7 @@ public interface QueryService extends Service {
      * @param otherText a string
      * @return a boolean
      */
-    boolean mayBeRelated( String text, String otherText );
+    boolean likelyRelated( String text, String otherText );
 
     /**
      * Find all sharing commitments addressing a given information need.

@@ -1,5 +1,7 @@
 package com.mindalliance.channels.nlp;
 
+import java.io.Serializable;
+
 /**
  * Semantic proximity.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -8,7 +10,7 @@ package com.mindalliance.channels.nlp;
  * Date: Jul 9, 2009
  * Time: 10:08:32 PM
  */
-public enum Proximity {
+public enum Proximity implements Serializable {
         /**
          *  No match.
          */

@@ -1979,13 +1979,13 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
     /**
      * {@inheritDoc}
      */
-    public boolean mayBeRelated( String text, String otherText ) {
+    public boolean likelyRelated( String text, String otherText ) {
         return
                 Matcher.matches( text, otherText ) ||
                         isSemanticMatch(
                                 StringUtils.uncapitalize( text ),
                                 StringUtils.uncapitalize( otherText ),
-                                Proximity.MEDIUM );
+                                Proximity.HIGH );
     }
 
     /**

@@ -237,25 +237,25 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             Iterator<Flow> nodeFlows = node.outcomes();
             while ( nodeFlows.hasNext() ) {
                 String name = nodeFlows.next().getName();
-                if ( queryService.mayBeRelated( s, name ) )
+                if ( queryService.likelyRelated( s, name ) )
                     choices.add( name );
             }
             nodeFlows = node.requirements();
             while ( nodeFlows.hasNext() ) {
                 String name = nodeFlows.next().getName();
-                if ( getQueryService().mayBeRelated( s, name ) )
+                if ( getQueryService().likelyRelated( s, name ) )
                     choices.add( name );
             }
             // all name-matching in-scenario flows of the right polarity
             for ( Flow flow : findRelevantInternalFlows() ) {
                 String name = flow.getName();
-                if ( queryService.mayBeRelated( s, name ) )
+                if ( queryService.likelyRelated( s, name ) )
                     choices.add( name );
             }
             // all name-matching connector inner flows of the right "polarity"
             for ( Connector connector : findAllRelevantConnectors() ) {
                 String name = connector.getInnerFlow().getName();
-                if ( queryService.mayBeRelated( s, name ) )
+                if ( queryService.likelyRelated( s, name ) )
                     choices.add( name );
             }
         }

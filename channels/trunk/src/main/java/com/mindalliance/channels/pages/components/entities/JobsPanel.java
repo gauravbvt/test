@@ -14,9 +14,9 @@ import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
+import com.mindalliance.channels.util.Matcher;
 import com.mindalliance.channels.util.NameRange;
 import com.mindalliance.channels.util.Play;
-import com.mindalliance.channels.util.Matcher;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -205,7 +205,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( getQueryService().mayBeRelated( s, choice ) ) candidates.add( choice );
+                    if ( getQueryService().likelyRelated( s, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
             }

@@ -1,9 +1,9 @@
 package com.mindalliance.channels.util;
 
+import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.nlp.Proximity;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -28,7 +28,7 @@ public class Matcher {
      */
     private static final Collator COLLATOR = Collator.getInstance();
 
-    private static List<String> NOISE_WORDS;
+    public static List<String> NOISE_WORDS;
 
     private static final String SEPARATORS = " .,:;?!/\\|+-'\"()[]";
 
@@ -39,11 +39,12 @@ public class Matcher {
         String[] words = {
                 "a", "an", "the", "it", "they", "we",
                 "and", "or", "so", "then",
-                "of", "by", "from", "at", "in", "out", "into", "off",
+                "of", "by", "from", "at", "in", "out", "into", "off", "to", "on",
                 "any", "all", "some", "most", "many", "few", "both",
                 "for", "if", "then",
                 "after", "before", "during",
-                "first", "last"
+                "first", "last",
+                "I", "you", "they", "us", "your", "my", "them"
         };
         NOISE_WORDS = Arrays.asList( words );
     }

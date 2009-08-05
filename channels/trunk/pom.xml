@@ -290,21 +290,15 @@
 
         <!-- Semantic proximity mantching -->
         <dependency>
-            <groupId>jwordnetsim</groupId>
-            <artifactId>jwordnetsim</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>postagger</groupId>
-            <artifactId>postagger</artifactId>
-            <version>1.6</version>
-        </dependency>
-        <dependency>
             <groupId>jwnl</groupId>
             <artifactId>jwnl</artifactId>
             <version>14.1</version>
         </dependency>
-        
+        <dependency>
+          <groupId>org.apache.lucene</groupId>
+          <artifactId>lucene-core</artifactId>
+          <version>1.9.1</version>
+        </dependency>
 
         <!-- LOGGING DEPENDENCIES -->
         <dependency>
@@ -454,7 +448,67 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
-
+            <!-- Plugin shading for Doxia integration with Maven 2.0 -->
+              <plugin>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.2</version>
+                <executions>
+                  <execution>
+                    <phase>package</phase>
+                    <goals>
+                      <goal>shade</goal>
+                    </goals>
+                    <configuration>
+                      <finalName>${project.build.finalName}</finalName>
+                      <createDependencyReducedPom>false</createDependencyReducedPom>
+                      <keepDependenciesWithProvidedScope>true</keepDependenciesWithProvidedScope>
+                      <transformers>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ComponentsXmlResourceTransformer" />
+                      </transformers>
+                      <artifactSet>
+                        <includes>
+                          <include>org.apache.maven.doxia:doxia-sink-api</include>
+                          <include>org.apache.maven.doxia:doxia-logging-api</include>
+                        </includes>
+                      </artifactSet>
+                    </configuration>
+                  </execution>
+                </executions>
+              </plugin>
+              <!-- Doxia -->
+            <plugin>
+              <groupId>org.apache.maven.doxia</groupId>
+              <artifactId>doxia-maven-plugin</artifactId>
+              <version>${doxiaVersion}</version>
+              <executions>
+                <execution>
+                  <phase>pre-site</phase>
+                  <goals>
+                    <goal>render-books</goal>
+                  </goals>
+                </execution>
+              </executions>
+              <configuration>
+                <generatedDocs>target/books</generatedDocs>
+                <books>
+                  <book>
+                    <directory>src/main/books/user_manual</directory>
+                    <descriptor>src/main/books/user_manual/user_manual.xml</descriptor>
+                    <formats>
+                      <format>
+                        <id>xhtml</id>
+                      </format>
+                      <format>
+                        <id>pdf</id>
+                      </format>
+                      <format>
+                        <id>rtf</id>
+                      </format>
+                    </formats>
+                  </book>
+                </books>
+              </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -534,5 +588,6 @@
     <properties>
         <wicket.version>1.4-SNAPSHOT</wicket.version>
         <jetty.version>6.1.4</jetty.version>
+        <doxiaVersion>1.0</doxiaVersion>
     </properties>
 </project>

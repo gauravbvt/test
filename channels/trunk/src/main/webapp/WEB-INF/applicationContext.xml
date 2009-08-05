@@ -8,9 +8,8 @@
            http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
     <bean id="semanticMatcher" class="com.mindalliance.channels.nlp.SemanticProximityMatcher">
-        <property name="simType" value="shef.nlp.wordnet.similarity.JCn"/>
-        <property name="taggerData" value="WEB-INF/data/left3words-wsj-0-18.tagger"/>
         <property name="wordnetDict" value="WEB-INF/data/wordnet-2/dict"/>
+        <property name="simIndex" value="WEB-INF/data/jwsl/wn_index"/>
     </bean>
 
     <bean id="queryService" class="com.mindalliance.channels.query.DefaultQueryService">

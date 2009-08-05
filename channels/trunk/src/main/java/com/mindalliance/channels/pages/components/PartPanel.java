@@ -191,7 +191,7 @@ public class PartPanel extends AbstractCommandablePanel {
 
     private boolean matches( String text, String otherText, boolean semMatching ) {
         if ( semMatching ) {
-            return getQueryService().mayBeRelated( text, otherText );
+            return getQueryService().likelyRelated( text, otherText );
         } else {
             return Matcher.matches( text, otherText );
         }
@@ -206,7 +206,7 @@ public class PartPanel extends AbstractCommandablePanel {
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( getQueryService().mayBeRelated( s, choice ) ) candidates.add( choice );
+                    if ( getQueryService().likelyRelated( s, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
 

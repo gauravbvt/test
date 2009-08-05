@@ -1,23 +1,25 @@
 package com.mindalliance.channels.nlp;
 
-import edu.stanford.nlp.ling.HasTag;
-import edu.stanford.nlp.ling.HasWord;
-import edu.stanford.nlp.ling.Sentence;
-import edu.stanford.nlp.ling.TaggedWord;
-import edu.stanford.nlp.tagger.maxent.MaxentTagger;
+import com.mindalliance.channels.SemanticMatcher;
+import jwsl.SimilarityAssessor;
+import jwsl.WordNotFoundException;
 import net.didion.jwnl.JWNL;
 import net.didion.jwnl.JWNLException;
 import net.didion.jwnl.data.IndexWord;
 import net.didion.jwnl.data.POS;
+import net.didion.jwnl.data.PointerTarget;
+import net.didion.jwnl.data.PointerType;
 import net.didion.jwnl.data.Synset;
+import net.didion.jwnl.data.Word;
+import net.didion.jwnl.data.relationship.RelationshipFinder;
+import net.didion.jwnl.data.relationship.RelationshipList;
 import net.didion.jwnl.dictionary.Dictionary;
 import net.didion.jwnl.dictionary.MorphologicalProcessor;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import shef.nlp.wordnet.similarity.SimilarityMeasure;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -25,18 +27,14 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-
-import com.mindalliance.channels.SemanticMatcher;
 
 /**
  * Semantic proximity matcher based POS tagging and WordNet similarity measures.
@@ -52,83 +50,47 @@ public class SemanticProximityMatcher implements SemanticMatcher {
      */
     private static final Logger LOG = LoggerFactory.getLogger( SemanticProximityMatcher.class );
     /**
-     * Between 0 and 1, highest value lifts asymptotic scoring curve less.
-     */
-    private static final double HIGH_POWER = 1.0;
-    /**
-     * Between 0 and 1, lowest value lifts asymptotic scoring curve more.
-     */
-    private static final double LOW_POWER = 0.2;
-    /**
-     * Number of words that get the LOW_POWER.
-     */
-    private static final int MANY_WORDS = 15;
-    /**
      * How much weight to give best match vs average match (1.0 -> 1/2, 2.0 -> 2/3 etc.)
      */
-    private static final double BEST_MATCH_FACTOR = 0; // 1.0
-    /**
-     * POS tags.
-     */
-    private static final List<String> PROPER_NOUN_TAGS = Arrays.asList( "NNP", "NNPS" );
-    /**
-     * POS tags.
-     */
-    private static final List<String> ADJECTIVE_TAGS = Arrays.asList( "JJ" );
-    /**
-     * POS tags.
-     */
-    private static final List<String> VERB_TAGS = Arrays.asList( "VB", "VBD", "VBG", "VBN", "VBP", "VBZ" );
-    /**
-     * POS tags.
-     */
-    private static final List<String> COMMON_NOUN_TAGS = Arrays.asList( "NN", "NNS" );
-    /**
-     * Tagger trained data.
-     * (in "./src/main/webapp/data/left3words-wsj-0-18.tagger")
-     */
-    private Resource taggerData;
+    // private static final double BEST_MATCH_FACTOR = 0; // 1.0
     /**
      * Wordnet library config.
      */
     private static final String JWNL_PROPERTIES = "jwnl_properties.xml";
     /**
-     * Wordnet similarity data.
-     */
-    private static final String SIMILARITY_DATA = "ic-bnc-resnik-add1.dat";
-    /**
      * WordNet dictionary.
-     * ("./src/main/webapp/data/wordnet-2.0/dict")
+     * ("./src/main/webapp/data/wordnet-3/dict")
      */
     private Resource wordnetDict;
     /**
-     * Similarity algorithm.
+     * Lucene index of WordNet used for similarity assessment.
      */
-    private String simType = "shef.nlp.wordnet.similarity.JCn";
+    private Resource simIndex;
     /**
      * Whether the matcher was (lazily) initialized.
      */
     private boolean initialized;
     /**
-     * In-memory wordnet dictionary.
-     */
-    private Dictionary dictionary;
-    /**
-     * POS tagger.
-     */
-    private MaxentTagger tagger;
-    /**
      * Morphological processor.
      */
     private MorphologicalProcessor morpher;
     /**
-     * Similarity meaasure calculator.
+     * Relationship finder.
      */
-    private SimilarityMeasure similarityMeasure;
+    private RelationshipFinder relationshipFinder;
+    /**
+     * Similarity assessor.
+     */
+    private SimilarityAssessor similarityAssessor;
     /**
      * How by how much instance overlap multiplies the conceptual similarity.
      */
     private static final double INSTANCE_OVERLAP_FACTOR = 2.0;
+    /**
+     * Similarity metric.
+     */
+    private static final String SIMILARITY_METRIC = SimilarityAssessor.JIANG_METRIC;
+    private static final String SEPARATORS = " ,.:;/?!\"'|\\'";
 
     public SemanticProximityMatcher() {
     }
@@ -137,24 +99,20 @@ public class SemanticProximityMatcher implements SemanticMatcher {
         if ( !initialized ) {
             LOG.debug( "Initializing semantic proximity matcher" );
             initializeJWNL();
-            dictionary = Dictionary.getInstance();
+            Dictionary dictionary = Dictionary.getInstance();
             morpher = dictionary.getMorphologicalProcessor();
-            tagger = new MaxentTagger( taggerData.getFile().getAbsolutePath() );
-            similarityMeasure = initializeSimilarityMeasure();
+            relationshipFinder = RelationshipFinder.getInstance();
+            similarityAssessor = new SimilarityAssessor( simIndex.getFile().getAbsolutePath() );
             initialized = true;
         }
-    }
-
-    public void setTaggerData( Resource taggerData ) {
-        this.taggerData = taggerData;
     }
 
     public void setWordnetDict( Resource wordnetDict ) {
         this.wordnetDict = wordnetDict;
     }
 
-    public void setSimType( String simType ) {
-        this.simType = simType;
+    public void setSimIndex( Resource simIndex ) {
+        this.simIndex = simIndex;
     }
 
     private void initializeJWNL() throws JWNLException, IOException {
@@ -186,16 +144,6 @@ public class SemanticProximityMatcher implements SemanticMatcher {
         return writer.toString();
     }
 
-    private SimilarityMeasure initializeSimilarityMeasure() throws Exception {
-        // return SimilarityMeasure.newInstance([simType: "shef.nlp.wordnet.similarity.JCn", infocontent: SIMILARITY_DATA])
-        URL url = SemanticProximityMatcher.class.getResource( SIMILARITY_DATA );
-        Map<String, String> config = new HashMap<String, String>();
-        config.put( "simType", simType );
-        String externalUrl = url.toExternalForm(); //.replace("file:/", "file://"); 
-        new URL( externalUrl );
-        config.put( "infocontent", externalUrl );
-        return SimilarityMeasure.newInstance( config );
-    }
 
     /**
      * {@inheritDoc}
@@ -239,16 +187,17 @@ public class SemanticProximityMatcher implements SemanticMatcher {
             if ( text.trim().length() == 0 || otherText.trim().length() == 0 ) return Proximity.NONE;
             LOG.trace( "==== Matching: [" + text + "] and [" + otherText + "]" );
             // Do POS analysis on each text
-            List<HasWord> words = posAnalyze( text );
-            List<HasWord> otherWords = posAnalyze( otherText );
-            List<HasWord> phrases = extractPhrases( words );
-            List<HasWord> otherPhrases = extractPhrases( otherWords );
+            List<POSWord> words = posAnalyze( text );
+            List<POSWord> otherWords = posAnalyze( otherText );
+            List<POSWord> phrases = extractPhrases( words );
+            List<POSWord> otherPhrases = extractPhrases( otherWords );
             List<String> properNouns = extractProperNouns( words );
             List<String> otherProperNouns = extractProperNouns( otherWords );
             int size = properNouns.size() + phrases.size();
             int otherSize = otherProperNouns.size() + otherPhrases.size();
+            int maxSize = Math.max( size, otherSize );
             // Get the synsets for the common nouns in each text
-            double conceptualSimilarity = computeSynsetsSimilarity( phrases, otherPhrases );
+            double conceptualSimilarity = computeConceptualSimilarity( phrases, otherPhrases );
             LOG.trace( "Conceptual similarity = " + conceptualSimilarity );
             // Calculate shared proper noun ratio between texts
             double instanceOverlap = computeInstanceOverlap(
@@ -256,21 +205,13 @@ public class SemanticProximityMatcher implements SemanticMatcher {
                     otherProperNouns );
             // Combine both measures into a proximity rating
             LOG.trace( "Instance overlap = " + instanceOverlap );
-            double score = conceptualSimilarity;
-            if ( instanceOverlap > 0 ) {
-                // instance overlap is a big deal
-                double boost = ( instanceOverlap / maximum( size, otherSize ) ) * INSTANCE_OVERLAP_FACTOR;
-                LOG.trace( boost + " : boost from instance overlap = conceptualSimilarity * instanceOverlap" );
-                score = minimum( 1.0, score + boost );
-            }
-            // to lift the curve
-            double power = getPower( Math.min( size, otherSize ) );
-            double finalScore = Math.pow( score, power );
-            LOG.trace( "Score: " + score + " Power: " + power + " Final: " + finalScore );
-            Proximity matchingLevel = matchingLevel( finalScore );
+            double score = ( conceptualSimilarity + ( instanceOverlap * INSTANCE_OVERLAP_FACTOR ) ) / maxSize;
+            score = Math.min( 1.0, score );
+            LOG.trace( "Score: " + score );
+            Proximity matchingLevel = matchingLevel( score );
             LOG.trace( "---- Match is " + matchingLevel );
             LOG.debug( matchingLevel.getLabel()
-                    + "(" + String.format( "%.3f", finalScore )
+                    + "(" + String.format( "%.3f", score )
                     + " in " + ( System.currentTimeMillis() - msecs ) + " ms" + "): "
                     + "\"" + text + "\" <=> " + "\"" + otherText + "\"" );
             return matchingLevel;
@@ -280,75 +221,134 @@ public class SemanticProximityMatcher implements SemanticMatcher {
         }
     }
 
-    private double getPower( int size ) {
-        if ( size <= 1 ) return HIGH_POWER;
-        if ( size > MANY_WORDS ) return LOW_POWER;
-        return HIGH_POWER - ( ( HIGH_POWER - LOW_POWER ) / ( MANY_WORDS + 1 - size ) );
-    }
-
     private Proximity matchingLevel( double score ) throws Exception {
         if ( score > 1.0 ) throw new Exception( "Illegal matching score" );
-        if ( score > 0.75 ) return Proximity.VERY_HIGH;
-        if ( score > 0.50 ) return Proximity.HIGH;
-        if ( score > 0.30 ) return Proximity.MEDIUM;
-        if ( score > 0.10 ) return Proximity.LOW;
+        if ( score > 0.85 ) return Proximity.VERY_HIGH;
+        if ( score > 0.70 ) return Proximity.HIGH;
+        if ( score > 0.40 ) return Proximity.MEDIUM;
+        if ( score > 0.20 ) return Proximity.LOW;
         else return Proximity.NONE;
     }
 
-    private List<HasWord> posAnalyze( String text ) {
+    private List<POSWord> posAnalyze( String text ) throws JWNLException {
         LOG.trace( "POS analysis: [" + text + "]" );
-        List<Sentence<? extends HasWord>> sentences = MaxentTagger.tokenizeText( new StringReader( text ) );
-        List<Sentence<TaggedWord>> processedSentences = tagger.process( sentences );
-        List<HasWord> words = new ArrayList<HasWord>();
-        for ( Sentence<TaggedWord> sentence : processedSentences ) {
-            for ( TaggedWord word : sentence ) {
-                words.add( word );
-            }
-        }
-        return words;
+        List<String> words = tokenizeText( text );
+        return processWords( words );
     }
 
-    // Collect all individual nouns or verbs, all adjective + noun phrases, and all noun + noun phrases
-    private List<HasWord> extractPhrases( List<HasWord> words ) throws JWNLException {
-        Set<HasWord> phrases = new HashSet<HasWord>();
-        String phrase = "";
-        for ( HasWord word : words ) {
-            if ( isVerb( word ) ) {
-                LOG.trace( "Found phrase [" + word + "]" );
-                phrases.add( word );
-                phrase = ""; // reset phrase
-            } else if ( isAdjective( word ) ) {
-                phrase = word.word(); // start a new phrase with it
-            } else if ( isCommonNoun( word ) ) {
-                LOG.trace( "Found phrase [" + word + "]" );
-                phrases.add( word );
-                if ( phrase.length() > 0 ) {
-                    phrase += " " + word.word();
-                    TaggedWord taggedWord = new TaggedWord( phrase, ( (TaggedWord) word ).tag() );
-                    // Only recognize noun phrases that have synsets
-                    if ( hasSynsets( taggedWord ) ) {
-                        LOG.trace( "Found phrase [" + taggedWord + "]" );
-                        phrases.add( taggedWord );
-                    }
-                    phrase = "";
+    private List<String> tokenizeText( String text ) {
+        String[] tokens = StringUtils.split( StringUtils.replaceChars( text, '\n', ' ' ), SEPARATORS );
+        return Arrays.asList( tokens );
+    }
+
+    private List<POSWord> processWords( List<String> words ) throws JWNLException {
+        List<POSWord> posWords = new ArrayList<POSWord>();
+        for ( String word : words ) {
+            POSWord posWord = new POSWord( word );
+            posWord.setProperNoun( isProperNoun( word ) );
+            posWord.addMeaning( lookupBaseForm( POS.NOUN, word ) );
+            posWord.addMeaning( lookupBaseForm( POS.VERB, word ) );
+            posWord.addMeaning( lookupBaseForm( POS.ADJECTIVE, word ) );
+            posWord.addMeaning( lookupBaseForm( POS.ADVERB, word ) );
+            posWords.add( posWord );
+        }
+        return posWords;
+    }
+
+    public IndexWord lookupBaseForm( POS pos, String word ) throws JWNLException {
+        return morpher.lookupBaseForm( pos, word );
+    }
+
+
+    private boolean isProperNoun( String word ) throws JWNLException {
+        byte[] bytes = word.getBytes();
+        return bytes[0] >= 'A' && bytes[0] <= 'Z';
+    }
+
+    // Collate words into meaningful phrases where possible. Drop proper names and meaningless words.
+    private List<POSWord> extractPhrases( List<POSWord> words ) throws JWNLException {
+        Set<POSWord> phrases = new HashSet<POSWord>();
+        int lastIndex = words.size() - 1;
+        int index = 0;
+        while ( index <= lastIndex ) {
+            POSWord word = words.get( index );
+            if ( index < lastIndex ) {
+                POSWord nextWord = words.get( index + 1 );
+                POSWord phrase = makeVerbPhrase( word, nextWord );
+                if ( phrase == null ) {
+                    phrase = makeCommonNounPhrase( word, nextWord );
+                }
+                if ( phrase == null ) {
+                    phrase = makeQualifiedNounPhrase( word, nextWord );
+                }
+                if ( phrase != null ) {
+                    phrases.add( phrase );
+                    index = index + 2;
                 } else {
-                    phrase = word.word(); // start a new phrase with it
+                    if ( !word.isProperNoun() && word.isComparable() ) phrases.add( word );
+                    index++;
                 }
             } else {
-                phrase = ""; // reset the phrase
+                if ( !word.isProperNoun() && word.isComparable() ) phrases.add( word );
+                index++;
             }
-
         }
-        return new ArrayList<HasWord>( phrases );
+        return new ArrayList<POSWord>( phrases );
     }
 
-    private List<String> extractProperNouns( List<HasWord> words ) {
+    private POSWord makeCommonNounPhrase( POSWord posWord, POSWord nextPosWord ) throws JWNLException {
+        POSWord nounPhrase = null;
+        if ( posWord.isCommonNoun() && nextPosWord.isCommonNoun() ) {
+            String composed =
+                    posWord.asPOS( POS.NOUN ).getLemma()
+                            + " "
+                            + nextPosWord.asPOS( POS.NOUN ).getLemma();
+            IndexWord indexWord = lookupBaseForm( POS.NOUN, composed );
+            if ( indexWord != null && indexWord.getLemma().equals( composed ) ) {
+                nounPhrase = new POSWord( composed );
+                nounPhrase.addMeaning( indexWord );
+            }
+        }
+        return nounPhrase;
+    }
+
+    private POSWord makeVerbPhrase( POSWord posWord, POSWord nextPosWord ) throws JWNLException {
+        POSWord verbPhrase = null;
+        if ( posWord.isVerb() && nextPosWord.isAdverb() ) {
+            String composed =
+                    posWord.asPOS( POS.VERB ).getLemma()
+                            + " "
+                            + nextPosWord.asPOS( POS.ADVERB ).getLemma();
+            IndexWord indexWord = lookupBaseForm( POS.VERB, composed );
+            if ( indexWord != null && indexWord.getLemma().equals( composed ) ) {
+                verbPhrase = new POSWord( composed );
+                verbPhrase.addMeaning( indexWord );
+            }
+        }
+        return verbPhrase;
+    }
+
+    private POSWord makeQualifiedNounPhrase( POSWord posWord, POSWord nextPosWord ) throws JWNLException {
+        POSWord qualifiedNounPhrase = null;
+        if ( posWord.isAdjective() && nextPosWord.isCommonNoun() ) {
+            String composed =
+                    posWord.asPOS( POS.ADJECTIVE ).getLemma()
+                            + " "
+                            + nextPosWord.asPOS( POS.NOUN ).getLemma();
+            qualifiedNounPhrase = new POSWord( composed );
+            qualifiedNounPhrase.addMeaning( nextPosWord.asPOS( POS.NOUN ) );
+            qualifiedNounPhrase.setQualifier( posWord );
+        }
+        return qualifiedNounPhrase;
+    }
+
+    private List<String> extractProperNouns( List<POSWord> words ) {
         Set<String> properNouns = new HashSet<String>();
         String composed = "";
-        for ( HasWord word : words ) {
-            if ( isProperNoun( word ) ) {
+        for ( POSWord word : words ) {
+            if ( word.isProperNoun() ) {
                 if ( composed.length() > 0 ) composed += " ";
-                composed += word.word();
+                composed += word.getWord();
             } else {
                 if ( composed.length() > 0 ) {
                     properNouns.add( composed );
@@ -365,140 +365,166 @@ public class SemanticProximityMatcher implements SemanticMatcher {
     }
 
 
-    private boolean isCommonNoun( HasWord word ) {
-        return word instanceof HasTag && COMMON_NOUN_TAGS.contains( ( (HasTag) word ).tag() );
-    }
-
-    private boolean isVerb( HasWord word ) {
-        return word instanceof HasTag && VERB_TAGS.contains( ( (HasTag) word ).tag() );
-    }
-
-    private boolean isAdjective( HasWord word ) {
-        return word instanceof HasTag && ADJECTIVE_TAGS.contains( ( (HasTag) word ).tag() );
-    }
-
-    private boolean isProperNoun( HasWord word ) {
-        return word instanceof HasTag && PROPER_NOUN_TAGS.contains( ( (HasTag) word ).tag() );
-    }
-
-    private double computeSynsetsSimilarity( List<HasWord> words, List<HasWord> otherWords ) throws JWNLException {
-        List<List<Synset>> synsets = findSynsets( words );
-        List<List<Synset>> otherSynsets = findSynsets( otherWords );
+    @SuppressWarnings( "unchecked" )
+    private double computeConceptualSimilarity(
+            List<POSWord> posWords,
+            List<POSWord> otherPosWords ) throws JWNLException {
         // computeCombinedSimilarity( A, B ) != computeCombinedSimilarity( B, A )
         double sim;
-        if ( words.size() >= otherWords.size() ) {
-            sim = computeCombinedSimilarity( synsets, otherSynsets );
+        if ( posWords.size() >= otherPosWords.size() ) {
+            sim = computeCombinedPOSWordSimilarity( posWords, otherPosWords );
         } else {
-            sim = computeCombinedSimilarity( otherSynsets, synsets );
+            sim = computeCombinedPOSWordSimilarity( otherPosWords, posWords );
         }
         return sim;
     }
 
-    private List<List<Synset>> findSynsets( List<HasWord> words ) throws JWNLException {
-        List<List<Synset>> allSynsets = new ArrayList<List<Synset>>();
-        for ( HasWord word : words ) {
-            List<Synset> wordSynsets = findSynsets( word );
-            if ( !wordSynsets.isEmpty() ) allSynsets.add( wordSynsets );
-        }
-        return allSynsets;
-    }
-
-    private List<Synset> findSynsets( HasWord word ) throws JWNLException {
-        List<Synset> synsets = new ArrayList<Synset>();
-        POS pos = posOf( word );
-        IndexWord indexWord = morpher.lookupBaseForm( pos, word.word() );
-        if ( indexWord != null ) {
-            for ( Long offset : indexWord.getSynsetOffsets() ) {
-                Synset synset = dictionary.getSynsetAt( pos, offset );
-                if ( !isRedundant( synsets, synset ) ) {
-                    synsets.add( synset );
-                    LOG.trace( "[" + word + "] => " + synset );
-                }
-            }
-        }
-        return synsets;
-    }
-
-    private boolean hasSynsets( HasWord word ) throws JWNLException {
-        return !findSynsets( word ).isEmpty();
-    }
-
-    private boolean isRedundant( List<Synset> synsets, final Synset synset ) {
-        return CollectionUtils.exists(
-                synsets,
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return ( (Synset) obj ).getOffset() == synset.getOffset();
-                    }
-                } );
-    }
-
-    private POS posOf( HasWord word ) {
-        if ( isCommonNoun( word ) ) return POS.NOUN;
-        else if ( isVerb( word ) ) return POS.VERB;
-        else throw new IllegalArgumentException( "No recognized POS for $word" );
-    }
-
-    // Compare each word's synsets to other words synsets
-    private double computeCombinedSimilarity(
-            List<List<Synset>> synsets,
-            List<List<Synset>> otherSynsets ) throws JWNLException {
-        if ( synsets.isEmpty() || otherSynsets.isEmpty() ) return 0.0;
+    // Compare each of a list of words to another list of words
+    private double computeCombinedPOSWordSimilarity(
+            List<POSWord> posWords,
+            List<POSWord> otherPosWords ) throws JWNLException {
+        if ( posWords.isEmpty() || otherPosWords.isEmpty() ) return 0.0;
         List<Double> similarities = new ArrayList<Double>();
         double overallBest = 0.0;
-        for ( List<Synset> wordSynsets : synsets ) {
+        for ( POSWord posWord : posWords ) {
             double best = 0.0;
-            for ( List<Synset> otherWordSynsets : otherSynsets ) {
-                double similarity = similarity( wordSynsets, otherWordSynsets );
-                best = maximum( best, similarity );
+            Iterator<POSWord> iter = otherPosWords.iterator();
+            while ( best < 1.0 && iter.hasNext() ) {
+                POSWord otherPosWord = iter.next();
+                double similarity = computePOSWordSimilarity( posWord, otherPosWord );
+                best = Math.max( best, similarity );
             }
             similarities.add( best );
-            overallBest = maximum( overallBest, best );
+            overallBest = Math.max( overallBest, best );
         }
         LOG.trace( overallBest + " for overall best match" );
         double sum = 0.0;
         for ( Double similarity : similarities ) {
             sum += similarity;
         }
-        double average = sum / similarities.size();
-        LOG.trace( average + " for average best match in " + similarities.size() );
-        return ( ( BEST_MATCH_FACTOR * overallBest ) + average ) / ( 1 + BEST_MATCH_FACTOR );
+        return sum;
     }
 
-    private double maximum( double x, double y ) {
-        return ( x > y ) ? x : y;
+    private double computePOSWordSimilarity( POSWord posWord, POSWord otherPosWord ) throws JWNLException {
+        if ( posWord.isQualified() && otherPosWord.isQualified() ) {
+            // If qualifiers are antonyms, negate similarity.
+            if ( antonyms(
+                    posWord.getQualifier().asPOS( POS.ADJECTIVE ),
+                    otherPosWord.getQualifier().asPOS( POS.ADJECTIVE ) ) ) {
+                return 0.0;
+            }
+        }
+        double similarity = 0.0;
+        for ( Meaning meaning : posWord.getMeanings() ) {
+            for ( Meaning otherMeaning : otherPosWord.getMeanings() ) {
+                if ( meaning.getPos().equals( otherMeaning.getPos() ) ) {
+                    if ( meaning.getLemma().equals( otherMeaning.getLemma() ) ) return 1.0;
+                    Set<String> nouns = getNominalizations( posWord );
+                    Set<String> otherNouns = getNominalizations( otherPosWord );
+                    double sim = assessSimilarity( nouns, otherNouns );
+                    if ( sim > similarity ) {
+                        similarity = sim;
+                    }
+                }
+            }
+        }
+        if ( posWord.isQualified() && otherPosWord.isQualified() ) {
+            // If both qualified and qualifications not synonymous, half similarity.
+            if ( !synonyms(
+                    posWord.getQualifier().asPOS( POS.ADJECTIVE ),
+                    otherPosWord.getQualifier().asPOS( POS.ADJECTIVE ) ) ) {
+                similarity = similarity / 2.0;
+            }
+        }
+        return similarity;
     }
 
-    private double minimum( double x, double y ) {
-        return ( x < y ) ? x : y;
+    // Get related nouns for non-noun word.
+    private Set<String> getNominalizations( POSWord posWord ) throws JWNLException {
+        Set<String> nouns = new HashSet<String>();
+        if ( posWord.isNoun() ) {
+            nouns.add( posWord.getNoun() );
+        } else {
+            for ( Synset synset : posWord.getSynsets() ) {
+                PointerTarget[] pointerTargets = synset.getTargets( PointerType.NOMINALIZATION );
+                for ( PointerTarget pointerTarget : pointerTargets ) {
+                    Word[] words;
+                    if ( pointerTarget instanceof Synset ) {
+                        Synset targetSynset = (Synset) pointerTarget;
+                        words = targetSynset.getWords();
+                    } else {
+                        words = new Word[1];
+                        words[0] = (Word) pointerTarget;
+                    }
+                    for ( Word word : words ) {
+                        nouns.add( word.getLemma() );
+                    }
+                }
+            }
+        }
+        return nouns;
     }
 
-    // Find best similarity between one of the synset's of a word and one of the synsets of another word.
-    private double similarity(
-            List<Synset> wordSynsets,
-            List<Synset> otherWordSynsets ) throws JWNLException {
+    private boolean antonyms( Meaning meaning, Meaning otherMeaning ) throws JWNLException {
+        return !synonyms( meaning, otherMeaning )
+                && hasRelationship( meaning, otherMeaning, PointerType.ANTONYM );
+    }
+
+    private boolean hasRelationship( Meaning meaning, Meaning otherMeaning, PointerType pointerType ) throws JWNLException {
+        if ( meaning == null || otherMeaning == null ) return false;
+        for ( Synset synset : meaning.getSynsets() ) {
+            for ( Synset otherSynset : otherMeaning.getSynsets() ) {
+                RelationshipList rels = relationshipFinder.findRelationships(
+                        synset,
+                        otherSynset,
+                        pointerType
+                );
+                if ( !rels.isEmpty() )
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean synonyms( Meaning meaning, Meaning otherMeaning ) throws JWNLException {
+        return !( meaning == null || otherMeaning == null )
+                && CollectionUtils.containsAny( meaning.getSynsets(), otherMeaning.getSynsets() );
+    }
+
+    private double assessSimilarity ( Set<String> nouns, Set<String> otherNouns ) {
         double best = 0.0;
-        for ( Synset synset : wordSynsets ) {
-            for ( Synset otherSynset : otherWordSynsets ) {
-                best = maximum( best, similarity( synset, otherSynset ) );
+        for ( String noun : nouns ) {
+            for ( String otherNoun : otherNouns ) {
+                double sim = assessSimilarity( noun, otherNoun );
+                if ( sim == 1.0 ) return 1.0;
+                if ( sim > best ) {
+                    best = sim;
+                }
             }
         }
         return best;
     }
 
-    private double similarity( Synset synset, Synset otherSynset ) throws JWNLException {
-        if ( synset.getOffset() == otherSynset.getOffset() ) return 1.0;
-        double similarity = similarityMeasure.getSimilarity( synset, otherSynset );
-        similarity = minimum( 1.0, similarity ); // cap it at 1.0
-        LOG.trace( "Similarity = " + similarity + " for " + synset + " and " + otherSynset );
+    public Double assessSimilarity ( String noun, String otherNoun ) {
+        double similarity = 0.0;
+        try {
+            if ( noun != null && otherNoun != null ) {
+                similarity = similarityAssessor.getSimilarity(
+                        noun,
+                        otherNoun,
+                        SIMILARITY_METRIC );
+            }
+        } catch ( WordNotFoundException e ) {
+            LOG.trace( "Word not found in: " + noun + ", " + otherNoun );
+        }
         return similarity;
     }
 
     @SuppressWarnings( "unchecked" )
     // Calculate percentage of proper nouns shared.
-    private double computeInstanceOverlap( List<String> properNouns, List<String> otherProperNouns ) {
+    private double computeInstanceOverlap ( List<String> properNouns, List<String> otherProperNouns ) {
         List<String> shared = (List<String>) CollectionUtils.intersection( properNouns, otherProperNouns );
-        double maxSampleSize = maximum( properNouns.size(), otherProperNouns.size() );
+        double maxSampleSize = Math.max( properNouns.size(), otherProperNouns.size() );
         return ( maxSampleSize > 0 ) ? ( shared.size() / maxSampleSize ) : 0.0;
     }
 
