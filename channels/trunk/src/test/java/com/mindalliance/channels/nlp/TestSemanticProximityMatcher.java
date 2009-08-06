@@ -49,7 +49,7 @@ public class TestSemanticProximityMatcher extends TestCase {
     }
 
     public void testSemanticMatching() throws Exception {
-        SemanticProximityMatcher matcher = new SemanticProximityMatcher();
+        WordnetSemanticMatcher matcher = new WordnetSemanticMatcher();
         matcher.setWordnetDict( new FileSystemResource( "src/main/webapp/WEB-INF/data/wordnet-2/dict" ) );
         matcher.setSimIndex( new FileSystemResource( "src/main/webapp/WEB-INF/data/jwsl/wn_index" ) );
         // for ( int i = 0; i < 2; i++ )

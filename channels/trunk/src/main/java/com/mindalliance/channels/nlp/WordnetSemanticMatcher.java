@@ -37,18 +37,18 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Semantic proximity matcher based POS tagging and WordNet similarity measures.
+ * Semantic proximity matcher based on WordNet.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: Jul 9, 2009
  * Time: 4:29:02 PM
  */
-public class SemanticProximityMatcher implements SemanticMatcher {
+public class WordnetSemanticMatcher implements SemanticMatcher {
     /**
      * Logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger( SemanticProximityMatcher.class );
+    private static final Logger LOG = LoggerFactory.getLogger( WordnetSemanticMatcher.class );
     /**
      * How much weight to give best match vs average match (1.0 -> 1/2, 2.0 -> 2/3 etc.)
      */
@@ -85,14 +85,17 @@ public class SemanticProximityMatcher implements SemanticMatcher {
     /**
      * How by how much instance overlap multiplies the conceptual similarity.
      */
-    private static final double INSTANCE_OVERLAP_FACTOR = 2.0;
+    private static final double INSTANCE_OVERLAP_FACTOR = 1.0;
     /**
      * Similarity metric.
      */
     private static final String SIMILARITY_METRIC = SimilarityAssessor.JIANG_METRIC;
-    private static final String SEPARATORS = " ,.:;/?!\"'|\\'";
+    /**
+     * Separators used for tokenizing.
+     */
+    private static final String SEPARATORS = " ,.:;/?!\"'|\\'()[]{}=";
 
-    public SemanticProximityMatcher() {
+    public WordnetSemanticMatcher() {
     }
 
     private void initialize() throws Exception {
@@ -120,7 +123,7 @@ public class SemanticProximityMatcher implements SemanticMatcher {
     }
 
     private InputStream getJWNLProperties() throws IOException {
-        URL url = SemanticProximityMatcher.class.getResource( JWNL_PROPERTIES );
+        URL url = WordnetSemanticMatcher.class.getResource( JWNL_PROPERTIES );
         // Class[] classes = {String.class};
         String template = getText( url );
         String adjustedTemplate = template.replaceFirst( "_WORDNET_DICT_",
@@ -195,7 +198,7 @@ public class SemanticProximityMatcher implements SemanticMatcher {
             List<String> otherProperNouns = extractProperNouns( otherWords );
             int size = properNouns.size() + phrases.size();
             int otherSize = otherProperNouns.size() + otherPhrases.size();
-            int maxSize = Math.max( size, otherSize );
+            int minSize = Math.min( size, otherSize );
             // Get the synsets for the common nouns in each text
             double conceptualSimilarity = computeConceptualSimilarity( phrases, otherPhrases );
             LOG.trace( "Conceptual similarity = " + conceptualSimilarity );
@@ -205,7 +208,7 @@ public class SemanticProximityMatcher implements SemanticMatcher {
                     otherProperNouns );
             // Combine both measures into a proximity rating
             LOG.trace( "Instance overlap = " + instanceOverlap );
-            double score = ( conceptualSimilarity + ( instanceOverlap * INSTANCE_OVERLAP_FACTOR ) ) / maxSize;
+            double score = ( conceptualSimilarity + ( instanceOverlap * INSTANCE_OVERLAP_FACTOR ) ) / minSize;
             score = Math.min( 1.0, score );
             LOG.trace( "Score: " + score );
             Proximity matchingLevel = matchingLevel( score );
@@ -255,6 +258,9 @@ public class SemanticProximityMatcher implements SemanticMatcher {
         return posWords;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public IndexWord lookupBaseForm( POS pos, String word ) throws JWNLException {
         return morpher.lookupBaseForm( pos, word );
     }
@@ -323,6 +329,9 @@ public class SemanticProximityMatcher implements SemanticMatcher {
             if ( indexWord != null && indexWord.getLemma().equals( composed ) ) {
                 verbPhrase = new POSWord( composed );
                 verbPhrase.addMeaning( indexWord );
+            } else {
+                posWord.setQualifier( nextPosWord );
+                return posWord;
             }
         }
         return verbPhrase;
@@ -371,7 +380,7 @@ public class SemanticProximityMatcher implements SemanticMatcher {
             List<POSWord> otherPosWords ) throws JWNLException {
         // computeCombinedSimilarity( A, B ) != computeCombinedSimilarity( B, A )
         double sim;
-        if ( posWords.size() >= otherPosWords.size() ) {
+        if ( posWords.size() <= otherPosWords.size() ) {
             sim = computeCombinedPOSWordSimilarity( posWords, otherPosWords );
         } else {
             sim = computeCombinedPOSWordSimilarity( otherPosWords, posWords );
@@ -379,25 +388,32 @@ public class SemanticProximityMatcher implements SemanticMatcher {
         return sim;
     }
 
-    // Compare each of a list of words to another list of words
+    // Compare each of a list of words to another list of words (no posWord must be matched twice)
     private double computeCombinedPOSWordSimilarity(
             List<POSWord> posWords,
             List<POSWord> otherPosWords ) throws JWNLException {
         if ( posWords.isEmpty() || otherPosWords.isEmpty() ) return 0.0;
         List<Double> similarities = new ArrayList<Double>();
-        double overallBest = 0.0;
+        Set<POSWord> matchedOthers = new HashSet<POSWord>();
         for ( POSWord posWord : posWords ) {
-            double best = 0.0;
+            double bestSim = -1.0;
+            POSWord bestMatch = null;
             Iterator<POSWord> iter = otherPosWords.iterator();
-            while ( best < 1.0 && iter.hasNext() ) {
+            while ( bestSim < 1.0 && iter.hasNext() ) {
                 POSWord otherPosWord = iter.next();
-                double similarity = computePOSWordSimilarity( posWord, otherPosWord );
-                best = Math.max( best, similarity );
+                if ( !matchedOthers.contains( otherPosWord ) ) {
+                    double sim = computePOSWordSimilarity( posWord, otherPosWord );
+                    if ( sim > bestSim ) {
+                        bestSim = sim;
+                        bestMatch = otherPosWord;
+                    }
+                }
             }
-            similarities.add( best );
-            overallBest = Math.max( overallBest, best );
+            if ( bestMatch != null ) {
+                matchedOthers.add( bestMatch );
+                similarities.add( bestSim );
+            }
         }
-        LOG.trace( overallBest + " for overall best match" );
         double sum = 0.0;
         for ( Double similarity : similarities ) {
             sum += similarity;
@@ -413,15 +429,26 @@ public class SemanticProximityMatcher implements SemanticMatcher {
                     otherPosWord.getQualifier().asPOS( POS.ADJECTIVE ) ) ) {
                 return 0.0;
             }
+            if ( antonyms(
+                    posWord.getQualifier().asPOS( POS.ADVERB ),
+                    otherPosWord.getQualifier().asPOS( POS.ADVERB ) ) ) {
+                return 0.0;
+            }
         }
         double similarity = 0.0;
         for ( Meaning meaning : posWord.getMeanings() ) {
-            for ( Meaning otherMeaning : otherPosWord.getMeanings() ) {
+            Iterator<Meaning> iter = otherPosWord.getMeanings().iterator();
+            while ( similarity < 1.0 && iter.hasNext() ) {
+                Meaning otherMeaning = iter.next();
                 if ( meaning.getPos().equals( otherMeaning.getPos() ) ) {
-                    if ( meaning.getLemma().equals( otherMeaning.getLemma() ) ) return 1.0;
-                    Set<String> nouns = getNominalizations( posWord );
-                    Set<String> otherNouns = getNominalizations( otherPosWord );
-                    double sim = assessSimilarity( nouns, otherNouns );
+                    double sim;
+                    if ( meaning.getLemma().equals( otherMeaning.getLemma() ) ) {
+                        sim = 1.0;
+                    } else {
+                        Set<String> nouns = getNominalizations( posWord );
+                        Set<String> otherNouns = getNominalizations( otherPosWord );
+                        sim = assessSimilarity( nouns, otherNouns );
+                    }
                     if ( sim > similarity ) {
                         similarity = sim;
                     }
@@ -430,9 +457,13 @@ public class SemanticProximityMatcher implements SemanticMatcher {
         }
         if ( posWord.isQualified() && otherPosWord.isQualified() ) {
             // If both qualified and qualifications not synonymous, half similarity.
-            if ( !synonyms(
+            boolean synonyms = synonyms(
                     posWord.getQualifier().asPOS( POS.ADJECTIVE ),
-                    otherPosWord.getQualifier().asPOS( POS.ADJECTIVE ) ) ) {
+                    otherPosWord.getQualifier().asPOS( POS.ADJECTIVE ) )
+                    || synonyms(
+                    posWord.getQualifier().asPOS( POS.ADVERB ),
+                    otherPosWord.getQualifier().asPOS( POS.ADVERB ) );
+            if ( !synonyms ) {
                 similarity = similarity / 2.0;
             }
         }
@@ -491,7 +522,7 @@ public class SemanticProximityMatcher implements SemanticMatcher {
                 && CollectionUtils.containsAny( meaning.getSynsets(), otherMeaning.getSynsets() );
     }
 
-    private double assessSimilarity ( Set<String> nouns, Set<String> otherNouns ) {
+    private double assessSimilarity( Set<String> nouns, Set<String> otherNouns ) {
         double best = 0.0;
         for ( String noun : nouns ) {
             for ( String otherNoun : otherNouns ) {
@@ -504,8 +535,10 @@ public class SemanticProximityMatcher implements SemanticMatcher {
         }
         return best;
     }
-
-    public Double assessSimilarity ( String noun, String otherNoun ) {
+    /**
+     * {@inheritDoc}
+     */
+    public Double assessSimilarity( String noun, String otherNoun ) {
         double similarity = 0.0;
         try {
             if ( noun != null && otherNoun != null ) {
@@ -522,7 +555,7 @@ public class SemanticProximityMatcher implements SemanticMatcher {
 
     @SuppressWarnings( "unchecked" )
     // Calculate percentage of proper nouns shared.
-    private double computeInstanceOverlap ( List<String> properNouns, List<String> otherProperNouns ) {
+    private double computeInstanceOverlap( List<String> properNouns, List<String> otherProperNouns ) {
         List<String> shared = (List<String>) CollectionUtils.intersection( properNouns, otherProperNouns );
         double maxSampleSize = Math.max( properNouns.size(), otherProperNouns.size() );
         return ( maxSampleSize > 0 ) ? ( shared.size() / maxSampleSize ) : 0.0;
@@ -539,43 +572,9 @@ If any string is empty, return NONE
 
 Find phrases in each string
 tokenize into parts-of-speech (POS set)
-extract phrases from POS set (phrase = noun, verb, adjective + noun or noun + noun)
+extract phrases from POS set (phrase = noun, verb, adjective + noun , noun + noun, verb + adjective)
 
 Calculate synsets similarity between the phrases in A and the phrases in B
-
-find all unique synsets for the phrases in each string
-for each phrase
- lookup its canonical form
- lookup the Wordnet synsets, if any, for the canonical form
-
-measure the proximity synsets of A to the synsets of B
- for each synset of A
-   find the highest proximity measure (Jiang and Conrath) with a synset in B
- find the overall best match of any synset in A with a synset in B
- calculate the average of all best matches of synsets in A siwht a synset in B
- proximity of A to B = (K * overall_best) / (1 + K) --- where K is tuned to 1
-
-measure the proximity synsets of B to the synsets of A
-...
-
-average of the two proximity measures => CONCEPTUAL_SIMILARITY
-
-Calculate the shared proper noun ratio between POS sets of A and B
-for each string
-extract the list (composed) proper nouns
-calculate how many are in both strings
-size of overlap / size of smallest POS set => INSTANCE_OVERLAP
-
-Combine both measures into a semantic proximity rating
-OVERLAP_BOOST = CONCEPTUAL_SIMILARITY * INSTANCE_OVERLAP
-SCORE = min(1.0, CONCEPTUAL_SIMILARITY + OVERLAP_BOOST) ^ P -- where P is between 0 and 1 and tuned to 0.6
-
-Convert score to fuzzy measure
-> 0.75  => VERY_HIGH
-> 0.5   => HIGH
-> 0.25  => MEDIUM
-> 0     => LOW
-= 0     => NONE
 
 */
 }

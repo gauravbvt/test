@@ -7,7 +7,7 @@
            http://www.springframework.org/schema/context
            http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
-    <bean id="semanticMatcher" class="com.mindalliance.channels.nlp.SemanticProximityMatcher">
+    <bean id="semanticMatcher" class="com.mindalliance.channels.nlp.WordnetSemanticMatcher">
         <property name="wordnetDict" value="WEB-INF/data/wordnet-2/dict"/>
         <property name="simIndex" value="WEB-INF/data/jwsl/wn_index"/>
     </bean>
