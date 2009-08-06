@@ -50,16 +50,28 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
      */
     private static final Logger LOG = LoggerFactory.getLogger( WordnetSemanticMatcher.class );
     /**
-     * How much weight to give best match vs average match (1.0 -> 1/2, 2.0 -> 2/3 etc.)
+     * Minimum score for very high proximity.
      */
-    // private static final double BEST_MATCH_FACTOR = 0; // 1.0
+    private static double VERY_HIGH_THRESHOLD = 0.85;
+    /**
+     * Minimum score for high proximity.
+     */
+    private static double HIGH_THRESHOLD = 0.7;
+    /**
+     * Minimum score for medium proximity.
+     */
+    private static double MEDIUM_THRESHOLD = 0.4;
+    /**
+     * Minimum score for low proximity.
+     */
+    private static double LOW_THRESHOLD = 0.2;
     /**
      * Wordnet library config.
      */
     private static final String JWNL_PROPERTIES = "jwnl_properties.xml";
     /**
      * WordNet dictionary.
-     * ("./src/main/webapp/data/wordnet-3/dict")
+     * ("./src/main/webapp/web-inf/data/wordnet-2/dict")
      */
     private Resource wordnetDict;
     /**
@@ -126,7 +138,8 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
         URL url = WordnetSemanticMatcher.class.getResource( JWNL_PROPERTIES );
         // Class[] classes = {String.class};
         String template = getText( url );
-        String adjustedTemplate = template.replaceFirst( "_WORDNET_DICT_",
+        String adjustedTemplate = template.replaceFirst(
+                "_WORDNET_DICT_",
                 wordnetDict.getFile().getAbsolutePath() );
         return new ByteArrayInputStream( adjustedTemplate.getBytes() );
     }
@@ -225,11 +238,11 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
     }
 
     private Proximity matchingLevel( double score ) throws Exception {
-        if ( score > 1.0 ) throw new Exception( "Illegal matching score" );
-        if ( score > 0.85 ) return Proximity.VERY_HIGH;
-        if ( score > 0.70 ) return Proximity.HIGH;
-        if ( score > 0.40 ) return Proximity.MEDIUM;
-        if ( score > 0.20 ) return Proximity.LOW;
+        if ( score > 1.0 || score < 0.0 ) throw new Exception( "Illegal matching score " + score );
+        if ( score > VERY_HIGH_THRESHOLD ) return Proximity.VERY_HIGH;
+        if ( score > HIGH_THRESHOLD ) return Proximity.HIGH;
+        if ( score > MEDIUM_THRESHOLD ) return Proximity.MEDIUM;
+        if ( score > LOW_THRESHOLD ) return Proximity.LOW;
         else return Proximity.NONE;
     }
 

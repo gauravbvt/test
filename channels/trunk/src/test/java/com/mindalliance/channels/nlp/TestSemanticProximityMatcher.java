@@ -23,11 +23,13 @@ public class TestSemanticProximityMatcher extends TestCase {
 
         add( "", "", Proximity.NONE );
         add( "", "hello world", Proximity.NONE );
+        add( "the fast fox jumped over the big dog", "the fast fox leapted over the big dog", Proximity.HIGH );
         add( "the fast fox jumped over the big dog", "the slow fox jumped over the small dog", Proximity.HIGH );
-        add( "the fast fox jumped over the big dog", "the agile carnivore leapt over the huge animal", Proximity.HIGH );
+        add( "the fast fox jumped over the big dog", "the agile carnivore leaped over the huge animal", Proximity.HIGH );
+        add( "the fast fox jumped over the big dog", "the fast fox jumped under the big dog", Proximity.HIGH );
         add( "the fast fox jumped over the big dog", "the slow carnivore crawled under the tiny animal", Proximity.MEDIUM );
-        add( "I flew to Europe on Delta Airlines", "an American Airlines plane crashed on take off", Proximity.LOW );
         add( "the quick fox jumped over the lazy dog", "tea for two at the Ritz", Proximity.LOW );
+        add( "I flew to Europe on Delta Airlines", "an American Airlines plane crashed on take off", Proximity.LOW );
         add( "terrorism, John Doe", "John Doe committed a violent crime", Proximity.VERY_HIGH );
         add( "autopsy report of plague", "account of death by contagious disease", Proximity.HIGH );
         add( "avian influenza virus usually refers to influenza A viruses found chiefly in birds, but infections can occur in humans.",
