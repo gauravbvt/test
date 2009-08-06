@@ -449,7 +449,7 @@
                 </configuration>
             </plugin>
             <!-- Plugin shading for Doxia integration with Maven 2.0 -->
-              <plugin>
+             <!-- <plugin>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>1.2</version>
                 <executions>
@@ -474,9 +474,9 @@
                     </configuration>
                   </execution>
                 </executions>
-              </plugin>
+              </plugin>-->
               <!-- Doxia -->
-            <plugin>
+            <!--<plugin>
               <groupId>org.apache.maven.doxia</groupId>
               <artifactId>doxia-maven-plugin</artifactId>
               <version>${doxiaVersion}</version>
@@ -508,7 +508,7 @@
                   </book>
                 </books>
               </configuration>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
 
