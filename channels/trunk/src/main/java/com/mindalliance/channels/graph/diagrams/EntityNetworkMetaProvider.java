@@ -2,7 +2,6 @@ package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
-import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
@@ -45,7 +44,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
     }
 
     public Object getContext() {
-        return PlanManager.plan();
+        return getPlan();
     }
 
     public URLProvider getURLProvider() {

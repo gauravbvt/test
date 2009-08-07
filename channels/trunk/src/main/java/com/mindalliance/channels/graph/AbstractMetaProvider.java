@@ -2,6 +2,7 @@ package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.Plan;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.core.io.Resource;
 
@@ -108,6 +109,15 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
 
     public Analyst getAnalyst() {
         return analyst;
+    }
+
+    /**
+     * Get current plan.
+     * @return a plan
+     */
+    protected Plan getPlan() {
+        // TODO -- Demeter's law...
+        return analyst.getQueryService().getPlanManager().getCurrentPlan();
     }
 
     /**
