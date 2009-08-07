@@ -13,7 +13,7 @@ import org.springframework.core.io.Resource;
 import java.util.List;
 
 /**
- * A diagram maker
+ * A diagram maker.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf

@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN"
+        "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<head><title wicket:id="title">Actor</title></head>
+<body>
+<h1><span wicket:id="header">Actor</span>&rsquo;s playbook</h1>
+
+<div class="events" wicket:id="events">
+    <p>In case of <span wicket:id="event-name">event</span>:</p>
+    <ul>
+        <li wicket:id="parts"><a wicket:id="part" href="#"><span
+                wicket:id="task-name">Task name</span></a></li>
+    </ul>
+</div>
+
+<div class="notifications" wicket:id="sources">
+    <p>From <span wicket:id="spec">someone</span>:</p>
+    <ul>
+        <li wicket:id="flows">
+            <a wicket:id="flow" href="#"><span wicket:id="flow-name">Flow name</span></a>
+            (<span wicket:id="cause">just because</span>)
+            <ul wicket:id="parts-list">
+                <li wicket:id="parts"><a wicket:id="part" href="#"><span
+                        wicket:id="task-name">Task name</span></a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<div id="nav">
+    <ul>
+        <li><a wicket:id="top">View other playbooks</a></li>
+        <li><a href="/logout">Logout <span wicket:id="user">user</span></a></li>
+    </ul>
+</div>
+</body>
+</html>

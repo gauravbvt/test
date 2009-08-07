@@ -5,6 +5,8 @@ import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.graph.Diagram;
+import com.mindalliance.channels.graph.URLProvider;
+import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
 import com.mindalliance.channels.model.Scenario;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
@@ -30,6 +32,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
      * Class logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( PlanMapDiagramPanel.class );
+
     /**
      * Plan manager.
      */
@@ -40,57 +43,72 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
      * List of scenarios to be mapped.
      */
     private List<Scenario> scenarios;
+
     /**
      * Selected scenario.
      */
     private Scenario selectedScenario;
+
     /**
      * Selected scenario releationship.
      */
     private ScenarioRelationship selectedScRel;
 
+    /** URL provider for imagemap links. */
+    private URLProvider<Scenario, ScenarioRelationship> uRLProvider;
+
     public PlanMapDiagramPanel(
-            String id,
-            IModel<ArrayList<Scenario>> model,
-            Scenario selectedScenario,
-            ScenarioRelationship selectedScRel,
-            double[] diagramSize,
-            String domIdentifier ) {
-        this( id, model, selectedScenario, selectedScRel, diagramSize, null, true, domIdentifier );
+            String id, IModel<ArrayList<Scenario>> model, Scenario selectedScenario,
+            ScenarioRelationship selectedScRel, Settings settings ) {
+
+        this( id, model, selectedScenario, selectedScRel, null, settings );
     }
 
     public PlanMapDiagramPanel(
-            String id,
-            IModel<ArrayList<Scenario>> model,
-            Scenario selectedScenario,
+            String id, IModel<ArrayList<Scenario>> model, Scenario selectedScenario,
             ScenarioRelationship selectedScRel,
-            double[] diagramSize,
-            String orientation,
-            boolean withImageMap,
-            String domIdentifier ) {
-        super( id, diagramSize, orientation, withImageMap, domIdentifier );
+            URLProvider<Scenario, ScenarioRelationship> uRLProvider,
+            Settings settings ) {
+
+        super( id, settings );
         scenarios = model.getObject();
         this.selectedScenario = selectedScenario;
         this.selectedScRel = selectedScRel;
+        this.uRLProvider = uRLProvider;
         init();
     }
 
-
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Diagram makeDiagram() {
-        return getDiagramFactory().newPlanMapDiagram(
-                scenarios,
-                selectedScenario,
-                selectedScRel,
-                getDiagramSize(),
-                getOrientation() );
+
+        PlanMapDiagram diagram = new PlanMapDiagram( scenarios,
+                                                     selectedScenario,
+                                                     selectedScRel,
+                                                     getDiagramSize(),
+                                                     getOrientation() );
+        diagram.setURLProvider( getURLProvider() );
+        return diagram;
+    }
+
+    /**
+     * Overridable imagemap link provider.
+     * @return a link provider, or null for the default one.
+     */
+    public URLProvider<Scenario, ScenarioRelationship> getURLProvider() {
+        return uRLProvider;
+    }
+
+    public void setURLProvider( URLProvider<Scenario, ScenarioRelationship> uRLProvider ) {
+        this.uRLProvider = uRLProvider;
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     protected String getContainerId() {
         return "plan-map";
     }
@@ -98,6 +116,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
         sb.append( "/plan.png?scenario=" );
@@ -122,6 +141,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc }
      */
+    @Override
     protected void onClick( AjaxRequestTarget target ) {
         update( target, new Change( Change.Type.Selected, planManager.getCurrentPlan() ) );
     }
@@ -129,6 +149,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void onSelectGraph(
             String graphId,
             String domIdentifier,
@@ -141,6 +162,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void onSelectVertex(
             String graphId,
             String vertexId,
@@ -162,6 +184,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void onSelectEdge(
             String graphId,
             String edgeId,
@@ -180,6 +203,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected String makeSeed() {
         // Force regeneration
         return "&_modified=" + System.currentTimeMillis();

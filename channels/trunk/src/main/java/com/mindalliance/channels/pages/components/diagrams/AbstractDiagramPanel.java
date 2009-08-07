@@ -18,9 +18,8 @@ import org.slf4j.LoggerFactory;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 /**
- * Abstract Diagram Panel
+ * Abstract Diagram Panel.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -28,57 +27,28 @@ import java.util.regex.Pattern;
  * Time: 1:11:09 PM
  */
 public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
+
     /**
      * Class logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( AbstractDiagramPanel.class );
 
     /**
-     * The flow diagram
+     * The flow diagram.
      */
     private Diagram diagram;
-    /**
-     * Whether to add an image map
-     */
-    private boolean withImageMap;
-    /**
-     * The requested size of the diagram (can be null).
-     */
-    private double[] diagramSize;
-    /**
-     * The orientation of the diagram.
-     */
-    private String orientation;
+
+    /** Diagram generation settings. */
+    private final Settings settings;
+
     /**
      * IMage map holder.
      */
     private StringBuilder imageMapHolder;
-    /**
-     * Unique CSS identifier to image container.
-     */
-    private String domIdentifier;
 
-    public AbstractDiagramPanel( String id ) {
-        this( id, null, null, true, null );
-    }
-
-    public AbstractDiagramPanel( String id,
-                                 double[] diagramSize,
-                                 String orientation,
-                                 boolean withImageMap ) {
-        this( id, diagramSize, orientation, withImageMap, null );
-    }
-
-    public AbstractDiagramPanel( String id,
-                                 double[] diagramSize,
-                                 String orientation,
-                                 boolean withImageMap,
-                                 String domIdentifier ) {
+    protected AbstractDiagramPanel( String id, Settings settings ) {
         super( id );
-        this.diagramSize = diagramSize;
-        this.orientation = orientation;
-        this.withImageMap = withImageMap;
-        this.domIdentifier = domIdentifier;
+        this.settings = settings;
     }
 
     public Diagram getDiagram() {
@@ -86,55 +56,58 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
     }
 
     public boolean isWithImageMap() {
-        return withImageMap;
+        return settings.isUsingMap();
     }
 
     public double[] getDiagramSize() {
-        return diagramSize;
+        return settings.getSize();
     }
 
     public String getOrientation() {
-        return orientation;
+        return settings.getOrientation();
     }
-
 
     /**
      * Initialize.
      */
     protected void init() {
         diagram = makeDiagram();
-        if ( withImageMap ) {
-            imageMapHolder = new StringBuilder();
-            updateImageMap();
-            add( new DiagramAjaxBehavior( imageMapHolder, domIdentifier ) {
-                protected void respond( AjaxRequestTarget target ) {
-                    RequestCycle requestCycle = RequestCycle.get();
-                    String graphId = requestCycle.getRequest().getParameter( "graph" );
-                    String vertexId = requestCycle.getRequest().getParameter( "vertex" );
-                    String edgeId = requestCycle.getRequest().getParameter( "edge" );
-                    String width = requestCycle.getRequest().getParameter( "width" );
-                    String height = requestCycle.getRequest().getParameter( "height" );
-                    if ( graphId != null ) {
-                        if ( vertexId == null && edgeId == null ) {
-                            onSelectGraph( graphId, domIdentifier, 0, 0, target );
-                        } else if ( vertexId != null ) {
-                            int[] scroll = calculateVertexScroll( imageMapHolder, vertexId, width, height );
-                            onSelectVertex( graphId, vertexId, domIdentifier, scroll[0], scroll[1], target );
-                        } else {
-                            int[] scroll = calculateEdgeScroll( imageMapHolder, edgeId, width, height );
-                            onSelectEdge( graphId, edgeId, domIdentifier, scroll[0], scroll[1], target );
+        if ( isWithImageMap() ) {
+            imageMapHolder = createMapHolder();
+            if ( isUsingAjax() )
+                add( new DiagramAjaxBehavior( imageMapHolder, getDomIdentifier() ) {
+                    @Override
+                    protected void respond( AjaxRequestTarget target ) {
+                        RequestCycle requestCycle = RequestCycle.get();
+                        String graphId = requestCycle.getRequest().getParameter( "graph" );
+                        String vertexId = requestCycle.getRequest().getParameter( "vertex" );
+                        String edgeId = requestCycle.getRequest().getParameter( "edge" );
+                        String width = requestCycle.getRequest().getParameter( "width" );
+                        String height = requestCycle.getRequest().getParameter( "height" );
+                        if ( graphId != null ) {
+                            if ( vertexId == null && edgeId == null ) {
+                                onSelectGraph( graphId, getDomIdentifier(), 0, 0, target );
+                            } else if ( vertexId != null ) {
+                                int[] scroll = calculateVertexScroll( vertexId, width, height );
+                                onSelectVertex( graphId, vertexId,
+                                                getDomIdentifier(), scroll[0], scroll[1], target );
+                            } else {
+                                int[] scroll = calculateEdgeScroll( imageMapHolder, edgeId, width, height );
+                                onSelectEdge( graphId, edgeId,
+                                              getDomIdentifier(), scroll[0], scroll[1], target );
+                            }
                         }
                     }
-                }
-            } );
+                } );
         }
+
         MarkupContainer graph = new MarkupContainer( getContainerId() ) {
             @Override
             protected void onComponentTag( ComponentTag tag ) {
                 super.onComponentTag( tag );
                 String url = makeDiagramUrl() + makeSeed();
                 tag.put( "src", url );
-                if ( withImageMap ) {
+                if ( isWithImageMap() ) {
                     // TODO may not be unique in the page but should be
                     tag.put( "usemap", "#" + getContainerId() );
                 }
@@ -143,9 +116,9 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
             @Override
             protected void onRender( MarkupStream markupStream ) {
                 super.onRender( markupStream );
-                if ( withImageMap ) {
+                if ( isWithImageMap() ) {
                     try {
-                        LOG.debug( "Rendering image map ");
+                        LOG.debug( "Rendering image map " );
                         getResponse().write( imageMapHolder.toString() );
                     } catch ( DiagramException e ) {
                         LOG.error( "Can't generate image map", e );
@@ -153,20 +126,20 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
                 }
             }
         };
-        graph.add( new AjaxEventBehavior( "onclick" ) {
-            protected void onEvent( AjaxRequestTarget target ) {
-                onClick( target );
-            }
-        } );
-        graph.setOutputMarkupId( true );
+        if ( isUsingAjax() ) {
+            graph.add( new AjaxEventBehavior( "onclick" ) {
+                @Override
+                protected void onEvent( AjaxRequestTarget target ) {
+                    onClick( target );
+                }
+            } );
+            graph.setOutputMarkupId( true );
+        }
         add( graph );
     }
 
     private int[] calculateVertexScroll(
-            StringBuilder imageMapHolder,
-            String vertexId,
-            String swidth,
-            String sheight ) {
+            String vertexId, String swidth, String sheight ) {
         int[] scroll = new int[2];
         String imageMap = imageMapHolder.toString();
         String s = "<area.*?vertex="
@@ -216,12 +189,14 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
         return scroll;
     }
 
-    private void updateImageMap() {
+    private StringBuilder createMapHolder() {
+        StringBuilder builder = new StringBuilder();
         String imageMap = diagram.makeImageMap();
         // imageMap = imageMap.replace( "id=\"G\"", "id=\"" + getContainerId() + "\"" );
         imageMap = imageMap.replace( "id=\"G\"", "" );
         imageMap = imageMap.replace( "name=\"G\"", "name=\"" + getContainerId() + "\"" );
-        imageMapHolder.replace( 0, imageMapHolder.length(), imageMap );
+        builder.replace( 0, builder.length(), imageMap );
+        return builder;
     }
 
     /**
@@ -277,7 +252,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
      * @param graphId       a string
      * @param domIdentifier -- dom identifier of diagram container - can be null
      * @param scrollTop     where to scroll to top
-     * @param scrollLeft    where to scroll to left                         in
+     * @param scrollLeft    where to scroll to left
      * @param target        an ajax request target
      */
     protected abstract void onSelectGraph(
@@ -350,4 +325,11 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
         return script;
     }
 
+    public boolean isUsingAjax() {
+        return settings.isUsingAjax();
+    }
+
+    public String getDomIdentifier() {
+        return settings.getDomIdentifier();
+    }
 }

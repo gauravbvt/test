@@ -33,15 +33,17 @@ public class HierarchyDiagramPanel extends AbstractDiagramPanel {
             IModel<Hierarchical> hierarchicalModel,
             double[] diagramSize,
             String domIdentifier ) {
-        super( id, diagramSize, null, true, domIdentifier );
+        super( id, new Settings( domIdentifier, null, diagramSize, true, true ) );
         this.hierarchicalModel = hierarchicalModel;
         init();
     }
 
+    @Override
     protected String getContainerId() {
         return "hierarchy-diagram";
     }
 
+    @Override
     protected Diagram makeDiagram() {
         return getDiagramFactory().newHierarchyDiagram(
                 hierarchicalModel.getObject(),
@@ -49,6 +51,7 @@ public class HierarchyDiagramPanel extends AbstractDiagramPanel {
                 getOrientation() );
     }
 
+    @Override
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
         sb.append( "/hierarchy.png?entity=" );
@@ -68,10 +71,12 @@ public class HierarchyDiagramPanel extends AbstractDiagramPanel {
         return sb.toString();
     }
 
+    @Override
     protected void onClick( AjaxRequestTarget target ) {
         // Do nothing
     }
 
+    @Override
     protected void onSelectGraph(
             String graphId,
             String domIdentifier,
@@ -81,6 +86,7 @@ public class HierarchyDiagramPanel extends AbstractDiagramPanel {
         // Do nothing -- never called
     }
 
+    @Override
     protected void onSelectVertex(
             String graphId,
             String vertexId,
@@ -103,6 +109,7 @@ public class HierarchyDiagramPanel extends AbstractDiagramPanel {
         }
     }
 
+    @Override
     protected void onSelectEdge(
             String graphId,
             String edgeId,

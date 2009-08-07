@@ -59,7 +59,7 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
             String orientation,
             boolean withImageMap,
             String domIdentifier ) {
-        super( id, diagramSize, orientation, withImageMap, domIdentifier );
+        super( id, new Settings( domIdentifier, orientation, diagramSize, true, withImageMap ) );
         this.entityModel = entityModel;
         this.selectedEntityRel = selectedEntityRel;
         init();

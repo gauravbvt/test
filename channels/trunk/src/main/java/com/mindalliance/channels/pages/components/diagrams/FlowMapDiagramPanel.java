@@ -32,27 +32,10 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
      */
     private IModel<Part> partModel;
 
-  /*  public FlowMapDiagramPanel( String id, IModel<Scenario> model, String domIdentifier ) {
-        this( id, model, null, null, null, true, domIdentifier );
-    }*/
-
-    public FlowMapDiagramPanel( String id,
-                                IModel<Scenario> scenarioModel,
-                                IModel<Part> partModel,
-                                double[] diagramSize,
-                                String domIdentifier ) {
-        this( id, scenarioModel, partModel, diagramSize, null, true, domIdentifier );
-    }
-
-    public FlowMapDiagramPanel( String id,
-                                IModel<Scenario> scenariomodel,
-                                IModel<Part> partModel,
-                                double[] diagramSize,
-                                String orientation,
-                                boolean withImageMap,
-                                String domIdentifier) {
-        super( id, diagramSize, orientation, withImageMap, domIdentifier );
-        this.scenarioModel = scenariomodel;
+    public FlowMapDiagramPanel( String id, IModel<Scenario> scenarioModel, IModel<Part> partModel,
+                                Settings settings ) {
+        super( id, settings );
+        this.scenarioModel = scenarioModel;
         this.partModel = partModel;
         init();
     }
@@ -60,6 +43,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected String getContainerId() {
         return "flow-map";
     }
@@ -67,6 +51,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Diagram makeDiagram( ) {
         return getDiagramFactory().newFlowMapDiagram(
                 getScenario(),
@@ -78,6 +63,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
         sb.append( "scenario.png?scenario=" );
@@ -106,6 +92,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc }
      */
+    @Override
     protected void onClick( AjaxRequestTarget target ) {
         // Do nothing
     }
@@ -113,6 +100,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc }
      */
+    @Override
     protected void onSelectGraph(
             String graphId,
             String domIdentifier,
@@ -130,6 +118,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc }
      */
+    @Override
     protected void onSelectVertex(
             String graphId,
             String vertexId,
@@ -157,6 +146,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
     /**
      * {@inheritDoc }
      */
+    @Override
     protected void onSelectEdge(
             String graphId,
             String edgeId,

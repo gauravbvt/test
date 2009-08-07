@@ -46,4 +46,10 @@ public interface GraphRenderer<V, E> {
                  String format,
                  OutputStream output ) throws DiagramException;
 
+    /**
+     * Set highlights to given edge and vertex.
+     * @param vertex a vertex. Clear if null
+     * @param edge an edge. Clear if null
+     */
+    void highlight( V vertex, E edge );
 }

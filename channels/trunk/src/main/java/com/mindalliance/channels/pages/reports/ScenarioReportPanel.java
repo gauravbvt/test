@@ -8,6 +8,7 @@ import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
+import com.mindalliance.channels.pages.components.diagrams.Settings;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -82,10 +83,8 @@ public class ScenarioReportPanel extends Panel {
                         "flowMap",                                                        // NON-NLS
                         new Model<Scenario>( scenario ),
                         null,
-                        null, //size,
-                        DiagramFactory.TOP_BOTTOM,
-                        false,
-                        null ) );
+                        //size,
+                        new Settings( null, DiagramFactory.TOP_BOTTOM, null, true, false ) ) );
 
         add( new IssuesReportPanel( "issues", new Model<ModelObject>( scenario ) ) );     // NON-NLS
     }

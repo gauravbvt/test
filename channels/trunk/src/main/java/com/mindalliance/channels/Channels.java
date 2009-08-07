@@ -11,6 +11,7 @@ import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.LoginPage;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.UploadPage;
+import com.mindalliance.channels.pages.playbook.TaskPlaybook;
 import com.mindalliance.channels.pages.png.EntityNetworkPage;
 import com.mindalliance.channels.pages.png.FlowMapPage;
 import com.mindalliance.channels.pages.png.HierarchyPage;
@@ -105,7 +106,8 @@ public final class Channels extends WebApplication implements ApplicationListene
 
         getMarkupSettings().setStripWicketTags( true );
 
-        mount( new IndexedParamUrlCodingStrategy( "playbook", PlanReportPage.class ) );
+        mount( new IndexedParamUrlCodingStrategy( "report", PlanReportPage.class ) );
+        mount( new IndexedParamUrlCodingStrategy( "playbooks", TaskPlaybook.class ) );
         mount( new QueryStringUrlCodingStrategy( "plan", PlanPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "admin", AdminPage.class ) );
 
@@ -132,7 +134,7 @@ public final class Channels extends WebApplication implements ApplicationListene
     }
 
     /**
-     * 
+     *
      */
     @Override
     public Class<? extends WebPage> getHomePage() {

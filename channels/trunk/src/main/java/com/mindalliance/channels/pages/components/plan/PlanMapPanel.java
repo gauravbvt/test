@@ -12,6 +12,7 @@ import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.ExternalFlowsPanel;
 import com.mindalliance.channels.pages.components.ScenarioCausesPanel;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
+import com.mindalliance.channels.pages.components.diagrams.Settings;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -116,23 +117,15 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
 
 
     private void addPlanMapDiagramPanel() {
-        if ( diagramSize[0] <= 0.0 || diagramSize[1] <= 0.0 ) {
-            planMapDiagramPanel = new PlanMapDiagramPanel(
-                    "plan-map",
-                    new PropertyModel<ArrayList<Scenario>>( this, "scenarios" ),
-                    selectedScenario,
-                    selectedScRel,
-                    null,
-                    ".plan .picture" );
-        } else {
-            planMapDiagramPanel = new PlanMapDiagramPanel(
-                    "plan-map",
-                    new PropertyModel<ArrayList<Scenario>>( this, "scenarios" ),
-                    selectedScenario,
-                    selectedScRel,
-                    diagramSize,
-                    ".plan .picture" );
-        }
+        Settings settings = diagramSize[0] <= 0.0 || diagramSize[1] <= 0.0 ? new Settings(
+                ".plan .picture", null, null, true, true )
+                            : new Settings( ".plan .picture", null, diagramSize, true, true );
+        planMapDiagramPanel = new PlanMapDiagramPanel(
+                "plan-map",
+                new PropertyModel<ArrayList<Scenario>>( this, "scenarios" ),
+                selectedScenario,
+                selectedScRel, settings );
+
         planMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( planMapDiagramPanel );
     }

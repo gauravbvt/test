@@ -8,6 +8,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.ScenarioObject;
 import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
+import com.mindalliance.channels.pages.components.diagrams.Settings;
 import com.mindalliance.channels.pages.components.menus.PartActionsMenuPanel;
 import com.mindalliance.channels.pages.components.menus.PartShowMenuPanel;
 import com.mindalliance.channels.pages.components.scenario.ScenarioEditPanel;
@@ -210,6 +211,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     private void addFlowSizing() {
         WebMarkupContainer reduceToFit = new WebMarkupContainer( "fit" );
         reduceToFit.add( new AbstractDefaultAjaxBehavior() {
+            @Override
             protected void onComponentTag( ComponentTag tag ) {
                 super.onComponentTag( tag );
                 String domIdentifier = "#graph";
@@ -222,6 +224,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
                 tag.put( "onclick", onclick );
             }
 
+            @Override
             protected void respond( AjaxRequestTarget target ) {
                 RequestCycle requestCycle = RequestCycle.get();
                 String swidth = requestCycle.getRequest().getParameter( "width" );
@@ -235,6 +238,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         add( reduceToFit );
         WebMarkupContainer fullSize = new WebMarkupContainer( "full" );
         fullSize.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
             protected void onEvent( AjaxRequestTarget target ) {
                 flowDiagramDim = new double[2];
                 addFlowDiagram();
@@ -245,21 +249,11 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     }
 
     private void addFlowDiagram() {
-        if ( flowDiagramDim[0] <= 0.0 || flowDiagramDim[0] <= 0.0 ) {
-            flowMapDiagramPanel = new FlowMapDiagramPanel(
-                    "flow-map",
-                    scenarioModel,
-                    partModel,
-                    null,
-                    "#graph" );
-        } else {
-            flowMapDiagramPanel = new FlowMapDiagramPanel(
-                    "flow-map",
-                    scenarioModel,
-                    partModel,
-                    flowDiagramDim,
-                    "#graph" );
-        }
+        double[] dim = flowDiagramDim[0] <= 0.0 || flowDiagramDim[1] <= 0.0 ? null : flowDiagramDim;
+        Settings settings = new Settings( "#graph", null, dim, true, true );
+
+        flowMapDiagramPanel =
+                new FlowMapDiagramPanel( "flow-map", scenarioModel, partModel, settings );
         flowMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( flowMapDiagramPanel );
     }

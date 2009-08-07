@@ -52,13 +52,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Observable;
 import java.util.Set;
 
 /**
  * Query service instance.
  */
-public class DefaultQueryService extends Observable implements QueryService, InitializingBean {
+public class DefaultQueryService implements QueryService, InitializingBean {
 
     /**
      * Class logger.

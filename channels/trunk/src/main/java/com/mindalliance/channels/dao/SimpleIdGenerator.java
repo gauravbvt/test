@@ -23,10 +23,16 @@ public class SimpleIdGenerator implements IdGenerator {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public synchronized long getLastAssignedId() {
         return lastAssignedId;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public synchronized void setLastAssignedId( long id ) {
         lastAssignedId = id;
     }

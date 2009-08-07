@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.User;
+import com.mindalliance.channels.pages.playbook.TaskPlaybook;
 import com.mindalliance.channels.pages.reports.PlanReportPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -36,7 +37,8 @@ public class AdminPage extends WebPage {
         add( new Label( "user", user.getUsername() ) );
         addPlanSwitcher();
         add( new BookmarkablePageLink<PlanPage>( "plan", PlanPage.class ) );
-        add( new BookmarkablePageLink<PlanReportPage>( "playbook", PlanReportPage.class ) );
+        add( new BookmarkablePageLink<PlanReportPage>( "report", PlanReportPage.class ) );
+        add( new BookmarkablePageLink<PlanReportPage>( "playbook", TaskPlaybook.class ) );
     }
 
     private void addPlanSwitcher() {

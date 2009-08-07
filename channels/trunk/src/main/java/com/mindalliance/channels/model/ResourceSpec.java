@@ -257,9 +257,9 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
     public String getName() {
         StringBuilder sb = new StringBuilder();
         if ( isAnyRole() )
-            sb.append( isAnyActor() ? "Someone" : actor.getName() );
+            sb.append( isAnyActor() ? "someone" : actor.getName() );
         else {
-            sb.append( isAnyActor() ? "Any " : actor.getName() + " as " );
+            sb.append( isAnyActor() ? "any " : actor.getName() + " as " );
             sb.append( role.getName() );
         }
         if ( !isAnyOrganization() ) {

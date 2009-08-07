@@ -5,6 +5,7 @@ import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
+import com.mindalliance.channels.pages.components.diagrams.Settings;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.markup.html.WebPage;
@@ -73,10 +74,12 @@ public class PlanReportPage extends WebPage {
                                     selector.isAllActors() ? null : selector.getActor() ) );
             }
         } );
+
+
         add( new PlanMapDiagramPanel( "planMap",                                          // NON-NLS
             new Model<ArrayList<Scenario>>( (ArrayList<Scenario>) scenarios ),
             selector.isAllScenarios() ? null : selector.getScenario(),
-            null, null, null, false, null ) );
+            null, new Settings() ) );
 
     }
 }

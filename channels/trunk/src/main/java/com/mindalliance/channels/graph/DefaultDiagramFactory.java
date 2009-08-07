@@ -102,7 +102,7 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
     /**
       * {@inheritDoc}
       */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     // TODO - why can't I say:  List<Scenario> scenarios ?   -- ? extends...
     public Diagram newPlanMapDiagram(
             List scenarios,
@@ -110,9 +110,9 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
             ScenarioRelationship scRel,
             double[] diagramSize,
             String orientation ) {
-        LOG.debug("Making plan diagram");
+        LOG.debug( "Making plan diagram" );
         return new PlanMapDiagram(
-                (List<Scenario>)scenarios,
+                scenarios,
                 scenario, scRel,
                 diagramSize,
                 orientation );

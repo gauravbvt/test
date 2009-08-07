@@ -2,15 +2,15 @@ package com.mindalliance.channels.graph;
 
 import org.jgrapht.Graph;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.io.OutputStream;
-import java.io.StringReader;
-import java.io.BufferedInputStream;
-import java.io.StringWriter;
-import java.io.IOException;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -195,6 +195,16 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
         StringWriter writer = new StringWriter();
         dotExporter.export( writer, graph );
         return writer.toString();
+    }
+
+    /** {@inheritDoc} */
+    public void highlight( V vertex, E edge ) {
+        resetHighlight();
+
+        if ( vertex != null )
+            highlightVertex( vertex );
+        if ( edge != null )
+            highlightEdge( edge );
     }
 
     /**

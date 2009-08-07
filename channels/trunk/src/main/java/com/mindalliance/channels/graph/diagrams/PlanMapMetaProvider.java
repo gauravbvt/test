@@ -41,6 +41,8 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
      */
     private static final String SCENARIO_FONT_SIZE = "10";
 
+    /** The thing that generates URLs in an image map. */
+    private URLProvider<Scenario, ScenarioRelationship> uRLProvider;
 
     /**
      * Scenarios in plan.
@@ -52,6 +54,7 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
             String outputFormat,
             Resource imageDirectory,
             Analyst analyst ) {
+
         super( outputFormat, imageDirectory, analyst );
         this.scenarios = scenarios;
     }
@@ -60,26 +63,18 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
         return scenarios;
     }
 
+    public void setURLProvider( URLProvider<Scenario, ScenarioRelationship> uRLProvider ) {
+        this.uRLProvider = uRLProvider;
+    }
+
     /**
      * {@inheritDoc}
      */
     public URLProvider<Scenario, ScenarioRelationship> getURLProvider() {
-        return new URLProvider<Scenario, ScenarioRelationship>() {
+        if ( uRLProvider == null )
+            uRLProvider = new DefaultURLProvider();
 
-            public String getGraphURL( Scenario vertex ) {
-                return null;
-            }
-
-            public String getVertexURL( Scenario scenario ) {
-                Object[] args = {0, scenario.getId()};
-                return MessageFormat.format( VERTEX_URL_FORMAT, args );
-            }
-
-            public String getEdgeURL( ScenarioRelationship scRel ) {
-                Object[] args = {0, scRel.getId()};
-                return MessageFormat.format( EDGE_URL_FORMAT, args );
-            }
-        };
+        return uRLProvider;
     }
 
     public DOTAttributeProvider<Scenario, ScenarioRelationship> getDOTAttributeProvider() {
@@ -95,7 +90,7 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
                     name = name + count + ( count > 1 ? " flows" : " flow" );
                 }
                 if ( scenarioRel.hasInitiators() ) {
-                    name = name + (name.isEmpty() ? " " : " and ");
+                    name += name.isEmpty() ? " " : " and ";
                     int count = scenarioRel.getInitiators().size();
                     name = name + count + ( count > 1 ? " causes" : " cause");
                 }
@@ -119,7 +114,7 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
     public VertexNameProvider<Scenario> getVertexIDProvider() {
         return new VertexNameProvider<Scenario>() {
             public String getVertexName( Scenario scenario ) {
-                return "" + scenario.getId();
+                return String.valueOf( scenario.getId() );
             }
         };
     }
@@ -194,4 +189,18 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
         }
     }
 
+    private static class DefaultURLProvider implements URLProvider<Scenario, ScenarioRelationship> {
+
+        public String getGraphURL( Scenario vertex ) {
+            return null;
+        }
+
+        public String getVertexURL( Scenario vertex ) {
+            return MessageFormat.format( VERTEX_URL_FORMAT, 0, vertex.getId() );
+        }
+
+        public String getEdgeURL( ScenarioRelationship edge ) {
+            return MessageFormat.format( EDGE_URL_FORMAT, 0, edge.getId() );
+        }
+    }
 }
