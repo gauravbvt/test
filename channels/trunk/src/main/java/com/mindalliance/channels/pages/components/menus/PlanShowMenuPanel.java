@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.menus;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.pages.reports.PlanReportPage;
 import org.apache.wicket.AttributeModifier;
@@ -12,6 +13,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,12 @@ import java.util.Set;
  */
 public class PlanShowMenuPanel extends MenuPanel {
 
+    /**
+     * Plan manager.
+     */
+    @SpringBean
+    private PlanManager planManager;
+
     public PlanShowMenuPanel( String s, IModel<? extends Scenario> model, Set<Long> expansions ) {
         super( s, "Show", model, expansions );
     }
@@ -37,12 +45,13 @@ public class PlanShowMenuPanel extends MenuPanel {
     @SuppressWarnings( "unchecked" )
     public List<Component> getMenuItems() {
         List<Component> menuItems = new ArrayList<Component>();
+        final Plan plan = planManager.getCurrentPlan();
         // Edit<->Hide
         Link editLink;
-        if ( getExpansions().contains( PlanManager.plan().getId() ) ) {
+        if ( getExpansions().contains( plan.getId() ) ) {
             AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {
-                    update( target, new Change( Change.Type.Collapsed, PlanManager.plan() ) );
+                    update( target, new Change( Change.Type.Collapsed, plan ) );
                 }
             };
             menuItems.add( new LinkMenuItem(
@@ -52,7 +61,7 @@ public class PlanShowMenuPanel extends MenuPanel {
         } else {
             AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {
-                    update( target, new Change( Change.Type.Expanded, PlanManager.plan() ) );
+                    update( target, new Change( Change.Type.Expanded, plan ) );
                 }
             };
             menuItems.add( new LinkMenuItem(

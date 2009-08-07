@@ -8,6 +8,7 @@ import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.model.Scenario;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +30,12 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
      * Class logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( PlanMapDiagramPanel.class );
+    /**
+     * Plan manager.
+     */
+    @SpringBean
+    private PlanManager planManager;
+    
     /**
      * List of scenarios to be mapped.
      */
@@ -116,7 +123,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
      * {@inheritDoc }
      */
     protected void onClick( AjaxRequestTarget target ) {
-        update( target, new Change( Change.Type.Selected, PlanManager.plan() ) );
+        update( target, new Change( Change.Type.Selected, planManager.getCurrentPlan() ) );
     }
 
     /**

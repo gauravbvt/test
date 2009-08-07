@@ -22,6 +22,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,6 +33,13 @@ import java.util.Set;
  * Editor on the details of a scenario (name, description, etc).
  */
 public class ScenarioEditDetailsPanel extends AbstractCommandablePanel {
+
+    /**
+     * Plan manager.
+     */
+    @SpringBean
+    private PlanManager planManager;
+    
     /**
      * An issues panel for scenario issues.
      */
@@ -196,7 +204,7 @@ public class ScenarioEditDetailsPanel extends AbstractCommandablePanel {
         String oldName = oldEvent == null ? "" : oldEvent.getName();
         Event newEvent = null;
         if ( name == null || name.trim().isEmpty() )
-            newEvent = PlanManager.plan().getDefaultEvent();
+            newEvent = planManager.getCurrentPlan().getDefaultEvent();
         else {
             if ( oldEvent == null || !isSame( name, oldName ) )
                 newEvent = getQueryService().findOrCreate( Event.class, name );

@@ -8,6 +8,7 @@ import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.model.ModelObject;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +21,13 @@ import org.slf4j.LoggerFactory;
  * Time: 7:31:07 PM
  */
 public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDiagramPanel {
+
+    /**
+     * Plan manager.
+     */
+    @SpringBean
+    private PlanManager planManager;
+    
 
     /**
      * Class logger.
@@ -107,7 +115,7 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
     }
 
     protected void onClick( AjaxRequestTarget target ) {
-        update( target, new Change( Change.Type.Selected, PlanManager.plan() ) );
+        update( target, new Change( Change.Type.Selected, planManager.getCurrentPlan() ) );
     }
 
     /**

@@ -20,6 +20,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
 import java.text.Collator;
@@ -39,6 +40,13 @@ import java.util.Set;
  * Time: 1:43:30 PM
  */
 public class EventListPanel extends AbstractCommandablePanel {
+
+    /**
+     * Plan manager.
+     */
+    @SpringBean
+    private PlanManager planManager;
+
     /**
      * Collator.
      */
@@ -115,7 +123,7 @@ public class EventListPanel extends AbstractCommandablePanel {
                 new PropertyModel<Boolean>( wrapper, "confirmed" ) );
         makeVisible( confirmedCheckBox, wrapper.canBeConfirmed() );
         item.addOrReplace( confirmedCheckBox );
-        final Plan plan = PlanManager.plan();
+        final Plan plan = planManager.getCurrentPlan();
         confirmedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 eventsDiv.addOrReplace( makeEventsTable() );
@@ -203,10 +211,11 @@ public class EventListPanel extends AbstractCommandablePanel {
 
         public void setConfirmed( boolean confirmed ) {
             this.confirmed = confirmed;
+            Plan plan = planManager.getCurrentPlan();
             if ( confirmed ) {
                 Event confirmedEvent = getQueryService().findOrCreate( Event.class, getName() );
                 doCommand( new UpdatePlanObject(
-                        PlanManager.plan(),
+                        plan,
                         "incidents",
                         confirmedEvent,
                         UpdateObject.Action.Add
@@ -215,7 +224,7 @@ public class EventListPanel extends AbstractCommandablePanel {
             } else if ( !markedForCreation ) {
                 Event confirmedEvent = getQueryService().findOrCreate( Event.class, getName() );
                 doCommand( new UpdatePlanObject(
-                        PlanManager.plan(),
+                        plan,
                         "incidents",
                         confirmedEvent,
                         UpdateObject.Action.Remove

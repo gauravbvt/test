@@ -30,6 +30,12 @@ import java.util.List;
  */
 public class PlanReportPage extends WebPage {
 
+    /**
+     * Plan manager.
+     */
+    @SpringBean
+    private PlanManager planManager;    
+
     private static final String ALL = "all";
 
     /** The query service. */
@@ -37,7 +43,7 @@ public class PlanReportPage extends WebPage {
     private QueryService queryService;
 
     /** The current plan. */
-    private Plan plan = PlanManager.plan();
+    private Plan plan = planManager.getCurrentPlan();
 
     private SelectorPanel selector;
 
