@@ -17,6 +17,7 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
@@ -888,4 +889,11 @@ public interface QueryService extends Service {
      * @return a list of actors
      */
     List<Actor> findAllActorsAsUser( String userName );
+
+    /**
+     * Get current plan.
+     *
+     * @return a plan
+     */
+    Plan getCurrentPlan();
 }

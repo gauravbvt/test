@@ -1,7 +1,9 @@
 package com.mindalliance.channels;
 
+import com.mindalliance.channels.analysis.IssueScanner;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 
 import java.util.Iterator;
@@ -21,6 +23,13 @@ public interface Analyst extends Service {
      * Whether to include issues that are property-specific.
      */
     boolean INCLUDE_PROPERTY_SPECIFIC = true;
+
+    /**
+     * Notification of command execution.
+     *
+     * @param plan a plan
+     */
+    void onAfterCommand( Plan plan );
 
     /**
      * Use all applicable issue detectors to find issues about a model object.
@@ -47,7 +56,7 @@ public interface Analyst extends Service {
      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
      * @return a list of issues detected
      */
-    List<Issue> listIssues( ModelObject modelObject, boolean includingPropertySpecific );
+    List<Issue> listIssues( ModelObject modelObject, Boolean includingPropertySpecific );
 
     /**
      * Use all applicable issue detectors to find issues about a model object.
@@ -57,7 +66,7 @@ public interface Analyst extends Service {
      * @param includingWaived           -- whether to also include waived issues
      * @return a list of issues detected
      */
-    List<Issue> listIssues( ModelObject modelObject, boolean includingPropertySpecific, boolean includingWaived );
+    List<Issue> listIssues( ModelObject modelObject, Boolean includingPropertySpecific, Boolean includingWaived );
 
     /**
      * Use all applicable issue detectors to find issues about a model object's property.
@@ -75,7 +84,7 @@ public interface Analyst extends Service {
      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
      * @return a list of issues detected
      */
-    List<Issue> listUnwaivedIssues( ModelObject modelObject, boolean includingPropertySpecific );
+    List<Issue> listUnwaivedIssues( ModelObject modelObject, Boolean includingPropertySpecific );
 
     /**
      * Use all unwaived issue detectors to find issues about a model object's property.
@@ -93,7 +102,7 @@ public interface Analyst extends Service {
      * @param property    -- the specifiec property being analyzed
      * @return whether a specifi property of a model object has issues
      */
-    boolean hasIssues( ModelObject modelObject, String property );
+    Boolean hasIssues( ModelObject modelObject, String property );
 
     /**
      * Tests whether a model object has issues.
@@ -102,7 +111,7 @@ public interface Analyst extends Service {
      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
      * @return whether a model object has issues
      */
-    boolean hasIssues( ModelObject modelObject, boolean includingPropertySpecific );
+    Boolean hasIssues( ModelObject modelObject, Boolean includingPropertySpecific );
 
     /**
      * Tests whether a specific property of a model object has unwaived issues.
@@ -111,7 +120,7 @@ public interface Analyst extends Service {
      * @param property    -- the specifiec property being analyzed
      * @return whether a specifi property of a model object has issues
      */
-    boolean hasUnwaivedIssues( ModelObject modelObject, String property );
+    Boolean hasUnwaivedIssues( ModelObject modelObject, String property );
 
     /**
      * Tests whether a model object has unwaived issues.
@@ -120,7 +129,7 @@ public interface Analyst extends Service {
      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
      * @return whether a model object has issues
      */
-    boolean hasUnwaivedIssues( ModelObject modelObject, boolean includingPropertySpecific );
+    Boolean hasUnwaivedIssues( ModelObject modelObject, Boolean includingPropertySpecific );
 
     /**
      * Produces an aggregate description of unwaived issues detected about a model object.
@@ -129,7 +138,7 @@ public interface Analyst extends Service {
      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
      * @return an aggregate description of issues or an empty string if none
      */
-    String getIssuesSummary( ModelObject modelObject, boolean includingPropertySpecific );
+    String getIssuesSummary( ModelObject modelObject, Boolean includingPropertySpecific );
 
     /**
      * Produces an aggregate description of unwaived issues detected about a specific property.
@@ -156,7 +165,7 @@ public interface Analyst extends Service {
      * @param specific a boolean -- true -> equality match, false -> marrow or equals
      * @return a list of issues
      */
-    List<Issue> findAllIssuesFor( ResourceSpec resource, boolean specific );
+    List<Issue> findAllIssuesFor( ResourceSpec resource, Boolean specific );
 
     /**
      * Get query service.
@@ -167,18 +176,23 @@ public interface Analyst extends Service {
 
     /**
      * Whether the model object has no unwaived validity issue.
+     *
      * @param modelObject a model object
      * @return a Boolean
      */
     Boolean isValid( ModelObject modelObject );
+
     /**
      * Whether the model object has no unwaived completeness issue.
+     *
      * @param modelObject a model object
      * @return a Boolean
      */
     Boolean isComplete( ModelObject modelObject );
+
     /**
      * Whether the model object has no unwaived robustness issue.
+     *
      * @param modelObject a model object
      * @return a Boolean
      */
@@ -186,10 +200,27 @@ public interface Analyst extends Service {
 
     /**
      * Count the number of unwaived issues for a model object in a given test.
+     *
      * @param modelObject a model object
-     * @param test a type of issue
+     * @param test        a type of issue
      * @return an Integer
      */
     Integer countTestFailures( ModelObject modelObject, String test );
 
+    /**
+     * On startup.
+     */
+    void onStart();
+
+    /**
+     * On destroy.
+     */
+    void onDestroy();
+
+    /**
+     * Sets issue scanner.
+     *
+     * @param issueScanner an issue scanner
+     */
+    void setIssueScanner( IssueScanner issueScanner );
 }

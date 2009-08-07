@@ -1,7 +1,6 @@
 package com.mindalliance.channels;
 
 import com.mindalliance.channels.geo.GeoLocation;
-import org.geonames.PostalCode;
 
 import java.net.URL;
 import java.util.List;
@@ -30,7 +29,7 @@ public interface GeoService extends Service {
      * @param val a string
      * @return a boolean
      */
-    boolean isLikelyGeoname( String val );
+    Boolean isLikelyGeoname( String val );
 
     /**
      * Verify the postal code.
@@ -39,7 +38,7 @@ public interface GeoService extends Service {
      * @param geoLocation a geo location
      * @return a boolean
      */
-    boolean verifyPostalCode( final String postalCode, GeoLocation geoLocation );
+    Boolean verifyPostalCode( final String postalCode, GeoLocation geoLocation );
 
     /**
      * Refine latlong values  from Google geocoder if address or postal code known.
@@ -73,14 +72,13 @@ public interface GeoService extends Service {
      * @param geoLocation a geo location
      * @return a boolean
      */
-    boolean isPostalCodeInGeoLocation( final String postalCode, GeoLocation geoLocation );
+    Boolean isPostalCodeInGeoLocation( final String postalCode, GeoLocation geoLocation );
 
     /**
      * Finds postal codes nearby a geolocation.
      *
      * @param geoLocation a geo location
-     * @return a list of postalcodes
-     * @throws Exception if web service request fails
+     * @return a list of postal codes as strings
      */
-    List<PostalCode> findNearbyPostalCodes( GeoLocation geoLocation ) throws Exception;
+    List<String> findNearbyPostalCodes( GeoLocation geoLocation );
 }

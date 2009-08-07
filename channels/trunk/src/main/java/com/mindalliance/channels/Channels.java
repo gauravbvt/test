@@ -31,9 +31,7 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -81,12 +79,6 @@ public final class Channels extends WebApplication implements ApplicationListene
      * One lock manager per plan
      */
     private Map<Plan, LockManager> lockManagers = new HashMap<Plan, LockManager>();
-    /**
-     * Plans.
-     */
-    private List<Plan> plans = new ArrayList<Plan>();
-
-    // TODO -- move to Plan
 
     /**
      * Default Constructor.
@@ -129,12 +121,14 @@ public final class Channels extends WebApplication implements ApplicationListene
 
         getApplicationSettings().setInternalErrorPage( ErrorPage.class );
         getApplicationSettings().setPageExpiredErrorPage( ExpiredPage.class );
+
     }
 
     @Override
     protected void onDestroy() {
         LOG.info( "Goodbye!" );
         queryService.onDestroy();
+        analyst.onDestroy();
     }
 
     /**
@@ -200,7 +194,7 @@ public final class Channels extends WebApplication implements ApplicationListene
      * @return a commander
      */
     public Commander getCommander() {
-        Plan plan = User.current().getPlan();
+        Plan plan = queryService.getCurrentPlan();
         return instance().getCommander( plan );
     }
 
@@ -229,7 +223,7 @@ public final class Channels extends WebApplication implements ApplicationListene
      * @return a lock manager
      */
     public LockManager getLockManager() {
-        Plan plan = User.current().getPlan();
+        Plan plan = queryService.getCurrentPlan();
         return instance().getLockManager( plan );
     }
 

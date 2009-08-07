@@ -32,7 +32,6 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.nlp.Proximity;
 import com.mindalliance.channels.util.Employment;
@@ -288,7 +287,7 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
     }
 
     private Plan getPlan() {
-        return User.current().getPlan();
+        return getPlanManager().getCurrentPlan();
     }
 
     /**
@@ -1647,7 +1646,7 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
      */
     public List<Issue> findAllIssues( Analyst analyst ) {
         List<Issue> allIssues = new ArrayList<Issue>();
-        allIssues.addAll( analyst.listIssues( getPlan(), true ) );
+        // allIssues.addAll( analyst.listIssues( getPlan(), true ) );
         for ( ModelObject mo : list( ModelObject.class ) ) {
             allIssues.addAll( analyst.listIssues( mo, true ) );
         }
@@ -1669,7 +1668,7 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
      */
     public List<Issue> findAllUnwaivedIssues( Analyst analyst ) {
         List<Issue> allUnwaivedIssues = new ArrayList<Issue>();
-        allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( getPlan(), true ) );
+        // allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( getPlan(), true ) );
         for ( ModelObject mo : list( ModelObject.class ) ) {
             allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( mo, true ) );
         }
@@ -2057,6 +2056,13 @@ public class DefaultQueryService extends Observable implements QueryService, Ini
                     }
                 }
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Plan getCurrentPlan() {
+        return planManager.getCurrentPlan();
     }
 
     private Issue.Level getPartPriority( Part part, List<Part> visited ) {

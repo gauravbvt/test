@@ -3,9 +3,10 @@ package com.mindalliance.channels;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.dao.Journal;
+import com.mindalliance.channels.model.Plan;
 
 import java.util.Map;
 
@@ -34,7 +35,8 @@ public interface Commander extends Service {
      *
      * @param command a command
      * @return an change
-     * @throws com.mindalliance.channels.command.CommandException if execution could not proceeed or failed.
+     * @throws com.mindalliance.channels.command.CommandException
+     *          if execution could not proceeed or failed.
      */
     Change doCommand( Command command ) throws CommandException;
 
@@ -102,7 +104,6 @@ public interface Commander extends Service {
     String getRedoTitle();
 
 
-
     /**
      * Find a model object from its id, possibly resolving the id first with idMap.
      *
@@ -114,35 +115,36 @@ public interface Commander extends Service {
 
     <T extends ModelObject> T resolve( Class<T> clazz, Long id ) throws CommandException;
 
-
 /**
-     * Resolves an id.
-     *
-     * @param id a long
-     * @return a long or int
-     * @throws CommandException if resolution fails
-     */
+ * Resolves an id.
+ *
+ * @param id a long
+ * @return a long or int
+ * @throws CommandException if resolution fails
+ */
 /*
     Long resolveId( Long id ) throws CommandException;
 
     */
 /**
-     * Map id translation for replay.
-     * @param oldId a Long or null
-     * @param newId a Long
-     */
+ * Map id translation for replay.
+ * @param oldId a Long or null
+ * @param newId a Long
+ */
 /*
     void mapId( Long oldId, Long newId );
 */
 
     /**
      * Whether commander is in journal replay mode.
+     *
      * @return a boolean
      */
     boolean isReplaying();
 
     /**
      * Turns on/off journal replay mode.
+     *
      * @param val a boolean
      */
     void setReplaying( boolean val );
@@ -150,8 +152,8 @@ public interface Commander extends Service {
     /**
      * Remove entity with old name if not referenced and if not defined.
      *
-     * @param clazz  a model object class
-     * @param name a string
+     * @param clazz a model object class
+     * @param name  a string
      */
     void cleanup( Class<? extends ModelObject> clazz, String name );
 
@@ -188,12 +190,12 @@ public interface Commander extends Service {
     boolean releaseAnyLockOn( Identifiable identifiable );
 
     /**
-      * Attempt to release lock on identifiable, failing silently.
-      *
-      * @param id an identifiable's id
-      * @return a boolean - whether a lock was released
-      */
-     boolean releaseAnyLockOn( Long id );
+     * Attempt to release lock on identifiable, failing silently.
+     *
+     * @param id an identifiable's id
+     * @return a boolean - whether a lock was released
+     */
+    boolean releaseAnyLockOn( Long id );
 
     /**
      * Release all locks held by named user.
@@ -204,12 +206,14 @@ public interface Commander extends Service {
 
     /**
      * System time when last modification was made.
+     *
      * @return a long
      */
     long getLastModified();
 
     /**
      * Get the name of the last user to have made a change.
+     *
      * @return a string
      */
     String getLastModifier();
@@ -221,6 +225,7 @@ public interface Commander extends Service {
 
     /**
      * Is current user timed out?
+     *
      * @return a boolean
      */
     boolean isTimedOut();
@@ -232,6 +237,7 @@ public interface Commander extends Service {
 
     /**
      * Whether the model object is not locked.
+     *
      * @param mo a model object
      * @return a boolean
      */
@@ -239,6 +245,7 @@ public interface Commander extends Service {
 
     /**
      * Remember state of part or flow.
+     *
      * @param state a map
      */
     void setCopy( Map<String, Object> state );
@@ -246,38 +253,52 @@ public interface Commander extends Service {
     /**
      * Get copied state of part or flow.
      * Null if none copied.
+     *
      * @return a map
      */
     Map<String, Object> getCopy();
 
     /**
      * Is a part copied?
+     *
      * @return a boolean
      */
     boolean isPartCopied();
 
     /**
      * Is a flow copied?
+     *
      * @return a boolean
      */
     boolean isFlowCopied();
 
     /**
      * Is aan attachment copied?
+     *
      * @return a boolean
      */
     boolean isAttachmentCopied();
 
     /**
      * Sets the commander's lock manager.
+     *
      * @param lockManager a lock manager
      */
     void setLockManager( LockManager lockManager );
 
     /**
      * Replay all commands in a journal.
+     *
      * @param journal the journal
-     * @throws com.mindalliance.channels.command.CommandException on errors
+     * @throws com.mindalliance.channels.command.CommandException
+     *          on errors
      */
     void replay( Journal journal ) throws CommandException;
+
+    /**
+     * Get current plan.
+     *
+     * @return a plan
+     */
+    Plan getPlan();
 }

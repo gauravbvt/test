@@ -20,15 +20,16 @@
     <bean id="cacheSet" class="com.mindalliance.channels.query.CacheAdvice">
         <property name="cache" ref="resultCache"/>
     </bean>
+
     <bean id="cacheClear" class="com.mindalliance.channels.query.CacheResetAdvice">
         <property name="cache" ref="resultCache"/>
     </bean>
-
 
     <bean id="permCache" class="com.mindalliance.channels.query.ResultCache">
         <property name="cacheKey" value="longTerm"/>
         <property name="cacheManager" ref="cacheManager"/>
     </bean>
+
     <bean id="permSet" class="com.mindalliance.channels.query.CacheAdvice">
         <property name="cache" ref="permCache"/>
     </bean>
@@ -53,6 +54,16 @@
         <!-- Permanent caching -->
         <aop:advisor pointcut="execution(String com.mindalliance.channels.GeoService.getGeoCoding(..))"
                      advice-ref="permSet"/>
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.GeoService.findNearbyPostalCodes(..))"
+                     advice-ref="permSet"/>
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.GeoService.verifyPostalCode(..))"
+                     advice-ref="permSet"/>
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.GeoService.isPostalCodeInGeoLocation(..))"
+                     advice-ref="permSet"/>
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.GeoService.isLikelyGeoname(..))"
+                      advice-ref="permSet"/>
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.GeoService.findGeoLocations(..))"
+                       advice-ref="permSet"/>
         <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.SemanticMatcher.matches(..))"
                      advice-ref="permSet"/>
         <aop:advisor pointcut="execution(com.mindalliance.channels.nlp.Proximity com.mindalliance.channels.SemanticMatcher.semanticProximity(..))"

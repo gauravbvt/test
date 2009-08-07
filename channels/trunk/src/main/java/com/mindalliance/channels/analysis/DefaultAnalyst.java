@@ -3,7 +3,6 @@ package com.mindalliance.channels.analysis;
 import com.mindalliance.channels.AbstractService;
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.SemanticMatcher;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
@@ -14,6 +13,7 @@ import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.util.Play;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.springframework.context.Lifecycle;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -29,11 +29,16 @@ import java.util.Set;
  * Date: Nov 26, 2008
  * Time: 10:07:27 AM
  */
-public class DefaultAnalyst extends AbstractService implements Analyst {
+public class DefaultAnalyst extends AbstractService implements Analyst, Lifecycle {
 
+    /**
+     * Description separator.
+     */
     private static final String DESCRIPTION_SEPARATOR = " -- ";
 
-    /** The query service. */
+    /**
+     * The query service.
+     */
     private QueryService queryService;
 
     /**
@@ -43,15 +48,49 @@ public class DefaultAnalyst extends AbstractService implements Analyst {
     private List<IssueDetector> issueDetectors = new ArrayList<IssueDetector>();
 
     /**
-     * Semantic matcher.
+     * Low priority, multi-threaded issues scanner.
      */
-    private SemanticMatcher semanticMatcher;
+    private IssueScanner issueScanner;
+    /**
+     * Lifecycle status.
+     */
+    private boolean running;
 
     public DefaultAnalyst() {
     }
 
-    public void setSemanticMatcher( SemanticMatcher semanticMatcher ) {
-        this.semanticMatcher = semanticMatcher;
+    public void setIssueScanner( IssueScanner issueScanner ) {
+        this.issueScanner = issueScanner;
+    }
+
+    public void start() {
+        running = true;
+    }
+
+    public void stop() {
+        issueScanner.terminate();
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void onAfterCommand( Plan plan ) {
+        issueScanner.rescan( plan );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onStart() {
+        issueScanner.scan();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onDestroy() {
+        issueScanner.terminate();
     }
 
     /**
@@ -98,7 +137,7 @@ public class DefaultAnalyst extends AbstractService implements Analyst {
      * {@inheritDoc}
      */
     public List<Issue> listIssues(
-            ModelObject modelObject, boolean includingPropertySpecific, boolean includingWaived ) {
+            ModelObject modelObject, Boolean includingPropertySpecific, Boolean includingWaived ) {
         if ( includingWaived ) {
             return listIssues( modelObject, includingPropertySpecific );
         } else {
@@ -109,7 +148,7 @@ public class DefaultAnalyst extends AbstractService implements Analyst {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> listIssues( ModelObject modelObject, boolean includingPropertySpecific ) {
+    public List<Issue> listIssues( ModelObject modelObject, Boolean includingPropertySpecific ) {
         List<Issue> issues = new ArrayList<Issue>();
         Iterator<Issue> iterator = findIssues( modelObject, includingPropertySpecific );
         while ( iterator.hasNext() )
@@ -129,7 +168,7 @@ public class DefaultAnalyst extends AbstractService implements Analyst {
     }
 
     public List<Issue> listUnwaivedIssues(
-            ModelObject modelObject, boolean includingPropertySpecific ) {
+            ModelObject modelObject, Boolean includingPropertySpecific ) {
         List<Issue> issues = new ArrayList<Issue>();
         Iterator<Issue> iterator = findUnwaivedIssues( modelObject, includingPropertySpecific );
         while ( iterator.hasNext() )
@@ -148,35 +187,35 @@ public class DefaultAnalyst extends AbstractService implements Analyst {
     /**
      * {@inheritDoc}
      */
-    public boolean hasIssues( ModelObject modelObject, String property ) {
+    public Boolean hasIssues( ModelObject modelObject, String property ) {
         return findIssues( modelObject, property ).hasNext();
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean hasIssues( ModelObject modelObject, boolean includingPropertySpecific ) {
+    public Boolean hasIssues( ModelObject modelObject, Boolean includingPropertySpecific ) {
         return findIssues( modelObject, includingPropertySpecific ).hasNext();
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean hasUnwaivedIssues( ModelObject modelObject, String property ) {
+    public Boolean hasUnwaivedIssues( ModelObject modelObject, String property ) {
         return !listUnwaivedIssues( modelObject, property ).isEmpty();
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean hasUnwaivedIssues( ModelObject modelObject, boolean includingPropertySpecific ) {
+    public Boolean hasUnwaivedIssues( ModelObject modelObject, Boolean includingPropertySpecific ) {
         return !listUnwaivedIssues( modelObject, includingPropertySpecific ).isEmpty();
     }
 
     /**
      * {@inheritDoc}
      */
-    public String getIssuesSummary( ModelObject modelObject, boolean includingPropertySpecific ) {
+    public String getIssuesSummary( ModelObject modelObject, Boolean includingPropertySpecific ) {
         List<Issue> issues = listUnwaivedIssues( modelObject, includingPropertySpecific );
         return summarize( issues );
     }
@@ -224,7 +263,7 @@ public class DefaultAnalyst extends AbstractService implements Analyst {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> findAllIssuesFor( ResourceSpec resourceSpec, boolean specific ) {
+    public List<Issue> findAllIssuesFor( ResourceSpec resourceSpec, Boolean specific ) {
         List<Issue> issues = new ArrayList<Issue>();
         if ( !resourceSpec.isAnyActor() ) {
             issues.addAll( listIssues( resourceSpec.getActor(), true ) );
@@ -268,7 +307,7 @@ public class DefaultAnalyst extends AbstractService implements Analyst {
             return passes( (Plan) modelObject, test );
         } else
             return modelObject instanceof Scenario ? passes( (Scenario) modelObject, test )
-                                                   : hasNoTestedIssue( modelObject, test );
+                    : hasNoTestedIssue( modelObject, test );
     }
 
     private boolean passes( Plan plan, String test ) {
@@ -310,7 +349,9 @@ public class DefaultAnalyst extends AbstractService implements Analyst {
         } ).isEmpty();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Integer countTestFailures( ModelObject modelObject, String test ) {
         if ( modelObject instanceof Plan ) {
             return countFailures( (Plan) modelObject, test );
@@ -385,4 +426,5 @@ public class DefaultAnalyst extends AbstractService implements Analyst {
     public void setQueryService( QueryService queryService ) {
         this.queryService = queryService;
     }
+
 }

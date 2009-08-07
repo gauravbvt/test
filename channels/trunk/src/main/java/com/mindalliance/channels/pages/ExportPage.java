@@ -6,7 +6,6 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.export.ImportExportFactory;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.User;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebPage;
@@ -56,7 +55,9 @@ public class ExportPage extends WebPage {
     private Exporter getExporter() {
         Channels channels = (Channels) getApplication();
         ImportExportFactory exportFactory = channels.getImportExportFactory();
-        return exportFactory.createExporter( channels.getQueryService(), User.current().getPlan() );
+        return exportFactory.createExporter(
+                channels.getQueryService(),
+                channels.getQueryService().getCurrentPlan() );
     }
 
     @Override

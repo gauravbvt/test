@@ -55,7 +55,7 @@ public class SimilarityAssessor
 	 * @return double The degree of similarity between the words; 0 means no
 	 *         similarity and 1 means that they may belong to the same synset.
 	 */
-	public double getSenseSimilarity(String word1, int senseForWord1,
+	public synchronized double getSenseSimilarity(String word1, int senseForWord1,
 			String word2, int senseForWord2, String metric) throws WordNotFoundException {
 		Hits synsets1 = _broker.getHits(word1 + "." + senseForWord1);
 		Hits synsets2 = _broker.getHits(word2 + "." + senseForWord2);
@@ -90,7 +90,7 @@ public class SimilarityAssessor
 	 *            Document
 	 * @return double
 	 */
-	private double getSimilarity(Document synset1, Document synset2, String metric) 
+	private synchronized double getSimilarity(Document synset1, Document synset2, String metric)
 	{
 		double msca = getBestMSCAValue(synset1, synset2);
 
@@ -134,7 +134,7 @@ public class SimilarityAssessor
 	 * @return double The degree of similarity between the words; 0 means no
 	 *         similarity and 1 means that they may belong to the same synset.
 	 */
-	public double getSimilarity(String word1, String word2, String metric)
+	public synchronized double getSimilarity(String word1, String word2, String metric)
 			throws WordNotFoundException {
 		Hits synsets1 = _broker.getHits(word1 + ".*");
 		Hits synsets2 = _broker.getHits(word2 + ".*");

@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RestartResponseException;
@@ -37,7 +37,7 @@ public class PlanReportPage extends WebPage {
     private QueryService queryService;
 
     /** The current plan. */
-    private Plan plan = User.current().getPlan();
+    private Plan plan = PlanManager.plan();
 
     private SelectorPanel selector;
 

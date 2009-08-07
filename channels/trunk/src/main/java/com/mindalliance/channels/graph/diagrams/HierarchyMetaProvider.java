@@ -2,6 +2,7 @@ package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.analysis.graph.HierarchyRelationship;
+import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
@@ -11,7 +12,6 @@ import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.User;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.springframework.core.io.Resource;
@@ -47,7 +47,7 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
     }
 
     public Object getContext() {
-        return User.current().getPlan();
+        return PlanManager.plan();
     }
 
     public URLProvider getURLProvider() {

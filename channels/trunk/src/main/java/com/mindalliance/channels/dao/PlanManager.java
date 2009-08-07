@@ -6,6 +6,7 @@ import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.Importer;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.analysis.IssueScanner;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.export.ImportExportFactory;
@@ -421,7 +422,7 @@ public class PlanManager implements InitializingBean {
      * Replay journaled commands for all plans.
      *
      * @param queryService a query service
-     * @param commander the commander
+     * @param commander    the commander
      */
     public void replayJournals( QueryService queryService, Commander commander ) {
         synchronized ( planIndex ) {
@@ -453,11 +454,27 @@ public class PlanManager implements InitializingBean {
      */
     public Plan getCurrentPlan() {
         if ( currentDao != null ) return currentDao.getPlan();
-        Plan plan = User.current().getPlan();
+        Plan plan = PlanManager.plan();
         if ( plan == null ) {
             plan = getPlans().get( 0 );
         }
         return plan;
+    }
+
+    /**
+     * Get current plan from current thread.
+     * @return a plan
+     */
+    public static Plan plan() {
+        if ( Thread.currentThread() instanceof IssueScanner.Daemon ) {
+            return ( (IssueScanner.Daemon) Thread.currentThread() ).getPlan();
+        } else {
+            User user = User.current();
+            if (user != null)
+                return user.getPlan();
+            else
+                return null;
+        }
     }
 
     /**

@@ -2,11 +2,11 @@ package com.mindalliance.channels.pages.components.scenario;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
@@ -196,7 +196,7 @@ public class ScenarioEditDetailsPanel extends AbstractCommandablePanel {
         String oldName = oldEvent == null ? "" : oldEvent.getName();
         Event newEvent = null;
         if ( name == null || name.trim().isEmpty() )
-            newEvent = User.current().getPlan().getDefaultEvent();
+            newEvent = PlanManager.plan().getDefaultEvent();
         else {
             if ( oldEvent == null || !isSame( name, oldName ) )
                 newEvent = getQueryService().findOrCreate( Event.class, name );

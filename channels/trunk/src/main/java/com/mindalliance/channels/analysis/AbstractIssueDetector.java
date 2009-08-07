@@ -5,6 +5,7 @@ import com.mindalliance.channels.GeoService;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Plan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -114,7 +115,7 @@ public abstract class AbstractIssueDetector implements IssueDetector {
     protected DetectedIssue makeIssue( String type, ModelObject about ) {
         DetectedIssue issue = new DetectedIssue( type, about );
         initializeDetectedIssue( issue );
-        if ( !about.isWaived( getKind() ))
+        if ( !about.isWaived( getKind() ) )
             LOG.debug( "Detected issue: "
                     + getKind()
                     + " on " + issue.getAbout() + "(" + issue.getAbout().getId() + ")" );
@@ -134,7 +135,7 @@ public abstract class AbstractIssueDetector implements IssueDetector {
     protected DetectedIssue makeIssue( String type, ModelObject about, String property ) {
         DetectedIssue issue = new DetectedIssue( type, about, property );
         initializeDetectedIssue( issue );
-        if ( !about.isWaived( getKind() ))
+        if ( !about.isWaived( getKind() ) )
             LOG.debug( "Detected issue: "
                     + getKind()
                     + " on " + issue.getAbout() + "(" + issue.getAbout().getId() + ")" + ":" + issue.getProperty() );
@@ -146,5 +147,15 @@ public abstract class AbstractIssueDetector implements IssueDetector {
         issue.setDetectorLabel( getLabel() );
         issue.setCanBeWaived( canBeWaived() );
     }
+
+    /**
+     * Get current plan.
+     *
+     * @return a plan
+     */
+    protected Plan getPlan() {
+        return queryService.getCurrentPlan();
+    }
+
 
 }

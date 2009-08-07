@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Semantic proximity matcher based on WordNet.
+ * Semantic proximity matcher of texts based on WordNet.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -49,6 +49,14 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
      * Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( WordnetSemanticMatcher.class );
+    /**
+     * Maximum match score.
+     */
+    private static final double MAX_SCORE = 1.0;
+    /**
+     * Minimum match score.
+     */
+    private static final double MIN_SCORE = 0.0;
     /**
      * Minimum score for very high proximity.
      */
@@ -222,7 +230,7 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
             // Combine both measures into a proximity rating
             LOG.trace( "Instance overlap = " + instanceOverlap );
             double score = ( conceptualSimilarity + ( instanceOverlap * INSTANCE_OVERLAP_FACTOR ) ) / minSize;
-            score = Math.min( 1.0, score );
+            score = Math.min( MAX_SCORE, score );
             LOG.trace( "Score: " + score );
             Proximity matchingLevel = matchingLevel( score );
             LOG.trace( "---- Match is " + matchingLevel );
@@ -238,7 +246,7 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
     }
 
     private Proximity matchingLevel( double score ) throws Exception {
-        if ( score > 1.0 || score < 0.0 ) throw new Exception( "Illegal matching score " + score );
+        if ( score > MAX_SCORE || score < MIN_SCORE ) throw new Exception( "Illegal matching score " + score );
         if ( score > VERY_HIGH_THRESHOLD ) return Proximity.VERY_HIGH;
         if ( score > HIGH_THRESHOLD ) return Proximity.HIGH;
         if ( score > MEDIUM_THRESHOLD ) return Proximity.MEDIUM;
@@ -303,12 +311,19 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
                 if ( phrase != null ) {
                     phrases.add( phrase );
                     index = index + 2;
+                    LOG.trace( "Extracted phrase: " + phrase );
                 } else {
-                    if ( !word.isProperNoun() && word.isComparable() ) phrases.add( word );
+                    if ( !word.isProperNoun() && word.isComparable() ) {
+                        phrases.add( word );
+                        LOG.trace( "Extracted phrase: " + word );
+                    }
                     index++;
                 }
             } else {
-                if ( !word.isProperNoun() && word.isComparable() ) phrases.add( word );
+                if ( !word.isProperNoun() && word.isComparable() ) {
+                    phrases.add( word );
+                    LOG.trace( "Extracted phrase: " + word );
+                }
                 index++;
             }
         }
@@ -405,14 +420,14 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
     private double computeCombinedPOSWordSimilarity(
             List<POSWord> posWords,
             List<POSWord> otherPosWords ) throws JWNLException {
-        if ( posWords.isEmpty() || otherPosWords.isEmpty() ) return 0.0;
+        if ( posWords.isEmpty() || otherPosWords.isEmpty() ) return MIN_SCORE;
         List<Double> similarities = new ArrayList<Double>();
         Set<POSWord> matchedOthers = new HashSet<POSWord>();
         for ( POSWord posWord : posWords ) {
-            double bestSim = -1.0;
+            double bestSim = MAX_SCORE * -1;
             POSWord bestMatch = null;
             Iterator<POSWord> iter = otherPosWords.iterator();
-            while ( bestSim < 1.0 && iter.hasNext() ) {
+            while ( bestSim < MAX_SCORE && iter.hasNext() ) {
                 POSWord otherPosWord = iter.next();
                 if ( !matchedOthers.contains( otherPosWord ) ) {
                     double sim = computePOSWordSimilarity( posWord, otherPosWord );
@@ -427,7 +442,7 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
                 similarities.add( bestSim );
             }
         }
-        double sum = 0.0;
+        double sum = MIN_SCORE;
         for ( Double similarity : similarities ) {
             sum += similarity;
         }
@@ -440,23 +455,25 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
             if ( antonyms(
                     posWord.getQualifier().asPOS( POS.ADJECTIVE ),
                     otherPosWord.getQualifier().asPOS( POS.ADJECTIVE ) ) ) {
-                return 0.0;
+                LOG.trace( "Anotnyms: " + posWord + ", " + otherPosWord );
+                return MIN_SCORE;
             }
             if ( antonyms(
                     posWord.getQualifier().asPOS( POS.ADVERB ),
                     otherPosWord.getQualifier().asPOS( POS.ADVERB ) ) ) {
-                return 0.0;
+                LOG.trace( "Anotnyms: " + posWord + ", " + otherPosWord );
+                return MIN_SCORE;
             }
         }
-        double similarity = 0.0;
+        double similarity = MIN_SCORE;
         for ( Meaning meaning : posWord.getMeanings() ) {
             Iterator<Meaning> iter = otherPosWord.getMeanings().iterator();
-            while ( similarity < 1.0 && iter.hasNext() ) {
+            while ( similarity < MAX_SCORE && iter.hasNext() ) {
                 Meaning otherMeaning = iter.next();
                 if ( meaning.getPos().equals( otherMeaning.getPos() ) ) {
                     double sim;
                     if ( meaning.getLemma().equals( otherMeaning.getLemma() ) ) {
-                        sim = 1.0;
+                        sim = MAX_SCORE;
                     } else {
                         Set<String> nouns = getNominalizations( posWord );
                         Set<String> otherNouns = getNominalizations( otherPosWord );
@@ -478,6 +495,7 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
                     otherPosWord.getQualifier().asPOS( POS.ADVERB ) );
             if ( !synonyms ) {
                 similarity = similarity / 2.0;
+                LOG.trace( "NOT synonyms: " + posWord + ", " + otherPosWord );
             }
         }
         return similarity;
@@ -502,6 +520,7 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
                     }
                     for ( Word word : words ) {
                         nouns.add( word.getLemma() );
+                        LOG.trace( "Nominalized " + posWord + " to " + word.getLemma() );
                     }
                 }
             }
@@ -536,11 +555,11 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
     }
 
     private double assessSimilarity( Set<String> nouns, Set<String> otherNouns ) {
-        double best = 0.0;
+        double best = MIN_SCORE;
         for ( String noun : nouns ) {
             for ( String otherNoun : otherNouns ) {
                 double sim = assessSimilarity( noun, otherNoun );
-                if ( sim == 1.0 ) return 1.0;
+                if ( sim == MAX_SCORE ) return MAX_SCORE;
                 if ( sim > best ) {
                     best = sim;
                 }
@@ -548,11 +567,12 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
         }
         return best;
     }
+
     /**
      * {@inheritDoc}
      */
     public Double assessSimilarity( String noun, String otherNoun ) {
-        double similarity = 0.0;
+        double similarity = MIN_SCORE;
         try {
             if ( noun != null && otherNoun != null ) {
                 similarity = similarityAssessor.getSimilarity(
@@ -563,6 +583,7 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
         } catch ( WordNotFoundException e ) {
             LOG.trace( "Word not found in: " + noun + ", " + otherNoun );
         }
+        LOG.trace( "Similarity of " + noun + " and " + otherNoun + " = " + similarity );
         return similarity;
     }
 
@@ -571,7 +592,7 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
     private double computeInstanceOverlap( List<String> properNouns, List<String> otherProperNouns ) {
         List<String> shared = (List<String>) CollectionUtils.intersection( properNouns, otherProperNouns );
         double maxSampleSize = Math.max( properNouns.size(), otherProperNouns.size() );
-        return ( maxSampleSize > 0 ) ? ( shared.size() / maxSampleSize ) : 0.0;
+        return ( maxSampleSize > 0 ) ? ( shared.size() / maxSampleSize ) : MIN_SCORE;
     }
 
 /*

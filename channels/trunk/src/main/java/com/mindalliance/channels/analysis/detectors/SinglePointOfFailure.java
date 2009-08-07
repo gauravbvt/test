@@ -9,7 +9,6 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.User;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.BlockCutpointGraph;
 import org.jgrapht.graph.AsUndirectedGraph;
@@ -63,7 +62,7 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Plan plan = (Plan) modelObject;
-        assert plan.equals( User.current().getPlan() );
+        assert plan.equals( getPlan() );
         Set<Actor> spofActors = detectSignificantCutpoints();
         // Found single points of failure?
         for ( Actor actor : spofActors ) {

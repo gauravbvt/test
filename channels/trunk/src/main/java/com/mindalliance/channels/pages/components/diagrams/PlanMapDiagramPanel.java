@@ -3,9 +3,9 @@ package com.mindalliance.channels.pages.components.diagrams;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.User;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
@@ -116,7 +116,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
      * {@inheritDoc }
      */
     protected void onClick( AjaxRequestTarget target ) {
-        update( target, new Change( Change.Type.Selected, User.current().getPlan() ) );
+        update( target, new Change( Change.Type.Selected, PlanManager.plan() ) );
     }
 
     /**

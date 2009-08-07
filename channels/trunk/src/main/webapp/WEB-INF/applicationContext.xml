@@ -57,10 +57,16 @@
         <property name="timeout" value="10000"/>
     </bean>
 
-    <!-- Scenario analyst -->
-    <bean id="analyst" class="com.mindalliance.channels.analysis.DefaultAnalyst">
+    <bean id="issueScanner" class="com.mindalliance.channels.analysis.IssueScanner">
+        <property name="planManager" ref="planManager"/>
         <property name="queryService" ref="queryService"/>
-        <property name="semanticMatcher" ref="semanticMatcher"/>
+        <property name="analyst" ref="analyst"/>
+    </bean>
+
+    <!-- Scenario analyst -->
+    <bean id="analyst" class="com.mindalliance.channels.analysis.DefaultAnalyst"
+            init-method="start" destroy-method="stop">
+        <property name="queryService" ref="queryService"/>
         <property name="issueDetectors">
             <list value-type="java.util.ArrayList">
                 <bean class="com.mindalliance.channels.analysis.detectors.FromUser">
@@ -223,6 +229,7 @@
     <bean id="commander" class="com.mindalliance.channels.command.DefaultCommander" scope="prototype">
         <property name="timeout" value="300"/>
         <property name="queryService" ref="queryService"/>
+        <property name="analyst" ref="analyst"/>
         <property name="lockManager" ref="lockManager"/>
     </bean>
 

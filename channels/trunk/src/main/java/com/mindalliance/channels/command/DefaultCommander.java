@@ -1,6 +1,7 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.AbstractService;
+import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.LockManager;
 import com.mindalliance.channels.NotFoundException;
@@ -13,9 +14,9 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.User;
-import com.mindalliance.channels.model.Plan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -56,6 +57,10 @@ public class DefaultCommander extends AbstractService implements Commander, Init
     private QueryService queryService;
 
     /**
+     * Plan analyst.
+     */
+    private Analyst analyst;
+    /**
      * Whether in reloading mode, i.e. replaying journaled commands.
      */
     private boolean replaying = false;
@@ -88,6 +93,10 @@ public class DefaultCommander extends AbstractService implements Commander, Init
 
     public DefaultCommander() {
     }
+
+    public void setAnalyst( Analyst analyst ) {
+         this.analyst = analyst;
+     }
 
     public Map<String, Object> getCopy() {
         return copy.get( User.current().getUsername() );
@@ -209,8 +218,10 @@ public class DefaultCommander extends AbstractService implements Commander, Init
                     LOG.debug( "***After command" );
 
                     PlanManager planManager = queryService.getPlanManager();
-                    Plan plan = User.current().getPlan();
+                    Plan plan = getPlan();
+                    // TODO Implement proper observers/listeners
                     planManager.onAfterCommand( queryService, plan, command );
+                    analyst.onAfterCommand( plan );
                 }
             } catch ( LockingException e ) {
                 throw new CommandException( e.getMessage(), e );
@@ -483,6 +494,13 @@ public class DefaultCommander extends AbstractService implements Commander, Init
     public void afterPropertiesSet() {
         queryService.replayJournals( this );
         queryService.getAttachmentManager().removeUnattached( queryService );
+        analyst.onStart();
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    public Plan getPlan() {
+        return queryService.getCurrentPlan();
     }
 }

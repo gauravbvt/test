@@ -5,6 +5,7 @@ import com.mindalliance.channels.GeoService;
 import com.mindalliance.channels.model.Place;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.TransformerUtils;
 import org.apache.commons.lang.StringUtils;
 import org.geonames.PostalCode;
 import org.geonames.PostalCodeSearchCriteria;
@@ -98,7 +99,7 @@ public class DefaultGeoService extends AbstractService implements GeoService {
     /**
      * {@inheritDoc}
      */
-    public boolean isLikelyGeoname( String val ) {
+    public Boolean isLikelyGeoname( String val ) {
         if ( val == null || val.isEmpty() || val.equals( Place.UnknownPlaceName ) ) return false;
         List<GeoLocation> geoLocs = findGeoLocations( val );
         final List<String> geonameTokens = Arrays.asList( StringUtils.split( val, ",. :;-'\"" ) );
@@ -119,7 +120,7 @@ public class DefaultGeoService extends AbstractService implements GeoService {
     /**
      * {@inheritDoc}
      */
-    public boolean verifyPostalCode( final String postalCode, GeoLocation geoLocation ) {
+    public Boolean verifyPostalCode( final String postalCode, GeoLocation geoLocation ) {
         try {
             return isPostalCodeInGeoLocation( postalCode, geoLocation );
         } catch ( Exception e ) {
@@ -128,21 +129,25 @@ public class DefaultGeoService extends AbstractService implements GeoService {
         }
     }
 
-    public boolean isPostalCodeInGeoLocation( String postalCode, GeoLocation geoLocation ) {
+    public Boolean isPostalCodeInGeoLocation( String postalCode, GeoLocation geoLocation ) {
         final String code = postalCode;
         if ( postalCode.isEmpty() || geoLocation == null ) return false;
-        List<PostalCode> postalCodes = findNearbyPostalCodes( geoLocation );
-        PostalCode match = (PostalCode) CollectionUtils.find(
+        List<String> postalCodes = findNearbyPostalCodes( geoLocation );
+        String match = (String) CollectionUtils.find(
                 postalCodes,
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        return ( (PostalCode) obj ).getPostalCode().equals( code );
+                        return obj.equals( code );
                     }
                 } );
         return match != null;
     }
 
-    public List<PostalCode> findNearbyPostalCodes( GeoLocation geoLocation ) {
+    /**
+     * {@inheritDoc
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<String> findNearbyPostalCodes( GeoLocation geoLocation ) {
         try {
             PostalCodeSearchCriteria criteria = new PostalCodeSearchCriteria();
 //            criteria.setCountryCode( geoLocation.getCountryCode() );
@@ -153,7 +158,7 @@ public class DefaultGeoService extends AbstractService implements GeoService {
             LOG.debug( "Geonames search: finding nearby postal codes for " + geoLocation );
             List<PostalCode> postalCodes = WebService.findNearbyPostalCodes( criteria );
             LOG.debug( "Found " + postalCodes.size() + " for " + geoLocation );
-            return postalCodes;
+            return (List<String>) CollectionUtils.collect( postalCodes, TransformerUtils.invokerTransformer( "toString" ) );
         } catch ( Exception e ) {
             throw new RuntimeException( e );
         }

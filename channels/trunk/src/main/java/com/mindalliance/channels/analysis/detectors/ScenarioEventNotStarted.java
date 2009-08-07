@@ -5,7 +5,6 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,7 @@ public class ScenarioEventNotStarted extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Scenario scenario = (Scenario) modelObject;
-        Plan plan = User.current().getPlan();
+        Plan plan = getPlan();
         if ( !plan.isIncident( scenario.getEvent() ) && getQueryService().isInitiated( scenario ) ) {
             if ( !getQueryService().findIfScenarioStarted( scenario ) ) {
                 Issue issue = makeIssue( Issue.COMPLETENESS, scenario );

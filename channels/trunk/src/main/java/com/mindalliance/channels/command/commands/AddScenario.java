@@ -6,7 +6,6 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.User;
 
 /**
  * Command to add a scenario.
@@ -37,7 +36,7 @@ public class AddScenario extends AbstractCommand {
         Scenario scenario = commander.getQueryService().createScenario(
                 priorId,
                 priorDefaultPartId);
-        User.current().getPlan().addScenario( scenario );
+        commander.getPlan().addScenario( scenario );
         set( "scenario", scenario.getId() );
         set( "defaultPart", scenario.getDefaultPart().getId() );
         return new Change( Change.Type.Added, scenario );
