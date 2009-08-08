@@ -89,14 +89,16 @@ public class History {
      * In essence disabling an undo for the user until a do is performed.
      *
      * @param userName a user name
+     * @param all include scenario-specific
      */
     @SuppressWarnings( "unchecked" )
-    private void clearDoneInScenario( final String userName ) {
+    private void clearDoneInScenario( final String userName, final boolean all ) {
         List<Memento> kept = new ArrayList<Memento>();
         kept.addAll( CollectionUtils.select( done, new Predicate() {
             public boolean evaluate( Object obj ) {
                 Memento memento = (Memento) obj;
-                return !memento.getUserName().equals( userName ) || !memento.getCommand().isScenarioSpecific();
+                return !memento.getUserName().equals( userName )
+                        || ( !all && !memento.getCommand().isScenarioSpecific() );
             }
         } ) );
         done = kept;
@@ -207,10 +209,11 @@ public class History {
      * Removes all scenario-specific done and undone mementoes of a user.
      *
      * @param userName a user's name
+     * @param all include scenario-specific commands
      */
-    public void resetForUser( String userName ) {
+    public void resetForUser( String userName, boolean all ) {
         clearUndone( userName );
-        clearDoneInScenario( userName );
+        clearDoneInScenario( userName, all );
     }
 
     /**

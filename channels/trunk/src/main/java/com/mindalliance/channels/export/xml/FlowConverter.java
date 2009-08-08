@@ -134,9 +134,6 @@ public class FlowConverter extends AbstractChannelsConverter {
 
     private void writePart( Part part, HierarchicalStreamWriter writer ) {
         writer.startNode( "part" );
-        if ( part.getId() > 500) {
-            System.out.println("Whoa!");
-        }
         writer.addAttribute( "id", String.valueOf( part.getId() ) );
         writer.endNode();
     }

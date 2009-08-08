@@ -11,11 +11,13 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.export.ImportExportFactory;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.query.DefaultQueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
+import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -48,7 +50,7 @@ public class PlanManager implements InitializingBean {
     /**
      * The logger.
      */
-    private final Logger logger = LoggerFactory.getLogger( getClass() );
+    private final Logger LOG = LoggerFactory.getLogger( getClass() );
     /**
      * Base for relative user definitions.
      */
@@ -183,7 +185,7 @@ public class PlanManager implements InitializingBean {
             readPlanDefinitions();
         } catch ( IOException e ) {
             String msg = "Unable to load plan definitions";
-            logger.error( msg, e );
+            LOG.error( msg, e );
             throw new DataRetrievalFailureException( msg, e );
         }
     }
@@ -214,13 +216,13 @@ public class PlanManager implements InitializingBean {
     private InputStream findInputStream() throws IOException {
         InputStream inputStream;
         if ( plansFile != null && plansFile.exists() ) {
-            logger.debug( "Reading user definitions from {}", plansFile.getAbsolutePath() );
+            LOG.debug( "Reading user definitions from {}", plansFile.getAbsolutePath() );
             inputStream = new FileInputStream( plansFile );
         } else if ( defaultPlanDefinitions != null && defaultPlanDefinitions.exists() ) {
-            logger.debug( "Reading default plan definitions from {}", defaultPlanDefinitions.getURI() );
+            LOG.debug( "Reading default plan definitions from {}", defaultPlanDefinitions.getURI() );
             inputStream = defaultPlanDefinitions.getInputStream();
         } else {
-            logger.warn( "No user readable plan definitions" );
+            LOG.warn( "No user readable plan definitions" );
             inputStream = new ByteArrayInputStream( new byte[0] );
         }
         return inputStream;
@@ -247,7 +249,7 @@ public class PlanManager implements InitializingBean {
             if ( stream != null )
                 stream.close();
         }
-        logger.debug( "Wrote plan definitions to {}", plansFile.getAbsolutePath() );
+        LOG.debug( "Wrote plan definitions to {}", plansFile.getAbsolutePath() );
     }
 
 
@@ -350,9 +352,9 @@ public class PlanManager implements InitializingBean {
     public void afterPropertiesSet() {
         try {
             loadPlanDefinitions();
-            logger.info( "Data will be saved in {}", dataDirectory.getFile().getAbsolutePath() );
+            LOG.info( "Data will be saved in {}", dataDirectory.getFile().getAbsolutePath() );
         } catch ( IOException e ) {
-            logger.error( "Unable to get reference to data directory", e );
+            LOG.error( "Unable to get reference to data directory", e );
             throw new IllegalStateException( e );
         }
     }
@@ -431,12 +433,12 @@ public class PlanManager implements InitializingBean {
                 Plan plan = dao.getPlan();
                 try {
                     commander.replay( dao.getJournal() );
-                    logger.info( "Replayed journal for plan {}", plan );
+                    LOG.info( "Replayed journal for plan {}", plan );
                     dao.save( importExportFactory.createExporter( queryService, dao.getPlan() ) );
                 } catch ( IOException e ) {
-                    logger.error( MessageFormat.format( "Unable to save plan {0}", dao.getPlan() ), e );
+                    LOG.error( MessageFormat.format( "Unable to save plan {0}", dao.getPlan() ), e );
                 } catch ( CommandException e ) {
-                    logger.error(
+                    LOG.error(
                             MessageFormat.format( "Unable to replay journal for plan {0}", plan ),
                             e );
                 } finally {
@@ -463,6 +465,7 @@ public class PlanManager implements InitializingBean {
 
     /**
      * Get current plan from current thread.
+     *
      * @return a plan
      */
     public static Plan plan() {
@@ -470,7 +473,7 @@ public class PlanManager implements InitializingBean {
             return ( (IssueScanner.Daemon) Thread.currentThread() ).getPlan();
         } else {
             User user = User.current();
-            if (user != null)
+            if ( user != null )
                 return user.getPlan();
             else
                 return null;
@@ -508,7 +511,7 @@ public class PlanManager implements InitializingBean {
                 } catch ( IOException e ) {
                     String msg = MessageFormat.format(
                             "Unable to import plan {0}", plan.getName() );
-                    logger.error( msg, e );
+                    LOG.error( msg, e );
                     throw new RuntimeException( msg, e );
                 } finally {
                     currentDao = null;
@@ -550,7 +553,7 @@ public class PlanManager implements InitializingBean {
     private void registerPlanDao( PlanDao dao ) {
         String key = dao.getPlan().getUri();
         if ( planIndex.get( key ) != null ) {
-            logger.error( "Duplicate plan URI " + key );
+            LOG.error( "Duplicate plan URI " + key );
             throw new DuplicateKeyException();
         }
         planIndex.put( dao.getPlan().getUri(), dao );
@@ -660,5 +663,33 @@ public class PlanManager implements InitializingBean {
                     }
                 }
         );
+    }
+
+    /**
+     * Import scenario from browsed file.
+     *
+     * @param upload       a file upload from file borwser dialog
+     * @param queryService a query service
+     * @return a scenario, or null if not successful
+     */
+    public Scenario importScenario( FileUpload upload, QueryService queryService ) {
+        Scenario imported = null;
+        if ( upload != null ) {
+            // Import and switch to scenario
+            LOG.info( "Importing scenario" );
+            Importer importer = getImportExportFactory().createImporter( queryService, getCurrentPlan() );
+            try {
+                InputStream inputStream = upload.getInputStream();
+                imported = importer.importScenario(
+                        inputStream );
+                LOG.info( "Imported scenario " + imported.getName() );
+            } catch ( IOException e ) {
+                // TODO redirect to a proper error screen... user has to know...
+                String s = "Import error";
+                LOG.error( s, e );
+                throw new RuntimeException( s, e );
+            }
+        }
+        return imported;
     }
 }

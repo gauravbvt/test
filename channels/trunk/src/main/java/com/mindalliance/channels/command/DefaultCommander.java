@@ -139,6 +139,7 @@ public class DefaultCommander extends AbstractService implements Commander, Init
         return queryService;
     }
 
+
     public int getTimeout() {
         return timeout;
     }
@@ -169,9 +170,9 @@ public class DefaultCommander extends AbstractService implements Commander, Init
     /**
      * {@inheritDoc}
      */
-    public void resetUserHistory( String userName ) {
+    public void resetUserHistory( String userName, boolean all ) {
         synchronized ( this ) {
-            history.resetForUser( userName );
+            history.resetForUser( userName, all );
         }
     }
 

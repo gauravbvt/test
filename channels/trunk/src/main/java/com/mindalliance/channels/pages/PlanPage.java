@@ -3,7 +3,6 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.Importer;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.Change;
@@ -22,6 +21,7 @@ import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
+import com.mindalliance.channels.pages.components.ScenarioImportPanel;
 import com.mindalliance.channels.pages.components.ScenarioLink;
 import com.mindalliance.channels.pages.components.ScenarioPanel;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
@@ -41,8 +41,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.upload.FileUpload;
-import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.Model;
@@ -53,8 +51,6 @@ import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.text.Collator;
 import java.text.MessageFormat;
@@ -151,10 +147,6 @@ public final class PlanPage extends WebPage implements Updatable {
      */
     private WebMarkupContainer switchPlanContainer;
     /**
-     * Choice of scenarios.
-     */
-    private DropDownChoice<Plan> planDropDownChoice;
-    /**
      * Container of link to admin page.
      */
     private WebMarkupContainer adminContainer;
@@ -177,12 +169,7 @@ public final class PlanPage extends WebPage implements Updatable {
     private Scenario scenario;
 
     /**
-     * The scenario import field.
-     */
-    private FileUploadField scenarioImport;
-
-    /**
-     * the big form
+     * The big form -- used for attachments and scenario imports only.
      */
     private IndicatorAwareForm form;
 
@@ -266,9 +253,8 @@ public final class PlanPage extends WebPage implements Updatable {
         form = new IndicatorAwareForm( "big-form" ) {
             @Override
             protected void onSubmit() {
-                LOG.debug( "Form submitted" );
-                getApp().getCommander().resetUserHistory( user.getUsername() );
-                importScenario();
+                // Drop user history on submit
+                getApp().getCommander().resetUserHistory( user.getUsername(), true );
             }
         };
         add( form );
@@ -287,25 +273,6 @@ public final class PlanPage extends WebPage implements Updatable {
         addPlanEditPanel();
         updateVisibility();
         LOG.debug( "Scenario page generated" );
-    }
-
-    private void importScenario() {
-        FileUpload fileUpload = scenarioImport.getFileUpload();
-        if ( fileUpload != null ) {
-            // Import and switch to scenario
-            Importer importer = getApp().getImportExportFactory().createImporter( getApp().getQueryService(), user.getPlan() );
-            try {
-                InputStream inputStream = fileUpload.getInputStream();
-                Scenario imported = importer.importScenario(
-                        inputStream );
-                redirectTo( imported );
-            } catch ( IOException e ) {
-                // TODO redirect to a proper error screen... user has to know...
-                String s = "Import error";
-                LOG.error( s, e );
-                throw new RuntimeException( s, e );
-            }
-        }
     }
 
     private void addHeader() {
@@ -472,8 +439,8 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void addScenarioSelector() {
-        scenarioImport = new FileUploadField( "sc-import", new Model<FileUpload>() );     // NON-NLS
-        form.add( scenarioImport );
+        ScenarioImportPanel scenarioImportPanel = new ScenarioImportPanel( "sc-import" );
+        form.add( scenarioImportPanel );
         selectScenarioContainer = new WebMarkupContainer( "select-scenario" );
         selectScenarioContainer.setOutputMarkupId( true );
         form.add( selectScenarioContainer );
@@ -496,7 +463,7 @@ public final class PlanPage extends WebPage implements Updatable {
         switchPlanContainer = new WebMarkupContainer( "switch-plan" );
         switchPlanContainer.setOutputMarkupId( true );
         form.add( switchPlanContainer );
-        planDropDownChoice = new DropDownChoice<Plan>(
+        DropDownChoice<Plan> planDropDownChoice = new DropDownChoice<Plan>(
                 "plan-sel",
                 new PropertyModel<Plan>( this, "plan" ),
                 new PropertyModel<List<? extends Plan>>( this, "writablePlans" ) );
@@ -631,8 +598,10 @@ public final class PlanPage extends WebPage implements Updatable {
         redirectTo( scenario.getDefaultPart() );
     }
 
-    public void redirectTo( Plan plan ) {
-        Set<Long> ids = Collections.emptySet();
+    /**
+     * Redirect to current plan page.
+     */
+    public void redirectToPlan( ) {
         setResponsePage( new RedirectPage( "plan" ) );
     }
 
@@ -990,7 +959,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
         if ( identifiable instanceof Scenario ) {
             if ( change.isExists() ) {
-                getCommander().resetUserHistory( user.getUsername() );
+                getCommander().resetUserHistory( user.getUsername(), false );
                 if ( change.isAdded() ) {
                     setScenario( (Scenario) identifiable );
                     setPart( null );
@@ -1062,7 +1031,7 @@ public final class PlanPage extends WebPage implements Updatable {
                     addPlanEditPanel();
                     target.addComponent( planEditPanel );
                 } else if ( change.isSelected() ) {
-                    redirectTo( getPlan() );
+                    redirectToPlan(  );
                 }
             }
             if ( identifiable instanceof Scenario ) {

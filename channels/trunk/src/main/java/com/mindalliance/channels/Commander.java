@@ -86,8 +86,9 @@ public interface Commander extends Service {
      * Resets history for current user.
      *
      * @param userName a string
+     * @param all if true include scenario-specific commands
      */
-    void resetUserHistory( String userName );
+    void resetUserHistory( String userName, boolean all );
 
     /**
      * Get label for undo command.
