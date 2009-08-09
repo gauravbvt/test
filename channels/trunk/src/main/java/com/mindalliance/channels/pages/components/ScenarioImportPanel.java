@@ -4,6 +4,8 @@ import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.pages.PlanPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
@@ -19,6 +21,7 @@ import org.apache.wicket.model.PropertyModel;
  */
 public class ScenarioImportPanel extends AbstractCommandablePanel {
 
+    private WebMarkupContainer importDialog;
     /**
      * Submit link.
      */
@@ -31,8 +34,36 @@ public class ScenarioImportPanel extends AbstractCommandablePanel {
 
     public ScenarioImportPanel( String id ) {
         super( id );
+        init();
+    }
+
+    private void init() {
+        importDialog = new WebMarkupContainer("import");
+        importDialog.setOutputMarkupId( true );
+        makeVisible(importDialog, false);
+        add(importDialog);
+        addHeader();
         addUploadField();
         addSubmit();
+    }
+
+    private void addHeader() {
+        AjaxFallbackLink closeLink = new AjaxFallbackLink( "close" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                close(target);
+            }
+        };
+        importDialog.add( closeLink );
+    }
+
+    public void open( AjaxRequestTarget target) {
+        makeVisible( importDialog, true );
+        target.addComponent( importDialog );
+    }
+
+    public void close(AjaxRequestTarget target) {
+        makeVisible( importDialog, false );
+        target.addComponent( importDialog );
     }
 
     /**
@@ -48,7 +79,7 @@ public class ScenarioImportPanel extends AbstractCommandablePanel {
         submitLink = new SubmitLink( "submit" );
         submitLink.setOutputMarkupId( true );
         submitLink.setEnabled( false );
-        add( submitLink );
+        importDialog.add( submitLink );
     }
 
     private void adjustFields() {
@@ -71,7 +102,7 @@ public class ScenarioImportPanel extends AbstractCommandablePanel {
                 target.addComponent( submitLink );
             }
         } );
-        add( scenarioImportField );
+        importDialog.add( scenarioImportField );
     }
 
     /**

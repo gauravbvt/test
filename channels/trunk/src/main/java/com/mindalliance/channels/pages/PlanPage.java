@@ -172,7 +172,10 @@ public final class PlanPage extends WebPage implements Updatable {
      * The big form -- used for attachments and scenario imports only.
      */
     private IndicatorAwareForm form;
-
+    /**
+     * Import scenario "dialog".
+     */
+    private ScenarioImportPanel scenarioImportPanel;
     /**
      * The scenario panel.
      */
@@ -263,6 +266,8 @@ public final class PlanPage extends WebPage implements Updatable {
         addPlanMenubar();
         addScenarioSelector();
         addPlanSwitcher();
+        scenarioImportPanel = new ScenarioImportPanel( "scenario-import" );
+        form.add( scenarioImportPanel );
         scenarioPanel = new ScenarioPanel(
                 "scenario",
                 new PropertyModel<Scenario>( this, "scenario" ),
@@ -425,7 +430,7 @@ public final class PlanPage extends WebPage implements Updatable {
         planShowMenu.setOutputMarkupId( true );
         form.add( planShowMenu );
         form.add( new Label( "username", user.getUsername() ) );
-        adminContainer = new WebMarkupContainer("admin");
+        adminContainer = new WebMarkupContainer( "admin" );
         form.add( adminContainer );
     }
 
@@ -439,8 +444,6 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void addScenarioSelector() {
-        ScenarioImportPanel scenarioImportPanel = new ScenarioImportPanel( "sc-import" );
-        form.add( scenarioImportPanel );
         selectScenarioContainer = new WebMarkupContainer( "select-scenario" );
         selectScenarioContainer.setOutputMarkupId( true );
         form.add( selectScenarioContainer );
@@ -601,7 +604,7 @@ public final class PlanPage extends WebPage implements Updatable {
     /**
      * Redirect to current plan page.
      */
-    public void redirectToPlan( ) {
+    public void redirectToPlan() {
         setResponsePage( new RedirectPage( "plan" ) );
     }
 
@@ -1031,7 +1034,7 @@ public final class PlanPage extends WebPage implements Updatable {
                     addPlanEditPanel();
                     target.addComponent( planEditPanel );
                 } else if ( change.isSelected() ) {
-                    redirectToPlan(  );
+                    redirectToPlan();
                 }
             }
             if ( identifiable instanceof Scenario ) {
@@ -1165,6 +1168,15 @@ public final class PlanPage extends WebPage implements Updatable {
      */
     private Set<Long> getReadOnlyExpansions() {
         return Collections.unmodifiableSet( expansions );
+    }
+
+    /**
+     * Open scenario import dialog.
+     *
+     * @param target an ajax request target
+     */
+    public void importScenario( AjaxRequestTarget target ) {
+        scenarioImportPanel.open( target );
     }
 
     /**

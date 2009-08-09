@@ -23,7 +23,7 @@ body.profile {
 
 #contents {
     position: absolute;
-    top: 6em;
+    top: 5em;
     bottom: 5px;
     left: 0;
     right: 0;
@@ -691,6 +691,18 @@ div.wicket-aa ul li.selected {
 
 .menubar span.menuitem {
     padding-left: 5px;
+}
+
+div.import-dialog {
+    background: #C3D9FF;
+    border: 1px outset #c3dede;
+    padding: 5px;
+    position: absolute;
+    width: 300px;
+    top: 10em;
+    left: 5em;
+    z-index: 10000;
+    overflow: auto;
 }
 
 div.scenario, div.entity, div.plan {

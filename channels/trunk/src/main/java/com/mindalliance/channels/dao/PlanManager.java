@@ -683,7 +683,10 @@ public class PlanManager implements InitializingBean {
                 imported = importer.importScenario(
                         inputStream );
                 LOG.info( "Imported scenario " + imported.getName() );
-            } catch ( IOException e ) {
+                this.getDao( getCurrentPlan() )
+                        .save( getImportExportFactory()
+                                .createExporter( queryService, getCurrentPlan() ));
+            } catch ( Exception e ) {
                 // TODO redirect to a proper error screen... user has to know...
                 String s = "Import error";
                 LOG.error( s, e );

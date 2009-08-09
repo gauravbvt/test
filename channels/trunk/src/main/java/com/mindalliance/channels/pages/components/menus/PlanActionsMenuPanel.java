@@ -12,6 +12,7 @@ import com.mindalliance.channels.pages.ExportPage;
 import com.mindalliance.channels.pages.PlanPage;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -40,10 +41,19 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings( "unchecked" )
     public List<Component> getMenuItems() {
         List<Component> menuItems = super.getMenuItems();
+        // Import
+        menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Import scenario" ),
+                new AjaxFallbackLink( "link" ) {
+                    public void onClick( AjaxRequestTarget target ) {
+                        ( (PlanPage) getPage() ).importScenario( target );
+                    }
+                } ) );
+
         // Export
-        menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Export to XML" ),
+        menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Export scenario" ),
                 new BookmarkablePageLink(
                         "link",
                         ExportPage.class,
