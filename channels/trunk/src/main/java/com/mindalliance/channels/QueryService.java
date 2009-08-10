@@ -809,6 +809,13 @@ public interface QueryService extends Service {
     List<? extends ModelObject> findAllModelObjectsIn( Place place );
 
     /**
+     * Find all model objects directly impacted by or impacting an event.
+     * @param event an event
+     * @return a list of model objects
+     */
+    List<ModelObject> findAllModelObjectsDirectlyRelatedToEvent( Event event );
+
+    /**
      * Find all model objects referencing a given place.
      *
      * @param place a place

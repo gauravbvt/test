@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.entities;
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
@@ -14,6 +15,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
@@ -100,15 +102,10 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
      * {@inheritDoc}
      */
     protected void addIncluded() {
-        CheckBox includeWaivedCheckBox = new CheckBox(
-                "includeWaived",
-                new PropertyModel<Boolean>( this, "includeWaived" ) );
-        includeWaivedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
-                updateIssuesTable( target );
-            }
-        } );
-        add( includeWaivedCheckBox );
+        // containment (for non-events only)
+        WebMarkupContainer containmentContainer = new WebMarkupContainer("containmentContainer");
+        makeVisible( containmentContainer, !( getEntity() instanceof Event ) );
+        add(containmentContainer);
         CheckBox includeContainedCheckBox = new CheckBox(
                 "includeContained",
                 new PropertyModel<Boolean>( this, "includeContained" ) );
@@ -118,8 +115,19 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
             }
         } );
         Label containmentLabel = new Label( "containment", getContainmentLabel() );
-        add( containmentLabel );
-        add( includeContainedCheckBox );
+        containmentContainer.add( containmentLabel );
+        containmentContainer.add( includeContainedCheckBox );
+        // INcluding waived
+        CheckBox includeWaivedCheckBox = new CheckBox(
+                "includeWaived",
+                new PropertyModel<Boolean>( this, "includeWaived" ) );
+        includeWaivedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                updateIssuesTable( target );
+            }
+        } );
+        add( includeWaivedCheckBox );
+        // Include from scenario
         CheckBox includeFromScenario = new CheckBox(
                 "includeFromScenarios",
                 new PropertyModel<Boolean>( this, "includeFromScenarios" ) );
@@ -141,6 +149,8 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
             return "actors and roles in this organization";
         } else if ( entity instanceof Place ) {
             return "anything located within this place";
+        } else if ( entity instanceof Event ) {
+            return "";
         } else {
             throw new IllegalStateException( "Can't diplay issue table for " + entity.getClass().getSimpleName() );
         }
@@ -159,7 +169,9 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
             inOrg.addAll( queryService.findAllActorsInOrganization( (Organization) entity ) );
             return inOrg;
         } else if ( entity instanceof Place ) {
-            return queryService.findAllModelObjectsIn( (Place)entity );
+            return queryService.findAllModelObjectsIn( (Place) entity );
+        } else if ( entity instanceof Event ) {
+            return new ArrayList<ModelObject>();
         } else {
             throw new IllegalStateException( "Can't diplay issue table for " + entity.getClass().getSimpleName() );
         }

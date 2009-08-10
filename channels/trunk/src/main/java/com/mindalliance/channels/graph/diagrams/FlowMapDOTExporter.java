@@ -11,8 +11,8 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
 import org.jgrapht.Graph;
 
-import java.io.PrintWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -131,7 +131,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
         Scenario scenario = (Scenario)metaProvider.getContext();
-        String label = scenario.getEvent().getName() + " starts";
+        String label = scenario.getEvent().getName()/* + " starts"*/;
         attributes.add( new DOTAttribute( "label", label ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
         attributes.add( new DOTAttribute( "tooltip", label ) );
@@ -156,7 +156,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
         Scenario scenario = (Scenario)metaProvider.getContext();
-        String label = scenario.getEvent().getName() + " ends";
+        String label = scenario.getEvent().getName()/* + " ends"*/;
         attributes.add( new DOTAttribute( "label", label ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
         attributes.add( new DOTAttribute( "tooltip", label ) );
@@ -218,9 +218,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     private void exportTerminations( PrintWriter out, Graph<Node, Flow> g ) {
         for ( Part terminator : terminators ) {
             List<DOTAttribute> attributes = getTimingEdgeAttributes();
-            attributes.add( new DOTAttribute( "label", makeLabelAboutModelObject(
-                    "Ends",
-                    terminator.getScenario() ) ) );
+            attributes.add( new DOTAttribute( "label", "ends" ) );
             attributes.add( new DOTAttribute(
                     "tooltip",
                     sanitize( "Ends "

@@ -23,6 +23,7 @@ import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTe
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -61,6 +62,10 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
      */
     private TextField scopeField;
     /**
+     * Self-terminating checkbox.
+     */
+    private CheckBox selfTerminatingCheckBox;
+    /**
      * Maximum number of rows in event references table.
      */
     private static final int MAX_ROWS = 20;
@@ -75,6 +80,20 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
     @Override
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
         this.moDetailsDiv = moDetailsDiv;
+        // Self terminating
+        selfTerminatingCheckBox = new CheckBox(
+                "selfTerminating",
+                new PropertyModel<Boolean>( this, "selfTerminating" ) );
+        selfTerminatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update(
+                        target,
+                        new Change( Change.Type.Updated, getPlanEvent(), "selfTerminating" ) );
+            }
+        } );
+        moDetailsDiv.add( selfTerminatingCheckBox );
+        // Scope
         moDetailsDiv.add(
                 new ModelObjectLink( "scope-link",
                         new PropertyModel<Organization>( getPlanEvent(), "scope" ),
@@ -105,6 +124,7 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
 
     private void adjustFields() {
         scopeField.setEnabled( isLockedByUser( getEvent() ) );
+        selfTerminatingCheckBox.setEnabled( isLockedByUser( getEvent() ) );
     }
 
     private void addEventReferenceTable() {
@@ -145,6 +165,28 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
     public String getScopeName() {
         Place scope = ( getPlanEvent() ).getScope();
         return scope == null ? "" : scope.getName();
+    }
+
+    /**
+     * Set event as self-terminating.
+     *
+     * @param val a boolean
+     */
+    public void setSelfTerminating( boolean val ) {
+        Event event = getPlanEvent();
+        boolean oldVal = event.isSelfTerminating();
+        if ( oldVal != val ) {
+            doCommand( new UpdatePlanObject( event, "selfTerminating", val ) );
+        }
+    }
+
+    /**
+     * Get whether event is self-terminating.
+     *
+     * @return a boolean
+     */
+    public boolean isSelfTerminating() {
+        return getPlanEvent().isSelfTerminating();
     }
 
     private Event getPlanEvent() {

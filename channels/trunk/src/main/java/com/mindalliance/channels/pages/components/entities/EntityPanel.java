@@ -7,7 +7,6 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.pages.components.AbstractMultiAspectPanel;
 import com.mindalliance.channels.pages.components.entities.menus.EntityActionsMenuPanel;
 import com.mindalliance.channels.pages.components.entities.menus.EntityShowMenuPanel;
@@ -212,9 +211,9 @@ public class EntityPanel extends AbstractMultiAspectPanel {
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change ) {
-        if ( change.getSubject() instanceof UserIssue ) {
+        /*if ( change.getSubject() instanceof UserIssue ) {
             setAspectShown( target, "issues" );
-        } else if ( change.isUpdated() && change.getProperty().equals( "geoLocation" ) ) {
+        } else */if ( change.isUpdated() && change.getProperty().equals( "geoLocation" ) ) {
             addShowMenu();
             target.addComponent( getShowMenu() );
         }

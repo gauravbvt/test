@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.scenario;
 
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.commands.RemoveRisk;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Identifiable;
@@ -395,12 +396,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
         public void deleteRisk() {
             selectedRisk = null;
             if ( getScenario().getRisks().contains( risk ) ) {
-                doCommand( new UpdatePlanObject(
-                        getScenario(),
-                        "risks",
-                        risk,
-                        UpdateObject.Action.Remove
-                ) );
+                doCommand( new RemoveRisk( getScenario(), risk ) );
             }
         }
 
@@ -576,10 +572,10 @@ public class RiskListPanel extends AbstractCommandablePanel {
             }
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             columns.add( makeColumn( "Mitigation", "kind", EMPTY ) );
+            columns.add( makeLinkColumn( "Task", "part", "part.task", EMPTY ) );
             columns.add( makeLinkColumn( "Actor", "part.actor", "part.actor.name", EMPTY ) );
             columns.add( makeLinkColumn( "Role", "part.role", "part.role.name", EMPTY ) );
             columns.add( makeLinkColumn( "Organization", "part.organization", "part.organization.name", EMPTY ) );
-            columns.add( makeLinkColumn( "Task", "part", "part.task", EMPTY ) );
             add( new AjaxFallbackDefaultDataTable(
                     "mitigations",
                     columns,

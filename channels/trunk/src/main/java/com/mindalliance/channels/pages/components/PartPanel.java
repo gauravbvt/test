@@ -25,7 +25,6 @@ import org.apache.wicket.model.PropertyModel;
 
 import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -125,16 +124,40 @@ public class PartPanel extends AbstractCommandablePanel {
         super.setOutputMarkupPlaceholderTag( false );
         this.model = model;
 
-        addField( TASK_PROPERTY, getQueryService().findAllTasks(), true );
-        addField( ACTOR_PROPERTY, getQueryService().findAllNames( Actor.class ), false );
-        addField( ROLE_PROPERTY, getQueryService().findAllNames( Role.class ), true );
-        addField( ORG_PROPERTY, getQueryService().findAllNames( Organization.class ), false );
-        addField( JURISDICTION_PROPERTY, getQueryService().findAllNames( Place.class ), false );
-        addField( LOCATION_PROPERTY, getQueryService().findAllNames( Place.class ), false );
+        addField( TASK_PROPERTY, new PropertyModel<List<String>>(this, "allTasks"), true );
+        addField( ACTOR_PROPERTY, new PropertyModel<List<String>>(this, "allActorNames"), false );
+        addField( ROLE_PROPERTY, new PropertyModel<List<String>>(this, "allRoleNames"), true );
+        addField( ORG_PROPERTY, new PropertyModel<List<String>>(this, "allOrganizationNames"), false );
+        addField( JURISDICTION_PROPERTY, new PropertyModel<List<String>>(this, "allPlaceNames"), false );
+        addField( LOCATION_PROPERTY, new PropertyModel<List<String>>(this, "allPlaceNames"), false );
         addEventInitiation();
         addTimingFields();
         addMitigations();
         adjustFields();
+    }
+
+    public List<String> getAllTasks() {
+        return getQueryService().findAllTasks();
+    }
+
+    public List<String> getAllActorNames() {
+        return getQueryService().findAllNames( Actor.class );
+    }
+
+    public List<String> getAllRoleNames() {
+        return getQueryService().findAllNames( Role.class );
+    }
+
+    public List<String> getAllOrganizationNames() {
+        return getQueryService().findAllNames( Organization.class );
+    }
+
+    public List<String> getAllPlaceNames() {
+        return getQueryService().findAllNames( Place.class );
+    }
+
+    public List<String> getAllEventNames() {
+        return getQueryService().findAllNames( Event.class );
     }
 
     private void adjustFields() {
@@ -154,7 +177,7 @@ public class PartPanel extends AbstractCommandablePanel {
 
     private void addField(
             final String property,
-            final Collection<String> choices,
+            final PropertyModel<List<String>> choices,
             final boolean semMatching ) {
         final TextField<String> field;
         if ( choices == null ) {
@@ -167,7 +190,7 @@ public class PartPanel extends AbstractCommandablePanel {
                     new PropertyModel<String>( this, property ) ) {
                 protected Iterator<String> getChoices( String s ) {
                     List<String> candidates = new ArrayList<String>();
-                    for ( String choice : choices ) {
+                    for ( String choice : choices.getObject() ) {
                         if ( matches( s, choice, semMatching ) ) candidates.add( choice );
                     }
                     return candidates.iterator();
@@ -199,13 +222,13 @@ public class PartPanel extends AbstractCommandablePanel {
 
 
     private void addEventInitiation() {
-        final List<String> choices = getQueryService().findAllNames( Event.class );
+        final PropertyModel<List<String>> choices = new PropertyModel<List<String>>(this, "allEventNames");
         initiatedEventField = new AutoCompleteTextField<String>(
                 "initiatedEvent",
                 new PropertyModel<String>( this, "initiatedEventName" ) ) {
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
-                for ( String choice : choices ) {
+                for ( String choice : choices.getObject() ) {
                     if ( getQueryService().likelyRelated( s, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();

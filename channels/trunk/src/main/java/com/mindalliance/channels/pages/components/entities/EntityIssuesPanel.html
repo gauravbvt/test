@@ -8,9 +8,11 @@
 <body>
 <wicket:extend>
     <div>
-        <input wicket:id="includeContained" type="checkbox"/> Include issues about
-        <span wicket:id="containment">actors in this role</span>
-        &nbsp;<input wicket:id="includeFromScenarios" type="checkbox"/> Include issues from scenarios
+        <span wicket:id="containmentContainer">
+            <input wicket:id="includeContained" type="checkbox"/> Include issues about
+            <span wicket:id="containment">actors in this role</span>
+        </span>
+        &nbsp;<input wicket:id="includeFromScenarios" type="checkbox"/> Include related issues from scenarios
         &nbsp;<input wicket:id="includeWaived" type="checkbox"/> Include waived issues
     </div>
     <br/>

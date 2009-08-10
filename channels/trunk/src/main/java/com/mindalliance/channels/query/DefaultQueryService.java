@@ -514,15 +514,15 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public boolean isReferenced( Event event ) {
         for ( Event incident : planManager.getCurrentPlan().getIncidents() ) {
-            if ( incident == event ) return true;
+            if ( incident.equals( event ) ) return true;
         }
         // look in scenarios
         for ( Scenario scenario : list( Scenario.class ) ) {
-            if ( scenario.getEvent() == event ) return true;
+            if ( scenario.getEvent().equals( event ) ) return true;
             Iterator<Part> parts = scenario.parts();
             while ( parts.hasNext() ) {
                 Part part = parts.next();
-                if ( part.getInitiatedEvent() == event ) return true;
+                if ( part.initiatesEvent() && part.getInitiatedEvent().equals( event ) ) return true;
             }
         }
         return false;
@@ -534,15 +534,15 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public int getReferenceCount( Event event ) {
         int count = 0;
         for ( Event incident : planManager.getCurrentPlan().getIncidents() ) {
-            if ( incident == event ) count++;
+            if ( incident.equals( event ) ) count++;
         }
         // look in scenarios
         for ( Scenario scenario : list( Scenario.class ) ) {
-            if ( scenario.getEvent() == event ) count++;
+            if ( scenario.getEvent().equals( event ) ) count++;
             Iterator<Part> parts = scenario.parts();
             while ( parts.hasNext() ) {
                 Part part = parts.next();
-                if ( part.getInitiatedEvent() == event ) count++;
+                if ( part.initiatesEvent() && part.getInitiatedEvent().equals( event ) ) count++;
             }
         }
         return count;
@@ -1093,21 +1093,25 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public List<ModelObject> findAllScenarioObjectsInvolving( ModelObject entity ) {
-        Set<ModelObject> scenarioObjects = new HashSet<ModelObject>();
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Part> parts = scenario.parts();
-            while ( parts.hasNext() ) {
-                Part part = parts.next();
-                if ( part.resourceSpec().hasEntity( entity ) ) {
-                    scenarioObjects.add( part );
-                    Iterator<Flow> outcomes = part.outcomes();
-                    while ( outcomes.hasNext() ) scenarioObjects.add( outcomes.next() );
-                    Iterator<Flow> requirements = part.requirements();
-                    while ( requirements.hasNext() ) scenarioObjects.add( requirements.next() );
+        if ( entity instanceof Event ) {
+          return this.findAllModelObjectsDirectlyRelatedToEvent( (Event) entity );
+        } else {
+            Set<ModelObject> scenarioObjects = new HashSet<ModelObject>();
+            for ( Scenario scenario : list( Scenario.class ) ) {
+                Iterator<Part> parts = scenario.parts();
+                while ( parts.hasNext() ) {
+                    Part part = parts.next();
+                    if ( part.resourceSpec().hasEntity( entity ) ) {
+                        scenarioObjects.add( part );
+                        Iterator<Flow> outcomes = part.outcomes();
+                        while ( outcomes.hasNext() ) scenarioObjects.add( outcomes.next() );
+                        Iterator<Flow> requirements = part.requirements();
+                        while ( requirements.hasNext() ) scenarioObjects.add( requirements.next() );
+                    }
                 }
             }
+            return new ArrayList<ModelObject>( scenarioObjects );
         }
-        return new ArrayList<ModelObject>( scenarioObjects );
     }
 
     /**
@@ -1502,7 +1506,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<Event> findPlannedEvents() {
         Plan plan = planManager.getCurrentPlan();
         List<Event> plannedEvents = new ArrayList<Event>();
-        for ( Event event : list( Event.class ) ) {
+        for ( Event event : listReferenced( Event.class ) ) {
             if ( !plan.isIncident( event ) ) plannedEvents.add( event );
         }
         return plannedEvents;
@@ -1846,7 +1850,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             if ( org.getLocation() != null && org.getLocation().isSameAsOrIn( place ) )
                 inPlace.add( org );
         }
-        for ( Event event : list( Event.class ) ) {
+        for ( Event event : listReferenced( Event.class ) ) {
             if ( event.getScope() != null && event.getScope().isSameAsOrIn( place ) )
                 inPlace.add( event );
         }
@@ -1868,13 +1872,36 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
+    public List<ModelObject> findAllModelObjectsDirectlyRelatedToEvent( Event event ) {
+        Set<ModelObject> mos = new HashSet<ModelObject>();
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            if ( scenario.getEvent().equals( event ) ) {
+                mos.add( scenario );
+            }
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                Part part = parts.next();
+                if ( part.initiatesEvent() && part.getInitiatedEvent().equals( event ) ) {
+                    mos.add( part );
+                }
+                if ( scenario.getEvent().equals( event ) && part.isTerminatesEvent() ) {
+                    mos.add( part );
+                }
+            }
+        }
+        return new ArrayList<ModelObject>( mos );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public List<ModelObject> findAllReferencesTo( Place place ) {
         List<ModelObject> references = new ArrayList<ModelObject>();
         for ( Organization org : list( Organization.class ) ) {
             if ( org.getLocation() != null && org.getLocation().equals( place ) )
                 references.add( org );
         }
-        for ( Event event : list( Event.class ) ) {
+        for ( Event event : listReferenced( Event.class ) ) {
             if ( event.getScope() != null && event.getScope().equals( place ) )
                 references.add( event );
         }
