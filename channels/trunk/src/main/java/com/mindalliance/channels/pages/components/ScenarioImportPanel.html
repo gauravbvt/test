@@ -9,16 +9,20 @@
 <body>
 <wicket:panel>
     <div wicket:id="import" class="import-dialog">
-        <div class="header">
-            <h2>Import scenario</h2>
-            <span class="menubar">
-                <span class="menuitem"><a wicket:id="close" href="#">Close</a></span>
-            </span>
-        </div>
-        <div>
-            <input class="file" type="file" wicket:id="import" name="sc-import" value="Upload">
-            <input type="button" value="Import" wicket:id="submit">
-        </div>
+        <h2>Import scenario</h2>
+        <table width="100%">
+            <tr>
+                <td align="center">
+                    <input class="file" type="file" wicket:id="import" name="sc-import" value="Upload">
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <input type="button" value="Cancel" wicket:id="cancel">
+                    <input type="button" value="Import" wicket:id="submit">
+                </td>
+            </tr>
+        </table>
     </div>
 </wicket:panel>
 </body>

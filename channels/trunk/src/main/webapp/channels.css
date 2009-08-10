@@ -699,8 +699,8 @@ div.import-dialog {
     padding: 5px;
     position: absolute;
     width: 300px;
-    top: 10em;
-    left: 5em;
+    top: 8em;
+    left: 25em;
     z-index: 10000;
     overflow: auto;
 }

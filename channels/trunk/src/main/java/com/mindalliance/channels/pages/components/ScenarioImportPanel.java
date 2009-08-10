@@ -42,13 +42,14 @@ public class ScenarioImportPanel extends AbstractCommandablePanel {
         importDialog.setOutputMarkupId( true );
         makeVisible(importDialog, false);
         add(importDialog);
-        addHeader();
         addUploadField();
+        addCancel();
         addSubmit();
+        adjustFields();
     }
 
-    private void addHeader() {
-        AjaxFallbackLink closeLink = new AjaxFallbackLink( "close" ) {
+    private void addCancel() {
+        AjaxFallbackLink closeLink = new AjaxFallbackLink( "cancel" ) {
             public void onClick( AjaxRequestTarget target ) {
                 close(target);
             }
@@ -72,18 +73,16 @@ public class ScenarioImportPanel extends AbstractCommandablePanel {
     protected void onBeforeRender() {
         super.onBeforeRender();
         adjustFields();
-        makeVisible( submitLink, false );
     }
 
     private void addSubmit() {
         submitLink = new SubmitLink( "submit" );
         submitLink.setOutputMarkupId( true );
-        submitLink.setEnabled( false );
         importDialog.add( submitLink );
     }
 
     private void adjustFields() {
-        makeVisible( submitLink, false );
+        submitLink.setEnabled( false );
     }
 
     public void refresh( AjaxRequestTarget target ) {
@@ -97,7 +96,6 @@ public class ScenarioImportPanel extends AbstractCommandablePanel {
         scenarioImportField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                makeVisible( submitLink, true );
                 submitLink.setEnabled( true );
                 target.addComponent( submitLink );
             }
