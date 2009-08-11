@@ -28,7 +28,6 @@ public class AddPart extends AbstractCommand {
 
     public AddPart( Scenario scenario ) {
         super();
-        needLockOn( scenario );
         set( "scenario", scenario.getId() );
     }
 

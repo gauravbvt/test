@@ -74,7 +74,7 @@ public class DefaultLockManager extends AbstractService implements LockManager {
                 }
                 return lock;
             } catch ( NotFoundException e ) {
-                LOG.warn( "Could not grab lock: " + id + " not found");
+                LOG.debug( "Could not grab lock: " + id + " not found (likely deleted by prior subcommand)");
                 return null;
             }
         }

@@ -31,8 +31,6 @@ public class SatisfyNeed extends AbstractCommand {
     }
 
     public SatisfyNeed( Flow need, Flow capability, Scenario context ) {
-        addConflicting( need );
-        addConflicting( capability );
         needLocksOn( CommandUtils.getLockingSetFor( need ) );
         needLocksOn( CommandUtils.getLockingSetFor( capability ) );
         Map<String, Object> args = new HashMap<String, Object>();

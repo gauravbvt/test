@@ -27,7 +27,7 @@ public class RedirectFlow extends AbstractCommand {
 
     public RedirectFlow( Flow flow, Node node, boolean nodeIsTarget ) {
         needLockOn( flow );
-        needLockOn( node );
+        if ( node.isPart() ) needLockOn( node );
         set( "scenario", flow.getScenario().getId() );
         set( "flow", flow.getId() );
         set( "nodeScenario", node.getScenario().getId() );

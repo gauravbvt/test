@@ -25,7 +25,6 @@ public class PastePart extends AbstractCommand {
     }
 
     public PastePart( Scenario scenario ) {
-        needLockOn( scenario );
         set( "scenario", scenario.getId() );
     }
 
@@ -109,7 +108,7 @@ public class PastePart extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
-        MultiCommand multi = new MultiCommand( "unsatisfy needs" );
+        MultiCommand multi = new MultiCommand( "unpaste part" );
         multi.setUndoes( getName() );
         MultiCommand subCommands = (MultiCommand) get( "subCommands" );
         multi.addCommand( subCommands.getUndoCommand( commander ) );

@@ -23,7 +23,6 @@ public class RemoveNeed extends AbstractCommand {
     }
 
     public RemoveNeed( Flow flow ) {
-        addConflicting( flow );
         needLocksOn( CommandUtils.getLockingSetFor( flow ) );
         setArguments( CommandUtils.getFlowState( flow ) );
         set( "flow", flow.getId() );

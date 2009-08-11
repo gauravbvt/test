@@ -26,7 +26,6 @@ public class DisconnectFlow extends AbstractCommand {
     }
 
     public DisconnectFlow( Flow flow ) {
-        addConflicting( flow );
         needLocksOn( CommandUtils.getLockingSetFor( flow ) );
         set( "scenario", flow.getScenario().getId() );
         set( "flow", flow.getId() );

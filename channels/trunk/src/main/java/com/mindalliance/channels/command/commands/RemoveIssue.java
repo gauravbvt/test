@@ -26,7 +26,8 @@ public class RemoveIssue extends AbstractCommand {
     }
 
     public RemoveIssue( UserIssue issue ) {
-        addConflicting( issue );
+        needLockOn( issue );
+        addConflicting( issue.getAbout() );
         set( "issue", issue.getId() );
     }
 

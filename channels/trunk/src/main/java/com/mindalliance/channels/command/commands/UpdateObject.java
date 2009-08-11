@@ -57,7 +57,7 @@ public abstract class UpdateObject extends AbstractCommand {
             final String property,
             final Object value,
             final Action action ) {
-        addConflicting( identifiable );
+        needLockOn( identifiable );
         set( "action", action.toString() );
         set( "object", identifiable.getId() );
         set( "property", property );

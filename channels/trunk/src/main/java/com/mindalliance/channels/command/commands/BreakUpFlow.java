@@ -28,7 +28,6 @@ public class BreakUpFlow extends AbstractCommand {
     }
 
     public BreakUpFlow( Flow flow ) {
-        addConflicting( flow );
         needLocksOn( CommandUtils.getLockingSetFor( flow ) );
         set( "flow", flow.getId() );
         set( "scenario", flow.getScenario().getId() );

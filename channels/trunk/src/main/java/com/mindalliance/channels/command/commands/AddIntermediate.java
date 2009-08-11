@@ -25,7 +25,6 @@ public class AddIntermediate extends AbstractCommand {
     }
 
     public AddIntermediate( Flow flow ) {
-        addConflicting( flow );
         needLocksOn( CommandUtils.getLockingSetFor( flow ) );
         set( "flow", flow.getId() );
         set( "scenario", flow.getScenario().getId() );

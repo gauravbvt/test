@@ -32,7 +32,6 @@ public class RemovePart extends AbstractCommand {
     }
 
     public RemovePart( final Part part ) {
-        addConflicting( part );
         needLocksOn( CommandUtils.getLockingSetFor( part ) );
         set( "part", part.getId() );
         set( "scenario", part.getScenario().getId() );

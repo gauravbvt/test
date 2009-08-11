@@ -4,6 +4,7 @@ import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.slf4j.Logger;
@@ -440,7 +441,7 @@ public class Scenario extends ModelObject {
     public QueryService getQueryService() {
         if ( queryService == null ) {
             queryService = Channels.instance().getQueryService();
-            LOG.warn( "Query service was not set");
+            LOG.warn( "Query service was not set" );
         }
         return queryService;
     }
@@ -509,7 +510,7 @@ public class Scenario extends ModelObject {
      * Find all organizations involved in scenario.
      *
      * @return a list of organizations. May contain Organization.UNKNOWN if some parts
-     * don't specify an organization.
+     *         don't specify an organization.
      */
     @Transient
     public List<Organization> getOrganizations() {
@@ -532,6 +533,16 @@ public class Scenario extends ModelObject {
         if ( hasUnknown )
             results.add( Organization.UNKNOWN );
         return results;
+    }
+
+    /**
+     * Get the list of all parts in the scenario.
+     *
+     * @return a list of parts
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<Part> listParts() {
+        return IteratorUtils.toList( parts() );
     }
 
     //=================================================
@@ -598,6 +609,7 @@ public class Scenario extends ModelObject {
             throw new UnsupportedOperationException();
         }
     }
+
     @Transient
     public boolean isBeingDeleted() {
         return beingDeleted;

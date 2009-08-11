@@ -231,12 +231,15 @@ public final class CommandUtils {
      */
     public static List<Identifiable> getLockingSetFor( Flow flow ) {
         List<Identifiable> lockingSet = new ArrayList<Identifiable>();
+        lockingSet.add( flow );
         if ( flow.isInternal() ) {
-            lockingSet.add( flow.getSource() );
-            lockingSet.add( flow.getTarget() );
+            Node node = flow.getSource();
+            if ( node.isPart() ) lockingSet.add( node );
+            node = flow.getTarget();
+            if ( node.isPart() ) lockingSet.add( node );
         } else {
             ExternalFlow externalFlow = (ExternalFlow) flow;
-            lockingSet.add( externalFlow.getConnector() );
+            // lockingSet.add( externalFlow.getConnector() );
             lockingSet.add( externalFlow.getPart() );
         }
         return lockingSet;
@@ -250,6 +253,7 @@ public final class CommandUtils {
      */
     public static List<Identifiable> getLockingSetFor( Part part ) {
         List<Identifiable> lockingSet = new ArrayList<Identifiable>();
+        lockingSet.add( part );
         Iterator<Flow> outcomes = part.outcomes();
         while ( outcomes.hasNext() ) {
             Flow outcome = outcomes.next();

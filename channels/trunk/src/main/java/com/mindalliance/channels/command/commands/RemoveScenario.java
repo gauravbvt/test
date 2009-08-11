@@ -31,9 +31,8 @@ public class RemoveScenario extends AbstractCommand {
     }
 
     public RemoveScenario( Scenario scenario ) {
-        super();
+        needLocksOn( scenario.listParts() );
         set( "scenario", scenario.getId() );
-        addConflicting( scenario );
         Iterator<Part> parts = scenario.parts();
         while ( parts.hasNext() ) {
             addConflicting( parts.next() );

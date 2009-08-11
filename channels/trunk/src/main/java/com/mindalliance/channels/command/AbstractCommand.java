@@ -45,7 +45,8 @@ public abstract class AbstractCommand implements Command {
      */
     private Set<Long> lockingSet = new HashSet<Long>();
     /**
-     * The command's conflict set.
+     * Ids of model objects that are affected by the command. Used to rule out conflicting undoes and redoes in history.
+     * An id in the locking set is always in the conclifct set.
      */
     private Set<Long> conflictSet = new HashSet<Long>();
     /**
@@ -154,6 +155,7 @@ public abstract class AbstractCommand implements Command {
      */
     protected void needLockOn( Identifiable identifiable ) {
         lockingSet.add( identifiable.getId() );
+        conflictSet.add( identifiable.getId() );
     }
 
     /**
@@ -161,7 +163,7 @@ public abstract class AbstractCommand implements Command {
      *
      * @param identifiables a list of identifiable objects
      */
-    protected void needLocksOn( List<Identifiable> identifiables ) {
+    protected void needLocksOn( List<? extends Identifiable> identifiables ) {
         for ( Identifiable identifiable : identifiables ) {
             needLockOn( identifiable );
         }
@@ -179,13 +181,11 @@ public abstract class AbstractCommand implements Command {
 
     /**
      * Add identifiable to conflict set.
-     * Also add to locking set.
      *
      * @param identifiable an identifiable object
      */
     public void addConflicting( Identifiable identifiable ) {
         conflictSet.add( identifiable.getId() );
-        needLockOn( identifiable );
     }
 
     /**

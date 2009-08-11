@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Remove a aprt from flows where the part acts as an intermediate.
+ * Remove a part from flows where the part acts as an intermediate.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -37,7 +37,8 @@ public class Disintermediate extends AbstractCommand {
     }
 
     public Disintermediate( Part part ) {
-        addConflicting( part );
+        // May overshoot if needs locks for unaffected flows.
+        needLocksOn( CommandUtils.getLockingSetFor( part ) );
         set( "part", part.getId() );
         set( "scenario", part.getScenario().getId() );
     }

@@ -23,7 +23,6 @@ public class RemoveCapability extends AbstractCommand {
     }
 
     public RemoveCapability( Flow flow ) {
-        addConflicting( flow );
         needLocksOn( CommandUtils.getLockingSetFor( flow ) );
         setArguments( CommandUtils.getFlowState( flow ) );
         set( "flow", flow.getId() );
