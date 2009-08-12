@@ -44,6 +44,7 @@ public class DisconnectFlow extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+            assert get( "flow" ) != null;
             Flow flow = scenario.findFlow( (Long) get( "flow" ) );
             set( "flowState", CommandUtils.getFlowState( flow ) );
             flow.disconnect();

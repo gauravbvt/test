@@ -159,8 +159,8 @@ public class MultiCommand extends AbstractCommand {
         for ( Command command : commands ) {
             try {
                 LOG.info( "--- sub-command --" );
-                Change change = commander.doCommand( command );
-                for ( Link link : links ) link.process( command, change.getSubject() );
+                Change change = commander.doCommand( command ); // TODO -- command journaled here
+                for ( Link link : links ) link.process( command, change.getSubject() ); // without benefit of link processing
                 executed.add( command );
             }
             catch ( CommandException e ) {

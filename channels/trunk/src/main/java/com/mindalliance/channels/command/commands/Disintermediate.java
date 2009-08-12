@@ -64,9 +64,9 @@ public class Disintermediate extends AbstractCommand {
             Collection receiveNames = CollectionUtils.collect(
                     IteratorUtils.filteredIterator( part.requirements(), new Predicate() {
                         public boolean evaluate( Object obj ) {
-                            return ((Flow)obj).isInternal();
+                            return ( (Flow) obj ).isInternal();
                         }
-                    }),
+                    } ),
                     new Transformer() {
                         public Object transform( Object obj ) {
                             return ( (Flow) obj ).getName();
@@ -75,9 +75,9 @@ public class Disintermediate extends AbstractCommand {
             Collection sendNames = CollectionUtils.collect(
                     IteratorUtils.filteredIterator( part.outcomes(), new Predicate() {
                         public boolean evaluate( Object obj ) {
-                            return ((Flow)obj).isInternal();
+                            return ( (Flow) obj ).isInternal();
                         }
-                    }),
+                    } ),
                     new Transformer() {
                         public Object transform( Object obj ) {
                             return ( (Flow) obj ).getName();
@@ -131,7 +131,8 @@ public class Disintermediate extends AbstractCommand {
         subCommands.setMemorable( false );
         List<Flow[]> inOuts = findIntermediations( part );
         // To avoid disconnecting a flow more than once
-        Set<Flow> flowsToDisconnect = new HashSet<Flow>();
+        Set<Flow> receivesToDisconnect = new HashSet<Flow>();
+        Set<Flow> sendsToDisconnect = new HashSet<Flow>();
         for ( Flow[] inOut : inOuts ) {
             Flow receive = inOut[0];
             Flow send = inOut[1];
@@ -145,11 +146,26 @@ public class Disintermediate extends AbstractCommand {
             attributes.put( "description", send.getDescription() );
             directConnect.set( "attributes", attributes );
             subCommands.addCommand( directConnect );
-            flowsToDisconnect.add( send );
-            flowsToDisconnect.add( receive );
+            sendsToDisconnect.add( send );
+            receivesToDisconnect.add( receive );
         }
-        for ( Flow flow : flowsToDisconnect ) {
-            subCommands.addCommand( new DisconnectFlow( flow ));
+        for ( Flow receive : receivesToDisconnect ) {
+            AddNeed addNeed = new AddNeed();
+            addNeed.set( "scenario", get( "scenario" ) );
+            addNeed.set( "part", get( "part" ) );
+            addNeed.set( "name", receive.getName() );
+            addNeed.set( "attributes", CommandUtils.getFlowAttributes( receive ) );
+            subCommands.addCommand( addNeed );
+            subCommands.addCommand( new DisconnectFlow( receive ) );
+        }
+        for ( Flow send : sendsToDisconnect ) {
+            AddCapability addCapability = new AddCapability();
+            addCapability.set( "scenario", get( "scenario" ) );
+            addCapability.set( "part", get( "part" ) );
+            addCapability.set( "name", send.getName() );
+            addCapability.set( "attributes", CommandUtils.getFlowAttributes( send ) );
+            subCommands.addCommand( addCapability );
+            subCommands.addCommand( new DisconnectFlow( send ) );
         }
         return subCommands;
     }

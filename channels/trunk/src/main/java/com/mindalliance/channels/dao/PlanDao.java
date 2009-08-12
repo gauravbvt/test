@@ -10,17 +10,23 @@ import com.mindalliance.channels.model.Scenario;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 /**
  * Wrapper for per-plan dao-related operations.
  */
 public class PlanDao extends Memory {
-
+    /**
+     * Name of file contining last id used in plan or and in journal, if any.
+     */
+    private static final String LAST_ID_FILE = "lastid";
     /**
      * Name of persisted data file.
      */
@@ -91,6 +97,8 @@ public class PlanDao extends Memory {
      * @throws IOException on loading errors
      */
     public synchronized void load( Importer importer ) throws IOException {
+        Long lastId = readLastAssignedId();
+        if ( lastId > 0L ) getIdGenerator().setLastAssignedId( lastId );
         File dataFile = getDataFile();
         if ( dataFile.length() > 0L ) {
             logger.info( "Importing snapshot for plan {}", plan );
@@ -187,6 +195,22 @@ public class PlanDao extends Memory {
         return new Journal();
     }
 
+    private long readLastAssignedId() throws IOException {
+        BufferedReader reader = null;
+        Long lastId = 0L;
+        try {
+            File lastIdFile = getLastIdFile();
+            if ( lastIdFile.length() > 0L ) {
+                reader = new BufferedReader( new FileReader( lastIdFile ) );
+                lastId = Long.parseLong( reader.readLine() );
+            }
+        } finally {
+            if ( reader != null )
+                reader.close();
+        }
+        return lastId;
+    }
+
     /**
      * Persist all plan data.
      *
@@ -198,6 +222,7 @@ public class PlanDao extends Memory {
             takeSnapshot( exporter );
             getJournalFile().delete();
             journal.reset();
+            updateLastIdRecord();
         }
     }
 
@@ -235,6 +260,7 @@ public class PlanDao extends Memory {
         try {
             out = new FileOutputStream( getJournalFile() );
             exporter.export( getJournal(), out );
+            updateLastIdRecord();
         } finally {
             if ( out != null )
                 out.close();
@@ -269,6 +295,27 @@ public class PlanDao extends Memory {
         } catch ( IOException e ) {
             throw new RuntimeException( "Failed to save journal", e );
         }
+    }
+
+    private void updateLastIdRecord() throws IOException {
+        long lastId = getIdGenerator().getLastAssignedId();
+        getLastIdFile().delete();
+        PrintWriter out = null;
+        try {
+            out = new PrintWriter( new FileOutputStream( getLastIdFile() ) );
+            out.print( lastId );
+        } finally {
+            if ( out != null )
+                out.close();
+        }
+    }
+
+    private File getLastIdFile() throws IOException {
+        File data = getDataDirectory();
+        File lastIdFile = new File( data.getPath(), LAST_ID_FILE );
+        if ( !lastIdFile.exists() )
+            lastIdFile.createNewFile();
+        return lastIdFile;
     }
 
     /**

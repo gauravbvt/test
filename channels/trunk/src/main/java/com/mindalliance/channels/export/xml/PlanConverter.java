@@ -119,8 +119,7 @@ public class PlanConverter extends AbstractChannelsConverter {
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "lastId" ) ) {
-                Long lastId = Long.parseLong( reader.getValue() );
-                getContext().getIdGenerator().setLastAssignedId( lastId );
+                LOG.info("Plan last saved with last id " + reader.getValue() );
             } else if ( nodeName.equals( "name" ) ) {
                 plan.setName( reader.getValue() );
             } else if ( nodeName.equals( "client" ) ) {

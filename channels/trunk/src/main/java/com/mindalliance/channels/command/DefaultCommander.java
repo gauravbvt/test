@@ -215,15 +215,6 @@ public class DefaultCommander extends AbstractService implements Commander, Init
                 Collection<Lock> grabbedLocks = lockManager.grabLocksOn( command.getLockingSet() );
                 change = command.execute( this );
                 lockManager.releaseLocks( grabbedLocks );
-                if ( !isReplaying() && command.isTop() && !change.isNone() ) {
-                    LOG.debug( "***After command" );
-
-                    PlanManager planManager = queryService.getPlanManager();
-                    Plan plan = getPlan();
-                    // TODO Implement proper observers/listeners
-                    planManager.onAfterCommand( queryService, plan, command );
-                    analyst.onAfterCommand( plan );
-                }
             } catch ( LockingException e ) {
                 throw new CommandException( e.getMessage(), e );
             }
@@ -291,6 +282,7 @@ public class DefaultCommander extends AbstractService implements Commander, Init
             Change change = execute( command );
             if ( command instanceof MultiCommand ) LOG.info( "*** END multicommand ***" );
             history.recordDone( command );
+            afterExecution( command, change );
             return change;
         }
     }
@@ -310,6 +302,7 @@ public class DefaultCommander extends AbstractService implements Commander, Init
             if ( undoCommand instanceof MultiCommand ) LOG.info( "*** END multicommand ***" );
             change.setUndoing( true );
             history.recordUndone( memento, undoCommand );
+            afterExecution( undoCommand, change );
             return change;
         }
     }
@@ -328,7 +321,19 @@ public class DefaultCommander extends AbstractService implements Commander, Init
             Change change = execute( redoCommand );
             change.setUndoing( true );
             history.recordRedone( memento, redoCommand );
+            afterExecution( redoCommand, change );
             return change;
+        }
+    }
+
+    private void afterExecution( Command command, Change change ) {
+        if ( !isReplaying() && command.isTop() && !change.isNone() ) {
+            LOG.debug( "***After command" );
+            PlanManager planManager = queryService.getPlanManager();
+            Plan plan = getPlan();
+            // TODO Implement proper observers/listeners
+            planManager.onAfterCommand( queryService, plan, command );
+            analyst.onAfterCommand( plan );
         }
     }
 

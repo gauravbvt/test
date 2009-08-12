@@ -47,6 +47,10 @@ public class IssueScanner implements Scanner {
      * Plan manager.
      */
     private PlanManager planManager;
+    /**
+     * Daemon threads reduction in priority compared to normal priority.
+     */
+    private static final int PRIORITY_REDUCTION = 2;
 
     private void initialize(  ) {
         for ( Plan plan : planManager.getPlans() ) {
@@ -114,7 +118,7 @@ public class IssueScanner implements Scanner {
 
         public Daemon( final Plan plan ) {
             setDaemon( true );
-            setPriority( Thread.NORM_PRIORITY - 1 );
+            setPriority( Thread.NORM_PRIORITY - PRIORITY_REDUCTION );
             planHolder = new ThreadLocal<Plan>() {
                 protected synchronized Plan initialValue() {
                     return plan;

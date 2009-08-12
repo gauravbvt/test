@@ -54,9 +54,7 @@ public class CommandConverter extends AbstractChannelsConverter {
         writer.startNode( "memorable" );
         writer.setValue( "" + command.isMemorable() );
         writer.endNode();
-        // Arguments arguments = new Arguments( command.getArguments() );
         writer.startNode( "arguments" );
-        // writer.setValue( toJSON( command.getArguments() ) );
         context.convertAnother( command.getArguments() );
         writer.endNode();
         if ( command instanceof MultiCommand ) {

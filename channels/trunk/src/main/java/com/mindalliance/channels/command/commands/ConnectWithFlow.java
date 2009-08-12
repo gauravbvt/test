@@ -1,7 +1,6 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
@@ -84,7 +83,7 @@ public class ConnectWithFlow extends AbstractCommand {
         Scenario otherScenario = commander.resolve(
                 Scenario.class,
                 (Long) get( "otherScenario" ) );
-        Long nodeId =  (Long) get( "other" );
+        Long nodeId = (Long) get( "other" );
         Node other = CommandUtils.resolveNode( nodeId, otherScenario, queryService );
         String name = (String) get( "name" );
         boolean isOutcome = (Boolean) get( "isOutcome" );
@@ -92,11 +91,12 @@ public class ConnectWithFlow extends AbstractCommand {
         Flow flow = isOutcome
                 ? queryService.connect( part, other, name, priorId )
                 : queryService.connect( other, part, name, priorId );
+        assert priorId == null || priorId == flow.getId();
+        set( "flow", flow.getId() );
         Map<String, Object> attributes = (Map<String, Object>) get( "attributes" );
         if ( attributes != null ) {
             CommandUtils.initialize( flow, attributes );
         }
-        set( "flow", flow.getId() );
         return new Change( Change.Type.Added, flow );
     }
 
@@ -111,14 +111,12 @@ public class ConnectWithFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
-        try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Long flowId = (Long) get( "flow" );
-            if ( flowId == null ) throw new CommandException( "Can't undo." );
-            Flow flow = scenario.findFlow( flowId );
-            return new DisconnectFlow( flow );
-        } catch ( NotFoundException e ) {
-            throw new CommandException( "Can't undo.", e );
-        }
+        Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+        Long flowId = (Long) get( "flow" );
+        if ( flowId == null ) throw new CommandException( "Can't undo." );
+        DisconnectFlow disconnectFlow = new DisconnectFlow();
+        disconnectFlow.set( "scenario", scenario.getId() );
+        disconnectFlow.set( "flow", flowId );
+        return disconnectFlow;
     }
 }
