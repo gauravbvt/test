@@ -98,7 +98,7 @@ public class PlanDao extends Memory {
      */
     public synchronized void load( Importer importer ) throws IOException {
         Long lastId = readLastAssignedId();
-        if ( lastId > 0L ) getIdGenerator().setLastAssignedId( lastId );
+        if ( lastId > 0L ) getIdGenerator().setLastAssignedId( lastId, getPlan() );
         File dataFile = getDataFile();
         if ( dataFile.length() > 0L ) {
             logger.info( "Importing snapshot for plan {}", plan );
@@ -298,7 +298,7 @@ public class PlanDao extends Memory {
     }
 
     private void updateLastIdRecord() throws IOException {
-        long lastId = getIdGenerator().getLastAssignedId();
+        long lastId = getIdGenerator().getLastAssignedId( getPlan() );
         getLastIdFile().delete();
         PrintWriter out = null;
         try {

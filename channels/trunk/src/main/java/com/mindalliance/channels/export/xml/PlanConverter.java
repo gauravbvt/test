@@ -9,6 +9,7 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -63,7 +64,8 @@ public class PlanConverter extends AbstractChannelsConverter {
         writer.addAttribute( "version", getVersion() );
         writer.addAttribute( "date", new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( new Date() ) );
         writer.startNode( "lastId" );
-        writer.setValue( String.valueOf( getContext().getIdGenerator().getLastAssignedId() ) );
+        writer.setValue( String.valueOf(
+                getContext().getIdGenerator().getLastAssignedId( getContext().getPlan() ) ) );
         writer.endNode();
         writer.startNode( "name" );
         writer.setValue( plan.getName() );
@@ -111,6 +113,7 @@ public class PlanConverter extends AbstractChannelsConverter {
         getProxyConnectors( context );
         context.put( "importing-plan", "true" );
         Plan plan = getContext().getPlan();
+        User.current().setPlan( plan );
         String uri = reader.getAttribute( "uri" );
         plan.setUri( uri );
         Long id = Long.parseLong( reader.getAttribute( "id" ) );
@@ -119,7 +122,7 @@ public class PlanConverter extends AbstractChannelsConverter {
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "lastId" ) ) {
-                LOG.info("Plan last saved with last id " + reader.getValue() );
+                LOG.info( "Plan last saved with last id " + reader.getValue() );
             } else if ( nodeName.equals( "name" ) ) {
                 plan.setName( reader.getValue() );
             } else if ( nodeName.equals( "client" ) ) {
@@ -138,7 +141,7 @@ public class PlanConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "event" ) ) {
                 context.convertAnother( plan, Event.class );
             } else if ( nodeName.equals( "incident" ) ) {
-                String eventId = reader.getAttribute( "id");
+                String eventId = reader.getAttribute( "id" );
                 Event event = findOrCreate( Event.class, reader.getValue(), eventId );
                 plan.addIncident( event );
                 // Scenarios

@@ -317,7 +317,7 @@ public class PlanManager implements InitializingBean {
         try {
             Plan plan = new Plan();
             plan.setName( "UNNAMED" );
-            plan.setId( idGenerator.assignId( null ) );
+            plan.setId( idGenerator.assignId( null, plan ) );
             add( plan );
             PlanDao dao = getDao( plan );
             dao.add( plan, plan.getId() );
@@ -434,7 +434,7 @@ public class PlanManager implements InitializingBean {
                 try {
                     commander.replay( dao.getJournal() );
                     LOG.info( "Replayed journal for plan {}", plan );
-                    dao.save( importExportFactory.createExporter( queryService, dao.getPlan() ) );
+                    dao.save( importExportFactory.createExporter( queryService, plan ) );
                 } catch ( IOException e ) {
                     LOG.error( MessageFormat.format( "Unable to save plan {0}", dao.getPlan() ), e );
                 } catch ( CommandException e ) {
@@ -522,7 +522,7 @@ public class PlanManager implements InitializingBean {
         for ( PlanDao dao : daos ) {
             if ( !dao.isPersisted() ) {
                 Plan plan = dao.getPlan();
-                plan.setId( idGenerator.assignId( null ) );
+                plan.setId( idGenerator.assignId( null, plan ) );
                 registerPlanDao( dao );
                 dao.add( plan, plan.getId() );
             }
@@ -685,7 +685,7 @@ public class PlanManager implements InitializingBean {
                 LOG.info( "Imported scenario " + imported.getName() );
                 this.getDao( getCurrentPlan() )
                         .save( getImportExportFactory()
-                                .createExporter( queryService, getCurrentPlan() ));
+                                .createExporter( queryService, getCurrentPlan() ) );
             } catch ( Exception e ) {
                 // TODO redirect to a proper error screen... user has to know...
                 String s = "Import error";

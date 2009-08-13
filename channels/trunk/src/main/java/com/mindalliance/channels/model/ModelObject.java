@@ -159,6 +159,15 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
     }
 
     /**
+     * Return default hashCode.
+     *
+     * @return an integer
+     */
+    public int systemHashCode() {
+        return super.hashCode();
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override

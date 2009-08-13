@@ -112,6 +112,9 @@ public final class PlanPage extends WebPage implements Updatable {
     @SpringBean
     private PlanManager planManager;
 
+    @SpringBean
+    Commander commander;
+
     /**
      * Id of components that are expanded.
      */
@@ -730,7 +733,8 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private Commander getCommander() {
-        return getApp().getCommander();
+        return commander;
+        // return getApp().getCommander();
     }
 
     /**

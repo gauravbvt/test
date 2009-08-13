@@ -114,7 +114,7 @@ public abstract class Memory implements Dao {
             if ( id != null && indexMap.containsKey( id ) ) {
                 throw new DuplicateKeyException();
             }
-            object.setId( getIdGenerator().assignId( id ) );
+            object.setId( getIdGenerator().assignId( id, getPlanManager().getCurrentPlan() ) );
             indexMap.put( object.getId(), object );
             if ( object instanceof Scenario ) {
                 getPlan().addScenario( (Scenario) object );
@@ -133,7 +133,7 @@ public abstract class Memory implements Dao {
      */
     public Part createPart( Scenario scenario, Long id ) {
         Part part = new Part();
-        part.setId( getIdGenerator().assignId( id ) );
+        part.setId( getIdGenerator().assignId( id, getPlanManager().getCurrentPlan() ) );
         part.setScenario( scenario );
         return part;
     }
@@ -143,7 +143,7 @@ public abstract class Memory implements Dao {
      */
     public Connector createConnector( Scenario scenario, Long id ) {
         Connector connector = new Connector();
-        connector.setId( getIdGenerator().assignId( id ) );
+        connector.setId( getIdGenerator().assignId( id, getPlanManager().getCurrentPlan() ) );
         connector.setScenario( scenario );
         return connector;
     }
@@ -153,7 +153,7 @@ public abstract class Memory implements Dao {
      */
     public ExternalFlow createExternalFlow( Node source, Node target, String name, Long id ) {
         ExternalFlow externalFlow = new ExternalFlow( source, target, name );
-        externalFlow.setId( getIdGenerator().assignId( id ) );
+        externalFlow.setId( getIdGenerator().assignId( id, getPlanManager().getCurrentPlan() ) );
         return externalFlow;
     }
 
@@ -162,7 +162,7 @@ public abstract class Memory implements Dao {
      */
     public InternalFlow createInternalFlow( Node source, Node target, String name, Long id ) {
         InternalFlow internalFlow = new InternalFlow( source, target, name );
-        internalFlow.setId( getIdGenerator().assignId( id ) );
+        internalFlow.setId( getIdGenerator().assignId( id, getPlanManager().getCurrentPlan() ) );
         return internalFlow;
     }
 
