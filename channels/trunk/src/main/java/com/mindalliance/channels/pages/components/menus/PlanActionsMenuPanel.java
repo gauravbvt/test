@@ -8,6 +8,7 @@ import com.mindalliance.channels.command.commands.PasteAttachment;
 import com.mindalliance.channels.command.commands.PastePart;
 import com.mindalliance.channels.command.commands.RemoveScenario;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.pages.ExportPage;
 import com.mindalliance.channels.pages.PlanPage;
 import org.apache.wicket.Component;
@@ -16,6 +17,7 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.target.basic.RedirectRequestTarget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +62,14 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
                         "link",
                         ExportPage.class,
                         PlanPage.getParameters( (Scenario) getModel().getObject(), null ) ) ) );
-
+        // Logout
+        menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Logout " + User.current().getUsername() ),
+                new AjaxFallbackLink( "link" )  {
+                    public void onClick( AjaxRequestTarget target ) {
+                        getRequestCycle().setRequestTarget(new RedirectRequestTarget("/logout"));                        
+                    }
+                }
+        ) );
         return menuItems;
     }
 

@@ -4,6 +4,8 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.User;
+import com.mindalliance.channels.pages.AdminPage;
 import com.mindalliance.channels.pages.reports.PlanReportPage;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -71,7 +73,7 @@ public class PlanShowMenuPanel extends MenuPanel {
                     new Model<String>( "About plan" ),
                     planMapLink ) );
         }
-        
+
         Link editLink;
         if ( getExpansions().contains( getScenario().getId() ) ) {
             editLink =
@@ -109,6 +111,14 @@ public class PlanShowMenuPanel extends MenuPanel {
                 "menuItem",
                 new Model<String>( "Plan as document" ),
                 reportLink ) );
+
+        if ( User.current().isAdmin() ) {
+            BookmarkablePageLink adminLink = new BookmarkablePageLink( "link", AdminPage.class );
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Admin page" ),
+                    adminLink ) );
+        }
         return menuItems;
     }
 

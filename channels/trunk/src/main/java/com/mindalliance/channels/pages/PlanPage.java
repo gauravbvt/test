@@ -112,9 +112,6 @@ public final class PlanPage extends WebPage implements Updatable {
     @SpringBean
     private PlanManager planManager;
 
-    @SpringBean
-    Commander commander;
-
     /**
      * Id of components that are expanded.
      */
@@ -149,10 +146,6 @@ public final class PlanPage extends WebPage implements Updatable {
      * Container of plan switcher.
      */
     private WebMarkupContainer switchPlanContainer;
-    /**
-     * Container of link to admin page.
-     */
-    private WebMarkupContainer adminContainer;
     /**
      * Scenarios action menu.
      */
@@ -246,12 +239,12 @@ public final class PlanPage extends WebPage implements Updatable {
 
 
     private void init( Scenario sc, Part p, Set<Long> expanded ) {
-        commander.releaseAllLocks( user.getUsername() );
+        getCommander().releaseAllLocks( user.getUsername() );
         setScenario( sc );
         setPart( p );
         expansions = expanded;
         for ( Long id : expansions ) {
-            commander.requestLockOn( id );
+            getCommander().requestLockOn( id );
         }
 
         setVersioned( false );
@@ -261,7 +254,7 @@ public final class PlanPage extends WebPage implements Updatable {
             @Override
             protected void onSubmit() {
                 // Drop user history on submit
-                commander.resetUserHistory( user.getUsername(), true );
+                getCommander().resetUserHistory( user.getUsername(), true );
             }
         };
         addHeader();
@@ -360,8 +353,8 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void doTimedUpdate( AjaxRequestTarget target ) {
-        commander.processTimeOuts();
-        if ( commander.isTimedOut() ) {
+        getCommander().processTimeOuts();
+        if ( getCommander().isTimedOut() ) {
             refreshAll( target );
         } else {
             updateRefreshNotice();
@@ -380,15 +373,15 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private String getReasonsToRefresh() {
         String reasons = "";
-        String lastModifier = commander.getLastModifier();
-        long lastModified = commander.getLastModified();
+        String lastModifier = getCommander().getLastModifier();
+        long lastModified = getCommander().getLastModified();
         if ( lastModified > lastRefreshed && !lastModifier.isEmpty()
              && !lastModifier.equals( user.getUsername() ) )
             reasons = " -- Plan was modified by " + lastModifier;
 
         // Find expansions that were locked and are not unlocked
         for ( ModelObject mo : getEditableModelObjects( expansions ) ) {
-            if ( !( mo instanceof Scenario || mo instanceof Plan ) && commander.isUnlocked( mo ) ) {
+            if ( !( mo instanceof Scenario || mo instanceof Plan ) && getCommander().isUnlocked( mo ) ) {
                 reasons += " -- " + mo.getName() + " can now be edited.";
             }
         }
@@ -431,8 +424,6 @@ public final class PlanPage extends WebPage implements Updatable {
         planShowMenu.setOutputMarkupId( true );
         form.add( planShowMenu );
         form.add( new Label( "username", user.getUsername() ) );
-        adminContainer = new WebMarkupContainer( "admin" );
-        form.add( adminContainer );
     }
 
     private void addPlanActionsMenu() {
@@ -730,8 +721,8 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private Commander getCommander() {
-        return commander;
-        // return getApp().getCommander();
+        // return Channels.instance().getCommander();
+        return getApp().getCommander();
     }
 
     /**
@@ -897,12 +888,12 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void reacquireLocks() {
         // Part is always "expanded"
-        commander.requestLockOn( getPart() );
+        getCommander().requestLockOn( getPart() );
         for ( Long id : expansions ) {
             try {
                 ModelObject expanded = getQueryService().find( ModelObject.class, id );
                 if ( !( expanded instanceof Scenario || expanded instanceof Plan ) )
-                    commander.requestLockOn( expanded );
+                    getCommander().requestLockOn( expanded );
             } catch ( NotFoundException e ) {
                 LOG.warn( "Expanded model object not found at: " + id );
             }
@@ -918,14 +909,14 @@ public final class PlanPage extends WebPage implements Updatable {
                 long id = entity.getId();
                 expansions.remove( id );
                 entityAspect = getEntityPanelAspect();
-                commander.releaseAnyLockOn( entity );
+                getCommander().releaseAnyLockOn( entity );
                 expandedEntities.add( 0, new EntityExpansion( entityAspect, id ) );
             }
             // expandedEntities.remove( identifiable.getId() );
         }
         // Never lock a scenario or plan
         if ( !( identifiable instanceof Scenario || identifiable instanceof Plan ) ) {
-            commander.requestLockOn( identifiable );
+            getCommander().requestLockOn( identifiable );
         }
         expansions.add( identifiable.getId() );
     }
@@ -935,7 +926,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 && ( (ModelObject) identifiable ).isEntity() ) {
             if ( !expandedEntities.isEmpty() ) {
                 EntityExpansion entityExpansion = expandedEntities.remove( 0 );
-                commander.requestLockOn( entityExpansion.getEntityId() );
+                getCommander().requestLockOn( entityExpansion.getEntityId() );
                 expansions.add( entityExpansion.getEntityId() );
                 entityAspect = entityExpansion.getAspect();
             }
@@ -1142,7 +1133,6 @@ public final class PlanPage extends WebPage implements Updatable {
     private void updateVisibility() {
         makeVisible( selectScenarioContainer, getAllScenarios().size() > 1 );
         makeVisible( switchPlanContainer, getWritablePlans().size() > 1 );
-        makeVisible( adminContainer, user.isAdmin() );
     }
 
     /**
