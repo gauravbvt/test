@@ -30,22 +30,27 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
      * Incidents aspect.
      */
     public static final String EVENTS = "events";
+
     /**
      * Map aspect.
      */
     public static final String MAP = "map";
+
     /**
      * Who's who aspect.
      */
     public static final String WHOSWHO = "who's who";
+
     /**
      * All issues aspect.
      */
     public static final String ISSUES = "all issues";
+
     /**
      * Index aspect.
      */
     public static final String INDEX = "index";
+
     /**
      * Bibliography aspect.
      */
@@ -55,13 +60,15 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
         super( id, iModel, expansions );
     }
 
-    public PlanEditPanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions, String aspect ) {
+    public PlanEditPanel( String id, IModel<? extends Identifiable> iModel,
+                          Set<Long> expansions, String aspect ) {
         super( id, iModel, expansions, aspect );
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     protected String getDefaultAspect() {
         return DETAILS;
     }
@@ -69,6 +76,7 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected String getCssClass() {
         return "plan";
     }
@@ -76,6 +84,7 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected String getObjectClassName() {
         return null;
     }
@@ -83,6 +92,7 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected MenuPanel makeShowMenu( String menuId ) {
         PlanEditShowMenuPanel showMenu = new PlanEditShowMenuPanel(
                 menuId,
@@ -94,6 +104,7 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected boolean objectNeedsLocking() {
         return false;
     }
@@ -101,6 +112,7 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected int getMaxTitleNameLength() {
         return 25;
     }
@@ -108,6 +120,7 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected MenuPanel makeActionMenu( String menuId ) {
         return new PlanEditActionsMenuPanel(
                 menuId,
@@ -117,6 +130,7 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Component makeAspectPanel( String aspect ) {
         if ( aspect.equals( DETAILS ) ) {
             return getPlanDetailsPanel();
@@ -175,9 +189,9 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
      */
     @Override
     public void updateWith( AjaxRequestTarget target, Change change ) {
-        if ( change.getSubject() instanceof Issue ) {
-            setAspectShown(target, DETAILS);
-        }
+        if ( change.getSubject() instanceof Issue )
+            setAspectShown( target, DETAILS );
+
         super.updateWith( target, change );
     }
 

@@ -206,6 +206,9 @@ public final class PlanPage extends WebPage implements Updatable {
      */
     private long lastRefreshed = System.currentTimeMillis();
 
+    @SpringBean
+    private QueryService queryService;
+
     /**
      * Used when page is called without parameters.
      * Set to default scenario, default part, all collapsed.
@@ -219,8 +222,7 @@ public final class PlanPage extends WebPage implements Updatable {
         super( parameters );
         QueryService queryService = getQueryService();
         Scenario sc = findScenario( queryService, parameters );
-        Part p = findPart( scenario, parameters );
-        init( sc, p, findExpansions( parameters ) );
+        init( sc, findPart( sc, parameters ), findExpansions( parameters ) );
     }
 
     /**
@@ -244,31 +246,30 @@ public final class PlanPage extends WebPage implements Updatable {
 
 
     private void init( Scenario sc, Part p, Set<Long> expanded ) {
-        getCommander().releaseAllLocks( user.getUsername() );
+        commander.releaseAllLocks( user.getUsername() );
         setScenario( sc );
         setPart( p );
         expansions = expanded;
         for ( Long id : expansions ) {
-            getCommander().requestLockOn( id );
+            commander.requestLockOn( id );
         }
+
         setVersioned( false );
-        setStatelessHint( true );
-        add( new Label( "sc-title",
-                new Model<String>( "Channels: " + getPlan().getName() ) ) );
+        add( new Label( "sc-title", new Model<String>( "Channels: " + getPlan().getName() ) ) );
 
         form = new IndicatorAwareForm( "big-form" ) {
             @Override
             protected void onSubmit() {
                 // Drop user history on submit
-                getApp().getCommander().resetUserHistory( user.getUsername(), true );
+                commander.resetUserHistory( user.getUsername(), true );
             }
         };
-        add( form );
         addHeader();
         addRefresh();
         addPlanMenubar();
         addScenarioSelector();
         addPlanSwitcher();
+
         scenarioImportPanel = new ScenarioImportPanel( "scenario-import" );
         form.add( scenarioImportPanel );
         scenarioPanel = new ScenarioPanel(
@@ -278,7 +279,8 @@ public final class PlanPage extends WebPage implements Updatable {
                 getReadOnlyExpansions() );
         form.add( scenarioPanel );
         addEntityPanel();
-        addPlanEditPanel();
+        form.addOrReplace( createPlanEditPanel( getPlan() ) );
+        add( form );
         updateVisibility();
         LOG.debug( "Scenario page generated" );
     }
@@ -295,11 +297,14 @@ public final class PlanPage extends WebPage implements Updatable {
                 }
         );
         scenarioNameLabel.setOutputMarkupId( true );
+
         // Add style mods from scenario analyst.
-        annotateScenarioName();
+        annotateScenarioName( getApp().getAnalyst() );
         form.add( scenarioNameLabel );
+
         // Add link to map of parts
-        addPartsMapLink();
+        form.addOrReplace( createPartsMapLink() );
+
         // Scenario description
         scenarioDescriptionLabel = new Label( "sc-desc",                                  // NON-NLS
                 new AbstractReadOnlyModel<String>() {
@@ -313,22 +318,22 @@ public final class PlanPage extends WebPage implements Updatable {
         );
         scenarioDescriptionLabel.setOutputMarkupId( true );
         form.add( scenarioDescriptionLabel );
-        form.add( new Label( "user", user.getUsername() ) );                                  // NON-NLS
+        form.add( new Label( "user", user.getUsername() ) );                              // NON-NLS
     }
 
-    private void addPartsMapLink() {
+    private GeomapLinkPanel createPartsMapLink() {
         List<GeoLocatable> geoLocatables = new ArrayList<GeoLocatable>();
-        Iterator<Part> parts = getScenario().parts();
-        while ( parts.hasNext() ) {
+        for ( Iterator<Part> parts = scenario.parts(); parts.hasNext(); )
             geoLocatables.add( parts.next() );
-        }
-        partsMapLink = new GeomapLinkPanel(
-                "geomapLink",
-                new Model<String>( "Tasks with known locations in scenario " + getScenario().getName() ),
-                geoLocatables,
-                new Model<String>( "Show parts in map" ) );
-        partsMapLink.setOutputMarkupId( true );
-        form.addOrReplace( partsMapLink );
+
+        GeomapLinkPanel panel = new GeomapLinkPanel( "geomapLink",
+             new Model<String>( "Tasks with known locations in scenario " + scenario.getName() ),
+             geoLocatables,
+             new Model<String>( "Show parts in map" ) );
+
+        panel.setOutputMarkupId( true );
+        partsMapLink = panel;
+        return panel;
     }
 
     private void addRefresh() {
@@ -355,8 +360,8 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void doTimedUpdate( AjaxRequestTarget target ) {
-        getCommander().processTimeOuts();
-        if ( getCommander().isTimedOut() ) {
+        commander.processTimeOuts();
+        if ( commander.isTimedOut() ) {
             refreshAll( target );
         } else {
             updateRefreshNotice();
@@ -367,41 +372,35 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void updateRefreshNotice() {
         String reasonsToRefresh = getReasonsToRefresh();
-        makeVisible(
-                refreshNeededContainer,
-                !reasonsToRefresh.isEmpty() );
-        refreshNeededContainer.add( new AttributeModifier(
-                "title",
-                true,
-                new Model<String>( "Refresh:" + reasonsToRefresh ) ) );
+        makeVisible( refreshNeededContainer, !reasonsToRefresh.isEmpty() );
+        refreshNeededContainer.add(
+            new AttributeModifier( "title", true,
+                                   new Model<String>( "Refresh:" + reasonsToRefresh ) ) );
     }
 
     private String getReasonsToRefresh() {
         String reasons = "";
-        String lastModifier = getCommander().getLastModifier();
-        long lastModified = getCommander().getLastModified();
-        if ( lastModified > lastRefreshed
-                && !lastModifier.isEmpty()
-                && !lastModifier.equals( user.getUsername() ) ) {
+        String lastModifier = commander.getLastModifier();
+        long lastModified = commander.getLastModified();
+        if ( lastModified > lastRefreshed && !lastModifier.isEmpty()
+             && !lastModifier.equals( user.getUsername() ) )
             reasons = " -- Plan was modified by " + lastModifier;
-        }
+
         // Find expansions that were locked and are not unlocked
-        Set<ModelObject> editables = getEditableModelObjects();
-        for ( ModelObject mo : editables ) {
-            if ( !( mo instanceof Scenario || mo instanceof Plan )
-                    && getCommander().isUnlocked( mo ) ) {
+        for ( ModelObject mo : getEditableModelObjects( expansions ) ) {
+            if ( !( mo instanceof Scenario || mo instanceof Plan ) && commander.isUnlocked( mo ) ) {
                 reasons += " -- " + mo.getName() + " can now be edited.";
             }
         }
         return reasons;
     }
 
-    private Set<ModelObject> getEditableModelObjects() {
+    private Set<ModelObject> getEditableModelObjects( Set<Long> expansions ) {
+
         Set<ModelObject> editables = new HashSet<ModelObject>();
         for ( Long id : expansions ) {
             try {
-                ModelObject mo = getQueryService().find( ModelObject.class, id );
-                editables.add( mo );
+                editables.add( queryService.find( ModelObject.class, id ) );
             } catch ( NotFoundException ignored ) {
                 // ignore
             }
@@ -410,12 +409,11 @@ public final class PlanPage extends WebPage implements Updatable {
         return editables;
     }
 
-    private void annotateScenarioName() {
-        Analyst analyst = getApp().getAnalyst();
+    private void annotateScenarioName( Analyst analyst ) {
         String issue = analyst.getIssuesSummary( scenario, Analyst.INCLUDE_PROPERTY_SPECIFIC );
         scenarioNameLabel.add(
                 new AttributeModifier( "class", true,                                     // NON-NLS
-                        new Model<String>( issue.isEmpty() ? "no-error" : "error" ) ) );      // NON-NLS
+                        new Model<String>( issue.isEmpty() ? "no-error" : "error" ) ) );  // NON-NLS
         scenarioNameLabel.add(
                 new AttributeModifier( "title", true,                                     // NON-NLS
                         new Model<String>( issue.isEmpty() ? "No known issue" : issue ) ) );
@@ -484,33 +482,32 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void addEntityPanel() {
         ModelObject entity = findExpandedEntity();
-        if ( entity == null ) {
+        if ( entity == null )
             entityPanel = new Label( "entity", "" );
-        } else {
+        else
             entityPanel = new EntityPanel(
                     "entity",
                     new Model<ModelObject>( entity ),
                     getReadOnlyExpansions(),
                     entityAspect );
-        }
+
         makeVisible( entityPanel, entity != null );
         entityPanel.setOutputMarkupId( true );
         form.addOrReplace( entityPanel );
     }
 
-    private void addPlanEditPanel() {
-        boolean showPlanEdit = expansions.contains( getPlan().getId() );
+    private Component createPlanEditPanel( Plan plan ) {
+        boolean showPlanEdit = expansions.contains( plan.getId() );
+        Component panel = showPlanEdit ?
+                          new PlanEditPanel( "plan",
+                                             new Model<Plan>( plan ),
+                                             getReadOnlyExpansions() )
+                        :  new Label( "plan", "" );
+        makeVisible( panel, showPlanEdit );
+        panel.setOutputMarkupId( true );
 
-        planEditPanel = showPlanEdit
-                ? new PlanEditPanel(
-                "plan",
-                new Model<Plan>( getPlan() ),
-                getReadOnlyExpansions() )
-                : new Label( "plan", "" );
-
-        makeVisible( planEditPanel, showPlanEdit );
-        planEditPanel.setOutputMarkupId( true );
-        form.addOrReplace( planEditPanel );
+        planEditPanel = panel;
+        return panel;
     }
 
     /**
@@ -534,7 +531,7 @@ public final class PlanPage extends WebPage implements Updatable {
     private ModelObject findExpandedEntity() {
         for ( long id : expansions ) {
             try {
-                ModelObject mo = getQueryService().find( ModelObject.class, id );
+                ModelObject mo = queryService.find( ModelObject.class, id );
                 if ( mo.isEntity() ) return mo;
             }
             catch ( NotFoundException ignored ) {
@@ -546,7 +543,7 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     public List<Scenario> getAllScenarios() {
-        List<Scenario> allScenarios = new ArrayList<Scenario>( getApp().getQueryService().list( Scenario.class ) );
+        List<Scenario> allScenarios = new ArrayList<Scenario>( queryService.list( Scenario.class ) );
         Collections.sort( allScenarios, new Comparator<Scenario>() {
             public int compare( Scenario o1, Scenario o2 ) {
                 return Collator.getInstance().compare( o1.getName(), o2.getName() );
@@ -725,11 +722,11 @@ public final class PlanPage extends WebPage implements Updatable {
      * @return the query service
      */
     private QueryService getQueryService() {
-        return getApp().getQueryService();
+        return queryService;
     }
 
     private Channels getApp() {
-        return Channels.instance();
+        return (Channels) getApplication();
     }
 
     private Commander getCommander() {
@@ -900,12 +897,12 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void reacquireLocks() {
         // Part is always "expanded"
-        getCommander().requestLockOn( getPart() );
+        commander.requestLockOn( getPart() );
         for ( Long id : expansions ) {
             try {
                 ModelObject expanded = getQueryService().find( ModelObject.class, id );
                 if ( !( expanded instanceof Scenario || expanded instanceof Plan ) )
-                    getCommander().requestLockOn( expanded );
+                    commander.requestLockOn( expanded );
             } catch ( NotFoundException e ) {
                 LOG.warn( "Expanded model object not found at: " + id );
             }
@@ -914,20 +911,21 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void expand( Identifiable identifiable ) {
         // First collapse any already expanded entity
-        if ( identifiable instanceof ModelObject
-                && ( (ModelObject) identifiable ).isEntity() ) {
+        if ( identifiable instanceof ModelObject && ( (ModelObject) identifiable ).isEntity() )
+        {
             ModelObject entity = findExpandedEntity();
             if ( entity != null ) {
-                expansions.remove( entity.getId() );
+                long id = entity.getId();
+                expansions.remove( id );
                 entityAspect = getEntityPanelAspect();
-                getCommander().releaseAnyLockOn( entity );
-                expandedEntities.add( 0, new EntityExpansion( entityAspect, entity.getId() ) );
+                commander.releaseAnyLockOn( entity );
+                expandedEntities.add( 0, new EntityExpansion( entityAspect, id ) );
             }
             // expandedEntities.remove( identifiable.getId() );
         }
         // Never lock a scenario or plan
         if ( !( identifiable instanceof Scenario || identifiable instanceof Plan ) ) {
-            getCommander().requestLockOn( identifiable );
+            commander.requestLockOn( identifiable );
         }
         expansions.add( identifiable.getId() );
     }
@@ -937,7 +935,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 && ( (ModelObject) identifiable ).isEntity() ) {
             if ( !expandedEntities.isEmpty() ) {
                 EntityExpansion entityExpansion = expandedEntities.remove( 0 );
-                getCommander().requestLockOn( entityExpansion.getEntityId() );
+                commander.requestLockOn( entityExpansion.getEntityId() );
                 expansions.add( entityExpansion.getEntityId() );
                 entityAspect = entityExpansion.getAspect();
             }
@@ -1035,7 +1033,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
             if ( identifiable instanceof Plan ) {
                 if ( change.isDisplay() ) {
-                    addPlanEditPanel();
+                    form.addOrReplace( createPlanEditPanel( getPlan() ) );
                     target.addComponent( planEditPanel );
                 } else if ( change.isSelected() ) {
                     redirectToPlan();
@@ -1050,7 +1048,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 } else if ( change.isRemoved() ) {
                     refreshAll( target );
                 } else if ( change.isRecomposed() ) {
-                    annotateScenarioName();
+                    annotateScenarioName( getApp().getAnalyst() );
                     target.addComponent( scenarioNameLabel );
                     scenarioPanel.refresh( target );
                     target.addComponent( scenarioPanel );
@@ -1076,16 +1074,16 @@ public final class PlanPage extends WebPage implements Updatable {
             if ( identifiable instanceof ScenarioObject
                     || identifiable instanceof Issue
                     && ( (Issue) identifiable ).getAbout().getId() == scenario.getId() ) {
-                annotateScenarioName();
+                annotateScenarioName( getApp().getAnalyst() );
                 target.addComponent( scenarioNameLabel );
             }
             if ( identifiable instanceof Issue
                     && change.isExists()
                     && ( (Issue) identifiable ).getAbout().getId() == scenario.getId() ) {
-                annotateScenarioName();
+                annotateScenarioName( getApp().getAnalyst() );
                 target.addComponent( scenarioNameLabel );
                 scenarioPanel.expandScenarioEditPanel( target );
-                addPlanEditPanel();
+                form.addOrReplace( createPlanEditPanel( getPlan() ) );
                 target.addComponent( planEditPanel );
             }
             if ( identifiable instanceof ModelObject
@@ -1124,7 +1122,7 @@ public final class PlanPage extends WebPage implements Updatable {
         target.addComponent( scenarioNameLabel );
         target.addComponent( scenarioDescriptionLabel );
         target.addComponent( selectScenarioContainer );
-        annotateScenarioName();
+        annotateScenarioName( getApp().getAnalyst() );
         target.addComponent( scenarioNameLabel );
         scenarioPanel.refreshScenarioEditPanel( target );
         scenarioPanel.refresh( target );
@@ -1134,7 +1132,7 @@ public final class PlanPage extends WebPage implements Updatable {
         target.addComponent( entityPanel );
         if ( planEditPanel instanceof PlanEditPanel )
             ( (PlanEditPanel) planEditPanel ).refresh( target );
-        addPartsMapLink();
+        form.addOrReplace( createPartsMapLink() );
         target.addComponent( partsMapLink );
         updateRefreshNotice();
         target.addComponent( refreshNeededContainer );

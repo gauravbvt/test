@@ -127,7 +127,7 @@ abstract public class AbstractMultiAspectPanel extends AbstractCommandablePanel 
      *
      * @return a string
      */
-    abstract protected String getDefaultAspect();
+    protected abstract String getDefaultAspect();
 
     private void annotatePanel() {
         moContainer.add( new AttributeModifier( "class", true, new Model<String>( getCssClass() ) ) );
@@ -138,10 +138,10 @@ abstract public class AbstractMultiAspectPanel extends AbstractCommandablePanel 
      *
      * @return a string
      */
-    abstract protected String getCssClass();
+    protected abstract String getCssClass();
 
     protected void adjustComponents() {
-        annotateHeaderTitle();
+        annotateHeaderTitle( getObject(), ( (Channels) getApplication() ).getAnalyst() );
         String objectClassName = getObjectClass();
         if ( objectClassName != null && !objectClassName.isEmpty() ) {
             banner.add( new AttributeModifier(
@@ -157,7 +157,7 @@ abstract public class AbstractMultiAspectPanel extends AbstractCommandablePanel 
      * @param menuId the menu's id
      * @return a MenuPanel
      */
-    abstract protected MenuPanel makeShowMenu( String menuId );
+    protected abstract MenuPanel makeShowMenu( String menuId );
 
     private Component makeActionMenuOrLabel( String menuId ) {
         Component menu;
@@ -182,7 +182,7 @@ abstract public class AbstractMultiAspectPanel extends AbstractCommandablePanel 
      *
      * @return a boolean
      */
-    abstract protected boolean objectNeedsLocking();
+    protected abstract boolean objectNeedsLocking();
 
     /**
      * Make action menu.
@@ -190,34 +190,32 @@ abstract public class AbstractMultiAspectPanel extends AbstractCommandablePanel 
      * @param menuId the menu's id
      * @return a MenuPanel or some Component
      */
-    abstract protected MenuPanel makeActionMenu( String menuId );
+    protected abstract MenuPanel makeActionMenu( String menuId );
 
-    private void annotateHeaderTitle() {
-        Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
-        String summary = analyst.getIssuesSummary(
-                getObject(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
-        boolean hasIssues = analyst.hasIssues( getObject(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
+    private void annotateHeaderTitle( ModelObject object, Analyst analyst ) {
+
+        String summary = analyst.getIssuesSummary( object, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+
+        String classString;
+        String titleString;
         if ( !summary.isEmpty() ) {
-            headerTitle.add( new AttributeModifier(
-                    "class", true, new Model<String>( "error" ) ) ); // NON-NLS
-            headerTitle.add( new AttributeModifier(
-                    "title", true, new Model<String>( summary ) ) );  // NON-NLS
-        } else {
-            if ( hasIssues ) {
-                // All waived issues
-                headerTitle.add(
-                        new AttributeModifier( "class", true, new Model<String>( "waived" ) ) );
-                headerTitle.add(
-                        new AttributeModifier( "title", true, new Model<String>( "All issues waived" ) ) );
-            } else {
-                headerTitle.add( new AttributeModifier(
-                        "class", true, new Model<String>( "no-error" ) ) ); // NON-NLS
-                headerTitle.add( new AttributeModifier(
-                        "title", true, new Model<String>( "No known issue" ) ) );  // NON-NLS
-            }
-        }
-    }
+            classString = "error";
+            titleString = summary;
 
+        } else if ( analyst.hasIssues( object, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+            classString = "waived";
+            titleString = "All issues waived";
+
+        } else {
+            classString = "no-error";
+            titleString = "No known issue";
+        }
+
+        headerTitle.add(
+            new AttributeModifier( "class", true, new Model<String>( classString ) ) );   // NON-NLS
+        headerTitle.add(
+            new AttributeModifier( "title", true, new Model<String>( titleString ) ) );   // NON-NLS
+    }
 
     private void showAspect( String aspect ) {
         aspectPanel = makeAspectPanel( aspect );
@@ -231,7 +229,7 @@ abstract public class AbstractMultiAspectPanel extends AbstractCommandablePanel 
      * @param aspect a string
      * @return a component
      */
-    abstract protected Component makeAspectPanel( String aspect );
+    protected abstract Component makeAspectPanel( String aspect );
 
 
     /**
@@ -249,7 +247,7 @@ abstract public class AbstractMultiAspectPanel extends AbstractCommandablePanel 
      *
      * @return an int
      */
-    abstract protected int getMaxTitleNameLength();
+    protected abstract int getMaxTitleNameLength();
 
     /**
      * Get the entity that's viewed.
@@ -291,7 +289,7 @@ abstract public class AbstractMultiAspectPanel extends AbstractCommandablePanel 
      *
      * @return a string
      */
-    abstract protected String getObjectClassName();
+    protected abstract String getObjectClassName();
 
     /**
      * Refresh everything that could have changed.
@@ -324,10 +322,11 @@ abstract public class AbstractMultiAspectPanel extends AbstractCommandablePanel 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void updateWith( AjaxRequestTarget target, Change change ) {
         target.addComponent( actionsMenu );
         adjustComponents();
-        annotateHeaderTitle();
+        annotateHeaderTitle( getObject(), ( (Channels) getApplication() ).getAnalyst() );
         target.addComponent( banner );
         super.updateWith( target, change );
     }

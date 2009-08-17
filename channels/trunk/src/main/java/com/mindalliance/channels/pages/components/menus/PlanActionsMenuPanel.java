@@ -41,12 +41,14 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<Component> getMenuItems() {
         List<Component> menuItems = super.getMenuItems();
         // Import
         menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Import scenario" ),
                 new AjaxFallbackLink( "link" ) {
+                    @Override
                     public void onClick( AjaxRequestTarget target ) {
                         ( (PlanPage) getPage() ).importScenario( target );
                     }
@@ -65,35 +67,42 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected List<CommandWrapper> getCommandWrappers() {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
         final Scenario scenario = getScenario();
         commandWrappers.add( new CommandWrapper( new PastePart( getScenario() ) ) {
+            @Override
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 update( target, change );
             }
         } );
         commandWrappers.add( new CommandWrapper( new PasteAttachment( getScenario() ) ) {
+            @Override
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 update( target, change );
             }
         } );
         commandWrappers.add( new CommandWrapper( new AddPart( scenario ) ) {
+            @Override
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 update( target, change );
             }
         } );
         commandWrappers.add( new CommandWrapper( new AddUserIssue( scenario ) ) {
+            @Override
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 update( target, change );
             }
         } );
         commandWrappers.add( new CommandWrapper( new AddScenario() ) {
+            @Override
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 update( target, change );
             }
         } );
         commandWrappers.add( new CommandWrapper( new RemoveScenario( scenario ) ) {
+            @Override
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 update( target, change );
             }

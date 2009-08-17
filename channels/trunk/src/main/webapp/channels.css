@@ -4,7 +4,7 @@ body {
     padding: 0;
     position: absolute;
     top: 0;
-    bottom: 0;
+    bottom: 5px;
     left: 0;
     right: 0;
     min-width: 94em;
@@ -36,7 +36,7 @@ div.section-content {
     top: 3em;
     bottom: 5px;
     left: 5px;
-    right: 5px;
+    right: 0;
     overflow: auto;
 }
 
@@ -108,6 +108,9 @@ div.section-title {
 div.header {
     height: 5em;
     padding: 1em 0 0 60px;
+}
+
+form > div.header {
     margin: 5px 0;
 }
 
@@ -128,10 +131,9 @@ div.section input[type='submit'] {
 }
 
 #sc-sel {
-    float: left;
     line-height: 1.6em;
     list-style-position: inside;
-    margin: 0 2em 0 0;
+    margin: 0;
     padding: 0;
     text-align: left;
 }
@@ -340,7 +342,7 @@ ul.menu, div.caption, span.menubar, ul.ranges {
 #controls {
     position: absolute;
     top: 0;
-    right: 5em;
+    right: 5px;
     padding: 0;
 }
 
@@ -430,6 +432,7 @@ ul.attach ul.menu {
 .header ul.menu, .header span.menubar {
     margin: 0;
     position: static;
+    display: inline-block;
     vertical-align: baseline;
 }
 
@@ -634,25 +637,18 @@ div.wicket-aa ul li:hover {
     background: #C3D9FF;
 }
 
-div.wicket-aa ul li.selected {
-}
-
 .menubar .dropmenu {
     width: auto;
     cursor: default;
     background: transparent url( images/dropmenu.png ) no-repeat scroll 100% 50%;
-    padding: 0 12px 0 5px;
+    padding: 0 12px 0 0;
     position: relative;
-}
-
-.menubar .dropmenu:hover {
-    background-color: #bbb;
 }
 
 .menubar .dropmenu ul {
     display: none;
     position: absolute;
-    top: 1.1em;
+    top: 1.2em;
     right: 0;
     background-color: #e6e6e6;
     color: black;
@@ -662,17 +658,21 @@ div.wicket-aa ul li.selected {
     z-index: 100000;
 }
 
-.menubar span.dropmenu ul li {
+.menubar .dropmenu:hover {
+    background-color: #bbb;
+}
+
+.menubar .dropmenu ul li {
     display: block;
     padding: 0.2em;
     z-index: 100000;
 }
 
-#part .menubar span.dropmenu.first:before {
+#part .menubar .dropmenu.first:before {
     content: " ";
 }
 
-.menubar span.dropmenu:before, .menubar span.menuitem:before {
+.menubar .menuitem:before {
     content: " \2015  ";
 }
 
@@ -681,17 +681,14 @@ div.wicket-aa ul li.selected {
     color: gray;
 }
 
-.menubar span.dropmenu:hover ul {
+.menubar .dropmenu:hover ul {
     display: block;
 }
 
-.menubar span.dropmenu ul li:hover {
+.menubar .dropmenu ul li:hover {
     background-color: #ccf;
 }
 
-.menubar span.menuitem {
-    padding-left: 5px;
-}
 
 div.import-dialog {
     background: #C3D9FF;
@@ -738,7 +735,7 @@ div.plan {
 
 div.aspect {
     right: 5px;
-    top: 5em;
+    top: 5.5em;
     bottom: 5px;
     left: 5px;
     overflow: auto;

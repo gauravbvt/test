@@ -4,6 +4,7 @@
 <head>
     <title wicket:id="sc-title">Title</title>
     <script type="text/javascript" src="jquery-1.3.2.js"></script>
+    <script type="text/javascript" src="jquery-ui-1.7.2.custom.min.js"></script>
     <link rel="stylesheet" href="channels.css" type="text/css">
 </head>
 
@@ -11,18 +12,20 @@
 <form wicket:id="big-form" class="stretch" action="#">
     <div class="header">
         <h1><span wicket:id="header">Title</span></h1>
-        <span wicket:id="geomapLink">[geomap link panel]</span>
         <span class="menubar">
-            <span wicket:id="planShowMenu">[show menu]</span>
-            <span wicket:id="planActionsMenu">[action menu]</span>
-            &nbsp;&nbsp;<a wicket:id="admin" href="admin">Admin</a>
-            &nbsp;&nbsp;<a href="logout">Logout <span wicket:id="username">user</span></a>
+            <span wicket:id="geomapLink">[geomap link panel]</span>
+
+            <span class="menuitem" wicket:id="planShowMenu">[show menu]</span>
+            <span class="menuitem" wicket:id="planActionsMenu">[action menu]</span>
+            <span class="menuitem"><a wicket:id="admin" href="admin">Admin</a></span>
+            <span class="menuitem"><a href="logout">Logout <span wicket:id="username">user</span></a></span>
+
+            <span class="refresh" wicket:id="refresh-needed">
+                <img src="images/refresh_needed.png" alt="Refresh needed"/>
+            </span>
+            <span id="spinner" class="spinner"><img src="images/ajax-loader.gif"></span>
         </span>
-        <span class="refresh" wicket:id="refresh-needed">
-            <img src="images/refresh_needed.png" alt="Refresh needed"/>
-        </span>
-        <span id="spinner" class="spinner"><img src="images/ajax-loader.gif"></span>
-        <p class="caption" wicket:id="sc-desc">A description.</p>     
+        <p class="caption" wicket:id="sc-desc">A description.</p>
     </div>
     <div id="controls">
         <ul id="sc-sel">
@@ -38,7 +41,7 @@
             </li>
         </ul>
     </div>
-    <span wicket:id="scenario-import">[scenario import dialog]</span> 
+    <span wicket:id="scenario-import">[scenario import dialog]</span>
     <span wicket:id="entity">[entity panel]</span>
     <span wicket:id="scenario">[scenario panel] </span>
     <span wicket:id="plan">[plan edit panel] </span>

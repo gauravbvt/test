@@ -6,14 +6,19 @@
         xml:lang="en"
         lang="en">
 <body>
+
 <wicket:panel>
+    <script type="text/javascript">
+    $(".plan").draggable();
+    </script>
+
     <div wicket:id="mo">  <!-- class="entity" or "plan" etc. added programmatically -->
         <div wicket:id="banner">
             <div class="header">
                 <h1 wicket:id="header-title">[Entity name]</h1>
                 <span class="menubar">
-                    <span wicket:id="showMenu">[show menu]</span>
-                    <span wicket:id="actionMenu">[action menu]</span>
+                    <span class="menuitem" wicket:id="showMenu">[show menu]</span>
+                    <span class="menuitem" wicket:id="actionMenu">[action menu]</span>
                     <span class="menuitem"><a wicket:id="close" href="#">Close</a></span>
                 </span>
             </div>

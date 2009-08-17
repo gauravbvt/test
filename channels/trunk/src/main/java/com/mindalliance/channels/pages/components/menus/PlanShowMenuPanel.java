@@ -42,14 +42,15 @@ public class PlanShowMenuPanel extends MenuPanel {
     /**
      * {@inheritDoc
      */
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<Component> getMenuItems() {
         List<Component> menuItems = new ArrayList<Component>();
         final Plan plan = planManager.getCurrentPlan();
         // Edit<->Hide
-        Link editLink;
         if ( getExpansions().contains( plan.getId() ) ) {
             AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {
+                @Override
                 public void onClick( AjaxRequestTarget target ) {
                     update( target, new Change( Change.Type.Collapsed, plan ) );
                 }
@@ -60,6 +61,7 @@ public class PlanShowMenuPanel extends MenuPanel {
                     planMapLink ) );
         } else {
             AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {
+                @Override
                 public void onClick( AjaxRequestTarget target ) {
                     update( target, new Change( Change.Type.Expanded, plan ) );
                 }
@@ -69,9 +71,12 @@ public class PlanShowMenuPanel extends MenuPanel {
                     new Model<String>( "About plan" ),
                     planMapLink ) );
         }
+        
+        Link editLink;
         if ( getExpansions().contains( getScenario().getId() ) ) {
             editLink =
                     new AjaxFallbackLink( "link" ) {
+                        @Override
                         public void onClick( AjaxRequestTarget target ) {
                             update( target, new Change( Change.Type.Collapsed, getScenario() ) );
                         }
@@ -84,6 +89,7 @@ public class PlanShowMenuPanel extends MenuPanel {
         } else {
             editLink =
                     new AjaxFallbackLink( "link" ) {
+                        @Override
                         public void onClick( AjaxRequestTarget target ) {
                             update( target, new Change( Change.Type.Expanded, getScenario() ) );
                         }
