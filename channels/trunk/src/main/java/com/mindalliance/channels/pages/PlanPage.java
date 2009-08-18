@@ -879,11 +879,10 @@ public final class PlanPage extends WebPage implements Updatable {
      * @param visible   a boolean
      */
     private static void makeVisible( Component component, boolean visible ) {
-        component.add(
-                new AttributeModifier(
-                        "style",
-                        true,
-                        new Model<String>( visible ? "display:inline" : "display:none" ) ) );
+        if ( !visible )
+            component.add( new AttributeModifier( "style",
+                                                  true,
+                                                  new Model<String>( "display:none" ) ) );
     }
 
     private void reacquireLocks() {
