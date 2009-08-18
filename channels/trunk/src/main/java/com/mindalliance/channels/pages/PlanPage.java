@@ -255,6 +255,7 @@ public final class PlanPage extends WebPage implements Updatable {
             protected void onSubmit() {
                 // Drop user history on submit
                 getCommander().resetUserHistory( user.getUsername(), true );
+                redirectHere();
             }
         };
         addHeader();
@@ -320,9 +321,9 @@ public final class PlanPage extends WebPage implements Updatable {
             geoLocatables.add( parts.next() );
 
         GeomapLinkPanel panel = new GeomapLinkPanel( "geomapLink",
-             new Model<String>( "Tasks with known locations in scenario " + scenario.getName() ),
-             geoLocatables,
-             new Model<String>( "Show parts in map" ) );
+                new Model<String>( "Tasks with known locations in scenario " + scenario.getName() ),
+                geoLocatables,
+                new Model<String>( "Show parts in map" ) );
 
         panel.setOutputMarkupId( true );
         partsMapLink = panel;
@@ -367,8 +368,8 @@ public final class PlanPage extends WebPage implements Updatable {
         String reasonsToRefresh = getReasonsToRefresh();
         makeVisible( refreshNeededContainer, !reasonsToRefresh.isEmpty() );
         refreshNeededContainer.add(
-            new AttributeModifier( "title", true,
-                                   new Model<String>( "Refresh:" + reasonsToRefresh ) ) );
+                new AttributeModifier( "title", true,
+                        new Model<String>( "Refresh:" + reasonsToRefresh ) ) );
     }
 
     private String getReasonsToRefresh() {
@@ -376,7 +377,7 @@ public final class PlanPage extends WebPage implements Updatable {
         String lastModifier = getCommander().getLastModifier();
         long lastModified = getCommander().getLastModified();
         if ( lastModified > lastRefreshed && !lastModifier.isEmpty()
-             && !lastModifier.equals( user.getUsername() ) )
+                && !lastModifier.equals( user.getUsername() ) )
             reasons = " -- Plan was modified by " + lastModifier;
 
         // Find expansions that were locked and are not unlocked
@@ -490,10 +491,10 @@ public final class PlanPage extends WebPage implements Updatable {
     private Component createPlanEditPanel( Plan plan ) {
         boolean showPlanEdit = expansions.contains( plan.getId() );
         Component panel = showPlanEdit ?
-                          new PlanEditPanel( "plan",
-                                             new Model<Plan>( plan ),
-                                             getReadOnlyExpansions() )
-                        :  new Label( "plan", "" );
+                new PlanEditPanel( "plan",
+                        new Model<Plan>( plan ),
+                        getReadOnlyExpansions() )
+                : new Label( "plan", "" );
         makeVisible( panel, showPlanEdit );
         panel.setOutputMarkupId( true );
 
@@ -611,7 +612,6 @@ public final class PlanPage extends WebPage implements Updatable {
 
     /**
      * Redirect here.
-     * // TODO - UNUSED
      */
     public void redirectHere() {
         long sid = scenario.getId();
@@ -624,7 +624,7 @@ public final class PlanPage extends WebPage implements Updatable {
         setResponsePage(
                 new RedirectPage(
                         MessageFormat.format(
-                                "?scenario={0,number,0}&part={1,number,0}{2}",            // NON-NLS
+                                "/plan?scenario={0,number,0}&part={1,number,0}{2}",            // NON-NLS
                                 sid,
                                 nid,
                                 exps ) ) );
@@ -879,10 +879,9 @@ public final class PlanPage extends WebPage implements Updatable {
      * @param visible   a boolean
      */
     private static void makeVisible( Component component, boolean visible ) {
-        if ( !visible )
-            component.add( new AttributeModifier( "style",
-                                                  true,
-                                                  new Model<String>( "display:none" ) ) );
+        component.add( new AttributeModifier( "style",
+                    true,
+                    new Model<String>( visible ? "" : "display:none" ) ) );
     }
 
     private void reacquireLocks() {
@@ -901,8 +900,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void expand( Identifiable identifiable ) {
         // First collapse any already expanded entity
-        if ( identifiable instanceof ModelObject && ( (ModelObject) identifiable ).isEntity() )
-        {
+        if ( identifiable instanceof ModelObject && ( (ModelObject) identifiable ).isEntity() ) {
             ModelObject entity = findExpandedEntity();
             if ( entity != null ) {
                 long id = entity.getId();
@@ -947,11 +945,14 @@ public final class PlanPage extends WebPage implements Updatable {
         if ( change.isNone() ) return;
 
         Identifiable identifiable = change.getSubject();
-        if ( change.isCollapsed() || change.isRemoved() )
-            collapse( identifiable );
-        else if ( change.isExpanded() || change.isAdded() )
-            expand( identifiable );
-
+        if ( identifiable instanceof ModelObject ) {
+            if ( change.isCollapsed()
+                    || ( change.isRemoved() && change.getProperty().equals( "issues" ) ) )
+                collapse( identifiable );
+            else if ( change.isExpanded()
+                    || ( change.isAdded() && change.getProperty().equals( "issues" ) ) )
+                expand( identifiable );
+        }
         if ( identifiable instanceof Scenario ) {
             if ( change.isExists() ) {
                 getCommander().resetUserHistory( user.getUsername(), false );

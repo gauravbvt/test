@@ -2,6 +2,8 @@ package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.PredicateUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -297,4 +299,47 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
     public String getModelObjectType() {
         return getClass().getSimpleName();
     }
+
+    /**
+     * Return list of meaningful types of attachments for class of model objects.
+     *
+     * @return a list of attachment types
+     */
+    @Transient
+    public List<Attachment.Type> getAttachmentTypes() {
+        List<Attachment.Type> types = new ArrayList<Attachment.Type>();
+        types.add( Attachment.Type.Reference );
+        types.add( Attachment.Type.Policy );
+        return types;
+    }
+
+    /**
+     * Has an image attachment.
+     *
+     * @return a boolean
+     */
+    public boolean hasImage() {
+        return CollectionUtils.exists(
+                getAttachments(),
+                PredicateUtils.invokerPredicate( "isImage" )
+        );
+    }
+
+    /**
+     * Get url of image attachment if any.
+     *
+     * @return a string
+     */
+    @Transient
+    public String getImageUrl() {
+        Attachment attachment = (Attachment) CollectionUtils.find(
+                getAttachments(),
+                PredicateUtils.invokerPredicate( "isImage" )
+        );
+        if ( attachment != null )
+            return attachment.getUrl();
+        else
+            return null;
+    }
+
 }

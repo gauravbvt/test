@@ -102,11 +102,11 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
     private File createFile( String name ) {
         String truncatedName = StringUtils.reverse(
                 StringUtils.reverse( name ).substring( 0, Math.min( name.length(), getMaxLength() ) ) );
-        String idealName = escape( truncatedName );
-        File result = new File( getUploadDirectory(), idealName );
+        // String idealName = escape( truncatedName );
+        File result = new File( getUploadDirectory(), truncatedName );
         int i = 0;
         while ( result.exists() ) {
-            String actual = ++i + "_" + idealName;
+            String actual = ++i + "_" + truncatedName;
             result = new File( getUploadDirectory(), actual );
         }
 
@@ -344,12 +344,12 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
      */
     public Attachment upload( Attachment.Type type, FileUpload fileUpload ) {
         String fileName = fileUpload.getClientFileName();
-        String escaped = escape( fileName );
+        //String escaped = escape( fileName );
         BufferedInputStream in = null;
         BufferedOutputStream out = null;
         Attachment attachment = null;
         try {
-            File file = createFile( escaped );
+            File file = createFile( fileName );
             MessageDigest messageDigest = MessageDigest.getInstance( "SHA" );
             in = new BufferedInputStream(
                     new DigestInputStream(

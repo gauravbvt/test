@@ -2,6 +2,7 @@ package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.GeoService;
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
 
@@ -430,4 +431,17 @@ public class Place extends ModelObject implements GeoLocatable {
         String actualAddress = getActualStreetAddress();
         return ( actualAddress == null || actualAddress.isEmpty() ) && geoLocate() != null;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    public List<Attachment.Type> getAttachmentTypes() {
+        List<Attachment.Type> types = new ArrayList<Attachment.Type>();
+        if ( !hasImage() )
+            types.add( Attachment.Type.Image );
+        types.addAll( super.getAttachmentTypes() );
+        return types;
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.attachments.Attachment;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -747,9 +748,25 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      *
      * @return a boolean
      */
+    @Transient
     public boolean isNeed() {
         return getSource().isConnector();
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    public List<Attachment.Type> getAttachmentTypes() {
+        List<Attachment.Type> types = super.getAttachmentTypes();
+        if ( !hasImage() )
+            types.add( Attachment.Type.Image );
+        types.add( Attachment.Type.PolicyMust );
+        types.add( Attachment.Type.PolicyCant );
+        types.add( Attachment.Type.MOU );
+        return types;
+    }
+
 
     /**
      * The significance of a flow.

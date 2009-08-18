@@ -28,7 +28,7 @@
         <property name="directory" value="file:${user.home}/channels/uploads"/>
         <property name="path" value="uploads/"/>
     </bean>
-                                                                                
+
     <bean id="geoService" class="com.mindalliance.channels.geo.DefaultGeoService">
         <property name="googleMapsAPIKey"
                   value="ABQIAAAAOEFNCNhUR4YjTHX0nnN5VRR4EqRj3RNZnoYuzojShxUjcPQKRRSLJekGZYEI4kGxmTTJBHr4EJ6Xpg"/>
@@ -37,6 +37,11 @@
     <bean id="idGenerator" class="com.mindalliance.channels.dao.PerPlanIdGenerator"/>
 
     <!--<bean id="idGenerator" class="com.mindalliance.channels.dao.SimpleIdGenerator"/>-->
+
+    <bean id="imagingService" class="com.mindalliance.channels.imaging.DefaultImagingService">
+        <property name="directory" value="file:${user.home}/channels/uploads"/>
+        <property name="path" value="uploads/"/>
+    </bean>
 
     <!-- setup wicket application -->
     <bean id="wicketApplication" class="com.mindalliance.channels.Channels">
@@ -67,7 +72,7 @@
 
     <!-- Scenario analyst -->
     <bean id="analyst" class="com.mindalliance.channels.analysis.DefaultAnalyst"
-            init-method="start" destroy-method="stop">
+          init-method="start" destroy-method="stop">
         <property name="queryService" ref="queryService"/>
         <property name="issueDetectors">
             <list value-type="java.util.ArrayList">
@@ -198,27 +203,27 @@
                     <property name="queryService" ref="queryService"/>
                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.CommitmentWithoutRequiredAgreement">
-                     <property name="queryService" ref="queryService"/>
+                    <property name="queryService" ref="queryService"/>
                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.UntimelyTriggeringCommitment">
-                     <property name="queryService" ref="queryService"/>
+                    <property name="queryService" ref="queryService"/>
                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.UntimelyCriticalCommitment">
-                     <property name="queryService" ref="queryService"/>
+                    <property name="queryService" ref="queryService"/>
                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.InconsistentImpactOnTargetPart">
-                     <property name="queryService" ref="queryService"/>
+                    <property name="queryService" ref="queryService"/>
                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.InconsistentImpactOnSourcePart">
-                     <property name="queryService" ref="queryService"/>
+                    <property name="queryService" ref="queryService"/>
                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.SinglePointOfFailure">
-                     <property name="queryService" ref="queryService"/>
+                    <property name="queryService" ref="queryService"/>
                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.UserIsManyActors">
-                     <property name="queryService" ref="queryService"/>
+                    <property name="queryService" ref="queryService"/>
                 </bean>
-             </list>
+            </list>
         </property>
     </bean>
 

@@ -23,7 +23,14 @@ public class Attachment implements Serializable {
          * A miscellaneous document.
          */
         Reference( "Reference" ),
-
+        /**
+         * A related policy that does not specifically mandate nor prohibit.
+         */
+        Policy( "Policy" ),
+        /**
+         * An image.
+         */
+        Image( "Image" ),
         /**
          * A policy document that mandates whatever the document is attached to.
          */
@@ -88,6 +95,15 @@ public class Attachment implements Serializable {
      */
     public boolean isPolicyViolation() {
         return type == Type.PolicyCant;
+    }
+
+    /**
+     * Represents an image.
+     *
+     * @return a boolean
+     */
+    public boolean isImage() {
+        return type == Type.Image;
     }
 
     /**

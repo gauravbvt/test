@@ -1,6 +1,7 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
 import org.apache.commons.collections.CollectionUtils;
@@ -248,5 +249,18 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
         if ( parent != null) superiors.add( parent );
         return superiors;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    public List<Attachment.Type> getAttachmentTypes() {
+        List<Attachment.Type> types = new ArrayList<Attachment.Type>();
+        if ( !hasImage() )
+            types.add( Attachment.Type.Image );
+        types.addAll( super.getAttachmentTypes() );
+        return types;
+    }
+    
 }
 

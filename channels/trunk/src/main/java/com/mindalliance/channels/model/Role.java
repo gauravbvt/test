@@ -1,9 +1,12 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.attachments.Attachment;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A generic role.
@@ -64,5 +67,16 @@ public class Role extends ModelObject {
         }
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    public List<Attachment.Type> getAttachmentTypes() {
+        List<Attachment.Type> types = new ArrayList<Attachment.Type>();
+        if ( !hasImage() )
+            types.add( Attachment.Type.Image );
+        types.addAll( super.getAttachmentTypes() );
+        return types;
+    }
+    
 }

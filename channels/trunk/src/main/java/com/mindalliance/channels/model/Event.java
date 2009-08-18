@@ -1,10 +1,13 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A plan event.
@@ -82,4 +85,17 @@ public class Event extends ModelObject implements GeoLocatable {
                 ? getName() + " in " + scope.getGeoMarkerLabel()
                 : "";
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    public List<Attachment.Type> getAttachmentTypes() {
+        List<Attachment.Type> types = new ArrayList<Attachment.Type>();
+        if ( !hasImage() )
+            types.add( Attachment.Type.Image );
+        types.addAll( super.getAttachmentTypes() );
+        return types;
+    }
+   
 }

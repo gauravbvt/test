@@ -177,7 +177,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     private void addTypeChoice() {
         DropDownChoice<Attachment.Type> typeChoice = new DropDownChoice<Attachment.Type>( "type",
                 new PropertyModel<Attachment.Type>( this, "selectedType" ),
-                Arrays.asList( Attachment.Type.values() ),
+                getAttachee().getAttachmentTypes(),
                 new IChoiceRenderer<Attachment.Type>() {
                     public Object getDisplayValue( Attachment.Type object ) {
                         return object.getLabel();

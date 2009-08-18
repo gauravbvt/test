@@ -661,4 +661,5 @@ public class Part extends Node implements GeoLocatable {
     public boolean initiatesEvent() {
         return getInitiatedEvent() != null;
     }
+
 }

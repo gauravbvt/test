@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.entities;
 
+import com.mindalliance.channels.ImagingService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
@@ -8,6 +9,7 @@ import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.util.Matcher;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
@@ -17,6 +19,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,10 +34,21 @@ import java.util.Set;
  * Time: 7:05:45 PM
  */
 public class EntityDetailsPanel extends AbstractCommandablePanel {
+
+    @SpringBean
+    /**
+     * Imaging service.
+     */
+            ImagingService imagingService;
+
     /**
      * The model object being edited
      */
     private IModel<? extends ModelObject> model;
+    /**
+     * Image tag.
+     */
+    WebMarkupContainer image;
     /**
      * Name field.
      */
@@ -47,6 +61,10 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
      * Entity issues panel.
      */
     private IssuesPanel issuesPanel;
+    /**
+     * Maximum image height.
+     */
+    private static final int MAX_IMAGE_HEIGHT = 200;
 
     public EntityDetailsPanel( String id, IModel<? extends ModelObject> model, Set<Long> expansions ) {
         super( id, model, expansions );
@@ -58,6 +76,9 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
         ModelObject mo = getEntity();
         WebMarkupContainer moDetailsDiv = new WebMarkupContainer( "mo-details" );
         add( moDetailsDiv );
+        image = new WebMarkupContainer( "image" );
+        image.setOutputMarkupId( true );
+        moDetailsDiv.add( image );
         final List<String> choices = getUniqueNameChoices( getEntity() );
         nameField = new AutoCompleteTextField<String>( "name",
                 new PropertyModel<String>( this, "name" ) ) {
@@ -95,6 +116,23 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
     }
 
     private void adjustFields() {
+        if ( getEntity().hasImage() ) {
+            String url = getEntity().getImageUrl();
+            image.add( new AttributeModifier(
+                    "src",
+                    true,
+                    new Model<String>( url ) ) );
+            int[] size = imagingService.getImageSize( url );
+            int height = size[1];
+            if ( height > MAX_IMAGE_HEIGHT ) {
+                image.add( new AttributeModifier(
+                        "height",
+                        true,
+                        new Model<String>( "" + MAX_IMAGE_HEIGHT )
+                ) );
+            }
+        }
+        makeVisible( image, getEntity().hasImage() );
         nameField.setEnabled( isLockedByUser( getEntity() ) );
         descriptionField.setEnabled( isLockedByUser( getEntity() ) );
         makeVisible( issuesPanel, getAnalyst().hasIssues( getEntity(), false ) );

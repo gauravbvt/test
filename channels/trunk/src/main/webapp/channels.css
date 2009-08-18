@@ -594,9 +594,18 @@ div.form th {
     font-style: italic;
 }
 
-li.doc_Document {
+li.doc_Reference {
     padding-left: 20px;
     background: transparent url( 'images/document.png' ) no-repeat 0;
+}
+
+li.doc_Policy {
+    padding-left: 20px;
+    background: transparent url( 'images/scroll.png' ) no-repeat 0;
+}
+li.doc_Image {
+    padding-left: 20px;
+    background: transparent url( 'images/palette.png' ) no-repeat 0;
 }
 
 li.doc_MOU {
