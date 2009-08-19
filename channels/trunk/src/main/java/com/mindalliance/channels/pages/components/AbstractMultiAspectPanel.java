@@ -28,7 +28,7 @@ import java.util.Set;
  * Date: May 6, 2009
  * Time: 7:56:27 PM
  */
-abstract public class AbstractMultiAspectPanel extends AbstractCommandablePanel {
+public abstract class AbstractMultiAspectPanel extends AbstractCommandablePanel {
 
     /**
      * Details aspect.
@@ -72,7 +72,7 @@ abstract public class AbstractMultiAspectPanel extends AbstractCommandablePanel 
     }
 
 
-    public AbstractMultiAspectPanel(
+    protected AbstractMultiAspectPanel(
             String id,
             IModel<? extends Identifiable> model,
             Set<Long> expansions,
@@ -87,25 +87,33 @@ abstract public class AbstractMultiAspectPanel extends AbstractCommandablePanel 
      */
     protected void init() {
         setOutputMarkupId( true );
-        if ( aspectShown == null ) aspectShown = getDefaultAspect();
-        moContainer = new WebMarkupContainer( "mo" );
-        add( moContainer );
-        banner = new WebMarkupContainer( "banner" );
-        banner.setOutputMarkupId( true );
-        moContainer.add( banner );
-        annotatePanel();
+
         headerTitle = new Label( "header-title", new PropertyModel<String>( this, "headerTitle" ) );
         headerTitle.setOutputMarkupId( true );
-        banner.add( headerTitle );
-        AjaxFallbackLink closeLink = new AjaxFallbackLink( "close" ) {
+
+        AjaxFallbackLink<?> closeLink = new AjaxFallbackLink( "close" ) {
+            @Override
             public void onClick( AjaxRequestTarget target ) {
                 Change change = new Change( Change.Type.Collapsed, getObject() );
                 update( target, change );
             }
         };
+
+        banner = new WebMarkupContainer( "banner" );
+        banner.setOutputMarkupId( true );
         banner.add( closeLink );
+        banner.add( headerTitle );
+
         addShowMenu();
         addActionsMenu();
+
+        String css = getCssClass();
+        moContainer = new WebMarkupContainer( "mo" );
+        moContainer.add( new AttributeModifier( "class", true, new Model<String>( css ) ) );
+        moContainer.add( banner );
+        add( moContainer );
+
+        if ( aspectShown == null ) aspectShown = getDefaultAspect();
         showAspect( aspectShown );
         adjustComponents();
     }
@@ -128,10 +136,6 @@ abstract public class AbstractMultiAspectPanel extends AbstractCommandablePanel 
      * @return a string
      */
     protected abstract String getDefaultAspect();
-
-    private void annotatePanel() {
-        moContainer.add( new AttributeModifier( "class", true, new Model<String>( getCssClass() ) ) );
-    }
 
     /**
      * Get the css class for the panel.
