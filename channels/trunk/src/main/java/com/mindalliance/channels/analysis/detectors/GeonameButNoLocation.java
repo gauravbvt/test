@@ -2,6 +2,7 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
+import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Place;
@@ -29,7 +30,8 @@ public class GeonameButNoLocation extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Place place = (Place) modelObject;
         String geoname = place.getGeoname();
-        if ( geoname != null && !place.getGeoname().isEmpty() && place.getGeoLocations().isEmpty() ) {
+        List<GeoLocation> geoLocations = place.getGeoLocations();
+        if ( geoname != null && !geoname.isEmpty() && ( geoLocations == null || geoLocations.isEmpty() ) ) {
             DetectedIssue issue = makeIssue( Issue.VALIDITY, place, getTestedProperty() );
             issue.setSeverity( Issue.Level.Major );
             issue.setDescription( "No geolocation could be found that might correspond to the place's geoname." );
@@ -57,6 +59,6 @@ public class GeonameButNoLocation extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Geoname corresponds to no geolocation.";
+        return "Can't put place on a map";
     }
 }
