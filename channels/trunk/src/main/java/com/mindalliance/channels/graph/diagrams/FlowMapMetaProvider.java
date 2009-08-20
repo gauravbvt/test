@@ -360,12 +360,18 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
     private String getIcon( Node node ) {
         String iconName;
         int numLines = 0;
+        String imagesDirName;
+        try {
+            imagesDirName = getImageDirectory().getFile().getAbsolutePath();
+        } catch ( IOException e ) {
+            throw new RuntimeException( "Unable to get image directory location", e );
+        }
         if ( node.isConnector() ) {
             Connector connector = (Connector) node;
             if ( !connector.isTarget() || connector.externalFlows().hasNext() ) {
-                iconName = "connector";
+                iconName = imagesDirName + "/connector";
             } else {
-                iconName = "connector_red";
+                iconName = imagesDirName + "/connector_red";
             }
         }
         // node is a part
@@ -374,30 +380,9 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
             String[] lines = label.split( "\\|" );
             numLines = Math.min( lines.length, 4 );
             Part part = (Part) node;
-            if ( part.getActor() != null ) {
-                iconName = part.isSystem() ? "system" : "person";
-            } else if ( part.getRole() != null ) {
-                List<Actor> partActors = getAnalyst().getQueryService().findAllActors( part.resourceSpec() );
-                boolean onePlayer = partActors.size() == 1;
-                iconName = part.isSystem()
-                        ? "system"
-                        : onePlayer
-                        ? "person"
-                        : "role";
-            } else if ( part.getOrganization() != null ) {
-                iconName = "organization";
-            } else {
-                iconName = "unknown";
-            }
+            iconName = getAnalyst().getQueryService().findIconName( part, imagesDirName );
         }
-
-        String dirName;
-        try {
-            dirName = getImageDirectory().getFile().getAbsolutePath();
-        } catch ( IOException e ) {
-            throw new RuntimeException( "Unable to get image directory location", e );
-        }
-        return dirName + "/" + iconName + ( numLines > 0 ? numLines : "" ) + ".png";
+        return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
     }
 
 }

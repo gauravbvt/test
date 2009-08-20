@@ -6,11 +6,8 @@ import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
 import com.mindalliance.channels.graph.URLProvider;
-import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Role;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.springframework.core.io.Resource;
@@ -121,7 +118,7 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
 
         public List<DOTAttribute> getVertexAttributes( Hierarchical vertex, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-            list.add( new DOTAttribute( "image", getIcon( vertex ) ) );
+            list.add( new DOTAttribute( "image", getIcon( (ModelObject)vertex ) ) );
             list.add( new DOTAttribute( "labelloc", "b" ) );
             if ( highlighted ) {
                 list.add( new DOTAttribute( "shape", "box" ) );
@@ -156,31 +153,19 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
             return list;
         }
 
-        private String getIcon( Hierarchical modelObject ) {
+        private String getIcon( ModelObject modelObject ) {
             String iconName;
-            int numLines;
-            String label = getIdentifiableLabel( modelObject );
-            String[] lines = label.split( "\\|" );
-            numLines = Math.min( lines.length, 3 );
-            if ( modelObject instanceof Actor ) {
-                boolean isSystem = ((Actor)modelObject).isSystem();
-                iconName = isSystem ? "system" : "person";
-            } else if ( modelObject instanceof Role ) {
-                boolean isSystem = ((Role)modelObject).isSystem();
-                iconName = isSystem ? "system" : "role";
-            } else if ( modelObject instanceof Organization ) {
-                iconName = "organization";
-            } else {
-                iconName = "unknown";
-            }
-            String dirName;
+            String imagesDirName;
             try {
-                dirName = getImageDirectory().getFile().getAbsolutePath();
+                imagesDirName = getImageDirectory().getFile().getAbsolutePath();
             } catch ( IOException e ) {
                 throw new RuntimeException( "Unable to get image directory location", e );
             }
-            return dirName
-                    + "/" + iconName + ( numLines > 0 ? numLines : "" ) + ".png";
+            String label = getIdentifiableLabel( modelObject );
+            String[] lines = label.split( "\\|" );
+            int numLines = Math.min( lines.length, 3 );
+            iconName = getAnalyst().getQueryService().findIconName( modelObject, imagesDirName );
+            return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
         }
 
     }

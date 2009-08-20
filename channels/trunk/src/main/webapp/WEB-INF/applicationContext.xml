@@ -12,10 +12,18 @@
         <property name="simIndex" value="WEB-INF/data/jwsl/wn_index"/>
     </bean>
 
+    <bean id="imagingService" class="com.mindalliance.channels.imaging.DefaultImagingService">
+        <property name="uploadDirectory" value="file:${user.home}/channels/uploads"/>
+        <property name="uploadPath" value="uploads/"/>
+        <property name="iconDirectory" value="file:${user.home}/channels/icons"/>
+        <property name="iconPath" value="icons/"/>
+    </bean>
+
     <bean id="queryService" class="com.mindalliance.channels.query.DefaultQueryService">
         <constructor-arg ref="planManager"/>
         <constructor-arg ref="attachmentManager"/>
         <property name="semanticMatcher" ref="semanticMatcher"/>
+        <property name="imagingService" ref="imagingService"/>
     </bean>
 
     <bean id="serializer" class="com.mindalliance.channels.export.xml.XmlStreamer">
@@ -37,11 +45,6 @@
     <bean id="idGenerator" class="com.mindalliance.channels.dao.PerPlanIdGenerator"/>
 
     <!--<bean id="idGenerator" class="com.mindalliance.channels.dao.SimpleIdGenerator"/>-->
-
-    <bean id="imagingService" class="com.mindalliance.channels.imaging.DefaultImagingService">
-        <property name="directory" value="file:${user.home}/channels/uploads"/>
-        <property name="path" value="uploads/"/>
-    </bean>
 
     <!-- setup wicket application -->
     <bean id="wicketApplication" class="com.mindalliance.channels.Channels">

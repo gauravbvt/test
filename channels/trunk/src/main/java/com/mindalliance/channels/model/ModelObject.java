@@ -119,10 +119,10 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
     /**
      * Set the description of this object.
      *
-     * @param description the description. Will set to empty string if null.
+     * @param val the description. Will set to empty string if null.
      */
-    public void setDescription( String description ) {
-        this.description = description == null ? "" : description;
+    public void setDescription( String val ) {
+        description = val == null ? "" : val;
     }
 
     //=============================
@@ -342,4 +342,12 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
             return null;
     }
 
+    /**
+     * Whether this can be represented by an icon.
+     * @return a boolean
+     */
+    @Transient
+    public boolean isIconized() {
+        return false;
+    }
 }

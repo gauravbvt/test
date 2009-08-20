@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.AttachmentManager;
+import com.mindalliance.channels.ImagingService;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AttachDocument;
@@ -40,6 +41,13 @@ import java.util.List;
  */
 public class AttachmentPanel extends AbstractCommandablePanel {
 
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( AttachmentPanel.class );
+    /**
+     * Submit link.
+     */
     private SubmitLink submit;
 
     /**
@@ -55,6 +63,11 @@ public class AttachmentPanel extends AbstractCommandablePanel {
      */
     @SpringBean
     private AttachmentManager attachmentManager;
+    /**
+     * Imaging service.
+     */
+    @SpringBean
+    private ImagingService imagingService;
 
     /**
      * The upload field.
@@ -241,6 +254,9 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 doCommand( new DetachDocument(
                         getAttachee(),
                         attachment ) );
+                if ( attachment.isImage() ) {
+                    imagingService.deiconize( getAttachee() );
+                }
                 refresh( target );
                 update( target,
                         new Change(
@@ -310,6 +326,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             // Only add non-redundant attachment.
             if ( attachment != null ) {
                 doCommand( new AttachDocument( mo, attachment ) );
+                postProcess( attachment );
             }
         }
     }
@@ -351,6 +368,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 new URL( value );
                 Attachment attachment = new Attachment( value, getSelectedType() );
                 doCommand( new AttachDocument( mo, attachment ) );
+                postProcess( attachment );
                 this.url = null;
             } catch ( MalformedURLException e ) {
                 logger.warn( "Invalid URL: " + value );
@@ -363,6 +381,13 @@ public class AttachmentPanel extends AbstractCommandablePanel {
 
     private ModelObject getAttachee() {
         return (ModelObject) getDefaultModelObject();
+    }
+
+    private void postProcess( Attachment attachment ) {
+        ModelObject attachee = getAttachee();
+        if ( attachment.isImage() && attachee.isIconized() ) {
+            imagingService.iconize( attachment.getUrl(), attachee );
+        }
     }
 
 

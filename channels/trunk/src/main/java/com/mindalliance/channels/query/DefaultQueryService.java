@@ -5,6 +5,7 @@ import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.Dao;
+import com.mindalliance.channels.ImagingService;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.SemanticMatcher;
@@ -79,6 +80,11 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     private SemanticMatcher semanticMatcher;
 
+    /**
+     * Imaging service.
+     */
+    private ImagingService imagingService;
+
     //=============================================
 
     public DefaultQueryService( PlanManager planManager, AttachmentManager attachmentManager ) {
@@ -102,6 +108,14 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     public void setSemanticMatcher( SemanticMatcher semanticMatcher ) {
         this.semanticMatcher = semanticMatcher;
+    }
+
+    public ImagingService getImagingService() {
+        return imagingService;
+    }
+
+    public void setImagingService( ImagingService imagingService ) {
+        this.imagingService = imagingService;
     }
 
     /**
@@ -1094,7 +1108,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public List<ModelObject> findAllScenarioObjectsInvolving( ModelObject entity ) {
         if ( entity instanceof Event ) {
-          return this.findAllModelObjectsDirectlyRelatedToEvent( (Event) entity );
+            return this.findAllModelObjectsDirectlyRelatedToEvent( (Event) entity );
         } else {
             Set<ModelObject> scenarioObjects = new HashSet<ModelObject>();
             for ( Scenario scenario : list( Scenario.class ) ) {
@@ -2110,6 +2124,61 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
         return max;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String findIconName( Part part, String imagesDirName ) {
+        String iconName;
+        if ( part.getActor() != null ) {
+            iconName = imagingService.getIconPath( part.getActor() );
+            if ( iconName == null ) {
+                iconName = imagesDirName + "/" + ( part.isSystem() ? "system" : "person" );
+            }
+        } else if ( part.getRole() != null ) {
+            List<Actor> partActors = findAllActors( part.resourceSpec() );
+            boolean onePlayer = partActors.size() == 1;
+            if ( onePlayer ) {
+                iconName = imagingService.getIconPath( partActors.get( 0 ) );
+                if ( iconName == null ) {
+                    iconName = imagesDirName + "/" + ( part.isSystem() ? "system" : "person" );
+                }
+            } else {
+                iconName = imagingService.getIconPath( part.getRole() );
+                if ( iconName == null ) {
+                    iconName = imagesDirName + "/" + ( part.isSystem() ? "system" : "role" );
+                }
+            }
+        } else if ( part.getOrganization() != null ) {
+            iconName = imagingService.getIconPath( part.getOrganization() );
+            if ( iconName == null ) {
+                iconName = imagesDirName + "/" + "organization";
+            }
+        } else {
+            iconName = imagesDirName + "/" + "unknown";
+        }
+        return iconName;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String findIconName( ModelObject modelObject, String imagesDirName ) {
+        String iconName = imagingService.getIconPath( modelObject );
+        if ( iconName == null ) {
+            if ( modelObject instanceof Actor ) {
+                iconName = imagesDirName + "/" + ( ( (Actor) modelObject ).isSystem() ? "system" : "person" );
+            } else if ( modelObject instanceof Role ) {
+                iconName = imagesDirName + "/" + "role";
+            } else if ( modelObject instanceof Organization ) {
+                iconName = imagesDirName + "/" + "organization";
+            } else {
+                iconName = imagesDirName + "/" + "unknown";
+            }
+        }
+        return iconName;
+    }
+
 
 }
 

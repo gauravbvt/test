@@ -810,6 +810,7 @@ public interface QueryService extends Service {
 
     /**
      * Find all model objects directly impacted by or impacting an event.
+     *
      * @param event an event
      * @return a list of model objects
      */
@@ -903,4 +904,22 @@ public interface QueryService extends Service {
      * @return a plan
      */
     Plan getCurrentPlan();
+
+    /**
+     * Find icon name for given part.
+     *
+     * @param part a part
+     * @param imagesDirName the name of the directory with the default icons
+     * @return a string
+     */
+    String findIconName( Part part, String imagesDirName );
+
+    /**
+     * Find icon name for given model object.
+     *
+     * @param modelObject a model object
+     * @param imagesDirName the name of the directory with the default icons
+     * @return a string
+     */
+    String findIconName( ModelObject modelObject, String imagesDirName );
 }

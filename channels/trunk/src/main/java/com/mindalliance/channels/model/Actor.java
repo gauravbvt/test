@@ -142,4 +142,12 @@ public class Actor extends AbstractUnicastChannelable {
         return types;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    public boolean isIconized() {
+        return true;
+    }
+    
 }

@@ -78,5 +78,15 @@ public class Role extends ModelObject {
         types.addAll( super.getAttachmentTypes() );
         return types;
     }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    public boolean isIconized() {
+        return true;
+    }
+    
     
 }

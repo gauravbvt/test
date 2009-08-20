@@ -19,6 +19,7 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -162,7 +163,12 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         add( partPanel );
 
         partDescription = new TextArea<String>( "description",                            // NON-NLS
-                new PropertyModel<String>( this, "partDescription" ) );                   // NON-NLS
+                new PropertyModel<String>( this, "partDescription" ) );
+        partDescription.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getPart(), "description" ) );
+            }
+        } );
         partDescription.setOutputMarkupId( true );
         add( partDescription );
 

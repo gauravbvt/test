@@ -261,6 +261,16 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
         types.addAll( super.getAttachmentTypes() );
         return types;
     }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    public boolean isIconized() {
+        return true;
+    }
+    
     
 }
 

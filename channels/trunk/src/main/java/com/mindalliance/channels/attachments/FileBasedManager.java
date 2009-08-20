@@ -247,7 +247,7 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
             out = new FileWriter( file );
             Properties digests = new Properties();
             for ( String url : documentMap.keySet() ) {
-                digests.setProperty( escape( url ), documentMap.get( url ).getDigest() );
+                digests.setProperty( url, documentMap.get( url ).getDigest() );
             }
             digests.store( out, " File digests. Do not edit." );
         } catch ( IOException e ) {
@@ -294,12 +294,12 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
         documentMap = new HashMap<String, FileDocument>();
         for ( String url : digests.stringPropertyNames() ) {
             String digest = digests.getProperty( url );
-            String unescapedUrl = unescape( url );
+            // String unescapedUrl = unescape( url );
             FileDocument document = new FileDocument(
-                    new File( getUploadDirectory(), unescapedUrl ),
+                    new File( getUploadDirectory(), url ),
                     /*path + */url, digest );
-            if ( exists( unescapedUrl ) ) {
-                documentMap.put( unescapedUrl, document );
+            if ( exists( url ) ) {
+                documentMap.put( url, document );
             }
         }
     }
