@@ -946,11 +946,9 @@ public final class PlanPage extends WebPage implements Updatable {
 
         Identifiable identifiable = change.getSubject();
         if ( identifiable instanceof ModelObject ) {
-            if ( change.isCollapsed()
-                    || ( change.isRemoved() && identifiable instanceof UserIssue ) )
+            if ( change.isCollapsed() || change.isRemoved() )
                 collapse( identifiable );
-            else if ( change.isExpanded()
-                    || ( change.isAdded() && identifiable instanceof UserIssue ) )
+            else if ( change.isExpanded() || change.isAdded() )
             expand( identifiable );
         }
         if ( identifiable instanceof Scenario ) {
