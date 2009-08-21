@@ -70,7 +70,7 @@ public interface Issue extends Identifiable, Serializable {
     ModelObject getAbout();
 
     /**
-     * The type of issue
+     * The type of issue (validity, completeness or robustness)
      *
      * @return a String
      */

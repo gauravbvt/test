@@ -60,7 +60,7 @@ public class Change implements Serializable {
         /**
          * Copy taken
          */
-       Copied;
+        Copied;
     }
 
     /**
@@ -106,7 +106,7 @@ public class Change implements Serializable {
         this.property = property;
     }
 
-    public Identifiable getSubject(  ) {
+    public Identifiable getSubject() {
         return subject;
     }
 
@@ -151,7 +151,7 @@ public class Change implements Serializable {
      *
      * @return an object
      */
-    public Object getChangedPropertyValue(  )  {
+    public Object getChangedPropertyValue() {
         Object value = null;
         if ( type == Type.Updated ) {
             try {
@@ -273,6 +273,16 @@ public class Change implements Serializable {
      */
     public boolean isNone() {
         return type == Type.None;
+    }
+
+    /**
+     * Whether change is to a given property.
+     *
+     * @param prop a string
+     * @return a boolean
+     */
+    public boolean isForProperty( String prop ) {
+        return property != null && prop != null && property.equals( prop );
     }
 
 

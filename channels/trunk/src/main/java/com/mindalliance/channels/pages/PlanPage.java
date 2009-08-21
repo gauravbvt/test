@@ -880,8 +880,8 @@ public final class PlanPage extends WebPage implements Updatable {
      */
     private static void makeVisible( Component component, boolean visible ) {
         component.add( new AttributeModifier( "style",
-                    true,
-                    new Model<String>( visible ? "" : "display:none" ) ) );
+                true,
+                new Model<String>( visible ? "" : "display:none" ) ) );
     }
 
     private void reacquireLocks() {
@@ -947,11 +947,11 @@ public final class PlanPage extends WebPage implements Updatable {
         Identifiable identifiable = change.getSubject();
         if ( identifiable instanceof ModelObject ) {
             if ( change.isCollapsed()
-                    || ( change.isRemoved() && change.getProperty().equals( "issues" ) ) )
+                    || ( change.isRemoved() && identifiable instanceof UserIssue ) )
                 collapse( identifiable );
             else if ( change.isExpanded()
-                    || ( change.isAdded() && change.getProperty().equals( "issues" ) ) )
-                expand( identifiable );
+                    || ( change.isAdded() && identifiable instanceof UserIssue ) )
+            expand( identifiable );
         }
         if ( identifiable instanceof Scenario ) {
             if ( change.isExists() ) {
