@@ -24,37 +24,27 @@ public class MainPage extends PlaybookPage {
     }
 
     private void init( QueryService service, Plan plan, User user ) {
-        add( new Label( "title", plan.getName() ) );                                      // NON-NLS
-        add( new Label( "plan-name", plan.getName() ) );                                  // NON-NLS
-        add( new Label( "description", plan.getDescription() ) );                         // NON-NLS
 
         List<Actor> actors = new ArrayList<Actor>( service.list( Actor.class ) );
         Collections.sort( actors );
-        add( new ListView<Actor>( "participants", actors ) {
-            @Override
-            protected void populateItem( ListItem<Actor> item ) {
-                Actor actor = item.getModelObject();
 
-                Label name = new Label( "name", actor.getName() );
-                name.setRenderBodyOnly( true );
+        add( new Label( "title", plan.getName() ),
+             new Label( "plan-name", plan.getName() ),
+             new Label( "description", plan.getDescription() ),
+             new Label( "user", user.getUsername() ).setRenderBodyOnly( true ),
 
-                BookmarkablePageLink<ActorPlaybook> pageLink =
-                    new BookmarkablePageLink<ActorPlaybook>( "participant", TaskPlaybook.class );
-                pageLink.setParameter( ACTOR_PARM, actor.getId() );
-                pageLink.add( name );
-                item.add( pageLink );
-
-                String desc = actor.getDescription();
-                desc = desc == null || desc.trim().isEmpty() ? "" : ", " + desc;
-                Label actorDesc = new Label( "actor-desc", desc );
-                actorDesc.setRenderBodyOnly( true );
-                item.add( actorDesc );
-            }
-        } );
-
-        Label userField = new Label( "user", user.getUsername() );
-        userField.setRenderBodyOnly( true );
-        add( userField );
-
+             new ListView<Actor>( "participants", actors ) {
+                @Override
+                protected void populateItem( ListItem<Actor> item ) {
+                    Actor actor = item.getModelObject();
+                    String desc = actor.getDescription();
+                    desc = desc == null || desc.trim().isEmpty() ? "" : ", " + desc;
+                    item.add( new BookmarkablePageLink<ActorPlaybook>( "participant",
+                                                                       TaskPlaybook.class )
+                            .setParameter( ACTOR_PARM, actor.getId() )
+                            .add( new Label( "name", actor.getName() ).setRenderBodyOnly( true ) ),
+                              new Label( "actor-desc", desc ).setRenderBodyOnly( true ) );
+                }
+            } );
     }
 }

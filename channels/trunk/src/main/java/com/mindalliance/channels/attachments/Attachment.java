@@ -12,7 +12,7 @@ import java.text.MessageFormat;
  * Date: May 29, 2009
  * Time: 2:42:35 PM
  */
-public class Attachment implements Serializable {
+public class Attachment implements Serializable, Comparable<Attachment> {
 
     /**
      * The specific kind of document.
@@ -128,4 +128,21 @@ public class Attachment implements Serializable {
         hash = hash * 31 + url.hashCode();
         return hash;
     }
+
+    /**
+     * Compares this object with the specified object for order.  Returns a
+     * negative integer, zero, or a positive integer as this object is less
+     * than, equal to, or greater than the specified object.
+     *
+     * @param   o the object to be compared.
+     * @return a negative integer, zero, or a positive integer as this object
+     *		is less than, equal to, or greater than the specified object.
+     *
+     * @throws ClassCastException if the specified object's type prevents it
+     *         from being compared to this object.
+     */
+    public int compareTo( Attachment o ) {
+        return url.compareTo( o.getUrl() );
+    }
+
 }

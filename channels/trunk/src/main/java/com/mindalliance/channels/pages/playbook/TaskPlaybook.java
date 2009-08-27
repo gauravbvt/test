@@ -1,13 +1,32 @@
 package com.mindalliance.channels.pages.playbook;
 
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.Delay;
+import com.mindalliance.channels.model.ExternalFlow;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Risk;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.User;
+import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RestartResponseException;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Event-based playbook.
@@ -16,23 +35,12 @@ public class TaskPlaybook extends PlaybookPage {
 
     public TaskPlaybook( PageParameters parameters ) {
         super( parameters );
-
         Actor actor = getActor();
         Part part = getPart();
 
-        if ( actor == null ) {
-            if ( parameters.containsKey( ACTOR_PARM ) ) {
-                // Invalid actor parameter. Forget other parameters and redirect
-                setRedirect( true );
-                throw new RestartResponseException( getClass() );
-            } else {
-                // No actor specified. Just show top page.
-                throw new RestartResponseException( MainPage.class );
-            }
-
-        } else if ( part == null ) {
+        if ( part == null ) {
             if ( parameters.containsKey( PART_PARM ) ) {
-                // Invalid event parameter, trim it and redirect to summary
+                // Invalid part parameter, trim it and redirect to summary
                 PageParameters parms = new PageParameters();
                 parms.put( ACTOR_PARM, parameters.getString( ACTOR_PARM ) );
                 setRedirect( true );
@@ -47,35 +55,205 @@ public class TaskPlaybook extends PlaybookPage {
     }
 
     private void init( Actor actor, Part part, User user ) {
-        String name = part.getTask();
-        add( new Label( "title", actor.getName() + " - " + name ) );
-        add( new Label( "header", name ) );
-        add( new Label( "role", getRoleString( actor, part ) ) );
+        String taskName = part.getTask();
+        String desc = part.getDescription();
 
-        createNavbar( actor, user );
+        List<Flow> inputs = new ArrayList<Flow>();
+        List<Flow> outputs = new ArrayList<Flow>();
+        List<ResourceSpec> specs = filterSpecs( organizeFlow( part, inputs, outputs ), actor );
+
+        ResourceSpec partSpec = part.resourceSpec();
+        FlowSet inputSet = new FlowSet( partSpec, true, inputs );
+        FlowSet outputSet = new FlowSet( partSpec, false, outputs );
+
+        add(
+            new Label( "title", actor.getName() + " - " + taskName ),
+            new Label( "header", taskName ),
+            new Label( "role", getRoleString( part, actor ) ),
+            new Label( "desc", desc ).setVisible( !desc.isEmpty() ),
+
+            createRepeat( part.getRepeatsEvery() ).setVisible( part.isRepeating() ),
+            createCompletion( part.getCompletionTime() ).setVisible( part.isSelfTerminating() ),
+            createRisks( part.getMitigations() ),
+
+            new AttachmentListPanel( "attachments", part.getAttachments() ),
+            createTaskList( actor, part, outputSet ),
+
+            new WebMarkupContainer( "flows" )
+                    .add(
+                        new ListView<ResourceSpec>( "actorSpec", specs ) {
+                            @Override
+                            protected void populateItem( ListItem<ResourceSpec> item ) {
+                                ResourceSpec resourceSpec = item.getModelObject();
+                                item.add( new Label( "actorLabel", resourceSpec.toString() )
+                                                    .setRenderBodyOnly( true ) );
+                            }
+                        },
+
+                        new FlowListPanel( "inputs", specs, inputSet ),
+                        new FlowListPanel( "outputs", specs, outputSet ) )
+
+                    .setVisible( !inputs.isEmpty() || !outputs.isEmpty() )
+        );
+
+        createNavbar( this, actor, user );
     }
 
-    private static String getRoleString( Actor actor, Part part ) {
+    private static List<ResourceSpec> filterSpecs( List<ResourceSpec> actorSpecs, Actor actor ) {
+        List<ResourceSpec> filtered = new ArrayList<ResourceSpec>();
+        for ( ResourceSpec spec : actorSpecs ) {
+            if ( !spec.isActor() || !actor.equals( spec.getActor() ) )
+                filtered.add( spec );
+        }
+        return filtered;
+    }
+
+    private Component createTaskList( final Actor actor, Part part, FlowSet flowSet ) {
+        List<Flow> flows = flowSet.getFlows( getQueryService(), ResourceSpec.with( actor ) );
+        List<Part> tasks = getSubtasks( flows );
+
+        return new WebMarkupContainer( "other" )
+            .add(
+                new ListView<Part>( "task", tasks ) {
+                    @Override
+                    protected void populateItem( ListItem<Part> item ) {
+                        Part otherPart = item.getModelObject();
+                        item.add( new BookmarkablePageLink<TaskPlaybook>(
+                                    "task-link", TaskPlaybook.class )
+                                  .setParameter( ACTOR_PARM, actor.getId() )
+                                  .setParameter( PART_PARM, otherPart.getId() )
+                                  .add( new Label( "task-label", otherPart.getTask() ) ) );
+                    }
+                },
+
+                new WebMarkupContainer( "end-event" )
+                    .add( new Label( "event", getEventName() ) )
+                    .setVisible( part.isTerminatesEvent() ) )
+
+            .setVisible( !tasks.isEmpty() || part.isTerminatesEvent() );
+    }
+
+    private static List<Part> getSubtasks( List<Flow> flows ) {
+        Set<Part> parts = new HashSet<Part>();
+        for ( Flow flow : flows )
+            parts.add( (Part) flow.getTarget() );
+
+        List<Part> tasks = new ArrayList<Part>( parts );
+        Collections.sort( tasks );
+        return tasks;
+    }
+
+    private List<ResourceSpec> organizeFlow( Part part, List<Flow> inputs, List<Flow> outputs ) {
+        Set<ResourceSpec> actorSpecs = new HashSet<ResourceSpec>();
+        for ( Flow flow : getFlows( part, part.getScenario() ) ) {
+            Node node;
+            if ( part.equals( flow.getTarget() ) ) {
+                inputs.add( flow );
+                node = flow.getSource();
+            } else {
+                outputs.add( flow );
+                node = flow.getTarget();
+            }
+            addActorSpecs( getQueryService(), actorSpecs, node );
+        }
+
+        List<ResourceSpec> result = new ArrayList<ResourceSpec>( actorSpecs );
+        Collections.sort( result );
+        return result;
+    }
+
+    private static List<Flow> getFlows( Part part, Scenario scenario ) {
+        List<Flow> result = new ArrayList<Flow>();
+
+        for ( Iterator<Flow> iterator = scenario.flows(); iterator.hasNext() ; ) {
+            Flow flow = iterator.next();
+            addSources( result, part, flow );
+            addTargets( result, part, flow );
+        }
+
+        return result;
+    }
+
+    private static void addTargets( List<Flow> result, Part part, Flow flow ) {
+        Node target = flow.getTarget();
+        if ( part.equals( target ) )
+            result.add( flow );
+        else if ( target instanceof Connector ) {
+            Iterator<ExternalFlow> exts = ( (Connector) target ).externalFlows();
+            while ( exts.hasNext() ) {
+                ExternalFlow externalFlow = exts.next();
+                if ( part.equals( externalFlow.getTarget() ) )
+                    result.add( externalFlow );
+            }
+        }
+    }
+
+    private static void addSources( List<Flow> result, Part part, Flow flow ) {
+        Node source = flow.getSource();
+        if ( part.equals( source ) )
+            result.add( flow );
+        else if ( source instanceof Connector ) {
+            Iterator<ExternalFlow> exts = ( (Connector) source ).externalFlows();
+            while ( exts.hasNext() ) {
+                ExternalFlow externalFlow = exts.next();
+                if ( part.equals( externalFlow.getSource() ) )
+                    result.add( externalFlow );
+            }
+        }
+    }
+
+    private static Component createRisks( List<Risk> risks ) {
+        final int size = risks.size();
+        return new WebMarkupContainer( "risk-note" )
+            .add( new ListView<Risk>( "risks", risks ) {
+                    @Override
+                    protected void populateItem( ListItem<Risk> item ) {
+                        Risk risk = item.getModelObject();
+                        int index = item.getIndex();
+                        String riskString = new StringBuilder( risk.getLabel() )
+                                .append( index == size - 1 ? "."
+                                       : index >= 0 && index == size - 2 ? " and "
+                                       : ", " )
+                                .toString();
+
+                        item.add( new Label( "risk", riskString ).setRenderBodyOnly( true ) )
+                            .setRenderBodyOnly( true );
+                    }
+                } )
+            .setRenderBodyOnly( true )
+            .setVisible( !risks.isEmpty() );
+    }
+
+    private static Component createCompletion( Delay time ) {
+        return new WebMarkupContainer( "completion-note" )
+                .add( new Label( "completion",
+                                 time.getSeconds() > 0 ? "in " + time : time.toString() )
+                        .setRenderBodyOnly( true ) )
+                .setRenderBodyOnly( true );
+    }
+
+    private static Component createRepeat( Delay time ) {
+        return new WebMarkupContainer( "repeat-note" )
+                .add( new Label( "repeat",
+                                    time.getSeconds() > 0 ? "every " + time : "continuously" )
+                        .setRenderBodyOnly( true ) )
+                .setRenderBodyOnly( true );
+    }
+
+    private static String getRoleString( Part part, Actor actor ) {
         ResourceSpec resourceSpec = new ResourceSpec( part.resourceSpec() );
         resourceSpec.setActor( actor );
         return resourceSpec.toString();
     }
 
-    private void createNavbar( Actor actor, User user ) {
+    private static void createNavbar( MarkupContainer component, Actor actor, User user ) {
         PageParameters parms = new PageParameters();
         parms.put( ACTOR_PARM, actor.getId() );
 
-        BookmarkablePageLink<TaskPlaybook> backLink =
-                new BookmarkablePageLink<TaskPlaybook>( "back", TaskPlaybook.class, parms );
-        Label actorLabel = new Label( "actor", actor.getName() );
-        actorLabel.setRenderBodyOnly( true );
-        backLink.add( actorLabel );
-        add( backLink );
-
-        add( new BookmarkablePageLink<TaskPlaybook>( "top", TaskPlaybook.class ) );
-
-        Label userField = new Label( "user", user.getUsername() );
-        userField.setRenderBodyOnly( true );
-        add( userField );
+        component.add(
+                new BookmarkablePageLink<TaskPlaybook>( "back", TaskPlaybook.class, parms )
+                            .add( new Label( "actor", actor.getName() ).setRenderBodyOnly( true ) ),
+                new BookmarkablePageLink<TaskPlaybook>( "top", TaskPlaybook.class ),
+                new Label( "user", user.getUsername() ).setRenderBodyOnly( true ) );
     }
 }
