@@ -30,7 +30,7 @@ public class UnnamedFlow extends AbstractIssueDetector {
         if ( name == null || name.trim().isEmpty() ) {
             DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, "name" );
             issue.setDescription( "The name of the information is missing." );
-            issue.setRemediation( "Name the information communicated." );
+            issue.setRemediation( "Name the information." );
             issues = new ArrayList<Issue>();
             issue.setSeverity( Issue.Level.Severe );
             issues.add( issue );
@@ -49,6 +49,6 @@ public class UnnamedFlow extends AbstractIssueDetector {
     }
 
     protected String getLabel() {
-        return "Communicated information is unspecified";
+        return "Information is not identified";
     }
 }

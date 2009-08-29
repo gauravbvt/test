@@ -41,8 +41,8 @@ public class NoScenarioRepondsToIncident extends AbstractIssueDetector {
             if ( !responded ) {
                 DetectedIssue issue = makeIssue( Issue.COMPLETENESS, plan );
                 issue.setDescription( "No scenario responds to incident \"" + incident.getName() + "\"." );
-                issue.setRemediation( "Define a scenario that responds to it, "
-                        + "or remove its incident status." );
+                issue.setRemediation( "Define a scenario that responds to it\n"
+                        + "remove the event's incident status." );
                 issue.setSeverity( ( Issue.Level.Major ) );
                 issues.add( issue );
             }

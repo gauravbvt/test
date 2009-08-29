@@ -44,7 +44,7 @@ public class UserIsManyActors extends AbstractIssueDetector {
                     issue.setRemediation(
                             "Change the user personified by "
                                     + actor.getName()
-                                    + " or by " + sameUserActor.getName()
+                                    + "\nor by " + sameUserActor.getName()
                                     + ".");
                     issue.setSeverity( Issue.Level.Major );
                     issues.add( issue );

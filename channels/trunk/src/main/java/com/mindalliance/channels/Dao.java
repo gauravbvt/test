@@ -8,6 +8,8 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -144,4 +146,12 @@ public interface Dao extends Service {
      * @return the relevant model object
      */
     <T extends ModelObject> T findOrCreate( Class<T> clazz, String name, Long id );
+
+    /**
+     * Get the location of the wrapped plan's data.
+     *
+     * @return a directory
+     * @throws java.io.IOException on error
+     */
+    File getDataDirectory() throws IOException;
 }

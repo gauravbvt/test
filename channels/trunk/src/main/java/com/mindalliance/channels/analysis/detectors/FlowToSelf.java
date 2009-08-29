@@ -41,7 +41,7 @@ public class FlowToSelf extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Communicating to self";
+        return "Sharing with self";
     }
 
 
@@ -64,7 +64,7 @@ public class FlowToSelf extends AbstractIssueDetector {
             if (source.getActor() == target.getActor() && source.getActor() != null ) {
                 Issue issue = makeIssue(Issue.VALIDITY, flow);
                 issue.setDescription(source.getActor() + " is both the source and target.");
-                issue.setRemediation(" Change either the source or target of this flow.");
+                issue.setRemediation(" Change either the source\n or change target of this flow.");
                 issue.setSeverity( Issue.Level.Major );
                 issues.add(issue);
             } else {
@@ -76,7 +76,8 @@ public class FlowToSelf extends AbstractIssueDetector {
                     Issue issue = makeIssue(Issue.VALIDITY, flow);
                     issue.setDescription(possibleSourceActors.get(0)
                             + " is both the only potential source and target.");
-                    issue.setRemediation(" If this is not intentional, change either the source or target of this flow, "
+                    issue.setRemediation(" If this is not intentional, change the source\n"
+                            + "or change the target of this flow\n"
                             + "or identify more actors that could be either source or target");
                     issue.setSeverity( Issue.Level.Minor );
                     issues.add(issue);

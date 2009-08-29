@@ -53,7 +53,8 @@ public class ActorNotInOneOrganization extends AbstractIssueDetector {
                 DetectedIssue issue = makeIssue( Issue.VALIDITY, actor );
                 issue.setSeverity( Issue.Level.Minor );
                 issue.setDescription( actor + " does not belong to any organization." );
-                issue.setRemediation( "Specify an organization in parts played by the actor." );
+                issue.setRemediation( "Specify an organization in a task played by the actor\n "
+                        + "or register the actor as an employee of an organization." );
                 issues.add( issue );
             } else {
                 for ( Organization org : employers ) {
@@ -74,7 +75,7 @@ public class ActorNotInOneOrganization extends AbstractIssueDetector {
                                 + " and to " + ancestor.getName()
                                 + ", and " + ancestor.getName()
                                 + " is a parent organization of " + org.getName() );
-                        issue.setRemediation( "Make sure " + actor + " belongs to only one of them." );
+                        issue.setRemediation( "Make sure " + actor + " belongs to only one organization." );
                         issues.add( issue );
                     }
                 }

@@ -47,8 +47,8 @@ public class TriggeredButNeverStartedDefinedTask extends AbstractIssueDetector {
                     issue.setDescription( "This task starts with the scenario but no task"
                             + " is ever started that causes the scenario to happen.");
                     issue.setRemediation( "Make sure the scenario is caused by a task"
-                            + " that can start (from another scenario),"
-                            + " or make the scenario an incident (i.e. happens irrespective of the plan." );
+                            + " that can start (from another scenario)\n"
+                            + "or make the scenario an incident (i.e. happens independently of the plan." );
                     issue.setSeverity( getQueryService().getPartPriority( part ) );
                     issues.add( issue );
                 }

@@ -147,7 +147,7 @@ public class PlanDao extends Memory {
      * @return a directory
      * @throws IOException on error
      */
-    private File getDataDirectory() throws IOException {
+    public File getDataDirectory() throws IOException {
         File baseDirectory = planManager.getDataDirectory().getFile();
         if ( !baseDirectory.exists() )
             baseDirectory.mkdir();

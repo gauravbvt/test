@@ -6,6 +6,8 @@ import com.mindalliance.channels.model.User;
 import org.acegisecurity.userdetails.UserDetails;
 import org.acegisecurity.userdetails.UserDetailsService;
 import org.acegisecurity.userdetails.UsernameNotFoundException;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.PredicateUtils;
 import org.apache.wicket.util.file.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +20,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -118,9 +122,9 @@ public class FileUserDetailsService implements UserDetailsService {
                         parsePlanAccess( token, user );
                     } else {
                         // admin role or default role for all accessible plans
-                        if (token.equals(User.ROLE_ADMIN)) {
-                            for (Plan plan : getPlanManager().getPlans()) {
-                                user.setPlanAccess( plan.getUri(), true);
+                        if ( token.equals( User.ROLE_ADMIN ) ) {
+                            for ( Plan plan : getPlanManager().getPlans() ) {
+                                user.setPlanAccess( plan.getUri(), true );
                                 planManager.addUser( user );
                             }
                         }
@@ -151,7 +155,7 @@ public class FileUserDetailsService implements UserDetailsService {
             planner = tokens.nextToken().equals( User.ROLE_PLANNER );
         }
         user.setPlanAccess( uri, planner );
-        planManager.addUser( user );        
+        planManager.addUser( user );
     }
 
     private Plan getDefaultPlan( User user ) {
@@ -247,5 +251,32 @@ public class FileUserDetailsService implements UserDetailsService {
 
     public PlanManager getPlanManager() {
         return planManager;
+    }
+
+    /**
+     * Get user by username.
+     *
+     * @param userName a string
+     * @return a user or null
+     */
+    public User getUserNamed( String userName ) {
+        return details.get( userName );
+    }
+
+    public List<User> getAllUsers() {
+        return new ArrayList<User>( details.values() );
+    }
+
+    /**
+     * Get all user who are planners for the current plan.
+     *
+     * @return a list of users
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<User> getAllPlanners() {
+        return (List<User>) CollectionUtils.select(
+                getAllUsers(),
+                PredicateUtils.invokerPredicate( "isPlanner" )
+        );
     }
 }

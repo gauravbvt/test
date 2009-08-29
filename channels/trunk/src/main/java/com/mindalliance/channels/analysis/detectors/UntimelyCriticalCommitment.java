@@ -52,7 +52,7 @@ public class UntimelyCriticalCommitment extends AbstractIssueDetector {
                     issue.setRemediation(
                             "Ease the timeliness constraint for \""
                                     + criticalNeed.getRequirementTitle()
-                                    + "\", or obtain a more timely sharing commitment for "
+                                    + "\"\nor obtain a more timely sharing commitment for "
                                     + "\"" + criticalNeed.getName() + "\""
                     );
                     issue.setSeverity( getQueryService().getPartPriority( target ) );

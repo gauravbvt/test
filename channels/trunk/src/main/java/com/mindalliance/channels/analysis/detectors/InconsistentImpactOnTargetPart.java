@@ -53,7 +53,7 @@ public class InconsistentImpactOnTargetPart extends AbstractIssueDetector {
                         + "' but '"
                         + similar.getRequirementTitle()
                         + "' does not." );
-                issue.setRemediation( "Have both or neither trigger the task that consumes the information." );
+                issue.setRemediation( "Have both trigger the task that consumes the information\nor have neither do it." );
                 issue.setSeverity( Issue.Level.Minor );
                 issues.add( issue );
             } else if ( similar.isTerminatingToTarget() != commitment.isTerminatingToTarget() ) {
@@ -65,7 +65,7 @@ public class InconsistentImpactOnTargetPart extends AbstractIssueDetector {
                         + "' but '"
                         + similar.getRequirementTitle()
                         + "' does not." );
-                issue.setRemediation( "Have both or neither terminate the task that consumes the information." );
+                issue.setRemediation( "Have both terminate the task that consumes the information\nor have neither." );
                 issue.setSeverity( Issue.Level.Minor );
                 issues.add( issue );
             }

@@ -39,8 +39,8 @@ public class PartWithoutRole extends AbstractIssueDetector {
         Part part = (Part) modelObject;
         if ( part.getActor() != null && part.getOrganization() != null && part.getRole() == null  ) {
             DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
-            issue.setDescription( "The role is missing." );
-            issue.setRemediation( "Name a role." );
+            issue.setDescription( "The role for the task is missing." );
+            issue.setRemediation( "Name a role for the task." );
             issue.setSeverity( Issue.Level.Minor );
             issues.add( issue );
         }

@@ -767,6 +767,12 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         return types;
     }
 
+    /**
+      * {@inheritDoc}
+      */
+     public String getTypeName() {
+         return "flow";
+     }
 
     /**
      * The significance of a flow.

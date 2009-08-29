@@ -908,7 +908,7 @@ public interface QueryService extends Service {
     /**
      * Find icon name for given part.
      *
-     * @param part a part
+     * @param part          a part
      * @param imagesDirName the name of the directory with the default icons
      * @return a string
      */
@@ -917,9 +917,16 @@ public interface QueryService extends Service {
     /**
      * Find icon name for given model object.
      *
-     * @param modelObject a model object
+     * @param modelObject   a model object
      * @param imagesDirName the name of the directory with the default icons
      * @return a string
      */
     String findIconName( ModelObject modelObject, String imagesDirName );
+
+    /**
+     * Find user names of all planners for current plan.
+     *
+     * @return a list of strings
+     */
+    List<String> findAllPlanners();
 }

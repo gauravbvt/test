@@ -56,7 +56,7 @@ public class InconsistentImpactOnSourcePart extends AbstractIssueDetector {
                         + "' but '"
                         + similar.getRequirementTitle()
                         + "' does not." );
-                issue.setRemediation( "Have both or neither terminate the task that produces the information." );
+                issue.setRemediation( "Have both terminate the task that produces the information\nor have neither do it." );
                 issue.setSeverity( Issue.Level.Minor );
                 issues.add( issue );
             }

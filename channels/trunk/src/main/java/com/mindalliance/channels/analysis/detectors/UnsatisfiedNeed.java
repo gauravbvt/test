@@ -80,8 +80,8 @@ public class UnsatisfiedNeed extends AbstractIssueDetector {
                 issue.setDescription( "There is apparently no commitment to share"
                         + " these needed elements of informations: "
                         + sb.toString() );
-                issue.setRemediation( "Obtain additional sharing commitments, "
-                        + "or extends current commitments to include the missing elements of informations" );
+                issue.setRemediation( "Obtain additional sharing commitments\n "
+                        + "or extend current commitments to include the missing elements of informations." );
                 issues.add( issue );
             }
         } else {

@@ -66,7 +66,7 @@ public class UselessPart extends AbstractIssueDetector {
                 DetectedIssue issue = makeIssue( DetectedIssue.COMPLETENESS, part );
                 issue.setDescription( "Not useful: it neither ends or mitigates a risk, "
                         + "nor does it trigger or send information to a useful task." );
-                issue.setRemediation( "Have the task mitigate a risk, or make sure at least one task that it"
+                issue.setRemediation( "Have the task mitigate a risk\nor make sure at least one task that it"
                         + " directly or indirectly impacts does address a risk." );
                 issue.setSeverity( Issue.Level.Minor );
                 issues.add( issue );

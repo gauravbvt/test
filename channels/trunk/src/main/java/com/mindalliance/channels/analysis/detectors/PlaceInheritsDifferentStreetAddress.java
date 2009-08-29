@@ -37,7 +37,7 @@ public class PlaceInheritsDifferentStreetAddress extends AbstractIssueDetector {
                 issue.setSeverity( Issue.Level.Minor );
                 issue.setDescription( place.getName()
                         + " is within a place with a different address." );
-                issue.setRemediation( "Change the address or remove it." );
+                issue.setRemediation( "Change the address\nor remove it." );
                 issues.add( issue );
             }
         }

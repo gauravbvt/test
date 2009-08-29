@@ -33,14 +33,14 @@ public class UnverifiedPostalCode extends AbstractIssueDetector {
                 Issue issue = makeIssue( Issue.VALIDITY, place, getTestedProperty() );
                 issue.setSeverity( Issue.Level.Minor );
                 issue.setDescription( "Can't verify the postal code without a geolocation." );
-                issue.setRemediation( "Make sure the geoname is set and valid, and choose a geolocation." );
+                issue.setRemediation( "Set a valid geoname and choose a geolocation." );
                 issues.add( issue );
             } else {
                 if ( !getGeoService().verifyPostalCode( place.getPostalCode(), place.geoLocate() ) ) {
                     Issue issue = makeIssue( Issue.VALIDITY, place, getTestedProperty() );
                     issue.setSeverity( Issue.Level.Minor );
                     issue.setDescription( "Can't verify the postal code for the geolocation." );
-                    issue.setRemediation( "Make sure the postal code or the geolocation are correct." );
+                    issue.setRemediation( "Change the postal code\nor change the geolocation." );
                     issues.add( issue );
                 }
             }

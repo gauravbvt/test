@@ -2,13 +2,13 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
+import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Role;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A person actor is given a role reserved for systems.
@@ -30,7 +30,7 @@ public class PersonInSystemRole extends AbstractIssueDetector {
             if ( role.isSystem() ) {
                 DetectedIssue issue = makeIssue( Issue.VALIDITY, person );
                 issue.setDescription( "Person assigned a role meant for systems." );
-                issue.setRemediation( "Make the actor a system, or do not assign the role." );
+                issue.setRemediation( "Make the actor a system\nor do not assign the role." );
                 issue.setSeverity( Issue.Level.Minor );
                 issues.add( issue );
             }

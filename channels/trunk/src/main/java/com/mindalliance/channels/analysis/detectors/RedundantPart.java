@@ -65,7 +65,7 @@ public class RedundantPart extends AbstractIssueDetector {
             issue.setDescription(
                     "This task is restated "
                             + ( ( count == 1 ) ? "once." : count + " times." ) );
-            issue.setRemediation( "Remove redundant task, or make the repeated tasks different." );
+            issue.setRemediation( "Remove redundant task\nor make the repeated tasks different." );
             issue.setSeverity( Issue.Level.Minor );
             issues.add( issue );
         }

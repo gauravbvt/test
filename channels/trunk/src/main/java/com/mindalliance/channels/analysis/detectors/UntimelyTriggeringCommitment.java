@@ -58,7 +58,7 @@ public class UntimelyTriggeringCommitment extends AbstractIssueDetector {
                     issue.setRemediation(
                             "Ease the timeliness constraint for \""
                                     + triggeredNeed.getRequirementTitle()
-                                    + "\", or obtain more timely sharing commitments for "
+                                    + "\",\nor obtain more timely sharing commitments for "
                                     + "\"" + triggeredNeed.getName() + "\""
                     );
                     issue.setSeverity( getQueryService().getPartPriority( target ) );

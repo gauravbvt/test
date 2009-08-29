@@ -34,8 +34,8 @@ public class ScenarioEventNotStarted extends AbstractIssueDetector {
                 Issue issue = makeIssue( Issue.COMPLETENESS, scenario );
                 issue.setDescription( "The scenario would never start"
                         + " because no other scenario causes the event it responds to." );
-                issue.setRemediation( "Ensure that tasks that cause the event in question are actually started,"
-                        + " or make the event unplanned by adding it to the plan as an incident." );
+                issue.setRemediation( "Ensure that tasks that cause the event in question are actually started\n"
+                        + "or make the event an incident within the plan." );
                 issue.setSeverity( Issue.Level.Major );
                 issues.add( issue );
             }

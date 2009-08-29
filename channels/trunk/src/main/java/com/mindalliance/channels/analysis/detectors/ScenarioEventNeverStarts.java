@@ -32,8 +32,8 @@ public class ScenarioEventNeverStarts extends AbstractIssueDetector {
         if ( !plan.isIncident( scenario.getEvent() ) && !getQueryService().isInitiated( scenario ) ) {
             Issue issue = makeIssue( Issue.COMPLETENESS, scenario );
             issue.setDescription( "The scenario is in response to an event that never happens." );
-            issue.setRemediation( "Make the event in question an incident, or make sure at least one"
-                    + " task in another scenario causes it." );
+            issue.setRemediation( "Make the event in question an incident\n"
+                    +"or make sure at least one task in another scenario causes it." );
             issue.setSeverity( Issue.Level.Major );
             issues.add( issue );
         }

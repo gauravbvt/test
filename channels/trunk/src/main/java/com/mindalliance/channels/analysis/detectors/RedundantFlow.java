@@ -69,7 +69,7 @@ public class RedundantFlow extends AbstractIssueDetector {
         if ( redundant ) {
             DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, flow );
             issue.setDescription( "This flow is redundant." );
-            issue.setRemediation( "Change the information transmitted, or break it up." );
+            issue.setRemediation( "Change the name of information transmitted\nor break up the flow." );
             issue.setSeverity( Issue.Level.Minor );
             issues.add( issue );
         }

@@ -37,7 +37,9 @@ public class RedundantPlace extends AbstractIssueDetector {
                 if ( iter.hasNext() ) sb.append( ", " );
             }
             issue.setDescription( "This place has the same location as: " + sb.toString() );
-            issue.setRemediation( "Remove references to this place or change its address or geolocation." );
+            issue.setRemediation( "Remove references to this place\n"
+                    +"or change its address\n"
+                    +"or change its geolocation." );
             issues.add( issue );
         }
         return issues;

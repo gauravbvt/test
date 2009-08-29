@@ -349,7 +349,8 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
         if ( !ModelObject.areEqualOrNull( organization, other.getOrganization() )
                 && !other.isAnyOrganization() )
             return false;
-        if ( Matcher.samePlace( jurisdiction, other.getJurisdiction() )
+        if ( other.getJurisdiction() == null
+                || Matcher.samePlace( jurisdiction, other.getJurisdiction() )
                 || Matcher.within( jurisdiction, other.getJurisdiction() ) )
             return true;
         else

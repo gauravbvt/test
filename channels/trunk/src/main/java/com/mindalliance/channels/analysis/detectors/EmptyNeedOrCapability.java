@@ -2,12 +2,12 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Flow;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An information need with an empty description (i.e. no elements of information)
@@ -35,8 +35,7 @@ public class EmptyNeedOrCapability extends AbstractIssueDetector {
             issue.setDescription( "Information "
                     + needOrCapability
                     + " has no description (no specified element of information" );
-            issue.setRemediation( "Add a description with elements of information "
-                    + "separated by carriage returns" );
+            issue.setRemediation( "Add a description with elements of information." );
             issues.add( issue );
         }
         return issues;

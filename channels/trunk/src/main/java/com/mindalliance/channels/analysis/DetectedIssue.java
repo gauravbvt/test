@@ -5,6 +5,7 @@ import com.mindalliance.channels.model.ModelObject;
 import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Transient;
+import java.util.List;
 
 /**
  * A problem uncovered about a model object.
@@ -24,6 +25,10 @@ public class DetectedIssue extends AnalysisObject implements Issue {
      * The kind of detector that found this issue.
      */
     private String kind;
+    /**
+     * User names of the default remediators.
+     */
+    private List<String> defaultRemediators;
     /**
      * Label for the detector.
      */
@@ -87,6 +92,14 @@ public class DetectedIssue extends AnalysisObject implements Issue {
 
     public void setDetectorLabel( String detectorLabel ) {
         this.detectorLabel = detectorLabel;
+    }
+
+    public List<String> getDefaultRemediators() {
+        return defaultRemediators;
+    }
+
+    public void setDefaultRemediators( List<String> defaultRemediators ) {
+        this.defaultRemediators = defaultRemediators;
     }
 
     /**

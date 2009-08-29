@@ -36,11 +36,13 @@ import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.nlp.Proximity;
 import com.mindalliance.channels.util.Employment;
+import com.mindalliance.channels.util.FileUserDetailsService;
 import com.mindalliance.channels.util.Matcher;
 import com.mindalliance.channels.util.Play;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.TransformerUtils;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -84,6 +86,10 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * Imaging service.
      */
     private ImagingService imagingService;
+    /**
+     * File user details service.
+     */
+    private FileUserDetailsService userDetailsService;
 
     //=============================================
 
@@ -116,6 +122,10 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     public void setImagingService( ImagingService imagingService ) {
         this.imagingService = imagingService;
+    }
+
+    public void setUserDetailsService( FileUserDetailsService userDetailsService ) {
+        this.userDetailsService = userDetailsService;
     }
 
     /**
@@ -2177,6 +2187,17 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             }
         }
         return iconName;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<String> findAllPlanners() {
+        return (List<String>) CollectionUtils.collect(
+                userDetailsService.getAllPlanners(),
+                TransformerUtils.invokerTransformer( "getUsername" )
+        );
     }
 
 

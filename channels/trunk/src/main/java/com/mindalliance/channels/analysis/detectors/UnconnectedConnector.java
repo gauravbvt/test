@@ -53,6 +53,7 @@ public class UnconnectedConnector extends AbstractIssueDetector {
         for ( Flow capability : getQueryService().findUnusedCapabilities( part ) ) {
             DetectedIssue issue = makeIssue( DetectedIssue.COMPLETENESS, part );
             issue.setDescription( "'" + capability.getName() + "' is produced but never sent." );
+            issue.setRemediation( "Add a commitment to share " + capability.getName() + " produced by the task." );
             issue.setSeverity( Issue.Level.Minor );
             issues.add( issue );
         }
@@ -63,6 +64,7 @@ public class UnconnectedConnector extends AbstractIssueDetector {
                             + "'"
                             + need.getName()
                             + "' is needed but never received." );
+            issue.setRemediation( "Add a commitment to share " + need.getName() + " needed by the task." );
             issue.setSeverity( need.isRequired() ? Issue.Level.Major : Issue.Level.Minor );
             issues.add( issue );
         }

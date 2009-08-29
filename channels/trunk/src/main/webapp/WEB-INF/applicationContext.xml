@@ -7,9 +7,26 @@
            http://www.springframework.org/schema/context
            http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"/>
+
     <bean id="semanticMatcher" class="com.mindalliance.channels.nlp.WordnetSemanticMatcher">
         <property name="wordnetDict" value="WEB-INF/data/wordnet-2/dict"/>
         <property name="simIndex" value="WEB-INF/data/jwsl/wn_index"/>
+    </bean>
+
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="smtp.gmail.com"/>
+        <property name="username" value="jf@mind-alliance.com"/>
+        <property name="password" value="tabarn4c"/>
+        <property name="port" value="465"/>
+        <property name="protocol" value="smtps" />
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtps.auth">true</prop>
+                <prop key="mail.smtps.starttls.enable">true</prop>
+                <prop key="mail.smtps.debug">true</prop>
+            </props>
+        </property>
     </bean>
 
     <bean id="imagingService" class="com.mindalliance.channels.imaging.DefaultImagingService">
@@ -24,6 +41,7 @@
         <constructor-arg ref="attachmentManager"/>
         <property name="semanticMatcher" ref="semanticMatcher"/>
         <property name="imagingService" ref="imagingService"/>
+        <property name="userDetailsService" ref="userDetails"/>
     </bean>
 
     <bean id="serializer" class="com.mindalliance.channels.export.xml.XmlStreamer">
@@ -40,6 +58,43 @@
     <bean id="geoService" class="com.mindalliance.channels.geo.DefaultGeoService">
         <property name="googleMapsAPIKey"
                   value="ABQIAAAAOEFNCNhUR4YjTHX0nnN5VRR4EqRj3RNZnoYuzojShxUjcPQKRRSLJekGZYEI4kGxmTTJBHr4EJ6Xpg"/>
+    </bean>
+
+    <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+        <property name="velocityProperties">
+            <value>
+                resource.loader=file
+                file.resource.loader.class=org.apache.velocity.runtime.resource.loader.FileResourceLoader
+                file.resource.loader.path=${user.home}/channels/templates
+                file.resource.loader.cache=true
+                file.resource.loader.modificationCheckInterval=2
+            </value>
+            <!-- <props>
+                <prop key="resource.loader">file</prop>
+                <prop key="file.resource.loader.class">
+                    org.apache.velocity.runtime.resource.loader.FileResourceLoader
+                </prop>
+                <prop key="file.resource.loader.path">
+                    /home/jf/channels/templates
+                </prop>
+                <prop key="file.resource.loader.cache">true</prop>
+                <prop key="file.resource.loader.modificationCheckInterval">2</prop>
+            </props>-->
+        </property>
+    </bean>
+
+    <bean id="surveyService" class="com.mindalliance.channels.surveys.SurveyGizmoService">
+        <property name="apiKey" value="f244197f935b14559b8061cea"/>
+        <property name="userKey" value="vxvnv4nys*29"/>
+        <property name="template" value="1800"/>
+        <property name="analyst" ref="analyst"/>
+        <property name="queryService" ref="queryService"/>
+        <property name="defaultEmailAddress" value="jf@mind-alliance.com"/>
+        <property name="mailSender" ref="mailSender"/>
+        <property name="userDetailsService" ref="userDetails"/>
+        <property name="velocityEngine" ref="velocityEngine"/>
+        <property name="surveysFile" value="surveys"/>
+        <property name="planManager" ref="planManager"/>
     </bean>
 
     <bean id="idGenerator" class="com.mindalliance.channels.dao.PerPlanIdGenerator"/>

@@ -2,18 +2,17 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
+import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.attachments.Attachment;
-
-import java.util.List;
-import java.util.ArrayList;
-
+import com.mindalliance.channels.model.Part;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Sharing commitment without a required MOU.
@@ -53,7 +52,7 @@ public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
                             + org.getName()
                             + " to another organization"
                             + " must be backed by an MOU." );
-                    issue.setRemediation( "Attach an MOU to this sharing commitment, "
+                    issue.setRemediation( "Attach an MOU to this sharing commitment,\n"
                             + "or remove the requirement for MOUs for "
                             + org.getName() );
                     issue.setSeverity( Issue.Level.Major );

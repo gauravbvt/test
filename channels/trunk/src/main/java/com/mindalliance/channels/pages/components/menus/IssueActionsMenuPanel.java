@@ -1,10 +1,13 @@
 package com.mindalliance.channels.pages.components.menus;
 
+import com.mindalliance.channels.SurveyService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.PasteAttachment;
 import com.mindalliance.channels.command.commands.RemoveIssue;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.UserIssue;
+import com.mindalliance.channels.surveys.Survey;
+import com.mindalliance.channels.surveys.SurveyException;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -12,6 +15,7 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,9 @@ public class IssueActionsMenuPanel extends MenuPanel {
      * Whether the issue is shown collapsed.
      */
     private boolean isCollapsed;
+
+    @SpringBean
+    private SurveyService surveyService;
 
     public IssueActionsMenuPanel( String s, IModel<? extends Issue> model, boolean isCollapsed ) {
         super( s, "Menu", model, null );
@@ -78,6 +85,26 @@ public class IssueActionsMenuPanel extends MenuPanel {
                     new Model<String>( "Hide details" ),
                     hideLink ) );
         }
+        AjaxFallbackLink surveyLink = new AjaxFallbackLink("link") {
+            public void onClick( AjaxRequestTarget target ) {
+                try {
+                    Survey survey = surveyService.getOrCreateSurvey( getIssue() );
+                    update( target, new Change( Change.Type.Expanded, survey));
+                } catch ( SurveyException e ) {
+                    e.printStackTrace();
+                    target.addComponent(IssueActionsMenuPanel.this);
+                    target.prependJavascript( "alert('Oops -- " + e.getMessage() + "');" );
+                }
+            }
+        };
+        menuItems.add( new LinkMenuItem(
+                "menuItem",
+                new Model<String>(
+                        surveyService.isSurveyed( getIssue() )
+                            ? "View survey"
+                                : "Create survey"
+                ),
+                surveyLink ) );
         // Undo and redo
         // Undo and redo
         menuItems.add( this.getUndoMenuItem( "menuItem" ) );

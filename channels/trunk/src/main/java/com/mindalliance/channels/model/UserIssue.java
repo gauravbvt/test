@@ -188,5 +188,4 @@ public class UserIssue extends ModelObject implements Issue {
                 && remediation.isEmpty();
     }
 
-
 }

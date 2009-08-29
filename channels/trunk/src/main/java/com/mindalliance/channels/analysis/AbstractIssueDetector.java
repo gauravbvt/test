@@ -146,6 +146,11 @@ public abstract class AbstractIssueDetector implements IssueDetector {
         issue.setKind( getKind() );
         issue.setDetectorLabel( getLabel() );
         issue.setCanBeWaived( canBeWaived() );
+        issue.setDefaultRemediators( getDefaultRemediators() );
+    }
+
+    private List<String> getDefaultRemediators() {
+        return queryService.findAllPlanners();
     }
 
     /**

@@ -31,8 +31,8 @@ public class AutoStartPartAlsoTriggered extends AbstractIssueDetector {
             Issue issue = makeIssue( Issue.COMPLETENESS, part );
             issue.setDescription( "This task is unnecessarily triggered"
                     + " since it starts with the scenario." );
-            issue.setRemediation( "Either have no flow trigger this task,"
-                    + " or have it not start with the scenario." );
+            issue.setRemediation( "Have no flow trigger this task\n"
+                    + "or have the task not start with the scenario." );
             issue.setSeverity( Issue.Level.Minor );
             issues.add( issue );
         }

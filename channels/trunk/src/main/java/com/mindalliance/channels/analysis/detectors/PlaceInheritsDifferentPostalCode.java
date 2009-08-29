@@ -36,7 +36,7 @@ public class PlaceInheritsDifferentPostalCode extends AbstractIssueDetector {
                 issue.setSeverity( Issue.Level.Minor );
                 issue.setDescription( place.getName()
                         + " is within a place with a different postal code." );
-                issue.setRemediation( "Change the postal code or remove it." );
+                issue.setRemediation( "Change the postal code\nor remove it." );
                 issues.add( issue );
             }
         }

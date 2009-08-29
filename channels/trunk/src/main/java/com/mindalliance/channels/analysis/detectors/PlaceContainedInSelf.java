@@ -36,7 +36,7 @@ public class PlaceContainedInSelf extends AbstractIssueDetector {
                     + loopy.getName()
                     + " which is within "
                     + place.getName() + "." );
-            issue.setRemediation( "Change the place this or " + loopy.getName() + " is said to be within." );
+            issue.setRemediation( "Change the place " + loopy.getName() + " is said to be within." );
             issues.add( issue );
         }
         return issues;

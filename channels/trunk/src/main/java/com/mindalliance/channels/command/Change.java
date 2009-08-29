@@ -60,7 +60,7 @@ public class Change implements Serializable {
         /**
          * Copy taken
          */
-        Copied;
+        Copied
     }
 
     /**
