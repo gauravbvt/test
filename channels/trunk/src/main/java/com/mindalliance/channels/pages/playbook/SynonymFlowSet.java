@@ -36,7 +36,7 @@ final class SynonymFlowSet implements Comparable<SynonymFlowSet> {
     //---------------------------------------
     SynonymFlowSet( Flow flow, boolean incoming ) {
         this.incoming = incoming;
-        flows.add( flow );
+        add( flow );
         firstFlow = flow;
     }
 
@@ -157,27 +157,32 @@ final class SynonymFlowSet implements Comparable<SynonymFlowSet> {
     /**
      * Project the flow with their actual destinations.
      * @param service the service for resolution to actual actors
-     * @return flow, indexed by source or target specs
+     * @param exception spec to ignore in the indexing, if not null
+     * @return flows, indexed by source or target specs
      */
-    public Map<ResourceSpec,Flow> getProjection( QueryService service ) {
+    public Map<ResourceSpec,Flow> getProjection( QueryService service, ResourceSpec exception ) {
         Map<ResourceSpec, Flow> map = new HashMap<ResourceSpec, Flow>();
         for ( Flow flow : flows ) {
             Node node = incoming ? flow.getSource() : flow.getTarget();
-            List<Flow> narrowedFlows = new ArrayList<Flow>();
-            if ( node.isConnector() ) {
-                Iterator<ExternalFlow> iterator = ( (Connector) node ).externalFlows();
-                while ( iterator.hasNext() )
-                    narrowedFlows.add( iterator.next() );
-            } else
-                narrowedFlows.add( flow );
-
-            Set<ResourceSpec> specs = new HashSet<ResourceSpec>();
-            for ( ResourceSpec otherSpec : PlaybookPage.addActorSpecs( service, specs, node ) )
-                for ( Flow narrowedFlow : narrowedFlows )
-                    map.put( otherSpec, narrowedFlow );
+            List<Flow> narrowedFlows = narrowFlow( flow, node );
+            for ( ResourceSpec otherSpec : PlaybookPage.expandSpecs( service, node ) )
+                if ( exception == null || !otherSpec.equals( exception ) )
+                    for ( Flow narrowedFlow : narrowedFlows )
+                        map.put( otherSpec, narrowedFlow );
         }
 
         return map;
+    }
+
+    private static List<Flow> narrowFlow( Flow flow, Node node ) {
+        List<Flow> narrowedFlows = new ArrayList<Flow>();
+        if ( node.isConnector() ) {
+            Iterator<ExternalFlow> iterator = ( (Connector) node ).externalFlows();
+            while ( iterator.hasNext() )
+                narrowedFlows.add( iterator.next() );
+        } else
+            narrowedFlows.add( flow );
+        return narrowedFlows;
     }
 
     /**
@@ -200,6 +205,10 @@ final class SynonymFlowSet implements Comparable<SynonymFlowSet> {
      * @return a flow, or null if none
      */
     public Flow getFlow( QueryService service, ResourceSpec spec ) {
-        return getProjection( service ).get( spec );
+        return getProjection( service, null ).get( spec );
+    }
+
+    public boolean isIncoming() {
+        return incoming;
     }
 }

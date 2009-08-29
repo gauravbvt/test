@@ -29,12 +29,10 @@ class FlowListPanel extends Panel {
     private QueryService queryService;
 
     FlowListPanel(
-            String id, final Collection<ResourceSpec> actorSpecs, final FlowSet flowSet ) {
+            String id, final Collection<ResourceSpec> actorSpecs, final ResourceSpec exception,
+            final List<SynonymFlowSet> synsets ) {
 
         super( id );
-
-        List<SynonymFlowSet> synsets = flowSet.getSynonymSets();
-
         add(
             new ListView<SynonymFlowSet>( "set", synsets ) {
                 @Override
@@ -42,12 +40,12 @@ class FlowListPanel extends Panel {
                     SynonymFlowSet set = item.getModelObject();
                     item.add( new Label( "set-name", set.getLabel() ).setRenderBodyOnly( true ),
                               new AttachmentListPanel( "attachments", set.getAttachments() ),
-                              new Label( "direction", flowSet.isIncoming() ? "<--" : "-->" ),
-                              createFlowCells( getFlowCells( set, actorSpecs ) ) );
+                              new Label( "direction", set.isIncoming() ? "<--" : "-->" ),
+                              createFlowCells( getFlowCells( set, actorSpecs, exception ) ) );
                 }
             } );
 
-        setVisible( flowSet.isNotEmpty() );
+        setVisible( !synsets.isEmpty() );
         setRenderBodyOnly( true );
     }
 
@@ -75,9 +73,10 @@ class FlowListPanel extends Panel {
         };
     }
 
-    private List<FlowCell> getFlowCells( SynonymFlowSet set, Collection<ResourceSpec> actorSpecs ) {
+    private List<FlowCell> getFlowCells(
+            SynonymFlowSet set, Collection<ResourceSpec> actorSpecs, ResourceSpec exception ) {
         List<FlowCell> flowCells = new ArrayList<FlowCell>();
-        Map<ResourceSpec,Flow> map = set.getProjection( queryService );
+        Map<ResourceSpec,Flow> map = set.getProjection( queryService, exception );
         for ( ResourceSpec actorSpec : actorSpecs )
             flowCells.add( new FlowCell( actorSpec.getActor(), map.get( actorSpec ) ) );
         return flowCells;

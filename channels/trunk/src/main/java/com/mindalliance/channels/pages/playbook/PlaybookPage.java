@@ -128,9 +128,7 @@ public abstract class PlaybookPage extends WebPage {
     List<FlowSet> sortFlows( Set<Flow> flows ) {
         Map<ResourceSpec, FlowSet> targets = new HashMap<ResourceSpec, FlowSet>();
         for ( Flow flow : flows ) {
-            for ( ResourceSpec spec : addActorSpecs( getQueryService(),
-                                                     new HashSet<ResourceSpec>(),
-                                                     flow.getSource() ) )
+            for ( ResourceSpec spec : expandSpecs( getQueryService(), flow.getSource() ) )
             {
                 if ( !spec.isActor() || !actor.equals( spec.getActor() ) ) {
                     FlowSet flowSet = targets.get( spec );
@@ -149,16 +147,25 @@ public abstract class PlaybookPage extends WebPage {
     }
 
     /**
+     * Find actual actor or irreducible spec associated with a node.
+     * @param service used for resolution
+     * @param node the initial node
+     * @return resource specification
+     */
+    static Set<ResourceSpec> expandSpecs( QueryService service, Node node ) {
+        return expandSpecs( service, node, new HashSet<ResourceSpec>() );
+    }
+
+    /**
      * Add actor specifications for a given node (either a simple actor or a role specification,
      * if no actors are assigned).
-     * @param <T> a subclass of a collection of resource specs
      * @param service the service to use
-     * @param result collection to add to
      * @param node the node
+     * @param result collection to add to
      * @return the result, for convenience
      */
-    static <T extends Collection<ResourceSpec>> T addActorSpecs(
-            QueryService service, T result, Node node ) {
+    static <T extends Collection<ResourceSpec>> T expandSpecs(
+            QueryService service, Node node, T result ) {
 
         Set<ResourceSpec> rawSpecs = new HashSet<ResourceSpec>();
         if ( node.isConnector() ) {

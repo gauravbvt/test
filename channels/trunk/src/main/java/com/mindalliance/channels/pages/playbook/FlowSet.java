@@ -39,10 +39,6 @@ class FlowSet implements Comparable<FlowSet> {
         return spec;
     }
 
-    public boolean isIncoming() {
-        return incoming;
-    }
-
     /**
      * @return the specification string
      */
@@ -111,7 +107,7 @@ class FlowSet implements Comparable<FlowSet> {
 
     /**
      * @return the flow specification attached to this category.
-     */
+\     */
     public List<SynonymFlowSet> getSynonymSets() {
         List<SynonymFlowSet> result = new ArrayList<SynonymFlowSet>( synonymSets.values() );
         Collections.sort( result );

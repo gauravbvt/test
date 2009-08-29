@@ -598,7 +598,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
         for ( Organization organization : list( Organization.class ) ) {
             result.add( ResourceSpec.with( organization ) );
-            result.addAll( organization.jobResourceSpecs( this ) );
+            result.addAll( organization.jobResourceSpecs() );
         }
         // Specs from scenario parts
         for ( Scenario scenario : list( Scenario.class ) ) {
@@ -845,26 +845,25 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public List<Actor> findAllActors( ResourceSpec resourceSpec ) {
         Set<Actor> actors = new HashSet<Actor>();
         // If the resource spec is anyone, then return no actor,
         // else it would return every actor known to the app
         if ( !resourceSpec.isAnyone() ) {
-            Iterator<ResourceSpec> actorResourceSpecs = new FilterIterator(
-                    findAllResourceSpecs().iterator(),
-                    new Predicate() {
+            Iterator<ResourceSpec> specs = findAllResourceSpecs().iterator();
+            Iterator<ResourceSpec> actorSpecs = new FilterIterator( specs, new Predicate() {
                         public boolean evaluate( Object object ) {
                             return ( (ResourceSpec) object ).getActor() != null;
                         }
                     } );
-            while ( actorResourceSpecs.hasNext() ) {
-                ResourceSpec actorResourceSpec = actorResourceSpecs.next();
-                if ( actorResourceSpec.narrowsOrEquals( resourceSpec ) ) {
+            while ( actorSpecs.hasNext() ) {
+                ResourceSpec actorResourceSpec = actorSpecs.next();
+                if ( actorResourceSpec.narrowsOrEquals( resourceSpec ) )
                     actors.add( actorResourceSpec.getActor() );
-                }
             }
         }
+
         return new ArrayList<Actor>( actors );
     }
 
@@ -1451,7 +1450,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             Flow send = sends.next();
             if ( send.getTarget().isConnector() ) {
                 if ( !( (Connector) send.getTarget() ).externalFlows().hasNext() ) {
-                    // A capability 
+                    // A capability
                     Iterator<Flow> others = part.outcomes();
                     boolean used = false;
                     while ( !used && others.hasNext() ) {

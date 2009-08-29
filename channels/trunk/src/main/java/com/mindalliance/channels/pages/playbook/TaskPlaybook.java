@@ -11,6 +11,7 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.User;
+import com.mindalliance.channels.QueryService;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.PageParameters;
@@ -55,16 +56,39 @@ public class TaskPlaybook extends PlaybookPage {
     }
 
     private void init( Actor actor, Part part, User user ) {
+        ResourceSpec actorSpec = ResourceSpec.with( actor );
         String taskName = part.getTask();
         String desc = part.getDescription();
+        QueryService service = getQueryService();
 
-        List<Flow> inputs = new ArrayList<Flow>();
-        List<Flow> outputs = new ArrayList<Flow>();
-        List<ResourceSpec> specs = filterSpecs( organizeFlow( part, inputs, outputs ), actor );
+        List<Flow> inputFlows = new ArrayList<Flow>();
+        List<Flow> outputFlows = new ArrayList<Flow>();
+        List<Flow> otherOutputFlows = new ArrayList<Flow>();
+
+        Set<ResourceSpec> actorSpecs = new HashSet<ResourceSpec>();
+        for ( Flow flow : getFlows( part, part.getScenario() ) )
+            if ( part.equals( flow.getTarget() ) ) {
+                if ( !flow.isTriggeringToTarget() ) {
+                    Set<ResourceSpec> specs = expandSpecs( service, flow.getSource() );
+                    if ( specs.size() > 1 || !specs.contains( actorSpec ) )
+                        inputFlows.add( flow );
+                    actorSpecs.addAll( specs );
+                }
+            } else {
+                Set<ResourceSpec> specs = expandSpecs( service, flow.getTarget() );
+                if ( specs.size() > 1 || !specs.contains( actorSpec ) )
+                    otherOutputFlows.add( flow );
+                outputFlows.add( flow );
+                actorSpecs.addAll( specs );
+            }
+
+        actorSpecs.remove( actorSpec );
+        List<ResourceSpec> specList = new ArrayList<ResourceSpec>( actorSpecs );
+        Collections.sort( specList );
 
         ResourceSpec partSpec = part.resourceSpec();
-        FlowSet inputSet = new FlowSet( partSpec, true, inputs );
-        FlowSet outputSet = new FlowSet( partSpec, false, outputs );
+        List<SynonymFlowSet> outputs = new FlowSet( partSpec, false, otherOutputFlows ).getSynonymSets();
+        List<SynonymFlowSet> inputs = new FlowSet( partSpec, true, inputFlows ).getSynonymSets();
 
         add(
             new Label( "title", actor.getName() + " - " + taskName ),
@@ -77,11 +101,11 @@ public class TaskPlaybook extends PlaybookPage {
             createRisks( part.getMitigations() ),
 
             new AttachmentListPanel( "attachments", part.getAttachments() ),
-            createTaskList( actor, part, outputSet ),
+            createTaskList( actor, part, new FlowSet( partSpec, false, outputFlows ) ),
 
             new WebMarkupContainer( "flows" )
                     .add(
-                        new ListView<ResourceSpec>( "actorSpec", specs ) {
+                        new ListView<ResourceSpec>( "actorSpec", specList ) {
                             @Override
                             protected void populateItem( ListItem<ResourceSpec> item ) {
                                 ResourceSpec resourceSpec = item.getModelObject();
@@ -90,22 +114,14 @@ public class TaskPlaybook extends PlaybookPage {
                             }
                         },
 
-                        new FlowListPanel( "inputs", specs, inputSet ),
-                        new FlowListPanel( "outputs", specs, outputSet ) )
+                        new FlowListPanel( "inputs", specList, actorSpec, inputs ),
+                        new FlowListPanel( "outputs", specList, actorSpec, outputs ) )
 
-                    .setVisible( !inputs.isEmpty() || !outputs.isEmpty() )
+                    .setVisible( !specList.isEmpty()
+                                 && ( !inputs.isEmpty() || !outputs.isEmpty() ) )
         );
 
         createNavbar( this, actor, user );
-    }
-
-    private static List<ResourceSpec> filterSpecs( List<ResourceSpec> actorSpecs, Actor actor ) {
-        List<ResourceSpec> filtered = new ArrayList<ResourceSpec>();
-        for ( ResourceSpec spec : actorSpecs ) {
-            if ( !spec.isActor() || !actor.equals( spec.getActor() ) )
-                filtered.add( spec );
-        }
-        return filtered;
     }
 
     private Component createTaskList( final Actor actor, Part part, FlowSet flowSet ) {
@@ -141,25 +157,6 @@ public class TaskPlaybook extends PlaybookPage {
         List<Part> tasks = new ArrayList<Part>( parts );
         Collections.sort( tasks );
         return tasks;
-    }
-
-    private List<ResourceSpec> organizeFlow( Part part, List<Flow> inputs, List<Flow> outputs ) {
-        Set<ResourceSpec> actorSpecs = new HashSet<ResourceSpec>();
-        for ( Flow flow : getFlows( part, part.getScenario() ) ) {
-            Node node;
-            if ( part.equals( flow.getTarget() ) ) {
-                inputs.add( flow );
-                node = flow.getSource();
-            } else {
-                outputs.add( flow );
-                node = flow.getTarget();
-            }
-            addActorSpecs( getQueryService(), actorSpecs, node );
-        }
-
-        List<ResourceSpec> result = new ArrayList<ResourceSpec>( actorSpecs );
-        Collections.sort( result );
-        return result;
     }
 
     private static List<Flow> getFlows( Part part, Scenario scenario ) {

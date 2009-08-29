@@ -1,6 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
@@ -204,14 +203,13 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
     /**
      * Return resources specs from jobs.
      *
-     * @param queryService a query service
      * @return a list of resource specs
      */
-    public List<ResourceSpec> jobResourceSpecs( QueryService queryService ) {
+    public List<ResourceSpec> jobResourceSpecs() {
         List<ResourceSpec> resourceSpecs = new ArrayList<ResourceSpec>();
-        for ( Job job : jobs ) {
+        for ( Job job : jobs )
             resourceSpecs.add( job.resourceSpec( this ) );
-        }
+
         return resourceSpecs;
     }
 
@@ -270,7 +268,7 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
     public boolean isIconized() {
         return true;
     }
-    
-    
+
+
 }
 

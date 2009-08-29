@@ -9,7 +9,7 @@ import com.mindalliance.channels.model.Actor;
 final class FlowCell {
 
     /** The actor for this cell (maybe null). */
-    private Actor actor;
+    private final Actor actor;
 
     /** The flow. */
     private final Flow flow;
