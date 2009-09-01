@@ -23,14 +23,18 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
 import org.apache.commons.collections.TransformerUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +62,11 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
      * Filters mapped by property.
      */
     private Map<String, ModelObject> filters = new HashMap<String, ModelObject>();
+    private static final String USERS_SURVEYED = "Users surveyed";
+    private static final String USERS_NOT_SURVEYED = "Users not surveyed";
+    private static final String ALL = "All";
+    private static String[] UsersScopes = {USERS_SURVEYED, USERS_NOT_SURVEYED, ALL};
+    private String usersScope = USERS_SURVEYED;
     /**
      * Survey contacts table.
      */
@@ -70,8 +79,32 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
     }
 
     private void init() {
+        addUsersChoices();
         addContactsTable();
         addUpdateContactsButton();
+    }
+
+    private void addUsersChoices() {
+        DropDownChoice<String> usersChoice = new DropDownChoice<String>(
+                "usersScope",
+                new PropertyModel<String>( this, "usersScope" ),
+                Arrays.asList( UsersScopes )
+        );
+        usersChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addContactsTable();
+                target.addComponent( surveyContactsTable );
+            }
+        } );
+        add( usersChoice );
+    }
+
+    public String getUsersScope() {
+        return usersScope;
+    }
+
+    public void setUsersScope( String usersScope ) {
+        this.usersScope = usersScope;
     }
 
     private void addContactsTable() {
@@ -189,13 +222,22 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
                     queryService.findAllUsernames(),
                     surveyed );
             for ( String other : others ) {
-                 contacts.add( new Contact( other ) );
+                contacts.add( new Contact( other ) );
             }
         }
         return contacts;
     }
 
     private boolean isFilteredOut( ContactDescriptor contactDescriptor ) {
+        if ( !usersScope.equals( ALL ) ) {
+            final Contact contact = contactDescriptor.getContact();
+            boolean isSurveyed = CollectionUtils.exists(
+                    getSurvey().getContacts(),
+                    PredicateUtils.equalPredicate( contact )
+            );
+            if ( usersScope.equals( USERS_SURVEYED ) && !isSurveyed ) return true;
+            if ( usersScope.equals( USERS_NOT_SURVEYED ) && isSurveyed ) return true;
+        }
         Organization org = (Organization) filters.get( "organization" );
         if ( org != null && !org.equals( contactDescriptor.getOrganization() ) )
             return true;
@@ -355,6 +397,10 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
 
         public Contact.Status getNewStatus() {
             return newStatus;
+        }
+
+        public Contact getContact() {
+            return contact;
         }
     }
 }
