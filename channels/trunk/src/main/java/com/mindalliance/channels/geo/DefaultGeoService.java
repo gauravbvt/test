@@ -16,6 +16,7 @@ import org.geonames.ToponymSearchResult;
 import org.geonames.WebService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,7 +38,7 @@ import java.util.List;
  * Date: Jun 19, 2009
  * Time: 1:30:08 PM
  */
-public class DefaultGeoService extends AbstractService implements GeoService {
+public class DefaultGeoService extends AbstractService implements GeoService, InitializingBean {
 
     /**
      * Logger.
@@ -47,6 +48,18 @@ public class DefaultGeoService extends AbstractService implements GeoService {
      * Maximum number fo results retrieved from geonames per search.
      */
     private static final int MAX_SEARCH_ROWS = 15;
+    /**
+     * Geonames server to use.
+     */
+    private String geonamesServer;
+    /**
+     * Authentication user name.
+     */
+    private String geonamesUserName;
+    /**
+     * Authentication token.
+     */
+    private String geonamesToken;
 
     /**
      * Google map's API key.
@@ -66,6 +79,27 @@ public class DefaultGeoService extends AbstractService implements GeoService {
 
     public void setGoogleMapsAPIKey( String googleMapsAPIKey ) {
         this.googleMapsAPIKey = googleMapsAPIKey;
+    }
+
+    public void setGeonamesServer( String geonamesServer ) {
+        this.geonamesServer = geonamesServer;
+    }
+
+    public void setGeonamesUserName( String geonamesUserName ) {
+        this.geonamesUserName = geonamesUserName;
+    }
+
+    public void setGeonamesToken( String geonamesToken ) {
+        this.geonamesToken = geonamesToken;
+    }
+
+    public void afterPropertiesSet() throws Exception {
+        if ( geonamesServer != null)
+            WebService.setGeoNamesServer( geonamesServer );
+        if ( geonamesUserName != null)
+            WebService.setUserName( geonamesUserName );
+        if ( geonamesToken != null)
+            WebService.setToken( geonamesToken );
     }
 
     /**
