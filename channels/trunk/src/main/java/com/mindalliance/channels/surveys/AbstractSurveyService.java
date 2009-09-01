@@ -186,7 +186,7 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
                         }
                     }
                 } else {
-                    LOG.error("No source dir to copy templates from");
+                    LOG.error( "No source dir to copy templates from" );
                 }
             } catch ( IOException e ) {
                 LOG.error( "Failed to copy template files", e );
@@ -429,11 +429,17 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
     public void launchSurvey( Survey survey ) throws SurveyException {
         if ( !survey.isRegistered() ) throw new SurveyException( "Survey not registered." );
         if ( survey.isClosed() || survey.isLaunched() ) throw new SurveyException( "Survey already launched." );
-        doLaunchSurvey( survey );
-        survey.setStatus( Survey.Status.Launched );
-        survey.resetData();
-        survey.setLaunchDate( new Date() );
-        save();
+        try {
+            doLaunchSurvey( survey );
+            survey.setStatus( Survey.Status.Launched );
+            survey.setLaunchDate( new Date() );
+            survey.resetData();
+            // Invite to-be-contacted users
+            inviteNewContacts( survey );
+        } finally {
+            // save no matter what - launch may succeed while invitations fail
+            save();
+        }
     }
 
     /**

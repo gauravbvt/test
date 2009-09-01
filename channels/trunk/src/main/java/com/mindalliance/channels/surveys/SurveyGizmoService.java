@@ -192,7 +192,6 @@ public class SurveyGizmoService extends AbstractSurveyService {
     protected void doLaunchSurvey( Survey survey ) throws SurveyException {
         changeSurveyStatus( survey, "Launched" );
         LOG.info( "Survey " + survey.getId() + " launched" );
-        inviteNewContacts( survey );
     }
 
     /**
