@@ -11,6 +11,7 @@ import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.LoginPage;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.UploadPage;
+import com.mindalliance.channels.pages.playbook.ContactPage;
 import com.mindalliance.channels.pages.playbook.TaskPlaybook;
 import com.mindalliance.channels.pages.playbook.VCardPage;
 import com.mindalliance.channels.pages.png.EntityNetworkPage;
@@ -110,6 +111,7 @@ public final class Channels extends WebApplication implements ApplicationListene
         mount( new IndexedParamUrlCodingStrategy( "report", PlanReportPage.class ) );
         mount( new IndexedParamUrlCodingStrategy( "playbooks", TaskPlaybook.class ) );
         mount( new IndexedParamUrlCodingStrategy( "vcards", VCardPage.class ) );
+        mount( new IndexedParamUrlCodingStrategy( "contacts", ContactPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "plan", PlanPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "admin", AdminPage.class ) );
 

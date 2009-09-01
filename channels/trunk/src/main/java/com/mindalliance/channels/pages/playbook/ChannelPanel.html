@@ -5,15 +5,14 @@
         xmlns:wicket="http://wicket.apache.org/"
         xml:lang="en"
         lang="en">
-<head>
-    <title wicket:id="title">Title</title>
-</head>
 <body>
-    <h1 wicket:id="name">Name</h1>
-
-    <div wicket:id="channels"></div>
-
-    <p wicket:id="description">Description...</p>
-
+<wicket:panel>
+    <table class="channels">
+        <tr wicket:id="channel">
+            <th align="right"><span wicket:id="type">Type</span>:</th>
+            <td><a wicket:id="detail">(detail)</a></td>
+        </tr>
+    </table>
+</wicket:panel>
 </body>
 </html>

@@ -3,7 +3,6 @@ package com.mindalliance.channels.pages.playbook;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Actor;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -28,11 +27,15 @@ class FlowListPanel extends Panel {
     @SpringBean
     private QueryService queryService;
 
+    /** True if the flows in this panel are incoming. */
+    private boolean incoming;
+
     FlowListPanel(
             String id, final Collection<ResourceSpec> actorSpecs, final ResourceSpec exception,
-            final List<SynonymFlowSet> synsets ) {
+            final List<SynonymFlowSet> synsets, boolean incoming ) {
 
         super( id );
+        this.incoming = incoming;
         add(
             new ListView<SynonymFlowSet>( "set", synsets ) {
                 @Override
@@ -54,21 +57,24 @@ class FlowListPanel extends Panel {
             @Override
             protected void populateItem( ListItem<FlowCell> item ) {
                 FlowCell flowCell = item.getModelObject();
-                if ( flowCell.hasFlow() )
-                    item.add( new WebMarkupContainer( "vcard" )
-                                .add( new Label( "delay", "" ),
-                                      new Label( "criticality", "" ) )
-                                .setRenderBodyOnly( true ) );
-                else {
-                    Actor actor = flowCell.getActor();
-                    long value = actor == null ? 0L : actor.getId();
-                    item.add( new BookmarkablePageLink<VCardPage>( "vcard", VCardPage.class )
-                                .setParameter( "0", value )
-                                .add( new Label( "delay", flowCell.getDelayString() ),
-                                      new Label( "criticality", flowCell.getCriticality() ) )
-                                .add( new AttributeModifier( "title", true,
-                                        new Model<String>( flowCell.getDescription() ) ) ) );
-                }
+
+                WebMarkupContainer container;
+                if ( flowCell.isIncoming() && !flowCell.isAskedFor() 
+                     || !flowCell.hasActor() && !flowCell.hasFlow() ) {
+                    container = new WebMarkupContainer( "vcard" );
+                    container.setRenderBodyOnly( true );
+                } else
+                    container = flowCell.hasActor() ?
+                                new BookmarkablePageLink<VCardPage>( "vcard", VCardPage.class )
+                                    .setParameter( "0", flowCell.getActorId() )
+                              : new BookmarkablePageLink<ContactPage>( "vcard", ContactPage.class )
+                                    .setParameter( "0", flowCell.getFlowId() );
+
+                item.add( container
+                            .add( new Label( "delay", flowCell.getDelayString() ),
+                                  new Label( "criticality", flowCell.getCriticality() ) )
+                            .add( new AttributeModifier( "title", true,
+                                    new Model<String>( flowCell.getDescription() ) ) ) );
             }
         };
     }
@@ -78,7 +84,7 @@ class FlowListPanel extends Panel {
         List<FlowCell> flowCells = new ArrayList<FlowCell>();
         Map<ResourceSpec,Flow> map = set.getProjection( queryService, exception );
         for ( ResourceSpec actorSpec : actorSpecs )
-            flowCells.add( new FlowCell( actorSpec.getActor(), map.get( actorSpec ) ) );
+            flowCells.add( new FlowCell( actorSpec.getActor(), map.get( actorSpec ), incoming ) );
         return flowCells;
     }
 }

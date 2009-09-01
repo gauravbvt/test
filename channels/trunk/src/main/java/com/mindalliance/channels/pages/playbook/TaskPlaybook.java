@@ -34,6 +34,14 @@ import java.util.Set;
  */
 public class TaskPlaybook extends PlaybookPage {
 
+    private List<ResourceSpec> specList;
+
+    private List<SynonymFlowSet> outputs;
+
+    private List<SynonymFlowSet> inputs;
+
+    private List<Part> tasks;
+
     public TaskPlaybook( PageParameters parameters ) {
         super( parameters );
         Actor actor = getActor();
@@ -59,13 +67,49 @@ public class TaskPlaybook extends PlaybookPage {
         ResourceSpec actorSpec = ResourceSpec.with( actor );
         String taskName = part.getTask();
         String desc = part.getDescription();
-        QueryService service = getQueryService();
+
+        sortFlows( part, actorSpec, getQueryService() );
+
+        add(
+            new Label( "title", actor.getName() + " - " + taskName ),
+            new Label( "header", taskName ),
+            new Label( "role", getRoleString( part, actor ) ),
+            new Label( "desc", desc ).setVisible( !desc.isEmpty() ),
+
+            createRepeat( part.getRepeatsEvery() ).setVisible( part.isRepeating() ),
+            createCompletion( part.getCompletionTime() ).setVisible( part.isSelfTerminating() ),
+            createRisks( part.getMitigations() ),
+
+            new AttachmentListPanel( "attachments", part.getAttachments() ),
+            createTaskList( actor, part, tasks ),
+
+            new WebMarkupContainer( "flows" )
+                    .add(
+                        new ListView<ResourceSpec>( "actorSpec", specList ) {
+                            @Override
+                            protected void populateItem( ListItem<ResourceSpec> item ) {
+                                ResourceSpec resourceSpec = item.getModelObject();
+                                item.add( new Label( "actorLabel", resourceSpec.toString() )
+                                                    .setRenderBodyOnly( true ) );
+                            }
+                        },
+
+                        new FlowListPanel( "inputs", specList, actorSpec, inputs, true ),
+                        new FlowListPanel( "outputs", specList, actorSpec, outputs, false ) )
+
+                    .setVisible( !( specList.isEmpty() || inputs.isEmpty() && outputs.isEmpty() ) )
+        );
+
+        createNavbar( this, actor, user );
+    }
+
+    private void sortFlows( Part part, ResourceSpec actorSpec, QueryService service ) {
 
         List<Flow> inputFlows = new ArrayList<Flow>();
         List<Flow> outputFlows = new ArrayList<Flow>();
         List<Flow> otherOutputFlows = new ArrayList<Flow>();
-
         Set<ResourceSpec> actorSpecs = new HashSet<ResourceSpec>();
+
         for ( Flow flow : getFlows( part, part.getScenario() ) )
             if ( part.equals( flow.getTarget() ) ) {
                 if ( !flow.isTriggeringToTarget() ) {
@@ -83,54 +127,21 @@ public class TaskPlaybook extends PlaybookPage {
             }
 
         actorSpecs.remove( actorSpec );
-        List<ResourceSpec> specList = new ArrayList<ResourceSpec>( actorSpecs );
+        specList = new ArrayList<ResourceSpec>( actorSpecs );
         Collections.sort( specList );
 
         ResourceSpec partSpec = part.resourceSpec();
-        List<SynonymFlowSet> outputs = new FlowSet( partSpec, false, otherOutputFlows ).getSynonymSets();
-        List<SynonymFlowSet> inputs = new FlowSet( partSpec, true, inputFlows ).getSynonymSets();
+        outputs = new FlowSet( partSpec, false, otherOutputFlows ).getSynonymSets();
+        inputs = new FlowSet( partSpec, true, inputFlows ).getSynonymSets();
 
-        add(
-            new Label( "title", actor.getName() + " - " + taskName ),
-            new Label( "header", taskName ),
-            new Label( "role", getRoleString( part, actor ) ),
-            new Label( "desc", desc ).setVisible( !desc.isEmpty() ),
-
-            createRepeat( part.getRepeatsEvery() ).setVisible( part.isRepeating() ),
-            createCompletion( part.getCompletionTime() ).setVisible( part.isSelfTerminating() ),
-            createRisks( part.getMitigations() ),
-
-            new AttachmentListPanel( "attachments", part.getAttachments() ),
-            createTaskList( actor, part, new FlowSet( partSpec, false, outputFlows ) ),
-
-            new WebMarkupContainer( "flows" )
-                    .add(
-                        new ListView<ResourceSpec>( "actorSpec", specList ) {
-                            @Override
-                            protected void populateItem( ListItem<ResourceSpec> item ) {
-                                ResourceSpec resourceSpec = item.getModelObject();
-                                item.add( new Label( "actorLabel", resourceSpec.toString() )
-                                                    .setRenderBodyOnly( true ) );
-                            }
-                        },
-
-                        new FlowListPanel( "inputs", specList, actorSpec, inputs ),
-                        new FlowListPanel( "outputs", specList, actorSpec, outputs ) )
-
-                    .setVisible( !specList.isEmpty()
-                                 && ( !inputs.isEmpty() || !outputs.isEmpty() ) )
-        );
-
-        createNavbar( this, actor, user );
+        FlowSet flowSet = new FlowSet( partSpec, false, outputFlows );
+        tasks = getSubtasks( flowSet.getFlows( service, actorSpec ) );
     }
 
-    private Component createTaskList( final Actor actor, Part part, FlowSet flowSet ) {
-        List<Flow> flows = flowSet.getFlows( getQueryService(), ResourceSpec.with( actor ) );
-        List<Part> tasks = getSubtasks( flows );
-
+    private Component createTaskList( final Actor actor, Part part, List<Part> parts ) {
         return new WebMarkupContainer( "other" )
             .add(
-                new ListView<Part>( "task", tasks ) {
+                new ListView<Part>( "task", parts ) {
                     @Override
                     protected void populateItem( ListItem<Part> item ) {
                         Part otherPart = item.getModelObject();
@@ -146,7 +157,7 @@ public class TaskPlaybook extends PlaybookPage {
                     .add( new Label( "event", getEventName() ) )
                     .setVisible( part.isTerminatesEvent() ) )
 
-            .setVisible( !tasks.isEmpty() || part.isTerminatesEvent() );
+            .setVisible( !parts.isEmpty() || part.isTerminatesEvent() );
     }
 
     private static List<Part> getSubtasks( List<Flow> flows ) {
@@ -222,18 +233,16 @@ public class TaskPlaybook extends PlaybookPage {
     }
 
     private static Component createCompletion( Delay time ) {
+        String completion = time.getSeconds() > 0 ? "in " + time : time.toString();
         return new WebMarkupContainer( "completion-note" )
-                .add( new Label( "completion",
-                                 time.getSeconds() > 0 ? "in " + time : time.toString() )
-                        .setRenderBodyOnly( true ) )
+                .add( new Label( "completion", completion ).setRenderBodyOnly( true ) )
                 .setRenderBodyOnly( true );
     }
 
     private static Component createRepeat( Delay time ) {
+        String timeString = time.getSeconds() > 0 ? "every " + time : "continuously";
         return new WebMarkupContainer( "repeat-note" )
-                .add( new Label( "repeat",
-                                    time.getSeconds() > 0 ? "every " + time : "continuously" )
-                        .setRenderBodyOnly( true ) )
+                .add( new Label( "repeat", timeString ).setRenderBodyOnly( true ) )
                 .setRenderBodyOnly( true );
     }
 

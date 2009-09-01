@@ -14,7 +14,11 @@ final class FlowCell {
     /** The flow. */
     private final Flow flow;
 
-    FlowCell( Actor actor, Flow flow ) {
+    /** If the flow is incoming. */
+    private boolean incoming;
+
+    FlowCell( Actor actor, Flow flow, boolean incoming ) {
+        this.incoming = incoming;
         this.actor = actor;
         this.flow = flow;
     }
@@ -27,7 +31,7 @@ final class FlowCell {
      * @return if this is not an empty cell
      */
     public boolean hasFlow() {
-        return flow == null;
+        return flow != null;
     }
 
     public String getDescription() {
@@ -45,5 +49,32 @@ final class FlowCell {
 
     public String getDelayString() {
         return flow == null ? "" : flow.getMaxDelay().toString();
+    }
+
+    public Flow getFlow() {
+        return flow;
+    }
+
+    /**
+     * @return the ID of the underlying flow (or 0)
+     */
+    public long getFlowId() {
+        return flow == null ? 0L : flow.getId();
+    }
+
+    boolean hasActor() {
+        return actor != null;
+    }
+
+    long getActorId() {
+        return actor.getId();
+    }
+
+    public boolean isIncoming() {
+        return incoming;
+    }
+
+    public boolean isAskedFor() {
+        return flow != null && flow.isAskedFor();
     }
 }

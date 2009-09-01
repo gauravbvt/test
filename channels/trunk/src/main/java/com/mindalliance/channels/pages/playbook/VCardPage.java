@@ -6,13 +6,9 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Medium;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.protocol.http.servlet.AbortWithHttpStatusException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -43,44 +39,8 @@ public class VCardPage extends WebPage {
                 new Label( "name", actor.getName() ),
                 new Label( "description", actor.getDescription() ),
 
-                new ListView<Channel>( "channel", channels ) {
-                    @Override
-                    protected void populateItem( ListItem<Channel> item ) {
-                        Channel channel = item.getModelObject();
-                        Medium medium = channel.getMedium();
-                        item.add( new Label( "type", medium.toString() )
-                                .setRenderBodyOnly( true ) );
-
-                        String address = channel.getAddress();
-
-                        if ( Medium.Email.equals( medium ) ) {
-                            String link = "mailto:" + address.trim();
-                            item.add( new ExternalLink( "detail", link, address ) );
-
-                        } else if ( isPhone( medium ) ) {
-                            item.add( new ExternalLink( "detail", phoneLink( address ), address ) );
-
-                        } else
-                            item.add( new Label( "detail", address ).setRenderBodyOnly( true ) );
-                    }
-                }
+                new ChannelPanel( "channels", channels ).setRenderBodyOnly( true )
         );
-    }
-
-    private static String phoneLink( String address ) {
-        StringBuilder buf = new StringBuilder();
-        for ( int i = 0 ; i < address.length() && buf.length() < 10; i++ )
-            if ( Character.isDigit( address.charAt( i ) ) )
-                buf.append( address.charAt( i ) );
-        return "wtai://wp/mc;" + buf.toString();
-    }
-
-    private static boolean isPhone( Medium medium ) {
-        return medium.equals( Medium.Phone )
-               || medium.equals( Medium.HomePhone )
-               || medium.equals( Medium.PhoneConf )
-               || medium.equals( Medium.Cell )
-               || medium.equals( Medium.Fax );
     }
 
     private <T extends ModelObject> T getParm( String parm, Class<T> parmClass ) {

@@ -9,11 +9,15 @@
     <title wicket:id="title">Title</title>
 </head>
 <body>
-    <h1 wicket:id="name">Name</h1>
+    <h1 wicket:id="header">Header</h1>
 
-    <div wicket:id="channels"></div>
+    <p wicket:id="description">description</p>
 
-    <p wicket:id="description">Description...</p>
-
+    <ul>
+        <li wicket:id="contact">
+            <span wicket:id="name">Contact name</span>
+            <div wicket:id="channel">(channels)</div>
+        </li>
+    </ul>
 </body>
 </html>
