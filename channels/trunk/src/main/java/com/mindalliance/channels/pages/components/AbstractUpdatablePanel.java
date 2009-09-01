@@ -13,7 +13,9 @@ import com.mindalliance.channels.pages.Updatable;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -263,8 +265,17 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
             }
         }
     }
-    
 
+    /**
+     * Add a confirmation dialog that can cancel the link's actions.
+     * @param link a link
+     * @param message a string
+     */
+    protected void confirm( Link link, String message ) {
+        link.add( new SimpleAttributeModifier(
+                "onclick",
+                "return confirm('" + message + "');" ) );
+    }
 
 
 }

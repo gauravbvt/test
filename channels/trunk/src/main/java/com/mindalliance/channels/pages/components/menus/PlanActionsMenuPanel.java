@@ -63,12 +63,16 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
                         ExportPage.class,
                         PlanPage.getParameters( (Scenario) getModel().getObject(), null ) ) ) );
         // Logout
-        menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Logout " + User.current().getUsername() ),
-                new AjaxFallbackLink( "link" )  {
+        AjaxFallbackLink logoutLink = new AjaxFallbackLink( "link" )  {
                     public void onClick( AjaxRequestTarget target ) {
-                        getRequestCycle().setRequestTarget(new RedirectRequestTarget("/logout"));                        
+                        getRequestCycle().setRequestTarget(new RedirectRequestTarget("/logout"));
                     }
-                }
+                };
+        confirm( logoutLink, "Logging out?");
+        menuItems.add( new LinkMenuItem(
+                "menuItem",
+                new Model<String>( "Logout " + User.current().getUsername() ),
+                logoutLink
         ) );
         return menuItems;
     }
@@ -110,7 +114,7 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
                 update( target, change );
             }
         } );
-        commandWrappers.add( new CommandWrapper( new RemoveScenario( scenario ) ) {
+        commandWrappers.add( new CommandWrapper( new RemoveScenario( scenario ), CONFIRM ) {
             @Override
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 update( target, change );

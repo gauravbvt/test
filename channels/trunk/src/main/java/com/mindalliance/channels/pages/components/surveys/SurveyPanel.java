@@ -77,11 +77,15 @@ public class SurveyPanel extends AbstractUpdatablePanel {
     }
 
     private String getStatusTitle() {
-        switch( survey.getStatus() ) {
-            case In_design: return "New";
-            case Launched: return "Launched";
-            case Closed: return "Closed";
-            default: throw new RuntimeException("Unknown status");
+        switch ( survey.getStatus() ) {
+            case In_design:
+                return "New";
+            case Launched:
+                return "Launched";
+            case Closed:
+                return "Closed";
+            default:
+                throw new RuntimeException( "Unknown status" );
         }
     }
 
@@ -159,6 +163,7 @@ public class SurveyPanel extends AbstractUpdatablePanel {
                 update( target, new Change( Change.Type.Updated, survey ) );
             }
         };
+        confirm( closeLink, "Close the survey?" );
         closeLink.setVisible( survey.isLaunched() );
         surveyDataContainer.add( closeLink );
     }

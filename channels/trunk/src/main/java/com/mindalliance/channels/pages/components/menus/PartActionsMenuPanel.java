@@ -50,7 +50,7 @@ public class PartActionsMenuPanel extends ActionMenuPanel {
                 update( target, change );
             }
         } );
-        commandWrappers.add( new CommandWrapper( new RemovePart( getPart() ) ) {
+        commandWrappers.add( new CommandWrapper( new RemovePart( getPart() ), CONFIRM ) {
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 Part part = getPart();
                 update( target, change );

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.menus;
 
-import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Command;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 import java.io.Serializable;
@@ -19,9 +19,22 @@ public abstract class CommandWrapper implements Serializable {
      * The wrapped command.
      */
     private Command command;
+    /**
+     * Whether the command requires confirmation.
+     */
+    private boolean confirm = false  ;
 
     public CommandWrapper( Command command ) {
         this.command = command;
+    }
+
+    public CommandWrapper( Command command, boolean confirm ) {
+        this( command );
+        this.confirm = confirm;
+    }
+
+    public boolean isConfirm() {
+        return confirm;
     }
 
     /**

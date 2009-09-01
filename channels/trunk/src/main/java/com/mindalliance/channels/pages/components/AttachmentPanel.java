@@ -266,6 +266,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                         ) );
             }
         };
+        confirm( deleteLink, "Delete attachment?" );
         makeVisible( deleteLink, isLockedByUserIfNeeded( getAttachee() ) );
         item.add( deleteLink );
     }

@@ -35,7 +35,7 @@ abstract public class ActionMenuPanel extends MenuPanel {
         menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
         return menuItems;
     }
-
+    
     /**
      * Get command wrappers from which menu items will be constructed.
      *

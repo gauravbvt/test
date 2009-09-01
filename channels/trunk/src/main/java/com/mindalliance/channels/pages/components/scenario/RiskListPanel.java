@@ -212,6 +212,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
                         ) );
             }
         };
+        confirm( deleteLink, "Delete risk?" );
         makeVisible( deleteLink, wrapper.isComplete() );
         item.addOrReplace( deleteLink );
     }

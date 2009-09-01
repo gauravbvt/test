@@ -129,7 +129,7 @@ public class FlowActionsMenuPanel extends MenuPanel {
                 }
             } );
         if ( !isCollapsed )
-            commandWrappers.add( new CommandWrapper( new DisconnectFlow( flow ) ) {
+            commandWrappers.add( new CommandWrapper( new DisconnectFlow( flow ), CONFIRM ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
                 }
@@ -141,7 +141,7 @@ public class FlowActionsMenuPanel extends MenuPanel {
                 }
             } );
         if ( !isCollapsed )
-            commandWrappers.add( new CommandWrapper( new BreakUpFlow( flow ) ) {
+            commandWrappers.add( new CommandWrapper( new BreakUpFlow( flow ), CONFIRM ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
                 }

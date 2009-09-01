@@ -33,8 +33,16 @@ import java.util.Set;
  * Time: 8:29:34 AM
  */
 public abstract class MenuPanel extends AbstractCommandablePanel {
+    /**
+     * Confirmation requested.
+     */
+    protected static boolean CONFIRM = true;
 
+    /**
+     * Title.
+     */
     private String title;
+
     public MenuPanel(
             String s,
             String title,
@@ -68,7 +76,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      */
     public abstract List<Component> getMenuItems();
 
-     /**
+    /**
      * Make menu items linking to model object pages.
      *
      * @param id         id of the menu item
@@ -94,68 +102,68 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
     }
 
     /**
-      * Make an undo menu item.
-      *
-      * @param id the id of the menu item.
-      * @return a menu item component
-      */
-     protected Component getUndoMenuItem( String id ) {
-         Component menuItem;
-         if ( getCommander().canUndo() ) {
-             Link link = new AjaxFallbackLink( "link" ) {
-                 public void onClick( AjaxRequestTarget target ) {
-                     try {
-                         Change change = getCommander().undo();
-                         update( target, change );
-                     } catch ( CommandException e ) {
-                         throw new WicketRuntimeException( "Failed to undo", e );
-                     }
-                 }
-             };
-             menuItem = new LinkMenuItem(
-                     id,
-                     new Model<String>( getCommander().getUndoTitle() ), link );
-         } else {
-             Label undoLabel = new Label( id, "Undo" );
-             undoLabel.add( new AttributeModifier(
-                     "class",
-                     true,
-                     new Model<String>( "disabled" ) ) );
-             menuItem = undoLabel;
-         }
-         return menuItem;
-     }
+     * Make an undo menu item.
+     *
+     * @param id the id of the menu item.
+     * @return a menu item component
+     */
+    protected Component getUndoMenuItem( String id ) {
+        Component menuItem;
+        if ( getCommander().canUndo() ) {
+            Link link = new AjaxFallbackLink( "link" ) {
+                public void onClick( AjaxRequestTarget target ) {
+                    try {
+                        Change change = getCommander().undo();
+                        update( target, change );
+                    } catch ( CommandException e ) {
+                        throw new WicketRuntimeException( "Failed to undo", e );
+                    }
+                }
+            };
+            menuItem = new LinkMenuItem(
+                    id,
+                    new Model<String>( getCommander().getUndoTitle() ), link );
+        } else {
+            Label undoLabel = new Label( id, "Undo" );
+            undoLabel.add( new AttributeModifier(
+                    "class",
+                    true,
+                    new Model<String>( "disabled" ) ) );
+            menuItem = undoLabel;
+        }
+        return menuItem;
+    }
 
-     /**
-      * Make a redo menu item.
-      *
-      * @param id the id of the menu item.
-      * @return a menu item component
-      */
-     protected Component getRedoMenuItem( String id ) {
-         Component menuItem;
-         if ( getCommander().canRedo() ) {
-             Link link = new AjaxFallbackLink( "link" ) {
-                 public void onClick( AjaxRequestTarget target ) {
-                     try {
-                         Change change = getCommander().redo();
-                         update( target, change );
-                     } catch ( CommandException e ) {
-                         throw new WicketRuntimeException( "Failed to redo", e );
-                     }
-                 }
-             };
-             menuItem = new LinkMenuItem(
-                     id,
-                     new Model<String>( getCommander().getRedoTitle() ), link );
-         } else {
-             Label label = new Label( id, "Redo" );
-             label.add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
-             menuItem = label;
-         }
-         return menuItem;
-     }
-    
+    /**
+     * Make a redo menu item.
+     *
+     * @param id the id of the menu item.
+     * @return a menu item component
+     */
+    protected Component getRedoMenuItem( String id ) {
+        Component menuItem;
+        if ( getCommander().canRedo() ) {
+            Link link = new AjaxFallbackLink( "link" ) {
+                public void onClick( AjaxRequestTarget target ) {
+                    try {
+                        Change change = getCommander().redo();
+                        update( target, change );
+                    } catch ( CommandException e ) {
+                        throw new WicketRuntimeException( "Failed to redo", e );
+                    }
+                }
+            };
+            menuItem = new LinkMenuItem(
+                    id,
+                    new Model<String>( getCommander().getRedoTitle() ), link );
+        } else {
+            Label label = new Label( id, "Redo" );
+            label.add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
+            menuItem = label;
+        }
+        return menuItem;
+    }
+
     /**
      * Make menu items from commands.
      *
@@ -182,6 +190,9 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
                         }
                     }
                 };
+                if ( commandWrapper.isConfirm() ) {
+                    confirm( link, "Are you sure?" );
+                }
                 menuItems.add( new LinkMenuItem( id,
                         new PropertyModel<String>( command, "title" ),
                         link ) );
