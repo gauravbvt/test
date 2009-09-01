@@ -177,6 +177,12 @@
           <groupId>maven</groupId>
           <artifactId>velocity</artifactId>
           <version>1.5-20060721.044818</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>avalon-logkit</groupId>
+                    <artifactId>avalon-logkit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
           <groupId>velocity-tools</groupId>
@@ -361,6 +367,12 @@
             <groupId>org.wicketstuff</groupId>
             <artifactId>wicket-contrib-gmap2</artifactId>
             <version>${wicket.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!--  JUNIT DEPENDENCY FOR TESTING -->
