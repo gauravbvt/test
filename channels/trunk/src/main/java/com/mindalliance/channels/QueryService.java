@@ -929,4 +929,27 @@ public interface QueryService extends Service {
      * @return a list of strings
      */
     List<String> findAllPlanners();
+
+    /**
+     * Given his/her username find the user's full name.
+     *
+     * @param userName a string
+     * @return a string
+     */
+    String findUserFullName( String userName );
+
+    /**
+     * Given his/her username find the user's normalized full name.
+     *
+     * @param userName a string
+     * @return a string
+     */
+    String findUserNormalizedFullName( String userName );
+
+    /**
+     * Find all usernames.
+     *
+     * @return a list of strings
+     */
+    List<String> findAllUsernames();
 }

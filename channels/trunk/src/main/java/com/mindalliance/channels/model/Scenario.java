@@ -618,4 +618,13 @@ public class Scenario extends ModelObject {
     public void setBeingDeleted( boolean beingDeleted ) {
         this.beingDeleted = beingDeleted;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    public boolean isLockable() {
+        return false;
+    }
+
 }

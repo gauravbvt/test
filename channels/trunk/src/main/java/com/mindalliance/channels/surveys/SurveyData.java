@@ -1,5 +1,7 @@
 package com.mindalliance.channels.surveys;
 
+import java.io.Serializable;
+
 /**
  * Summary data about a survey.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -8,37 +10,37 @@ package com.mindalliance.channels.surveys;
  * Date: Aug 21, 2009
  * Time: 12:12:35 PM
  */
-public class SurveyData {
+public class SurveyData implements Serializable {
 
     /**
      * How many completed the survey.
      */
-    private int countCompleted;
+    private int countCompleted = 0;
     /**
      * How many are working on the survey.
      */
-    private int countInProgress;
+    private int countInProgress = 0;
     /**
      * How many abandoned the survey.
      */
-    private int countAbandoned;
+    private int countAbandoned = 0;
     /**
      * How many partially completed the survey.
      */
-    private int countPartial;
+    private int countPartial = 0;
 
     /**
      * preview link.
      */
-    private String previewLink;
+    private String previewLink = "";
     /**
      * Reporting link.
      */
-    private String reportingLink;
+    private String reportingLink = "";
     /**
      * Publish link
      */
-    private String publishLink;
+    private String publishLink = "";
     /**
      * Survey status.
      */

@@ -1,0 +1,42 @@
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div class="survey">
+        <h3>
+            <span wicket:id="statusTitle">New</span> survey about &quot;<span wicket:id="about">some issue</span>&quot;
+        </h3>
+        <table wicket:id="surveyData" width="100%">
+            <tr>
+                <td rowspan="2" width="33%">
+                    <span wicket:id="toBeContacted">0</span> to be emailed <br/>
+                    <span wicket:id="contacted">0</span> emailed
+                </td>
+                <td rowspan="2" width="33%">
+                    <span wicket:id="inProgress">0</span> in progress <br/>
+                    <span wicket:id="completed">0</span> completed <br/>
+                    <span wicket:id="abandoned">0</span> abandoned
+                </td>
+                <td width="33%">
+                    <a wicket:id="preview" href="#">See survey questions</a> <br/>
+                    <a wicket:id="reporting" href="#">See survey report</a>
+                </td>
+            </tr>
+            <tr>
+                <td align="left">
+                    <input wicket:id="launch" type="button" value="Launch survey"/>
+                    <input wicket:id="close" type="button" value="Close survey"/>
+                </td>
+
+            </tr>
+        </table>
+        <span wicket:id="contacts">[contacts panel]</span>
+        <span class="note"><span wicket:id="status">Created</span> on <span wicket:id="date">today</span>
+        by <span wicket:id="issuer">someone</span></span>
+    </div>
+</wicket:panel>
+</body>
+</html>

@@ -78,10 +78,10 @@ public class UnsatisfiedNeed extends AbstractIssueDetector {
                     sb.append( StringUtils.abbreviate( eoi, 25 ) );
                 }
                 issue.setDescription( "There is apparently no commitment to share"
-                        + " these needed elements of informations: "
+                        + " these needed elements of information: "
                         + sb.toString() );
                 issue.setRemediation( "Obtain additional sharing commitments\n "
-                        + "or extend current commitments to include the missing elements of informations." );
+                        + "or extend current commitments to include the missing elements of information." );
                 issues.add( issue );
             }
         } else {
@@ -121,7 +121,7 @@ public class UnsatisfiedNeed extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Information need not fully satisfied.";
+        return "Information need not fully satisfied";
     }
 
     /**

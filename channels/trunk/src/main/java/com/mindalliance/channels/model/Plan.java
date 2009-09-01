@@ -145,4 +145,11 @@ public class Plan extends ModelObject {
         return getScenarios().iterator().next();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    public boolean isLockable() {
+        return false;
+    }
 }

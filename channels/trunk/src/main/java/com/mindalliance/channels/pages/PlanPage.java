@@ -5,6 +5,7 @@ import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.SurveyService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.geo.GeoLocatable;
@@ -29,6 +30,8 @@ import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.menus.PlanActionsMenuPanel;
 import com.mindalliance.channels.pages.components.menus.PlanShowMenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
+import com.mindalliance.channels.pages.components.surveys.SurveysPanel;
+import com.mindalliance.channels.surveys.Survey;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -187,6 +190,10 @@ public final class PlanPage extends WebPage implements Updatable {
      */
     private Component planEditPanel;
     /**
+     * The surveys panel.
+     */
+    private Component surveysPanel;
+    /**
      * The aspect for entity panel.
      */
     private String entityAspect = EntityPanel.DETAILS;
@@ -200,7 +207,15 @@ public final class PlanPage extends WebPage implements Updatable {
     private long lastRefreshed = System.currentTimeMillis();
 
     @SpringBean
+    /**
+     * Query service.
+     */
     private QueryService queryService;
+    /**
+     * Survey service.
+     */
+    @SpringBean
+    private SurveyService surveyService;
 
     /**
      * Used when page is called without parameters.
@@ -274,6 +289,7 @@ public final class PlanPage extends WebPage implements Updatable {
         form.add( scenarioPanel );
         addEntityPanel();
         form.addOrReplace( createPlanEditPanel( getPlan() ) );
+        form.addOrReplace( createSurveysPanel( null ) );
         add( form );
         updateVisibility();
         LOG.debug( "Scenario page generated" );
@@ -500,6 +516,17 @@ public final class PlanPage extends WebPage implements Updatable {
 
         planEditPanel = panel;
         return panel;
+    }
+
+    private Component createSurveysPanel( Survey survey ) {
+        boolean showSurveys = expansions.contains( surveyService.getId() );
+        surveysPanel = showSurveys ?
+                new SurveysPanel( "surveys", survey,
+                        getReadOnlyExpansions() )
+                : new Label( "surveys", "" );
+        makeVisible( surveysPanel, showSurveys );
+        surveysPanel.setOutputMarkupId( true );
+        return surveysPanel;
     }
 
     /**
@@ -912,7 +939,7 @@ public final class PlanPage extends WebPage implements Updatable {
             // expandedEntities.remove( identifiable.getId() );
         }
         // Never lock a scenario or plan
-        if ( !( identifiable instanceof Scenario || identifiable instanceof Plan ) ) {
+        if ( identifiable instanceof ModelObject && ((ModelObject)identifiable).isLockable() ) {
             getCommander().requestLockOn( identifiable );
         }
         expansions.add( identifiable.getId() );
@@ -945,11 +972,16 @@ public final class PlanPage extends WebPage implements Updatable {
         if ( change.isNone() ) return;
 
         Identifiable identifiable = change.getSubject();
-        if ( identifiable instanceof ModelObject ) {
+        if ( !( identifiable instanceof Survey ) ) {
             if ( change.isCollapsed() || change.isRemoved() )
                 collapse( identifiable );
             else if ( change.isExpanded() || change.isAdded() )
-            expand( identifiable );
+                expand( identifiable );
+        }
+        if ( identifiable instanceof Survey ) {
+            if ( change.isExpanded() ) {
+                expand( surveyService );
+            }
         }
         if ( identifiable instanceof Scenario ) {
             if ( change.isExists() ) {
@@ -1019,7 +1051,18 @@ public final class PlanPage extends WebPage implements Updatable {
         if ( change.isUpdated() ) {
             refreshAll( target );
         } else {
-
+            if ( identifiable instanceof SurveyService ) {
+                if ( change.isDisplay() ) {
+                    form.addOrReplace( createSurveysPanel( null ) );
+                    target.addComponent( surveysPanel );
+                }
+            }
+            if ( identifiable instanceof Survey ) {
+                if ( change.isExpanded() ) {
+                    form.addOrReplace( createSurveysPanel( (Survey) identifiable ) );
+                    target.addComponent( surveysPanel );
+                }
+            }
             if ( identifiable instanceof Plan ) {
                 if ( change.isDisplay() ) {
                     form.addOrReplace( createPlanEditPanel( getPlan() ) );

@@ -1,16 +1,30 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.SurveyService;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.surveys.Survey;
+import com.mindalliance.channels.surveys.SurveyException;
 import com.mindalliance.channels.util.SortableBeanProvider;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
+import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +39,11 @@ import java.util.List;
  * Time: 1:20:17 PM
  */
 public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel implements Filterable {
+
+    /**
+     * The logger.
+     */
+    private final Logger LOG = LoggerFactory.getLogger( AbstractUpdatablePanel.class );
 
     protected static final String ALL = "All";
     /**
@@ -43,6 +62,11 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
      * Maximum number of rows in table.
      */
     private int maxRows;
+    /**
+     * Survey service.
+     */
+    @SpringBean
+    SurveyService surveyService;
 
     public AbstractIssueTablePanel( String id, IModel<ModelObject> model, int maxRows ) {
         super( id, model );
@@ -189,6 +213,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
                     "Waived",
                     "waivedString",
                     EMPTY ) );
+            columns.add( makeSurveyColumn( "Survey" ) );
             // provider and table
             add( new AjaxFallbackDefaultDataTable(
                     "issues",
@@ -199,6 +224,61 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
                     getPageSize() ) );
         }
 
+        private AbstractColumn<Issue> makeSurveyColumn( String name ) {
+            return new AbstractColumn<Issue>( new Model<String>( name ) ) {
+                public void populateItem(
+                        Item<ICellPopulator<Issue>> cellItem,
+                        String id,
+                        IModel<Issue> issueModel ) {
+                    Issue issue = issueModel.getObject();
+                    boolean surveyed = surveyService.isSurveyed( issue );
+                    SurveyLinkPanel surveyLinkPanel = new SurveyLinkPanel( id, surveyed, issue );
+                    cellItem.add( surveyLinkPanel );
+                }
+            };
+        }
+
     }
 
+    private class SurveyLinkPanel extends AbstractUpdatablePanel {
+        private SurveyLinkPanel(
+                String id,
+                final boolean surveyed,
+                final Issue issue ) {
+            super( id );
+            AjaxFallbackLink link = new AjaxFallbackLink( "link" ) {
+                public void onClick( AjaxRequestTarget target ) {
+                    try {
+                        Survey survey = surveyService.getOrCreateSurvey( issue );
+                        update( target, new Change( Change.Type.Expanded, survey ) );
+                    } catch ( SurveyException e ) {
+                        LOG.error( "Fail to get or create survey on " + issue.getDetectorLabel() );
+                        target.prependJavascript( "alert(\"Oops! Could not get or create survey.\")" );
+                        target.addComponent( AbstractIssueTablePanel.this );
+                    }
+                }
+            };
+            add( link );
+            WebMarkupContainer image = new WebMarkupContainer( "image" );
+            image.add( new AttributeModifier(
+                    "src",
+                    true,
+                    new Model<String>(
+                            surveyed ? "/images/survey_small.png" : "/images/survey_add_small.png"
+                    )));
+            image.add( new AttributeModifier(
+                    "alt",
+                    true,
+                    new Model<String>(
+                            surveyed ? "View survey" : "Create new survey"
+                    )));
+            image.add( new AttributeModifier(
+                    "title",
+                    true,
+                    new Model<String>(
+                            surveyed ? "View survey" : "Create new survey"
+                    )));
+            link.add( image );
+        }
+    }
 }

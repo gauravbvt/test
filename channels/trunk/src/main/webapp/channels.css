@@ -476,6 +476,11 @@ span.suggest {
     font-style: italic;
 }
 
+span.note {
+    font-style: italic;
+    font-size: x-small;
+}
+
 div.picture {
     background: white;
 }
@@ -526,6 +531,10 @@ div.header {
 }
 .organization .header {
     background: transparent url( 'images/organization.png' ) no-repeat 5px 2px;
+}
+
+.surveys .header {
+    background: transparent url( 'images/survey_big.png' ) no-repeat 5px 2px;
 }
 
 #footer {
@@ -711,7 +720,7 @@ div.import-dialog {
     overflow: auto;
 }
 
-div.scenario, div.entity, div.plan {
+div.scenario, div.entity, div.plan, div.surveys {
     background: #C3D9FF;
     border: 1px outset #c3dede;
     padding: 5px;
@@ -737,6 +746,14 @@ div.entity {
 div.plan {
     width: 47%;
     right: 2em;
+    top: 7em;
+    bottom: 7em;
+    min-height: 14em;
+}
+
+div.surveys {
+    width: 60%;
+    left: 3em;
     top: 7em;
     bottom: 7em;
     min-height: 14em;

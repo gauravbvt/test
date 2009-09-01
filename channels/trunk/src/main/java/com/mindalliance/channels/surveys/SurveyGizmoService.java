@@ -1,11 +1,11 @@
 package com.mindalliance.channels.surveys;
 
 import com.mindalliance.channels.model.Issue;
-import org.w3c.dom.Node;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
 import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
@@ -32,6 +32,10 @@ import java.util.Map;
  * Time: 1:50:44 PM
  */
 public class SurveyGizmoService extends AbstractSurveyService {
+    /**
+     * Class logger.
+     */
+    public static final Logger LOG = LoggerFactory.getLogger( SurveyGizmoService.class );
     /**
      * API key.
      */
@@ -104,8 +108,10 @@ public class SurveyGizmoService extends AbstractSurveyService {
         }
         String id = xpathExtract( response, "/apiResults/survey/@id" );
         if ( id != null ) {
+            LOG.info( "Survey " + id + " registered" );
             return Long.parseLong( id );
         } else {
+            LOG.error( "Failed to create survey" );
             throw new SurveyException( "Failed to create survey" );
         }
     }
@@ -123,15 +129,7 @@ public class SurveyGizmoService extends AbstractSurveyService {
             XPathExpression expr = xpath.compile( expression );
             return expr.evaluate( new InputSource( new StringReader( xml ) ) );
         } catch ( XPathExpressionException e ) {
-            throw new RuntimeException( e );
-        }
-    }
-
-    private String xpathExtract( Node node, String expression ) throws SurveyException {
-        try {
-            XPathExpression expr = xpath.compile( expression );
-            return expr.evaluate( node );
-        } catch ( XPathExpressionException e ) {
+            LOG.error( "XPath extract failed", e );
             throw new RuntimeException( e );
         }
     }
@@ -140,18 +138,6 @@ public class SurveyGizmoService extends AbstractSurveyService {
         String extracted = xpathExtract( xml, expression );
         return extracted.equals( value );
     }
-
-    private Node findNode( String xml, String expression ) {
-        try {
-            XPathExpression expr = xpath.compile( expression );
-            return (Node) expr.evaluate(
-                    new InputSource( new StringReader( xml ) ),
-                    XPathConstants.NODE );
-        } catch ( XPathExpressionException e ) {
-            throw new RuntimeException( e );
-        }
-    }
-
 
     private String sendRequest( String urlString, Map<String, String> post ) throws SurveyException {
         try {
@@ -177,6 +163,7 @@ public class SurveyGizmoService extends AbstractSurveyService {
             response = writer.toString();
             return response;
         } catch ( IOException e ) {
+            LOG.error( "Request failed: " + e.getMessage(), e );
             throw new SurveyException( "Request failed: " + e.getMessage(), e );
         }
     }
@@ -204,6 +191,7 @@ public class SurveyGizmoService extends AbstractSurveyService {
      */
     protected void doLaunchSurvey( Survey survey ) throws SurveyException {
         changeSurveyStatus( survey, "Launched" );
+        LOG.info( "Survey " + survey.getId() + " launched" );
         inviteNewContacts( survey );
     }
 
@@ -212,6 +200,7 @@ public class SurveyGizmoService extends AbstractSurveyService {
      */
     protected void doCloseSurvey( Survey survey ) throws SurveyException {
         changeSurveyStatus( survey, "Closed" );
+        LOG.info( "Survey " + survey.getId() + " closed" );
     }
 
     private void changeSurveyStatus( Survey survey, String status ) throws SurveyException {
@@ -222,10 +211,12 @@ public class SurveyGizmoService extends AbstractSurveyService {
         String response = sendRequest( getBaseUrl( "sgSetSurveyStatus", query ), null );
         boolean succeeded = requestSuccess( response );
         if ( !succeeded ) {
+            LOG.error( "Failed to change survey status to " + status );
             throw new SurveyException( "Failed to change survey status to " + status );
         }
         survey.setStatus( surveyStatus( status ) );
-        survey.setSurveyData( getSurveyData( survey ) );
+        survey.resetData();
+        survey.updateSurveyData( this );
     }
 
     /**
@@ -255,8 +246,10 @@ public class SurveyGizmoService extends AbstractSurveyService {
             value = xpathExtract( response, surveyPath + "/publish_link/text()" );
             data.setPublishLink( value );
             data.setReportingLink( "http://app.sgizmo.com/survey_list_responses.php?id=" + survey.getId() );
+            LOG.info( "Data retrieved for survey " + survey.getId() );
             return data;
         } else {
+            LOG.warn( "Failed to find survey " + survey.getId() );
             throw new SurveyException( "Failed to find survey " + survey.getId() );
         }
     }
@@ -281,4 +274,20 @@ public class SurveyGizmoService extends AbstractSurveyService {
                 throw new RuntimeException( "Unknown survey status " + survey.getStatus().name() );
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getDescription() {
+        return "The SurveyGizmo survey service";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getName() {
+        return "SurveyGizmo";
+    }
+
+
 }

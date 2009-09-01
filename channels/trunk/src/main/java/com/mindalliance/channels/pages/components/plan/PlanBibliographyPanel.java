@@ -263,6 +263,7 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
             initialize();
         }
 
+        @SuppressWarnings( "unchecked" )
         private void initialize() {
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns

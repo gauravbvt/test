@@ -279,4 +279,13 @@ public class FileUserDetailsService implements UserDetailsService {
                 PredicateUtils.invokerPredicate( "isPlanner" )
         );
     }
+
+    /**
+     * Get all usernames.
+     *
+     * @return a list of strings
+     */
+    public List<String> getAllUsernames() {
+        return new ArrayList<String>( details.keySet() );
+    }
 }

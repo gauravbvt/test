@@ -15,6 +15,7 @@ public class Contact implements Serializable {
 
     public enum Status {
         None( "None" ),
+        To_be_contacted( "To be contacted" ),
         Contacted( "Contacted" ),
         In_progress( "In progress" ),
         Completed( "Completed" ),
@@ -64,6 +65,14 @@ public class Contact implements Serializable {
 
     public void setContacted(  ) {
         status = Status.Contacted;
+    }
+
+    public boolean isToBeContacted() {
+        return status == Status.To_be_contacted;
+    }
+
+    public void setToBeContacted(  ) {
+        status = Status.To_be_contacted;
     }
 
     public boolean isCompleted() {

@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.model.Identifiable;
@@ -7,15 +8,22 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.FilterableModelObjectLink;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.entities.EntityLink;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,7 +116,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                                             final String style,
                                             final String defaultText,
                                             final String titleProperty ) {
-        return makeColumn( name,  labelProperty, style, defaultText, titleProperty, null );
+        return makeColumn( name, labelProperty, style, defaultText, titleProperty, null );
     }
 
     /**
@@ -133,8 +141,8 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
                                       IModel<T> model ) {
-                String text = (String) CommandUtils.getProperty( model.getObject(), labelProperty, defaultText );
-                String labelText = ( text == null || text.isEmpty() ) ? ( defaultText == null ? "" : defaultText ) : text;
+                String text = "" + CommandUtils.getProperty( model.getObject(), labelProperty, defaultText );
+                String labelText = ( text.isEmpty() ) ? ( defaultText == null ? "" : defaultText ) : text;
                 cellItem.add( new Label( id, new Model<String>( labelText ) ) );
                 if ( style != null ) {
                     String styleClass = findStyleClass( model.getObject(), style );
@@ -142,8 +150,8 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                         cellItem.add( new AttributeModifier( "class", true, new Model<String>( styleClass ) ) );
                 }
                 if ( titleProperty != null ) {
-                    String title = (String) CommandUtils.getProperty( model.getObject(), titleProperty, null );
-                    if ( title != null )
+                    String title = "" + CommandUtils.getProperty( model.getObject(), titleProperty, null );
+                    if ( !title.isEmpty() )
                         cellItem.add( new AttributeModifier( "title", true, new Model<String>( title ) ) );
                 }
             }
@@ -326,8 +334,54 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 cellItem.add( cellContent );
             }
         };
+    }
 
+    protected AbstractColumn<T> makeCheckBoxColumn(
+            String name,
+            final String stateProperty,
+            final String[] allowedStates
+    ) {
+        return new AbstractColumn<T>( new Model<String>( name ) ) {
+            public void populateItem( Item<ICellPopulator<T>> cellItem,
+                                      String id,
+                                      final IModel<T> model ) {
+                Component cellContent = new TernaryCheckBoxPanel<T>(
+                        id,
+                        model,
+                        stateProperty,
+                        allowedStates );
+                cellItem.add( cellContent );
+            }
+        };
+    }
 
+    /**
+     * Make a column with a link that expands the bean for the row.
+     *
+     * @param name  a string
+     * @param identifiableProperty a string
+     * @param label a string
+     * @return an abstract column
+     */
+    protected AbstractColumn<T> makeExpandLinkColumn(
+            String name,
+            final String identifiableProperty,
+            final String label
+    ) {
+        return new AbstractColumn<T>( new Model<String>( name ), label ) {
+            public void populateItem( Item<ICellPopulator<T>> cellItem,
+                                      String id,
+                                      final IModel<T> model ) {
+                T bean = model.getObject();
+                Identifiable identifiable = (Identifiable)CommandUtils.getProperty(
+                        bean,
+                        identifiableProperty,
+                        null );
+                ExpandLinkPanel<Identifiable> cellContent = new ExpandLinkPanel<Identifiable>( id, identifiable, label );
+                cellItem.add( cellContent );
+            }
+
+        };
     }
 
     protected IColumn<?> makeGeomapLinkColumn(
@@ -360,6 +414,82 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 cellItem.add( cellContent );
             }
         };
+    }
+
+    /**
+     * Expand link panel.
+     */
+    public class ExpandLinkPanel<T> extends Panel {
+
+        public ExpandLinkPanel(
+                String id,
+                final T bean,
+                final String label ) {
+            super( id );
+            AjaxLink link = new AjaxLink<String>( "link", new Model<String>( label ) ) {
+                public void onClick( AjaxRequestTarget target ) {
+                    update( target, new Change( Change.Type.Expanded, (Identifiable) bean ) );
+                }
+            };
+            add( link );
+        }
+    }
+
+    /**
+     * Property-setting checkbox panel.
+     */
+    public class TernaryCheckBoxPanel<T> extends Panel {
+        /**
+         * String property.
+         */
+        private String stateProperty;
+        /**
+         * Three states: 1- unchecked, 2- checked, 3- checked and disabled
+         */
+        private String[] allowedStates;
+        /**
+         * Bean with property to be set.
+         */
+        private T bean;
+
+        public TernaryCheckBoxPanel(
+                String id,
+                IModel<T> model,
+                String stateProperty,
+                String[] allowedStates ) {
+            super( id );
+            this.stateProperty = stateProperty;
+            this.allowedStates = allowedStates;
+            bean = model.getObject();
+            CheckBox checkBox = new CheckBox( "checkBox", new PropertyModel<Boolean>( this, "checked" ) );
+            checkBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+                protected void onUpdate( AjaxRequestTarget target ) {
+                    // Do nothing
+                }
+            } );
+            checkBox.setEnabled( !hasDisabledState() );
+            add( checkBox );
+        }
+
+        private boolean hasDisabledState() {
+            String state = (String) CommandUtils.getProperty( bean, stateProperty, "" );
+            return state.equals( allowedStates[2] );
+        }
+
+        public boolean getChecked() {
+            String state = (String) CommandUtils.getProperty( bean, stateProperty, "" );
+            return state.equals( allowedStates[1] ) || state.equals( allowedStates[2] );
+        }
+
+        public void setChecked( boolean val ) {
+            String state = val ? allowedStates[1] : allowedStates[0];
+            try {
+                PropertyUtils.setProperty( bean, stateProperty, state );
+            } catch ( Exception e ) {
+                LOG.error( "Failed to set property " + stateProperty );
+                throw new RuntimeException( e );
+            }
+        }
     }
 
 }

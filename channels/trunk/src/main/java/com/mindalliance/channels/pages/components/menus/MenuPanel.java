@@ -49,6 +49,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      * {@inheritDoc}
      */
     protected void init() {
+        setOutputMarkupId( true );
         add( new Label( "title", new Model<String>( title ) ) );
         ListView<Component> menuItems = new ListView<Component>(
                 "items",

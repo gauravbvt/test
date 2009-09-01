@@ -1,8 +1,13 @@
 package com.mindalliance.channels.surveys;
 
+import com.mindalliance.channels.SurveyService;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.User;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.PredicateUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -24,13 +29,17 @@ import java.util.StringTokenizer;
  * Time: 7:23:40 AM
  */
 public class Survey implements Identifiable, Serializable {
+    /**
+     * Max title length.
+     */
+    private static final int MAX_TITLE_LENGTH = 80;
 
     /**
      * The status of a survey.
      */
     public enum Status {
         Created( "Created" ),
-        In_design( "In Design" ),
+        In_design( "New" ),
         Launched( "Launched" ),
         Closed( "Closed" );
 
@@ -74,9 +83,17 @@ public class Survey implements Identifiable, Serializable {
      */
     private Date launchDate;
     /**
+     * Date of creation
+     */
+    private Date closedDate;
+    /**
      * Time interval from launchDate to deadline.
      */
     private Long timeToDeadline;
+    /**
+     * Full name of issuer.
+     */
+    private String issuer;
     /**
      * Simple date format.
      */
@@ -129,6 +146,14 @@ public class Survey implements Identifiable, Serializable {
         this.userName = userName;
     }
 
+    public String getIssuer() {
+        return issuer;
+    }
+
+    public void setIssuer( String issuer ) {
+        this.issuer = issuer;
+    }
+
     public Date getCreationDate() {
         return creationDate;
     }
@@ -145,6 +170,14 @@ public class Survey implements Identifiable, Serializable {
         this.launchDate = launchDate;
     }
 
+    public Date getClosedDate() {
+        return closedDate;
+    }
+
+    public void setClosedDate( Date closedDate ) {
+        this.closedDate = closedDate;
+    }
+
     public Long getTimeToDeadline() {
         return timeToDeadline;
     }
@@ -154,7 +187,7 @@ public class Survey implements Identifiable, Serializable {
     }
 
     public Set<Contact> getContacts() {
-        return contacts;
+        return new HashSet<Contact>( contacts );
     }
 
     public void setContacts( Set<Contact> contacts ) {
@@ -163,11 +196,6 @@ public class Survey implements Identifiable, Serializable {
 
     public SurveyData getSurveyData() {
         return surveyData;
-    }
-
-    public void setSurveyData( SurveyData surveyData ) {
-        this.surveyData = surveyData;
-        setStatus( surveyData.getStatus() );
     }
 
     /**
@@ -198,12 +226,30 @@ public class Survey implements Identifiable, Serializable {
      */
     public void addContacts( Collection<String> usernames ) {
         for ( String username : usernames ) {
-            contacts.add( new Contact( username ) );
+            addContact( username );
         }
     }
 
     public void addContact( String username ) {
-        contacts.add( new Contact( username ) );
+        Contact contact = new Contact( username );
+        contact.setToBeContacted();
+        contacts.add( contact );
+    }
+
+    public void removeContact( String username ) {
+        Contact contact = getContact( username );
+        if ( contact != null )
+            contacts.remove( contact );
+    }
+
+    public Contact getContact( final String username ) {
+        return (Contact) CollectionUtils.find(
+                contacts,
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ( (Contact) obj ).getUsername().equals( username );
+                    }
+                } );
     }
 
     private void addContact( Contact contact ) {
@@ -239,10 +285,17 @@ public class Survey implements Identifiable, Serializable {
         sb.append( ',' );
         sb.append( userName );
         sb.append( ',' );
+        sb.append( issuer );
+        sb.append( ',' );
         sb.append( dateFormat.format( creationDate ) );
         sb.append( ',' );
         if ( launchDate != null )
             sb.append( dateFormat.format( launchDate ) );
+        else
+            sb.append( "0" );
+        sb.append( ',' );
+        if ( closedDate != null )
+            sb.append( dateFormat.format( closedDate ) );
         else
             sb.append( "0" );
         sb.append( ',' );
@@ -269,10 +322,15 @@ public class Survey implements Identifiable, Serializable {
             Survey.Status status = Survey.Status.valueOf( tokens.nextToken() );
             survey.setStatus( status );
             survey.setUserName( tokens.nextToken() );
+            survey.setIssuer( tokens.nextToken() );
             survey.setCreationDate( dateFormat.parse( tokens.nextToken() ) );
             String token = tokens.nextToken();
             if ( !token.equals( "0" ) ) {
                 survey.setLaunchDate( dateFormat.parse( token ) );
+            }
+            token = tokens.nextToken();
+            if ( !token.equals( "0" ) ) {
+                survey.setClosedDate( dateFormat.parse( token ) );
             }
             String contactsString = tokens.nextToken();
             StringTokenizer contacts = new StringTokenizer( contactsString, ":" );
@@ -283,7 +341,7 @@ public class Survey implements Identifiable, Serializable {
             survey.setIssueSpec( IssueSpec.fromString( URLDecoder.decode( encoded, "UTF-8" ) ) );
             return survey;
         } catch ( Exception e ) {
-            throw new RuntimeException( "Can't decode issue spec" );
+            throw new RuntimeException( "Can't decode issue spec", e );
         }
     }
 
@@ -306,7 +364,17 @@ public class Survey implements Identifiable, Serializable {
     }
 
     public String getTitle() {
-        return issueSpec.getDetectorLabel();
+        if ( isAboutDetectedIssue() )
+            return issueSpec.getDetectorLabel();
+        else
+            return StringUtils.abbreviate(
+                    issueSpec.getDescription(),
+                    MAX_TITLE_LENGTH );
+    }
+
+    private boolean isAboutDetectedIssue() {
+        Long userIssueId = issueSpec.getUserIssueId();
+        return userIssueId == null;
     }
 
     public String getPlanText() {
@@ -326,9 +394,63 @@ public class Survey implements Identifiable, Serializable {
         return new Date( creationDate.getTime() + timeToDeadline );
     }
 
-    public String getTimestamp() {
-        if ( isLaunched() || isClosed() )
+
+    public String getFormattedCreationDate() {
+        return dateFormat.format( creationDate );
+    }
+
+    public int getContactedCount() {
+        return CollectionUtils.select(
+                contacts,
+                PredicateUtils.invokerPredicate( "isContacted" ) ).size();
+    }
+
+    public int getToBeContactedCount() {
+        return CollectionUtils.select(
+                contacts,
+                PredicateUtils.invokerPredicate( "isToBeContacted" ) ).size();
+    }
+
+    public boolean updateSurveyData( SurveyService surveyService ) {
+        if ( surveyData == null ) {
+            try {
+                surveyData = surveyService.getSurveyData( this );
+            } catch ( SurveyException e ) {
+                return false;
+            }
+            setStatus( surveyData.getStatus() );
+        }
+        return true;
+    }
+
+    public void updateContact( String username, Contact.Status newStatus ) {
+        if ( newStatus == Contact.Status.None ) {
+            removeContact( username );
+        } else {
+            Contact contact = getContact( username );
+            if ( contact == null ) {
+                Contact newContact = new Contact( username );
+                newContact.setStatus( newStatus );
+                addContact( newContact );
+            } else {
+                contact.setStatus( newStatus );
+            }
+        }
+    }
+
+    public void setSurveyData( SurveyData surveyData ) {
+        this.surveyData = surveyData;
+    }
+
+    public void resetData() {
+        surveyData = null;
+    }
+
+    public String getFormattedStatusDate() {
+        if ( isLaunched() )
             return dateFormat.format( launchDate );
+        else if ( isClosed() )
+            return dateFormat.format( closedDate );
         else
             return dateFormat.format( creationDate );
     }

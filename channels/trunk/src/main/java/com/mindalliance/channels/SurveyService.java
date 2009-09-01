@@ -1,5 +1,6 @@
 package com.mindalliance.channels;
 
+import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyData;
@@ -15,10 +16,10 @@ import java.util.List;
  * Date: Aug 21, 2009
  * Time: 11:00:51 AM
  */
-public interface SurveyService extends Service {
+public interface SurveyService extends Service, Identifiable {
 
     /**
-     * Create a new survey in current plan on an issue, or get most recent one.
+     * Create a new survey in current plan on an issue, or get current, not closed one.
      *
      * @param issue an issue
      * @return a survey
@@ -36,16 +37,6 @@ public interface SurveyService extends Service {
     boolean isSurveyed( Issue issue );
 
     /**
-     * Add contact to a survey.
-     *
-     * @param survey    a survey
-     * @param username a user name
-     * @throws com.mindalliance.channels.surveys.SurveyException
-     *          if fails
-     */
-    void addContact( Survey survey, String username ) throws SurveyException;    
-
-    /**
      * Add contacts to a survey.
      *
      * @param survey    a survey
@@ -53,7 +44,7 @@ public interface SurveyService extends Service {
      * @throws com.mindalliance.channels.surveys.SurveyException
      *          if fails
      */
-    void addContacts( Survey survey, List<String> usernames ) throws SurveyException;
+    void inviteContacts( Survey survey, List<String> usernames ) throws SurveyException;
 
     /**
      * Whether the survey can still be associated with an existing issue.
@@ -63,6 +54,14 @@ public interface SurveyService extends Service {
      */
     boolean isRelevant( Survey survey );
 
+    /**
+     * Find current issue the survey is about.
+     *
+     * @param survey a survey
+     * @return an issue or null
+     */
+    Issue findIssue( final Survey survey );
+    
     /**
      * Delete not-yet-launched survey.
      *
@@ -99,4 +98,10 @@ public interface SurveyService extends Service {
      */
     SurveyData getSurveyData( Survey survey ) throws SurveyException;
 
- }
+    /**
+     * Return all known surveys for the current plan.
+     *
+     * @return a list of surveys
+     */
+    List<Survey> getSurveys();
+}

@@ -45,12 +45,11 @@ public class IssueSpec implements Serializable {
     public IssueSpec( Issue issue ) {
         if ( issue instanceof UserIssue ) {
             userIssueId = issue.getId();
-        } else {
-            kind = issue.getKind();
-            description = issue.getDescription();
-            aboutId = issue.getAbout().getId();
-            detectorLabel = issue.getDetectorLabel();
         }
+        kind = issue.getKind();
+        description = issue.getDescription();
+        aboutId = issue.getAbout().getId();
+        detectorLabel = issue.getDetectorLabel();
     }
 
     public String getKind() {
@@ -101,7 +100,7 @@ public class IssueSpec implements Serializable {
      */
     public boolean matches( Issue issue ) {
         if ( issue instanceof UserIssue ) {
-            return userIssueId == issue.getId();
+            return userIssueId != null && userIssueId == issue.getId();
         } else {
             return issue.getKind().equals( kind )
                     && issue.getAbout().getId() == aboutId
@@ -118,19 +117,20 @@ public class IssueSpec implements Serializable {
         if ( userIssueId != null ) {
             sb.append( "user issue," );
             sb.append( userIssueId );
+            sb.append( ',' );
         } else {
             sb.append( "detected issue," );
-            sb.append( kind );
+        }
+        sb.append( kind );
+        sb.append( ',' );
+        sb.append( aboutId );
+        sb.append( ',' );
+        try {
+            sb.append( URLEncoder.encode( description, "UTF-8" ) );
             sb.append( ',' );
-            sb.append( aboutId );
-            sb.append( ',' );
-            try {
-                sb.append( URLEncoder.encode( description, "UTF-8" ) );
-                sb.append( ',' );
-                sb.append( URLEncoder.encode( detectorLabel, "UTF-8" ) );
-            } catch ( UnsupportedEncodingException e ) {
-                throw new RuntimeException( "Failed to encode issue description" );
-            }
+            sb.append( URLEncoder.encode( detectorLabel, "UTF-8" ) );
+        } catch ( UnsupportedEncodingException e ) {
+            throw new RuntimeException( "Failed to encode issue description" );
         }
         return sb.toString();
     }
@@ -140,15 +140,14 @@ public class IssueSpec implements Serializable {
         StringTokenizer tokens = new StringTokenizer( s, "," );
         if ( tokens.nextToken().equals( "user issue" ) ) {
             issueSpec.setUserIssueId( Long.parseLong( tokens.nextToken() ) );
-        } else {
-            issueSpec.setKind( tokens.nextToken() );
-            issueSpec.setAboutId( Long.parseLong( tokens.nextToken() ) );
-            try {
-                issueSpec.setDescription( URLDecoder.decode( tokens.nextToken(), "UTF-8" ) );
-                issueSpec.setDetectorLabel( URLDecoder.decode( tokens.nextToken(), "UTF-8" ) );
-            } catch ( UnsupportedEncodingException e ) {
-                throw new RuntimeException( "Failed to decode issue description" );
-            }
+        }
+        issueSpec.setKind( tokens.nextToken() );
+        issueSpec.setAboutId( Long.parseLong( tokens.nextToken() ) );
+        try {
+            issueSpec.setDescription( URLDecoder.decode( tokens.nextToken(), "UTF-8" ) );
+            issueSpec.setDetectorLabel( URLDecoder.decode( tokens.nextToken(), "UTF-8" ) );
+        } catch ( UnsupportedEncodingException e ) {
+            throw new RuntimeException( "Failed to decode issue description" );
         }
         return issueSpec;
     }

@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.menus;
 
+import com.mindalliance.channels.SurveyService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Plan;
@@ -36,6 +37,11 @@ public class PlanShowMenuPanel extends MenuPanel {
      */
     @SpringBean
     private PlanManager planManager;
+    /**
+     * Survey service.
+     */
+    @SpringBean
+    private SurveyService surveyService;
 
     public PlanShowMenuPanel( String s, IModel<? extends Scenario> model, Set<Long> expansions ) {
         super( s, "Show", model, expansions );
@@ -100,6 +106,33 @@ public class PlanShowMenuPanel extends MenuPanel {
                     "menuItem",
                     new Model<String>( "About scenario" ),
                     editLink ) );
+        }
+        Link surveyLink;
+        if ( getExpansions().contains( surveyService.getId() ) ) {
+            surveyLink =
+                    new AjaxFallbackLink( "link" ) {
+                        @Override
+                        public void onClick( AjaxRequestTarget target ) {
+                            update( target, new Change( Change.Type.Collapsed, surveyService ) );
+                        }
+                    };
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Hide surveys" ),
+                    surveyLink ) );
+
+        } else {
+            surveyLink =
+                    new AjaxFallbackLink( "link" ) {
+                        @Override
+                        public void onClick( AjaxRequestTarget target ) {
+                            update( target, new Change( Change.Type.Expanded, surveyService ) );
+                        }
+                    };
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "All surveys" ),
+                    surveyLink ) );
         }
         BookmarkablePageLink reportLink = new BookmarkablePageLink( "link", PlanReportPage.class );
         reportLink.add( new AttributeModifier( "target", true, new Model<String>( "report" ) ) );

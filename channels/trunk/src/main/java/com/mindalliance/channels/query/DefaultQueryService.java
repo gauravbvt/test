@@ -33,6 +33,7 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.nlp.Proximity;
 import com.mindalliance.channels.util.Employment;
@@ -2199,6 +2200,36 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public String findUserFullName( String userName ) {
+        User user = userDetailsService.getUserNamed( userName );
+        if ( user != null ) {
+            return user.getFullName();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String findUserNormalizedFullName( String userName ) {
+        User user = userDetailsService.getUserNamed( userName );
+        if ( user != null ) {
+            return user.getNormalizedFullName();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<String> findAllUsernames() {
+        return userDetailsService.getAllUsernames();
+    }
 
 }
 

@@ -344,10 +344,21 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
 
     /**
      * Whether this can be represented by an icon.
+     *
      * @return a boolean
      */
     @Transient
     public boolean isIconized() {
         return false;
+    }
+
+    /**
+     * Whether this can be locked.
+     *
+     * @return a boolean
+     */
+    @Transient
+    public boolean isLockable() {
+        return true;
     }
 }

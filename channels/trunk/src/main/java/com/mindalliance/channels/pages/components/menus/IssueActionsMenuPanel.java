@@ -85,26 +85,38 @@ public class IssueActionsMenuPanel extends MenuPanel {
                     new Model<String>( "Hide details" ),
                     hideLink ) );
         }
-        AjaxFallbackLink surveyLink = new AjaxFallbackLink("link") {
-            public void onClick( AjaxRequestTarget target ) {
-                try {
-                    Survey survey = surveyService.getOrCreateSurvey( getIssue() );
-                    update( target, new Change( Change.Type.Expanded, survey));
-                } catch ( SurveyException e ) {
-                    e.printStackTrace();
-                    target.addComponent(IssueActionsMenuPanel.this);
-                    target.prependJavascript( "alert('Oops -- " + e.getMessage() + "');" );
+        // Create/view survey
+        Component menuItem;
+        String itemLabel = surveyService.isSurveyed( getIssue() )
+                ? "View survey"
+                : "Create survey";
+        if ( !getIssue().getDescription().isEmpty()
+                && !getIssue().getRemediation().isEmpty() ) {
+            AjaxFallbackLink surveyLink = new AjaxFallbackLink( "link" ) {
+                public void onClick( AjaxRequestTarget target ) {
+                    try {
+                        Survey survey = surveyService.getOrCreateSurvey( getIssue() );
+                        update( target, new Change( Change.Type.Expanded, survey ) );
+                    } catch ( SurveyException e ) {
+                        e.printStackTrace();
+                        target.addComponent( IssueActionsMenuPanel.this );
+                        target.prependJavascript( "alert('Oops -- " + e.getMessage() + "');" );
+                    }
                 }
-            }
-        };
-        menuItems.add( new LinkMenuItem(
-                "menuItem",
-                new Model<String>(
-                        surveyService.isSurveyed( getIssue() )
-                            ? "View survey"
-                                : "Create survey"
-                ),
-                surveyLink ) );
+            };
+            menuItem = new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( itemLabel ),
+                    surveyLink );
+        } else {
+            Label createSurveyLabel = new Label( "menuItem", itemLabel );
+            createSurveyLabel.add( new AttributeModifier(
+                    "class",
+                    true,
+                    new Model<String>( "disabled" ) ) );
+            menuItem = createSurveyLabel;
+        }
+        menuItems.add( menuItem );
         // Undo and redo
         // Undo and redo
         menuItems.add( this.getUndoMenuItem( "menuItem" ) );

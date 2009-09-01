@@ -16,8 +16,8 @@
 
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <property name="host" value="smtp.gmail.com"/>
-        <property name="username" value="jf@mind-alliance.com"/>
-        <property name="password" value="tabarn4c"/>
+        <property name="username" value="channels.mindalliance@gmail.com"/>
+        <property name="password" value="trafalg4r"/>
         <property name="port" value="465"/>
         <property name="protocol" value="smtps" />
         <property name="javaMailProperties">
@@ -89,12 +89,14 @@
         <property name="template" value="1800"/>
         <property name="analyst" ref="analyst"/>
         <property name="queryService" ref="queryService"/>
-        <property name="defaultEmailAddress" value="jf@mind-alliance.com"/>
+        <property name="defaultEmailAddress" value="channels.mindalliance@gmail.com"/>
         <property name="mailSender" ref="mailSender"/>
         <property name="userDetailsService" ref="userDetails"/>
         <property name="velocityEngine" ref="velocityEngine"/>
         <property name="surveysFile" value="surveys"/>
         <property name="planManager" ref="planManager"/>
+        <property name="templatesDir" value="${user.home}/channels/templates"/>
+        <property name="templatesSource" value="WEB-INF/templates"/>
     </bean>
 
     <bean id="idGenerator" class="com.mindalliance.channels.dao.PerPlanIdGenerator"/>

@@ -44,6 +44,10 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
      * Remediation text area.
      */
     private TextArea<String> remediationArea;
+    /**
+     * Issue action menu.
+     */
+    private IssueActionsMenuPanel issueActionMenu;
 
     public ExpandedIssuePanel( String id, IModel<Issue> model ) {
         super( id );
@@ -60,7 +64,8 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
                 new PropertyModel<String>( this, "description" ) );
         descriptionArea.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                // do nothing
+                addIssueActionsMenu();
+                target.addComponent( issueActionMenu );
             }
         } );
         add( descriptionArea );
@@ -92,7 +97,8 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
                 new PropertyModel<String>( this, "remediation" ) );
         remediationArea.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                // do nothing
+                addIssueActionsMenu();
+                target.addComponent( issueActionMenu );
             }
         } );
         add( remediationArea );
@@ -114,10 +120,11 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
     }
 
     private void addIssueActionsMenu() {
-        add( new IssueActionsMenuPanel(
+        issueActionMenu = new IssueActionsMenuPanel(
                 "issueActionsMenu",
                 new Model<Issue>( model.getObject() ),
-                false ) );
+                false );
+        addOrReplace( issueActionMenu );
     }
 
     private Issue getIssue() {
