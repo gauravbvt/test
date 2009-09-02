@@ -6,6 +6,7 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
@@ -178,7 +179,9 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
         for ( final CommandWrapper commandWrapper : commandWrappers ) {
             final Command command = commandWrapper.getCommand();
             if ( getCommander().canDo( command ) ) {
-                Link link = new AjaxFallbackLink( "link" ) {
+                Link link = new ConfirmedAjaxFallbackLink(
+                        "link",
+                        commandWrapper.isConfirm() ? "Are you sure?" : null) {
                     public void onClick( AjaxRequestTarget target ) {
                         try {
                             Change change = getCommander().doCommand( command );
@@ -190,9 +193,6 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
                         }
                     }
                 };
-                if ( commandWrapper.isConfirm() ) {
-                    confirm( link, "Are you sure?" );
-                }
                 menuItems.add( new LinkMenuItem( id,
                         new PropertyModel<String>( command, "title" ),
                         link ) );

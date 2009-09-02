@@ -165,7 +165,7 @@ public class ScenarioConverter extends AbstractChannelsConverter {
                 String id = reader.getAttribute( "id");
                 Event event = getEntity(
                         Event.class,
-                        nodeName,
+                        reader.getValue(),
                         Long.parseLong( id ),
                         importingPlan,
                         idMap );

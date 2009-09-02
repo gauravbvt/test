@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.surveys;
 import com.mindalliance.channels.SurveyService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyException;
 import org.apache.wicket.AttributeModifier;
@@ -153,7 +154,9 @@ public class SurveyPanel extends AbstractUpdatablePanel {
         };
         launchLink.setVisible( survey.canBeLaunched() );
         surveyDataContainer.add( launchLink );
-        AjaxFallbackLink closeLink = new AjaxFallbackLink( "close" ) {
+        ConfirmedAjaxFallbackLink closeLink = new ConfirmedAjaxFallbackLink(
+                "close",
+                "Close the survey?" ) {
             public void onClick( AjaxRequestTarget target ) {
                 try {
                     surveyService.closeSurvey( survey );
@@ -163,7 +166,6 @@ public class SurveyPanel extends AbstractUpdatablePanel {
                 update( target, new Change( Change.Type.Updated, survey ) );
             }
         };
-        confirm( closeLink, "Close the survey?" );
         closeLink.setVisible( survey.isLaunched() );
         surveyDataContainer.add( closeLink );
     }

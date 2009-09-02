@@ -12,6 +12,7 @@ import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
+import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.util.Matcher;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.wicket.Component;
@@ -201,7 +202,9 @@ public class RiskListPanel extends AbstractCommandablePanel {
 
     private void addDeleteImage( ListItem<RiskWrapper> item ) {
         final RiskWrapper wrapper = item.getModelObject();
-        AjaxFallbackLink deleteLink = new AjaxFallbackLink( "delete" ) {
+        ConfirmedAjaxFallbackLink deleteLink = new ConfirmedAjaxFallbackLink(
+                "delete",
+                "Delete risk?" ) {
             public void onClick( AjaxRequestTarget target ) {
                 wrapper.deleteRisk();
                 update( target,
@@ -212,7 +215,6 @@ public class RiskListPanel extends AbstractCommandablePanel {
                         ) );
             }
         };
-        confirm( deleteLink, "Delete risk?" );
         makeVisible( deleteLink, wrapper.isComplete() );
         item.addOrReplace( deleteLink );
     }

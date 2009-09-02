@@ -11,6 +11,7 @@ import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.pages.ExportPage;
 import com.mindalliance.channels.pages.PlanPage;
+import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -63,12 +64,11 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
                         ExportPage.class,
                         PlanPage.getParameters( (Scenario) getModel().getObject(), null ) ) ) );
         // Logout
-        AjaxFallbackLink logoutLink = new AjaxFallbackLink( "link" )  {
+        ConfirmedAjaxFallbackLink logoutLink = new ConfirmedAjaxFallbackLink( "link", "Log out?" )  {
                     public void onClick( AjaxRequestTarget target ) {
                         getRequestCycle().setRequestTarget(new RedirectRequestTarget("/logout"));
                     }
                 };
-        confirm( logoutLink, "Logging out?");
         menuItems.add( new LinkMenuItem(
                 "menuItem",
                 new Model<String>( "Logout " + User.current().getUsername() ),

@@ -74,7 +74,7 @@ public class JobConverter extends AbstractChannelsConverter {
                 String id = reader.getAttribute( "id" );
                 Actor actor = getEntity(
                         Actor.class,
-                        nodeName,
+                        reader.getValue(),
                         Long.parseLong( id ),
                         importingPlan,
                         idMap );
@@ -83,7 +83,7 @@ public class JobConverter extends AbstractChannelsConverter {
                 String id = reader.getAttribute( "id" );
                 Role role = getEntity(
                         Role.class,
-                        nodeName,
+                        reader.getValue(),
                         Long.parseLong( id ),
                         importingPlan,
                         idMap );
@@ -92,7 +92,7 @@ public class JobConverter extends AbstractChannelsConverter {
                 String id = reader.getAttribute( "id" );
                 Place jurisdiction = getEntity(
                         Place.class,
-                        nodeName,
+                        reader.getValue(),
                         Long.parseLong( id ),
                         importingPlan,
                         idMap );

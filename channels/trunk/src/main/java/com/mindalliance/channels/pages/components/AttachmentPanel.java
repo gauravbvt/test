@@ -249,7 +249,9 @@ public class AttachmentPanel extends AbstractCommandablePanel {
 
     private void addDeleteImage( ListItem<Attachment> item ) {
         final Attachment attachment = item.getModelObject();
-        AjaxFallbackLink deleteLink = new AjaxFallbackLink( "delete" ) {
+        ConfirmedAjaxFallbackLink deleteLink = new ConfirmedAjaxFallbackLink(
+                "delete",
+                "Delete attachment?" ) {
             public void onClick( AjaxRequestTarget target ) {
                 doCommand( new DetachDocument(
                         getAttachee(),
@@ -266,7 +268,6 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                         ) );
             }
         };
-        confirm( deleteLink, "Delete attachment?" );
         makeVisible( deleteLink, isLockedByUserIfNeeded( getAttachee() ) );
         item.add( deleteLink );
     }
