@@ -18,6 +18,8 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -76,10 +78,21 @@ public class ActorPlaybook extends PlaybookPage {
 
     private static Component createPicture( Actor actor ) {
         String name = actor == null ? "" : actor.getName();
-        String url = actor == null ? "images/actor.png" : actor.getImageUrl();
-
+        String url = "../images/actor.png";
+        if ( actor != null ) {
+            String s = actor.getImageUrl();
+            if ( s != null )
+                try {
+                    URI u = new URI( s );
+                    if ( u.isAbsolute() )
+                        url = u.toString();
+                    else
+                        url = "../" + u.toString();
+                } catch ( URISyntaxException ignored ) {
+                }
+        }
         return new WebMarkupContainer( "pic" )
-                .add( new AttributeModifier( "src", new Model<String>( "../" + url ) ),
+                .add( new AttributeModifier( "src", new Model<String>( url ) ),
                       new AttributeModifier( "alt", new Model<String>( name ) ) )
                 .setVisible( url != null );
     }
