@@ -32,7 +32,7 @@ class FlowListPanel extends Panel {
 
     FlowListPanel(
             String id, final Collection<ResourceSpec> actorSpecs, final ResourceSpec exception,
-            final List<SynonymFlowSet> synsets, boolean incoming ) {
+            final List<SynonymFlowSet> synsets, boolean incoming, final int offset ) {
 
         super( id );
         this.incoming = incoming;
@@ -48,8 +48,9 @@ class FlowListPanel extends Panel {
                                         new Model<String>( set.isIncoming() ? "in" : "out" ) ) ),
                               createFlowCells( getFlowCells( set, actorSpecs, exception ) ) );
 
+                    int index = offset + synsets.indexOf( set );
                     item.add( new AttributeModifier( "class", true,
-                        new Model<String>( synsets.indexOf( set ) % 2 == 0 ? "even" : "odd" ) ) );
+                        new Model<String>( index % 2 == 0 ? "even" : "odd" ) ) );
                 }
             } );
 

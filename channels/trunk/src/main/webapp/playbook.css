@@ -18,7 +18,7 @@ body {
 #contents {
     font-size: 0.875em;
     background: white;
-    padding: 0.5625em;
+    padding: 1.125em 0.5625em 0.5625em 0.5625em;
 }
 
 #nav {
@@ -77,6 +77,10 @@ table.stretch {
     width: 100%;
 }
 
+tr.odd {
+    background: #f6f6f6;
+}
+
 th, td {
     border: none;
 }
@@ -101,11 +105,25 @@ p {
     margin-bottom: 1em;
 }
 
-p .description {
+p.description {
 }
 
-div .events {
+div.events:first-child, div.notifications:first-child {
+    border: none;
+}
+div.events, div.notifications {
+    border-top: 1px solid #c3d9ff;
 }
 
-div .notifications {
+div.notifications {
+    clear: both;
+}
+
+div.notifications img {
+    margin-bottom: 1em;
+}
+
+div.notifications ul {
+    display: block;
+    margin-left: 55px;
 }

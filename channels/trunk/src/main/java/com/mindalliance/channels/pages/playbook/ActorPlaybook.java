@@ -8,6 +8,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.User;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -15,6 +16,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.Model;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -66,9 +68,20 @@ public class ActorPlaybook extends PlaybookPage {
                     FlowSet flowSet = item.getModelObject();
                     item.add(
                         new Label( "spec", flowSet.getSourceString() ).setRenderBodyOnly( true ),
-                        newFlowList( actor, flowSet.getSynonymSets() ) );
+                        newFlowList( actor, flowSet.getSynonymSets() ),
+                        createPicture( flowSet.getActor() ) );
                 }
             } );
+    }
+
+    private static Component createPicture( Actor actor ) {
+        String name = actor == null ? "" : actor.getName();
+        String url = actor == null ? "images/actor.png" : actor.getImageUrl();
+
+        return new WebMarkupContainer( "pic" )
+                .add( new AttributeModifier( "src", new Model<String>( "../" + url ) ),
+                      new AttributeModifier( "alt", new Model<String>( name ) ) )
+                .setVisible( url != null );
     }
 
     private static List<EventParts> classifyParts( QueryService service, Actor actor ) {

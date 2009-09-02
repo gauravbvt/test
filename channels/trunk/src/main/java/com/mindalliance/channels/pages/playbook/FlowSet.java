@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.playbook;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Actor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -136,5 +137,9 @@ class FlowSet implements Comparable<FlowSet> {
 
     public boolean isNotEmpty() {
         return !synonymSets.isEmpty();
+    }
+
+    public Actor getActor() {
+        return spec.getActor();
     }
 }

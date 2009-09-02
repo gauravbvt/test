@@ -94,8 +94,9 @@ public class TaskPlaybook extends PlaybookPage {
                             }
                         },
 
-                        new FlowListPanel( "inputs", specList, actorSpec, inputs, true ),
-                        new FlowListPanel( "outputs", specList, actorSpec, outputs, false ) )
+                        new FlowListPanel( "inputs", specList, actorSpec, inputs, true, 0 ),
+                        new FlowListPanel( "outputs", specList, actorSpec, outputs, false,
+                                           inputs.size() ) )
 
                     .setVisible( !( specList.isEmpty() || inputs.isEmpty() && outputs.isEmpty() ) )
         );
