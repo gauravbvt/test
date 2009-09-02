@@ -7,6 +7,7 @@ import org.acegisecurity.userdetails.UserDetails;
 import org.acegisecurity.userdetails.UserDetailsService;
 import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
 import org.apache.wicket.util.file.File;
 import org.slf4j.Logger;
@@ -281,11 +282,20 @@ public class FileUserDetailsService implements UserDetailsService {
     }
 
     /**
-     * Get all usernames.
+     * Get all usernames for current plan.
      *
      * @return a list of strings
      */
-    public List<String> getAllUsernames() {
-        return new ArrayList<String>( details.keySet() );
+    @SuppressWarnings( "unchecked" )
+    public List<String> getAllPlanUsernames() {
+        return (List<String>) CollectionUtils.select(
+                new ArrayList<String>( details.keySet() ),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        User user = FileUserDetailsService.this.getUserNamed( (String) obj );
+                        return user.isParticipant( User.current().getPlan() );
+                    }
+                }
+        );
     }
 }

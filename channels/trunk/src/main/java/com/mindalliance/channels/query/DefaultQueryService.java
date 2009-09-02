@@ -158,7 +158,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public void onDestroy() {
-        attachmentManager.removeUnattached( this );
+        // Do nothing
     }
 
     /**
@@ -2227,8 +2227,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<String> findAllUsernames() {
-        return userDetailsService.getAllUsernames();
+    public List<String> findAllPlanUsernames() {
+        return userDetailsService.getAllPlanUsernames();
     }
 
 }

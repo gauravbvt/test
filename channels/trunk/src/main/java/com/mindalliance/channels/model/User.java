@@ -300,6 +300,16 @@ public class User implements UserDetails {
         return canRead( getPlan() );
     }
 
+    /**
+     * User can at least view the given plan.
+     *
+     * @param plan a plan
+     * @return a boolean
+     */
+    public boolean isParticipant( Plan plan ) {
+        return canRead( plan );
+    }
+
     private boolean canPlan( Plan plan ) {
         if ( isAdmin() ) return true;
         Boolean canPlan = plans.get( plan.getUri() );
@@ -371,7 +381,7 @@ public class User implements UserDetails {
         buffer.write( "," );
         buffer.write( getFullName() );
         buffer.write( "," );
-        buffer.write( getEmail() );        
+        buffer.write( getEmail() );
         buffer.write( "," );
         for ( String uri : plans.keySet() ) {
             buffer.write( "[" );

@@ -29,10 +29,8 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -402,8 +400,10 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
      * {@inheritDoc }
      * @param service
      */
+    // TODO - BUG: if the current plan does not use an uploaded fiel but another plan does, the file is deleted.
     public synchronized void removeUnattached( QueryService service ) {
-        List<String> attachedUrls = service.findAllAttached();
+        log.warn( "Fix bug and re-enable. ");
+        /*List<String> attachedUrls = service.findAllAttached();
         File[] files = getUploadDirectory().listFiles();
         if ( files != null ) {
             List<File> uploadedFiles = Arrays.asList( files );
@@ -421,7 +421,7 @@ public class FileBasedManager implements AttachmentManager, Lifecycle {
                 }
             }
             save();
-        }
+        }*/
     }
 
     /**

@@ -947,9 +947,9 @@ public interface QueryService extends Service {
     String findUserNormalizedFullName( String userName );
 
     /**
-     * Find all usernames.
+     * Find usernames of all users who can access the current plan.
      *
      * @return a list of strings
      */
-    List<String> findAllUsernames();
+    List<String> findAllPlanUsernames();
 }
