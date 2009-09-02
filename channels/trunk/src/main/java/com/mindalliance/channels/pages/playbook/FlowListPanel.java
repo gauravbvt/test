@@ -43,8 +43,13 @@ class FlowListPanel extends Panel {
                     SynonymFlowSet set = item.getModelObject();
                     item.add( new Label( "set-name", set.getLabel() ).setRenderBodyOnly( true ),
                               new AttachmentListPanel( "attachments", set.getAttachments() ),
-                              new Label( "direction", set.isIncoming() ? "<--" : "-->" ),
+                              new Label( "direction", set.isIncoming() ? "<--" : "-->" )
+                                .add( new AttributeModifier( "class", true,
+                                        new Model<String>( set.isIncoming() ? "in" : "out" ) ) ),
                               createFlowCells( getFlowCells( set, actorSpecs, exception ) ) );
+
+                    item.add( new AttributeModifier( "class", true,
+                        new Model<String>( synsets.indexOf( set ) % 2 == 0 ? "even" : "odd" ) ) );
                 }
             } );
 
@@ -59,7 +64,7 @@ class FlowListPanel extends Panel {
                 FlowCell flowCell = item.getModelObject();
 
                 WebMarkupContainer container;
-                if ( flowCell.isIncoming() && !flowCell.isAskedFor() 
+                if ( flowCell.isIncoming() && !flowCell.isAskedFor()
                      || !flowCell.hasActor() && !flowCell.hasFlow() ) {
                     container = new WebMarkupContainer( "vcard" );
                     container.setRenderBodyOnly( true );

@@ -5,10 +5,25 @@
         xmlns:wicket="http://wicket.apache.org/"
         xml:lang="en"
         lang="en">
-<head><title wicket:id="title">Title</title></head>
+<head>
+    <title wicket:id="title">Title</title>
+    <link rel="stylesheet" href="playbook.css" type="text/css">
+</head>
 <body>
-    <h1 wicket:id="header">Header</h1>
+<div id="header">
+    <h1 class="twofer" wicket:id="header">Header</h1>
     <h3 wicket:id="role">(role in location)</h3>
+    <div id="nav">
+        <ul>
+            <li><a wicket:id="back">Back to <span wicket:id="actor">somebody</span>&rsquo;s playbook</a></li>
+            <li><a wicket:id="top">View other playbooks</a></li>
+            <li><a href="/logout">Logout <span wicket:id="user">user</span></a></li>
+        </ul>
+        <hr>
+    </div>
+</div>
+
+<div id="contents">
 
     <p><span wicket:id="desc">description, if any</span>
        <span wicket:id="completion-note">Should be completed <span wicket:id="completion">XXX</span>.</span>
@@ -22,11 +37,11 @@
         <p>Possible consequences:</p>
         <ul>
             <li wicket:id="task"><a wicket:id="task-link"><span wicket:id="task-label">an ensuing task</span></a></li>
-            <li wicket:id="end-event">Decide to end <span wicket:id="event">event</span></li>
+            <li wicket:id="end-event">Cause end of <span wicket:id="event">event</span></li>
         </ul>
     </div>
 
-    <table border="1" wicket:id="flows">
+    <table class="stretch" border="1" wicket:id="flows">
         <thead>
             <tr><th align="left">Flows</th><th>&nbsp;</th><th wicket:id="actorSpec"><span wicket:id="actorLabel">Actor</span></th></tr>
         </thead>
@@ -35,14 +50,6 @@
             <div wicket:id="outputs">(outputs)</div>
         </tbody>
     </table>
-
-    <div id="nav">
-        <hr>
-        <ul>
-            <li><a wicket:id="back">Back to <span wicket:id="actor">somebody</span>&rsquo;s playbook</a></li>
-            <li><a wicket:id="top">View other playbooks</a></li>
-            <li><a href="/logout">Logout <span wicket:id="user">user</span></a></li>
-        </ul>
-    </div>
+</div>
 </body>
 </html>

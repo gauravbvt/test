@@ -1,0 +1,111 @@
+body {
+    font-size: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 18px;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 70em;
+    background: #f6f6f6;
+}
+
+#header {
+    background: #c3d9ff url('images/logo.png') no-repeat 5px center;
+    padding: 0 0 0 58px;
+    height: 70px;
+    position: relative;
+}
+
+#contents {
+    font-size: 0.875em;
+    background: white;
+    padding: 0.5625em;
+}
+
+#nav {
+    font-size: 0.875em;
+    padding: 0.5625em 0.5625em 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#nav ul {
+    margin-bottom: 0;
+}
+
+#nav hr {
+    display: none;
+}
+
+p, td, th, ul {
+    margin: 0 0 18px 0;
+}
+li {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+ul ul {
+    margin: 0;
+}
+
+h1, h2, h3 {
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    padding-top: 25px;
+}
+h1.twofer {
+    padding-top: 15px;
+}
+
+h2 {
+}
+
+h3 {
+    font-size: 75%;
+    margin-top: 10px;
+}
+
+table {
+    border: none;
+}
+table.stretch {
+    width: 100%;
+}
+
+th, td {
+    border: none;
+}
+
+th {
+    background: #c3d9ff;
+    padding: 0 0.5em;
+}
+
+td.in {
+    background: transparent url( 'images/arrow_left_blue.png' ) no-repeat 50% 50%;
+    color: transparent;
+    width: 23px;
+}
+td.out {
+    background: transparent url( 'images/arrow_right_blue.png' ) no-repeat 50% 50%;
+    color: transparent;
+    width: 23px;
+}
+
+p {
+    margin-bottom: 1em;
+}
+
+p .description {
+}
+
+div .events {
+}
+
+div .notifications {
+}

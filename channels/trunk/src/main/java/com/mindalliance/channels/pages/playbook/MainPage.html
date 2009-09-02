@@ -12,21 +12,27 @@
 </head>
 
 <body>
-    <h1 wicket:id="plan-name">plan name</h1>
-    <p class="description" wicket:id="description">description</p>
+    <div id="header">
+        <h1 wicket:id="plan-name">plan name</h1>
+        <div id="nav">
+            <ul>
+                <li><a href="/logout">Logout <span wicket:id="user">user</span></a></li>
+            </ul>
+            <hr>
+        </div>
+    </div>
 
-    <p>Participants in this plan:</p>
-    <ul>
-        <li wicket:id="participants">
-            <a wicket:id="participant" href="#"><span wicket:id="name">a scenario</span></a><span wicket:id="actor-desc">description</span>
-        </li>
-    </ul>
+    <div id="contents">
+        <p class="description" wicket:id="description">description</p>
 
-    <div id="nav">
-        <hr>
-        <ul>
-            <li><a href="/logout">Logout <span wicket:id="user">user</span></a></li>
+        <p>Participants in this plan:</p>
+        <ul class="participants">
+            <li wicket:id="participants">
+                <a wicket:id="participant" href="#"><span wicket:id="name">a scenario</span></a><span
+                    wicket:id="actor-desc">description</span>
+            </li>
         </ul>
+
     </div>
 </body>
 </html>
