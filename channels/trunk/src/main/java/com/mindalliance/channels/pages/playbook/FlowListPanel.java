@@ -66,7 +66,9 @@ class FlowListPanel extends Panel {
 
                 WebMarkupContainer container;
                 if ( flowCell.isIncoming() && !flowCell.isAskedFor()
-                     || !flowCell.hasActor() && !flowCell.hasFlow() ) {
+                     || !flowCell.isIncoming() && flowCell.isAskedFor()
+                     || !flowCell.hasActor() && !flowCell.hasFlow() )
+                {
                     container = new WebMarkupContainer( "vcard" );
                     container.setRenderBodyOnly( true );
                 } else
@@ -78,7 +80,9 @@ class FlowListPanel extends Panel {
 
                 item.add( container
                             .add( new Label( "delay", flowCell.getDelayString() ),
-                                  new Label( "criticality", flowCell.getCriticality() ) )
+                                  new Label( "criticality", flowCell.getCriticality() ),
+                                  new WebMarkupContainer( "ask" )
+                                          .setVisible( flowCell.isAskedFor() ) )
                             .add( new AttributeModifier( "title", true,
                                     new Model<String>( flowCell.getDescription() ) ) ) );
             }
