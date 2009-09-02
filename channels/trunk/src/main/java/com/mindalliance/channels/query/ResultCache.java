@@ -121,9 +121,9 @@ public class ResultCache {
                 key.append( argumentToString( methodArgs[i] ) );
             }
             key.append( ')' );
-            // Add plan id to key
+            // Add plan uri to key
             key.append( " in " );
-            key.append( PlanManager.plan().getId() );
+            key.append( PlanManager.plan().getUri() );
             return key.toString();
         } else
             return targetMethodName;

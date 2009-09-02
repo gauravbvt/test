@@ -11,6 +11,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+
 /**
  * Job XML converter.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -62,19 +64,39 @@ public class JobConverter extends AbstractChannelsConverter {
     public Object unmarshal(
             HierarchicalStreamReader reader,
             UnmarshallingContext context ) {
+        Map<Long, Long> idMap = getIdMap( context );
+        boolean importingPlan = isImportingPlan( context );
         Job job = new Job();
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "actor" ) ) {
                 String id = reader.getAttribute( "id" );
-                job.setActor( findOrCreate( Actor.class, reader.getValue(), id ) );
+                Actor actor = getEntity(
+                        Actor.class,
+                        nodeName,
+                        Long.parseLong( id ),
+                        importingPlan,
+                        idMap );
+                job.setActor( actor );
             } else if ( nodeName.equals( "role" ) ) {
                 String id = reader.getAttribute( "id" );
-                job.setRole( findOrCreate( Role.class, reader.getValue(), id ) );
+                Role role = getEntity(
+                        Role.class,
+                        nodeName,
+                        Long.parseLong( id ),
+                        importingPlan,
+                        idMap );
+                job.setRole( role );
             } else if ( nodeName.equals( "jurisdiction" ) ) {
                 String id = reader.getAttribute( "id" );
-                job.setJurisdiction( findOrCreate( Place.class, reader.getValue(), id ) );
+                Place jurisdiction = getEntity(
+                        Place.class,
+                        nodeName,
+                        Long.parseLong( id ),
+                        importingPlan,
+                        idMap );
+                job.setJurisdiction( jurisdiction );
             } else if ( nodeName.equals( "title" ) ) {
                 job.setTitle( reader.getValue() );
             } else {

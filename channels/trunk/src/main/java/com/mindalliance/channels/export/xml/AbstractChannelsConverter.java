@@ -250,4 +250,27 @@ public abstract class AbstractChannelsConverter implements Converter {
         return about;
     }
 
+    /**
+     * Find or make entity
+     * @param clazz entity class
+     * @param name  entity name
+     * @param id  entity id
+     * @param importingPlan boolean
+     * @param idMap id map
+     * @return an entity model object
+     */
+    protected <T extends ModelObject> T getEntity(
+            Class<T> clazz,
+            String name,
+            Long id,
+            boolean importingPlan,
+            Map<Long, Long> idMap ) {
+        T entity = importingPlan
+                ? getQueryService().findOrCreate( clazz, name, id )
+                : getQueryService().findOrCreate( clazz, name );
+        idMap.put( id, entity.getId() );
+        return entity;
+    }
+
+
 }
