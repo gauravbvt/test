@@ -49,10 +49,9 @@
         <property name="version" value="1.0"/>
     </bean>
 
-    <bean id="attachmentManager" class="com.mindalliance.channels.attachments.FileBasedManager"
-          init-method="start" destroy-method="stop">
-        <property name="directory" value="file:${user.home}/channels/uploads"/>
+    <bean id="attachmentManager" class="com.mindalliance.channels.attachments.FileBasedManager">
         <property name="path" value="uploads/"/>
+        <property name="planManager" ref="planManager"/>
     </bean>
 
     <bean id="geoService" class="com.mindalliance.channels.geo.DefaultGeoService">

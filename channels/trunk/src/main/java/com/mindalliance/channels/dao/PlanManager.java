@@ -695,4 +695,18 @@ public class PlanManager implements InitializingBean {
         }
         return imported;
     }
+
+    /**
+     * Get name of directory where current plan is persisted.
+     * @return a string
+     */
+    public String getPlanDirectory() {
+        try {
+            return getDataDirectory().getFile().getAbsolutePath()
+                    + File.separator
+                    + PlanDao.sanitize( plan().getUri() ) ;
+        } catch ( IOException e ) {
+            throw new RuntimeException("Failed to get plan directory", e);
+        }
+    }
 }

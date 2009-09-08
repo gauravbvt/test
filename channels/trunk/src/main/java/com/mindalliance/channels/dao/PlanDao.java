@@ -159,7 +159,7 @@ public class PlanDao extends Memory {
         return directory;
     }
 
-    private static String sanitize( String name ) {
+    public static String sanitize( String name ) {
         return name.replaceAll( "\\W", "_" );
     }
 
