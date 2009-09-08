@@ -89,12 +89,17 @@ class FlowSet implements Comparable<FlowSet> {
      * @param flow the flow
      */
     public void add( Flow flow ) {
-        String key = flow.getName();
+        String key = getKey( flow );
         SynonymFlowSet set = synonymSets.get( key );
         if ( set == null )
             synonymSets.put( key, new SynonymFlowSet( flow, incoming ) );
         else
             set.add( flow );
+    }
+
+    private static String getKey( Flow flow ) {
+        String key = flow.getName();
+        return flow.isAskedFor() ? key + "?" : key;
     }
 
     /**

@@ -46,6 +46,7 @@ public class ActorPlaybook extends PlaybookPage {
         add(
             new Label( "title", name ),
             new Label( "header", name ).setRenderBodyOnly( true ),
+            new Label( "ess", name.endsWith( "s" )? "" : "s" ).setRenderBodyOnly( true ),
 
             new BookmarkablePageLink<TaskPlaybook>( "top", TaskPlaybook.class ),
 

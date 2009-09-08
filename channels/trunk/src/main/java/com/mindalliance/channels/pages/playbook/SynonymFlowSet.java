@@ -52,7 +52,8 @@ final class SynonymFlowSet implements Comparable<SynonymFlowSet> {
      * @return a label to describe all the flows
      */
     public String getLabel() {
-        return firstFlow.getName();
+        String label = firstFlow.getName();
+        return firstFlow.isAskedFor() ? label + "?" : label;
     }
 
     /**
