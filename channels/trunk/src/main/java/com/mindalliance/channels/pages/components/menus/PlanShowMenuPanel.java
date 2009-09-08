@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.pages.AdminPage;
+import com.mindalliance.channels.pages.playbook.TaskPlaybook;
 import com.mindalliance.channels.pages.reports.PlanReportPage;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -144,6 +145,13 @@ public class PlanShowMenuPanel extends MenuPanel {
                 "menuItem",
                 new Model<String>( "Plan as document" ),
                 reportLink ) );
+
+        BookmarkablePageLink playbooksLink = new BookmarkablePageLink<PlanReportPage>( "link", TaskPlaybook.class );
+        playbooksLink.add( new AttributeModifier( "target", true, new Model<String>( "playbooks" ) ) );
+        menuItems.add( new LinkMenuItem(
+                "menuItem",
+                new Model<String>( "Playbooks" ),
+                playbooksLink ) );
 
         if ( User.current().isAdmin() ) {
             BookmarkablePageLink adminLink = new BookmarkablePageLink( "link", AdminPage.class );

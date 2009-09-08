@@ -72,18 +72,7 @@
                 file.resource.loader.cache=true
                 file.resource.loader.modificationCheckInterval=2
             </value>
-            <!-- <props>
-                <prop key="resource.loader">file</prop>
-                <prop key="file.resource.loader.class">
-                    org.apache.velocity.runtime.resource.loader.FileResourceLoader
-                </prop>
-                <prop key="file.resource.loader.path">
-                    /home/jf/channels/templates
-                </prop>
-                <prop key="file.resource.loader.cache">true</prop>
-                <prop key="file.resource.loader.modificationCheckInterval">2</prop>
-            </props>-->
-        </property>
+         </property>
     </bean>
 
     <bean id="surveyService" class="com.mindalliance.channels.surveys.SurveyGizmoService">

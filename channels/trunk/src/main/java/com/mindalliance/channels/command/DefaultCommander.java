@@ -21,10 +21,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -71,6 +73,11 @@ public class DefaultCommander extends AbstractService implements Commander, Init
     private Map<String, Long> whenLastActive = Collections.synchronizedMap( new HashMap<String, Long>() );
 
     /**
+     * Times after which users are considered "dead", unless incremented by "keepAlive" signals.
+     */
+    private Map<String, Long> userLives = Collections.synchronizedMap( new HashMap<String, Long>() );
+
+    /**
      * Users who timed out but have yet to be refreshed.
      */
     private Set<String> timedOut = Collections.synchronizedSet( new HashSet<String>() );
@@ -95,8 +102,8 @@ public class DefaultCommander extends AbstractService implements Commander, Init
     }
 
     public void setAnalyst( Analyst analyst ) {
-         this.analyst = analyst;
-     }
+        this.analyst = analyst;
+    }
 
     public Map<String, Object> getCopy() {
         return copy.get( User.current().getUsername() );
@@ -442,6 +449,35 @@ public class DefaultCommander extends AbstractService implements Commander, Init
     /**
      * {@inheritDoc}
      */
+    public void keepAlive( String userName, int refreshDelay ) {
+        userLives.put(
+                userName,
+                System.currentTimeMillis() + ( refreshDelay * 2 * 1000 ) );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void processDeaths() {
+        long now = System.currentTimeMillis();
+        List<String> deads = new ArrayList<String>();
+        for ( String userName : userLives.keySet() ) {
+            long timeOfDeath = userLives.get( userName );
+            if ( now > timeOfDeath ) {
+                deads.add( userName );
+                LOG.info( userName + " is no longer live" );
+                lockManager.releaseAllLocks( userName );
+            }
+        }
+        for ( String userName : deads ) {
+            userLives.remove( userName );
+        }
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
     public synchronized void processTimeOuts() {
         long now = System.currentTimeMillis();
         long timeoutMillis = timeout * 1000;
@@ -509,4 +545,5 @@ public class DefaultCommander extends AbstractService implements Commander, Init
     public Plan getPlan() {
         return queryService.getCurrentPlan();
     }
+
 }

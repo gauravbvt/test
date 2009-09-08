@@ -370,6 +370,8 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void doTimedUpdate( AjaxRequestTarget target ) {
+        getCommander().keepAlive( User.current().getUsername(), REFRESH_DELAY );
+        getCommander().processDeaths();
         getCommander().processTimeOuts();
         if ( getCommander().isTimedOut() ) {
             refreshAll( target );

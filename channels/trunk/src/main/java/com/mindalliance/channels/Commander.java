@@ -86,7 +86,7 @@ public interface Commander extends Service {
      * Resets history for current user.
      *
      * @param userName a string
-     * @param all if true include scenario-specific commands
+     * @param all      if true include scenario-specific commands
      */
     void resetUserHistory( String userName, boolean all );
 
@@ -220,6 +220,19 @@ public interface Commander extends Service {
     String getLastModifier();
 
     /**
+      * Keep current user alive.
+      *
+      * @param userName a string
+     * @param refreshDelay a number of seconds between pings
+      */
+     void keepAlive( String userName, int refreshDelay );
+
+    /**
+     * Remove locks from any user who is no longer live.
+     */
+     void processDeaths();
+
+    /**
      * Check for and process user inactivity timeouts.
      */
     void processTimeOuts();
@@ -302,4 +315,5 @@ public interface Commander extends Service {
      * @return a plan
      */
     Plan getPlan();
-}
+
+ }
