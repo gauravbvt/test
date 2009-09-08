@@ -1,7 +1,7 @@
 body {
     font-size: 100%;
     font-family: Arial, Helvetica, sans-serif;
-    line-height: 18px;
+    line-height: 1.25em;
     padding: 0;
     margin: 0 auto;
     max-width: 70em;
@@ -9,9 +9,9 @@ body {
 }
 
 #header {
-    background: #c3d9ff url('images/logo.png') no-repeat 5px center;
-    padding: 0 16em 0 58px;
-    height: 70px;
+    background: #c3d9ff url('images/logo.png') no-repeat 5px 7px;
+    padding: 0.5625em 0.5625em 0.5625em  58px;
+    min-height: 48px;
     position: relative;
 }
 
@@ -23,10 +23,8 @@ body {
 
 #nav {
     font-size: 0.875em;
-    padding: 0.5625em 0.5625em 0;
-    position: absolute;
-    top: 0;
-    right: 0;
+    float: right;
+    clear: both;
 }
 
 #nav ul {
@@ -53,14 +51,12 @@ ul ul {
 h1, h2, h3 {
     margin: 0;
     padding: 0;
+    line-height: 1.125em;
 }
 
 h1 {
-    padding-top: 25px;
+    padding: 0;
     font-size: 19px;
-}
-h1.twofer {
-    padding-top: 15px;
 }
 
 h2 {
@@ -68,7 +64,8 @@ h2 {
 
 h3 {
     font-size: 75%;
-    margin-top: 10px;
+    margin-top: 1em;
+    font-weight: normal;
 }
 
 table {
@@ -76,6 +73,9 @@ table {
 }
 table.stretch {
     width: 100%;
+}
+table.channels th {
+    white-space: nowrap;
 }
 
 tr.odd {

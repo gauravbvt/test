@@ -3,7 +3,6 @@ package com.mindalliance.channels.pages.playbook;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.User;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -20,10 +19,10 @@ public class MainPage extends PlaybookPage {
 
     //----------------------------------------------
     public MainPage() {
-        init( getQueryService(), getPlan(), getUser() );
+        init( getQueryService(), getPlan() );
     }
 
-    private void init( QueryService service, Plan plan, User user ) {
+    private void init( QueryService service, Plan plan ) {
 
         List<Actor> actors = new ArrayList<Actor>( service.list( Actor.class ) );
         Collections.sort( actors );
@@ -31,7 +30,6 @@ public class MainPage extends PlaybookPage {
         add( new Label( "title", plan.getName() ),
              new Label( "plan-name", plan.getName() ),
              new Label( "description", plan.getDescription() ),
-             new Label( "user", user.getUsername() ).setRenderBodyOnly( true ),
 
              new ListView<Actor>( "participants", actors ) {
                 @Override

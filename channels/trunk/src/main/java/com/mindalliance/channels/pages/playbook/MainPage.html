@@ -9,17 +9,18 @@
 <head>
     <title wicket:id="title">[Title]</title>
     <link rel="stylesheet" href="playbook.css" type="text/css">
+    <link rel="stylesheet" href="iPhone.css"   type="text/css" media="only screen and (max-device-width: 480px)">
 </head>
 
 <body>
     <div id="header">
-        <h1 wicket:id="plan-name">plan name</h1>
         <div id="nav">
             <ul>
-                <li><a href="/logout">Logout <span wicket:id="user">user</span></a></li>
+                <li><a href="/logout">Logout</a></li>
             </ul>
             <hr>
         </div>
+        <h1 wicket:id="plan-name">plan name</h1>
     </div>
 
     <div id="contents">

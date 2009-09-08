@@ -7,7 +7,6 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.User;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
@@ -38,10 +37,10 @@ public class ActorPlaybook extends PlaybookPage {
     public ActorPlaybook( PageParameters parameters ) {
         super( parameters );
 
-        init( getQueryService(), getUser(), getActor() );
+        init( getQueryService(), getActor() );
     }
 
-    private void init( QueryService service, User user, final Actor actor ) {
+    private void init( QueryService service, final Actor actor ) {
         String name = actor.getName();
 
         add(
@@ -49,7 +48,6 @@ public class ActorPlaybook extends PlaybookPage {
             new Label( "header", name ).setRenderBodyOnly( true ),
 
             new BookmarkablePageLink<TaskPlaybook>( "top", TaskPlaybook.class ),
-            new Label( "user", user.getUsername() ).setRenderBodyOnly( true ),
 
             new ListView<EventParts>( "events", classifyParts( service, actor ) ) {
                 @Override

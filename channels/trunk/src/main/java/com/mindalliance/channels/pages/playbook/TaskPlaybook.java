@@ -13,7 +13,6 @@ import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.QueryService;
 import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -98,10 +97,11 @@ public class TaskPlaybook extends PlaybookPage {
                         new FlowListPanel( "outputs", specList, actorSpec, outputs, false,
                                            inputs.size() ) )
 
-                    .setVisible( !( specList.isEmpty() || inputs.isEmpty() && outputs.isEmpty() ) )
+                    .setVisible( !( specList.isEmpty() || inputs.isEmpty() && outputs.isEmpty() ) ),
+
+             new BookmarkablePageLink<TaskPlaybook>( "top", TaskPlaybook.class )
         );
 
-        createNavbar( this, actor, user );
     }
 
     private void sortFlows( Part part, ResourceSpec actorSpec, QueryService service ) {
@@ -251,16 +251,5 @@ public class TaskPlaybook extends PlaybookPage {
         ResourceSpec resourceSpec = new ResourceSpec( part.resourceSpec() );
         resourceSpec.setActor( actor );
         return resourceSpec.toString();
-    }
-
-    private static void createNavbar( MarkupContainer component, Actor actor, User user ) {
-        PageParameters parms = new PageParameters();
-        parms.put( ACTOR_PARM, actor.getId() );
-
-        component.add(
-                new BookmarkablePageLink<TaskPlaybook>( "back", TaskPlaybook.class, parms )
-                            .add( new Label( "actor", actor.getName() ).setRenderBodyOnly( true ) ),
-                new BookmarkablePageLink<TaskPlaybook>( "top", TaskPlaybook.class ),
-                new Label( "user", user.getUsername() ).setRenderBodyOnly( true ) );
     }
 }
