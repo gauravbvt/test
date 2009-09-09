@@ -29,7 +29,7 @@ body > div {
 }
 
 #contents img {
-    margin: 2px 1px 2px 0;  
+    margin: 2px 1px 2px 0;
 }
 
 #nav {
@@ -81,9 +81,8 @@ h3 {
 
 table {
     border: none;
-}
-table.stretch {
     width: 100%;
+    display: block;
 }
 table.channels th {
     white-space: nowrap;
@@ -103,14 +102,14 @@ th {
 }
 
 td.in {
-    background: transparent url( 'images/arrow_left_blue.png' ) no-repeat 50% 3px;
+    background: transparent url( 'images/arrow_left_blue.png' ) no-repeat 0 3px;
     color: transparent;
-    width: 23px;
+    width: 16px;
 }
 td.out {
-    background: transparent url( 'images/arrow_right_blue.png' ) no-repeat 50% 3px;
+    background: transparent url( 'images/arrow_right_blue.png' ) no-repeat 0 3px;
     color: transparent;
-    width: 23px;
+    width: 16px;
 }
 
 p {
