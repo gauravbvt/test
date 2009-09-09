@@ -10,7 +10,6 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.QueryService;
 import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
@@ -33,12 +32,16 @@ import java.util.Set;
  */
 public class TaskPlaybook extends PlaybookPage {
 
+    /** Columns headers in the flow table. */
     private List<ResourceSpec> specList;
 
+    /** Combine output flows. */
     private List<SynonymFlowSet> outputs;
 
+    /** Combine input flows. */
     private List<SynonymFlowSet> inputs;
 
+    /** Self-triggered tasks. */
     private List<Part> tasks;
 
     public TaskPlaybook( PageParameters parameters ) {
@@ -59,25 +62,18 @@ public class TaskPlaybook extends PlaybookPage {
             }
         }
 
-        init( actor, part, getUser() );
+        init( actor, part );
     }
 
-    private void init( Actor actor, Part part, User user ) {
+    private void init( Actor actor, Part part ) {
         ResourceSpec actorSpec = ResourceSpec.with( actor );
         String taskName = part.getTask();
-        String desc = part.getDescription();
-
         sortFlows( part, actorSpec, getQueryService() );
 
         add(
             new Label( "title", actor.getName() + " - " + taskName ),
             new Label( "header", taskName ),
-            new Label( "role", getRoleString( part, actor ) ),
-            new Label( "desc", desc ).setVisible( !desc.isEmpty() ),
-
-            createRepeat( part.getRepeatsEvery() ).setVisible( part.isRepeating() ),
-            createCompletion( part.getCompletionTime() ).setVisible( part.isSelfTerminating() ),
-            createRisks( part.getMitigations() ),
+            new Label( "role", getRoleString( part, actor ) ), createDescription( part ),
 
             new AttachmentListPanel( "attachments", part.getAttachments() ),
             createTaskList( actor, part, tasks ),
@@ -102,6 +98,21 @@ public class TaskPlaybook extends PlaybookPage {
              new BookmarkablePageLink<TaskPlaybook>( "top", TaskPlaybook.class )
         );
 
+    }
+
+    private static Component createDescription( Part part ) {
+        String partDescription = part.getDescription();
+        boolean hasDescription = !partDescription.isEmpty();
+        boolean hasMitigations = !part.getMitigations().isEmpty();
+
+        return new WebMarkupContainer( "all" ).add(
+                new Label( "desc", partDescription ).setVisible( hasDescription ),
+                createRepeat( part.getRepeatsEvery() ).setVisible( part.isRepeating() ),
+                createCompletion( part.getCompletionTime() ).setVisible( part.isSelfTerminating() ),
+                createRisks( part.getMitigations() ).setVisible( hasMitigations )
+
+        ).setVisible( hasDescription || part.isRepeating()
+                                     || part.isSelfTerminating() || hasMitigations );
     }
 
     private void sortFlows( Part part, ResourceSpec actorSpec, QueryService service ) {

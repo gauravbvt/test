@@ -12,41 +12,42 @@
 </head>
 
 <body>
-<div id="header">
-    <div id="nav">
-        <ul>
-            <li><a wicket:id="top">Playbook</a></li>
-            <li><a href="/logout">Logout</a></li>
-        </ul>
-        <hr>
+<div>
+    <div id="header">
+        <div id="nav">
+            <ul>
+                <li><a wicket:id="top">Playbook</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+            <hr>
+        </div>
+        <h1><span wicket:id="header">Actor</span>&rsquo;<span wicket:id="ess">s</span> playbook</h1>
     </div>
-    <h1><span wicket:id="header">Actor</span>&rsquo;<span wicket:id="ess">s</span> playbook</h1>
+
+    <div id="contents">
+        <div class="events" wicket:id="events">
+            <p>In case of <span wicket:id="event-name">event</span>:</p>
+            <ul>
+                <li wicket:id="parts"><a wicket:id="part" href="#"><span
+                        wicket:id="task-name">Task name</span></a></li>
+            </ul>
+        </div>
+
+        <div class="notifications" wicket:id="sources">
+            <p>From <span wicket:id="spec">someone</span>:</p>
+            <img width="48" wicket:id="pic" align="left" src="" alt="someone">
+            <ul>
+                <li wicket:id="flows">
+                    <a wicket:id="flow" href="#"><span wicket:id="flow-name">Flow name</span></a>
+                    (<span wicket:id="cause">just because</span>)
+                    <ul wicket:id="parts-list">
+                        <li wicket:id="parts"><a wicket:id="part" href="#"><span
+                                wicket:id="task-name">Task name</span></a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
-
-<div id="contents">
-    <div class="events" wicket:id="events">
-        <p>In case of <span wicket:id="event-name">event</span>:</p>
-        <ul>
-            <li wicket:id="parts"><a wicket:id="part" href="#"><span
-                    wicket:id="task-name">Task name</span></a></li>
-        </ul>
-    </div>
-
-    <div class="notifications" wicket:id="sources">
-        <p>From <span wicket:id="spec">someone</span>:</p>
-        <img width="48" wicket:id="pic" align="left" src="" alt="someone">
-        <ul>
-            <li wicket:id="flows">
-                <a wicket:id="flow" href="#"><span wicket:id="flow-name">Flow name</span></a>
-                (<span wicket:id="cause">just because</span>)
-                <ul wicket:id="parts-list">
-                    <li wicket:id="parts"><a wicket:id="part" href="#"><span
-                            wicket:id="task-name">Task name</span></a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-</div>
-
 </body>
 </html>

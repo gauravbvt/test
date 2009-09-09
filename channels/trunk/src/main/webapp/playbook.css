@@ -1,11 +1,18 @@
 body {
+    position: relative;
+    margin: 0 auto;
+    max-width: 70em;
+
+    padding: 0;
     font-size: 100%;
     font-family: Arial, Helvetica, sans-serif;
     line-height: 1.25em;
-    padding: 0;
-    margin: 0 auto;
-    max-width: 70em;
-    background: #f6f6f6;
+    background: white;
+}
+
+body > div {
+    display: table;
+    width: 100%;
 }
 
 #header {
@@ -19,6 +26,10 @@ body {
     font-size: 0.875em;
     background: white;
     padding: 1.125em 0.5625em 0.5625em 0.5625em;
+}
+
+#contents img {
+    margin: 2px 1px 2px 0;  
 }
 
 #nav {
@@ -92,12 +103,12 @@ th {
 }
 
 td.in {
-    background: transparent url( 'images/arrow_left_blue.png' ) no-repeat 50% 50%;
+    background: transparent url( 'images/arrow_left_blue.png' ) no-repeat 50% 3px;
     color: transparent;
     width: 23px;
 }
 td.out {
-    background: transparent url( 'images/arrow_right_blue.png' ) no-repeat 50% 50%;
+    background: transparent url( 'images/arrow_right_blue.png' ) no-repeat 50% 3px;
     color: transparent;
     width: 23px;
 }

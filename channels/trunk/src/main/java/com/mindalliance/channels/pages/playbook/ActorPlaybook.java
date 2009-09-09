@@ -75,7 +75,12 @@ public class ActorPlaybook extends PlaybookPage {
             } );
     }
 
-    private static Component createPicture( Actor actor ) {
+    /**
+     * Create a "pic" image component.
+     * @param actor the actor
+     * @return a wicket component
+     */
+    static Component createPicture( Actor actor ) {
         String name = actor == null ? "" : actor.getName();
         String url = "../images/actor.png";
         if ( actor != null ) {

@@ -67,7 +67,7 @@ public abstract class PlaybookPage extends WebPage {
         super( parameters );
         setStatelessHint( true );
 
-        actor = getParm( ACTOR_PARM, Actor.class );
+        actor = getActualActor();
         part = getParm( PART_PARM, Part.class );
 
         if ( actor == null ) {
@@ -80,6 +80,21 @@ public abstract class PlaybookPage extends WebPage {
                 throw new RestartResponseException( MainPage.class );
             }
         }
+    }
+
+    /**
+     * Get actor for current user, if no actor was explicitely specify.
+     * @return an actor or null, if nothing relevant was found.
+     */
+    private Actor getActualActor() {
+        Actor actualActor = getParm( ACTOR_PARM, Actor.class );
+        if ( actualActor == null ) {
+            List<Actor> userActors = queryService.findAllActorsAsUser( user.getUsername() );
+            if ( userActors.size() == 1 )
+                actualActor = userActors.get( 0 );
+        }
+
+        return actualActor;
     }
 
     final Plan getPlan() {

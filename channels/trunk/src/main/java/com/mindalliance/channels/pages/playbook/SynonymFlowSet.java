@@ -10,6 +10,7 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,7 +23,7 @@ import java.util.Set;
 /**
  * A set of flows with the same label.
  */
-final class SynonymFlowSet implements Comparable<SynonymFlowSet> {
+final class SynonymFlowSet implements Comparable<SynonymFlowSet>, Serializable {
 
     /** The flows contributing to this spec. */
     private final Set<Flow> flows = new HashSet<Flow>();

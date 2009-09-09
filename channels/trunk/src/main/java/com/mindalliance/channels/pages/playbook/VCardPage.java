@@ -38,7 +38,7 @@ public class VCardPage extends WebPage {
                 new Label( "title", actor.getName() ),
                 new Label( "name", actor.getName() ),
                 new Label( "description", actor.getDescription() ),
-
+                ActorPlaybook.createPicture( actor ),
                 new ChannelPanel( "channels", channels ).setRenderBodyOnly( true )
         );
     }
