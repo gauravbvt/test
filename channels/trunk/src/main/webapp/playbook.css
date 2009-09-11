@@ -98,7 +98,7 @@ th, td {
 }
 
 th {
-    background: #c3d9ff url('images/back.png') fixed top left;
+    background: #c3d9ff;
     padding: 0 0.5em;
 }
 
