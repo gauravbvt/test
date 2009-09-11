@@ -9,8 +9,11 @@ body {
     line-height: 1.25em;
 }
 
-body > div {
+body > div, thead tr, table.channels th {
     background: #c3d9ff url('images/back.png') no-repeat 0 0;
+}
+
+body > div {
     display: table;
     width: 100%;
 }
@@ -92,13 +95,11 @@ table.channels th {
 tr.odd {
     background: #f6f6f6;
 }
-
 th, td {
     border: none;
 }
 
 th {
-    background: #c3d9ff;
     padding: 0 0.5em;
 }
 
