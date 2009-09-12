@@ -5,6 +5,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Risk;
+import com.mindalliance.channels.model.Place;
 import org.apache.commons.collections.iterators.IteratorChain;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -35,77 +36,85 @@ public class PartReportPanel extends Panel {
      */
     private Part part;
 
-    public PartReportPanel( String id, IModel<Part> model, boolean showRole ) {
+    public PartReportPanel(
+            String id, IModel<Part> model, boolean showRole, boolean showingIssues ) {
+
         super( id, model );
         setRenderBodyOnly( true );
         part = model.getObject();
-        init( showRole );
+
+        init( showRole, showingIssues );
     }
 
-    private void init( boolean showRole ) {
-        add( new Label( "task", uppercasedName( part.getTask() ) ) );                     // NON-NLS
+    private void init( boolean showRole, final boolean showingIssues ) {
+        List<Risk> riskList = part.getMitigations();
 
-        WebMarkupContainer roleContainer = new WebMarkupContainer( "role-container" );
-        roleContainer.add( new Label( "role", part.getRoleString() ) );
-        roleContainer.setVisible( showRole && part.getRole() != null );
-        add( roleContainer );
+        add( new Label( "task", uppercasedName( part.getTask() ) ),                       // NON-NLS
 
-        String desc = part.getDescription();
-        Label descLabel = new Label( "description", desc );                               // NON-NLS
-        descLabel.setVisible( desc != null && !desc.isEmpty() );
-        add( descLabel );
+             new WebMarkupContainer( "role-container" )
+                .add( new Label( "role", part.getRoleString() ) )
+                    .setVisible( showRole && part.getRole() != null ),
 
-        add( new Label( "location", part.getLocation() == null ?                          // NON-NLS
-                            "Unspecified" : part.getLocation().toString() ) );
+             new Label( "description", part.getDescription() )
+                     .setVisible( !part.getDescription().isEmpty() ),
+
+             new Label( "location", getLocation( part.getLocation() ) ),
+
+             new WebMarkupContainer( "mitigates" )
+                     .add( new ListView<Risk>( "risks", riskList ) {
+                         @Override
+                         protected void populateItem( ListItem<Risk> item ) {
+                             Risk risk = item.getModelObject();
+                             item.add( new Label( "risk", risk.getLabel() ),
+                                       new Label( "risk-desc", risk.getDescription() ) );
+                         }
+                     } ).setVisible( !riskList.isEmpty() ),
+
+             new IssuesReportPanel( "issues", new Model<ModelObject>( part ) )            // NON-NLS
+                     .setVisible( showingIssues ),
+
+             new ListView<Flow>( "flows", getSortedFlows( part ) ) {                      // NON-NLS
+                @Override
+                protected void populateItem( ListItem<Flow> item ) {
+                    Flow flow = item.getModelObject();
+                    String type = getType( flow, part.equals( flow.getContactedPart() ) );
+                    item.add( new AttributeModifier( "class", true, new Model<String>( type ) ) );
+                    item.add( new FlowReportPanel( "flow", 
+                                                   new Model<Flow>( flow ), part, showingIssues ) );
+                }
+            } );
 
         addTimingInfo();
-        addRisks();
-
-        addFlows( getSortedFlows( part ) );
-        add( new IssuesReportPanel( "issues", new Model<ModelObject>( part ) ) );         // NON-NLS
     }
 
-    private void addRisks() {
-        WebMarkupContainer risks = new WebMarkupContainer( "mitigates" );
-        List<Risk> riskList = part.getMitigations();
-        risks.add( new ListView<Risk>( "risks", riskList ) {
-            @Override
-            protected void populateItem( ListItem<Risk> item ) {
-                item.add( new Label( "risk", item.getModelObject().getLabel() ) );
-                item.add( new Label( "risk-desc", item.getModelObject().getDescription() ) );
-            }
-        } );
-        risks.setVisible( !riskList.isEmpty() );
-        add( risks );
+    private static String getLocation( Place place ) {
+        return place == null ? "Unspecified" : place.toString();
     }
 
     private void addTimingInfo() {
-        WebMarkupContainer completionDiv = new WebMarkupContainer( "delay-div" );         // NON-NLS
-        completionDiv.add( new Label( "completion-time",                                  // NON-NLS
-                            part.isSelfTerminating() ? part.getCompletionTime().toString() : "" ) );
-        completionDiv.setVisible( part.isSelfTerminating() );
-        add( completionDiv );
+        String completion = part.isSelfTerminating() ? part.getCompletionTime().toString() : "";
+        String repetition = part.isRepeating() ? part.getRepeatsEvery().toString() : "";
 
-        WebMarkupContainer repeatsDiv = new WebMarkupContainer( "repeats-div" );          // NON-NLS
-        repeatsDiv.add( new Label( "repeats-every",                                       // NON-NLS
-                                   part.isRepeating() ? part.getRepeatsEvery().toString() : "" ) );
-        repeatsDiv.setVisible( part.isRepeating() );
-        add( repeatsDiv );
+        String eventName = getEventName( part.getInitiatedEvent() );
+        add( new WebMarkupContainer( "delay-div" )
+                .add( new Label( "completion-time", completion ) )
+                    .setVisible( part.isSelfTerminating() ),
 
-        WebMarkupContainer starts = new WebMarkupContainer( "starts" );                   // NON-NLS
-        starts.setVisible( part.isStartsWithScenario() );
-        add( starts );
+             new WebMarkupContainer( "repeats-div" )
+                .add( new Label( "repeats-every", repetition ) )
+                    .setVisible( part.isRepeating() ),
 
-        WebMarkupContainer terminates = new WebMarkupContainer( "terminates" );           // NON-NLS
-        terminates.setVisible( part.isTerminatesEvent() );
-        add( terminates );
+             new WebMarkupContainer( "starts" ).setVisible( part.isStartsWithScenario() ),
 
-        Event initiatedEvent = part.getInitiatedEvent();
-        WebMarkupContainer starting = new WebMarkupContainer( "starting" );               // NON-NLS
-        String name = initiatedEvent == null ? "" : initiatedEvent.getName();
-        starting.add( new Label( "started-event", name ) );                               // NON-NLS
-        starting.setVisible( initiatedEvent != null );
-        add( starting );
+             new WebMarkupContainer( "terminates" ).setVisible( part.isTerminatesEvent() ),
+
+             new WebMarkupContainer( "starting" )
+                     .add( new Label( "started-event", eventName ) )
+                        .setVisible( !eventName.isEmpty() ) );
+    }
+
+    private static String getEventName( Event initiatedEvent ) {
+        return initiatedEvent == null ? "" : initiatedEvent.getName();
     }
 
     private static String uppercasedName( String name ) {
@@ -121,7 +130,7 @@ public class PartReportPanel extends Panel {
         Iterator<?> i = new IteratorChain( part.requirements(), part.outcomes() );
         while ( i.hasNext() ) {
             Flow flow = (Flow) i.next();
-            switch ( flow.getSource().equals( part ) ?
+            switch ( part.equals( flow.getSource() ) ?
                         flow.getSignificanceToSource() : flow.getSignificanceToTarget() )
             {
             case Triggers :
@@ -144,28 +153,16 @@ public class PartReportPanel extends Panel {
         return heads;
     }
 
-    private void addFlows( final List<Flow> flows ) {
+    private String getType( Flow flow, boolean incoming ) {
+        StringBuilder type = new StringBuilder( incoming ? "receive" : "send" );          // NON-NLS
+        type.append( flow.isAskedFor() ? "-answer" : "-notification" );                   // NON-NLS
 
-        add( new ListView<Flow>( "flows", flows ) {                                       // NON-NLS
-            @Override
-            protected void populateItem( ListItem<Flow> item ) {
-                Flow flow = item.getModelObject();
+        Flow.Significance s = part.getSignificance( flow );
+        if ( s.equals( Flow.Significance.Triggers ) )
+            type.append( " trigger" );                                                    // NON-NLS
+        if ( s.equals( Flow.Significance.Terminates ) )
+            type.append( " terminate" );                                                  // NON-NLS
 
-                boolean incoming = part.equals( flow.getContactedPart() );
-                String type = incoming ? "receive" : "send";                              // NON-NLS
-                type += flow.isAskedFor() ? "-answer" : "-notification";                  // NON-NLS
-
-                Flow.Significance s = part.getSignificance( flow );
-                if ( s.equals( Flow.Significance.Triggers ) )
-                    type += " trigger" ;                                                  // NON-NLS
-                if ( s.equals( Flow.Significance.Terminates ) )
-                    type += " terminate" ;                                                // NON-NLS
-
-                item.add( new AttributeModifier(
-                        "class", true, new Model<String>( type ) ) );                     // NON-NLS
-
-                item.add( new FlowReportPanel( "flow", new Model<Flow>( flow ), part ) ); // NON-NLS
-            }
-        } );
+        return type.toString();
     }
 }

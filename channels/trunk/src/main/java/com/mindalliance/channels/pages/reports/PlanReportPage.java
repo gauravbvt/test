@@ -31,13 +31,14 @@ import java.util.List;
  */
 public class PlanReportPage extends WebPage {
 
+    /** The parameter that specifies all scenarios. */
+    private static final String ALL = "all";
+
     /**
      * Plan manager.
      */
     @SpringBean
-    private PlanManager planManager;    
-
-    private static final String ALL = "all";
+    private PlanManager planManager;
 
     /** The query service. */
     @SpringBean
@@ -46,40 +47,45 @@ public class PlanReportPage extends WebPage {
     /** The current plan. */
     private Plan plan = planManager.getCurrentPlan();
 
+    /** Restrictions to report generation. */
     private SelectorPanel selector;
 
     public PlanReportPage( PageParameters parameters ) {
         super( parameters );
+
         selector = new SelectorPanel( "selector", parameters );
-        add( selector );
         if ( !selector.isValid() ) {
             setRedirect( true );
             throw new RestartResponseException( getClass(), selector.getParameters() );
         }
 
-        add( new Label( "title",                                                          // NON-NLS
-                        MessageFormat.format( "Report: {0}", plan.getName() ) ) );
-        add( new Label( "plan-name", plan.getName() ) );                                  // NON-NLS
-        add( new Label( "plan-client", plan.getClient() ) );                              // NON-NLS
-        add( new Label( "plan-description", plan.getDescription() ) );                    // NON-NLS
-        add( new Label( "date", DateFormat.getDateTimeInstance(                           // NON-NLS
-            DateFormat.LONG, DateFormat.LONG ).format( new Date() ) ) );
-
+        String reportDate = DateFormat.getDateTimeInstance( DateFormat.LONG, DateFormat.LONG )
+                                .format( new Date() );
         List<Scenario> scenarios = selector.getScenarios();
-        add( new ListView<Scenario>( "scenarios", scenarios ) {                           // NON-NLS
-            @Override
-            protected void populateItem( ListItem<Scenario> item ) {
-                item.add( new ScenarioReportPanel( "scenario",                            // NON-NLS
-                                    item.getModel(),
-                                    selector.isAllActors() ? null : selector.getActor() ) );
-            }
-        } );
 
+        add( selector,
+             new Label( "title",                                                          // NON-NLS
+                        MessageFormat.format( "Report: {0}", plan.getName() ) ),
+             new Label( "plan-name", plan.getName() ),                                    // NON-NLS
+             new Label( "plan-client", plan.getClient() ),                                // NON-NLS
+             new Label( "plan-description", plan.getDescription() ),                      // NON-NLS
+             new Label( "date", reportDate ),
 
-        add( new PlanMapDiagramPanel( "planMap",                                          // NON-NLS
-            new Model<ArrayList<Scenario>>( (ArrayList<Scenario>) scenarios ),
-            selector.isAllScenarios() ? null : selector.getScenario(),
-            null, new Settings() ) );
+             new ListView<Scenario>( "scenarios", scenarios ) {                           // NON-NLS
+                    @Override
+                    protected void populateItem( ListItem<Scenario> item ) {
+                        item.add( new ScenarioReportPanel( "scenario",                    // NON-NLS
+                                        item.getModel(),
+                                        selector.isAllActors() ? null : selector.getActor(),
+                                        selector.isShowingIssues() ) );
+                    }
+                },
 
+             new PlanMapDiagramPanel( "planMap",                                          // NON-NLS
+                new Model<ArrayList<Scenario>>( (ArrayList<Scenario>) scenarios ),
+                selector.isAllScenarios() ? null : selector.getScenario(),
+                null,
+                new Settings() )
+        );
     }
 }

@@ -3,10 +3,10 @@ package com.mindalliance.channels.pages.reports;
 import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import org.apache.wicket.AttributeModifier;
@@ -35,12 +35,13 @@ public class ScenarioReportPanel extends Panel {
      */
     private Scenario scenario;
 
-    public ScenarioReportPanel( String id, IModel<Scenario> model, final Actor actor ) {
+    public ScenarioReportPanel(
+            String id, IModel<Scenario> model, final Actor actor, final boolean showingIssues ) {
         super( id, model );
         setRenderBodyOnly( true );
         scenario = model.getObject();
 
-        addScenarioPage();
+        addScenarioPage( scenario, scenario.getEvent(), showingIssues );
 
         add( new ListView<Organization>( "organizations", scenario.getOrganizations() ) { // NON-NLS
             @Override
@@ -49,43 +50,40 @@ public class ScenarioReportPanel extends Panel {
                 item.add( new AttributeModifier( "class", true, new Model<String>(        // NON-NLS
                         organization.getParent() == null ? "top organization"             // NON-NLS
                                                          : "sub organization" ) ) );      // NON-NLS
-                item.add( new OrganizationReportPanel(
-                        "organization", organization, scenario, actor, true ) );          // NON-NLS
+                item.add( new OrganizationReportPanel( "organization",                    // NON-NLS
+                        organization, scenario, actor, true, showingIssues ) );
             }
         } );
     }
 
-    private void addScenarioPage() {
-        add( new Label( "name", MessageFormat.format(                                     // NON-NLS
-                        "Scenario: {0}", scenario.getName() ) ) );
-        add( new Label( "description", scenario.getDescription() ) );                     // NON-NLS
-        WebMarkupContainer eventSection = new WebMarkupContainer( "event-section" );
-        Event event = scenario.getEvent();
-        eventSection.add( new Label( "event",
-                                     event == null ? "" : event.getName().toLowerCase() ) );
-        eventSection.setVisible( event != null );
-        add( eventSection );
-        WebMarkupContainer risks = new WebMarkupContainer( "risk-section" );
-        List<Risk> riskList = scenario.getRisks();
-        risks.add( new ListView<Risk>( "risks", riskList ) {
-            @Override
-            protected void populateItem( ListItem<Risk> item1 ) {
-                Risk risk = item1.getModelObject();
-                item1.add( new Label( "risk", risk.getLabel() ) );
-                item1.add( new Label( "risk-desc", item1.getModelObject().getDescription() ) );
-            }
-        } );
-        risks.setVisible( !riskList.isEmpty() );
-        add( risks );
+    private void addScenarioPage( Scenario s, Event event, boolean showIssues ) {
+        String eventName = event == null ? "" : event.getName().toLowerCase();
+        List<Risk> riskList = s.getRisks();
+        add( new Label( "name", MessageFormat.format( "Scenario: {0}", s.getName() ) ),
 
-//        double[] size = { 7.5, 9.0 };
-        add( new FlowMapDiagramPanel(
-                        "flowMap",                                                        // NON-NLS
-                        new Model<Scenario>( scenario ),
+             new Label( "description", s.getDescription() ),                              // NON-NLS
+
+             new WebMarkupContainer( "event-section" )
+                .add( new Label( "event", eventName ) ).setVisible( event != null ),
+
+             new WebMarkupContainer( "risk-section" )
+                .add( new ListView<Risk>( "risks", riskList ) {
+                        @Override
+                        protected void populateItem( ListItem<Risk> item ) {
+                            Risk risk = item.getModelObject();
+                            item.add( new Label( "risk", risk.getLabel() ),
+                                      new Label( "risk-desc", risk.getDescription() ) );
+                        }
+                    } ).setVisible( !riskList.isEmpty() ),
+
+             new FlowMapDiagramPanel( "flowMap",                                          // NON-NLS
+                        new Model<Scenario>( s ),
                         null,
                         //size,
-                        new Settings( null, DiagramFactory.TOP_BOTTOM, null, true, false ) ) );
+                        new Settings( null, DiagramFactory.TOP_BOTTOM, null, true, false ) ),
 
-        add( new IssuesReportPanel( "issues", new Model<ModelObject>( scenario ) ) );     // NON-NLS
+            new IssuesReportPanel( "issues", new Model<ModelObject>( s ) )                // NON-NLS
+                    .setVisible( showIssues )
+        );
     }
 }

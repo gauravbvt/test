@@ -19,33 +19,33 @@ public class ActorReportPanel extends Panel {
     @SpringBean
     private QueryService queryService;
 
-    public ActorReportPanel( String id, Scenario scenario, ResourceSpec spec ) {
+    public ActorReportPanel(
+            String id, Scenario scenario, ResourceSpec spec, final boolean showingIssues ) {
 
         super( id );
         setRenderBodyOnly( true );
 
-        add( new Label( "sc-name", scenario.getName() ) );                                // NON-NLS
-
         Actor actor = spec.getActor();
-        Label title = new Label(
-                "title", actor == null ? "" : queryService.getTitle( actor ) );
-        title.setVisible( actor != null && !Actor.UNKNOWN.equals( actor ) );
-        add( title );
+        String actorTitle = actor == null ? "" : queryService.getTitle( actor );
+        String description = spec.getDescription();
 
-        add( new Label( "org", spec.getOrganizationName() ) );                            // NON-NLS
-        add( new Label( "name", spec.getReportTitle() ) );                                // NON-NLS
+        add( new Label( "sc-name", scenario.getName() ),                                  // NON-NLS
+             new Label( "title", actorTitle )
+                     .setVisible( !( actor == null || Actor.UNKNOWN.equals( actor ) ) ),
 
-        String desc = spec.getDescription();
-        Label descLabel = new Label( "description", desc );                               // NON-NLS
-        descLabel.setVisible( desc != null && !desc.isEmpty() );
-        add( descLabel );
+             new Label( "org", spec.getOrganizationName() ),                              // NON-NLS
+             new Label( "name", spec.getReportTitle() ),                                  // NON-NLS
 
-        add( new ChannelsBannerPanel( "channels", spec, null, null ) );
-        add( new ListView<Part>( "parts", queryService.findAllParts( scenario, spec ) ) {
-            @Override
-            protected void populateItem( ListItem<Part> item ) {
-                item.add( new PartReportPanel( "part", item.getModel(), true ) );         // NON-NLS
-            }
-        } );
+             new Label( "description", description ).setVisible( !description.isEmpty() ),
+
+             new ChannelsBannerPanel( "channels", spec, null, null ),
+
+             new ListView<Part>( "parts", queryService.findAllParts( scenario, spec ) ) {
+                    @Override
+                    protected void populateItem( ListItem<Part> item ) {
+                        item.add( new PartReportPanel( "part",                            // NON-NLS
+                                                       item.getModel(), true, showingIssues ) );
+                    }
+                } );
     }
 }

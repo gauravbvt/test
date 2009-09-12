@@ -45,6 +45,9 @@
         text-align: right;
         font-size: 8pt;
     }
+    #selector input {
+        vertical-align: top; 
+    }
 }
 
 

@@ -5,10 +5,12 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Scenario;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -26,17 +28,26 @@ public class SelectorPanel extends Panel {
 
     private static final String SCENARIO_PARM = "0";
     private static final String ACTOR_PARM = "1";
+    private static final String ISSUES_PARM = "issues";
     private static final String ALL = "all";
 
-    private static final Scenario AllScenarios = new Scenario();
+    /** Default value for "All scenarios" selection. */
+    private static final Scenario ALL_SCENARIOS = new Scenario();
 
-    private Scenario scenario;
+    /** Localized sorter-upper. */
+    private static final Collator SORTER = Collator.getInstance();
 
-    private Actor actor;
+    /** The selected scenario (or AllScenarios) */
+    private Scenario scenario = ALL_SCENARIOS;
 
+    /** The selected actor (or Actor.UNKNOWN) */
+    private Actor actor = Actor.UNKNOWN;
+
+    /** True when parameter combination would produce a not-empty report. */
     private boolean valid = true;
 
-    static private Collator collator = Collator.getInstance();
+    /** True when issues are shown. */
+    private boolean showingIssues = true;
 
     @SpringBean
     private QueryService queryService;
@@ -45,47 +56,43 @@ public class SelectorPanel extends Panel {
         super( id );
 
         setDefaultModel( new CompoundPropertyModel<Object>( this ) );
-        setParameters( parameters );
+        setParameters( queryService, parameters );
+        add( new DropDownChoice<Scenario>( "scenario", getScenarioChoices( queryService ),
+                new IChoiceRenderer<Scenario>() {
+                    public Object getDisplayValue( Scenario object ) {
+                        return ALL_SCENARIOS.equals( object ) ? "All scenarios" : object.getName();
+                    }
 
-        DropDownChoice<Scenario> scenarioChoices = new DropDownChoice<Scenario>(
-                "scenario", getScenarioChoices(), new IChoiceRenderer<Scenario>() {
-            public Object getDisplayValue( Scenario object ) {
-                return AllScenarios == object ? "All scenarios" : object.getName();
-            }
+                    public String getIdValue( Scenario object, int index ) {
+                        return ALL_SCENARIOS.equals( object ) ? ALL
+                                                             : Long.toString( object.getId() );
+                    }
+                } ).add( newOnChange() ),
 
-            public String getIdValue( Scenario object, int index ) {
-                return AllScenarios == object ? ALL : Long.toString( object.getId() );
-            }
-        } );
+             new DropDownChoice<Actor>( "actor", getActorsChoices( queryService ),
+                                        new IChoiceRenderer<Actor>() {
+                    public Object getDisplayValue( Actor object ) {
+                        return object.equals( Actor.UNKNOWN ) ? "All actors"
+                                                              : object.getNormalizedName();
+                    }
 
-        scenarioChoices.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+                    public String getIdValue( Actor object, int index ) {
+                        return object.equals( Actor.UNKNOWN ) ? ALL
+                                                              : Long.toString( object.getId() );
+                    }
+                } ).add( newOnChange() ),
+
+             new CheckBox( "showingIssues" ).add( newOnChange() ) );
+    }
+
+    private IBehavior newOnChange() {
+        return new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 setRedirect( true );
                 setResponsePage( getPage().getClass(), getParameters() );
             }
-        } );
-        add( scenarioChoices );
-
-        DropDownChoice<Actor> actorChoices = new DropDownChoice<Actor>(
-                "actor", getActorsChoices(), new IChoiceRenderer<Actor>() {
-            public Object getDisplayValue( Actor object ) {
-                return Actor.UNKNOWN.equals( object ) ? "All actors" : object.getNormalizedName();
-            }
-
-            public String getIdValue( Actor object, int index ) {
-                return Actor.UNKNOWN.equals( object ) ?
-                        ALL : Long.toString( object.getId() );
-            }
-        } );
-        actorChoices.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                setRedirect( true );
-                setResponsePage( getPage().getClass(), getParameters() );
-            }
-        } );
-        add( actorChoices );
+        };
     }
 
     /**
@@ -131,11 +138,11 @@ public class SelectorPanel extends Panel {
     /**
      * Set scenario and actor fields given parameters.
      *
+     * @param queryService for parameter resolution
      * @param parameters the parameters
      */
-    public final void setParameters( PageParameters parameters ) {
+    public final void setParameters( QueryService queryService, PageParameters parameters ) {
         setValid( true );
-        setScenario( AllScenarios );
         String scenarioId = parameters.getString( SCENARIO_PARM, ALL );
         if ( !ALL.equals( scenarioId ) ) {
             try {
@@ -148,7 +155,6 @@ public class SelectorPanel extends Panel {
             }
         }
 
-        setActor( Actor.UNKNOWN );
         String actorId = parameters.getString( ACTOR_PARM, ALL );
         if ( !ALL.equals( actorId ) ) {
             try {
@@ -160,8 +166,15 @@ public class SelectorPanel extends Panel {
                 setValid( false );
             }
         }
+
+        if ( parameters.containsKey( ISSUES_PARM ) )
+            setShowingIssues( parameters.getAsBoolean( ISSUES_PARM, true ) );
     }
 
+    /**
+     * Build a new parameter container for the current selections.
+     * @return the parameters
+     */
     public PageParameters getParameters() {
         PageParameters result = new PageParameters();
 
@@ -170,32 +183,34 @@ public class SelectorPanel extends Panel {
                 result.put( SCENARIO_PARM, Long.toString( scenario.getId() ) );
 
         } else {
-            result.put( SCENARIO_PARM,
-                    isAllScenarios() ? ALL : Long.toString( scenario.getId() ) );
+            result.put( SCENARIO_PARM, isAllScenarios() ? ALL : Long.toString( scenario.getId() ) );
             result.put( ACTOR_PARM, Long.toString( actor.getId() ) );
         }
 
+        if ( !showingIssues )
+            result.put( ISSUES_PARM, Boolean.toString( showingIssues ) );
+
         return result;
     }
 
-    private List<Scenario> getScenarioChoices() {
+    private List<Scenario> getScenarioChoices( QueryService service ) {
         List<Scenario> result = new ArrayList<Scenario>(
-                isAllActors() ? queryService.list( Scenario.class )
-                        : queryService.findScenarios( actor ) );
+                isAllActors() ? service.list( Scenario.class )
+                              : service.findScenarios( actor ) );
         Collections.sort( result );
-        result.add( 0, AllScenarios );
+        result.add( 0, ALL_SCENARIOS );
         return result;
     }
 
-    private List<Actor> getActorsChoices() {
+    private List<Actor> getActorsChoices( QueryService service ) {
         List<Actor> result = new ArrayList<Actor>(
-                isAllScenarios() ? queryService.list( Actor.class )
-                        : queryService.findActors( scenario ) );
+                isAllScenarios() ? service.list( Actor.class )
+                                 : service.findActors( scenario ) );
         Collections.sort(
                 result,
                 new Comparator<Actor>() {
-                    public int compare( Actor actor1, Actor actor2 ) {
-                        return collator.compare( actor1.getNormalizedName(), actor2.getNormalizedName() );
+                    public int compare( Actor o1, Actor o2 ) {
+                        return SORTER.compare( o1.getNormalizedName(), o2.getNormalizedName() );
                     }
                 } );
         result.add( 0, Actor.UNKNOWN );
@@ -227,10 +242,18 @@ public class SelectorPanel extends Panel {
     }
 
     public boolean isAllActors() {
-        return Actor.UNKNOWN.equals( actor );
+        return actor.equals( Actor.UNKNOWN );
     }
 
     public boolean isAllScenarios() {
-        return AllScenarios == scenario;
+        return ALL_SCENARIOS.equals( scenario );
+    }
+
+    public boolean isShowingIssues() {
+        return showingIssues;
+    }
+
+    public void setShowingIssues( boolean showingIssues ) {
+        this.showingIssues = showingIssues;
     }
 }

@@ -12,7 +12,6 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Scenario;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -22,11 +21,9 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -55,87 +52,64 @@ public class FlowReportPanel extends Panel {
      */
     private Part part;
 
-    public FlowReportPanel( String id, Model<Flow> model, Part part ) {
+    public FlowReportPanel( String id, Model<Flow> model, Part part, boolean showingIssues ) {
         super( id, model );
         setRenderBodyOnly( true );
         flow = model.getObject();
         this.part = part;
-        init();
+        init( showingIssues, part.equals( flow.getSource() ) );
     }
 
-    private void init() {
-        boolean partIsSource = flow.getSource() == part;
-        boolean showContacts = !partIsSource &&  flow.isAskedFor()
-                             || partIsSource && !flow.isAskedFor();
+    private void init( boolean showingIssues, boolean isSource ) {
+        boolean showContacts = !isSource &&  flow.isAskedFor()
+                             || isSource && !flow.isAskedFor();
 
-        addFlowPropertyFields( partIsSource );
-
-        List<Channel> channels = flow.getChannels();
         Set<Medium> unicasts = flow.getUnicasts();
         Collection<Channel> broadcasts = flow.getBroadcasts();
-        List<LocalizedActor> actors = findActors( flow, broadcasts, unicasts, queryService );
+        final List<LocalizedActor> actors = findActors( flow, broadcasts, unicasts, queryService );
+        
+        add( new Label( "information",
+                        isSource ? flow.getOutcomeTitle() : flow.getRequirementTitle() )
+                .add( new AttributeModifier( "class", true,
+                        new Model<String>( flow.isRequired() ? "required-information"
+                                                             : "information" ) ) ),
 
-        ResourceSpec spec = new ResourceSpec( flow.getContactedPart() );
-        Component channelsPanel = new ChannelsBannerPanel(
-                "channels", spec, unicasts, broadcasts );
-        channelsPanel.setVisible( showContacts && !channels.isEmpty() && actors.isEmpty() );
-        add( channelsPanel );
+             new Label( "urgency", flow.getMaxDelay().toString() ),                       // NON-NLS
+             new Label( "start-stop", getSignificance() ),
+             new Label( "description", flow.getDescription() )
+                .setVisible( !flow.getDescription().isEmpty() ),
 
-        WebMarkupContainer actorsDiv = createContacts( actors );
-        actorsDiv.setVisible( showContacts && !actors.isEmpty() );
-        add( actorsDiv );
+             new IssuesReportPanel( "issues", new Model<ModelObject>( flow ) )
+                .setVisible( showingIssues ),
 
-        add( new IssuesReportPanel( "issues", new Model<ModelObject>( flow ) ) );
+             new ChannelsBannerPanel( "channels",
+                            new ResourceSpec( flow.getContactedPart() ), unicasts, broadcasts )
+                .setVisible( showContacts && !flow.getChannels().isEmpty() && actors.isEmpty() ),
+
+             new WebMarkupContainer( "actors-div" )
+                .add( new ListView<LocalizedActor>( "actors", actors ) {
+                    @Override
+                    protected void populateItem( ListItem<LocalizedActor> item ) {
+                        LocalizedActor localizedActor = item.getModel().getObject();
+                        item.add( new ActorBannerPanel( "actor",
+                                localizedActor.getOtherScenario( part.getScenario() ),
+                                localizedActor.getActorSpec(),
+                                true,
+                                localizedActor.getUnicasts(),
+                                localizedActor.getBroadcasts() ) );
+                    }
+                }
+                    .add( new AttributeModifier( "class", true,
+                         new Model<String>( flow.isAll() ? "all-actors" : "any-actor" ) ) ) )
+                    .setVisible( showContacts && !actors.isEmpty() ) );
+
     }
 
-    private void addFlowPropertyFields( boolean partIsSource ) {
-        String classes = flow.isRequired() ? "required-information" : "information";      // NON-NLS
-
-        String title = partIsSource ? flow.getOutcomeTitle() : flow.getRequirementTitle();
-        Label informationLabel = new Label( "information", title );                       // NON-NLS
-        informationLabel.add(
-                new AttributeModifier( "class", true, new Model<String>( classes ) ) );   // NON-NLS
-        add( informationLabel );
-
-        add( new Label( "urgency", flow.getMaxDelay().toString() ) );                     // NON-NLS
-
+    private String getSignificance() {
         Flow.Significance significance = part.getSignificance( flow );
-        add( new Label( "start-stop",
-              significance.equals( Flow.Significance.Triggers   ) ? "Starts this task."
-            : significance.equals( Flow.Significance.Terminates ) ? "Ends this task."
-            : "" ) );
-
-        String desc = flow.getDescription();
-        Label descLabel = new Label( "description", desc );                               // NON-NLS
-        descLabel.setVisible( desc != null && !desc.isEmpty() );
-        add( descLabel );
-    }
-
-    private WebMarkupContainer createContacts( final List<LocalizedActor> actors ) {
-
-        ListView<LocalizedActor> actorsList = new ListView<LocalizedActor>( "actors", actors ) {
-            @Override
-            protected void populateItem( ListItem<LocalizedActor> item ) {
-                LocalizedActor localizedActor = item.getModel().getObject();
-                Part p = localizedActor.getPart();
-                Actor actor = localizedActor.getActor();
-                ResourceSpec spec = new ResourceSpec( p );
-                if ( !Actor.UNKNOWN.equals( actor ) )
-                    spec.setActor( actor );
-
-                Scenario scenario = p.getScenario().equals( part.getScenario() ) ? null
-                                                                                 : p.getScenario();
-                item.add( new ActorBannerPanel(
-                        "actor", scenario, spec, true,
-                        localizedActor.getUnicasts(), localizedActor.getBroadcasts() ) );
-            }
-        };
-        actorsList.add( new AttributeModifier( "class", true,
-                new Model<String>( flow.isAll() ? "all-actors" : "any-actor" ) ) );
-
-        WebMarkupContainer result = new WebMarkupContainer( "actors-div" );
-        result.add( actorsList );
-        return result;
+        return significance.equals( Flow.Significance.Triggers )   ? "Starts this task."
+             : significance.equals( Flow.Significance.Terminates ) ? "Ends this task."
+                                                                   : "";
     }
 
     private static List<LocalizedActor> findActors(
@@ -165,19 +139,14 @@ public class FlowReportPanel extends Panel {
         }
 
         List<LocalizedActor> result = new ArrayList<LocalizedActor>( localizedActors );
-        Collections.sort( result, new Comparator<LocalizedActor>() {
-            public int compare( LocalizedActor o1, LocalizedActor o2 ) {
-                return Collator.getInstance().compare(
-                        o1.getActor().getName(), o2.getActor().getName() );
-            }
-        } );
+        Collections.sort( result );
         return result;
     }
 
     /**
      * An actor from a part in a scenario.
      */
-    private static class LocalizedActor implements Serializable {
+    public static final class LocalizedActor implements Serializable, Comparable<LocalizedActor> {
 
         /** Unicast media used to contact the actor. */
         private Set<Medium> unicasts;
@@ -186,10 +155,10 @@ public class FlowReportPanel extends Panel {
         private Collection<Channel> broadcasts;
 
         /** The actor. */
-        private Actor actor;
+        private final Actor actor;
 
         /** The part. */
-        private Part part;
+        private final Part part;
 
         private LocalizedActor( Actor actor, Part part,
                                 Set<Medium> unicasts, Collection<Channel> broadcasts ) {
@@ -219,14 +188,12 @@ public class FlowReportPanel extends Panel {
         public boolean equals( Object obj ) {
             if ( this == obj )
                 return true;
-            if ( obj == null || getClass() != obj.getClass() )
+            else if ( obj == null || getClass() != obj.getClass() ) {
                 return false;
-            LocalizedActor that = (LocalizedActor) obj;
-            if ( actor != null ? !actor.equals( that.actor ) : that.actor != null )
-                return false;
-            if ( part != null ? !part.equals( that.part ) : that.part != null )
-                return false;
-            return true;
+            } else {
+                LocalizedActor other = (LocalizedActor) obj;
+                return actor.equals( other.getActor() ) && part.equals( other.getPart() );
+            }
         }
 
         @Override
@@ -234,6 +201,28 @@ public class FlowReportPanel extends Panel {
             int result = actor != null ? actor.hashCode() : 0;
             result = 31 * result + ( part != null ? part.hashCode() : 0 );
             return result;
+        }
+
+        /**
+         * Compares this object with the specified object for order.
+         * @param   o the object to be compared.
+         * @return a negative integer, zero, or a positive integer as this object
+         *         is less than, equal to, or greater than the specified object.
+         */
+        public int compareTo( LocalizedActor o ) {
+            return actor.compareTo( o.getActor() );
+        }
+
+        public ResourceSpec getActorSpec() {
+            ResourceSpec spec = new ResourceSpec( part );
+            if ( !actor.equals( Actor.UNKNOWN ) )
+                spec.setActor( actor );
+            return spec;
+        }
+
+        private Scenario getOtherScenario( Scenario scenario ) {
+            Scenario s = part.getScenario();
+            return scenario.equals( s ) ? null : s;
         }
     }
 }

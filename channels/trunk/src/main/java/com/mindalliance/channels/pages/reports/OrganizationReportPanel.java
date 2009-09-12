@@ -41,15 +41,16 @@ public class OrganizationReportPanel extends Panel {
     @SpringBean
     private QueryService queryService;
 
+    /** The actor to single out or null to show all actors. */
     private Actor actor;
 
     public OrganizationReportPanel(
             String id, Organization organization, Scenario scenario, Actor actor,
-            boolean showActors ) {
+            boolean showActors, final boolean showingIssues ) {
 
         super( id );
-        this.actor = actor;
         setRenderBodyOnly( true );
+        this.actor = actor;
         this.organization = organization;
         this.scenario = scenario;
 
@@ -59,7 +60,7 @@ public class OrganizationReportPanel extends Panel {
                 protected void populateItem( ListItem<ResourceSpec> item ) {
                     item.add( new ActorReportPanel( "section",
                                                     OrganizationReportPanel.this.scenario,
-                                                    item.getModelObject() ) );
+                                                    item.getModelObject(), showingIssues ) );
                 }
             } );
         else
@@ -68,7 +69,7 @@ public class OrganizationReportPanel extends Panel {
                 protected void populateItem( ListItem<Role> item ) {
                     item.add( new RoleReportPanel( "section", item.getModelObject(),
                                        OrganizationReportPanel.this.scenario,
-                                       OrganizationReportPanel.this.organization ) );
+                                       OrganizationReportPanel.this.organization, showingIssues ) );
                 }
             } );
     }

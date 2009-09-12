@@ -25,6 +25,7 @@ import org.acegisecurity.event.authentication.AbstractAuthenticationEvent;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.target.coding.IndexedParamUrlCodingStrategy;
+import org.apache.wicket.request.target.coding.MixedParamUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.slf4j.Logger;
@@ -108,7 +109,9 @@ public final class Channels extends WebApplication implements ApplicationListene
 
         getMarkupSettings().setStripWicketTags( true );
 
-        mount( new IndexedParamUrlCodingStrategy( "report", PlanReportPage.class ) );
+        String[] parameterNames = { "0", "1" };
+        mount( new MixedParamUrlCodingStrategy( "report", PlanReportPage.class, parameterNames ) );
+        
         mount( new IndexedParamUrlCodingStrategy( "playbooks", TaskPlaybook.class ) );
         mount( new IndexedParamUrlCodingStrategy( "vcards", VCardPage.class ) );
         mount( new IndexedParamUrlCodingStrategy( "contacts", ContactPage.class ) );
