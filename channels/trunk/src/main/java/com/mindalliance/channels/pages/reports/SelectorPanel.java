@@ -5,12 +5,15 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Scenario;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -24,7 +27,7 @@ import java.util.List;
 /**
  * The report fine-tuning gizmo.
  */
-public class SelectorPanel extends Panel {
+public class SelectorPanel extends Panel implements IHeaderContributor {
 
     private static final String SCENARIO_PARM = "0";
     private static final String ACTOR_PARM = "1";
@@ -57,42 +60,55 @@ public class SelectorPanel extends Panel {
 
         setDefaultModel( new CompoundPropertyModel<Object>( this ) );
         setParameters( queryService, parameters );
-        add( new DropDownChoice<Scenario>( "scenario", getScenarioChoices( queryService ),
-                new IChoiceRenderer<Scenario>() {
-                    public Object getDisplayValue( Scenario object ) {
-                        return ALL_SCENARIOS.equals( object ) ? "All scenarios" : object.getName();
-                    }
 
-                    public String getIdValue( Scenario object, int index ) {
-                        return ALL_SCENARIOS.equals( object ) ? ALL
-                                                             : Long.toString( object.getId() );
-                    }
-                } ).add( newOnChange() ),
+        add( new Form( "form" ) {
+            @Override
+            protected void onSubmit() {
+                redirect();
+                super.onSubmit();
+            }
+        }
+            .add( new DropDownChoice<Scenario>( "scenario", getScenarioChoices( queryService ),
+                    new IChoiceRenderer<Scenario>() {
+                        public Object getDisplayValue( Scenario object ) {
+                            return ALL_SCENARIOS.equals( object ) ? "All scenarios"
+                                                                  : object.getName();
+                        }
 
-             new DropDownChoice<Actor>( "actor", getActorsChoices( queryService ),
-                                        new IChoiceRenderer<Actor>() {
-                    public Object getDisplayValue( Actor object ) {
-                        return object.equals( Actor.UNKNOWN ) ? "All actors"
-                                                              : object.getNormalizedName();
-                    }
+                        public String getIdValue( Scenario object, int index ) {
+                            return ALL_SCENARIOS.equals( object ) ? ALL
+                                                                 : Long.toString( object.getId() );
+                        }
+                    } ).add( newOnChange() ),
 
-                    public String getIdValue( Actor object, int index ) {
-                        return object.equals( Actor.UNKNOWN ) ? ALL
-                                                              : Long.toString( object.getId() );
-                    }
-                } ).add( newOnChange() ),
+                 new DropDownChoice<Actor>( "actor", getActorsChoices( queryService ),
+                                            new IChoiceRenderer<Actor>() {
+                        public Object getDisplayValue( Actor object ) {
+                            return object.equals( Actor.UNKNOWN ) ? "All actors"
+                                                                  : object.getNormalizedName();
+                        }
 
-             new CheckBox( "showingIssues" ).add( newOnChange() ) );
+                        public String getIdValue( Actor object, int index ) {
+                            return object.equals( Actor.UNKNOWN ) ? ALL
+                                                                  : Long.toString( object.getId() );
+                        }
+                    } ).add( newOnChange() ),
+
+                 new CheckBox( "showingIssues" ).add( newOnChange() ) ) );
     }
 
     private IBehavior newOnChange() {
         return new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                setRedirect( true );
-                setResponsePage( getPage().getClass(), getParameters() );
+                redirect();
             }
         };
+    }
+
+    private void redirect() {
+        setRedirect( true );
+        setResponsePage( getPage().getClass(), getParameters() );
     }
 
     /**
@@ -255,5 +271,14 @@ public class SelectorPanel extends Panel {
 
     public void setShowingIssues( boolean showingIssues ) {
         this.showingIssues = showingIssues;
+    }
+
+    /**
+     * Add something to the page header.
+     * @param response the header
+     */
+    public void renderHead( IHeaderResponse response ) {
+//        response.renderOnDomReadyJavascript(
+//                "document.getElementById('apply').style.display = \"none\";" );
     }
 }
