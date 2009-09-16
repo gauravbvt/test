@@ -62,7 +62,6 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Plan plan = (Plan) modelObject;
-        assert plan.equals( getPlan() );
         Set<Actor> spofActors = detectSignificantCutpoints();
         // Found single points of failure?
         for ( Actor actor : spofActors ) {

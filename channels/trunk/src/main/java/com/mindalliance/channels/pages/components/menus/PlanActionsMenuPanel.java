@@ -49,14 +49,15 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
     public List<Component> getMenuItems() {
         List<Component> menuItems = super.getMenuItems();
         // Import
-        menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Import scenario" ),
-                new AjaxFallbackLink( "link" ) {
-                    @Override
-                    public void onClick( AjaxRequestTarget target ) {
-                        ( (PlanPage) getPage() ).importScenario( target );
-                    }
-                } ) );
-
+        if ( getPlan().isDevelopment() ) {
+            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Import scenario" ),
+                    new AjaxFallbackLink( "link" ) {
+                        @Override
+                        public void onClick( AjaxRequestTarget target ) {
+                            ( (PlanPage) getPage() ).importScenario( target );
+                        }
+                    } ) );
+        }
         // Export
         menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Export scenario" ),
                 new BookmarkablePageLink(
@@ -64,11 +65,11 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
                         ExportPage.class,
                         PlanPage.getParameters( (Scenario) getModel().getObject(), null ) ) ) );
         // Logout
-        ConfirmedAjaxFallbackLink logoutLink = new ConfirmedAjaxFallbackLink( "link", "Log out?" )  {
-                    public void onClick( AjaxRequestTarget target ) {
-                        getRequestCycle().setRequestTarget(new RedirectRequestTarget("/logout"));
-                    }
-                };
+        ConfirmedAjaxFallbackLink logoutLink = new ConfirmedAjaxFallbackLink( "link", "Log out?" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                getRequestCycle().setRequestTarget( new RedirectRequestTarget( "/logout" ) );
+            }
+        };
         menuItems.add( new LinkMenuItem(
                 "menuItem",
                 new Model<String>( "Logout " + User.current().getUsername() ),
@@ -83,43 +84,43 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
     @Override
     protected List<CommandWrapper> getCommandWrappers() {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
-        final Scenario scenario = getScenario();
-        commandWrappers.add( new CommandWrapper( new PastePart( getScenario() ) ) {
-            @Override
-            public void onExecuted( AjaxRequestTarget target, Change change ) {
-                update( target, change );
-            }
-        } );
-        commandWrappers.add( new CommandWrapper( new PasteAttachment( getScenario() ) ) {
-            @Override
-            public void onExecuted( AjaxRequestTarget target, Change change ) {
-                update( target, change );
-            }
-        } );
-        commandWrappers.add( new CommandWrapper( new AddPart( scenario ) ) {
-            @Override
-            public void onExecuted( AjaxRequestTarget target, Change change ) {
-                update( target, change );
-            }
-        } );
-        commandWrappers.add( new CommandWrapper( new AddUserIssue( scenario ) ) {
-            @Override
-            public void onExecuted( AjaxRequestTarget target, Change change ) {
-                update( target, change );
-            }
-        } );
-        commandWrappers.add( new CommandWrapper( new AddScenario() ) {
-            @Override
-            public void onExecuted( AjaxRequestTarget target, Change change ) {
-                update( target, change );
-            }
-        } );
-        commandWrappers.add( new CommandWrapper( new RemoveScenario( scenario ), CONFIRM ) {
-            @Override
-            public void onExecuted( AjaxRequestTarget target, Change change ) {
-                update( target, change );
-            }
-        } );
+            final Scenario scenario = getScenario();
+            commandWrappers.add( new CommandWrapper( new PastePart( getScenario() ) ) {
+                @Override
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
+            commandWrappers.add( new CommandWrapper( new PasteAttachment( getScenario() ) ) {
+                @Override
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
+            commandWrappers.add( new CommandWrapper( new AddPart( scenario ) ) {
+                @Override
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
+            commandWrappers.add( new CommandWrapper( new AddUserIssue( scenario ) ) {
+                @Override
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
+            commandWrappers.add( new CommandWrapper( new AddScenario() ) {
+                @Override
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
+            commandWrappers.add( new CommandWrapper( new RemoveScenario( scenario ), CONFIRM ) {
+                @Override
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
         return commandWrappers;
     }
 

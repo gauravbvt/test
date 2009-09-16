@@ -108,32 +108,34 @@ public class PlanShowMenuPanel extends MenuPanel {
                     new Model<String>( "About scenario" ),
                     editLink ) );
         }
-        Link surveyLink;
-        if ( getExpansions().contains( surveyService.getId() ) ) {
-            surveyLink =
-                    new AjaxFallbackLink( "link" ) {
-                        @Override
-                        public void onClick( AjaxRequestTarget target ) {
-                            update( target, new Change( Change.Type.Collapsed, surveyService ) );
-                        }
-                    };
-            menuItems.add( new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( "Hide surveys" ),
-                    surveyLink ) );
+        if ( getPlan().isDevelopment() ) {
+            Link surveyLink;
+            if ( getExpansions().contains( surveyService.getId() ) ) {
+                surveyLink =
+                        new AjaxFallbackLink( "link" ) {
+                            @Override
+                            public void onClick( AjaxRequestTarget target ) {
+                                update( target, new Change( Change.Type.Collapsed, surveyService ) );
+                            }
+                        };
+                menuItems.add( new LinkMenuItem(
+                        "menuItem",
+                        new Model<String>( "Hide surveys" ),
+                        surveyLink ) );
 
-        } else {
-            surveyLink =
-                    new AjaxFallbackLink( "link" ) {
-                        @Override
-                        public void onClick( AjaxRequestTarget target ) {
-                            update( target, new Change( Change.Type.Expanded, surveyService ) );
-                        }
-                    };
-            menuItems.add( new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( "All surveys" ),
-                    surveyLink ) );
+            } else {
+                surveyLink =
+                        new AjaxFallbackLink( "link" ) {
+                            @Override
+                            public void onClick( AjaxRequestTarget target ) {
+                                update( target, new Change( Change.Type.Expanded, surveyService ) );
+                            }
+                        };
+                menuItems.add( new LinkMenuItem(
+                        "menuItem",
+                        new Model<String>( "All surveys" ),
+                        surveyLink ) );
+            }
         }
         BookmarkablePageLink reportLink = new BookmarkablePageLink( "link", PlanReportPage.class );
         reportLink.add( new AttributeModifier( "target", true, new Model<String>( "report" ) ) );

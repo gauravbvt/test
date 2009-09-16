@@ -159,17 +159,60 @@ public class FileUserDetailsService implements UserDetailsService {
         planManager.addUser( user );
     }
 
-    private Plan getDefaultPlan( User user ) {
-        Plan plan = null;
-        String uri = user.getDefaultPlanUri();
-        if ( uri != null ) {
-            plan = getPlanManager().getPlanWithUri( uri );
+    /**
+     * Get a plan the uer can edit, else one the user can read, else the default plan.
+     * @param user a user
+     * @return a plan, or null if none
+     */
+    public Plan getDefaultPlan( final User user ) {
+        List<Plan> plans = findPlannablePlans( user );
+        if (!plans.isEmpty()) {
+           return plans.get(0);
         }
-        if ( plan == null ) {
-            logger.warn( "Using default plan for user " + user.getUsername() );
-            plan = getPlanManager().getCurrentPlan();
+        plans = findReadablePlans( user );
+        if (!plans.isEmpty()) {
+           return plans.get(0);
         }
-        return plan;
+        logger.warn( "No default plan for user " + user.getUsername() );
+        return null;
+    }
+
+    /**
+     * Find all development plans a user can edit.
+     * @param user  a user
+     * @return  a list of versioned plans
+     */
+    @SuppressWarnings( "unchecked")
+    public List<Plan> findPlannablePlans( final User user ) {
+        List<Plan> plans = planManager.getPlans();
+        return (List<Plan>)CollectionUtils.select(
+                plans,
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        Plan plan = (Plan)object;
+                        return plan.isDevelopment() && user.isPlanner( plan );
+                    }
+                }
+        );
+    }
+
+    /**
+     * Find all production plans a user can read.
+     * @param user  a user
+     * @return  a list of versioned plans
+     */
+    @SuppressWarnings( "unchecked")
+    public List<Plan> findReadablePlans( final User user ) {
+        List<Plan> plans = planManager.getPlans();
+        return (List<Plan>)CollectionUtils.select(
+                plans,
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        Plan plan = (Plan)object;
+                        return plan.isProduction() && user.isParticipant( plan );
+                    }
+                }
+        );
     }
 
 /*

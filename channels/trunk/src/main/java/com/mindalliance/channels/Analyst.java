@@ -213,6 +213,11 @@ public interface Analyst extends Service {
     void onStart();
 
     /**
+     * On stop.
+     */
+    void onStop();
+
+    /**
      * On destroy.
      */
     void onDestroy();

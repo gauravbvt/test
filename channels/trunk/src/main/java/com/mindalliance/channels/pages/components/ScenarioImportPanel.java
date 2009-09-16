@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.pages.PlanPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -120,7 +119,4 @@ public class ScenarioImportPanel extends AbstractCommandablePanel {
         return upload;
     }
 
-    private PlanManager getPlanManager() {
-       return getQueryService().getPlanManager();
-    }
 }

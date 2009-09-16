@@ -40,12 +40,15 @@ import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.pages.RedirectPage;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -69,6 +72,7 @@ import java.util.Set;
 
 /**
  * The plan's home page.
+ * Note: When a user switches plan, this page *must* be reloaded.
  */
 public final class PlanPage extends WebPage implements Updatable {
     /**
@@ -104,11 +108,6 @@ public final class PlanPage extends WebPage implements Updatable {
      * Length a scenario title is abbreviated to
      */
     private static final int SCENARIO_DESCRIPTION_MAX_LENGTH = 94;
-    /**
-     * The current user.
-     */
-    @SpringBean
-    private User user;
     /**
      * The plan manager.
      */
@@ -205,6 +204,10 @@ public final class PlanPage extends WebPage implements Updatable {
      * When last refreshed.
      */
     private long lastRefreshed = System.currentTimeMillis();
+    /**
+     * Modal dialog window.
+     */
+    private ModalWindow dialogWindow;
 
     @SpringBean
     /**
@@ -254,7 +257,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
 
     private void init( Scenario sc, Part p, Set<Long> expanded ) {
-        getCommander().releaseAllLocks( user.getUsername() );
+        getCommander().releaseAllLocks( getUser().getUsername() );
         setScenario( sc );
         setPart( p );
         expansions = expanded;
@@ -263,21 +266,23 @@ public final class PlanPage extends WebPage implements Updatable {
         }
 
         setVersioned( false );
-        add( new Label( "sc-title", new Model<String>( "Channels: " + getPlan().getName() ) ) );
+        add( new Label( "sc-title", new Model<String>( "Channels: " + getPlan().getVersionedName() ) ) );
 
         form = new IndicatorAwareForm( "big-form" ) {
             @Override
             protected void onSubmit() {
                 // Drop user history on submit
-                getCommander().resetUserHistory( user.getUsername(), true );
+                getCommander().resetUserHistory( getUser().getUsername(), true );
                 redirectHere();
             }
         };
         addHeader();
         addRefresh();
+        getCommander().resynced();
         addPlanMenubar();
         addScenarioSelector();
         addPlanSwitcher();
+        addModalDialog();
 
         scenarioImportPanel = new ScenarioImportPanel( "scenario-import" );
         form.add( scenarioImportPanel );
@@ -328,7 +333,7 @@ public final class PlanPage extends WebPage implements Updatable {
         );
         scenarioDescriptionLabel.setOutputMarkupId( true );
         form.add( scenarioDescriptionLabel );
-        form.add( new Label( "user", user.getUsername() ) );                              // NON-NLS
+        form.add( new Label( "user", getUser().getUsername() ) );                              // NON-NLS
     }
 
     private GeomapLinkPanel createPartsMapLink() {
@@ -370,6 +375,9 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void doTimedUpdate( AjaxRequestTarget target ) {
+        if ( getCommander().isOutOfSync() ) {
+            if ( !dialogWindow.isShown() ) dialogWindow.show( target );
+        }
         getCommander().keepAlive( User.current().getUsername(), REFRESH_DELAY );
         getCommander().processDeaths();
         getCommander().processTimeOuts();
@@ -395,7 +403,7 @@ public final class PlanPage extends WebPage implements Updatable {
         String lastModifier = getCommander().getLastModifier();
         long lastModified = getCommander().getLastModified();
         if ( lastModified > lastRefreshed && !lastModifier.isEmpty()
-                && !lastModifier.equals( user.getUsername() ) )
+                && !lastModifier.equals( getUser().getUsername() ) )
             reasons = " -- Plan was modified by " + lastModifier;
 
         // Find expansions that were locked and are not unlocked
@@ -442,7 +450,7 @@ public final class PlanPage extends WebPage implements Updatable {
         planShowMenu = new PlanShowMenuPanel( "planShowMenu", sc, exps );
         planShowMenu.setOutputMarkupId( true );
         form.add( planShowMenu );
-        form.add( new Label( "username", user.getUsername() ) );
+        form.add( new Label( "username", getUser().getUsername() ) );
     }
 
     private void addPlanActionsMenu() {
@@ -480,7 +488,7 @@ public final class PlanPage extends WebPage implements Updatable {
         DropDownChoice<Plan> planDropDownChoice = new DropDownChoice<Plan>(
                 "plan-sel",
                 new PropertyModel<Plan>( this, "plan" ),
-                new PropertyModel<List<? extends Plan>>( this, "writablePlans" ) );
+                new PropertyModel<List<? extends Plan>>( this, "plannablePlans" ) );
         planDropDownChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
@@ -488,6 +496,30 @@ public final class PlanPage extends WebPage implements Updatable {
             }
         } );
         switchPlanContainer.add( planDropDownChoice );
+    }
+
+    private void addModalDialog() {
+        dialogWindow = new ModalWindow( "dialog" );
+        dialogWindow.setResizable( false );
+        dialogWindow.setContent( new DialogPanel(
+                dialogWindow.getContentId(),
+                new Model<String>( "This page is out of sync.\nIt will be refreshed when you close this." ) ) );
+        dialogWindow.setTitle( "Alert" );
+        dialogWindow.setCookieName( "refresh-alert" );
+        dialogWindow.setCloseButtonCallback( new ModalWindow.CloseButtonCallback() {
+            public boolean onCloseButtonClicked( AjaxRequestTarget target ) {
+                return true;
+            }
+        } );
+        dialogWindow.setWindowClosedCallback( new ModalWindow.WindowClosedCallback() {
+            public void onClose( AjaxRequestTarget target ) {
+                redirectToPlan();
+            }
+        } );
+        dialogWindow.setHeightUnit( "px" );
+        dialogWindow.setInitialHeight( 100 );
+        dialogWindow.setInitialWidth( 400 );
+        add( dialogWindow );
     }
 
     private void addEntityPanel() {
@@ -537,7 +569,7 @@ public final class PlanPage extends WebPage implements Updatable {
      * @return a plan
      */
     public Plan getPlan() {
-        return user.getPlan();
+        return getUser().getPlan();
     }
 
     /**
@@ -546,7 +578,7 @@ public final class PlanPage extends WebPage implements Updatable {
      * @param plan a plan
      */
     public void setPlan( Plan plan ) {
-        user.switchPlan( plan );
+        getUser().switchPlan( plan );
     }
 
     private ModelObject findExpandedEntity() {
@@ -940,8 +972,10 @@ public final class PlanPage extends WebPage implements Updatable {
             }
             // expandedEntities.remove( identifiable.getId() );
         }
-        // Never lock a scenario or plan
-        if ( identifiable instanceof ModelObject && ((ModelObject)identifiable).isLockable() ) {
+        // Never lock a scenario or plan, or anything in a production plan
+        if ( getPlan().isDevelopment()
+                && identifiable instanceof ModelObject
+                && ( (ModelObject) identifiable ).isLockable() ) {
             getCommander().requestLockOn( identifiable );
         }
         expansions.add( identifiable.getId() );
@@ -987,7 +1021,7 @@ public final class PlanPage extends WebPage implements Updatable {
         }
         if ( identifiable instanceof Scenario ) {
             if ( change.isExists() ) {
-                getCommander().resetUserHistory( user.getUsername(), false );
+                getCommander().resetUserHistory( getUser().getUsername(), false );
                 if ( change.isAdded() ) {
                     setScenario( (Scenario) identifiable );
                     setPart( null );
@@ -1069,7 +1103,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 if ( change.isDisplay() ) {
                     form.addOrReplace( createPlanEditPanel( getPlan() ) );
                     target.addComponent( planEditPanel );
-                } else if ( change.isSelected() ) {
+                } else if ( change.isSelected() || change.isRecomposed() ) {
                     redirectToPlan();
                 }
             }
@@ -1175,7 +1209,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void updateVisibility() {
         makeVisible( selectScenarioContainer, getAllScenarios().size() > 1 );
-        makeVisible( switchPlanContainer, getWritablePlans().size() > 1 );
+        makeVisible( switchPlanContainer, getPlannablePlans().size() > 1 );
     }
 
     /**
@@ -1183,8 +1217,12 @@ public final class PlanPage extends WebPage implements Updatable {
      *
      * @return a list of plans
      */
-    public List<Plan> getWritablePlans() {
-        return user.getWritablePlans( getPlanManager() );
+    public List<Plan> getPlannablePlans() {
+        return getUser().getPlannablePlans( getPlanManager() );
+    }
+
+    private User getUser() {
+        return User.current();
     }
 
     private PlanManager getPlanManager() {
@@ -1235,6 +1273,18 @@ public final class PlanPage extends WebPage implements Updatable {
             return entityId;
         }
 
+    }
+
+    /**
+     * Dialog panel.
+     */
+    private class DialogPanel extends Panel {
+
+        private DialogPanel( String id, IModel<String> iModel ) {
+            super( id, iModel );
+            Label alertLabel = new Label( "alert", iModel );
+            add( alertLabel );
+        }
     }
 }
 

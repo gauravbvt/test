@@ -213,7 +213,9 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
                     "Waived",
                     "waivedString",
                     EMPTY ) );
-            columns.add( makeSurveyColumn( "Survey" ) );
+            if ( getPlan().isDevelopment() ) {
+                columns.add( makeSurveyColumn( "Survey" ) );
+            }
             // provider and table
             add( new AjaxFallbackDefaultDataTable(
                     "issues",
@@ -265,19 +267,19 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
                     true,
                     new Model<String>(
                             surveyed ? "/images/survey_small.png" : "/images/survey_add_small.png"
-                    )));
+                    ) ) );
             image.add( new AttributeModifier(
                     "alt",
                     true,
                     new Model<String>(
                             surveyed ? "View survey" : "Create new survey"
-                    )));
+                    ) ) );
             image.add( new AttributeModifier(
                     "title",
                     true,
                     new Model<String>(
                             surveyed ? "View survey" : "Create new survey"
-                    )));
+                    ) ) );
             link.add( image );
         }
     }

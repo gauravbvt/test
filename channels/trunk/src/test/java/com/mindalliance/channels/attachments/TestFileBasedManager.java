@@ -5,7 +5,6 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.upload.FileItem;
 import org.easymock.EasyMock;
-import org.springframework.core.io.FileSystemResource;
 
 /**
  * ...
@@ -32,7 +31,7 @@ public class TestFileBasedManager extends TestCase {
                 "target" + System.getProperty( "file.separator" ) + "upload-test" );
         if ( !directory.exists() )
             directory.mkdir();
-        mgr.setDirectory( new FileSystemResource( directory ) );
+//        mgr.setDirectory( new FileSystemResource( directory ) );
         map = new File( directory, mgr.getDigestsMapFile() );
 
         fileItem = EasyMock.createMock( FileItem.class );
@@ -80,15 +79,6 @@ public class TestFileBasedManager extends TestCase {
         assertEquals( 0, mgr.getDirectory().list().length );
     }*/
 
-    public void testStartStop() {
-        assertFalse( map.exists() );
-        assertFalse( mgr.isRunning() );
-        mgr.start();
-        assertTrue( mgr.isRunning() );
-        assertFalse( map.exists() );
-        mgr.stop();
-        assertFalse( mgr.isRunning() );
-    }
 
 /*    public void testUrl() throws MalformedURLException {
         assertFalse( map.exists() );

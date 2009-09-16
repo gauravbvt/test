@@ -1,5 +1,7 @@
 package com.mindalliance.channels.dao;
 
+import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.DuplicateKeyException;
 import com.mindalliance.channels.Exporter;
@@ -13,10 +15,11 @@ import com.mindalliance.channels.export.ImportExportFactory;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.User;
-import com.mindalliance.channels.query.DefaultQueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
+import org.apache.commons.collections.TransformerUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +30,7 @@ import org.springframework.dao.DataRetrievalFailureException;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,6 +38,7 @@ import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -69,17 +74,12 @@ public class PlanManager implements InitializingBean {
      */
     private File plansFile;
     /**
-     * Last modification date for the plans definitions. Used to monitor external changes to
-     * the plans file.
-     */
-    private long lastModified;
-    /**
      * Definitions parsed from plans properties file.
      * uri => [name, client]
      */
     private Map<String, List<String>> planDefinitions = new HashMap<String, List<String>>();
     /**
-     * All the plans, indexed by id.
+     * All the plans, indexed by version uri (uri:version).
      */
     private final Map<String, PlanDao> planIndex =
             Collections.synchronizedMap( new HashMap<String, PlanDao>() );
@@ -88,6 +88,13 @@ public class PlanManager implements InitializingBean {
      * plan uri => participation
      */
     private Set<User> users = new HashSet<User>();
+
+    /**
+     * For each plan uri, usernames of users who not in sync with its current version.
+     * {uri => username}
+     */
+    private Map<String, List<String>> outOfSyncUsers =
+            Collections.synchronizedMap( new HashMap<String, List<String>>() );
 
     /**
      * The plan importer.
@@ -107,6 +114,14 @@ public class PlanManager implements InitializingBean {
      * The default current plan dao -- used only during loading.
      */
     private PlanDao currentDao;
+    /**
+     * Surveys file name.
+     */
+    private String surveysFileName;
+    /**
+     * Uploads dir name.
+     */
+    private String uploadsDirName;
 
     /**
      * The location of the persisted data.
@@ -120,6 +135,10 @@ public class PlanManager implements InitializingBean {
      * Default: 10
      */
     private int snapshotThreshold = 10;
+    /**
+     * Default uri.
+     */
+    public static final String DEFAULT_URI = "DEFAULT";
 
     /**
      * Required for AOP decorations.
@@ -161,6 +180,14 @@ public class PlanManager implements InitializingBean {
         this.base = base;
     }
 
+    public void setSurveysFileName( String surveysFileName ) {
+        this.surveysFileName = surveysFileName;
+    }
+
+    public void setUploadsDirName( String uploadsDirName ) {
+        this.uploadsDirName = uploadsDirName;
+    }
+
     /**
      * Get the dao wrapper for a plan.
      *
@@ -169,7 +196,7 @@ public class PlanManager implements InitializingBean {
      * @throws NotFoundException if plan does not exist
      */
     public PlanDao getDao( Plan plan ) throws NotFoundException {
-        PlanDao result = planIndex.get( plan.getUri() );
+        PlanDao result = planIndex.get( plan.getVersionUri() );
         if ( result == null ) {
             if ( currentDao != null && plan == currentDao.getPlan() ) {
                 result = currentDao;
@@ -261,34 +288,13 @@ public class PlanManager implements InitializingBean {
     public List<Plan> getPlans() {
         synchronized ( planIndex ) {
             List<Plan> result = new ArrayList<Plan>( planIndex.size() );
-            for ( PlanDao dao : planIndex.values() )
+            for ( PlanDao dao : planIndex.values() ) {
                 result.add( dao.getPlan() );
-
+            }
             Collections.sort( result );
             return Collections.unmodifiableList( result );
         }
     }
-
-    /**
-     * Initialize managed plans.
-     *
-     * @param plans the plans
-     */
-/*
-    public void setPlans( List<Plan> plans ) {
-        synchronized ( planIndex ) {
-            planIndex.clear();
-            for ( Plan p : plans ) {
-                long id = p.getId();
-                if ( planIndex.containsKey( id ) )
-                    logger.warn( "Duplicate plan id {}. Plan ignored", id );
-                else
-                    planIndex.put( id, new PlanDao( this, p ) );
-            }
-        }
-        logger.info( "Loaded {} plan(s)", planIndex.size() );
-    }
-*/
 
     /**
      * Return the number of plans manager by this instance.
@@ -317,7 +323,10 @@ public class PlanManager implements InitializingBean {
         try {
             Plan plan = new Plan();
             plan.setName( "UNNAMED" );
+            plan.setUri( DEFAULT_URI );
             plan.setId( idGenerator.assignId( null, plan ) );
+            plan.setVersion( 1 );
+            plan.setDevelopment();
             add( plan );
             PlanDao dao = getDao( plan );
             dao.add( plan, plan.getId() );
@@ -376,6 +385,14 @@ public class PlanManager implements InitializingBean {
     }
 
     public Resource getDataDirectory() {
+        File baseDirectory;
+        try {
+            baseDirectory = dataDirectory.getFile();
+        } catch ( IOException e ) {
+            throw new RuntimeException( e );
+        }
+        if ( !baseDirectory.exists() )
+            baseDirectory.mkdir();
         return dataDirectory;
     }
 
@@ -432,9 +449,11 @@ public class PlanManager implements InitializingBean {
                 currentDao = dao;
                 Plan plan = dao.getPlan();
                 try {
-                    commander.replay( dao.getJournal() );
-                    LOG.info( "Replayed journal for plan {}", plan );
-                    dao.save( importExportFactory.createExporter( queryService, plan ) );
+                    if ( plan.isDevelopment() ) {
+                        commander.replay( dao.getJournal() );
+                        LOG.info( "Replayed journal for plan {}", plan );
+                        dao.save( importExportFactory.createExporter( queryService, plan ) );
+                    }
                 } catch ( IOException e ) {
                     LOG.error( MessageFormat.format( "Unable to save plan {0}", dao.getPlan() ), e );
                 } catch ( CommandException e ) {
@@ -449,7 +468,7 @@ public class PlanManager implements InitializingBean {
     }
 
     /**
-     * Get the plan of the current user (or a default plan if current user does not have a plan.
+     * Get the plan of the current user, or a default plan if current user does not have a plan.
      *
      * @return a plan
      *         // todo Insecure... Refactor and fix elsewhere.
@@ -485,37 +504,33 @@ public class PlanManager implements InitializingBean {
      * Create default plan if none defined.
      * Called by DefaultQueryService after properties set.
      *
-     * @param service the service to use for validation
+     * @param queryService the service to use for validation
      */
-    public synchronized void validate( DefaultQueryService service ) {
+    public synchronized void validate( QueryService queryService ) {
         List<PlanDao> daos = new ArrayList<PlanDao>();
         for ( String uri : planDefinitions.keySet() ) {
             List<String> propVals = planDefinitions.get( uri );
-            Plan plan = new Plan();
-            plan.setUri( uri );
-            plan.setName( propVals.get( 0 ) );
-            plan.setClient( propVals.get( 1 ) );
-            PlanDao dao = new PlanDao( this, plan );
-            daos.add( dao );
+            int lastVersion = getDevelopmentVersion( uri );
+            for ( int version = lastVersion; version > 0; version-- ) {
+                Plan plan = new Plan();
+                plan.setUri( uri );
+                plan.setVersion( version );
+                if ( version == lastVersion )
+                    plan.setDevelopment();
+                else if ( version == lastVersion - 1 )
+                    plan.setProduction();
+                else
+                    plan.setRetired();
+                plan.setName( propVals.get( 0 ) );
+                plan.setClient( propVals.get( 1 ) );
+                PlanDao dao = new PlanDao( this, plan );
+                daos.add( dao );
+            }
         }
         // Load persisted, defined plans
         for ( PlanDao dao : daos ) {
             if ( dao.isPersisted() ) {
-                Plan plan = dao.getPlan();
-                Importer importer = importExportFactory.createImporter( service, plan );
-                try {
-                    currentDao = dao;
-                    dao.load( importer );
-                    registerPlanDao( dao );
-                    dao.add( plan, plan.getId() );
-                } catch ( IOException e ) {
-                    String msg = MessageFormat.format(
-                            "Unable to import plan {0}", plan.getName() );
-                    LOG.error( msg, e );
-                    throw new RuntimeException( msg, e );
-                } finally {
-                    currentDao = null;
-                }
+                importPlan( dao, queryService );
             }
         }
         // Create new, defined plans
@@ -535,7 +550,7 @@ public class PlanManager implements InitializingBean {
         for ( PlanDao dao : daos ) {
             try {
                 currentDao = dao;
-                dao.validate( service );
+                dao.validate( queryService );
             } finally {
                 currentDao = null;
             }
@@ -547,16 +562,33 @@ public class PlanManager implements InitializingBean {
                 throw new RuntimeException( "Failed to write plan definitions", e );
             }
         }
-        lastModified = plansFile == null ? System.currentTimeMillis() : plansFile.lastModified();
+    }
+
+    private void importPlan( PlanDao dao, QueryService queryService ) {
+        Plan plan = dao.getPlan();
+        Importer importer = importExportFactory.createImporter( queryService, plan );
+        try {
+            currentDao = dao;
+            dao.load( importer );
+            registerPlanDao( dao );
+            dao.add( plan, plan.getId() );
+        } catch ( IOException e ) {
+            String msg = MessageFormat.format(
+                    "Unable to import plan {0}", plan.getName() );
+            LOG.error( msg, e );
+            throw new RuntimeException( msg, e );
+        } finally {
+            currentDao = null;
+        }
     }
 
     private void registerPlanDao( PlanDao dao ) {
-        String key = dao.getPlan().getUri();
+        String key = dao.getPlan().getVersionUri();
         if ( planIndex.get( key ) != null ) {
             LOG.error( "Duplicate plan URI " + key );
             throw new DuplicateKeyException();
         }
-        planIndex.put( dao.getPlan().getUri(), dao );
+        planIndex.put( key, dao );
     }
 
 /*
@@ -610,13 +642,14 @@ public class PlanManager implements InitializingBean {
     }*/
 
     /**
-     * Find the plan, if any, with a given uri.
+     * Find the plans, if any, with a given uri.
      *
      * @param uri a string
-     * @return a plan or null
+     * @return a list of plans
      */
-    public Plan getPlanWithUri( final String uri ) {
-        return (Plan) CollectionUtils.find(
+    @SuppressWarnings( "unchecked" )
+    public List<Plan> getPlansWithUri( final String uri ) {
+        return (List<Plan>) CollectionUtils.select(
                 getPlans(),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
@@ -697,16 +730,265 @@ public class PlanManager implements InitializingBean {
     }
 
     /**
-     * Get name of directory where current plan is persisted.
+     * Get name of directory where all versions of the current plan are  persisted.
+     *
      * @return a string
      */
     public String getPlanDirectory() {
+        return getPlanDirectory( plan().getUri() );
+    }
+
+    /**
+     * Get name of directory where the current plan is persisted.
+     *
+     * @return a string
+     */
+    public String getPlanVersionDirectory() {
+        return getPlanVersionDirectory( plan() );
+    }
+
+    private String getPlanVersionDirectory( Plan plan ) {
+        return getPlanDirectory( plan.getUri() ) + File.separator + plan.getVersion();
+    }
+
+    private String getPlanDirectory( String uri ) {
         try {
             return getDataDirectory().getFile().getAbsolutePath()
                     + File.separator
-                    + PlanDao.sanitize( plan().getUri() ) ;
+                    + PlanDao.sanitize( uri );
         } catch ( IOException e ) {
-            throw new RuntimeException("Failed to get plan directory", e);
+            throw new RuntimeException( "Failed to get plan directory", e );
         }
     }
+
+    private int getDevelopmentVersion( String uri ) {
+        int maxVersion = 1;
+        File planDir = new File( getPlanDirectory( uri ) );
+        File[] subDirs = planDir.listFiles( new FileFilter() {
+            public boolean accept( File file ) {
+                return file.isDirectory();
+            }
+        } );
+        if ( subDirs != null ) {
+            for ( File dir : subDirs ) {
+                try {
+                    int version = Integer.parseInt( dir.getName() );
+                    maxVersion = Math.max( maxVersion, version );
+                } catch ( NumberFormatException e ) {
+                    // Do nothing
+                }
+            }
+        }
+        // else version dirs to be created
+        return maxVersion;
+    }
+
+    /**
+     * Make a plan in development version and make it a production version.
+     * Retire previous production version of the plan if any, and
+     * Create a new development version from a copy of the prior development version.
+     * Substitute the new development plan as the current plan for each user where applicable.
+     * Substitute the new production plan as the current plan for each user where applicable.
+     *
+     * @param queryService a query service
+     * @param analyst      issue analyst
+     * @param oldDevPlan   a plan
+     */
+    private void moveToProduction( Plan oldDevPlan, QueryService queryService, Analyst analyst ) {
+        if ( !oldDevPlan.isDevelopment() )
+            throw new IllegalStateException( "Plan " + oldDevPlan + " is not a development version" );
+        // Stop issue scanning
+        analyst.onStop();
+        // Create development plan from copy of old dev plan
+        Plan newDevPlan = makeNewDevPlan( oldDevPlan, queryService );
+        // Substitute current plans of users as appropriate
+        for ( User user : users ) {
+            Plan userPlan = user.getPlan();
+            if ( userPlan != null && userPlan.getUri().equals( oldDevPlan.getUri() ) ) {
+                if ( userPlan.isDevelopment() ) {
+                    user.setPlan( newDevPlan );
+                } else {
+                    if ( userPlan.isProduction() ) {
+                        user.setPlan( oldDevPlan );
+                    }
+                }
+            }
+        }
+        // Mark loaded production version of plan retired
+        Plan oldProductionPlan = findProductionPlan( oldDevPlan.getUri() );
+        if ( oldProductionPlan != null ) {
+            oldProductionPlan.setRetired();
+            oldProductionPlan.setWhenVersioned( new Date() );
+            planIndex.remove( oldProductionPlan.getVersionUri() );
+        }
+        // Mark loaded development version of plan as production
+        oldDevPlan.setProduction();
+        oldDevPlan.setWhenVersioned( new Date() );
+        // Restart issue scanning
+        analyst.onStart();
+    }
+
+    /**
+     * Find the production version of a plan.
+     *
+     * @param uri a string
+     * @return a plan
+     */
+    public Plan findProductionPlan( final String uri ) {
+        return (Plan) CollectionUtils.find(
+                getPlanVersions( uri ),
+                PredicateUtils.invokerPredicate( "isProduction" )
+        );
+    }
+
+
+    /**
+     * Find the development version of a plan.
+     *
+     * @param uri a string
+     * @return a plan
+     */
+    public Plan findDevelopmentPlan( final String uri ) {
+        return (Plan) CollectionUtils.find(
+                getPlanVersions( uri ),
+                PredicateUtils.invokerPredicate( "isDevelopment" )
+        );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<Plan> getPlanVersions( final String uri ) {
+        return (List<Plan>) CollectionUtils.select(
+                getPlans(),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ( (Plan) obj ).getUri().equals( uri );
+                    }
+                }
+        );
+    }
+
+
+    private void makeNewVersionDirectory( Plan plan ) throws IOException {
+        // Create new persisted dev version
+        int version = plan.getVersion();
+        String newDevVersionDirName = getPlanDirectory( plan.getUri() )
+                + File.separator
+                + ( version + 1 );
+        File newVersionDir = new File( newDevVersionDirName );
+        assert ( !newVersionDir.exists() );
+        newVersionDir.mkdir();
+        File oldVersionDir = new File( getPlanVersionDirectory( plan ) );
+        // Copy files from old to new
+        FileUtils.copyFileToDirectory( new File( oldVersionDir, PlanDao.DATA_FILE ), newVersionDir );
+        FileUtils.copyFileToDirectory( new File( oldVersionDir, surveysFileName ), newVersionDir );
+        FileUtils.copyDirectoryToDirectory( new File( oldVersionDir, uploadsDirName ), newVersionDir );
+    }
+
+    private Plan makeNewDevPlan( Plan oldDevPlan, QueryService queryService ) {
+        try {
+            // Create new persisted dev version
+            makeNewVersionDirectory( oldDevPlan );
+            Plan newDevPlan = new Plan();
+            newDevPlan.setUri( oldDevPlan.getUri() );
+            newDevPlan.setVersion( oldDevPlan.getVersion() + 1 );
+            newDevPlan.setDevelopment();
+            newDevPlan.setWhenVersioned( new Date() );
+            newDevPlan.setName( oldDevPlan.getName() );
+            newDevPlan.setClient( oldDevPlan.getClient() );
+            PlanDao dao = new PlanDao( this, newDevPlan );
+            importPlan( dao, queryService );
+            newDevPlan.removeAllProducers();
+            dao.save( importExportFactory.createExporter( queryService, newDevPlan ) );
+            // TODO - remove initial data_???.xml backup file since it has producers set.
+            return newDevPlan;
+        } catch ( Exception e ) {
+            throw new RuntimeException( "Failed to make new development version of " + oldDevPlan, e );
+        }
+    }
+
+    /**
+     * Add a producer to the plan.
+     * Returns whether the plan was put into production as a result.
+     *
+     * @param producer     user name of planner voting to put plan in production
+     * @param plan         a plan
+     * @param queryService query service
+     * @return a boolean
+     */
+    public boolean addProducer( String producer, final Plan plan, QueryService queryService ) {
+        plan.addProducer( producer );
+        final List<String> producers = plan.getProducers();
+        boolean unanimous = !CollectionUtils.exists(
+                users,
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        User user = (User) obj;
+                        return user.isPlanner( plan )
+                                && !producers.contains( user.getUsername() );
+                    }
+                }
+        );
+        if ( unanimous ) {
+            Analyst analyst = Channels.instance().getAnalyst();
+            moveToProduction( plan, queryService, analyst );
+        }
+        return unanimous;
+    }
+
+    public List<User> getPlanners( String uri ) {
+        List<User> planners = new ArrayList<User>();
+        for ( User user : users ) {
+            if ( user.isPlanner( uri ) ) {
+                planners.add( user );
+            }
+        }
+        return planners;
+    }
+
+    public void removeProducer( String producer, Plan plan ) {
+        plan.removeProducer( producer );
+    }
+
+    /**
+     * Signal that the plan with given uri was versioned.
+     *
+     * @param uri the plan's uri
+     */
+    public synchronized void setResyncRequired( String uri ) {
+        outOfSyncUsers.put( uri, allUsernames() );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<String> allUsernames() {
+        return (List<String>) CollectionUtils.collect(
+                users,
+                TransformerUtils.invokerTransformer( "getUsername" )
+        );
+    }
+
+    /**
+     * Signal that a user is now in sync with all plans versions.
+     *
+     * @param user a user
+     */
+    public synchronized void resynced( User user ) {
+        for ( String uri : outOfSyncUsers.keySet() ) {
+            List<String> usernames = outOfSyncUsers.get( uri );
+            if ( usernames != null )
+                usernames.remove( user.getUsername() );
+        }
+    }
+
+    /**
+     * Whether a user is out of sync with a plan of given uri.
+     *
+     * @param user a user
+     * @param uri  a string
+     * @return a boolean
+     */
+    public synchronized boolean isOutOfSync( User user, String uri ) {
+        List<String> usernames = outOfSyncUsers.get( uri );
+        return usernames != null && usernames.contains( user.getUsername() );
+    }
+
 }

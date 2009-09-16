@@ -66,6 +66,7 @@ public class IssuesPanel extends AbstractCommandablePanel {
                 update( target, change );
             }
         };
+        newIssueLink.setVisible( getPlan().isDevelopment() );
         add( newIssueLink );
         createIssuePanels();
     }

@@ -360,4 +360,11 @@ public abstract class AbstractCommand implements Command {
     public void setTop( boolean top ) {
         this.top = top;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean forcesSnapshot() {
+        return false;
+    }
 }

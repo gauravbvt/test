@@ -103,7 +103,7 @@ public class EventListPanel extends AbstractCommandablePanel {
 
             }
         };
-        nameField.setVisible( wrapper.isMarkedForCreation() );
+        nameField.setVisible( getPlan().isDevelopment() && wrapper.isMarkedForCreation() );
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addConfirmedCell( item );
@@ -121,16 +121,15 @@ public class EventListPanel extends AbstractCommandablePanel {
         final CheckBox confirmedCheckBox = new CheckBox(
                 "confirmed",
                 new PropertyModel<Boolean>( wrapper, "confirmed" ) );
-        makeVisible( confirmedCheckBox, wrapper.canBeConfirmed() );
+        makeVisible( confirmedCheckBox, getPlan().isDevelopment() && wrapper.canBeConfirmed() );
         item.addOrReplace( confirmedCheckBox );
-        final Plan plan = planManager.getCurrentPlan();
         confirmedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 eventsDiv.addOrReplace( makeEventsTable() );
                 target.addComponent( eventsDiv );
                 update( target, new Change(
                         Change.Type.Updated,
-                        plan,
+                        getPlan(),
                         "incidents"
                 ) );
             }
@@ -163,10 +162,6 @@ public class EventListPanel extends AbstractCommandablePanel {
         creationEventWrapper.setMarkedForCreation( true );
         wrappers.add( creationEventWrapper );
         return wrappers;
-    }
-
-    private Plan getPlan() {
-        return (Plan) getModel().getObject();
     }
 
     public class EventWrapper implements Serializable {

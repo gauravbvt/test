@@ -153,5 +153,5 @@ public interface Dao extends Service {
      * @return a directory
      * @throws java.io.IOException on error
      */
-    File getDataDirectory() throws IOException;
+    File getPlanStoreDirectory() throws IOException;
 }

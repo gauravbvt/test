@@ -18,6 +18,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -63,6 +64,9 @@ public class PlanConverter extends AbstractChannelsConverter {
         writer.addAttribute( "uri", plan.getUri() );
         writer.addAttribute( "version", getVersion() );
         writer.addAttribute( "date", new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( new Date() ) );
+        writer.startNode( "whenVersioned" );
+        writer.setValue( new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( plan.getWhenVersioned() )  );
+        writer.endNode();
         writer.startNode( "lastId" );
         writer.setValue( String.valueOf(
                 getContext().getIdGenerator().getLastAssignedId( getContext().getPlan() ) ) );
@@ -76,6 +80,11 @@ public class PlanConverter extends AbstractChannelsConverter {
         writer.startNode( "description" );
         writer.setValue( plan.getDescription() );
         writer.endNode();
+        for (String producer : plan.getProducers() ) {
+            writer.startNode( "producer" );
+            writer.setValue( producer );
+            writer.endNode();
+        }
         exportDetectionWaivers( plan, writer );
         exportAttachments( plan, writer );
         context.put( "exporting-plan", "true" );
@@ -125,6 +134,13 @@ public class PlanConverter extends AbstractChannelsConverter {
                 LOG.info( "Plan last saved with last id " + reader.getValue() );
             } else if ( nodeName.equals( "name" ) ) {
                 plan.setName( reader.getValue() );
+            } else if ( nodeName.equals( "whenVersioned" ) ) {
+                try {
+                    Date whenVersion = new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).parse( reader.getValue() );
+                    plan.setWhenVersioned( whenVersion );
+                } catch ( ParseException e ) {
+                    throw new RuntimeException( e );
+                }
             } else if ( nodeName.equals( "client" ) ) {
                 plan.setClient( reader.getValue() );
             } else if ( nodeName.equals( "description" ) ) {
@@ -145,7 +161,10 @@ public class PlanConverter extends AbstractChannelsConverter {
                 Event event = findOrCreate( Event.class, reader.getValue(), eventId );
                 plan.addIncident( event );
                 // Scenarios
-            } else if ( nodeName.equals( "scenario" ) ) {
+            } else if ( nodeName.equals( "producer" ) ) {
+                plan.addProducer( reader.getValue() );
+                // Scenarios
+            }  else if ( nodeName.equals( "scenario" ) ) {
                 context.convertAnother( plan, Scenario.class );
             } else if ( nodeName.equals( "detection-waivers" ) ) {
                 importDetectionWaivers( plan, reader );

@@ -2,7 +2,9 @@ package com.mindalliance.channels.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +20,13 @@ import java.util.Set;
  */
 @Entity
 public class Plan extends ModelObject {
+
+    public enum Status implements Serializable {
+
+        DEVELOPMENT,
+        PRODUCTION,
+        RETIRED
+    }
 
     /**
      * The scenarios, for convenience...
@@ -39,18 +48,82 @@ public class Plan extends ModelObject {
      * Always set when application loads.
      */
     private String uri = "default";
+    /**
+     * Whether dev, prod or retired.
+     */
+    @Transient
+    private Status status;
+    /**
+     * Version number.
+     * Implied from folder where persisted
+     */
+    @Transient
+    private int version;
+    /**
+     * User names of planners who voted to put this plan into production.
+     */
+    private List<String> producers = new ArrayList<String>();
+    /**
+     * Date when version was in retirement, production or development.
+     */
+    private Date whenVersioned;
 
     //-----------------------------
     public Plan() {
+        whenVersioned = new Date();
     }
 
-    // TODO fix persistence, eventually
+    public int getVersion() {
+        return version;
+    }
+
+    @Transient
+    public void setVersion( int version ) {
+        this.version = version;
+    }
+
+    @Transient
+    public boolean isDevelopment() {
+        return status == Status.DEVELOPMENT;
+    }
+
+    public void setDevelopment() {
+        status = Status.DEVELOPMENT;
+    }
+
+    @Transient
+    public boolean isProduction() {
+        return status == Status.PRODUCTION;
+    }
+
+    public void setProduction() {
+        status = Status.PRODUCTION;
+    }
+
+    @Transient
+    public boolean isRetired() {
+        return status == Status.RETIRED;
+    }
+
+    public void setRetired() {
+        status = Status.RETIRED;
+    }
+
+    /**
+     * Name with version.
+     *
+     * @return a string
+     */
+    @Transient
+    public String getVersionedName() {
+        return getName() + " v." + getVersion() + "(" + getStatusString() + ")";
+    }
+
     @Transient
     public Set<Scenario> getScenarios() {
         return scenarios;
     }
 
-    // TODO fix persistence, eventually
     @Transient
     public List<Event> getIncidents() {
         return incidents;
@@ -74,6 +147,49 @@ public class Plan extends ModelObject {
 
     public void setUri( String uri ) {
         this.uri = uri;
+    }
+
+    @Transient
+    public String getVersionUri() {
+        return uri + ":" + version;
+    }
+
+    public List<String> getProducers() {
+        return producers;
+    }
+
+    public void setProducers( List<String> producers ) {
+        this.producers = producers;
+    }
+
+    public void removeAllProducers() {
+        producers = new ArrayList<String>();
+    }
+
+    public Date getWhenVersioned() {
+        return whenVersioned;
+    }
+
+    public void setWhenVersioned( Date whenVersioned ) {
+        this.whenVersioned = whenVersioned;
+    }
+
+    /**
+     * Add planner as voting to put plan in production.
+     *
+     * @param username a string
+     */
+    public void addProducer( String username ) {
+        if ( !producers.contains( username ) ) producers.add( username );
+    }
+
+    /**
+     * Remove planner as voting to put plan in production.
+     *
+     * @param username a string
+     */
+    public void removeProducer( String username ) {
+        producers.remove( username );
     }
 
     /**
@@ -152,4 +268,42 @@ public class Plan extends ModelObject {
     public boolean isLockable() {
         return false;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        return getName()
+                + " v."
+                + getVersion()
+                + " ("
+                + getStatusString()
+                + ")";
+    }
+
+    private String getStatusString() {
+        return isDevelopment()
+                ? "dev" : isProduction()
+                ? "prod" : "ret";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals( Object obj ) {
+        return this == obj
+                || obj instanceof Plan
+                && getVersionUri().equals( ( (Plan) obj ).getVersionUri() );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return getVersionUri().hashCode();
+    }
+
+
 }

@@ -50,6 +50,14 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
      * Index aspect.
      */
     public static final String INDEX = "index";
+    /**
+     * Evaluation aspect.
+     */
+    public static final String EVAL = "evaluation";
+    /**
+     * Versions aspect.
+     */
+    public static final String VERSIONS = "versions";
 
     /**
      * Bibliography aspect.
@@ -146,6 +154,10 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
             return getPlanBibliographyPanel();
         } else if ( aspect.equals( INDEX ) ) {
             return getPlanIndexPanel();
+        } else if ( aspect.equals( EVAL ) ) {
+            return getPlanEvaluationPanel();
+        }  else if ( aspect.equals( VERSIONS ) ) {
+            return getPlanVersionsPanel();
         } else {
             // Should never happen
             throw new RuntimeException( "Unknown aspect " + aspect );
@@ -168,6 +180,10 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
         return new PlanIndexPanel( "aspect", getModel(), getExpansions() );
     }
 
+    private Component getPlanVersionsPanel() {
+        return new PlanVersionsPanel( "aspect", getModel(), getExpansions() );
+    }
+
     private Component getPlanIssuesPanel() {
         return new PlanIssuesPanel( "aspect" );
     }
@@ -178,6 +194,10 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
 
     private Component getPlanWhoswhoPanel() {
         return new PlanWhosWhoPanel( "aspect", getModel(), getExpansions() );
+    }
+
+    private Component getPlanEvaluationPanel() {
+        return new PlanEvaluationPanel( "aspect", getModel(), getExpansions() );
     }
 
     public Plan getPlan() {

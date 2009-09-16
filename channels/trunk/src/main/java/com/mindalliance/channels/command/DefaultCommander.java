@@ -212,7 +212,9 @@ public class DefaultCommander extends AbstractService implements Commander, Init
      * {@inheritDoc}
      */
     public boolean canDo( Command command ) {
-        return command.canDo( this ) && lockManager.canGrabLocksOn( command.getLockingSet() );
+        return getPlan().isDevelopment()
+                && command.canDo( this )
+                && lockManager.canGrabLocksOn( command.getLockingSet() );
     }
 
     private Change execute( Command command ) throws CommandException {
@@ -237,6 +239,7 @@ public class DefaultCommander extends AbstractService implements Commander, Init
      */
     public boolean canUndo() {
         synchronized ( this ) {
+            if ( !getPlan().isDevelopment() ) return false;
             boolean canUndo = false;
             Memento memento = history.getUndo();
             if ( memento != null ) {
@@ -244,7 +247,7 @@ public class DefaultCommander extends AbstractService implements Commander, Init
                 if ( command.isUndoable() ) {
                     try {
                         canUndo = command.noLockRequired()
-                                || canDo( command.getUndoCommand( this ) );
+                                        || canDo( command.getUndoCommand( this ) ) ;
                     } catch ( CommandException e ) {
                         e.printStackTrace();
                         canUndo = false;
@@ -260,6 +263,7 @@ public class DefaultCommander extends AbstractService implements Commander, Init
      */
     public boolean canRedo() {
         synchronized ( this ) {
+            if ( !getPlan().isDevelopment() ) return false;
             boolean canRedo = false;
             Memento memento = history.getRedo();
             if ( memento != null ) {
@@ -284,6 +288,8 @@ public class DefaultCommander extends AbstractService implements Commander, Init
      */
     public Change doCommand( Command command ) throws CommandException {
         synchronized ( this ) {
+            if ( !getPlan().isDevelopment() )
+                throw new CommandException( "This version is no longer in development. You need to refresh. ");            
             if ( command instanceof MultiCommand ) LOG.info( "*** START multicommand ***" );
             LOG.info( ( isReplaying() ? "Replaying: " : "Doing: " ) + command.toString() );
             Change change = execute( command );
@@ -544,6 +550,27 @@ public class DefaultCommander extends AbstractService implements Commander, Init
      */
     public Plan getPlan() {
         return queryService.getCurrentPlan();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setResyncRequired() {
+        queryService.getPlanManager().setResyncRequired( PlanManager.plan().getUri() );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void resynced() {
+        queryService.getPlanManager().resynced( User.current() );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isOutOfSync() {
+        return queryService.getPlanManager().isOutOfSync( User.current(), PlanManager.plan().getUri() );
     }
 
 }

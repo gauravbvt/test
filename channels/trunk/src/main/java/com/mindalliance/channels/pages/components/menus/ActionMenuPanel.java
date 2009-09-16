@@ -28,14 +28,14 @@ abstract public class ActionMenuPanel extends MenuPanel {
      */
     public List<Component> getMenuItems() {
         List<Component> menuItems = new ArrayList<Component>();
-        // Undo and redo
-        menuItems.add( this.getUndoMenuItem( "menuItem" ) );
-        menuItems.add( this.getRedoMenuItem( "menuItem" ) );
+            // Undo and redo
+            menuItems.add( this.getUndoMenuItem( "menuItem" ) );
+            menuItems.add( this.getRedoMenuItem( "menuItem" ) );
         // Commands
         menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
         return menuItems;
     }
-    
+
     /**
      * Get command wrappers from which menu items will be constructed.
      *

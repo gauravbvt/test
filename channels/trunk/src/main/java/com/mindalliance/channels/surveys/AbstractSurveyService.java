@@ -161,7 +161,9 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
 
     public void afterPropertiesSet() throws Exception {
         for ( Plan plan : planManager.getPlans() )
-            loadSurveys( plan );
+            if ( plan.isDevelopment() ) {
+                loadSurveys( plan );
+            }
     }
 
     private void copyTemplatesIfNeeded() {
@@ -263,7 +265,7 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
     }
 
     private File getDataDirectory( Plan plan ) throws IOException, NotFoundException {
-        return planManager.getDao( plan ).getDataDirectory();
+        return planManager.getDao( plan ).getPlanStoreDirectory();
     }
 
     /**

@@ -61,8 +61,8 @@ public class IssueActionsMenuPanel extends MenuPanel {
     public List<Component> getMenuItems() {
         List<Component> menuItems = new ArrayList<Component>();
         // Undo and redo
-        menuItems.add( this.getUndoMenuItem( "menuItem" ) );
-        menuItems.add( this.getRedoMenuItem( "menuItem" ) );
+            menuItems.add( this.getUndoMenuItem( "menuItem" ) );
+            menuItems.add( this.getRedoMenuItem( "menuItem" ) );
         // Show/hide details
         if ( isCollapsed ) {
             AjaxFallbackLink showLink = new AjaxFallbackLink( "link" ) {
@@ -86,41 +86,39 @@ public class IssueActionsMenuPanel extends MenuPanel {
                     hideLink ) );
         }
         // Create/view survey
-        Component menuItem;
-        String itemLabel = surveyService.isSurveyed( getIssue() )
-                ? "View survey"
-                : "Create survey";
-        if ( !getIssue().getDescription().isEmpty()
-                && !getIssue().getRemediation().isEmpty() ) {
-            AjaxFallbackLink surveyLink = new AjaxFallbackLink( "link" ) {
-                public void onClick( AjaxRequestTarget target ) {
-                    try {
-                        Survey survey = surveyService.getOrCreateSurvey( getIssue() );
-                        update( target, new Change( Change.Type.Expanded, survey ) );
-                    } catch ( SurveyException e ) {
-                        e.printStackTrace();
-                        target.addComponent( IssueActionsMenuPanel.this );
-                        target.prependJavascript( "alert('Oops -- " + e.getMessage() + "');" );
+        if ( getPlan().isDevelopment() ) {
+            Component menuItem;
+            String itemLabel = surveyService.isSurveyed( getIssue() )
+                    ? "View survey"
+                    : "Create survey";
+            if ( !getIssue().getDescription().isEmpty()
+                    && !getIssue().getRemediation().isEmpty() ) {
+                AjaxFallbackLink surveyLink = new AjaxFallbackLink( "link" ) {
+                    public void onClick( AjaxRequestTarget target ) {
+                        try {
+                            Survey survey = surveyService.getOrCreateSurvey( getIssue() );
+                            update( target, new Change( Change.Type.Expanded, survey ) );
+                        } catch ( SurveyException e ) {
+                            e.printStackTrace();
+                            target.addComponent( IssueActionsMenuPanel.this );
+                            target.prependJavascript( "alert('Oops -- " + e.getMessage() + "');" );
+                        }
                     }
-                }
-            };
-            menuItem = new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( itemLabel ),
-                    surveyLink );
-        } else {
-            Label createSurveyLabel = new Label( "menuItem", itemLabel );
-            createSurveyLabel.add( new AttributeModifier(
-                    "class",
-                    true,
-                    new Model<String>( "disabled" ) ) );
-            menuItem = createSurveyLabel;
+                };
+                menuItem = new LinkMenuItem(
+                        "menuItem",
+                        new Model<String>( itemLabel ),
+                        surveyLink );
+            } else {
+                Label createSurveyLabel = new Label( "menuItem", itemLabel );
+                createSurveyLabel.add( new AttributeModifier(
+                        "class",
+                        true,
+                        new Model<String>( "disabled" ) ) );
+                menuItem = createSurveyLabel;
+            }
+            menuItems.add( menuItem );
         }
-        menuItems.add( menuItem );
-        // Undo and redo
-        // Undo and redo
-        menuItems.add( this.getUndoMenuItem( "menuItem" ) );
-        menuItems.add( this.getRedoMenuItem( "menuItem" ) );
         // Commands
         String disablement =
                 isLockedByUser( getIssue() )

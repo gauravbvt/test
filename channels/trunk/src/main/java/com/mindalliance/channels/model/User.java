@@ -251,7 +251,7 @@ public class User implements UserDetails {
      * @return a list of plans
      */
     @SuppressWarnings( "unchecked" )
-    public List<Plan> getWritablePlans( PlanManager planManager ) {
+    public List<Plan> getPlannablePlans( PlanManager planManager ) {
         return (List<Plan>) CollectionUtils.select(
                 planManager.getPlans(),
                 new Predicate() {
@@ -291,6 +291,27 @@ public class User implements UserDetails {
     }
 
     /**
+     * User can modify given plan.
+     *
+     * @param plan a plan
+     * @return a boolean
+     */
+    public boolean isPlanner( Plan plan ) {
+        return canPlan( plan );
+    }
+
+    /**
+     * User can modify plan with given uri.
+     *
+     * @param uri a stirng
+     * @return a boolean
+     */
+    public boolean isPlanner( String uri ) {
+        return canPlan( uri );
+    }
+
+
+    /**
      * User can at least view the current plan.
      *
      * @return a boolean
@@ -307,17 +328,21 @@ public class User implements UserDetails {
      * @return a boolean
      */
     public boolean isParticipant( Plan plan ) {
-        return canRead( plan );
+        return plan != null && canRead( plan );
     }
 
     private boolean canPlan( Plan plan ) {
+        return plan != null && canPlan( plan.getUri() );
+    }
+
+    private boolean canPlan( String uri ) {
         if ( isAdmin() ) return true;
-        Boolean canPlan = plans.get( plan.getUri() );
+        Boolean canPlan = plans.get( uri );
         return canPlan == null ? false : canPlan;
     }
 
     private boolean canRead( Plan plan ) {
-        return isAdmin() || plans.get( plan.getUri() ) != null;
+        return plan != null && ( isAdmin() || plans.get( plan.getUri() ) != null );
     }
 
     public boolean isAdmin() {
@@ -437,6 +462,5 @@ public class User implements UserDetails {
         }
         return normalized + " (" + username + ")";
     }
-
 
 }

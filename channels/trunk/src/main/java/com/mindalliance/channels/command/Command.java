@@ -173,13 +173,22 @@ public interface Command extends Serializable {
 
     /**
      * Not a sub-command,
-     * @return  a boolean
+     *
+     * @return a boolean
      */
     boolean isTop();
 
     /**
      * Whether a command is top command.
+     *
      * @param val a boolean
      */
-    void setTop( boolean val);
+    void setTop( boolean val );
+
+    /**
+     * Whether the execution of the command forces an immediate snapshot.
+     *
+     * @return a boolean
+     */
+    boolean forcesSnapshot();
 }

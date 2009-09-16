@@ -316,4 +316,19 @@ public interface Commander extends Service {
      */
     Plan getPlan();
 
- }
+    /**
+     * All users are out of sync with plan versions.
+     */
+    void setResyncRequired();
+
+    /**
+     * Whether the current user us out of sync with plan versions.
+     * @return a boolean
+     */
+    boolean isOutOfSync();
+
+    /**
+     *  Signal that the current user is in sync with the plan versions.
+     */
+    void resynced();
+}

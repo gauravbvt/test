@@ -34,7 +34,7 @@ public class IssueScanner implements Scanner {
     /**
      * Daemon threads that each scan a plan for issues.
      */
-    private Map<Plan, Daemon> daemons = new HashMap<Plan, Daemon>();
+    private Map<String, Daemon> daemons;
     /**
      * Analyst.
      */
@@ -52,9 +52,12 @@ public class IssueScanner implements Scanner {
      */
     private static final int PRIORITY_REDUCTION = 2;
 
-    private void initialize(  ) {
+    private void initialize() {
+        daemons = new HashMap<String, Daemon>();
         for ( Plan plan : planManager.getPlans() ) {
-            daemons.put( plan, new Daemon( plan ) );
+            if ( plan.isDevelopment() ) {
+                daemons.put( plan.getVersionUri(), new Daemon( plan ) );
+            }
         }
     }
 
@@ -85,7 +88,7 @@ public class IssueScanner implements Scanner {
     /**
      * {@inheritDoc}
      */
-     public void terminate() {
+    public void terminate() {
         LOG.debug( "Terminating issue scans" );
         for ( Daemon daemon : daemons.values() ) {
             daemon.terminate();
@@ -95,11 +98,13 @@ public class IssueScanner implements Scanner {
     /**
      * {@inheritDoc}
      */
-      public void rescan( Plan plan ) {
+    public void rescan( Plan plan ) {
+        assert plan.isDevelopment();
         LOG.debug( "Rescanning issue in " + plan.getName() );
-        daemons.get( plan ).terminate();
-        Daemon daemon = new Daemon( plan );
-        daemons.put( plan, daemon );
+        Daemon daemon = daemons.get( plan.getVersionUri() );
+        if ( daemon != null ) daemon.terminate();
+        daemon = new Daemon( plan );
+        daemons.put( plan.getVersionUri(), daemon );
         daemon.activate();
     }
 
@@ -139,7 +144,7 @@ public class IssueScanner implements Scanner {
          * Activate scan.
          */
         public synchronized void activate() {
-            LOG.debug( "Activating issue sweep on plan " + getPlan().getId() );
+            LOG.info( "Activating issue sweep on plan " + getPlan() );
             active = true;
             super.start();
         }
@@ -148,7 +153,7 @@ public class IssueScanner implements Scanner {
          * Abort scan.
          */
         public synchronized void terminate() {
-            LOG.debug( "Terminating issue sweep on plan " + getPlan().getId() );
+            LOG.info( "Terminating issue sweep on plan " + getPlan() );
             active = false;
         }
 

@@ -30,7 +30,7 @@ public class PlanDao extends Memory {
     /**
      * Name of persisted data file.
      */
-    private static final String DATA_FILE = "data.xml";
+    public static final String DATA_FILE = "data.xml";
 
     /**
      * Name of command journal file.
@@ -121,7 +121,7 @@ public class PlanDao extends Memory {
      */
     public boolean isPersisted() {
         try {
-            return new File( getDataDirectory(), DATA_FILE ).exists();
+            return new File( getPlanStoreDirectory(), DATA_FILE ).exists();
         } catch ( IOException e ) {
             logger.warn( "IO failure", e );
             return false;
@@ -135,7 +135,7 @@ public class PlanDao extends Memory {
      * @throws IOException on errors
      */
     private File getDataFile() throws IOException {
-        File dataFile = new File( getDataDirectory(), DATA_FILE );
+        File dataFile = new File( getPlanStoreDirectory(), DATA_FILE );
         if ( !dataFile.exists() )
             dataFile.createNewFile();
         return dataFile;
@@ -147,14 +147,13 @@ public class PlanDao extends Memory {
      * @return a directory
      * @throws IOException on error
      */
-    public File getDataDirectory() throws IOException {
+    public File getPlanStoreDirectory() throws IOException {
         File baseDirectory = planManager.getDataDirectory().getFile();
-        if ( !baseDirectory.exists() )
-            baseDirectory.mkdir();
-
-        File directory = new File( baseDirectory, sanitize( plan.getUri() ) );
+        File directory = new File(
+                baseDirectory,
+                sanitize( plan.getUri() ) + File.separator + plan.getVersion() );
         if ( !directory.exists() )
-            directory.mkdir();
+            directory.mkdirs();
 
         return directory;
     }
@@ -170,7 +169,7 @@ public class PlanDao extends Memory {
      * @throws IOException on errors
      */
     private File getJournalFile() throws IOException {
-        File data = getDataDirectory();
+        File data = getPlanStoreDirectory();
         File journalFile = new File( data.getPath(), JOURNAL_FILE );
         if ( !journalFile.exists() )
             journalFile.createNewFile();
@@ -179,7 +178,7 @@ public class PlanDao extends Memory {
 
     private Journal loadJournal( Importer importer ) throws IOException {
         FileInputStream inputStream = null;
-        if ( importer != null )
+        if ( getPlan().isDevelopment() && importer != null )
             try {
                 File journalFile = getJournalFile();
                 if ( journalFile.length() > 0L ) {
@@ -286,7 +285,7 @@ public class PlanDao extends Memory {
      */
     public synchronized void onAfterCommand( Command command, Exporter exporter ) {
         try {
-            if ( journal.size() >= planManager.getSnapshotThreshold() )
+            if ( command.forcesSnapshot() || journal.size() >= planManager.getSnapshotThreshold() )
                 save( exporter );
             else {
                 journal.addCommand( command );
@@ -311,7 +310,7 @@ public class PlanDao extends Memory {
     }
 
     private File getLastIdFile() throws IOException {
-        File data = getDataDirectory();
+        File data = getPlanStoreDirectory();
         File lastIdFile = new File( data.getPath(), LAST_ID_FILE );
         if ( !lastIdFile.exists() )
             lastIdFile.createNewFile();

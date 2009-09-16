@@ -139,7 +139,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
                         }
                     }
                 } );
-
+        severityChoices.setEnabled( getPlan().isDevelopment() );
         item.add( severityChoices );
     }
 
@@ -171,6 +171,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
 
                     }
                 } );
+        typeChoices.setEnabled( getPlan().isDevelopment() );
         item.add( typeChoices );
     }
 
@@ -197,6 +198,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
                 }
             }
         } );
+        orgNameField.setEnabled( getPlan().isDevelopment() );
         item.add( orgNameField );
     }
 
@@ -215,7 +217,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
                         ) );
             }
         };
-        makeVisible( deleteLink, wrapper.isComplete() );
+        makeVisible( deleteLink, getPlan().isDevelopment() && wrapper.isComplete() );
         item.addOrReplace( deleteLink );
     }
 
@@ -251,6 +253,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
             }
         } );
         descriptionField.setOutputMarkupId( true );
+        descriptionField.setEnabled( getPlan().isDevelopment() );
         moreContainer.add( descriptionField );
     }
 

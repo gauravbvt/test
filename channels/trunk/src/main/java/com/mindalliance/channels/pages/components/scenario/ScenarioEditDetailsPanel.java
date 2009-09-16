@@ -39,7 +39,7 @@ public class ScenarioEditDetailsPanel extends AbstractCommandablePanel {
      */
     @SpringBean
     private PlanManager planManager;
-    
+
     /**
      * An issues panel for scenario issues.
      */
@@ -50,8 +50,8 @@ public class ScenarioEditDetailsPanel extends AbstractCommandablePanel {
     private ModelObjectLink eventLink;
 
     public ScenarioEditDetailsPanel( String id,
-                              IModel<? extends Identifiable> model,
-                              Set<Long> expansions ) {
+                                     IModel<? extends Identifiable> model,
+                                     Set<Long> expansions ) {
         super( id, model, expansions );
         init();
     }
@@ -70,7 +70,7 @@ public class ScenarioEditDetailsPanel extends AbstractCommandablePanel {
         addEventLink();
         addEventField();
         addIssuesPanel();
-        add( new AttachmentPanel( "attachments", new PropertyModel<Scenario>(this, "scenario") ) );
+        add( new AttachmentPanel( "attachments", new PropertyModel<Scenario>( this, "scenario" ) ) );
     }
 
     private void addIdentityFields() {
@@ -83,6 +83,7 @@ public class ScenarioEditDetailsPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getScenario(), "name" ) );
             }
         } );
+        nameField.setEnabled( getPlan().isDevelopment() );
         add( nameField );
 
         TextArea<String> descField = new TextArea<String>(
@@ -94,23 +95,24 @@ public class ScenarioEditDetailsPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getScenario(), "description" ) );
             }
         } );
+        descField.setEnabled( getPlan().isDevelopment() );
         add( descField );
     }
 
-        private void addEventField() {
+    private void addEventField() {
         final List<String> choices = getQueryService().findAllNames( Event.class );
-            TextField<String> eventField = new AutoCompleteTextField<String>(
-                    "event",
-                    new PropertyModel<String>( this, "eventName" ) ) {
-                protected Iterator<String> getChoices( String s ) {
-                    List<String> candidates = new ArrayList<String>();
-                    for ( String choice : choices ) {
-                        if ( Matcher.matches( s, choice ) ) candidates.add( choice );
-                    }
-                    return candidates.iterator();
-
+        TextField<String> eventField = new AutoCompleteTextField<String>(
+                "event",
+                new PropertyModel<String>( this, "eventName" ) ) {
+            protected Iterator<String> getChoices( String s ) {
+                List<String> candidates = new ArrayList<String>();
+                for ( String choice : choices ) {
+                    if ( Matcher.matches( s, choice ) ) candidates.add( choice );
                 }
-            };
+                return candidates.iterator();
+
+            }
+        };
         eventField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addEventLink();
@@ -118,13 +120,14 @@ public class ScenarioEditDetailsPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getScenario(), "event" ) );
             }
         } );
+        eventField.setEnabled( getPlan().isDevelopment() );
         add( eventField );
     }
 
     private void addEventLink() {
         eventLink = new ModelObjectLink( "event-link",
-                        new PropertyModel<Event>( getScenario(), "event" ),
-                        new Model<String>( "event" ) );
+                new PropertyModel<Event>( getScenario(), "event" ),
+                new Model<String>( "event" ) );
         eventLink.setOutputMarkupId( true );
         addOrReplace( eventLink );
     }
@@ -142,10 +145,11 @@ public class ScenarioEditDetailsPanel extends AbstractCommandablePanel {
 
     /**
      * Get edited scenario.
+     *
      * @return a scenario
      */
     public Scenario getScenario() {
-        return (Scenario)getModel().getObject();
+        return (Scenario) getModel().getObject();
     }
 
     /**

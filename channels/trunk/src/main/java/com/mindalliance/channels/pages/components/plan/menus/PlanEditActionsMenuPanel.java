@@ -4,7 +4,6 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.PasteAttachment;
 import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.components.menus.ActionMenuPanel;
 import com.mindalliance.channels.pages.components.menus.CommandWrapper;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -33,10 +32,10 @@ public class PlanEditActionsMenuPanel extends ActionMenuPanel {
     protected List<CommandWrapper> getCommandWrappers() {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
         commandWrappers.add( new CommandWrapper( new PasteAttachment( getPlan() ) ) {
-             public void onExecuted( AjaxRequestTarget target, Change change ) {
-                 update( target, change );
-             }
-         } );
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                update( target, change );
+            }
+        } );
         commandWrappers.add( new CommandWrapper( new AddUserIssue( getPlan() ) ) {
             public void onExecuted(
                     AjaxRequestTarget target,
@@ -45,10 +44,6 @@ public class PlanEditActionsMenuPanel extends ActionMenuPanel {
             }
         } );
         return commandWrappers;
-    }
-
-    private Plan getPlan() {
-        return (Plan) getModel().getObject();
     }
 
 }

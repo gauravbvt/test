@@ -83,6 +83,8 @@
         <property name="importDirectory" value="file:${user.home}/channels/import"/>
         <property name="planDefinitionsFileName" value="channels/plans.properties"/>
         <property name="defaultPlanDefinitions" value="/WEB-INF/plans.properties"/>
+        <property name="surveysFileName" value="surveys"/>
+        <property name="uploadsDirName" value="uploads"/>
 <!--
         <property name="plans">
             <list value-type="java.util.ArrayList">

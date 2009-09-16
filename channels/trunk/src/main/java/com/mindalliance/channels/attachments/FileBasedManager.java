@@ -388,7 +388,7 @@ public class FileBasedManager implements AttachmentManager {
      * @return a directory
      */
     public File getUploadDirectory() {
-        File uploadsDir = new File( planManager.getPlanDirectory() + File.separator + path );
+        File uploadsDir = new File( planManager.getPlanVersionDirectory() + File.separator + path );
         if ( !uploadsDir.exists() ) {
             uploadsDir.mkdir();
             log.info( "Created upload directory: {}", uploadsDir.getAbsolutePath() );

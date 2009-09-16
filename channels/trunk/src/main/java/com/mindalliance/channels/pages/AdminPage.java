@@ -33,7 +33,6 @@ public class AdminPage extends WebPage {
      * can be called/ created from anywhere.
      */
     public AdminPage() {
-
         add( new Label( "user", user.getUsername() ) );
         addPlanSwitcher();
         add( new BookmarkablePageLink<PlanPage>( "plan", PlanPage.class ) );

@@ -105,6 +105,26 @@ public class PlanEditShowMenuPanel extends MenuPanel {
                 "menuItem",
                 new Model<String>( "Index" ),
                 indexLink ) );
+        // Evaluation
+        Link evalLink = new AjaxFallbackLink( "link" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                changeAspectTo( target, PlanEditPanel.EVAL );
+            }
+        };
+        menuItems.add( new LinkMenuItem(
+                "menuItem",
+                new Model<String>( "Evaluation" ),
+                evalLink ) );
+        // Versions
+        Link versionsLink = new AjaxFallbackLink( "link" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                changeAspectTo( target, PlanEditPanel.VERSIONS );
+            }
+        };
+        menuItems.add( new LinkMenuItem(
+                "menuItem",
+                new Model<String>( "Versions" ),
+                versionsLink ) );
 
         return menuItems;
     }

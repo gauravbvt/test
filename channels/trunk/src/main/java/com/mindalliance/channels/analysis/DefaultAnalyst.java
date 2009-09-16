@@ -87,6 +87,14 @@ public class DefaultAnalyst extends AbstractService implements Analyst, Lifecycl
     }
 
     /**
+      * {@inheritDoc}
+      */
+     public void onStop() {
+         stop();
+     }
+
+
+    /**
      * {@inheritDoc}
      */
     public void onDestroy() {

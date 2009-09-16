@@ -36,7 +36,7 @@ public class NoScenarioRepondsToIncident extends AbstractIssueDetector {
             Iterator<Scenario> scenarios = getQueryService().list( Scenario.class ).iterator();
             while ( !responded && scenarios.hasNext() ) {
                 Scenario scenario = scenarios.next();
-                if ( scenario.getEvent() == incident ) responded = true;
+                if ( scenario.getEvent().equals(incident) ) responded = true;
             }
             if ( !responded ) {
                 DetectedIssue issue = makeIssue( Issue.COMPLETENESS, plan );

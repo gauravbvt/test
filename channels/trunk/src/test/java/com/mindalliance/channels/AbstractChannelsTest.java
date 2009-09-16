@@ -100,7 +100,7 @@ public class AbstractChannelsTest extends TestCase {
         planManager.setSnapshotThreshold( 10 );
 
         FileBasedManager attachmentManager = new FileBasedManager();
-        attachmentManager.setDirectory( new FileSystemResource( "work/uploads" ) );
+//        attachmentManager.setDirectory( new FileSystemResource( "work/uploads" ) );
         attachmentManager.setPath( "uploads" );
 
         DefaultQueryService queryService = new DefaultQueryService( planManager, attachmentManager );

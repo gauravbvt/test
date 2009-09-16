@@ -157,7 +157,7 @@ public class DefaultImagingService implements ImagingService {
             ImageIO.write( resized, "png", iconFile );
             createNumberedIcons( resized, width, modelObject );
         } catch ( Exception e ) {
-            LOG.warn( "Failed to iconize uploaded image " + url );
+            LOG.warn( "Failed to iconize uploaded image at " + url + " (" + e.getMessage() + ")");
             e.printStackTrace();
             return false;
         }

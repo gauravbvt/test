@@ -52,7 +52,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      * @return a boolean
      */
     protected boolean isLockedByUser( Identifiable identifiable ) {
-        return getLockManager().isLockedByUser( identifiable );
+        return getPlan().isDevelopment() && getLockManager().isLockedByUser( identifiable );
     }
 
     /**
@@ -61,9 +61,10 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      * @return  a boolean
      */
     protected boolean isLockedByUserIfNeeded( Identifiable identifiable ) {
-        return identifiable instanceof Scenario
+        return getPlan().isDevelopment() &&
+                ( identifiable instanceof Scenario
                 || identifiable instanceof Plan
-                || isLockedByUser( identifiable );
+                || isLockedByUser( identifiable ) );
     }
 
 

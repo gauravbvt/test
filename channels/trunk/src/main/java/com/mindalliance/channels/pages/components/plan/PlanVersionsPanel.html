@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <h3>This is version <span wicket:id="currentVersion">1</span></h3>
+    <div wicket:id="prod"><b>Version
+        <span wicket:id="prodVersion">1</span></b>
+        is in production since <span wicket:id="prodDate">today</span>
+    </div>
+    <div><b>Version
+        <span wicket:id="devVersion">2</span></b>
+        is in development since <span wicket:id="devDate">today</span>
+    </div>
+    <br/>
+    <span wicket:id="prodVotes">
+        <h3>Votes to move this version to production</h3>
+        <table>
+            <tr wicket:id="votes">
+                <td align="right">
+                     <input wicket:id="plannerVote" type="checkbox"/>
+                 </td>
+                <td align="left" nowrap="nowrap">
+                    <span wicket:id="plannerName">Jean-Francois Cloutier (jf)</span>
+                </td>
+                <td align="left" width="95%">
+                    <a wicket:id="plannerEmailLink" href="mailto:jf@mind-alliance.com">
+                        <img border="0" src="images/mail.png" alt="email" title="send email"/>
+                    </a>
+                </td>
+             </tr>
+        </table>
+    </span>
+</wicket:panel>
+</body>
+</html>
