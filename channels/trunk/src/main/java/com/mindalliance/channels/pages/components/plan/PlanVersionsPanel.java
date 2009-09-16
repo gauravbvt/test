@@ -128,7 +128,7 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
                     }
                 } );
                 item.add( voteCheckBox );
-                // voteCheckBox.setEnabled( isCurrentUser );
+                voteCheckBox.setEnabled( isCurrentUser );
             }
         };
         prodVotesContainer.add( voteList );
