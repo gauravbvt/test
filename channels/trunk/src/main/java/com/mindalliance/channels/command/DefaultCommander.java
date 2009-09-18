@@ -247,7 +247,7 @@ public class DefaultCommander extends AbstractService implements Commander, Init
                 if ( command.isUndoable() ) {
                     try {
                         canUndo = command.noLockRequired()
-                                        || canDo( command.getUndoCommand( this ) ) ;
+                                || canDo( command.getUndoCommand( this ) );
                     } catch ( CommandException e ) {
                         e.printStackTrace();
                         canUndo = false;
@@ -289,7 +289,7 @@ public class DefaultCommander extends AbstractService implements Commander, Init
     public Change doCommand( Command command ) throws CommandException {
         synchronized ( this ) {
             if ( !getPlan().isDevelopment() )
-                throw new CommandException( "This version is no longer in development. You need to refresh. ");            
+                throw new CommandException( "This version is no longer in development. You need to refresh. " );
             if ( command instanceof MultiCommand ) LOG.info( "*** START multicommand ***" );
             LOG.info( ( isReplaying() ? "Replaying: " : "Doing: " ) + command.toString() );
             Change change = execute( command );
@@ -456,6 +456,9 @@ public class DefaultCommander extends AbstractService implements Commander, Init
      * {@inheritDoc}
      */
     public void keepAlive( String userName, int refreshDelay ) {
+        if ( !userLives.containsKey( userName ) ) {
+            LOG.info( userName + " is planning" );
+        }
         userLives.put(
                 userName,
                 System.currentTimeMillis() + ( refreshDelay * 2 * 1000 ) );
@@ -471,7 +474,7 @@ public class DefaultCommander extends AbstractService implements Commander, Init
             long timeOfDeath = userLives.get( userName );
             if ( now > timeOfDeath ) {
                 deads.add( userName );
-                LOG.info( userName + " is no longer live" );
+                LOG.info( userName + " is done planning" );
                 lockManager.releaseAllLocks( userName );
             }
         }

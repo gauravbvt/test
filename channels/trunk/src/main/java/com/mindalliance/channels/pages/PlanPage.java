@@ -503,7 +503,9 @@ public final class PlanPage extends WebPage implements Updatable {
         dialogWindow.setResizable( false );
         dialogWindow.setContent( new DialogPanel(
                 dialogWindow.getContentId(),
-                new Model<String>( "This page is out of sync.\nIt will be refreshed when you close this." ) ) );
+                new Model<String>(
+                        "There is a new version of the plan. "
+                                + "Closing this alert will switch you to it." ) ) );
         dialogWindow.setTitle( "Alert" );
         dialogWindow.setCookieName( "refresh-alert" );
         dialogWindow.setCloseButtonCallback( new ModalWindow.CloseButtonCallback() {
