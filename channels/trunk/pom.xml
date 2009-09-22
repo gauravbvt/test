@@ -366,7 +366,7 @@
         <dependency>
             <groupId>org.wicketstuff</groupId>
             <artifactId>wicket-contrib-gmap2</artifactId>
-            <version>${wicket.version}</version>
+            <version>1.4-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-logging</groupId>
@@ -623,7 +623,7 @@
     </reporting>
 
     <properties>
-        <wicket.version>1.4-SNAPSHOT</wicket.version>
+        <wicket.version>1.4.1</wicket.version>
         <jetty.version>6.1.4</jetty.version>
         <doxiaVersion>1.0</doxiaVersion>
     </properties>
