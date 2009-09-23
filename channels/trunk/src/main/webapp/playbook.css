@@ -32,7 +32,11 @@ body > div {
 }
 
 #contents img {
-    margin: 2px 1px 2px 0;
+    margin: 2px 2em 18px 0;
+}
+
+div.person {
+    clear: both;
 }
 
 #nav {
@@ -91,6 +95,7 @@ table.channels {
 }
 table.channels th {
     white-space: nowrap;
+    min-width: 6em;
 }
 tr.odd {
     background: #f6f6f6;
@@ -116,6 +121,7 @@ td.out {
 
 p {
     margin-bottom: 1em;
+    clear: both;
 }
 
 p.description {
@@ -124,7 +130,7 @@ p.description {
 div.events:first-child, div.notifications:first-child {
     border: none;
 }
-div.events, div.notifications {
+div.events, div.notifications, h2 {
     border-top: 1px solid #c3d9ff;
 }
 

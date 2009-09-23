@@ -63,6 +63,10 @@ public enum Medium {
      */
     Courier( "Courier", ".+" ),
     /**
+     * Regular mail.
+     */
+    Mail( "Mail", ".+" ),
+    /**
      * In person, one on one.
      */
     F2F( "Face to face", ".*" ),

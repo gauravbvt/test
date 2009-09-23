@@ -75,6 +75,7 @@ class FlowListPanel extends Panel {
                     container = flowCell.hasActor() ?
                                 new BookmarkablePageLink<VCardPage>( "vcard", VCardPage.class )
                                     .setParameter( "0", flowCell.getActorId() )
+                                    .setParameter( "1", flowCell.getFlowId() )
                               : new BookmarkablePageLink<ContactPage>( "vcard", ContactPage.class )
                                     .setParameter( "0", flowCell.getFlowId() );
 

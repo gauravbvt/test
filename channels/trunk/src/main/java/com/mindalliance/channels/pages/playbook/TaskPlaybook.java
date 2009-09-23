@@ -73,7 +73,8 @@ public class TaskPlaybook extends PlaybookPage {
         add(
             new Label( "title", actor.getName() + " - " + taskName ),
             new Label( "header", taskName ),
-            new Label( "role", getRoleString( part, actor ) ), createDescription( part ),
+            new Label( "role", getRoleString( part, actor ) ),
+            createDescription( part ),
 
             new AttachmentListPanel( "attachments", part.getAttachments() ),
             createTaskList( actor, part, tasks ),
@@ -187,38 +188,36 @@ public class TaskPlaybook extends PlaybookPage {
 
         for ( Iterator<Flow> iterator = scenario.flows(); iterator.hasNext() ; ) {
             Flow flow = iterator.next();
-            addSources( result, part, flow );
             addTargets( result, part, flow );
+            addSources( result, part, flow );
         }
 
         return result;
     }
 
-    private static void addTargets( List<Flow> result, Part part, Flow flow ) {
+    private static void addSources( List<Flow> result, Part part, Flow flow ) {
         Node target = flow.getTarget();
-        if ( part.equals( target ) )
-            result.add( flow );
-        else if ( target instanceof Connector ) {
-            Iterator<ExternalFlow> exts = ( (Connector) target ).externalFlows();
-            while ( exts.hasNext() ) {
-                ExternalFlow externalFlow = exts.next();
-                if ( part.equals( externalFlow.getTarget() ) )
-                    result.add( externalFlow );
-            }
+        if ( part.equals( target ) ) {
+            Node source = flow.getSource();
+            if ( source instanceof Connector ) {
+                Iterator<ExternalFlow> exts = ( (Connector) source ).externalFlows();
+                while ( exts.hasNext() )
+                    result.add( exts.next() );
+            } else
+                result.add( flow );
         }
     }
 
-    private static void addSources( List<Flow> result, Part part, Flow flow ) {
+    private static void addTargets( List<Flow> result, Part part, Flow flow ) {
         Node source = flow.getSource();
-        if ( part.equals( source ) )
-            result.add( flow );
-        else if ( source instanceof Connector ) {
-            Iterator<ExternalFlow> exts = ( (Connector) source ).externalFlows();
-            while ( exts.hasNext() ) {
-                ExternalFlow externalFlow = exts.next();
-                if ( part.equals( externalFlow.getSource() ) )
-                    result.add( externalFlow );
-            }
+        if ( part.equals( source ) ) {
+            Node target = flow.getTarget();
+            if ( target instanceof Connector ) {
+                Iterator<ExternalFlow> exts = ( (Connector) target ).externalFlows();
+                while ( exts.hasNext() )
+                    result.add( exts.next() );
+            } else
+                result.add( flow );
         }
     }
 

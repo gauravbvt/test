@@ -417,17 +417,17 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
     public boolean hasEntity( ModelObject entity ) {
         assert entity.isEntity();
         if ( entity instanceof Actor ) {
-            return ( actor != null && actor.equals( entity ) )
-                    || ( actor == null && entity.equals( Actor.UNKNOWN ) );
+            return actor != null && actor.equals( entity )
+                || actor == null && entity.equals( Actor.UNKNOWN );
         } else if ( entity instanceof Role ) {
-            return ( role != null && role.equals( entity ) )
-                    || ( role == null && entity.equals( Role.UNKNOWN ) );
+            return role != null && role.equals( entity )
+                || role == null && entity.equals( Role.UNKNOWN );
         } else if ( entity instanceof Organization ) {
-            return ( organization != null && organization.equals( entity ) )
-                    || ( organization == null && entity.equals( Organization.UNKNOWN ) );
+            return organization != null && organization.equals( entity )
+                || organization == null && entity.equals( Organization.UNKNOWN );
         } else {
-            return ( jurisdiction != null && jurisdiction.equals( entity ) )
-                    || ( jurisdiction == null && entity.equals( Place.UNKNOWN ) );
+            return jurisdiction != null && jurisdiction.equals( entity )
+                || jurisdiction == null && entity.equals( Place.UNKNOWN );
         }
     }
 
@@ -437,5 +437,18 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
                 : role != null ? role.getDescription()
                 : organization == null ? ""
                 : organization.getDescription();
+    }
+
+    /**
+     * Find the first job that fits this resource spec.
+     * @return a job or null
+     */
+    public Job getJob() {
+        if ( organization != null )
+            for ( Job job : organization.getJobs() )
+                if ( narrowsOrEquals( job.resourceSpec( organization ) ) )
+                    return job;
+
+        return null;
     }
 }

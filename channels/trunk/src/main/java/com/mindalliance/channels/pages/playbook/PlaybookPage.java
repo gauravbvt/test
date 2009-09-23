@@ -33,10 +33,10 @@ import java.util.Iterator;
 public abstract class PlaybookPage extends WebPage {
 
     /** The name of the agent id parameter. */
-    static final String ACTOR_PARM = "0";
+    public static final String ACTOR_PARM = "0";
 
     /** The name of the part id parameter. */
-    static final String PART_PARM = "1";
+    public static final String PART_PARM = "1";
 
     /** The current plan. */
     @SpringBean

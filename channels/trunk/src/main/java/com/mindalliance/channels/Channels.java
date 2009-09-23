@@ -12,6 +12,7 @@ import com.mindalliance.channels.pages.LoginPage;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.UploadPage;
 import com.mindalliance.channels.pages.playbook.ContactPage;
+import com.mindalliance.channels.pages.playbook.PlaybookPage;
 import com.mindalliance.channels.pages.playbook.TaskPlaybook;
 import com.mindalliance.channels.pages.playbook.VCardPage;
 import com.mindalliance.channels.pages.png.EntityNetworkPage;
@@ -109,9 +110,9 @@ public final class Channels extends WebApplication implements ApplicationListene
 
         getMarkupSettings().setStripWicketTags( true );
 
-        String[] parameterNames = { "0", "1" };
+        String[] parameterNames = { PlaybookPage.ACTOR_PARM, PlaybookPage.PART_PARM };
         mount( new MixedParamUrlCodingStrategy( "report", PlanReportPage.class, parameterNames ) );
-        
+
         mount( new IndexedParamUrlCodingStrategy( "playbooks", TaskPlaybook.class ) );
         mount( new IndexedParamUrlCodingStrategy( "vcards", VCardPage.class ) );
         mount( new IndexedParamUrlCodingStrategy( "contacts", ContactPage.class ) );

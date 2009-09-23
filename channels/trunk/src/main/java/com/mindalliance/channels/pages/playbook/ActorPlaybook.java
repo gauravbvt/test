@@ -4,6 +4,7 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Scenario;
@@ -32,6 +33,8 @@ import java.util.Set;
  * An actor's playbook.
  */
 public class ActorPlaybook extends PlaybookPage {
+
+    public static final String DEFAULT_PIC = "../images/actor.png";
 
     //----------------------------------------------
     public ActorPlaybook( PageParameters parameters ) {
@@ -70,32 +73,43 @@ public class ActorPlaybook extends PlaybookPage {
                     item.add(
                         new Label( "spec", flowSet.getSourceString() ).setRenderBodyOnly( true ),
                         newFlowList( actor, flowSet.getSynonymSets() ),
-                        createPicture( flowSet.getActor() ) );
+                        createPicture( "pic", flowSet.getActor(), "../", DEFAULT_PIC ) );
                 }
             } );
     }
 
     /**
      * Create a "pic" image component.
-     * @param actor the actor
+     * @param id the wicket id
+     * @param object the model object associated with an icon
+     * @param prefix url fixup to relative links to upload directory.
+     * @param defaultPicture the picture to show if none is attached to the object. Hide picture if
+     * null
      * @return a wicket component
      */
-    static Component createPicture( Actor actor ) {
-        String name = actor == null ? "" : actor.getName();
-        String url = "../images/actor.png";
-        if ( actor != null ) {
-            String s = actor.getImageUrl();
+    static Component createPicture(
+            String id, ModelObject object, String prefix, String defaultPicture ) {
+
+        String name = object == null ? "" : object.getName();
+        String url;
+        if ( object == null )
+            url = defaultPicture;
+        else {
+            String s = object.getImageUrl();
             if ( s != null )
                 try {
                     URI u = new URI( s );
                     if ( u.isAbsolute() )
                         url = u.toString();
                     else
-                        url = "../" + u.toString();
+                        url = prefix + u.toString();
                 } catch ( URISyntaxException ignored ) {
+                    url = defaultPicture;
                 }
+            else
+                url = defaultPicture;
         }
-        return new WebMarkupContainer( "pic" )
+        return new WebMarkupContainer( id )
                 .add( new AttributeModifier( "src", new Model<String>( url ) ),
                       new AttributeModifier( "alt", new Model<String>( name ) ) )
                 .setVisible( url != null );

@@ -6,12 +6,12 @@
         xml:lang="en"
         lang="en">
 <head>
-    <title wicket:id="title">Title</title>
+    <title wicket:id="pagetitle">Title</title>
     <link rel="stylesheet" href="playbook.css" type="text/css">
     <link rel="stylesheet" href="iPhone.css"   type="text/css" media="only screen and (max-device-width: 480px)">
 </head>
 <body>
-<div>
+<div class="vcard">
     <div id="header">
         <div id="nav">
             <ul>
@@ -19,14 +19,28 @@
             </ul>
             <hr>
         </div>
-        
-        <h1 wicket:id="name">Name</h1>
+        <h1 class="fn" wicket:id="name">Name</h1>
+        <h3 wicket:id="title-section">
+            <span class="title" wicket:id="title">title</span><span wicket:id="title-sep">, </span>
+            <span class="role" wicket:id="role">role</span></h3>
     </div>
 
     <div id="contents">
-        <p wicket:id="description">Description...</p>
-        <img width="48" align="left" wicket:id="pic" src="" alt="someone">
-        <div wicket:id="channels">(channels)</div>
+        <div class="person">
+            <p class="note" wicket:id="actor-description">Description...</p>
+            <img class="photo" width="48" align="left" wicket:id="actor-pic" src="" alt="Picture">
+            <div wicket:id="actor-channels">(channels)</div>
+            <p></p>
+        </div>
+
+        <div wicket:id="org" class="organization">
+            <h2 class="org" wicket:id="org-name">Organization</h2>
+            <p class="adr" wicket:id="org-address">Address</p>
+            <p class="note" wicket:id="org-description">Description...</p>
+            <img class="logo" width="48" align="left" wicket:id="org-pic" src="" alt="Logo">
+            <div wicket:id="org-channels">(channels)</div>
+            <p></p>
+        </div>
     </div>
 </div>
 </body>
