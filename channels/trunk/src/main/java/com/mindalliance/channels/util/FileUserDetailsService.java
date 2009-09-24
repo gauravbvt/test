@@ -41,7 +41,7 @@ public class FileUserDetailsService implements UserDetailsService {
     /**
      * Users, indexed by username.
      */
-    private Map<String, User> details;
+    private Map<String, User> details = new HashMap<String, User>();
 
     /**
      * The actual user definitions (file name).
