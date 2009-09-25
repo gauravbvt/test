@@ -36,10 +36,6 @@ import java.util.Set;
  */
 public class PlanEditDetailsPanel extends AbstractCommandablePanel {
     /**
-     * Phase list panel.
-     */
-    private PhaseListPanel phaseListPanel;
-    /**
      * Issues panel.
      */
     private IssuesPanel issuesPanel;
@@ -58,7 +54,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
     }
 
     private void addPhaseListPanel() {
-        phaseListPanel = new PhaseListPanel( "phases" );
+        PhaseListPanel phaseListPanel = new PhaseListPanel( "phases" );
         add( phaseListPanel );
     }
 
@@ -99,7 +95,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
                 new PropertyModel<ModelObject>( this, "plan" ),
                 getExpansions() );
         issuesPanel.setOutputMarkupId( true );
-        add( issuesPanel );
+        addOrReplace( issuesPanel );
     }
 
     protected void adjustComponents() {
@@ -184,6 +180,16 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
         List<Phase> phases = new ArrayList<Phase>( getPlan().getPhases() );
         Collections.sort( phases );
         return phases;
+    }
+
+    public void updateWith( AjaxRequestTarget target, Change change ) {
+        if ( change.isForProperty( "phases" ) ) {
+            // Only unused phases can be removed, added ones at not yet referenced.
+            addIssuesPanel();
+            target.addComponent( issuesPanel );
+        } else {
+            super.updateWith( target, change );
+        }
     }
 
 
