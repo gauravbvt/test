@@ -30,8 +30,7 @@
     </bean>
 
     <bean id="imagingService" class="com.mindalliance.channels.imaging.DefaultImagingService">
-        <property name="uploadDirectory" value="file:${user.home}/channels/uploads"/>
-        <property name="uploadPath" value="uploads/"/>
+        <property name="attachmentManager" ref="attachmentManager"/>
         <property name="iconDirectory" value="file:${user.home}/channels/icons"/>
         <property name="iconPath" value="icons/"/>
     </bean>
@@ -50,7 +49,7 @@
     </bean>
 
     <bean id="attachmentManager" class="com.mindalliance.channels.attachments.FileBasedManager">
-        <property name="path" value="uploads/"/>
+        <property name="uploadPath" value="uploads/"/>
         <property name="planManager" ref="planManager"/>
     </bean>
 
@@ -192,7 +191,7 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.PartWithRoleWithNoKnownActor">
                     <property name="queryService" ref="queryService"/>
                 </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.ScenarioEventNeverEnds">
+                <bean class="com.mindalliance.channels.analysis.detectors.ScenarioNeverEnds">
                     <property name="queryService" ref="queryService"/>
                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.TriggeredButNeverStartedDefinedTask">
@@ -204,10 +203,10 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.AutoStartPartAlsoTriggered">
                     <property name="queryService" ref="queryService"/>
                 </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.ScenarioEventNeverStarts">
+                <bean class="com.mindalliance.channels.analysis.detectors.ScenarioEventNeverCaused">
                     <property name="queryService" ref="queryService"/>
                 </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.ScenarioEventNotStarted">
+                <bean class="com.mindalliance.channels.analysis.detectors.ScenarioNeverStarts">
                     <property name="queryService" ref="queryService"/>
                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.CyclicTriggering">
@@ -274,6 +273,9 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.UserIsManyActors">
                     <property name="queryService" ref="queryService"/>
                 </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.NoScenarioForEventPhase">
+                     <property name="queryService" ref="queryService"/>
+                 </bean>
             </list>
         </property>
     </bean>

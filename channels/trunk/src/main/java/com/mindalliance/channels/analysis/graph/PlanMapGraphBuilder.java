@@ -18,9 +18,13 @@ import java.util.List;
  * Time: 10:16:21 AM
  */
 public class PlanMapGraphBuilder implements GraphBuilder<Scenario, ScenarioRelationship> {
-
+    /**
+     * All scenarios.
+     */
     private List<Scenario> scenarios;
-
+    /**
+     * Query service.
+     */
     private QueryService queryService;
 
     public PlanMapGraphBuilder( List<Scenario> scenarios, QueryService queryService ) {

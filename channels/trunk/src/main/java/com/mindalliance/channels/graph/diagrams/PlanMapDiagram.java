@@ -7,6 +7,7 @@ import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.graph.URLProvider;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Scenario;
 import org.jgrapht.DirectedGraph;
 import org.springframework.core.io.Resource;
@@ -28,7 +29,18 @@ public class PlanMapDiagram extends AbstractDiagram<Scenario,ScenarioRelationshi
      * The scenarios mapped.
      */
     private List<Scenario> scenarios;
-
+    /**
+     * Phase or event grouping scenarios.
+     */
+    private ModelObject selectedGroup;
+    /**
+     * Whether to group scenarios by phases.
+     */
+    private boolean groupByPhase;
+    /**
+     * Whether to group scenarios by events.
+     */
+    private boolean groupByEvent;
     /**
      * Selected vertex-scenario.
      */
@@ -44,14 +56,19 @@ public class PlanMapDiagram extends AbstractDiagram<Scenario,ScenarioRelationshi
 
     public PlanMapDiagram(
             List<Scenario> scenarios,
+            boolean groupByPhase,
+            boolean groupByEvent,
+            ModelObject selectedGroup,
             Scenario scenario,
             ScenarioRelationship scRel,
             double[] diagramSize,
             String orientation ) {
 
         super( diagramSize, orientation );
-
         this.scenarios = scenarios;
+        this.selectedGroup = selectedGroup;
+        this.groupByPhase = groupByPhase;
+        this.groupByEvent = groupByEvent;
         selectedScenario = scenario;
         selectedScRel = scRel;
     }
@@ -88,7 +105,9 @@ public class PlanMapDiagram extends AbstractDiagram<Scenario,ScenarioRelationshi
 
         PlanMapMetaProvider metaProvider =
             new PlanMapMetaProvider( scenarios, outputFormat, imageDirectory, getAnalyst() );
-
+        metaProvider.setGroupByPhase( groupByPhase );
+        metaProvider.setGroupByEvent( groupByEvent );
+        metaProvider.setSelectedGroup( selectedGroup );
         metaProvider.setURLProvider( getURLProvider() );
 
         double[] diagramSize = getDiagramSize();

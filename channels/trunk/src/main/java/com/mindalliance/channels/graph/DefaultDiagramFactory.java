@@ -90,6 +90,7 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
         return new FlowMapDiagram( scenario, node, diagramSize, orientation );
     }
 
+
     public Diagram newEntityNetworkDiagram(
             ModelObject entity,
             EntityRelationship selectedEntityRel,
@@ -106,6 +107,9 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
     // TODO - why can't I say:  List<Scenario> scenarios ?   -- ? extends...
     public Diagram newPlanMapDiagram(
             List scenarios,
+            boolean groupByPhase,
+            boolean groupByEvent,
+            ModelObject group,
             Scenario scenario,
             ScenarioRelationship scRel,
             double[] diagramSize,
@@ -113,7 +117,11 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
         LOG.debug( "Making plan diagram" );
         return new PlanMapDiagram(
                 scenarios,
-                scenario, scRel,
+                groupByPhase,
+                groupByEvent,
+                group,
+                scenario,
+                scRel,
                 diagramSize,
                 orientation );
     }

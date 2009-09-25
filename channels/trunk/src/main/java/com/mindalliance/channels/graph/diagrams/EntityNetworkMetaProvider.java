@@ -109,7 +109,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
             return list;
         }
 
-        public List<DOTAttribute> getSubgraphAttributes() {
+        public List<DOTAttribute> getSubgraphAttributes( boolean highlighted ) {
             return DOTAttribute.emptyList();
         }
 

@@ -336,8 +336,9 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
                 getAttachments(),
                 PredicateUtils.invokerPredicate( "isImage" )
         );
-        if ( attachment != null )
+        if ( attachment != null ) {
             return attachment.getUrl();
+        }
         else
             return null;
     }

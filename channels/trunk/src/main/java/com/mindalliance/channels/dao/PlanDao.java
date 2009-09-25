@@ -323,7 +323,6 @@ public class PlanDao extends Memory {
      * @param queryService to use for validation
      */
     public void validate( QueryService queryService ) {
-
         // Make sure there is at least one event per plan
         List<Event> incidents = plan.getIncidents();
         if ( incidents.isEmpty() ) {
@@ -337,7 +336,10 @@ public class PlanDao extends Memory {
                 remove( event );
             }
         }
-
+        // Make sure there is at least one phase.
+        if ( plan.getPhases().isEmpty() ) {
+            plan.addDefaultPhase( queryService );
+        }
         // Make sure there is at least one scenario per plan
         if ( !list( Scenario.class ).iterator().hasNext() )
             plan.addScenario( queryService.createScenario() );

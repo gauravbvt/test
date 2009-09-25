@@ -5,6 +5,7 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
@@ -103,6 +104,13 @@ public class PlanConverter extends AbstractChannelsConverter {
             writer.setValue( event.getName() );
             writer.endNode();
         }
+        // All phases
+        for ( Phase phase : plan.getPhases() ) {
+            writer.startNode( "plan-phase" );
+            writer.addAttribute( "id", Long.toString( phase.getId() ) );
+            writer.setValue( phase.getName() );
+            writer.endNode();
+        }
         // All scenarios
         for ( Scenario scenario : plan.getScenarios() ) {
             writer.startNode( "scenario" );
@@ -156,11 +164,19 @@ public class PlanConverter extends AbstractChannelsConverter {
                 context.convertAnother( plan, Place.class );
             } else if ( nodeName.equals( "event" ) ) {
                 context.convertAnother( plan, Event.class );
+            }  else if ( nodeName.equals( "phase" ) ) {
+                context.convertAnother( plan, Phase.class );
             } else if ( nodeName.equals( "incident" ) ) {
                 String eventId = reader.getAttribute( "id" );
                 Event event = findOrCreate( Event.class, reader.getValue(), eventId );
                 plan.addIncident( event );
-                // Scenarios
+                // Phases
+            }  else if ( nodeName.equals( "plan-phase" ) ) {
+                String phaseId = reader.getAttribute( "id" );
+                String name = reader.getValue();
+                Phase phase = findOrCreate( Phase.class, name, phaseId );
+                plan.addPhase( phase );
+                // Producers
             } else if ( nodeName.equals( "producer" ) ) {
                 plan.addProducer( reader.getValue() );
                 // Scenarios

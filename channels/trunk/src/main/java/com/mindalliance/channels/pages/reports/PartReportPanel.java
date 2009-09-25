@@ -4,8 +4,8 @@ import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Risk;
 import org.apache.commons.collections.iterators.IteratorChain;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -106,7 +106,7 @@ public class PartReportPanel extends Panel {
 
              new WebMarkupContainer( "starts" ).setVisible( part.isStartsWithScenario() ),
 
-             new WebMarkupContainer( "terminates" ).setVisible( part.isTerminatesEvent() ),
+             new WebMarkupContainer( "terminates" ).setVisible( part.isTerminatesEventPhase() ),
 
              new WebMarkupContainer( "starting" )
                      .add( new Label( "started-event", eventName ) )

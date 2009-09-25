@@ -88,9 +88,9 @@ public class Part extends Node implements GeoLocatable {
      */
     private boolean startsWithScenario;
     /**
-     * Whether the part can terminate the event the scenario responds to.
+     * Whether the part can terminate the event phase the scenario is about.
      */
-    private boolean terminatesEvent;
+    private boolean terminatesEventPhase;
     /**
      * Event this part initiates.
      */
@@ -332,12 +332,12 @@ public class Part extends Node implements GeoLocatable {
         this.startsWithScenario = startsWithScenario;
     }
 
-    public boolean isTerminatesEvent() {
-        return terminatesEvent;
+    public boolean isTerminatesEventPhase() {
+        return terminatesEventPhase;
     }
 
-    public void setTerminatesEvent( boolean terminatesEvent ) {
-        this.terminatesEvent = terminatesEvent;
+    public void setTerminatesEventPhase( boolean terminatesEventPhase ) {
+        this.terminatesEventPhase = terminatesEventPhase;
     }
 
     public Event getInitiatedEvent() {

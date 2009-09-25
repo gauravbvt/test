@@ -7,12 +7,10 @@ import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -28,11 +26,11 @@ public class ScenarioCausesPanel extends AbstractTablePanel<ScenarioRelationship
     /**
      * List of scenario relationships containing initiators.
      */
-    private IModel<ArrayList<ScenarioRelationship>> scRels;
+    private List<ScenarioRelationship> scRels;
 
     public ScenarioCausesPanel(
             String id,
-            IModel<ArrayList<ScenarioRelationship>> scRels,
+            List<ScenarioRelationship> scRels,
             int pageSize,
             Set<Long> expansions ) {
         super( id, null, pageSize, expansions );
@@ -43,38 +41,46 @@ public class ScenarioCausesPanel extends AbstractTablePanel<ScenarioRelationship
     @SuppressWarnings( "unchecked" )
     private void init() {
         final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
-        columns.add( makeLinkColumn( "Task", "part", "part.title", EMPTY ) );
-        columns.add( new PropertyColumn<String>(
-                new Model<String>( "in scenario" ),
-                "part.scenario.name", "part.scenario.name" ) );
         columns.add( makeLinkColumn(
-                "causes event",
-                "part.initiatedEvent",
-                "part.initiatedEvent.name",
+                "Task",
+                "cause",
+                "cause.title",
                 EMPTY ) );
         columns.add( new PropertyColumn<String>(
-                new Model<String>( "triggering scenario" ),
-                "caused.name", "caused.name" ) );
-        columns.add( makeGeomapLinkColumn(
-                "",
-                "name",
-                Arrays.asList( "part", "caused.event" ),
-                new Model<String>( "Show task and event it causes in map" ) ) );
+                new Model<String>( "in scenario" ),
+                "cause.scenario.name",
+                "cause.scenario.name" ) );
+        columns.add( new PropertyColumn<String>(
+                new Model<String>( "has effect" ),
+                "effect",
+                "effect" ) );
+        columns.add( makeLinkColumn(
+                "on scenario",
+                "effected",
+                "effected.name",
+                EMPTY ) );
+        columns.add( new PropertyColumn<String>(
+                new Model<String>( "because" ),
+                "explanation",
+                "explanation" ) );
         List<Causation> causations = getCausations();
         add( new AjaxFallbackDefaultDataTable(
                 "causes",
                 columns,
-                new SortableBeanProvider<Causation>( causations, "part.name" ),
+                new SortableBeanProvider<Causation>( causations, "cause.name" ),
                 getPageSize() ) );
 
     }
 
     private List<Causation> getCausations() {
         List<Causation> causations = new ArrayList<Causation>();
-        for ( ScenarioRelationship scRel : scRels.getObject() ) {
-            Scenario caused = scRel.getToScenario( getQueryService() );
+        for ( ScenarioRelationship scRel : scRels ) {
+            Scenario toScenario = scRel.getToScenario( getQueryService() );
             for ( Part part : scRel.getInitiators() ) {
-                causations.add( new Causation( part, caused ) );
+                causations.add( new Causation( part, Causation.STARTS, toScenario ) );
+            }
+            for ( Part part : scRel.getTerminators() ) {
+                causations.add( new Causation( part, Causation.TERMINATES, toScenario ) );
             }
         }
         return causations;
@@ -87,32 +93,59 @@ public class ScenarioCausesPanel extends AbstractTablePanel<ScenarioRelationship
         /**
          * Part.
          */
-        private Part part;
+        private Part cause;
         /**
          * Scenario caused by part.
          */
-        private Scenario caused;
+        private Scenario effected;
+        /**
+         * Cause-effect is not triggering (but termination)
+         */
+        public static final boolean TERMINATES = false;
+        /**
+         * Cause-effect is triggering
+         */
+        public static final boolean STARTS = true;
+        /**
+         * Whether effect on caused scenario is its triggering.
+         */
+        private boolean starts;
 
-        public Causation( Part part, Scenario caused ) {
-            this.part = part;
-            this.caused = caused;
+        public Causation( Part cause, boolean starts, Scenario effected ) {
+            this.cause = cause;
+            this.starts = starts;
+            this.effected = effected;
         }
 
-        public Part getPart() {
-            return part;
+        public Part getCause() {
+            return cause;
         }
 
 
-        public Scenario getCaused() {
-            return caused;
+        public Scenario getEffected() {
+            return effected;
         }
 
         /**
-         * Return name of causation.
+         * Return name of effect.
+         *
          * @return a string
          */
-        public String getName() {
-            return part.getTitle() + " causes " + caused.getEvent().getName();
+        public String getEffect() {
+            return starts ? " triggers " : " terminates ";
+        }
+
+        /**
+         * Explains causation.
+         *
+         * @return a string
+         */
+        public String getExplanation() {
+            if ( starts ) {
+                return "it " + effected.initiationCause( cause );
+            } else {
+                return "it " + effected.terminationCause( cause );
+            }
         }
 
     }

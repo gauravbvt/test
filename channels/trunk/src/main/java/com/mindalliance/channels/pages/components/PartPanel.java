@@ -124,12 +124,12 @@ public class PartPanel extends AbstractCommandablePanel {
         super.setOutputMarkupPlaceholderTag( false );
         this.model = model;
 
-        addField( TASK_PROPERTY, new PropertyModel<List<String>>(this, "allTasks"), true );
-        addField( ACTOR_PROPERTY, new PropertyModel<List<String>>(this, "allActorNames"), false );
-        addField( ROLE_PROPERTY, new PropertyModel<List<String>>(this, "allRoleNames"), true );
-        addField( ORG_PROPERTY, new PropertyModel<List<String>>(this, "allOrganizationNames"), false );
-        addField( JURISDICTION_PROPERTY, new PropertyModel<List<String>>(this, "allPlaceNames"), false );
-        addField( LOCATION_PROPERTY, new PropertyModel<List<String>>(this, "allPlaceNames"), false );
+        addField( TASK_PROPERTY, new PropertyModel<List<String>>( this, "allTasks" ), true );
+        addField( ACTOR_PROPERTY, new PropertyModel<List<String>>( this, "allActorNames" ), false );
+        addField( ROLE_PROPERTY, new PropertyModel<List<String>>( this, "allRoleNames" ), true );
+        addField( ORG_PROPERTY, new PropertyModel<List<String>>( this, "allOrganizationNames" ), false );
+        addField( JURISDICTION_PROPERTY, new PropertyModel<List<String>>( this, "allPlaceNames" ), false );
+        addField( LOCATION_PROPERTY, new PropertyModel<List<String>>( this, "allPlaceNames" ), false );
         addEventInitiation();
         addTimingFields();
         addMitigations();
@@ -222,7 +222,7 @@ public class PartPanel extends AbstractCommandablePanel {
 
 
     private void addEventInitiation() {
-        final PropertyModel<List<String>> choices = new PropertyModel<List<String>>(this, "allEventNames");
+        final PropertyModel<List<String>> choices = new PropertyModel<List<String>>( this, "allEventNames" );
         initiatedEventField = new AutoCompleteTextField<String>(
                 "initiatedEvent",
                 new PropertyModel<String>( this, "initiatedEventName" ) ) {
@@ -291,13 +291,16 @@ public class PartPanel extends AbstractCommandablePanel {
         add( new ModelObjectLink( "event-link",
                 new PropertyModel<Event>( this, "part.scenario.event" ),
                 new PropertyModel<String>( this, "part.scenario.event.name" ) ) );
+        add( new ModelObjectLink( "phase-link",
+                new PropertyModel<Event>( this, "part.scenario.phase" ),
+                new PropertyModel<String>( this, "part.scenario.phase.name" ) ) );
         terminatesScenarioCheckBox = new CheckBox(
-                "terminatesEvent",
-                new PropertyModel<Boolean>( this, "terminatesEvent" ) );
+                "terminatesEventPhase",
+                new PropertyModel<Boolean>( this, "terminatesEventPhase" ) );
         add( terminatesScenarioCheckBox );
         terminatesScenarioCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getPart(), "terminatesEvent" ) );
+                update( target, new Change( Change.Type.Updated, getPart(), "terminatesEventPhase" ) );
             }
         } );
     }
@@ -560,8 +563,8 @@ public class PartPanel extends AbstractCommandablePanel {
      *
      * @return a boolean
      */
-    public boolean isTerminatesEvent() {
-        return getPart().isTerminatesEvent();
+    public boolean isTerminatesEventPhase() {
+        return getPart().isTerminatesEventPhase();
     }
 
     /**
@@ -569,8 +572,8 @@ public class PartPanel extends AbstractCommandablePanel {
      *
      * @param val a boolean
      */
-    public void setTerminatesEvent( boolean val ) {
-        doCommand( new UpdateScenarioObject( getPart(), "terminatesEvent", val ) );
+    public void setTerminatesEventPhase( boolean val ) {
+        doCommand( new UpdateScenarioObject( getPart(), "terminatesEventPhase", val ) );
     }
 
     /**

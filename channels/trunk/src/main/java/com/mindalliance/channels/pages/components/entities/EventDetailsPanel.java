@@ -205,7 +205,7 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
         QueryService queryService = getQueryService();
         for ( Scenario scenario : queryService.findScenariosRespondingTo( event ) ) {
             eventReferences.add( new EventReference( scenario ) );
-            for ( Part part : queryService.findPartsTerminatingEventIn( scenario ) ) {
+            for ( Part part : queryService.findPartsTerminatingEventPhaseIn( scenario ) ) {
                 eventReferences.add( new EventReference( part, EventRelation.Terminates ) );
             }
             for ( Part part : queryService.findPartsStartingWithEventIn( scenario ) ) {
@@ -350,7 +350,7 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
                 case Initiates:
                     return "initiates the event";
                 case Terminates:
-                    return "terminates the event";
+                    return "terminates the event phase";
                 case StartsWith:
                     return "is started by the event";
                 case RespondsTo:
@@ -376,7 +376,7 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
          */
         Initiates,
         /**
-         * Terminates the event.
+         * Terminates the event phase.
          */
         Terminates,
         /**

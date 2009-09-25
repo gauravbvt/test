@@ -13,6 +13,7 @@ import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
@@ -378,6 +379,8 @@ public class DefaultCommander extends AbstractService implements Commander, Init
                         garbage = !queryService.isReferenced( (Place) mo );
                     else if ( mo instanceof com.mindalliance.channels.model.Event )
                         garbage = !queryService.isReferenced( (Event) mo );
+                    else if ( mo instanceof Phase )
+                        garbage = !queryService.isReferenced( (Phase) mo );
                     else throw new IllegalArgumentException( "Can't clean up something of class " + clazz );
                     if ( garbage ) {
                         LOG.info( "Removing unused " + mo.getClass().getSimpleName() + " " + mo );

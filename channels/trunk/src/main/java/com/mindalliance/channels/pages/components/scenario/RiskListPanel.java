@@ -622,8 +622,8 @@ public class RiskListPanel extends AbstractCommandablePanel {
          * @return a string
          */
         public String getKind() {
-            if ( part.isTerminatesEvent() ) {
-                return "Ends event causing risk";
+            if ( part.isTerminatesEventPhase() ) {
+                return "Ends event phase causing risk";
             } else if ( part.getMitigations().contains( risk ) ) {
                 return "Reduces risk";
             } else {

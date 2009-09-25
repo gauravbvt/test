@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
@@ -103,9 +104,9 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
      */
     protected void addIncluded() {
         // containment (for non-events only)
-        WebMarkupContainer containmentContainer = new WebMarkupContainer("containmentContainer");
+        WebMarkupContainer containmentContainer = new WebMarkupContainer( "containmentContainer" );
         makeVisible( containmentContainer, !( getEntity() instanceof Event ) );
-        add(containmentContainer);
+        add( containmentContainer );
         CheckBox includeContainedCheckBox = new CheckBox(
                 "includeContained",
                 new PropertyModel<Boolean>( this, "includeContained" ) );
@@ -117,7 +118,7 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
         Label containmentLabel = new Label( "containment", getContainmentLabel() );
         containmentContainer.add( containmentLabel );
         containmentContainer.add( includeContainedCheckBox );
-        // INcluding waived
+        // Including waived
         CheckBox includeWaivedCheckBox = new CheckBox(
                 "includeWaived",
                 new PropertyModel<Boolean>( this, "includeWaived" ) );
@@ -128,6 +129,8 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
         } );
         add( includeWaivedCheckBox );
         // Include from scenario
+        WebMarkupContainer inScenarioContainer = new WebMarkupContainer( "inScenarioContainer" );
+        add( inScenarioContainer );
         CheckBox includeFromScenario = new CheckBox(
                 "includeFromScenarios",
                 new PropertyModel<Boolean>( this, "includeFromScenarios" ) );
@@ -136,7 +139,8 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
                 updateIssuesTable( target );
             }
         } );
-        add( includeFromScenario );
+        inScenarioContainer.add( includeFromScenario );
+        makeVisible( inScenarioContainer, !( getEntity() instanceof Phase ) );
     }
 
     private String getContainmentLabel() {
@@ -151,6 +155,8 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
             return "anything located within this place";
         } else if ( entity instanceof Event ) {
             return "";
+        } else if ( entity instanceof Phase ) {
+            return "anything within this phase";
         } else {
             throw new IllegalStateException( "Can't diplay issue table for " + entity.getClass().getSimpleName() );
         }
@@ -172,6 +178,8 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
             return queryService.findAllModelObjectsIn( (Place) entity );
         } else if ( entity instanceof Event ) {
             return new ArrayList<ModelObject>();
+        } else if ( entity instanceof Phase ) {
+            return queryService.findAllModelObjectsIn( (Phase) entity );
         } else {
             throw new IllegalStateException( "Can't diplay issue table for " + entity.getClass().getSimpleName() );
         }

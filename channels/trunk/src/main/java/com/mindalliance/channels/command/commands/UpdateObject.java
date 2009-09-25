@@ -39,6 +39,10 @@ public abstract class UpdateObject extends AbstractCommand {
          */
         Remove,
         /**
+         * Remove value from list except if the last one.
+         */
+        RemoveExceptLast,
+        /**
          * Move value in list.
          */
         Move
@@ -132,6 +136,13 @@ public abstract class UpdateObject extends AbstractCommand {
                         get( "value", commander )
                 );
                 break;
+            case RemoveExceptLast:
+                removeExceptLastFromProperty(
+                        identifiable,
+                        (String) get( "property" ),
+                        get( "value", commander )
+                );
+                break;
             case Move:
                 moveInProperty(
                         identifiable,
@@ -206,6 +217,7 @@ public abstract class UpdateObject extends AbstractCommand {
                 value = get( "value", commander );
                 return createUndoCommand( identifiable, property, value, Action.Remove );
             case Remove:
+            case RemoveExceptLast:
                 value = get( "value", commander );
                 return createUndoCommand( identifiable, property, value, Action.Add );
             case Move:

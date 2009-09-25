@@ -533,6 +533,15 @@ div.header {
 .system .header {
     background: transparent url( 'images/system.png' ) no-repeat 5px 2px;
 }
+
+.phase .header {
+    background: transparent url( 'images/phase.png' ) no-repeat 5px 2px;
+}
+
+.event .header {
+    background: transparent url( 'images/event.png' ) no-repeat 5px 2px;
+}
+
 .organization .header {
     background: transparent url( 'images/organization.png' ) no-repeat 5px 2px;
 }

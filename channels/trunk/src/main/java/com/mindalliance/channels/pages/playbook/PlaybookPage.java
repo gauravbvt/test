@@ -3,29 +3,29 @@ package com.mindalliance.channels.pages.playbook;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.ExternalFlow;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.User;
-import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.ExternalFlow;
-import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.User;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import java.util.List;
-import java.util.Set;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A generic playbook page.
@@ -202,7 +202,7 @@ public abstract class PlaybookPage extends WebPage {
         return result;
     }
 
-    String getEventName() {
-        return part.getScenario().getEvent().getName();
+    String getEventPhaseName() {
+        return part.getScenario().getPhaseEventTitle();
     }
 }

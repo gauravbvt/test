@@ -28,21 +28,21 @@ public class StartedOrTerminatedPartWithoutTask extends AbstractIssueDetector {
             if ( part.isStartsWithScenario() || part.isTriggered() ) {
                 DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
                 issue.setDescription( "The task is started during the scenario but is not specified." );
-                issue.setRemediation( "Specify a task." );
+                issue.setRemediation( "Specify the task." );
                 issue.setSeverity( Issue.Level.Minor );
                 issues.add( issue );
             }
-            if ( part.isTerminatesEvent() ) {
+            if ( part.isTerminatesEventPhase() ) {
                 DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
-                issue.setDescription( "The task terminates the event responded to but the task is not specified." );
-                issue.setRemediation( "Specify a task." );
+                issue.setDescription( "The task can terminate the scenario but the task is not specified." );
+                issue.setRemediation( "Specify the task." );
                 issue.setSeverity( Issue.Level.Minor );
                 issues.add( issue );
             }
             if ( part.isTerminated() ) {
                 DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
                 issue.setDescription( "The task is terminated during scenario but is not specified." );
-                issue.setRemediation( "Specify a task." );
+                issue.setRemediation( "Specify the task." );
                 issue.setSeverity( Issue.Level.Minor );
                 issues.add( issue );
             }

@@ -75,7 +75,7 @@ public class FileBasedManager implements AttachmentManager {
     /**
      * The webapp-relative path to file URLs.
      */
-    private String path = "";
+    private String uploadPath = "";
 
     /**
      * The maximum file name length. Anything above that will get truncated.
@@ -141,12 +141,12 @@ public class FileBasedManager implements AttachmentManager {
         return document;
     }
 
-    public synchronized String getPath() {
-        return path;
+    public synchronized String getUploadPath() {
+        return uploadPath;
     }
 
-    public synchronized void setPath( String path ) {
-        this.path = path;
+    public synchronized void setUploadPath( String uploadPath ) {
+        this.uploadPath = uploadPath;
     }
 
     public int getMaxLength() {
@@ -275,7 +275,7 @@ public class FileBasedManager implements AttachmentManager {
     }
 
     private boolean isValidUrl( String url ) {
-        if ( url.startsWith( path ) ) return true;
+        if ( url.startsWith( uploadPath ) ) return true;
         try {
             new URL( url );
         } catch ( MalformedURLException e ) {
@@ -293,7 +293,7 @@ public class FileBasedManager implements AttachmentManager {
     }
 
     private boolean isFileDocument( String url ) {
-        return url.startsWith( path );
+        return url.startsWith( uploadPath );
     }
 
 
@@ -325,7 +325,7 @@ public class FileBasedManager implements AttachmentManager {
                     "UTF-8" );
             FileDocument fileDocument = new FileDocument(
                     file,
-                    path + file.getName(),
+                    uploadPath + file.getName(),
                     digest );
             synchronized ( this ) {
                 FileDocument actual = resolve( fileDocument );
@@ -370,7 +370,7 @@ public class FileBasedManager implements AttachmentManager {
                 String name = file.getName();
                 if ( !( name.equals( "readme.txt" )
                         || name.equals( digestsMapFile ) ) ) {
-                    String url = path + name;
+                    String url = uploadPath + name;
                     if ( !attachedUrls.contains( url ) ) {
                         log.warn( "Removing unattached " + url );
                         file.delete();
@@ -388,7 +388,7 @@ public class FileBasedManager implements AttachmentManager {
      * @return a directory
      */
     public File getUploadDirectory() {
-        File uploadsDir = new File( planManager.getPlanVersionDirectory() + File.separator + path );
+        File uploadsDir = new File( planManager.getPlanVersionDirectory() + File.separator + uploadPath );
         if ( !uploadsDir.exists() ) {
             uploadsDir.mkdir();
             log.info( "Created upload directory: {}", uploadsDir.getAbsolutePath() );

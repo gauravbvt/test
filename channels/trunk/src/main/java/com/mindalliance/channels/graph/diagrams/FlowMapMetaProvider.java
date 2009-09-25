@@ -211,7 +211,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
          *
          * @return the style declarations
          */
-        public List<DOTAttribute> getSubgraphAttributes() {
+        public List<DOTAttribute> getSubgraphAttributes( boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             list.add( new DOTAttribute( "fontsize", SUBGRAPH_FONT_SIZE ) );

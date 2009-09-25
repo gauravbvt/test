@@ -83,6 +83,9 @@ public class PlanReportPage extends WebPage {
 
              new PlanMapDiagramPanel( "planMap",                                          // NON-NLS
                 new Model<ArrayList<Scenario>>( (ArrayList<Scenario>) scenarios ),
+                     false, // group scenarios by phase
+                     false, // group scenarios by event
+                null, // selected phase or event
                 selector.isAllScenarios() ? null : selector.getScenario(),
                 null,
                 new Settings() )

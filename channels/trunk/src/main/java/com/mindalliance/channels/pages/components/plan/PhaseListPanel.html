@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div class="phases" wicket:id = phasesDiv>
+        <ul>
+            <li wicket:id="phase">
+                <span wicket:id="name-container">
+                    <input wicket:id="name-input" type="text" size="25" title = "Enter name of new phase"/>
+                    <span wicket:id="phase-link">[phase link]</span>
+                </span>
+                <a wicket:id="delete" href="#">
+                         <img style="border:0; vertical-align:middle" src="images/delete.png" title="Delete unused phase" alt="Delete unused phase"/>
+                     </a>
+            </li>
+        </ul>
+    </div>
+</wicket:panel>
+</body>
+</html>

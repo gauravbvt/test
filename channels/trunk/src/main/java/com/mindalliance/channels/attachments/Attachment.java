@@ -44,7 +44,7 @@ public class Attachment implements Serializable, Comparable<Attachment> {
         /**
          * A document that allows whatever the document is attached to.
          */
-        MOU( "MOU" );
+        MOU( "Sharing agreement" );
 
         //--------------------------------
         /**

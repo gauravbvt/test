@@ -327,6 +327,19 @@ public abstract class AbstractCommand implements Command {
     }
 
     /**
+     * Remove a value from a list at a given object's property if not the last value.
+     *
+     * @param obj      target object
+     * @param property list property name
+     * @param value    value to remove
+     */
+    @SuppressWarnings( "unchecked" )
+    protected void removeExceptLastFromProperty( Object obj, String property, Object value ) {
+        List list = (List) getProperty( obj, property );
+        if ( list.size() > 1 ) list.remove( value );
+    }
+
+    /**
      * {@inheritDoc}
      */
     public String getUndoes( Commander commander ) {

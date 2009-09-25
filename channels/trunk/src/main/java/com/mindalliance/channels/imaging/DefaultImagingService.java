@@ -1,5 +1,6 @@
 package com.mindalliance.channels.imaging;
 
+import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.ImagingService;
 import com.mindalliance.channels.model.ModelObject;
 import org.slf4j.Logger;
@@ -34,15 +35,18 @@ public class DefaultImagingService implements ImagingService {
      * Sizes of icons to generate.
      */
     private static final int[] ICON_HEIGHTS = {32, 56, 72, 84, 100};
-
+    /**
+     * Attachment manager.
+     */
+    private AttachmentManager attachmentManager;
     /**
      * The directory to keep files in.
      */
-    private Resource uploadDirectory;
+    //private Resource uploadDirectory;
     /**
      * The webapp-relative path to file URLs.
      */
-    private String uploadPath = "";
+    //private String uploadPath = "";
     /**
      * Directory for generated icons.
      */
@@ -59,25 +63,16 @@ public class DefaultImagingService implements ImagingService {
     public DefaultImagingService() {
     }
 
-    public synchronized void setUploadPath( String uploadPath ) {
-        this.uploadPath = uploadPath;
+
+    public void setAttachmentManager( AttachmentManager attachmentManager ) {
+        this.attachmentManager = attachmentManager;
     }
 
-    public String getUploadPath() {
-        return uploadPath;
-    }
 
     public Resource getIconDirectory() {
         return iconDirectory;
     }
 
-    public void setUploadDirectory( Resource uploadDirectory ) {
-        this.uploadDirectory = uploadDirectory;
-    }
-
-    public Resource getUploadDirectory() {
-        return uploadDirectory;
-    }
 
     public void setIconDirectory( Resource iconDirectory ) {
         this.iconDirectory = iconDirectory;
@@ -114,20 +109,20 @@ public class DefaultImagingService implements ImagingService {
             }
             return image;
         } catch ( IOException e ) {
-            LOG.warn( "Failed to retrieve image " + url );
-            e.printStackTrace();
+            LOG.warn( "Failed to retrieve image at " + url );
             return null;
         }
     }
 
     private boolean isFileDocument( String url ) {
-        return url.startsWith( uploadPath );
+        return url.startsWith( attachmentManager.getUploadPath() );
     }
 
 
     private File getImageFile( String url ) {
-        String fileName = url.replaceFirst( uploadPath, "" );
-        return new File( uploadDirectory(), fileName );
+        return new File(
+                attachmentManager.getUploadDirectory(),
+                url.replaceFirst( attachmentManager.getUploadPath(), "" ));
     }
 
     /**
@@ -136,11 +131,7 @@ public class DefaultImagingService implements ImagingService {
      * @return a directory
      */
     public File uploadDirectory() {
-        try {
-            return uploadDirectory.getFile();
-        } catch ( IOException e ) {
-            throw new RuntimeException( e );
-        }
+        return attachmentManager.getUploadDirectory();
     }
 
     /**

@@ -6,6 +6,7 @@ import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -16,6 +17,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponentLabel;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
@@ -47,6 +49,14 @@ public class ScenarioEditDetailsPanel extends AbstractCommandablePanel {
     /**
      * Link to event.
      */
+    private ModelObjectLink phaseLink;
+    /**
+     * Choice of phases.
+     */
+    private DropDownChoice<Phase> phaseChoices;
+    /**
+     * Link to phase.
+     */
     private ModelObjectLink eventLink;
 
     public ScenarioEditDetailsPanel( String id,
@@ -67,6 +77,8 @@ public class ScenarioEditDetailsPanel extends AbstractCommandablePanel {
         };
         add( closeLink );
         addIdentityFields();
+        addPhaseLink();
+        addPhaseChoice();
         addEventLink();
         addEventField();
         addIssuesPanel();
@@ -83,7 +95,7 @@ public class ScenarioEditDetailsPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getScenario(), "name" ) );
             }
         } );
-        nameField.setEnabled( getPlan().isDevelopment() );
+        nameField.setEnabled( isLockedByUserIfNeeded( getScenario() ) );
         add( nameField );
 
         TextArea<String> descField = new TextArea<String>(
@@ -95,8 +107,34 @@ public class ScenarioEditDetailsPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getScenario(), "description" ) );
             }
         } );
-        descField.setEnabled( getPlan().isDevelopment() );
+        descField.setEnabled( isLockedByUserIfNeeded( getScenario() ) );
         add( descField );
+    }
+
+    private void addPhaseLink() {
+        phaseLink = new ModelObjectLink( "phase-link",
+                new PropertyModel<Event>( getScenario(), "phase" ),
+                new Model<String>( "phase" ) );
+        phaseLink.setOutputMarkupId( true );
+        addOrReplace( phaseLink );
+    }
+
+    private void addPhaseChoice() {
+        phaseChoices = new DropDownChoice<Phase>(
+                "phase-choices",
+                new PropertyModel<Phase>( this, "phase"),
+                new PropertyModel<List<Phase>>( getPlan(), "phases")
+        );
+        phaseChoices.setOutputMarkupId( true );
+        phaseChoices.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addPhaseLink();
+                target.addComponent( phaseLink);
+                update( target, new Change( Change.Type.Updated, getScenario(), "phase" ) );
+            }
+        });
+        phaseChoices.setEnabled( isLockedByUserIfNeeded( getScenario() ) );
+        addOrReplace( phaseChoices );
     }
 
     private void addEventField() {
@@ -120,7 +158,7 @@ public class ScenarioEditDetailsPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getScenario(), "event" ) );
             }
         } );
-        eventField.setEnabled( getPlan().isDevelopment() );
+        eventField.setEnabled( isLockedByUserIfNeeded( getScenario() ) );
         add( eventField );
     }
 
@@ -217,6 +255,25 @@ public class ScenarioEditDetailsPanel extends AbstractCommandablePanel {
         getCommander().cleanup( Event.class, oldName );
     }
 
+    /**
+     * Name of phase for this scenario.
+     *
+     * @return a phase
+     */
+    public Phase getPhase() {
+        return getScenario().getPhase();
+    }
+
+    /**
+     * Sets the scenario's planning phase.
+     *
+     * @param phase a phase
+     */
+    public void setPhase( Phase phase ) {
+        doCommand( new UpdatePlanObject( getScenario(), "phase", phase ) );
+    }
+
+
     private Event getEvent() {
         return getScenario().getEvent();
     }
@@ -231,9 +288,10 @@ public class ScenarioEditDetailsPanel extends AbstractCommandablePanel {
         super.updateWith( target, change );
     }
 
-    // TODO - needed?
     public void refresh( AjaxRequestTarget target ) {
         makeVisible( target, issuesPanel, getAnalyst().hasIssues( getScenario(), false ) );
         target.addComponent( issuesPanel );
+        addPhaseChoice();
+        target.addComponent( phaseChoices );
     }
 }

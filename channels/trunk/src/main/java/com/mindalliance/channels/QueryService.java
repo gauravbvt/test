@@ -16,6 +16,7 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
@@ -468,6 +469,14 @@ public interface QueryService extends Service {
     int getReferenceCount( Event event );
 
     /**
+     * Whether the plan phase is referenced in another model object.
+     *
+     * @param phase a plan phase
+     * @return a boolean
+     */
+    boolean isReferenced( Phase phase );
+
+    /**
      * Called when application is terminated.
      */
     void onDestroy();
@@ -592,15 +601,34 @@ public interface QueryService extends Service {
     List<Connector> findAllSatificers( Flow need );
 
     /**
-     * Find all parts in a plan that cause the event to which a given scenario responds.
+     * Find all parts in a plan that can start the given scenario
+     * because of the event they cause or the event phases they terminate.
      *
      * @param scenario a scenario
      * @return a list of parts
      */
-    public List<Part> findInitiators( Scenario scenario );
+    List<Part> findInitiators( Scenario scenario );
 
     /**
-     * Whether a task in another scenario causes the event the given scenario responds to.
+     * Find all parts in a plan that can terminate the given scenario
+     * because of the event they cause or the event phases they terminate.
+     *
+     * @param scenario a scenario
+     * @return a list of parts
+     */
+    List<Part> findTerminators( Scenario scenario );
+
+    /**
+     * Find all external parts in a plan that can terminate the given scenario
+     * because of the event they cause or the event phases they terminate.
+     *
+     * @param scenario a scenario
+     * @return a list of parts
+     */
+    List<Part> findExternalTerminators( Scenario scenario );
+
+    /**
+     * Whether a task in another scenario intiates a given scenario.
      *
      * @param scenario a scenario
      * @return a boolean
@@ -746,7 +774,7 @@ public interface QueryService extends Service {
      * @param scenario a scenario
      * @return a list of parts
      */
-    List<Part> findPartsTerminatingEventIn( Scenario scenario );
+    List<Part> findPartsTerminatingEventPhaseIn( Scenario scenario );
 
     /**
      * Find all parts initiating a given event.
@@ -807,6 +835,14 @@ public interface QueryService extends Service {
      * @return a list of model objects
      */
     List<? extends ModelObject> findAllModelObjectsIn( Place place );
+
+    /**
+     * Find all model objects located within a given phase.
+     *
+     * @param phase a phase
+     * @return a list of model objects
+     */
+    List<? extends ModelObject> findAllModelObjectsIn( Phase phase );
 
     /**
      * Find all model objects directly impacted by or impacting an event.
@@ -952,4 +988,20 @@ public interface QueryService extends Service {
      * @return a list of strings
      */
     List<String> findAllPlanUsernames();
+
+    /**
+     * Find all scenarios for a given phase.
+     *
+     * @param phase a phase
+     * @return a list of scenarios
+     */
+    List<Scenario> findAllScenariosForPhase( Phase phase );
+
+    /**
+     * Find all parts that cause an event.
+     *
+     * @param event an event
+     * @return a list of parts
+     */
+    List<Part> findCausesOf( Event event );
 }

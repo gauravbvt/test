@@ -5,6 +5,7 @@ import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
@@ -20,6 +21,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -33,11 +35,15 @@ import java.util.Set;
  * Time: 5:31:25 AM
  */
 public class PlanEditDetailsPanel extends AbstractCommandablePanel {
-
+    /**
+     * Phase list panel.
+     */
+    private PhaseListPanel phaseListPanel;
     /**
      * Issues panel.
      */
     private IssuesPanel issuesPanel;
+
     public PlanEditDetailsPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( id, model, expansions );
         init();
@@ -45,9 +51,15 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
 
     private void init() {
         addIdentityFields();
+        addPhaseListPanel();
         addIssuesPanel();
         add( new AttachmentPanel( "attachments", new Model<ModelObject>( getPlan() ) ) );
         adjustComponents();
+    }
+
+    private void addPhaseListPanel() {
+        phaseListPanel = new PhaseListPanel( "phases" );
+        add( phaseListPanel );
     }
 
 
@@ -161,6 +173,17 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
                             "description",
                             desc,
                             UpdateObject.Action.Set ) );
+    }
+
+    /**
+     * Get a sorted list of plan phases.
+     *
+     * @return a list of phases
+     */
+    public List<Phase> getPhases() {
+        List<Phase> phases = new ArrayList<Phase>( getPlan().getPhases() );
+        Collections.sort( phases );
+        return phases;
     }
 
 

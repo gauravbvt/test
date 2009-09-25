@@ -20,6 +20,7 @@ import com.mindalliance.channels.analysis.detectors.InconsistentImpactOnTargetPa
 import com.mindalliance.channels.analysis.detectors.InvalidChannel;
 import com.mindalliance.channels.analysis.detectors.NeverTriggeredSpecifiedTask;
 import com.mindalliance.channels.analysis.detectors.NoRedundancy;
+import com.mindalliance.channels.analysis.detectors.NoScenarioForEventPhase;
 import com.mindalliance.channels.analysis.detectors.NoScenarioRepondsToIncident;
 import com.mindalliance.channels.analysis.detectors.OrphanedPart;
 import com.mindalliance.channels.analysis.detectors.PartWithInvalidTiming;
@@ -34,9 +35,9 @@ import com.mindalliance.channels.analysis.detectors.PotentialDeadlock;
 import com.mindalliance.channels.analysis.detectors.RedundantFlow;
 import com.mindalliance.channels.analysis.detectors.RedundantPart;
 import com.mindalliance.channels.analysis.detectors.RedundantPlace;
-import com.mindalliance.channels.analysis.detectors.ScenarioEventNeverEnds;
-import com.mindalliance.channels.analysis.detectors.ScenarioEventNeverStarts;
-import com.mindalliance.channels.analysis.detectors.ScenarioEventNotStarted;
+import com.mindalliance.channels.analysis.detectors.ScenarioEventNeverCaused;
+import com.mindalliance.channels.analysis.detectors.ScenarioNeverEnds;
+import com.mindalliance.channels.analysis.detectors.ScenarioNeverStarts;
 import com.mindalliance.channels.analysis.detectors.ScenarioWithSameRisk;
 import com.mindalliance.channels.analysis.detectors.ScenarioWithoutManagedRisk;
 import com.mindalliance.channels.analysis.detectors.SinglePointOfFailure;
@@ -101,7 +102,7 @@ public class AbstractChannelsTest extends TestCase {
 
         FileBasedManager attachmentManager = new FileBasedManager();
 //        attachmentManager.setDirectory( new FileSystemResource( "work/uploads" ) );
-        attachmentManager.setPath( "uploads" );
+        attachmentManager.setUploadPath( "uploads" );
 
         DefaultQueryService queryService = new DefaultQueryService( planManager, attachmentManager );
 
@@ -177,12 +178,12 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new NoRedundancy() );
         detectors.add( new FlowToSelf() );
         detectors.add( new PartWithRoleWithNoKnownActor() );
-        detectors.add( new ScenarioEventNeverEnds() );
+        detectors.add( new ScenarioNeverEnds() );
         detectors.add( new TriggeredButNeverStartedDefinedTask() );
         detectors.add( new NeverTriggeredSpecifiedTask() );
         detectors.add( new AutoStartPartAlsoTriggered() );
-        detectors.add( new ScenarioEventNeverStarts() );
-        detectors.add( new ScenarioEventNotStarted() );
+        detectors.add( new ScenarioEventNeverCaused() );
+        detectors.add( new ScenarioNeverStarts() );
         detectors.add( new CyclicTriggering() );
         detectors.add( new PotentialDeadlock() );
         detectors.add( new FlowViolatesPolicy() );
@@ -206,6 +207,7 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new UntimelyCriticalCommitment() );
         detectors.add( new SinglePointOfFailure() );
         detectors.add( new UserIsManyActors() );
+        detectors.add( new NoScenarioForEventPhase() );
         for ( IssueDetector detector : detectors ) {
             ( (AbstractIssueDetector) detector ).setQueryService( queryService );
         }

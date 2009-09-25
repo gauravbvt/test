@@ -180,6 +180,7 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
             stream.registerConverter( new UserIssueConverter( this ) );
             stream.registerConverter( new ChannelConverter( this ) );
             stream.registerConverter( new JobConverter( this ) );
+            stream.registerConverter( new PhaseConverter( this ) );
             stream.registerConverter( new ExportConverter( this ) );
         }
 

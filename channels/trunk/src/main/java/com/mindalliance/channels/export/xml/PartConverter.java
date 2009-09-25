@@ -99,8 +99,9 @@ public class PartConverter extends AbstractChannelsConverter {
         writer.startNode( "startsWithScenario" );
         writer.setValue( "" + part.isStartsWithScenario() );
         writer.endNode();
+        // todo - rename "terminatesEventPhase"
         writer.startNode( "terminatesEvent" );
-        writer.setValue( "" + part.isTerminatesEvent() );
+        writer.setValue( "" + part.isTerminatesEventPhase() );
         writer.endNode();
         if ( part.getInitiatedEvent() != null ) {
             Event initiatedEvent = part.getInitiatedEvent();
@@ -168,7 +169,7 @@ public class PartConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "startsWithScenario" ) ) {
                 part.setStartsWithScenario( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "terminatesEvent" ) ) {
-                part.setTerminatesEvent( reader.getValue().equals( "true" ) );
+                part.setTerminatesEventPhase( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "initiatedEvent" ) ) {
                 String eventId = reader.getAttribute( "id");
                 String eventName = reader.getValue();

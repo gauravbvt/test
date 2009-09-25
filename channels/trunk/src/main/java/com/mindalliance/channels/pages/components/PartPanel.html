@@ -58,10 +58,14 @@
                     wicket:id="repeats-every">[Delay panel]</span>
             </span>
             <span class="timing">
-                <input type="checkbox" wicket:id="startsWithScenario"/>Starts with
-                <a wicket:id="event-link" href="#">scenario event</a>
-                 &#160;<input type="checkbox" wicket:id="terminatesEvent"/>Can end this event
+                <input type="checkbox" wicket:id="startsWithScenario"/>Starts with phase
+                <a wicket:id="phase-link" href="#">phase</a>
+                of event
+                <a wicket:id="event-link" href="#">event</a>
              </span>
+            <span class="timing">
+                <input type="checkbox" wicket:id="terminatesEventPhase"/>Can end this scenario
+            </span>
         </td>
     </tr>
 

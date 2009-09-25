@@ -36,7 +36,7 @@ public class ScenarioWithSameRisk extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Another scenario also addresses risk";
+        return "Scenario overlap";
     }
 
     /**
@@ -46,7 +46,9 @@ public class ScenarioWithSameRisk extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Scenario scenario = (Scenario) modelObject;
         for ( Scenario other : getQueryService().list( Scenario.class ) ) {
-            if ( scenario != other && scenario.getEvent() == other.getEvent() ) {
+            if ( !scenario.equals( other )
+                    && scenario.getEvent().equals( other.getEvent() )
+                    && scenario.getPhase().equals( other.getPhase() ) ) {
                 Set<Risk> sharedRisks = new HashSet<Risk>();
                 for ( Risk risk : scenario.getRisks() ) {
                     if ( other.getRisks().contains( risk ) ) {
@@ -55,13 +57,13 @@ public class ScenarioWithSameRisk extends AbstractIssueDetector {
                 }
                 for ( Risk sharedRisk : sharedRisks ) {
                     DetectedIssue issue = makeIssue( Issue.VALIDITY, scenario );
-                    issue.setDescription( "This scenario responds to the same event as scenario \""
+                    issue.setDescription( "This scenario is for the same event phase as scenario \""
                             + other.getName()
-                            + "\" and both address the same risk: \"" + sharedRisk.getLabel()
+                            + "\" and both address a common risk: \"" + sharedRisk.getLabel()
                             + "\" impacting "
                             + ( sharedRisk.getOrganization() != null
-                                    ? sharedRisk.getOrganization().getName()
-                                    : "all" )
+                            ? sharedRisk.getOrganization().getName()
+                            : "all" )
                             + "."
                     );
                     issue.setRemediation( "Consider merging the two scenarios\n"

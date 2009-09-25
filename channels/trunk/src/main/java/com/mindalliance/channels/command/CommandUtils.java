@@ -140,7 +140,7 @@ public final class CommandUtils {
         state.put( "waivedIssueDetections", new ArrayList<String>( part.getWaivedIssueDetections() ) );
         state.put( "selfTerminating", part.isSelfTerminating() );
         state.put( "repeating", part.isRepeating() );
-        state.put( "terminatesEvent", part.isTerminatesEvent() );
+        state.put( "terminatesEventPhase", part.isTerminatesEventPhase() );
         state.put( "startsWithScenario", part.isStartsWithScenario() );
         state.put( "mitigations", new ArrayList<Risk>( part.getMitigations() ) );
         if ( part.getInitiatedEvent() != null ) state.put( "actor", part.getInitiatedEvent().getName() );
@@ -166,7 +166,7 @@ public final class CommandUtils {
         part.setTask( (String) state.get( "task" ) );
         part.setRepeating( (Boolean) state.get( "repeating" ) );
         part.setSelfTerminating( (Boolean) state.get( "selfTerminating" ) );
-        part.setTerminatesEvent( (Boolean) state.get( "terminatesEvent" ) );
+        part.setTerminatesEventPhase( (Boolean) state.get( "terminatesEventPhase" ) );
         part.setStartsWithScenario( (Boolean) state.get( "startsWithScenario" ) );
         part.setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
         part.setCompletionTime( (Delay) state.get( "completionTime" ) );

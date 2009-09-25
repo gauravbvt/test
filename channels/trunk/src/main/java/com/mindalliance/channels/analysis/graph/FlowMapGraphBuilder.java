@@ -63,6 +63,9 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
         for ( Part initiator : scenario.getQueryService().findInitiators( scenario ) ) {
             graph.addVertex( initiator );
         }
+        for ( Part terminator : scenario.getQueryService().findExternalTerminators( scenario ) ) {
+            graph.addVertex( terminator );
+        }
         // add flows as edges
         Iterator<Flow> flows = scenario.flows();
         while ( flows.hasNext() ) {

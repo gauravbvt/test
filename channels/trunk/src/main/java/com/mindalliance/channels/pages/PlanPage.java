@@ -326,7 +326,8 @@ public final class PlanPage extends WebPage implements Updatable {
                     @Override
                     public String getObject() {
                         return StringUtils.abbreviate(
-                                scenario.getDescription(),
+                                StringUtils.capitalize(
+                                        scenario.getPhaseEventTitle() ),
                                 SCENARIO_DESCRIPTION_MAX_LENGTH );
                     }
                 }
@@ -1083,7 +1084,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 || change.isUnknown()
                 || ( identifiable instanceof ModelObject
                 && change.isUpdated()
-                && change.getProperty().equals( "waivedIssueDetections" ) ) ) {
+                && change.isForProperty( "waivedIssueDetections" ) ) ) {
             refreshAll( target );
         }
         if ( change.isUpdated() ) {
@@ -1107,6 +1108,8 @@ public final class PlanPage extends WebPage implements Updatable {
                     target.addComponent( planEditPanel );
                 } else if ( change.isSelected() || change.isRecomposed() ) {
                     redirectToPlan();
+                } else if ( change.isExists() && change.isForProperty( "phases" ) ) {
+                    scenarioPanel.refreshScenarioEditPanel( target );
                 }
             }
             if ( identifiable instanceof Scenario ) {

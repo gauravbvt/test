@@ -318,8 +318,9 @@ public class PlanManager implements InitializingBean {
      * Create a new plan and index it.
      *
      * @return the new plan dao
+     * @param queryService a query service
      */
-    public PlanDao createPlan() {
+    private PlanDao createPlan( QueryService queryService ) {
         try {
             Plan plan = new Plan();
             plan.setName( "UNNAMED" );
@@ -327,6 +328,7 @@ public class PlanManager implements InitializingBean {
             plan.setId( idGenerator.assignId( null, plan ) );
             plan.setVersion( 1 );
             plan.setDevelopment();
+            plan.addDefaultPhase( queryService );
             add( plan );
             PlanDao dao = getDao( plan );
             dao.add( plan, plan.getId() );
@@ -544,7 +546,7 @@ public class PlanManager implements InitializingBean {
         }
         // Make sure there is at least one active (if bogus) plan
         if ( planIndex.isEmpty() ) {
-            daos.add( createPlan() );
+            daos.add( createPlan( queryService ) );
         }
         // Validate and save each individual plan.
         for ( PlanDao dao : daos ) {

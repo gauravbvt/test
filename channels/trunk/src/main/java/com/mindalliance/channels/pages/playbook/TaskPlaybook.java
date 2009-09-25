@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.playbook;
 
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Delay;
@@ -10,7 +11,6 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.QueryService;
 import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RestartResponseException;
@@ -167,10 +167,10 @@ public class TaskPlaybook extends PlaybookPage {
                 },
 
                 new WebMarkupContainer( "end-event" )
-                    .add( new Label( "event", getEventName() ) )
-                    .setVisible( part.isTerminatesEvent() ) )
+                    .add( new Label( "event-phase", getEventPhaseName() ) )
+                    .setVisible( part.isTerminatesEventPhase() ) )
 
-            .setVisible( !parts.isEmpty() || part.isTerminatesEvent() );
+            .setVisible( !parts.isEmpty() || part.isTerminatesEventPhase() );
     }
 
     private static List<Part> getSubtasks( List<Flow> flows ) {

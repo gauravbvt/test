@@ -3,9 +3,12 @@ package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
@@ -13,13 +16,17 @@ import com.mindalliance.channels.pages.components.ExternalFlowsPanel;
 import com.mindalliance.channels.pages.components.ScenarioCausesPanel;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
@@ -42,6 +49,18 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
      * Default page size for external flows panel.
      */
     private static final int PAGE_SIZE = 10;
+    /**
+     * Whether to group scenarios by phase.
+     */
+    private boolean groupByPhase;
+    /**
+     * Whether to group by event.
+     */
+    private boolean groupByEvent = true;
+    /**
+     * Selected phase or event in plan.
+     */
+    private ModelObject selectedGroup;
     /**
      * Selected scenario in plan.
      */
@@ -67,12 +86,54 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     }
 
     private void init() {
+        addGroupingChoices();
         addPlanSizing();
         addPlanMapDiagramPanel();
         addFlowsTitleLabel();
         addExternalFlowsPanel();
         addCausesTitleLabel();
         addCausesPanel();
+    }
+
+    private void addGroupingChoices() {
+        CheckBox groupByPhaseCheckBox = new CheckBox(
+                "groupByPhase",
+                new PropertyModel<Boolean>( this, "groupByPhase" ) );
+        groupByPhaseCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                refresh( target );
+            }
+        } );
+        add( groupByPhaseCheckBox );
+        CheckBox groupByEventCheckBox = new CheckBox(
+                "groupByEvent",
+                new PropertyModel<Boolean>( this, "groupByEvent" ) );
+        groupByEventCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                refresh( target );
+            }
+        } );
+        add( groupByEventCheckBox );
+    }
+
+    public boolean isGroupByPhase() {
+        return groupByPhase;
+    }
+
+    public void setGroupByPhase( boolean groupByPhase ) {
+        this.groupByPhase = groupByPhase;
+        groupByEvent = !groupByPhase;
+        selectedGroup = null;
+    }
+
+    public boolean isGroupByEvent() {
+        return groupByEvent;
+    }
+
+    public void setGroupByEvent( boolean groupByEvent ) {
+        this.groupByEvent = groupByEvent;
+        groupByPhase = !groupByEvent;
+        selectedGroup = null;
     }
 
     private void addPlanSizing() {
@@ -119,13 +180,16 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     private void addPlanMapDiagramPanel() {
         Settings settings = diagramSize[0] <= 0.0 || diagramSize[1] <= 0.0 ? new Settings(
                 ".plan .picture", null, null, true, true )
-                            : new Settings( ".plan .picture", null, diagramSize, true, true );
+                : new Settings( ".plan .picture", null, diagramSize, true, true );
         planMapDiagramPanel = new PlanMapDiagramPanel(
                 "plan-map",
-                new PropertyModel<ArrayList<Scenario>>( this, "scenarios" ),
+                new PropertyModel<ArrayList<Scenario>>( this, "allScenarios" ),
+                groupByPhase,
+                groupByEvent,
+                selectedGroup,
                 selectedScenario,
-                selectedScRel, settings );
-
+                selectedScRel,
+                settings );
         planMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( planMapDiagramPanel );
     }
@@ -134,14 +198,14 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
         Label flowsTitleLabel = new Label( "flows-title",
                 new PropertyModel<String>( this, "flowsTitle" ) );
         flowsTitleLabel.setOutputMarkupId( true );
-        add( flowsTitleLabel );
+        addOrReplace( flowsTitleLabel );
     }
 
     private void addCausesTitleLabel() {
         Label causesTitleLabel = new Label( "causes-title",
                 new PropertyModel<String>( this, "causesTitle" ) );
         causesTitleLabel.setOutputMarkupId( true );
-        add( causesTitleLabel );
+        addOrReplace( causesTitleLabel );
     }
 
     private void addExternalFlowsPanel() {
@@ -158,7 +222,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     private void addCausesPanel() {
         ScenarioCausesPanel scenarioCausesPanel = new ScenarioCausesPanel(
                 "causes",
-                new PropertyModel<ArrayList<ScenarioRelationship>>( this, "scenarioRelationships" ),
+                getScenarioRelationships(),
                 PAGE_SIZE,
                 getExpansions()
         );
@@ -171,7 +235,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
      *
      * @return an array list of scenarios
      */
-    public List<Scenario> getScenarios() {
+    public List<Scenario> getAllScenarios() {
         return getQueryService().list( Scenario.class );
     }
 
@@ -181,19 +245,29 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
      * @return a string
      */
     public String getFlowsTitle() {
-        if ( selectedScenario != null ) {
-            return "Flows in \""
+        if ( selectedGroup != null ) {
+            if ( groupByPhase ) {
+                return "Flows connecting scenarios in phase \""
+                        + selectedGroup.getName()
+                        + "\"";
+            } else {
+                return "Flows connecting scenarios about event \""
+                        + selectedGroup.getName()
+                        + "\"";
+            }
+        } else if ( selectedScenario != null ) {
+            return "Flows connecting \""
                     + selectedScenario.getName()
-                    + "\" connecting to other scenarios";
+                    + "\" to other scenarios";
         } else if ( selectedScRel != null ) {
             Scenario fromScenario = selectedScRel.getFromScenario( getQueryService() );
             Scenario toScenario = selectedScRel.getToScenario( getQueryService() );
             if ( fromScenario == null || toScenario == null ) {
                 return "*** You need to refresh ***";
             } else {
-                return "Flows in \""
+                return "Flows connecting \""
                         + fromScenario.getName()
-                        + "\" connecting to \""
+                        + "\" to \""
                         + toScenario.getName()
                         + "\"";
             }
@@ -208,10 +282,20 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
      * @return a string
      */
     public String getCausesTitle() {
-        if ( selectedScenario != null ) {
-            return "What \""
+        if ( selectedGroup != null ) {
+            if ( groupByPhase ) {
+                return "Causations for scenarios in phase \""
+                        + selectedGroup.getName()
+                        + "\"";
+            } else {
+                return "Causations for scenarios about event \""
+                        + selectedGroup.getName()
+                        + "\"";
+            }
+        } else if ( selectedScenario != null ) {
+            return "Causations for scenario \""
                     + selectedScenario.getName()
-                    + " causes";
+                    + "\"";
         } else if ( selectedScRel != null ) {
             Scenario fromScenario = selectedScRel.getFromScenario( getQueryService() );
             Scenario toScenario = selectedScRel.getToScenario( getQueryService() );
@@ -220,7 +304,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
             } else {
                 return "How \""
                         + fromScenario.getName()
-                        + "\" causes \""
+                        + "\" impacts \""
                         + toScenario.getName()
                         + "\"";
             }
@@ -237,22 +321,40 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     public List<ExternalFlow> getExternalFlows() {
         if ( selectedScRel != null ) {
             return selectedScRel.getExternalFlows();
+        } else if ( selectedGroup != null ) {
+            List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
+            List<Scenario> scenariosInGroup = getScenariosInGroup();
+            List<Scenario> allScenarios = getAllScenarios();
+            for ( Scenario scenario : allScenarios ) {
+                for ( Scenario other : allScenarios ) {
+                    if ( !scenario.equals( other )
+                            &&
+                            ( scenariosInGroup.contains( scenario )
+                                    || scenariosInGroup.contains( other ) ) ) {
+                        ScenarioRelationship scRel = getQueryService().findScenarioRelationship( scenario, other );
+                        if ( scRel != null ) externalFlows.addAll( scRel.getExternalFlows() );
+                    }
+                }
+            }
+            return externalFlows;
         } else if ( selectedScenario != null ) {
             List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
-            List<Scenario> allScenarios = getScenarios();
+            List<Scenario> allScenarios = getAllScenarios();
             for ( Scenario other : allScenarios ) {
-                if ( selectedScenario != other ) {
+                if ( !selectedScenario.equals( other ) ) {
                     ScenarioRelationship scRel = getQueryService().findScenarioRelationship( selectedScenario, other );
+                    if ( scRel != null ) externalFlows.addAll( scRel.getExternalFlows() );
+                    scRel = getQueryService().findScenarioRelationship( other, selectedScenario );
                     if ( scRel != null ) externalFlows.addAll( scRel.getExternalFlows() );
                 }
             }
             return externalFlows;
         } else {
             List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
-            List<Scenario> allScenarios = getScenarios();
+            List<Scenario> allScenarios = getAllScenarios();
             for ( Scenario scenario : allScenarios ) {
                 for ( Scenario other : allScenarios ) {
-                    if ( scenario != other ) {
+                    if ( !scenario.equals( other ) ) {
                         ScenarioRelationship scRel = getQueryService().findScenarioRelationship( scenario, other );
                         if ( scRel != null ) externalFlows.addAll( scRel.getExternalFlows() );
                     }
@@ -260,6 +362,27 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
             }
             return externalFlows;
         }
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<Scenario> getScenariosInGroup() {
+        return (List<Scenario>) CollectionUtils.select(
+                getAllScenarios(),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        if ( selectedGroup != null ) {
+                            Scenario scenario = (Scenario) obj;
+                            if ( groupByPhase ) {
+                                return scenario.getPhase().equals( selectedGroup );
+                            } else {
+                                return scenario.getEvent().equals( selectedGroup );
+                            }
+                        } else {
+                            return true;
+                        }
+                    }
+                }
+        );
     }
 
     /**
@@ -271,19 +394,37 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
         List<ScenarioRelationship> scRels = new ArrayList<ScenarioRelationship>();
         if ( selectedScRel != null ) {
             scRels.add( selectedScRel );
+        } else if ( selectedGroup != null ) {
+            List<Scenario> scenariosInGroup = getScenariosInGroup();
+            List<Scenario> allScenarios = getAllScenarios();
+            for ( Scenario scenario : allScenarios ) {
+                for ( Scenario other : allScenarios ) {
+                    if ( !scenario.equals( other )
+                            &&
+                            ( scenariosInGroup.contains( scenario )
+                                    || scenariosInGroup.contains( other ) ) ) {
+                        ScenarioRelationship scRel =
+                                getQueryService().findScenarioRelationship( scenario, other );
+                        if ( scRel != null ) scRels.add( scRel );
+                    }
+                }
+            }
         } else if ( selectedScenario != null ) {
-            List<Scenario> allScenarios = getScenarios();
+            List<Scenario> allScenarios = getAllScenarios();
             for ( Scenario other : allScenarios ) {
-                if ( selectedScenario != other ) {
-                    ScenarioRelationship scRel = getQueryService().findScenarioRelationship( selectedScenario, other );
+                if ( !selectedScenario.equals( other ) ) {
+                    ScenarioRelationship scRel = getQueryService().
+                            findScenarioRelationship( selectedScenario, other );
+                    if ( scRel != null ) scRels.add( scRel );
+                    scRel = getQueryService().findScenarioRelationship( other, selectedScenario );
                     if ( scRel != null ) scRels.add( scRel );
                 }
             }
         } else {
-            List<Scenario> allScenarios = getScenarios();
+            List<Scenario> allScenarios = getAllScenarios();
             for ( Scenario scenario : allScenarios ) {
                 for ( Scenario other : allScenarios ) {
-                    if ( scenario != other ) {
+                    if ( !scenario.equals( other ) ) {
                         ScenarioRelationship scRel = getQueryService().findScenarioRelationship( scenario, other );
                         if ( scRel != null ) scRels.add( scRel );
                     }
@@ -308,7 +449,9 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
 
     public void refresh( AjaxRequestTarget target ) {
         addPlanMapDiagramPanel();
+        addFlowsTitleLabel();
         addExternalFlowsPanel();
+        addCausesTitleLabel();
         addCausesPanel();
         target.addComponent( this );
     }
@@ -321,12 +464,19 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
         if ( change.isSelected() ) {
             Identifiable changed = change.getSubject();
             if ( changed instanceof Plan ) {
+                selectedGroup = null;
+                selectedScenario = null;
+                selectedScRel = null;
+            } else if ( changed instanceof Phase || changed instanceof Event ) {
+                selectedGroup = (ModelObject) changed;
                 selectedScenario = null;
                 selectedScRel = null;
             } else if ( changed instanceof Scenario ) {
+                selectedGroup = null;
                 selectedScenario = (Scenario) changed;
                 selectedScRel = null;
             } else if ( changed instanceof ScenarioRelationship ) {
+                selectedGroup = null;
                 selectedScenario = null;
                 selectedScRel = (ScenarioRelationship) changed;
             }

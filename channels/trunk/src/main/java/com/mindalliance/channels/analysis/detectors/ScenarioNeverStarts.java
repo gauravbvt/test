@@ -1,8 +1,10 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
 
@@ -17,9 +19,9 @@ import java.util.List;
  * Date: Apr 11, 2009
  * Time: 2:52:56 PM
  */
-public class ScenarioEventNotStarted extends AbstractIssueDetector {
+public class ScenarioNeverStarts extends AbstractIssueDetector {
 
-    public ScenarioEventNotStarted() {
+    public ScenarioNeverStarts() {
     }
 
     /**
@@ -29,19 +31,25 @@ public class ScenarioEventNotStarted extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Scenario scenario = (Scenario) modelObject;
         Plan plan = getPlan();
-        if ( !plan.isIncident( scenario.getEvent() ) && getQueryService().isInitiated( scenario ) ) {
-            if ( !getQueryService().findIfScenarioStarted( scenario ) ) {
-                Issue issue = makeIssue( Issue.COMPLETENESS, scenario );
-                issue.setDescription( "The scenario would never start"
-                        + " because no other scenario causes the event it responds to." );
-                issue.setRemediation( "Ensure that tasks that cause the event in question are actually started\n"
-                        + "or make the event an incident within the plan." );
-                issue.setSeverity( Issue.Level.Major );
-                issues.add( issue );
-            }
+        Event event = scenario.getEvent();
+        Phase phase = scenario.getPhase();
+        boolean isIncident = plan.isIncident( event );
+        if ( !( isIncident && phase.isConcurrent()
+                ||
+                ( isIncident || !getQueryService().findCausesOf( event ).isEmpty() )
+                        && event.isSelfTerminating() && phase.isPostEvent() )
+                && !getQueryService().isInitiated( scenario ) ) {
+            Issue issue = makeIssue( Issue.COMPLETENESS, scenario );
+            issue.setDescription( "The scenario may never start"
+                    + " because it is not in response to an incident and no other scenario causes it to start." );
+            issue.setRemediation( "Make this scenario in response to an incident\n"
+                    + "or make sure that a task in another scenario causes this scenario to start." );
+            issue.setSeverity( Issue.Level.Major );
+            issues.add( issue );
         }
         return issues;
     }
+
 
     /**
      * {@inheritDoc}
@@ -61,6 +69,6 @@ public class ScenarioEventNotStarted extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Event never caused";
+        return "Scenario may never starts";
     }
 }

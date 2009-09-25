@@ -70,6 +70,9 @@ public interface DiagramFactory<Vertex, Edge> extends Service {
 
     /**
      * Instantiate a plan map diagram.
+     * @param groupByPhase whetner to group scenario by phases
+     * @param groupByEvent whether to group scenarios by events addressed
+     * @param group phase or event grouping scenarios
      * @param scenarios list of scenarios
      * @param scRel selected scenario relationship
      * @param scenario selected scenario
@@ -79,6 +82,9 @@ public interface DiagramFactory<Vertex, Edge> extends Service {
      */
     Diagram newPlanMapDiagram(
             List<Scenario> scenarios,
+            boolean groupByPhase,
+            boolean groupByEvent,
+            ModelObject group,
             Scenario scenario,
             ScenarioRelationship scRel,
             double[] diagramSize,

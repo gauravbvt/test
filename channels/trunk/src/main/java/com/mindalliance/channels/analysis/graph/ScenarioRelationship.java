@@ -48,6 +48,11 @@ public class ScenarioRelationship implements Identifiable {
      */
     private List<Part> initiators = new ArrayList<Part>();
 
+    /**
+     * Parts in from-scenario that terminate the to-scenario
+     */
+    private List<Part> terminators = new ArrayList<Part>();
+
     public ScenarioRelationship() {
     }
 
@@ -121,6 +126,14 @@ public class ScenarioRelationship implements Identifiable {
 
     public void setInitiators( List<Part> initiators ) {
         this.initiators = initiators;
+    }
+
+    public List<Part> getTerminators() {
+        return terminators;
+    }
+
+    public void setTerminators( List<Part> terminators ) {
+        this.terminators = terminators;
     }
 
     /**
@@ -224,6 +237,14 @@ public class ScenarioRelationship implements Identifiable {
     }
 
     /**
+     * Whether has external initiators.
+     * @return a boolean
+     */
+    public boolean hasTerminators() {
+        return !terminators.isEmpty();
+    }
+
+     /**
      * Clear out initiators.
      */
     public void clearInitiators() {
@@ -231,9 +252,17 @@ public class ScenarioRelationship implements Identifiable {
     }
 
     /**
+    * Clear out initiators.
+    */
+   public void clearTerminators() {
+       terminators = new ArrayList<Part>();
+   }
+
+    /**
      * Clear out external flows.
      */
     public void clearExternalFlows() {
         externalFlows = new ArrayList<ExternalFlow>();
     }
+
 }

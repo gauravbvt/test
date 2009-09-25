@@ -3,6 +3,8 @@ package com.mindalliance.channels;
 import com.mindalliance.channels.attachments.Attachment;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 
+import java.io.File;
+
 /**
  * A thing that keeps track of the associations of model objects and their file attachments.
  */
@@ -10,6 +12,7 @@ public interface AttachmentManager {
 
     /**
      * URL points to a document.
+     *
      * @param url a url
      * @return a boolean
      */
@@ -17,14 +20,16 @@ public interface AttachmentManager {
 
     /**
      * Upload a file and get an attachment.
+     *
      * @param selectedType a type of attachment
-     * @param upload  a file upload
+     * @param upload       a file upload
      * @return an attachment or null if failed
      */
     Attachment upload( Attachment.Type selectedType, FileUpload upload );
 
     /**
      * Get display label for an attachment.
+     *
      * @param attachment an attachment
      * @return a string
      */
@@ -32,7 +37,22 @@ public interface AttachmentManager {
 
     /**
      * Remove unattached documents.
+     *
      * @param service the service to use for finding objects
      */
     void removeUnattached( QueryService service );
+
+    /**
+     * Get upload directory.
+     *
+     * @return a string
+     */
+    File getUploadDirectory();
+
+    /**
+      * Get upload path.
+      *
+      * @return a string
+      */
+    String getUploadPath();
 }

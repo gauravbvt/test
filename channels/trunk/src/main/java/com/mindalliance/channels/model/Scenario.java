@@ -7,6 +7,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,9 +59,13 @@ public class Scenario extends ModelObject {
      */
     private Map<Long, Node> nodeIndex;
     /**
-     * Plan event responded to by this scenario.
+     * Plan event addressed to by this scenario.
      */
     private Event event;
+    /**
+     * Plan phase addressed by this scenario.
+     */
+    private Phase phase;
     /**
      * Risks to be mitigated in this scenario.
      */
@@ -545,6 +550,100 @@ public class Scenario extends ModelObject {
         return IteratorUtils.toList( parts() );
     }
 
+    /**
+     * Get text about phase and event.
+     *
+     * @return a string
+     */
+    public String getPhaseEventTitle() {
+        StringBuilder sb = new StringBuilder();
+        sb.append( StringUtils.capitalize( getPhase().getName() ) );
+        sb.append( ' ' );
+        sb.append( getPhase().getPreposition() );
+        sb.append( ' ' );
+        sb.append( StringUtils.uncapitalize( getEvent().getName() ) );
+        return sb.toString();
+    }
+
+    /**
+     * Whether the scenario can be initiated by a given part.
+     * True if the part causes this scenario's event and the scenario phase is concurrent.
+     * True if the part terminates a concurrent scenario for same event and this scenario is postEvent.
+     *
+     * @param part a part
+     * @return a boolean
+     */
+    public boolean isInitiatedBy( Part part ) {
+        return !initiationCause( part ).isEmpty();
+        /*return part.getInitiatedEvent().equals( getEvent() )
+                && getPhase().isConcurrent()
+                ||
+                part.isTerminatesEventPhase()
+                        && part.getScenario().getPhase().isConcurrent()
+                        && part.getScenario().getEvent().equals( getEvent() )
+                        && getPhase().isPostEvent();*/
+    }
+
+    /**
+     * Explains why part initiates this scenario.
+     *
+     * @param part a part
+     * @return a string
+     */
+    public String initiationCause( Part part ) {
+        Event initiatedEvent = part.getInitiatedEvent();
+        if ( initiatedEvent != null && initiatedEvent.equals( getEvent() )
+                && getPhase().isConcurrent() ) {
+            return "causes event \"" + getEvent().getName().toLowerCase() + "\"";
+        } else if ( part.isTerminatesEventPhase()
+                && part.getScenario().getPhase().isConcurrent()
+                && part.getScenario().getEvent().equals( getEvent() )
+                && getPhase().isPostEvent() ) {
+            return "terminates event \"" + getEvent().getName().toLowerCase() + "\"";
+        } else {
+            return "";
+        }
+
+    }
+
+    /**
+     * Whether the scenario can be terminated by a given part.
+     * True if the part explicitly terminates the phase event of this scenario.
+     * True if the part causes an event and the scenario is for pre-event phase of that event.
+     *
+     * @param part a part
+     * @return a boolean
+     */
+    public boolean isTerminatedBy( Part part ) {
+        return !terminationCause( part ).isEmpty();
+        /*return part.getScenario().equals( this )
+                && part.isTerminatesEventPhase()
+                ||
+                part.getInitiatedEvent().equals( getEvent() )
+                        && getPhase().isPreEvent();*/
+    }
+
+    /**
+     * Explains why part terminates this scenario.
+     *
+     * @param part a part
+     * @return a string
+     */
+    public String terminationCause( Part part ) {
+        Event initiatedEvent = part.getInitiatedEvent();
+        if ( part.getScenario().equals( this )
+                && part.isTerminatesEventPhase() ) {
+            return "terminates " + this.getPhaseEventTitle().toLowerCase();
+        } else if ( initiatedEvent != null
+                && initiatedEvent.equals( getEvent() )
+                && getPhase().isPreEvent() ) {
+            return "causes event \"" + initiatedEvent.getName().toLowerCase() + "\"";
+        } else {
+            return "";
+        }
+
+    }
+
     //=================================================
     /**
      * An iterator that walks through all flow in the scenario.
@@ -627,4 +726,11 @@ public class Scenario extends ModelObject {
         return false;
     }
 
+    public Phase getPhase() {
+        return phase;
+    }
+
+    public void setPhase( Phase phase ) {
+        this.phase = phase;
+    }
 }

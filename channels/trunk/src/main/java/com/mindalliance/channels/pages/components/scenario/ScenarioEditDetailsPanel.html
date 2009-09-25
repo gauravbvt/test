@@ -19,8 +19,20 @@
         </tr>
         <tr>
             <th align="right">
+                <label for="phase">
+                    About <a wicket:id="phase-link" href="#" title="Phase details">phase</a>:
+                </label>
+            </th>
+            <td>
+                <select id="phase" wicket:id="phase-choices">
+                    <option>Responding</option> 
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th align="right">
                 <label for="event">
-                    Responds to <a wicket:id="event-link" href="#" title="Event details">event</a>:
+                    of <a wicket:id="event-link" href="#" title="Event details">event</a>:
                 </label>
             </th>
             <td><input type="text" size="40" id="event" wicket:id="event" value=""></td>

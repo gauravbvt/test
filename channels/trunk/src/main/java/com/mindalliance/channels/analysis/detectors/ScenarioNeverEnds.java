@@ -1,26 +1,26 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Scenario;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
- * Scenario does not terminate on its own and no part terminates it.
+ * Scenario might not terminate.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: Apr 10, 2009
  * Time: 3:01:54 PM
  */
-public class ScenarioEventNeverEnds extends AbstractIssueDetector {
+public class ScenarioNeverEnds extends AbstractIssueDetector {
 
-    public ScenarioEventNeverEnds() {
+    public ScenarioNeverEnds() {
     }
 
     /**
@@ -34,7 +34,7 @@ public class ScenarioEventNeverEnds extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Event never ended";
+        return "Scenario may never end";
     }
 
     /**
@@ -43,21 +43,18 @@ public class ScenarioEventNeverEnds extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Scenario scenario = (Scenario) modelObject;
-        if ( !scenario.getEvent().isSelfTerminating() ) {
-            boolean terminated = false;
-            Iterator<Part> parts = scenario.parts();
-            while ( !terminated && parts.hasNext() ) {
-                Part part = parts.next();
-                terminated = part.isTerminatesEvent();
-            }
-            if ( !terminated ) {
-                Issue issue = makeIssue( Issue.COMPLETENESS, scenario );
-                issue.setDescription( "The scenario never ends the event it responds to." );
-                issue.setRemediation( "Have the event end on its own\n"
-                        + "have at least one task in the scenario terminate it." );
-                issue.setSeverity( Issue.Level.Major );
-                issues.add( issue );
-            }
+        Phase phase = scenario.getPhase();
+        Event event = scenario.getEvent();
+        if ( !( phase.isConcurrent() && event.isSelfTerminating()
+                || phase.isPreEvent() && getPlan().isIncident( event ) )
+                && getQueryService().findTerminators( scenario ).isEmpty() ) {
+            Issue issue = makeIssue( Issue.COMPLETENESS, scenario );
+            issue.setDescription( "The scenario may never end." );
+            issue.setRemediation( "Have the event end on its own if the scenario is for a concurrent phase\n"
+                    +"or have the event be an incident if the scenario is for a pre-event phase\n "
+                    + "or have at least one task in the scenario terminate the scenario." );
+            issue.setSeverity( Issue.Level.Major );
+            issues.add( issue );
         }
         return issues;
     }

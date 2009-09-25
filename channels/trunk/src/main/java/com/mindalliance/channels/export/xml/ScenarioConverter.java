@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Risk;
@@ -60,7 +61,7 @@ public class ScenarioConverter extends AbstractChannelsConverter {
         Scenario scenario = (Scenario) object;
         Plan plan = getContext().getPlan();
         QueryService queryService = getQueryService();
-        boolean exportingInPlan = isExportingPlan( context )  || scenario.isBeingDeleted();
+        boolean exportingInPlan = isExportingPlan( context ) || scenario.isBeingDeleted();
         context.put( "scenario", scenario );
         writer.addAttribute( "plan", plan.getUri() );
         writer.addAttribute( "version", getVersion() );
@@ -96,6 +97,17 @@ public class ScenarioConverter extends AbstractChannelsConverter {
             writer.setValue( event.getName() );
             writer.endNode();
         }
+        // Plan phase
+        Phase phase = scenario.getPhase();
+        if ( phase == null ) {
+            // Make sur a scenario is always saved with a phase.
+            phase = plan.getDefaultPhase( getQueryService() );
+        }
+        writer.startNode( "phase" );
+        writer.addAttribute( "id", Long.toString( phase.getId() ) );
+        writer.setValue( phase.getName() );
+        writer.endNode();
+
         // Scenario user issues
         exportUserIssues( scenario, writer, context );
         // Risks in scope
@@ -135,8 +147,8 @@ public class ScenarioConverter extends AbstractChannelsConverter {
         QueryService queryService = getQueryService();
         Long oldId = Long.parseLong( reader.getAttribute( "id" ) );
         Scenario scenario = importingPlan
-                                ? queryService.createScenario( oldId )
-                                : queryService.createScenario();
+                ? queryService.createScenario( oldId )
+                : queryService.createScenario();
         Part defaultPart = scenario.getDefaultPart();
         context.put( "scenario", scenario );
         scenario.setName( reader.getAttribute( "name" ) );
@@ -148,7 +160,7 @@ public class ScenarioConverter extends AbstractChannelsConverter {
                 scenario.setDescription( reader.getValue() );
             } else if ( nodeName.equals( "detection-waivers" ) ) {
                 importDetectionWaivers( scenario, reader );
-            }  else if ( nodeName.equals( "attachments" ) ) {
+            } else if ( nodeName.equals( "attachments" ) ) {
                 importAttachments( scenario, reader );
             } else if ( nodeName.equals( "event" ) ) {
                 context.convertAnother( scenario, Event.class );
@@ -162,7 +174,7 @@ public class ScenarioConverter extends AbstractChannelsConverter {
                 context.convertAnother( scenario, Place.class );
                 // Incident
             } else if ( nodeName.equals( "incident" ) ) {
-                String id = reader.getAttribute( "id");
+                String id = reader.getAttribute( "id" );
                 Event event = getEntity(
                         Event.class,
                         reader.getValue(),
@@ -172,9 +184,14 @@ public class ScenarioConverter extends AbstractChannelsConverter {
                 getContext().getPlan().addIncident( event );
                 // Event
             } else if ( nodeName.equals( "trigger-event" ) ) {
-                String id = reader.getAttribute( "id");
+                String id = reader.getAttribute( "id" );
                 Event event = findOrCreate( Event.class, reader.getValue(), id );
                 scenario.setEvent( event );
+                // Phase
+            } else if ( nodeName.equals( "phase" ) ) {
+                String id = reader.getAttribute( "id" );
+                Phase phase = findOrCreate( Phase.class, reader.getValue(), id );
+                scenario.setPhase( phase );
                 // Parts and flows
             } else if ( nodeName.equals( "part" ) ) {
                 context.convertAnother( scenario, Part.class );
@@ -194,6 +211,10 @@ public class ScenarioConverter extends AbstractChannelsConverter {
         }
         // Remove automatically created default part
         scenario.removeNode( defaultPart );
+        if ( scenario.getPhase() == null ) {
+            LOG.warn( "Setting scenario's phase to plan default." );
+            scenario.setPhase( getContext().getPlan().getDefaultPhase( getQueryService() ) );
+        }
         Map<String, Object> state = new HashMap<String, Object>();
         state.put( "scenario", scenario );
         state.put( "idMap", context.get( "idMap" ) );

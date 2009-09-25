@@ -7,6 +7,7 @@ import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.URLProvider;
 import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Scenario;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
@@ -43,7 +44,10 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
      * List of scenarios to be mapped.
      */
     private List<Scenario> scenarios;
-
+    /**
+     * Selected phase or event.
+     */
+    private ModelObject selectedGroup;
     /**
      * Selected scenario.
      */
@@ -56,27 +60,50 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
 
     /** URL provider for imagemap links. */
     private URLProvider<Scenario, ScenarioRelationship> uRLProvider;
+    /**
+     * Whether to group by phase.
+     */
+    private boolean groupByPhase;
+    /**
+     * Whether to group by event.
+     */
+    private boolean groupByEvent;
 
     public PlanMapDiagramPanel(
-            String id, IModel<ArrayList<Scenario>> model, Scenario selectedScenario,
-            ScenarioRelationship selectedScRel, Settings settings ) {
+            String id,
+            IModel<ArrayList<Scenario>> model,
+            boolean groupByPhase,
+            boolean groupByEvent,
+            ModelObject selectedGroup,
+            Scenario selectedScenario,
+            ScenarioRelationship selectedScRel,
+            Settings settings ) {
 
-        this( id, model, selectedScenario, selectedScRel, null, settings );
+        this( id, model, groupByPhase, groupByEvent, selectedGroup, selectedScenario, selectedScRel, null, settings );
     }
 
     public PlanMapDiagramPanel(
-            String id, IModel<ArrayList<Scenario>> model, Scenario selectedScenario,
+            String id,
+            IModel<ArrayList<Scenario>> model,
+            boolean groupByPhase,
+            boolean groupByEvent,
+            ModelObject selectedGroup,
+            Scenario selectedScenario,
             ScenarioRelationship selectedScRel,
             URLProvider<Scenario, ScenarioRelationship> uRLProvider,
             Settings settings ) {
 
         super( id, settings );
+        this.groupByPhase = groupByPhase;
+        this.groupByEvent = groupByEvent;
         scenarios = model.getObject();
+        this.selectedGroup = selectedGroup;
         this.selectedScenario = selectedScenario;
         this.selectedScRel = selectedScRel;
         this.uRLProvider = uRLProvider;
         init();
     }
+
 
     /**
      * {@inheritDoc}
@@ -85,6 +112,9 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
     protected Diagram makeDiagram() {
 
         PlanMapDiagram diagram = new PlanMapDiagram( scenarios,
+                                                     groupByPhase,
+                                                     groupByEvent,
+                                                     selectedGroup,
                                                      selectedScenario,
                                                      selectedScRel,
                                                      getDiagramSize(),
@@ -119,7 +149,16 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
     @Override
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "/plan.png?scenario=" );
+        sb.append( "/plan.png?" );
+        sb.append("groupby=");
+        sb.append( groupByPhase
+                    ? "phase"
+                    : groupByEvent
+                        ? "event"
+                        : "NONE");
+        sb.append("&group=");
+        sb.append( selectedGroup == null ? "NONE" : selectedGroup.getId() );
+        sb.append("&scenario=");
         sb.append( selectedScenario == null ? "NONE" : selectedScenario.getId() );
         sb.append( "&connection=" );
         sb.append( selectedScRel == null ? "NONE" : selectedScRel.getId() );
@@ -156,7 +195,15 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
             int scrollTop,
             int scrollLeft,
             AjaxRequestTarget target ) {
-        // Do nothing -- never called
+        String js = scroll( domIdentifier, scrollTop, scrollLeft );
+        try {
+            ModelObject group = getQueryService().find( ModelObject.class, Long.valueOf( graphId ));
+            Change change = new Change( Change.Type.Selected, group );
+            change.setScript( js );
+            update( target, change );
+        } catch ( NotFoundException e ) {
+            LOG.warn( "Nout found", e );
+        }
     }
 
     /**

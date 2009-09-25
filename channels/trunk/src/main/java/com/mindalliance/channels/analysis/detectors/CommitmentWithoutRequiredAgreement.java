@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Sharing commitment without a required MOU.
+ * Sharing commitment without a required sharing agreement.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -51,9 +51,9 @@ public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
                     issue.setDescription( "Sharing commitments from "
                             + org.getName()
                             + " to another organization"
-                            + " must be backed by an MOU." );
-                    issue.setRemediation( "Attach an MOU to this sharing commitment,\n"
-                            + "or remove the requirement for MOUs for "
+                            + " must be backed by a sharing agreement." );
+                    issue.setRemediation( "Attach an agreement to this sharing commitment,\n"
+                            + "or remove the requirement for agreements for "
                             + org.getName() );
                     issue.setSeverity( Issue.Level.Major );
                     issues.add( issue );
@@ -82,7 +82,7 @@ public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Sharing commitment without required MOU";
+        return "Sharing commitment without required agreement";
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
@@ -10,16 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A scenario that is not an incident is never initiated by a part form another scenario.
+ * A scenario is about an event that is never caused.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: Apr 11, 2009
  * Time: 2:41:55 PM
  */
-public class ScenarioEventNeverStarts extends AbstractIssueDetector {
+public class ScenarioEventNeverCaused extends AbstractIssueDetector {
 
-    public ScenarioEventNeverStarts() {
+    public ScenarioEventNeverCaused() {
     }
 
     /**
@@ -28,10 +29,12 @@ public class ScenarioEventNeverStarts extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Scenario scenario = (Scenario) modelObject;
+        Event event = scenario.getEvent();
         Plan plan = getPlan();
-        if ( !plan.isIncident( scenario.getEvent() ) && !getQueryService().isInitiated( scenario ) ) {
+        if ( !plan.isIncident( event )
+                && getQueryService().findCausesOf( event ).isEmpty() ) {
             Issue issue = makeIssue( Issue.COMPLETENESS, scenario );
-            issue.setDescription( "The scenario is in response to an event that never happens." );
+            issue.setDescription( "The scenario is about an event that may never be caused." );
             issue.setRemediation( "Make the event in question an incident\n"
                     +"or make sure at least one task in another scenario causes it." );
             issue.setSeverity( Issue.Level.Major );
@@ -58,6 +61,6 @@ public class ScenarioEventNeverStarts extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Event never initiated";
+        return "Event may never be caused";
     }
 }

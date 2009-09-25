@@ -8,6 +8,7 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
@@ -89,10 +90,14 @@ public class PlanIndexPanel extends AbstractCommandablePanel implements NameRang
      */
     private static final String FLOWS = "Flows";
     /**
+     * Indexing choice.
+     */
+    private static final String PHASES = "Phases";
+    /**
      * Indexing choices.
      */
     private static final String[] indexingChoices =
-            {ALL, ACTORS, EVENTS, FLOWS, PLACES, ORGANIZATIONS, ROLES, TASKS};
+            {ALL, ACTORS, EVENTS, FLOWS, PHASES, PLACES, ORGANIZATIONS, ROLES, TASKS};
     /**
      * Maximum number of rows shown in table at a time.
      */
@@ -251,6 +256,8 @@ public class PlanIndexPanel extends AbstractCommandablePanel implements NameRang
             names = queryService.findAllNames( Place.class );
         } else if ( indexedOn.equals( EVENTS ) ) {
             names = queryService.findAllNames( Event.class );
+        } else if ( indexedOn.equals( PHASES ) ) {
+            names = queryService.findAllNames( Phase.class );
         } else if ( indexedOn.equals( TASKS ) ) {
             names = queryService.findAllTasks();
         } else if ( indexedOn.equals( FLOWS ) ) {
@@ -279,6 +286,7 @@ public class PlanIndexPanel extends AbstractCommandablePanel implements NameRang
         names.addAll( queryService.findAllNames( Organization.class ) );
         names.addAll( queryService.findAllNames( Place.class ) );
         names.addAll( queryService.findAllNames( Event.class ) );
+        names.addAll( queryService.findAllNames( Phase.class ) );
         names.addAll( queryService.findAllTasks() );
         names.addAll( queryService.findAllFlowNames() );
         return new ArrayList<String>( names );
@@ -370,6 +378,8 @@ public class PlanIndexPanel extends AbstractCommandablePanel implements NameRang
                 indices = getIndicesForAllEntities( Place.class );
             } else if ( indexedOn.equals( EVENTS ) ) {
                 indices = getIndicesForAllEntities( Event.class );
+            } else if ( indexedOn.equals( PHASES ) ) {
+                indices = getIndicesForAllEntities( Phase.class );
             } else if ( indexedOn.equals( TASKS ) ) {
                 indices = getIndicesForAllTasks();
             } else if ( indexedOn.equals( FLOWS ) ) {
@@ -389,6 +399,7 @@ public class PlanIndexPanel extends AbstractCommandablePanel implements NameRang
         indexEntries.addAll( getIndicesForAllEntities( Organization.class ) );
         indexEntries.addAll( getIndicesForAllEntities( Place.class ) );
         indexEntries.addAll( getIndicesForAllEntities( Event.class ) );
+        indexEntries.addAll( getIndicesForAllEntities( Phase.class ) );
         indexEntries.addAll( getIndicesForAllTasks() );
         indexEntries.addAll( getIndicesForAllFlows() );
         return indexEntries;

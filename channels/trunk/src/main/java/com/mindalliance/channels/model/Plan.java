@@ -1,5 +1,7 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.QueryService;
+
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 import java.io.Serializable;
@@ -21,10 +23,30 @@ import java.util.Set;
 @Entity
 public class Plan extends ModelObject {
 
-    public enum Status implements Serializable {
+    /**
+     * Name of the default phase of a plan.
+     */
+    private static final String DEFAULT_PHASE_NAME = "Responding";
+    /**
+     * Timing of the default phase.
+     */
+    private static final Phase.Timing DEFAULT_PHASE_TIMING = Phase.Timing.Concurrent;
 
+    /**
+     * The status of a (version of) plan.
+     */
+    public enum Status implements Serializable {
+        /**
+         * In development.
+         */
         DEVELOPMENT,
+        /**
+         * In production.
+         */
         PRODUCTION,
+        /**
+         * Retired.
+         */
         RETIRED
     }
 
@@ -67,6 +89,10 @@ public class Plan extends ModelObject {
      * Date when version was in retirement, production or development.
      */
     private Date whenVersioned;
+    /**
+     * Phases defined for this plan.
+     */
+    private List<Phase> phases = new ArrayList<Phase>();
 
     //-----------------------------
     public Plan() {
@@ -202,7 +228,7 @@ public class Plan extends ModelObject {
     }
 
     /**
-     * Get default event.
+     * Get a scenario's default event.
      *
      * @return a plan event
      */
@@ -212,6 +238,18 @@ public class Plan extends ModelObject {
         Iterator<Event> eventIterator = incidents.iterator();
         return eventIterator.hasNext() ? eventIterator.next() : null;
     }
+
+    /**
+     * Get a scenario's default phase, adding it if needed.
+     *
+     * @param queryService a query service
+     * @return a phase
+     */
+    public Phase getDefaultPhase( QueryService queryService ) {
+        if ( phases.isEmpty() ) addDefaultPhase( queryService );
+        return phases.get( 0 );
+    }
+
 
     /**
      * Whether an event is an incident.
@@ -267,6 +305,34 @@ public class Plan extends ModelObject {
     @Transient
     public boolean isLockable() {
         return false;
+    }
+
+    public List<Phase> getPhases() {
+        return phases;
+    }
+
+    public void setPhases( List<Phase> phases ) {
+        this.phases = phases;
+    }
+
+    /**
+     * Add default phase to plan.
+     *
+     * @param queryService a query service
+     */
+    public void addDefaultPhase( QueryService queryService ) {
+        Phase defaultPhase = queryService.findOrCreate( Phase.class, DEFAULT_PHASE_NAME );
+        defaultPhase.setTiming( DEFAULT_PHASE_TIMING );
+        phases.add( defaultPhase );
+    }
+
+    /**
+     * Add phase to plan.
+     *
+     * @param phase a phase
+     */
+    public void addPhase( Phase phase ) {
+        phases.add( phase );
     }
 
     /**
