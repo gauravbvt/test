@@ -208,14 +208,6 @@ public class IssueScanner implements Scanner {
         private void scanIssues( ModelObject mo ) {
             if ( !active ) return;
             analyst.listIssues( mo, true );
-            if ( !active ) return;
-            analyst.listIssues( mo, false );
-            if ( !active ) return;
-            analyst.listUnwaivedIssues( mo, true );
-            if ( !active ) return;
-            analyst.hasIssues( mo, true );
-            if ( !active ) return;
-            analyst.getIssuesSummary( mo, true );
         }
     }
 }

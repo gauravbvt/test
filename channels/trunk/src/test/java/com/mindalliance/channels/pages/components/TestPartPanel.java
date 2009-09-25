@@ -4,10 +4,10 @@ import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.DiagramFactory;
-import com.mindalliance.channels.export.DummyExporter;
 import com.mindalliance.channels.attachments.BitBucket;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.SimpleIdGenerator;
+import com.mindalliance.channels.export.DummyExporter;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Issue;
@@ -26,7 +26,12 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.easymock.EasyMock;
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.anyBoolean;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,7 +41,7 @@ import java.util.Iterator;
 /**
  * Test behavoir of a part panel.
  */
-@SuppressWarnings( { "HardCodedStringLiteral", "OverlyLongMethod" } )
+@SuppressWarnings( {"HardCodedStringLiteral", "OverlyLongMethod"} )
 public class TestPartPanel extends AbstractChannelsTest {
 
     private PartPanel panel;
@@ -59,25 +64,25 @@ public class TestPartPanel extends AbstractChannelsTest {
 //        queryService.setAddingSamples( true );
         channelsApp.setQueryService( queryService );
         DiagramFactory dm = createMock( DiagramFactory.class );
-         Diagram fd = createMock(  Diagram.class);
-         expect( fd.makeImageMap( ) ).andReturn( "" ).anyTimes();
-         expect( dm.newFlowMapDiagram( (Scenario) anyObject(), (Node) EasyMock.isNull(), (double[]) EasyMock.isNull(), (String) EasyMock.isNull() ) )
-                     .andReturn( fd ).anyTimes();
-         replay( dm );
-         replay( fd );
-         channelsApp.setDiagramFactory( dm );
+        Diagram fd = createMock( Diagram.class );
+        expect( fd.makeImageMap() ).andReturn( "" ).anyTimes();
+        expect( dm.newFlowMapDiagram( (Scenario) anyObject(), (Node) EasyMock.isNull(), (double[]) EasyMock.isNull(), (String) EasyMock.isNull() ) )
+                .andReturn( fd ).anyTimes();
+        replay( dm );
+        replay( fd );
+        channelsApp.setDiagramFactory( dm );
 
         Analyst sa = createNiceMock( Analyst.class );
-        expect( sa.getIssuesSummary( (ModelObject) anyObject(), anyBoolean()) ).andReturn( "" ).anyTimes();
+        expect( sa.getIssuesSummary( (ModelObject) anyObject(), anyBoolean() ) ).andReturn( "" ).anyTimes();
         expect( sa.getIssuesSummary( (ModelObject) anyObject(), (String) anyObject() ) )
                 .andReturn( "" ).anyTimes();
-        expect( sa.findIssues( (ModelObject) anyObject(), anyBoolean() ))
+        expect( sa.listIssues( (ModelObject) anyObject(), anyBoolean() ).iterator() )
                 .andReturn( new ArrayList<Issue>().iterator() ).anyTimes();
         replay( sa );
         channelsApp.setAnalyst( sa );
 
         tester = new WicketTester( channelsApp );
-        tester.setParametersForNextRequest( new HashMap<String,String[]>() );
+        tester.setParametersForNextRequest( new HashMap<String, String[]>() );
 
         // Find first part in scenario
         scenario = channelsApp.getQueryService().getDefaultScenario();
@@ -89,7 +94,7 @@ public class TestPartPanel extends AbstractChannelsTest {
                 part = (Part) n;
         }
 
-        panel = new PartPanel( "id", new Model<Part>(part) );
+        panel = new PartPanel( "id", new Model<Part>( part ) );
         tester.startComponent( panel );
     }
 
@@ -260,6 +265,7 @@ public class TestPartPanel extends AbstractChannelsTest {
 
     /**
      * Test all fields in the form using page tester.
+     *
      * @throws java.io.IOException if fails
      */
     public void testForm() throws IOException {

@@ -5,11 +5,11 @@ import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.Importer;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.export.DummyExporter;
 import com.mindalliance.channels.attachments.BitBucket;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.SimpleIdGenerator;
+import com.mindalliance.channels.export.DummyExporter;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
@@ -22,7 +22,14 @@ import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.anyBoolean;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.notNull;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,7 +43,7 @@ import java.util.Set;
 /**
  * Simple test using the WicketTester.
  */
-@SuppressWarnings( { "HardCodedStringLiteral" } )
+@SuppressWarnings( {"HardCodedStringLiteral"} )
 public class TestScenarioPage extends TestCase {
 
     private WicketTester tester;
@@ -60,10 +67,10 @@ public class TestScenarioPage extends TestCase {
 
         app.setQueryService( queryService );
         DiagramFactory dm = createMock( DiagramFactory.class );
-        Diagram fd = createMock(  Diagram.class);
-        expect( fd.makeImageMap( ) ).andReturn( "" ).anyTimes();
+        Diagram fd = createMock( Diagram.class );
+        expect( fd.makeImageMap() ).andReturn( "" ).anyTimes();
         expect( dm.newFlowMapDiagram( (Scenario) anyObject(), null, null, null ) )
-                    .andReturn( fd ).anyTimes();
+                .andReturn( fd ).anyTimes();
         replay( dm );
         replay( fd );
         app.setDiagramFactory( dm );
@@ -73,24 +80,26 @@ public class TestScenarioPage extends TestCase {
                 .andReturn( "" ).anyTimes();
         expect( sa.getIssuesSummary( (ModelObject) anyObject(), (String) anyObject() ) )
                 .andReturn( "" ).anyTimes();
-        expect( sa.findIssues( (ModelObject) anyObject(), anyBoolean() ))
+        expect( sa.listIssues( (ModelObject) anyObject(), anyBoolean() ).iterator() )
                 .andReturn( new ArrayList<Issue>().iterator() ).anyTimes();
         replay( sa );
         app.setAnalyst( sa );
 
         scenario = app.getQueryService().getDefaultScenario();
         tester = new WicketTester( app );
-        tester.setParametersForNextRequest( new HashMap<String,String[]>() );
+        tester.setParametersForNextRequest( new HashMap<String, String[]>() );
     }
 
-    /** Workaround for wicket form tester bug re: file upload. File must be set
+    /**
+     * Workaround for wicket form tester bug re: file upload. File must be set
      * otherwise all fields set to null. Resolved in wickets 1.4-RC2, coming out
      * soon to a theater near you...
-     * @param ft the tester to fix
+     *
+     * @param ft  the tester to fix
      * @param app
-     * @see {https://issues.apache.org/jira/browse/WICKET-1931}
-     * @todo remove when moving to Wickets 1.4-RC2
      * @throws java.io.IOException
+     * @todo remove when moving to Wickets 1.4-RC2
+     * @see {https://issues.apache.org/jira/browse/WICKET-1931}
      */
     public static void setFiles( FormTester ft, Channels app ) throws IOException {
 
@@ -164,7 +173,9 @@ public class TestScenarioPage extends TestCase {
         tester.assertNoErrorMessage();
     }
 
-    /** Test all nodes pages in default scenario. */
+    /**
+     * Test all nodes pages in default scenario.
+     */
     public void testNodes() {
         Iterator<Part> parts = scenario.parts();
         while ( parts.hasNext() ) {
@@ -195,8 +206,11 @@ public class TestScenarioPage extends TestCase {
         tester.assertNoErrorMessage();
     }
 
-    /** Test submit with part modifications.
-     * @throws NotFoundException on error */
+    /**
+     * Test submit with part modifications.
+     *
+     * @throws NotFoundException on error
+     */
     public void testEmptySubmit() throws NotFoundException, IOException {
         Part part = scenario.getDefaultPart();
 
@@ -214,8 +228,11 @@ public class TestScenarioPage extends TestCase {
         checkFiles( app );
     }
 
-    /** Test submit with part modifications.
-     * @throws NotFoundException on error */
+    /**
+     * Test submit with part modifications.
+     *
+     * @throws NotFoundException on error
+     */
     public void testDescriptionSubmit1() throws NotFoundException, IOException {
         Part part = scenario.getDefaultPart();
         part.setDescription( "" );
@@ -239,8 +256,11 @@ public class TestScenarioPage extends TestCase {
         checkFiles( app );
     }
 
-    /** Test submit with part modifications.
-     * @throws NotFoundException on error */
+    /**
+     * Test submit with part modifications.
+     *
+     * @throws NotFoundException on error
+     */
     public void testDescriptionSubmit2() throws NotFoundException, IOException {
         Part part = scenario.getDefaultPart();
         part.setDescription( "something" );
@@ -283,7 +303,8 @@ public class TestScenarioPage extends TestCase {
         try {
             assertNull( dao.find( Scenario.class, scenario.getId() ) );
             fail();
-        } catch ( NotFoundException ignored ) {}
+        } catch ( NotFoundException ignored ) {
+        }
 
         assertEquals( 3, getScenarioCount() );
         // the setFiles() imports/creates a new scenario...

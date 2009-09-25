@@ -73,6 +73,7 @@ public abstract class AbstractIssueDetector implements IssueDetector {
     public boolean appliesTo( ModelObject modelObject, String property ) {
         return appliesTo( modelObject )
                 && property != null
+                && isPropertySpecific()
                 && property.equals( getTestedProperty() );
     }
 
@@ -160,6 +161,13 @@ public abstract class AbstractIssueDetector implements IssueDetector {
      */
     protected Plan getPlan() {
         return queryService.getCurrentPlan();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isPropertySpecific() {
+        return getTestedProperty() != null;
     }
 
 

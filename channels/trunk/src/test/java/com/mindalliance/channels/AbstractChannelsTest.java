@@ -2,6 +2,7 @@ package com.mindalliance.channels;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DefaultAnalyst;
+import com.mindalliance.channels.analysis.DefaultDetective;
 import com.mindalliance.channels.analysis.IssueDetector;
 import com.mindalliance.channels.analysis.detectors.ActorNotInOneOrganization;
 import com.mindalliance.channels.analysis.detectors.AutoStartPartAlsoTriggered;
@@ -127,9 +128,10 @@ public class AbstractChannelsTest extends TestCase {
         // Set scenario analyst
         // Initialize analyst
         DefaultAnalyst analyst = new DefaultAnalyst();
+        DefaultDetective detective = new DefaultDetective();
         List<IssueDetector> detectors = createDetectors( queryService );
-        analyst.setIssueDetectors( detectors );
-
+        detective.setIssueDetectors( detectors );
+        analyst.setDetective( detective );
         app = new Channels();
         app.setQueryService( queryService );
         app.setImportExportFactory( xmlStreamer );

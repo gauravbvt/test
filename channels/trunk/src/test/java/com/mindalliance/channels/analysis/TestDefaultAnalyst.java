@@ -3,15 +3,15 @@ package com.mindalliance.channels.analysis;
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.Issue;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.io.IOException;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -60,8 +60,8 @@ public class TestDefaultAnalyst extends AbstractChannelsTest {
     }
 
     private void collectIssues( ModelObject modelObject, List<Issue> collector ) {
-        Iterator<Issue> issues = analyst.findIssues( modelObject,
-                Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        Iterator<Issue> issues = analyst.listIssues( modelObject,
+                Analyst.INCLUDE_PROPERTY_SPECIFIC ).iterator();
         while ( issues.hasNext() ) {
             Issue issue = issues.next();
             System.out.println( issue );

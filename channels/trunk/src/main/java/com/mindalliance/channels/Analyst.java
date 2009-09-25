@@ -6,11 +6,10 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
- * Analyzes model elements to uncover issues and make recommendations for fixing them.
+ * Analyzes the plan and individual model elements.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -30,24 +29,6 @@ public interface Analyst extends Service {
      * @param plan a plan
      */
     void onAfterCommand( Plan plan );
-
-    /**
-     * Use all applicable issue detectors to find issues about a model object.
-     *
-     * @param modelObject               -- the model object being analyzed
-     * @param includingPropertySpecific -- all issues or only those that are not specific to a property
-     * @return an iterator on issues detected
-     */
-    Iterator<Issue> findIssues( ModelObject modelObject, boolean includingPropertySpecific );
-
-    /**
-     * Use all applicable issue detectors to find issues about a model object's property.
-     *
-     * @param modelObject -- the model object being analyzed
-     * @param property    -- the name of a property of the model object
-     * @return an iterator on issues detected
-     */
-    Iterator<Issue> findIssues( ModelObject modelObject, String property );
 
     /**
      * Use all applicable issue detectors to find issues about a model object.

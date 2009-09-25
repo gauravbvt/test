@@ -41,7 +41,7 @@
         <!-- Temporary caching refreshed when model is changed -->
         <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.QueryService.*(..))"
                      advice-ref="cacheSet"/>
-        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.Analyst.*(..))"
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.Detective.*(..))"
                      advice-ref="cacheSet"/>
         <aop:advisor pointcut="execution(String com.mindalliance.channels.Analyst.*(..))"
                      advice-ref="cacheSet"/>

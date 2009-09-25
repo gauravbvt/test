@@ -2,6 +2,7 @@ package com.mindalliance.channels.analysis;
 
 import com.mindalliance.channels.AbstractService;
 import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.Detective;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
@@ -40,12 +41,11 @@ public class DefaultAnalyst extends AbstractService implements Analyst, Lifecycl
      * The query service.
      */
     private QueryService queryService;
-
     /**
-     * Issue detectors registered with the scenario analyst.
+     * The detective service.
      */
+    private Detective detective;
 
-    private List<IssueDetector> issueDetectors = new ArrayList<IssueDetector>();
 
     /**
      * Low priority, multi-threaded issues scanner.
@@ -57,6 +57,18 @@ public class DefaultAnalyst extends AbstractService implements Analyst, Lifecycl
     private boolean running;
 
     public DefaultAnalyst() {
+    }
+
+    public QueryService getQueryService() {
+        return queryService;
+    }
+
+    public void setQueryService( QueryService queryService ) {
+        this.queryService = queryService;
+    }
+
+    public void setDetective( Detective detective ) {
+        this.detective = detective;
     }
 
     public void setIssueScanner( IssueScanner issueScanner ) {
@@ -87,11 +99,11 @@ public class DefaultAnalyst extends AbstractService implements Analyst, Lifecycl
     }
 
     /**
-      * {@inheritDoc}
-      */
-     public void onStop() {
-         stop();
-     }
+     * {@inheritDoc}
+     */
+    public void onStop() {
+        stop();
+    }
 
 
     /**
@@ -104,52 +116,15 @@ public class DefaultAnalyst extends AbstractService implements Analyst, Lifecycl
     /**
      * {@inheritDoc}
      */
-    public Iterator<Issue> findIssues(
-            ModelObject modelObject, boolean includingPropertySpecific ) {
-        return new IssueIterator( issueDetectors, modelObject, includingPropertySpecific );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Iterator<Issue> findIssues( ModelObject modelObject, String property ) {
-        return new IssueIterator( issueDetectors, modelObject, property );
-    }
-
-    @SuppressWarnings( "unchecked" )
-    private Iterator<Issue> findUnwaivedIssues(
-            final ModelObject modelObject, boolean includingPropertySpecific ) {
-        List<IssueDetector> unwaivedDetectors = (List<IssueDetector>) CollectionUtils.select(
-                issueDetectors, new Predicate() {
-            public boolean evaluate( Object obj ) {
-                IssueDetector issueDetector = (IssueDetector) obj;
-                return !modelObject.isWaived( issueDetector.getKind() );
-            }
-        } );
-        return new IssueIterator( unwaivedDetectors, modelObject, includingPropertySpecific );
-    }
-
-    @SuppressWarnings( "unchecked" )
-    private Iterator<Issue> findUnwaivedIssues( final ModelObject modelObject, String property ) {
-        List<IssueDetector> unwaivedDetectors = (List<IssueDetector>) CollectionUtils.select(
-                issueDetectors, new Predicate() {
-            public boolean evaluate( Object obj ) {
-                IssueDetector issueDetector = (IssueDetector) obj;
-                return !modelObject.isWaived( issueDetector.getKind() );
-            }
-        } );
-        return new IssueIterator( unwaivedDetectors, modelObject, property );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public List<Issue> listIssues(
             ModelObject modelObject, Boolean includingPropertySpecific, Boolean includingWaived ) {
         if ( includingWaived ) {
-            return listIssues( modelObject, includingPropertySpecific );
+            return detectAllIssues( modelObject, null, includingPropertySpecific );
         } else {
-            return listUnwaivedIssues( modelObject, includingPropertySpecific );
+            return detectUnwaivedIssues(
+                    modelObject,
+                    null,
+                    includingPropertySpecific );
         }
     }
 
@@ -157,53 +132,40 @@ public class DefaultAnalyst extends AbstractService implements Analyst, Lifecycl
      * {@inheritDoc}
      */
     public List<Issue> listIssues( ModelObject modelObject, Boolean includingPropertySpecific ) {
-        List<Issue> issues = new ArrayList<Issue>();
-        Iterator<Issue> iterator = findIssues( modelObject, includingPropertySpecific );
-        while ( iterator.hasNext() )
-            issues.add( iterator.next() );
-        return issues;
+        return detectAllIssues( modelObject, null, includingPropertySpecific );
     }
 
     /**
      * {@inheritDoc}
      */
     public List<Issue> listIssues( ModelObject modelObject, String property ) {
-        List<Issue> issues = new ArrayList<Issue>();
-        Iterator<Issue> iterator = findIssues( modelObject, property );
-        while ( iterator.hasNext() )
-            issues.add( iterator.next() );
-        return issues;
+        return detectAllIssues( modelObject, property, true );
     }
 
     public List<Issue> listUnwaivedIssues(
             ModelObject modelObject, Boolean includingPropertySpecific ) {
-        List<Issue> issues = new ArrayList<Issue>();
-        Iterator<Issue> iterator = findUnwaivedIssues( modelObject, includingPropertySpecific );
-        while ( iterator.hasNext() )
-            issues.add( iterator.next() );
-        return issues;
+        return detectUnwaivedIssues(
+                modelObject,
+                null,
+                includingPropertySpecific );
     }
 
     public List<Issue> listUnwaivedIssues( ModelObject modelObject, String property ) {
-        List<Issue> issues = new ArrayList<Issue>();
-        Iterator<Issue> iterator = findUnwaivedIssues( modelObject, property );
-        while ( iterator.hasNext() )
-            issues.add( iterator.next() );
-        return issues;
+        return detectUnwaivedIssues( modelObject, property, true );
     }
 
     /**
      * {@inheritDoc}
      */
     public Boolean hasIssues( ModelObject modelObject, String property ) {
-        return findIssues( modelObject, property ).hasNext();
+        return !listIssues( modelObject, property ).isEmpty();
     }
 
     /**
      * {@inheritDoc}
      */
     public Boolean hasIssues( ModelObject modelObject, Boolean includingPropertySpecific ) {
-        return findIssues( modelObject, includingPropertySpecific ).hasNext();
+        return !listIssues( modelObject, includingPropertySpecific ).isEmpty();
     }
 
     /**
@@ -250,15 +212,6 @@ public class DefaultAnalyst extends AbstractService implements Analyst, Lifecycl
                 sb.append( DESCRIPTION_SEPARATOR );
         }
         return sb.toString();
-    }
-
-    /**
-     * Sets the list of issue detectors used for analysis
-     *
-     * @param issueDetectors -- a list of issue detectors
-     */
-    public void setIssueDetectors( List<IssueDetector> issueDetectors ) {
-        this.issueDetectors = issueDetectors;
     }
 
     /**
@@ -415,24 +368,48 @@ public class DefaultAnalyst extends AbstractService implements Analyst, Lifecycl
         Set<Part> parts = new HashSet<Part>();
         for ( Play play : plays ) {
             parts.add( play.getPartFor( resourceSpec ) );
-            Iterator<Issue> iterator = findIssues( play.getFlow(), true );
-            while ( iterator.hasNext() )
-                issues.add( iterator.next() );
+            issues.addAll( listIssues( play.getFlow(), true ) );
         }
         for ( Part part : parts ) {
-            Iterator<Issue> iterator = findIssues( part, true );
-            while ( iterator.hasNext() )
-                issues.add( iterator.next() );
+            issues.addAll( listIssues( part, true ) );
         }
         return issues;
     }
 
-    public QueryService getQueryService() {
-        return queryService;
+    private List<Issue> detectAllIssues(
+            ModelObject modelObject,
+            String property,
+            boolean includingPropertySpecific ) {
+        List<Issue> issues = new ArrayList<Issue>();
+        if ( property != null ) {
+            issues.addAll( detective.detectUnwaivedPropertyIssues( modelObject, property ) );
+            issues.addAll( detective.detectWaivedPropertyIssues( modelObject, property ) );
+        } else {
+            if ( includingPropertySpecific ) {
+                issues.addAll( detective.detectUnwaivedIssues( modelObject, true ) );
+                issues.addAll( detective.detectWaivedIssues( modelObject, true ) );
+            }
+            issues.addAll( detective.detectUnwaivedIssues( modelObject, false ) );
+            issues.addAll( detective.detectWaivedIssues( modelObject, false ) );
+        }
+        return issues;
     }
 
-    public void setQueryService( QueryService queryService ) {
-        this.queryService = queryService;
+    private List<Issue> detectUnwaivedIssues(
+            ModelObject modelObject,
+            String property,
+            boolean includingPropertySpecific ) {
+        if ( property != null ) {
+            return detective.detectUnwaivedPropertyIssues( modelObject, property );
+        } else {
+            List<Issue> issues = new ArrayList<Issue>();
+            if ( includingPropertySpecific ) {
+                issues.addAll( detective.detectUnwaivedIssues( modelObject, true ) );
+            }
+            issues.addAll( detective.detectUnwaivedIssues( modelObject, false ) );
+            return issues;
+        }
     }
+
 
 }

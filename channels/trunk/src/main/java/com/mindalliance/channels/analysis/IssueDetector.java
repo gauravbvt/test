@@ -1,7 +1,7 @@
 package com.mindalliance.channels.analysis;
 
-import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelObject;
 
 import java.util.List;
 
@@ -58,4 +58,12 @@ public interface IssueDetector {
      * @return a boolean
      */
     boolean canBeWaived();
+
+    /**
+     * Whether the detector is for a specific property.
+     *
+     * @return a boolean
+     */
+    boolean isPropertySpecific();
+
 }

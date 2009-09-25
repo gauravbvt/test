@@ -120,10 +120,7 @@
         <property name="analyst" ref="analyst"/>
     </bean>
 
-    <!-- Scenario analyst -->
-    <bean id="analyst" class="com.mindalliance.channels.analysis.DefaultAnalyst"
-          init-method="start" destroy-method="stop">
-        <property name="queryService" ref="queryService"/>
+    <bean id="detective" class="com.mindalliance.channels.analysis.DefaultDetective">
         <property name="issueDetectors">
             <list value-type="java.util.ArrayList">
                 <bean class="com.mindalliance.channels.analysis.detectors.FromUser">
@@ -278,6 +275,13 @@
                  </bean>
             </list>
         </property>
+    </bean>
+
+    <!-- Scenario analyst -->
+    <bean id="analyst" class="com.mindalliance.channels.analysis.DefaultAnalyst"
+          init-method="start" destroy-method="stop">
+        <property name="queryService" ref="queryService"/>
+        <property name="detective"  ref="detective"/>
     </bean>
 
     <!-- Lock manager -->
