@@ -162,6 +162,7 @@ public class IssueScanner implements Scanner {
          */
         public void run() {
             try {
+                long startTime = System.currentTimeMillis();
                 if ( !active ) return;
                 for ( ModelObject mo : queryService.list( ModelObject.class ) ) {
                     if ( !active ) return;
@@ -199,6 +200,8 @@ public class IssueScanner implements Scanner {
                 analyst.countTestFailures( getPlan(), Issue.COMPLETENESS );
                 if ( !active ) return;
                 analyst.countTestFailures( getPlan(), Issue.ROBUSTNESS );
+                long endTime = System.currentTimeMillis();
+                LOG.info( "Issue sweep completed on " + getPlan() + " in " + (endTime - startTime) + " msecs" );
             } catch ( Throwable e ) {
                 e.printStackTrace();
                 LOG.debug( "Deamon failed", e );
