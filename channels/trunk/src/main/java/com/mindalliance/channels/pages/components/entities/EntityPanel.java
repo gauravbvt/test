@@ -212,13 +212,6 @@ public class EntityPanel extends AbstractMultiAspectPanel {
         return (ModelObject) getModel().getObject();
     }
 
-    /** {@inheritDoc} */
-    public void refresh( AjaxRequestTarget target ) {
-        getCommander().requestLockOn( getEntity() );
-        super.refresh( target );
-    }
-
-
     /**
      * {@inheritDoc}
      */

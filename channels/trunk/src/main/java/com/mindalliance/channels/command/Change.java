@@ -38,11 +38,11 @@ public class Change implements Serializable {
          */
         Removed,
         /**
-         * Expanded view requested.
+         * Expansion requested.
          */
         Expanded,
         /**
-         * Collapsed view requested.
+         * Collapse requested.
          */
         Collapsed,
         /**
@@ -60,7 +60,11 @@ public class Change implements Serializable {
         /**
          * Copy taken
          */
-        Copied
+        Copied,
+        /**
+         * View requested
+         */
+        AspectViewed
     }
 
     /**
@@ -231,6 +235,15 @@ public class Change implements Serializable {
     }
 
     /**
+     * Whether type is View.
+     *
+     * @return a boolean
+     */
+    public boolean isAspectViewed() {
+        return type == Type.AspectViewed;
+    }
+
+    /**
      * Whether type is Selected.
      *
      * @return a boolean
@@ -254,7 +267,7 @@ public class Change implements Serializable {
      * @return a boolean
      */
     public boolean isDisplay() {
-        return isExpanded() || isCollapsed();
+        return isExpanded() || isCollapsed() || isAspectViewed();
     }
 
     /**

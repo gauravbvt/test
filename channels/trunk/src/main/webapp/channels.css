@@ -350,6 +350,12 @@ ul.menu, div.caption, span.menubar, ul.ranges {
     padding: 0;
 }
 
+#history {
+    position: absolute;
+    top: 18px;
+    right: 500px;
+}
+
 #form-buttons {
     margin: 0;
     top: 3px;
@@ -804,7 +810,7 @@ div.aspect {
 .aspect tr.odd {
 }
 
-.refresh {
+.refresh, .navigation {
     cursor: pointer;
     vertical-align: baseline;
 }

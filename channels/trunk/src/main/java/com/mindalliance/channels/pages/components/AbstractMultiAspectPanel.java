@@ -78,7 +78,7 @@ public abstract class AbstractMultiAspectPanel extends AbstractCommandablePanel 
             Set<Long> expansions,
             String aspect ) {
         super( id, model, expansions );
-        aspectShown = aspect;
+        aspectShown = aspect ;
         init();
     }
 
@@ -216,9 +216,9 @@ public abstract class AbstractMultiAspectPanel extends AbstractCommandablePanel 
         }
 
         headerTitle.add(
-            new AttributeModifier( "class", true, new Model<String>( classString ) ) );   // NON-NLS
+                new AttributeModifier( "class", true, new Model<String>( classString ) ) );   // NON-NLS
         headerTitle.add(
-            new AttributeModifier( "title", true, new Model<String>( titleString ) ) );   // NON-NLS
+                new AttributeModifier( "title", true, new Model<String>( titleString ) ) );   // NON-NLS
     }
 
     private void showAspect( String aspect ) {
@@ -254,7 +254,7 @@ public abstract class AbstractMultiAspectPanel extends AbstractCommandablePanel 
     protected abstract int getMaxTitleNameLength();
 
     /**
-     * Get the entity that's viewed.
+     * Get the model object  that's viewed.
      *
      * @return a model object
      */
@@ -273,10 +273,13 @@ public abstract class AbstractMultiAspectPanel extends AbstractCommandablePanel 
      * @param aspect the name of the aspect
      */
     public void setAspectShown( AjaxRequestTarget target, String aspect ) {
+/*
         aspectShown = aspect;
         showAspect( aspect );
         target.addComponent( headerTitle );
         target.addComponent( aspectPanel );
+*/
+        update( target, new Change( Change.Type.AspectViewed, getObject(), aspect ) );
     }
 
     /**

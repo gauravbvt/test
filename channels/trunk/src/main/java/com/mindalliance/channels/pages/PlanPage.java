@@ -32,6 +32,7 @@ import com.mindalliance.channels.pages.components.menus.PlanShowMenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import com.mindalliance.channels.pages.components.surveys.SurveysPanel;
 import com.mindalliance.channels.surveys.Survey;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -64,9 +65,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -117,13 +120,19 @@ public final class PlanPage extends WebPage implements Updatable {
     /**
      * Id of components that are expanded.
      */
-    private Set<Long> expansions;
-
+    private Set<Long> expansions = new HashSet<Long>();
     /**
-     * Ids of expanded entities.
+     * Aspects shown.
      */
-    private List<EntityExpansion> expandedEntities = new ArrayList<EntityExpansion>();
-
+    private Map<Long, String> aspects = new HashMap<Long, String>();
+    /**
+     * Page history.
+     */
+    private List<PageState> pageHistory = new ArrayList<PageState>();
+    /**
+     * Page history cursor.
+     */
+    private int historyCursor = -1;
     /**
      * Label with name of scenario.
      */
@@ -195,11 +204,19 @@ public final class PlanPage extends WebPage implements Updatable {
     /**
      * The aspect for entity panel.
      */
-    private String entityAspect = EntityPanel.DETAILS;
+    // private String entityAspect = EntityPanel.DETAILS;
     /**
      * Refresh button container.
      */
     private WebMarkupContainer refreshNeededContainer;
+    /**
+     * Go back button container.
+     */
+    private WebMarkupContainer goBackContainer;
+    /**
+     * Go forward button container.
+     */
+    private WebMarkupContainer goForwardContainer;
     /**
      * When last refreshed.
      */
@@ -278,6 +295,7 @@ public final class PlanPage extends WebPage implements Updatable {
         };
         addHeader();
         addRefresh();
+        addGoBackAndForward();
         getCommander().resynced();
         addPlanMenubar();
         addScenarioSelector();
@@ -290,14 +308,27 @@ public final class PlanPage extends WebPage implements Updatable {
                 "scenario",
                 new PropertyModel<Scenario>( this, "scenario" ),
                 new PropertyModel<Part>( this, "part" ),
-                getReadOnlyExpansions() );
+                getReadOnlyExpansions(),
+                new PropertyModel<String>( this, "scenarioAspect" )
+        );
         form.add( scenarioPanel );
         addEntityPanel();
-        form.addOrReplace( createPlanEditPanel( getPlan() ) );
-        form.addOrReplace( createSurveysPanel( null ) );
+        createPlanEditPanel( getPlan() );
+        createSurveysPanel( null );
         add( form );
         updateVisibility();
+        updateNavigation();
         LOG.debug( "Scenario page generated" );
+        rememberState();
+    }
+
+    /**
+     * Get aspect of scenario shown.
+     *
+     * @return a string
+     */
+    public String getScenarioAspect() {
+        return getAspectShown( getScenario() );
     }
 
     private void addHeader() {
@@ -373,6 +404,27 @@ public final class PlanPage extends WebPage implements Updatable {
 
         form.add( refreshNeededContainer );
         updateRefreshNotice();
+    }
+
+    private void addGoBackAndForward() {
+        goBackContainer = new WebMarkupContainer( "goBack" );
+        goBackContainer.setOutputMarkupId( true );
+        goBackContainer.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                goBack( target );
+            }
+        } );
+        form.add( goBackContainer );
+        goForwardContainer = new WebMarkupContainer( "goForward" );
+        goForwardContainer.setOutputMarkupId( true );
+        goForwardContainer.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                goForward( target );
+            }
+        } );
+        form.add( goForwardContainer );
     }
 
     private void doTimedUpdate( AjaxRequestTarget target ) {
@@ -534,28 +586,31 @@ public final class PlanPage extends WebPage implements Updatable {
                     "entity",
                     new Model<ModelObject>( entity ),
                     getReadOnlyExpansions(),
-                    entityAspect );
+                    getAspectShown( entity ) );
 
         makeVisible( entityPanel, entity != null );
         entityPanel.setOutputMarkupId( true );
         form.addOrReplace( entityPanel );
     }
 
-    private Component createPlanEditPanel( Plan plan ) {
-        boolean showPlanEdit = expansions.contains( plan.getId() );
-        Component panel = showPlanEdit ?
-                new PlanEditPanel( "plan",
-                        new Model<Plan>( plan ),
-                        getReadOnlyExpansions() )
-                : new Label( "plan", "" );
-        makeVisible( panel, showPlanEdit );
-        panel.setOutputMarkupId( true );
-
-        planEditPanel = panel;
-        return panel;
+    private String getAspectShown( Identifiable identifiable ) {
+        return aspects.get( identifiable.getId() );
     }
 
-    private Component createSurveysPanel( Survey survey ) {
+    private void createPlanEditPanel( Plan plan ) {
+        boolean showPlanEdit = expansions.contains( plan.getId() );
+        planEditPanel = showPlanEdit ?
+                new PlanEditPanel( "plan",
+                        new Model<Plan>( plan ),
+                        getReadOnlyExpansions(),
+                        getAspectShown( plan ) )
+                : new Label( "plan", "" );
+        makeVisible( planEditPanel, showPlanEdit );
+        planEditPanel.setOutputMarkupId( true );
+        form.addOrReplace( planEditPanel );
+    }
+
+    private void createSurveysPanel( Survey survey ) {
         boolean showSurveys = expansions.contains( surveyService.getId() );
         surveysPanel = showSurveys ?
                 new SurveysPanel( "surveys", survey,
@@ -563,7 +618,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 : new Label( "surveys", "" );
         makeVisible( surveysPanel, showSurveys );
         surveysPanel.setOutputMarkupId( true );
-        return surveysPanel;
+        form.addOrReplace( surveysPanel );
     }
 
     /**
@@ -878,7 +933,64 @@ public final class PlanPage extends WebPage implements Updatable {
         scenario = sc;
         if ( scenario == null )
             scenario = getQueryService().getDefaultScenario();
+        setPart( scenario.getDefaultPart() );
     }
+
+    /**
+     * Set a component's visibility.
+     *
+     * @param component a component
+     * @param visible   a boolean
+     */
+    private static void makeVisible( Component component, boolean visible ) {
+        component.add( new AttributeModifier( "style",
+                true,
+                new Model<String>( visible ? "" : "display:none" ) ) );
+    }
+
+    private void reacquireLocks() {
+        // Part is always "expanded"
+        getCommander().requestLockOn( getPart() );
+        for ( Long id : expansions ) {
+            try {
+                ModelObject expanded = getQueryService().find( ModelObject.class, id );
+                if ( !( expanded instanceof Scenario || expanded instanceof Plan ) )
+                    getCommander().requestLockOn( expanded );
+            } catch ( NotFoundException e ) {
+                LOG.warn( "Expanded model object not found at: " + id );
+            }
+        }
+    }
+
+    private void expand( Identifiable identifiable ) {
+        // Never lock a scenario or plan, or anything in a production plan
+        if ( getPlan().isDevelopment()
+                && identifiable instanceof ModelObject
+                && ( (ModelObject) identifiable ).isLockable() ) {
+            getCommander().requestLockOn( identifiable );
+        }
+        if ( identifiable instanceof ModelObject && ( (ModelObject) identifiable ).isEntity() ) {
+            // ModelObject entity = (ModelObject) identifiable;
+            ModelObject previous = findExpandedEntity();
+            if ( previous != null ) {
+                /*String previousAspect = getAspectShown( previous );
+                viewAspect( entity, previousAspect );*/
+                collapse( previous );
+            }
+        }
+        expansions.add( identifiable.getId() );
+    }
+
+    private void collapse( Identifiable identifiable ) {
+        getCommander().releaseAnyLockOn( identifiable );
+        expansions.remove( identifiable.getId() );
+        aspects.remove( identifiable.getId() );
+    }
+
+    private void viewAspect( Identifiable identifiable, String aspect ) {
+        aspects.put( identifiable.getId(), aspect );
+    }
+
 
     private void collapseScenarioObjects() {
         List<Identifiable> toCollapse = new ArrayList<Identifiable>();
@@ -936,86 +1048,23 @@ public final class PlanPage extends WebPage implements Updatable {
         }
     }
 
-    /**
-     * Set a component's visibility.
-     *
-     * @param component a component
-     * @param visible   a boolean
-     */
-    private static void makeVisible( Component component, boolean visible ) {
-        component.add( new AttributeModifier( "style",
-                true,
-                new Model<String>( visible ? "" : "display:none" ) ) );
-    }
-
-    private void reacquireLocks() {
-        // Part is always "expanded"
-        getCommander().requestLockOn( getPart() );
-        for ( Long id : expansions ) {
-            try {
-                ModelObject expanded = getQueryService().find( ModelObject.class, id );
-                if ( !( expanded instanceof Scenario || expanded instanceof Plan ) )
-                    getCommander().requestLockOn( expanded );
-            } catch ( NotFoundException e ) {
-                LOG.warn( "Expanded model object not found at: " + id );
-            }
-        }
-    }
-
-    private void expand( Identifiable identifiable ) {
-        // First collapse any already expanded entity
-        if ( identifiable instanceof ModelObject && ( (ModelObject) identifiable ).isEntity() ) {
-            ModelObject entity = findExpandedEntity();
-            if ( entity != null ) {
-                long id = entity.getId();
-                expansions.remove( id );
-                entityAspect = getEntityPanelAspect();
-                getCommander().releaseAnyLockOn( entity );
-                expandedEntities.add( 0, new EntityExpansion( entityAspect, id ) );
-            }
-            // expandedEntities.remove( identifiable.getId() );
-        }
-        // Never lock a scenario or plan, or anything in a production plan
-        if ( getPlan().isDevelopment()
-                && identifiable instanceof ModelObject
-                && ( (ModelObject) identifiable ).isLockable() ) {
-            getCommander().requestLockOn( identifiable );
-        }
-        expansions.add( identifiable.getId() );
-    }
-
-    private void collapse( Identifiable identifiable ) {
-        if ( identifiable instanceof ModelObject
-                && ( (ModelObject) identifiable ).isEntity() ) {
-            if ( !expandedEntities.isEmpty() ) {
-                EntityExpansion entityExpansion = expandedEntities.remove( 0 );
-                getCommander().requestLockOn( entityExpansion.getEntityId() );
-                expansions.add( entityExpansion.getEntityId() );
-                entityAspect = entityExpansion.getAspect();
-            }
-        }
-        getCommander().releaseAnyLockOn( identifiable );
-        expansions.remove( identifiable.getId() );
-    }
-
-    private String getEntityPanelAspect() {
-        return entityPanel instanceof EntityPanel ? ( (EntityPanel) entityPanel ).getAspectShown()
-                : EntityPanel.DETAILS;
-    }
-
 
     /**
      * {@inheritDoc}
      */
     public void changed( Change change ) {
         if ( change.isNone() ) return;
-
         Identifiable identifiable = change.getSubject();
         if ( !( identifiable instanceof Survey ) ) {
-            if ( change.isCollapsed() || change.isRemoved() )
-                collapse( identifiable );
-            else if ( change.isExpanded() || change.isAdded() )
-                expand( identifiable );
+            if ( change.isDisplay() ) {
+                if ( change.isCollapsed() || change.isRemoved() )
+                    collapse( identifiable );
+                else if ( change.isExpanded() || change.isAdded() )
+                    expand( identifiable );
+                else if ( change.isAspectViewed() ) {
+                    viewAspect( identifiable, change.getProperty() );
+                }
+            }
         }
         if ( identifiable instanceof Survey ) {
             if ( change.isExpanded() ) {
@@ -1071,6 +1120,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 expand( identifiable );
             }
         }
+        rememberState();
     }
 
     /**
@@ -1078,6 +1128,7 @@ public final class PlanPage extends WebPage implements Updatable {
      */
     public void updateWith( AjaxRequestTarget target, Change change ) {
         refreshMenus( target );
+        updateNavigation( target );
         if ( change.isNone() ) return;
         Identifiable identifiable = change.getSubject();
         if ( change.isUndoing()
@@ -1092,29 +1143,29 @@ public final class PlanPage extends WebPage implements Updatable {
         } else {
             if ( identifiable instanceof SurveyService ) {
                 if ( change.isDisplay() ) {
-                    form.addOrReplace( createSurveysPanel( null ) );
+                    createSurveysPanel( null );
                     target.addComponent( surveysPanel );
                 }
             }
             if ( identifiable instanceof Survey ) {
                 if ( change.isExpanded() ) {
-                    form.addOrReplace( createSurveysPanel( (Survey) identifiable ) );
+                    createSurveysPanel( (Survey) identifiable );
                     target.addComponent( surveysPanel );
                 }
             }
             if ( identifiable instanceof Plan ) {
                 if ( change.isDisplay() ) {
-                    form.addOrReplace( createPlanEditPanel( getPlan() ) );
+                    createPlanEditPanel( getPlan() );
                     target.addComponent( planEditPanel );
                 } else if ( change.isSelected() || change.isRecomposed() ) {
                     redirectToPlan();
                 } else if ( change.isExists() && change.isForProperty( "phases" ) ) {
-                    scenarioPanel.refreshScenarioEditPanel( target );
+                    scenarioPanel.refreshScenarioEditPanel( target, getAspectShown( getScenario() ) );
                 }
             }
             if ( identifiable instanceof Scenario ) {
                 if ( change.isDisplay() ) {
-                    scenarioPanel.resetScenarioEditPanel( target );
+                    scenarioPanel.refreshScenarioEditPanel( target, getAspectShown( getScenario() ) );
                 }
                 if ( change.isAdded() || change.isSelected() ) {
                     refreshAll( target );
@@ -1156,7 +1207,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 annotateScenarioName( getApp().getAnalyst() );
                 target.addComponent( scenarioNameLabel );
                 scenarioPanel.expandScenarioEditPanel( target );
-                form.addOrReplace( createPlanEditPanel( getPlan() ) );
+                createPlanEditPanel( getPlan() );
                 target.addComponent( planEditPanel );
             }
             if ( identifiable instanceof ModelObject
@@ -1190,6 +1241,7 @@ public final class PlanPage extends WebPage implements Updatable {
         // Re-acquire lock
         // setPart( getPart() );
         updateVisibility();
+        updateNavigation( target );
         target.addComponent( planActionsMenu );
         target.addComponent( planShowMenu );
         target.addComponent( scenarioNameLabel );
@@ -1197,14 +1249,13 @@ public final class PlanPage extends WebPage implements Updatable {
         target.addComponent( selectScenarioContainer );
         annotateScenarioName( getApp().getAnalyst() );
         target.addComponent( scenarioNameLabel );
-        scenarioPanel.refreshScenarioEditPanel( target );
+        scenarioPanel.refreshScenarioEditPanel( target, getAspectShown( getScenario() ) );
         scenarioPanel.refresh( target );
         target.addComponent( scenarioPanel );
-        if ( entityPanel instanceof EntityPanel )
-            ( (EntityPanel) entityPanel ).refresh( target );
+        addEntityPanel();
         target.addComponent( entityPanel );
-        if ( planEditPanel instanceof PlanEditPanel )
-            ( (PlanEditPanel) planEditPanel ).refresh( target );
+        createPlanEditPanel( getPlan() );
+        target.addComponent( planEditPanel );
         form.addOrReplace( createPartsMapLink() );
         target.addComponent( partsMapLink );
         updateRefreshNotice();
@@ -1215,6 +1266,31 @@ public final class PlanPage extends WebPage implements Updatable {
     private void updateVisibility() {
         makeVisible( selectScenarioContainer, getAllScenarios().size() > 1 );
         makeVisible( switchPlanContainer, getPlannablePlans().size() > 1 );
+    }
+
+    private void updateNavigation() {
+        goBackContainer.add( new AttributeModifier(
+                "src",
+                true,
+                new Model<String>(isCanGoBack() ? "images/go_back.png" : "images/go_back_disabled.png") ) );
+        goBackContainer.add( new AttributeModifier(
+                "title",
+                true,
+                new Model<String>(isCanGoBack() ? "Go back" : "") ) );
+        goForwardContainer.add( new AttributeModifier(
+                "src",
+                true,
+                new Model<String>(isCanGoForward() ? "images/go_forward.png" : "images/go_forward_disabled.png") ) );
+        goForwardContainer.add( new AttributeModifier(
+                "title",
+                true,
+                new Model<String>(isCanGoForward() ? "Go forward" : "") ) );
+    }
+
+    private void updateNavigation( AjaxRequestTarget target ) {
+        updateNavigation();
+        target.addComponent( goBackContainer );
+        target.addComponent( goForwardContainer );
     }
 
     /**
@@ -1249,6 +1325,15 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     /**
+     * Get read-only expansions.
+     *
+     * @return a read-only set of Longs
+     */
+    private Map<Long, String> getReadOnlyAspects() {
+        return Collections.unmodifiableMap( aspects );
+    }
+
+    /**
      * Open scenario import dialog.
      *
      * @param target an ajax request target
@@ -1257,28 +1342,97 @@ public final class PlanPage extends WebPage implements Updatable {
         scenarioImportPanel.open( target );
     }
 
-    /**
-     * Entity expansion record.
-     */
-    private class EntityExpansion implements Serializable {
-
-        private String aspect = "details";
-        private Long entityId;
-
-        private EntityExpansion( String apsect, Long entityId ) {
-            this.aspect = apsect;
-            this.entityId = entityId;
-        }
-
-        public String getAspect() {
-            return aspect;
-        }
-
-        public Long getEntityId() {
-            return entityId;
-        }
-
+    public boolean isCanGoBack() {
+        return historyCursor > 0;
     }
+
+    public boolean isCanGoForward() {
+        return historyCursor < pageHistory.size() - 1;
+    }
+
+    private void rememberState() {
+        // Delete any forward state
+        int size = pageHistory.size();
+        for ( int i = historyCursor + 1; i < size; i++ ) {
+            pageHistory.remove( historyCursor + 1 );
+        }
+        // Add current state to history if different from current one
+        PageState newState = new PageState();
+        if ( historyCursor < 0 || !pageHistory.get( historyCursor ).equals( newState ) ) {
+            pageHistory.add( newState );
+            historyCursor = pageHistory.size() - 1;
+        }
+    }
+
+    private void goBack( AjaxRequestTarget target ) {
+        if ( isCanGoBack() ) {
+            reinstate( pageHistory.get( --historyCursor ), target );
+        }
+    }
+
+    private void goForward( AjaxRequestTarget target ) {
+        if ( isCanGoForward() ) {
+            reinstate( pageHistory.get( ++historyCursor ), target );
+        }
+    }
+
+    /**
+     * Collapse what's no longer expanded, expand what's not yet expanded,
+     * change aspects viewed if needed for expanded,
+     * set scenario if different and exists, set part if different and exists
+     *
+     * @param pageState a page state
+     * @param target    an ajax request target
+     */
+    @SuppressWarnings( "unchecked" )
+    private void reinstate( PageState pageState, AjaxRequestTarget target ) {
+        // Expand what's expanded in page state but not in current expansions
+        List<Long> expandSet = (List<Long>) CollectionUtils.subtract( pageState.getExpansions(), expansions );
+        // Collapse what's in expansions but not in page state
+        List<Long> collapseSet = (List<Long>) CollectionUtils.subtract( expansions, pageState.getExpansions() );
+        for ( Long id : expandSet ) {
+            try {
+                ModelObject toExpand = getQueryService().find( ModelObject.class, id );
+                expand( toExpand );
+            } catch ( NotFoundException e ) {
+                // Do nothing
+            }
+        }
+        for ( Long id : collapseSet ) {
+            try {
+                ModelObject toCollapse = getQueryService().find( ModelObject.class, id );
+                collapse( toCollapse );
+            } catch ( NotFoundException e ) {
+                // Do nothing
+            }
+        }
+        // Reset aspects
+        aspects = new HashMap<Long, String>();
+        for ( Long id : pageState.getAspects().keySet() ) {
+            try {
+                ModelObject viewedObject = getQueryService().find( ModelObject.class, id );
+                String previousAspect = pageState.getAspects().get( id );
+                viewAspect( viewedObject, previousAspect );
+            } catch ( NotFoundException e ) {
+                // Do nothing
+            }
+
+        }
+        try {
+            Scenario previousScenario = getQueryService().find( Scenario.class, pageState.getScenarioId() );
+            if ( !getScenario().equals( previousScenario ) ) {
+                setScenario( previousScenario );
+            }
+            Part previousPart = (Part) getScenario().getNode( pageState.getPartId() );
+            if ( !getPart().equals( previousPart ) ) {
+                setPart( previousPart );
+            }
+        } catch ( NotFoundException e ) {
+            // Do nothing
+        }
+        refreshAll( target );
+    }
+
 
     /**
      * Dialog panel.
@@ -1289,6 +1443,91 @@ public final class PlanPage extends WebPage implements Updatable {
             super( id, iModel );
             Label alertLabel = new Label( "alert", iModel );
             add( alertLabel );
+        }
+    }
+
+    /**
+     * Page state.
+     */
+    private class PageState implements Serializable {
+        /**
+         * Scenario id.
+         */
+        private long scenarioId;
+        /**
+         * Part id.
+         */
+        private long partId;
+        /**
+         * Expansions
+         */
+        private Set<Long> expansions;
+        /**
+         * Aspects viewed.
+         */
+        private Map<Long, String> aspects;
+
+        private PageState() {
+            scenarioId = getScenario().getId();
+            partId = getPart().getId();
+            this.expansions = new HashSet<Long>( getReadOnlyExpansions() );
+            this.aspects = new HashMap<Long, String>( getReadOnlyAspects() );
+        }
+
+        public long getScenarioId() {
+            return scenarioId;
+        }
+
+        public void setScenarioId( long scenarioId ) {
+            this.scenarioId = scenarioId;
+        }
+
+        public long getPartId() {
+            return partId;
+        }
+
+        public void setPartId( long partId ) {
+            this.partId = partId;
+        }
+
+        public Set<Long> getExpansions() {
+            return expansions;
+        }
+
+        public void setExpansions( Set<Long> expansions ) {
+            this.expansions = expansions;
+        }
+
+        public Map<Long, String> getAspects() {
+            return aspects;
+        }
+
+        public void setAspects( Map<Long, String> aspects ) {
+            this.aspects = aspects;
+        }
+
+        public boolean equals( Object obj ) {
+            if ( obj instanceof PageState ) {
+                PageState other = (PageState) obj;
+                return scenarioId == other.getScenarioId()
+                        && partId == other.getPartId()
+                        && CollectionUtils.isEqualCollection( expansions, other.getExpansions() )
+                        && hasSameAspects( other );
+            } else {
+                return false;
+            }
+        }
+
+        private boolean hasSameAspects( PageState other ) {
+            Map<Long, String> otherAspects = other.getAspects();
+            if ( !CollectionUtils.isEqualCollection( aspects.keySet(), otherAspects.keySet() ) )
+                return false;
+            for ( Long id : aspects.keySet() ) {
+                String otherAspect = otherAspects.get( id );
+                if ( otherAspect == null || !otherAspect.equals( aspects.get( id ) ) )
+                    return false;
+            }
+            return true;
         }
     }
 }

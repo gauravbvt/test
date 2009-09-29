@@ -64,6 +64,10 @@ public class ScenarioPanel extends AbstractCommandablePanel {
      * Scenario model.
      */
     private IModel<Scenario> scenarioModel;
+    /**
+     * Aspect shown in scenario edit panel.
+     */
+    private IModel<String> aspectModel;
 
     /**
      * Selected part model.
@@ -115,16 +119,18 @@ public class ScenarioPanel extends AbstractCommandablePanel {
             String id,
             IModel<Scenario> scenarioModel,
             IModel<Part> partModel,
-            Set<Long> expansions ) {
+            Set<Long> expansions,
+            IModel<String> aspectModel ) {
         super( id, scenarioModel, expansions );
         this.scenarioModel = scenarioModel;
         this.partModel = partModel;
+        this.aspectModel = aspectModel;
         init();
     }
 
     private void init() {
         setOutputMarkupId( true );
-        addScenarioEditPanel();
+        addScenarioEditPanel( aspectModel.getObject() );
         addFlowSizing();
         addFlowDiagram();
         addPartContent();
@@ -267,13 +273,15 @@ public class ScenarioPanel extends AbstractCommandablePanel {
 
     /**
      * Add scenario-related components.
+     * @param aspect a string
      */
-    private void addScenarioEditPanel() {
+    private void addScenarioEditPanel( String aspect ) {
         scenarioEditPanel = new ScenarioEditPanel(
                 "sc-editor",                                                              // NON-NLS
                 scenarioModel,
-                getExpansions() );
-        add( scenarioEditPanel );
+                getExpansions(),
+                aspect );
+        addOrReplace( scenarioEditPanel );
     }
 
 
@@ -365,20 +373,12 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     }
 
     /**
-     * Reset scenario edit panel to show details.
-     * @param target an ajax request target
-     */
-    public void resetScenarioEditPanel( AjaxRequestTarget target ) {
-        scenarioEditPanel.setAspectShown( target, ScenarioEditPanel.DETAILS );
-        refreshScenarioEditPanel( target );
-    }
-
-    /**
      * Refresh the scenario edit panel.
      * @param target an ajax request target
+     * @param aspect a string
      */
-    public void refreshScenarioEditPanel( AjaxRequestTarget target ) {
-        scenarioEditPanel.refresh( target );
+    public void refreshScenarioEditPanel( AjaxRequestTarget target, String aspect ) {
+        addScenarioEditPanel( aspect );
         makeVisible( scenarioEditPanel, getExpansions().contains( getScenario().getId() ) );
         target.addComponent( scenarioEditPanel );
     }
