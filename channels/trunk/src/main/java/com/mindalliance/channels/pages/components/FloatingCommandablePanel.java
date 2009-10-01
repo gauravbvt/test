@@ -9,6 +9,7 @@ import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.JavascriptPackageResource;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -48,15 +49,82 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
         super( id, iModel, expansions );
         setOutputMarkupId( true );
         add( JavascriptPackageResource.getHeaderContribution( JAVASCRIPT ) );
+        // move
+        WebMarkupContainer moveBar = new WebMarkupContainer( "moveBar" );
+        String moveScript = MessageFormat.format(
+                "Floater.beginMove(this.parentNode.parentNode,event,{0,number,####},{1,number,####},{2,number,####},{3,number,####});",
+                getPadTop(),
+                getPadLeft(),
+                getPadBottom(),
+                getPadRight()
+        );
+        moveBar.add( new AttributeModifier( "onMouseDown", true, new Model<String>( moveScript ) ) );
+        add( moveBar );
+        // close
         AjaxFallbackLink<?> closeLink = new AjaxFallbackLink( "close" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 close( target );
             }
         };
-        add( closeLink );
+        moveBar.add( closeLink );
+        // resize
+        WebMarkupContainer resizer = new WebMarkupContainer( "resizer" );
+        String resizeScript = MessageFormat.format(
+                "Floater.beginResize(this.parentNode.parentNode,event,{0,number,####},{1,number,####},{2,number,####},{3,number,####});",
+                getMinWidth(),
+                getMinHeight(),
+                getPadBottom(),
+                getPadRight()
+        );
+        resizer.add( new AttributeModifier( "onMouseDown", true, new Model<String>( resizeScript ) ) );
+        add( resizer );
+        // styling
         setLayout();
     }
+
+    /**
+     * Get top padding in px.
+     *
+     * @return an int
+     */
+    abstract protected int getPadTop();
+
+    /**
+     * Get left padding in px.
+     *
+     * @return an int
+     */
+    abstract protected int getPadLeft();
+
+    /**
+     * Get bottom padding in px.
+     *
+     * @return an int
+     */
+    abstract protected int getPadBottom();
+
+    /**
+     * Get right padding in px.
+     *
+     * @return an int
+     */
+    abstract protected int getPadRight();
+
+
+    /**
+     * Get min width  in px on resize.
+     *
+     * @return an int
+     */
+    abstract protected int getMinWidth();
+
+    /**
+     * Get min width  in px on resize.
+     *
+     * @return an int
+     */
+    abstract protected int getMinHeight();
 
     /**
      * Close panel.
@@ -80,7 +148,7 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
         add( new AttributeModifier( "style", true, new Model<String>( style ) ) );
         add( new HeaderContributor( new IHeaderContributor() {
             public void renderHead( IHeaderResponse response ) {
-                String script = "Floater.restoreStyle('" + getMarkupId() + "');";
+                String script = "Floater.onOpen('" + getMarkupId() + "');";
                 response.renderOnDomReadyJavascript( script );
             }
         } ) );

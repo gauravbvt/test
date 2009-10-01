@@ -9,8 +9,7 @@
 
 <wicket:panel>
     <div class="floating">
-        <div class="float-bar"
-             onMouseDown="Floater.beginMove(this.parentNode.parentNode, event);">
+        <div class="float-bar" wicket:id="moveBar">
             <div style="position:absolute; top:1px; right:1px; float:right;">
                 <a wicket:id="close" href="#">
                     <img src="images/close-icon.png" border="0"/>
@@ -18,7 +17,7 @@
             </div>
         </div>
         <wicket:child/>
-        <div class="float-resize" onMouseDown="Floater.beginResize(this.parentNode.parentNode, event);">
+        <div class="float-resize" wicket:id="resizer">
             <img src="images/resize-icon.png" border="0"/>
         </div>
     </div>

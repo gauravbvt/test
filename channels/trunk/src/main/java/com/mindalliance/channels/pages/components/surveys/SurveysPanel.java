@@ -46,6 +46,31 @@ import java.util.Set;
  * Time: 11:16:48 AM
  */
 public class SurveysPanel extends FloatingCommandablePanel implements Filterable {
+    /**
+     * Pad top on move.
+     */
+    private static final int PAD_TOP = 68;
+    /**
+     * Pad left on move.
+     */
+    private static final int PAD_LEFT = 5;
+    /**
+     * Pad bottom on move and resize.
+     */
+    private static final int PAD_BOTTOM = 5;
+    /**
+     * Pad right on move and resize.
+     */
+    private static final int PAD_RIGHT = 6;
+    /**
+     * Min width on resize.
+     */
+    private static final int MIN_WIDTH = 300;
+    /**
+     * Min height on resize.
+     */
+    private static final int MIN_HEIGHT = 300;
+
     private static final String NOT_YET_LAUNCHED = "not yet launched";
     private static final String LAUNCHED = "launched";
     private static final String CLOSED = "closed";
@@ -109,6 +134,55 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
         init();
     }
 
+    /** {@inheritDoc} */
+    protected void close( AjaxRequestTarget target ) {
+        Change change = new Change( Change.Type.Collapsed, surveyService );
+        update( target, change );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected int getPadTop() {
+        return PAD_TOP;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected int getPadLeft() {
+        return PAD_LEFT;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected int getPadBottom() {
+        return PAD_BOTTOM;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected int getPadRight() {
+        return PAD_RIGHT;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected int getMinWidth() {
+        return MIN_WIDTH;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected int getMinHeight() {
+        return MIN_HEIGHT;
+    }
+
+
     private void init() {
         addStatusAndRelevanceFilters();
         addTableTitle();
@@ -167,11 +241,6 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
             title = title + " that are " + getStatusFilter() + " and are " + getRelevanceFilter();
         }
         return title;
-    }
-
-    protected void close( AjaxRequestTarget target ) {
-        Change change = new Change( Change.Type.Collapsed, surveyService );
-        update( target, change );
     }
 
     private void addStatusChoices() {

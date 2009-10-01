@@ -19,32 +19,30 @@ Floater.findMaxZIndex = function() {
 
 Floater.moveToTop = function( element ) {
     if ( __DEBUG__ ) console.log("Moving %s at %s to top", element.id, element.style.zIndex);
-    var maxZIndex = Floater.findMaxZIndex();
+    var maxZIndex = this.findMaxZIndex();
     var z = 0;
     if ( typeof(element.style.zIndex) != "undefined" )
         z = parseInt(element.style.zIndex);
     if ( z <= maxZIndex ) {
         element.style.zIndex = maxZIndex + 1;
-        Floater.recordStyle(element.id);
+        this.recordStyle(element);
         if ( __DEBUG__ ) console.log("z-index of %s changed to %s", element, element.style.zIndex);
     }
 }
 
-Floater.recordStyle = function( elementId ) {
-    var element = document.getElementById(elementId);
-    if ( __DEBUG__ ) console.log("Recording style %s for %s", element.style.toString(), elementId);
-    StyleStates[elementId] = {};
-    StyleStates[elementId].top = element.style.top;
-    StyleStates[elementId].left = element.style.left;
-    StyleStates[elementId].bottom = element.style.bottom;
-    StyleStates[elementId].width = element.style.width;
-    StyleStates[elementId].zIndex = element.style.zIndex;
+Floater.recordStyle = function( element ) {
+    if ( __DEBUG__ ) console.log("Recording style %s for %s", element.style.toString(), element.id);
+    StyleStates[element.id] = {};
+    StyleStates[element.id].top = element.style.top;
+    StyleStates[element.id].left = element.style.left;
+    StyleStates[element.id].bottom = element.style.bottom;
+    StyleStates[element.id].width = element.style.width;
+    StyleStates[element.id].zIndex = element.style.zIndex;
 }
 
-Floater.restoreStyle = function( elementId ) {
-    var element = document.getElementById(elementId);
+Floater.restoreStyle = function( element ) {
     if ( __DEBUG__ ) console.log("Attempting to restore style for %s", element.id);
-    var style = StyleStates[elementId];
+    var style = StyleStates[element.id];
     if ( typeof(style) != "undefined" ) {
         if ( __DEBUG__ ) console.log("Restoring prior style");
         if ( typeof(style.top) != "undefined" ) {
@@ -68,13 +66,18 @@ Floater.restoreStyle = function( elementId ) {
             if ( __DEBUG__ ) console.log("z-index = %s", style.zIndex);
         }
     }
-    Floater.recordStyle(elementId);
-    Floater.moveToTop(element);
+}
+
+Floater.onOpen = function( elementId ) {
+    var element = document.getElementById(elementId);
+    this.restoreStyle(element);
+    this.recordStyle(element);
+    this.moveToTop(element);
     element.style.display = "block";
 }
 
-Floater.beginMove = function( elementToMove, event ) {
-    Floater.moveToTop(elementToMove);
+Floater.beginMove = function( elementToMove, event, padTop, padLeft, padBottom, padRight ) {
+    this.moveToTop(elementToMove);
     var startX = event.clientX;
     var startY = event.clientY;
     var startLeft = parseInt(elementToMove.style.left);
@@ -104,15 +107,18 @@ Floater.beginMove = function( elementToMove, event ) {
         if ( !e ) e = window.event;
         var deltaX = e.clientX - startX;
         var deltaY = e.clientY - startY;
-        var left = startLeft + deltaX;
+        var left = Math.max(padLeft, startLeft + deltaX);
         var top = startTop + deltaY;
         var bottom = startBottom - deltaY;
-        if ( left > 0 && top > 0 && bottom > 0 ) {
+        var rightX = left + $(elementToMove).width();
+        if ( rightX + padRight < $(elementToMove.parentNode).width() ) {
             elementToMove.style.left = left + "px";
+        }
+        if ( top > padTop && bottom > padBottom ) {
             elementToMove.style.top = top + "px";
             elementToMove.style.bottom = bottom + "px";
-            Floater.recordStyle(elementToMove.id);
         }
+        Floater.recordStyle(elementToMove);
         if ( e.stopPropagation ) e.stopPropagation();
         else e.cancelBubble = true;
     }
@@ -136,12 +142,13 @@ Floater.beginMove = function( elementToMove, event ) {
     }
 }
 
-Floater.beginResize = function( elementToResize, event ) {
-    Floater.moveToTop(elementToResize);
+Floater.beginResize = function( elementToResize, event, minWidth, minHeight, padBottom, padRight ) {
+    this.moveToTop(elementToResize);
     var startX = event.clientX;
     var startY = event.clientY;
     var startWidth = parseInt(elementToResize.style.width);
     var startHeight = $(elementToResize).height();
+    var startLeft = parseInt(elementToResize.style.left);
     var startBottom = parseInt(elementToResize.style.bottom);
 
     if ( document.addEventListener ) {
@@ -169,12 +176,16 @@ Floater.beginResize = function( elementToResize, event ) {
         var deltaY = e.clientY - startY;
         var width = startWidth + deltaX;
         var height = startHeight + deltaY;
-        var bottom = startBottom - deltaY;
-        if ( height > 300 && width > 300 && bottom > 0 ) {
+        var bottom = Math.max(padBottom, startBottom - deltaY);
+        var left = startLeft + deltaX;
+        var rightX = left + $(elementToResize).width();
+        if ( width > minWidth && (rightX + padRight) < $(elementToResize.parentNode).width() ) {
             elementToResize.style.width = width + "px";
-            elementToResize.style.bottom = bottom + "px";
-            Floater.recordStyle(elementToResize.id);
         }
+        if ( height > minHeight ) {
+            elementToResize.style.bottom = bottom + "px";
+        }
+        Floater.recordStyle(elementToResize);
         if ( e.stopPropagation ) e.stopPropagation();
         else e.cancelBubble = true;
     }
