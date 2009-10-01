@@ -8,8 +8,8 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.ScenarioObject;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
-import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
+import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
@@ -17,7 +17,6 @@ import org.apache.commons.collections.Predicate;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -46,7 +45,7 @@ import java.util.Set;
  * Date: Aug 29, 2009
  * Time: 11:16:48 AM
  */
-public class SurveysPanel extends AbstractUpdatablePanel implements Filterable {
+public class SurveysPanel extends FloatingCommandablePanel implements Filterable {
     private static final String NOT_YET_LAUNCHED = "not yet launched";
     private static final String LAUNCHED = "launched";
     private static final String CLOSED = "closed";
@@ -111,7 +110,6 @@ public class SurveysPanel extends AbstractUpdatablePanel implements Filterable {
     }
 
     private void init() {
-        addClose();
         addStatusAndRelevanceFilters();
         addTableTitle();
         addSurveysTable();
@@ -171,15 +169,9 @@ public class SurveysPanel extends AbstractUpdatablePanel implements Filterable {
         return title;
     }
 
-    private void addClose() {
-        AjaxFallbackLink<?> closeLink = new AjaxFallbackLink( "close" ) {
-            @Override
-            public void onClick( AjaxRequestTarget target ) {
-                Change change = new Change( Change.Type.Collapsed, surveyService );
-                update( target, change );
-            }
-        };
-        add( closeLink );
+    protected void close( AjaxRequestTarget target ) {
+        Change change = new Change( Change.Type.Collapsed, surveyService );
+        update( target, change );
     }
 
     private void addStatusChoices() {

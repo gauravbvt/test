@@ -11,7 +11,6 @@ import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import com.mindalliance.channels.pages.components.menus.PartActionsMenuPanel;
 import com.mindalliance.channels.pages.components.menus.PartShowMenuPanel;
-import com.mindalliance.channels.pages.components.scenario.ScenarioEditPanel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -50,10 +49,6 @@ public class ScenarioPanel extends AbstractCommandablePanel {
      */
     private IssuesPanel partIssuesPanel;
 
-    /**
-     * Scenario edit panel.
-     */
-    private ScenarioEditPanel scenarioEditPanel;
 
     /**
      * Flow diagram panel.
@@ -64,10 +59,6 @@ public class ScenarioPanel extends AbstractCommandablePanel {
      * Scenario model.
      */
     private IModel<Scenario> scenarioModel;
-    /**
-     * Aspect shown in scenario edit panel.
-     */
-    private IModel<String> aspectModel;
 
     /**
      * Selected part model.
@@ -124,13 +115,11 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         super( id, scenarioModel, expansions );
         this.scenarioModel = scenarioModel;
         this.partModel = partModel;
-        this.aspectModel = aspectModel;
         init();
     }
 
     private void init() {
         setOutputMarkupId( true );
-        addScenarioEditPanel( aspectModel.getObject() );
         addFlowSizing();
         addFlowDiagram();
         addPartContent();
@@ -190,7 +179,6 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         partDescription.setEnabled( isLockedByUser( getPart() ) );
         boolean partHasIssues = getAnalyst().hasIssues( getPart(), false );
         makeVisible( partIssuesPanel, partHasIssues );
-        makeVisible( scenarioEditPanel, getExpansions().contains( getScenario().getId() ) );
     }
 
     private void addPartMenuBar() {
@@ -271,18 +259,6 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         addOrReplace( flowMapDiagramPanel );
     }
 
-    /**
-     * Add scenario-related components.
-     * @param aspect a string
-     */
-    private void addScenarioEditPanel( String aspect ) {
-        scenarioEditPanel = new ScenarioEditPanel(
-                "sc-editor",                                                              // NON-NLS
-                scenarioModel,
-                getExpansions(),
-                aspect );
-        addOrReplace( scenarioEditPanel );
-    }
 
 
     public Part getPart() {
@@ -323,12 +299,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     public void updateWith( AjaxRequestTarget target, Change change ) {
         if ( !change.isNone() ) {
             Identifiable identifiable = change.getSubject();
-            if ( identifiable == getScenario() && change.isDisplay() ) {
-                scenarioEditPanel.setVisibility(       // TODO - needed?
-                        target, getExpansions().contains( getScenario().getId() ) );
-                target.addComponent( scenarioEditPanel );
-
-            } else if ( identifiable == getPart() && change.isUpdated() ) {
+            if ( identifiable == getPart() && change.isUpdated() ) {
                 target.addComponent( partTitle );
                 reqsFlowPanel.refresh( target );
                 outcomesFlowPanel.refresh( target );
@@ -366,22 +337,11 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         addFlowDiagram();
         target.addComponent( flowMapDiagramPanel );
         adjustComponents();
-        target.addComponent( scenarioEditPanel );
         target.addComponent( partDescription );
         target.addComponent( partIssuesPanel );
         target.addComponent( partIssuesPanel );
     }
 
-    /**
-     * Refresh the scenario edit panel.
-     * @param target an ajax request target
-     * @param aspect a string
-     */
-    public void refreshScenarioEditPanel( AjaxRequestTarget target, String aspect ) {
-        addScenarioEditPanel( aspect );
-        makeVisible( scenarioEditPanel, getExpansions().contains( getScenario().getId() ) );
-        target.addComponent( scenarioEditPanel );
-    }
 
     /**
      * Refresh the flow map
@@ -399,7 +359,6 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         addPartActionsMenu();
         target.addComponent( partShowMenu );
         target.addComponent( partActionsMenu );
-        scenarioEditPanel.refreshMenus( target );
         reqsFlowPanel.refreshMenus( target );
         outcomesFlowPanel.refreshMenus( target );
     }

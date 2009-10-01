@@ -30,6 +30,7 @@ import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.menus.PlanActionsMenuPanel;
 import com.mindalliance.channels.pages.components.menus.PlanShowMenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
+import com.mindalliance.channels.pages.components.scenario.ScenarioEditPanel;
 import com.mindalliance.channels.pages.components.surveys.SurveysPanel;
 import com.mindalliance.channels.surveys.Survey;
 import org.apache.commons.collections.CollectionUtils;
@@ -184,6 +185,10 @@ public final class PlanPage extends WebPage implements Updatable {
      */
     private ScenarioImportPanel scenarioImportPanel;
     /**
+     * Scenario edit panel.
+     */
+    private Component scenarioEditPanel;
+    /**
      * The scenario panel.
      */
     private ScenarioPanel scenarioPanel;
@@ -313,8 +318,9 @@ public final class PlanPage extends WebPage implements Updatable {
         );
         form.add( scenarioPanel );
         addEntityPanel();
-        createPlanEditPanel( getPlan() );
-        createSurveysPanel( null );
+        addScenarioEditPanel();
+        addPlanEditPanel();
+        addSurveysPanel( null );
         add( form );
         updateVisibility();
         updateNavigation();
@@ -579,46 +585,92 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void addEntityPanel() {
         ModelObject entity = findExpandedEntity();
-        if ( entity == null )
+        if ( entity == null ) {
             entityPanel = new Label( "entity", "" );
-        else
+            entityPanel.setOutputMarkupId( true );
+            makeVisible( entityPanel, false );
+        } else {
             entityPanel = new EntityPanel(
                     "entity",
                     new Model<ModelObject>( entity ),
                     getReadOnlyExpansions(),
                     getAspectShown( entity ) );
-
-        makeVisible( entityPanel, entity != null );
-        entityPanel.setOutputMarkupId( true );
+        }
         form.addOrReplace( entityPanel );
     }
+
+    private void refreshEntityPanel( AjaxRequestTarget target ) {
+        addEntityPanel();
+        target.addComponent( entityPanel );
+    }
+
+    /**
+     * Add scenario-related components.
+     */
+    private void addScenarioEditPanel() {
+        boolean showScenarioEdit = expansions.contains( getScenario().getId() );
+        if ( showScenarioEdit ) {
+            scenarioEditPanel = new ScenarioEditPanel(
+                    "sc-editor",                                                              // NON-NLS
+                    new PropertyModel<Scenario>( this, "scenario" ),
+                    getReadOnlyExpansions(),
+                    getAspectShown( getScenario() ) );
+        } else {
+            scenarioEditPanel = new Label( "sc-editor", "" );
+            scenarioEditPanel.setOutputMarkupId( true );
+            makeVisible( scenarioEditPanel, false );
+        }
+        form.addOrReplace( scenarioEditPanel );
+    }
+
+    private void refreshScenarioEditPanel( AjaxRequestTarget target ) {
+        addScenarioEditPanel();
+        target.addComponent( scenarioEditPanel );
+    }
+
 
     private String getAspectShown( Identifiable identifiable ) {
         return aspects.get( identifiable.getId() );
     }
 
-    private void createPlanEditPanel( Plan plan ) {
+    private void addPlanEditPanel() {
+        Plan plan = getPlan();
         boolean showPlanEdit = expansions.contains( plan.getId() );
-        planEditPanel = showPlanEdit ?
-                new PlanEditPanel( "plan",
-                        new Model<Plan>( plan ),
-                        getReadOnlyExpansions(),
-                        getAspectShown( plan ) )
-                : new Label( "plan", "" );
-        makeVisible( planEditPanel, showPlanEdit );
-        planEditPanel.setOutputMarkupId( true );
+        if ( showPlanEdit ) {
+            planEditPanel = new PlanEditPanel( "plan",
+                    new Model<Plan>( plan ),
+                    getReadOnlyExpansions(),
+                    getAspectShown( plan ) );
+        } else {
+            planEditPanel = new Label( "plan", "" );
+            planEditPanel.setOutputMarkupId( true );
+            makeVisible( planEditPanel, false );
+        }
         form.addOrReplace( planEditPanel );
     }
 
-    private void createSurveysPanel( Survey survey ) {
+    private void refreshPlanEditPanel( AjaxRequestTarget target ) {
+        addPlanEditPanel();
+        target.addComponent( planEditPanel );
+    }
+
+    private void addSurveysPanel( Survey survey ) {
         boolean showSurveys = expansions.contains( surveyService.getId() );
-        surveysPanel = showSurveys ?
-                new SurveysPanel( "surveys", survey,
-                        getReadOnlyExpansions() )
-                : new Label( "surveys", "" );
-        makeVisible( surveysPanel, showSurveys );
-        surveysPanel.setOutputMarkupId( true );
+        if ( showSurveys ) {
+            surveysPanel = new SurveysPanel( "surveys", survey,
+                    getReadOnlyExpansions() );
+
+        } else {
+            surveysPanel = new Label( "surveys", "" );
+            surveysPanel.setOutputMarkupId( true );
+            makeVisible( surveysPanel, false );
+        }
         form.addOrReplace( surveysPanel );
+    }
+
+    private void refreshSurveysPanel( AjaxRequestTarget target, Survey survey ) {
+        addSurveysPanel( survey );
+        target.addComponent( surveysPanel );
     }
 
     /**
@@ -1143,29 +1195,28 @@ public final class PlanPage extends WebPage implements Updatable {
         } else {
             if ( identifiable instanceof SurveyService ) {
                 if ( change.isDisplay() ) {
-                    createSurveysPanel( null );
+                    refreshSurveysPanel( target, null );
                     target.addComponent( surveysPanel );
                 }
             }
             if ( identifiable instanceof Survey ) {
                 if ( change.isExpanded() ) {
-                    createSurveysPanel( (Survey) identifiable );
+                    refreshSurveysPanel( target, (Survey) identifiable );
                     target.addComponent( surveysPanel );
                 }
             }
             if ( identifiable instanceof Plan ) {
                 if ( change.isDisplay() ) {
-                    createPlanEditPanel( getPlan() );
-                    target.addComponent( planEditPanel );
+                    refreshPlanEditPanel( target );
                 } else if ( change.isSelected() || change.isRecomposed() ) {
                     redirectToPlan();
                 } else if ( change.isExists() && change.isForProperty( "phases" ) ) {
-                    scenarioPanel.refreshScenarioEditPanel( target, getAspectShown( getScenario() ) );
+                    refreshScenarioEditPanel( target );
                 }
             }
             if ( identifiable instanceof Scenario ) {
                 if ( change.isDisplay() ) {
-                    scenarioPanel.refreshScenarioEditPanel( target, getAspectShown( getScenario() ) );
+                    refreshScenarioEditPanel( target );
                 }
                 if ( change.isAdded() || change.isSelected() ) {
                     refreshAll( target );
@@ -1184,6 +1235,7 @@ public final class PlanPage extends WebPage implements Updatable {
                     target.addComponent( scenarioPanel );
                 } else if ( change.isSelected() ) {
                     // In case selecting the part switched scenarios
+                    refreshScenarioEditPanel( target );
                     target.addComponent( scenarioDropDownChoice );
                     scenarioPanel.refresh( target );
                     target.addComponent( scenarioPanel );
@@ -1207,14 +1259,13 @@ public final class PlanPage extends WebPage implements Updatable {
                 annotateScenarioName( getApp().getAnalyst() );
                 target.addComponent( scenarioNameLabel );
                 scenarioPanel.expandScenarioEditPanel( target );
-                createPlanEditPanel( getPlan() );
+                refreshPlanEditPanel( target );
                 target.addComponent( planEditPanel );
             }
             if ( identifiable instanceof ModelObject
                     && ( (ModelObject) identifiable ).isEntity() ) {
                 if ( change.isDisplay() ) {
-                    addEntityPanel();
-                    target.addComponent( entityPanel );
+                    refreshEntityPanel( target );
                 } else {
                     refreshAll( target );
                 }
@@ -1235,6 +1286,8 @@ public final class PlanPage extends WebPage implements Updatable {
             ( (PlanEditPanel) planEditPanel ).refreshMenus( target );
         if ( entityPanel instanceof EntityPanel )
             ( (EntityPanel) entityPanel ).refreshMenus( target );
+        if ( scenarioEditPanel instanceof ScenarioEditPanel )
+            ( (ScenarioEditPanel) scenarioEditPanel ).refreshMenus( target );
     }
 
     private void refreshAll( AjaxRequestTarget target ) {
@@ -1249,12 +1302,11 @@ public final class PlanPage extends WebPage implements Updatable {
         target.addComponent( selectScenarioContainer );
         annotateScenarioName( getApp().getAnalyst() );
         target.addComponent( scenarioNameLabel );
-        scenarioPanel.refreshScenarioEditPanel( target, getAspectShown( getScenario() ) );
+        refreshScenarioEditPanel( target );
         scenarioPanel.refresh( target );
         target.addComponent( scenarioPanel );
-        addEntityPanel();
-        target.addComponent( entityPanel );
-        createPlanEditPanel( getPlan() );
+        refreshEntityPanel( target );
+        refreshPlanEditPanel( target );
         target.addComponent( planEditPanel );
         form.addOrReplace( createPartsMapLink() );
         target.addComponent( partsMapLink );
@@ -1272,19 +1324,19 @@ public final class PlanPage extends WebPage implements Updatable {
         goBackContainer.add( new AttributeModifier(
                 "src",
                 true,
-                new Model<String>(isCanGoBack() ? "images/go_back.png" : "images/go_back_disabled.png") ) );
+                new Model<String>( isCanGoBack() ? "images/go_back.png" : "images/go_back_disabled.png" ) ) );
         goBackContainer.add( new AttributeModifier(
                 "title",
                 true,
-                new Model<String>(isCanGoBack() ? "Go back" : "") ) );
+                new Model<String>( isCanGoBack() ? "Go back" : "" ) ) );
         goForwardContainer.add( new AttributeModifier(
                 "src",
                 true,
-                new Model<String>(isCanGoForward() ? "images/go_forward.png" : "images/go_forward_disabled.png") ) );
+                new Model<String>( isCanGoForward() ? "images/go_forward.png" : "images/go_forward_disabled.png" ) ) );
         goForwardContainer.add( new AttributeModifier(
                 "title",
                 true,
-                new Model<String>(isCanGoForward() ? "Go forward" : "") ) );
+                new Model<String>( isCanGoForward() ? "Go forward" : "" ) ) );
     }
 
     private void updateNavigation( AjaxRequestTarget target ) {

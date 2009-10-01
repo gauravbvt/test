@@ -11,7 +11,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
@@ -28,7 +27,7 @@ import java.util.Set;
  * Date: May 6, 2009
  * Time: 7:56:27 PM
  */
-public abstract class AbstractMultiAspectPanel extends AbstractCommandablePanel {
+public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel {
 
     /**
      * Details aspect.
@@ -78,45 +77,43 @@ public abstract class AbstractMultiAspectPanel extends AbstractCommandablePanel 
             Set<Long> expansions,
             String aspect ) {
         super( id, model, expansions );
-        aspectShown = aspect ;
+        aspectShown = aspect;
         init();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void close( AjaxRequestTarget target ) {
+        Change change = new Change( Change.Type.Collapsed, getObject() );
+        update( target, change );
     }
 
     /**
      * Panel initialization.
      */
     protected void init() {
-        setOutputMarkupId( true );
-
+        moContainer = new WebMarkupContainer( "mo" );
+        add( moContainer );
         headerTitle = new Label( "header-title", new PropertyModel<String>( this, "headerTitle" ) );
         headerTitle.setOutputMarkupId( true );
 
-        AjaxFallbackLink<?> closeLink = new AjaxFallbackLink( "close" ) {
-            @Override
-            public void onClick( AjaxRequestTarget target ) {
-                Change change = new Change( Change.Type.Collapsed, getObject() );
-                update( target, change );
-            }
-        };
-
         banner = new WebMarkupContainer( "banner" );
         banner.setOutputMarkupId( true );
-        banner.add( closeLink );
         banner.add( headerTitle );
 
         addShowMenu();
         addActionsMenu();
 
         String css = getCssClass();
-        moContainer = new WebMarkupContainer( "mo" );
         moContainer.add( new AttributeModifier( "class", true, new Model<String>( css ) ) );
         moContainer.add( banner );
-        add( moContainer );
 
         if ( aspectShown == null ) aspectShown = getDefaultAspect();
         showAspect( aspectShown );
         adjustComponents();
     }
+
 
     protected void addShowMenu() {
         showMenu = makeShowMenu( "showMenu" );

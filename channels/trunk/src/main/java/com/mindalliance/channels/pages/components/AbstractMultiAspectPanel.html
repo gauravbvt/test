@@ -7,7 +7,7 @@
         lang="en">
 <body>
 
-<wicket:panel>
+<wicket:extend>
     <div wicket:id="mo">  <!-- class="entity" or "plan" etc. added programmatically -->
         <div wicket:id="banner">
             <div class="header">
@@ -15,12 +15,11 @@
                 <span class="menubar">
                     <span class="menuitem" wicket:id="showMenu">[show menu]</span>
                     <span class="menuitem" wicket:id="actionMenu">[action menu]</span>
-                    <span class="menuitem"><a wicket:id="close" href="#">Close</a></span>
                 </span>
             </div>
         </div>
         <div class="aspect" wicket:id="aspect">[aspect panel]</div>
     </div>
-</wicket:panel>
+</wicket:extend>
 </body>
 </html>
