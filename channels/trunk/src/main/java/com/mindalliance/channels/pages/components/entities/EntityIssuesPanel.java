@@ -77,10 +77,17 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
                 scope.addAll( findRelatedScenarioObjects( getEntity() ) );
             }
             if ( includeContained ) {
-                for ( ModelObject containedEntity : findContainedEntities() ) {
-                    scope.add( containedEntity );
-                    if ( includeFromScenarios ) {
-                        scope.addAll( findRelatedScenarioObjects( containedEntity ) );
+                if ( getEntity() instanceof Phase ) {
+                    for ( ModelObject containedModelObject :
+                            getQueryService().findAllModelObjectsIn( (Phase)getEntity()) ) {
+                        scope.add( containedModelObject );
+                    }
+                } else {
+                    for ( ModelObject containedEntity : findContainedEntities() ) {
+                        scope.add( containedEntity );
+                        if ( includeFromScenarios ) {
+                            scope.addAll( findRelatedScenarioObjects( containedEntity ) );
+                        }
                     }
                 }
             }
@@ -162,6 +169,7 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
         }
     }
 
+    @SuppressWarnings( "unchecked" )
     private List<? extends ModelObject> findContainedEntities() {
         ModelObject entity = getEntity();
         QueryService queryService = getQueryService();
@@ -175,11 +183,11 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
             inOrg.addAll( queryService.findAllActorsInOrganization( (Organization) entity ) );
             return inOrg;
         } else if ( entity instanceof Place ) {
-            return queryService.findAllModelObjectsIn( (Place) entity );
+            return queryService.findAllEntitiesIn( (Place) entity );
         } else if ( entity instanceof Event ) {
             return new ArrayList<ModelObject>();
         } else if ( entity instanceof Phase ) {
-            return queryService.findAllModelObjectsIn( (Phase) entity );
+            return queryService.findAllEntitiesIn( (Phase) entity );
         } else {
             throw new IllegalStateException( "Can't diplay issue table for " + entity.getClass().getSimpleName() );
         }

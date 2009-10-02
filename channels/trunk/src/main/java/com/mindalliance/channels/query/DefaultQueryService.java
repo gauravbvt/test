@@ -44,6 +44,7 @@ import com.mindalliance.channels.util.Play;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.PredicateUtils;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.TransformerUtils;
 import org.apache.commons.collections.iterators.FilterIterator;
@@ -2328,6 +2329,27 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
         return causes;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("unchecked")
+    public List<? extends ModelObject> findAllEntitiesIn( Place place ) {
+        return (List<ModelObject>)CollectionUtils.select(
+                    findAllModelObjectsIn( place ),
+                    PredicateUtils.invokerPredicate( "isEntity" ));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("unchecked")
+    public List<? extends ModelObject> findAllEntitiesIn( Phase phase ) {
+            return (List<ModelObject>)CollectionUtils.select(
+                        findAllModelObjectsIn( phase ),
+                        PredicateUtils.invokerPredicate( "isEntity" ));
+        }
+
 
 }
 

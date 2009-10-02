@@ -1004,4 +1004,18 @@ public interface QueryService extends Service {
      * @return a list of parts
      */
     List<Part> findCausesOf( Event event );
+
+    /**
+     * Find all entities in a given place.
+     * @param place a place
+     * @return a list of entities
+     */
+    List<? extends ModelObject> findAllEntitiesIn( Place place );
+
+    /**
+     * Find all entities in a given phase.
+     * @param place a place
+     * @return a list of entities
+     */
+    List<? extends ModelObject> findAllEntitiesIn( Phase phase );
 }

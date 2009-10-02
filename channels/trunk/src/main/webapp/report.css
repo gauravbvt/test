@@ -52,7 +52,7 @@
 
 
 div.flow-map:after, .scenario div.section:after, #directory:after {
-    content: "Copyright (C) 2009 Mind-Alliance Systems. All Rights Reserved.";
+    content: "Confidential. (c) Mind-Alliance Systems, LLC 2009.";
     font-size: 0.625em;
     font-style: italic;
     text-align: right;
