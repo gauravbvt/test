@@ -172,7 +172,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 new PropertyModel<Boolean>( jobWrapper, "confirmed" ) );
         makeVisible( confirmedCheckBox, jobWrapper.canBeConfirmed() );
         item.addOrReplace( confirmedCheckBox );
-        confirmedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        confirmedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 if ( !getOrganization().getJobs().contains( jobWrapper.getJob() ) ) {
                     addJobPlaybook( null );
@@ -307,7 +307,8 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
      */
     public void updateWith( AjaxRequestTarget target, Change change ) {
         if ( change.isUpdated() ) {
-            setNameRange( target, rangePanel.getRangeFor( selectedJob.getActorLastName() ) );
+            if ( selectedJob != null )
+                setNameRange( target, rangePanel.getRangeFor( selectedJob.getActorLastName() ) );
         }
         super.updateWith( target, change );
     }

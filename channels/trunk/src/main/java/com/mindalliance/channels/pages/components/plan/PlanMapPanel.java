@@ -99,7 +99,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
         CheckBox groupByPhaseCheckBox = new CheckBox(
                 "groupByPhase",
                 new PropertyModel<Boolean>( this, "groupByPhase" ) );
-        groupByPhaseCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        groupByPhaseCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 refresh( target );
             }
@@ -108,7 +108,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
         CheckBox groupByEventCheckBox = new CheckBox(
                 "groupByEvent",
                 new PropertyModel<Boolean>( this, "groupByEvent" ) );
-        groupByEventCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        groupByEventCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 refresh( target );
             }

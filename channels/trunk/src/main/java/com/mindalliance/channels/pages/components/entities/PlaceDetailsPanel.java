@@ -16,8 +16,8 @@ import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
-import com.mindalliance.channels.util.NameRange;
 import com.mindalliance.channels.util.Matcher;
+import com.mindalliance.channels.util.NameRange;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -523,7 +523,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
             CheckBox selectionCheckBox = new CheckBox(
                     "selection",
                     new PropertyModel<Boolean>( this, "selected" ) );
-            selectionCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            selectionCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
                 @Override
                 protected void onUpdate( AjaxRequestTarget target ) {
                     addIssues( postalCodeField, getPlace(), "postalCode" );

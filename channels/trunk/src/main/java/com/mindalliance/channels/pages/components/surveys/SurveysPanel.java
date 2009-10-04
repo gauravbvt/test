@@ -206,7 +206,7 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
         CheckBox filteredCheckBox = new CheckBox(
                 "filtered",
                 new PropertyModel<Boolean>( this, "stateFiltered" ) );
-        filteredCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        filteredCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 updateEnabled();
                 target.addComponent( statusChoice );

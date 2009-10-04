@@ -102,7 +102,7 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
         CheckBox waiveCheckBox = new CheckBox(
                 "waived",
                 new PropertyModel<Boolean>( this, "waived" ) );
-        waiveCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        waiveCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change(
                         Change.Type.Updated,

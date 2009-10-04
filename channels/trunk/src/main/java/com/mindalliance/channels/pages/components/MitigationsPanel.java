@@ -67,7 +67,7 @@ public class MitigationsPanel extends AbstractCommandablePanel {
         makeVisible( confirmedCheckBox, wrapper.isConfirmed() );
         confirmedCheckBox.setEnabled( isLockedByUser( getPart() ) );
         item.addOrReplace( confirmedCheckBox );
-        confirmedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        confirmedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target,
                         new Change( Change.Type.Updated, getPart(), "mitigations"

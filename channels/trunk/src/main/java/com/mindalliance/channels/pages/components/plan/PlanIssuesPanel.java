@@ -38,7 +38,7 @@ public class PlanIssuesPanel extends AbstractIssueTablePanel {
         CheckBox includeWaivedCheckBox = new CheckBox(
                 "includeWaived",
                 new PropertyModel<Boolean>( this, "includeWaived" ) );
-        includeWaivedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        includeWaivedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 updateIssuesTable( target );
             }

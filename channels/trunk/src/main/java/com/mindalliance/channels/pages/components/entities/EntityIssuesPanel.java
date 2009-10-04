@@ -117,7 +117,7 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
         CheckBox includeContainedCheckBox = new CheckBox(
                 "includeContained",
                 new PropertyModel<Boolean>( this, "includeContained" ) );
-        includeContainedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        includeContainedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 updateIssuesTable( target );
             }
@@ -129,7 +129,7 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
         CheckBox includeWaivedCheckBox = new CheckBox(
                 "includeWaived",
                 new PropertyModel<Boolean>( this, "includeWaived" ) );
-        includeWaivedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        includeWaivedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 updateIssuesTable( target );
             }
@@ -141,7 +141,7 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
         CheckBox includeFromScenario = new CheckBox(
                 "includeFromScenarios",
                 new PropertyModel<Boolean>( this, "includeFromScenarios" ) );
-        includeFromScenario.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        includeFromScenario.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 updateIssuesTable( target );
             }

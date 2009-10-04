@@ -462,7 +462,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             this.allowedStates = allowedStates;
             bean = model.getObject();
             CheckBox checkBox = new CheckBox( "checkBox", new PropertyModel<Boolean>( this, "checked" ) );
-            checkBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            checkBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
                 protected void onUpdate( AjaxRequestTarget target ) {
                     // Do nothing
                 }

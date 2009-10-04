@@ -129,7 +129,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         actorsRequiredCheckBox = new CheckBox(
                 "actorsRequired",
                 new PropertyModel<Boolean>( this, "actorsRequired" ) );
-        actorsRequiredCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        actorsRequiredCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getOrganization(), "actorsRequired" ) );
             }
@@ -139,7 +139,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         agreementsRequiredCheckBox = new CheckBox(
                 "agreementsRequired",
                 new PropertyModel<Boolean>( this, "agreementsRequired" ) );
-        agreementsRequiredCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        agreementsRequiredCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getOrganization(), "agreementsRequired" ) );
             }

@@ -123,7 +123,7 @@ public class EventListPanel extends AbstractCommandablePanel {
                 new PropertyModel<Boolean>( wrapper, "confirmed" ) );
         makeVisible( confirmedCheckBox, getPlan().isDevelopment() && wrapper.canBeConfirmed() );
         item.addOrReplace( confirmedCheckBox );
-        confirmedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        confirmedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 eventsDiv.addOrReplace( makeEventsTable() );
                 target.addComponent( eventsDiv );

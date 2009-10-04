@@ -153,7 +153,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         isParticipantCheckBox = new CheckBox(
                 "isParticipant",
                 new PropertyModel<Boolean>( this, "participant" ) );
-        isParticipantCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        isParticipantCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 makeVisible( userChoice, isParticipant() );
                 target.addComponent( userChoice );

@@ -79,7 +79,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
                             return ALL_SCENARIOS.equals( object ) ? ALL
                                                                  : Long.toString( object.getId() );
                         }
-                    } ).add( newOnChange() ),
+                    } ).add( newOnChange( "onchange" ) ),
 
                  new DropDownChoice<Actor>( "actor", getActorsChoices( queryService ),
                                             new IChoiceRenderer<Actor>() {
@@ -92,13 +92,13 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
                             return object.equals( Actor.UNKNOWN ) ? ALL
                                                                   : Long.toString( object.getId() );
                         }
-                    } ).add( newOnChange() ),
+                    } ).add( newOnChange( "onchange" ) ),
 
-                 new CheckBox( "showingIssues" ).add( newOnChange() ) ) );
+                 new CheckBox( "showingIssues" ).add( newOnChange( "onclick" ) ) ) );
     }
 
-    private IBehavior newOnChange() {
-        return new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+    private IBehavior newOnChange( String event ) {
+        return new AjaxFormComponentUpdatingBehavior( event ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 redirect();

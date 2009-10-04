@@ -121,7 +121,7 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
                 emailLink.setVisible( !isCurrentUser );
                 item.add( emailLink );
                 CheckBox voteCheckBox = new CheckBox( "plannerVote", new PropertyModel<Boolean>( vote, "inFavor" ) );
-                voteCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+                voteCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
                     protected void onUpdate( AjaxRequestTarget target ) {
                         Change change = vote.getChange();
                         update( target, change );

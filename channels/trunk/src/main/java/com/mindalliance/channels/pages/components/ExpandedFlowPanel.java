@@ -324,7 +324,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         triggersSourceCheckBox = new CheckBox(
                 "triggers-source",
                 new PropertyModel<Boolean>( this, "triggeringToSource" ) );
-        triggersSourceCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        triggersSourceCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update(
                         target,
@@ -337,7 +337,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         terminatesSourceCheckBox = new CheckBox(
                 "terminates-source",
                 new PropertyModel<Boolean>( this, "terminatingToSource" ) );
-        terminatesSourceCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        terminatesSourceCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update(
@@ -393,7 +393,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         CheckBox checkBox = new CheckBox(
                 "all",
                 new PropertyModel<Boolean>( this, "all" ) );
-        checkBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        checkBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
 
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {

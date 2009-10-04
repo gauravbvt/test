@@ -84,7 +84,7 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
         selfTerminatingCheckBox = new CheckBox(
                 "selfTerminating",
                 new PropertyModel<Boolean>( this, "selfTerminating" ) );
-        selfTerminatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        selfTerminatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update(

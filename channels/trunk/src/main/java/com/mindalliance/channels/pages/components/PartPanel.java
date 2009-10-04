@@ -259,7 +259,7 @@ public class PartPanel extends AbstractCommandablePanel {
         selfTerminatingCheckBox = new CheckBox(
                 "self-terminating",
                 new PropertyModel<Boolean>( this, "selfTerminating" ) );
-        selfTerminatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        selfTerminatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 completionTimePanel.enable( getPart().isSelfTerminating()
                         && isLockedByUser( getPart() ) );
@@ -272,11 +272,11 @@ public class PartPanel extends AbstractCommandablePanel {
                 "repeating",
                 new PropertyModel<Boolean>( this, "repeating" ) );
         add( repeatingCheckBox );
-        repeatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        repeatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 repeatsEveryPanel.enable( getPart().isRepeating() );
                 target.addComponent( repeatsEveryPanel );
-                update( target, new Change( Change.Type.Updated, getPart(), "repeating" ) );
+                update( target, new Change( Change.Type.Updated, getPart(), "onclick" ) );
             }
         } );
         startWithScenarioCheckBox = new CheckBox(
@@ -298,7 +298,7 @@ public class PartPanel extends AbstractCommandablePanel {
                 "terminatesEventPhase",
                 new PropertyModel<Boolean>( this, "terminatesEventPhase" ) );
         add( terminatesScenarioCheckBox );
-        terminatesScenarioCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        terminatesScenarioCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getPart(), "terminatesEventPhase" ) );
             }
