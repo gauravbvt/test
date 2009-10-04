@@ -1,11 +1,11 @@
 package com.mindalliance.channels.model;
 
 import javax.persistence.Transient;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A communication medium.
@@ -160,6 +160,7 @@ public enum Medium {
      */
     public boolean isAddressValid( String address ) {
         if ( addressPattern.isEmpty() ) return true;
+        if ( address.isEmpty() && isBroadcast() ) return true;
         Pattern p = getCompiledPattern();
         Matcher m = p.matcher( address );
         return m.matches();

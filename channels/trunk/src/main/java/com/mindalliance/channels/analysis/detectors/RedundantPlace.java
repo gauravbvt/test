@@ -54,6 +54,8 @@ public class RedundantPlace extends AbstractIssueDetector {
                         Place other = (Place) obj;
                         return !other.equals( place )
                                 && ( place.getWithin() == null && other.getWithin() == null )
+                                && !place.getFullAddress().isEmpty()
+                                && !other.getFullAddress().isEmpty()
                                 && place.getFullAddress().equals( other.getFullAddress() );
                     }
                 } );

@@ -40,7 +40,7 @@ public class PlanDao extends Memory {
     /**
      * Name of the default event.
      */
-    private static final String DEFAULT_EVENT_NAME = "UNNAMED";
+    private static final String DEFAULT_EVENT_NAME = "unnamed";
 
     /**
      * The logger.
@@ -329,7 +329,7 @@ public class PlanDao extends Memory {
             Event unnamedEvent = findOrCreate( Event.class, DEFAULT_EVENT_NAME, null );
             plan.addIncident( unnamedEvent );
         } else if ( incidents.size() > 1 ) {
-            // Remove UNNAMED event if not referenced
+            // Remove default event if not referenced
             Event event = find( Event.class, DEFAULT_EVENT_NAME );
             if ( event != null && queryService.getReferenceCount( event ) <= 1 ) {
                 incidents.remove( event );

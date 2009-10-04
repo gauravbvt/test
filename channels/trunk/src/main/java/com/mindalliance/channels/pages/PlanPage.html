@@ -7,7 +7,7 @@
     <script type="text/javascript" src="jquery-ui-1.7.2.custom.min.js"></script>
     <link rel="stylesheet" href="channels.css" type="text/css">
     <script type="text/javascript">
-        function channels_patchKeypress( kc, t ) {
+        function channels_keypress( kc, t ) {
             // Patch autocomplete field bug (choices list not hidden)
             if ( kc == 13 && t == 'text' ) {
                 var autocompleteList = $(".wicket-aa-container");
@@ -24,13 +24,13 @@
             document.onkeydown = function() { // IE
                 var t = event.srcElement.type;
                 var kc = event.keyCode;
-                return channels_patchKeypress(kc, t);
+                return channels_keypress(kc, t);
             }
         else
             document.onkeypress = function( e ) { // FireFox/Others
                 var t = e.target.type;
                 var kc = e.keyCode;
-                return channels_patchKeypress(kc, t);
+                return channels_keypress(kc, t);
             }
     </script>
     <!--[if IE 7]><link rel="stylesheet" type="text/css" href="channels-ie.css" /><![endif]-->

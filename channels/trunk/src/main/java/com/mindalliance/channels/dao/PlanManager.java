@@ -323,7 +323,7 @@ public class PlanManager implements InitializingBean {
     private PlanDao createPlan( QueryService queryService ) {
         try {
             Plan plan = new Plan();
-            plan.setName( "UNNAMED" );
+            plan.setName( "unnamed" );
             plan.setUri( DEFAULT_URI );
             plan.setId( idGenerator.assignId( null, plan ) );
             plan.setVersion( 1 );

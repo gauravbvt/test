@@ -143,7 +143,7 @@ public class Phase extends ModelObject implements Comparable<ModelObject> {
         /**
          * The phase is about what happens during the event.
          */
-        Concurrent( "Concurrent" ),
+        Concurrent( "Co-event" ),
         /**
          * The phase is about what happens after the event.
          */

@@ -30,8 +30,8 @@ public class PlaceInheritsDifferentStreetAddress extends AbstractIssueDetector {
         if ( place.getWithin() != null ) {
             String withinAddress = place.getWithin().getActualStreetAddress();
             String streetAddress = place.getStreetAddress();
-            if ( !streetAddress.isEmpty()
-                    && !withinAddress.isEmpty()
+            if ( streetAddress != null && !streetAddress.isEmpty()
+                    && withinAddress != null && !withinAddress.isEmpty()
                     && !streetAddress.equals( withinAddress ) ) {
                 Issue issue = makeIssue( Issue.VALIDITY, place );
                 issue.setSeverity( Issue.Level.Minor );
