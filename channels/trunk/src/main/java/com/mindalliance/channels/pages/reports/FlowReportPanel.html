@@ -11,11 +11,12 @@
 
     <p class="info">
         <span wicket:id="information">information</span> <!-- class= "information" or "required-information" -->
-        (<span wicket:id="urgency" class="urgency">(max delay)</span>).
+        (<span wicket:id="urgency">(max delay)</span>).
         <span wicket:id="start-stop">Starts/stops this task.</span>
+        <span wicket:id="eoi-lead">Provide the following information:</span>
     </p>
 
-    <p wicket:id="description" class="description">(description)</p>
+    <ul wicket:id="eoi"><li wicket:id="eoi-item">Information</li></ul>
 
     <ul class="channels-only" wicket:id="channels">[channels report panel]</ul>
 

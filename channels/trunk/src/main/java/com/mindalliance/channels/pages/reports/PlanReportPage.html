@@ -5,21 +5,35 @@
         lang="en">
 <head>
     <title wicket:id="title">[Title]</title>
-    <link rel="stylesheet" href="report.css" type="text/css">
+    <link rel="stylesheet" href="playbook.css" type="text/css" title="Playbook">
 </head>
 
 <body class="report">
-<div id="selector" wicket:id="selector">(Report selector)</div>
-<div id="plan">
-    <h1 wicket:id="plan-name">plan name</h1>
-    <p class="client" wicket:id="plan-client">client</p>
-    <p class="date" wicket:id="date">date</p>
-    <p class="description" wicket:id="plan-description">description</p>
-    <div class="flow-map" wicket:id="planMap">[flow diagram panel]</div>
-</div>
+<div>
+    <div id="header">
+        <div id="nav" wicket:id="selector">(Report selector)</div>
+        <h1 wicket:id="plan-name">plan name</h1>
+        <h3 class="client" wicket:id="plan-client">client</h3>
+        <h3 class="date" wicket:id="date">date</h3>
+    </div>
+    <div id="contents">
+        <div id="plan">
+            <div class="flow-map" wicket:id="planMap">[flow diagram panel]</div>
 
-<div class="scenario" wicket:id="scenarios">
-    <span wicket:id="scenario">[scenario report panel]</span>
+            <p class="description"><span wicket:id="plan-description">description</span>
+                This plan is based on the following scenarios:</p>
+
+            <ul>
+                <li wicket:id="sc-list"><a wicket:id="sc-link">A scenario</a></li>
+            </ul>
+        </div>
+
+        <div class="scenario" wicket:id="scenarios">
+            <span wicket:id="scenario">[scenario report panel]</span>
+        </div>
+
+        <p class="notice">Confidential. Copyright &copy; 2009 Mind-Alliance Systems LLC.</p>
+    </div>
 </div>
 </body>
 </html>

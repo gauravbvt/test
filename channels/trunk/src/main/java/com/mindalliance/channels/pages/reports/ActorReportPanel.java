@@ -10,6 +10,10 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.model.Model;
+
+import java.util.List;
 
 /**
  * Describe the parts played by an actor in an organization in a scenario.
@@ -24,28 +28,44 @@ public class ActorReportPanel extends Panel {
 
         super( id );
         setRenderBodyOnly( true );
-
-        Actor actor = spec.getActor();
-        String actorTitle = actor == null ? "" : queryService.getTitle( actor );
         String description = spec.getDescription();
+        List<Part> parts = queryService.findAllParts( scenario, spec );
 
-        add( new Label( "sc-name", scenario.getName() ),                                  // NON-NLS
-             new Label( "title", actorTitle )
-                     .setVisible( !( actor == null || Actor.UNKNOWN.equals( actor ) ) ),
-
-             new Label( "org", spec.getOrganizationName() ),                              // NON-NLS
+        add( new Label( "title", getActorTitle( spec ) ),
              new Label( "name", spec.getReportTitle() ),                                  // NON-NLS
 
              new Label( "description", description ).setVisible( !description.isEmpty() ),
 
              new ChannelsBannerPanel( "channels", spec, null, null ),
 
-             new ListView<Part>( "parts", queryService.findAllParts( scenario, spec ) ) {
+             new ListView<Part>( "parts", parts ) {
                     @Override
                     protected void populateItem( ListItem<Part> item ) {
                         item.add( new PartReportPanel( "part",                            // NON-NLS
                                                        item.getModel(), true, showingIssues ) );
+                        item.add( new AttributeModifier( "class", true,
+                            new Model<String>( item.getIndex() % 2 == 0 ?
+                                               "task even" : "task odd" ) ) );
                     }
                 } );
+    }
+
+    private String getActorTitle( ResourceSpec spec ) {
+        Actor actor = spec.getActor();
+        String actorTitle;
+        if ( actor == null || Actor.UNKNOWN.equals( actor ) )
+            actorTitle = "";
+        else {
+            String t = queryService.getTitle( actor );
+            if ( t.isEmpty() )
+                actorTitle = "";
+            else
+                actorTitle = t + ", ";
+        }
+
+        String s = spec.toString();
+        int as = s.indexOf( " as " );
+        String s1 = as >= 0 ? s.substring( as + 4 ) : s ;
+        return actorTitle + s1;
     }
 }

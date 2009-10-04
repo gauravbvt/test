@@ -8,17 +8,18 @@
 <body>
 <wicket:panel>
     <form wicket:id="form" action="" method="GET">
-        Show: <select name="0" wicket:id="scenario">
+        <ul>
+            <li>Scenario: <select name="0" wicket:id="scenario">
                 <option>* all *</option>
-            </select> <select name="1" wicket:id="actor">
+            </select> Actor: <select name="1" wicket:id="actor">
                 <option>* all *</option>
-            </select>
-        &mdash; <label>Show issues: <input wicket:id="showingIssues" type="checkbox"></label>
-        &mdash; <a href="/logout">Logout</a>
-        <span id="apply">&mdash; <input type="submit" value="Apply"></span>
+            </select></li>
+            <li><label>Issues: <input wicket:id="showingIssues" type="checkbox"></label><span id="apply"> <input type="submit" value="Apply"></span>
         <script type="text/javascript">
             document.getElementById('apply').style.display = 'none';
-        </script>
+        </script></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
     </form>
 </wicket:panel>
 </body>

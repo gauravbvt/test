@@ -67,17 +67,18 @@ public class FlowReportPanel extends Panel {
         Set<Medium> unicasts = flow.getUnicasts();
         Collection<Channel> broadcasts = flow.getBroadcasts();
         final List<LocalizedActor> actors = findActors( flow, broadcasts, unicasts, queryService );
-        
+
         add( new Label( "information",
                         isSource ? flow.getOutcomeTitle() : flow.getRequirementTitle() )
                 .add( new AttributeModifier( "class", true,
                         new Model<String>( flow.isRequired() ? "required-information"
                                                              : "information" ) ) ),
-
-             new Label( "urgency", flow.getMaxDelay().toString() ),                       // NON-NLS
+             newUrgency(),
              new Label( "start-stop", getSignificance() ),
-             new Label( "description", flow.getDescription() )
-                .setVisible( !flow.getDescription().isEmpty() ),
+             new WebMarkupContainer( "eoi-lead" ).setVisible( !flow.getDescription().isEmpty() ),
+             new WebMarkupContainer( "eoi" )
+                     .add( new Label( "eoi-item", flow.getDescription() ) )
+                     .setVisible( !flow.getDescription().isEmpty() ),
 
              new IssuesReportPanel( "issues", new Model<ModelObject>( flow ) )
                 .setVisible( showingIssues ),
@@ -103,6 +104,13 @@ public class FlowReportPanel extends Panel {
                          new Model<String>( flow.isAll() ? "all-actors" : "any-actor" ) ) ) )
                     .setVisible( showContacts && !actors.isEmpty() ) );
 
+    }
+
+    private Label newUrgency() {
+        Label result = new Label( "urgency", flow.getMaxDelay().toString() );
+        if ( flow.isCritical() )
+            result.add( new AttributeModifier( "class", true, new Model<String>( "urgent" ) ) );
+        return result;
     }
 
     private String getSignificance() {

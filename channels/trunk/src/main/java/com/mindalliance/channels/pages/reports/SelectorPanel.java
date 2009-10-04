@@ -71,7 +71,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
             .add( new DropDownChoice<Scenario>( "scenario", getScenarioChoices( queryService ),
                     new IChoiceRenderer<Scenario>() {
                         public Object getDisplayValue( Scenario object ) {
-                            return ALL_SCENARIOS.equals( object ) ? "All scenarios"
+                            return ALL_SCENARIOS.equals( object ) ? "All"
                                                                   : object.getName();
                         }
 
@@ -84,7 +84,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
                  new DropDownChoice<Actor>( "actor", getActorsChoices( queryService ),
                                             new IChoiceRenderer<Actor>() {
                         public Object getDisplayValue( Actor object ) {
-                            return object.equals( Actor.UNKNOWN ) ? "All actors"
+                            return object.equals( Actor.UNKNOWN ) ? "All"
                                                                   : object.getNormalizedName();
                         }
 

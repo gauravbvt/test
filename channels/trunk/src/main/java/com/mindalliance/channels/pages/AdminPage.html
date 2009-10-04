@@ -7,28 +7,36 @@
         lang="en">
 <head>
     <title>Channels - Administration</title>
-    <link rel="stylesheet" href="channels.css" type="text/css">
+    <link rel="stylesheet" href="playbook.css" type="text/css">
+    <link rel="stylesheet" href="iPhone.css"   type="text/css" media="only screen and (max-device-width: 480px)">
 </head>
 <body class="message">
 <div>
-    <h1>Channels Administration</h1>
+    <div id="header">
+        <div id="nav">
+            <ul>
+                <li><a href="/logout">Logout <span wicket:id="user">user</span></a></li>
+            </ul>
+            <hr>
+        </div>
+        <h1>Channels Administration</h1>
+    </div>
 
-    <ul>
-        <li><label>Switch to plan:
-            <select wicket:id="plan-sel" name="plan">
-                <option>Some plan</option>
-            </select></label>
-        </li>
-        <li><a wicket:id="playbook">Show playbooks</a></li>
-        <li><a wicket:id="report">Show plan report</a></li>
-        <li><a wicket:id="plan">Build plan</a></li>
-    </ul>
+    <div id="contents">
+        <ul>
+            <li><label>Switch to plan:
+                <select wicket:id="plan-sel" name="plan">
+                    <option>Some plan</option>
+                </select></label>
+            </li>
+            <li><a wicket:id="playbook">Show playbooks</a></li>
+            <li><a wicket:id="report">Show plan report</a></li>
+            <li><a wicket:id="plan">Build plan</a></li>
+        </ul>
+    </div>
     <!-- Users -->
 
     <!-- Plans -->
-
-    <!-- Logout -->
-    <a href="/logout">Logout <span wicket:id="user">user</span></a>
 </div>
 </body>
 </html>

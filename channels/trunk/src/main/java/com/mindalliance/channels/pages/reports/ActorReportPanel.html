@@ -9,23 +9,18 @@
 <wicket:panel>
     <div class="header">
         <div>
+            <ul class="channels-only" wicket:id="channels"></ul>
             <div class="section-head">
                 <h4 wicket:id="name">name</h4>
-                <ul>
-                    <li wicket:id="title" class="title">(title)</li>
-                    <li wicket:id="org" class="organization">(organization)</li>
-                    <li wicket:id="sc-name" class="scenario">(scenario)</li>
-                </ul>
+                <h5 wicket:id="title">title</h5>
                 <p class="description" wicket:id="description">description</p>
             </div>
-            <ul class="channels-only" wicket:id="channels">
-            </ul>
         </div>
     </div>
 
     <table class="tasks">
         <thead>
-            <tr><th><h4>Tasks</h4></th><th><h4>Communication Actions</h4></th></tr>
+            <tr><th>Tasks</th><th>Communication Actions</th></tr>
         </thead>
         <tbody>
             <tr class="task" wicket:id="parts">

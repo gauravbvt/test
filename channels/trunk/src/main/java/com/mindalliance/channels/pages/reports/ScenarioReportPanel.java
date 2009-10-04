@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Risk;
@@ -18,7 +17,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
-import java.text.MessageFormat;
 import java.util.List;
 
 /**
@@ -41,7 +39,7 @@ public class ScenarioReportPanel extends Panel {
         setRenderBodyOnly( true );
         scenario = model.getObject();
 
-        addScenarioPage( scenario, scenario.getEvent(), showingIssues );
+        addScenarioPage( scenario, showingIssues );
 
         add( new ListView<Organization>( "organizations", scenario.getOrganizations() ) { // NON-NLS
             @Override
@@ -56,23 +54,29 @@ public class ScenarioReportPanel extends Panel {
         } );
     }
 
-    private void addScenarioPage( Scenario s, Event event, boolean showIssues ) {
-        String eventName = event == null ? "" : event.getName().toLowerCase();
+    private void addScenarioPage( Scenario s, boolean showIssues ) {
         List<Risk> riskList = s.getRisks();
-        add( new Label( "name", MessageFormat.format( "Scenario: {0}", s.getName() ) ),
+        add( new Label( "name", s.getName() )
+                .add( new AttributeModifier( "name", true,
+                                             new Model<String>( String.valueOf( s.getId() ) ) ) ),
 
-             new Label( "description", s.getDescription() ),                              // NON-NLS
+             new Label( "description", getScenarioDesc( s ) ).setRenderBodyOnly( true ),  // NON-NLS
 
-             new WebMarkupContainer( "event-section" )
-                .add( new Label( "event", eventName ) ).setVisible( event != null ),
+             new Label( "event", s.getPhaseEventTitle() ).setVisible( s.getEvent() != null ),
+
+             new WebMarkupContainer( "risk-lead" )
+                     .setRenderBodyOnly( true )
+                     .setVisible( !riskList.isEmpty() ),
 
              new WebMarkupContainer( "risk-section" )
                 .add( new ListView<Risk>( "risks", riskList ) {
                         @Override
                         protected void populateItem( ListItem<Risk> item ) {
                             Risk risk = item.getModelObject();
-                            item.add( new Label( "risk", risk.getLabel() ),
-                                      new Label( "risk-desc", risk.getDescription() ) );
+                            item.add( new Label( "risk", risk.getLabel() )
+                                            .setRenderBodyOnly( true ),
+                                      new Label( "risk-desc", risk.getDescription() )
+                                            .setRenderBodyOnly( true ) );
                         }
                     } ).setVisible( !riskList.isEmpty() ),
 
@@ -86,4 +90,10 @@ public class ScenarioReportPanel extends Panel {
                     .setVisible( showIssues )
         );
     }
+
+    private static String getScenarioDesc( Scenario s ) {
+        String desc = s.getDescription();
+        return desc.isEmpty() || !desc.endsWith( "." ) ?
+               desc + "." : desc;
+    }   
 }

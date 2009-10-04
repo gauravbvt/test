@@ -58,9 +58,11 @@ public class OrganizationReportPanel extends Panel {
             add( new ListView<ResourceSpec>( "sections", getSpecs() ) {
                 @Override
                 protected void populateItem( ListItem<ResourceSpec> item ) {
+                    ResourceSpec resourceSpec = item.getModelObject();
                     item.add( new ActorReportPanel( "section",
                                                     OrganizationReportPanel.this.scenario,
-                                                    item.getModelObject(), showingIssues ) );
+                                                    resourceSpec, showingIssues )
+                                .setRenderBodyOnly( true ) );
                 }
             } );
         else
@@ -69,39 +71,44 @@ public class OrganizationReportPanel extends Panel {
                 protected void populateItem( ListItem<Role> item ) {
                     item.add( new RoleReportPanel( "section", item.getModelObject(),
                                        OrganizationReportPanel.this.scenario,
-                                       OrganizationReportPanel.this.organization, showingIssues ) );
+                                       OrganizationReportPanel.this.organization, showingIssues )
+                                .setRenderBodyOnly( true ) );
                 }
             } );
     }
 
     private List<ResourceSpec> getSpecs() {
-        Set<Actor> actors = new HashSet<Actor>();
         Set<ResourceSpec> specs = new HashSet<ResourceSpec>();
 
         for ( Part p : queryService.findAllParts( scenario, ResourceSpec.with( organization ) ) ) {
             ResourceSpec spec = p.resourceSpec();
             if ( spec.isOrganization() )
                 spec.setActor( Actor.UNKNOWN );
+
             List<Actor> a = queryService.findAllActors( spec );
             if ( actor == null ) {
                 if ( a.isEmpty() )
                     specs.add( spec );
                 else
-                    actors.addAll( a );
-            } else if ( a.contains( actor ) )
-                actors.add( actor );
+                    for ( Actor a1 : a ) {
+                        ResourceSpec rs = new ResourceSpec( spec );
+                        rs.setActor( a1 );
+                        rs.setOrganization( organization );
+                        specs.add( rs );
+                    }
+
+            } else if ( a.contains( actor ) ) {
+                ResourceSpec rs = new ResourceSpec( spec );
+                rs.setActor( actor );
+                rs.setOrganization( organization );
+                specs.add( rs );
+            }
         }
 
         List<ResourceSpec> result = new ArrayList<ResourceSpec>( specs );
-        for ( Actor a : actors ) {
-            ResourceSpec spec = new ResourceSpec();
-            spec.setActor( a );
-            spec.setOrganization( organization );
-            result.add( spec );
-        }
         Collections.sort( result, new Comparator<ResourceSpec>() {
             public int compare( ResourceSpec o1, ResourceSpec o2 ) {
-                return o1.getReportTitle().compareTo( o2.getReportTitle() );
+                return o1.toString().compareTo( o2.toString() );
             }
         } );
         return result;

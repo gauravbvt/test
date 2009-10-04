@@ -1,5 +1,8 @@
 package com.mindalliance.channels.pages.reports;
 
+import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.Commander;
+import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Plan;
@@ -10,9 +13,11 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.text.DateFormat;
@@ -53,6 +58,8 @@ public class PlanReportPage extends WebPage {
     public PlanReportPage( PageParameters parameters ) {
         super( parameters );
 
+        setStatelessHint( true );
+
         selector = new SelectorPanel( "selector", parameters );
         if ( !selector.isValid() ) {
             setRedirect( true );
@@ -62,14 +69,29 @@ public class PlanReportPage extends WebPage {
         String reportDate = DateFormat.getDateTimeInstance( DateFormat.LONG, DateFormat.LONG )
                                 .format( new Date() );
         List<Scenario> scenarios = selector.getScenarios();
+        double[] size = { 478L, 400L };
+        Settings planMapSettings = new Settings( "#plan-map", DiagramFactory.TOP_BOTTOM,
+                                                 size, false, false );
 
-        add( selector,
+        add( selector,                            
              new Label( "title",                                                          // NON-NLS
                         MessageFormat.format( "Report: {0}", plan.getName() ) ),
              new Label( "plan-name", plan.getName() ),                                    // NON-NLS
-             new Label( "plan-client", plan.getClient() ),                                // NON-NLS
-             new Label( "plan-description", plan.getDescription() ),                      // NON-NLS
-             new Label( "date", reportDate ),
+             new Label( "plan-client", plan.getClient() )                                 // NON-NLS
+                     .setVisible( !plan.getClient().isEmpty() ),
+             new Label( "plan-description", getPlanDescription() )                        // NON-NLS
+                     .setRenderBodyOnly( true ),
+
+             new Label( "date", reportDate ),                                             // NON-NLS
+
+             new ListView<Scenario>( "sc-list", scenarios ) {                             // NON-NLS
+                    @Override
+                    protected void populateItem( ListItem<Scenario> item ) {
+                        Scenario scenario = item.getModelObject();
+                        item.add( new ExternalLink( "sc-link",
+                                        "#" + scenario.getId(), scenario.getName() ) );
+                    }
+                },
 
              new ListView<Scenario>( "scenarios", scenarios ) {                           // NON-NLS
                     @Override
@@ -83,12 +105,37 @@ public class PlanReportPage extends WebPage {
 
              new PlanMapDiagramPanel( "planMap",                                          // NON-NLS
                 new Model<ArrayList<Scenario>>( (ArrayList<Scenario>) scenarios ),
-                     false, // group scenarios by phase
-                     false, // group scenarios by event
+                false, // group scenarios by phase
+                false, // group scenarios by event
                 null, // selected phase or event
                 selector.isAllScenarios() ? null : selector.getScenario(),
                 null,
-                new Settings() )
+                planMapSettings )
         );
+    }
+
+    private String getPlanDescription() {
+        String label = plan.getDescription();
+        return label.isEmpty() || label.endsWith( "." ) ? label
+                                                        : label + ".";
+    }
+
+    /**
+     * Set the headers of the Page being served.
+     *
+     * @param response the response.
+     */
+    @Override
+    protected void setHeaders( WebResponse response ) {
+        super.setHeaders( response );
+
+        Channels channels = (Channels) getApplication();
+        Commander commander = channels.getCommander( plan );
+        long longTime = commander.getLastModified();
+        long now = System.currentTimeMillis();
+
+        response.setDateHeader( "Date", now );
+//        response.setDateHeader( "Expires", now + 24L*60*60*1000 );
+        response.setDateHeader( "Last-Modified", longTime );
     }
 }

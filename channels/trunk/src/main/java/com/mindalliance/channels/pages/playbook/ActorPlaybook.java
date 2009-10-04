@@ -124,7 +124,7 @@ public class ActorPlaybook extends PlaybookPage {
                     Event event = scenario.getEvent();
                     EventParts parts = rawEvents.get( event );
                     if ( parts == null ) {
-                        parts = new EventParts( event );
+                        parts = new EventParts( scenario, event );
                         rawEvents.put( event, parts );
                     }
                     parts.add( part );
@@ -201,13 +201,17 @@ public class ActorPlaybook extends PlaybookPage {
      */
     private static final class EventParts implements Comparable<EventParts> {
 
+        /** The scenario of the event. */
+        private Scenario scenario;
+
         /** The initiating event. */
         private final Event event;
 
         /** The associated parts. */
         private final Set<Part> parts = new HashSet<Part>();
 
-        private EventParts( Event event ) {
+        private EventParts( Scenario scenario, Event event ) {
+            this.scenario = scenario;
             this.event = event;
         }
 
@@ -254,8 +258,7 @@ public class ActorPlaybook extends PlaybookPage {
         }
 
         private String getEventName() {
-            String name = event.getName();
-            return name.toLowerCase();
+            return scenario.getPhaseEventTitle();
         }
     }
 }

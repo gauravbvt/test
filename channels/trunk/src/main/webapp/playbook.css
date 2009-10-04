@@ -1,16 +1,18 @@
-body {
-    position: relative;
-    margin: 0 auto;
-    max-width: 70em;
-
-    padding: 0;
+body, input, h1, h2, h3, h4, h5 {
     font-size: 100%;
     font-family: Arial, Helvetica, sans-serif;
     line-height: 1.25em;
 }
 
-body > div, thead tr, table.channels th {
-    background: #c3d9ff url('images/back.png') no-repeat 0 0;
+body {
+    position: relative;
+    margin: 0 auto;
+    max-width: 70em;
+    padding: 0;
+}
+
+body > div, thead tr, table.channels th, div.section {
+    background: #c3d9ff url('images/back.png') repeat-y 0 0;
 }
 
 body > div {
@@ -25,8 +27,31 @@ body > div {
     position: relative;
 }
 
+#header h3 {
+    margin-top: 1em;
+}
+#header h3, div.section h3, h5 {
+    font-weight: normal;
+    margin-top: 0.5625em !important;
+}
+
+#header h3.date {
+    margin-top: 0.5em;
+}
+
+#header h1 {
+    padding: 0;
+    font-size: 19px;
+}
+
+#nav, p.notice, span.sub {
+    font-size: 10.5px;
+}
+
+#contents, h3, h5 {
+    font-size: 12px;
+}
 #contents {
-    font-size: 0.875em;
     background: white;
     padding: 1.125em 0.5625em 0.5625em 0.5625em;
 }
@@ -40,7 +65,6 @@ div.person {
 }
 
 #nav {
-    font-size: 0.875em;
     float: right;
     clear: both;
 }
@@ -66,24 +90,65 @@ ul ul {
     margin: 0;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4, h5 {
     margin: 0;
     padding: 0;
     line-height: 1.125em;
 }
 
-h1 {
-    padding: 0;
-    font-size: 19px;
-}
-
 h2 {
+    font-size: 16px;
+}
+h4 {
+    margin-top: 2.25em;
+    padding-top: 0.5625em;
+}
+h5 {
+    margin-bottom: 1.125em;
 }
 
-h3 {
-    font-size: 75%;
-    margin-top: 1em;
-    font-weight: normal;
+div.issues {
+    color: darkred;
+    margin-top: 1.125em;
+}
+
+div.section {
+    clear: both;
+    padding: 0.5625em;
+    margin-bottom: 1.125em;
+    margin-top: 1.125em;
+}
+
+div.section-head {
+}
+
+#plan div.flow-map img {
+    margin: 0 0 0.5625em 0.5625em !important;
+    border: none;
+    float: right;
+    width: 50%;
+    max-width: 470px;
+}
+
+table.tasks {
+    clear: both;
+}
+
+p.description {
+    clear: none;
+}
+
+div.scenario div.flow-map {
+    position: relative;
+    width: 100%;
+}
+
+div.scenario div.flow-map img {
+    display: block;
+    margin: 0;
+    border: none;
+    width: 100%;
+    text-align: center;
 }
 
 table {
@@ -97,15 +162,17 @@ table.channels th {
     white-space: nowrap;
     min-width: 6em;
 }
-tr.odd {
-    background: #f6f6f6;
+
+tr.odd, ul.channels-only, ul.channels, p.name {
+    background: #f5f8ff;
 }
+
 th, td {
     border: none;
 }
 
 th {
-    padding: 0 0.5em;
+    padding: 0 0.5625em;
 }
 
 td.in {
@@ -119,30 +186,166 @@ td.out {
     width: 16px;
 }
 
-p {
-    margin-bottom: 1em;
-    clear: both;
+form td {
+    white-space: nowrap;
 }
 
-p.description {
+form input[type='checkbox'] {
+    margin: 0;
+    padding: 0;
+    vertical-align: text-top;
+}
+
+p {
+    margin-bottom: 1em;
+}
+
+p.notice {
+    margin-top: 0.5625em;
+    font-style: italic;
+    text-align: right;
+    color: #c4d5b6;
 }
 
 div.events:first-child, div.notifications:first-child {
     border: none;
 }
-div.events, div.notifications, h2 {
-    border-top: 1px solid #c3d9ff;
+div.events, div.notifications, h4 {
+    border-top: 1px solid #c4d5b6;
 }
 
-div.notifications {
+div.notifications, p {
     clear: both;
 }
 
 div.notifications img {
-    margin-bottom: 1em;
+    margin-bottom: 1.125em;
 }
 
 div.notifications ul {
     display: block;
     margin-left: 55px;
+}
+
+ul.channels {
+    display: table-cell;
+    width: 100%;
+    list-style: none;
+    padding: 0 0 0.5625em 2em;
+}
+
+div.header ul.channels-only {
+    float: right;
+    margin: 0.5625em 0;
+    padding: 0;
+    width: 60%;
+}
+
+ul.channels-only li.channel {
+    border-spacing: 0;
+    padding: 0;
+}
+
+ul.channels li.channel, ul.channels-only li.channel {
+    display: inline-table;
+    min-width: 2.5in;
+    margin: 0;
+    padding: 0 2em 0 0.5625em;
+}
+
+ul.details {
+    list-style: none;
+    padding: 0;
+}
+p.task-name {
+    font-weight: bold;
+}
+
+ul.flows {
+    list-style: none;
+    padding: 0;
+}
+
+ul.flows > li {
+    margin-bottom: 1.125em;
+    padding: 0 0 0 2.25em;
+}
+
+ul.flows li.receive-notification, ul.flows li.send-answer {
+    background: transparent url('images/arrow_left_blue.png') no-repeat top left;
+}
+ul.flows li.receive-notification.trigger, ul.flows li.send-answer.trigger {
+    background: transparent url('images/left_plus.png') no-repeat top left;
+}
+ul.flows li.receive-notification.trigger.terminate, ul.flows li.send-answer.trigger.terminate {
+    background: transparent url('images/left_both.png') no-repeat top left;
+}
+ul.flows li.receive-notification.terminate, ul.flows li.send-answer.terminate {
+    background: transparent url('images/left_box.png') no-repeat top left;
+}
+ul.flows li.send-notification, ul.flows li.receive-answer {
+    background: transparent url('images/arrow_right_blue.png') no-repeat top left;
+}
+ul.flows li.send-notification.trigger, ul.flows li.receive-answer.trigger {
+    background: transparent url('images/right_plus.png') no-repeat top left;
+}
+ul.flows li.send-notification.trigger.terminate, ul.flows li.receive-answer.trigger.terminate {
+    background: transparent url('images/right_both.png') no-repeat top left;
+}
+ul.flows li.send-notification.terminate, ul.flows li.receive-answer.terminate {
+    background: transparent url('images/right_box.png') no-repeat top left;
+}
+
+ul.contacts {
+    list-style: none;
+    display: table;
+    border-spacing: 0;
+}
+
+ul.contacts h4 {
+    display: none;
+}
+
+ul.contacts li.contact {
+    display: table-row;
+    padding-bottom: 0.5625em;
+}
+
+ul.contacts li.contact p.name {
+    display: table-cell;
+    margin: 0;
+    padding-bottom: 0.5625em;
+}
+
+span.unicast, span.urgent {
+    font-weight: bold;
+}
+
+p.name span {
+    white-space: nowrap;
+}
+
+table.tasks {
+    width: 100%;
+    border-spacing: 0;
+    table-layout: fixed;
+}
+
+/* Printed version -----------------------------------------------*/
+@media print {
+
+    @page {
+        margin: 0;
+    }
+    div.scenario, div.actor {
+        page-break-before: always;
+    }
+
+    tr.task {
+        page-break-inside: avoid;
+    }
+
+    #nav {
+        display: none;
+    }
 }

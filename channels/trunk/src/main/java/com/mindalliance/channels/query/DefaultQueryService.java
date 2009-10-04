@@ -919,6 +919,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     private void visitParts( Set<Part> visited, ResourceSpec spec, Scenario scenario ) {
+        // Add exact matches
         for ( Scenario s : getScenarios( scenario ) )
             for ( Iterator<Part> partIterator = s.parts(); partIterator.hasNext(); ) {
                 Part part = partIterator.next();
@@ -931,15 +932,19 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         Role role = spec.getRole();
         Place jurisdiction = spec.getJurisdiction();
 
-        if ( actor != null && role == null ) {
-            // add parts with actor's roles
-            for ( ResourceSpec job : findAllJobSpecs( organization, actor ) ) {
+        if ( actor != null ) {
+            if ( role == null ) {
+                // Add parts with all of actor's roles
+                for ( ResourceSpec job : findAllJobSpecs( organization, actor ) ) {
+                    ResourceSpec s = new ResourceSpec( spec );
+                    s.setRole( job.getRole() );
+                    s.setJurisdiction( job.getJurisdiction() );
+                    s.setOrganization( job.getOrganization() );
+                    visitParts( visited, s, scenario );
+                }
+            } else {
+                // Add regular role parts
                 ResourceSpec s = new ResourceSpec( spec );
-                s.setRole( job.getRole() );
-                s.setJurisdiction( job.getJurisdiction() );
-                s.setOrganization( job.getOrganization() );
-                visitParts( visited, s, scenario );
-
                 s.setActor( null );
                 visitParts( visited, s, scenario );
             }

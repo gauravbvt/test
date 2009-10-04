@@ -7,17 +7,19 @@
         lang="en">
 <body>
 <wicket:panel>
-    <h2 wicket:id="name">name</h2>
-    <p class="event-response" wicket:id="event-section">
-        (This scenario is in response to <span wicket:id="event">event</span>.)
-    </p>
-    <p class="description" wicket:id="description">description</p>
-    <div class="risks" wicket:id="risk-section">
-        <p>This scenario addresses the following risks:</p>
-        <ul>
-            <li wicket:id="risks"><span wicket:id="risk">Risk label</span>. <span wicket:id="risk-desc">Description.</span> </li>
-        </ul>
+    <div class="section">
+        <h2><a wicket:id="name" name="">name</a></h2>
+        <h3 wicket:id="event">Responding to some event</h3>
     </div>
+    <p class="description">
+        <span wicket:id="description">description</span>
+        <span wicket:id="risk-lead">
+            This scenario addresses the following risks:
+        </span>
+    </p>
+    <ul wicket:id="risk-section">
+        <li wicket:id="risks"><span wicket:id="risk">Risk label</span>. <span wicket:id="risk-desc">Description.</span> </li>
+    </ul>
     <div class="flow-map" wicket:id="flowMap">[flow diagram panel]</div>
     <div wicket:id="issues">[issues report panel]</div>
     <div wicket:id="organizations">
