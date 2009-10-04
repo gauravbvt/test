@@ -754,6 +754,16 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
     }
 
     /**
+     * Flow is an information capability.
+     *
+     * @return a boolean
+     */
+    @Transient
+    public boolean isCapability() {
+        return getTarget().isConnector();
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Transient

@@ -13,10 +13,8 @@ import com.mindalliance.channels.model.Scenario;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.commons.collections.Transformer;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -61,29 +59,7 @@ public class Disintermediate extends AbstractCommand {
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Part part = (Part) scenario.getNode( (Long) get( "part" ) );
-            Collection receiveNames = CollectionUtils.collect(
-                    IteratorUtils.filteredIterator( part.requirements(), new Predicate() {
-                        public boolean evaluate( Object obj ) {
-                            return ( (Flow) obj ).isInternal();
-                        }
-                    } ),
-                    new Transformer() {
-                        public Object transform( Object obj ) {
-                            return ( (Flow) obj ).getName();
-                        }
-                    } );
-            Collection sendNames = CollectionUtils.collect(
-                    IteratorUtils.filteredIterator( part.outcomes(), new Predicate() {
-                        public boolean evaluate( Object obj ) {
-                            return ( (Flow) obj ).isInternal();
-                        }
-                    } ),
-                    new Transformer() {
-                        public Object transform( Object obj ) {
-                            return ( (Flow) obj ).getName();
-                        }
-                    } );
-            return !CollectionUtils.intersection( receiveNames, sendNames ).isEmpty();
+            return !findIntermediations( part ).isEmpty();
         } catch ( CommandException e ) {
             return false;
         }
@@ -150,24 +126,54 @@ public class Disintermediate extends AbstractCommand {
             receivesToDisconnect.add( receive );
         }
         for ( Flow receive : receivesToDisconnect ) {
-            AddNeed addNeed = new AddNeed();
-            addNeed.set( "scenario", get( "scenario" ) );
-            addNeed.set( "part", get( "part" ) );
-            addNeed.set( "name", receive.getName() );
-            addNeed.set( "attributes", CommandUtils.getFlowAttributes( receive ) );
-            subCommands.addCommand( addNeed );
-            subCommands.addCommand( new DisconnectFlow( receive ) );
+            if ( !hasNeed( part, receive.getName() ) ) {
+                AddNeed addNeed = new AddNeed();
+                addNeed.set( "scenario", get( "scenario" ) );
+                addNeed.set( "part", get( "part" ) );
+                addNeed.set( "name", receive.getName() );
+                addNeed.set( "attributes", CommandUtils.getFlowAttributes( receive ) );
+                subCommands.addCommand( addNeed );
+                subCommands.addCommand( new DisconnectFlow( receive ) );
+            }
         }
         for ( Flow send : sendsToDisconnect ) {
-            AddCapability addCapability = new AddCapability();
-            addCapability.set( "scenario", get( "scenario" ) );
-            addCapability.set( "part", get( "part" ) );
-            addCapability.set( "name", send.getName() );
-            addCapability.set( "attributes", CommandUtils.getFlowAttributes( send ) );
-            subCommands.addCommand( addCapability );
-            subCommands.addCommand( new DisconnectFlow( send ) );
+            if ( !hasCapability( part, send.getName() ) ) {
+                AddCapability addCapability = new AddCapability();
+                addCapability.set( "scenario", get( "scenario" ) );
+                addCapability.set( "part", get( "part" ) );
+                addCapability.set( "name", send.getName() );
+                addCapability.set( "attributes", CommandUtils.getFlowAttributes( send ) );
+                subCommands.addCommand( addCapability );
+                subCommands.addCommand( new DisconnectFlow( send ) );
+            }
         }
         return subCommands;
+    }
+
+    private boolean hasNeed( Part part, final String name ) {
+        return CollectionUtils.exists(
+                IteratorUtils.toList( part.requirements() ),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        Flow flow = (Flow) object;
+                        return flow.isNeed() && flow.getName().equals( name );
+                    }
+                }
+        );
+
+    }
+
+    private boolean hasCapability( Part part, final String name ) {
+        return CollectionUtils.exists(
+                IteratorUtils.toList( part.outcomes() ),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        Flow flow = (Flow) object;
+                        return flow.isCapability() && flow.getName().equals( name );
+                    }
+                }
+        );
+
     }
 
     // Find pairs of synonymous internal receives and send on a part.
@@ -176,11 +182,13 @@ public class Disintermediate extends AbstractCommand {
         Iterator<Flow> receives = part.requirements();
         while ( receives.hasNext() ) {
             Flow receive = receives.next();
-            if ( receive.isInternal() ) {
+            if ( receive.isInternal() && receive.getSource().isPart() ) {
                 Iterator<Flow> sends = part.outcomes();
                 while ( sends.hasNext() ) {
                     Flow send = sends.next();
-                    if ( send.isInternal() && receive.getName().equals( send.getName() ) ) {
+                    if ( send.isInternal()
+                            && send.getTarget().isPart()
+                            && receive.getName().equals( send.getName() ) ) {
                         Flow[] interm = {receive, send};
                         interms.add( interm );
                     }
@@ -191,3 +199,4 @@ public class Disintermediate extends AbstractCommand {
     }
 
 }
+
