@@ -204,7 +204,7 @@ p.notice {
     margin-top: 0.5625em;
     font-style: italic;
     text-align: right;
-    color: #c4d5b6;
+    color: #707070;
 }
 
 div.events:first-child, div.notifications:first-child {
