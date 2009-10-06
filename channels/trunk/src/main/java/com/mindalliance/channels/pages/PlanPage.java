@@ -979,13 +979,15 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     public void setScenario( Scenario sc ) {
-        if ( scenario != null && scenario != sc ) {
+        if ( scenario != null && !scenario.equals( sc ) ) {
             collapseScenarioObjects();
         }
         scenario = sc;
         if ( scenario == null )
             scenario = getQueryService().getDefaultScenario();
-        setPart( scenario.getDefaultPart() );
+        if ( !getPart().getScenario().equals( scenario ) ) {
+            setPart( scenario.getDefaultPart() );
+        }
     }
 
     /**
