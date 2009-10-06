@@ -670,7 +670,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             Connector connector = (Connector) other;
             Flow need = isOutcome() ? connector.getInnerFlow() : getFlow();
             Flow capability = isOutcome() ? getFlow() : connector.getInnerFlow();
-            change = doCommand( new SatisfyNeed( need, capability, getFlow().getScenario() ) );
+            change = doCommand( new SatisfyNeed( need, capability ) );
         } else {
             change = doCommand( new RedirectFlow( getFlow(), other, isOutcome() ) );
         }

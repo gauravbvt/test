@@ -10,8 +10,8 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
 
-import java.util.Iterator;
 import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -57,7 +57,7 @@ public class TestSatisfyNeed extends AbstractChannelsTest {
         assertTrue( countFlows( source.outcomes() ) == 1 );
         assertTrue( countFlows( target.requirements() ) == 1 );
         assertTrue( countFlows( otherTarget.requirements() ) == 1 );
-        Command satisfyNeed = new SatisfyNeed( flow, connector.getInnerFlow(), flow.getScenario() );
+        Command satisfyNeed = new SatisfyNeed( flow, connector.getInnerFlow() );
         assertTrue( commander.canDo( satisfyNeed ) );
         assertTrue( commander.doCommand( satisfyNeed ).isAdded() );
         assertTrue( countFlows( source.outcomes() ) == 1 );

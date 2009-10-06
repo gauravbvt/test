@@ -1,6 +1,8 @@
 package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.graph.GraphBuilder;
+import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.InternalFlow;
 import com.mindalliance.channels.model.Node;
@@ -73,6 +75,16 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
             graph.addVertex( flow.getSource() );
             graph.addVertex( flow.getTarget() );
             graph.addEdge( flow.getSource(), flow.getTarget(), flow );
+            // add flows between capability connectors and external parts
+            if (flow.hasConnector() && flow.isCapability()) {
+                Connector connector = (Connector) flow.getTarget();
+                Iterator<ExternalFlow> externalFlows = connector.externalFlows();
+                while( externalFlows.hasNext() ) {
+                    ExternalFlow externalFlow = externalFlows.next();
+                    graph.addVertex( externalFlow.getPart() );
+                    graph.addEdge( externalFlow.getSource(), externalFlow.getTarget(), externalFlow );
+                }
+            }
         }
     }
 

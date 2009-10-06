@@ -13,12 +13,8 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Scenario;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
- * Set the node at the other side of this flow by connecting "through" a connector
- * to the part in the connector's innerflow.
+ * Satisfy a need by connecting with a capability.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -30,16 +26,13 @@ public class SatisfyNeed extends AbstractCommand {
     public SatisfyNeed() {
     }
 
-    public SatisfyNeed( Flow need, Flow capability, Scenario context ) {
+    public SatisfyNeed( Flow need, Flow capability ) {
         needLocksOn( CommandUtils.getLockingSetFor( need ) );
         needLocksOn( CommandUtils.getLockingSetFor( capability ) );
-        Map<String, Object> args = new HashMap<String, Object>();
-        args.put( "context", context.getId() );
-        args.put( "needScenario", need.getScenario().getId() );
-        args.put( "need", need.getId() );
-        args.put( "capabilityScenario", capability.getScenario().getId() );
-        args.put( "capability", capability.getId() );
-        setArguments( args );
+        set( "needScenario", need.getScenario().getId() );
+        set( "need", need.getId() );
+        set( "capabilityScenario", capability.getScenario().getId() );
+        set( "capability", capability.getId() );
     }
 
     /**
@@ -56,7 +49,6 @@ public class SatisfyNeed extends AbstractCommand {
         Flow newFlow;
         QueryService queryService = commander.getQueryService();
         try {
-            Scenario context = commander.resolve( Scenario.class, (Long) get( "context" ) );
             Scenario needScenario = commander.resolve( Scenario.class, (Long) get( "needScenario" ) );
             Flow need = needScenario.findFlow( (Long) get( "need" ) );
             Scenario capabilityScenario = commander.resolve(
@@ -70,15 +62,9 @@ public class SatisfyNeed extends AbstractCommand {
                 fromNode = capability.getSource();
                 toNode = need.getTarget();
             } else {
-                // External - which connector to use depends on context
-                if ( context == capabilityScenario ) {
-                    // from capability's part to need's connector
-                    fromNode = capability.getSource();
-                    toNode = need.getSource();
-                } else {
-                    fromNode = capability.getTarget();
+                // Create flow in need's scenario
+                     fromNode = capability.getTarget();
                     toNode = need.getTarget();
-                }
             }
             Long priorId = (Long) get( "satisfy" );
             newFlow = queryService.connect( fromNode, toNode, need.getName(), priorId );
@@ -87,23 +73,15 @@ public class SatisfyNeed extends AbstractCommand {
             newFlow.setChannels( need.isAskedFor() ? capability.getChannels() : need.getChannels() );
             newFlow.setMaxDelay( need.getMaxDelay() );
             set( "satisfy", newFlow.getId() );
+            set( "context", newFlow.getScenario().getId() );
             MultiCommand multi = (MultiCommand) get( "subCommands" );
             if ( multi == null ) {
                 multi = new MultiCommand( "satisfy need - extra" );
                 if ( needScenario == capabilityScenario ) {
                     multi.addCommand( new RemoveCapability( capability ) );
                     multi.addCommand( new RemoveNeed( need ) );
-                } else {
-                    // External - which connector to use depends on context
-                    if ( context == capabilityScenario ) {
-                        // from capability's part to need's connector
-                        multi.addCommand( new RemoveCapability( capability ) );
-                    } else {
-                        // from capability's connector to need's part
-                        multi.addCommand( new RemoveNeed( need ) );
-                    }
                 }
-                set( "subCommands", multi );
+                 set( "subCommands", multi );
             }
             multi.execute( commander );
             return new Change( Change.Type.Added, newFlow );
