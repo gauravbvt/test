@@ -14,7 +14,7 @@ import java.text.Collator;
  * Time: 10:29:06 AM
  */
 @Entity
-public class Phase extends ModelObject implements Comparable<ModelObject> {
+public class Phase extends ModelEntity implements Comparable<ModelObject> {
 
     public Phase() {
     }
@@ -34,14 +34,6 @@ public class Phase extends ModelObject implements Comparable<ModelObject> {
 
     public void setTiming( Timing timing ) {
         this.timing = timing;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Transient
-    public boolean isEntity() {
-        return true;
     }
 
     /**

@@ -3,7 +3,7 @@ package com.mindalliance.channels.analysis.graph;
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,7 +17,7 @@ import java.util.List;
  * Date: Apr 6, 2009
  * Time: 5:03:25 PM
  */
-public class EntityRelationship<T extends ModelObject> extends Relationship {
+public class EntityRelationship<T extends ModelEntity> extends Relationship {
 
     /**
      * External flows in fromScenario referencing node in toScenario
@@ -40,12 +40,12 @@ public class EntityRelationship<T extends ModelObject> extends Relationship {
         if ( entityRel != null ) flows = entityRel.getFlows();
     }
 
-    private ModelObject getFromEntity( QueryService queryService ) {
-        return (ModelObject) getFromIdentifiable( queryService );
+    private ModelEntity getFromEntity( QueryService queryService ) {
+        return (ModelEntity) getFromIdentifiable( queryService );
     }
 
-    private ModelObject getToEntity( QueryService queryService ) {
-        return (ModelObject) getToIdentifiable( queryService );
+    private ModelEntity getToEntity( QueryService queryService ) {
+        return (ModelEntity) getToIdentifiable( queryService );
     }
 
     public List<Flow> getFlows() {

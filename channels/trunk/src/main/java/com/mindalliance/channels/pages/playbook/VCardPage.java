@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Job;
 import com.mindalliance.channels.model.Medium;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
@@ -57,7 +58,7 @@ public class VCardPage extends WebPage {
         init( actorSpec.getOrganization(), actorSpec.getJob(), getChannels( actor ) );
     }
 
-    private List<Channel> getChannels( ModelObject object ) {
+    private List<Channel> getChannels( ModelEntity object ) {
         List<Channel> result = new ArrayList<Channel>();
 
         Set<Medium> media = flow.getUnicasts();

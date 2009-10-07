@@ -4,7 +4,7 @@ import com.mindalliance.channels.ImagingService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
@@ -42,9 +42,9 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
             ImagingService imagingService;
 
     /**
-     * The model object being edited
+     * The entity being edited
      */
-    private IModel<? extends ModelObject> model;
+    private IModel<? extends ModelEntity> model;
     /**
      * Image tag.
      */
@@ -66,14 +66,14 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
      */
     private static final int MAX_IMAGE_HEIGHT = 200;
 
-    public EntityDetailsPanel( String id, IModel<? extends ModelObject> model, Set<Long> expansions ) {
+    public EntityDetailsPanel( String id, IModel<? extends ModelEntity> model, Set<Long> expansions ) {
         super( id, model, expansions );
         this.model = model;
         init();
     }
 
     private void init() {
-        ModelObject mo = getEntity();
+        ModelEntity mo = getEntity();
         WebMarkupContainer moDetailsDiv = new WebMarkupContainer( "mo-details" );
         add( moDetailsDiv );
         image = new WebMarkupContainer( "image" );
@@ -104,11 +104,11 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
             }
         } );
         moDetailsDiv.add( descriptionField );
-        moDetailsDiv.add( new AttachmentPanel( "attachments", new Model<ModelObject>( mo ) ) );
+        moDetailsDiv.add( new AttachmentPanel( "attachments", new Model<ModelEntity>( mo ) ) );
         addSpecifics( moDetailsDiv );
         issuesPanel = new IssuesPanel(
                 "issues",
-                new PropertyModel<ModelObject>( this, "entity" ),
+                new PropertyModel<ModelEntity>( this, "entity" ),
                 getExpansions() );
         issuesPanel.setOutputMarkupId( true );
         moDetailsDiv.add( issuesPanel );
@@ -210,9 +210,9 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
     /**
      * Get model object.
      *
-     * @return a model object
+     * @return an entity
      */
-    public ModelObject getEntity() {
+    public ModelEntity getEntity() {
         return model.getObject();
     }
 

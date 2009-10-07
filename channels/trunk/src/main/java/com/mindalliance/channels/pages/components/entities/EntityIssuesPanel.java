@@ -5,6 +5,7 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Phase;
@@ -51,12 +52,12 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
      */
     private boolean includeFromScenarios = false;
 
-    public EntityIssuesPanel( String id, IModel<ModelObject> model ) {
+    public EntityIssuesPanel( String id, IModel<ModelEntity> model ) {
         super( id, model, MAX_ROWS );
     }
 
-    public ModelObject getEntity() {
-        return (ModelObject) getModel().getObject();
+    public ModelEntity getEntity() {
+        return (ModelEntity) getModel().getObject();
     }
 
     /**
@@ -66,7 +67,7 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
     public List<Issue> getIssues() {
         Set<ModelObject> scope = new HashSet<ModelObject>();
         List<Issue> issues = new ArrayList<Issue>();
-        ModelObject about = getAbout();
+        ModelEntity about = (ModelEntity)getAbout();
         final String issueType = getIssueType();
         Analyst analyst = getAnalyst();
         if ( about != null ) {
@@ -83,7 +84,7 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
                         scope.add( containedModelObject );
                     }
                 } else {
-                    for ( ModelObject containedEntity : findContainedEntities() ) {
+                    for ( ModelEntity containedEntity : findContainedEntities() ) {
                         scope.add( containedEntity );
                         if ( includeFromScenarios ) {
                             scope.addAll( findRelatedScenarioObjects( containedEntity ) );
@@ -151,7 +152,7 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
     }
 
     private String getContainmentLabel() {
-        ModelObject entity = getEntity();
+        ModelEntity entity = getEntity();
         if ( entity instanceof Actor ) {
             return "roles played by this actor";
         } else if ( entity instanceof Role ) {
@@ -170,22 +171,22 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
     }
 
     @SuppressWarnings( "unchecked" )
-    private List<? extends ModelObject> findContainedEntities() {
-        ModelObject entity = getEntity();
+    private List<? extends ModelEntity> findContainedEntities() {
+        ModelEntity entity = getEntity();
         QueryService queryService = getQueryService();
         if ( entity instanceof Actor ) {
             return queryService.findAllRolesOf( (Actor) entity );
         } else if ( entity instanceof Role ) {
             return queryService.findAllActors( ResourceSpec.with( entity ) );
         } else if ( entity instanceof Organization ) {
-            List<ModelObject> inOrg = new ArrayList<ModelObject>();
+            List<ModelEntity> inOrg = new ArrayList<ModelEntity>();
             inOrg.addAll( queryService.findRolesIn( (Organization) entity ) );
             inOrg.addAll( queryService.findAllActorsInOrganization( (Organization) entity ) );
             return inOrg;
         } else if ( entity instanceof Place ) {
             return queryService.findAllEntitiesIn( (Place) entity );
         } else if ( entity instanceof Event ) {
-            return new ArrayList<ModelObject>();
+            return new ArrayList<ModelEntity>();
         } else if ( entity instanceof Phase ) {
             return queryService.findAllEntitiesIn( (Phase) entity );
         } else {
@@ -193,7 +194,7 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
         }
     }
 
-    private List<ModelObject> findRelatedScenarioObjects( ModelObject entity ) {
+    private List<ModelObject> findRelatedScenarioObjects( ModelEntity entity ) {
         return getQueryService().findAllScenarioObjectsInvolving( entity );
     }
 

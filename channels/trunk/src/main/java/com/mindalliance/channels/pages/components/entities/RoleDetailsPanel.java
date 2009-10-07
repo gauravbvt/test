@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
@@ -87,7 +87,7 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
 
     public RoleDetailsPanel(
             String id,
-            IModel<? extends ModelObject> model,
+            IModel<? extends ModelEntity> model,
             Set<Long> expansions ) {
         super( id, model, expansions );
     }

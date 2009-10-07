@@ -5,7 +5,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
@@ -70,7 +70,7 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
      */
     private static final int MAX_ROWS = 20;
 
-    public EventDetailsPanel( String id, IModel<? extends ModelObject> model, Set<Long> expansions ) {
+    public EventDetailsPanel( String id, IModel<? extends ModelEntity> model, Set<Long> expansions ) {
         super( id, model, expansions );
     }
 

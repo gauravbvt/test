@@ -12,7 +12,7 @@ import java.util.List;
  * A generic role.
  */
 @Entity
-public class Role extends ModelObject {
+public class Role extends ModelEntity {
 
     /**
       * Bogus role used to signify that the role is not known...
@@ -34,14 +34,6 @@ public class Role extends ModelObject {
      */
     public Role( String name ) {
         super( name );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Transient @Override
-    public boolean isEntity() {
-        return true;
     }
 
     /**

@@ -6,7 +6,7 @@ import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Job;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.ResourceSpec;
@@ -573,7 +573,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             // link
             AjaxFallbackLink link = new AjaxFallbackLink( "entity-link" ) {
                 public void onClick( AjaxRequestTarget target ) {
-                    ModelObject mo = (ModelObject) CommandUtils.getProperty( jobWrapper, property, null );
+                    ModelEntity mo = (ModelEntity) CommandUtils.getProperty( jobWrapper, property, null );
                     if ( mo != null ) {
                         // setResponsePage(  new RedirectPage( ModelObjectLink.linkForEntity( mo ) ) );
                         update( target, new Change( Change.Type.Expanded, mo ) );
@@ -584,7 +584,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             Label label = new Label( "entity", new PropertyModel<String>( jobWrapper, property + "Name" ) );
             link.add( label );
             makeVisible( link, !jobWrapper.isMarkedForCreation() );
-            Class<? extends ModelObject> moClass =
+            Class<? extends ModelEntity> moClass =
                     property.equals( "actor" )
                             ? Actor.class
                             : ( property.equals( "role" )

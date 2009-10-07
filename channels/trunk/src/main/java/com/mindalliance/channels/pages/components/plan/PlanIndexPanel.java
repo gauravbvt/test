@@ -5,6 +5,7 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
@@ -428,7 +429,7 @@ public class PlanIndexPanel extends AbstractCommandablePanel implements NameRang
         return (List<IndexEntry>) CollectionUtils.collect(
                 CollectionUtils.select( getQueryService().listReferenced( entityClass ), new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        return isNameIncluded( ( (ModelObject) obj ).getName() );
+                        return isNameIncluded( ( (ModelEntity) obj ).getName() );
                     }
                 } ),
                 new Transformer() {

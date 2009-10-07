@@ -1,14 +1,14 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import org.apache.wicket.markup.html.link.Link;
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 
 /**
  * A link to an entity panel.
@@ -22,17 +22,17 @@ public class EntityLink extends AbstractUpdatablePanel {
     /**
      * Entity.
      */
-    private ModelObject entity;
+    private ModelEntity entity;
     /**
      * Text for link other than entity.getLabel().
      */
     private String text;
 
-    public EntityLink( String id, IModel<? extends ModelObject> model ) {
+    public EntityLink( String id, IModel<? extends ModelEntity> model ) {
          this( id, model, null );
     }
 
-    public EntityLink( String id, IModel<? extends ModelObject> model, String text ) {
+    public EntityLink( String id, IModel<? extends ModelEntity> model, String text ) {
         super( id, model, null );
         entity = model.getObject();
         this.text = text;

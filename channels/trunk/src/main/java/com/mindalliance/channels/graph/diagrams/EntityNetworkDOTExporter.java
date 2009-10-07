@@ -1,9 +1,9 @@
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
 import com.mindalliance.channels.graph.MetaProvider;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.model.ModelEntity;
 
 /**
  * Entity network DOT exporter.
@@ -13,9 +13,9 @@ import com.mindalliance.channels.analysis.graph.EntityRelationship;
  * Date: Apr 6, 2009
  * Time: 8:34:55 PM
  */
-public class EntityNetworkDOTExporter extends AbstractDOTExporter<ModelObject, EntityRelationship> {
+public class EntityNetworkDOTExporter extends AbstractDOTExporter<ModelEntity, EntityRelationship> {
 
-    public EntityNetworkDOTExporter( MetaProvider<ModelObject, EntityRelationship> metaProvider ) {
+    public EntityNetworkDOTExporter( MetaProvider<ModelEntity, EntityRelationship> metaProvider ) {
         super( metaProvider );
     }
 }

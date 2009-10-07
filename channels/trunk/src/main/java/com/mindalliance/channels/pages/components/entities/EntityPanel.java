@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.components.entities;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
@@ -42,11 +42,11 @@ public class EntityPanel extends AbstractMultiAspectPanel {
      */
     public static final String ISSUES = "issues";
 
-    public EntityPanel( String id, IModel<? extends ModelObject> model, Set<Long> expansions ) {
+    public EntityPanel( String id, IModel<? extends ModelEntity> model, Set<Long> expansions ) {
         this( id, model, expansions, DETAILS );
     }
 
-    public EntityPanel( String id, IModel<? extends ModelObject> model, Set<Long> expansions, String aspect ) {
+    public EntityPanel( String id, IModel<? extends ModelEntity> model, Set<Long> expansions, String aspect ) {
         super( id, model, expansions, aspect );
     }
 
@@ -71,7 +71,7 @@ public class EntityPanel extends AbstractMultiAspectPanel {
     protected MenuPanel makeShowMenu( String menuId ) {
         EntityShowMenuPanel showMenu = new EntityShowMenuPanel(
                 menuId,
-                new PropertyModel<ModelObject>( this, "object" ) );
+                new PropertyModel<ModelEntity>( this, "object" ) );
         showMenu.setEntityPanel( this );
         return showMenu;
     }
@@ -89,7 +89,7 @@ public class EntityPanel extends AbstractMultiAspectPanel {
     protected MenuPanel makeActionMenu( String menuId ) {
         return new EntityActionsMenuPanel(
                 menuId,
-                new PropertyModel<ModelObject>( this, "object" ) );
+                new PropertyModel<ModelEntity>( this, "object" ) );
     }
 
 
@@ -122,37 +122,37 @@ public class EntityPanel extends AbstractMultiAspectPanel {
         if ( getObject() instanceof Organization ) {
             return new OrganizationDetailsPanel(
                     "aspect",
-                    new PropertyModel<ModelObject>( this, "object" ),
+                    new PropertyModel<ModelEntity>( this, "object" ),
                     getExpansions() );
         } else if ( getObject() instanceof Actor ) {
             return new ActorDetailsPanel(
                     "aspect",
-                    new PropertyModel<ModelObject>( this, "object" ),
+                    new PropertyModel<ModelEntity>( this, "object" ),
                     getExpansions() );
         } else if ( getObject() instanceof Role ) {
             return new RoleDetailsPanel(
                     "aspect",
-                    new PropertyModel<ModelObject>( this, "object" ),
+                    new PropertyModel<ModelEntity>( this, "object" ),
                     getExpansions() );
         } else if ( getObject() instanceof Event ) {
             return new EventDetailsPanel(
                     "aspect",
-                    new PropertyModel<ModelObject>( this, "object" ),
+                    new PropertyModel<ModelEntity>( this, "object" ),
                     getExpansions() );
         } else if ( getObject() instanceof Place ) {
             return new PlaceDetailsPanel(
                     "aspect",
-                    new PropertyModel<ModelObject>( this, "object" ),
+                    new PropertyModel<ModelEntity>( this, "object" ),
                     getExpansions() );
         } else if ( getObject() instanceof Phase ) {
             return new PhaseDetailsPanel(
                     "aspect",
-                    new PropertyModel<ModelObject>( this, "object" ),
+                    new PropertyModel<ModelEntity>( this, "object" ),
                     getExpansions() );
         }  else {
             return new EntityDetailsPanel(
                     "aspect",
-                    new PropertyModel<ModelObject>( this, "object" ),
+                    new PropertyModel<ModelEntity>( this, "object" ),
                     getExpansions() );
         }
     }
@@ -188,7 +188,7 @@ public class EntityPanel extends AbstractMultiAspectPanel {
     private Component getEntityIssuesPanel() {
         return new EntityIssuesPanel(
                 "aspect",
-                new PropertyModel<ModelObject>( this, "object" ) );
+                new PropertyModel<ModelEntity>( this, "object" ) );
     }
 
 
@@ -196,7 +196,7 @@ public class EntityPanel extends AbstractMultiAspectPanel {
      * {@inheritDoc}
      */
     protected String getObjectClassName() {
-        ModelObject entity = getEntity();
+        ModelEntity entity = getEntity();
         if ( entity instanceof Actor && ( (Actor) entity ).isSystem() )
             return "system";
         else
@@ -208,8 +208,8 @@ public class EntityPanel extends AbstractMultiAspectPanel {
      *
      * @return a model object
      */
-    protected ModelObject getEntity() {
-        return (ModelObject) getModel().getObject();
+    protected ModelEntity getEntity() {
+        return (ModelEntity) getModel().getObject();
     }
 
     /**

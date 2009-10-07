@@ -7,6 +7,7 @@ import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.export.ConnectionSpecification;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -88,7 +89,7 @@ public abstract class AbstractChannelsConverter implements Converter {
      * @param id          a string (null or convertible to a long)
      * @return a model object
      */
-    protected <T extends ModelObject> T findOrCreate( Class<T> entityClass, String name, String id ) {
+    protected <T extends ModelEntity> T findOrCreate( Class<T> entityClass, String name, String id ) {
         if ( id == null ) {
             LOG.warn( "Recreating referenced " + entityClass.getSimpleName() + " without id" );
             return getQueryService().findOrCreate( entityClass, name );
@@ -259,7 +260,7 @@ public abstract class AbstractChannelsConverter implements Converter {
      * @param idMap id map
      * @return an entity model object
      */
-    protected <T extends ModelObject> T getEntity(
+    protected <T extends ModelEntity> T getEntity(
             Class<T> clazz,
             String name,
             Long id,

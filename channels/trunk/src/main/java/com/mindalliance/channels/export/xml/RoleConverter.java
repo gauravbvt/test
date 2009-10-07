@@ -1,6 +1,6 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Role;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -29,7 +29,7 @@ public class RoleConverter extends EntityConverter {
      * {@inheritDoc}
      */
     @Override
-    ModelObject findOrMakeEntity( String name, Long id, boolean importingPlan ) {
+    ModelEntity findOrMakeEntity( String name, Long id, boolean importingPlan ) {
         return importingPlan
                 ? getQueryService().findOrCreate( Role.class, name, id )
                 : getQueryService().findOrCreate( Role.class, name );
@@ -38,7 +38,7 @@ public class RoleConverter extends EntityConverter {
     /**
      * {@inheritDoc}
      */
-    protected void writeSpecifics( ModelObject entity,
+    protected void writeSpecifics( ModelEntity entity,
                                    HierarchicalStreamWriter writer,
                                    MarshallingContext context ) {
        // Do nothing
@@ -48,7 +48,7 @@ public class RoleConverter extends EntityConverter {
      * {@inheritDoc}
      */
     protected void setSpecific(
-            ModelObject entity,
+            ModelEntity entity,
             String nodeName,
             HierarchicalStreamReader reader,
             UnmarshallingContext context  ) {

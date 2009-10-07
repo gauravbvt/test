@@ -1,7 +1,7 @@
 package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.model.Event;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Place;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -41,7 +41,7 @@ public class EventConverter extends EntityConverter {
      * {@inheritDoc}
      */
     @Override
-    ModelObject findOrMakeEntity( String name, Long id, boolean importingPlan ) {
+    ModelEntity findOrMakeEntity( String name, Long id, boolean importingPlan ) {
         return importingPlan
                 ? getQueryService().findOrCreate( Event.class, name, id )
                 : getQueryService().findOrCreate( Event.class, name );
@@ -50,7 +50,7 @@ public class EventConverter extends EntityConverter {
     /**
      * {@inheritDoc}
      */
-    protected void writeSpecifics( ModelObject entity,
+    protected void writeSpecifics( ModelEntity entity,
                                    HierarchicalStreamWriter writer,
                                    MarshallingContext context ) {
         Event event = (Event) entity;
@@ -71,7 +71,7 @@ public class EventConverter extends EntityConverter {
     /**
      * {@inheritDoc}
      */
-    protected void setSpecific( ModelObject entity,
+    protected void setSpecific( ModelEntity entity,
                                 String nodeName,
                                 HierarchicalStreamReader reader,
                                 UnmarshallingContext context ) {

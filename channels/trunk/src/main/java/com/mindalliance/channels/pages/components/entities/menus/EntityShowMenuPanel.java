@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.components.entities.menus;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.pages.GeoMapPage;
@@ -51,7 +51,7 @@ public class EntityShowMenuPanel extends MenuPanel {
                 "menuItem",
                 new Model<String>( "Details" ),
                 detailsLink ) );
-        ModelObject entity = getEntity();
+        ModelEntity entity = getEntity();
         if ( !( entity instanceof Event || entity instanceof Place || entity instanceof Phase ) ) {
             Link networkLink = new AjaxFallbackLink( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {
@@ -98,7 +98,7 @@ public class EntityShowMenuPanel extends MenuPanel {
         this.entityPanel = entityPanel;
     }
 
-    private ModelObject getEntity() {
-        return (ModelObject) getModel().getObject();
+    private ModelEntity getEntity() {
+        return (ModelEntity) getModel().getObject();
     }
 }

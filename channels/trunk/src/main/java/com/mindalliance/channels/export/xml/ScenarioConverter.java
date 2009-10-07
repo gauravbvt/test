@@ -4,7 +4,7 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Phase;
@@ -75,9 +75,9 @@ public class ScenarioConverter extends AbstractChannelsConverter {
         exportAttachments( scenario, writer );
         if ( !exportingInPlan ) {
             // All entities if not within a plan export
-            Iterator<ModelObject> entities = queryService.iterateEntities();
+            Iterator<ModelEntity> entities = queryService.iterateEntities();
             while ( entities.hasNext() ) {
-                ModelObject entity = entities.next();
+                ModelEntity entity = entities.next();
                 writer.startNode( entity.getClass().getSimpleName().toLowerCase() );
                 context.convertAnother( entity );
                 writer.endNode();

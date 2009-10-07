@@ -5,7 +5,7 @@ import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
  * Date: Apr 6, 2009
  * Time: 7:31:07 PM
  */
-public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDiagramPanel {
+public class EntityNetworkDiagramPanel<T extends ModelEntity> extends AbstractDiagramPanel {
 
     /**
      * Plan manager.
@@ -142,7 +142,7 @@ public class EntityNetworkDiagramPanel<T extends ModelObject> extends AbstractDi
             int scrollLeft,
             AjaxRequestTarget target ) {
         try {
-            T entity = (T) getQueryService().find( ModelObject.class, Long.valueOf( vertexId ) );
+            T entity = (T) getQueryService().find( ModelEntity.class, Long.valueOf( vertexId ) );
             if ( entity != getEntity() ) {
                 String js = scroll( domIdentifier, scrollTop, scrollLeft );
                 Change change = new Change( Change.Type.Selected, entity );

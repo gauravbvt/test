@@ -95,12 +95,12 @@ public class HierarchyDiagramPanel extends AbstractDiagramPanel {
             int scrollLeft,
             AjaxRequestTarget target ) {
         try {
-            Hierarchical entity = (Hierarchical) getQueryService().find(
+            Hierarchical hierarchical = (Hierarchical) getQueryService().find(
                     ModelObject.class,
                     Long.valueOf( vertexId ) );
-            if ( entity != getHierarchical() ) {
+            if ( hierarchical != getHierarchical() ) {
                 // String js = scroll( domIdentifier, scrollTop, scrollLeft );
-                Change change = new Change( Change.Type.Expanded, entity );
+                Change change = new Change( Change.Type.Expanded, hierarchical );
                 // change.setScript( js );
                 update( target, change );
             }

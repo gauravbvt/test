@@ -6,6 +6,7 @@ import com.mindalliance.channels.Detective;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
@@ -278,8 +279,8 @@ public class DefaultAnalyst extends AbstractService implements Analyst, Lifecycl
             if ( !passes( scenario, test ) )
                 return false;
         }
-        for ( ModelObject mo : queryService.list( ModelObject.class ) ) {
-            if ( mo.isEntity() && !hasNoTestedIssue( mo, test ) )
+        for ( ModelEntity entity : queryService.list( ModelEntity.class ) ) {
+            if ( !hasNoTestedIssue( entity, test ) )
                 return false;
         }
         return true;
@@ -328,9 +329,8 @@ public class DefaultAnalyst extends AbstractService implements Analyst, Lifecycl
         for ( Scenario scenario : plan.getScenarios() ) {
             count += countFailures( scenario, test );
         }
-        for ( ModelObject mo : queryService.list( ModelObject.class ) ) {
-            if ( mo.isEntity() )
-                count += countTestIssues( mo, test );
+        for ( ModelEntity entity : queryService.list( ModelEntity.class ) ) {
+            count += countTestIssues( entity, test );
         }
         return count;
     }

@@ -23,6 +23,7 @@ import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Job;
 import com.mindalliance.channels.model.Medium;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Organization;
@@ -222,7 +223,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     @SuppressWarnings( {"unchecked"} )
-    public Iterator<ModelObject> iterateEntities() {
+    public Iterator<ModelEntity> iterateEntities() {
         return new FilterIterator( listReferenced( ModelObject.class ).iterator(), new Predicate() {
             public boolean evaluate( Object object ) {
                 return ( (ModelObject) object ).isEntity();
@@ -835,7 +836,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public EntityRelationship findEntityRelationship( ModelObject fromEntity, ModelObject toEntity ) {
+    public EntityRelationship findEntityRelationship( ModelEntity fromEntity, ModelEntity toEntity ) {
         List<Flow> entityFlows = new ArrayList<Flow>();
         for ( Scenario scenario : list( Scenario.class ) ) {
             Iterator<Flow> flows = scenario.flows();
@@ -861,7 +862,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     }
 
-    private boolean isExecutedBy( Part part, ModelObject entity ) {
+    private boolean isExecutedBy( Part part, ModelEntity entity ) {
         ResourceSpec partSpec = part.resourceSpec();
         if ( entity instanceof Actor ) {
             List<Actor> allPlayers = findAllActors( partSpec );
@@ -1171,7 +1172,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<ModelObject> findAllScenarioObjectsInvolving( ModelObject entity ) {
+    public List<ModelObject> findAllScenarioObjectsInvolving( ModelEntity entity ) {
         if ( entity instanceof Event ) {
             return this.findAllModelObjectsDirectlyRelatedToEvent( (Event) entity );
         } else {
@@ -1771,9 +1772,9 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    public <T extends ModelObject> List<T> listEntitiesWithUnknown( Class<T> entityClass ) {
+    public <T extends ModelEntity> List<T> listEntitiesWithUnknown( Class<T> entityClass ) {
         List<T> allEntities = new ArrayList<T>( list( entityClass ) );
-        ModelObject unknown =
+        ModelEntity unknown =
                 entityClass == Actor.class
                         ? Actor.UNKNOWN
                         : entityClass == Event.class
@@ -2339,8 +2340,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public List<? extends ModelObject> findAllEntitiesIn( Place place ) {
-        return (List<ModelObject>)CollectionUtils.select(
+    public List<? extends ModelEntity> findAllEntitiesIn( Place place ) {
+        return (List<ModelEntity>)CollectionUtils.select(
                     findAllModelObjectsIn( place ),
                     PredicateUtils.invokerPredicate( "isEntity" ));
     }
@@ -2349,8 +2350,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public List<? extends ModelObject> findAllEntitiesIn( Phase phase ) {
-            return (List<ModelObject>)CollectionUtils.select(
+    public List<? extends ModelEntity> findAllEntitiesIn( Phase phase ) {
+            return (List<ModelEntity>)CollectionUtils.select(
                         findAllModelObjectsIn( phase ),
                         PredicateUtils.invokerPredicate( "isEntity" ));
         }

@@ -5,7 +5,7 @@ import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.model.Hierarchical;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Scenario;
 import org.springframework.core.io.Resource;
@@ -84,7 +84,7 @@ public interface DiagramFactory<Vertex, Edge> extends Service {
             List<Scenario> scenarios,
             boolean groupByPhase,
             boolean groupByEvent,
-            ModelObject group,
+            ModelEntity group,
             Scenario scenario,
             ScenarioRelationship scRel,
             double[] diagramSize,
@@ -98,7 +98,7 @@ public interface DiagramFactory<Vertex, Edge> extends Service {
      * @param orientation a string
      * @return an entity network diagram
      */
-    <T extends ModelObject>Diagram newEntityNetworkDiagram(
+    <T extends ModelEntity>Diagram newEntityNetworkDiagram(
             T entity,
             EntityRelationship<T> selectedEntityRel,
             double[] diagramSize,

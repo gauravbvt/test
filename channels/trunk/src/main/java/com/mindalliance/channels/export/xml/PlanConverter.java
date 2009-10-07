@@ -3,6 +3,7 @@ package com.mindalliance.channels.export.xml;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Phase;
@@ -90,7 +91,7 @@ public class PlanConverter extends AbstractChannelsConverter {
         exportAttachments( plan, writer );
         context.put( "exporting-plan", "true" );
         // All entities
-        Iterator<ModelObject> entities = queryService.iterateEntities();
+        Iterator<ModelEntity> entities = queryService.iterateEntities();
         while ( entities.hasNext() ) {
             ModelObject entity = entities.next();
             writer.startNode( entity.getClass().getSimpleName().toLowerCase() );

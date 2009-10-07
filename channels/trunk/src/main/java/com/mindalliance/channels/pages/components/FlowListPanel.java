@@ -73,6 +73,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
         };
         newLink.setVisible( getPlan().isDevelopment() );
         add( newLink );
+        newLink.add( new Label( "addFlow", outcomes ? "Add capability" : "Add need" ) );
         addFlowsDiv();
     }
 
@@ -96,7 +97,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
                     item.add( flowPanel );
                 } else {
                     CollapsedFlowPanel flowPanel =
-                            new CollapsedFlowPanel( "flow", new Model<Flow>(flow), outcomes );
+                            new CollapsedFlowPanel( "flow", new Model<Flow>( flow ), outcomes );
                     item.add( flowPanel );
                 }
             }

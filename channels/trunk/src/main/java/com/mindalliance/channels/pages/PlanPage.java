@@ -13,6 +13,7 @@ import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
@@ -584,7 +585,7 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void addEntityPanel() {
-        ModelObject entity = findExpandedEntity();
+        ModelEntity entity = findExpandedEntity();
         if ( entity == null ) {
             entityPanel = new Label( "entity", "" );
             entityPanel.setOutputMarkupId( true );
@@ -592,7 +593,7 @@ public final class PlanPage extends WebPage implements Updatable {
         } else {
             entityPanel = new EntityPanel(
                     "entity",
-                    new Model<ModelObject>( entity ),
+                    new Model<ModelEntity>( entity ),
                     getReadOnlyExpansions(),
                     getAspectShown( entity ) );
         }
@@ -691,11 +692,11 @@ public final class PlanPage extends WebPage implements Updatable {
         getUser().switchPlan( plan );
     }
 
-    private ModelObject findExpandedEntity() {
+    private ModelEntity findExpandedEntity() {
         for ( long id : expansions ) {
             try {
                 ModelObject mo = queryService.find( ModelObject.class, id );
-                if ( mo.isEntity() ) return mo;
+                if ( mo.isEntity() ) return (ModelEntity)mo;
             }
             catch ( NotFoundException ignored ) {
                 // ignore

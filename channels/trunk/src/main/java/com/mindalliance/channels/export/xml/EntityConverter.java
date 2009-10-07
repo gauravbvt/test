@@ -1,6 +1,6 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.UserIssue;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -29,8 +29,7 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
     public void marshal( Object object,
                          HierarchicalStreamWriter writer,
                          MarshallingContext context ) {
-        ModelObject entity = (ModelObject) object;
-        assert entity.isEntity();
+        ModelEntity entity = (ModelEntity) object;
         writer.addAttribute( "id", String.valueOf( entity.getId() ) );
         String name = entity.getName() == null ? "" : entity.getName();
         writer.addAttribute( "name", name );
@@ -47,11 +46,11 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
     /**
      * Write specific properties to xml stream.
      *
-     * @param entity  the entity model object being converted
+     * @param entity  the entity  being converted
      * @param writer  the xml stream
      * @param context a context
      */
-    abstract protected void writeSpecifics( ModelObject entity,
+    abstract protected void writeSpecifics( ModelEntity entity,
                                             HierarchicalStreamWriter writer,
                                             MarshallingContext context );
 
@@ -65,7 +64,7 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
         boolean importingPlan = isImportingPlan( context );
         String name = reader.getAttribute( "name" );
         Long id = Long.parseLong( reader.getAttribute( "id" ) );
-        ModelObject entity = getEntity( name, id, importingPlan, idMap );
+        ModelEntity entity = getEntity( name, id, importingPlan, idMap );
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
@@ -85,8 +84,8 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
         return entity;
     }
 
-    private ModelObject getEntity( String name, Long id, boolean importingPlan, Map<Long, Long> idMap ) {
-        ModelObject entity = findOrMakeEntity( name, id, importingPlan );
+    private ModelEntity getEntity( String name, Long id, boolean importingPlan, Map<Long, Long> idMap ) {
+        ModelEntity entity = findOrMakeEntity( name, id, importingPlan );
         idMap.put( id, entity.getId() );
         return entity;
     }
@@ -100,7 +99,7 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
      * @param context  a context
      */
     abstract protected void setSpecific(
-            ModelObject entity,
+            ModelEntity entity,
             String nodeName,
             HierarchicalStreamReader reader,
             UnmarshallingContext context );
@@ -113,6 +112,6 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
      *@param importingPlan a boolean
      * @return an entity
      */
-    abstract ModelObject findOrMakeEntity( String name, Long id, boolean importingPlan );
+    abstract ModelEntity findOrMakeEntity( String name, Long id, boolean importingPlan );
 
 }

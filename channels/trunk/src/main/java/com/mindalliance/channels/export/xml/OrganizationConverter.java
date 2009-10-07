@@ -2,7 +2,7 @@ package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Job;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Scenario;
@@ -43,7 +43,7 @@ public class OrganizationConverter extends EntityConverter {
     /**
      * {@inheritDoc}
      */
-    ModelObject findOrMakeEntity( String name, Long id, boolean importingPlan ) {
+    ModelEntity findOrMakeEntity( String name, Long id, boolean importingPlan ) {
         return importingPlan
                 ? getQueryService().findOrCreate( Organization.class, name, id )
                 : getQueryService().findOrCreate( Organization.class, name );
@@ -52,7 +52,7 @@ public class OrganizationConverter extends EntityConverter {
     /**
      * {@inheritDoc}
      */
-    protected void writeSpecifics( ModelObject entity,
+    protected void writeSpecifics( ModelEntity entity,
                                    HierarchicalStreamWriter writer,
                                    MarshallingContext context ) {
         Organization org = (Organization) entity;
@@ -97,7 +97,7 @@ public class OrganizationConverter extends EntityConverter {
     /**
      * {@inheritDoc}
      */
-    protected void setSpecific( ModelObject entity,
+    protected void setSpecific( ModelEntity entity,
                                 String nodeName,
                                 HierarchicalStreamReader reader,
                                 UnmarshallingContext context ) {

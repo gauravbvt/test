@@ -18,7 +18,7 @@ import java.util.List;
  * Time: 3:49:53 PM
  */
 @Entity
-public class Event extends ModelObject implements GeoLocatable {
+public class Event extends ModelEntity implements GeoLocatable {
     /**
      * Where the event is considered to occur.
      * Null means that its scope is universal.
@@ -58,14 +58,6 @@ public class Event extends ModelObject implements GeoLocatable {
 
     public void setSelfTerminating( boolean selfTerminating ) {
         this.selfTerminating = selfTerminating;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Transient
-    public boolean isEntity() {
-        return true;
     }
 
     /**

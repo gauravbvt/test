@@ -1,6 +1,6 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Phase;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -31,7 +31,7 @@ public class PhaseConverter extends EntityConverter {
     /**
      * {@inheritDoc}
      */
-    ModelObject findOrMakeEntity( String name, Long id, boolean importingPlan ) {
+    ModelEntity findOrMakeEntity( String name, Long id, boolean importingPlan ) {
         return importingPlan
                 ? getQueryService().findOrCreate( Phase.class, name, id )
                 : getQueryService().findOrCreate( Phase.class, name );
@@ -40,7 +40,7 @@ public class PhaseConverter extends EntityConverter {
     /**
      * {@inheritDoc}
      */
-    protected void writeSpecifics( ModelObject entity,
+    protected void writeSpecifics( ModelEntity entity,
                                    HierarchicalStreamWriter writer,
                                    MarshallingContext context ) {
         Phase phase = (Phase) entity;
@@ -54,7 +54,7 @@ public class PhaseConverter extends EntityConverter {
      * {@inheritDoc}
      */
     protected void setSpecific(
-            ModelObject entity,
+            ModelEntity entity,
             String nodeName,
             HierarchicalStreamReader reader,
             UnmarshallingContext context ) {

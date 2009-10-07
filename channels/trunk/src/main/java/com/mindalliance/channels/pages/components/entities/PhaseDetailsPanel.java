@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
@@ -43,7 +43,7 @@ public class PhaseDetailsPanel extends EntityDetailsPanel {
     private static final int MAX_ROWS = 20;
 
 
-    public PhaseDetailsPanel( String id, PropertyModel<ModelObject> entityModel, Set<Long> expansions ) {
+    public PhaseDetailsPanel( String id, PropertyModel<ModelEntity> entityModel, Set<Long> expansions ) {
         super( id, entityModel, expansions );
     }
 

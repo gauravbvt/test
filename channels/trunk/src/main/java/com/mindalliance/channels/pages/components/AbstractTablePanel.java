@@ -4,6 +4,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.FilterableModelObjectLink;
 import com.mindalliance.channels.pages.ModelObjectLink;
@@ -253,7 +254,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                     if ( mo.isUnknown() ) {
                         return new Label( id, new Model<String>( mo.getName() ) );
                     } else {
-                        return new EntityLink( id, new Model<ModelObject>( mo ) );
+                        return new EntityLink( id, new Model<ModelEntity>( (ModelEntity) mo ) );
                     }
                 } else {
                     return new ModelObjectLink(
@@ -358,9 +359,9 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
     /**
      * Make a column with a link that expands the bean for the row.
      *
-     * @param name  a string
+     * @param name                 a string
      * @param identifiableProperty a string
-     * @param label a string
+     * @param label                a string
      * @return an abstract column
      */
     protected AbstractColumn<T> makeExpandLinkColumn(
@@ -373,7 +374,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                                       String id,
                                       final IModel<T> model ) {
                 T bean = model.getObject();
-                Identifiable identifiable = (Identifiable)CommandUtils.getProperty(
+                Identifiable identifiable = (Identifiable) CommandUtils.getProperty(
                         bean,
                         identifiableProperty,
                         null );

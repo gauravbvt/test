@@ -6,6 +6,7 @@ import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
@@ -49,7 +50,7 @@ import java.util.Set;
  * Date: Apr 6, 2009
  * Time: 3:33:41 PM
  */
-public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatablePanel implements Filterable {
+public class EntityNetworkPanel<T extends ModelEntity> extends AbstractUpdatablePanel implements Filterable {
 
     /**
      * Default page size for external flows panel.
@@ -424,8 +425,7 @@ public class EntityNetworkPanel<T extends ModelObject> extends AbstractUpdatable
             Identifiable changed = change.getSubject();
             if ( changed instanceof Plan ) {
                 selectedEntityRel = null;
-            } else if ( changed instanceof ModelObject
-                    && ( (ModelObject) changed ).isEntity() ) {
+            } else if ( changed instanceof ModelEntity ) {
                 if ( changed == getEntity() ) {
                     selectedEntityRel = null;
                 } else {

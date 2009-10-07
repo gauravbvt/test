@@ -2,7 +2,7 @@ package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Scenario;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -39,7 +39,7 @@ public class ActorConverter extends EntityConverter {
      * {@inheritDoc}
      */
     @Override
-    ModelObject findOrMakeEntity( String name, Long id, boolean importingPlan ) {
+    ModelEntity findOrMakeEntity( String name, Long id, boolean importingPlan ) {
         return importingPlan
                 ? getQueryService().findOrCreate( Actor.class, name, id )
                 : getQueryService().findOrCreate( Actor.class, name );
@@ -48,7 +48,7 @@ public class ActorConverter extends EntityConverter {
     /**
      * {@inheritDoc}
      */
-    protected void writeSpecifics( ModelObject entity,
+    protected void writeSpecifics( ModelEntity entity,
                                    HierarchicalStreamWriter writer,
                                    MarshallingContext context ) {
         Actor actor = (Actor) entity;
@@ -73,7 +73,7 @@ public class ActorConverter extends EntityConverter {
     /**
      * {@inheritDoc}
      */
-    protected void setSpecific( ModelObject entity, String nodeName,
+    protected void setSpecific( ModelEntity entity, String nodeName,
                                 HierarchicalStreamReader reader,
                                 UnmarshallingContext context ) {
         Scenario scenario = (Scenario) context.get( "scenario" );

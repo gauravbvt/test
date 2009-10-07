@@ -15,7 +15,7 @@ import java.util.List;
  * A location or jurisdiction.
  */
 @Entity
-public class Place extends ModelObject implements GeoLocatable {
+public class Place extends ModelEntity implements GeoLocatable {
 
     /**
      * Bogus place used to signify that the place is not known...
@@ -159,15 +159,6 @@ public class Place extends ModelObject implements GeoLocatable {
         } while ( place != null );
 
         return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Transient
-    @Override
-    public boolean isEntity() {
-        return true;
     }
 
     /**

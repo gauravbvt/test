@@ -6,6 +6,7 @@ import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.pages.GeoMapPage;
@@ -102,7 +103,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
 
     public PlaceDetailsPanel(
             String id,
-            IModel<? extends ModelObject> model,
+            IModel<? extends ModelEntity> model,
             Set<Long> expansions ) {
         super( id, model, expansions );
     }

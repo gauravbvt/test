@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Abstract class for channelable model objects with only unicast channels.
+ * Abstract class for channelable entity with only unicast channels.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -16,7 +16,7 @@ import java.util.List;
  * Time: 11:25:24 AM
  */
 @Entity
-public abstract class AbstractUnicastChannelable extends ModelObject implements Channelable {
+public abstract class AbstractUnicastChannelable extends ModelEntity implements Channelable {
 
     /**
      * Channels.

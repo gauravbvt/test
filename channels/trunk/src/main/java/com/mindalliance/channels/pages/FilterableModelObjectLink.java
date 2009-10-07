@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages;
 
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
@@ -88,7 +89,7 @@ public class FilterableModelObjectLink extends AbstractUpdatablePanel {
             if ( mo.isUnknown() ) {
                 add( new Label( "moLink", new Model<String>( mo.getName() )) );
             } else {
-                add( new EntityLink( "moLink", new Model<ModelObject>( mo ) ) );
+                add( new EntityLink( "moLink", new Model<ModelEntity>( (ModelEntity)mo ) ) );
             }
         } else {
             add( new ModelObjectLink( "moLink", moModel, textModel, hint ) );

@@ -4,7 +4,7 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Scenario;
 import org.apache.wicket.PageParameters;
 import org.slf4j.Logger;
@@ -28,7 +28,7 @@ public class PlanMapPage extends PngWebPage {
     /**
      * The selected phase or event.
      */
-    private ModelObject group;
+    private ModelEntity group;
     /**
      * Group scenarios by phase.
      */
@@ -59,11 +59,11 @@ public class PlanMapPage extends PngWebPage {
             groupByEvent = groupBy.equals( "event" );
         }
         if ( parameters.containsKey( "group" ) && !parameters.getString( "group" ).equals( "NONE" ) ) {
-            Long modelObjectId = Long.valueOf( parameters.getString( "group" ) );
+            Long groupId = Long.valueOf( parameters.getString( "group" ) );
             try {
-                group = queryService.find( ModelObject.class, modelObjectId );
+                group = queryService.find( ModelEntity.class, groupId );
             } catch ( NotFoundException e ) {
-                LOG.warn( "Phase or event group not found at :" + modelObjectId, e );
+                LOG.warn( "Phase or event group not found at :" + groupId, e );
             }
         }
         if ( parameters.containsKey( "scenario" ) && !parameters.getString( "scenario" ).equals( "NONE" ) ) {

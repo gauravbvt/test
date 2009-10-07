@@ -10,7 +10,7 @@ import com.mindalliance.channels.graph.diagrams.FlowMapDiagram;
 import com.mindalliance.channels.graph.diagrams.HierarchyDiagram;
 import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
 import com.mindalliance.channels.model.Hierarchical;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Scenario;
 import org.slf4j.Logger;
@@ -92,7 +92,7 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
 
 
     public Diagram newEntityNetworkDiagram(
-            ModelObject entity,
+            ModelEntity entity,
             EntityRelationship selectedEntityRel,
             double[] diagramSize,
             String orientation ) {
@@ -109,7 +109,7 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
             List scenarios,
             boolean groupByPhase,
             boolean groupByEvent,
-            ModelObject group,
+            ModelEntity group,
             Scenario scenario,
             ScenarioRelationship scRel,
             double[] diagramSize,

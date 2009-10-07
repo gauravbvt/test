@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.entities;
 
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.util.Play;
 import com.mindalliance.channels.util.SortableBeanProvider;
@@ -63,16 +63,17 @@ public class PlaysTablePanel extends AbstractTablePanel<Play> {
 
     public PlaysTablePanel(
             String s,
-            IModel<ModelObject> entityModel,
+            IModel<ModelEntity> entityModel,
             IModel<List<Play>> playsModel,
             Set<Long> expansions,
             int pageSize
-            ) {
-        super (s, entityModel, pageSize, expansions);
+    ) {
+        super( s, entityModel, pageSize, expansions );
         this.playsModel = playsModel;
         init();
     }
 
+    @SuppressWarnings( "unchecked" )
     private void init() {
         final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
         // columns

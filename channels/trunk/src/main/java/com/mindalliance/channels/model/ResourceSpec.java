@@ -75,8 +75,7 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      * @param entity an entity
      * @return a new resource spec
      */
-    public static ResourceSpec with( ModelObject entity ) {
-        assert entity.isEntity();
+    public static ResourceSpec with( ModelEntity entity ) {
         ResourceSpec resourceSpec = new ResourceSpec();
         if ( entity instanceof Actor )
             resourceSpec.setActor( (Actor) entity );
@@ -362,8 +361,8 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      *
      * @return an entity
      */
-    public ModelObject mostSpecificEntity() {
-        ModelObject mostSpecific = null;
+    public ModelEntity mostSpecificEntity() {
+        ModelEntity mostSpecific = null;
         if ( actor != null ) mostSpecific = actor;
         else if ( jurisdiction != null ) mostSpecific = jurisdiction;
         else if ( role != null ) mostSpecific = role;
@@ -414,8 +413,7 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      * @param entity an entity
      * @return a boolean
      */
-    public boolean hasEntity( ModelObject entity ) {
-        assert entity.isEntity();
+    public boolean hasEntity( ModelEntity entity ) {
         if ( entity instanceof Actor ) {
             return actor != null && actor.equals( entity )
                 || actor == null && entity.equals( Actor.UNKNOWN );

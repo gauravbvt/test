@@ -6,7 +6,7 @@ import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
 import com.mindalliance.channels.graph.URLProvider;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.springframework.core.io.Resource;
@@ -45,17 +45,17 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
     }
 
     public URLProvider getURLProvider() {
-        return new URLProvider<ModelObject, EntityRelationship>() {
+        return new URLProvider<ModelEntity, EntityRelationship>() {
 
-            public String getGraphURL( ModelObject vertex ) {
+            public String getGraphURL( ModelEntity vertex ) {
                 return null;
             }
 
-            public String getVertexURL( ModelObject modelObject ) {
-                if ( modelObject.isUnknown() ) {
+            public String getVertexURL( ModelEntity entity ) {
+                if ( entity.isUnknown() ) {
                     return null;
                 } else {
-                    Object[] args = {0, modelObject.getId()};
+                    Object[] args = {0, entity.getId()};
                     return MessageFormat.format( VERTEX_URL_FORMAT, args );
                 }
             }
@@ -78,17 +78,17 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
     }
 
     public VertexNameProvider getVertexLabelProvider() {
-        return new VertexNameProvider<ModelObject>() {
-            public String getVertexName( ModelObject modelObject ) {
-                String label = getIdentifiableLabel( modelObject ).replaceAll( "\\|", "\\\\n" );
+        return new VertexNameProvider<ModelEntity>() {
+            public String getVertexName( ModelEntity entity ) {
+                String label = getIdentifiableLabel( entity ).replaceAll( "\\|", "\\\\n" );
                 return sanitize( label );
             }
         };
     }
 
     public VertexNameProvider getVertexIDProvider() {
-        return new VertexNameProvider<ModelObject>() {
-            public String getVertexName( ModelObject entity ) {
+        return new VertexNameProvider<ModelEntity>() {
+            public String getVertexName( ModelEntity entity ) {
                 return "" + entity.getId();
             }
         };
@@ -98,7 +98,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
         return new NetwordDOTAttributeProvider();
     }
 
-    private class NetwordDOTAttributeProvider implements DOTAttributeProvider<ModelObject, EntityRelationship> {
+    private class NetwordDOTAttributeProvider implements DOTAttributeProvider<ModelEntity, EntityRelationship> {
         public List<DOTAttribute> getGraphAttributes() {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "rankdir", getGraphOrientation() ) );
@@ -113,7 +113,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
             return DOTAttribute.emptyList();
         }
 
-        public List<DOTAttribute> getVertexAttributes( ModelObject vertex, boolean highlighted ) {
+        public List<DOTAttribute> getVertexAttributes( ModelEntity vertex, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "image", getIcon( vertex ) ) );
             list.add( new DOTAttribute( "labelloc", "b" ) );
@@ -156,7 +156,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
             return list;
         }
 
-        private String getIcon( ModelObject modelObject ) {
+        private String getIcon( ModelEntity entity ) {
             String iconName;
             String imagesDirName;
             try {
@@ -164,10 +164,10 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
             } catch ( IOException e ) {
                 throw new RuntimeException( "Unable to get image directory location", e );
             }
-            String label = getIdentifiableLabel( modelObject );
+            String label = getIdentifiableLabel( entity );
             String[] lines = label.split( "\\|" );
             int numLines = Math.min( lines.length, 3 );
-            iconName = getAnalyst().getQueryService().findIconName( modelObject, imagesDirName );
+            iconName = getAnalyst().getQueryService().findIconName( entity, imagesDirName );
             return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
         }
 

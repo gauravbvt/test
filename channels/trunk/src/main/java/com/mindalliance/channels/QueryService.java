@@ -12,6 +12,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Job;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Organization;
@@ -97,9 +98,9 @@ public interface QueryService extends Service {
     /**
      * Iterate on ModelObject that are referenced entities.
      *
-     * @return an iterator on ModelObjects that are entities
+     * @return an iterator on  entities
      */
-    Iterator<ModelObject> iterateEntities();
+    Iterator<ModelEntity> iterateEntities();
 
     /**
      * Add a model object to the persistence store.
@@ -517,7 +518,7 @@ public interface QueryService extends Service {
      * @param toEntity   an entity
      * @return an entity relationship or null if no link exists
      */
-    <T extends ModelObject> EntityRelationship<T> findEntityRelationship( T fromEntity, T toEntity );
+    <T extends ModelEntity> EntityRelationship<T> findEntityRelationship( T fromEntity, T toEntity );
 
     /**
      * Find all confirmed jobs with resource spec
@@ -734,7 +735,7 @@ public interface QueryService extends Service {
      * @param clazz a class extending ModelObject
      * @return a list of entities
      */
-    <T extends ModelObject> List<T> listEntitiesWithUnknown( Class<T> clazz );
+    <T extends ModelEntity> List<T> listEntitiesWithUnknown( Class<T> clazz );
 
     /**
      * Find all roles played by an actor.
@@ -755,10 +756,10 @@ public interface QueryService extends Service {
     /**
      * Find all parts and flows that directly involve a given entity.
      *
-     * @param entity a model object
+     * @param entity a model entity
      * @return a list of model objects (parts and flows)
      */
-    List<ModelObject> findAllScenarioObjectsInvolving( ModelObject entity );
+    List<ModelObject> findAllScenarioObjectsInvolving( ModelEntity entity );
 
     /**
      * Find all scenarios that respond to a given event.
@@ -1010,12 +1011,12 @@ public interface QueryService extends Service {
      * @param place a place
      * @return a list of entities
      */
-    List<? extends ModelObject> findAllEntitiesIn( Place place );
+    List<? extends ModelEntity> findAllEntitiesIn( Place place );
 
     /**
      * Find all entities in a given phase.
-     * @param place a place
+     * @param phase a phase
      * @return a list of entities
      */
-    List<? extends ModelObject> findAllEntitiesIn( Phase phase );
+    List<? extends ModelEntity> findAllEntitiesIn( Phase phase );
 }

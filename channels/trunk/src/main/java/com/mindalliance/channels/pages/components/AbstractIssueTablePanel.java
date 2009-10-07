@@ -68,7 +68,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
     @SpringBean
     SurveyService surveyService;
 
-    public AbstractIssueTablePanel( String id, IModel<ModelObject> model, int maxRows ) {
+    public AbstractIssueTablePanel( String id, IModel<? extends ModelObject> model, int maxRows ) {
         super( id, model );
         this.maxRows = maxRows;
         init();

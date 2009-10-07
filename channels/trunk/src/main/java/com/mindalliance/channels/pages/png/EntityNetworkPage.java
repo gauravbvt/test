@@ -1,14 +1,14 @@
 package com.mindalliance.channels.pages.png;
 
+import com.mindalliance.channels.DiagramFactory;
+import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.graph.Diagram;
+import com.mindalliance.channels.model.ModelEntity;
 import org.apache.wicket.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.DiagramFactory;
-import com.mindalliance.channels.analysis.graph.EntityRelationship;
 
 /**
  * Generation of an entity network PNG.
@@ -25,7 +25,7 @@ public class EntityNetworkPage extends PngWebPage {
      */
     private static final Logger LOG = LoggerFactory.getLogger( EntityNetworkPage.class );
 
-    private ModelObject entity;
+    private ModelEntity entity;
     private EntityRelationship selectedEntityRel;
 
     public EntityNetworkPage( PageParameters parameters ) {
@@ -34,7 +34,7 @@ public class EntityNetworkPage extends PngWebPage {
         if ( parameters.containsKey( "entity" ) && !parameters.getString( "entity" ).equals( "NONE" ) ) {
             Long entityId = Long.valueOf( parameters.getString( "entity" ) );
             try {
-                entity = queryService.find( ModelObject.class, entityId );
+                entity = queryService.find( ModelEntity.class, entityId );
             } catch ( NotFoundException e ) {
                 LOG.warn( "Selected entity not found at :" + entityId, e );
             }
@@ -47,7 +47,7 @@ public class EntityNetworkPage extends PngWebPage {
     }
 
     protected Diagram makeDiagram( double[] size, String orientation ) {
-        DiagramFactory<ModelObject, EntityRelationship> factory = getDiagramFactory();
+        DiagramFactory<ModelEntity, EntityRelationship> factory = getDiagramFactory();
         return factory.newEntityNetworkDiagram( entity, selectedEntityRel, size, orientation );
     }
 }

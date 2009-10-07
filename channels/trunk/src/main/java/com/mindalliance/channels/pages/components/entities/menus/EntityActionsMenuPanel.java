@@ -4,7 +4,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.PasteAttachment;
 import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.pages.components.menus.ActionMenuPanel;
 import com.mindalliance.channels.pages.components.menus.CommandWrapper;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -47,8 +47,8 @@ public class EntityActionsMenuPanel extends ActionMenuPanel {
         return commandWrappers;
     }
 
-    private ModelObject getEntity() {
-        return (ModelObject) getModel().getObject();
+    private ModelEntity getEntity() {
+        return (ModelEntity) getModel().getObject();
     }
 
 }

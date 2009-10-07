@@ -2,7 +2,7 @@ package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.graph.GraphBuilder;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;
@@ -18,38 +18,38 @@ import java.util.List;
  * Date: Apr 6, 2009
  * Time: 8:52:20 PM
  */
-public class EntityNetworkGraphBuilder implements GraphBuilder<ModelObject, EntityRelationship> {
+public class EntityNetworkGraphBuilder implements GraphBuilder<ModelEntity, EntityRelationship> {
 
     /**
-     * A model object.
+     * An entity.
      */
-    private ModelObject entity;
+    private ModelEntity entity;
     /**
      * Related entities.
      */
-    private List<? extends ModelObject> entities;
+    private List<? extends ModelEntity> entities;
     /**
      * A query service.
      */
     private QueryService queryService;
 
     public EntityNetworkGraphBuilder(
-            ModelObject entity,
-            List<? extends ModelObject> entities,
+            ModelEntity entity,
+            List<? extends ModelEntity> entities,
             QueryService queryService ) {
         this.entity = entity;
         this.entities = entities;
         this.queryService = queryService;
     }
 
-    public DirectedGraph<ModelObject, EntityRelationship> buildDirectedGraph() {
-        DirectedGraph<ModelObject, EntityRelationship> digraph =
-                new DirectedMultigraph<ModelObject, EntityRelationship>(
-                        new EdgeFactory<ModelObject, EntityRelationship>() {
+    public DirectedGraph<ModelEntity, EntityRelationship> buildDirectedGraph() {
+        DirectedGraph<ModelEntity, EntityRelationship> digraph =
+                new DirectedMultigraph<ModelEntity, EntityRelationship>(
+                        new EdgeFactory<ModelEntity, EntityRelationship>() {
 
                             public EntityRelationship createEdge(
-                                    ModelObject entity,
-                                    ModelObject otherEntity ) {
+                                    ModelEntity entity,
+                                    ModelEntity otherEntity ) {
                                 return new EntityRelationship( entity, otherEntity );
                             }
 
@@ -59,12 +59,12 @@ public class EntityNetworkGraphBuilder implements GraphBuilder<ModelObject, Enti
     }
 
     private void populateGraph(
-            DirectedGraph<ModelObject, EntityRelationship> digraph,
-            ModelObject entity,
-            List<? extends ModelObject> entities ) {
+            DirectedGraph<ModelEntity, EntityRelationship> digraph,
+            ModelEntity entity,
+            List<? extends ModelEntity> entities ) {
         digraph.addVertex( entity );
         List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
-        for ( ModelObject otherEntity : entities ) {
+        for ( ModelEntity otherEntity : entities ) {
             if ( otherEntity != entity ) {
                 EntityRelationship sendRel = queryService.findEntityRelationship( entity, otherEntity );
                 if ( sendRel != null ) {
@@ -77,13 +77,13 @@ public class EntityNetworkGraphBuilder implements GraphBuilder<ModelObject, Enti
             }
         }
         for ( EntityRelationship entityRel : rels ) {
-            digraph.addVertex( (ModelObject)entityRel.getToIdentifiable( queryService ) );
-            digraph.addVertex( (ModelObject)entityRel.getFromIdentifiable( queryService ) );
+            digraph.addVertex( (ModelEntity)entityRel.getToIdentifiable( queryService ) );
+            digraph.addVertex( (ModelEntity)entityRel.getFromIdentifiable( queryService ) );
         }
         for ( EntityRelationship entityRel : rels ) {
             if ( entityRel != null ) {
-                digraph.addEdge( (ModelObject)entityRel.getFromIdentifiable( queryService ),
-                        (ModelObject)entityRel.getToIdentifiable( queryService ),
+                digraph.addEdge( (ModelEntity)entityRel.getFromIdentifiable( queryService ),
+                        (ModelEntity)entityRel.getToIdentifiable( queryService ),
                         entityRel );
             }
         }

@@ -6,7 +6,7 @@ import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.graph.GraphRenderer;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.ModelEntity;
 import org.jgrapht.Graph;
 
 import java.io.OutputStream;
@@ -20,13 +20,13 @@ import java.util.List;
  * Date: Apr 6, 2009
  * Time: 8:15:12 PM
  */
-public class EntityNetworkDiagram extends AbstractDiagram<ModelObject, EntityRelationship> {
+public class EntityNetworkDiagram extends AbstractDiagram<ModelEntity, EntityRelationship> {
 
-    private ModelObject entity;
+    private ModelEntity entity;
     private EntityRelationship selectedEntityRel;
 
     public EntityNetworkDiagram(
-            ModelObject entity,
+            ModelEntity entity,
             EntityRelationship selectedEntityRel,
             double[] diagramSize,
             String orientation ) {
@@ -36,15 +36,15 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelObject, EntityRel
     }
 
     public void render( String outputFormat, OutputStream outputStream ) {
-        List<? extends ModelObject> entities = getEntities();
-        DiagramFactory<ModelObject, EntityRelationship> diagramFactory = getDiagramFactory();
+        List<? extends ModelEntity> entities = getEntities();
+        DiagramFactory<ModelEntity, EntityRelationship> diagramFactory = getDiagramFactory();
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
-        GraphBuilder<ModelObject, EntityRelationship> entityNetworkGraphBuilder =
+        GraphBuilder<ModelEntity, EntityRelationship> entityNetworkGraphBuilder =
                 new EntityNetworkGraphBuilder( entity, entities, getDiagramFactory().getQueryService() );
-        Graph<ModelObject, EntityRelationship> graph =
+        Graph<ModelEntity, EntityRelationship> graph =
                 entityNetworkGraphBuilder.buildDirectedGraph();
-        GraphRenderer<ModelObject, EntityRelationship> graphRenderer =
+        GraphRenderer<ModelEntity, EntityRelationship> graphRenderer =
                 diagramFactory.getGraphRenderer();
         graphRenderer.resetHighlight();
         graphRenderer.highlightVertex( entity );
@@ -69,7 +69,7 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelObject, EntityRel
         );
     }
 
-    private List<? extends ModelObject> getEntities() {
+    private List<? extends ModelEntity> getEntities() {
         return getDiagramFactory().getQueryService().listEntitiesWithUnknown( entity.getClass() );
     }
 
