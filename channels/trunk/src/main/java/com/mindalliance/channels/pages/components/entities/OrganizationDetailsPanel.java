@@ -103,7 +103,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                 new ModelObjectLink( "loc-link",
                         new PropertyModel<Organization>( organization, "location" ),
                         new Model<String>( "Location" ) ) );
-        final List<String> locationChoices = getQueryService().findAllNames( Place.class );
+        final List<String> locationChoices = getQueryService().findAllEntityNames( Place.class );
         locationField = new AutoCompleteTextField<String>( "location",
                 new PropertyModel<String>( this, "locationName" ) ) {
             @Override

@@ -37,11 +37,16 @@ public class Event extends ModelEntity implements GeoLocatable {
     static {
         UNKNOWN = new Event();
         UNKNOWN.setName( "(unknown)" );
+        UNKNOWN.setActual();
         UNKNOWN.setId( 10000000L - 2 );
     }
 
     public Event() {
 
+    }
+
+    public Event( String name ) {
+        super( name );
     }
 
     public Place getScope() {
@@ -61,17 +66,17 @@ public class Event extends ModelEntity implements GeoLocatable {
     }
 
     /**
-      * {@inheritDoc}
-      */
-     @Transient
+     * {@inheritDoc}
+     */
+    @Transient
     public GeoLocation geoLocate() {
         return scope != null ? scope.geoLocate() : null;
     }
 
     /**
-      * {@inheritDoc}
-      */
-     @Transient
+     * {@inheritDoc}
+     */
+    @Transient
     public String getGeoMarkerLabel() {
         return scope != null
                 ? getName() + " in " + scope.getGeoMarkerLabel()
@@ -89,5 +94,5 @@ public class Event extends ModelEntity implements GeoLocatable {
         types.addAll( super.getAttachmentTypes() );
         return types;
     }
-   
+
 }

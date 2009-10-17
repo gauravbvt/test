@@ -4,6 +4,7 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import org.apache.commons.collections.CollectionUtils;
@@ -88,7 +89,7 @@ public class ActorNotInOneOrganization extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     public boolean appliesTo( ModelObject modelObject ) {
-        return modelObject instanceof Actor;
+        return modelObject instanceof Actor && ( (ModelEntity) modelObject ).isActual();
     }
 
     /**

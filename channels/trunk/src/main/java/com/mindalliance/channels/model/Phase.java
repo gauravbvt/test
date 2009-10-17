@@ -15,6 +15,13 @@ import java.text.Collator;
  */
 @Entity
 public class Phase extends ModelEntity implements Comparable<ModelObject> {
+    public static final Phase UNKNOWN;
+
+    static {
+        UNKNOWN = new Phase( "(unknown)" );
+        UNKNOWN.setActual();
+        UNKNOWN.setId( 10000000L - 6L );
+    }
 
     public Phase() {
     }

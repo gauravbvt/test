@@ -367,7 +367,7 @@ public class DefaultCommander extends AbstractService implements Commander, Init
         synchronized ( this ) {
             if ( name != null && !name.trim().isEmpty() ) {
                 ModelObject mo = queryService.getDao().find( clazz, name.trim() );
-                if ( mo != null && mo.isUndefined() ) {
+                if ( mo != null && !mo.isUnknown() && mo.isUndefined() ) {
                     boolean garbage;
                     if ( mo instanceof Actor )
                         garbage = !queryService.isReferenced( (Actor) mo );

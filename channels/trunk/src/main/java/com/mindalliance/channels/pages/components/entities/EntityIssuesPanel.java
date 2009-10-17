@@ -177,7 +177,7 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
         if ( entity instanceof Actor ) {
             return queryService.findAllRolesOf( (Actor) entity );
         } else if ( entity instanceof Role ) {
-            return queryService.findAllActors( ResourceSpec.with( entity ) );
+            return queryService.findAllActualActors( ResourceSpec.with( entity ) );
         } else if ( entity instanceof Organization ) {
             List<ModelEntity> inOrg = new ArrayList<ModelEntity>();
             inOrg.addAll( queryService.findRolesIn( (Organization) entity ) );

@@ -14,10 +14,10 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Comparator;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -85,7 +85,7 @@ public class OrganizationReportPanel extends Panel {
             if ( spec.isOrganization() )
                 spec.setActor( Actor.UNKNOWN );
 
-            List<Actor> a = queryService.findAllActors( spec );
+            List<Actor> a = queryService.findAllActualActors( spec );
             if ( actor == null ) {
                 if ( a.isEmpty() )
                     specs.add( spec );

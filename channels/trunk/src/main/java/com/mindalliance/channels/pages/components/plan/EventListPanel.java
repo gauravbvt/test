@@ -86,7 +86,7 @@ public class EventListPanel extends AbstractCommandablePanel {
         item.add( nameContainer );
         final List<String> choices;
         if ( wrapper.isMarkedForCreation() ) {
-            choices = getQueryService().findAllNames( Event.class );
+            choices = getQueryService().findAllEntityNames( Event.class );
         } else {
             choices = new ArrayList<String>();
         }
@@ -208,7 +208,7 @@ public class EventListPanel extends AbstractCommandablePanel {
             this.confirmed = confirmed;
             Plan plan = planManager.getCurrentPlan();
             if ( confirmed ) {
-                Event confirmedEvent = getQueryService().findOrCreate( Event.class, getName() );
+                Event confirmedEvent = getQueryService().safeFindOrCreateType( Event.class, getName() );
                 doCommand( new UpdatePlanObject(
                         plan,
                         "incidents",
@@ -217,7 +217,7 @@ public class EventListPanel extends AbstractCommandablePanel {
                 ) );
 
             } else if ( !markedForCreation ) {
-                Event confirmedEvent = getQueryService().findOrCreate( Event.class, getName() );
+                Event confirmedEvent = getQueryService().safeFindOrCreateType( Event.class, getName() );
                 doCommand( new UpdatePlanObject(
                         plan,
                         "incidents",

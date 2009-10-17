@@ -76,6 +76,7 @@ public class JobConverter extends AbstractChannelsConverter {
                         Actor.class,
                         reader.getValue(),
                         Long.parseLong( id ),
+                        false,
                         importingPlan,
                         idMap );
                 job.setActor( actor );
@@ -85,6 +86,7 @@ public class JobConverter extends AbstractChannelsConverter {
                         Role.class,
                         reader.getValue(),
                         Long.parseLong( id ),
+                        false,
                         importingPlan,
                         idMap );
                 job.setRole( role );
@@ -94,6 +96,7 @@ public class JobConverter extends AbstractChannelsConverter {
                         Place.class,
                         reader.getValue(),
                         Long.parseLong( id ),
+                        false,
                         importingPlan,
                         idMap );
                 job.setJurisdiction( jurisdiction );

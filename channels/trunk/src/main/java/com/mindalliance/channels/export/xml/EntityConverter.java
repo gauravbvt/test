@@ -31,11 +31,22 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
                          MarshallingContext context ) {
         ModelEntity entity = (ModelEntity) object;
         writer.addAttribute( "id", String.valueOf( entity.getId() ) );
+        if ( entity.getKind() == null ) {
+            System.out.println( "Oops" );
+        }
+        writer.addAttribute( "kind", entity.getKind().name() );
         String name = entity.getName() == null ? "" : entity.getName();
         writer.addAttribute( "name", name );
         writer.startNode( "description" );
         writer.setValue( entity.getDescription() == null ? "" : entity.getDescription() );
         writer.endNode();
+        for ( ModelEntity tag : entity.getTags() ) {
+            writer.startNode( "tag" );
+            writer.addAttribute( "id", tag.getId() + "" );
+            writer.addAttribute( "kind", tag.getKind().name() );
+            writer.setValue( tag.getName() );
+            writer.endNode();
+        }
         exportDetectionWaivers( entity, writer );
         exportAttachments( entity, writer );
         writeSpecifics( entity, writer, context );
@@ -64,19 +75,40 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
         boolean importingPlan = isImportingPlan( context );
         String name = reader.getAttribute( "name" );
         Long id = Long.parseLong( reader.getAttribute( "id" ) );
-        ModelEntity entity = getEntity( name, id, importingPlan, idMap );
+        String kind = reader.getAttribute( "kind" );
+        // The default kind is Actual
+        boolean isType = ( kind != null && ModelEntity.Kind.valueOf( kind ) == ModelEntity.Kind.Type );
+        ModelEntity entity = getEntity(
+                getEntityClass(),
+                name,
+                id,
+                isType,
+                importingPlan,
+                idMap );
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "description" ) ) {
                 entity.setDescription( reader.getValue() );
+            } else if ( nodeName.equals( "tag" ) ) {
+                Long tagId = Long.parseLong( reader.getAttribute( "id" ) );
+                String tagName = reader.getValue();
+                ModelEntity tag = getEntity(
+                        getEntityClass(),
+                        tagName,
+                        tagId,
+                        // always a type
+                        true,
+                        importingPlan,
+                        idMap );
+                entity.addTag( tag );
             } else if ( nodeName.equals( "detection-waivers" ) ) {
                 importDetectionWaivers( entity, reader );
             } else if ( nodeName.equals( "attachments" ) ) {
                 importAttachments( entity, reader );
             } else if ( nodeName.equals( "issue" ) ) {
                 context.convertAnother( entity, UserIssue.class );
-            }else {
+            } else {
                 setSpecific( entity, nodeName, reader, context );
             }
             reader.moveUp();
@@ -84,11 +116,12 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
         return entity;
     }
 
-    private ModelEntity getEntity( String name, Long id, boolean importingPlan, Map<Long, Long> idMap ) {
-        ModelEntity entity = findOrMakeEntity( name, id, importingPlan );
-        idMap.put( id, entity.getId() );
-        return entity;
-    }
+    /**
+     * The entity's class.
+     *
+     * @return a class
+     */
+    abstract protected Class<? extends ModelEntity> getEntityClass();
 
     /**
      * Set an entity model object's specific property from xml.
@@ -104,14 +137,5 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
             HierarchicalStreamReader reader,
             UnmarshallingContext context );
 
-    /**
-     * Find or make an entity with id if importing plan.
-     *
-     * @param name entity's name
-     * @param id a Long
-     *@param importingPlan a boolean
-     * @return an entity
-     */
-    abstract ModelEntity findOrMakeEntity( String name, Long id, boolean importingPlan );
 
 }

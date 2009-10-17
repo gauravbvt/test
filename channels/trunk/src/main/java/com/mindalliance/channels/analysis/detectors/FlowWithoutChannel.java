@@ -8,8 +8,8 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Medium;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.ResourceSpec;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
                 ResourceSpec partSpec = flow.getContactedPart().resourceSpec();
                 // If both any actor and any organization, don't bother with missing addresses
                 if ( !( partSpec.getActor() == null && partSpec.getOrganization() == null ) ) {
-                    List<Actor> actors = getQueryService().findAllActors( partSpec );
+                    List<Actor> actors = getQueryService().findAllActualActors( partSpec );
                     if ( actors.isEmpty() ) {
                         issues.addAll( findIssues( modelObject, partSpec, media ) );
                     } else

@@ -332,9 +332,9 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
         // Assumes that instance equality works for entities (two instances are necessarily non equal)
         if ( other.isAnyone() ) return false;
         if ( equals( other ) ) return true;
-        if ( !ModelObject.areEqualOrNull( actor, other.getActor() ) && !other.isAnyActor() )
+        if ( !ModelEntity.implies( actor, other.getActor() ) && !other.isAnyActor() )
             return false;
-        if ( !ModelObject.areEqualOrNull( role, other.getRole() ) && !other.isAnyRole() )
+        if ( !ModelEntity.implies( role, other.getRole() ) && !other.isAnyRole() )
             return false;
         // Todo compare inclusion
         /*
@@ -344,6 +344,36 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
             return false;
 
          */
+
+        if ( !ModelEntity.implies( organization, other.getOrganization() )
+                && !other.isAnyOrganization() )
+            return false;
+        if ( other.getJurisdiction() == null
+                || ModelEntity.implies( jurisdiction, other.getJurisdiction() )
+                || Matcher.samePlace( jurisdiction, other.getJurisdiction() )
+                || Matcher.within( jurisdiction, other.getJurisdiction() ) )
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     *     public boolean narrowsOrEquals( ResourceSpec other ) {
+        // Assumes that instance equality works for entities (two instances are necessarily non equal)
+        if ( other.isAnyone() ) return false;
+        if ( equals( other ) ) return true;
+        if ( !ModelObject.areEqualOrNull( actor, other.getActor() ) && !other.isAnyActor() )
+            return false;
+        if ( !ModelObject.areEqualOrNull( role, other.getRole() ) && !other.isAnyRole() )
+            return false;
+        // Todo compare inclusion
+        ======================
+        if ( !other.isAnyOrganization()
+                && ( organization == null
+                || !organization.isSameOrWithin( other.getOrganization() ) ) )
+            return false;
+
+        ==========================
 
         if ( !ModelObject.areEqualOrNull( organization, other.getOrganization() )
                 && !other.isAnyOrganization() )
@@ -355,6 +385,8 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
         else
             return false;
     }
+
+     */
 
     /**
      * Return most specific entity composing this resource specification
@@ -404,7 +436,7 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      * @return a boolean
      */
     public boolean hasJob() {
-        return actor != null && role != null;
+        return actor != null && actor.isActual() && role != null;
     }
 
     /**
@@ -413,19 +445,19 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      * @param entity an entity
      * @return a boolean
      */
-    public boolean hasEntity( ModelEntity entity ) {
+    public boolean hasOrImpliesEntity( ModelEntity entity ) {
         if ( entity instanceof Actor ) {
-            return actor != null && actor.equals( entity )
-                || actor == null && entity.equals( Actor.UNKNOWN );
+            return actor != null && ( actor.equals( entity ) || actor.hasTag( entity ) )
+                    || actor == null && entity.equals( Actor.UNKNOWN );
         } else if ( entity instanceof Role ) {
-            return role != null && role.equals( entity )
-                || role == null && entity.equals( Role.UNKNOWN );
+            return role != null && ( role.equals( entity ) || role.hasTag( entity ) )
+                    || role == null && entity.equals( Role.UNKNOWN );
         } else if ( entity instanceof Organization ) {
-            return organization != null && organization.equals( entity )
-                || organization == null && entity.equals( Organization.UNKNOWN );
+            return organization != null && ( organization.equals( entity ) || organization.hasTag( entity ) )
+                    || organization == null && entity.equals( Organization.UNKNOWN );
         } else {
-            return jurisdiction != null && jurisdiction.equals( entity )
-                || jurisdiction == null && entity.equals( Place.UNKNOWN );
+            return jurisdiction != null && ( jurisdiction.equals( entity ) || jurisdiction.hasTag( entity ) )
+                    || jurisdiction == null && entity.equals( Place.UNKNOWN );
         }
     }
 
@@ -439,6 +471,7 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
 
     /**
      * Find the first job that fits this resource spec.
+     *
      * @return a job or null
      */
     public Job getJob() {

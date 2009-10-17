@@ -138,7 +138,7 @@ public class ScenarioEditDetailsPanel extends AbstractCommandablePanel {
     }
 
     private void addEventField() {
-        final List<String> choices = getQueryService().findAllNames( Event.class );
+        final List<String> choices = getQueryService().findAllEntityNames( Event.class );
         TextField<String> eventField = new AutoCompleteTextField<String>(
                 "event",
                 new PropertyModel<String>( this, "eventName" ) ) {
@@ -249,7 +249,7 @@ public class ScenarioEditDetailsPanel extends AbstractCommandablePanel {
             newEvent = planManager.getCurrentPlan().getDefaultEvent();
         else {
             if ( oldEvent == null || !isSame( name, oldName ) )
-                newEvent = getQueryService().findOrCreate( Event.class, name );
+                newEvent = getQueryService().findOrCreateType( Event.class, name );
         }
         doCommand( new UpdatePlanObject( getScenario(), "event", newEvent ) );
         getCommander().cleanup( Event.class, oldName );

@@ -191,7 +191,7 @@ public abstract class PlaybookPage extends WebPage {
             rawSpecs.add( ( (Part) node ).resourceSpec() );
 
         for ( ResourceSpec spec : rawSpecs ) {
-            List<Actor> actors = service.findAllActors( spec );
+            List<Actor> actors = service.findAllActualActors( spec );
             if ( actors.isEmpty() )
                 result.add( spec );
             else

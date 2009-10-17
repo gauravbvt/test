@@ -21,6 +21,7 @@ public class Role extends ModelEntity {
 
      static {
          UNKNOWN = new Role( "(unknown)" );
+         UNKNOWN.setActual();
          UNKNOWN.setId( 10000000L - 5 );
      }
 

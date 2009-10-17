@@ -52,6 +52,7 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
 
     static {
         UNKNOWN = new Organization( "(unknown)" );
+        UNKNOWN.setActual();
         UNKNOWN.setId( 10000000L - 3 );
     }
 

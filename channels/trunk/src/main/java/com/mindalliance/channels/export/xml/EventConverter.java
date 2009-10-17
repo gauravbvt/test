@@ -40,11 +40,8 @@ public class EventConverter extends EntityConverter {
     /**
      * {@inheritDoc}
      */
-    @Override
-    ModelEntity findOrMakeEntity( String name, Long id, boolean importingPlan ) {
-        return importingPlan
-                ? getQueryService().findOrCreate( Event.class, name, id )
-                : getQueryService().findOrCreate( Event.class, name );
+    protected Class<? extends ModelEntity> getEntityClass() {
+        return Event.class;
     }
 
     /**

@@ -38,11 +38,8 @@ public class ActorConverter extends EntityConverter {
     /**
      * {@inheritDoc}
      */
-    @Override
-    ModelEntity findOrMakeEntity( String name, Long id, boolean importingPlan ) {
-        return importingPlan
-                ? getQueryService().findOrCreate( Actor.class, name, id )
-                : getQueryService().findOrCreate( Actor.class, name );
+    protected Class<? extends ModelEntity> getEntityClass() {
+        return Actor.class;
     }
 
     /**

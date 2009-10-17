@@ -7,13 +7,13 @@
         lang="en">
 <body>
 <wicket:extend>
-    <tr>
+    <tr wicket:id="system">
         <th align="right">
             <label for="system">Is a system:</label>
         </th>
         <td><input id="system" wicket:id="system" type="checkbox"/></td>
     </tr>
-    <tr>
+    <tr wicket:id="user">
         <th align="right">
             <label for="user">Is user:</label>
         </th>
@@ -23,13 +23,13 @@
             </select>
         </td>
     </tr>
-    <tr>
+    <tr wicket:id="contact">
         <th align="right">
             <label for="contact-info">Contact info:</label>
         </th>
         <td><span id="contact-info" wicket:id="channels">[channel list panel]</span></td>
     </tr>
-    <tr>
+    <tr wicket:id="rolesContainer">
         <td colspan="2">
             <h3>Roles played
                 <span wicket:id="geomapLink">[geomap link panel]</span>

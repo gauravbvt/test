@@ -99,6 +99,24 @@ public abstract class AbstractChannelsConverter implements Converter {
     }
 
     /**
+     * Find or create an entity type given name and possibly an id.
+     *
+     * @param entityClass a class extending ModelObject
+     * @param name        a string
+     * @param id          a string (null or convertible to a long)
+     * @return a model object
+     */
+    protected <T extends ModelEntity> T findOrCreateType( Class<T> entityClass, String name, String id ) {
+        if ( id == null ) {
+            LOG.warn( "Recreating referenced " + entityClass.getSimpleName() + " without id" );
+            return getQueryService().findOrCreateType( entityClass, name );
+        } else {
+            return getQueryService().findOrCreateType( entityClass, name, Long.valueOf( id ) );
+        }
+    }
+
+
+    /**
      * Get idMap from context, initializing it if needed.
      *
      * @param context an unmarshalling context
@@ -256,6 +274,32 @@ public abstract class AbstractChannelsConverter implements Converter {
      * @param clazz entity class
      * @param name  entity name
      * @param id  entity id
+     * @param kind a model entity kind (type or actual)
+     * @param context an unmarshalling context
+     * @return an entity model object
+     */
+    protected <T extends ModelEntity> T getEntity(
+            Class<T> clazz,
+            String name,
+            Long id,
+            ModelEntity.Kind kind,
+            UnmarshallingContext context) {
+        return getEntity(
+                clazz,
+                name,
+                id,
+                kind == ModelEntity.Kind.Type,
+                isImportingPlan( context ),
+                getIdMap( context )
+        );
+    }
+
+    /**
+     * Find or make entity
+     * @param clazz entity class
+     * @param name  entity name
+     * @param id  entity id
+     * @param isType whether the entity is a type vs actual
      * @param importingPlan boolean
      * @param idMap id map
      * @return an entity model object
@@ -264,11 +308,19 @@ public abstract class AbstractChannelsConverter implements Converter {
             Class<T> clazz,
             String name,
             Long id,
+            boolean isType,
             boolean importingPlan,
             Map<Long, Long> idMap ) {
-        T entity = importingPlan
+        T entity;
+        if ( isType ) {
+            entity = importingPlan
+                    ? getQueryService().findOrCreateType( clazz, name, id )
+                    : getQueryService().findOrCreateType( clazz, name );
+        } else {
+        entity = importingPlan
                 ? getQueryService().findOrCreate( clazz, name, id )
                 : getQueryService().findOrCreate( clazz, name );
+        }
         idMap.put( id, entity.getId() );
         return entity;
     }

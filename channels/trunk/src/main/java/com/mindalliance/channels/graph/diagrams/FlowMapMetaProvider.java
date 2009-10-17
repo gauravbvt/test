@@ -254,7 +254,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
             } else {
                 String tooltip = vertex.getTitle();
                 if ( vertex.isPart() ) {
-                    List<Actor> partActors = getAnalyst().getQueryService().findAllActors(
+                    List<Actor> partActors = getAnalyst().getQueryService().findAllActualActors(
                             ( (Part) vertex ).resourceSpec() );
                     if ( partActors.size() > 1 ) {
                         tooltip = sanitize( listActors( partActors ) );

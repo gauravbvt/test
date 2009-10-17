@@ -31,10 +31,8 @@ public class PhaseConverter extends EntityConverter {
     /**
      * {@inheritDoc}
      */
-    ModelEntity findOrMakeEntity( String name, Long id, boolean importingPlan ) {
-        return importingPlan
-                ? getQueryService().findOrCreate( Phase.class, name, id )
-                : getQueryService().findOrCreate( Phase.class, name );
+    protected Class<? extends ModelEntity> getEntityClass() {
+        return Phase.class;
     }
 
     /**

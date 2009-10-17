@@ -12,7 +12,7 @@
             <tr>
                 <th>&nbsp;</th>
                 <td>
-                    <img wicket:id="image" alt="Image not found"/>                    
+                    <img wicket:id="image" alt="Image not found"/>
                 </td>
             </tr>
             <tr>
@@ -23,12 +23,20 @@
                 <th class="area" align="right" valign="top"><label>Description:</label></th>
                 <td><textarea cols="40" rows="2" wicket:id="description">...</textarea></td>
             </tr>
+            <tr>
+                <th align="right"><label>Type tags:</label></th>
+                <td><span wicket:id="tags">[Tags panel]</span></td>
+            </tr>
             <tr wicket:id="attachments">
                 <th align="right" valign="top">Attachments:</th>
                 <td>&nbsp;</td>
             </tr>
             <wicket:child/>
         </table>
+        <span wicket:id="referencesContainer">
+            <h3>Usages of type &quot;<span wicket:id="referenced">entity name</span>&quot;</h3>
+            <span wicket:id="typeReferences">[references index panel]</span>
+        </span>
         <span wicket:id="issues">[issues panel]</span>
     </div>
 </wicket:panel>

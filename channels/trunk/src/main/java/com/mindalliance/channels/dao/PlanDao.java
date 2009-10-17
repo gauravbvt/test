@@ -327,6 +327,7 @@ public class PlanDao extends Memory {
         List<Event> incidents = plan.getIncidents();
         if ( incidents.isEmpty() ) {
             Event unnamedEvent = findOrCreate( Event.class, DEFAULT_EVENT_NAME, null );
+            unnamedEvent.setType();
             plan.addIncident( unnamedEvent );
         } else if ( incidents.size() > 1 ) {
             // Remove default event if not referenced

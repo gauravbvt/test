@@ -60,6 +60,8 @@ public class Scenario extends ModelObject {
     private Map<Long, Node> nodeIndex;
     /**
      * Plan event addressed to by this scenario.
+     * The event is always a type
+     * (planning is done for types of events, not actual events since they have yet to occur).
      */
     private Event event;
     /**
@@ -100,6 +102,7 @@ public class Scenario extends ModelObject {
     }
 
     public void setEvent( Event event ) {
+        assert event.isType();
         this.event = event;
     }
 

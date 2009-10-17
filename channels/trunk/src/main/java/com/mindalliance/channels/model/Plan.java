@@ -224,6 +224,7 @@ public class Plan extends ModelObject {
      * @param event an event
      */
     public void addIncident( Event event ) {
+        assert event.isType();
         if ( !incidents.contains( event ) ) incidents.add( event );
     }
 

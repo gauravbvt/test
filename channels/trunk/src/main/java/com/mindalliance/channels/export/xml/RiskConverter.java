@@ -1,6 +1,7 @@
 package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Risk;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -46,6 +47,7 @@ public class RiskConverter extends AbstractChannelsConverter {
             Organization organization = risk.getOrganization();
             writer.startNode( "organization" );
             writer.addAttribute( "id", Long.toString( organization.getId() ) );
+            writer.addAttribute( "kind", organization.getKind().name() );
             writer.setValue( organization.getName() );
             writer.endNode();
         }
@@ -71,8 +73,14 @@ public class RiskConverter extends AbstractChannelsConverter {
                 Risk.Type type = Risk.Type.valueOf( reader.getValue() );
                 risk.setType( type );
             } else if ( nodeName.equals( "organization" ) ) {
-                String id = reader.getAttribute( "id");
-                Organization org = findOrCreate( Organization.class, reader.getValue(), id );
+                Long id = Long.parseLong(reader.getAttribute( "id"));
+                String kind = reader.getAttribute( "kind" );
+                Organization org = getEntity(
+                        Organization.class,
+                        reader.getValue(),
+                        id,
+                        ModelEntity.Kind.valueOf( kind ),
+                        context); 
                 risk.setOrganization( org );
             } else if ( nodeName.equals( "severity" ) ) {
                 risk.setSeverity( Issue.Level.valueOf( reader.getValue() ) );

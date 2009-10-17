@@ -179,13 +179,14 @@ public class ScenarioConverter extends AbstractChannelsConverter {
                         Event.class,
                         reader.getValue(),
                         Long.parseLong( id ),
+                        true,
                         importingPlan,
                         idMap );
                 getContext().getPlan().addIncident( event );
-                // Event
+                // Event (always a type)
             } else if ( nodeName.equals( "trigger-event" ) ) {
                 String id = reader.getAttribute( "id" );
-                Event event = findOrCreate( Event.class, reader.getValue(), id );
+                Event event = findOrCreateType( Event.class, reader.getValue(), id );
                 scenario.setEvent( event );
                 // Phase
             } else if ( nodeName.equals( "phase" ) ) {

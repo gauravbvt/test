@@ -26,6 +26,10 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
         super( id );
     }
 
+    public AbstractCommandablePanel( String id, IModel<? extends Identifiable> iModel ) {
+        super( id, iModel, null );
+    } 
+
     public AbstractCommandablePanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
         super( id, iModel, expansions );
     }

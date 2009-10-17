@@ -13,13 +13,12 @@ import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
-import com.mindalliance.channels.util.Matcher;
+import com.mindalliance.channels.pages.components.EntityReferencePanel;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -27,7 +26,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
@@ -40,7 +38,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -178,28 +175,16 @@ public class RiskListPanel extends AbstractCommandablePanel {
     private void addOrganizationCell( final ListItem<RiskWrapper> item ) {
         item.setOutputMarkupId( true );
         final RiskWrapper wrapper = item.getModelObject();
-        final List<String> choices = getQueryService().findAllNames( Organization.class );
-        TextField<String> orgNameField = new AutoCompleteTextField<String>(
+        final List<String> choices = getQueryService().findAllEntityNames( Organization.class );
+        EntityReferencePanel<Organization> orgRefField = new EntityReferencePanel<Organization>(
                 "organization",
-                new PropertyModel<String>( wrapper, "organizationName" ) ) {
-            protected Iterator<String> getChoices( String s ) {
-                List<String> candidates = new ArrayList<String>();
-                for ( String choice : choices ) {
-                    if ( Matcher.matches( s, choice ) ) candidates.add( choice );
-                }
-                return candidates.iterator();
-
-            }
-        };
-        orgNameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
-                if ( !wrapper.isUndergoingCreation() ) {
-                    update( target, new Change( Change.Type.Updated, getScenario(), "risks" ) );
-                }
-            }
-        } );
-        orgNameField.setEnabled( getPlan().isDevelopment() );
-        item.add( orgNameField );
+                new Model<RiskWrapper>( wrapper ),
+                choices,
+                "organization",
+                Organization.class,
+                Organization.UNKNOWN );
+        orgRefField.enable( getPlan().isDevelopment() );
+        item.add( orgRefField );
     }
 
     private void addDeleteImage( ListItem<RiskWrapper> item ) {
@@ -350,7 +335,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
         super.updateWith( target, change );
     }
 
-    public class RiskWrapper implements Serializable {
+    public class RiskWrapper implements Identifiable {
         /**
          * Risk.
          */
@@ -420,31 +405,6 @@ public class RiskListPanel extends AbstractCommandablePanel {
             }
         }
 
-        /*       public void setConfirmed( boolean confirmed ) {
-                    this.confirmed = confirmed;
-                    if ( confirmed ) {
-                        assert markedForCreation;
-                        if ( !getScenario().getRisks().contains( risk ) ) {
-                            doCommand( new UpdatePlanObject(
-                                    getScenario(),
-                                    "risks",
-                                    risk,
-                                    UpdateObject.Action.Add
-                            ) );
-                        }
-                    } else if ( !markedForCreation ) {
-                        selectedRisk = null;
-                        if ( getScenario().getRisks().contains( risk ) ) {
-                            doCommand( new UpdatePlanObject(
-                                    getScenario(),
-                                    "risks",
-                                    risk,
-                                    UpdateObject.Action.Remove
-                            ) );
-                        }
-                    }
-                }
-        */
         public Issue.Level getSeverity() {
             return risk.getSeverity();
         }
@@ -491,35 +451,53 @@ public class RiskListPanel extends AbstractCommandablePanel {
             }
         }
 
-        public String getOrganizationName() {
+        public Organization getOrganization() {
+            return  risk.getOrganization();
+        }
+
+        public void setOrganization( Organization org ) {
+            String oldName = getOrganizationName();
+            if ( markedForCreation ) {
+                risk.setOrganization( org );
+                addIfComplete();
+            } else {
+                int index = getScenario().getRisks().indexOf( risk );
+                if ( index >= 0 ) {
+                    doCommand( new UpdatePlanObject(
+                            getScenario(),
+                            "risks[" + index + "].organization",
+                            org,
+                            UpdateObject.Action.Set
+                    ) );
+                }
+            }
+            getCommander().cleanup( Organization.class, oldName );
+        }
+
+
+       public String getOrganizationName() {
             Organization org = risk.getOrganization();
             return org != null ? org.getName() : "";
         }
 
-        public void setOrganizationName( String name ) {
-            String oldName = getOrganizationName();
-            if ( name != null && !isSame( name, oldName ) ) {
-                Organization org = getQueryService().findOrCreate( Organization.class, name );
-                if ( markedForCreation ) {
-                    risk.setOrganization( org );
-                    addIfComplete();
-                } else {
-                    int index = getScenario().getRisks().indexOf( risk );
-                    if ( index >= 0 ) {
-                        doCommand( new UpdatePlanObject(
-                                getScenario(),
-                                "risks[" + index + "].organization",
-                                org,
-                                UpdateObject.Action.Set
-                        ) );
-                    }
-                }
-                getCommander().cleanup( Organization.class, oldName );
-            }
+        /** {@inheritDoc} */
+        public long getId() {
+            return 0;
         }
 
+        /** {@inheritDoc} */
         public String getDescription() {
             return risk.getDescription();
+        }
+
+        /** {@inheritDoc} */
+        public String getName() {
+            return risk.toString();
+        }
+
+        /** {@inheritDoc} */
+        public String getTypeName() {
+            return "Risk wrapper";
         }
 
         public void setDescription( String value ) {

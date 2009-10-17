@@ -20,6 +20,7 @@ import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Hierarchical;
+import com.mindalliance.channels.model.InvalidEntityKindException;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Job;
 import com.mindalliance.channels.model.Medium;
@@ -209,12 +210,42 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings( "unchecked" )
+    public <T extends ModelEntity> List<T> listTypeEntities( Class<T> clazz ) {
+        return (List<T>) CollectionUtils.select(
+                list( clazz ),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ( (T) obj ).isType();
+                    }
+                }
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
+    public <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz ) {
+        return (List<T>) CollectionUtils.select(
+                list( clazz ),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ( (T) obj ).isActual();
+                    }
+                }
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings( {"unchecked"} )
-    public <T extends ModelObject> List<T> listReferenced( Class<T> clazz ) {
+    public <T extends ModelEntity> List<T> listReferencedEntities( Class<T> clazz ) {
         return (List<T>) CollectionUtils.select( list( clazz ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        return isModelObjectReferenced( (ModelObject) obj );
+                        return isModelEntityReferenced( (ModelEntity) obj );
                     }
                 } );
     }
@@ -224,33 +255,104 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     @SuppressWarnings( {"unchecked"} )
     public Iterator<ModelEntity> iterateEntities() {
-        return new FilterIterator( listReferenced( ModelObject.class ).iterator(), new Predicate() {
-            public boolean evaluate( Object object ) {
-                return ( (ModelObject) object ).isEntity();
-            }
-        } );
+        return listReferencedEntities( ModelEntity.class ).iterator();
     }
 
-    private boolean isModelObjectReferenced( ModelObject modelObject ) {
-        if ( modelObject instanceof Actor ) return isReferenced( (Actor) modelObject );
-        if ( modelObject instanceof Role ) return isReferenced( (Role) modelObject );
-        if ( modelObject instanceof Organization ) return isReferenced( (Organization) modelObject );
-        if ( modelObject instanceof Place ) return isReferenced( (Place) modelObject );
-        return !( modelObject instanceof Event ) || isReferenced( (Event) modelObject );
+    private boolean isModelEntityReferenced( ModelEntity entity ) {
+        if ( entity instanceof Actor ) return isReferenced( (Actor) entity );
+        if ( entity instanceof Role ) return isReferenced( (Role) entity );
+        if ( entity instanceof Organization ) return isReferenced( (Organization) entity );
+        if ( entity instanceof Place ) return isReferenced( (Place) entity );
+        if ( entity instanceof Phase ) return isReferenced( (Phase) entity );
+        return !( entity instanceof Event ) || isReferenced( (Event) entity );
     }
 
     /**
      * {@inheritDoc}
      */
-    public <T extends ModelObject> T findOrCreate( Class<T> clazz, String name ) {
+    public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name ) {
+        T entity = null;
+        if ( name != null && !name.trim().isEmpty() ) {
+            String candidateName = name.trim();
+            boolean success = false;
+            int i = 1;
+            while ( !success ) {
+                try {
+                    entity = findOrCreate( clazz, candidateName );
+                    success = true;
+                } catch ( InvalidEntityKindException e ) {
+                    LOG.warn( "Entity name conflict creating actual " + candidateName );
+                    candidateName = candidateName + " (" + i + ")";
+                    i++;
+                }
+            }
+        }
+        return entity;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public <T extends ModelEntity> T findOrCreate( Class<T> clazz, String name ) {
         return findOrCreate( clazz, name, null );
     }
 
     /**
      * {@inheritDoc}
      */
-    public <T extends ModelObject> T findOrCreate( Class<T> clazz, String name, Long id ) {
-        return getDao().findOrCreate( clazz, name, id );
+    public <T extends ModelEntity> T findOrCreate( Class<T> clazz, String name, Long id ) {
+        if ( ModelEntity.getUniversalType( name, clazz ) != null )
+            throw new InvalidEntityKindException( clazz.getSimpleName() + " " + name + " is a type" );
+        T actualEntity = getDao().findOrCreate( clazz, name, id );
+        if ( actualEntity.isType() )
+            throw new InvalidEntityKindException( clazz.getSimpleName() + " " + name + " is a type" );
+        actualEntity.setActual();
+        return actualEntity;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public <T extends ModelEntity> T safeFindOrCreateType( Class<T> clazz, String name ) {
+        T entityType = null;
+        if ( name != null && !name.trim().isEmpty() ) {
+            String candidateName = name.trim();
+            boolean success = false;
+            int i = 0;
+            while ( !success ) {
+                try {
+                    entityType = findOrCreateType( clazz, candidateName );
+                    success = true;
+                } catch ( InvalidEntityKindException e ) {
+                    LOG.warn( "Entity name conflict creating type " + candidateName );
+                    candidateName = name.trim() + " type";
+                    if ( i > 0 ) candidateName = candidateName + " (" + i + ")";
+                    i++;
+                }
+            }
+        }
+        return entityType;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public <T extends ModelEntity> T findOrCreateType( Class<T> clazz, String name ) {
+        return findOrCreateType( clazz, name, null );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public <T extends ModelEntity> T findOrCreateType( Class<T> clazz, String name, Long id ) {
+        T entityType = ModelEntity.getUniversalType( name, clazz );
+        if ( entityType == null ) {
+            entityType = getDao().findOrCreate( clazz, name, id );
+            if ( entityType.isActual() )
+                throw new InvalidEntityKindException( clazz.getSimpleName() + " " + name + " is actual" );
+            entityType.setType();
+        }
+        return entityType;
     }
 
     /**
@@ -489,7 +591,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public boolean isReferenced( Actor actor ) {
-        for ( Organization org : list( Organization.class ) ) {
+        for ( Organization org : listActualEntities( Organization.class ) ) {
             for ( Job job : org.getJobs() ) {
                 if ( job.getActor() == actor ) return true;
             }
@@ -501,14 +603,15 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 if ( parts.next().getActor() == actor ) return true;
             }
         }
-        return false;
+        return actor.isType()
+                && !findAllEntitiesReferencingType( actor, ModelEntity.class ).isEmpty();
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isReferenced( Role role ) {
-        for ( Organization org : list( Organization.class ) ) {
+        for ( Organization org : listActualEntities( Organization.class ) ) {
             for ( Job job : org.getJobs() ) {
                 if ( job.getRole() == role ) return true;
             }
@@ -520,14 +623,15 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 if ( parts.next().getRole() == role ) return true;
             }
         }
-        return false;
+        return role.isType()
+                && !findAllEntitiesReferencingType( role, ModelEntity.class ).isEmpty();
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isReferenced( Organization organization ) {
-        for ( Organization org : list( Organization.class ) ) {
+        for ( Organization org : listActualEntities( Organization.class ) ) {
             if ( org.getParent() == organization ) return true;
         }
         for ( Scenario scenario : list( Scenario.class ) ) {
@@ -541,14 +645,15 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 if ( risk.getOrganization() == organization ) return true;
             }
         }
-        return false;
+        return organization.isType()
+                && !findAllEntitiesReferencingType( organization, ModelEntity.class ).isEmpty();
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isReferenced( Place place ) {
-        for ( Organization org : list( Organization.class ) ) {
+        for ( Organization org : listActualEntities( Organization.class ) ) {
             if ( org.getLocation() == place ) return true;
             else for ( Job job : org.getJobs() ) {
                 if ( job.getJurisdiction() == place ) return true;
@@ -566,7 +671,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         for ( Event event : list( Event.class ) ) {
             if ( event.getScope() == place ) return true;
         }
-        return false;
+        return place.isType()
+                && !findAllEntitiesReferencingType( place, ModelEntity.class ).isEmpty();
     }
 
     /**
@@ -585,7 +691,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 if ( part.initiatesEvent() && part.getInitiatedEvent().equals( event ) ) return true;
             }
         }
-        return false;
+        return event.isType()
+                && !findAllEntitiesReferencingType( event, ModelEntity.class ).isEmpty();
     }
 
     /**
@@ -596,7 +703,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         for ( Scenario scenario : list( Scenario.class ) ) {
             if ( scenario.getPhase().equals( phase ) ) return true;
         }
-        return false;
+        return phase.isType()
+                && !findAllEntitiesReferencingType( phase, ModelEntity.class ).isEmpty();
     }
 
     /**
@@ -864,14 +972,14 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     private boolean isExecutedBy( Part part, ModelEntity entity ) {
         ResourceSpec partSpec = part.resourceSpec();
-        if ( entity instanceof Actor ) {
-            List<Actor> allPlayers = findAllActors( partSpec );
+        if ( entity instanceof Actor && entity.isActual() ) {
+            List<Actor> allPlayers = findAllActualActors( partSpec );
             if ( allPlayers.isEmpty() )
                 return entity.isUnknown();
             else
                 return allPlayers.contains( (Actor) entity );
         } else {
-            return partSpec.hasEntity( entity );
+            return partSpec.hasOrImpliesEntity( entity );
         }
     }
 
@@ -898,7 +1006,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     @SuppressWarnings( {"unchecked"} )
-    public List<Actor> findAllActors( ResourceSpec resourceSpec ) {
+    public List<Actor> findAllActualActors( ResourceSpec resourceSpec ) {
         Set<Actor> actors = new HashSet<Actor>();
         // If the resource spec is anyone, then return no actor,
         // else it would return every actor known to the app
@@ -906,7 +1014,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             Iterator<ResourceSpec> specs = findAllResourceSpecs().iterator();
             Iterator<ResourceSpec> actorSpecs = new FilterIterator( specs, new Predicate() {
                 public boolean evaluate( Object object ) {
-                    return ( (ResourceSpec) object ).getActor() != null;
+                    Actor actor = ( (ResourceSpec) object ).getActor();
+                    return actor != null && actor.isActual();
                 }
             } );
             while ( actorSpecs.hasNext() ) {
@@ -1106,7 +1215,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public List<String> findAllJobTitles() {
         Set<String> titles = new HashSet<String>();
-        for ( Organization organization : list( Organization.class ) ) {
+        for ( Organization organization : listActualEntities( Organization.class ) ) {
             for ( Job job : organization.getJobs() ) {
                 titles.add( job.getTitle() );
             }
@@ -1131,10 +1240,24 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<String> findAllNames( Class<? extends ModelObject> aClass ) {
+    public List<String> findAllEntityNames( Class<? extends ModelEntity> aClass ) {
         Set<String> allNames = new HashSet<String>();
-        for ( ModelObject mo : listReferenced( aClass ) ) {
+        for ( ModelObject mo : listReferencedEntities( aClass ) ) {
             allNames.add( mo.getName() );
+        }
+        return toSortedList( allNames );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<String> findAllEntityNames(
+            Class<? extends ModelEntity> aClass,
+            ModelEntity.Kind kind ) {
+        Set<String> allNames = new HashSet<String>();
+        for ( ModelEntity entity : listReferencedEntities( aClass ) ) {
+            if ( entity.getKind().equals( kind ) )
+                allNames.add( entity.getName() );
         }
         return toSortedList( allNames );
     }
@@ -1181,7 +1304,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 Iterator<Part> parts = scenario.parts();
                 while ( parts.hasNext() ) {
                     Part part = parts.next();
-                    if ( part.resourceSpec().hasEntity( entity ) ) {
+                    if ( part.resourceSpec().hasOrImpliesEntity( entity ) ) {
                         scenarioObjects.add( part );
                         Iterator<Flow> outcomes = part.outcomes();
                         while ( outcomes.hasNext() ) scenarioObjects.add( outcomes.next() );
@@ -1264,12 +1387,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             Iterator<ExternalFlow> xFlows = ( (Connector) node ).externalFlows();
             while ( xFlows.hasNext() ) {
                 ExternalFlow xFlow = xFlows.next();
-                actors.addAll( findAllActors( xFlow.getPart().resourceSpec() ) );
+                actors.addAll( findAllActualActors( xFlow.getPart().resourceSpec() ) );
             }
         } else {
             Part otherPart = (Part) node;
             if ( otherPart.getActor() == null )
-                actors.addAll( findAllActors( otherPart.resourceSpec() ) );
+                actors.addAll( findAllActualActors( otherPart.resourceSpec() ) );
         }
 
         return toSortedList( actors );
@@ -1307,8 +1430,9 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         List<Job> jobs = new ArrayList<Job>();
         List<Organization> orgs;
         if ( organization == null )
-            orgs = list( Organization.class );
+            orgs = listActualEntities( Organization.class );
         else {
+            assert organization.isActual();
             orgs = new ArrayList<Organization>();
             orgs.add( organization );
         }
@@ -1332,8 +1456,9 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         List<ResourceSpec> jobs = new ArrayList<ResourceSpec>();
         List<Organization> orgs;
         if ( organization == null )
-            orgs = list( Organization.class );
+            orgs = listActualEntities( Organization.class );
         else {
+            assert organization.isActual();
             orgs = new ArrayList<Organization>();
             orgs.add( organization );
         }
@@ -1358,7 +1483,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public List<Job> findAllConfirmedJobs( ResourceSpec resourceSpec ) {
         List<Job> jobs = new ArrayList<Job>();
-        for ( Organization org : list( Organization.class ) ) {
+        for ( Organization org : listActualEntities( Organization.class ) ) {
             for ( Job job : org.getJobs() ) {
                 if ( job.resourceSpec( org ).narrowsOrEquals( resourceSpec ) ) {
                     jobs.add( job );
@@ -1374,7 +1499,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<String> findJobTitles( Actor actor ) {
         String actorName = actor.getName();
         List<String> titles = new ArrayList<String>();
-        for ( Organization org : list( Organization.class ) ) {
+        for ( Organization org : listActualEntities( Organization.class ) ) {
             for ( Job job : org.getJobs() ) {
                 if ( job.getActorName().equals( actorName ) ) {
                     String title = job.getTitle();
@@ -1391,7 +1516,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<Organization> findEmployers( Actor actor ) {
         List<Organization> employers = new ArrayList<Organization>();
         String actorName = actor.getName();
-        for ( Organization org : list( Organization.class ) ) {
+        for ( Organization org : listActualEntities( Organization.class ) ) {
             for ( Job job : org.getJobs() ) {
                 if ( job.getActorName().equals( actorName ) ) {
                     if ( !employers.contains( org ) ) employers.add( org );
@@ -1449,10 +1574,23 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
+    public List<Part> findAllParts() {
+        List<Part> list = new ArrayList<Part>();
+        for ( Scenario scenario : list( Scenario.class ) ) {
+            Iterator<Part> parts = scenario.parts();
+            while ( parts.hasNext() ) {
+                list.add( parts.next() );
+            }
+        }
+        return list;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public List<Part> findAllParts( Scenario scenario, ResourceSpec resourceSpec ) {
         Set<Part> list = new HashSet<Part>();
         visitParts( list, resourceSpec, scenario );
-
         return toSortedList( list );
     }
 
@@ -1461,13 +1599,9 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public List<Part> findAllPartsWithLocation( Place place ) {
         List<Part> list = new ArrayList<Part>();
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Part> parts = scenario.parts();
-            while ( parts.hasNext() ) {
-                Part part = parts.next();
-                if ( Matcher.samePlace( part.getLocation(), place ) )
-                    list.add( part );
-            }
+        for ( Part part : findAllParts() ) {
+            if ( Matcher.samePlace( part.getLocation(), place ) )
+                list.add( part );
         }
         return list;
     }
@@ -1586,7 +1720,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<Event> findPlannedEvents() {
         Plan plan = planManager.getCurrentPlan();
         List<Event> plannedEvents = new ArrayList<Event>();
-        for ( Event event : listReferenced( Event.class ) ) {
+        for ( Event event : listReferencedEntities( Event.class ) ) {
             if ( !plan.isIncident( event ) ) plannedEvents.add( event );
         }
         return plannedEvents;
@@ -1630,7 +1764,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         Set<Actor> actors = new HashSet<Actor>();
         for ( Iterator<Part> pi = scenario.parts(); pi.hasNext(); ) {
             Part p = pi.next();
-            actors.addAll( findAllActors( p.resourceSpec() ) );
+            actors.addAll( findAllActualActors( p.resourceSpec() ) );
         }
 
         List<Actor> result = new ArrayList<Actor>( actors );
@@ -1644,7 +1778,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @SuppressWarnings( "unchecked" )
     public List<String> findAllActorLastNames() {
         return (List<String>) CollectionUtils.collect(
-                list( Actor.class ),
+                listActualEntities( Actor.class ),
                 new Transformer() {
                     public Object transform( Object obj ) {
                         return ( (Actor) obj ).getLastName();
@@ -1658,7 +1792,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<Employment> findAllEmployments() {
         Set<Actor> employed = new HashSet<Actor>();
         List<Employment> employments = new ArrayList<Employment>();
-        List<Organization> orgs = new ArrayList<Organization>( list( Organization.class ) );
+        List<Organization> orgs = new ArrayList<Organization>( listActualEntities( Organization.class ) );
         orgs.add( Organization.UNKNOWN );
         for ( Organization org : orgs ) {
             for ( Job job : org.getJobs() ) {
@@ -1670,7 +1804,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 employed.add( job.getActor() );
             }
         }
-        for ( Actor actor : list( Actor.class ) ) {
+        for ( Actor actor : listActualEntities( Actor.class ) ) {
             if ( !employed.contains( actor ) ) {
                 employments.add( new Employment( actor ) );
             }
@@ -1713,13 +1847,25 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<String> findAllFlowNames() {
-        Set<String> names = new HashSet<String>();
+    public List<Flow> findAllFlows() {
+        List<Flow> allFlows = new ArrayList<Flow>();
         for ( Scenario scenario : list( Scenario.class ) ) {
             Iterator<Flow> flows = scenario.flows();
             while ( flows.hasNext() ) {
-                names.add( flows.next().getName() );
+                allFlows.add( flows.next() );
             }
+        }
+        return allFlows;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<String> findAllFlowNames() {
+        Set<String> names = new HashSet<String>();
+        for ( Flow flow : findAllFlows() ) {
+            names.add( flow.getName() );
         }
         return new ArrayList<String>( names );
     }
@@ -1930,7 +2076,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             if ( org.getLocation() != null && org.getLocation().isSameAsOrIn( place ) )
                 inPlace.add( org );
         }
-        for ( Event event : listReferenced( Event.class ) ) {
+        for ( Event event : listReferencedEntities( Event.class ) ) {
             if ( event.getScope() != null && event.getScope().isSameAsOrIn( place ) )
                 inPlace.add( event );
         }
@@ -1997,7 +2143,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             if ( org.getLocation() != null && org.getLocation().equals( place ) )
                 references.add( org );
         }
-        for ( Event event : listReferenced( Event.class ) ) {
+        for ( Event event : listReferencedEntities( Event.class ) ) {
             if ( event.getScope() != null && event.getScope().equals( place ) )
                 references.add( event );
         }
@@ -2170,7 +2316,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @SuppressWarnings( "unchecked" )
     public List<Actor> findAllActorsAsUser( final String userName ) {
         return (List<Actor>) CollectionUtils.select(
-                list( Actor.class ),
+                listActualEntities( Actor.class ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         String name = ( (Actor) obj ).getUserName();
@@ -2218,7 +2364,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 iconName = imagesDirName + "/" + ( part.isSystem() ? "system" : "person" );
             }
         } else if ( part.getRole() != null ) {
-            List<Actor> partActors = findAllActors( part.resourceSpec() );
+            List<Actor> partActors = findAllActualActors( part.resourceSpec() );
             boolean onePlayer = partActors.size() == 1;
             if ( onePlayer ) {
                 iconName = imagingService.getIconPath( partActors.get( 0 ) );
@@ -2339,22 +2485,75 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<? extends ModelEntity> findAllEntitiesIn( Place place ) {
-        return (List<ModelEntity>)CollectionUtils.select(
-                    findAllModelObjectsIn( place ),
-                    PredicateUtils.invokerPredicate( "isEntity" ));
+        return (List<ModelEntity>) CollectionUtils.select(
+                findAllModelObjectsIn( place ),
+                PredicateUtils.invokerPredicate( "isEntity" ) );
     }
 
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<? extends ModelEntity> findAllEntitiesIn( Phase phase ) {
-            return (List<ModelEntity>)CollectionUtils.select(
-                        findAllModelObjectsIn( phase ),
-                        PredicateUtils.invokerPredicate( "isEntity" ));
-        }
+        return (List<ModelEntity>) CollectionUtils.select(
+                findAllModelObjectsIn( phase ),
+                PredicateUtils.invokerPredicate( "isEntity" ) );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
+    public <T extends ModelEntity> List<T> findAllEntitiesReferencingType(
+            final ModelEntity entityType,
+            Class<T> entityClass ) {
+        assert entityType.isType();
+        return (List<T>) CollectionUtils.select(
+                list( entityClass ),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        if ( ( (ModelEntity) obj ).getTags().contains( entityType ) ) {
+                            return true;
+                        } else if ( obj instanceof Event ) {
+                            if ( ModelObject.areIdentical(
+                                    ( (Event) obj ).getScope(),
+                                    entityType ) )
+                                return true;
+                        } else if ( obj instanceof Organization ) {
+                            if ( ModelObject.areIdentical(
+                                    ( (Organization) obj ).getLocation(),
+                                    entityType ) )
+                                return true;
+                        }
+                        return false;
+                    }
+                }
+        );
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<Part> findAllPartsReferencingType( final ModelEntity entityType ) {
+        assert entityType.isType();
+        return (List<Part>) CollectionUtils.select(
+                findAllParts(),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        Part part = (Part) obj;
+                        return ModelObject.areIdentical( part.getLocation(), entityType )
+                                || ModelObject.areIdentical( part.getActor(), entityType )
+                                || ModelObject.areIdentical( part.getRole(), entityType )
+                                || ModelObject.areIdentical( part.getOrganization(), entityType )
+                                || ModelObject.areIdentical( part.getJurisdiction(), entityType );
+                    }
+                }
+        );
+    }
 
 
 }

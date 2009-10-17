@@ -10,10 +10,8 @@ import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
-import com.mindalliance.channels.util.Matcher;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
@@ -22,7 +20,6 @@ import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -60,17 +57,8 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
 
 
     private void addIdentityFields() {
-        final List<String> choices = getUniqueNameChoices( getPlan() );
-        TextField<String> nameField = new AutoCompleteTextField<String>( "name",
-                new PropertyModel<String>( this, "plan.name" ) ) {
-            protected Iterator<String> getChoices( String s ) {
-                List<String> candidates = new ArrayList<String>();
-                for ( String choice : choices ) {
-                    if ( Matcher.matches( s, choice ) ) candidates.add( choice );
-                }
-                return candidates.iterator();
-            }
-        };
+        TextField<String> nameField = new TextField<String>( "name",
+                new PropertyModel<String>( this, "plan.name" ) );
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getPlan(), "name" ) );
@@ -130,7 +118,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
             String oldName = getPlan().getName();
             String uniqueName = name.trim();
             if ( !isSame( oldName, name ) ) {
-                List<String> namesTaken = getQueryService().findAllNames( Plan.class );
+                List<String> namesTaken = getPlanManager().getPlanNames();
                 int count = 2;
                 while ( namesTaken.contains( uniqueName ) ) {
                     uniqueName = name + "(" + count++ + ")";

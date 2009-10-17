@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div class="tags" wicket:id=tagsDiv>
+        <ul>
+             <li wicket:id="tags">
+                <span wicket:id="tagContainer">
+                    <span wicket:id="universal">Any actor</span>
+                    <span wicket:id="tagLink">[tag link]</span>
+                    <input wicket:id="newTag" type="text" title = "Enter new tag"/>
+                </span>
+                 <span>
+                     <a wicket:id="delete" href="#">
+                         <img style="border:0;vertical-align:middle" src="images/delete.png" title="Remove tag" alt="Remove tag"/>
+                     </a>
+                 </span>
+            </li>
+        </ul>
+    </div>
+</wicket:panel>
+</body>
+</html>

@@ -24,7 +24,7 @@ public class MainPage extends PlaybookPage {
 
     private void init( QueryService service, Plan plan ) {
 
-        List<Actor> actors = new ArrayList<Actor>( service.list( Actor.class ) );
+        List<Actor> actors = new ArrayList<Actor>( service.listActualEntities( Actor.class ) );
         Collections.sort( actors );
 
         add( new Label( "title", plan.getName() ),

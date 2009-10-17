@@ -69,7 +69,7 @@ public class PhaseListPanel extends AbstractCommandablePanel {
         item.add( nameContainer );
         final List<String> choices;
         if ( wrapper.isMarkedForCreation() ) {
-            choices = getQueryService().findAllNames( Phase.class );
+            choices = getQueryService().findAllEntityNames( Phase.class );
         } else {
             choices = new ArrayList<String>();
         }

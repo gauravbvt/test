@@ -590,7 +590,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                             : ( property.equals( "role" )
                             ? Role.class
                             : Place.class );
-            final List<String> choices = getQueryService().findAllNames( moClass );
+            final List<String> choices = getQueryService().findAllEntityNames( moClass );
             // text field
             TextField<String> entityField = new AutoCompleteTextField<String>(
                     "entity-field",

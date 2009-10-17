@@ -87,13 +87,28 @@ public interface QueryService extends Service {
     <T extends ModelObject> List<T> list( Class<T> clazz );
 
     /**
+     * Find all type entities of a given class.
+     * @param clazz a class of entities
+     * @return a list of entities
+     */
+    <T extends ModelEntity> List<T> listTypeEntities(Class<T> clazz);
+
+    /**
+     * Find all actual entities of a given class.
+     * @param clazz a class of entities
+     * @return a list of entities
+     */
+    <T extends ModelEntity> List<T> listActualEntities(Class<T> clazz);
+
+
+    /**
      * Get all referenced objects (not orphaned) of the given class.
      *
      * @param clazz the given subclass of model object.
-     * @param <T>   a subclass of model object.
+     * @param <T>   a subclass of model entity.
      * @return a list
      */
-    <T extends ModelObject> List<T> listReferenced( Class<T> clazz );
+    <T extends ModelEntity> List<T> listReferencedEntities( Class<T> clazz );
 
     /**
      * Iterate on ModelObject that are referenced entities.
@@ -138,25 +153,65 @@ public interface QueryService extends Service {
     Scenario getDefaultScenario();
 
     /**
-     * Find a model object by given name. If none, create it.
+     * Find an entity type by name. If none, create it for given domain,
+     * renaming it to avoid conflicts if needed.
+     *
+     * @param clazz the kind of model object
+     * @param name  the name
+     * @return the object or null if name is null or empty
+     */
+    <T extends ModelEntity> T safeFindOrCreateType( Class<T> clazz, String name );
+
+    /**
+     * Find an entity type by name. If none, create it for given domain.
+     *
+     * @param clazz the kind of model object
+     * @param name  the name
+     * @return the object or null if name is null or empty
+     */
+    <T extends ModelEntity> T findOrCreateType( Class<T> clazz, String name );
+
+    /**
+     * Find an entity type by name. If none, create it for given domain.
+     *
+     * @param clazz the kind of model object
+     * @param name  the name
+     * @param id    a long
+     * @return the object or null if name is null or empty
+     */
+    <T extends ModelEntity> T findOrCreateType( Class<T> clazz, String name, Long id );
+
+    /**
+       * Find an actual entity by given name. If none, create it for given domain,
+     * renaming it to avoid conflicts if needed.
+       *
+       * @param clazz the kind of model object
+       * @param name  the name
+       * @param <T>   a subclass of model object
+       * @return the object or null if name is null or empty
+       */
+      <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name );
+
+    /**
+     * Find an actual entity by given name. If none, create it.
      *
      * @param clazz the kind of model object
      * @param name  the name
      * @param <T>   a subclass of model object
      * @return the object or null if name is null or empty
      */
-    <T extends ModelObject> T findOrCreate( Class<T> clazz, String name );
+    <T extends ModelEntity> T findOrCreate( Class<T> clazz, String name );
 
     /**
-     * Find a model object by given name. If none, create it and give it provided id.
+     * Find an actual entity by given name. If none, create it and give it provided id.
      *
      * @param clazz the kind of model object
      * @param name  the name
      * @param id    a long
      * @param <T>   a subclass of model object
-     * @return the object or null if name is null or empty
+     * @return the entity or null if name is null or empty
      */
-    <T extends ModelObject> T findOrCreate( Class<T> clazz, String name, Long id );
+    <T extends ModelEntity> T findOrCreate( Class<T> clazz, String name, Long id );
 
     /**
      * Create a connector in a scenario.
@@ -327,12 +382,12 @@ public interface QueryService extends Service {
     List<Flow> findAllFlowsContacting( ResourceSpec resourceSpec );
 
     /**
-     * Find all known actors that belong to a resource spec
+     * Find all known, actual (non-type) actors that belong to a resource spec
      *
      * @param resourceSpec a resource spec
      * @return a list of actors
      */
-    List<Actor> findAllActors( ResourceSpec resourceSpec );
+    List<Actor> findAllActualActors( ResourceSpec resourceSpec );
 
     /**
      * Make a replicate of the flow
@@ -376,7 +431,16 @@ public interface QueryService extends Service {
      * @param aClass a model object class
      * @return a list of strings
      */
-    List<String> findAllNames( Class<? extends ModelObject> aClass );
+    List<String> findAllEntityNames( Class<? extends ModelEntity> aClass );
+
+    /**
+     * Find all names, sorted, of known instances of a model object class.
+     *
+     * @param aClass a model entity class
+     * @param kind a kind of entity
+     * @return a list of strings
+     */
+    List<String> findAllEntityNames( Class<? extends ModelEntity> aClass, ModelEntity.Kind kind );
 
     /**
      * Find actors in given organization and role.
@@ -561,6 +625,12 @@ public interface QueryService extends Service {
     boolean findIfScenarioStarted( Scenario scenario );
 
     /**
+     * Find all parts in the plan.
+     * @return  a list of parts
+     */
+    List<Part> findAllParts();
+
+    /**
      * Find all parts that has the specified resource.
      *
      * @param scenario     a scenario
@@ -705,6 +775,12 @@ public interface QueryService extends Service {
      * @return a list of employments
      */
     List<Employment> findAllEmploymentsForActor( Actor actor );
+
+    /**
+     * FInd all flows in the plan.
+     * @return a list of flows
+     */
+    List<Flow> findAllFlows();
 
     /**
      * Find all distinct flow names.
@@ -895,7 +971,7 @@ public interface QueryService extends Service {
     boolean isSemanticMatch( String text, String otherText, Proximity proximity );
 
     /**
-     * Whether two texts have high semantic proximity. The texts
+     * Whether two texts have high semantic proximity.
      *
      * @param text      a string
      * @param otherText a string
@@ -1019,4 +1095,19 @@ public interface QueryService extends Service {
      * @return a list of entities
      */
     List<? extends ModelEntity> findAllEntitiesIn( Phase phase );
+
+    /**
+     * Find all entities of a given class that reference an entity type.
+     * @param entityType a model entity that's a type
+     * @param entityClass a class of entities
+     * @return a list of entities
+     */
+    <T extends ModelEntity> List<T> findAllEntitiesReferencingType( ModelEntity entityType, Class<T> entityClass );
+
+    /**
+     * Find all flows that reference a model entity type.
+     * @param entityType a model entity that's a type
+     * @return a list of flows
+     */
+    List<Part> findAllPartsReferencingType( ModelEntity entityType );
 }

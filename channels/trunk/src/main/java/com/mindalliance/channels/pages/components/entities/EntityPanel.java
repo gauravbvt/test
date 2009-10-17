@@ -12,6 +12,7 @@ import com.mindalliance.channels.pages.components.AbstractMultiAspectPanel;
 import com.mindalliance.channels.pages.components.entities.menus.EntityActionsMenuPanel;
 import com.mindalliance.channels.pages.components.entities.menus.EntityShowMenuPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
@@ -50,6 +51,22 @@ public class EntityPanel extends AbstractMultiAspectPanel {
         super( id, model, expansions, aspect );
     }
 
+     /**
+     * {@inheritDoc}
+     */
+    public String getHeaderTitle() {
+        ModelEntity entity = getEntity();
+        StringBuilder sb = new StringBuilder();
+        sb.append( StringUtils.abbreviate( entity.getName(), getMaxTitleNameLength() ) );
+        sb.append( " - " );
+        sb.append( entity.getTypeName() );
+        if ( entity.isType() ) {
+            sb.append( " type" );
+        }
+        sb.append( ' ' );
+        sb.append( getAspectShown() );
+        return sb.toString();
+    }
 
     /**
      * {@inheritDoc}

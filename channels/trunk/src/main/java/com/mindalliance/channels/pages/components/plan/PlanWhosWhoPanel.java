@@ -136,6 +136,7 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
 
     /**
      * Find all employments in the plan that are not filtered out and are within selected name range.
+     *
      * @return a list of employments.
      */
     @SuppressWarnings( "unchecked" )
@@ -182,6 +183,7 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
 
     /**
      * Find all names to be indexed.
+     *
      * @return a list of strings
      */
     @SuppressWarnings( "unchecked" )
@@ -256,8 +258,9 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
 
     /**
      * Change the selected name range.
+     *
      * @param target an ajax request target
-     * @param range a name range
+     * @param range  a name range
      */
     public void setNameRange( AjaxRequestTarget target, NameRange range ) {
         nameRange = range;
@@ -305,6 +308,7 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
             init();
         }
 
+        @SuppressWarnings( "unchecked" )
         private void init() {
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns

@@ -169,7 +169,7 @@ public class PlanConverter extends AbstractChannelsConverter {
                 context.convertAnother( plan, Phase.class );
             } else if ( nodeName.equals( "incident" ) ) {
                 String eventId = reader.getAttribute( "id" );
-                Event event = findOrCreate( Event.class, reader.getValue(), eventId );
+                Event event = findOrCreateType( Event.class, reader.getValue(), eventId );
                 plan.addIncident( event );
                 // Phases
             }  else if ( nodeName.equals( "plan-phase" ) ) {

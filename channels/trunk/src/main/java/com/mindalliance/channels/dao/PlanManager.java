@@ -993,4 +993,11 @@ public class PlanManager implements InitializingBean {
         return usernames != null && usernames.contains( user.getUsername() );
     }
 
+    @SuppressWarnings("unchecked")
+    /**
+     * Get All plan names.
+     */
+    public List<String> getPlanNames() {
+        return (List<String>)CollectionUtils.collect(getPlans(), TransformerUtils.invokerTransformer( "getName" ));
+    }
 }

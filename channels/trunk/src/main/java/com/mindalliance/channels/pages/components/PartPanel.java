@@ -5,13 +5,13 @@ import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.pages.ModelObjectLink;
-import com.mindalliance.channels.util.Matcher;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -82,9 +82,14 @@ public class PartPanel extends AbstractCommandablePanel {
      */
     private IModel<Part> model;
     /**
-     * Text fields.
+     * Entity reference fields.
      */
-    private List<TextField<String>> textFields = new ArrayList<TextField<String>>();
+    private List<EntityReferencePanel<? extends ModelEntity>> entityFields =
+            new ArrayList<EntityReferencePanel<? extends ModelEntity>>();
+    /**
+     * Task.
+     */
+    private TextField<String> taskField;
     /**
      * Initiated event.
      */
@@ -124,16 +129,21 @@ public class PartPanel extends AbstractCommandablePanel {
         super.setOutputMarkupPlaceholderTag( false );
         this.model = model;
 
-        addField( TASK_PROPERTY, new PropertyModel<List<String>>( this, "allTasks" ), true );
-        addField( ACTOR_PROPERTY, new PropertyModel<List<String>>( this, "allActorNames" ), false );
-        addField( ROLE_PROPERTY, new PropertyModel<List<String>>( this, "allRoleNames" ), true );
-        addField( ORG_PROPERTY, new PropertyModel<List<String>>( this, "allOrganizationNames" ), false );
-        addField( JURISDICTION_PROPERTY, new PropertyModel<List<String>>( this, "allPlaceNames" ), false );
-        addField( LOCATION_PROPERTY, new PropertyModel<List<String>>( this, "allPlaceNames" ), false );
+        addTaskField();
+        addEntityFields();
         addEventInitiation();
         addTimingFields();
         addMitigations();
         adjustFields();
+    }
+
+    private void addEntityFields() {
+        entityFields = new ArrayList<EntityReferencePanel<? extends ModelEntity>>();
+        addActorField();
+        addRoleField();
+        addOrganizationField();
+        addJurisdictionField();
+        addLocationField();
     }
 
     public List<String> getAllTasks() {
@@ -141,28 +151,29 @@ public class PartPanel extends AbstractCommandablePanel {
     }
 
     public List<String> getAllActorNames() {
-        return getQueryService().findAllNames( Actor.class );
+        return getQueryService().findAllEntityNames( Actor.class );
     }
 
     public List<String> getAllRoleNames() {
-        return getQueryService().findAllNames( Role.class );
+        return getQueryService().findAllEntityNames( Role.class );
     }
 
     public List<String> getAllOrganizationNames() {
-        return getQueryService().findAllNames( Organization.class );
+        return getQueryService().findAllEntityNames( Organization.class );
     }
 
     public List<String> getAllPlaceNames() {
-        return getQueryService().findAllNames( Place.class );
+        return getQueryService().findAllEntityNames( Place.class );
     }
 
     public List<String> getAllEventNames() {
-        return getQueryService().findAllNames( Event.class );
+        return getQueryService().findAllEntityNames( Event.class );
     }
 
     private void adjustFields() {
-        for ( TextField field : textFields ) {
-            field.setEnabled( isLockedByUser( getPart() ) );
+        taskField.setEnabled( isLockedByUser( getPart() ) );
+        for ( EntityReferencePanel entityReferencePanel : entityFields ) {
+            entityReferencePanel.enable( isLockedByUser( getPart() ) );
         }
         repeatsEveryPanel.enable( getPart().isRepeating()
                 && isLockedByUser( getPart() ) );
@@ -175,51 +186,87 @@ public class PartPanel extends AbstractCommandablePanel {
         initiatedEventField.setEnabled( isLockedByUser( getPart() ) );
     }
 
-    private void addField(
-            final String property,
-            final PropertyModel<List<String>> choices,
-            final boolean semMatching ) {
-        final TextField<String> field;
-        if ( choices == null ) {
-            field = new TextField<String>(
-                    property,
-                    new PropertyModel<String>( this, property ) );
-        } else {
-            field = new AutoCompleteTextField<String>(
-                    property,
-                    new PropertyModel<String>( this, property ) ) {
-                protected Iterator<String> getChoices( String s ) {
-                    List<String> candidates = new ArrayList<String>();
-                    for ( String choice : choices.getObject() ) {
-                        if ( matches( s, choice, semMatching ) ) candidates.add( choice );
-                    }
-                    return candidates.iterator();
+    private void addActorField() {
+        EntityReferencePanel<Actor> field = new EntityReferencePanel<Actor>(
+                ACTOR_PROPERTY,
+                new PropertyModel<Part>( this, "part" ),
+                getAllActorNames(),
+                ACTOR_PROPERTY,
+                Actor.class,
+                null );
+        addOrReplace( field );
+        entityFields.add( field );
+    }
+
+    private void addRoleField() {
+        EntityReferencePanel<Role> field = new EntityReferencePanel<Role>(
+                ROLE_PROPERTY,
+                new PropertyModel<Part>( this, "part" ),
+                getAllRoleNames(),
+                ROLE_PROPERTY,
+                Role.class,
+                null );
+        addOrReplace( field );
+        entityFields.add( field );
+    }
+
+    private void addOrganizationField() {
+        EntityReferencePanel<Organization> field = new EntityReferencePanel<Organization>(
+                ORG_PROPERTY,
+                new PropertyModel<Part>( this, "part" ),
+                getAllOrganizationNames(),
+                ORG_PROPERTY,
+                Organization.class,
+                null );
+        addOrReplace( field );
+        entityFields.add( field );
+    }
+
+    private void addJurisdictionField() {
+        EntityReferencePanel<Place> field = new EntityReferencePanel<Place>(
+                JURISDICTION_PROPERTY,
+                new PropertyModel<Part>( this, "part" ),
+                getAllPlaceNames(),
+                JURISDICTION_PROPERTY,
+                Place.class,
+                null );
+        addOrReplace( field );
+        entityFields.add( field );
+    }
+
+    private void addLocationField() {
+        EntityReferencePanel<Place> field = new EntityReferencePanel<Place>(
+                LOCATION_PROPERTY,
+                new PropertyModel<Part>( this, "part" ),
+                getAllPlaceNames(),
+                LOCATION_PROPERTY,
+                Place.class,
+                null );
+        addOrReplace( field );
+        entityFields.add( field );
+    }
+
+    private void addTaskField() {
+        final PropertyModel<List<String>> choices = new PropertyModel<List<String>>( this, "allTasks" );
+        taskField = new AutoCompleteTextField<String>(
+                TASK_PROPERTY,
+                new PropertyModel<String>( this, TASK_PROPERTY ) ) {
+            protected Iterator<String> getChoices( String s ) {
+                List<String> candidates = new ArrayList<String>();
+                for ( String choice : choices.getObject() ) {
+                    if ( getQueryService().likelyRelated( s, choice ) ) candidates.add( choice );
                 }
-            };
-        }
-        field.setOutputMarkupId( true );
-        field.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+                return candidates.iterator();
+
+            }
+        };
+        taskField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                addIssues( field, getPart(), property );
-                target.addComponent( field );
-                update( target, new Change( Change.Type.Updated, getPart(), property ) );
+                update( target, new Change( Change.Type.Updated, getPart(), "task" ) );
             }
         } );
-
-        // Add style mods from scenario analyst.
-        addIssues( field, getPart(), property );
-        add( field );
-        textFields.add( field );
+        add( taskField );
     }
-
-    private boolean matches( String text, String otherText, boolean semMatching ) {
-        if ( semMatching ) {
-            return getQueryService().likelyRelated( text, otherText );
-        } else {
-            return Matcher.matches( text, otherText );
-        }
-    }
-
 
     private void addEventInitiation() {
         final PropertyModel<List<String>> choices = new PropertyModel<List<String>>( this, "allEventNames" );
@@ -608,7 +655,7 @@ public class PartPanel extends AbstractCommandablePanel {
             newEvent = null;
         else {
             if ( oldEvent == null || !isSame( name, oldName ) )
-                newEvent = getQueryService().findOrCreate( Event.class, name );
+                newEvent = getQueryService().findOrCreateType( Event.class, name );
         }
         doCommand( new UpdateScenarioObject( getPart(), "initiatedEvent", newEvent ) );
         getCommander().cleanup( Event.class, oldName );
@@ -630,6 +677,7 @@ public class PartPanel extends AbstractCommandablePanel {
      * @param target an ajax request target
      */
     public void refresh( AjaxRequestTarget target ) {
+        addEntityFields();
         adjustFields();
         addMitigations();
         target.addComponent( this );
@@ -641,9 +689,9 @@ public class PartPanel extends AbstractCommandablePanel {
     public void updateWith( AjaxRequestTarget target, Change change ) {
         if ( change.getType() == Change.Type.Updated ) {
             String property = change.getProperty();
-            for ( TextField<String> field : textFields ) {
-                if ( field.getId().equals( property ) )
-                    addIssues( field, getPart(), property );
+            for ( EntityReferencePanel entityReferencePanel : entityFields ) {
+                entityReferencePanel.updateIssues();
+                target.addComponent( entityReferencePanel );
             }
             if ( property.equals( "mitigations" ) ) {
                 addMitigations();

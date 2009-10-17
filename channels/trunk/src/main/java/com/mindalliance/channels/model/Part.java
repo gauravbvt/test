@@ -345,6 +345,7 @@ public class Part extends Node implements GeoLocatable {
     }
 
     public void setInitiatedEvent( Event initiatedEvent ) {
+        assert initiatedEvent == null || initiatedEvent.isType();
         this.initiatedEvent = initiatedEvent;
     }
 
@@ -534,7 +535,7 @@ public class Part extends Node implements GeoLocatable {
         if ( actor != null ) {
             return actor;
         } else {
-            List<Actor> knownActors = getScenario().getQueryService().findAllActors( resourceSpec() );
+            List<Actor> knownActors = getScenario().getQueryService().findAllActualActors( resourceSpec() );
             if ( knownActors.size() == 1 ) {
                 return knownActors.get( 0 );
             } else {
@@ -598,7 +599,7 @@ public class Part extends Node implements GeoLocatable {
         if ( getRole() != null ) {
             if ( !label.isEmpty() ) label += sep;
             if ( getActor() == null ) {
-                List<Actor> partActors = getScenario().getQueryService().findAllActors( resourceSpec() );
+                List<Actor> partActors = getScenario().getQueryService().findAllActualActors( resourceSpec() );
                 if ( partActors.size() == 1 ) {
                     label += partActors.get( 0 ).getName();
                     label += " ";

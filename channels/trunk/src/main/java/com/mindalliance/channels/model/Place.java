@@ -55,6 +55,7 @@ public class Place extends ModelEntity implements GeoLocatable {
 
     static {
         UNKNOWN = new Place( UnknownPlaceName );
+        UNKNOWN.setActual();
         UNKNOWN.setId( 10000000L - 4 );
     }
 

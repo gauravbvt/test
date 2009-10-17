@@ -173,7 +173,7 @@ public class PartConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "initiatedEvent" ) ) {
                 String eventId = reader.getAttribute( "id");
                 String eventName = reader.getValue();
-                Event event = findOrCreate( Event.class, eventName, eventId );
+                Event event = findOrCreateType( Event.class, eventName, eventId );
                 if ( event == null ) LOG.warn( "Plan has no event named " + eventName );
                 part.setInitiatedEvent( event );
             } else if ( nodeName.equals( "flow" ) ) {

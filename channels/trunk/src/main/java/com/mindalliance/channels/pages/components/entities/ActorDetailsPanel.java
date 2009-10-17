@@ -127,20 +127,25 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
      */
     private GeomapLinkPanel rolesMapLink;
 
+    /**
+     * Roles table container.
+     */
+    private WebMarkupContainer rolesContainer;
+
     public ActorDetailsPanel( String id, IModel<? extends ModelEntity> model, Set<Long> expansions ) {
         super( id, model, expansions );
     }
 
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
+        this.moDetailsDiv = moDetailsDiv;
         addUserChoice( moDetailsDiv );
         addIsSystem( moDetailsDiv );
+        rolesContainer = new WebMarkupContainer( "rolesContainer" );
+        moDetailsDiv.add( rolesContainer );
         indexedOn = indexingChoices[0];
         nameRange = new NameRange();
         filters = new ArrayList<Identifiable>();
-        this.moDetailsDiv = moDetailsDiv;
-        moDetailsDiv.add( new ChannelListPanel(
-                "channels",
-                new Model<Channelable>( (Actor) getEntity() ) ) );
+        addContactInfo( moDetailsDiv );
         addRolesMap();
         addIndexedOnChoice();
         addNameRangePanel();
@@ -149,7 +154,17 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         makeVisible( userChoice, isParticipant() );
     }
 
+    private void addContactInfo( WebMarkupContainer moDetailsDiv ) {
+        WebMarkupContainer contactContainer = new WebMarkupContainer( "contact" );
+        moDetailsDiv.add( contactContainer );
+        contactContainer.add( new ChannelListPanel(
+                "channels",
+                new Model<Channelable>( (Actor) getEntity() ) ) );
+        contactContainer.setVisible( getEntity().isActual() );
+    }
+
     private void addUserChoice( WebMarkupContainer moDetailsDiv ) {
+        WebMarkupContainer userContainer = new WebMarkupContainer( "user" );
         isParticipantCheckBox = new CheckBox(
                 "isParticipant",
                 new PropertyModel<Boolean>( this, "participant" ) );
@@ -162,7 +177,9 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 }
             }
         } );
-        moDetailsDiv.add( isParticipantCheckBox );
+        userContainer.add( isParticipantCheckBox );
+        userContainer.setVisible( getEntity().isActual() );
+        moDetailsDiv.add( userContainer );
         userChoice = new DropDownChoice<User>(
                 "user",
                 new PropertyModel<User>( this, "user" ),
@@ -181,10 +198,12 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 update( target, new Change( Change.Type.Updated, getActor(), "userName" ) );
             }
         } );
-        moDetailsDiv.add( userChoice );
+        userContainer.add( userChoice );
     }
 
     private void addIsSystem( WebMarkupContainer moDetailsDiv ) {
+        WebMarkupContainer systemContainer = new WebMarkupContainer( "system" );
+        moDetailsDiv.add( systemContainer );
         systemCheckBox = new CheckBox( "system", new PropertyModel<Boolean>( this, "system" ) );
         systemCheckBox.setOutputMarkupId( true );
         systemCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
@@ -192,13 +211,15 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 update( target, new Change( Change.Type.Updated, getActor(), "system" ) );
             }
         } );
-        moDetailsDiv.add( systemCheckBox );
+        systemContainer.setVisible( getEntity().isActual() );
+        systemContainer.add( systemCheckBox );
     }
 
     private void adjustFields() {
         isParticipantCheckBox.setEnabled( isLockedByUser( getActor() ) );
         userChoice.setEnabled( isLockedByUser( getActor() ) );
         systemCheckBox.setEnabled( isLockedByUser( getActor() ) );
+        rolesContainer.setVisible( getActor().isActual() );
     }
 
     private void addRolesMap() {
@@ -208,7 +229,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 new Model<String>( "Where " + getActor().getName() + " is employed" ),
                 geoLocatables,
                 new Model<String>( "Map actor employments" ) );
-        moDetailsDiv.addOrReplace( rolesMapLink );
+        rolesContainer.addOrReplace( rolesMapLink );
     }
 
     private void addIndexedOnChoice() {
@@ -227,7 +248,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 target.addComponent( rolesMapLink );
             }
         } );
-        moDetailsDiv.add( indexedOnChoices );
+        rolesContainer.add( indexedOnChoices );
     }
 
     private void addNameRangePanel() {
@@ -239,7 +260,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 "All names"
         );
         nameRangePanel.setOutputMarkupId( true );
-        moDetailsDiv.addOrReplace( nameRangePanel );
+        rolesContainer.addOrReplace( nameRangePanel );
     }
 
     private void addActorEmploymentTable() {
@@ -249,7 +270,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 MAX_ROWS
         );
         actorEmploymentTable.setOutputMarkupId( true );
-        moDetailsDiv.addOrReplace( actorEmploymentTable );
+        rolesContainer.addOrReplace( actorEmploymentTable );
     }
 
     public String getIndexedOn() {

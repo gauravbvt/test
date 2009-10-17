@@ -9,6 +9,7 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.Updatable;
@@ -214,11 +215,11 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         return expansions;
     }
 
-    protected List<String> getUniqueNameChoices( ModelObject mo ) {
+    protected List<String> getUniqueNameChoices( ModelEntity entity ) {
         List<String> choices = new ArrayList<String>();
-        List<String> namesTaken = getQueryService().findAllNames( mo.getClass() );
+        List<String> namesTaken = getQueryService().findAllEntityNames( entity.getClass() );
         for ( String taken : namesTaken ) {
-            if ( taken.equals( mo.getName() ) ) {
+            if ( taken.equals( entity.getName() ) ) {
                 choices.add( taken );
             } else {
                 Matcher matcher = namePattern.matcher( taken );

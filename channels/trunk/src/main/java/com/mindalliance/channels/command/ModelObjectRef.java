@@ -2,6 +2,7 @@ package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 
 import java.io.Serializable;
@@ -27,10 +28,15 @@ public class ModelObjectRef implements Serializable {
      * The entity's name, if an entity is referenced.
      */
     private String entityName;
+    /**
+     * Kind of entity
+     */
+    private String entityKind;
 
     public ModelObjectRef( ModelObject mo ) {
         if ( mo.isEntity() ) {
             entityName = mo.getName();
+            entityKind = ( (ModelEntity) mo ).getKind().name();
         }
         id = mo.getId();
         className = mo.getClass().getName();
@@ -44,6 +50,13 @@ public class ModelObjectRef implements Serializable {
         return className;
     }
 
+    /**
+     * Get model object class given class name.
+     *
+     * @return a class
+     * @throws NotFoundException if class not found
+     */
+    @SuppressWarnings( "unchecked" )
     public Class<? extends ModelObject> getModelObjectClass() throws NotFoundException {
         try {
             return (Class<? extends ModelObject>) Class.forName( className );
@@ -61,18 +74,35 @@ public class ModelObjectRef implements Serializable {
 
     /**
      * Resolve the reference to a model object
+     *
      * @param commander a commander
      * @return a model object
      * @throws NotFoundException if not found
-     * @throws com.mindalliance.channels.command.CommandException if commander fails to resolve
+     * @throws com.mindalliance.channels.command.CommandException
+     *                           if commander fails to resolve
      */
+    @SuppressWarnings( "unchecked" )
     public ModelObject resolve( Commander commander ) throws NotFoundException, CommandException {
         ModelObject mo;
         if ( entityName == null ) {
             mo = commander.resolve( getModelObjectClass(), id );
-        }
-        else {
-            mo = commander.getQueryService().findOrCreate( getModelObjectClass(), entityName, id );
+        } else {
+            if ( ModelEntity.class.isAssignableFrom( getModelObjectClass() ) ) {
+                if ( entityKind.equals( ModelEntity.Kind.Actual.name() ) ) {
+                    mo = commander.getQueryService().findOrCreate(
+                            (Class<ModelEntity>) getModelObjectClass(),
+                            entityName,
+                            id );
+                }
+                else {
+                    mo = commander.getQueryService().findOrCreateType(
+                            (Class<ModelEntity>) getModelObjectClass(),
+                            entityName,
+                            id );
+                }
+            } else {
+                throw new NotFoundException();
+            }
         }
         return mo;
     }

@@ -267,7 +267,8 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
                 || equals( Event.UNKNOWN )
                 || equals( Organization.UNKNOWN )
                 || equals( Place.UNKNOWN )
-                || equals( Role.UNKNOWN );
+                || equals( Role.UNKNOWN )
+                || equals( Phase.UNKNOWN );
     }
 
     /**
@@ -338,8 +339,7 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
         );
         if ( attachment != null ) {
             return attachment.getUrl();
-        }
-        else
+        } else
             return null;
     }
 
@@ -361,5 +361,16 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
     @Transient
     public boolean isLockable() {
         return true;
+    }
+
+    /**
+     * Two model objects are not null and equal.
+     *
+     * @param mo    a model object
+     * @param other a model object
+     * @return a boolean
+     */
+    public static boolean areIdentical( ModelObject mo, ModelObject other ) {
+        return mo != null && other != null && mo.equals( other );
     }
 }

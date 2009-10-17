@@ -142,7 +142,7 @@ public class FlowReportPanel extends Panel {
             ResourceSpec spec = part.resourceSpec();
             if ( spec.isOrganization() )
                 spec.setActor( Actor.UNKNOWN );
-            for ( Actor a : queryService.findAllActors( spec ) )
+            for ( Actor a : queryService.findAllActualActors( spec ) )
                 localizedActors.add( new LocalizedActor( a, part, unicasts, broadcasts ) );
         }
 

@@ -98,7 +98,7 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
                 new ModelObjectLink( "scope-link",
                         new PropertyModel<Organization>( getPlanEvent(), "scope" ),
                         new Model<String>( "Location" ) ) );
-        final List<String> choices = getQueryService().findAllNames( Place.class );
+        final List<String> choices = getQueryService().findAllEntityNames( Place.class );
         scopeField = new AutoCompleteTextField<String>( "scope",
                 new PropertyModel<String>( this, "scopeName" ) ) {
             @Override

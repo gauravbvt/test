@@ -14,6 +14,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
@@ -46,6 +47,10 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
      */
     private IModel<? extends ModelEntity> model;
     /**
+     * Container.
+     */
+    private WebMarkupContainer moDetailsDiv;
+    /**
      * Image tag.
      */
     WebMarkupContainer image;
@@ -61,6 +66,11 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
      * Entity issues panel.
      */
     private IssuesPanel issuesPanel;
+
+    /**
+     * Container for index of type references.
+     */
+    private WebMarkupContainer referencesContainer;
     /**
      * Maximum image height.
      */
@@ -74,11 +84,26 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
 
     private void init() {
         ModelEntity mo = getEntity();
-        WebMarkupContainer moDetailsDiv = new WebMarkupContainer( "mo-details" );
+        moDetailsDiv = new WebMarkupContainer( "mo-details" );
         add( moDetailsDiv );
+        addImage();
+        addNameField();
+        addDescriptionField();
+        addTagsPanel();
+        moDetailsDiv.add( new AttachmentPanel( "attachments", new Model<ModelEntity>( mo ) ) );
+        addTypeReferencesPanel();
+        addSpecifics( moDetailsDiv );
+        addIssuesPanel();
+        adjustFields();
+    }
+
+    private void addImage() {
         image = new WebMarkupContainer( "image" );
         image.setOutputMarkupId( true );
         moDetailsDiv.add( image );
+    }
+
+    private void addNameField() {
         final List<String> choices = getUniqueNameChoices( getEntity() );
         nameField = new AutoCompleteTextField<String>( "name",
                 new PropertyModel<String>( this, "name" ) ) {
@@ -96,6 +121,9 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
             }
         } );
         moDetailsDiv.add( nameField );
+    }
+
+    private void addDescriptionField() {
         descriptionField = new TextArea<String>( "description",
                 new PropertyModel<String>( this, "description" ) );
         descriptionField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
@@ -104,16 +132,42 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
             }
         } );
         moDetailsDiv.add( descriptionField );
-        moDetailsDiv.add( new AttachmentPanel( "attachments", new Model<ModelEntity>( mo ) ) );
-        addSpecifics( moDetailsDiv );
+    }
+
+    private void addIssuesPanel() {
         issuesPanel = new IssuesPanel(
                 "issues",
                 new PropertyModel<ModelEntity>( this, "entity" ),
                 getExpansions() );
         issuesPanel.setOutputMarkupId( true );
         moDetailsDiv.add( issuesPanel );
-        adjustFields();
     }
+
+    private void addTagsPanel() {
+        TagsPanel tagsPanel = new TagsPanel(
+                "tags",
+                new PropertyModel<ModelEntity>( this, "entity" ) ); 
+        moDetailsDiv.add( tagsPanel );
+    }
+
+    private void addTypeReferencesPanel() {
+        referencesContainer = new WebMarkupContainer( "referencesContainer" );
+        ModelEntity entity = getEntity();
+        Label referencedLabel = new Label( "referenced", new Model<String>( entity.getName() ) );
+        referencesContainer.add( referencedLabel );
+        if ( entity.isType() ) {
+            EntityTypeReferencesIndexPanel refsPanel = new EntityTypeReferencesIndexPanel(
+                    "typeReferences",
+                    new PropertyModel<ModelEntity>( this, "entity" ),
+                    getExpansions() );
+            referencesContainer.add( refsPanel );
+        } else {
+            Label label = new Label( "typeReferences", "" );
+            referencesContainer.add( label );
+        }
+        moDetailsDiv.add( referencesContainer );
+    }
+
 
     private void adjustFields() {
         if ( getEntity().hasImage() ) {
@@ -136,6 +190,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
         nameField.setEnabled( isLockedByUser( getEntity() ) );
         descriptionField.setEnabled( isLockedByUser( getEntity() ) );
         makeVisible( issuesPanel, getAnalyst().hasIssues( getEntity(), false ) );
+        referencesContainer.setVisible( getEntity().isType() );
     }
 
     /**
@@ -166,7 +221,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
             String oldName = getEntity().getName();
             String uniqueName = name.trim();
             if ( !isSame( oldName, name ) ) {
-                List<String> namesTaken = getQueryService().findAllNames( getEntity().getClass() );
+                List<String> namesTaken = getQueryService().findAllEntityNames( getEntity().getClass() );
                 int count = 2;
                 while ( namesTaken.contains( uniqueName ) ) {
                     uniqueName = name + "(" + count++ + ")";
