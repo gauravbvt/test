@@ -175,7 +175,7 @@ input[type='text'], textarea {
 }
 
 #part .entityReference input[type='text'] {
-    width: 81%;
+    width: auto;
 }
 
 input[type="text"].no-expand {

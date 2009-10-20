@@ -3,6 +3,7 @@ package com.mindalliance.channels.analysis.detectors;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.util.Matcher;
@@ -83,16 +84,18 @@ public class RedundantPart extends AbstractIssueDetector {
         }
         return equivalentParts;
     }
-    
-    // One narrows or equls the other
+
+    // One narrows or equals the other
     private boolean isEquivalent( Part part, Part otherPart ) {
         return Matcher.same( part.getTask(), otherPart.getTask() )
                 && (
                 part.resourceSpec().narrowsOrEquals( otherPart.resourceSpec() )
                         || otherPart.resourceSpec().narrowsOrEquals( part.resourceSpec() )
         )
-                && ( Matcher.samePlace( part.getLocation(), otherPart.getLocation() )
-                || Matcher.within( part.getLocation(), otherPart.getLocation() )
-                || Matcher.within( otherPart.getLocation(), part.getLocation() ) );
+                && (
+                ModelEntity.implies( part.getLocation(), otherPart.getLocation() )
+                        || ModelEntity.implies( otherPart.getLocation(), part.getLocation() )
+        );
+
     }
 }

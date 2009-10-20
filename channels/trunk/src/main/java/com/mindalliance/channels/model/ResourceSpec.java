@@ -1,7 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.util.Matcher;
-
 /**
  * A Resource is an actor in a role for an organization with a jurisdiction.
  * Actor, role, organization (any two), and jurisdiction may be null.
@@ -133,7 +131,7 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
         return ModelObject.areEqualOrNull( actor, resourceSpec.getActor() )
                 && ModelObject.areEqualOrNull( role, resourceSpec.getRole() )
                 && ModelObject.areEqualOrNull( organization, resourceSpec.getOrganization() )
-                && Matcher.samePlace( jurisdiction, resourceSpec.getJurisdiction() );
+                && Place.samePlace( jurisdiction, resourceSpec.getJurisdiction() );
     }
 
     /**
@@ -317,7 +315,7 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
             return sameActor
                     && sameRole
                     && sameOrganization
-                    && Matcher.samePlace( jurisdiction, other.getJurisdiction() );
+                    && Place.samePlace( jurisdiction, other.getJurisdiction() );
         } else
             return narrowsOrEquals( other );
     }
@@ -336,57 +334,14 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
             return false;
         if ( !ModelEntity.implies( role, other.getRole() ) && !other.isAnyRole() )
             return false;
-        // Todo compare inclusion
-        /*
-        if ( !other.isAnyOrganization()
-                && ( organization == null
-                || !organization.isSameOrWithin( other.getOrganization() ) ) )
-            return false;
-
-         */
-
         if ( !ModelEntity.implies( organization, other.getOrganization() )
                 && !other.isAnyOrganization() )
             return false;
-        if ( other.getJurisdiction() == null
-                || ModelEntity.implies( jurisdiction, other.getJurisdiction() )
-                || Matcher.samePlace( jurisdiction, other.getJurisdiction() )
-                || Matcher.within( jurisdiction, other.getJurisdiction() ) )
-            return true;
-        else
+        if ( !ModelEntity.implies( jurisdiction, other.getJurisdiction() )
+                && !other.isAnyJurisdiction() )
             return false;
+        return true;
     }
-
-    /**
-     *     public boolean narrowsOrEquals( ResourceSpec other ) {
-        // Assumes that instance equality works for entities (two instances are necessarily non equal)
-        if ( other.isAnyone() ) return false;
-        if ( equals( other ) ) return true;
-        if ( !ModelObject.areEqualOrNull( actor, other.getActor() ) && !other.isAnyActor() )
-            return false;
-        if ( !ModelObject.areEqualOrNull( role, other.getRole() ) && !other.isAnyRole() )
-            return false;
-        // Todo compare inclusion
-        ======================
-        if ( !other.isAnyOrganization()
-                && ( organization == null
-                || !organization.isSameOrWithin( other.getOrganization() ) ) )
-            return false;
-
-        ==========================
-
-        if ( !ModelObject.areEqualOrNull( organization, other.getOrganization() )
-                && !other.isAnyOrganization() )
-            return false;
-        if ( other.getJurisdiction() == null
-                || Matcher.samePlace( jurisdiction, other.getJurisdiction() )
-                || Matcher.within( jurisdiction, other.getJurisdiction() ) )
-            return true;
-        else
-            return false;
-    }
-
-     */
 
     /**
      * Return most specific entity composing this resource specification
@@ -431,12 +386,13 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
     }
 
     /**
-     * Is a job specified (actor and role set)?
+     * Is a job specified (actor and organization set)?
      *
      * @return a boolean
      */
     public boolean hasJob() {
-        return actor != null && actor.isActual() && role != null;
+        return actor != null && actor.isActual()
+                && organization != null && organization.isActual();
     }
 
     /**
@@ -445,8 +401,12 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      * @param entity an entity
      * @return a boolean
      */
-    public boolean hasOrImpliesEntity( ModelEntity entity ) {
-        if ( entity instanceof Actor ) {
+    public boolean hasEntity( ModelEntity entity ) {
+        return ModelEntity.isEquivalentToOrIsA( actor, entity )
+                || ModelEntity.isEquivalentToOrIsA( role, entity )
+                || ModelEntity.isEquivalentToOrIsA( organization, entity )
+                || ModelEntity.isEquivalentToOrIsA( jurisdiction, entity );
+        /*if ( entity instanceof Actor ) {
             return actor != null && ( actor.equals( entity ) || actor.hasTag( entity ) )
                     || actor == null && entity.equals( Actor.UNKNOWN );
         } else if ( entity instanceof Role ) {
@@ -458,7 +418,7 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
         } else {
             return jurisdiction != null && ( jurisdiction.equals( entity ) || jurisdiction.hasTag( entity ) )
                     || jurisdiction == null && entity.equals( Place.UNKNOWN );
-        }
+        }*/
     }
 
     @Override

@@ -75,8 +75,20 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
      */
     @Override
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
+        addParentField( moDetailsDiv );
+        addLocationField( moDetailsDiv );
+        addContactInfoPanel( moDetailsDiv );
+        addRequirementFields( moDetailsDiv );
+        addTabPanel( moDetailsDiv );
+        adjustFields();
+    }
+
+    private void addParentField( WebMarkupContainer moDetailsDiv ) {
+        WebMarkupContainer parentContainer = new WebMarkupContainer( "parentContainer" );
+        parentContainer.setVisible( getOrganization().isActual() );
+        moDetailsDiv.add( parentContainer );
         Organization organization = getOrganization();
-        moDetailsDiv.add( new ModelObjectLink(
+        parentContainer.add( new ModelObjectLink(
                 "org-link",
                 new PropertyModel<Organization>( organization, "parent" ),
                 new Model<String>( "Parent" ) ) );
@@ -98,8 +110,15 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                 update( target, new Change( Change.Type.Updated, getModel().getObject(), "parent" ) );
             }
         } );
-        moDetailsDiv.add( parentField );
-        moDetailsDiv.add(
+        parentContainer.add( parentField );
+    }
+
+    private void addLocationField( WebMarkupContainer moDetailsDiv ) {
+        WebMarkupContainer locationContainer = new WebMarkupContainer( "locationContainer" );
+        locationContainer.setVisible( getOrganization().isActual() );
+        moDetailsDiv.add( locationContainer );
+        Organization organization = getOrganization();
+        locationContainer.add(
                 new ModelObjectLink( "loc-link",
                         new PropertyModel<Organization>( organization, "location" ),
                         new Model<String>( "Location" ) ) );
@@ -121,11 +140,23 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                 update( target, new Change( Change.Type.Updated, getModel().getObject(), "location" ) );
             }
         } );
-        moDetailsDiv.add( locationField );
+        locationContainer.add( locationField );
+    }
 
-        moDetailsDiv.add( new ChannelListPanel(
+    private void addContactInfoPanel( WebMarkupContainer moDetailsDiv ) {
+        WebMarkupContainer contactContainer = new WebMarkupContainer( "contactContainer" );
+        contactContainer.setVisible( getOrganization().isActual() );
+        moDetailsDiv.add( contactContainer );
+        Organization organization = getOrganization();
+        contactContainer.add( new ChannelListPanel(
                 "channels",
                 new Model<Channelable>( organization ) ) );
+    }
+
+    private void addRequirementFields( WebMarkupContainer moDetailsDiv ) {
+        WebMarkupContainer requirementsContainers = new WebMarkupContainer( "requirementsContainers" );
+        requirementsContainers.setVisible( getOrganization().isActual() );
+        moDetailsDiv.add( requirementsContainers );
         actorsRequiredCheckBox = new CheckBox(
                 "actorsRequired",
                 new PropertyModel<Boolean>( this, "actorsRequired" ) );
@@ -135,7 +166,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
             }
         } );
         actorsRequiredCheckBox.setEnabled( isLockedByUser( getOrganization() ) );
-        moDetailsDiv.add( actorsRequiredCheckBox );
+        requirementsContainers.add( actorsRequiredCheckBox );
         agreementsRequiredCheckBox = new CheckBox(
                 "agreementsRequired",
                 new PropertyModel<Boolean>( this, "agreementsRequired" ) );
@@ -145,10 +176,14 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
             }
         } );
         agreementsRequiredCheckBox.setEnabled( isLockedByUser( getOrganization() ) );
-        moDetailsDiv.add( agreementsRequiredCheckBox );
-        moDetailsDiv.add( new AjaxTabbedPanel( "tabs", getTabs() ) );
-//        moDetailsDiv.add( new JobsPanel( "jobs", new Model<Organization>( organization ), getExpansions() ) );
-        adjustFields();
+        requirementsContainers.add( agreementsRequiredCheckBox );
+    }
+
+    private void addTabPanel( WebMarkupContainer moDetailsDiv ) {
+        WebMarkupContainer tabContainer = new WebMarkupContainer( "tabContainer" );
+        tabContainer.setVisible( getOrganization().isActual() );
+        moDetailsDiv.add( tabContainer );
+        tabContainer.add( new AjaxTabbedPanel( "tabs", getTabs() ) );
     }
 
     private void adjustFields() {
@@ -159,23 +194,25 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
 
     private List<ITab> getTabs() {
         List<ITab> tabs = new ArrayList<ITab>();
-        tabs.add( new AbstractTab( new Model<String>( "Jobs" ) ) {
-            public Panel getPanel( String id ) {
-                return new JobsPanel(
-                        id,
-                        new PropertyModel<Organization>( OrganizationDetailsPanel.this, "organization" ),
-                        getExpansions() );
-            }
-        } );
-        tabs.add( new AbstractTab( new Model<String>( "Chart" ) ) {
-            public Panel getPanel( String id ) {
-                return new OrgChartPanel(
-                        id,
-                        new PropertyModel<Hierarchical>( OrganizationDetailsPanel.this, "organization" ),
-                        getExpansions(),
-                        OrgChartDomIdentifier );
-            }
-        } );
+        if ( getOrganization().isActual() ) {
+            tabs.add( new AbstractTab( new Model<String>( "Jobs" ) ) {
+                public Panel getPanel( String id ) {
+                    return new JobsPanel(
+                            id,
+                            new PropertyModel<Organization>( OrganizationDetailsPanel.this, "organization" ),
+                            getExpansions() );
+                }
+            } );
+            tabs.add( new AbstractTab( new Model<String>( "Chart" ) ) {
+                public Panel getPanel( String id ) {
+                    return new OrgChartPanel(
+                            id,
+                            new PropertyModel<Hierarchical>( OrganizationDetailsPanel.this, "organization" ),
+                            getExpansions(),
+                            OrgChartDomIdentifier );
+                }
+            } );
+        }
         return tabs;
     }
 
@@ -183,16 +220,18 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
     private List<String> findCandidateParents() {
         Organization organization = getOrganization();
         List<String> candidateNames = new ArrayList<String>();
-        List<Organization> ancestors = organization.ancestors();
-        List<Organization> allOrganizations =
-                new ArrayList<Organization>( getQueryService().list( Organization.class ) );
-        allOrganizations.remove( organization );
-        Collection<Organization> candidates = CollectionUtils.subtract( allOrganizations, ancestors );
-        for ( Organization candidate : candidates ) {
-            if ( !candidate.ancestors().contains( organization ) )
-                candidateNames.add( candidate.getName() );
+        if ( getOrganization().isActual() ) {
+            List<Organization> ancestors = organization.ancestors();
+            List<Organization> allOrganizations =
+                    new ArrayList<Organization>( getQueryService().list( Organization.class ) );
+            allOrganizations.remove( organization );
+            Collection<Organization> candidates = CollectionUtils.subtract( allOrganizations, ancestors );
+            for ( Organization candidate : candidates ) {
+                if ( !candidate.ancestors().contains( organization ) )
+                    candidateNames.add( candidate.getName() );
+            }
+            Collections.sort( candidateNames );
         }
-        Collections.sort( candidateNames );
         return candidateNames;
     }
 
@@ -209,7 +248,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
             newOrg = null;
         else {
             if ( oldOrg == null || !isSame( name, oldName ) ) {
-                newOrg = getQueryService().findOrCreate( Organization.class, name );
+                newOrg = getQueryService().safeFindOrCreate( Organization.class, name );
                 if ( newOrg.ancestors().contains( getOrganization() ) ) {
                     newOrg = oldOrg;
                     getCommander().cleanup( Organization.class, name );
@@ -244,7 +283,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
             newPlace = null;
         else {
             if ( oldPlace == null || !isSame( name, oldName ) )
-                newPlace = getQueryService().findOrCreate( Place.class, name );
+                newPlace = getQueryService().safeFindOrCreate( Place.class, name );
         }
         doCommand( new UpdatePlanObject( org, "location", newPlace ) );
         getCommander().cleanup( Place.class, oldName );

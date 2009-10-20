@@ -4,6 +4,7 @@ import com.mindalliance.channels.ImagingService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
@@ -146,7 +147,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
     private void addTagsPanel() {
         TagsPanel tagsPanel = new TagsPanel(
                 "tags",
-                new PropertyModel<ModelEntity>( this, "entity" ) ); 
+                new PropertyModel<ModelEntity>( this, "entity" ) );
         moDetailsDiv.add( tagsPanel );
     }
 
@@ -190,7 +191,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
         nameField.setEnabled( isLockedByUser( getEntity() ) );
         descriptionField.setEnabled( isLockedByUser( getEntity() ) );
         makeVisible( issuesPanel, getAnalyst().hasIssues( getEntity(), false ) );
-        referencesContainer.setVisible( getEntity().isType() );
+        referencesContainer.setVisible( getEntity().isType() && !( getEntity() instanceof Event ) );
     }
 
     /**

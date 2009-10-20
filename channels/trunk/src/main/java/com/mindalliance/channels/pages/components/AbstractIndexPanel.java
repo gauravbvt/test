@@ -699,7 +699,18 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      * Get all kinds of model objects to index on.
      * @return a list of strings
      */
-    abstract protected List<String> getIndexingChoices();
+     protected List<String> getIndexingChoices() {
+        List<String> choices = new ArrayList<String>();
+        choices.add( ALL );
+        if ( !findIndexedActors().isEmpty() ) choices.add( ACTORS );
+        if ( !findIndexedEvents().isEmpty() ) choices.add( EVENTS );
+        if ( !findIndexedPhases().isEmpty() ) choices.add( PHASES );
+        if ( !findIndexedPlaces().isEmpty() ) choices.add( PLACES );
+        if ( !findIndexedOrganizations().isEmpty() ) choices.add( ORGANIZATIONS );
+        if ( !findIndexedRoles().isEmpty() ) choices.add( ROLES );
+        if ( !findIndexedParts().isEmpty() ) choices.add( TASKS );
+        return choices;
+    }
 
     /**
      * Find all actors to index.

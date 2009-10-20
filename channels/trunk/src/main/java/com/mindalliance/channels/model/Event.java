@@ -1,5 +1,6 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
@@ -63,6 +64,32 @@ public class Event extends ModelEntity implements GeoLocatable {
 
     public void setSelfTerminating( boolean selfTerminating ) {
         this.selfTerminating = selfTerminating;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isDefinedUsing( ModelEntity entity ) {
+        return super.isDefinedUsing( entity )
+                || ModelEntity.isEquivalentToOrDefinedUsing( getScope(), entity );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean narrowsOrEquals( ModelEntity other ) {
+        return super.narrowsOrEquals( other )
+                && isSelfTerminating() == ((Event)other).isSelfTerminating()
+                && ModelEntity.implies( getScope(), other );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
+        List<Event> geoLocatables = new ArrayList<Event>();
+        geoLocatables.add( this );
+        return geoLocatables;
     }
 
     /**

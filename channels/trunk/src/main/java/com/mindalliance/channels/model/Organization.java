@@ -1,5 +1,6 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
@@ -14,7 +15,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A company, agency, social club, etc.
@@ -75,6 +78,34 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
     @Override
     public boolean isEntity() {
         return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isDefinedUsing( final ModelEntity entity ) {
+        return super.isDefinedUsing( entity )
+                ||
+                CollectionUtils.exists(
+                        ancestors(),
+                        new Predicate() {
+                            public boolean evaluate( Object obj ) {
+                                return ModelEntity.isEquivalentToOrDefinedUsing(
+                                        (Organization) obj,
+                                        entity );
+                            }
+                        }
+                )
+                || ModelEntity.isEquivalentToOrDefinedUsing( getLocation(), entity );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean narrowsOrEquals( ModelEntity other ) {
+        return super.narrowsOrEquals( other )
+                || other != null && isWithin( ( (Organization) other ).getParent() );
     }
 
     public boolean isActorsRequired() {
@@ -144,15 +175,22 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
     }
 
     /**
-     * List all ancestors.
+     * List all ancestors, avoiding circularities
      *
      * @return a list of organizations
      */
     public List<Organization> ancestors() {
+        return safeAncestors( new HashSet<Organization>() );
+    }
+
+    private List<Organization> safeAncestors( Set<Organization> visited ) {
         List<Organization> ancestors = new ArrayList<Organization>();
-        if ( parent != null ) {
-            ancestors.add( parent );
-            ancestors.addAll( parent.ancestors() );
+        if ( !visited.contains( this ) ) {
+            visited.add( this );
+            if ( parent != null ) {
+                ancestors.add( parent );
+                ancestors.addAll( parent.safeAncestors( visited ) );
+            }
         }
         return ancestors;
     }
@@ -224,28 +262,44 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
     }
 
     /**
-      * {@inheritDoc}
-      */
-     @Transient
+     * {@inheritDoc}
+     */
+    @Transient
     public GeoLocation geoLocate() {
         return location != null ? location.geoLocate() : null;
     }
 
     /**
-      * {@inheritDoc}
-      */
-     @Transient
+     * {@inheritDoc}
+     */
+    public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
+        List<Organization> geoLocatables = new ArrayList<Organization>();
+        for ( Organization organization : queryService.listEntitiesNarrowingOrEqualTo( this ) ) {
+            if ( organization.isActual() ) {
+                GeoLocation geoLoc = organization.geoLocate();
+                if ( geoLoc != null ) {
+                    geoLocatables.add( organization );
+                }
+            }
+        }
+        return geoLocatables;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
     public String getGeoMarkerLabel() {
         return location != null ? location.getGeoMarkerLabel() : "";
     }
 
     /**
-       * {@inheritDoc}
-       */
-      @Transient
+     * {@inheritDoc}
+     */
+    @Transient
     public List<Hierarchical> getSuperiors() {
-        List<Hierarchical> superiors =  new ArrayList<Hierarchical>();
-        if ( parent != null) superiors.add( parent );
+        List<Hierarchical> superiors = new ArrayList<Hierarchical>();
+        if ( parent != null ) superiors.add( parent );
         return superiors;
     }
 

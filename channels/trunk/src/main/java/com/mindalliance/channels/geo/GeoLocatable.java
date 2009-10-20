@@ -1,6 +1,9 @@
 package com.mindalliance.channels.geo;
 
+import com.mindalliance.channels.QueryService;
+
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * A geolocatable object.
@@ -24,5 +27,13 @@ public interface GeoLocatable extends Serializable {
      * @return a string
      */
     String getGeoMarkerLabel();
+
+    /**
+     * Get implied geolocatables.
+     *
+     * @return a list of geolocatables
+     * @param queryService a query service
+     */
+    List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService );
 
 }

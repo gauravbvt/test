@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.entities.menus;
 
 import com.mindalliance.channels.geo.GeoLocatable;
+import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
@@ -68,9 +69,13 @@ public class EntityShowMenuPanel extends MenuPanel {
             GeoLocatable geo = (GeoLocatable) getEntity();
             BookmarkablePageLink<GeoMapPage> geomapLink = GeoMapPage.makeLink(
                     "link",
-                    new Model<String>( "Location of " + getEntity().getName() ),
-                    geo );
-            if ( geo.geoLocate() == null ) {
+                    new Model<String>(
+                            getEntity().isActual()
+                                ? "Location of " + getEntity().getName()
+                                : "Locations of organizations of type \"" + getEntity().getName() + "\""),
+                    geo,
+                    getQueryService() );
+            if ( GeoLocation.getImpliedGeoLocations( geo, getQueryService() ).isEmpty() ) {
                 geomapLink.setEnabled( false );
             }
             menuItems.add( new LinkMenuItem(
@@ -78,6 +83,7 @@ public class EntityShowMenuPanel extends MenuPanel {
                     new Model<String>( "Map" ),
                     geomapLink ) );
         }
+        // Issues
         Link issuesLink = new AjaxFallbackLink( "link" ) {
             public void onClick( AjaxRequestTarget target ) {
                 changeAspectTo( target, "issues" );

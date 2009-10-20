@@ -1,9 +1,11 @@
 package com.mindalliance.channels.geo;
 
+import com.mindalliance.channels.QueryService;
 import org.geonames.InsufficientStyleException;
 import org.geonames.Toponym;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -214,7 +216,7 @@ public class GeoLocation implements Serializable {
     }
 
     public void setPostalCode( String postalCode ) {
-        this.postalCode =  postalCode ;
+        this.postalCode = postalCode;
     }
 
     public String getStreetAddress() {
@@ -222,7 +224,7 @@ public class GeoLocation implements Serializable {
     }
 
     public void setStreetAddress( String streetAddress ) {
-        this.streetAddress =  streetAddress ;
+        this.streetAddress = streetAddress;
     }
 
     public int getPrecision() {
@@ -305,8 +307,28 @@ public class GeoLocation implements Serializable {
 
     public boolean isRefinedTo( String addressOrNull, String codeOrNull ) {
         if ( streetAddress == null || postalCode == null ) return false;
-        String address = (addressOrNull == null ? "" : addressOrNull);
-        String code = (codeOrNull == null ? "" : codeOrNull);
+        String address = ( addressOrNull == null ? "" : addressOrNull );
+        String code = ( codeOrNull == null ? "" : codeOrNull );
         return streetAddress.equals( address ) && postalCode.equals( code );
+    }
+
+    /**
+     * Find all implied geolocations for a geolocatable.
+     *
+     * @param geoLocatable a geolocatable
+     * @param queryService a query service
+     * @return a list ofr geolocations
+     */
+    public static List<GeoLocation> getImpliedGeoLocations(
+            GeoLocatable geoLocatable,
+            QueryService queryService ) {
+        List<GeoLocation> geoLocations = new ArrayList<GeoLocation>();
+        for ( GeoLocatable geo : geoLocatable.getImpliedGeoLocatables( queryService ) ) {
+            GeoLocation geoLocation = geo.geoLocate();
+            if ( geoLocation != null ) {
+                geoLocations.add( geoLocation );
+            }
+        }
+        return geoLocations;
     }
 }

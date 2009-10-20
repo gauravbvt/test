@@ -1,5 +1,7 @@
 package com.mindalliance.channels.model;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,7 +19,6 @@ import java.util.Set;
  * Time: 1:05:30 PM
  */
 public abstract class ModelEntity extends ModelObject {
-
     /**
      * Actual or Type.
      */
@@ -234,9 +235,77 @@ public abstract class ModelEntity extends ModelObject {
      */
     public static boolean implies( ModelEntity entity, ModelEntity other ) {
         return entity == null && other == null
-                || entity != null
-                && other != null
-                && ( entity.equals( other ) || entity.hasTag( other ) );
+                || entity != null && entity.narrowsOrEquals( other );
+    }
+
+    /**
+     * Whether two entity values are equivalent, or the first one is defined in terms of the other.
+     *
+     * @param entity an entity or null
+     * @param other  an entity
+     * @return a boolean
+     */
+    public static boolean isEquivalentToOrIsA( ModelEntity entity, ModelEntity other ) {
+        if ( other == null )
+            return false;
+        else if ( entity == null )
+            return other.isUnknown();
+        else
+            return entity.equals( other ) || ( other.isType() && entity.hasTag( other ) );
+    }
+
+
+    /**
+     * Whether two entity values are equivalent, or the first one is defined in terms of the other.
+     *
+     * @param entity an entity or null
+     * @param other  an entity
+     * @return a boolean
+     */
+    public static boolean isEquivalentToOrDefinedUsing( ModelEntity entity, ModelEntity other ) {
+        if ( other == null )
+            return false;
+        else if ( entity == null )
+            return other.isUnknown();
+        else
+            return entity.equals( other ) || entity.isDefinedUsing( other );
+    }
+
+    /**
+     * Is defined in terms of another entity.
+     *
+     * @param entity an entity
+     * @return a boolean
+     */
+    public boolean isDefinedUsing( ModelEntity entity ) {
+        return entity.isType() && hasTag( entity );
+    }
+
+    /**
+     * Whether this entity is the same as the other,
+     * or it has all the tags (transitively) of the other, type entity.
+     *
+     * @param other a model entity
+     * @return a boolean
+     */
+    public boolean narrowsOrEquals( ModelEntity other ) {
+        return other != null
+                &&
+                ( equals( other )
+                        ||
+                        other.isType()
+                                &&
+                                CollectionUtils.isSubCollection(
+                                        other.getTyping(),
+                                        getAllTags() )
+                );
+    }
+
+    private List<ModelEntity> getTyping() {
+        assert isType();
+        List<ModelEntity> typing = getAllTags();
+        typing.add( this );
+        return typing;
     }
 
     /**

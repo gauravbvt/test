@@ -88,17 +88,19 @@ public interface QueryService extends Service {
 
     /**
      * Find all type entities of a given class.
+     *
      * @param clazz a class of entities
      * @return a list of entities
      */
-    <T extends ModelEntity> List<T> listTypeEntities(Class<T> clazz);
+    <T extends ModelEntity> List<T> listTypeEntities( Class<T> clazz );
 
     /**
      * Find all actual entities of a given class.
+     *
      * @param clazz a class of entities
      * @return a list of entities
      */
-    <T extends ModelEntity> List<T> listActualEntities(Class<T> clazz);
+    <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz );
 
 
     /**
@@ -109,6 +111,14 @@ public interface QueryService extends Service {
      * @return a list
      */
     <T extends ModelEntity> List<T> listReferencedEntities( Class<T> clazz );
+
+    /**
+     * Get all entities that narrow or equal a given entity.
+     *
+     * @param entity an entity
+     * @return a list of entities
+     */
+    <T extends ModelEntity> List<T> listEntitiesNarrowingOrEqualTo( final T entity );
 
     /**
      * Iterate on ModelObject that are referenced entities.
@@ -182,15 +192,15 @@ public interface QueryService extends Service {
     <T extends ModelEntity> T findOrCreateType( Class<T> clazz, String name, Long id );
 
     /**
-       * Find an actual entity by given name. If none, create it for given domain,
+     * Find an actual entity by given name. If none, create it for given domain,
      * renaming it to avoid conflicts if needed.
-       *
-       * @param clazz the kind of model object
-       * @param name  the name
-       * @param <T>   a subclass of model object
-       * @return the object or null if name is null or empty
-       */
-      <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name );
+     *
+     * @param clazz the kind of model object
+     * @param name  the name
+     * @param <T>   a subclass of model object
+     * @return the object or null if name is null or empty
+     */
+    <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name );
 
     /**
      * Find an actual entity by given name. If none, create it.
@@ -437,7 +447,7 @@ public interface QueryService extends Service {
      * Find all names, sorted, of known instances of a model object class.
      *
      * @param aClass a model entity class
-     * @param kind a kind of entity
+     * @param kind   a kind of entity
      * @return a list of strings
      */
     List<String> findAllEntityNames( Class<? extends ModelEntity> aClass, ModelEntity.Kind kind );
@@ -452,7 +462,7 @@ public interface QueryService extends Service {
     List<Actor> findActors( Organization organization, Role role );
 
     /**
-     * Find all roles in given organization across all scenarios.
+     * Find all roles in given organization and across all scenarios.
      *
      * @param organization the organization, possibly Organization.UNKNOWN
      * @return a sorted list of roles
@@ -626,7 +636,8 @@ public interface QueryService extends Service {
 
     /**
      * Find all parts in the plan.
-     * @return  a list of parts
+     *
+     * @return a list of parts
      */
     List<Part> findAllParts();
 
@@ -645,7 +656,7 @@ public interface QueryService extends Service {
      * @param place a place
      * @return a list of parts
      */
-    List<Part> findAllPartsWithLocation( Place place );
+    List<Part> findAllPartsWithExactLocation( Place place );
 
     /**
      * Find the unsatisfied needs of a part.
@@ -761,6 +772,14 @@ public interface QueryService extends Service {
     List<Employment> findAllEmployments();
 
     /**
+     * FInd all employments in acutal or type or organization.
+     *
+     * @param organization an organization
+     * @return a list of employments
+     */
+    List<Employment> findAllEmploymentsIn( Organization organization );
+
+    /**
      * Find all employments for a given role.
      *
      * @param role a role
@@ -778,6 +797,7 @@ public interface QueryService extends Service {
 
     /**
      * FInd all flows in the plan.
+     *
      * @return a list of flows
      */
     List<Flow> findAllFlows();
@@ -822,7 +842,7 @@ public interface QueryService extends Service {
     List<Role> findAllRolesOf( Actor actor );
 
     /**
-     * Find all actors in an organization.
+     * Find all actors in an organization or type of organization.
      *
      * @param organization an organization
      * @return a list of organizations
@@ -933,9 +953,10 @@ public interface QueryService extends Service {
      * Find all model objects referencing a given place.
      *
      * @param place a place
+     * @param clazz a model object class
      * @return a list of model objects
      */
-    List<ModelObject> findAllReferencesTo( Place place );
+    <T extends ModelObject>List<T> findAllReferencesTo( Place place, Class<T> clazz );
 
     /**
      * Find all roots of hierarchy in which a hierarchical object belongs.
@@ -1084,6 +1105,7 @@ public interface QueryService extends Service {
 
     /**
      * Find all entities in a given place.
+     *
      * @param place a place
      * @return a list of entities
      */
@@ -1091,6 +1113,7 @@ public interface QueryService extends Service {
 
     /**
      * Find all entities in a given phase.
+     *
      * @param phase a phase
      * @return a list of entities
      */
@@ -1098,7 +1121,8 @@ public interface QueryService extends Service {
 
     /**
      * Find all entities of a given class that reference an entity type.
-     * @param entityType a model entity that's a type
+     *
+     * @param entityType  a model entity that's a type
      * @param entityClass a class of entities
      * @return a list of entities
      */
@@ -1106,6 +1130,7 @@ public interface QueryService extends Service {
 
     /**
      * Find all flows that reference a model entity type.
+     *
      * @param entityType a model entity that's a type
      * @return a list of flows
      */

@@ -116,9 +116,10 @@ public class GeoMapPage extends WebPage {
     public static BookmarkablePageLink<GeoMapPage> makeLink(
             String id,
             IModel<String> titleModel,
-            GeoLocatable geo ) {
+            GeoLocatable geo,
+            QueryService queryService ) {
         List<GeoLocatable> geos = new ArrayList<GeoLocatable>();
-        geos.add( geo );
+        geos.addAll( geo.getImpliedGeoLocatables( queryService ) );
         return makeLink( id, titleModel, geos );
     }
 

@@ -34,21 +34,6 @@ public class EntityTypeReferencesIndexPanel extends AbstractIndexPanel {
         super( id, model, expansions );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected List<String> getIndexingChoices() {
-        List<String> choices = new ArrayList<String>();
-        choices.add( ALL );
-        if ( !findIndexedActors().isEmpty() ) choices.add( ACTORS );
-        if ( !findIndexedEvents().isEmpty() ) choices.add( EVENTS );
-        if ( !findIndexedPhases().isEmpty() ) choices.add( PHASES );
-        if ( !findIndexedPlaces().isEmpty() ) choices.add( PLACES );
-        if ( !findIndexedOrganizations().isEmpty() ) choices.add( ORGANIZATIONS );
-        if ( !findIndexedRoles().isEmpty() ) choices.add( ROLES );
-        if ( !findIndexedParts().isEmpty() ) choices.add( TASKS );
-        return choices;
-    }
 
     /**
      * {@inheritDoc}

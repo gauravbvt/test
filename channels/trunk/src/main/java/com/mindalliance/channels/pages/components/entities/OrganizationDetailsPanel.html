@@ -7,26 +7,26 @@
         lang="en">
 <body>
 <wicket:extend>
-    <tr>
+    <tr wicket:id="parentContainer">
         <th align="right">
             <label for="parent"><a wicket:id="org-link" href=""
                                    title="Parent organization's details">Parent</a>:</label>
         </th>
         <td><input id="parent" width="40" wicket:id="parent" type="text"/></td>
     </tr>
-    <tr>
+    <tr wicket:id="locationContainer">
         <th align="right"><label for="location"><a wicket:id="loc-link" href=""
                                                    title="Location's details">Location</a>:</label>
         </th>
         <td><input type="text" size="40" id="location" wicket:id="location" value=""></td>
     </tr>
-    <tr>
+    <tr wicket:id="contactContainer">
         <th align="right">
             <label for="contact-info">Contact info:</label>
         </th>
         <td><span id="contact-info" wicket:id="channels">[channel list panel]</span></td>
     </tr>
-    <tr>
+    <tr wicket:id="requirementsContainers">
         <th align="right">Requirements:</th>
         <td>
             <input wicket:id="agreementsRequired" type="checkbox"/> No sharing commitment with other organizations without an MOU
@@ -34,7 +34,7 @@
             <input wicket:id="actorsRequired" type="checkbox"/> No roles without actors
         </td>
     </tr>
-     <tr>
+     <tr wicket:id="tabContainer">
         <td colspan="2"><div wicket:id="tabs" class="tabpanel">[tab panel]</div></td>
     </tr>
 </wicket:extend>

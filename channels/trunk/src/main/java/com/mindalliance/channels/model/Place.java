@@ -5,10 +5,14 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -69,17 +73,96 @@ public class Place extends ModelEntity implements GeoLocatable {
     /**
      * {@inheritDoc}
      */
+    @Override
+    public boolean isDefinedUsing( final ModelEntity entity ) {
+        return super.isDefinedUsing( entity )
+                ||
+                CollectionUtils.exists(
+                        containment(),
+                        new Predicate() {
+                            public boolean evaluate( Object obj ) {
+                                return ModelEntity.isEquivalentToOrDefinedUsing(
+                                        (Place) obj,
+                                        entity );
+                            }
+                        }
+                );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
+        List<Place> geoLocatables = new ArrayList<Place>();
+        for ( Place place : queryService.listEntitiesNarrowingOrEqualTo( this ) ) {
+            if ( place.isActual() ) {
+                GeoLocation geoLoc = place.geoLocate();
+                if ( geoLoc != null ) {
+                    geoLocatables.add( place );
+                }
+            }
+        }
+        return geoLocatables;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean narrowsOrEquals( ModelEntity other ) {
+        return super.narrowsOrEquals( other )
+                || ( other != null && isSameAsOrIn( ( (Place) other ) ) );
+    }
+
+    /**
+     * Returns whether places are exactly the same or both are null.
+     *
+     * @param place -- a string
+     * @param other -- another string
+     * @return -- whether they are similar
+     */
+    public static boolean samePlace( Place place, Place other ) {
+        if ( place == null && other == null )
+            return true;
+        if ( place == null || other == null )
+            return false;
+        return place.equals( other );
+    }
+
+    /**
+     * Find all places this one is contained in, avoiding circularities.
+     *
+     * @return a list of places
+     */
+    public List<Place> containment() {
+        return safeContainment( new HashSet<Place>() );
+    }
+
+    private List<Place> safeContainment( HashSet<Place> visited ) {
+        List<Place> containers = new ArrayList<Place>();
+        if ( !visited.contains( this ) ) {
+            visited.add( this );
+            if ( within != null ) {
+                containers.add( within );
+                containers.addAll( within.safeContainment( visited ) );
+            }
+        }
+        return containers;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
     public GeoLocation geoLocate() {
-        Place place = this;
-        do {
-            if ( place.getGeoLocation() == null )
-                place = place.getWithin();
-            else
-                return place.getGeoLocation();
-
-        } while ( place != null );
-
-        return null;
+        GeoLocation geoLoc = getGeoLocation();
+        if (geoLoc == null) {
+            Iterator<Place> containers = containment().iterator();
+            while( geoLoc == null && containers.hasNext() ) {
+                geoLoc = containers.next().getGeoLocation();
+            }
+        }
+        return geoLoc;
     }
 
     /**
@@ -176,16 +259,18 @@ public class Place extends ModelEntity implements GeoLocatable {
 
     /**
      * Test if this place has been validated by a geoservice.
+     *
      * @return true when validate() has been called.
      * @see #validate
      */
     @Transient
     public boolean isValidated() {
-        return !( geoname == null || geoLocations == null ) ;
+        return !( geoname == null || geoLocations == null );
     }
 
     /**
      * Validate this place using a geoservice.
+     *
      * @param service the service
      */
     public void validate( GeoService service ) {
@@ -204,7 +289,7 @@ public class Place extends ModelEntity implements GeoLocatable {
     }
 
     @Transient
-    public List<GeoLocation> getGeoLocations() {
+    public List<GeoLocation> getGeoLocations( QueryService queryService ) {
         return geoLocations;
     }
 
@@ -219,7 +304,7 @@ public class Place extends ModelEntity implements GeoLocatable {
         for ( Part part : queryService.findAllParts( null, ResourceSpec.with( this ) ) ) {
             part.setJurisdiction( null );
         }
-        for ( Part part : queryService.findAllPartsWithLocation( this ) ) {
+        for ( Part part : queryService.findAllPartsWithExactLocation( this ) ) {
             part.setLocation( null );
         }
         for ( Place place : queryService.list( Place.class ) ) {
@@ -260,6 +345,7 @@ public class Place extends ModelEntity implements GeoLocatable {
     /**
      * Pick a specific geoname for this place.
      * Assumes a subsequent call to validate().
+     *
      * @param geoname the geoname.
      * @see #validate
      */
@@ -287,6 +373,7 @@ public class Place extends ModelEntity implements GeoLocatable {
 
     /**
      * Add a geolocation to this place.
+     *
      * @param location a location
      */
     public void addGeoLocation( GeoLocation location ) {
@@ -295,7 +382,7 @@ public class Place extends ModelEntity implements GeoLocatable {
     }
 
     /**
-     * Whether this place is equivalent to or in another.
+     * Whether this place is equivalent to or is in another.
      *
      * @param place a place
      * @return a boolean

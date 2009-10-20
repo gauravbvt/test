@@ -1,5 +1,6 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.MappedObject;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
@@ -9,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A role possibly with jurisdiction and title assigned to an actor by an organization.
@@ -174,15 +177,14 @@ public class Job implements Serializable, Mappable, GeoLocatable {
      */
     public static Job from( ResourceSpec resourceSpec ) {
         Actor actor = resourceSpec.getActor();
+        if ( actor == null ) return null;
         Role role = resourceSpec.getRole();
+        if ( role == null ) role = Role.UNKNOWN;
         Place jurisdiction = resourceSpec.getJurisdiction();
-        if ( actor == null || role == null )
-            return null;
-        else
-            return new Job(
-                    actor,
-                    role,
-                    jurisdiction );
+        return new Job(
+                actor,
+                role,
+                jurisdiction );
     }
 
     @Id
@@ -219,17 +221,24 @@ public class Job implements Serializable, Mappable, GeoLocatable {
     }
 
     /**
-      * {@inheritDoc}
-      */
-     @Transient
+     * {@inheritDoc}
+     */
+    @Transient
     public GeoLocation geoLocate() {
         return jurisdiction != null ? jurisdiction.geoLocate() : null;
     }
 
+    public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
+        List<Place> geoLocatables = new ArrayList<Place>();
+        if ( jurisdiction != null )
+            geoLocatables.addAll( queryService.listEntitiesNarrowingOrEqualTo( jurisdiction ) );
+        return geoLocatables;
+    }
+
     /**
-      * {@inheritDoc}
-      */
-     @Transient
+     * {@inheritDoc}
+     */
+    @Transient
     public String getGeoMarkerLabel() {
         return jurisdiction != null ? jurisdiction.getGeoMarkerLabel() : "";
     }

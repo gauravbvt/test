@@ -1,5 +1,6 @@
 package com.mindalliance.channels.util;
 
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.model.Actor;
@@ -9,6 +10,8 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An actor's employment by an organization, or by none if organization and job are null.
@@ -111,6 +114,15 @@ public class Employment implements Serializable, GeoLocatable {
      */
     public GeoLocation geoLocate() {
         return organization.geoLocate();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
+        List<Employment> geoLocatables = new ArrayList<Employment>();
+        geoLocatables.add( this );
+        return geoLocatables;
     }
 
     /**

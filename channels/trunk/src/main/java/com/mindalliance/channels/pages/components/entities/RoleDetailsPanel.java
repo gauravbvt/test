@@ -52,9 +52,9 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
      */
     private static final String LOCATIONS = "Locations";
     /**
-     * Indexing choices.
+     * Indexing choice.
      */
-    private static final String[] indexingChoices = {ACTORS, LOCATIONS, ORGANIZATIONS};
+    private static final String ROLES = "Roles";
     /**
      * Maximum number of rows shown in table at a time.
      */
@@ -96,7 +96,7 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
      * {@inheritDoc}
      */
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
-        indexedOn = indexingChoices[0];
+        indexedOn = getIndexingChoices().get(0);
         nameRange = new NameRange();
         filters = new ArrayList<Identifiable>();
         this.moDetailsDiv = moDetailsDiv;
@@ -109,7 +109,7 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
         DropDownChoice<String> indexedOnChoices = new DropDownChoice<String>(
                 "indexed",
                 new PropertyModel<String>( this, "indexedOn" ),
-                Arrays.asList( indexingChoices ) );
+                getIndexingChoices() );
         indexedOnChoices.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 nameRange = new NameRange();
@@ -120,6 +120,16 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
             }
         } );
         moDetailsDiv.add( indexedOnChoices );
+    }
+
+    private List<String> getIndexingChoices() {
+        if ( getRole().isActual() ) {
+            String[] choices = {ACTORS, ORGANIZATIONS, LOCATIONS};
+            return Arrays.asList( choices );
+        } else {
+            String[] choices = {ACTORS, ORGANIZATIONS, ROLES, LOCATIONS};
+            return Arrays.asList( choices );
+        }
     }
 
     private void addNameRangePanel() {
@@ -217,6 +227,21 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
                         }
 
                     } );
+        }  else if ( indexedOn.equals( ROLES ) ) {
+            return (List<String>) CollectionUtils.collect(
+                    CollectionUtils.select(
+                            employments,
+                            new Predicate() {
+                                public boolean evaluate( Object obj ) {
+                                    return ( (Employment) obj ).getRole() != null;
+                                }
+                            } ),
+                    new Transformer() {
+                        public Object transform( Object obj ) {
+                            return ( (Employment) obj ).getRole().getName();
+                        }
+
+                    } );
         } else if ( indexedOn.equals( LOCATIONS ) ) {
             return (List<String>) CollectionUtils.collect(
                     CollectionUtils.select(
@@ -261,6 +286,7 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
             filteredOut = filteredOut ||
                     ( filter instanceof Actor && employment.getActor() != filter )
                     || ( filter instanceof Organization && employment.getOrganization() != filter )
+                    || ( filter instanceof Role && employment.getRole() != filter )
                     || ( filter instanceof Place && employment.getLocation() != filter );
         }
         return filteredOut;
@@ -272,6 +298,9 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
         } else if ( indexedOn.equals( ORGANIZATIONS ) ) {
             return employment.getOrganization() != null
                     && nameRange.contains( employment.getOrganization().getName() );
+        }  else if ( indexedOn.equals( ROLES ) ) {
+            return employment.getRole() != null
+                    && nameRange.contains( employment.getRole().getName() );
         } else if ( indexedOn.equals( LOCATIONS ) ) {
             return ( employment.getLocation() != null
                     && nameRange.contains( employment.getLocation().getName() ) );
@@ -303,6 +332,7 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
             init();
         }
 
+        @SuppressWarnings( "unchecked" )
         private void init() {
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
@@ -318,6 +348,14 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
                     "organization.name",
                     EMPTY,
                     RoleDetailsPanel.this ) );
+            if ( getRole().isType() ) {
+                columns.add( makeFilterableLinkColumn(
+                        "Role",
+                        "role",
+                        "role.name",
+                        EMPTY,
+                        RoleDetailsPanel.this ) );
+            }
             columns.add( makeFilterableLinkColumn(
                     "Location",
                     "organization.location",

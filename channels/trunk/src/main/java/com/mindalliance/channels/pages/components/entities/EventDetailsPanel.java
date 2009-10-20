@@ -12,26 +12,23 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
+import com.mindalliance.channels.pages.components.EntityReferencePanel;
 import com.mindalliance.channels.pages.components.Filterable;
-import com.mindalliance.channels.util.Matcher;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -58,9 +55,9 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
      */
     private List<Identifiable> filters;
     /**
-     * Text field for scope as name of place.
+     * Entity reference panel for scope of event (a place).
      */
-    private TextField scopeField;
+    private EntityReferencePanel<Place> scopePanel;
     /**
      * Self-terminating checkbox.
      */
@@ -80,7 +77,14 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
     @Override
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
         this.moDetailsDiv = moDetailsDiv;
-        // Self terminating
+        addSelfTerminatingField();
+        addScopePanel();
+        filters = new ArrayList<Identifiable>();
+        adjustFields();
+        addEventReferenceTable();
+    }
+
+    private void addSelfTerminatingField() {
         selfTerminatingCheckBox = new CheckBox(
                 "selfTerminating",
                 new PropertyModel<Boolean>( this, "selfTerminating" ) );
@@ -93,37 +97,27 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
             }
         } );
         moDetailsDiv.add( selfTerminatingCheckBox );
-        // Scope
+    }
+
+    private void addScopePanel() {
         moDetailsDiv.add(
                 new ModelObjectLink( "scope-link",
                         new PropertyModel<Organization>( getPlanEvent(), "scope" ),
                         new Model<String>( "Location" ) ) );
         final List<String> choices = getQueryService().findAllEntityNames( Place.class );
-        scopeField = new AutoCompleteTextField<String>( "scope",
-                new PropertyModel<String>( this, "scopeName" ) ) {
-            @Override
-            protected Iterator<String> getChoices( String s ) {
-                List<String> candidates = new ArrayList<String>();
-                for ( String choice : choices ) {
-                    if ( Matcher.matches( s, choice ) ) candidates.add( choice );
-                }
-                return candidates.iterator();
-            }
-        };
-        scopeField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getPlanEvent(), "scope" ) );
-            }
-        } );
-        moDetailsDiv.add( scopeField );
-        filters = new ArrayList<Identifiable>();
-        adjustFields();
-        addEventReferenceTable();
+        scopePanel = new EntityReferencePanel<Place>(
+                "scopePanel",
+                new Model<Event>(getEvent()),
+                choices,
+                "scope",
+                Place.class,
+                null
+        );
+        moDetailsDiv.add( scopePanel );
     }
 
     private void adjustFields() {
-        scopeField.setEnabled( isLockedByUser( getEvent() ) );
+        scopePanel.enable( isLockedByUser( getEvent() ) );
         selfTerminatingCheckBox.setEnabled( isLockedByUser( getEvent() ) );
     }
 
@@ -135,36 +129,6 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
         );
         eventReferenceTable.setOutputMarkupId( true );
         moDetailsDiv.addOrReplace( eventReferenceTable );
-    }
-
-    /**
-     * Set organization's location from name, if not null or empty.
-     *
-     * @param name a String
-     */
-    public void setScopeName( String name ) {
-        Event event = getPlanEvent();
-        Place oldPlace = event.getScope();
-        String oldName = oldPlace == null ? "" : oldPlace.getName();
-        Place newPlace = null;
-        if ( name == null || name.trim().isEmpty() )
-            newPlace = null;
-        else {
-            if ( oldPlace == null || !isSame( name, oldName ) )
-                newPlace = getQueryService().findOrCreate( Place.class, name );
-        }
-        doCommand( new UpdatePlanObject( event, "scope", newPlace ) );
-        getCommander().cleanup( Place.class, oldName );
-    }
-
-    /**
-     * Get organization's location's name.
-     *
-     * @return a String
-     */
-    public String getScopeName() {
-        Place scope = ( getPlanEvent() ).getScope();
-        return scope == null ? "" : scope.getName();
     }
 
     /**

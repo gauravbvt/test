@@ -65,21 +65,6 @@ public class Matcher {
     }
 
     /**
-     * Returns whether places are exactly the same or both are null.
-     *
-     * @param place -- a string
-     * @param other -- another string
-     * @return -- whether they are similar
-     */
-    public static boolean samePlace( Place place, Place other ) {
-        if ( place == null && other == null )
-            return true;
-        if ( place == null || other == null )
-            return false;
-        return same( place.getName(), other.getName() );
-    }
-
-    /**
      * Compares two roles for identity.
      *
      * @param role1 a Role

@@ -375,7 +375,7 @@ public class Part extends Node implements GeoLocatable {
      */
     public boolean isIn( Organization o ) {
         return organization == null ? Organization.UNKNOWN == o
-                : o.equals( organization );
+                : o.narrowsOrEquals( organization );
     }
 
     /**
@@ -630,6 +630,15 @@ public class Part extends Node implements GeoLocatable {
     @Transient
     public GeoLocation geoLocate() {
         return location != null ? location.geoLocate() : null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
+        List<Part> geoLocatables = new ArrayList<Part>(  );
+        geoLocatables.add( this );
+        return geoLocatables;
     }
 
     /**

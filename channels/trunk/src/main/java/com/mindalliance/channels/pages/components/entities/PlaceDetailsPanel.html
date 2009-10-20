@@ -7,7 +7,7 @@
         lang="en">
 <body>
 <wicket:extend>
-    <tr>
+    <tr wicket:id="withinContainer">
         <th align="right">
             <label for="within"><a wicket:id="within-link" href=""
                                                title="Containing place's details">Is within</a>:</label>
@@ -16,15 +16,15 @@
             <input type="text" size="40" id="within" wicket:id="within" value="" title="The place if any this is part of">
         </td>
     </tr>
-    <tr>
+    <tr wicket:id="streetContainer">
         <th align="right">Street address:</th>
         <td><input type="text" size="40" wicket:id="streetAddress" value="" title="Street number and name"></td>
     </tr>
-    <tr>
+    <tr wicket:id="codeContainer">
         <th align="right">Postal code:</th>
         <td><input type="text" size="40" wicket:id="postalCode" value=""></td>
     </tr>
-    <tr>
+    <tr wicket:id="geonameContainer">
         <th align="right">City, county, state and/or country:</th>
         <td><input type="text" size="40" wicket:id="geoname" value="" title="City, county, state and/or country"></td>
     </tr>
@@ -41,7 +41,7 @@
         </td>
     </tr>
     <tr>
-        <td colspan="2">
+        <td wicket:id="placesWithinContainer" colspan="2">
             <h3>
                 Places within this one
                 &nbsp;
@@ -54,7 +54,7 @@
         </td>
     </tr>
     <tr>
-        <td colspan="2">
+        <td wicket:id="placeReferencesContainer"colspan="2">
             <h3>References to this place</h3>
             <span wicket:id="placeReferences">[place reference table]</span>
         </td>

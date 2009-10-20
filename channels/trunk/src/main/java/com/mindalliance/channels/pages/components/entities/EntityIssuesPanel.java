@@ -154,13 +154,21 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
     private String getContainmentLabel() {
         ModelEntity entity = getEntity();
         if ( entity instanceof Actor ) {
-            return "roles played by this actor";
+            return entity.isActual()
+                    ? "roles played by this actor"
+                    : "roles played by this type of actor";
         } else if ( entity instanceof Role ) {
-            return "actors playing this role";
+            return entity.isActual()
+                    ? "actors playing this role"
+                    : "actors playing this type of role";
         } else if ( entity instanceof Organization ) {
-            return "actors and roles in this organization";
+            return entity.isActual()
+                    ? "actors and roles in this organization"
+                    : "actors and roles in this type of organization";
         } else if ( entity instanceof Place ) {
-            return "anything located within this place";
+            return entity.isActual()
+                    ? "anything located within this place"
+                    : "anything located within this type of place";
         } else if ( entity instanceof Event ) {
             return "";
         } else if ( entity instanceof Phase ) {

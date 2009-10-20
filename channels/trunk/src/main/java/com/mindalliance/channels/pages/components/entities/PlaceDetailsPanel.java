@@ -5,12 +5,19 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.ModelObjectLink;
+import com.mindalliance.channels.pages.components.AbstractIndexPanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
@@ -124,9 +131,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         geoLocationsContainer.setOutputMarkupId( true );
         moDetailsDiv.add( geoLocationsContainer );
         addGeoLocationList();
-        addPlacesWithinGeomapLink();
-        addNameRangePanel();
-        addPlacesWithinTable();
+        addPlacesWithin();
         addPlaceReferencesTable();
         adjustFields();
     }
@@ -138,7 +143,10 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     private void addWithinField() {
-        moDetailsDiv.add(
+        WebMarkupContainer withinContainer = new WebMarkupContainer( "withinContainer" );
+        withinContainer.setVisible( getPlace().isActual() );
+        moDetailsDiv.add( withinContainer );
+        withinContainer.add(
                 new ModelObjectLink( "within-link",
                         new PropertyModel<Place>( getPlace(), "within" ),
                         new Model<String>( "Is within" ) ) );
@@ -167,7 +175,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         addIssues( withinField, getPlace(), "within" );
         withinField.setEnabled( isLockedByUser( getPlace() ) );
         withinField.setOutputMarkupId( true );
-        moDetailsDiv.add( withinField );
+        withinContainer.add( withinField );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -191,9 +199,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     private void refreshPlacesWithin( AjaxRequestTarget target ) {
-        addPlacesWithinGeomapLink();
-        addNameRangePanel();
-        addPlacesWithinTable();
+        addPlacesWithin();
         target.addComponent( withinPlacesMapLink );
         target.addComponent( nameRangePanel );
         target.addComponent( placesWithinTable );
@@ -214,6 +220,9 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     private void addStreetAddressField() {
+        WebMarkupContainer streetContainer = new WebMarkupContainer( "streetContainer" );
+        streetContainer.setVisible( getPlace().isActual() );
+        moDetailsDiv.add( streetContainer );
         final TextField<String> streetAddressField = new TextField<String>(
                 "streetAddress",
                 new PropertyModel<String>( this, "streetAddress" ) );
@@ -227,10 +236,13 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         } );
         addIssues( streetAddressField, getPlace(), "streetAddress" );
         streetAddressField.setEnabled( isLockedByUser( getPlace() ) );
-        moDetailsDiv.add( streetAddressField );
+        streetContainer.add( streetAddressField );
     }
 
     private void addPostalCodeField() {
+        WebMarkupContainer codeContainer = new WebMarkupContainer( "codeContainer" );
+        codeContainer.setVisible( getPlace().isActual() );
+        moDetailsDiv.add( codeContainer );
         postalCodeField = new TextField<String>(
                 "postalCode",
                 new PropertyModel<String>( this, "postalCode" ) );
@@ -248,10 +260,13 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         } );
         addIssues( postalCodeField, getPlace(), "postalCode" );
         postalCodeField.setEnabled( isLockedByUser( getPlace() ) );
-        moDetailsDiv.add( postalCodeField );
+        codeContainer.add( postalCodeField );
     }
 
     private void addGeonameField() {
+        WebMarkupContainer geonameContainer = new WebMarkupContainer( "geonameContainer" );
+        geonameContainer.setVisible( getPlace().isActual() );
+        moDetailsDiv.add( geonameContainer );
         final List<String> choices = getQueryService().findAllGeonames();
         geonameField = new AutoCompleteTextField<String>(
                 "geoname",
@@ -280,10 +295,15 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         } );
         addIssues( geonameField, getPlace(), "geoname" );
         geonameField.setEnabled( isLockedByUser( getPlace() ) );
-        moDetailsDiv.add( geonameField );
+        geonameContainer.add( geonameField );
     }
 
-    private void addPlacesWithinGeomapLink() {
+    private void addPlacesWithin() {
+        WebMarkupContainer placesWithinContainer = new WebMarkupContainer( "placesWithinContainer" );
+        placesWithinContainer.setVisible( getPlace().isActual() );
+        placesWithinContainer.setOutputMarkupId( true );
+        moDetailsDiv.add( placesWithinContainer );
+        // Geomaplink
         List<? extends GeoLocatable> geoLocatables = getPlacesWithin();
         withinPlacesMapLink = new GeomapLinkPanel(
                 "geomapLink",
@@ -291,10 +311,8 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 geoLocatables,
                 new Model<String>( "Show listed places within this one" ) );
         withinPlacesMapLink.setOutputMarkupId( true );
-        moDetailsDiv.addOrReplace( withinPlacesMapLink );
-    }
-
-    private void addNameRangePanel() {
+        placesWithinContainer.addOrReplace( withinPlacesMapLink );
+        // Name ranges
         nameRangePanel = new NameRangePanel(
                 "nameRanges",
                 new PropertyModel<List<String>>( this, "indexedNames" ),
@@ -303,26 +321,31 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 "All names"
         );
         nameRangePanel.setOutputMarkupId( true );
-        moDetailsDiv.addOrReplace( nameRangePanel );
-    }
-
-    private void addPlacesWithinTable() {
+        placesWithinContainer.addOrReplace( nameRangePanel );
+        // Table
         placesWithinTable = new PlacesWithinTable(
                 "placesWithin",
                 new PropertyModel<List<Place>>( this, "placesWithin" ),
                 MAX_ROWS
         );
         placesWithinTable.setOutputMarkupId( true );
-        moDetailsDiv.addOrReplace( placesWithinTable );
+        placesWithinContainer.addOrReplace( placesWithinTable );
     }
 
     private void addPlaceReferencesTable() {
-        PlaceReferencesTable placeReferencesTable = new PlaceReferencesTable(
-                "placeReferences",
-                new PropertyModel<List<ModelObject>>( this, "placeReferences" ),
-                MAX_ROWS
-        );
-        moDetailsDiv.add( placeReferencesTable );
+        WebMarkupContainer placeReferencesContainer = new WebMarkupContainer( "placeReferencesContainer" );
+        placeReferencesContainer.setVisible( getPlace().isActual() );
+        moDetailsDiv.add( placeReferencesContainer );
+        if ( getPlace().isActual() ) {
+            PlaceReferencesIndex placeReferencesIndex = new PlaceReferencesIndex(
+                    "placeReferences",
+                    new Model<Place>( getPlace() ),
+                    getExpansions()
+            );
+            placeReferencesContainer.add( placeReferencesIndex );
+        } else {
+            placeReferencesContainer.add( new Label( "placeReferences", "" ) );
+        }
     }
 
     /**
@@ -351,7 +374,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
     public void setNameRange( AjaxRequestTarget target, NameRange range ) {
         nameRange = range;
         nameRangePanel.setSelected( target, range );
-        addPlacesWithinTable();
+        addPlacesWithin();
         target.addComponent( placesWithinTable );
     }
 
@@ -395,8 +418,8 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         boolean filteredOut = false;
         for ( Identifiable filter : filters ) {
             filteredOut = filteredOut
-                        || filter instanceof Place
-                           && ( place.getWithin() == null || !place.getWithin().equals( filter ) );
+                    || filter instanceof Place
+                    && ( place.getWithin() == null || !place.getWithin().equals( filter ) );
         }
         return filteredOut;
     }
@@ -497,19 +520,10 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
             newPlace = null;
         else {
             if ( oldWithin == null || !isSame( name, oldName ) )
-                newPlace = getQueryService().findOrCreate( Place.class, name );
+                newPlace = getQueryService().safeFindOrCreate( Place.class, name );
         }
         updatePlace( "within", newPlace );
         getCommander().cleanup( Place.class, oldName );
-    }
-
-    /**
-     * Find all model objects that reference this place.
-     *
-     * @return a list of model objects
-     */
-    public List<ModelObject> getPlaceReferences() {
-        return getQueryService().findAllReferencesTo( getPlace() );
     }
 
     private class GeoLocationPanel extends AbstractUpdatablePanel {
@@ -624,49 +638,66 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
     /**
      * Event reference table.
      */
-    public class PlaceReferencesTable extends AbstractTablePanel<ModelObject> {
-        /**
-         * Event reference model.
-         */
-        private IModel<List<ModelObject>> referencesModel;
+    public class PlaceReferencesIndex extends AbstractIndexPanel {
 
-        public PlaceReferencesTable(
-                String id,
-                IModel<List<ModelObject>> referencesModel,
-                int pageSize ) {
-            super( id, null, pageSize, null );
-            this.referencesModel = referencesModel;
-            initialize();
+        public PlaceReferencesIndex( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
+            super( id, model, expansions );
         }
 
-        @SuppressWarnings( "unchecked" )
-        private void initialize() {
-            final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
-            // columns
-            columns.add( makeColumn(
-                    "Kind",
-                    "modelObjectType",
-                    "modelObjectType.name",
-                    EMPTY ) );
-            columns.add( makeLinkColumn(
-                    "Name",
-                    "",
-                    "name",
-                    EMPTY ) );
-            columns.add( makeColumn(
-                    "Description",
-                    "description",
-                    "description",
-                    EMPTY ) );
-            // provider and table
-            add( new AjaxFallbackDefaultDataTable(
-                    "references",
-                    columns,
-                    new SortableBeanProvider<ModelObject>(
-                            referencesModel.getObject(),
-                            "name" ),
-                    getPageSize() ) );
+        /**
+         * {@inheritDoc}
+         */
+        protected List<Actor> findIndexedActors() {
+            return getQueryService().findAllReferencesTo( getPlace(), Actor.class );
+        }
 
+        /**
+         * {@inheritDoc}
+         */
+        protected List<Event> findIndexedEvents() {
+            return getQueryService().findAllReferencesTo( getPlace(), Event.class );
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        protected List<Organization> findIndexedOrganizations() {
+            return getQueryService().findAllReferencesTo( getPlace(), Organization.class );
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        protected List<Phase> findIndexedPhases() {
+            return new ArrayList<Phase>();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        protected List<Place> findIndexedPlaces() {
+            return getQueryService().findAllReferencesTo( getPlace(), Place.class );
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        protected List<Role> findIndexedRoles() {
+            return new ArrayList<Role>();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        protected List<Flow> findIndexedFlows() {
+            return new ArrayList<Flow>();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        protected List<Part> findIndexedParts() {
+            return getQueryService().findAllReferencesTo( getPlace(), Part.class );
         }
     }
 
