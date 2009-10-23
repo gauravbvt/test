@@ -77,10 +77,9 @@ public class Event extends ModelEntity implements GeoLocatable {
     /**
      * {@inheritDoc}
      */
-    public boolean narrowsOrEquals( ModelEntity other ) {
-        return super.narrowsOrEquals( other )
-                && isSelfTerminating() == ((Event)other).isSelfTerminating()
-                && ModelEntity.implies( getScope(), other );
+    protected boolean moreNarrowsType( ModelEntity entityType ) {
+        return isSelfTerminating() == ( (Event) entityType ).isSelfTerminating()
+                && ModelEntity.implies( getScope(), ( (Event) entityType ).getScope() );
     }
 
     /**

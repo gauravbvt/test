@@ -296,15 +296,15 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     private void addWithinRequirement() {
-        WebMarkupContainer withinContainer = new WebMarkupContainer( "withinRequirement" );
-        withinContainer.setVisible( getPlace().isType() );
-        moDetailsDiv.add( withinContainer );
-        PlaceReferencePanel mustBeWithinPanel = new PlaceReferencePanel(
-                "mustBeWithin",
+        WebMarkupContainer containedInContainer = new WebMarkupContainer( "containedInRequirement" );
+        containedInContainer.setVisible( getPlace().isType() );
+        moDetailsDiv.add( containedInContainer );
+        PlaceReferencePanel mustBeContainedInPanel = new PlaceReferencePanel(
+                "mustBeContainedIn",
                 new Model<Place>( getPlace() ),
-                "mustBeWithin" );
-        mustBeWithinPanel.enable( isLockedByUser( getPlace() ) );
-        withinContainer.add( mustBeWithinPanel );
+                "mustBeContainedIn" );
+        mustBeContainedInPanel.enable( isLockedByUser( getPlace() ) );
+        containedInContainer.add( mustBeContainedInPanel );
     }
 
     private void addContainsRequirement() {

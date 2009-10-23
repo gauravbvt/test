@@ -235,7 +235,7 @@ public abstract class ModelEntity extends ModelObject {
      * @return a boolean
      */
     public static boolean implies( ModelEntity entity, ModelEntity other ) {
-        return entity == null && other == null
+        return other == null
                 || entity != null && entity.narrowsOrEquals( other );
     }
 
@@ -290,16 +290,44 @@ public abstract class ModelEntity extends ModelObject {
      * @return a boolean
      */
     public boolean narrowsOrEquals( ModelEntity other ) {
-        return other != null
-                &&
-                ( equals( other )
-                        ||
-                        other.isType()
-                                &&
-                                CollectionUtils.isSubCollection(
-                                        other.getTyping(),
-                                        getAllTags() )
-                );
+        if ( other == null ) return false;
+        // Can't compare apples with oranges
+        if ( !getClass().isAssignableFrom( other.getClass() ) ) return false;
+        // same entity
+        if ( equals( other ) ) return true;
+        if ( overrideNarrows( other ) ) return true;
+        // a type of entity can't narrow an actual entity
+        // and an actual entity can't narrow a different actual entity
+        if ( other.isActual() ) return false;
+        // entity explicitly is classified as other entity type
+        if ( hasTag( other ) ) return true;
+        // entity (actual or type) must at least have all the tags of the other entity type
+        if ( !CollectionUtils.isSubCollection(
+                other.getTyping(),
+                getAllTags() ) ) return false;
+        // apply specific tests
+        return moreNarrowsType( other );
+    }
+
+    /**
+     * Override test for narrowing.
+     *
+     * @param other a model entity
+     * @return a boolean
+     */
+    protected boolean overrideNarrows( ModelEntity other ) {
+        return false;
+    }
+
+    /**
+     * Apply tests specific to the class of entity.
+     *
+     * @param entityType an entity type
+     * @return a boolean
+     */
+    protected boolean moreNarrowsType( ModelEntity entityType ) {
+        // Default
+        return true;
     }
 
     private List<ModelEntity> getTyping() {

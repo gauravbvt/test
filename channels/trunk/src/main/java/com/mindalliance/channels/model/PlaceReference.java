@@ -25,7 +25,7 @@ public class PlaceReference implements Serializable {
     }
 
     public void setPlace( Place place ) {
-        assert event == null;
+        event = null;
         this.place = place;
     }
 
@@ -34,7 +34,7 @@ public class PlaceReference implements Serializable {
     }
 
     public void setEvent( Event event ) {
-        assert place == null;
+        place = null;
         this.event = event;
     }
 
@@ -59,5 +59,19 @@ public class PlaceReference implements Serializable {
 
     public boolean isSet() {
         return getReferencedPlace() != null;
+    }
+
+    public boolean isEventReferenced() {
+        return event != null;
+    }
+
+    public boolean isPlaceReferenced() {
+        return place != null;
+    }
+
+    public ModelEntity getReference() {
+        if ( event != null ) return event;
+        if ( place != null ) return place;
+        return null;
     }
 }

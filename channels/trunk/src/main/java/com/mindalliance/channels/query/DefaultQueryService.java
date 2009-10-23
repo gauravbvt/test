@@ -2122,7 +2122,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     references.add( (T) p );
                 if ( p.getWithin() != null && p.getWithin().equals( place ) )
                     references.add( (T) p );
-                if ( p.getMustBeWithin().references( place ) )
+                if ( p.getMustBeContainedIn().references( place ) )
                     references.add( (T) p );
                 if ( p.getMustContain().references( place ) )
                     references.add( (T) p );
@@ -2510,7 +2510,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                         } else if ( obj instanceof Place ) {
                             if ( ( (Place) obj ).getMustContain().references( entityType ) )
                                 return true;
-                            if ( ( (Place) obj ).getMustBeWithin().references( entityType ) )
+                            if ( ( (Place) obj ).getMustBeContainedIn().references( entityType ) )
                                 return true;
                         }
                         return false;

@@ -103,32 +103,19 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
     /**
      * {@inheritDoc}
      */
+    protected boolean overrideNarrows( ModelEntity other ) {
+        // Any actual organization narrows any of its ancestors
+        return isActual() && isWithin( (Organization) other );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public boolean narrowsOrEquals( ModelEntity other ) {
-        if ( other == null ) return false;
-        if ( isActual() ) {
-            return super.narrowsOrEquals( other )
-                    // Any actual organization narrows any of its ancestors
-                    || isWithin( (Organization) other );
-        } else {
-            // is type
-            // check tag compatibility
-            if ( !super.narrowsOrEquals( other ) ) return false;
-            assert other.isType();
-            // check location compatibility if constrained
-            Place otherLocation = ( (Organization) other ).getLocation();
-            if ( otherLocation != null ) {
-                if ( location == null ) return false;
-                if ( !location.narrowsOrEquals( otherLocation ) ) return false;
-            }
-            // check parent compatibility if constrained
-            Organization otherParent = ( (Organization) other ).getParent();
-            if ( otherParent != null ) {
-                if ( parent == null ) return false;
-                if ( !parent.narrowsOrEquals( otherParent ) ) return false;
-            }
-            return true;
-        }
+    protected boolean moreNarrowsType( ModelEntity entityType ) {
+        // check that location and parent are compatible
+        return ModelEntity.implies( location, ( (Organization) entityType ).getLocation() )
+                && ModelEntity.implies( parent, ( (Organization) entityType ).getParent() );
     }
 
     public boolean isActorsRequired() {

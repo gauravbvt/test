@@ -61,9 +61,9 @@ public class Place extends ModelEntity implements GeoLocatable {
      */
     private PlaceReference mustContain = new PlaceReference();
     /**
-     * The place a place this type must be within.
+     * The place a place this type must be contained in.
      */
-    private PlaceReference mustBeWithin = new PlaceReference();
+    private PlaceReference mustBeContainedIn = new PlaceReference();
 
     static {
         UNKNOWN = new Place( UnknownPlaceName );
@@ -141,45 +141,58 @@ public class Place extends ModelEntity implements GeoLocatable {
         this.mustContain = mustContain;
     }
 
-    public PlaceReference getMustBeWithin() {
-        return mustBeWithin;
+    public PlaceReference getMustBeContainedIn() {
+        return mustBeContainedIn;
     }
 
-    public void setMustBeWithin( PlaceReference mustBeWithin ) {
+    public void setMustBeContainedIn( PlaceReference mustBeContainedIn ) {
         assert isType();
-        this.mustBeWithin = mustBeWithin;
+        this.mustBeContainedIn = mustBeContainedIn;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean narrowsOrEquals( ModelEntity other ) {
-        if ( other == null ) return false;
+    protected boolean overrideNarrows( ModelEntity other ) {
+        // an actual place narrows another actual place if it is within it
+        return isActual() && other.isActual() && isSameAsOrIn( (Place) other );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean moreNarrowsType( ModelEntity entityType ) {
+        Place placeType = (Place) entityType;
         if ( isActual() ) {
-            if ( other.isActual() ) {
-                return isSameAsOrIn( ( (Place) other ) );
-            } else {
-                // actual matched with a type
-                // compatible types?
-                if ( !super.narrowsOrEquals( other ) ) return false;
-                // Check that this contains any place specified by the place type (aka other)
-                PlaceReference contained = ( (Place) other ).getMustContain();
-                if ( contained.isSet() ) {
-                    if ( !contained.narrowsOrEquals( this ) ) return false;
+            // Check that this place contains a place that it must contain according to the place type
+            PlaceReference contained = placeType.getMustContain();
+            if ( contained.isSet() ) {
+                final Place placeToContain = contained.getReferencedPlace();
+                if ( placeToContain.isActual() ) {
+                    if ( !placeToContain.isSameAsOrIn( this ) ) return false;
+                } else {
+                    // place to be contained in this one is a place type
+                    // look for a tag that is narrowed by the type of place to contain
+                    if ( !CollectionUtils.exists(
+                            getAllTags(),
+                            new Predicate() {
+                                public boolean evaluate( Object obj ) {
+                                    return placeToContain.narrowsOrEquals( (ModelEntity) obj );
+                                }
+                            }
+                    ) ) return false;
                 }
-                // Check that any place specified by the place type (aka other) contains this
-                PlaceReference container = ( (Place) other ).getMustBeWithin();
-                if ( container.isSet() ) {
-                    if ( !narrowsOrEquals( container.getReferencedPlace() ) ) return false;
-                }
-                return true;
+            }
+            // Check that any place specified by the place type contains this one
+            PlaceReference contain = placeType.getMustBeContainedIn();
+            if ( contain.isSet() ) {
+                Place placeToBeContainedIn = contain.getReferencedPlace();
+                if ( !narrowsOrEquals( placeToBeContainedIn ) ) return false;
             }
         } else {
-            // is type
-            if ( !super.narrowsOrEquals( other ) ) return false;
-            assert other.isType();
-            PlaceReference otherMustContain = ( (Place) other ).getMustContain();
+            PlaceReference otherMustContain = placeType.getMustContain();
             if ( otherMustContain.isSet() ) {
                 if ( !mustContain.isSet() ) return false;
                 // other mustContain test must be less stringent
@@ -189,13 +202,13 @@ public class Place extends ModelEntity implements GeoLocatable {
                 // because Morristown narrows NJ
                 if ( !otherMustContain.narrowsOrEquals( mustContain ) ) return false;
             }
-            PlaceReference otherMustBeWithin = ( (Place) other ).getMustBeWithin();
-            if ( otherMustBeWithin.isSet() ) {
-                if ( !mustBeWithin.isSet() ) return false;
-                if ( !mustBeWithin.narrowsOrEquals( otherMustBeWithin ) ) return false;
+            PlaceReference otherMustBeContainedIn = placeType.getMustBeContainedIn();
+            if ( otherMustBeContainedIn.isSet() ) {
+                if ( !mustBeContainedIn.isSet() ) return false;
+                if ( !mustBeContainedIn.narrowsOrEquals( otherMustBeContainedIn ) ) return false;
             }
-            return true;
         }
+        return true;
     }
 
     /**
@@ -581,7 +594,7 @@ public class Place extends ModelEntity implements GeoLocatable {
     public boolean references( ModelObject mo ) {
         return super.references( mo )
                 || ModelObject.areIdentical( within, mo )
-                || mustBeWithin.references( mo )
+                || mustBeContainedIn.references( mo )
                 || mustContain.references( mo );
     }
 }

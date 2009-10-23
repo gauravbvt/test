@@ -327,18 +327,17 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      * @return a boolean
      */
     public boolean narrowsOrEquals( ResourceSpec other ) {
-        // Assumes that instance equality works for entities (two instances are necessarily non equal)
         if ( other.isAnyone() ) return false;
         if ( equals( other ) ) return true;
-        if ( !ModelEntity.implies( actor, other.getActor() ) && !other.isAnyActor() )
+        if ( !( ModelEntity.implies( actor, other.getActor() ) || other.isAnyActor() ) )
             return false;
-        if ( !ModelEntity.implies( role, other.getRole() ) && !other.isAnyRole() )
+        if ( !( ModelEntity.implies( role, other.getRole() ) || other.isAnyRole() ) )
             return false;
-        if ( !ModelEntity.implies( organization, other.getOrganization() )
-                && !other.isAnyOrganization() )
+        if ( !( ModelEntity.implies( organization, other.getOrganization() )
+                || other.isAnyOrganization() ) )
             return false;
-        if ( !ModelEntity.implies( jurisdiction, other.getJurisdiction() )
-                && !other.isAnyJurisdiction() )
+        if ( !( ModelEntity.implies( jurisdiction, other.getJurisdiction() )
+                || other.isAnyJurisdiction() ) )
             return false;
         return true;
     }

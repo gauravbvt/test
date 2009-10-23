@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Identifiable;
@@ -21,6 +22,7 @@ import org.apache.wicket.model.PropertyModel;
 import java.util.List;
 
 /**
+ * Place reference panel.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -32,18 +34,13 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
      * Name of property set to a PlaceReference.
      */
     private String property;
-    /**
-     * Place reference.
-     */
-    private PlaceReference placeRef = new PlaceReference();
     private boolean placeReferenced = false;
     private boolean eventReferenced = false;
     private CheckBox eventCheckBox;
     private CheckBox placeCheckBox;
-    private ModelObjectLink eventLink;
-    private ModelObjectLink placeLink;
     private DropDownChoice eventChoice;
     private EntityReferencePanel<Place> entityReferencePanel;
+    private boolean reset = false;
 
     public PlaceReferencePanel( String id, IModel<? extends Identifiable> model, String property ) {
         super( id, model );
@@ -52,6 +49,9 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
     }
 
     private void init() {
+        placeReferenced = getPlaceReference().isPlaceReferenced();
+        eventReferenced = getPlaceReference().isEventReferenced();
+        assert !( placeReferenced && eventReferenced );
         this.setOutputMarkupId( true );
         addEventCheckBox();
         addPlaceCheckBox();
@@ -68,7 +68,13 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
         eventCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields();
-                refreshAll( target );
+                target.addComponent( eventChoice );
+                target.addComponent( placeCheckBox );
+                target.addComponent( entityReferencePanel );
+                if ( reset ) {
+                    reset = false;
+                    update( target, new Change( Change.Type.Updated, getEntity(), property ) );
+                }
             }
         } );
         add( eventCheckBox );
@@ -80,14 +86,20 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
         placeCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields();
-                refreshAll( target );
+                target.addComponent( eventCheckBox );
+                target.addComponent( eventChoice );
+                target.addComponent( entityReferencePanel );
+                if ( reset ) {
+                    reset = false;
+                    update( target, new Change( Change.Type.Updated, getEntity(), property ) );
+                }
             }
         } );
         add( placeCheckBox );
     }
 
     private void addEventLink() {
-        eventLink = new ModelObjectLink(
+        ModelObjectLink eventLink = new ModelObjectLink(
                 "eventLink",
                 new PropertyModel<Place>( this, "refEvent" ),
                 new Model<String>( "event" ) );
@@ -96,7 +108,7 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
     }
 
     private void addPlaceLink() {
-        placeLink = new ModelObjectLink(
+        ModelObjectLink placeLink = new ModelObjectLink(
                 "placeLink",
                 new PropertyModel<Place>( this, "refPlace" ),
                 new Model<String>( "place" )
@@ -140,40 +152,50 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
     }
 
     private void refreshAll( AjaxRequestTarget target ) {
+        reset = false;
         target.addComponent( this );
     }
 
     public boolean isEventReferenced() {
-        return placeRef.getEvent() != null || eventReferenced;
+        return eventReferenced;
     }
 
     public void setEventReferenced( boolean val ) {
         eventReferenced = val;
-        if (val) placeReferenced = false;
-        placeRef = new PlaceReference();
+        if ( val )
+            placeReferenced = false;
+        else
+            resetPlaceReference();
     }
 
     public boolean isPlaceReferenced() {
-        return placeRef.getPlace() != null || placeReferenced;
+        return placeReferenced;
     }
 
     public void setPlaceReferenced( boolean val ) {
         placeReferenced = val;
-        if (val) eventReferenced = false;
-        placeRef = new PlaceReference();
+        if ( val )
+            eventReferenced = false;
+        else
+            resetPlaceReference();
+    }
+
+    private void resetPlaceReference() {
+        doCommand( new UpdatePlanObject( getEntity(), property, new PlaceReference() ) );
+        reset = true;
     }
 
     public Event getRefEvent() {
-        return eventReferenced ? placeRef.getEvent() : null;
+        return getPlaceReference().getEvent();
     }
 
     public void setRefEvent( Event event ) {
-        placeRef.setEvent( event );
-        doCommand( new UpdatePlanObject( getEntity(), property, placeRef) );
+        getPlaceReference().setEvent( event );
+        doCommand( new UpdatePlanObject( getEntity(), property, getPlaceReference() ) );
     }
 
     public Place getRefPlace() {
-        return !eventReferenced ? placeRef.getPlace() : null;
+        return getPlaceReference().getPlace();
     }
 
     private ModelEntity getEntity() {
@@ -189,4 +211,12 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
         placeCheckBox.setEnabled( enabled );
         adjustFields();
     }
+
+    private PlaceReference getPlaceReference() {
+        return (PlaceReference) CommandUtils.getProperty(
+                getEntity(),
+                property,
+                new PlaceReference() );
+    }
+
 }
