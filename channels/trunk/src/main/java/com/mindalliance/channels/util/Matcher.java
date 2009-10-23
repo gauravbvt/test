@@ -118,7 +118,7 @@ public class Matcher {
      * @return a boolean
      */
     public static boolean within( Place place, Place other ) {
-        return !( place == null || other == null ) && place.isSameAsOrIn( other );
+        return !( place == null || other == null ) && place.matchesOrIsInside( other );
     }
 
     /**

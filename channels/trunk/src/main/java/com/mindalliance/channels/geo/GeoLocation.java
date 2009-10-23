@@ -49,7 +49,7 @@ public class GeoLocation implements Serializable {
         stateCode = getStateCode( topo );
         countyCode = getCountyCode( topo );
         cityCode = getCityCode( topo );
-        population = getPopulation( topo );
+        // population = getPopulation( topo );
         latitude = topo.getLatitude();
         longitude = topo.getLongitude();
         geonameId = topo.getGeoNameId();
@@ -110,7 +110,7 @@ public class GeoLocation implements Serializable {
     private Long getPopulation( Toponym topo ) {
         try {
             return topo.getPopulation();
-        } catch ( InsufficientStyleException e ) {
+        } catch ( Exception e ) {
             return null;
         }
     }

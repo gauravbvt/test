@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.GeoService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.geo.GeoLocatable;
@@ -37,6 +37,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,6 +59,8 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
      */
     private static final int MAX_ROWS = 5;
 
+    @SpringBean
+    private GeoService geoService;
     /**
      * Place detail fields container.
      */
@@ -136,10 +139,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     private void addWithinField() {
-        WebMarkupContainer withinContainer = new WebMarkupContainer( "withinContainer" );
-        withinContainer.setVisible( getPlace().isActual() );
-        moDetailsDiv.add( withinContainer );
-        withinContainer.add(
+        moDetailsDiv.add(
                 new ModelObjectLink( "within-link",
                         new PropertyModel<Place>( getPlace(), "within" ),
                         new Model<String>( "Is within" ) ) );
@@ -168,28 +168,30 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         addIssues( withinField, getPlace(), "within" );
         withinField.setEnabled( isLockedByUser( getPlace() ) );
         withinField.setOutputMarkupId( true );
-        withinContainer.add( withinField );
+        moDetailsDiv.add( withinField );
     }
 
     @SuppressWarnings( "unchecked" )
     private List<String> findWithinCandidates() {
         final Place place = getPlace();
-        if (place.isActual()) {
-        List<Place> allCandidatePlaces = (List<Place>) CollectionUtils.select(
-                getQueryService().listActualEntities( Place.class ),
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        return !( (Place) object ).isSameAsOrIn( place );
+        if ( place.isActual() ) {
+            List<Place> allCandidatePlaces = (List<Place>) CollectionUtils.select(
+                    ( getPlace().isActual()
+                            ? getQueryService().listActualEntities( Place.class )
+                            : getQueryService().listTypeEntities( Place.class ) ),
+                    new Predicate() {
+                        public boolean evaluate( Object object ) {
+                            return !( (Place) object ).matchesOrIsInside( place );
+                        }
                     }
-                }
-        );
-        return (List<String>) CollectionUtils.collect(
-                allCandidatePlaces,
-                new Transformer() {
-                    public Object transform( Object input ) {
-                        return ( (Place) input ).getName();
-                    }
-                } );
+            );
+            return (List<String>) CollectionUtils.collect(
+                    allCandidatePlaces,
+                    new Transformer() {
+                        public Object transform( Object input ) {
+                            return ( (Place) input ).getName();
+                        }
+                    } );
         } else {
             return new ArrayList<String>();
         }
@@ -322,7 +324,8 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
     private void addPlacesWithin() {
         WebMarkupContainer placesWithinContainer = new WebMarkupContainer( "placesWithinContainer" );
         placesWithinContainer.setVisible( getPlace().isActual() );
-        moDetailsDiv.add( placesWithinContainer );
+        placesWithinContainer.setOutputMarkupId( true );
+        moDetailsDiv.addOrReplace( placesWithinContainer );
         Label placesWithinLabel = new Label(
                 "placesWithinTitle",
                 "Places within \"" + getPlace().getName() + "\""
@@ -470,7 +473,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
     private void updatePlace( String property, Object value ) {
         Place place = getPlace();
         doCommand( new UpdatePlanObject( place, property, value ) );
-        place.validate( Channels.instance().getGeoService() );
+        place.validate( geoService );
 
     }
 
@@ -535,7 +538,9 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
             newPlace = null;
         else {
             if ( oldWithin == null || !isSame( name, oldName ) )
-                newPlace = getQueryService().safeFindOrCreate( Place.class, name );
+                newPlace = ( getPlace().isActual()
+                        ? getQueryService().safeFindOrCreate( Place.class, name )
+                        : getQueryService().safeFindOrCreateType( Place.class, name ) );
         }
         updatePlace( "within", newPlace );
         getCommander().cleanup( Place.class, oldName );

@@ -2021,7 +2021,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                         Place other = (Place) obj;
                         return
                                 !other.equals( place )
-                                        && ( other.isWithin( place )
+                                        && ( other.isInside( place )
                                         || place.isRegion() && other.isGeoLocatedIn( place.geoLocate() ) );
                     }
                 } );

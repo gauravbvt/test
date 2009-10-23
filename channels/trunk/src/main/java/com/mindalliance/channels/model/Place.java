@@ -128,7 +128,6 @@ public class Place extends ModelEntity implements GeoLocatable {
     }
 
     public void setWithin( Place within ) {
-        assert within == null || isActual() && within.isActual();
         this.within = within;
     }
 
@@ -155,8 +154,8 @@ public class Place extends ModelEntity implements GeoLocatable {
      */
     @Override
     protected boolean overrideNarrows( ModelEntity other ) {
-        // an actual place narrows another actual place if it is within it
-        return isActual() && other.isActual() && isSameAsOrIn( (Place) other );
+        // a place narrows another place if it or one of its parent is within it
+        return matchesOrIsInside( (Place) other );
     }
 
     /**
@@ -169,27 +168,14 @@ public class Place extends ModelEntity implements GeoLocatable {
             // Check that this place contains a place that it must contain according to the place type
             PlaceReference contained = placeType.getMustContain();
             if ( contained.isSet() ) {
-                final Place placeToContain = contained.getReferencedPlace();
-                if ( placeToContain.isActual() ) {
-                    if ( !placeToContain.isSameAsOrIn( this ) ) return false;
-                } else {
-                    // place to be contained in this one is a place type
-                    // look for a tag that is narrowed by the type of place to contain
-                    if ( !CollectionUtils.exists(
-                            getAllTags(),
-                            new Predicate() {
-                                public boolean evaluate( Object obj ) {
-                                    return placeToContain.narrowsOrEquals( (ModelEntity) obj );
-                                }
-                            }
-                    ) ) return false;
-                }
+                Place placeToContain = contained.getReferencedPlace();
+                if ( !placeToContain.matchesOrIsInside( this ) ) return false;
             }
             // Check that any place specified by the place type contains this one
             PlaceReference contain = placeType.getMustBeContainedIn();
             if ( contain.isSet() ) {
                 Place placeToBeContainedIn = contain.getReferencedPlace();
-                if ( !narrowsOrEquals( placeToBeContainedIn ) ) return false;
+                if ( !matchesOrIsInside( placeToBeContainedIn ) ) return false;
             }
         } else {
             PlaceReference otherMustContain = placeType.getMustContain();
@@ -455,14 +441,14 @@ public class Place extends ModelEntity implements GeoLocatable {
     }
 
     /**
-     * Whether this place is equivalent to or is in another.
+     * Whether this place is the same as or is inside another by definition or by geolocation.
      *
      * @param place a place
      * @return a boolean
      */
-    public boolean isSameAsOrIn( Place place ) {
+    public boolean matchesOrIsInside( Place place ) {
         return equals( place )
-                || isWithin( place )
+                || isInside( place )
                 || isGeoLocatedIn( place.geoLocate() );
     }
 
@@ -549,23 +535,21 @@ public class Place extends ModelEntity implements GeoLocatable {
     }
 
     /**
-     * Whether this actual place is within another actual.
-     * Checks if any of the places this one is contained in equals a given place.
+     * Whether this place is within another.
+     * Checks if any of my parent places matches (narrowsOrEquals) a given place.
      *
      * @param place a place
      * @return a boolean
      */
-    public boolean isWithin( final Place place ) {
-        return isActual() && place.isActual()
-                &&
-                CollectionUtils.exists(
-                        containment(),
-                        new Predicate() {
-                            public boolean evaluate( Object obj ) {
-                                return obj.equals( place );
-                            }
-                        }
-                );
+    public boolean isInside( final Place place ) {
+        return CollectionUtils.exists(
+                containment(),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ( (Place) obj ).narrowsOrEquals( place );
+                    }
+                }
+        );
     }
 
     /**
