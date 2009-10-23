@@ -132,6 +132,16 @@ public class Risk implements Serializable, Mappable {
     }
 
     /**
+     * Whether this references a model object.
+     *
+     * @param mo a model object
+     * @return a boolean
+     */
+    public boolean references( ModelObject mo ) {
+        return ModelObject.areIdentical( organization, mo );
+    }
+
+    /**
      * Type of risk.
      */
     public enum Type {

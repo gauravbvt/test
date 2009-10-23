@@ -16,6 +16,7 @@ import javax.persistence.Transient;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -104,8 +105,30 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
      */
     @Override
     public boolean narrowsOrEquals( ModelEntity other ) {
-        return super.narrowsOrEquals( other )
-                || other != null && isWithin( ( (Organization) other ).getParent() );
+        if ( other == null ) return false;
+        if ( isActual() ) {
+            return super.narrowsOrEquals( other )
+                    // Any actual organization narrows any of its ancestors
+                    || isWithin( (Organization) other );
+        } else {
+            // is type
+            // check tag compatibility
+            if ( !super.narrowsOrEquals( other ) ) return false;
+            assert other.isType();
+            // check location compatibility if constrained
+            Place otherLocation = ( (Organization) other ).getLocation();
+            if ( otherLocation != null ) {
+                if ( location == null ) return false;
+                if ( !location.narrowsOrEquals( otherLocation ) ) return false;
+            }
+            // check parent compatibility if constrained
+            Organization otherParent = ( (Organization) other ).getParent();
+            if ( otherParent != null ) {
+                if ( parent == null ) return false;
+                if ( !parent.narrowsOrEquals( otherParent ) ) return false;
+            }
+            return true;
+        }
     }
 
     public boolean isActorsRequired() {
@@ -130,6 +153,7 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
     }
 
     public void setParent( Organization parent ) {
+        assert parent == null || isType() || parent.isActual();
         this.parent = parent;
     }
 
@@ -139,18 +163,26 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
     }
 
     public void setLocation( Place location ) {
+        assert location == null || isType() || location.isActual();
         this.location = location;
     }
 
     /**
-     * Whether this organization has for parent a given organization (transitive)
+     * Whether this organization has an ancestor that narrows or equals a given organization.
      *
      * @param organization an organization
      * @return a boolean
      */
-    public boolean isWithin( Organization organization ) {
-        return parent != null && ( parent == organization || parent.isWithin( organization ) );
-
+    public boolean isWithin( final Organization organization ) {
+        return CollectionUtils.exists(
+                ancestors(),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        Organization ancestor = (Organization) obj;
+                        return ancestor.narrowsOrEquals( organization );
+                    }
+                }
+        );
     }
 
     /**
@@ -160,7 +192,7 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
      * @return a boolean
      */
     public boolean isSameOrWithin( Organization organization ) {
-        return this == organization || isWithin( organization );
+        return this.equals( organization ) || isWithin( organization );
     }
 
     /**
@@ -169,9 +201,13 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
      * @return a String
      */
     public String parentage() {
-        String parentage = parent == null ? "" : parent.getName() + "," + parent.parentage();
-        return parentage.endsWith( "," ) ? parentage.substring( 0, parentage.length() - 1 )
-                : parentage;
+        StringBuilder sb = new StringBuilder();
+        Iterator<Organization> iter = ancestors().iterator();
+        while ( iter.hasNext() ) {
+            sb.append( iter.next().getName() );
+            if ( iter.hasNext() ) sb.append( "," );
+        }
+        return sb.toString();
     }
 
     /**
@@ -187,7 +223,7 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
         List<Organization> ancestors = new ArrayList<Organization>();
         if ( !visited.contains( this ) ) {
             visited.add( this );
-            if ( parent != null ) {
+            if ( parent != null && !visited.contains( parent ) ) {
                 ancestors.add( parent );
                 ancestors.addAll( parent.safeAncestors( visited ) );
             }
@@ -324,6 +360,22 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
         return true;
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
+    public boolean references( final ModelObject mo ) {
+        return super.references( mo )
+                || ModelObject.areIdentical( parent, mo )
+                || ModelObject.areIdentical( location, mo )
+                ||
+                CollectionUtils.exists(
+                        jobs,
+                        new Predicate() {
+                            public boolean evaluate( Object obj ) {
+                                return ( (Job) obj ).references( mo );
+                            }
+                        }
+                );
+    }
 }
 

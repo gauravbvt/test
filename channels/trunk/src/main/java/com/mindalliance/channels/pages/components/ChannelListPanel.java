@@ -453,7 +453,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         }
 
         private void addUpdatingBehavior( CheckBox checkBox ) {
-            checkBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {           // NON-NLS
+            checkBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {           // NON-NLS
                 @Override
                 protected void onUpdate( AjaxRequestTarget target ) {
                     doUpdate( target );

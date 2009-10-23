@@ -330,7 +330,7 @@ public class PartPanel extends AbstractCommandablePanel {
                 "startsWithScenario",
                 new PropertyModel<Boolean>( this, "startsWithScenario" ) );
         add( startWithScenarioCheckBox );
-        startWithScenarioCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        startWithScenarioCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getPart(), "startsWithScenario" ) );
             }

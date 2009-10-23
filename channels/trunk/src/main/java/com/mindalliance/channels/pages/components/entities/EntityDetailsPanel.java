@@ -4,7 +4,6 @@ import com.mindalliance.channels.ImagingService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
@@ -69,10 +68,6 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
     private IssuesPanel issuesPanel;
 
     /**
-     * Container for index of type references.
-     */
-    private WebMarkupContainer referencesContainer;
-    /**
      * Maximum image height.
      */
     private static final int MAX_IMAGE_HEIGHT = 200;
@@ -92,7 +87,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
         addDescriptionField();
         addTagsPanel();
         moDetailsDiv.add( new AttachmentPanel( "attachments", new Model<ModelEntity>( mo ) ) );
-        addTypeReferencesPanel();
+        addEntityReferencesAndMatchesPanel();
         addSpecifics( moDetailsDiv );
         addIssuesPanel();
         adjustFields();
@@ -151,22 +146,25 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
         moDetailsDiv.add( tagsPanel );
     }
 
-    private void addTypeReferencesPanel() {
-        referencesContainer = new WebMarkupContainer( "referencesContainer" );
+    private void addEntityReferencesAndMatchesPanel() {
         ModelEntity entity = getEntity();
-        Label referencedLabel = new Label( "referenced", new Model<String>( entity.getName() ) );
-        referencesContainer.add( referencedLabel );
-        if ( entity.isType() ) {
-            EntityTypeReferencesIndexPanel refsPanel = new EntityTypeReferencesIndexPanel(
-                    "typeReferences",
+        Label indexTitleLabel = new Label(
+                "indexTitle",
+                new Model<String>(
+                        entity.isActual()
+                                ? "References to"
+                                : "Index of type") );
+        moDetailsDiv.add( indexTitleLabel );
+        Label referencedLabel = new Label(
+                "indexedName",
+                new Model<String>(
+                        "\"" + entity.getName() + "\"" ) );
+        moDetailsDiv.add( referencedLabel );
+        EntityReferencesAndMatchesPanel refsPanel = new EntityReferencesAndMatchesPanel(
+                    "referencesOrMatches",
                     new PropertyModel<ModelEntity>( this, "entity" ),
                     getExpansions() );
-            referencesContainer.add( refsPanel );
-        } else {
-            Label label = new Label( "typeReferences", "" );
-            referencesContainer.add( label );
-        }
-        moDetailsDiv.add( referencesContainer );
+        moDetailsDiv.add( refsPanel );
     }
 
 
@@ -191,7 +189,6 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
         nameField.setEnabled( isLockedByUser( getEntity() ) );
         descriptionField.setEnabled( isLockedByUser( getEntity() ) );
         makeVisible( issuesPanel, getAnalyst().hasIssues( getEntity(), false ) );
-        referencesContainer.setVisible( getEntity().isType() && !( getEntity() instanceof Event ) );
     }
 
     /**

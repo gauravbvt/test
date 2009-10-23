@@ -8,15 +8,9 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Phase;
-import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -368,21 +362,7 @@ public class DefaultCommander extends AbstractService implements Commander, Init
             if ( name != null && !name.trim().isEmpty() ) {
                 ModelObject mo = queryService.getDao().find( clazz, name.trim() );
                 if ( mo != null && !mo.isUnknown() && mo.isUndefined() ) {
-                    boolean garbage;
-                    if ( mo instanceof Actor )
-                        garbage = !queryService.isReferenced( (Actor) mo );
-                    else if ( mo instanceof Role )
-                        garbage = !queryService.isReferenced( (Role) mo );
-                    else if ( mo instanceof Organization )
-                        garbage = !queryService.isReferenced( (Organization) mo );
-                    else if ( mo instanceof Place )
-                        garbage = !queryService.isReferenced( (Place) mo );
-                    else if ( mo instanceof com.mindalliance.channels.model.Event )
-                        garbage = !queryService.isReferenced( (Event) mo );
-                    else if ( mo instanceof Phase )
-                        garbage = !queryService.isReferenced( (Phase) mo );
-                    else throw new IllegalArgumentException( "Can't clean up something of class " + clazz );
-                    if ( garbage ) {
+                    if ( !queryService.isReferenced( mo ) ) {
                         LOG.info( "Removing unused " + mo.getClass().getSimpleName() + " " + mo );
                         queryService.remove( mo );
                     }

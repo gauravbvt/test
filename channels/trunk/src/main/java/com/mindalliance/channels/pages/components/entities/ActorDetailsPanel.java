@@ -206,7 +206,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         moDetailsDiv.add( systemContainer );
         systemCheckBox = new CheckBox( "system", new PropertyModel<Boolean>( this, "system" ) );
         systemCheckBox.setOutputMarkupId( true );
-        systemCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        systemCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getActor(), "system" ) );
             }

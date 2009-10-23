@@ -122,4 +122,11 @@ public class Event extends ModelEntity implements GeoLocatable {
         return types;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public boolean references( ModelObject mo ) {
+        return super.references( mo )
+                || ModelObject.areIdentical( scope, mo );
+    }
 }

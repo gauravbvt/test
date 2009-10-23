@@ -1,6 +1,8 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.QueryService;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
@@ -372,5 +374,25 @@ public class Plan extends ModelObject {
         return getVersionUri().hashCode();
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
+    public boolean references( final ModelObject mo ) {
+        return
+                CollectionUtils.exists(
+                        scenarios,
+                        new Predicate() {
+                            public boolean evaluate( Object obj ) {
+                                return ModelObject.areIdentical( (Scenario) obj, mo );
+                            }
+                        } )
+                        ||
+                        CollectionUtils.exists(
+                                incidents,
+                                new Predicate() {
+                                    public boolean evaluate( Object obj ) {
+                                        return ModelObject.areIdentical( (Event) obj, mo );
+                                    }
+                                } );
+    }
 }

@@ -14,6 +14,7 @@ import javax.persistence.Lob;
 import javax.persistence.Transient;
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -372,5 +373,30 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
      */
     public static boolean areIdentical( ModelObject mo, ModelObject other ) {
         return mo != null && other != null && mo.equals( other );
+    }
+
+    /**
+     * Return a list of all classes of model object participating in reference counts.
+     * UserIssue is purposely left out.
+     *
+     * @return a list of model object classes
+     */
+    public static List<Class> referencingClasses() {
+        Class[] classes = {
+                Actor.class, Event.class, Organization.class, Phase.class, Place.class, Phase.class, Role.class,
+                Scenario.class, Part.class, Flow.class
+        };
+        return Arrays.asList( classes );
+    }
+
+    /**
+     * Whether this references a given model object.
+     *
+     * @param mo a model object
+     * @return a boolean
+     */
+    public boolean references( ModelObject mo ) {
+        // default
+        return false;
     }
 }

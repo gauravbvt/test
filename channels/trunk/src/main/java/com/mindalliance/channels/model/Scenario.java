@@ -736,4 +736,20 @@ public class Scenario extends ModelObject {
     public void setPhase( Phase phase ) {
         this.phase = phase;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean references( final ModelObject mo ) {
+        return ModelObject.areIdentical( phase, mo )
+                || ModelObject.areIdentical( event, mo )
+                ||
+                CollectionUtils.exists(
+                        risks,
+                        new Predicate() {
+                            public boolean evaluate( Object obj ) {
+                                return ( (Risk) obj ).references( mo );
+                            }
+                        } );
+    }
 }

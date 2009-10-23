@@ -243,5 +243,15 @@ public class Job implements Serializable, Mappable, GeoLocatable {
         return jurisdiction != null ? jurisdiction.getGeoMarkerLabel() : "";
     }
 
-
+    /**
+     * Whether this references a model object.
+     *
+     * @param mo a model object
+     * @return a boolean
+     */
+    public boolean references( ModelObject mo ) {
+        return ModelObject.areIdentical( actor, mo )
+                || ModelObject.areIdentical( role, mo )
+                || ModelObject.areIdentical( jurisdiction, mo );
+    }
 }

@@ -4,6 +4,7 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.util.Matcher;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 
@@ -636,7 +637,7 @@ public class Part extends Node implements GeoLocatable {
      * {@inheritDoc}
      */
     public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
-        List<Part> geoLocatables = new ArrayList<Part>(  );
+        List<Part> geoLocatables = new ArrayList<Part>();
         geoLocatables.add( this );
         return geoLocatables;
     }
@@ -672,4 +673,23 @@ public class Part extends Node implements GeoLocatable {
         return getInitiatedEvent() != null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public boolean references( final ModelObject mo ) {
+        return ModelObject.areIdentical( actor, mo )
+                || ModelObject.areIdentical( role, mo )
+                || ModelObject.areIdentical( jurisdiction, mo )
+                || ModelObject.areIdentical( organization, mo )
+                || ModelObject.areIdentical( location, mo )
+                || ModelObject.areIdentical( initiatedEvent, mo )
+                ||
+                CollectionUtils.exists(
+                        mitigations,
+                        new Predicate() {
+                            public boolean evaluate( Object obj ) {
+                                return ((Risk)obj).references( mo );
+                            }
+                        } );
+    }
 }

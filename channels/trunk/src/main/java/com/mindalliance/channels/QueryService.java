@@ -496,44 +496,12 @@ public interface QueryService extends Service {
     List<Actor> findActors( Organization organization, Role role, Scenario scenario );
 
     /**
-     * Whether the actor is referenced in another model object.
+     * Whether the model object is referenced in another model object.
      *
-     * @param actor an actor
+     * @param mo a model object
      * @return a boolean
      */
-    boolean isReferenced( Actor actor );
-
-    /**
-     * Whether the role is referenced in another model object.
-     *
-     * @param role a role
-     * @return a boolean
-     */
-    boolean isReferenced( Role role );
-
-    /**
-     * Whether the organization is referenced in another model object.
-     *
-     * @param organization an organization
-     * @return a boolean
-     */
-    boolean isReferenced( Organization organization );
-
-    /**
-     * Whether the place is referenced in another model object.
-     *
-     * @param place a place
-     * @return a boolean
-     */
-    boolean isReferenced( Place place );
-
-    /**
-     * Whether the plan event is referenced in another model object.
-     *
-     * @param event a plan event
-     * @return a boolean
-     */
-    boolean isReferenced( Event event );
+    Boolean isReferenced( ModelObject mo );
 
     /**
      * Get reference count for event.
@@ -543,13 +511,6 @@ public interface QueryService extends Service {
      */
     int getReferenceCount( Event event );
 
-    /**
-     * Whether the plan phase is referenced in another model object.
-     *
-     * @param phase a plan phase
-     * @return a boolean
-     */
-    boolean isReferenced( Phase phase );
 
     /**
      * Called when application is terminated.
@@ -911,6 +872,14 @@ public interface QueryService extends Service {
     List<ModelObject> findAllModelObjects();
 
     /**
+     * Find all model objects of a given class.
+     *
+     * @param clazz a model object class
+     * @return a list of model objects
+     */
+    <T extends ModelObject> List<T> findAllModelObjects( Class<T> clazz );
+
+    /**
      * Find all geonames in plan.
      *
      * @return a list of strings
@@ -956,7 +925,7 @@ public interface QueryService extends Service {
      * @param clazz a model object class
      * @return a list of model objects
      */
-    <T extends ModelObject>List<T> findAllReferencesTo( Place place, Class<T> clazz );
+    <T extends ModelObject> List<T> findAllReferencesTo( Place place, Class<T> clazz );
 
     /**
      * Find all roots of hierarchy in which a hierarchical object belongs.
@@ -1120,6 +1089,15 @@ public interface QueryService extends Service {
     List<? extends ModelEntity> findAllEntitiesIn( Phase phase );
 
     /**
+     * Find all model objects of a given class that reference a given model object.
+     *
+     * @param mo    a model object
+     * @param clazz a model object class
+     * @return a list of model objects
+     */
+    <T extends ModelObject> List<T> findAllReferencing( ModelObject mo, Class<T> clazz );
+
+    /**
      * Find all entities of a given class that reference an entity type.
      *
      * @param entityType  a model entity that's a type
@@ -1135,4 +1113,12 @@ public interface QueryService extends Service {
      * @return a list of flows
      */
     List<Part> findAllPartsReferencingType( ModelEntity entityType );
+
+    /**
+     * Find all entities equal or narrowing another.
+     *
+     * @param entity a model entity
+     * @return a list of model entities
+     */
+    List<? extends ModelEntity> findAllNarrowingOrEqualTo( ModelEntity entity );
 }

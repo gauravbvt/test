@@ -28,22 +28,34 @@
         <th align="right">City, county, state and/or country:</th>
         <td><input type="text" size="40" wicket:id="geoname" value="" title="City, county, state and/or country"></td>
     </tr>
-    <tr>
+    <tr wicket:id="geoLocationsContainer">
         <th align="right">
             &nbsp;
         </th>
         <td>
-            <span wicket:id="geoLocationsContainer">
+            <span>
                 <ul>
                     <li wicket:id="geoLocations"><span wicket:id="geoLocation">[geolocations panel]</span></li>
                 </ul>
             </span>
         </td>
     </tr>
-    <tr>
-        <td wicket:id="placesWithinContainer" colspan="2">
+    <tr wicket:id="withinRequirement">
+        <th align="right">Is within:</th>
+        <td>
+            <span wicket:id="mustBeWithin">[place reference panel]</span>
+        </td>
+    </tr>
+    <tr wicket:id="containsRequirement">
+        <th align="right">Contains:</th>
+        <td>
+            <span wicket:id="mustContain">[place reference panel]</span>
+        </td>
+    </tr>
+    <tr wicket:id="placesWithinContainer">
+        <td colspan="2">
             <h3>
-                Places within this one
+                <span wicket:id="placesWithinTitle">Places within this one</span>
                 &nbsp;
                 <span wicket:id="geomapLink">[geomap link panel]</span>    
             </h3>
@@ -51,12 +63,6 @@
                 <span wicket:id="nameRanges">[name range panel]</span>
                 <span wicket:id="placesWithin">[places within panel]</span>
             </div>
-        </td>
-    </tr>
-    <tr>
-        <td wicket:id="placeReferencesContainer"colspan="2">
-            <h3>References to this place</h3>
-            <span wicket:id="placeReferences">[place reference table]</span>
         </td>
     </tr>
 </wicket:extend>

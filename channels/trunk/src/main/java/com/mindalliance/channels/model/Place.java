@@ -53,9 +53,17 @@ public class Place extends ModelEntity implements GeoLocatable {
      */
     private List<GeoLocation> geoLocations;
     /**
-     * The place, if any, this one is directly in.
+     * The actual place, if any, this actual place is directly in.
      */
     private Place within;
+    /**
+     * The place a place of this type must contain.
+     */
+    private PlaceReference mustContain = new PlaceReference();
+    /**
+     * The place a place this type must be within.
+     */
+    private PlaceReference mustBeWithin = new PlaceReference();
 
     static {
         UNKNOWN = new Place( UnknownPlaceName );
@@ -68,6 +76,126 @@ public class Place extends ModelEntity implements GeoLocatable {
 
     public Place( String name ) {
         super( name );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    @Override
+    public void setName( String name ) {
+        // If geoname was empty or same as name, reset it to null
+        if ( geoname != null && ( geoname.isEmpty() || geoname.equals( getName() ) ) )
+            setGeoname( null );
+        super.setName( name );
+    }
+
+    public String getStreetAddress() {
+        return streetAddress;
+    }
+
+    public void setStreetAddress( String address ) {
+        streetAddress = address == null ? "" : address;
+    }
+
+    public String getGeoname() {
+        return geoname;
+    }
+
+    /**
+     * Pick a specific geoname for this place.
+     * Assumes a subsequent call to validate().
+     *
+     * @param geoname the geoname.
+     * @see #validate
+     */
+    public void setGeoname( String geoname ) {
+        geoLocations = null;
+        geoLocation = null;
+        this.geoname = geoname;
+    }
+
+    public String getPostalCode() {
+        return postalCode == null ? "" : postalCode;
+    }
+
+    public void setPostalCode( String code ) {
+        postalCode = code == null ? "" : code;
+    }
+
+    public Place getWithin() {
+        return within;
+    }
+
+    public void setWithin( Place within ) {
+        assert within == null || isActual() && within.isActual();
+        this.within = within;
+    }
+
+    public PlaceReference getMustContain() {
+        return mustContain;
+    }
+
+    public void setMustContain( PlaceReference mustContain ) {
+        assert isType();
+        this.mustContain = mustContain;
+    }
+
+    public PlaceReference getMustBeWithin() {
+        return mustBeWithin;
+    }
+
+    public void setMustBeWithin( PlaceReference mustBeWithin ) {
+        assert isType();
+        this.mustBeWithin = mustBeWithin;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean narrowsOrEquals( ModelEntity other ) {
+        if ( other == null ) return false;
+        if ( isActual() ) {
+            if ( other.isActual() ) {
+                return isSameAsOrIn( ( (Place) other ) );
+            } else {
+                // actual matched with a type
+                // compatible types?
+                if ( !super.narrowsOrEquals( other ) ) return false;
+                // Check that this contains any place specified by the place type (aka other)
+                PlaceReference contained = ( (Place) other ).getMustContain();
+                if ( contained.isSet() ) {
+                    if ( !contained.narrowsOrEquals( this ) ) return false;
+                }
+                // Check that any place specified by the place type (aka other) contains this
+                PlaceReference container = ( (Place) other ).getMustBeWithin();
+                if ( container.isSet() ) {
+                    if ( !narrowsOrEquals( container.getReferencedPlace() ) ) return false;
+                }
+                return true;
+            }
+        } else {
+            // is type
+            if ( !super.narrowsOrEquals( other ) ) return false;
+            assert other.isType();
+            PlaceReference otherMustContain = ( (Place) other ).getMustContain();
+            if ( otherMustContain.isSet() ) {
+                if ( !mustContain.isSet() ) return false;
+                // other mustContain test must be less stringent
+                // "must contain NJ" is more stringent than "must contain Morristown" because
+                // some places that contain Morristown do not contain NJ, but all places containing
+                // NJ contain Morristown. so "must contain NJ" narrows "must contain Morristown"
+                // because Morristown narrows NJ
+                if ( !otherMustContain.narrowsOrEquals( mustContain ) ) return false;
+            }
+            PlaceReference otherMustBeWithin = ( (Place) other ).getMustBeWithin();
+            if ( otherMustBeWithin.isSet() ) {
+                if ( !mustBeWithin.isSet() ) return false;
+                if ( !mustBeWithin.narrowsOrEquals( otherMustBeWithin ) ) return false;
+            }
+            return true;
+        }
     }
 
     /**
@@ -103,15 +231,6 @@ public class Place extends ModelEntity implements GeoLocatable {
             }
         }
         return geoLocatables;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean narrowsOrEquals( ModelEntity other ) {
-        return super.narrowsOrEquals( other )
-                || ( other != null && isSameAsOrIn( ( (Place) other ) ) );
     }
 
     /**
@@ -156,9 +275,9 @@ public class Place extends ModelEntity implements GeoLocatable {
      */
     public GeoLocation geoLocate() {
         GeoLocation geoLoc = getGeoLocation();
-        if (geoLoc == null) {
+        if ( geoLoc == null ) {
             Iterator<Place> containers = containment().iterator();
-            while( geoLoc == null && containers.hasNext() ) {
+            while ( geoLoc == null && containers.hasNext() ) {
                 geoLoc = containers.next().getGeoLocation();
             }
         }
@@ -206,55 +325,37 @@ public class Place extends ModelEntity implements GeoLocatable {
     }
 
     /**
-     * Get street address, possibly inherited from place it si within.
+     * Get street address, possibly inherited from containing places.
      *
      * @return a string
      */
     @Transient
     public String getActualStreetAddress() {
-        Place place = this;
-        do {
-            String address = place.getStreetAddress();
-            if ( address == null || address.isEmpty() )
-                place = place.getWithin();
-            else
-                return address;
-
-        } while ( place != null );
-
-        return null;
+        String street = getStreetAddress();
+        if ( street == null || street.isEmpty() ) {
+            Iterator<Place> containers = containment().iterator();
+            while ( street == null && containers.hasNext() ) {
+                street = containers.next().getStreetAddress();
+            }
+        }
+        return street;
     }
 
     /**
-     * Get postal code, possibly inherited from place it is within.
+     * Get postal code, possibly inherited from containing places.
      *
      * @return a string
      */
     @Transient
     public String getActualPostalCode() {
-        Place place = this;
-        do {
-            String code = place.getPostalCode();
-            if ( code == null ) {
-                place = place.getWithin();
-            } else {
-                return code;
+        String code = getPostalCode();
+        if ( code == null || code.isEmpty() ) {
+            Iterator<Place> containers = containment().iterator();
+            while ( code == null && containers.hasNext() ) {
+                code = containers.next().getPostalCode();
             }
-        } while ( place != null );
-
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Transient
-    @Override
-    public void setName( String name ) {
-        // If geoname was empty or same as name, reset it to null
-        if ( geoname != null && ( geoname.isEmpty() || geoname.equals( getName() ) ) )
-            setGeoname( null );
-        super.setName( name );
+        }
+        return code;
     }
 
     /**
@@ -330,47 +431,6 @@ public class Place extends ModelEntity implements GeoLocatable {
         return geoLocation != null && ( hasStreetAddress || hasPostalCode );
     }
 
-    public String getStreetAddress() {
-        return streetAddress;
-    }
-
-    public void setStreetAddress( String address ) {
-        streetAddress = address == null ? "" : address;
-    }
-
-    public String getGeoname() {
-        return geoname;
-    }
-
-    /**
-     * Pick a specific geoname for this place.
-     * Assumes a subsequent call to validate().
-     *
-     * @param geoname the geoname.
-     * @see #validate
-     */
-    public void setGeoname( String geoname ) {
-        geoLocations = null;
-        geoLocation = null;
-        this.geoname = geoname;
-    }
-
-    public String getPostalCode() {
-        return postalCode == null ? "" : postalCode;
-    }
-
-    public void setPostalCode( String code ) {
-        postalCode = code == null ? "" : code;
-    }
-
-    public Place getWithin() {
-        return within;
-    }
-
-    public void setWithin( Place within ) {
-        this.within = within;
-    }
-
     /**
      * Add a geolocation to this place.
      *
@@ -405,21 +465,6 @@ public class Place extends ModelEntity implements GeoLocatable {
         } else {
             GeoLocation myGeoLoc = geoLocate();
             return myGeoLoc != null && myGeoLoc.isSameAsOrInside( geoLoc );
-        }
-    }
-
-    private boolean isWithin( Place place, List<Place> contained ) {
-        // Protect against circularity
-        if ( contained.contains( this ) ) return false;
-        if ( within != null ) {
-            if ( within.equals( place ) ) {
-                return true;
-            } else {
-                contained.add( this );
-                return within.isWithin( place, contained );
-            }
-        } else {
-            return false;
         }
     }
 
@@ -491,13 +536,23 @@ public class Place extends ModelEntity implements GeoLocatable {
     }
 
     /**
-     * Whether this place is transitively within another.
+     * Whether this actual place is within another actual.
+     * Checks if any of the places this one is contained in equals a given place.
      *
      * @param place a place
      * @return a boolean
      */
-    public boolean isWithin( Place place ) {
-        return isWithin( place, new ArrayList<Place>() );
+    public boolean isWithin( final Place place ) {
+        return isActual() && place.isActual()
+                &&
+                CollectionUtils.exists(
+                        containment(),
+                        new Predicate() {
+                            public boolean evaluate( Object obj ) {
+                                return obj.equals( place );
+                            }
+                        }
+                );
     }
 
     /**
@@ -523,4 +578,10 @@ public class Place extends ModelEntity implements GeoLocatable {
         return types;
     }
 
+    public boolean references( ModelObject mo ) {
+        return super.references( mo )
+                || ModelObject.areIdentical( within, mo )
+                || mustBeWithin.references( mo )
+                || mustContain.references( mo );
+    }
 }

@@ -69,6 +69,10 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
      * Default entity to set as default. Can be null.
      */
     private T defaultEntity;
+    /**
+     * If set, set to kind of reference.
+     */
+    private ModelEntity.Kind referenceKind = null;
 
     public EntityReferencePanel(
             String id,
@@ -76,12 +80,24 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
             List<String> choices,
             String property,
             Class<T> entityClass,
-            T defaultEntity ) {
+            T defaultEntity) {
+        this(id, iModel, choices, property, entityClass, defaultEntity, null);
+    }
+
+    public EntityReferencePanel(
+            String id,
+            IModel<? extends Identifiable> iModel,
+            List<String> choices,
+            String property,
+            Class<T> entityClass,
+            T defaultEntity,
+            ModelEntity.Kind referenceKind ) {
         super( id, iModel );
         this.choices = choices;
         this.property = property;
         this.entityClass = entityClass;
         this.defaultEntity = defaultEntity;
+        this.referenceKind = referenceKind;
         init();
     }
 
@@ -116,6 +132,7 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
             }
         } );
         actualOrTypeChoice.setOutputMarkupId( true );
+        actualOrTypeChoice.setVisible( referenceKind == null );
         add( actualOrTypeChoice );
     }
 
@@ -167,7 +184,7 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
     public ModelEntity.Kind getEntityKind() {
         ModelEntity entity = getEntity();
         if ( entity == null ) {
-            return entityKind;
+            return referenceKind != null ? referenceKind : entityKind;
         } else {
             return entity.getKind();
         }
@@ -191,7 +208,7 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
     }
 
     private boolean matches( String text, String otherText ) {
-        if ( entityClass.isAssignableFrom( Role.class ) || entityKind.equals( ModelEntity.Kind.Type ) ) {
+        if ( entityClass.isAssignableFrom( Role.class ) || getEntityKind().equals( ModelEntity.Kind.Type ) ) {
             return getQueryService().likelyRelated( text, otherText );
         } else {
             return Matcher.matches( text, otherText );
@@ -236,7 +253,7 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
             }
         }
         if ( newEntity == null ) {
-            if ( entityKind.equals( ModelEntity.Kind.Type ) ) {
+            if ( getEntityKind().equals( ModelEntity.Kind.Type ) ) {
                 newEntity = ModelEntity.getUniversalTypeFor( entityClass );
             } else {
                 newEntity = defaultEntity;

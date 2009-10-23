@@ -1,6 +1,7 @@
 package com.mindalliance.channels.model;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 
 import javax.persistence.Transient;
 import java.util.ArrayList;
@@ -282,8 +283,8 @@ public abstract class ModelEntity extends ModelObject {
     }
 
     /**
-     * Whether this entity is the same as the other,
-     * or it has all the tags (transitively) of the other, type entity.
+     * Whether an entity is the same as the other,
+     * or has all the tags (transitively) of the other, type entity.
      *
      * @param other a model entity
      * @return a boolean
@@ -386,6 +387,20 @@ public abstract class ModelEntity extends ModelObject {
             }
         }
         return inheritance;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean references( final ModelObject mo ) {
+        return CollectionUtils.exists(
+                tags,
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ModelObject.areIdentical( ( (ModelEntity) obj ), mo );
+                    }
+                }
+        );
     }
 
 }

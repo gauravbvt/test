@@ -7,7 +7,12 @@
         lang="en">
 <body>
 <wicket:panel>
-    <table wicket:id="references">[table]</table>
+    <div wicket:id="referencesVsMatches">
+        Show <input wicket:id="references" type="checkbox"/> references
+        <input wicket:id="matches" type="checkbox"/> matches
+    </div>
+    <br/>
+    <span wicket:id="index">[index panel]</span>
 </wicket:panel>
 </body>
 </html>

@@ -33,9 +33,12 @@
             </tr>
             <wicket:child/>
         </table>
-        <span wicket:id="referencesContainer">
-            <h3>Usages of type &quot;<span wicket:id="referenced">entity name</span>&quot;</h3>
-            <span wicket:id="typeReferences">[references index panel]</span>
+        <span>
+            <h3>
+                <span wicket:id="indexTitle">References to</span>
+                <span wicket:id="indexedName">entity name</span>
+            </h3>
+            <span wicket:id="referencesOrMatches">[references or matches panel]</span>
         </span>
         <span wicket:id="issues">[issues panel]</span>
     </div>

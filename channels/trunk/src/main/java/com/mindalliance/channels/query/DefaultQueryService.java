@@ -245,7 +245,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return (List<T>) CollectionUtils.select( list( clazz ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        return isModelEntityReferenced( (ModelEntity) obj );
+                        return isReferenced( (ModelEntity) obj );
                     }
                 } );
     }
@@ -271,15 +271,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @SuppressWarnings( {"unchecked"} )
     public Iterator<ModelEntity> iterateEntities() {
         return listReferencedEntities( ModelEntity.class ).iterator();
-    }
-
-    private boolean isModelEntityReferenced( ModelEntity entity ) {
-        if ( entity instanceof Actor ) return isReferenced( (Actor) entity );
-        if ( entity instanceof Role ) return isReferenced( (Role) entity );
-        if ( entity instanceof Organization ) return isReferenced( (Organization) entity );
-        if ( entity instanceof Place ) return isReferenced( (Place) entity );
-        if ( entity instanceof Phase ) return isReferenced( (Phase) entity );
-        return !( entity instanceof Event ) || isReferenced( (Event) entity );
     }
 
     /**
@@ -602,125 +593,46 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 && ( target.isConnector() || source.isConnector() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isReferenced( Actor actor ) {
-        for ( Organization org : listActualEntities( Organization.class ) ) {
-            for ( Job job : org.getJobs() ) {
-                if ( job.getActor() == actor ) return true;
-            }
-        }
-        // Look in parts
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Part> parts = scenario.parts();
-            while ( parts.hasNext() ) {
-                if ( parts.next().getActor() == actor ) return true;
-            }
-        }
-        return actor.isType()
-                && !findAllEntitiesReferencingType( actor, ModelEntity.class ).isEmpty();
-    }
 
     /**
      * {@inheritDoc}
      */
-    public boolean isReferenced( Role role ) {
-        for ( Organization org : listActualEntities( Organization.class ) ) {
-            for ( Job job : org.getJobs() ) {
-                if ( job.getRole() == role ) return true;
-            }
-        }
-        // Look in parts
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Part> parts = scenario.parts();
-            while ( parts.hasNext() ) {
-                if ( parts.next().getRole() == role ) return true;
-            }
-        }
-        return role.isType()
-                && !findAllEntitiesReferencingType( role, ModelEntity.class ).isEmpty();
+    @SuppressWarnings( "unchecked" )
+    public <T extends ModelObject> List<T> findAllReferencing( final ModelObject mo, Class<T> clazz ) {
+        return (List<T>) CollectionUtils.select(
+                findAllModelObjects( clazz ),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ( (ModelObject) obj ).references( mo );
+                    }
+                }
+        );
     }
 
     /**
-     * {@inheritDoc}
+     * Whether a model object is referenced.
+     *
+     * @param mo a model object
+     * @return a boolean
      */
-    public boolean isReferenced( Organization organization ) {
-        for ( Organization org : listActualEntities( Organization.class ) ) {
-            if ( org.getParent() == organization ) return true;
+    @SuppressWarnings( "unchecked" )
+    public Boolean isReferenced( final ModelObject mo ) {
+        boolean hasReference = false;
+        Iterator classes = ModelObject.referencingClasses().iterator();
+        while ( !hasReference && classes.hasNext() ) {
+            List<? extends ModelObject> mos = findAllModelObjects( (Class<? extends ModelObject>) classes.next() );
+            hasReference = CollectionUtils.exists(
+                    mos,
+                    new Predicate() {
+                        public boolean evaluate( Object obj ) {
+                            return ( (ModelObject) obj ).references( mo );
+                        }
+                    }
+            );
         }
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            // Look in parts
-            Iterator<Part> parts = scenario.parts();
-            while ( parts.hasNext() ) {
-                if ( parts.next().getOrganization() == organization ) return true;
-            }
-            // Look in scenario risks
-            for ( Risk risk : scenario.getRisks() ) {
-                if ( risk.getOrganization() == organization ) return true;
-            }
-        }
-        return organization.isType()
-                && !findAllEntitiesReferencingType( organization, ModelEntity.class ).isEmpty();
+        return hasReference;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isReferenced( Place place ) {
-        for ( Organization org : listActualEntities( Organization.class ) ) {
-            if ( org.getLocation() == place ) return true;
-            else for ( Job job : org.getJobs() ) {
-                if ( job.getJurisdiction() == place ) return true;
-            }
-        }
-        // Look in parts
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Part> parts = scenario.parts();
-            while ( parts.hasNext() ) {
-                Part part = parts.next();
-                if ( part.getLocation() == place || part.getJurisdiction() == place ) return true;
-            }
-        }
-        // Look in plan events
-        for ( Event event : list( Event.class ) ) {
-            if ( event.getScope() == place ) return true;
-        }
-        return place.isType()
-                && !findAllEntitiesReferencingType( place, ModelEntity.class ).isEmpty();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isReferenced( Event event ) {
-        for ( Event incident : planManager.getCurrentPlan().getIncidents() ) {
-            if ( incident.equals( event ) ) return true;
-        }
-        // look in scenarios
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            if ( scenario.getEvent().equals( event ) ) return true;
-            Iterator<Part> parts = scenario.parts();
-            while ( parts.hasNext() ) {
-                Part part = parts.next();
-                if ( part.initiatesEvent() && part.getInitiatedEvent().equals( event ) ) return true;
-            }
-        }
-        return event.isType()
-                && !findAllEntitiesReferencingType( event, ModelEntity.class ).isEmpty();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isReferenced( Phase phase ) {
-        // look in scenarios
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            if ( scenario.getPhase().equals( phase ) ) return true;
-        }
-        return phase.isType()
-                && !findAllEntitiesReferencingType( phase, ModelEntity.class ).isEmpty();
-    }
 
     /**
      * {@inheritDoc}
@@ -2067,6 +1979,23 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return allModelObjects;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
+    public <T extends ModelObject> List<T> findAllModelObjects( Class<T> clazz ) {
+        List<T> domain;
+        if ( Part.class.isAssignableFrom( clazz ) ) {
+            domain = (List<T>) findAllParts();
+        } else if ( Flow.class.isAssignableFrom( clazz ) ) {
+            domain = (List<T>) findAllFlows();
+        } else {
+            domain = list( clazz );
+        }
+        return domain;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -2086,7 +2015,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @SuppressWarnings( "unchecked" )
     public List<Place> findAllPlacesWithin( final Place place ) {
         return (List<Place>) CollectionUtils.select(
-                list( Place.class ),
+                listActualEntities( Place.class ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         Place other = (Place) obj;
@@ -2104,22 +2033,22 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<? extends ModelObject> findAllModelObjectsIn( Place place ) {
         List<ModelObject> inPlace = new ArrayList<ModelObject>();
         for ( Organization org : list( Organization.class ) ) {
-            if ( org.getLocation() != null && org.getLocation().isSameAsOrIn( place ) )
+            if ( org.getLocation() != null && org.getLocation().narrowsOrEquals( place ) )
                 inPlace.add( org );
         }
         for ( Event event : listReferencedEntities( Event.class ) ) {
-            if ( event.getScope() != null && event.getScope().isSameAsOrIn( place ) )
+            if ( event.getScope() != null && event.getScope().narrowsOrEquals( place ) )
                 inPlace.add( event );
         }
         for ( Place p : list( Place.class ) ) {
-            if ( !p.equals( place ) && p.isSameAsOrIn( place ) )
+            if ( !p.equals( place ) && p.narrowsOrEquals( place ) )
                 inPlace.add( p );
         }
         for ( Scenario scenario : list( Scenario.class ) ) {
             Iterator<Part> parts = scenario.parts();
             while ( parts.hasNext() ) {
                 Part part = parts.next();
-                if ( part.getLocation() != null && part.getLocation().isSameAsOrIn( place ) )
+                if ( part.getLocation() != null && part.getLocation().narrowsOrEquals( place ) )
                     inPlace.add( part );
             }
         }
@@ -2168,31 +2097,35 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
-    public <T extends ModelObject>List<T> findAllReferencesTo( Place place, Class<T> clazz ) {
+    @SuppressWarnings( "unchecked" )
+    public <T extends ModelObject> List<T> findAllReferencesTo( Place place, Class<T> clazz ) {
         List<T> references = new ArrayList<T>();
         if ( clazz.isAssignableFrom( Organization.class ) ) {
             for ( Organization org : list( Organization.class ) ) {
                 if ( org.getLocation() != null && org.getLocation().equals( place ) )
-                    references.add( (T)org );
-                for (Job job : org.getJobs() ) {
-                    if ( job.getJurisdiction() != null && job.getJurisdiction().equals( place ))
-                     references.add( (T)org );
+                    references.add( (T) org );
+                for ( Job job : org.getJobs() ) {
+                    if ( job.getJurisdiction() != null && job.getJurisdiction().equals( place ) )
+                        references.add( (T) org );
                 }
             }
         }
         if ( clazz.isAssignableFrom( Event.class ) ) {
             for ( Event event : listReferencedEntities( Event.class ) ) {
                 if ( event.getScope() != null && event.getScope().equals( place ) )
-                    references.add( (T)event );
+                    references.add( (T) event );
             }
         }
         if ( clazz.isAssignableFrom( Place.class ) ) {
             for ( Place p : list( Place.class ) ) {
                 if ( !p.equals( place ) && p.equals( place ) )
-                    references.add( (T)p );
+                    references.add( (T) p );
                 if ( p.getWithin() != null && p.getWithin().equals( place ) )
-                    references.add( (T)p );
+                    references.add( (T) p );
+                if ( p.getMustBeWithin().references( place ) )
+                    references.add( (T) p );
+                if ( p.getMustContain().references( place ) )
+                    references.add( (T) p );
             }
         }
         if ( clazz.isAssignableFrom( Part.class ) ) {
@@ -2201,9 +2134,9 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 while ( parts.hasNext() ) {
                     Part part = parts.next();
                     if ( part.getLocation() != null && part.getLocation().equals( place ) )
-                        references.add( (T)part );
+                        references.add( (T) part );
                     if ( part.getJurisdiction() != null && part.getJurisdiction().equals( place ) )
-                        references.add( (T)part );
+                        references.add( (T) part );
                 }
             }
         }
@@ -2570,6 +2503,15 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                                     ( (Organization) obj ).getLocation(),
                                     entityType ) )
                                 return true;
+                            if ( ModelObject.areIdentical(
+                                    ( (Organization) obj ).getParent(),
+                                    entityType ) )
+                                return true;
+                        } else if ( obj instanceof Place ) {
+                            if ( ( (Place) obj ).getMustContain().references( entityType ) )
+                                return true;
+                            if ( ( (Place) obj ).getMustBeWithin().references( entityType ) )
+                                return true;
                         }
                         return false;
                     }
@@ -2594,6 +2536,21 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                                 || ModelObject.areIdentical( part.getRole(), entityType )
                                 || ModelObject.areIdentical( part.getOrganization(), entityType )
                                 || ModelObject.areIdentical( part.getJurisdiction(), entityType );
+                    }
+                }
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<? extends ModelEntity> findAllNarrowingOrEqualTo( final ModelEntity entity ) {
+        return (List<? extends ModelEntity>) CollectionUtils.select(
+                list( entity.getClass() ),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ( (ModelEntity) obj ).narrowsOrEquals( entity );
                     }
                 }
         );
