@@ -17,13 +17,11 @@ public class Role extends ModelEntity {
     /**
       * Bogus role used to signify that the role is not known...
       */
-     public static final Role UNKNOWN;
-
-     static {
-         UNKNOWN = new Role( "(unknown)" );
-         UNKNOWN.setActual();
-         UNKNOWN.setId( 10000000L - 5 );
-     }
+     public static Role UNKNOWN;
+    /**
+     * Name of unknown role.
+     */
+    private static String UnknownName = "(unknown)";
 
     public Role() {
     }
@@ -37,6 +35,16 @@ public class Role extends ModelEntity {
         super( name );
     }
 
+    /**
+     * Create immutables.
+     *
+     * @param queryService a query service
+     */
+    public static void createImmutables( QueryService queryService ) {
+        UNKNOWN = queryService.findOrCreate( Role.class, UnknownName );
+        UNKNOWN.makeImmutable();
+    }
+    
     /**
      * Whether the role is to be played by a system actor.
      * @return a boolean

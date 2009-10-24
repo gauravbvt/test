@@ -331,4 +331,41 @@ public class GeoLocation implements Serializable {
         }
         return geoLocations;
     }
+
+    /**
+     * Whether this is a country.
+     *
+     * @return a boolean
+     */
+    public boolean isCountry() {
+        return country != null && state == null && county == null && city == null;
+    }
+
+    /**
+     * Whether this is a state.
+     *
+     * @return a boolean
+     */
+    public boolean isState() {
+        return state != null && county == null && city == null;
+    }
+
+    /**
+     * Whether this is a county.
+     *
+     * @return a boolean
+     */
+    public boolean isCounty() {
+        return county != null && city == null;
+    }
+
+    /**
+     * Whether this is a city.
+     *
+     * @return a boolean
+     */
+    public boolean isCity() {
+        return city != null;
+    }
+
 }

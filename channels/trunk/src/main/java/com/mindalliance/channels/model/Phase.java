@@ -1,5 +1,7 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.QueryService;
+
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 import java.text.Collator;
@@ -15,14 +17,15 @@ import java.text.Collator;
  */
 @Entity
 public class Phase extends ModelEntity implements Comparable<ModelObject> {
-    public static final Phase UNKNOWN;
-
-    static {
-        UNKNOWN = new Phase( "(unknown)" );
-        UNKNOWN.setActual();
-        UNKNOWN.setId( 10000000L - 6L );
-    }
-
+    /**
+     * Unknown phase.
+     */
+    public static Phase UNKNOWN;
+    /**
+     * Name of unknown phase.
+     */
+    private static String UnknownName = "(unknown)";
+    
     public Phase() {
     }
 
@@ -30,6 +33,15 @@ public class Phase extends ModelEntity implements Comparable<ModelObject> {
         super( name );
     }
 
+    /**
+     * Create immutables.
+     *
+     * @param queryService a query service
+     */
+    public static void createImmutables( QueryService queryService ) {
+        UNKNOWN = queryService.findOrCreate( Phase.class, UnknownName );
+        UNKNOWN.makeImmutable();
+    }
     /**
      * The timing of the phase relative to an event.
      */

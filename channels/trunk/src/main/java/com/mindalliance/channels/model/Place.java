@@ -14,17 +14,53 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A location or jurisdiction.
  */
 @Entity
 public class Place extends ModelEntity implements GeoLocatable {
-
+    /**
+     * Name of pre-fab administrative area place type.
+     */
+    public static String ADMINISTRATIVE_AREA = "Administrative area";
+    /**
+     * Name of pre-fab country place type.
+     */
+    public static String COUNTRY = "Country";
+    /**
+     * Name of pre-fab state place type.
+     */
+    public static String STATE = "State";
+    /**
+     * Name of pre-fab county place type.
+     */
+    public static String COUNTY = "County";
+    /**
+     * Name of pre-fab city place type.
+     */
+    public static String CITY = "City";
+    /**
+     * Immutable place type.
+     */
+    public static Place Country;
+    /**
+     * Immutable place type.
+     */
+    public static Place State;
+    /**
+     * Immutable place type.
+     */
+    public static Place County;
+    /**
+     * Immutable place type.
+     */
+    public static Place City;
     /**
      * Bogus place used to signify that the place is not known...
      */
-    public static final Place UNKNOWN;
+    public static Place UNKNOWN;
     /**
      * Unknown place's name.
      */
@@ -65,17 +101,52 @@ public class Place extends ModelEntity implements GeoLocatable {
      */
     private PlaceReference mustBeContainedIn = new PlaceReference();
 
-    static {
-        UNKNOWN = new Place( UnknownPlaceName );
-        UNKNOWN.setActual();
-        UNKNOWN.setId( 10000000L - 4 );
-    }
-
     public Place() {
     }
 
     public Place( String name ) {
         super( name );
+    }
+
+    /**
+     * Create immutable places.
+     *
+     * @param queryService a query service
+     */
+    public static void createImmutables( QueryService queryService ) {
+        // Unknown place
+        UNKNOWN = queryService.findOrCreate( Place.class, UnknownPlaceName );
+        UNKNOWN.makeImmutable();
+        // Administrative area types
+        Place administrativeArea = queryService.findOrCreateType( Place.class, ADMINISTRATIVE_AREA );
+        administrativeArea.makeImmutable();
+        Country = queryService.findOrCreateType( Place.class, COUNTRY );
+        Country.addTag( administrativeArea );
+        Country.makeImmutable();
+        State = queryService.findOrCreateType( Place.class, STATE );
+        State.addTag( administrativeArea );
+        State.setWithin( Country );
+        State.makeImmutable();
+        County = queryService.findOrCreateType( Place.class, COUNTY );
+        County.addTag( administrativeArea );
+        County.setWithin( State );
+        County.makeImmutable();
+        City = queryService.findOrCreateType( Place.class, CITY );
+        City.addTag( administrativeArea );
+        City.setWithin( County );
+        City.makeImmutable();
+    }
+
+    @Override
+    public List<ModelEntity> getTags() {
+        Set<ModelEntity> allTags = new HashSet<ModelEntity>( super.getTags() );
+        if ( geoLocation != null && streetAddress.isEmpty() && postalCode.isEmpty() ) {
+            if ( geoLocation.isCity() ) allTags.add( City );
+            else if ( geoLocation.isCounty() ) allTags.add( County );
+            else if ( geoLocation.isState() ) allTags.add( State );
+            else if ( geoLocation.isCountry() ) allTags.add( Country );
+        }
+        return new ArrayList<ModelEntity>( allTags );
     }
 
     /**
@@ -162,7 +233,7 @@ public class Place extends ModelEntity implements GeoLocatable {
      * {@inheritDoc}
      */
     @Override
-    protected boolean moreNarrowsType( ModelEntity entityType ) {
+    protected boolean meetsTypeRequirementTests( ModelEntity entityType ) {
         Place placeType = (Place) entityType;
         if ( isActual() ) {
             // Check that this place contains a place that it must contain according to the place type

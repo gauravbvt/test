@@ -2,6 +2,7 @@ package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import org.apache.commons.lang.StringUtils;
@@ -31,6 +32,8 @@ public class Relationship<T extends Identifiable> implements Identifiable {
      */
     private Long toIdentifiable;
 
+    private static final long SEED = 100000000 - ( 2 * PlanManager.IMMUTABLE_RANGE );
+
     public Relationship() {
     }
 
@@ -48,14 +51,14 @@ public class Relationship<T extends Identifiable> implements Identifiable {
 
     /**
      * Long value of(<fromIdentifiable id as string>
-     * concatenated to  <toIdentifiable id as string of lenght 9, left padded with 0>.
+     * concatenated to  <toIdentifiable id as string of length 9, left padded with 0>.
      *
      * @return a long
      */
     public long getId() {
-        String toId = Long.toString( toIdentifiable );
+        String toId = Long.toString( SEED - toIdentifiable );
         toId = StringUtils.leftPad( toId, 9, '0' );
-        String fromId = Long.toString( fromIdentifiable );
+        String fromId = Long.toString( SEED - fromIdentifiable );
         return Long.valueOf( fromId + toId );
     }
 
@@ -63,8 +66,8 @@ public class Relationship<T extends Identifiable> implements Identifiable {
         String s = Long.toString( id );
         String toId = s.substring( s.length() - 9 );
         String fromId = s.substring( 0, s.length() - 9 );
-        fromIdentifiable = Long.valueOf( fromId );
-        toIdentifiable = Long.valueOf( toId );
+        fromIdentifiable = (Long.valueOf( fromId ) * -1) + SEED;
+        toIdentifiable = (Long.valueOf( toId ) * -1) + SEED;
     }
 
     public String getName() {

@@ -22,7 +22,7 @@ public class Actor extends AbstractUnicastChannelable {
     /**
      * Bogus actor used to signify that the actor is not known...
      */
-    public static final Actor UNKNOWN;
+    public static Actor UNKNOWN;
 
     /**
      * Whether the actor is a system, vs. a person.
@@ -32,12 +32,6 @@ public class Actor extends AbstractUnicastChannelable {
      * Name of the user, if any, represented by this actor.
      */
     private String userName;
-
-    static {
-        UNKNOWN = new Actor( UnknownName );
-        UNKNOWN.setActual();
-        UNKNOWN.setId( 10000000L - 1L );
-    }
 
     public Actor() {
     }
@@ -49,6 +43,16 @@ public class Actor extends AbstractUnicastChannelable {
      */
     public Actor( String name ) {
         super( name );
+    }
+
+    /**
+     * Create immutables.
+     *
+     * @param queryService a query service
+     */
+    public static void createImmutables( QueryService queryService ) {
+        UNKNOWN = queryService.findOrCreate( Actor.class, UnknownName );
+        UNKNOWN.makeImmutable();
     }
 
     public boolean isSystem() {

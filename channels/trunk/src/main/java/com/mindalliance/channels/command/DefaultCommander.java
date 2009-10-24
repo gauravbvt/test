@@ -362,7 +362,7 @@ public class DefaultCommander extends AbstractService implements Commander, Init
             if ( name != null && !name.trim().isEmpty() ) {
                 ModelObject mo = queryService.getDao().find( clazz, name.trim() );
                 if ( mo != null && !mo.isUnknown() && mo.isUndefined() ) {
-                    if ( !queryService.isReferenced( mo ) ) {
+                    if ( !queryService.isReferenced( mo ) && !mo.isImmutable() ) {
                         LOG.info( "Removing unused " + mo.getClass().getSimpleName() + " " + mo );
                         queryService.remove( mo );
                     }

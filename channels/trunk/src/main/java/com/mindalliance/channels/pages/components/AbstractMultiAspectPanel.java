@@ -235,6 +235,9 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
         } else if ( getCommander().isTimedOut() || getLockOwner( getObject() ) == null ) {
             menu = new Label(
                     menuId, new Model<String>( "Timed out" ) );
+        } else if ( getObject().isImmutable() ) {
+            menu = new Label(
+                    menuId, new Model<String>( "Immutable" ) );
         } else {
             String otherUser = lockManager.getLockOwner( getObject().getId() );
             menu = new Label(

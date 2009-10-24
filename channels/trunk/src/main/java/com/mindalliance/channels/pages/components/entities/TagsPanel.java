@@ -114,7 +114,7 @@ public class TagsPanel extends AbstractCommandablePanel {
 
             }
         };
-        nameField.setVisible( isLockedByUser( getEntity() ) && wrapper.isMarkedForCreation() );
+        nameField.setVisible( wrapper.isMarkedForCreation() && isLockedByUser( getEntity() ) );
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 target.addComponent( item );
@@ -125,7 +125,7 @@ public class TagsPanel extends AbstractCommandablePanel {
         // Link to entity type
         EntityLink entityLink = new EntityLink( "tagLink", new PropertyModel<Event>( wrapper, "tag" ) );
         entityLink.setVisible( !wrapper.isMarkedForCreation() && !wrapper.isUniversal() );
-        if ( wrapper.isInherited() )
+        if ( wrapper.isInherited() || wrapper.isImmutable() )
             entityLink.add(
                     new AttributeModifier( "style", true, new Model<String>( "font-style:oblique" ) ) );
         entityLink.add( new AttributeModifier(
@@ -178,8 +178,10 @@ public class TagsPanel extends AbstractCommandablePanel {
             }
         } );
         wrappers.addAll( current );
-        // New Tag
-        wrappers.add( new TagWrapper() );
+        if ( isLockedByUser( getEntity() ) ) {
+            // to-be-created tag
+            wrappers.add( new TagWrapper() );
+        }
         return wrappers;
     }
 
@@ -212,6 +214,10 @@ public class TagsPanel extends AbstractCommandablePanel {
 
         public boolean isMarkedForCreation() {
             return tag == null;
+        }
+
+        public boolean isImmutable() {
+            return tag != null && tag.isImmutable();
         }
 
         public boolean isInherited() {
@@ -264,7 +270,7 @@ public class TagsPanel extends AbstractCommandablePanel {
         }
 
         public boolean isRemovable() {
-            return !isMarkedForCreation() && !isInherited() && !isUniversal();
+            return !isMarkedForCreation() && !isInherited() && !isUniversal() && !isImmutable();
         }
     }
 }

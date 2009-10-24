@@ -33,14 +33,11 @@ public class Event extends ModelEntity implements GeoLocatable {
     /**
      * Bogus event used to signify that the event is not known...
      */
-    public static final Event UNKNOWN;
-
-    static {
-        UNKNOWN = new Event();
-        UNKNOWN.setName( "(unknown)" );
-        UNKNOWN.setActual();
-        UNKNOWN.setId( 10000000L - 2 );
-    }
+    public static Event UNKNOWN;
+    /**
+     * Name of unknown event.
+     */
+    private static String UnknownName = "(unknown)";
 
     public Event() {
 
@@ -49,6 +46,17 @@ public class Event extends ModelEntity implements GeoLocatable {
     public Event( String name ) {
         super( name );
     }
+
+    /**
+     * Create immutables.
+     *
+     * @param queryService a query service
+     */
+    public static void createImmutables( QueryService queryService ) {
+        UNKNOWN = queryService.findOrCreate( Event.class, UnknownName );
+        UNKNOWN.makeImmutable();
+    }
+
 
     public Place getScope() {
         return scope;
@@ -77,7 +85,7 @@ public class Event extends ModelEntity implements GeoLocatable {
     /**
      * {@inheritDoc}
      */
-    protected boolean moreNarrowsType( ModelEntity entityType ) {
+    protected boolean meetsTypeRequirementTests( ModelEntity entityType ) {
         return isSelfTerminating() == ( (Event) entityType ).isSelfTerminating()
                 && ModelEntity.implies( getScope(), ( (Event) entityType ).getScope() );
     }

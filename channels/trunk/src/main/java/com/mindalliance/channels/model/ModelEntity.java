@@ -60,6 +60,11 @@ public abstract class ModelEntity extends ModelObject {
      * Type set.
      */
     private List<ModelEntity> tags = new ArrayList<ModelEntity>();
+
+    /**
+     * Whether the entity is immutable.
+     */
+    private boolean immutable = false;
     /**
      * Whether the entity is actual, a type or TBD (null).
      */
@@ -107,6 +112,17 @@ public abstract class ModelEntity extends ModelObject {
         return true;
     }
 
+    public boolean isImmutable() {
+        return immutable;
+    }
+
+    /**
+     * Make the entity immutable.
+     */
+    public void makeImmutable() {
+        immutable = true;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -136,6 +152,15 @@ public abstract class ModelEntity extends ModelObject {
     }
 
     public List<ModelEntity> getTags() {
+        return tags;
+    }
+
+    /**
+     * Get tags that were explicitly added.
+     *
+     * @return a list of model entities.
+     */
+    public List<ModelEntity> getRawTags() {
         return tags;
     }
 
@@ -219,9 +244,9 @@ public abstract class ModelEntity extends ModelObject {
     }
 
     private boolean hasTagSafe( ModelEntity entity, Set<ModelEntity> visited ) {
-        if ( tags.contains( entity ) ) return true;
+        if ( getTags().contains( entity ) ) return true;
         visited.add( this );
-        for ( ModelEntity tag : tags ) {
+        for ( ModelEntity tag : getTags() ) {
             if ( !visited.contains( tag ) && tag.hasTagSafe( entity, visited ) ) return true;
         }
         return false;
@@ -305,8 +330,17 @@ public abstract class ModelEntity extends ModelObject {
         if ( !CollectionUtils.isSubCollection(
                 other.getTyping(),
                 getAllTags() ) ) return false;
-        // apply specific tests
-        return moreNarrowsType( other );
+        // meets specific and inherited requirement tests of entity type 
+        return meetsTypeRequirementTests( other )
+                &&
+                CollectionUtils.selectRejected(
+                        other.getAllTags(),
+                        new Predicate() {
+                            public boolean evaluate( Object obj ) {
+                                return meetsTypeRequirementTests( (ModelEntity) obj );
+                            }
+                        }
+                ).isEmpty();
     }
 
     /**
@@ -325,7 +359,7 @@ public abstract class ModelEntity extends ModelObject {
      * @param entityType an entity type
      * @return a boolean
      */
-    protected boolean moreNarrowsType( ModelEntity entityType ) {
+    protected boolean meetsTypeRequirementTests( ModelEntity entityType ) {
         // Default
         return true;
     }
@@ -349,9 +383,9 @@ public abstract class ModelEntity extends ModelObject {
     private List<ModelEntity> safeAllTags( Set<ModelEntity> visited ) {
         List<ModelEntity> allTags = new ArrayList<ModelEntity>();
         if ( !visited.contains( this ) ) {
-            allTags.addAll( tags );
+            allTags.addAll( getTags() );
             visited.add( this );
-            for ( ModelEntity tag : tags ) {
+            for ( ModelEntity tag : getTags() ) {
                 allTags.addAll( tag.safeAllTags( visited ) );
             }
         }
@@ -393,11 +427,11 @@ public abstract class ModelEntity extends ModelObject {
         List<ModelEntity> inheritance = new ArrayList<ModelEntity>();
         if ( !visited.contains( this ) ) {
             visited.add( this );
-            if ( tags.contains( tag ) ) {
+            if ( getTags().contains( tag ) ) {
                 inheritance.add( this );
             } else {
                 List<List<ModelEntity>> allPaths = new ArrayList<List<ModelEntity>>();
-                for ( ModelEntity t : tags ) {
+                for ( ModelEntity t : getTags() ) {
                     List<ModelEntity> inh = t.safeInheritanceTo( tag, visited );
                     if ( !inh.isEmpty() ) {
                         inh.add( this );
@@ -422,7 +456,7 @@ public abstract class ModelEntity extends ModelObject {
      */
     public boolean references( final ModelObject mo ) {
         return CollectionUtils.exists(
-                tags,
+                getTags(),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         return ModelObject.areIdentical( ( (ModelEntity) obj ), mo );

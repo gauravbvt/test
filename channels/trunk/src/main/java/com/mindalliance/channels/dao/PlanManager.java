@@ -12,7 +12,13 @@ import com.mindalliance.channels.analysis.IssueScanner;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.export.ImportExportFactory;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Phase;
+import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.User;
 import org.apache.commons.collections.CollectionUtils;
@@ -139,6 +145,10 @@ public class PlanManager implements InitializingBean {
      * Default uri.
      */
     public static final String DEFAULT_URI = "DEFAULT";
+    /**
+     * Lowest id for mutable model objects.
+     */
+    public static final long IMMUTABLE_RANGE = -1000L;
 
     /**
      * Required for AOP decorations.
@@ -571,6 +581,10 @@ public class PlanManager implements InitializingBean {
         Importer importer = importExportFactory.createImporter( queryService, plan );
         try {
             currentDao = dao;
+            dao.getIdGenerator().setLastAssignedId( IMMUTABLE_RANGE, plan );
+            defineImmutableEntities( queryService );
+            // set last id to start of mutable range
+            dao.getIdGenerator().setLastAssignedId( 0, plan );
             dao.load( importer );
             registerPlanDao( dao );
             dao.add( plan, plan.getId() );
@@ -582,6 +596,15 @@ public class PlanManager implements InitializingBean {
         } finally {
             currentDao = null;
         }
+    }
+
+    private void defineImmutableEntities( QueryService queryService ) {
+        Actor.createImmutables( queryService );
+        Event.createImmutables( queryService );
+        Organization.createImmutables( queryService );
+        Place.createImmutables( queryService );
+        Phase.createImmutables( queryService );
+        Role.createImmutables( queryService );
     }
 
     private void registerPlanDao( PlanDao dao ) {

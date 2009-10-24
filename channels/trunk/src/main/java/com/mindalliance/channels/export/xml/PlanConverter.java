@@ -4,7 +4,6 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
@@ -67,7 +66,7 @@ public class PlanConverter extends AbstractChannelsConverter {
         writer.addAttribute( "version", getVersion() );
         writer.addAttribute( "date", new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( new Date() ) );
         writer.startNode( "whenVersioned" );
-        writer.setValue( new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( plan.getWhenVersioned() )  );
+        writer.setValue( new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( plan.getWhenVersioned() ) );
         writer.endNode();
         writer.startNode( "lastId" );
         writer.setValue( String.valueOf(
@@ -82,7 +81,7 @@ public class PlanConverter extends AbstractChannelsConverter {
         writer.startNode( "description" );
         writer.setValue( plan.getDescription() );
         writer.endNode();
-        for (String producer : plan.getProducers() ) {
+        for ( String producer : plan.getProducers() ) {
             writer.startNode( "producer" );
             writer.setValue( producer );
             writer.endNode();
@@ -93,10 +92,12 @@ public class PlanConverter extends AbstractChannelsConverter {
         // All entities
         Iterator<ModelEntity> entities = queryService.iterateEntities();
         while ( entities.hasNext() ) {
-            ModelObject entity = entities.next();
-            writer.startNode( entity.getClass().getSimpleName().toLowerCase() );
-            context.convertAnother( entity );
-            writer.endNode();
+            ModelEntity entity = entities.next();
+            if ( !entity.isImmutable() ) {
+                writer.startNode( entity.getClass().getSimpleName().toLowerCase() );
+                context.convertAnother( entity );
+                writer.endNode();
+            }
         }
         // All incidents
         for ( Event event : plan.getIncidents() ) {
@@ -165,14 +166,14 @@ public class PlanConverter extends AbstractChannelsConverter {
                 context.convertAnother( plan, Place.class );
             } else if ( nodeName.equals( "event" ) ) {
                 context.convertAnother( plan, Event.class );
-            }  else if ( nodeName.equals( "phase" ) ) {
+            } else if ( nodeName.equals( "phase" ) ) {
                 context.convertAnother( plan, Phase.class );
             } else if ( nodeName.equals( "incident" ) ) {
                 String eventId = reader.getAttribute( "id" );
                 Event event = findOrCreateType( Event.class, reader.getValue(), eventId );
                 plan.addIncident( event );
                 // Phases
-            }  else if ( nodeName.equals( "plan-phase" ) ) {
+            } else if ( nodeName.equals( "plan-phase" ) ) {
                 String phaseId = reader.getAttribute( "id" );
                 String name = reader.getValue();
                 Phase phase = findOrCreate( Phase.class, name, phaseId );
@@ -181,7 +182,7 @@ public class PlanConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "producer" ) ) {
                 plan.addProducer( reader.getValue() );
                 // Scenarios
-            }  else if ( nodeName.equals( "scenario" ) ) {
+            } else if ( nodeName.equals( "scenario" ) ) {
                 context.convertAnother( plan, Scenario.class );
             } else if ( nodeName.equals( "detection-waivers" ) ) {
                 importDetectionWaivers( plan, reader );

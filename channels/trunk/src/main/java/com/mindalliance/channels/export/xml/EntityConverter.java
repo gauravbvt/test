@@ -40,7 +40,7 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
         writer.startNode( "description" );
         writer.setValue( entity.getDescription() == null ? "" : entity.getDescription() );
         writer.endNode();
-        for ( ModelEntity tag : entity.getTags() ) {
+        for ( ModelEntity tag : entity.getRawTags() ) {
             writer.startNode( "tag" );
             writer.addAttribute( "id", tag.getId() + "" );
             writer.addAttribute( "kind", tag.getKind().name() );

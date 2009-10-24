@@ -5,6 +5,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
 import org.apache.wicket.WicketRuntimeException;
@@ -28,7 +29,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
 
     public AbstractCommandablePanel( String id, IModel<? extends Identifiable> iModel ) {
         super( id, iModel, null );
-    } 
+    }
 
     public AbstractCommandablePanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
         super( id, iModel, expansions );
@@ -56,25 +57,33 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      * @return a boolean
      */
     protected boolean isLockedByUser( Identifiable identifiable ) {
-        return getPlan().isDevelopment() && getLockManager().isLockedByUser( identifiable );
+        return getPlan().isDevelopment()
+                && !isImmutable( identifiable )
+                && getLockManager().isLockedByUser( identifiable );
     }
 
     /**
      * Model object is locked by user if necessary.
-     * @param identifiable  a model object
-     * @return  a boolean
+     *
+     * @param identifiable a model object
+     * @return a boolean
      */
     protected boolean isLockedByUserIfNeeded( Identifiable identifiable ) {
         return getPlan().isDevelopment() &&
                 ( identifiable instanceof Scenario
-                || identifiable instanceof Plan
-                || isLockedByUser( identifiable ) );
+                        || identifiable instanceof Plan
+                        || isImmutable( identifiable )
+                        || isLockedByUser( identifiable ) );
     }
 
+    private boolean isImmutable( Identifiable identifiable ) {
+        return identifiable instanceof ModelObject && ( (ModelObject) identifiable ).isImmutable();
+    }
 
 
     /**
      * Get name of lock owner.
+     *
      * @param identifiable the possibly locked identifiable
      * @return a string or null
      */

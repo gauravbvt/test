@@ -97,6 +97,16 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
     }
 
     /**
+     * Whether the model object is immutable.
+     * @return a boolean
+     */
+    @Transient
+    public boolean isImmutable() {
+        // Default
+        return false;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public String getName() {

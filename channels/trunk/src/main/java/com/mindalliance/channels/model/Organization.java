@@ -52,7 +52,11 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
     /**
      * Bogus organization used to signify that the organization is not known...
      */
-    public static final Organization UNKNOWN;
+    public static Organization UNKNOWN;
+    /**
+     * Name of unknown organization.
+     */
+    private static String UnknownName = "(unknown)";
 
     static {
         UNKNOWN = new Organization( "(unknown)" );
@@ -71,6 +75,17 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
     public Organization( String name ) {
         super( name );
     }
+
+    /**
+     * Create immutables.
+     *
+     * @param queryService a query service
+     */
+    public static void createImmutables( QueryService queryService ) {
+        UNKNOWN = queryService.findOrCreate( Organization.class, UnknownName );
+        UNKNOWN.makeImmutable();
+    }
+
 
     /**
      * {@inheritDoc}
@@ -112,7 +127,7 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
      * {@inheritDoc}
      */
     @Override
-    protected boolean moreNarrowsType( ModelEntity entityType ) {
+    protected boolean meetsTypeRequirementTests( ModelEntity entityType ) {
         // check that location and parent are compatible
         return ModelEntity.implies( location, ( (Organization) entityType ).getLocation() )
                 && ModelEntity.implies( parent, ( (Organization) entityType ).getParent() );
