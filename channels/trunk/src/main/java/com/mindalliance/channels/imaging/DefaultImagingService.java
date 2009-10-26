@@ -34,7 +34,7 @@ public class DefaultImagingService implements ImagingService {
     /**
      * Sizes of icons to generate.
      */
-    private static final int[] ICON_HEIGHTS = {32, 56, 72, 84, 100};
+    private static final int[] ICON_HEIGHTS = {32, 56, 72, 84, 100, 116};
     /**
      * Attachment manager.
      */
@@ -148,8 +148,7 @@ public class DefaultImagingService implements ImagingService {
             ImageIO.write( resized, "png", iconFile );
             createNumberedIcons( resized, width, modelObject );
         } catch ( Exception e ) {
-            LOG.warn( "Failed to iconize uploaded image at " + url + " (" + e.getMessage() + ")");
-            e.printStackTrace();
+            LOG.warn( "Failed to iconize uploaded image at " + url + " (" + e.getMessage() + ")", e);
             return false;
         }
         return true;

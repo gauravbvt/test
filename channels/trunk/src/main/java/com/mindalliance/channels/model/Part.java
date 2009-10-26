@@ -527,7 +527,7 @@ public class Part extends Node implements GeoLocatable {
     }
 
     /**
-     * Find explicit or implicit actor, if any.
+     * Find explicit or implicit, single, actual actor, if any.
      *
      * @return an actor or null
      */
@@ -536,12 +536,16 @@ public class Part extends Node implements GeoLocatable {
         if ( actor != null ) {
             return actor;
         } else {
-            List<Actor> knownActors = getScenario().getQueryService().findAllActualActors( resourceSpec() );
-            if ( knownActors.size() == 1 ) {
-                return knownActors.get( 0 );
-            } else {
-                return null;
-            }
+            return getKnownActualActor();
+        }
+    }
+
+    public Actor getKnownActualActor() {
+        List<Actor> knownActors = getScenario().getQueryService().findAllActualActors( resourceSpec() );
+        if ( knownActors.size() == 1 ) {
+            return knownActors.get( 0 );
+        } else {
+            return null;
         }
     }
 
@@ -596,13 +600,19 @@ public class Part extends Node implements GeoLocatable {
         String label = "";
         if ( getActor() != null ) {
             label += getActor().getName();
+            if ( getActor().isType() ) {
+                Actor impliedActor = getKnownActualActor();
+                if ( impliedActor != null ) {
+                    label += " (" + impliedActor.getName() + ")";
+                }
+            }
         }
         if ( getRole() != null ) {
             if ( !label.isEmpty() ) label += sep;
             if ( getActor() == null ) {
-                List<Actor> partActors = getScenario().getQueryService().findAllActualActors( resourceSpec() );
-                if ( partActors.size() == 1 ) {
-                    label += partActors.get( 0 ).getName();
+                Actor impliedActor = getKnownActualActor();
+                if ( impliedActor != null ) {
+                    label += impliedActor.getName();
                     label += " ";
                 }
             }
@@ -688,7 +698,7 @@ public class Part extends Node implements GeoLocatable {
                         mitigations,
                         new Predicate() {
                             public boolean evaluate( Object obj ) {
-                                return ((Risk)obj).references( mo );
+                                return ( (Risk) obj ).references( mo );
                             }
                         } );
     }

@@ -2334,17 +2334,25 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public String findIconName( Part part, String imagesDirName ) {
-        String iconName;
+        String iconName = null;
         if ( part.getActor() != null ) {
-            iconName = imagingService.getIconPath( part.getActor() );
+            if ( part.getActor().isType() ) {
+                Actor knownActor = part.getKnownActualActor();
+                if ( knownActor != null ) {
+                    iconName = imagingService.getIconPath( knownActor );
+                }
+            }
+            if (iconName == null) {
+                iconName = imagingService.getIconPath( part.getActor() );
+            }
             if ( iconName == null ) {
                 iconName = imagesDirName + "/" + ( part.isSystem() ? "system" : "person" );
             }
         } else if ( part.getRole() != null ) {
-            List<Actor> partActors = findAllActualActors( part.resourceSpec() );
-            boolean onePlayer = partActors.size() == 1;
+            Actor knownActor = part.getKnownActualActor();
+            boolean onePlayer = knownActor != null;
             if ( onePlayer ) {
-                iconName = imagingService.getIconPath( partActors.get( 0 ) );
+                iconName = imagingService.getIconPath( knownActor );
                 if ( iconName == null ) {
                     iconName = imagesDirName + "/" + ( part.isSystem() ? "system" : "person" );
                 }

@@ -172,7 +172,6 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
             return part.getFullTitle( "|" );
         } else {
             return "c";
-            // return node.getUsername();
         }
     }
 
@@ -378,7 +377,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
         else {
             String label = getNodeLabel( node );
             String[] lines = label.split( "\\|" );
-            numLines = Math.min( lines.length, 4 );
+            numLines = Math.min( lines.length, 5 );
             Part part = (Part) node;
             iconName = getAnalyst().getQueryService().findIconName( part, imagesDirName );
         }
