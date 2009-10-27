@@ -1121,4 +1121,27 @@ public interface QueryService extends Service {
      * @return a list of model entities
      */
     List<? extends ModelEntity> findAllNarrowingOrEqualTo( ModelEntity entity );
+
+    /**
+     * Whether an organization plays at least on part in the plan.
+     *
+     * @param organization an organization
+     * @return a boolean
+     */
+    Boolean isInvolved( Organization organization );
+
+    /**
+     * Whether an organization is expected to play at least one part in the plan.
+     *
+     * @param organization an organization
+     * @return a boolean
+     */
+    Boolean isInvolvementExpected( Organization organization );
+
+    /**
+     * Find all parts played by an organization or one of its children.
+     * @param organization an organization
+     * @return a list of parts
+     */
+    List<Part> findAllPartsPlayedBy( Organization organization );
 }

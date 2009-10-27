@@ -357,7 +357,7 @@ public class DefaultCommander extends AbstractService implements Commander, Init
     /**
      * {@inheritDoc}
      */
-    public void cleanup( Class<? extends ModelObject> clazz, String name ) {
+    public boolean cleanup( Class<? extends ModelObject> clazz, String name ) {
         synchronized ( this ) {
             if ( name != null && !name.trim().isEmpty() ) {
                 ModelObject mo = queryService.getDao().find( clazz, name.trim() );
@@ -365,10 +365,12 @@ public class DefaultCommander extends AbstractService implements Commander, Init
                     if ( !queryService.isReferenced( mo ) && !mo.isImmutable() ) {
                         LOG.info( "Removing unused " + mo.getClass().getSimpleName() + " " + mo );
                         queryService.remove( mo );
+                        return true;
                     }
                 }
             }
         }
+        return false;
     }
 
     /**

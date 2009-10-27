@@ -155,8 +155,9 @@ public interface Commander extends Service {
      *
      * @param clazz a model object class
      * @param name  a string
+     * @return a boolean - true if the entity was deleted
      */
-    void cleanup( Class<? extends ModelObject> clazz, String name );
+    boolean cleanup( Class<? extends ModelObject> clazz, String name );
 
     /**
      * Whether someone other than the user has a lock on the model object with given id.

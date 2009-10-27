@@ -63,6 +63,10 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
      * Bibliography aspect.
      */
     public static final String BIBLIOGRAPHY = "bibliography";
+    /**
+     * Organizations in scope.
+     */
+    public static final String SCOPE = "organizations";
 
     public PlanEditPanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
         super( id, iModel, expansions );
@@ -146,6 +150,8 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
             return getPlanMapPanel();
         } else if ( aspect.equals( EVENTS ) ) {
             return getPlanIncidentsPanel();
+        } else if ( aspect.equals( SCOPE ) ) {
+            return getPlanScopePanel();
         } else if ( aspect.equals( WHOSWHO ) ) {
             return getPlanWhoswhoPanel();
         } else if ( aspect.equals( ISSUES ) ) {
@@ -174,6 +180,10 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
 
     private Component getPlanIncidentsPanel() {
         return new PlanEventsPanel( "aspect", getModel(), getExpansions() );
+    }
+
+    private Component getPlanScopePanel() {
+        return new PlanScopePanel( "aspect", getModel(), getExpansions() );
     }
 
     private Component getPlanIndexPanel() {

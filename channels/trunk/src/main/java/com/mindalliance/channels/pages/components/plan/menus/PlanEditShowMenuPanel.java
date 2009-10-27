@@ -55,6 +55,16 @@ public class PlanEditShowMenuPanel extends MenuPanel {
                 "menuItem",
                 new Model<String>( "All events" ),
                 incidentsLink ) );
+        // Organizations in scope
+        Link scopeLink = new AjaxFallbackLink( "link" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                changeAspectTo( target, PlanEditPanel.SCOPE );
+            }
+        };
+        menuItems.add( new LinkMenuItem(
+                "menuItem",
+                new Model<String>( "All organizations" ),
+                scopeLink ) );
         // Map
         Link mapLink = new AjaxFallbackLink( "link" ) {
             public void onClick( AjaxRequestTarget target ) {

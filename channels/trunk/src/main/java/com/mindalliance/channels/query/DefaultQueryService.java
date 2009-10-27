@@ -619,6 +619,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public Boolean isReferenced( final ModelObject mo ) {
         boolean hasReference = false;
         Iterator classes = ModelObject.referencingClasses().iterator();
+        if ( planManager.getCurrentPlan().references( mo ) ) return true;
         while ( !hasReference && classes.hasNext() ) {
             List<? extends ModelObject> mos = findAllModelObjects( (Class<? extends ModelObject>) classes.next() );
             hasReference = CollectionUtils.exists(
@@ -2342,7 +2343,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     iconName = imagingService.getIconPath( knownActor );
                 }
             }
-            if (iconName == null) {
+            if ( iconName == null ) {
                 iconName = imagingService.getIconPath( part.getActor() );
             }
             if ( iconName == null ) {
@@ -2559,6 +2560,49 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         return ( (ModelEntity) obj ).narrowsOrEquals( entity );
+                    }
+                }
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Boolean isInvolved( final Organization organization ) {
+        return CollectionUtils.exists(
+                findAllParts(),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        Organization partOrg = ( (Part) obj ).getOrganization();
+                        return partOrg != null
+                                && ( partOrg.equals( organization )
+                                || partOrg.ancestors().contains( organization ) );
+                    }
+                }
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Boolean isInvolvementExpected( Organization organization ) {
+        return planManager.getCurrentPlan().getOrganizations().contains( organization );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<Part> findAllPartsPlayedBy( final Organization organization ) {
+        return (List<Part>) CollectionUtils.select(
+                findAllParts(),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        Part part = (Part) obj;
+                        Organization org = part.getOrganization();
+                        return org != null
+                                && ( org.equals( organization )
+                                || org.ancestors().contains( organization ) );
                     }
                 }
         );

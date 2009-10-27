@@ -113,6 +113,13 @@ public class PlanConverter extends AbstractChannelsConverter {
             writer.setValue( phase.getName() );
             writer.endNode();
         }
+        // All organizations to be involved
+        for ( Organization organization : plan.getOrganizations() ) {
+            writer.startNode( "organization-involved" );
+            writer.addAttribute( "id", Long.toString( organization.getId() ) );
+            writer.setValue( organization.getName() );
+            writer.endNode();
+        }
         // All scenarios
         for ( Scenario scenario : plan.getScenarios() ) {
             writer.startNode( "scenario" );
@@ -178,6 +185,11 @@ public class PlanConverter extends AbstractChannelsConverter {
                 String name = reader.getValue();
                 Phase phase = findOrCreate( Phase.class, name, phaseId );
                 plan.addPhase( phase );
+                // Organizations involved
+            }  else if ( nodeName.equals( "organization-involved" ) ) {
+                String orgId = reader.getAttribute( "id" );
+                Organization organization = findOrCreate( Organization.class, reader.getValue(), orgId );
+                plan.addOrganization( organization );
                 // Producers
             } else if ( nodeName.equals( "producer" ) ) {
                 plan.addProducer( reader.getValue() );

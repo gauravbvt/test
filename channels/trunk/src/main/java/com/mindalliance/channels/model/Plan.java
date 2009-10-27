@@ -61,12 +61,10 @@ public class Plan extends ModelObject {
      * Unplanned-for events.
      */
     private List<Event> incidents = new ArrayList<Event>();
-
     /**
      * Name of client sponsoring the plan.
      */
     private String client = "Unnamed";
-
     /**
      * Unique resource identifier for the plan.
      * Always set when application loads.
@@ -95,6 +93,11 @@ public class Plan extends ModelObject {
      * Phases defined for this plan.
      */
     private List<Phase> phases = new ArrayList<Phase>();
+    /**
+     * Organization whose involvement is expected.
+     */
+    private List<Organization> organizations = new ArrayList<Organization>();
+
 
     //-----------------------------
     public Plan() {
@@ -159,6 +162,14 @@ public class Plan extends ModelObject {
 
     public void setIncidents( List<Event> incidents ) {
         this.incidents = incidents;
+    }
+
+    public List<Organization> getOrganizations() {
+        return organizations;
+    }
+
+    public void setOrganizations( List<Organization> organizations ) {
+        this.organizations = organizations;
     }
 
     public String getClient() {
@@ -228,6 +239,16 @@ public class Plan extends ModelObject {
     public void addIncident( Event event ) {
         assert event.isType();
         if ( !incidents.contains( event ) ) incidents.add( event );
+    }
+
+    /**
+     * Add an organization expected to be involved.
+     *
+     * @param organization an organization
+     */
+    public void addOrganization( Organization organization ) {
+        assert organization.isActual();
+        if ( !organizations.contains( organization ) ) organizations.add( organization );
     }
 
     /**
@@ -383,7 +404,7 @@ public class Plan extends ModelObject {
                         scenarios,
                         new Predicate() {
                             public boolean evaluate( Object obj ) {
-                                return ModelObject.areIdentical( (Scenario) obj, mo );
+                                return ModelObject.areIdentical( (ModelObject) obj, mo );
                             }
                         } )
                         ||
@@ -391,7 +412,15 @@ public class Plan extends ModelObject {
                                 incidents,
                                 new Predicate() {
                                     public boolean evaluate( Object obj ) {
-                                        return ModelObject.areIdentical( (Event) obj, mo );
+                                        return ModelObject.areIdentical( (ModelObject) obj, mo );
+                                    }
+                                } )
+                        ||
+                        CollectionUtils.exists(
+                                organizations,
+                                new Predicate() {
+                                    public boolean evaluate( Object obj ) {
+                                        return ModelObject.areIdentical( (ModelObject) obj, mo );
                                     }
                                 } );
     }
