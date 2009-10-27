@@ -1,30 +1,34 @@
 <export>
-  <plan id="0" uri="mindalliance.com/channels/plans/acme" version="1.0" date="2009/09/24 20:37:51 EDT">
+  <plan id="0" uri="mindalliance.com/channels/plans/acme" version="1.0" date="2009/10/27 15:12:06 EDT">
     <whenVersioned>2009/09/15 9:48:22 EDT</whenVersioned>
-    <lastId>6131</lastId>
+    <lastId>12407</lastId>
     <name>ACME Emergency Communications Plan</name>
     <client>ACME Manufacturing, Inc.</client>
     <description>Communications planning for responding and recovering from business interruptions due fire or power outage.</description>
-    <actor id="686" name="R2D2">
+    <detection-waivers>
+      <detection>NoScenarioForEventPhase</detection>
+    </detection-waivers>
+    <actor id="686" kind="Actual" name="R2D2">
       <description></description>
       <attachments>
         <attachment type="Image">http://www.cutiegadget.com/pict/r2-d2_robot.jpg</attachment>
       </attachments>
+      <system>true</system>
     </actor>
-    <role id="685" name="Switchboard and Intercom System">
+    <role id="685" kind="Actual" name="Switchboard and Intercom System">
       <description></description>
     </role>
-    <role id="279" name="Emergency Manager">
+    <role id="279" kind="Actual" name="Emergency Manager">
       <description>Organizes and leads response to fire; leads evacuation etc.</description>
     </role>
-    <event id="5" name="Building on fire">
+    <role id="278" kind="Actual" name="Assembly Area Leader">
+      <description></description>
+    </role>
+    <event id="5" kind="Type" name="Building on fire">
       <description></description>
       <scope id="323">Main building</scope>
     </event>
-    <role id="278" name="Assembly Area Leader">
-      <description></description>
-    </role>
-    <actor id="277" name="Richard Carry">
+    <actor id="277" kind="Actual" name="Richard Carry">
       <description>Administration</description>
       <attachments>
         <attachment type="Image">uploads/richardcarry.jpeg</attachment>
@@ -47,7 +51,7 @@
         <address>(516) 449-0974</address>
       </channel>
     </actor>
-    <actor id="283" name="John Garrison">
+    <actor id="283" kind="Actual" name="John Garrison">
       <description>Reception</description>
       <channel>
         <medium>Phone</medium>
@@ -70,7 +74,7 @@
         <address>jgarrison@acme.com</address>
       </channel>
     </actor>
-    <place id="282" name="1st shift/floor">
+    <place id="282" kind="Actual" name="1st shift/floor">
       <description></description>
       <within id="323">Main building</within>
       <geoname></geoname>
@@ -92,16 +96,17 @@
         <precision>6</precision>
       </geoLocation>
     </place>
-    <role id="10" name="Fire Chief">
+    <role id="10" kind="Actual" name="Fire Chief">
       <description></description>
       <attachments>
         <attachment type="Image">http://www.plumparty.com/partysupply/graphics/products/large/16596.jpg</attachment>
       </attachments>
     </role>
-    <role id="281" name="Evacuation Team Leader">
-      <description></description>
+    <role id="281" kind="Actual" name="Evacuation Team Leader">
+      <description>Someone in charge of leading evacuations.</description>
+      <tag id="11623" kind="Type">Leader</tag>
     </role>
-    <actor id="280" name="Mary Delaney">
+    <actor id="280" kind="Actual" name="Mary Delaney">
       <description>Admin./Impo</description>
       <channel>
         <medium>Phone</medium>
@@ -120,7 +125,7 @@
         <address>mdelaney@acme.com</address>
       </channel>
     </actor>
-    <actor id="287" name="Louise Burns">
+    <actor id="287" kind="Actual" name="Louise Burns">
       <description>President and CEO of ACME</description>
       <attachments>
         <attachment type="Image">http://www.adamsonross.com/imgs/louise.jpg</attachment>
@@ -142,39 +147,18 @@
         <address>(973) 729-2942</address>
       </channel>
     </actor>
-    <role id="286" name="Switchboard and Intercom Operator">
-      <description></description>
-    </role>
-    <organization id="13" name="Fire Department">
+    <organization id="13" kind="Actual" name="Fire Department">
       <description></description>
       <attachments>
         <attachment type="Image">http://cityofashville.googlepages.com/firelogo.jpg/firelogo-full.jpg</attachment>
       </attachments>
     </organization>
-    <actor id="285" name="Peter Sanchez">
-      <description>Sales and marketing</description>
-      <attachments>
-        <attachment type="Image">uploads/petersanchez.jpeg</attachment>
-      </attachments>
-      <channel>
-        <medium>Phone</medium>
-        <address>(973) 754-0722 x.257</address>
-      </channel>
-      <channel>
-        <medium>Cell</medium>
-        <address>(973) 769-7854</address>
-      </channel>
-      <channel>
-        <medium>HomePhone</medium>
-        <address>(973) 729-7352</address>
-      </channel>
-      <channel>
-        <medium>Email</medium>
-        <address>psanchez@acme.com</address>
-      </channel>
-    </actor>
-    <organization id="14" name="ACME">
+    <role id="286" kind="Actual" name="Switchboard and Intercom Operator">
       <description></description>
+    </role>
+    <organization id="14" kind="Actual" name="ACME">
+      <description></description>
+      <tag id="11681" kind="Type">Multinational corporation</tag>
       <attachments>
         <attachment type="Image">uploads/acme.png</attachment>
       </attachments>
@@ -229,11 +213,6 @@
         <title>Employee</title>
       </job>
       <job>
-        <actor id="287">Louise Burns</actor>
-        <role id="325">CEO</role>
-        <title>President</title>
-      </job>
-      <job>
         <actor id="277">Richard Carry</actor>
         <role id="326">Business Continuity Manager</role>
         <title>Employee</title>
@@ -247,11 +226,6 @@
         <actor id="283">John Garrison</actor>
         <role id="328">Secretary</role>
         <title>Employee</title>
-      </job>
-      <job>
-        <actor id="287">Louise Burns</actor>
-        <role id="329">Public Spokesperson</role>
-        <title>President</title>
       </job>
       <job>
         <actor id="277">Richard Carry</actor>
@@ -285,12 +259,12 @@
         <title>Employee</title>
       </job>
       <job>
-        <actor id="336">Jocelyne Bilodeau</actor>
+        <actor id="280">Mary Delaney</actor>
         <role id="335">Business Continuity Officer</role>
         <title>Employee</title>
       </job>
       <job>
-        <actor id="280">Mary Delaney</actor>
+        <actor id="285">Peter Sanchez</actor>
         <role id="335">Business Continuity Officer</role>
         <title>Employee</title>
       </job>
@@ -300,16 +274,65 @@
         <title>Employee</title>
       </job>
       <job>
-        <actor id="285">Peter Sanchez</actor>
+        <actor id="287">Louise Burns</actor>
+        <role id="329">Public Spokesperson</role>
+        <title>President</title>
+      </job>
+      <job>
+        <actor id="287">Louise Burns</actor>
+        <role id="325">CEO</role>
+        <title>President</title>
+      </job>
+      <job>
+        <actor id="336">Jocelyne Bilodeau</actor>
         <role id="335">Business Continuity Officer</role>
         <title>Employee</title>
       </job>
     </organization>
-    <role id="42" name="Cleanup Contractor">
+    <actor id="285" kind="Actual" name="Peter Sanchez">
+      <description>Sales and marketing</description>
+      <tag id="10990" kind="Type">Certified emergency technician</tag>
+      <attachments>
+        <attachment type="Image">uploads/petersanchez.jpeg</attachment>
+      </attachments>
+      <channel>
+        <medium>Phone</medium>
+        <address>(973) 754-0722 x.257</address>
+      </channel>
+      <channel>
+        <medium>Cell</medium>
+        <address>(973) 769-7854</address>
+      </channel>
+      <channel>
+        <medium>HomePhone</medium>
+        <address>(973) 729-7352</address>
+      </channel>
+      <channel>
+        <medium>Email</medium>
+        <address>psanchez@acme.com</address>
+      </channel>
+    </actor>
+    <actor id="11392" kind="Type" name="Technician">
+      <description></description>
+      <tag id="11432" kind="Type">Trained</tag>
+    </actor>
+    <actor id="10990" kind="Type" name="Certified emergency technician">
+      <description></description>
+      <tag id="11392" kind="Type">Technician</tag>
+    </actor>
+    <organization id="11682" kind="Type" name="Corporation">
+      <description></description>
+    </organization>
+    <organization id="11681" kind="Type" name="Multinational corporation">
+      <description></description>
+      <tag id="11682" kind="Type">Corporation</tag>
+    </organization>
+    <role id="42" kind="Actual" name="Cleanup Contractor">
       <description></description>
     </role>
-    <organization id="43" name="PSEG">
+    <organization id="43" kind="Actual" name="PSEG">
       <description></description>
+      <tag id="11682" kind="Type">Corporation</tag>
       <attachments>
         <attachment type="Image">http://wpcontent.answers.com/wikipedia/en/2/2f/PSEG_Logo.jpg</attachment>
       </attachments>
@@ -318,27 +341,27 @@
         <address>(800) 440-7734</address>
       </channel>
     </organization>
-    <role id="40" name="Firefighter">
+    <role id="40" kind="Actual" name="Firefighter">
       <description></description>
       <attachments>
         <attachment type="Image">http://www.things4myspace.com/myspace/backgrounds/firefighter/firefighter_18.jpg</attachment>
       </attachments>
     </role>
-    <role id="47" name="Media Representative">
+    <role id="47" kind="Actual" name="Media Representative">
       <description></description>
     </role>
-    <place id="44" name="Assembly area">
+    <place id="44" kind="Actual" name="Assembly area">
       <description></description>
       <geoname></geoname>
     </place>
-    <place id="45" name="ACME">
+    <place id="45" kind="Actual" name="ACME">
       <description></description>
       <geoname></geoname>
     </place>
-    <role id="51" name="Building Inspector">
+    <role id="51" kind="Actual" name="Building Inspector">
       <description></description>
     </role>
-    <place id="50" name="ACME 100">
+    <place id="50" kind="Actual" name="ACME 100">
       <description></description>
       <streetAddress>200 South Street</streetAddress>
       <geoname>Morristown, NJ</geoname>
@@ -358,13 +381,13 @@
         <precision>0</precision>
       </geoLocation>
     </place>
-    <role id="48" name="Contractor">
+    <role id="48" kind="Actual" name="Contractor">
       <description></description>
     </role>
-    <role id="55" name="Insurance Adjuster">
+    <role id="55" kind="Actual" name="Insurance Adjuster">
       <description></description>
     </role>
-    <place id="52" name="Pinnacle Headquarters">
+    <place id="52" kind="Actual" name="Pinnacle Headquarters">
       <description></description>
       <streetAddress>1123 Route 9 South Suite 4</streetAddress>
       <postalCode>07070</postalCode>
@@ -419,10 +442,13 @@
         <precision>0</precision>
       </alternateGeoLocation>
     </place>
-    <role id="59" name="Landlord">
+    <role id="59" kind="Actual" name="Landlord">
       <description></description>
     </role>
-    <place id="57" name="Brock Insurance Office">
+    <actor id="11432" kind="Type" name="Trained">
+      <description></description>
+    </actor>
+    <place id="57" kind="Actual" name="Brock Insurance Office">
       <description></description>
       <streetAddress>34 Omaha Place</streetAddress>
       <postalCode>20814</postalCode>
@@ -475,32 +501,34 @@
         <precision>0</precision>
       </alternateGeoLocation>
     </place>
-    <role id="60" name="ACME Customer">
+    <place id="11778" kind="Type" name="Warehouse type">
+      <description>A building used as storage space.</description>
+      <tag id="11779" kind="Type">Building</tag>
+    </place>
+    <place id="11779" kind="Type" name="Building">
+      <description></description>
+    </place>
+    <role id="60" kind="Actual" name="ACME Customer">
       <description></description>
     </role>
-    <place id="68" name="Warehouse building">
+    <place id="68" kind="Actual" name="Warehouse building">
       <description></description>
+      <tag id="11778" kind="Type">Warehouse type</tag>
       <geoname></geoname>
     </place>
-    <organization id="69" name="P. K. Brock Insurance Agency">
+    <organization id="69" kind="Actual" name="P. K. Brock Insurance Agency">
       <description></description>
+      <tag id="11682" kind="Type">Corporation</tag>
       <location id="57">Brock Insurance Office</location>
       <channel>
         <medium>Phone</medium>
         <address>(301) 984-2124</address>
       </channel>
     </organization>
-    <role id="70" name="Occupant">
+    <role id="70" kind="Actual" name="Occupant">
       <description></description>
     </role>
-    <actor id="337" name="JoAnn Blythe">
-      <description></description>
-      <channel>
-        <medium>Cell</medium>
-        <address>(973) 867-0100</address>
-      </channel>
-    </actor>
-    <place id="66" name="Springfield building">
+    <place id="66" kind="Actual" name="Springfield building">
       <description></description>
       <streetAddress>100 Mountain Avenue</streetAddress>
       <postalCode>07081</postalCode>
@@ -538,7 +566,14 @@
         <precision>0</precision>
       </alternateGeoLocation>
     </place>
-    <actor id="336" name="Jocelyne Bilodeau">
+    <actor id="337" kind="Actual" name="JoAnn Blythe">
+      <description></description>
+      <channel>
+        <medium>Cell</medium>
+        <address>(973) 867-0100</address>
+      </channel>
+    </actor>
+    <actor id="336" kind="Actual" name="Jocelyne Bilodeau">
       <description>Digital/IT</description>
       <channel>
         <medium>Phone</medium>
@@ -557,7 +592,7 @@
         <address>jbilodeau@acme.com</address>
       </channel>
     </actor>
-    <actor id="76" name="Judy Palmer">
+    <actor id="76" kind="Actual" name="Judy Palmer">
       <description></description>
       <channel>
         <medium>Phone</medium>
@@ -568,8 +603,9 @@
         <address>(908) 447-7344</address>
       </channel>
     </actor>
-    <organization id="77" name="Pinnacle">
+    <organization id="77" kind="Actual" name="Pinnacle">
       <description></description>
+      <tag id="11681" kind="Type">Multinational corporation</tag>
       <attachments>
         <attachment type="Image">uploads/pinnacle.jpg</attachment>
       </attachments>
@@ -580,23 +616,19 @@
         <title>Employee</title>
       </job>
     </organization>
-    <role id="78" name="Fire Inspector">
+    <role id="78" kind="Actual" name="Fire Inspector">
       <description></description>
     </role>
-    <phase id="4952" name="Preparing">
-      <description></description>
-      <timing>PreEvent</timing>
-    </phase>
-    <event id="72" name="Business interrupted">
+    <event id="72" kind="Type" name="Business interrupted">
       <description></description>
     </event>
-    <role id="326" name="Business Continuity Manager">
+    <role id="326" kind="Actual" name="Business Continuity Manager">
       <description></description>
     </role>
-    <role id="327" name="Customer Support Representative">
+    <role id="327" kind="Actual" name="Customer Support Representative">
       <description></description>
     </role>
-    <place id="324" name="2nd shift/floor">
+    <place id="324" kind="Actual" name="2nd shift/floor">
       <description></description>
       <within id="323">Main building</within>
       <geoname></geoname>
@@ -618,57 +650,23 @@
         <precision>6</precision>
       </geoLocation>
     </place>
-    <role id="325" name="CEO">
+    <role id="325" kind="Actual" name="CEO">
       <description></description>
     </role>
-    <event id="81" name="Building closed due to fire">
+    <event id="81" kind="Type" name="Building closed due to fire">
       <description></description>
     </event>
-    <place id="323" name="Main building">
+    <place id="323" kind="Actual" name="Main building">
       <description></description>
       <streetAddress>100 Main Road</streetAddress>
       <postalCode>07963</postalCode>
-      <geoname>Morristown, NJ</geoname>
-      <geoLocation>
-        <geonameId>5101427</geonameId>
-        <country>United States</country>
-        <state>New Jersey</state>
-        <county>Morris County</county>
-        <city>Morristown</city>
-        <countryCode>US</countryCode>
-        <stateCode>NJ</stateCode>
-        <countyCode>027</countyCode>
-        <cityCode>PPL</cityCode>
-        <population>18886</population>
-        <latitude>40.793691</latitude>
-        <longitude>-74.577753</longitude>
-        <streetAddress>100 Main Road</streetAddress>
-        <postalCode>07963</postalCode>
-        <precision>6</precision>
-      </geoLocation>
-      <alternateGeoLocation>
-        <geonameId>5101427</geonameId>
-        <country>United States</country>
-        <state>New Jersey</state>
-        <county>Morris County</county>
-        <city>Morristown</city>
-        <countryCode>US</countryCode>
-        <stateCode>NJ</stateCode>
-        <countyCode>027</countyCode>
-        <cityCode>PPL</cityCode>
-        <population>18886</population>
-        <latitude>40.793691</latitude>
-        <longitude>-74.577753</longitude>
-        <streetAddress>100 Main Road</streetAddress>
-        <postalCode>07963</postalCode>
-        <precision>6</precision>
-      </alternateGeoLocation>
+      <geoname>Morristown</geoname>
     </place>
-    <event id="82" name="Power is out">
+    <event id="82" kind="Type" name="Power is out">
       <description></description>
       <scope id="323">Main building</scope>
     </event>
-    <actor id="334" name="Arthur Green">
+    <actor id="334" kind="Actual" name="Arthur Green">
       <description>Systems: Mac</description>
       <channel>
         <medium>Phone</medium>
@@ -687,36 +685,39 @@
         <address>(973)478-7403</address>
       </channel>
     </actor>
-    <role id="335" name="Business Continuity Officer">
+    <role id="335" kind="Actual" name="Business Continuity Officer">
       <description></description>
     </role>
-    <role id="332" name="Manager">
+    <role id="332" kind="Actual" name="Manager">
       <description></description>
     </role>
-    <place id="333" name="Warehouse">
+    <place id="333" kind="Actual" name="Warehouse">
       <description></description>
       <geoname></geoname>
     </place>
-    <role id="330" name="Response Liaison Officer">
+    <role id="330" kind="Actual" name="Response Liaison Officer">
       <description></description>
     </role>
-    <role id="331" name="Customer Account Manager">
+    <role id="331" kind="Actual" name="Customer Account Manager">
       <description></description>
     </role>
-    <role id="328" name="Secretary">
+    <role id="328" kind="Actual" name="Secretary">
       <description></description>
     </role>
-    <role id="329" name="Public Spokesperson">
+    <role id="329" kind="Actual" name="Public Spokesperson">
       <description></description>
     </role>
-    <event id="1191" name="Building unsafe">
+    <event id="1191" kind="Type" name="Building unsafe">
       <description></description>
     </event>
-    <phase id="1192" name="Responding">
+    <role id="11623" kind="Type" name="Leader">
+      <description>One who leads</description>
+    </role>
+    <phase id="1192" kind="Actual" name="Responding">
       <description>Responding to an event as it unfolds.</description>
       <timing>Concurrent</timing>
     </phase>
-    <phase id="4972" name="Recovering">
+    <phase id="4972" kind="Actual" name="Recovering">
       <description></description>
       <timing>PostEvent</timing>
     </phase>
@@ -724,31 +725,34 @@
     <incident id="5">Building on fire</incident>
     <incident id="1191">Building unsafe</incident>
     <plan-phase id="1192">Responding</plan-phase>
-    <plan-phase id="4952">Preparing</plan-phase>
     <plan-phase id="4972">Recovering</plan-phase>
-    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/09/24 20:37:51 EDT" id="3" name="Power outage">
+    <plan-phase id="4952">Preparing</plan-phase>
+    <organization-involved id="14">ACME</organization-involved>
+    <organization-involved id="77">Pinnacle</organization-involved>
+    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/10/27 15:12:07 EDT" id="3" name="Power outage">
       <description>A power outage interrupts operations at main location.</description>
       <trigger-event id="82">Power is out</trigger-event>
       <phase id="1192">Responding</phase>
       <risk>
         <type>DelayedDelivery</type>
-        <organization id="14">ACME</organization>
+        <organization id="14" kind="Actual">ACME</organization>
         <severity>Major</severity>
         <description></description>
       </risk>
       <risk>
         <type>PropertyDamage</type>
-        <organization id="14">ACME</organization>
+        <organization id="14" kind="Actual">ACME</organization>
         <severity>Minor</severity>
         <description></description>
       </risk>
       <part id="87">
         <task>Finding out about outage</task>
-        <role id="328" name="Secretary">
+        <role id="328" kind="Actual" name="Secretary">
           <description></description>
         </role>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -803,11 +807,6 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -821,11 +820,6 @@
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -859,12 +853,12 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -874,12 +868,22 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
         </organization>
-        <location id="50" name="ACME 100">
+        <location id="50" kind="Actual" name="ACME 100">
           <description></description>
           <streetAddress>200 South Street</streetAddress>
           <geoname>Morristown, NJ</geoname>
@@ -904,11 +908,12 @@
       </part>
       <part id="88">
         <task>Managing outage response</task>
-        <role id="326" name="Business Continuity Manager">
+        <role id="326" kind="Actual" name="Business Continuity Manager">
           <description></description>
         </role>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -963,11 +968,6 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -981,11 +981,6 @@
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -1019,12 +1014,12 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -1034,12 +1029,22 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
         </organization>
-        <location id="50" name="ACME 100">
+        <location id="50" kind="Actual" name="ACME 100">
           <description></description>
           <streetAddress>200 South Street</streetAddress>
           <geoname>Morristown, NJ</geoname>
@@ -1065,11 +1070,12 @@
       </part>
       <part id="89">
         <task>Managing transfer of operations</task>
-        <role id="332" name="Manager">
+        <role id="332" kind="Actual" name="Manager">
           <description></description>
         </role>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -1124,11 +1130,6 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -1142,11 +1143,6 @@
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -1180,12 +1176,12 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -1195,12 +1191,22 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
         </organization>
-        <location id="66" name="Springfield building">
+        <location id="66" kind="Actual" name="Springfield building">
           <description></description>
           <streetAddress>100 Mountain Avenue</streetAddress>
           <postalCode>07081</postalCode>
@@ -1238,7 +1244,7 @@
             <precision>0</precision>
           </alternateGeoLocation>
         </location>
-        <jurisdiction id="66" name="Springfield building">
+        <jurisdiction id="66" kind="Actual" name="Springfield building">
           <description></description>
           <streetAddress>100 Mountain Avenue</streetAddress>
           <postalCode>07081</postalCode>
@@ -1282,11 +1288,12 @@
       </part>
       <part id="90">
         <task>Overseeing data transfer and operations startup</task>
-        <role id="332" name="Manager">
+        <role id="332" kind="Actual" name="Manager">
           <description></description>
         </role>
-        <actor id="285" name="Peter Sanchez">
+        <actor id="285" kind="Actual" name="Peter Sanchez">
           <description>Sales and marketing</description>
+          <tag id="10990" kind="Type">Certified emergency technician</tag>
           <attachments>
             <attachment type="Image">uploads/petersanchez.jpeg</attachment>
           </attachments>
@@ -1307,8 +1314,9 @@
             <address>psanchez@acme.com</address>
           </channel>
         </actor>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -1363,11 +1371,6 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -1381,11 +1384,6 @@
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -1419,12 +1417,12 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -1434,12 +1432,22 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
         </organization>
-        <location id="66" name="Springfield building">
+        <location id="66" kind="Actual" name="Springfield building">
           <description></description>
           <streetAddress>100 Mountain Avenue</streetAddress>
           <postalCode>07081</postalCode>
@@ -1483,8 +1491,9 @@
       </part>
       <part id="91">
         <task>Responding to outage</task>
-        <organization id="43" name="PSEG">
+        <organization id="43" kind="Actual" name="PSEG">
           <description></description>
+          <tag id="11682" kind="Type">Corporation</tag>
           <attachments>
             <attachment type="Image">http://wpcontent.answers.com/wikipedia/en/2/2f/PSEG_Logo.jpg</attachment>
           </attachments>
@@ -1498,11 +1507,12 @@
       </part>
       <part id="92">
         <task>Switching off computers</task>
-        <role id="335" name="Business Continuity Officer">
+        <role id="335" kind="Actual" name="Business Continuity Officer">
           <description></description>
         </role>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -1557,11 +1567,6 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -1575,11 +1580,6 @@
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -1613,12 +1613,12 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -1628,12 +1628,22 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
         </organization>
-        <location id="50" name="ACME 100">
+        <location id="50" kind="Actual" name="ACME 100">
           <description></description>
           <streetAddress>200 South Street</streetAddress>
           <geoname>Morristown, NJ</geoname>
@@ -1659,11 +1669,12 @@
       </part>
       <part id="93">
         <task>Transfer operations</task>
-        <role id="325" name="CEO">
+        <role id="325" kind="Actual" name="CEO">
           <description></description>
         </role>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -1718,11 +1729,6 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -1736,11 +1742,6 @@
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -1774,12 +1775,12 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -1789,7 +1790,17 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -1975,35 +1986,36 @@
         <maxDelay>30 seconds</maxDelay>
       </flow>
     </scenario>
-    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/09/24 20:37:51 EDT" id="190" name="Business continuity">
+    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/10/27 15:12:07 EDT" id="190" name="Business continuity">
       <description>Provide a framework on which to resume critical business processes when normal work location and the resources in it are not accessible. The department plans are closely coordinated and supported by local management support staff for such areas as technology and office administrative assistance in establishing a continuous working environment.</description>
       <trigger-event id="72">Business interrupted</trigger-event>
       <phase id="1192">Responding</phase>
       <risk>
         <type>DelayedDelivery</type>
-        <organization id="14">ACME</organization>
+        <organization id="14" kind="Actual">ACME</organization>
         <severity>Major</severity>
         <description>Delivery of services may be delayed.</description>
       </risk>
       <risk>
         <type>ReputationDamage</type>
-        <organization id="14">ACME</organization>
+        <organization id="14" kind="Actual">ACME</organization>
         <severity>Major</severity>
         <description></description>
       </risk>
       <risk>
         <type>LostRevenue</type>
-        <organization id="14">ACME</organization>
+        <organization id="14" kind="Actual">ACME</organization>
         <severity>Major</severity>
         <description></description>
       </risk>
       <part id="192">
         <task>Assist in shifts</task>
-        <role id="48" name="Contractor">
+        <role id="48" kind="Actual" name="Contractor">
           <description></description>
         </role>
-        <organization id="77" name="Pinnacle">
+        <organization id="77" kind="Actual" name="Pinnacle">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/pinnacle.jpg</attachment>
           </attachments>
@@ -2020,11 +2032,12 @@
       </part>
       <part id="193">
         <task>Determining manager shifts</task>
-        <role id="326" name="Business Continuity Manager">
+        <role id="326" kind="Actual" name="Business Continuity Manager">
           <description></description>
         </role>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -2079,11 +2092,6 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -2097,11 +2105,6 @@
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -2135,12 +2138,12 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -2150,12 +2153,22 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
         </organization>
-        <location id="50" name="ACME 100">
+        <location id="50" kind="Actual" name="ACME 100">
           <description></description>
           <streetAddress>200 South Street</streetAddress>
           <geoname>Morristown, NJ</geoname>
@@ -2181,11 +2194,12 @@
       </part>
       <part id="194">
         <task>Ensuring business continuity</task>
-        <role id="325" name="CEO">
+        <role id="325" kind="Actual" name="CEO">
           <description></description>
         </role>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -2240,11 +2254,6 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -2258,11 +2267,6 @@
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -2296,12 +2300,12 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -2311,7 +2315,17 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -2321,8 +2335,9 @@
       </part>
       <part id="195">
         <task>Evaluate business losses</task>
-        <organization id="69" name="P. K. Brock Insurance Agency">
+        <organization id="69" kind="Actual" name="P. K. Brock Insurance Agency">
           <description></description>
+          <tag id="11682" kind="Type">Corporation</tag>
           <location id="57">Brock Insurance Office</location>
           <channel>
             <medium>Phone</medium>
@@ -2335,11 +2350,12 @@
       </part>
       <part id="196">
         <task>Executing continuity procedures</task>
-        <role id="335" name="Business Continuity Officer">
+        <role id="335" kind="Actual" name="Business Continuity Officer">
           <description></description>
         </role>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -2394,11 +2410,6 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -2412,11 +2423,6 @@
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -2450,12 +2456,12 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -2465,7 +2471,17 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -2476,11 +2492,12 @@
       </part>
       <part id="197">
         <task>Managing impacts to customers</task>
-        <role id="331" name="Customer Account Manager">
+        <role id="331" kind="Actual" name="Customer Account Manager">
           <description></description>
         </role>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -2535,11 +2552,6 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -2553,11 +2565,6 @@
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -2591,12 +2598,12 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -2606,7 +2613,17 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -2617,11 +2634,12 @@
       </part>
       <part id="198">
         <task>Managing interruption insurance</task>
-        <role id="326" name="Business Continuity Manager">
+        <role id="326" kind="Actual" name="Business Continuity Manager">
           <description></description>
         </role>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -2676,11 +2694,6 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -2694,11 +2707,6 @@
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -2732,12 +2740,12 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -2747,7 +2755,17 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -2757,11 +2775,12 @@
       </part>
       <part id="199">
         <task>Managing interruption to operations</task>
-        <role id="326" name="Business Continuity Manager">
+        <role id="326" kind="Actual" name="Business Continuity Manager">
           <description></description>
         </role>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -2816,11 +2835,6 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -2834,11 +2848,6 @@
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -2872,12 +2881,12 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -2887,12 +2896,22 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
         </organization>
-        <location id="50" name="ACME 100">
+        <location id="50" kind="Actual" name="ACME 100">
           <description></description>
           <streetAddress>200 South Street</streetAddress>
           <geoname>Morristown, NJ</geoname>
@@ -2917,7 +2936,7 @@
       </part>
       <part id="200">
         <task>Managing job completion delay</task>
-        <role id="60" name="ACME Customer">
+        <role id="60" kind="Actual" name="ACME Customer">
           <description></description>
         </role>
         <startsWithScenario>false</startsWithScenario>
@@ -2925,8 +2944,9 @@
       </part>
       <part id="201">
         <task>Providing ACME with alternate facilities</task>
-        <organization id="77" name="Pinnacle">
+        <organization id="77" kind="Actual" name="Pinnacle">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/pinnacle.jpg</attachment>
           </attachments>
@@ -3239,183 +3259,29 @@
         <maxDelay>immediately</maxDelay>
       </flow>
     </scenario>
-    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/09/24 20:37:51 EDT" id="140" name="Building evacuation">
+    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/10/27 15:12:07 EDT" id="140" name="Building evacuation">
       <description>Evacuating the building to minimize risk to personnel.</description>
       <trigger-event id="1191">Building unsafe</trigger-event>
       <phase id="1192">Responding</phase>
       <risk>
         <type>BodilyHarm</type>
-        <organization id="14">ACME</organization>
+        <organization id="14" kind="Actual">ACME</organization>
         <severity>Major</severity>
         <description></description>
       </risk>
-      <part id="142">
-        <task>Conducting floor evacuation</task>
-        <role id="281" name="Evacuation Team Leader">
-          <description></description>
-        </role>
-        <organization id="14" name="ACME">
-          <description></description>
-          <attachments>
-            <attachment type="Image">uploads/acme.png</attachment>
-          </attachments>
-          <actorsRequired>true</actorsRequired>
-          <agreementsRequired>true</agreementsRequired>
-          <location id="323">Main building</location>
-          <channel>
-            <medium>Phone</medium>
-            <address>(973) 754-0722</address>
-          </channel>
-          <channel>
-            <medium>Fax</medium>
-            <address>(973) 754-2493</address>
-          </channel>
-          <job>
-            <actor id="277">Richard Carry</actor>
-            <role id="278">Assembly Area Leader</role>
-            <title>Employee</title>
-          </job>
-          <job>
-            <actor id="277">Richard Carry</actor>
-            <role id="279">Emergency Manager</role>
-            <title>Employee</title>
-          </job>
-          <job>
-            <actor id="280">Mary Delaney</actor>
-            <role id="281">Evacuation Team Leader</role>
-            <jurisdiction id="282">1st shift/floor</jurisdiction>
-            <title>Employee</title>
-          </job>
-          <job>
-            <actor id="283">John Garrison</actor>
-            <role id="281">Evacuation Team Leader</role>
-            <jurisdiction id="324">2nd shift/floor</jurisdiction>
-            <title>Employee</title>
-          </job>
-          <job>
-            <actor id="285">Peter Sanchez</actor>
-            <role id="281">Evacuation Team Leader</role>
-            <title>Employee</title>
-          </job>
-          <job>
-            <actor id="280">Mary Delaney</actor>
-            <role id="286">Switchboard and Intercom Operator</role>
-            <jurisdiction id="282">1st shift/floor</jurisdiction>
-            <title>Employee</title>
-          </job>
-          <job>
-            <actor id="283">John Garrison</actor>
-            <role id="286">Switchboard and Intercom Operator</role>
-            <jurisdiction id="324">2nd shift/floor</jurisdiction>
-            <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
-            <actor id="277">Richard Carry</actor>
-            <role id="326">Business Continuity Manager</role>
-            <title>Employee</title>
-          </job>
-          <job>
-            <actor id="277">Richard Carry</actor>
-            <role id="327">Customer Support Representative</role>
-            <title>Employee</title>
-          </job>
-          <job>
-            <actor id="283">John Garrison</actor>
-            <role id="328">Secretary</role>
-            <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
-          </job>
-          <job>
-            <actor id="277">Richard Carry</actor>
-            <role id="330">Response Liaison Officer</role>
-            <title>Employee</title>
-          </job>
-          <job>
-            <actor id="277">Richard Carry</actor>
-            <role id="331">Customer Account Manager</role>
-            <title>Employee</title>
-          </job>
-          <job>
-            <actor id="285">Peter Sanchez</actor>
-            <role id="332">Manager</role>
-            <title>Employee</title>
-          </job>
-          <job>
-            <actor id="285">Peter Sanchez</actor>
-            <role id="281">Evacuation Team Leader</role>
-            <jurisdiction id="333">Warehouse</jurisdiction>
-            <title>Employee</title>
-          </job>
-          <job>
-            <actor id="334">Arthur Green</actor>
-            <role id="335">Business Continuity Officer</role>
-            <title>Employee</title>
-          </job>
-          <job>
-            <actor id="277">Richard Carry</actor>
-            <role id="335">Business Continuity Officer</role>
-            <title>Employee</title>
-          </job>
-          <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
-            <role id="335">Business Continuity Officer</role>
-            <title>Employee</title>
-          </job>
-          <job>
-            <actor id="280">Mary Delaney</actor>
-            <role id="335">Business Continuity Officer</role>
-            <title>Employee</title>
-          </job>
-          <job>
-            <actor id="337">JoAnn Blythe</actor>
-            <role id="335">Business Continuity Officer</role>
-            <title>Employee</title>
-          </job>
-          <job>
-            <actor id="285">Peter Sanchez</actor>
-            <role id="335">Business Continuity Officer</role>
-            <title>Employee</title>
-          </job>
-        </organization>
-        <location id="50" name="ACME 100">
-          <description></description>
-          <streetAddress>200 South Street</streetAddress>
-          <geoname>Morristown, NJ</geoname>
-          <geoLocation>
-            <geonameId>5101427</geonameId>
-            <country>United States</country>
-            <state>New Jersey</state>
-            <county>Morris County</county>
-            <city>Morristown</city>
-            <countryCode>US</countryCode>
-            <stateCode>NJ</stateCode>
-            <countyCode>027</countyCode>
-            <cityCode>PPL</cityCode>
-            <population>18886</population>
-            <latitude>40.7967667</latitude>
-            <longitude>-74.4815438</longitude>
-            <precision>0</precision>
-          </geoLocation>
-        </location>
-        <startsWithScenario>false</startsWithScenario>
-        <terminatesEvent>false</terminatesEvent>
-      </part>
       <part id="143">
         <task>Conducting warehouse evacuation</task>
-        <role id="281" name="Evacuation Team Leader">
-          <description></description>
+        <role id="281" kind="Actual" name="Evacuation Team Leader">
+          <description>Someone in charge of leading evacuations.</description>
+          <tag id="11623" kind="Type">Leader</tag>
         </role>
-        <organization id="14" name="ACME">
+        <actor id="10990" kind="Type" name="Certified emergency technician">
           <description></description>
+          <tag id="11392" kind="Type">Technician</tag>
+        </actor>
+        <organization id="14" kind="Actual" name="ACME">
+          <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -3470,11 +3336,6 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -3488,11 +3349,6 @@
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -3526,12 +3382,12 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -3541,16 +3397,27 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
         </organization>
-        <location id="68" name="Warehouse building">
+        <location id="68" kind="Actual" name="Warehouse building">
           <description></description>
+          <tag id="11778" kind="Type">Warehouse type</tag>
           <geoname></geoname>
         </location>
-        <jurisdiction id="333" name="Warehouse">
+        <jurisdiction id="333" kind="Actual" name="Warehouse">
           <description></description>
           <geoname></geoname>
         </jurisdiction>
@@ -3559,10 +3426,10 @@
       </part>
       <part id="144">
         <task>evacuating building</task>
-        <role id="70" name="Occupant">
+        <role id="70" kind="Actual" name="Occupant">
           <description></description>
         </role>
-        <location id="50" name="ACME 100">
+        <location id="50" kind="Actual" name="ACME 100">
           <description></description>
           <streetAddress>200 South Street</streetAddress>
           <geoname>Morristown, NJ</geoname>
@@ -3588,10 +3455,10 @@
       </part>
       <part id="145">
         <task>Evacuating floor</task>
-        <role id="70" name="Occupant">
+        <role id="70" kind="Actual" name="Occupant">
           <description></description>
         </role>
-        <location id="45" name="ACME">
+        <location id="45" kind="Actual" name="ACME">
           <description></description>
           <geoname></geoname>
         </location>
@@ -3601,11 +3468,12 @@
       </part>
       <part id="146">
         <task>Evacuating warehouse</task>
-        <role id="70" name="Occupant">
+        <role id="70" kind="Actual" name="Occupant">
           <description></description>
         </role>
-        <location id="68" name="Warehouse building">
+        <location id="68" kind="Actual" name="Warehouse building">
           <description></description>
+          <tag id="11778" kind="Type">Warehouse type</tag>
           <geoname></geoname>
         </location>
         <startsWithScenario>false</startsWithScenario>
@@ -3614,11 +3482,12 @@
       </part>
       <part id="147">
         <task>Managing assembly area</task>
-        <role id="278" name="Assembly Area Leader">
+        <role id="278" kind="Actual" name="Assembly Area Leader">
           <description></description>
         </role>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -3673,11 +3542,6 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -3691,11 +3555,6 @@
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -3729,12 +3588,12 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -3744,12 +3603,22 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
         </organization>
-        <location id="44" name="Assembly area">
+        <location id="44" kind="Actual" name="Assembly area">
           <description></description>
           <geoname></geoname>
         </location>
@@ -3758,11 +3627,12 @@
       </part>
       <part id="148">
         <task>Managing building evacuation</task>
-        <role id="279" name="Emergency Manager">
+        <role id="279" kind="Actual" name="Emergency Manager">
           <description>Organizes and leads response to fire; leads evacuation etc.</description>
         </role>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -3817,11 +3687,6 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -3835,11 +3700,6 @@
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -3873,12 +3733,12 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -3888,12 +3748,22 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
         </organization>
-        <location id="50" name="ACME 100">
+        <location id="50" kind="Actual" name="ACME 100">
           <description></description>
           <streetAddress>200 South Street</streetAddress>
           <geoname>Morristown, NJ</geoname>
@@ -3918,11 +3788,12 @@
       </part>
       <part id="149">
         <task>Overseeing building evacuation</task>
-        <role id="325" name="CEO">
+        <role id="325" kind="Actual" name="CEO">
           <description></description>
         </role>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -3977,11 +3848,6 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -3995,11 +3861,6 @@
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -4033,12 +3894,12 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -4048,7 +3909,17 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -4057,19 +3928,15 @@
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="BodilyHarm">ACME</mitigation>
       </part>
-      <part id="150">
+      <part id="142">
         <task>Relaying evacuation message</task>
-        <role id="685" name="Switchboard and Intercom System">
-          <description></description>
+        <role id="281" kind="Actual" name="Evacuation Team Leader">
+          <description>Someone in charge of leading evacuations.</description>
+          <tag id="11623" kind="Type">Leader</tag>
         </role>
-        <actor id="686" name="R2D2">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
-          <attachments>
-            <attachment type="Image">http://www.cutiegadget.com/pict/r2-d2_robot.jpg</attachment>
-          </attachments>
-        </actor>
-        <organization id="14" name="ACME">
-          <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -4124,11 +3991,6 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -4142,11 +4004,6 @@
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -4180,12 +4037,12 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -4195,12 +4052,190 @@
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
         </organization>
-        <location id="50" name="ACME 100">
+        <location id="50" kind="Actual" name="ACME 100">
+          <description></description>
+          <streetAddress>200 South Street</streetAddress>
+          <geoname>Morristown, NJ</geoname>
+          <geoLocation>
+            <geonameId>5101427</geonameId>
+            <country>United States</country>
+            <state>New Jersey</state>
+            <county>Morris County</county>
+            <city>Morristown</city>
+            <countryCode>US</countryCode>
+            <stateCode>NJ</stateCode>
+            <countyCode>027</countyCode>
+            <cityCode>PPL</cityCode>
+            <population>18886</population>
+            <latitude>40.7967667</latitude>
+            <longitude>-74.4815438</longitude>
+            <precision>0</precision>
+          </geoLocation>
+        </location>
+        <startsWithScenario>false</startsWithScenario>
+        <terminatesEvent>false</terminatesEvent>
+      </part>
+      <part id="150">
+        <task>Relaying evacuation message</task>
+        <role id="685" kind="Actual" name="Switchboard and Intercom System">
+          <description></description>
+        </role>
+        <actor id="686" kind="Actual" name="R2D2">
+          <description></description>
+          <attachments>
+            <attachment type="Image">http://www.cutiegadget.com/pict/r2-d2_robot.jpg</attachment>
+          </attachments>
+          <system>true</system>
+        </actor>
+        <organization id="14" kind="Actual" name="ACME">
+          <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
+          <attachments>
+            <attachment type="Image">uploads/acme.png</attachment>
+          </attachments>
+          <actorsRequired>true</actorsRequired>
+          <agreementsRequired>true</agreementsRequired>
+          <location id="323">Main building</location>
+          <channel>
+            <medium>Phone</medium>
+            <address>(973) 754-0722</address>
+          </channel>
+          <channel>
+            <medium>Fax</medium>
+            <address>(973) 754-2493</address>
+          </channel>
+          <job>
+            <actor id="277">Richard Carry</actor>
+            <role id="278">Assembly Area Leader</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="277">Richard Carry</actor>
+            <role id="279">Emergency Manager</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="280">Mary Delaney</actor>
+            <role id="281">Evacuation Team Leader</role>
+            <jurisdiction id="282">1st shift/floor</jurisdiction>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="283">John Garrison</actor>
+            <role id="281">Evacuation Team Leader</role>
+            <jurisdiction id="324">2nd shift/floor</jurisdiction>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="285">Peter Sanchez</actor>
+            <role id="281">Evacuation Team Leader</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="280">Mary Delaney</actor>
+            <role id="286">Switchboard and Intercom Operator</role>
+            <jurisdiction id="282">1st shift/floor</jurisdiction>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="283">John Garrison</actor>
+            <role id="286">Switchboard and Intercom Operator</role>
+            <jurisdiction id="324">2nd shift/floor</jurisdiction>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="277">Richard Carry</actor>
+            <role id="326">Business Continuity Manager</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="277">Richard Carry</actor>
+            <role id="327">Customer Support Representative</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="283">John Garrison</actor>
+            <role id="328">Secretary</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="277">Richard Carry</actor>
+            <role id="330">Response Liaison Officer</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="277">Richard Carry</actor>
+            <role id="331">Customer Account Manager</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="285">Peter Sanchez</actor>
+            <role id="332">Manager</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="285">Peter Sanchez</actor>
+            <role id="281">Evacuation Team Leader</role>
+            <jurisdiction id="333">Warehouse</jurisdiction>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="334">Arthur Green</actor>
+            <role id="335">Business Continuity Officer</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="277">Richard Carry</actor>
+            <role id="335">Business Continuity Officer</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="280">Mary Delaney</actor>
+            <role id="335">Business Continuity Officer</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="285">Peter Sanchez</actor>
+            <role id="335">Business Continuity Officer</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="337">JoAnn Blythe</actor>
+            <role id="335">Business Continuity Officer</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
+            <role id="335">Business Continuity Officer</role>
+            <title>Employee</title>
+          </job>
+        </organization>
+        <location id="50" kind="Actual" name="ACME 100">
           <description></description>
           <streetAddress>200 South Street</streetAddress>
           <geoname>Morristown, NJ</geoname>
@@ -4224,95 +4259,6 @@
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="BodilyHarm">ACME</mitigation>
       </part>
-      <flow id="151" name="Evacuate to assembly area">
-        <source>
-          <part id="142"/>
-        </source>
-        <target>
-          <part id="145"/>
-        </target>
-        <description></description>
-        <channel>
-          <medium>F2F</medium>
-          <address></address>
-        </channel>
-        <channel>
-          <medium>Other</medium>
-          <address>Conference bridge</address>
-        </channel>
-        <channel>
-          <medium>Other</medium>
-          <address>Intercom</address>
-        </channel>
-        <all>false</all>
-        <significanceToSource>None</significanceToSource>
-        <significanceToTarget>Triggers</significanceToTarget>
-        <askedFor>false</askedFor>
-        <maxDelay>immediately</maxDelay>
-      </flow>
-      <flow id="152" name="Evacuation report">
-        <source>
-          <part id="142"/>
-        </source>
-        <target>
-          <part id="148"/>
-        </target>
-        <description></description>
-        <channel>
-          <medium>Phone</medium>
-          <address></address>
-        </channel>
-        <channel>
-          <medium>Cell</medium>
-          <address></address>
-        </channel>
-        <channel>
-          <medium>Email</medium>
-          <address></address>
-        </channel>
-        <channel>
-          <medium>HomePhone</medium>
-          <address></address>
-        </channel>
-        <all>false</all>
-        <significanceToSource>None</significanceToSource>
-        <significanceToTarget>Useful</significanceToTarget>
-        <askedFor>false</askedFor>
-        <maxDelay>immediately</maxDelay>
-      </flow>
-      <flow id="2278" name="Activate evacuation plan">
-        <source>
-          <connector id="176" scenario="Fire in the building">
-            <scenario-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
-9- Respond immediately to the fire event. &#xd;
-8- Ensure the safety and health of colleagues&#xd;
-7- Assess any damage or impact of a situation&#xd;
-4- Identify and apply the necessary emergency activities&#xd;
-0- Manage and communicate information about the incident to parties deemed necessary</scenario-description>
-            <flow name="Activate evacuation plan"/>
-            <part-id>170</part-id>
-            <part-role name="Emergency Manager"/>
-            <part-task name="Facilitating fire response"></part-task>
-            <part-organization name="ACME"/>
-          </connector>
-        </source>
-        <target>
-          <part id="142"/>
-        </target>
-        <detection-waivers>
-          <detection>EmptyNeedOrCapability</detection>
-        </detection-waivers>
-        <description></description>
-        <channel>
-          <medium>Phone</medium>
-          <address></address>
-        </channel>
-        <all>false</all>
-        <significanceToSource>None</significanceToSource>
-        <significanceToTarget>Triggers</significanceToTarget>
-        <askedFor>false</askedFor>
-        <maxDelay>26 minutes</maxDelay>
-      </flow>
       <flow id="153" name="Warehouse evacuation status">
         <source>
           <part id="143"/>
@@ -4395,11 +4341,7 @@
         </target>
         <description></description>
         <channel>
-          <medium>Cell</medium>
-          <address></address>
-        </channel>
-        <channel>
-          <medium>F2F</medium>
+          <medium>TV</medium>
           <address></address>
         </channel>
         <all>true</all>
@@ -4529,7 +4471,7 @@
         <askedFor>true</askedFor>
         <maxDelay>20 minutes</maxDelay>
       </flow>
-      <flow id="223" name="Activate evacuation plan">
+      <flow id="10375" name="Activate evacuation plan">
         <source>
           <connector id="176" scenario="Fire in the building">
             <scenario-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
@@ -4565,6 +4507,95 @@
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
         <maxDelay>20 minutes</maxDelay>
+      </flow>
+      <flow id="151" name="Evacuate to assembly area">
+        <source>
+          <part id="142"/>
+        </source>
+        <target>
+          <part id="145"/>
+        </target>
+        <description></description>
+        <channel>
+          <medium>F2F</medium>
+          <address></address>
+        </channel>
+        <channel>
+          <medium>Other</medium>
+          <address>Conference bridge</address>
+        </channel>
+        <channel>
+          <medium>Other</medium>
+          <address>Intercom</address>
+        </channel>
+        <all>false</all>
+        <significanceToSource>None</significanceToSource>
+        <significanceToTarget>Triggers</significanceToTarget>
+        <askedFor>false</askedFor>
+        <maxDelay>immediately</maxDelay>
+      </flow>
+      <flow id="152" name="Evacuation report">
+        <source>
+          <part id="142"/>
+        </source>
+        <target>
+          <part id="148"/>
+        </target>
+        <description></description>
+        <channel>
+          <medium>Phone</medium>
+          <address></address>
+        </channel>
+        <channel>
+          <medium>Cell</medium>
+          <address></address>
+        </channel>
+        <channel>
+          <medium>Email</medium>
+          <address></address>
+        </channel>
+        <channel>
+          <medium>HomePhone</medium>
+          <address></address>
+        </channel>
+        <all>false</all>
+        <significanceToSource>None</significanceToSource>
+        <significanceToTarget>Useful</significanceToTarget>
+        <askedFor>false</askedFor>
+        <maxDelay>immediately</maxDelay>
+      </flow>
+      <flow id="10376" name="Activate evacuation plan">
+        <source>
+          <connector id="176" scenario="Fire in the building">
+            <scenario-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
+9- Respond immediately to the fire event. &#xd;
+8- Ensure the safety and health of colleagues&#xd;
+7- Assess any damage or impact of a situation&#xd;
+4- Identify and apply the necessary emergency activities&#xd;
+0- Manage and communicate information about the incident to parties deemed necessary</scenario-description>
+            <flow name="Activate evacuation plan"/>
+            <part-id>170</part-id>
+            <part-role name="Emergency Manager"/>
+            <part-task name="Facilitating fire response"></part-task>
+            <part-organization name="ACME"/>
+          </connector>
+        </source>
+        <target>
+          <part id="142"/>
+        </target>
+        <detection-waivers>
+          <detection>EmptyNeedOrCapability</detection>
+        </detection-waivers>
+        <description></description>
+        <channel>
+          <medium>Phone</medium>
+          <address></address>
+        </channel>
+        <all>false</all>
+        <significanceToSource>None</significanceToSource>
+        <significanceToTarget>Triggers</significanceToTarget>
+        <askedFor>false</askedFor>
+        <maxDelay>26 minutes</maxDelay>
       </flow>
       <flow id="166" name="Evacuate building">
         <source>
@@ -4609,7 +4640,7 @@
         <target>
           <part id="143"/>
         </target>
-        <description></description>
+        <description>safe exits</description>
         <channel>
           <medium>Cell</medium>
           <address></address>
@@ -4661,7 +4692,7 @@ danger zones</description>
         <maxDelay>26 minutes</maxDelay>
       </flow>
     </scenario>
-    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/09/24 20:37:51 EDT" id="167" name="Fire in the building">
+    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/10/27 15:12:07 EDT" id="167" name="Fire in the building">
       <description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
 9- Respond immediately to the fire event. &#xd;
 8- Ensure the safety and health of colleagues&#xd;
@@ -4681,25 +4712,25 @@ or move them  to another scenario</remediation>
       </issue>
       <risk>
         <type>BodilyHarm</type>
-        <organization id="14">ACME</organization>
+        <organization id="14" kind="Actual">ACME</organization>
         <severity>Major</severity>
         <description></description>
       </risk>
       <risk>
         <type>PropertyDamage</type>
-        <organization id="14">ACME</organization>
+        <organization id="14" kind="Actual">ACME</organization>
         <severity>Severe</severity>
         <description></description>
       </risk>
       <part id="169">
         <task>Coordinating fire response</task>
-        <role id="10" name="Fire Chief">
+        <role id="10" kind="Actual" name="Fire Chief">
           <description></description>
           <attachments>
             <attachment type="Image">http://www.plumparty.com/partysupply/graphics/products/large/16596.jpg</attachment>
           </attachments>
         </role>
-        <organization id="13" name="Fire Department">
+        <organization id="13" kind="Actual" name="Fire Department">
           <description></description>
           <attachments>
             <attachment type="Image">http://cityofashville.googlepages.com/firelogo.jpg/firelogo-full.jpg</attachment>
@@ -4711,11 +4742,12 @@ or move them  to another scenario</remediation>
       </part>
       <part id="170">
         <task>Facilitating fire response</task>
-        <role id="279" name="Emergency Manager">
+        <role id="279" kind="Actual" name="Emergency Manager">
           <description>Organizes and leads response to fire; leads evacuation etc.</description>
         </role>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -4770,11 +4802,6 @@ or move them  to another scenario</remediation>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -4788,11 +4815,6 @@ or move them  to another scenario</remediation>
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -4826,12 +4848,12 @@ or move them  to another scenario</remediation>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -4841,7 +4863,17 @@ or move them  to another scenario</remediation>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -4854,19 +4886,19 @@ or move them  to another scenario</remediation>
       </part>
       <part id="171">
         <task>Fighting fire</task>
-        <role id="40" name="Firefighter">
+        <role id="40" kind="Actual" name="Firefighter">
           <description></description>
           <attachments>
             <attachment type="Image">http://www.things4myspace.com/myspace/backgrounds/firefighter/firefighter_18.jpg</attachment>
           </attachments>
         </role>
-        <organization id="13" name="Fire Department">
+        <organization id="13" kind="Actual" name="Fire Department">
           <description></description>
           <attachments>
             <attachment type="Image">http://cityofashville.googlepages.com/firelogo.jpg/firelogo-full.jpg</attachment>
           </attachments>
         </organization>
-        <location id="50" name="ACME 100">
+        <location id="50" kind="Actual" name="ACME 100">
           <description></description>
           <streetAddress>200 South Street</streetAddress>
           <geoname>Morristown, NJ</geoname>
@@ -4893,11 +4925,12 @@ or move them  to another scenario</remediation>
       </part>
       <part id="172">
         <task>Initiating fire response</task>
-        <role id="279" name="Emergency Manager">
+        <role id="279" kind="Actual" name="Emergency Manager">
           <description>Organizes and leads response to fire; leads evacuation etc.</description>
         </role>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -4952,11 +4985,6 @@ or move them  to another scenario</remediation>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -4970,11 +4998,6 @@ or move them  to another scenario</remediation>
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -5008,12 +5031,12 @@ or move them  to another scenario</remediation>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -5023,12 +5046,22 @@ or move them  to another scenario</remediation>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
         </organization>
-        <location id="50" name="ACME 100">
+        <location id="50" kind="Actual" name="ACME 100">
           <description></description>
           <streetAddress>200 South Street</streetAddress>
           <geoname>Morristown, NJ</geoname>
@@ -5056,11 +5089,12 @@ or move them  to another scenario</remediation>
       </part>
       <part id="173">
         <task>Powering down building</task>
-        <role id="279" name="Emergency Manager">
+        <role id="279" kind="Actual" name="Emergency Manager">
           <description>Organizes and leads response to fire; leads evacuation etc.</description>
         </role>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -5115,11 +5149,6 @@ or move them  to another scenario</remediation>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -5133,11 +5162,6 @@ or move them  to another scenario</remediation>
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -5171,12 +5195,12 @@ or move them  to another scenario</remediation>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -5186,7 +5210,17 @@ or move them  to another scenario</remediation>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -5198,7 +5232,7 @@ or move them  to another scenario</remediation>
       </part>
       <part id="174">
         <task>Responding to fire</task>
-        <organization id="13" name="Fire Department">
+        <organization id="13" kind="Actual" name="Fire Department">
           <description></description>
           <attachments>
             <attachment type="Image">http://cityofashville.googlepages.com/firelogo.jpg/firelogo-full.jpg</attachment>
@@ -5463,47 +5497,48 @@ jobs completed</description>
         <maxDelay>immediately</maxDelay>
       </flow>
     </scenario>
-    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/09/24 20:37:51 EDT" id="107" name="Recovery after fire">
+    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/10/27 15:12:07 EDT" id="107" name="Recovery after fire">
       <description>Managing the aftermath of a fire.</description>
       <trigger-event id="5">Building on fire</trigger-event>
       <phase id="4972">Recovering</phase>
       <risk>
         <type>BodilyHarm</type>
-        <organization id="14">ACME</organization>
+        <organization id="14" kind="Actual">ACME</organization>
         <severity>Minor</severity>
         <description></description>
       </risk>
       <risk>
         <type>FinesPenalties</type>
-        <organization id="14">ACME</organization>
+        <organization id="14" kind="Actual">ACME</organization>
         <severity>Major</severity>
         <description></description>
       </risk>
       <risk>
         <type>ReputationDamage</type>
-        <organization id="14">ACME</organization>
+        <organization id="14" kind="Actual">ACME</organization>
         <severity>Major</severity>
         <description></description>
       </risk>
       <risk>
         <type>AssetDevaluation</type>
-        <organization id="14">ACME</organization>
+        <organization id="14" kind="Actual">ACME</organization>
         <severity>Major</severity>
         <description></description>
       </risk>
       <risk>
         <type>PropertyDamage</type>
-        <organization id="14">ACME</organization>
+        <organization id="14" kind="Actual">ACME</organization>
         <severity>Major</severity>
         <description></description>
       </risk>
       <part id="109">
         <task>Assessing ability to restart operations</task>
-        <role id="330" name="Response Liaison Officer">
+        <role id="330" kind="Actual" name="Response Liaison Officer">
           <description></description>
         </role>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -5558,11 +5593,6 @@ jobs completed</description>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -5576,11 +5606,6 @@ jobs completed</description>
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -5614,12 +5639,12 @@ jobs completed</description>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -5629,7 +5654,17 @@ jobs completed</description>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -5639,11 +5674,12 @@ jobs completed</description>
       </part>
       <part id="110">
         <task>Assessing cost of damages</task>
-        <role id="279" name="Emergency Manager">
+        <role id="279" kind="Actual" name="Emergency Manager">
           <description>Organizes and leads response to fire; leads evacuation etc.</description>
         </role>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -5698,11 +5734,6 @@ jobs completed</description>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -5716,11 +5747,6 @@ jobs completed</description>
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -5754,12 +5780,12 @@ jobs completed</description>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -5769,12 +5795,22 @@ jobs completed</description>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
         </organization>
-        <location id="50" name="ACME 100">
+        <location id="50" kind="Actual" name="ACME 100">
           <description></description>
           <streetAddress>200 South Street</streetAddress>
           <geoname>Morristown, NJ</geoname>
@@ -5800,7 +5836,7 @@ jobs completed</description>
       </part>
       <part id="111">
         <task>Assessing cost of damages</task>
-        <role id="55" name="Insurance Adjuster">
+        <role id="55" kind="Actual" name="Insurance Adjuster">
           <description></description>
         </role>
         <startsWithScenario>false</startsWithScenario>
@@ -5808,7 +5844,7 @@ jobs completed</description>
       </part>
       <part id="112">
         <task>Assessing structural damage</task>
-        <role id="51" name="Building Inspector">
+        <role id="51" kind="Actual" name="Building Inspector">
           <description></description>
         </role>
         <startsWithScenario>false</startsWithScenario>
@@ -5817,11 +5853,12 @@ jobs completed</description>
       </part>
       <part id="113">
         <task>Coordinating recovery</task>
-        <role id="325" name="CEO">
+        <role id="325" kind="Actual" name="CEO">
           <description></description>
         </role>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -5876,11 +5913,6 @@ jobs completed</description>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -5894,11 +5926,6 @@ jobs completed</description>
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -5932,12 +5959,12 @@ jobs completed</description>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -5947,7 +5974,17 @@ jobs completed</description>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -5959,11 +5996,12 @@ jobs completed</description>
       </part>
       <part id="114">
         <task>Engaging clean up contractor</task>
-        <role id="326" name="Business Continuity Manager">
+        <role id="326" kind="Actual" name="Business Continuity Manager">
           <description></description>
         </role>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -6018,11 +6056,6 @@ jobs completed</description>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -6036,11 +6069,6 @@ jobs completed</description>
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -6074,12 +6102,12 @@ jobs completed</description>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -6089,7 +6117,17 @@ jobs completed</description>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -6100,7 +6138,7 @@ jobs completed</description>
       </part>
       <part id="115">
         <task>Estimating costs</task>
-        <role id="42" name="Cleanup Contractor">
+        <role id="42" kind="Actual" name="Cleanup Contractor">
           <description></description>
         </role>
         <startsWithScenario>false</startsWithScenario>
@@ -6108,7 +6146,7 @@ jobs completed</description>
       </part>
       <part id="116">
         <task>Investigating cause of fire</task>
-        <role id="78" name="Fire Inspector">
+        <role id="78" kind="Actual" name="Fire Inspector">
           <description></description>
         </role>
         <startsWithScenario>false</startsWithScenario>
@@ -6119,8 +6157,9 @@ jobs completed</description>
           <detection>UselessPart</detection>
         </detection-waivers>
         <task>Managing account</task>
-        <organization id="69" name="P. K. Brock Insurance Agency">
+        <organization id="69" kind="Actual" name="P. K. Brock Insurance Agency">
           <description></description>
+          <tag id="11682" kind="Type">Corporation</tag>
           <location id="57">Brock Insurance Office</location>
           <channel>
             <medium>Phone</medium>
@@ -6132,11 +6171,12 @@ jobs completed</description>
       </part>
       <part id="118">
         <task>Managing media</task>
-        <role id="329" name="Public Spokesperson">
+        <role id="329" kind="Actual" name="Public Spokesperson">
           <description></description>
         </role>
-        <organization id="14" name="ACME">
+        <organization id="14" kind="Actual" name="ACME">
           <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
           <attachments>
             <attachment type="Image">uploads/acme.png</attachment>
           </attachments>
@@ -6191,11 +6231,6 @@ jobs completed</description>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="325">CEO</role>
-            <title>President</title>
-          </job>
-          <job>
             <actor id="277">Richard Carry</actor>
             <role id="326">Business Continuity Manager</role>
             <title>Employee</title>
@@ -6209,11 +6244,6 @@ jobs completed</description>
             <actor id="283">John Garrison</actor>
             <role id="328">Secretary</role>
             <title>Employee</title>
-          </job>
-          <job>
-            <actor id="287">Louise Burns</actor>
-            <role id="329">Public Spokesperson</role>
-            <title>President</title>
           </job>
           <job>
             <actor id="277">Richard Carry</actor>
@@ -6247,12 +6277,12 @@ jobs completed</description>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="336">Jocelyne Bilodeau</actor>
+            <actor id="280">Mary Delaney</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="280">Mary Delaney</actor>
+            <actor id="285">Peter Sanchez</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -6262,7 +6292,17 @@ jobs completed</description>
             <title>Employee</title>
           </job>
           <job>
-            <actor id="285">Peter Sanchez</actor>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
             <role id="335">Business Continuity Officer</role>
             <title>Employee</title>
           </job>
@@ -6276,7 +6316,7 @@ jobs completed</description>
           <detection>UselessPart</detection>
         </detection-waivers>
         <task>Managing property</task>
-        <role id="59" name="Landlord">
+        <role id="59" kind="Actual" name="Landlord">
           <description></description>
         </role>
         <startsWithScenario>false</startsWithScenario>
@@ -6287,7 +6327,7 @@ jobs completed</description>
           <detection>UselessPart</detection>
         </detection-waivers>
         <task>Reporting on fire</task>
-        <role id="47" name="Media Representative">
+        <role id="47" kind="Actual" name="Media Representative">
           <description></description>
         </role>
         <startsWithScenario>true</startsWithScenario>
