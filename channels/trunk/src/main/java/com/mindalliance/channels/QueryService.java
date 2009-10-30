@@ -5,8 +5,11 @@ import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Channel;
+import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Hierarchical;
@@ -25,7 +28,6 @@ import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.nlp.Proximity;
-import com.mindalliance.channels.util.Employment;
 import com.mindalliance.channels.util.Play;
 
 import java.util.Iterator;
@@ -730,7 +732,7 @@ public interface QueryService extends Service {
      *
      * @return a list of jobs
      */
-    List<Employment> findAllEmployments();
+    List<Employment> findAllEmploymentsWithKnownActors();
 
     /**
      * FInd all employments in acutal or type or organization.
@@ -1140,8 +1142,26 @@ public interface QueryService extends Service {
 
     /**
      * Find all parts played by an organization or one of its children.
+     *
      * @param organization an organization
      * @return a list of parts
      */
     List<Part> findAllPartsPlayedBy( Organization organization );
+
+    /**
+     * Find all assignments that match a part.
+     *
+     * @param part                 a part
+     * @param includeUnknownActors whether to include assignment of unknown actors
+     * @return a list of assignments
+     */
+    List<Assignment> findAllAssignments( Part part, boolean includeUnknownActors );
+
+    /**
+     * Find all commitments implied by a sharing flow.
+     *
+     * @param flow a flow
+     * @return a list of commitments
+     */
+    List<Commitment> findAllCommitments( Flow flow );
 }

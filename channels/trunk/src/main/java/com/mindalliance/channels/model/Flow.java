@@ -734,12 +734,12 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
     }
 
     /**
-     * Whether this flow represents a sharing commitment.
+     * Whether this flow represents an information sharing.
      *
      * @return a boolean
      */
     @Transient
-    public boolean isSharingCommitment() {
+    public boolean isSharing() {
         return getSource().isPart() && getTarget().isPart();
     }
 
@@ -773,7 +773,6 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
             types.add( Attachment.Type.Image );
         types.add( Attachment.Type.PolicyMust );
         types.add( Attachment.Type.PolicyCant );
-        types.add( Attachment.Type.MOU );
         return types;
     }
 

@@ -80,6 +80,19 @@ public class FlowActionsMenuPanel extends MenuPanel {
             };
             menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Hide details" ), hideLink ) );
         }
+        // View flow commitments
+        if ( getFlow().isSharing() ) {
+            AjaxFallbackLink commitmentsLink = new AjaxFallbackLink( "link" ) {
+                @Override
+                public void onClick( AjaxRequestTarget target ) {
+                    update( target, new Change( Change.Type.AspectViewed, getFlow(), "commitments" ) );
+                }
+            };
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Show commitments" ),
+                    commitmentsLink ) );
+        }
         // Undo and redo
         menuItems.add( this.getUndoMenuItem( "menuItem" ) );
         menuItems.add( this.getRedoMenuItem( "menuItem" ) );

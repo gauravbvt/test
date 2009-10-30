@@ -39,12 +39,7 @@ public class Attachment implements Serializable, Comparable<Attachment> {
         /**
          * A policy document that prohibits whatever the document is attached to.
          */
-        PolicyCant( "Prohibiting policy" ),
-
-        /**
-         * A document that allows whatever the document is attached to.
-         */
-        MOU( "Sharing agreement" );
+        PolicyCant( "Prohibiting policy" );
 
         //--------------------------------
         /**

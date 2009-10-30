@@ -1,15 +1,9 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.analysis.DetectedIssue;
-import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Part;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +26,8 @@ public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
      */
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
+        // TODO redefine
+/*
         Flow flow = (Flow) modelObject;
         Part source = (Part) flow.getSource();
         Organization org = source.getOrganization();
@@ -60,6 +56,7 @@ public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
                 }
             }
         }
+*/
         return issues;
     }
 
@@ -68,7 +65,7 @@ public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
      */
     public boolean appliesTo( ModelObject modelObject ) {
         return modelObject instanceof Flow
-                && ( (Flow) modelObject ).isSharingCommitment();
+                && ( (Flow) modelObject ).isSharing();
     }
 
     /**

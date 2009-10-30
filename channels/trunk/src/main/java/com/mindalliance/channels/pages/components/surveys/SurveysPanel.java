@@ -114,8 +114,17 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
      * Surveys table.
      */
     private SurveysTable surveysTable;
+    /**
+     * Selected survey.
+     */
     private Survey selectedSurvey;
+    /**
+     * Survey container.
+     */
     private WebMarkupContainer surveyContainer;
+    /**
+     * Title label.
+     */
     private Label titleLabel;
     /**
      * Survey service.

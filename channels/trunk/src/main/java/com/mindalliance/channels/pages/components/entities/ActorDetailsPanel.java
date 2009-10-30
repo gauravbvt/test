@@ -6,6 +6,7 @@ import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channelable;
+import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
@@ -17,7 +18,6 @@ import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
-import com.mindalliance.channels.util.Employment;
 import com.mindalliance.channels.util.NameRange;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
@@ -508,14 +508,14 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         /**
          * Employment model.
          */
-        private IModel<List<Employment>> employmentModel;
+        private IModel<List<Employment>> employmentsModel;
 
         public ActorEmploymentTable(
                 String id,
                 IModel<List<Employment>> employmentModel,
                 int pageSize ) {
             super( id, null, pageSize, null );
-            this.employmentModel = employmentModel;
+            this.employmentsModel = employmentModel;
             init();
         }
 
@@ -546,7 +546,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                     "employments",
                     columns,
                     new SortableBeanProvider<Employment>(
-                            employmentModel.getObject(),
+                            employmentsModel.getObject(),
                             "actor.lastName" ),
                     getPageSize() ) );
         }

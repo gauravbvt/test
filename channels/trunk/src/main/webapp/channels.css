@@ -564,6 +564,13 @@ div.header {
     background: transparent url( 'images/survey_big.png' ) no-repeat 5px 2px;
 }
 
+.assignments .header {
+    background: transparent url( 'images/assignment.png' ) no-repeat 5px 2px;
+}
+
+.commitments .header {
+    background: transparent url( 'images/commitment.png' ) no-repeat 5px 2px;
+}
 #footer {
     border: 1px outset #6fafaf;
 }

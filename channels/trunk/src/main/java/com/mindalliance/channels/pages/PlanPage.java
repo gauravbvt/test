@@ -21,8 +21,10 @@ import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.ScenarioObject;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
+import com.mindalliance.channels.pages.components.FlowCommitmentsPanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
+import com.mindalliance.channels.pages.components.PartAssignmentsPanel;
 import com.mindalliance.channels.pages.components.ScenarioImportPanel;
 import com.mindalliance.channels.pages.components.ScenarioLink;
 import com.mindalliance.channels.pages.components.ScenarioPanel;
@@ -35,6 +37,7 @@ import com.mindalliance.channels.pages.components.scenario.ScenarioEditPanel;
 import com.mindalliance.channels.pages.components.surveys.SurveysPanel;
 import com.mindalliance.channels.surveys.Survey;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -198,7 +201,14 @@ public final class PlanPage extends WebPage implements Updatable {
      * The entity panel.
      */
     private Component entityPanel;
-
+    /**
+     * The assignments panel.
+     */
+    private Component assignmentsPanel;
+    /**
+     * The commitments panel.
+     */
+    private Component commitmentsPanel;
     /**
      * The scenarios map panel.
      */
@@ -307,18 +317,11 @@ public final class PlanPage extends WebPage implements Updatable {
         addScenarioSelector();
         addPlanSwitcher();
         addModalDialog();
-
-        scenarioImportPanel = new ScenarioImportPanel( "scenario-import" );
-        form.add( scenarioImportPanel );
-        scenarioPanel = new ScenarioPanel(
-                "scenario",
-                new PropertyModel<Scenario>( this, "scenario" ),
-                new PropertyModel<Part>( this, "part" ),
-                getReadOnlyExpansions(),
-                new PropertyModel<String>( this, "scenarioAspect" )
-        );
-        form.add( scenarioPanel );
+        addScenarioImportDialog();
+        addScenarioPanel();
         addEntityPanel();
+        addAssignmentsPanel();
+        addCommitmentsPanel();
         addScenarioEditPanel();
         addPlanEditPanel();
         addSurveysPanel( null );
@@ -373,6 +376,22 @@ public final class PlanPage extends WebPage implements Updatable {
         scenarioDescriptionLabel.setOutputMarkupId( true );
         form.add( scenarioDescriptionLabel );
         form.add( new Label( "user", getUser().getUsername() ) );                              // NON-NLS
+    }
+
+    private void addScenarioImportDialog() {
+        scenarioImportPanel = new ScenarioImportPanel( "scenario-import" );
+        form.add( scenarioImportPanel );
+    }
+
+    private void addScenarioPanel() {
+        scenarioPanel = new ScenarioPanel(
+                "scenario",
+                new PropertyModel<Scenario>( this, "scenario" ),
+                new PropertyModel<Part>( this, "part" ),
+                getReadOnlyExpansions(),
+                new PropertyModel<String>( this, "scenarioAspect" )
+        );
+        form.add( scenarioPanel );
     }
 
     private GeomapLinkPanel createPartsMapLink() {
@@ -605,6 +624,49 @@ public final class PlanPage extends WebPage implements Updatable {
         target.addComponent( entityPanel );
     }
 
+    private void addAssignmentsPanel() {
+        Part partViewed = getPartViewed( "assignments" );
+        if ( partViewed == null ) {
+            assignmentsPanel = new Label( "assignments", "" );
+            assignmentsPanel.setOutputMarkupId( true );
+            makeVisible( assignmentsPanel, false );
+        } else {
+            assignmentsPanel = new PartAssignmentsPanel(
+                    "assignments",
+                    new Model<Part>( getPartViewed( "assignments" ) ),
+                    getReadOnlyExpansions()
+            );
+        }
+        form.addOrReplace( assignmentsPanel );
+    }
+
+    private void refreshAssignmentsPanel( AjaxRequestTarget target ) {
+        addAssignmentsPanel();
+        target.addComponent( assignmentsPanel );
+    }
+
+    private void addCommitmentsPanel() {
+        Flow flowViewed = getFlowViewed( "commitments" );
+        if ( flowViewed == null ) {
+            commitmentsPanel = new Label( "commitments", "" );
+            commitmentsPanel.setOutputMarkupId( true );
+            makeVisible( commitmentsPanel, false );
+        } else {
+            commitmentsPanel = new FlowCommitmentsPanel(
+                    "commitments",
+                    new Model<Flow>( getFlowViewed("commitments" ) ),
+                    getReadOnlyExpansions()
+            );
+        }
+        form.addOrReplace( commitmentsPanel );
+    }
+
+    private void refreshCommitmentsPanel( AjaxRequestTarget target ) {
+        addCommitmentsPanel();
+        target.addComponent( commitmentsPanel );
+    }
+
+
     /**
      * Add scenario-related components.
      */
@@ -696,7 +758,7 @@ public final class PlanPage extends WebPage implements Updatable {
         for ( long id : expansions ) {
             try {
                 ModelObject mo = queryService.find( ModelObject.class, id );
-                if ( mo.isEntity() ) return (ModelEntity)mo;
+                if ( mo.isEntity() ) return (ModelEntity) mo;
             }
             catch ( NotFoundException ignored ) {
                 // ignore
@@ -1043,9 +1105,62 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void viewAspect( Identifiable identifiable, String aspect ) {
-        aspects.put( identifiable.getId(), aspect );
+        if ( aspect == null || aspect.isEmpty() ) {
+            aspects.remove( identifiable.getId() );
+        } else {
+            aspects.put( identifiable.getId(), aspect );
+        }
     }
 
+    /**
+     * Get part which given aspect is viewed
+     *
+     * @param aspect a string
+     * @return a part or null
+     */
+    private Part getPartViewed( final String aspect ) {
+        Part partViewed = null;
+        Long partId = findIdForAspectViewed( aspect );
+        if ( partId != null ) {
+            try {
+                partViewed = getQueryService().find( Part.class, partId );
+            } catch ( NotFoundException e ) {
+                LOG.warn( "Part not found at " + partId );
+            }
+        }
+        return partViewed;
+    }
+
+    /**
+     * Get flow which given aspect is viewed
+     *
+     * @param aspect a string
+     * @return a flow or null
+     */
+    private Flow getFlowViewed( final String aspect ) {
+        Flow flowViewed = null;
+        Long flowId = findIdForAspectViewed( aspect );
+        if ( flowId != null ) {
+            try {
+                flowViewed = getQueryService().find( Flow.class, flowId );
+            } catch ( NotFoundException e ) {
+                LOG.warn( "Flow not found at " + flowId );
+            }
+        }
+        return flowViewed;
+    }
+
+    private Long findIdForAspectViewed( final String aspect ) {
+        return (Long) CollectionUtils.find(
+                aspects.keySet(),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        Long id = (Long) obj;
+                        return aspects.get( id ).equals( aspect );
+                    }
+                }
+        );
+    }
 
     private void collapseScenarioObjects() {
         List<Identifiable> toCollapse = new ArrayList<Identifiable>();
@@ -1240,10 +1355,16 @@ public final class PlanPage extends WebPage implements Updatable {
                     target.addComponent( scenarioDropDownChoice );
                     scenarioPanel.refresh( target );
                     target.addComponent( scenarioPanel );
+                } else if ( change.isAspectViewed() ) {
+                    refreshAssignmentsPanel( target );
                 }
             }
             if ( identifiable instanceof Flow ) {
-                if ( !change.isDisplay() ) refreshAll( target );
+                if ( change.isAspectViewed() ) {
+                    refreshCommitmentsPanel( target );
+                } else if ( !change.isDisplay() ) {
+                    refreshAll( target );
+                }
             }
             if ( identifiable instanceof ExternalFlow && !change.isDisplay() ) {
                 target.addComponent( planEditPanel );
@@ -1307,6 +1428,8 @@ public final class PlanPage extends WebPage implements Updatable {
         scenarioPanel.refresh( target );
         target.addComponent( scenarioPanel );
         refreshEntityPanel( target );
+        refreshAssignmentsPanel( target );
+        refreshCommitmentsPanel( target );
         refreshPlanEditPanel( target );
         target.addComponent( planEditPanel );
         form.addOrReplace( createPartsMapLink() );

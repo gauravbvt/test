@@ -83,7 +83,7 @@ public class InconsistentImpactOnSourcePart extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     public boolean appliesTo( ModelObject modelObject ) {
-        return modelObject instanceof Flow && ( (Flow) modelObject ).isSharingCommitment();
+        return modelObject instanceof Flow && ( (Flow) modelObject ).isSharing();
     }
 
     /**

@@ -89,7 +89,7 @@ public class UntimelyCriticalCommitment extends AbstractIssueDetector {
      */
     public boolean appliesTo( ModelObject modelObject ) {
         return modelObject instanceof Flow
-                && ( (Flow) modelObject ).isSharingCommitment()
+                && ( (Flow) modelObject ).isSharing()
                 && !( (Flow) modelObject ).isTriggeringToTarget();
     }
 

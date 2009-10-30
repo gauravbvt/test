@@ -14,8 +14,11 @@ import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Channel;
+import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
@@ -39,7 +42,6 @@ import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.nlp.Proximity;
-import com.mindalliance.channels.util.Employment;
 import com.mindalliance.channels.util.FileUserDetailsService;
 import com.mindalliance.channels.util.Matcher;
 import com.mindalliance.channels.util.Play;
@@ -1716,7 +1718,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<Employment> findAllEmployments() {
+    public List<Employment> findAllEmploymentsWithKnownActors() {
         Set<Actor> employed = new HashSet<Actor>();
         List<Employment> employments = new ArrayList<Employment>();
         List<Organization> orgs = new ArrayList<Organization>( listActualEntities( Organization.class ) );
@@ -1762,7 +1764,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @SuppressWarnings( "unchecked" )
     public List<Employment> findAllEmploymentsForRole( final Role role ) {
         return (List<Employment>) CollectionUtils.select(
-                findAllEmployments(),
+                findAllEmploymentsWithKnownActors(),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         Role empRole = ( (Employment) obj ).getRole();
@@ -1778,7 +1780,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @SuppressWarnings( "unchecked" )
     public List<Employment> findAllEmploymentsForActor( final Actor actor ) {
         return (List<Employment>) CollectionUtils.select(
-                findAllEmployments(),
+                findAllEmploymentsWithKnownActors(),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         Actor empActor = ( (Employment) obj ).getActor();
@@ -2608,6 +2610,54 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public List<Assignment> findAllAssignments( final Part part, final boolean includeUnknownActors ) {
+        List<Employment> employments = findAllEmploymentsWithKnownActors();
+        if ( includeUnknownActors ) {
+            employments.addAll( findAllEmploymentsWithUnknownActors() );
+        }
+        List<Assignment> assignments = new ArrayList<Assignment>();
+        for ( Employment employment : employments ) {
+            if ( employment.playsPart( part ) )
+                assignments.add( new Assignment( employment, part ) );
+        }
+        return assignments;
+    }
+
+    private List<Employment> findAllEmploymentsWithUnknownActors() {
+        Set<Employment> employments = new HashSet<Employment>();
+        for ( Part p : findAllParts() ) {
+            if ( !p.resourceSpec().isAnyone() && p.getActorOrUnknown().isUnknown() ) {
+                Employment employment = new Employment(
+                        Actor.UNKNOWN,
+                        p.getOrganizationOrUnknown(),
+                        new Job( Actor.UNKNOWN, p.getRoleOrUnknown(), p.getJurisdiction() ) );
+                employments.add( employment );
+            }
+        }
+        return new ArrayList<Employment>( employments );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Commitment> findAllCommitments( Flow flow ) {
+        Set<Commitment> commitments = new HashSet<Commitment>();
+        if ( flow.isSharing() ) {
+            List<Assignment> sources = findAllAssignments( (Part) flow.getSource(), false );
+            List<Assignment> beneficiaries = findAllAssignments( (Part) flow.getTarget(), true );
+            for ( Assignment source : sources ) {
+                for ( Assignment beneficiary : beneficiaries ) {
+                    if ( !source.getActor().equals( beneficiary.getActor() ) ) {
+                        commitments.add( new Commitment( source, beneficiary, flow ) );
+                    }
+                }
+            }
+        }
+        return new ArrayList<Commitment>( commitments );
+    }
 
 }
 

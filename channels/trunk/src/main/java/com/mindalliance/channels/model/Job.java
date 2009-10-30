@@ -141,7 +141,7 @@ public class Job implements Serializable, Mappable, GeoLocatable {
                 + ( getJurisdictionName().isEmpty() ? "" : " for " + getJurisdictionName() );
     }
 
-    /**
+   /**
      * {@inheritDoc}
      */
     @Override
@@ -155,7 +155,6 @@ public class Job implements Serializable, Mappable, GeoLocatable {
             return false;
         }
     }
-
     /**
      * {@inheritDoc}
      */

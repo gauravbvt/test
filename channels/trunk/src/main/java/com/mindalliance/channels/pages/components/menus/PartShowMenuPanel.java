@@ -1,8 +1,12 @@
 package com.mindalliance.channels.pages.components.menus;
 
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Part;
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,18 @@ public class PartShowMenuPanel extends MenuPanel {
      */
     public List<Component> getMenuItems() {
         List<Component> menuItems = new ArrayList<Component>();
+        // View part assignments
+        AjaxFallbackLink assignmentsLink = new AjaxFallbackLink( "link" ) {
+                @Override
+                public void onClick( AjaxRequestTarget target ) {
+                    update( target, new Change( Change.Type.AspectViewed, getPart(), "assignments" ) );
+                }
+            };
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Assignments" ),
+                    assignmentsLink ) );
+        // View part entities
         menuItems.addAll( getModelObjectMenuItems( "menuItem", getModelObjectWrappers() ) );
         return menuItems;
     }

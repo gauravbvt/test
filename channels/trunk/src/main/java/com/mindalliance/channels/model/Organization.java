@@ -58,12 +58,6 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
      */
     private static String UnknownName = "(unknown)";
 
-    static {
-        UNKNOWN = new Organization( "(unknown)" );
-        UNKNOWN.setActual();
-        UNKNOWN.setId( 10000000L - 3 );
-    }
-
     public Organization() {
     }
 

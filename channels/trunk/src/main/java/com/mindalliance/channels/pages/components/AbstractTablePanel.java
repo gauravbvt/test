@@ -59,6 +59,10 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
      */
     private int pageSize = 5;
 
+    public AbstractTablePanel( String s ) {
+        super( s );
+    }
+
     public AbstractTablePanel( String s, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
         super( s, iModel, expansions );
     }
