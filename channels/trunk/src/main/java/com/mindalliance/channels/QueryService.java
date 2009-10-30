@@ -1158,10 +1158,24 @@ public interface QueryService extends Service {
     List<Assignment> findAllAssignments( Part part, boolean includeUnknownActors );
 
     /**
+     * Find all assignments for an actor.
+     * @param actor an actor
+     * @return a list of assignments
+     */
+    List<Assignment> findAllAssignments( Actor actor );
+
+    /**
      * Find all commitments implied by a sharing flow.
      *
      * @param flow a flow
      * @return a list of commitments
      */
     List<Commitment> findAllCommitments( Flow flow );
+
+    /**
+     * Find all commitments of an actor.
+     * @param actor an actor
+     * @return a list of commitments
+     */
+    List<Commitment> findAllCommitments( Actor actor );
 }

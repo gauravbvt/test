@@ -2626,6 +2626,22 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return assignments;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public List<Assignment> findAllAssignments( Actor actor ) {
+        Set<Assignment> assignments = new HashSet<Assignment>();
+        List<Employment> employments = findAllEmploymentsForActor( actor );
+        List<Part> parts = findAllParts();
+        for ( Employment employment : employments ) {
+            for ( Part part : parts ) {
+                if ( employment.playsPart( part ) )
+                    assignments.add( new Assignment( employment, part ) );
+            }
+        }
+        return new ArrayList<Assignment>( assignments );
+    }
+
     private List<Employment> findAllEmploymentsWithUnknownActors() {
         Set<Employment> employments = new HashSet<Employment>();
         for ( Part p : findAllParts() ) {
@@ -2652,6 +2668,28 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 for ( Assignment beneficiary : beneficiaries ) {
                     if ( !source.getActor().equals( beneficiary.getActor() ) ) {
                         commitments.add( new Commitment( source, beneficiary, flow ) );
+                    }
+                }
+            }
+        }
+        return new ArrayList<Commitment>( commitments );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Commitment> findAllCommitments( Actor actor ) {
+        Set<Commitment> commitments = new HashSet<Commitment>();
+        for ( Assignment assignment : findAllAssignments( actor ) ) {
+            Iterator<Flow> flows = assignment.getPart().flows();
+            while ( flows.hasNext() ) {
+                Flow flow = flows.next();
+                if ( flow.isSharing() && flow.getSource().equals( assignment.getPart() ) ) {
+                    for ( Assignment beneficiary : findAllAssignments( (Part) flow.getTarget(), true ) ) {
+                        commitments.add( new Commitment(
+                                assignment,
+                                beneficiary,
+                                flow ) );
                     }
                 }
             }

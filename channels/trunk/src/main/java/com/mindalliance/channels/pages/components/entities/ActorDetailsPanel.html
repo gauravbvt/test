@@ -38,11 +38,22 @@
             <select wicket:id="indexed">
                 <option>Role</option>
             </select>
-
             <div>
                 <span wicket:id="nameRanges">[name range panel]</span>
                 <span wicket:id="actorEmployments">[actor employments panel]</span>
             </div>
+        </td>
+    </tr>
+    <tr wicket:id="assignmentsContainer">
+        <td colspan="2">
+            <h3>Task assignments</h3>
+            <div wicket:id="assignments">[assignments panel]</div>
+        </td>
+    </tr>
+    <tr wicket:id="commitmentsContainer">
+        <td colspan="2">
+            <h3>Sharing commitments</h3>
+            <span wicket:id="commitments">[commitments panel]</span>
         </td>
     </tr>
 </wicket:extend>

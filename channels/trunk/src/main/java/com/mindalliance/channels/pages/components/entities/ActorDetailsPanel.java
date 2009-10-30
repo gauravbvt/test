@@ -5,7 +5,9 @@ import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Channelable;
+import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
@@ -28,6 +30,7 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
@@ -150,6 +153,8 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         addIndexedOnChoice();
         addNameRangePanel();
         addActorEmploymentTable();
+        addAssignmentsPanel();
+        addCommitmentsPanel();
         adjustFields();
         makeVisible( userChoice, isParticipant() );
     }
@@ -279,6 +284,56 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
 
     public void setIndexedOn( String val ) {
         indexedOn = val;
+    }
+
+    private void addAssignmentsPanel() {
+        WebMarkupContainer assignmentsContainer = new WebMarkupContainer( "assignmentsContainer" );
+        assignmentsContainer.setVisible( getActor().isActual() );
+        moDetailsDiv.add( assignmentsContainer );
+        if ( getActor().isActual() ) {
+            assignmentsContainer.add(
+                    new AssignmentsTablePanel(
+                            "assignments",
+                            new PropertyModel<List<Assignment>>( this, "assignments" )
+                    )
+            );
+        } else {
+            assignmentsContainer.add( new Label( "assignments", "" ) );
+        }
+    }
+
+    /**
+     * Find all of the actor's assignments.
+     *
+     * @return a list of assignments
+     */
+    public List<Assignment> getAssignments() {
+        return getQueryService().findAllAssignments( getActor() );
+    }
+
+    private void addCommitmentsPanel() {
+        WebMarkupContainer commitmentsContainer = new WebMarkupContainer( "commitmentsContainer" );
+        commitmentsContainer.setVisible( getActor().isActual() );
+        moDetailsDiv.add( commitmentsContainer );
+        if ( getActor().isActual() ) {
+            commitmentsContainer.add(
+                    new CommitmentsTablePanel(
+                            "commitments",
+                            new PropertyModel<List<Commitment>>( this, "commitments" )
+                    )
+            );
+        } else {
+            commitmentsContainer.add( new Label( "commitments", "" ) );
+        }
+    }
+
+    /**
+     * Find all of the actor's assignments.
+     *
+     * @return a list of assignments
+     */
+    public List<Commitment> getCommitments() {
+        return getQueryService().findAllCommitments( getActor() );
     }
 
     /**
@@ -552,5 +607,174 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         }
     }
 
+    private class AssignmentsTablePanel extends AbstractFilterableTablePanel {
+        /**
+         * Assignments model.
+         */
+        private IModel<List<Assignment>> assignmentsModel;
+
+
+        public AssignmentsTablePanel( String id, IModel<List<Assignment>> assignmentsModel ) {
+            super( id );
+            this.assignmentsModel = assignmentsModel;
+            init();
+        }
+
+        /**
+         * Find all employments in the plan that are not filtered out and are within selected name range.
+         *
+         * @return a list of employments.
+         */
+        @SuppressWarnings( "unchecked" )
+        public List<Assignment> getFilteredAssignments() {
+            return (List<Assignment>) CollectionUtils.select(
+                    assignmentsModel.getObject(),
+                    new Predicate() {
+                        public boolean evaluate( Object obj ) {
+                            return !isFilteredOut( obj );
+                        }
+                    }
+            );
+        }
+
+        @SuppressWarnings( "unchecked" )
+        private void init() {
+            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            // columns
+            columns.add( this.makeFilterableLinkColumn(
+                    "Task",
+                    "part",
+                    "part.task",
+                    EMPTY,
+                    AssignmentsTablePanel.this ) );
+            columns.add( makeFilterableLinkColumn(
+                    "Location",
+                    "part.location",
+                    "part.location.name",
+                    EMPTY,
+                    AssignmentsTablePanel.this ) );
+            columns.add( this.makeFilterableLinkColumn(
+                    "Role",
+                    "employment.role",
+                    "employment.role.name",
+                    EMPTY,
+                    AssignmentsTablePanel.this ) );
+            columns.add( makeFilterableLinkColumn(
+                    "Jurisdiction",
+                    "employment.job.jurisdiction",
+                    "employment.job.jurisdiction.name",
+                    EMPTY,
+                    AssignmentsTablePanel.this ) );
+            columns.add( makeFilterableLinkColumn(
+                    "Organization",
+                    "employment.organization",
+                    "employment.organization.name",
+                    EMPTY,
+                    AssignmentsTablePanel.this ) );
+            // provider and table
+            addOrReplace( new AjaxFallbackDefaultDataTable(
+                    "assignments",
+                    columns,
+                    new SortableBeanProvider<Assignment>(
+                            getFilteredAssignments(),
+                            "part.task" ),
+                    getPageSize() ) );
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        protected void resetTable( AjaxRequestTarget target ) {
+            init();
+            target.addComponent( this );
+        }
+    }
+
+    private class CommitmentsTablePanel extends AbstractFilterableTablePanel {
+    /**
+     * Commitments model.
+     */
+    private IModel<List<Commitment>> commitmentsModel;
+
+    public CommitmentsTablePanel( String id, IModel<List<Commitment>> commitmentsModel ) {
+        super( id );
+        this.commitmentsModel = commitmentsModel;
+        init();
+    }
+
+    /**
+     * Find all employments in the plan that are not filtered out and are within selected name range.
+     *
+     * @return a list of employments.
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<Commitment> getFilteredCommitments() {
+        return (List<Commitment>) CollectionUtils.select(
+                commitmentsModel.getObject(),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return !isFilteredOut( obj );
+                    }
+                }
+        );
+    }
+
+        @SuppressWarnings( "unchecked" )
+        private void init() {
+            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            // columns
+            columns.add( this.makeFilterableLinkColumn(
+                    "From task",
+                    "sharing.source",
+                    "sharing.source.task",
+                    EMPTY,
+                    CommitmentsTablePanel.this ) );
+            columns.add( this.makeFilterableLinkColumn(
+                    "at location",
+                    "sharing.source.location",
+                    "sharing.source.location.name",
+                    EMPTY,
+                    CommitmentsTablePanel.this ) );
+            columns.add( makeLinkColumn(
+                   "commits to share",
+                   "sharing",
+                   "sharing.name",
+                   EMPTY ) );
+            columns.add( this.makeFilterableLinkColumn(
+                     "with actor",
+                     "beneficiary.actor",
+                     "beneficiary.actor.normalizedName",
+                     EMPTY,
+                     CommitmentsTablePanel.this ) );
+            columns.add( this.makeFilterableLinkColumn(
+                    "for task",
+                    "sharing.target",
+                    "sharing.target.task",
+                    EMPTY,
+                    CommitmentsTablePanel.this ) );
+            columns.add( this.makeFilterableLinkColumn(
+                    "at location",
+                    "sharing.target.location",
+                    "sharing.target.location.name",
+                    EMPTY,
+                    CommitmentsTablePanel.this ) );
+           // provider and table
+            addOrReplace( new AjaxFallbackDefaultDataTable(
+                    "commitments",
+                    columns,
+                    new SortableBeanProvider<Commitment>(
+                            getFilteredCommitments(),
+                            "sharing.source.task" ),
+                    getPageSize() ) );
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        protected void resetTable( AjaxRequestTarget target ) {
+            init();
+            target.addComponent( this );
+        }
+    }
 
 }
