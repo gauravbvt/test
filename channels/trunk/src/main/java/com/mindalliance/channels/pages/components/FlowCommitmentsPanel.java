@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
@@ -29,32 +30,32 @@ import java.util.Set;
 public class FlowCommitmentsPanel extends FloatingCommandablePanel {
 
     /**
-      * Pad top on move.
-      */
-     private static final int PAD_TOP = 68;
-     /**
-      * Pad left on move.
-      */
-     private static final int PAD_LEFT = 5;
-     /**
-      * Pad bottom on move and resize.
-      */
-     private static final int PAD_BOTTOM = 5;
-     /**
-      * Pad right on move and resize.
-      */
-     private static final int PAD_RIGHT = 6;
-     /**
-      * Min width on resize.
-      */
-     private static final int MIN_WIDTH = 300;
-     /**
-      * Min height on resize.
-      */
-     private static final int MIN_HEIGHT = 300;
+     * Pad top on move.
+     */
+    private static final int PAD_TOP = 68;
+    /**
+     * Pad left on move.
+     */
+    private static final int PAD_LEFT = 5;
+    /**
+     * Pad bottom on move and resize.
+     */
+    private static final int PAD_BOTTOM = 5;
+    /**
+     * Pad right on move and resize.
+     */
+    private static final int PAD_RIGHT = 6;
+    /**
+     * Min width on resize.
+     */
+    private static final int MIN_WIDTH = 300;
+    /**
+     * Min height on resize.
+     */
+    private static final int MIN_HEIGHT = 300;
 
     public FlowCommitmentsPanel( String id, IModel<Flow> flowModel, Set<Long> expansions ) {
-        super(id, flowModel, expansions);
+        super( id, flowModel, expansions );
         init();
     }
 
@@ -64,12 +65,16 @@ public class FlowCommitmentsPanel extends FloatingCommandablePanel {
     }
 
     private void addAbout() {
-        Label infoLabel = new Label( "info", new Model<String>(getFlow().getName()));
-        add(infoLabel);
-        Label fromTask = new Label("fromTask", new Model<String>(getFlow().getSource().getTitle()));
-        add( fromTask);
-        Label toTask = new Label("toTask", new Model<String>(getFlow().getTarget().getTitle()));
-        add( toTask);
+        Label infoLabel = new Label( "info", new Model<String>( getFlow().getName() ) );
+        add( infoLabel );
+        Label fromTask = new Label( "fromTask", new Model<String>( ( (Part) getFlow().getSource() ).getTask() ) );
+        add( fromTask );
+        Label toTask = new Label( "toTask", new Model<String>( ( (Part) getFlow().getTarget() ).getTask() ) );
+        add( toTask );
+        Label anyOrAllLabel = new Label(
+                "anyOrAll",
+                new Model<String>( getFlow().isAll() ? "all" : "any" ) );
+        add( anyOrAllLabel );
     }
 
     private void addCommitmentsTable() {
@@ -80,22 +85,23 @@ public class FlowCommitmentsPanel extends FloatingCommandablePanel {
         add( commitmentsTablePanel );
     }
 
-    public List<Commitment>getCommitments() {
+    public List<Commitment> getCommitments() {
         return getQueryService().findAllCommitments( getFlow() );
     }
 
 
     /**
-      * {@inheritDoc}
-      */
+     * {@inheritDoc}
+     */
     protected void close( AjaxRequestTarget target ) {
         Change change = new Change( Change.Type.AspectViewed, getFlow(), null );
         update( target, change );
     }
 
     private Flow getFlow() {
-        return (Flow)getModel().getObject();
+        return (Flow) getModel().getObject();
     }
+
     /**
      * {@inheritDoc}
      */
@@ -139,33 +145,33 @@ public class FlowCommitmentsPanel extends FloatingCommandablePanel {
     }
 
     private class CommitmentsTablePanel extends AbstractFilterableTablePanel {
-    /**
-     * Commitments model.
-     */
-    private IModel<List<Commitment>> commitmentsModel;
+        /**
+         * Commitments model.
+         */
+        private IModel<List<Commitment>> commitmentsModel;
 
-    public CommitmentsTablePanel( String id, IModel<List<Commitment>> commitmentsModel ) {
-        super( id );
-        this.commitmentsModel = commitmentsModel;
-        init();
-    }
+        public CommitmentsTablePanel( String id, IModel<List<Commitment>> commitmentsModel ) {
+            super( id );
+            this.commitmentsModel = commitmentsModel;
+            init();
+        }
 
-    /**
-     * Find all employments in the plan that are not filtered out and are within selected name range.
-     *
-     * @return a list of employments.
-     */
-    @SuppressWarnings( "unchecked" )
-    public List<Commitment> getFilteredCommitments() {
-        return (List<Commitment>) CollectionUtils.select(
-                commitmentsModel.getObject(),
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return !isFilteredOut( obj );
+        /**
+         * Find all employments in the plan that are not filtered out and are within selected name range.
+         *
+         * @return a list of employments.
+         */
+        @SuppressWarnings( "unchecked" )
+        public List<Commitment> getFilteredCommitments() {
+            return (List<Commitment>) CollectionUtils.select(
+                    commitmentsModel.getObject(),
+                    new Predicate() {
+                        public boolean evaluate( Object obj ) {
+                            return !isFilteredOut( obj );
+                        }
                     }
-                }
-        );
-    }
+            );
+        }
 
         @SuppressWarnings( "unchecked" )
         private void init() {
@@ -195,36 +201,36 @@ public class FlowCommitmentsPanel extends FloatingCommandablePanel {
                     "committer.organization.name",
                     EMPTY,
                     CommitmentsTablePanel.this ) );
-             columns.add( makeLinkColumn(
+            columns.add( makeLinkColumn(
                     "commits to share",
                     "sharing",
                     "sharing.name",
                     EMPTY ) );
             columns.add( this.makeFilterableLinkColumn(
-                     "with actor",
-                     "beneficiary.actor",
-                     "beneficiary.actor.normalizedName",
-                     EMPTY,
-                     CommitmentsTablePanel.this ) );
-             columns.add( this.makeFilterableLinkColumn(
-                     "in role",
-                     "beneficiary.role",
-                     "beneficiary.role.name",
-                     EMPTY,
-                     CommitmentsTablePanel.this ) );
+                    "with actor",
+                    "beneficiary.actor",
+                    "beneficiary.actor.normalizedName",
+                    EMPTY,
+                    CommitmentsTablePanel.this ) );
+            columns.add( this.makeFilterableLinkColumn(
+                    "in role",
+                    "beneficiary.role",
+                    "beneficiary.role.name",
+                    EMPTY,
+                    CommitmentsTablePanel.this ) );
             columns.add( this.makeFilterableLinkColumn(
                     "for",
                     "beneficiary.jurisdiction",
                     "beneficiary.jurisdiction.name",
                     EMPTY,
                     CommitmentsTablePanel.this ) );
-             columns.add( makeFilterableLinkColumn(
-                     "at organization",
-                     "beneficiary.organization",
-                     "beneficiary.organization.name",
-                     EMPTY,
-                     CommitmentsTablePanel.this ) );
-           // provider and table
+            columns.add( makeFilterableLinkColumn(
+                    "at organization",
+                    "beneficiary.organization",
+                    "beneficiary.organization.name",
+                    EMPTY,
+                    CommitmentsTablePanel.this ) );
+            // provider and table
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "commitments",
                     columns,
