@@ -2,6 +2,7 @@ package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
@@ -81,9 +82,16 @@ public class PlanConverter extends AbstractChannelsConverter {
         writer.startNode( "description" );
         writer.setValue( plan.getDescription() );
         writer.endNode();
+        // Producers - planners who voted to put this version into production
         for ( String producer : plan.getProducers() ) {
             writer.startNode( "producer" );
             writer.setValue( producer );
+            writer.endNode();
+        }
+        // Classifications
+        for ( Classification classification : plan.getClassifications() ) {
+            writer.startNode( "classification" );
+            context.convertAnother( classification );
             writer.endNode();
         }
         exportDetectionWaivers( plan, writer );
@@ -173,6 +181,9 @@ public class PlanConverter extends AbstractChannelsConverter {
                 context.convertAnother( plan, Place.class );
             } else if ( nodeName.equals( "event" ) ) {
                 context.convertAnother( plan, Event.class );
+            } else if ( nodeName.equals( "classification" ) ) {
+                // conversion adds classification to plan
+                context.convertAnother( plan, Classification.class );
             } else if ( nodeName.equals( "phase" ) ) {
                 context.convertAnother( plan, Phase.class );
             } else if ( nodeName.equals( "incident" ) ) {

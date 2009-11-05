@@ -12,7 +12,9 @@ import com.mindalliance.channels.export.ConnectionSpecification;
 import com.mindalliance.channels.export.ImportExportFactory;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
+import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
@@ -173,6 +175,7 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
             stream.registerConverter( new RiskConverter( this ) );
             stream.registerConverter( new PartConverter( this ) );
             stream.registerConverter( new FlowConverter( this ) );
+            stream.registerConverter( new ElementOfInformationConverter( this ) );
             stream.registerConverter( new ActorConverter( this ) );
             stream.registerConverter( new RoleConverter( this ) );
             stream.registerConverter( new OrganizationConverter( this ) );
@@ -181,6 +184,7 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
             stream.registerConverter( new ChannelConverter( this ) );
             stream.registerConverter( new JobConverter( this ) );
             stream.registerConverter( new PhaseConverter( this ) );
+            stream.registerConverter( new ClassificationConverter( this ) );
             stream.registerConverter( new ExportConverter( this ) );
         }
 
@@ -189,9 +193,11 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
             stream.alias( "command", AbstractCommand.class );
             stream.alias( "journal", Journal.class );
             stream.alias( "plan", Plan.class );
+            stream.alias( "classification", Classification.class );
             stream.alias( "planevent", Event.class );
             stream.alias( "actor", Actor.class );
             stream.aliasType( "flow", Flow.class );
+            stream.aliasType( "eoi", ElementOfInformation.class );
             stream.alias( "jurisdiction", Place.class );
             stream.alias( "location", Place.class );
             stream.alias( "organization", Organization.class );

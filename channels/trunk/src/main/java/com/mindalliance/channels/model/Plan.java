@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -97,6 +98,10 @@ public class Plan extends ModelObject {
      * Organization whose involvement is expected.
      */
     private List<Organization> organizations = new ArrayList<Organization>();
+    /**
+     * Classifications supported.
+     */
+    private List<Classification> classifications = new ArrayList<Classification>();
 
 
     //-----------------------------
@@ -249,6 +254,32 @@ public class Plan extends ModelObject {
     public void addOrganization( Organization organization ) {
         assert organization.isActual();
         if ( !organizations.contains( organization ) ) organizations.add( organization );
+    }
+
+    public List<Classification> getClassifications() {
+        return classifications;
+    }
+
+    public void setClassifications( List<Classification> classifications ) {
+        this.classifications = classifications;
+    }
+
+    /**
+     * Find classification given system and name.
+     *
+     * @param system a string
+     * @param name   a string
+     * @return a classification or null
+     */
+    public Classification getClassification( String system, final String name ) {
+        return (Classification) CollectionUtils.find(
+                classificationsFor( system ),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ( (Classification) obj ).getName().equals( name );
+                    }
+                }
+        );
     }
 
     /**
@@ -423,5 +454,89 @@ public class Plan extends ModelObject {
                                         return ModelObject.areIdentical( (ModelObject) obj, mo );
                                     }
                                 } );
+    }
+
+    /**
+     * List all classification systems (sorted).
+     *
+     * @return a list of strings
+     */
+    public List<String> classificationSystems() {
+        Set<String> systems = new HashSet<String>();
+        for ( Classification classification : classifications ) {
+            systems.add( classification.getSystem() );
+        }
+        List<String> classificationSystems = new ArrayList<String>( systems );
+        Collections.sort( classificationSystems );
+        return classificationSystems;
+    }
+
+    /**
+     * Find all classifications in a given classification system.
+     *
+     * @param classificationSystem a string
+     * @return a list of classifications
+     */
+    public List<Classification> classificationsFor( String classificationSystem ) {
+        List<Classification> list = new ArrayList<Classification>();
+        for ( Classification classification : classifications ) {
+            if ( classification.getSystem().equals( classificationSystem ) ) {
+                list.add( classification );
+            }
+        }
+        Collections.sort( list );
+        return list;
+    }
+
+    /**
+     * Add a classification if unique. Return whether added.
+     *
+     * @param classification a classification
+     * @return a boolean
+     */
+    public boolean addClassification( Classification classification ) {
+        if ( classifications.contains( classification ) ) {
+            return false;
+        } else {
+            classifications.add( classification );
+            return true;
+        }
+    }
+
+    /**
+     * Remove a classification.
+     *
+     * @param classification a classification
+     */
+    public void removeClassification( Classification classification ) {
+        classifications.remove( classification );
+    }
+
+    /**
+     * Get the level of the top classification in a system.
+     *
+     * @param system a string
+     * @return an integer
+     */
+    public int topLevelFor( String system ) {
+        List<Classification> list = classificationsFor( system );
+        Classification top = list.get( 0 );
+        return top.getLevel();
+    }
+
+    /**
+     * The non-conflicting, default level for a new classification in a given system.
+     *
+     * @param system a string
+     * @return an integer
+     */
+    public int defaultLevelFor( String system ) {
+        List<Classification> list = classificationsFor( system );
+        if ( list.isEmpty() ) return 0;
+        int max = Integer.MIN_VALUE;
+        for ( Classification classification : list ) {
+            max = Math.max( max, classification.getLevel() );
+        }
+        return max + 1;
     }
 }

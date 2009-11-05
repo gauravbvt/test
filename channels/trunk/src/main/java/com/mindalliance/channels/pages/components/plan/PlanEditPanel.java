@@ -32,6 +32,11 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
     public static final String EVENTS = "events";
 
     /**
+     * Classifications aspect.
+     */
+    public static final String CLASSIFICATIONS = "classifications";
+
+    /**
      * Map aspect.
      */
     public static final String MAP = "map";
@@ -150,7 +155,9 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
             return getPlanMapPanel();
         } else if ( aspect.equals( EVENTS ) ) {
             return getPlanIncidentsPanel();
-        } else if ( aspect.equals( SCOPE ) ) {
+        } else if ( aspect.equals( CLASSIFICATIONS ) ) {
+            return getPlanClassificationsPanel();
+        }  else if ( aspect.equals( SCOPE ) ) {
             return getPlanScopePanel();
         } else if ( aspect.equals( WHOSWHO ) ) {
             return getPlanWhoswhoPanel();
@@ -208,6 +215,10 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
 
     private Component getPlanEvaluationPanel() {
         return new PlanEvaluationPanel( "aspect", getModel(), getExpansions() );
+    }
+
+    private Component getPlanClassificationsPanel() {
+        return new PlanClassificationsPanel( "aspect", getModel(), getExpansions() );
     }
 
     public Plan getPlan() {

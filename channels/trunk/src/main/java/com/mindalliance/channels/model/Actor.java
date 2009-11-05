@@ -12,7 +12,7 @@ import java.util.List;
  * Someone or something playing a part in a scenario.
  */
 @Entity
-public class Actor extends AbstractUnicastChannelable {
+public class Actor extends AbstractUnicastChannelable implements Classifiable {
 
     /**
      * The name of the unknown actor.
@@ -32,6 +32,11 @@ public class Actor extends AbstractUnicastChannelable {
      * Name of the user, if any, represented by this actor.
      */
     private String userName;
+
+    /**
+     * Clearances.
+     */
+    private List<Classification> clearances = new ArrayList<Classification>();
 
     public Actor() {
     }
@@ -69,6 +74,29 @@ public class Actor extends AbstractUnicastChannelable {
 
     public void setUserName( String userName ) {
         this.userName = userName;
+    }
+
+    public List<Classification> getClearances() {
+        return clearances;
+    }
+
+    public void setClearances( List<Classification> clearances ) {
+        this.clearances = clearances;
+    }
+
+    /**
+     * Add a classification to the actor's clearances if unique.
+     *
+     * @param classification a classification
+     * @return a boolean - whether added
+     */
+    public boolean addClearance( Classification classification ) {
+        if ( !clearances.contains( classification ) ) {
+            clearances.add( classification );
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -155,5 +183,14 @@ public class Actor extends AbstractUnicastChannelable {
     public boolean isIconized() {
         return true;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    public List<Classification> getClassifications() {
+        return getClearances();
+    }
+
 
 }

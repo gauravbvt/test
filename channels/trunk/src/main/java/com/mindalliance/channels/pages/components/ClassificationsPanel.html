@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <table wicket:id="classificationsContainer">
+        <thead>
+             <tr>
+                 <td>Classification system</td>
+                 <td>Classification</td>
+             </tr>
+         </thead>
+        <tr wicket:id="classifications">
+            <td>
+                <span wicket:id="system">US Gov</span>
+                <select wicket:id="systemChoice">
+                    <option>US Gov</option>
+                </select>
+            </td>
+            <td>
+                <span wicket:id="name">Top secret</span>
+                <select wicket:id="nameChoice">
+                    <option>Top secret</option>
+                </select>
+            </td>
+            <td>
+                <a wicket:id="delete" href="#">
+                    <img  border="0" src="images/delete.png" alt="delete"
+                         title="Delete this classification"/>
+                </a>
+            </td>
+        </tr>
+    </table>
+</wicket:panel>
+</body>
+</html>

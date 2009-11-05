@@ -16,6 +16,7 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
+import com.mindalliance.channels.pages.components.ClassificationsPanel;
 import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
@@ -148,7 +149,8 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         indexedOn = indexingChoices[0];
         nameRange = new NameRange();
         filters = new ArrayList<Identifiable>();
-        addContactInfo( moDetailsDiv );
+        addContactInfo();
+        addClearances();
         addRolesMap();
         addIndexedOnChoice();
         addNameRangePanel();
@@ -159,13 +161,24 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         makeVisible( userChoice, isParticipant() );
     }
 
-    private void addContactInfo( WebMarkupContainer moDetailsDiv ) {
+    private void addContactInfo() {
         WebMarkupContainer contactContainer = new WebMarkupContainer( "contact" );
         moDetailsDiv.add( contactContainer );
         contactContainer.add( new ChannelListPanel(
                 "channels",
                 new Model<Channelable>( (Actor) getEntity() ) ) );
         contactContainer.setVisible( getEntity().isActual() );
+    }
+
+    private void addClearances() {
+        WebMarkupContainer clearancesContainer = new WebMarkupContainer( "clearancesContainer" );
+        moDetailsDiv.add( clearancesContainer );
+        clearancesContainer.add( new ClassificationsPanel(
+                "clearances",
+                new Model<Identifiable>( getEntity() ),
+                "clearances" )
+        );
+        clearancesContainer.setVisible( getEntity().isActual() );
     }
 
     private void addUserChoice( WebMarkupContainer moDetailsDiv ) {
@@ -691,33 +704,33 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     private class CommitmentsTablePanel extends AbstractFilterableTablePanel {
-    /**
-     * Commitments model.
-     */
-    private IModel<List<Commitment>> commitmentsModel;
+        /**
+         * Commitments model.
+         */
+        private IModel<List<Commitment>> commitmentsModel;
 
-    public CommitmentsTablePanel( String id, IModel<List<Commitment>> commitmentsModel ) {
-        super( id );
-        this.commitmentsModel = commitmentsModel;
-        init();
-    }
+        public CommitmentsTablePanel( String id, IModel<List<Commitment>> commitmentsModel ) {
+            super( id );
+            this.commitmentsModel = commitmentsModel;
+            init();
+        }
 
-    /**
-     * Find all employments in the plan that are not filtered out and are within selected name range.
-     *
-     * @return a list of employments.
-     */
-    @SuppressWarnings( "unchecked" )
-    public List<Commitment> getFilteredCommitments() {
-        return (List<Commitment>) CollectionUtils.select(
-                commitmentsModel.getObject(),
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return !isFilteredOut( obj );
+        /**
+         * Find all employments in the plan that are not filtered out and are within selected name range.
+         *
+         * @return a list of employments.
+         */
+        @SuppressWarnings( "unchecked" )
+        public List<Commitment> getFilteredCommitments() {
+            return (List<Commitment>) CollectionUtils.select(
+                    commitmentsModel.getObject(),
+                    new Predicate() {
+                        public boolean evaluate( Object obj ) {
+                            return !isFilteredOut( obj );
+                        }
                     }
-                }
-        );
-    }
+            );
+        }
 
         @SuppressWarnings( "unchecked" )
         private void init() {
@@ -736,16 +749,16 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                     EMPTY,
                     CommitmentsTablePanel.this ) );
             columns.add( makeLinkColumn(
-                   "commits to share",
-                   "sharing",
-                   "sharing.name",
-                   EMPTY ) );
+                    "commits to share",
+                    "sharing",
+                    "sharing.name",
+                    EMPTY ) );
             columns.add( this.makeFilterableLinkColumn(
-                     "with actor",
-                     "beneficiary.actor",
-                     "beneficiary.actor.normalizedName",
-                     EMPTY,
-                     CommitmentsTablePanel.this ) );
+                    "with actor",
+                    "beneficiary.actor",
+                    "beneficiary.actor.normalizedName",
+                    EMPTY,
+                    CommitmentsTablePanel.this ) );
             columns.add( this.makeFilterableLinkColumn(
                     "for task",
                     "sharing.target",
@@ -758,7 +771,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                     "sharing.target.location.name",
                     EMPTY,
                     CommitmentsTablePanel.this ) );
-           // provider and table
+            // provider and table
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "commitments",
                     columns,

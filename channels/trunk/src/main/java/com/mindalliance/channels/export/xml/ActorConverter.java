@@ -2,6 +2,7 @@ package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
+import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Scenario;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -65,6 +66,12 @@ public class ActorConverter extends EntityConverter {
             context.convertAnother( channel );
             writer.endNode();
         }
+        // classification clearances
+        for ( Classification clearance : actor.getClearances() ) {
+            writer.startNode( "clearance" );
+            context.convertAnother( clearance );
+            writer.endNode();
+        }
     }
 
     /**
@@ -83,6 +90,9 @@ public class ActorConverter extends EntityConverter {
         } else if ( nodeName.equals( "system" ) ) {
             boolean isSystem = reader.getValue().equals( "true" );
             actor.setSystem( isSystem );
+        } else if ( nodeName.equals( "clearance" ) ) {
+            Classification clearance = (Classification) context.convertAnother( scenario, Classification.class );
+            actor.addClearance( clearance );
         } else {
             LOG.warn( "Unknown element " + nodeName );
         }

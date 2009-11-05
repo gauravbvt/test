@@ -7,6 +7,7 @@ import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Channel;
+import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Employment;
@@ -504,6 +505,14 @@ public interface QueryService extends Service {
      * @return a boolean
      */
     Boolean isReferenced( ModelObject mo );
+
+    /**
+     * Whether a classification is referenced within the plan.
+     *
+     * @param classification a classification
+     * @return a boolean
+     */
+    Boolean isReferenced( Classification classification );
 
     /**
      * Get reference count for event.
@@ -1159,6 +1168,7 @@ public interface QueryService extends Service {
 
     /**
      * Find all assignments for an actor.
+     *
      * @param actor an actor
      * @return a list of assignments
      */
@@ -1174,8 +1184,10 @@ public interface QueryService extends Service {
 
     /**
      * Find all commitments of an actor.
+     *
      * @param actor an actor
      * @return a list of commitments
      */
     List<Commitment> findAllCommitments( Actor actor );
+
 }

@@ -16,6 +16,7 @@ import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Channel;
+import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Employment;
@@ -633,6 +634,26 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     }
             );
         }
+        return hasReference;
+    }
+
+    public Boolean isReferenced( final Classification classification ) {
+        boolean hasReference = CollectionUtils.exists(
+                this.listActualEntities( Actor.class ),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ((Actor)obj).getClearances().contains( classification );
+                    }
+                }
+        );
+        hasReference = hasReference || CollectionUtils.exists(
+                findAllFlows(),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ((Flow)obj).getClassifications().contains( classification );
+                    }
+                }
+        );
         return hasReference;
     }
 
@@ -2667,7 +2688,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             for ( Assignment source : sources ) {
                 for ( Assignment beneficiary : beneficiaries ) {
                     if ( !source.getActor().equals( beneficiary.getActor() ) ) {
-                        commitments.add( new Commitment( source, beneficiary, flow ) );
+                        Commitment commitment = new Commitment( source, beneficiary, flow );
+                        if ( commitment.passesClearanceTest() ) commitments.add( commitment  );
                     }
                 }
             }
@@ -2686,10 +2708,11 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 Flow flow = flows.next();
                 if ( flow.isSharing() && flow.getSource().equals( assignment.getPart() ) ) {
                     for ( Assignment beneficiary : findAllAssignments( (Part) flow.getTarget(), true ) ) {
-                        commitments.add( new Commitment(
+                        Commitment commitment = new Commitment(
                                 assignment,
                                 beneficiary,
-                                flow ) );
+                                flow );
+                        if ( commitment.passesClearanceTest() ) commitments.add( commitment  );
                     }
                 }
             }

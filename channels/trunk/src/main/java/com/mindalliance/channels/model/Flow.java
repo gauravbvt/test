@@ -2,6 +2,7 @@ package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.util.Matcher;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -58,9 +59,29 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      */
     private boolean all;
 
+    /**
+     * Elements of information.
+     */
+    private List<ElementOfInformation> eois = new ArrayList<ElementOfInformation>();
+
     protected Flow() {
     }
 
+    // todo - remove when cut-over is completed
+    public void setDescription( String val ) {
+        super.setDescription( val );
+        if ( !getDescription().isEmpty() ) setEOIsFromDescription();
+    }
+
+    // todo - remove when cut-over is completed
+    private void setEOIsFromDescription() {
+        List<String> contents = Matcher.extractEOIs( getDescription() );
+        for ( String content : contents ) {
+            ElementOfInformation eoi = new ElementOfInformation();
+            eoi.setContent( content );
+            addEOI( eoi );
+        }
+    }
 
     public boolean isAskedFor() {
         return askedFor;
@@ -154,6 +175,32 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      */
     public void setMaxDelay( String s ) {
         maxDelay = Delay.parse( s );
+    }
+
+    public List<ElementOfInformation> getEois() {
+        return eois;
+    }
+
+    public void setEois( List<ElementOfInformation> eois ) {
+        this.eois = eois;
+    }
+
+    /**
+     * Add element of information.
+     *
+     * @param eoi an element of information
+     */
+    public void addEoi( ElementOfInformation eoi ) {
+        eois.add( eoi );
+    }
+
+    /**
+     * Add element of information.
+     *
+     * @param eoi an element of information
+     */
+    public void addEOI( ElementOfInformation eoi ) {
+        eois.add( eoi );
     }
 
     @Enumerated( EnumType.ORDINAL )
@@ -777,11 +824,25 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
     }
 
     /**
-      * {@inheritDoc}
-      */
-     public String getTypeName() {
-         return "flow";
-     }
+     * {@inheritDoc}
+     */
+    public String getTypeName() {
+        return "flow";
+    }
+
+    /**
+     * Get all distinct classifications of the flow's elements of information.
+     *
+     * @return a list of classifications
+     */
+    @Transient
+    public List<Classification> getClassifications() {
+        Set<Classification> classifications = new HashSet<Classification>();
+        for ( ElementOfInformation eoi : eois ) {
+            classifications.addAll( eoi.getClassifications() );
+        }
+        return new ArrayList<Classification>( classifications );
+    }
 
     /**
      * The significance of a flow.

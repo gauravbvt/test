@@ -55,6 +55,16 @@ public class PlanEditShowMenuPanel extends MenuPanel {
                 "menuItem",
                 new Model<String>( "All events" ),
                 incidentsLink ) );
+        // Secrecy classifications
+        Link classificationsLink = new AjaxFallbackLink( "link" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                changeAspectTo( target, PlanEditPanel.CLASSIFICATIONS );
+            }
+        };
+        menuItems.add( new LinkMenuItem(
+                "menuItem",
+                new Model<String>( "Secrecy classifications" ),
+                classificationsLink ) );
         // Organizations in scope
         Link scopeLink = new AjaxFallbackLink( "link" ) {
             public void onClick( AjaxRequestTarget target ) {

@@ -7,6 +7,7 @@ import com.mindalliance.channels.export.ScenarioSpecification;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Delay;
+import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.InternalFlow;
@@ -71,6 +72,12 @@ public class FlowConverter extends AbstractChannelsConverter {
         writer.startNode( "description" );
         writer.setValue( flow.getDescription() );
         writer.endNode();
+        // eois
+        for ( ElementOfInformation eoi : flow.getEois() ) {
+            writer.startNode( "eoi" );
+            context.convertAnother( eoi );
+            writer.endNode();
+        }
         // channels
         for ( Channel channel : flow.getChannels() ) {
             writer.startNode( "channel" );
@@ -193,6 +200,11 @@ public class FlowConverter extends AbstractChannelsConverter {
                 importDetectionWaivers( flow, reader );
             } else if ( nodeName.equals( "attachments" ) ) {
                 importAttachments( flow, reader );
+            } else if ( nodeName.equals( "eoi" ) ) {
+                ElementOfInformation eoi = (ElementOfInformation) context.convertAnother(
+                        scenario,
+                        ElementOfInformation.class );
+                flow.addEoi( eoi );
             } else if ( nodeName.equals( "channel" ) ) {
                 Channel channel = (Channel) context.convertAnother( scenario, Channel.class );
                 flow.addChannel( channel );
@@ -345,7 +357,7 @@ public class FlowConverter extends AbstractChannelsConverter {
         List<ConnectionSpecification> conSpecs = proxyConnectors.get( connector );
         if ( conSpecs == null ) {
             conSpecs = new ArrayList<ConnectionSpecification>();
-            proxyConnectors.put(  connector, conSpecs );
+            proxyConnectors.put( connector, conSpecs );
         }
         conSpecs.add( conSpec );
     }

@@ -9,6 +9,7 @@ import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Plan;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -271,10 +272,11 @@ public abstract class AbstractChannelsConverter implements Converter {
 
     /**
      * Find or make entity
-     * @param clazz entity class
-     * @param name  entity name
-     * @param id  entity id
-     * @param kind a model entity kind (type or actual)
+     *
+     * @param clazz   entity class
+     * @param name    entity name
+     * @param id      entity id
+     * @param kind    a model entity kind (type or actual)
      * @param context an unmarshalling context
      * @return an entity model object
      */
@@ -283,7 +285,7 @@ public abstract class AbstractChannelsConverter implements Converter {
             String name,
             Long id,
             ModelEntity.Kind kind,
-            UnmarshallingContext context) {
+            UnmarshallingContext context ) {
         return getEntity(
                 clazz,
                 name,
@@ -296,12 +298,13 @@ public abstract class AbstractChannelsConverter implements Converter {
 
     /**
      * Find or make entity
-     * @param clazz entity class
-     * @param name  entity name
-     * @param id  entity id
-     * @param isType whether the entity is a type vs actual
+     *
+     * @param clazz         entity class
+     * @param name          entity name
+     * @param id            entity id
+     * @param isType        whether the entity is a type vs actual
      * @param importingPlan boolean
-     * @param idMap id map
+     * @param idMap         id map
      * @return an entity model object
      */
     protected <T extends ModelEntity> T getEntity(
@@ -317,12 +320,21 @@ public abstract class AbstractChannelsConverter implements Converter {
                     ? getQueryService().findOrCreateType( clazz, name, id )
                     : getQueryService().findOrCreateType( clazz, name );
         } else {
-        entity = importingPlan
-                ? getQueryService().findOrCreate( clazz, name, id )
-                : getQueryService().findOrCreate( clazz, name );
+            entity = importingPlan
+                    ? getQueryService().findOrCreate( clazz, name, id )
+                    : getQueryService().findOrCreate( clazz, name );
         }
         idMap.put( id, entity.getId() );
         return entity;
+    }
+
+    /**
+     * Get current plan.
+     *
+     * @return a plan
+     */
+    protected Plan getPlan() {
+        return getQueryService().getCurrentPlan();
     }
 
 

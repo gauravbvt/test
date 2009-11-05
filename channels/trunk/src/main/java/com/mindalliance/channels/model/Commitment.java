@@ -1,6 +1,10 @@
 package com.mindalliance.channels.model;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * A commitment to share information.
@@ -75,5 +79,34 @@ public class Commitment implements Serializable {
         hash = hash * 31 + beneficiary.hashCode();
         hash = hash * 31 + sharing.hashCode();
         return hash;
+    }
+
+    /**
+     * Whether the commitment survives the classification test.
+     *
+     * @return a boolean
+     */
+    public boolean passesClearanceTest() {
+        List<ElementOfInformation> eois = sharing.getEois();
+        if ( eois.isEmpty() ) return true;
+        List<ElementOfInformation> clearedEOIs = getClearedEOIs();
+        return !clearedEOIs.isEmpty();
+    }
+
+    /**
+     * The sharing flow's EOIs that are cleared for the beneficiary actor.
+     *
+     * @return a list of EOIs
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<ElementOfInformation> getClearedEOIs() {
+        return (List<ElementOfInformation>) CollectionUtils.select(
+                sharing.getEois(),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ( (ElementOfInformation) obj ).isClearedFor( beneficiary.getActor() );
+                    }
+                }
+        );
     }
 }
