@@ -94,7 +94,7 @@ public class FlowCommitmentsPanel extends FloatingCommandablePanel {
      * {@inheritDoc}
      */
     protected void close( AjaxRequestTarget target ) {
-        Change change = new Change( Change.Type.AspectViewed, getFlow(), null );
+        Change change = new Change( Change.Type.AspectClosed, getFlow(), "commitments" );
         update( target, change );
     }
 

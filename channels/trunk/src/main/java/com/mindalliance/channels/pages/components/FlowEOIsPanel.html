@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+    <div class="eois">
+        <div class="header">
+            <h1>Elements of information</h1>
+        </div>
+        <div class="aspect">
+            <table>
+                <tr>
+                    <td>
+                        <h3>
+                            In <span wicket:id="flowType">need for</span>
+                            &quot;<span wicket:id="flowName">Flow name</span>&quot;
+                            <span wicket:id="source">by actor X</span>
+                            <span wicket:id="target">with actor Y</span>
+                       </h3>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table wicket:id="eoisContainer">
+                            <thead>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td>Content</td>
+                                    <td>Classifications</td>
+                                    <td>Sourcing</td>
+                                    <td>Special handling</td>
+                                </tr>
+                            </thead>
+                            <tr wicket:id="eois">
+                                <td><input wicket:id="confirmed" type="checkbox"/></td>
+                                <td><input wicket:id="content" size="40"/></td>
+                                <td><span wicket:id="classifications">[classifications panel]</span></td>
+                                <td><textarea wicket:id="sources" rows="1" cols="20">sourcing</textarea></td>
+                                <td><textarea wicket:id="specialHandling" rows="1" cols="20">handling</textarea></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+             </table>
+        </div>
+    </div>
+</wicket:extend>
+</body>
+</html>

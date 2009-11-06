@@ -176,7 +176,9 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         clearancesContainer.add( new ClassificationsPanel(
                 "clearances",
                 new Model<Identifiable>( getEntity() ),
-                "clearances" )
+                "clearances",
+                isLockedByUser( getActor() )
+                )
         );
         clearancesContainer.setVisible( getEntity().isActual() );
     }

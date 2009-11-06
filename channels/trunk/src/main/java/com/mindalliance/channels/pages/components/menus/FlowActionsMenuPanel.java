@@ -80,6 +80,19 @@ public class FlowActionsMenuPanel extends MenuPanel {
             };
             menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Hide details" ), hideLink ) );
         }
+        // View flow eois
+        if ( !isCollapsed ) {
+            AjaxFallbackLink eoisLink = new AjaxFallbackLink( "link" ) {
+                @Override
+                public void onClick( AjaxRequestTarget target ) {
+                    update( target, new Change( Change.Type.AspectViewed, getFlow(), "eois" ) );
+                }
+            };
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Show elements" ),
+                    eoisLink ) );
+        }
         // View flow commitments
         if ( getFlow().isSharing() ) {
             AjaxFallbackLink commitmentsLink = new AjaxFallbackLink( "link" ) {

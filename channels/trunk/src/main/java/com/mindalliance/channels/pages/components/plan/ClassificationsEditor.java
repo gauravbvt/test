@@ -33,10 +33,21 @@ import java.util.List;
  * Time: 1:25:37 PM
  */
 public class ClassificationsEditor extends AbstractCommandablePanel {
-
+    /**
+     * Selected classification system.
+     */
     private String selectedSystem;
+    /**
+     * New system name field.
+     */
     private TextField<String> newSystemField;
+    /**
+     * System choice.
+     */
     private DropDownChoice<String> systemChoice;
+    /**
+     * Classifications list view container.
+     */
     private WebMarkupContainer classificationsContainer;
 
     public ClassificationsEditor( String id, IModel<? extends Identifiable> iModel ) {

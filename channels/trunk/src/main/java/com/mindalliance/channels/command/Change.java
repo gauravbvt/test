@@ -64,7 +64,13 @@ public class Change implements Serializable {
         /**
          * View requested
          */
-        AspectViewed
+        AspectViewed,
+        /**
+         * View closed
+         */
+        AspectClosed
+
+
     }
 
     /**
@@ -235,13 +241,63 @@ public class Change implements Serializable {
     }
 
     /**
-     * Whether type is View.
+     * Whether type is AspectViewed.
      *
      * @return a boolean
      */
     public boolean isAspectViewed() {
         return type == Type.AspectViewed;
     }
+
+    /**
+     * Whether type is AspectClosed.
+     *
+     * @return a boolean
+     */
+    public boolean isAspectClosed() {
+        return type == Type.AspectClosed;
+    }
+
+    /**
+     * Whether type is Aspect related.
+     *
+     * @return a boolean
+     */
+    public boolean isAspect() {
+        return isAspectViewed() || isAspectClosed();
+    }
+
+
+    /**
+     * Whether a particular aspect (via property) is viewed.
+     *
+     * @param property a string
+     * @return a boolean
+     */
+    public boolean isAspectViewed( String property ) {
+        return isAspectViewed() && this.isForProperty( property );
+    }
+
+    /**
+     * Whether a particular aspect (via property) is closed.
+     *
+     * @param property a string
+     * @return a boolean
+     */
+    public boolean isAspectClosed( String property ) {
+        return isAspectClosed() && this.isForProperty( property );
+    }
+
+    /**
+     * Whether a particular aspect (via property) is viewed or closed.
+     *
+     * @param property a string
+     * @return a boolean
+     */
+    public boolean isAspect( String property ) {
+        return isAspect() && this.isForProperty( property );
+    }
+
 
     /**
      * Whether type is Selected.

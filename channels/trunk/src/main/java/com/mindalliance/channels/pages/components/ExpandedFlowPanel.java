@@ -20,6 +20,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -59,9 +60,9 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private TextField<String> nameField;
 
     /**
-     * The description field.
+     * The EOIs description field.
      */
-    private TextArea<String> descriptionField;
+    private TextArea<String> eoisDescriptionField;
 
     /**
      * The askedFor buttons.
@@ -135,17 +136,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         setOutputMarkupId( true );
         addHeader();
         addNameField();
-        addLabeled( "name-label", nameField );                                            // NON-NLS
-        descriptionField = new TextArea<String>(
-                "description",
-                new PropertyModel<String>( this, "description" ) );
-        descriptionField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getFlow(), "description" ) );
-            }
-        } );
-        addLabeled( "description-label", descriptionField );                              // NON-NLS
+        addLabeled( "name-label", nameField );
+        addEOIs();
         addAskedForRadios();
         addSignificanceToTarget();
         addOtherField();
@@ -173,6 +165,20 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         adjustFields( getFlow() );
     }
 
+    private void addEOIs() {
+        AjaxFallbackLink editEOIsLink = new AjaxFallbackLink("editEOIs"){
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.AspectViewed, getFlow(), "eois" ) );
+            }
+        };
+        add( editEOIsLink );
+        eoisDescriptionField = new TextArea<String>(
+                "eois",
+                new PropertyModel<String>( getFlow(), "eOIsDescription" ) );
+        eoisDescriptionField.setEnabled( false );
+        add( eoisDescriptionField );                              // NON-NLS
+    }
+
     /**
      * Show/hide/enable/disable parts of the panel given the state of the flow.
      *
@@ -183,7 +189,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         boolean lockedByUser = isLockedByUser( f );
 
         nameField.setEnabled( lockedByUser && f.canSetNameAndDescription() );
-        descriptionField.setEnabled( lockedByUser && f.canSetNameAndDescription() );
         askedForButtons.setEnabled( lockedByUser && f.canSetAskedFor() );
         allField.setVisible( isOutcome() && f.canGetAll() );
         allField.setEnabled( lockedByUser && isOutcome() && f.canSetAll() );

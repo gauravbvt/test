@@ -69,9 +69,9 @@ public class FlowConverter extends AbstractChannelsConverter {
         }
         exportDetectionWaivers( flow, writer );
         exportAttachments( flow, writer );
-        writer.startNode( "description" );
+        /*writer.startNode( "description" );
         writer.setValue( flow.getDescription() );
-        writer.endNode();
+        writer.endNode();*/
         // eois
         for ( ElementOfInformation eoi : flow.getEois() ) {
             writer.startNode( "eoi" );
@@ -193,6 +193,7 @@ public class FlowConverter extends AbstractChannelsConverter {
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
+            // for cut-over
             if ( nodeName.equals( "description" ) ) {
                 String description = reader.getValue();
                 flow.setDescription( description );

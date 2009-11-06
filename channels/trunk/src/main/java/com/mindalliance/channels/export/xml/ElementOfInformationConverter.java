@@ -37,10 +37,10 @@ public class ElementOfInformationConverter extends AbstractChannelsConverter {
         writer.setValue( eoi.getContent() );
         writer.endNode();
         writer.startNode( "sourceCodes" );
-        writer.setValue( eoi.getSourceCodes() );
+        writer.setValue( eoi.getSources() );
         writer.endNode();
         writer.startNode( "specialHandlingCodes" );
-        writer.setValue( eoi.getSpecialHandlingCodes() );
+        writer.setValue( eoi.getSpecialHandling() );
         writer.endNode();
         for ( Classification classification : eoi.getClassifications() ) {
             writer.startNode( "classification" );
@@ -60,9 +60,9 @@ public class ElementOfInformationConverter extends AbstractChannelsConverter {
             if ( nodeName.equals( "content" ) ) {
                 eoi.setContent( reader.getValue() );
             } else if ( nodeName.equals( "sourceCodes" ) ) {
-                eoi.setSourceCodes( reader.getValue() );
+                eoi.setSources( reader.getValue() );
             } else if ( nodeName.equals( "specialHandlingCodes" ) ) {
-                eoi.setSpecialHandlingCodes( reader.getValue() );
+                eoi.setSpecialHandling( reader.getValue() );
             } else if ( nodeName.equals( "classification" ) ) {
                 Classification classification = (Classification) context.convertAnother(
                         context.get( "scenario" ),

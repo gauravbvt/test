@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -69,18 +70,37 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
 
     // todo - remove when cut-over is completed
     public void setDescription( String val ) {
-        super.setDescription( val );
-        if ( !getDescription().isEmpty() ) setEOIsFromDescription();
+        if ( !val.isEmpty() ) setEOIsFrom( val );
     }
 
     // todo - remove when cut-over is completed
-    private void setEOIsFromDescription() {
-        List<String> contents = Matcher.extractEOIs( getDescription() );
+    private void setEOIsFrom( String val ) {
+        List<String> contents = Matcher.extractEOIs( val );
         for ( String content : contents ) {
             ElementOfInformation eoi = new ElementOfInformation();
             eoi.setContent( content );
             addEOI( eoi );
         }
+    }
+
+    /**
+     * Get EOIs as a string.
+     * @return a string
+     */
+    @Transient
+    public String getEOIsDescription() {
+        return descriptionFromEOIs();
+    }
+
+    private String descriptionFromEOIs() {
+        StringBuilder sb = new StringBuilder();
+        Iterator<ElementOfInformation> iter = getEois().iterator();
+        while ( iter.hasNext() ) {
+            ElementOfInformation eoi = iter.next();
+            sb.append( eoi.toString() );
+            if ( iter.hasNext() ) sb.append( '\n' );
+        }
+        return sb.toString();
     }
 
     public boolean isAskedFor() {

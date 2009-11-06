@@ -423,6 +423,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                     "included", new PropertyModel<Boolean>( wrapper, "included" ) );      // NON-NLS
             addUpdatingBehavior( result );
             result.setEnabled( !wrapper.isReadOnly() && isEnabled() );
+            makeVisible(result, !wrapper.isMarkedForCreation() );
             return result;
         }
 

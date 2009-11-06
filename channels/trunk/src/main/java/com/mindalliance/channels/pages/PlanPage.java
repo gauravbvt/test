@@ -22,6 +22,7 @@ import com.mindalliance.channels.model.ScenarioObject;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.pages.components.FlowCommitmentsPanel;
+import com.mindalliance.channels.pages.components.FlowEOIsPanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
 import com.mindalliance.channels.pages.components.PartAssignmentsPanel;
@@ -129,7 +130,7 @@ public final class PlanPage extends WebPage implements Updatable {
     /**
      * Aspects shown.
      */
-    private Map<Long, String> aspects = new HashMap<Long, String>();
+    private Map<Long, List<String>> aspects = new HashMap<Long, List<String>>();
     /**
      * Page history.
      */
@@ -209,6 +210,10 @@ public final class PlanPage extends WebPage implements Updatable {
      * The commitments panel.
      */
     private Component commitmentsPanel;
+    /**
+     * The flow EOIs panel.
+     */
+    private Component eoisPanel;
     /**
      * The scenarios map panel.
      */
@@ -322,6 +327,7 @@ public final class PlanPage extends WebPage implements Updatable {
         addEntityPanel();
         addAssignmentsPanel();
         addCommitmentsPanel();
+        addEOIsPanel();
         addScenarioEditPanel();
         addPlanEditPanel();
         addSurveysPanel( null );
@@ -654,16 +660,38 @@ public final class PlanPage extends WebPage implements Updatable {
         } else {
             commitmentsPanel = new FlowCommitmentsPanel(
                     "commitments",
-                    new Model<Flow>( getFlowViewed("commitments" ) ),
+                    new Model<Flow>( getFlowViewed( "commitments" ) ),
                     getReadOnlyExpansions()
             );
         }
         form.addOrReplace( commitmentsPanel );
     }
 
+    private void addEOIsPanel() {
+        Flow flowViewed = getFlowViewed( "eois" );
+        if ( flowViewed == null ) {
+            eoisPanel = new Label( "eois", "" );
+            eoisPanel.setOutputMarkupId( true );
+            makeVisible( eoisPanel, false );
+        } else {
+            eoisPanel = new FlowEOIsPanel(
+                    "eois",
+                    new Model<Flow>( getFlowViewed( "eois" ) ),
+                    getReadOnlyExpansions()
+            );
+        }
+        form.addOrReplace( eoisPanel );
+    }
+
+
     private void refreshCommitmentsPanel( AjaxRequestTarget target ) {
         addCommitmentsPanel();
         target.addComponent( commitmentsPanel );
+    }
+
+    private void refreshEOIsPanel( AjaxRequestTarget target ) {
+        addEOIsPanel();
+        target.addComponent( eoisPanel );
     }
 
 
@@ -691,9 +719,14 @@ public final class PlanPage extends WebPage implements Updatable {
         target.addComponent( scenarioEditPanel );
     }
 
-
+    // Return the (presumably) only aspect shown, if any.
     private String getAspectShown( Identifiable identifiable ) {
-        return aspects.get( identifiable.getId() );
+        String aspectShown = null;
+        List<String> aspectsShown = aspects.get( identifiable.getId() );
+        if ( aspectsShown != null && !aspectsShown.isEmpty() ) {
+            aspectShown = aspectsShown.get( 0 );
+        }
+        return aspectShown;
     }
 
     private void addPlanEditPanel() {
@@ -1101,14 +1134,33 @@ public final class PlanPage extends WebPage implements Updatable {
     private void collapse( Identifiable identifiable ) {
         getCommander().releaseAnyLockOn( identifiable );
         expansions.remove( identifiable.getId() );
-        aspects.remove( identifiable.getId() );
+        // Close aspects of collapsed object
+        if ( identifiable instanceof Flow ) {
+            closeAspect( identifiable, "eois" );
+        } else if ( !( identifiable instanceof Part ) )
+            closeAspect( identifiable, null );
     }
 
     private void viewAspect( Identifiable identifiable, String aspect ) {
         if ( aspect == null || aspect.isEmpty() ) {
             aspects.remove( identifiable.getId() );
         } else {
-            aspects.put( identifiable.getId(), aspect );
+            List<String> aspectsShown = aspects.get( identifiable.getId() );
+            if ( aspectsShown == null ) aspectsShown = new ArrayList<String>();
+            if ( !aspectsShown.contains( aspect ) )
+                aspectsShown.add( aspect );
+            aspects.put( identifiable.getId(), aspectsShown );
+        }
+    }
+
+    private void closeAspect( Identifiable identifiable, String aspect ) {
+        if ( aspect == null || aspect.isEmpty() ) {
+            aspects.remove( identifiable.getId() );
+        } else {
+            List<String> aspectsShown = aspects.get( identifiable.getId() );
+            if ( aspectsShown != null ) {
+                aspectsShown.remove( aspect );
+            }
         }
     }
 
@@ -1120,7 +1172,7 @@ public final class PlanPage extends WebPage implements Updatable {
      */
     private Part getPartViewed( final String aspect ) {
         Part partViewed = null;
-        Long partId = findIdForAspectViewed( aspect );
+        Long partId = findIdForAspectViewed( Part.class, aspect );
         if ( partId != null ) {
             try {
                 partViewed = getQueryService().find( Part.class, partId );
@@ -1139,7 +1191,7 @@ public final class PlanPage extends WebPage implements Updatable {
      */
     private Flow getFlowViewed( final String aspect ) {
         Flow flowViewed = null;
-        Long flowId = findIdForAspectViewed( aspect );
+        Long flowId = findIdForAspectViewed( Flow.class, aspect );
         if ( flowId != null ) {
             try {
                 flowViewed = getQueryService().find( Flow.class, flowId );
@@ -1150,13 +1202,19 @@ public final class PlanPage extends WebPage implements Updatable {
         return flowViewed;
     }
 
-    private Long findIdForAspectViewed( final String aspect ) {
+    // Assumes that only instance of clazz can view the given aspect at a time.
+    private Long findIdForAspectViewed( final Class<? extends ModelObject> clazz, final String aspect ) {
         return (Long) CollectionUtils.find(
                 aspects.keySet(),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         Long id = (Long) obj;
-                        return aspects.get( id ).equals( aspect );
+                        try {
+                            getQueryService().find( clazz, id );
+                        } catch ( NotFoundException e ) {
+                            return false;
+                        }
+                        return aspects.get( id ).contains( aspect );
                     }
                 }
         );
@@ -1230,9 +1288,10 @@ public final class PlanPage extends WebPage implements Updatable {
                 collapse( identifiable );
             else if ( change.isExpanded() || change.isAdded() )
                 expand( identifiable );
-            else if ( change.isAspectViewed() ) {
+            else if ( change.isAspectViewed() )
                 viewAspect( identifiable, change.getProperty() );
-            }
+            else if ( change.isAspectClosed() )
+                closeAspect( identifiable, change.getProperty() );
         }
         if ( identifiable instanceof Survey ) {
             if ( change.isExpanded() ) {
@@ -1355,13 +1414,15 @@ public final class PlanPage extends WebPage implements Updatable {
                     target.addComponent( scenarioDropDownChoice );
                     scenarioPanel.refresh( target );
                     target.addComponent( scenarioPanel );
-                } else if ( change.isAspectViewed() ) {
+                } else if ( change.isAspect( "assignments" ) ) {
                     refreshAssignmentsPanel( target );
                 }
             }
             if ( identifiable instanceof Flow ) {
-                if ( change.isAspectViewed() ) {
+                if ( change.isAspect( "commitments" ) ) {
                     refreshCommitmentsPanel( target );
+                } else if ( change.isCollapsed() || change.isAspect( "eois" ) ) {
+                    refreshEOIsPanel( target );
                 } else if ( !change.isDisplay() ) {
                     refreshAll( target );
                 }
@@ -1430,6 +1491,7 @@ public final class PlanPage extends WebPage implements Updatable {
         refreshEntityPanel( target );
         refreshAssignmentsPanel( target );
         refreshCommitmentsPanel( target );
+        refreshEOIsPanel( target );
         refreshPlanEditPanel( target );
         target.addComponent( planEditPanel );
         form.addOrReplace( createPartsMapLink() );
@@ -1501,12 +1563,18 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     /**
-     * Get read-only expansions.
+     * Get read-only aspects.
      *
-     * @return a read-only set of Longs
+     * @return a read-only map of Longs to lists of strings
      */
-    private Map<Long, String> getReadOnlyAspects() {
-        return Collections.unmodifiableMap( aspects );
+    private Map<Long, List<String>> getReadOnlyAspects() {
+        Map<Long, List<String>> copy = new HashMap<Long, List<String>>();
+        for ( Long id : aspects.keySet() ) {
+            List<String> viewed = aspects.get( id );
+            if ( viewed != null )
+                copy.put( id, new ArrayList<String>( viewed ) );
+        }
+        return Collections.unmodifiableMap( copy );
     }
 
     /**
@@ -1583,12 +1651,13 @@ public final class PlanPage extends WebPage implements Updatable {
             }
         }
         // Reset aspects
-        aspects = new HashMap<Long, String>();
+        aspects = new HashMap<Long, List<String>>();
         for ( Long id : pageState.getAspects().keySet() ) {
             try {
                 ModelObject viewedObject = getQueryService().find( ModelObject.class, id );
-                String previousAspect = pageState.getAspects().get( id );
-                viewAspect( viewedObject, previousAspect );
+                for ( String previousAspect : pageState.getAspects().get( id ) ) {
+                    viewAspect( viewedObject, previousAspect );
+                }
             } catch ( NotFoundException e ) {
                 // Do nothing
             }
@@ -1641,13 +1710,13 @@ public final class PlanPage extends WebPage implements Updatable {
         /**
          * Aspects viewed.
          */
-        private Map<Long, String> aspects;
+        private Map<Long, List<String>> aspects;
 
         private PageState() {
             scenarioId = getScenario().getId();
             partId = getPart().getId();
             this.expansions = new HashSet<Long>( getReadOnlyExpansions() );
-            this.aspects = new HashMap<Long, String>( getReadOnlyAspects() );
+            this.aspects = new HashMap<Long, List<String>>( getReadOnlyAspects() );
         }
 
         public long getScenarioId() {
@@ -1674,11 +1743,11 @@ public final class PlanPage extends WebPage implements Updatable {
             this.expansions = expansions;
         }
 
-        public Map<Long, String> getAspects() {
+        public Map<Long, List<String>> getAspects() {
             return aspects;
         }
 
-        public void setAspects( Map<Long, String> aspects ) {
+        public void setAspects( Map<Long, List<String>> aspects ) {
             this.aspects = aspects;
         }
 
@@ -1695,12 +1764,15 @@ public final class PlanPage extends WebPage implements Updatable {
         }
 
         private boolean hasSameAspects( PageState other ) {
-            Map<Long, String> otherAspects = other.getAspects();
-            if ( !CollectionUtils.isEqualCollection( aspects.keySet(), otherAspects.keySet() ) )
+            Map<Long, List<String>> otherAspects = other.getAspects();
+            if ( !CollectionUtils.isEqualCollection(
+                    aspects.keySet(),
+                    otherAspects.keySet() ) )
                 return false;
             for ( Long id : aspects.keySet() ) {
-                String otherAspect = otherAspects.get( id );
-                if ( otherAspect == null || !otherAspect.equals( aspects.get( id ) ) )
+                if ( !CollectionUtils.isEqualCollection(
+                        otherAspects.get( id ),
+                        aspects.get( id ) ) )
                     return false;
             }
             return true;

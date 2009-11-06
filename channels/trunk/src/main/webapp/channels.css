@@ -571,6 +571,11 @@ div.header {
 .commitments .header {
     background: transparent url( 'images/commitment.png' ) no-repeat 5px 2px;
 }
+
+.eois .header {
+    background: transparent url( 'images/eois.png' ) no-repeat 5px 2px;
+}
+
 #footer {
     border: 1px outset #6fafaf;
 }

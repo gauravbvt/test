@@ -45,14 +45,20 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
      * Property of the classified model object to get the classifiable bean.
      */
     private String classifiableProperty;
+    /**
+     * WHether editing is enabled.
+     */
+    private boolean editEnabled;
 
     public ClassificationsPanel(
             String id,
             IModel<Identifiable> classifiedModel,
-            String classifiableProperty ) {
+            String classifiableProperty,
+            boolean enabled ) {
         super( id );
         this.classifiableProperty = classifiableProperty;
         this.classifiedModel = classifiedModel;
+        editEnabled = enabled;
         init();
     }
 
@@ -99,6 +105,7 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
             }
         } );
         makeVisible( systemsChoice, wrapper.isMarkedForCreation() && !choices.isEmpty() );
+        systemsChoice.setEnabled( editEnabled );
         item.add( systemsChoice );
     }
 
@@ -168,7 +175,7 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
             }
         } );
         namesChoice.setOutputMarkupId( true );
-        namesChoice.setEnabled( wrapper.getSystem() != null );
+        namesChoice.setEnabled( wrapper.getSystem() != null && editEnabled );
         makeVisible( namesChoice, wrapper.isMarkedForCreation() && !choices.isEmpty() );
         item.addOrReplace( namesChoice );
     }
@@ -185,7 +192,7 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
                         new Change( Change.Type.Updated, getClassified(), classifiableProperty ) );
             }
         };
-        makeVisible( deleteLink, !wrapper.isMarkedForCreation() );
+        makeVisible( deleteLink, !wrapper.isMarkedForCreation() && editEnabled );
         item.add( deleteLink );
     }
 
@@ -195,7 +202,7 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
         for ( Classification classification : getClassifications() ) {
             wrappers.add( new ClassificationWrapper( classification ) );
         }
-        wrappers.add( new ClassificationWrapper() );
+        if ( editEnabled ) wrappers.add( new ClassificationWrapper() );
         return wrappers;
     }
 

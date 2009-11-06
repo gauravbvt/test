@@ -26,11 +26,11 @@ public class ElementOfInformation implements Classifiable {
     /**
      * Source codes.
      */
-    private String sourceCodes = "";
+    private String sources = "";
     /**
      * Special handling codes.
      */
-    private String specialHandlingCodes = "";
+    private String specialHandling = "";
 
     public ElementOfInformation() {
     }
@@ -43,20 +43,20 @@ public class ElementOfInformation implements Classifiable {
         this.content = content;
     }
 
-    public String getSourceCodes() {
-        return sourceCodes;
+    public String getSources() {
+        return sources;
     }
 
-    public void setSourceCodes( String sourceCodes ) {
-        this.sourceCodes = sourceCodes;
+    public void setSources( String sources ) {
+        this.sources = sources;
     }
 
-    public String getSpecialHandlingCodes() {
-        return specialHandlingCodes;
+    public String getSpecialHandling() {
+        return specialHandling;
     }
 
-    public void setSpecialHandlingCodes( String specialHandlingCodes ) {
-        this.specialHandlingCodes = specialHandlingCodes;
+    public void setSpecialHandling( String specialHandling ) {
+        this.specialHandling = specialHandling;
     }
 
     public List<Classification> getClassifications() {
@@ -117,13 +117,38 @@ public class ElementOfInformation implements Classifiable {
         if ( !classifications.isEmpty() ) {
             sb.append( '[' );
             for ( Classification classification : classifications ) {
-                sb.append( classification.toString() );
+                sb.append( classification.getLabel() );
                 sb.append( ' ' );
             }
             sb.deleteCharAt( sb.length() - 1 );
             sb.append( ']' );
         }
         return sb.toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean equals( Object object ) {
+        if ( object instanceof ElementOfInformation ) {
+            ElementOfInformation other = (ElementOfInformation)object;
+            return toString().equals( other.toString() )
+                    && sources.equals( other.getSources() )
+                    && specialHandling.equals( other.getSpecialHandling() );
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * {inheritDoc}
+     */
+    public int hashCode() {
+        int hash = 1;
+        hash = hash * 31 + toString().hashCode();
+        hash = hash * 31 + sources.hashCode();
+        hash = hash * 31 + specialHandling.hashCode();
+        return hash;
     }
 
 }
