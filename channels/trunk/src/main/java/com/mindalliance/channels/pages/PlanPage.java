@@ -1288,9 +1288,14 @@ public final class PlanPage extends WebPage implements Updatable {
                 collapse( identifiable );
             else if ( change.isExpanded() || change.isAdded() )
                 expand( identifiable );
-            else if ( change.isAspectViewed() )
+            else if ( change.isAspectViewed() ) {
+                if ( change.getSubject() instanceof Flow ) {
+                    Flow otherFlowViewed = getFlowViewed( change.getProperty() );
+                    if ( otherFlowViewed != null )
+                        closeAspect( otherFlowViewed, change.getProperty() );
+                }
                 viewAspect( identifiable, change.getProperty() );
-            else if ( change.isAspectClosed() )
+            } else if ( change.isAspectClosed() )
                 closeAspect( identifiable, change.getProperty() );
         }
         if ( identifiable instanceof Survey ) {
