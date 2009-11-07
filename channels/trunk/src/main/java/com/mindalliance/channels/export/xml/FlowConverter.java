@@ -96,6 +96,9 @@ public class FlowConverter extends AbstractChannelsConverter {
         writer.startNode( "askedFor" );
         writer.setValue( String.valueOf( flow.isAskedFor() ) );
         writer.endNode();
+        writer.startNode( "classificationsLinked" );
+        writer.setValue( String.valueOf( flow.isClassificationsLinked() ) );
+        writer.endNode();
         if ( flow.getMaxDelay() != null ) {
             writer.startNode( "maxDelay" );
             writer.setValue( flow.getMaxDelay().toString() );
@@ -224,6 +227,9 @@ public class FlowConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "all" ) ) {
                 boolean all = reader.getValue().equals( "true" );
                 flow.setAll( all );
+            } else if ( nodeName.equals( "classificationsLinked" ) ) {
+                boolean classificationsLinked = reader.getValue().equals( "true" );
+                flow.setClassificationsLinked( classificationsLinked );
             } else if ( nodeName.equals( "issue" ) ) {
                 context.convertAnother( scenario, UserIssue.class );
             } else {

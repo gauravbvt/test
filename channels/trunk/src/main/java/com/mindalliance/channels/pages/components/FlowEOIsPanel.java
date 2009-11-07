@@ -1,12 +1,18 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.commands.LinkFlowClassifications;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.util.Matcher;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -19,6 +25,7 @@ import org.apache.wicket.model.PropertyModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -59,6 +66,14 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
      * EOIs list container.
      */
     private WebMarkupContainer eoisContainer;
+    /**
+     * Unlinked classification link.
+     */
+    AjaxFallbackLink unlinkedClassificationsLink;
+    /**
+     * Linked classification link.
+     */
+    AjaxFallbackLink linkedClassificationsLink;
 
     public FlowEOIsPanel( String id, Model<Flow> flowModel, Set<Long> expansions ) {
         super( id, flowModel, expansions );
@@ -69,8 +84,71 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         eoisContainer = new WebMarkupContainer( "eoisContainer" );
         eoisContainer.setOutputMarkupId( true );
         add( eoisContainer );
+        addHeaders();
         addAboutFlow();
         addEOIs();
+    }
+
+    private void addHeaders() {
+        WebMarkupContainer classificationsHeaderContainer =
+                new WebMarkupContainer( "classificationsHeaderContainer" );
+        classificationsHeaderContainer.setOutputMarkupId( true );
+        classificationsHeaderContainer.setVisible( !getFlow().isNeed() );
+        eoisContainer.addOrReplace( classificationsHeaderContainer );
+        WebMarkupContainer sourcingHeaderContainer =
+                new WebMarkupContainer( "sourcingHeaderContainer" );
+        sourcingHeaderContainer.setOutputMarkupId( true );
+        sourcingHeaderContainer.setVisible( !getFlow().isNeed() );
+        eoisContainer.addOrReplace( sourcingHeaderContainer );
+        WebMarkupContainer handlingHeaderContainer =
+                new WebMarkupContainer( "handlingHeaderContainer" );
+        handlingHeaderContainer.setVisible( !getFlow().isNeed() );
+        handlingHeaderContainer.setOutputMarkupId( true );
+        eoisContainer.addOrReplace( handlingHeaderContainer );
+        // Auto populate eois
+        AjaxFallbackLink autoPopulateLink = new AjaxFallbackLink( "autoPopulate" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                boolean changed = autoPopulate();
+                if ( changed ) {
+                    addEOIs();
+                    target.addComponent( eoisContainer );
+                    update( target, new Change( Change.Type.Updated, getFlow(), "eois" ) );
+                }
+            }
+        };
+        makeVisible( autoPopulateLink, canBePopulated() );
+        // Link classifications
+        eoisContainer.add( autoPopulateLink );
+        unlinkedClassificationsLink = new AjaxFallbackLink( "unlinkClassifications" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                Change change = linkClassifications();
+                updateLinkingLinks( target );
+                if ( change.isForProperty( "eois" ) ) {
+                    addEOIs();
+                    target.addComponent( eoisContainer );
+                    update( target, new Change( Change.Type.Updated, getFlow(), "eois" ) );
+                }
+            }
+        };
+        makeVisible( unlinkedClassificationsLink, !isClassificationsLinked() );
+        classificationsHeaderContainer.add( unlinkedClassificationsLink );
+        // Unlink classifications
+        eoisContainer.add( autoPopulateLink );
+        linkedClassificationsLink = new AjaxFallbackLink( "linkClassifications" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                unlinkClassifications();
+                updateLinkingLinks( target );
+            }
+        };
+        makeVisible( linkedClassificationsLink, isClassificationsLinked() );
+        classificationsHeaderContainer.add( linkedClassificationsLink );
+    }
+
+    private void updateLinkingLinks( AjaxRequestTarget target ) {
+        makeVisible( unlinkedClassificationsLink, !isClassificationsLinked() );
+        makeVisible( linkedClassificationsLink, isClassificationsLinked() );
+        target.addComponent( unlinkedClassificationsLink );
+        target.addComponent( linkedClassificationsLink );
     }
 
     private void addAboutFlow() {
@@ -162,12 +240,16 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
     }
 
     private void addClassifications( ListItem<EOIWrapper> item ) {
+        WebMarkupContainer classificationsContainer = new WebMarkupContainer( "classificationsContainer" );
+        classificationsContainer.setOutputMarkupId( true );
+        classificationsContainer.setVisible( !getFlow().isNeed() );
+        item.addOrReplace( classificationsContainer );
         EOIWrapper wrapper = item.getModelObject();
         int index = item.getIndex();
         if ( wrapper.isMarkedForCreation() ) {
             Label emptyLabel = new Label( "classifications", "" );
             makeVisible( emptyLabel, false );
-            item.add( emptyLabel );
+            classificationsContainer.add( emptyLabel );
         } else {
             ClassificationsPanel classificationsPanel = new ClassificationsPanel(
                     "classifications",
@@ -175,11 +257,16 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                     "eois[" + index + "].classifications",
                     !isReadOnly()
             );
-            item.add( classificationsPanel );
+            makeVisible( classificationsPanel, true );
+            classificationsContainer.add( classificationsPanel );
         }
     }
 
     private void addSourcing( ListItem<EOIWrapper> item ) {
+        WebMarkupContainer sourcingContainer = new WebMarkupContainer( "sourcingContainer" );
+        sourcingContainer.setOutputMarkupId( true );
+        sourcingContainer.setVisible( !getFlow().isNeed() );
+        item.addOrReplace( sourcingContainer );
         EOIWrapper wrapper = item.getModelObject();
         TextArea<String> sourcingText = new TextArea<String>(
                 "sources",
@@ -192,10 +279,14 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         } );
         makeVisible( sourcingText, !wrapper.isMarkedForCreation() );
         sourcingText.setEnabled( !isReadOnly() );
-        item.addOrReplace( sourcingText );
+        sourcingContainer.addOrReplace( sourcingText );
     }
 
     private void addSpecialHandling( ListItem<EOIWrapper> item ) {
+        WebMarkupContainer handlingContainer = new WebMarkupContainer( "handlingContainer" );
+        handlingContainer.setOutputMarkupId( true );
+        handlingContainer.setVisible( !getFlow().isNeed() );
+        item.addOrReplace( handlingContainer );
         EOIWrapper wrapper = item.getModelObject();
         TextArea<String> specialHandlingText = new TextArea<String>(
                 "specialHandling",
@@ -208,7 +299,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         } );
         makeVisible( specialHandlingText, !wrapper.isMarkedForCreation() );
         specialHandlingText.setEnabled( !isReadOnly() );
-        item.addOrReplace( specialHandlingText );
+        handlingContainer.addOrReplace( specialHandlingText );
     }
 
     private List<EOIWrapper> getWrappers() {
@@ -223,6 +314,83 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         }
         return wrappers;
     }
+
+    private boolean autoPopulate() {
+        boolean populated = false;
+        List<ElementOfInformation> newEOIs = getNewEOIs();
+        if ( !newEOIs.isEmpty() ) {
+            List<ElementOfInformation> allEOIs = new ArrayList<ElementOfInformation>();
+            allEOIs.addAll( getFlow().getEois() );
+            allEOIs.addAll( newEOIs );
+            doCommand(
+                    UpdateObject.makeCommand(
+                            getFlow(),
+                            "eois",
+                            allEOIs,
+                            UpdateObject.Action.Set
+                    )
+            );
+            populated = true;
+        }
+        return populated;
+    }
+
+    private boolean canBePopulated() {
+        return !getNewEOIs().isEmpty();
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<ElementOfInformation> getNewEOIs() {
+        Set<ElementOfInformation> population = new HashSet<ElementOfInformation>();
+        for ( Flow flow : relatedFlows() ) {
+            for ( ElementOfInformation eoi : flow.getEois() ) {
+                population.add( new ElementOfInformation( eoi ) );
+            }
+        }
+        return new ArrayList<ElementOfInformation>(
+                CollectionUtils.subtract( population, getFlow().getEois() ) );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<Flow> relatedFlows() {
+        final Flow flow = getFlow();
+        Set<Flow> flows = new HashSet<Flow>();
+        flows.addAll( (List<Flow>) CollectionUtils.select(
+                IteratorUtils.toList(
+                        IteratorUtils.chainedIterator(
+                                IteratorUtils.chainedIterator(
+                                        flow.getSource().outcomes(),
+                                        flow.getSource().requirements() ),
+                                IteratorUtils.chainedIterator(
+                                        flow.getTarget().outcomes(),
+                                        flow.getTarget().requirements() ) ) ),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return Matcher.same( ( (Flow) obj ).getName(), flow.getName() );
+                    }
+                }
+        ) );
+
+        return new ArrayList<Flow>( flows );
+    }
+
+    private boolean isClassificationsLinked() {
+        return getFlow().isClassificationsLinked() && getFlow().areAllEOIClassificationsSame();
+    }
+
+    private void unlinkClassifications() {
+        doCommand( UpdateObject.makeCommand(
+                getFlow(),
+                "classificationsLinked",
+                false,
+                UpdateObject.Action.Set
+        ) );
+    }
+
+    private Change linkClassifications() {
+        return doCommand( new LinkFlowClassifications( getFlow() ) );
+    }
+
 
     /**
      * {@inheritDoc}
@@ -307,6 +475,9 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
 
         public EOIWrapper() {
             this.eoi = new ElementOfInformation();
+            if ( getFlow().isClassificationsLinked() ) {
+                eoi.setClassifications( getFlow().getAllEOIClassifications() );
+            }
             index = -1;
             markedForCreation = true;
         }
@@ -343,21 +514,23 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
             String content = val == null ? "" : val.trim();
             if ( !content.isEmpty() ) {
                 eoi.setContent( content );
-                if ( !markedForCreation ) {
-                    doCommand( UpdateObject.makeCommand(
-                            getFlow(),
-                            "eois[" + index + "].content",
-                            content,
-                            UpdateObject.Action.Set
-                    ) );
-                } else {
-                    eoi.setContent( content );
-                    doCommand( UpdateObject.makeCommand(
-                            getFlow(),
-                            "eois",
-                            eoi,
-                            UpdateObject.Action.Add
-                    ) );
+                if ( !getFlow().getEois().contains( eoi ) ) {
+                    if ( !markedForCreation ) {
+                        doCommand( UpdateObject.makeCommand(
+                                getFlow(),
+                                "eois[" + index + "].content",
+                                content,
+                                UpdateObject.Action.Set
+                        ) );
+                    } else {
+                        eoi.setContent( content );
+                        doCommand( UpdateObject.makeCommand(
+                                getFlow(),
+                                "eois",
+                                eoi,
+                                UpdateObject.Action.Add
+                        ) );
+                    }
                 }
             }
         }

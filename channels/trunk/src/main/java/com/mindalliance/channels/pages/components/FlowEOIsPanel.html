@@ -28,19 +28,28 @@
                         <table wicket:id="eoisContainer">
                             <thead>
                                 <tr>
-                                    <td>&nbsp;</td>
+                                    <td><a wicket:id="autoPopulate" href="#">
+                                            <img border="0" src="images/magic.png" alt="auto-populate" title="Click to auto-populate elements"/>
+                                        </a></td>
                                     <td>Content</td>
-                                    <td>Classifications</td>
-                                    <td>Sourcing</td>
-                                    <td>Special handling</td>
+                                    <td wicket:id="classificationsHeaderContainer">Classifications
+                                        <a wicket:id="linkClassifications" href="#">
+                                            <img border="0" src="images/link.png" valign="middle" alt="link" title="Make classifications the same for all. Click to make them independent."/>
+                                        </a>
+                                        <a wicket:id="unlinkClassifications" href="#">
+                                            <img border="0" src="images/broken_link.png" valign="middle" alt="unlink" title="Independent classifications. Click for all elements to have the same classification."/>
+                                        </a>
+                                    </td>
+                                    <td wicket:id="sourcingHeaderContainer">Sourcing</td>
+                                    <td wicket:id="handlingHeaderContainer">Special handling</td>
                                 </tr>
                             </thead>
                             <tr wicket:id="eois">
-                                <td><input wicket:id="confirmed" type="checkbox"/></td>
+                                <td><input wicket:id="confirmed" type="checkbox" title="Uncheck to remove the element"/></td>
                                 <td><input wicket:id="content" size="40"/></td>
-                                <td><span wicket:id="classifications">[classifications panel]</span></td>
-                                <td><textarea wicket:id="sources" rows="1" cols="20">sourcing</textarea></td>
-                                <td><textarea wicket:id="specialHandling" rows="1" cols="20">handling</textarea></td>
+                                <td wicket:id="classificationsContainer"><span wicket:id="classifications">[classifications panel]</span></td>
+                                <td wicket:id="sourcingContainer"><textarea wicket:id="sources" rows="1" cols="20">sourcing</textarea></td>
+                                <td wicket:id="handlingContainer"><textarea wicket:id="specialHandling" rows="1" cols="20">handling</textarea></td>
                             </tr>
                         </table>
                     </td>

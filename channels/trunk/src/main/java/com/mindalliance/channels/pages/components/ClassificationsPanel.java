@@ -116,22 +116,26 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
                 getClassifiableProperty(),
                 new ArrayList<String>()
         );
-        return (List<String>) CollectionUtils.select(
-                getPlan().classificationSystems(),
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        final String system = (String) obj;
-                        return !CollectionUtils.exists(
-                                classifications,
-                                new Predicate() {
-                                    public boolean evaluate( Object obj ) {
-                                        return ( (Classification) obj ).getSystem().equals( system );
+        if ( classifications.isEmpty() ) {
+            return getPlan().classificationSystems();
+        } else {
+            return (List<String>) CollectionUtils.select(
+                    getPlan().classificationSystems(),
+                    new Predicate() {
+                        public boolean evaluate( Object obj ) {
+                            final String system = (String) obj;
+                            return !CollectionUtils.exists(
+                                    classifications,
+                                    new Predicate() {
+                                        public boolean evaluate( Object obj ) {
+                                            return ( (Classification) obj ).getSystem().equals( system );
+                                        }
                                     }
-                                }
-                        );
+                            );
+                        }
                     }
-                }
-        );
+            );
+        }
     }
 
     @SuppressWarnings( "unchecked" )
@@ -140,7 +144,7 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
             return new ArrayList<String>();
         } else {
             return (List<String>) CollectionUtils.collect(
-                    getPlan().classificationsFor( system ),                            
+                    getPlan().classificationsFor( system ),
                     new Transformer() {
                         public Object transform( Object input ) {
                             return ( (Classification) input ).getName();

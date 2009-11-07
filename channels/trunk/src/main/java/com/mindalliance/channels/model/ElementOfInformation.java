@@ -35,6 +35,13 @@ public class ElementOfInformation implements Classifiable {
     public ElementOfInformation() {
     }
 
+    public ElementOfInformation( ElementOfInformation eoi ) {
+        content = eoi.getContent();
+        classifications = new ArrayList<Classification>( eoi.getClassifications() );
+        sources = eoi.getSources();
+        specialHandling = eoi.getSpecialHandling();
+    }
+
     public String getContent() {
         return content;
     }
@@ -131,10 +138,8 @@ public class ElementOfInformation implements Classifiable {
      */
     public boolean equals( Object object ) {
         if ( object instanceof ElementOfInformation ) {
-            ElementOfInformation other = (ElementOfInformation)object;
-            return toString().equals( other.toString() )
-                    && sources.equals( other.getSources() )
-                    && specialHandling.equals( other.getSpecialHandling() );
+            ElementOfInformation other = (ElementOfInformation) object;
+            return content.equals( other.getContent() );
         } else {
             return false;
         }
@@ -145,10 +150,17 @@ public class ElementOfInformation implements Classifiable {
      */
     public int hashCode() {
         int hash = 1;
-        hash = hash * 31 + toString().hashCode();
-        hash = hash * 31 + sources.hashCode();
-        hash = hash * 31 + specialHandling.hashCode();
+        hash = hash * 31 + content.hashCode();
         return hash;
     }
 
+    /**
+     * Reset all properties except content.
+     */
+    public void retainContentOnly() {
+        setClassifications( new ArrayList<Classification>() );
+        setSources( "" );
+        setSpecialHandling( "" );
+
+    }
 }

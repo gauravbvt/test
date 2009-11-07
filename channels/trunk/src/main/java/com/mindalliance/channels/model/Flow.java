@@ -3,6 +3,8 @@ package com.mindalliance.channels.model;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.util.Matcher;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -64,6 +66,10 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      * Elements of information.
      */
     private List<ElementOfInformation> eois = new ArrayList<ElementOfInformation>();
+    /**
+     * Whether eois classifications are expected to "share" the same classifications.
+     */
+    private boolean classificationsLinked = true;
 
     protected Flow() {
     }
@@ -79,12 +85,13 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         for ( String content : contents ) {
             ElementOfInformation eoi = new ElementOfInformation();
             eoi.setContent( content );
-            addEOI( eoi );
+            addEoi( eoi );
         }
     }
 
     /**
      * Get EOIs as a string.
+     *
      * @return a string
      */
     @Transient
@@ -201,9 +208,21 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         return eois;
     }
 
-    public void setEois( List<ElementOfInformation> eois ) {
-        this.eois = eois;
+    public void setEois( List<ElementOfInformation> elements ) {
+        eois = new ArrayList<ElementOfInformation>();
+        for (ElementOfInformation eoi : elements) {
+            addEoi( eoi );
+        }
     }
+
+    public boolean isClassificationsLinked() {
+        return classificationsLinked;
+    }
+
+    public void setClassificationsLinked( boolean classificationsLinked ) {
+        this.classificationsLinked = classificationsLinked;
+    }
+
 
     /**
      * Add element of information.
@@ -211,16 +230,12 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      * @param eoi an element of information
      */
     public void addEoi( ElementOfInformation eoi ) {
-        eois.add( eoi );
-    }
-
-    /**
-     * Add element of information.
-     *
-     * @param eoi an element of information
-     */
-    public void addEOI( ElementOfInformation eoi ) {
-        eois.add( eoi );
+        if ( !eois.contains( eoi ) )  {
+            if ( isNeed() ) {
+                eoi.retainContentOnly();
+            }
+            eois.add( eoi );
+        }
     }
 
     @Enumerated( EnumType.ORDINAL )
@@ -862,6 +877,70 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
             classifications.addAll( eoi.getClassifications() );
         }
         return new ArrayList<Classification>( classifications );
+    }
+
+    /**
+     * Generate a copy of the eois but each with the union of their classifications.
+     *
+     * @return a list of elements of information
+     */
+    @Transient
+    @SuppressWarnings( "unchecked" )
+    public List<ElementOfInformation> getEOISWithSameClassifications() {
+        List<Classification> allClassifications = getAllEOIClassifications();
+        List<ElementOfInformation> eoisCopy = new ArrayList<ElementOfInformation>();
+        for ( ElementOfInformation eoi : eois ) {
+            ElementOfInformation copy = new ElementOfInformation();
+            copy.setContent( eoi.getContent() );
+            copy.setSources( eoi.getSources() );
+            copy.setSpecialHandling( eoi.getSpecialHandling() );
+            copy.setClassifications( new ArrayList<Classification>( allClassifications ) );
+            eoisCopy.add( copy );
+        }
+        return eoisCopy;
+    }
+
+    /**
+     * Whether all eois have the same classifications.
+     *
+     * @return a boolean
+     */
+    public boolean areAllEOIClassificationsSame() {
+        // No eoi has classifications different from those of another eoi.
+        return !CollectionUtils.exists(
+                eois,
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        final ElementOfInformation eoi = (ElementOfInformation) obj;
+                        return CollectionUtils.exists(
+                                eois,
+                                new Predicate() {
+                                    public boolean evaluate( Object obj ) {
+                                        return !CollectionUtils.isEqualCollection(
+                                                eoi.getClassifications(),
+                                                ( (ElementOfInformation) obj ).getClassifications()
+                                        );
+                                    }
+                                }
+                        );
+                    }
+                }
+        );
+    }
+
+    /**
+     * Get all classifications used in eois.
+     *
+     * @return a list of classifications
+     */
+    @Transient
+    @SuppressWarnings( "unchecked" )
+    public List<Classification> getAllEOIClassifications() {
+        Set<Classification> allClassifications = new HashSet<Classification>();
+        for ( ElementOfInformation eoi : eois ) {
+            allClassifications.addAll( eoi.getClassifications() );
+        }
+        return new ArrayList<Classification>( allClassifications );
     }
 
     /**

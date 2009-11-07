@@ -16,10 +16,12 @@ import java.util.List;
 public class Classification implements Identifiable, Comparable {
     /**
      * Classification system.
+     * Set once.
      */
     private String system = "";
     /**
      * Classification name.
+     * Set once.
      */
     private String name = "";
     /**
@@ -36,6 +38,7 @@ public class Classification implements Identifiable, Comparable {
     }
 
     public void setSystem( String system ) {
+        assert this.system.isEmpty();
         this.system = system;
     }
 
@@ -56,6 +59,7 @@ public class Classification implements Identifiable, Comparable {
     }
 
     public void setName( String name ) {
+        assert this.name.isEmpty();
         this.name = name;
     }
 
@@ -147,4 +151,5 @@ public class Classification implements Identifiable, Comparable {
                 }
         );
     }
+
 }
