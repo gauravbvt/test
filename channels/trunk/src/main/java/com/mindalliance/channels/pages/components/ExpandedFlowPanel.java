@@ -174,7 +174,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         add( editEOIsLink );
         eoisDescriptionField = new TextArea<String>(
                 "eois",
-                new PropertyModel<String>( getFlow(), "eOIsDescription" ) );
+                new PropertyModel<String>( getFlow(), "description" ) );
         eoisDescriptionField.setEnabled( false );
         add( eoisDescriptionField );                              // NON-NLS
     }

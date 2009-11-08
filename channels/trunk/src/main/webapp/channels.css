@@ -246,9 +246,9 @@ span.waived, li.waived {
 }
 
 h1.waived {
-   background: transparent url( 'images/waived.png' ) no-repeat 100% 0;
-   padding-right: 20px;
-   padding-top: 0;
+    background: transparent url( 'images/waived.png' ) no-repeat 100% 0;
+    padding-right: 20px;
+    padding-top: 0;
 }
 
 h1, h2, h3, h4 {
@@ -444,7 +444,7 @@ div.section-title ul.menu {
 
 ul.attach ul.menu {
     padding-top: 2px;
-    padding-right:8px;
+    padding-right: 8px;
 }
 
 .header ul.menu, .header span.menubar {
@@ -651,6 +651,7 @@ li.doc_Policy {
     padding-left: 20px;
     background: transparent url( 'images/scroll.png' ) no-repeat 0;
 }
+
 li.doc_Image {
     padding-left: 20px;
     background: transparent url( 'images/palette.png' ) no-repeat 0;
@@ -746,7 +747,6 @@ div.wicket-aa ul li:hover {
     background-color: #ccf;
 }
 
-
 div.import-dialog {
     background: #C3D9FF;
     border: 1px outset #c3dede;
@@ -760,18 +760,18 @@ div.import-dialog {
 }
 
 div.float-bar {
-    padding-bottom:18px;
-    width:100%;
-    background-color:#718191;
-    border-bottom:1px solid #464f5a;
+    padding-bottom: 18px;
+    width: 100%;
+    background-color: #718191;
+    border-bottom: 1px solid #464f5a;
     cursor: move;
 }
 
 div.float-resize {
-    position:absolute;
-    bottom:0;
-    right:5px;
-    float:right;
+    position: absolute;
+    bottom: 0;
+    right: 5px;
+    float: right;
     cursor: se-resize;
 }
 
@@ -814,60 +814,60 @@ div.aspect {
 
 /* Tabbed panels */
 
-div.tabpanel div.tab-row{
-  float:left;
-  width:100%;
-  background:#DAE0D2 url("images/tabs/bg.gif") repeat-x bottom;
-  line-height:normal;
-  }
+div.tabpanel div.tab-row {
+    float: left;
+    width: 100%;
+    background: #DAE0D2 url( "images/tabs/bg.gif" ) repeat-x bottom;
+    line-height: normal;
+}
 
 div.tabpanel div.tab-row ul {
-  margin:0;
-  padding:10px 10px 0;
-  list-style:none;
-  }
+    margin: 0;
+    padding: 10px 10px 0;
+    list-style: none;
+}
 
 div.tabpanel div.tab-row li {
-  float:left;
-  background:url("images/tabs/left.gif") no-repeat left top;
-  margin:0;
-  padding:0 0 0 9px;
-  }
+    float: left;
+    background: url( "images/tabs/left.gif" ) no-repeat left top;
+    margin: 0;
+    padding: 0 0 0 9px;
+}
 
 div.tabpanel div.tab-row a {
-  display:block;
-  background:url("images/tabs/right.gif") no-repeat right top;
-  padding:5px 15px 4px 6px;
-  text-decoration:none;
-  font-weight:bold;
-  color:#765;
-  white-space:nowrap;
-  }
+    display: block;
+    background: url( "images/tabs/right.gif" ) no-repeat right top;
+    padding: 5px 15px 4px 6px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #765;
+    white-space: nowrap;
+}
 
 div.tabpanel div.tab-row a:hover {
-  color:#333;
-  }
+    color: #333;
+}
 
 div.tabpanel div.tab-row li.selected {
-  background-image:url("images/tabs/left_on.gif");
-  }
+    background-image: url( "images/tabs/left_on.gif" );
+}
 
 div.tabpanel div.tab-row li.selected a {
-  background-image:url("images/tabs/right_on.gif");
-  color:#333;
-  padding-bottom:5px;
-  }
+    background-image: url( "images/tabs/right_on.gif" );
+    color: #333;
+    padding-bottom: 5px;
+}
 
 div.tabpanel table {
-  border: 1px solid transparent;
-  display: block;
+    border: 1px solid transparent;
+    display: block;
 }
 
 ul.ranges {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  text-align: right;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: right;
 }
 
 ul.ranges li {
@@ -877,6 +877,7 @@ ul.ranges li {
 ul.ranges li:before {
     content: "  \2015   ";
 }
+
 ul.ranges li:first-child:before {
     content: " ";
 }
@@ -913,6 +914,7 @@ ul.index-counter li {
 ul.index-counter li:before {
     content: "-";
 }
+
 ul.index-counter li:first-child:before {
     content: ":";
 }
@@ -926,11 +928,11 @@ input.filter-small {
 }
 
 body.message {
-    background: white url("images/plain-back.png") repeat-y;
+    background: white url( "images/plain-back.png" ) repeat-y;
 }
 
 body.message div {
-    background: transparent url("images/plain-head.png") no-repeat 0 -20px;
+    background: transparent url( "images/plain-head.png" ) no-repeat 0 -20px;
     padding: 5px 5px 5px 1in;
 }
 
@@ -952,6 +954,14 @@ body.message div {
 
 .classifications {
     background-color: #e6e6e6;
+}
+
+textarea[disabled] {
+    color: #555555;
+}
+
+input[disabled] {
+    color: #555555;
 }
 
 

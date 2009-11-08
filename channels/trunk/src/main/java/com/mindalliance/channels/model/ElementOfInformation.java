@@ -130,6 +130,14 @@ public class ElementOfInformation implements Classifiable {
             sb.deleteCharAt( sb.length() - 1 );
             sb.append( ']' );
         }
+        if (!sources.isEmpty()) {
+            sb.append (": ");
+            sb.append( sources );
+        }
+        if (!specialHandling.isEmpty()) {
+             sb.append (" -");
+             sb.append( specialHandling );
+         }
         return sb.toString();
     }
 

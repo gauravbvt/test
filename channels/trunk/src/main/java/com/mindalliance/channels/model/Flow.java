@@ -79,6 +79,11 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         if ( !val.isEmpty() ) setEOIsFrom( val );
     }
 
+    @Override
+    public String getDescription() {
+        return descriptionFromEOIs();
+    }
+
     // todo - remove when cut-over is completed
     private void setEOIsFrom( String val ) {
         List<String> contents = Matcher.extractEOIs( val );
@@ -94,11 +99,6 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      *
      * @return a string
      */
-    @Transient
-    public String getEOIsDescription() {
-        return descriptionFromEOIs();
-    }
-
     private String descriptionFromEOIs() {
         StringBuilder sb = new StringBuilder();
         Iterator<ElementOfInformation> iter = getEois().iterator();

@@ -93,7 +93,8 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         WebMarkupContainer classificationsHeaderContainer =
                 new WebMarkupContainer( "classificationsHeaderContainer" );
         classificationsHeaderContainer.setOutputMarkupId( true );
-        classificationsHeaderContainer.setVisible( !getFlow().isNeed() );
+        classificationsHeaderContainer.setVisible( !getFlow().isNeed()
+                && !getPlan().classificationSystems().isEmpty() );
         eoisContainer.addOrReplace( classificationsHeaderContainer );
         WebMarkupContainer sourcingHeaderContainer =
                 new WebMarkupContainer( "sourcingHeaderContainer" );
