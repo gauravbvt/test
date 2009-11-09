@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -98,7 +99,7 @@ public class Survey implements Identifiable, Serializable {
      * Simple date format.
      */
     private static SimpleDateFormat dateFormat =
-            new SimpleDateFormat( "EEE MMM dd HH:mm:ss zzz yyyy" );
+            new SimpleDateFormat( "EEE MMM dd HH:mm:ss zzz yyyy", Locale.US );
     /**
      * Survey data.
      */

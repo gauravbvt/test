@@ -11,37 +11,26 @@
     <link rel="stylesheet" href="iPhone.css"   type="text/css" media="only screen and (max-device-width: 480px)">
 </head>
 <body>
-<div class="vcard">
+<div id="top">
     <div id="header">
-        <div id="nav">
-            <ul>
-                <li><a href="/logout">Logout</a></li>
-            </ul>
-            <hr>
+        <div>
+            <div id="nav">
+                <ul>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+                <hr>
+            </div>
+            <h1 wicket:id="name">Name</h1>
         </div>
-        <h1 class="fn" wicket:id="name">Name</h1>
-        <h3 wicket:id="title-section">
-            <span class="title" wicket:id="title">title</span><span wicket:id="title-sep">, </span>
-            <span class="role" wicket:id="role">role</span></h3>
     </div>
 
     <div id="contents">
-        <div class="person">
-            <p class="note" wicket:id="actor-description">Description...</p>
-            <img class="photo" width="48" align="left" wicket:id="actor-pic" src="" alt="Picture">
-            <div wicket:id="actor-channels">(channels)</div>
-            <p></p>
-        </div>
+        <p wicket:id="desc">(Description)</p>
 
-        <div wicket:id="org" class="organization">
-            <h2 class="org" wicket:id="org-name">Organization</h2>
-            <p class="adr" wicket:id="org-address">Address</p>
-            <p class="note" wicket:id="org-description">Description...</p>
-            <img class="logo" width="48" align="left" wicket:id="org-pic" src="" alt="Logo">
-            <div wicket:id="org-channels">(channels)</div>
-            <p></p>
-        </div>
-        <p class="notice">Confidential. Copyright &copy; 2009 Mind-Alliance Systems LLC.</p>        
+        <div wicket:id="person">(Person)</div>
+        <div wicket:id="org">(Org)</div>
+
+        <p class="notice">Confidential. Copyright &copy; 2009 Mind-Alliance Systems LLC.</p>
     </div>
 </div>
 </body>

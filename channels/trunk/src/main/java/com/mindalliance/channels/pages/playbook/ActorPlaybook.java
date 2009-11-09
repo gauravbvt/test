@@ -47,9 +47,9 @@ public class ActorPlaybook extends PlaybookPage {
         String name = actor.getName();
 
         add(
-            new Label( "title", name ),
+            new Label( "title", "Playbook: " + name ),
             new Label( "header", name ).setRenderBodyOnly( true ),
-            new Label( "ess", name.endsWith( "s" )? "" : "s" ).setRenderBodyOnly( true ),
+            new Label( "ess", name.endsWith( "s" ) ? "" : "s" ).setRenderBodyOnly( true ),
 
             new BookmarkablePageLink<TaskPlaybook>( "top", TaskPlaybook.class ),
 
@@ -87,7 +87,7 @@ public class ActorPlaybook extends PlaybookPage {
      * null
      * @return a wicket component
      */
-    static Component createPicture(
+    public static Component createPicture(
             String id, ModelObject object, String prefix, String defaultPicture ) {
 
         String name = object == null ? "" : object.getName();

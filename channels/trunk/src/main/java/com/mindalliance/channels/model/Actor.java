@@ -60,6 +60,11 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
         UNKNOWN.makeImmutable();
     }
 
+    @Override
+    public boolean isActual() {
+        return !equals( UNKNOWN ) && super.isActual();
+    }
+
     public boolean isSystem() {
         return system;
     }

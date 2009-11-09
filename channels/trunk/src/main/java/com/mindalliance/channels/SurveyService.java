@@ -61,7 +61,7 @@ public interface SurveyService extends Service, Identifiable {
      * @return an issue or null
      */
     Issue findIssue( final Survey survey );
-    
+
     /**
      * Delete not-yet-launched survey.
      *

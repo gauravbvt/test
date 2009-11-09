@@ -12,9 +12,10 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.pages.reports.VCardPanel;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.protocol.http.servlet.AbortWithHttpStatusException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -55,7 +56,7 @@ public class VCardPage extends WebPage {
             throw new AbortWithHttpStatusException( HttpServletResponse.SC_NOT_FOUND, false );
 
         actorSpec = getActorSpec( flow.getContactedPart() );
-        init( actorSpec.getOrganization(), actorSpec.getJob(), getChannels( actor ) );
+        init( actorSpec.getOrganization(), actorSpec.getJob() );
     }
 
     private List<Channel> getChannels( ModelEntity object ) {
@@ -80,44 +81,16 @@ public class VCardPage extends WebPage {
         return null;
     }
 
-    private void init( Organization organization, Job job, List<Channel> channels ) {
-        String jobTitle = job.getTitle();
-        String roleName = job.getRole().getName();
+    private void init( Organization organization, Job job ) {
+        String title = flow.getName();
         add(
-            new Label( "pagetitle", actor.getName() ),
-            new Label( "name", actor.getName() ),
-            new Label( "actor-description", actor.getDescription() )
-                .setVisible( !actor.getDescription().isEmpty() ),
-            ActorPlaybook.createPicture( "actor-pic", actor, PREFIX,
-                                         "../../images/actor.png" ),
-            new WebMarkupContainer( "title-section" )
-                .add( new Label( "title", jobTitle ).setVisible( !jobTitle.isEmpty() ),
-                      new WebMarkupContainer( "title-sep" )
-                              .setRenderBodyOnly( true )
-                              .setVisible( !jobTitle.isEmpty() && !roleName.isEmpty() ),
-                      new Label( "role", roleName ) ),
-            new ChannelPanel( "actor-channels", channels ).setRenderBodyOnly( true ),
+            new Label( "pagetitle", title ),
+            new Label( "name", title ),
+            new Label( "desc", flow.getDescription() ),
 
-            organization == null ?
-                  new WebMarkupContainer( "org" )
-                      .add( new Label( "org-description", "" ),
-                            new Label( "org-pic", "" ),
-                            new Label( "org-address", "" ),
-                            new Label( "org-name", "" ),
-                            new Label( "org-channels", "" ) )
-                      .setVisible( false )
-                : new WebMarkupContainer( "org" )
-                      .add( new Label( "org-description", organization.getDescription() )
-                                .setVisible( !organization.getDescription().isEmpty() ),
-                            ActorPlaybook.createPicture( "org-pic", organization, PREFIX,
-                                                         "../../images/organization.png" ),
-                            new ChannelPanel( "org-channels", organization.getEffectiveChannels() )
-                                .setRenderBodyOnly( true ),
-                            new Label( "org-name", organization.getName() ),
-                            new Label( "org-address", organization.getLocation() == null ? ""
-                                                    : organization.getLocation().getFullAddress() )
-                                .setVisible( organization.getLocation() != null )
-                           )
+            new VCardPanel( "person", job.resourceSpec( organization ), "../../" ),
+            organization == null ? new WebMarkupContainer( "org" ).setVisible( false )
+                                 : new VCardPanel( "org", new ResourceSpec( organization ), "../../" )
         );
     }
 

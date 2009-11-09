@@ -61,6 +61,7 @@ public class FlowReportPanel extends Panel {
     }
 
     private void init( boolean showingIssues, boolean isSource ) {
+        boolean hasDescription = !flow.getDescription().isEmpty();
         boolean showContacts = !isSource &&  flow.isAskedFor()
                              || isSource && !flow.isAskedFor();
 
@@ -75,10 +76,10 @@ public class FlowReportPanel extends Panel {
                                                              : "information" ) ) ),
              newUrgency(),
              new Label( "start-stop", getSignificance() ),
-             new WebMarkupContainer( "eoi-lead" ).setVisible( !flow.getDescription().isEmpty() ),
+             new WebMarkupContainer( "eoi-lead" ).setVisible( hasDescription ),
              new WebMarkupContainer( "eoi" )
                      .add( new Label( "eoi-item", flow.getDescription() ) )
-                     .setVisible( !flow.getDescription().isEmpty() ),
+                     .setVisible( hasDescription ),
 
              new IssuesReportPanel( "issues", new Model<ModelObject>( flow ) )
                 .setVisible( showingIssues ),

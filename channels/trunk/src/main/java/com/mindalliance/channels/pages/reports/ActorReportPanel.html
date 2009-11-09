@@ -7,31 +7,26 @@
         lang="en">
 <body>
 <wicket:panel>
-    <div class="header">
-        <div>
-            <ul class="channels-only" wicket:id="channels"></ul>
-            <div class="section-head">
-                <h4 wicket:id="name">name</h4>
-                <h5 wicket:id="title">title</h5>
-                <p class="description" wicket:id="description">description</p>
-            </div>
-        </div>
+    <div wicket:id="vcard">
+        (Vcard)
     </div>
 
-    <table class="tasks">
-        <thead>
-            <tr><th>Tasks</th><th>Communications</th></tr>
-        </thead>
-        <tbody>
-            <tr class="task" wicket:id="parts">
-                <div wicket:id="part">[part report panel]</div>
-            </tr>
-        </tbody>
-        <tfoot>
-            <tr><td colspan="2"><p class="notice">Confidential. Copyright &copy; 2009 Mind-Alliance Systems LLC.</p>
-</td></tr>
-        </tfoot>
-    </table>
+    <div class="table-wrap">
+        <table class="tasks">
+            <thead>
+                <tr><th>Tasks</th><th width="61%">Communication Actions</th></tr>
+            </thead>
+            <tbody>
+                <tr class="task" wicket:id="parts">
+                    <div wicket:id="part">[part report panel]</div>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr><td colspan="2"><p class="notice">Confidential. Copyright &copy; 2009 Mind-Alliance Systems LLC.</p>
+    </td></tr>
+            </tfoot>
+        </table>
+    </div>
 </wicket:panel>
 </body>
 </html>
