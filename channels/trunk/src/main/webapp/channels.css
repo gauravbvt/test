@@ -795,6 +795,10 @@ div.aspect {
     padding: 0 10px 0 0
 }
 
+.aspect td {
+    vertical-align: top;
+}
+
 .aspect tr.headers th {
     text-align: left;
     font-weight: bold;
