@@ -170,12 +170,21 @@ input[type='text'], textarea {
     width: 96%;
 }
 
-.entityReference input[type='text'] {
-    width: auto;
+span.entityReference {
+    display: block;
+    position: relative;
+    width: 98%;
 }
 
-#part .entityReference input[type='text'] {
-    width: auto;
+span.entityReference select {
+    position: absolute;
+    width: 21%;
+    padding: 1px;
+}
+
+span.entityReference input[type='text'] {
+    width: 76%;
+    margin-left: 22%;
 }
 
 input[type="text"].no-expand {

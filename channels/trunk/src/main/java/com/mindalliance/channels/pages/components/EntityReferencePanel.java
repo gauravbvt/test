@@ -11,6 +11,7 @@ import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.ScenarioObject;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
@@ -18,6 +19,7 @@ import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,8 +82,8 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
             List<String> choices,
             String property,
             Class<T> entityClass,
-            T defaultEntity) {
-        this(id, iModel, choices, property, entityClass, defaultEntity, null);
+            T defaultEntity ) {
+        this( id, iModel, choices, property, entityClass, defaultEntity, null );
     }
 
     public EntityReferencePanel(
@@ -98,7 +100,10 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
         this.entityClass = entityClass;
         this.defaultEntity = defaultEntity;
         this.referenceKind = referenceKind;
+
+        add( new AttributeModifier( "class", true, new Model<String>( "entityReference" ) ) );
         init();
+
     }
 
     private void init() {
