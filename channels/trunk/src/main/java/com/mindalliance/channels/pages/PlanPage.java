@@ -1297,6 +1297,10 @@ public final class PlanPage extends WebPage implements Updatable {
                 viewAspect( identifiable, change.getProperty() );
             } else if ( change.isAspectClosed() )
                 closeAspect( identifiable, change.getProperty() );
+            else if ( change.isAspectReplaced() ) {
+                closeAspect( identifiable, null );
+                viewAspect( identifiable, change.getProperty() );
+            }
         }
         if ( identifiable instanceof Survey ) {
             if ( change.isExpanded() ) {

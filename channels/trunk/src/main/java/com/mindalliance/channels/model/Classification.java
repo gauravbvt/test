@@ -104,7 +104,7 @@ public class Classification implements Identifiable, Comparable {
     }
 
     /**
-     * Whether a classifcation encompasses another.
+     * Whether a classifcation is higher than or equal to another.
      *
      * @param other a classification
      * @return a boolean
@@ -112,6 +112,17 @@ public class Classification implements Identifiable, Comparable {
     public boolean encompasses( Classification other ) {
         return system.equals( other.getSystem() )
                 && level <= other.getLevel();
+    }
+
+    /**
+     * Whether a classifcation is higher than another.
+     *
+     * @param other a classification
+     * @return a boolean
+     */
+    public boolean isHigherThan( Classification other ) {
+        return system.equals( other.getSystem() )
+                && level < other.getLevel();
     }
 
     /**
@@ -138,6 +149,7 @@ public class Classification implements Identifiable, Comparable {
 
     /**
      * Is this classification encompassed by any in a given list?
+     *
      * @param classifications a list of classifications
      * @return a boolean
      */
@@ -146,10 +158,30 @@ public class Classification implements Identifiable, Comparable {
                 classifications,
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        return ((Classification)obj).encompasses( Classification.this );
+                        return ( (Classification) obj ).encompasses( Classification.this );
                     }
                 }
         );
     }
 
+    /**
+     * Whether at least one in a list of classifications is stronger than another in another list.
+     *
+     * @param classifications a list of classifications
+     * @param others          a list of classifications
+     * @return a boolean
+     */
+    public static boolean hasHigherClassification(
+            final List<Classification> classifications,
+            final List<Classification> others ) {
+        if ( classifications.isEmpty() && others.isEmpty() ) return false;
+        if ( others.isEmpty() ) return true;
+        // None in the other classifications is not encompassed by at least one of the (first) classifications.
+        for ( Classification other : others ) {
+            for ( Classification classification : classifications ) {
+                if ( classification.isHigherThan( other ) ) return true;
+            }
+        }
+        return false;
+    }
 }

@@ -1188,6 +1188,13 @@ public interface QueryService extends Service {
      * @param actor an actor
      * @return a list of commitments
      */
-    List<Commitment> findAllCommitments( Actor actor );
+    List<Commitment> findAllCommitmentsOf( Actor actor );
 
+    /**
+     * Find all commitments to an actor.
+     *
+     * @param actor an actor
+     * @return a list of commitments
+     */
+    List<Commitment> findAllCommitmentsTo( Actor actor );
 }

@@ -29,9 +29,9 @@ import java.util.Set;
  * Date: Jul 21, 2009
  * Time: 3:47:25 PM
  */
-public class UntimelyTriggeringCommitment extends AbstractIssueDetector {
+public class UntimelyTriggeringSharing extends AbstractIssueDetector {
 
-    public UntimelyTriggeringCommitment() {
+    public UntimelyTriggeringSharing() {
     }
 
     /**

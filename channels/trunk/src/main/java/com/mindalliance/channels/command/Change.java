@@ -66,6 +66,10 @@ public class Change implements Serializable {
          */
         AspectViewed,
         /**
+         * View replacement requested
+         */
+        AspectReplaced,
+        /**
          * View closed
          */
         AspectClosed
@@ -259,12 +263,21 @@ public class Change implements Serializable {
     }
 
     /**
+     * Whether type is AspectClosed.
+     *
+     * @return a boolean
+     */
+    public boolean isAspectReplaced() {
+        return type == Type.AspectReplaced;
+    }
+
+    /**
      * Whether type is Aspect related.
      *
      * @return a boolean
      */
     public boolean isAspect() {
-        return isAspectViewed() || isAspectClosed();
+        return isAspectViewed() || isAspectClosed() || isAspectReplaced();
     }
 
 
@@ -286,6 +299,16 @@ public class Change implements Serializable {
      */
     public boolean isAspectClosed( String property ) {
         return isAspectClosed() && this.isForProperty( property );
+    }
+
+    /**
+     * Whether a particular aspect (via property) is replaced by another.
+     *
+     * @param property a string
+     * @return a boolean
+     */
+    public boolean isAspectReplaced( String property ) {
+        return isAspectReplaced() && this.isForProperty( property );
     }
 
     /**
@@ -323,7 +346,7 @@ public class Change implements Serializable {
      * @return a boolean
      */
     public boolean isDisplay() {
-        return isExpanded() || isCollapsed() || isAspectViewed();
+        return isExpanded() || isCollapsed() || isAspect();
     }
 
     /**

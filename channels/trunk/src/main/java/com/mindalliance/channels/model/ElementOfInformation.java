@@ -130,14 +130,14 @@ public class ElementOfInformation implements Classifiable {
             sb.deleteCharAt( sb.length() - 1 );
             sb.append( ']' );
         }
-        if (!sources.isEmpty()) {
-            sb.append (": ");
+        if ( !sources.isEmpty() ) {
+            sb.append( ": " );
             sb.append( sources );
         }
-        if (!specialHandling.isEmpty()) {
-             sb.append (" -");
-             sb.append( specialHandling );
-         }
+        if ( !specialHandling.isEmpty() ) {
+            sb.append( " -" );
+            sb.append( specialHandling );
+        }
         return sb.toString();
     }
 
@@ -170,5 +170,14 @@ public class ElementOfInformation implements Classifiable {
         setSources( "" );
         setSpecialHandling( "" );
 
+    }
+
+    /**
+     * Whether the eoi is classified.
+     *
+     * @return a boolean
+     */
+    public boolean isClassified() {
+        return !getClassifications().isEmpty();
     }
 }

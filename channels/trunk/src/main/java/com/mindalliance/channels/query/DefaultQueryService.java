@@ -642,7 +642,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 this.listActualEntities( Actor.class ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        return ((Actor)obj).getClearances().contains( classification );
+                        return ( (Actor) obj ).getClearances().contains( classification );
                     }
                 }
         );
@@ -650,7 +650,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 findAllFlows(),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        return ((Flow)obj).getClassifications().contains( classification );
+                        return ( (Flow) obj ).getClassifications().contains( classification );
                     }
                 }
         );
@@ -2687,9 +2687,10 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             List<Assignment> beneficiaries = findAllAssignments( (Part) flow.getTarget(), true );
             for ( Assignment source : sources ) {
                 for ( Assignment beneficiary : beneficiaries ) {
-                    if ( !source.getActor().equals( beneficiary.getActor() ) ) {
-                        Commitment commitment = new Commitment( source, beneficiary, flow );
-                        if ( commitment.passesClearanceTest() ) commitments.add( commitment  );
+                    Commitment commitment = new Commitment( source, beneficiary, flow );
+                    if ( source.getActor().equals( beneficiary.getActor() )
+                            || commitment.passesClearanceTest() ) {
+                        commitments.add( commitment );
                     }
                 }
             }
@@ -2700,7 +2701,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<Commitment> findAllCommitments( Actor actor ) {
+    public List<Commitment> findAllCommitmentsOf( Actor actor ) {
         Set<Commitment> commitments = new HashSet<Commitment>();
         for ( Assignment assignment : findAllAssignments( actor ) ) {
             Iterator<Flow> flows = assignment.getPart().flows();
@@ -2712,10 +2713,21 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                                 assignment,
                                 beneficiary,
                                 flow );
-                        if ( commitment.passesClearanceTest() ) commitments.add( commitment  );
+                        if ( commitment.passesClearanceTest() ) commitments.add( commitment );
                     }
                 }
             }
+        }
+        return new ArrayList<Commitment>( commitments );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Commitment> findAllCommitmentsTo( Actor actor ) {
+        Set<Commitment> commitments = new HashSet<Commitment>();
+        for ( Flow flow : findAllRelatedFlows( ResourceSpec.with( actor ), false ) ) {
+            commitments.addAll( findAllCommitments( flow ) );
         }
         return new ArrayList<Commitment>( commitments );
     }

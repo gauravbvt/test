@@ -23,9 +23,9 @@ import java.util.List;
  * Date: Jul 22, 2009
  * Time: 2:32:23 PM
  */
-public class UntimelyCriticalCommitment extends AbstractIssueDetector {
+public class UntimelyCriticalSharing extends AbstractIssueDetector {
 
-    public UntimelyCriticalCommitment() {
+    public UntimelyCriticalSharing() {
     }
 
     /**

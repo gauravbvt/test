@@ -223,6 +223,22 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         this.classificationsLinked = classificationsLinked;
     }
 
+    /**
+     * Whether at least one eoi is classified.
+     * @return a boolean
+     */
+    @Transient
+    public boolean isClassified() {
+        return CollectionUtils.exists(
+                eois,
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ((ElementOfInformation)obj).isClassified();
+                    }
+                }
+        );
+    }
+
 
     /**
      * Add element of information.

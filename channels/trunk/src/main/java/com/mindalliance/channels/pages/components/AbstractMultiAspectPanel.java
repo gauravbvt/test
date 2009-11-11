@@ -346,7 +346,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
         target.addComponent( headerTitle );
         target.addComponent( aspectPanel );
 */
-        update( target, new Change( Change.Type.AspectViewed, getObject(), aspect ) );
+        update( target, new Change( Change.Type.AspectReplaced, getObject(), aspect ) );
     }
 
     /**

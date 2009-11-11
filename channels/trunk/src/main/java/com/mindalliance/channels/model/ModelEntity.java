@@ -364,8 +364,18 @@ public abstract class ModelEntity extends ModelObject {
         return true;
     }
 
+    /**
+     * Is consistent with the definition of an entity type.
+     *
+     * @param entityType a model entity
+     * @return a boolean
+     */
+    public boolean isConsistentWith( ModelEntity entityType ) {
+        assert entityType.isType();
+        return overrideNarrows( entityType ) || meetsTypeRequirementTests( entityType );
+    }
+
     private List<ModelEntity> getTyping() {
-        assert isType();
         List<ModelEntity> typing = getAllTags();
         typing.add( this );
         return typing;

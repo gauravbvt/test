@@ -27,8 +27,8 @@ public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         // TODO redefine
-/*
-        Flow flow = (Flow) modelObject;
+
+/*        Flow flow = (Flow) modelObject;
         Part source = (Part) flow.getSource();
         Organization org = source.getOrganization();
         if ( org != null && org.isAgreementsRequired() ) {
@@ -55,8 +55,8 @@ public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
                     issues.add( issue );
                 }
             }
-        }
-*/
+        }*/
+
         return issues;
     }
 

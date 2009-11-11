@@ -77,7 +77,7 @@ public class RedundantFlow extends AbstractIssueDetector {
     }
 
     private boolean equivalent( Flow flow, Flow otherFlow ) {
-        return flow.getTarget() == otherFlow.getTarget()
+        return flow.getTarget().equals( otherFlow.getTarget() )
                 && flow.isAskedFor() == otherFlow.isAskedFor()
                 && Matcher.same( flow.getName(), otherFlow.getName() );
     }

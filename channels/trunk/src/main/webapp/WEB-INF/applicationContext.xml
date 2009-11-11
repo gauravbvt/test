@@ -252,10 +252,10 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.CommitmentWithoutRequiredAgreement">
                     <property name="queryService" ref="queryService"/>
                 </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.UntimelyTriggeringCommitment">
+                <bean class="com.mindalliance.channels.analysis.detectors.UntimelyTriggeringSharing">
                     <property name="queryService" ref="queryService"/>
                 </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.UntimelyCriticalCommitment">
+                <bean class="com.mindalliance.channels.analysis.detectors.UntimelyCriticalSharing">
                     <property name="queryService" ref="queryService"/>
                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.InconsistentImpactOnTargetPart">
@@ -273,6 +273,21 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.NoScenarioForEventPhase">
                      <property name="queryService" ref="queryService"/>
                  </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.UnplayedPart">
+                     <property name="queryService" ref="queryService"/>
+                 </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.UselessActor">
+                          <property name="queryService" ref="queryService"/>
+                      </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.InvalidEntityTyping">
+                          <property name="queryService" ref="queryService"/>
+                      </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.FlowDeclassifies">
+                          <property name="queryService" ref="queryService"/>
+                      </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.SharingWithoutCommitments">
+                          <property name="queryService" ref="queryService"/>
+                      </bean>
             </list>
         </property>
     </bean>
