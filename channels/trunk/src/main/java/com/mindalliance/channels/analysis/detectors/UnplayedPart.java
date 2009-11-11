@@ -26,21 +26,23 @@ public class UnplayedPart extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     public List<Issue> detectIssues( ModelObject modelObject ) {
-        Part part = (Part)modelObject;
+        Part part = (Part) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        List<Assignment> assignments = getQueryService().findAllAssignments( part, false );
-        if ( assignments.isEmpty() ) {
-            Issue issue = makeIssue( Issue.COMPLETENESS, part );
-            issue.setDescription( "The task is assigned to no one" );
-            issue.setRemediation( "Explicitly assign an actor to the task"
-                    + "\nor profile an actor to match the task specifications"
-                    + "\nor modify the task specifications so that it matches at least one actor"
-            );
-            issue.setSeverity( Issue.Level.Minor );
-            issues.add( issue );
+        if ( part.hasNonActorResource() ) {
+            List<Assignment> assignments = getQueryService().findAllAssignments( part, false );
+            if ( assignments.isEmpty() ) {
+                Issue issue = makeIssue( Issue.COMPLETENESS, part );
+                issue.setDescription( "The task is assigned to no one" );
+                issue.setRemediation( "Explicitly assign an actor to the task"
+                        + "\nor profile an actor to match the task specifications"
+                        + "\nor modify the task specifications so that it matches at least one actor"
+                );
+                issue.setSeverity( Issue.Level.Minor );
+                issues.add( issue );
+            }
         }
         return issues;
-       }
+    }
 
     /**
      * {@inheritDoc}

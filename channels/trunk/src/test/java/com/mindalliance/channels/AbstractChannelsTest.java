@@ -120,7 +120,7 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new InvalidChannel() );
         detectors.add( new StartedOrTerminatedPartWithoutTask() );
         detectors.add( new PartWithoutRole() );
-        detectors.add( new PartWithRoleButNoOrganization() );
+        detectors.add( new PartWithActorOrRoleButNoOrganization() );
         detectors.add( new PartWithInvalidTiming() );
         detectors.add( new UnnamedFlow() );
         detectors.add( new FlowWithUndefinedSource() );
@@ -167,6 +167,7 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new UselessActor() );
         detectors.add( new UnplayedPart() );
         detectors.add( new SharingWithoutCommitments() );
+        detectors.add( new InsufficientClearance() );
         for ( IssueDetector detector : detectors ) {
             ( (AbstractIssueDetector) detector ).setQueryService( queryService );
         }

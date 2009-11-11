@@ -469,7 +469,8 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
 
     private boolean isInNameRange( Employment employment ) {
         if ( indexedOn.equals( ROLES ) ) {
-            return nameRange.contains( employment.getRole().getName() );
+            return employment.getRole() != null
+                    && nameRange.contains( employment.getRole().getName() );
         } else if ( indexedOn.equals( ORGANIZATIONS ) ) {
             return employment.getOrganization() != null
                     && nameRange.contains( employment.getOrganization().getName() );

@@ -702,4 +702,22 @@ public class Part extends Node implements GeoLocatable {
                             }
                         } );
     }
+
+    /**
+     * Has actual actor.
+     *
+     * @return a boolean
+     */
+    public boolean hasActualActor() {
+        return actor != null && actor.isActual();
+    }
+
+    /**
+     * Has actual role.
+     *
+     * @return a boolean
+     */
+    public boolean hasActualRole() {
+        return role != null && role.isActual();
+    }
 }

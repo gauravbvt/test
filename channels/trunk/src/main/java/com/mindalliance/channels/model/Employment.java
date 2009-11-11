@@ -186,7 +186,8 @@ public class Employment implements Serializable, GeoLocatable {
      * @return a boolean
      */
     public boolean playsPart( Part part ) {
-        return !getActor().isUnknown()
+        return !part.isEmpty()
+                &&!getActor().isUnknown()
                 && !getOrganization().isUnknown()
                 && ModelEntity.implies( getActor(), part.getActor() )
                 && ModelEntity.implies( getRole(), part.getRole() )

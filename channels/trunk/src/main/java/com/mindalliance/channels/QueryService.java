@@ -1164,7 +1164,7 @@ public interface QueryService extends Service {
      * @param includeUnknownActors whether to include assignment of unknown actors
      * @return a list of assignments
      */
-    List<Assignment> findAllAssignments( Part part, boolean includeUnknownActors );
+    List<Assignment> findAllAssignments( Part part, Boolean includeUnknownActors );
 
     /**
      * Find all assignments for an actor.

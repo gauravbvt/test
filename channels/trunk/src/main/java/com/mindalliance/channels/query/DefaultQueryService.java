@@ -2634,7 +2634,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<Assignment> findAllAssignments( final Part part, final boolean includeUnknownActors ) {
+    public List<Assignment> findAllAssignments( final Part part, final Boolean includeUnknownActors ) {
         List<Employment> employments = findAllEmploymentsWithKnownActors();
         if ( includeUnknownActors ) {
             employments.addAll( findAllEmploymentsWithUnknownActors() );

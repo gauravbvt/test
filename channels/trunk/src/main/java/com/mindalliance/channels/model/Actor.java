@@ -2,6 +2,8 @@ package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
@@ -197,5 +199,25 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
         return getClearances();
     }
 
-
+    /**
+     * Whether the actor is cleared for the information in a flow.
+     *
+     * @param flow a flow
+     * @return a boolean
+     */
+    public boolean isClearedFor( Flow flow ) {
+        // No eoi in the flow has classification that exceeds the actor's clearance.
+        return !CollectionUtils.exists(
+                flow.getEois(),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        ElementOfInformation eoi = (ElementOfInformation) obj;
+                        return Classification.hasHigherClassification(
+                                eoi.getClassifications(),
+                                getClearances()
+                        );
+                    }
+                }
+        );
+    }
 }
