@@ -121,7 +121,7 @@ public class InternalFlow extends Flow {
      * {@inheritDoc}
      */
     @Override
-    public boolean canSetNameAndDescription() {
+    public boolean canSetNameAndElements() {
         return true;
     }
 

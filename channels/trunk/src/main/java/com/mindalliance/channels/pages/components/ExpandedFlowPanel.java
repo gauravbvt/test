@@ -188,7 +188,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         // TODO exception wnem f just got disconnected on undo
         boolean lockedByUser = isLockedByUser( f );
 
-        nameField.setEnabled( lockedByUser && f.canSetNameAndDescription() );
+        nameField.setEnabled( lockedByUser && f.canSetNameAndElements() );
         askedForButtons.setEnabled( lockedByUser && f.canSetAskedFor() );
         allField.setVisible( isOutcome() && f.canGetAll() );
         allField.setEnabled( lockedByUser && isOutcome() && f.canSetAll() );

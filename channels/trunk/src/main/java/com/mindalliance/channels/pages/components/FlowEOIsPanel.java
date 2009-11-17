@@ -117,7 +117,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                 }
             }
         };
-        makeVisible( autoPopulateLink, canBePopulated() );
+        makeVisible( autoPopulateLink, !isReadOnly() && canBePopulated()  );
         // Link classifications
         eoisContainer.add( autoPopulateLink );
         unlinkedClassificationsLink = new AjaxFallbackLink( "unlinkClassifications" ) {
@@ -131,7 +131,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                 }
             }
         };
-        makeVisible( unlinkedClassificationsLink, !isClassificationsLinked() );
+        makeVisible( unlinkedClassificationsLink, !isReadOnly() && !isClassificationsLinked() );
         classificationsHeaderContainer.add( unlinkedClassificationsLink );
         // Unlink classifications
         eoisContainer.add( autoPopulateLink );
@@ -406,7 +406,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
     }
 
     private boolean isReadOnly() {
-        return !isLockedByUser( getFlow() );
+        return !isLockedByUser( getFlow() ) || !getFlow().canSetNameAndElements();
     }
 
     /**

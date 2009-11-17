@@ -563,11 +563,11 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
     // Abstract methods
 
     /**
-     * Whether the flow's name and description can be set.
+     * Whether the flow's name and elemsnts can be set.
      *
      * @return a boolean
      */
-    public abstract boolean canSetNameAndDescription();
+    public abstract boolean canSetNameAndElements();
 
     /**
      * Whether the flow's max delay can be set.

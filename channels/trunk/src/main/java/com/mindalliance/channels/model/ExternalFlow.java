@@ -221,6 +221,22 @@ public class ExternalFlow extends Flow {
         return flow == null ? super.getDescription() : flow.getDescription();
     }
 
+    public List<ElementOfInformation> getEois() {
+        Flow flow = getConnectorFlow();
+        if ( flow == null )
+            return super.getEois( );
+        else
+            return flow.getEois( );
+    }
+
+    public void setEois( List<ElementOfInformation> elements ) {
+        Flow flow = getConnectorFlow();
+        if ( flow == null )
+            super.setEois( elements );
+        else
+            flow.setEois( elements );
+    }
+
     /**
      * Delegate to connector flow.
      *
@@ -320,7 +336,7 @@ public class ExternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
-    public boolean canSetNameAndDescription() {
+    public boolean canSetNameAndElements() {
         return false;
     }
 
