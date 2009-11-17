@@ -9,14 +9,13 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.export.ImportExportFactory;
-import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.List;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -31,23 +30,16 @@ public class RemoveScenario extends AbstractCommand {
     }
 
     public RemoveScenario( Scenario scenario ) {
-        needLocksOn( scenario.listParts() );
+        List<Part> parts = scenario.listParts();
+        needLocksOn( parts );
         set( "scenario", scenario.getId() );
-        Iterator<Part> parts = scenario.parts();
-        while ( parts.hasNext() ) {
-            addConflicting( parts.next() );
-        }
-        Iterator<Flow> flows = scenario.flows();
-        while ( flows.hasNext() ) {
-            addConflicting( flows.next() );
-        }
     }
 
     /**
      * {@inheritDoc}
      */
     public String getName() {
-        return "remove scenario";
+        return "delete scenario";
     }
 
     /**

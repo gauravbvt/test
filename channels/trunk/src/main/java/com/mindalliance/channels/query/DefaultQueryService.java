@@ -854,7 +854,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         Iterator<Flow> flows = fromScenario.flows();
         while ( flows.hasNext() ) {
             Flow flow = flows.next();
-            if ( !flow.isInternal() ) {
+            if ( flow.isExternal() ) {
                 ExternalFlow externalFlow = (ExternalFlow) flow;
                 if ( externalFlow.getConnector().getScenario() == toScenario
                         && !externalFlow.isPartTargeted() ) {
@@ -865,7 +865,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         flows = toScenario.flows();
         while ( flows.hasNext() ) {
             Flow flow = flows.next();
-            if ( !flow.isInternal() ) {
+            if ( flow.isExternal() ) {
                 ExternalFlow externalFlow = (ExternalFlow) flow;
                 if ( externalFlow.getConnector().getScenario() == fromScenario
                         && externalFlow.isPartTargeted() ) {

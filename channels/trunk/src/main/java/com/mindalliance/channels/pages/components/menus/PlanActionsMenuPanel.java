@@ -4,9 +4,9 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AddPart;
 import com.mindalliance.channels.command.commands.AddScenario;
 import com.mindalliance.channels.command.commands.AddUserIssue;
+import com.mindalliance.channels.command.commands.DisconnectAndRemoveScenario;
 import com.mindalliance.channels.command.commands.PasteAttachment;
 import com.mindalliance.channels.command.commands.PastePart;
-import com.mindalliance.channels.command.commands.RemoveScenario;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.pages.ExportPage;
@@ -115,7 +115,7 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
                     update( target, change );
                 }
             } );
-            commandWrappers.add( new CommandWrapper( new RemoveScenario( scenario ), CONFIRM ) {
+            commandWrappers.add( new CommandWrapper( new DisconnectAndRemoveScenario( scenario ), CONFIRM ) {
                 @Override
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );

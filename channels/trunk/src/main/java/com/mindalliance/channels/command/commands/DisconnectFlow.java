@@ -13,7 +13,7 @@ import com.mindalliance.channels.model.Scenario;
 import java.util.Map;
 
 /**
- * DIsconnect a flow.
+ * Disconnect a flow.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf

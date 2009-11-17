@@ -7,6 +7,7 @@ import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Delay;
+import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
@@ -59,7 +60,7 @@ public final class CommandUtils {
      */
     public static Map<String, Object> getFlowAttributes( final Flow flow ) {
         Map<String, Object> attributes = new HashMap<String, Object>();
-        attributes.put( "description", flow.getDescription() );
+        attributes.put( "eois", copyEois( flow ) );
         attributes.put( "askedFor", flow.isAskedFor() );
         attributes.put( "all", flow.isAll() );
         attributes.put( "maxDelay", new Delay( flow.getMaxDelay() ) );
@@ -69,6 +70,20 @@ public final class CommandUtils {
         attributes.put( "significanceToTarget", flow.getSignificanceToTarget() );
         attributes.put( "significanceToSource", flow.getSignificanceToSource() );
         return attributes;
+    }
+
+    /**
+     * Get a copy of the elements fo information in a flow.
+     *
+     * @param flow a flow
+     * @return a list of elements of information
+     */
+    public static List<ElementOfInformation> copyEois( Flow flow ) {
+        List<ElementOfInformation> eois = new ArrayList<ElementOfInformation>();
+        for ( ElementOfInformation eoi : flow.getEois() ) {
+            eois.add( new ElementOfInformation( eoi ) );
+        }
+        return eois;
     }
 
     /**

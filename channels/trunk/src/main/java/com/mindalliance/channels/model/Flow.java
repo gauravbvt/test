@@ -960,6 +960,15 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
     }
 
     /**
+     * Whether flow is external.
+     * @return a boolean
+     */
+    @Transient
+    public boolean isExternal() {
+        return !isInternal();
+    }
+
+    /**
      * The significance of a flow.
      */
     public enum Significance {

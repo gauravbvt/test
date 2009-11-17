@@ -554,6 +554,17 @@ public class Scenario extends ModelObject {
     }
 
     /**
+     * Get the list of all flows in the scenario.
+     *
+     * @return a list of flows
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<Flow> listFlows() {
+        return IteratorUtils.toList( flows() );
+    }
+
+
+    /**
      * Get text about phase and event.
      *
      * @return a string
@@ -645,6 +656,68 @@ public class Scenario extends ModelObject {
             return "";
         }
 
+    }
+
+    /**
+     * List all connectors.
+     *
+     * @return a list of connectors
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<Connector> listConnectors() {
+        return (List<Connector>) CollectionUtils.select(
+                (List<Node>) IteratorUtils.toList( nodes() ),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ( (Node) obj ).isConnector();
+                    }
+                }
+        );
+    }
+
+    /**
+     * List all parts from other scenarios connected to this one via external flows.
+     *
+     * @return a list of parts
+     */
+    public List<Part> listExternalParts() {
+        Set<Part> externalParts = new HashSet<Part>();
+        for ( Connector connector : listConnectors() ) {
+            Iterator<ExternalFlow> externalFlows = connector.externalFlows();
+            while ( externalFlows.hasNext() ) {
+                Part part = externalFlows.next().getPart();
+                if ( !part.getScenario().equals( this ) ) {
+                    externalParts.add( part );
+                }
+            }
+        }
+        return new ArrayList<Part>( externalParts );
+    }
+
+    /**
+     * List all external flows.
+     *
+     * @return a list of external flows
+     */
+    public List<ExternalFlow> listExternalFlows() {
+        List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
+        for ( Connector connector : listConnectors() ) {
+            Iterator<ExternalFlow> iter = connector.externalFlows();
+            while ( iter.hasNext() ) externalFlows.add( iter.next() );
+        }
+        for ( Part part : listParts() ) {
+            Iterator<Flow> outcomes = part.outcomes();
+            while ( outcomes.hasNext() ) {
+                Flow flow = outcomes.next();
+                if ( flow.isExternal() ) externalFlows.add( (ExternalFlow) flow );
+            }
+            Iterator<Flow> requirements = part.requirements();
+            while ( requirements.hasNext() ) {
+                Flow flow = requirements.next();
+                if ( flow.isExternal() ) externalFlows.add( (ExternalFlow) flow );
+            }
+        }
+        return externalFlows;
     }
 
     //=================================================

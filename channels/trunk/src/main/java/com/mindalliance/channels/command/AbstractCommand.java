@@ -189,6 +189,16 @@ public abstract class AbstractCommand implements Command {
     }
 
     /**
+     * Add identifiables to conflict set.
+     *
+     * @param identifiables a list of identifiable object
+     */
+    public void addConflicting( List<? extends Identifiable> identifiables ) {
+        for (Identifiable identifiable: identifiables)
+            conflictSet.add( identifiable.getId() );
+    }
+
+    /**
      * {@inheritDoc}
      */
     public boolean isAuthorized() {

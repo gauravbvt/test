@@ -9,9 +9,14 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.MultiCommand;
+import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Scenario;
+import org.apache.commons.collections.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Satisfy a need by connecting with a capability.
@@ -63,11 +68,12 @@ public class SatisfyNeed extends AbstractCommand {
                 toNode = need.getTarget();
             } else {
                 // Create flow in need's scenario
-                     fromNode = capability.getTarget();
-                    toNode = need.getTarget();
+                fromNode = capability.getTarget();
+                toNode = need.getTarget();
             }
             Long priorId = (Long) get( "satisfy" );
             newFlow = queryService.connect( fromNode, toNode, need.getName(), priorId );
+            newFlow.setEois( neededAndSatisfiedEOIs( need, capability ) );
             newFlow.setSignificanceToSource( capability.getSignificanceToSource() );
             newFlow.setSignificanceToTarget( need.getSignificanceToTarget() );
             newFlow.setChannels( need.isAskedFor() ? capability.getChannels() : need.getChannels() );
@@ -81,13 +87,25 @@ public class SatisfyNeed extends AbstractCommand {
                     multi.addCommand( new RemoveCapability( capability ) );
                     multi.addCommand( new RemoveNeed( need ) );
                 }
-                 set( "subCommands", multi );
+                set( "subCommands", multi );
             }
             multi.execute( commander );
             return new Change( Change.Type.Added, newFlow );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
         }
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<ElementOfInformation> neededAndSatisfiedEOIs( Flow need, Flow capability ) {
+        List<ElementOfInformation> eois = new ArrayList<ElementOfInformation>();
+        for ( ElementOfInformation eoi :
+                (List<ElementOfInformation>) CollectionUtils.intersection(
+                        capability.getEois(),
+                        need.getEois() ) ) {
+            eois.add( new ElementOfInformation( eoi ) );
+        }
+        return eois;
     }
 
     /**
@@ -114,7 +132,7 @@ public class SatisfyNeed extends AbstractCommand {
             multi.addCommand( new DisconnectFlow( newFlow ) );
             return multi;
         } catch ( NotFoundException e ) {
-            throw new CommandException("You need to refresh.", e);
+            throw new CommandException( "You need to refresh.", e );
         }
     }
 

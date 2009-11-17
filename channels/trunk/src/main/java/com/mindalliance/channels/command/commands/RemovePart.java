@@ -31,7 +31,7 @@ public class RemovePart extends AbstractCommand {
     public RemovePart() {
     }
 
-    public RemovePart( final Part part ) {
+    public RemovePart( Part part ) {
         needLocksOn( CommandUtils.getLockingSetFor( part ) );
         set( "part", part.getId() );
         set( "scenario", part.getScenario().getId() );
