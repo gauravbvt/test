@@ -647,7 +647,7 @@ public interface QueryService extends Service {
     List<Flow> findUnusedCapabilities( Part part );
 
     /**
-     * Find all connectors for capabilities that match a need.
+     * Find all connectors of capabilities that match a need.
      *
      * @param need a flow
      * @return a list of connectors
@@ -1197,4 +1197,12 @@ public interface QueryService extends Service {
      * @return a list of commitments
      */
     List<Commitment> findAllCommitmentsTo( Actor actor );
+
+    /**
+     * Find all unconnected need-capability pairs given a part's needs.
+     *
+     * @param part a part
+     * @return a list of arrays of flows (pairs)
+     */
+    List<Flow[]> findUntappedSatisfactions( Part part );
 }

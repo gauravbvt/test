@@ -5,6 +5,7 @@ import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 
@@ -719,5 +720,23 @@ public class Part extends Node implements GeoLocatable {
      */
     public boolean hasActualRole() {
         return role != null && role.isActual();
+    }
+
+    /**
+     * Get all needs.
+     *
+     * @return a list of flows
+     */
+    @Transient
+    @SuppressWarnings( "unchecked" )
+    public List<Flow> getNeeds() {
+        return (List<Flow>) CollectionUtils.select(
+                IteratorUtils.toList( requirements() ),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ( (Flow) obj ).isNeed();
+                    }
+                }
+        );
     }
 }

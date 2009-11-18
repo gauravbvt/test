@@ -4,6 +4,7 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 
 import javax.persistence.CascadeType;
@@ -210,7 +211,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
 
     public void setEois( List<ElementOfInformation> elements ) {
         eois = new ArrayList<ElementOfInformation>();
-        for (ElementOfInformation eoi : elements) {
+        for ( ElementOfInformation eoi : elements ) {
             addEoi( eoi );
         }
     }
@@ -225,6 +226,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
 
     /**
      * Whether at least one eoi is classified.
+     *
      * @return a boolean
      */
     @Transient
@@ -233,7 +235,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
                 eois,
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        return ((ElementOfInformation)obj).isClassified();
+                        return ( (ElementOfInformation) obj ).isClassified();
                     }
                 }
         );
@@ -246,7 +248,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      * @param eoi an element of information
      */
     public void addEoi( ElementOfInformation eoi ) {
-        if ( !eois.contains( eoi ) )  {
+        if ( !eois.contains( eoi ) ) {
             if ( isNeed() ) {
                 eoi.retainContentOnly();
             }
@@ -961,11 +963,52 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
 
     /**
      * Whether flow is external.
+     *
      * @return a boolean
      */
     @Transient
     public boolean isExternal() {
         return !isInternal();
+    }
+
+    /**
+     * Whether the need is satisfied, even if only partially.
+     *
+     * @return a boolean
+     */
+    @Transient
+    public boolean isSatisfied() {
+        assert isNeed();
+        return CollectionUtils.exists(
+                IteratorUtils.toList( getTarget().requirements() ),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        Flow flow = (Flow) obj;
+                        return flow.isSharing() && Matcher.same( getName(), flow.getName() );
+                    }
+                }
+        );
+    }
+
+    /**
+     * Whether the capability is used.
+     *
+     * @return a boolean
+     */
+    @Transient
+    public boolean isSatisfying() {
+        assert isCapability();
+        return ( (Connector) getTarget() ).externalFlows().hasNext()
+                ||
+                CollectionUtils.exists(
+                        IteratorUtils.toList( getSource().outcomes() ),
+                        new Predicate() {
+                            public boolean evaluate( Object obj ) {
+                                Flow flow = (Flow) obj;
+                                return flow.isSharing() && Matcher.same( getName(), flow.getName() );
+                            }
+                        }
+                );
     }
 
     /**

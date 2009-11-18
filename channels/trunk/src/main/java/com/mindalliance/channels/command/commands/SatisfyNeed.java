@@ -9,14 +9,9 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.MultiCommand;
-import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Scenario;
-import org.apache.commons.collections.CollectionUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Satisfy a need by connecting with a capability.
@@ -31,13 +26,25 @@ public class SatisfyNeed extends AbstractCommand {
     public SatisfyNeed() {
     }
 
-    public SatisfyNeed( Flow need, Flow capability ) {
+    /**
+     * Constructor.
+     *
+     * @param need                  a flow
+     * @param capability            a flow
+     * @param keepCapabilityAndNeed whether *not* to delete connected capability and need if both local
+     */
+    public SatisfyNeed( Flow need, Flow capability, boolean keepCapabilityAndNeed ) {
         needLocksOn( CommandUtils.getLockingSetFor( need ) );
         needLocksOn( CommandUtils.getLockingSetFor( capability ) );
         set( "needScenario", need.getScenario().getId() );
         set( "need", need.getId() );
         set( "capabilityScenario", capability.getScenario().getId() );
         set( "capability", capability.getId() );
+        set( "keep", keepCapabilityAndNeed );
+    }
+
+    public SatisfyNeed( Flow need, Flow capability ) {
+        this( need, capability, false );
     }
 
     /**
@@ -60,6 +67,7 @@ public class SatisfyNeed extends AbstractCommand {
                     Scenario.class,
                     (Long) get( "capabilityScenario" ) );
             Flow capability = capabilityScenario.findFlow( (Long) get( "capability" ) );
+            boolean keepCapabilityAndNeed = (Boolean) get( "keep" );
             Node fromNode;
             Node toNode;
             if ( needScenario == capabilityScenario ) {
@@ -73,7 +81,7 @@ public class SatisfyNeed extends AbstractCommand {
             }
             Long priorId = (Long) get( "satisfy" );
             newFlow = queryService.connect( fromNode, toNode, need.getName(), priorId );
-            newFlow.setEois( neededAndSatisfiedEOIs( need, capability ) );
+            newFlow.setEois( CommandUtils.copyEois( capability ) );
             newFlow.setSignificanceToSource( capability.getSignificanceToSource() );
             newFlow.setSignificanceToTarget( need.getSignificanceToTarget() );
             newFlow.setChannels( need.isAskedFor() ? capability.getChannels() : need.getChannels() );
@@ -83,7 +91,7 @@ public class SatisfyNeed extends AbstractCommand {
             MultiCommand multi = (MultiCommand) get( "subCommands" );
             if ( multi == null ) {
                 multi = new MultiCommand( "satisfy need - extra" );
-                if ( needScenario == capabilityScenario ) {
+                if ( needScenario == capabilityScenario && !keepCapabilityAndNeed ) {
                     multi.addCommand( new RemoveCapability( capability ) );
                     multi.addCommand( new RemoveNeed( need ) );
                 }
@@ -94,18 +102,6 @@ public class SatisfyNeed extends AbstractCommand {
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
         }
-    }
-
-    @SuppressWarnings( "unchecked" )
-    private List<ElementOfInformation> neededAndSatisfiedEOIs( Flow need, Flow capability ) {
-        List<ElementOfInformation> eois = new ArrayList<ElementOfInformation>();
-        for ( ElementOfInformation eoi :
-                (List<ElementOfInformation>) CollectionUtils.intersection(
-                        capability.getEois(),
-                        need.getEois() ) ) {
-            eois.add( new ElementOfInformation( eoi ) );
-        }
-        return eois;
     }
 
     /**

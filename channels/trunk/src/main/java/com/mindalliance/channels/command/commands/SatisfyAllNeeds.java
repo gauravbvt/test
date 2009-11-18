@@ -2,16 +2,12 @@ package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.MultiCommand;
-import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
 
@@ -53,8 +49,8 @@ public class SatisfyAllNeeds extends AbstractCommand {
             if ( part == null ) {
                 return false;
             } else {
-                List<Flow> unsatisfiedNeeds = commander.getQueryService().findUnconnectedNeeds( part );
-                return !unsatisfiedNeeds.isEmpty();
+                List<Flow[]> satisfactions = commander.getQueryService().findUntappedSatisfactions( part );
+                return !satisfactions.isEmpty();
             }
         } catch ( CommandException e ) {
             return false;
@@ -65,14 +61,18 @@ public class SatisfyAllNeeds extends AbstractCommand {
      * {@inheritDoc}
      */
     public Change execute( Commander commander ) throws CommandException {
-        QueryService queryService = commander.getQueryService();
         try {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Part part = (Part) scenario.getNode( (Long) get( "part" ) );
             if ( part == null ) throw new NotFoundException();
             MultiCommand multi = (MultiCommand) get( "subCommands" );
             if ( multi == null ) {
-                multi = makeSubCommands( part, queryService );
+                multi = new MultiCommand( "satisfy needs - extra" );
+                for ( Flow[] satisfaction :
+                        commander.getQueryService().findUntappedSatisfactions( part ) ) {
+                    // Keep need and capability even after capable and needy parts connected
+                    multi.addCommand( new SatisfyNeed( satisfaction[0], satisfaction[1], true ) );
+                }
                 set( "subCommands", multi );
             }
             // else command replay
@@ -83,7 +83,7 @@ public class SatisfyAllNeeds extends AbstractCommand {
         }
     }
 
-    private MultiCommand makeSubCommands( Part part, QueryService queryService ) {
+/*    private MultiCommand makeSubCommands( Part part, QueryService queryService ) {
         MultiCommand subCommands = new MultiCommand( "satisfy needs - extra" );
         subCommands.setMemorable( false );
         List<Flow> unsatisfiedNeeds = queryService.findUnconnectedNeeds( part );
@@ -99,7 +99,7 @@ public class SatisfyAllNeeds extends AbstractCommand {
             }
         }
         return subCommands;
-    }
+    }*/
 
     /**
      * {@inheritDoc}

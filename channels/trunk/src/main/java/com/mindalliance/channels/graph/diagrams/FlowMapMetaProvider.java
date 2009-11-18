@@ -265,10 +265,18 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
                 Connector connector = (Connector) vertex;
                 Iterator<ExternalFlow> externalFlows = connector.externalFlows();
                 list.add( new DOTAttribute( "fontcolor", "white" ) );
-                if ( !connector.isTarget() || externalFlows.hasNext() ) {
+                if ( externalFlows.hasNext() ) {
                     list.add( new DOTAttribute( "tooltip", "Connected to: " + summarizeExternalFlows( externalFlows ) ) );
                 } else {
-                    list.add( new DOTAttribute( "tooltip", "Not connected" ) );
+                    if ( connector.isSource() && !connector.getInnerFlow().isSatisfied() ) {
+                        list.add( new DOTAttribute( "tooltip", "Need completely unsatisfied" ) );
+                    } else if ( connector.isTarget() && !connector.getInnerFlow().isSatisfying() ) {
+                        list.add( new DOTAttribute( "tooltip", "Capability unused" ) );
+                    } else {
+                        list.add( new DOTAttribute(
+                                "tooltip",
+                                connector.isTarget() ? "Capability" : "Need" ) );
+                    }
                 }
             }
             return list;
@@ -367,7 +375,9 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
         }
         if ( node.isConnector() ) {
             Connector connector = (Connector) node;
-            if ( !connector.isTarget() || connector.externalFlows().hasNext() ) {
+            Flow flow = connector.getInnerFlow();
+            if ( flow.isNeed() && flow.isSatisfied()
+                    || flow.isCapability() && flow.isSatisfying() ) {
                 iconName = imagesDirName + "/connector";
             } else {
                 iconName = imagesDirName + "/connector_red";

@@ -1611,7 +1611,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public List<Connector> findAllSatificers( Flow need ) {
-        List<Connector> connectors = new ArrayList<Connector>();
+        List<Connector> satisficers = new ArrayList<Connector>();
         for ( Scenario scenario : list( Scenario.class ) ) {
             Iterator<Part> parts = scenario.parts();
             while ( parts.hasNext() ) {
@@ -1622,24 +1622,22 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                         Flow outcome = outcomes.next();
                         if ( outcome.getTarget().isConnector()
                                 && satisfiesNeed( outcome, need ) ) {
-                            connectors.add( (Connector) outcome.getTarget() );
+                            satisficers.add( (Connector) outcome.getTarget() );
                         }
                     }
                 }
             }
         }
-        return connectors;
+        return satisficers;
     }
 
     private boolean satisfiesNeed( Flow outcome, Flow need ) {
         return Matcher.same( outcome.getName(), need.getName() )
                 &&
-                ( need.getDescription().trim().isEmpty()
-                        ||
-                        Matcher.hasCommonEOIs(
-                                outcome,
-                                need,
-                                this ) );
+                Matcher.hasCommonEOIs(
+                        outcome,
+                        need,
+                        this );
     }
 
     private boolean doFindIfScenarioStarted( Scenario scenario, Set<ModelObject> visited ) {
@@ -2730,6 +2728,32 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             commitments.addAll( findAllCommitments( flow ) );
         }
         return new ArrayList<Commitment>( commitments );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Flow[]> findUntappedSatisfactions( final Part part ) {
+        List<Flow[]> untapped = new ArrayList<Flow[]>();
+        for ( Flow need : part.getNeeds() ) {
+            for ( Connector connector : findAllSatificers( need ) ) {
+                boolean connected = CollectionUtils.exists(
+                        IteratorUtils.toList( connector.externalFlows() ),
+                        new Predicate() {
+                            public boolean evaluate( Object obj ) {
+                                return ( (ExternalFlow) obj ).getTarget().equals( part );
+                            }
+                        }
+                );
+                if ( !connected ) {
+                    Flow[] satisfaction = new Flow[2];
+                    satisfaction[0] = need;
+                    satisfaction[1] = connector.getInnerFlow();
+                    untapped.add( satisfaction );
+                }
+            }
+        }
+        return untapped;
     }
 
 }
