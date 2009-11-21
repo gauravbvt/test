@@ -29,6 +29,7 @@ import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.UserIssue;
+import com.mindalliance.channels.util.ChannelsUtils;
 import com.mindalliance.channels.util.Matcher;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.DataHolder;
@@ -72,7 +73,9 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
      */
     private String version = "0.0";
 
-    /** The thing that generate ids... */
+    /**
+     * The thing that generate ids...
+     */
     private final IdGenerator idGenerator;
 
     public XmlStreamer( IdGenerator idGenerator ) {
@@ -81,8 +84,9 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
 
     /**
      * Create an import context.
+     *
      * @param service the query service
-     * @param plan the current plan
+     * @param plan    the current plan
      * @return an importer
      */
     public Importer createImporter( QueryService service, Plan plan ) {
@@ -91,8 +95,9 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
 
     /**
      * Create an export context.
+     *
      * @param service the query service
-     * @param plan the current plan
+     * @param plan    the current plan
      * @return an exporter
      */
     public Exporter createExporter( QueryService service, Plan plan ) {
@@ -101,6 +106,7 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
 
     /**
      * Get current version, for upgrading purposes.
+     *
      * @return a string
      */
     public String getVersion() {
@@ -133,10 +139,14 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
          */
         private XStream xstream = new XStream();
 
-        /** The current plan. */
+        /**
+         * The current plan.
+         */
         private Plan plan;
 
-        /** The current service. */
+        /**
+         * The current service.
+         */
         private final QueryService queryService;
 
         private Context( QueryService queryService, Plan plan ) {
@@ -212,7 +222,9 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
             stream.alias( "export", Export.class );
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public Map<String, Object> loadScenario( InputStream inputStream ) throws IOException {
             ObjectInputStream in = xstream.createObjectInputStream( inputStream );
             try {
@@ -222,7 +234,9 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
             }
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public Scenario restoreScenario( String xml ) {
 
             DataHolder dataHolder = xstream.newDataHolder();
@@ -230,16 +244,18 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
             dataHolder.put( "importing-plan", true );
 
             Map<String, Object> results = (Map<String, Object>) xstream.unmarshal(
-                new XppReader( new StringReader( xml ) ), null, dataHolder );
+                    new XppReader( new StringReader( xml ) ), null, dataHolder );
 
             reconnectExternalFlows(
-                (Map<Connector, List<ConnectionSpecification>>) results.get( "proxyConnectors" ),
-                false );
+                    (Map<Connector, List<ConnectionSpecification>>) results.get( "proxyConnectors" ),
+                    false );
 
             return (Scenario) results.get( "scenario" );
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public Journal importJournal( FileInputStream stream ) throws IOException {
             ObjectInputStream in = xstream.createObjectInputStream( stream );
             try {
@@ -249,14 +265,18 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
             }
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public void export( Journal journal, OutputStream stream ) throws IOException {
             ObjectOutputStream out = xstream.createObjectOutputStream( stream, "export" );
             out.writeObject( journal );
             out.close();
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public void importPlan( FileInputStream stream ) throws IOException {
             ObjectInputStream in = xstream.createObjectInputStream( stream );
             try {
@@ -270,28 +290,34 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
             }
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public void export( Plan plan, OutputStream stream ) throws IOException {
             ObjectOutputStream out = xstream.createObjectOutputStream( stream, "export" );
             out.writeObject( plan );
             out.close();
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public void export( Scenario scenario, OutputStream stream ) throws IOException {
             ObjectOutputStream out = xstream.createObjectOutputStream( stream, "export" );
             out.writeObject( scenario );
             out.close();
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public Scenario importScenario( InputStream stream ) throws IOException {
             ObjectInputStream in = xstream.createObjectInputStream( stream );
             try {
                 Map<String, Object> results = (Map<String, Object>) in.readObject();
                 reconnectExternalFlows(
-                    (Map<Connector, List<ConnectionSpecification>>) results.get( "proxyConnectors" ),
-                    false );
+                        (Map<Connector, List<ConnectionSpecification>>) results.get( "proxyConnectors" ),
+                        false );
                 return (Scenario) results.get( "scenario" );
 
             } catch ( ClassNotFoundException e ) {
@@ -299,7 +325,9 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
             }
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public void reconnectExternalFlows(
                 Map<Connector, List<ConnectionSpecification>> proxyConnectors, boolean loadingPlan ) {
 
@@ -334,6 +362,7 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
 
         /**
          * Make sure the reconnected external flow has its pre-export id if importing a plan.
+         *
          * @param proxyConnector
          * @param externalConnector
          * @param conSpec
@@ -348,19 +377,19 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
 
             Flow localInnerFlow = proxyConnector.getInnerFlow();
             Part part = conSpec.isSource() ? (Part) localInnerFlow.getTarget()
-                                           : (Part) localInnerFlow.getSource();
+                    : (Part) localInnerFlow.getSource();
             String innerName = localInnerFlow.getName();
 
             ExternalFlow externalFlow;
             if ( loadingPlan ) {
                 Long id = conSpec.getExternalFlowId();
                 externalFlow = conSpec.isSource() ?
-                    (ExternalFlow) queryService.connect( externalConnector, part, innerName, id )
-                  : (ExternalFlow) queryService.connect( part, externalConnector, innerName, id );
+                        (ExternalFlow) queryService.connect( externalConnector, part, innerName, id )
+                        : (ExternalFlow) queryService.connect( part, externalConnector, innerName, id );
             } else {
                 externalFlow = conSpec.isSource() ?
-                    (ExternalFlow) queryService.connect( externalConnector, part, innerName )
-                  : (ExternalFlow) queryService.connect( part, externalConnector, innerName );
+                        (ExternalFlow) queryService.connect( externalConnector, part, innerName )
+                        : (ExternalFlow) queryService.connect( part, externalConnector, innerName );
             }
             copy( localInnerFlow, externalFlow );
             localInnerFlow.disconnect();
@@ -373,11 +402,12 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
             external.setSignificanceToTarget( inner.getSignificanceToTarget() );
             external.setAll( inner.isAll() );
             external.setAskedFor( inner.isAskedFor() );
-            external.setDescription( inner.getDescription() );
+            external.setEois( ChannelsUtils.copyEois( inner ) );
             external.setWaivedIssueDetections( inner.getWaivedIssueDetections() );
             external.setAttachments( inner.getAttachments() );
         }
 
+        @SuppressWarnings( "unchecked" )
         private List<Connector> findMatchingConnectors( final ConnectionSpecification conSpec ) {
             List<Connector> connectors = new ArrayList<Connector>();
             List<Scenario> scenarios = ConverterUtils.findMatchingScenarios(
@@ -406,15 +436,17 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
             if ( externalConnector.isSource() == conSpec.isSource() ) return false;
             Flow externalInnerFlow = externalConnector.getInnerFlow();
             Part part = (Part) ( conSpec.isSource() ? externalInnerFlow.getSource()
-                                                    : externalInnerFlow.getTarget() );
+                    : externalInnerFlow.getTarget() );
             Long partIdValue = Long.parseLong( conSpec.getPartSpecification().getId() );
             boolean partIdMatches = partIdValue != null && partIdValue == part.getId();
             return Matcher.same( externalInnerFlow.getName(), conSpec.getFlowName() )
                     && ( partIdMatches
-                         || ConverterUtils.partMatches( part, conSpec.getPartSpecification() ) );
+                    || ConverterUtils.partMatches( part, conSpec.getPartSpecification() ) );
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public String getMimeType() {
             return XmlStreamer.this.getMimeType();
         }

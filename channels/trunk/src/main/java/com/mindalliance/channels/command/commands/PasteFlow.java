@@ -7,10 +7,10 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.Map;
 
@@ -83,7 +83,7 @@ public class PasteFlow extends AbstractCommand {
             }
             Map<String, Object> flowAttributes = (Map<String, Object>) copy.get( "attributes" );
             if ( flowAttributes != null ) {
-                CommandUtils.initialize( flow, flowAttributes );
+                ChannelsUtils.initialize( flow, flowAttributes );
             }
             set( "flow", flow.getId() );
             return new Change( Change.Type.Added, flow );

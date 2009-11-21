@@ -6,9 +6,9 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.util.ChannelsUtils;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -46,7 +46,7 @@ public class DuplicateFlow extends AbstractCommand {
             Flow flow = scenario.findFlow( (Long) get( "flow" ) );
             if ( flow == null ) throw new NotFoundException();
             boolean isOutcome = (Boolean) get( "outcome" );
-            duplicate = CommandUtils.duplicate( flow, isOutcome, (Long) get( "duplicate" ) );
+            duplicate = ChannelsUtils.duplicate( flow, isOutcome, (Long) get( "duplicate" ) );
             set( "duplicate", duplicate.getId() );
             return new Change( Change.Type.Added, duplicate );
         } catch ( NotFoundException e ) {

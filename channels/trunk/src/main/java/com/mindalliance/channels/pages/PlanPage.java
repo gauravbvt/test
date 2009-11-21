@@ -1469,6 +1469,13 @@ public final class PlanPage extends WebPage implements Updatable {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void update( AjaxRequestTarget target, Object object, String action ) {
+        // Do nothing
+    }
+
     private void refreshMenus( AjaxRequestTarget target ) {
         addPlanActionsMenu();
         target.addComponent( planActionsMenu );

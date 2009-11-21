@@ -1,11 +1,12 @@
 package com.mindalliance.channels.export.xml;
 
+import com.mindalliance.channels.model.Agreement;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Job;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Plan;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -90,6 +91,12 @@ public class OrganizationConverter extends EntityConverter {
             context.convertAnother( job );
             writer.endNode();
         }
+        // agreements
+        for ( Agreement agreement : org.getAgreements()) {
+            writer.startNode( "agreement" );
+            context.convertAnother( agreement );
+            writer.endNode();
+        }
     }
 
     /**
@@ -99,8 +106,8 @@ public class OrganizationConverter extends EntityConverter {
                                 String nodeName,
                                 HierarchicalStreamReader reader,
                                 UnmarshallingContext context ) {
-        Scenario scenario = (Scenario) context.get( "scenario" );
         Organization org = (Organization) entity;
+        Plan plan = getPlan();
         if ( nodeName.equals( "actorsRequired" ) ) {
             org.setActorsRequired( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals( "agreementsRequired" ) ) {
@@ -112,11 +119,14 @@ public class OrganizationConverter extends EntityConverter {
             String id = reader.getAttribute( "id");
             org.setLocation( findOrCreate( Place.class, reader.getValue(), id ) );
         } else if ( nodeName.equals( "channel" ) ) {
-            Channel channel = (Channel) context.convertAnother( scenario, Channel.class );
+            Channel channel = (Channel) context.convertAnother( plan, Channel.class );
             org.addChannel( channel );
         } else if ( nodeName.equals( "job" ) ) {
-            Job job = (Job) context.convertAnother( scenario, Job.class );
+            Job job = (Job) context.convertAnother( plan, Job.class );
             org.addJob( job );
+        } else if ( nodeName.equals( "agreement" ) ) {
+            Agreement agreement = (Agreement) context.convertAnother( plan, Agreement.class );
+            org.addAgreement( agreement );
         } else {
             LOG.warn( "Unknown element " + nodeName );
         }

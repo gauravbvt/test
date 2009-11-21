@@ -117,12 +117,12 @@ public class Employment implements Serializable, GeoLocatable {
         StringBuilder sb = new StringBuilder();
         sb.append( getActor().getName() );
         if ( getOrganization().isUnknown() ) {
-            sb.append( " is unemployed" );
+            sb.append( ", unemployed" );
         } else {
-            sb.append( " is employed by " );
-            sb.append( getOrganization().getName() );
-            sb.append( " as " );
+            sb.append( ", " );
             sb.append( getRole() );
+            sb.append( " at " );
+            sb.append( getOrganization().getName() );
             if ( job != null && job.getJurisdiction() != null ) {
                 sb.append( " for " );
                 sb.append( job.getJurisdiction().getName() );

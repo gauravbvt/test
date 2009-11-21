@@ -6,7 +6,7 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.CommandUtils;
+import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +25,7 @@ public class CopyAttachment extends AbstractCommand {
     }
 
     public CopyAttachment( Attachment attachment ) {
-        setArguments( CommandUtils.getAttachmentState( attachment ));
+        setArguments( ChannelsUtils.getAttachmentState( attachment ));
     }
 
     /**

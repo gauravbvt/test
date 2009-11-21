@@ -6,10 +6,10 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
+import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.Map;
 
@@ -51,7 +51,7 @@ public class AddUserIssue extends AbstractCommand {
         Map<String, Object> state = (Map<String, Object>) get( "state" );
         issue.setReportedBy( User.current().getUsername() );
         if ( state != null ) {
-            CommandUtils.initialize( issue, state );
+            ChannelsUtils.initialize( issue, state );
         }
         queryService.add( issue, priorId );
         set( "issue", issue.getId() );

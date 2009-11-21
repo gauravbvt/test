@@ -14,6 +14,7 @@ import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Agreement;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Classification;
@@ -2239,7 +2240,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public boolean isSemanticMatch( String text, String otherText, Proximity proximity ) {
-        return semanticMatcher.matches( text.trim(), otherText.trim(), proximity );
+        return Matcher.same( text, otherText )
+                || semanticMatcher.matches( text.trim(), otherText.trim(), proximity );
     }
 
     /**
@@ -2257,7 +2259,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<Flow> findAllSharingCommitmentsAddressing( Flow need ) {
+    public List<Flow> findAllSharingsAddressing( Flow need ) {
         List<Flow> commitments = new ArrayList<Flow>();
         assert need.getSource().isConnector();
         // Find all synonymous commitments to the part
@@ -2722,6 +2724,22 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
+    public List<Commitment> findAllCommitmentsOf( Organization organization ) {
+        Set<Commitment> commitments = new HashSet<Commitment>();
+        List<Actor> actorsInOrganization = findAllActorsInOrganization( organization );
+        for ( Actor actor : actorsInOrganization ) {
+            for ( final Commitment commitment : findAllCommitmentsOf( actor ) ) {
+                if ( commitment.getCommitter().getOrganization().equals( organization ) ) {
+                    commitments.add( commitment );
+                }
+            }
+        }
+        return new ArrayList<Commitment>( commitments );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public List<Commitment> findAllCommitmentsTo( Actor actor ) {
         Set<Commitment> commitments = new HashSet<Commitment>();
         for ( Flow flow : findAllRelatedFlows( ResourceSpec.with( actor ), false ) ) {
@@ -2754,6 +2772,49 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             }
         }
         return untapped;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<Agreement> findAllImpliedAgreementsOf( Organization organization ) {
+        List<Agreement> agreements = new ArrayList<Agreement>();
+        List<Agreement> encompassed = new ArrayList<Agreement>();
+        for ( final Commitment commitment : findAllCommitmentsOf( organization ) ) {
+            if ( commitment.isBetweenOrganizations() ) {
+                Agreement agreement = Agreement.from( commitment );
+                encompassed.addAll( (List<Agreement>) CollectionUtils.select(
+                        agreements,
+                        new Predicate() {
+                            public boolean evaluate( Object object ) {
+                                return Agreement.from( commitment ).encompasses(
+                                        (Agreement) object,
+                                        DefaultQueryService.this );
+                            }
+                        } )
+                );
+                agreements.add( agreement );
+            }
+        }
+        return (List<Agreement>) CollectionUtils.subtract( agreements, encompassed );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Commitment> findAllCommitmentsCoveredBy(
+            Agreement agreement,
+            Organization organization ) {
+        Set<Commitment> commitments = new HashSet<Commitment>();
+        List<Actor> actorsInOrganization = findAllActorsInOrganization( organization );
+        for ( Actor actor : actorsInOrganization ) {
+            for ( Commitment commitment : findAllCommitmentsOf( actor ) ) {
+                if ( commitment.isBetweenOrganizations() && agreement.covers( commitment, this ) )
+                    commitments.add( commitment );
+            }
+        }
+        return new ArrayList<Commitment>( commitments );
     }
 
 }

@@ -1,10 +1,10 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -111,7 +111,7 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
 
     @SuppressWarnings( "unchecked" )
     private List<String> getSystemChoices() {
-        final List<Classification> classifications = (List<Classification>) CommandUtils.getProperty(
+        final List<Classification> classifications = (List<Classification>) ChannelsUtils.getProperty(
                 getClassified(),
                 getClassifiableProperty(),
                 new ArrayList<String>()
@@ -220,7 +220,7 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
 
     @SuppressWarnings( "unchecked" )
     private List<Classification> getClassifications() {
-        return (List<Classification>) CommandUtils.getProperty(
+        return (List<Classification>) ChannelsUtils.getProperty(
                 getClassified(),
                 classifiableProperty,
                 null

@@ -6,9 +6,9 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.Map;
 
@@ -26,7 +26,7 @@ public class DisconnectFlow extends AbstractCommand {
     }
 
     public DisconnectFlow( Flow flow ) {
-        needLocksOn( CommandUtils.getLockingSetFor( flow ) );
+        needLocksOn( ChannelsUtils.getLockingSetFor( flow ) );
         set( "scenario", flow.getScenario().getId() );
         set( "flow", flow.getId() );
     }
@@ -46,7 +46,7 @@ public class DisconnectFlow extends AbstractCommand {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             assert get( "flow" ) != null;
             Flow flow = scenario.findFlow( (Long) get( "flow" ) );
-            set( "flowState", CommandUtils.getFlowState( flow ) );
+            set( "flowState", ChannelsUtils.getFlowState( flow ) );
             flow.disconnect();
             commander.releaseAnyLockOn( flow );
             return new Change( Change.Type.Removed, flow );

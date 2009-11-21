@@ -28,7 +28,7 @@ public class EmptyNeedOrCapability extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        if ( !flow.getName().trim().isEmpty() && flow.getDescription().trim().isEmpty() ) {
+        if ( !flow.getName().trim().isEmpty() && flow.getEois().isEmpty() ) {
             DetectedIssue issue = makeIssue( Issue.VALIDITY, flow );
             issue.setSeverity( Issue.Level.Minor );
             String needOrCapability = flow.getTarget().isConnector() ? "capability" : "need";

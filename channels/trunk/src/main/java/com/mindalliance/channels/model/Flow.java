@@ -81,11 +81,13 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
     }
 
     @Override
+    @Transient
     public String getDescription() {
         return descriptionFromEOIs();
     }
 
     // todo - remove when cut-over is completed
+    @Transient
     private void setEOIsFrom( String val ) {
         List<String> contents = Matcher.extractEOIs( val );
         for ( String content : contents ) {

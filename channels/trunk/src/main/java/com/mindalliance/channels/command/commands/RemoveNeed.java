@@ -6,9 +6,9 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.util.ChannelsUtils;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -23,8 +23,8 @@ public class RemoveNeed extends AbstractCommand {
     }
 
     public RemoveNeed( Flow flow ) {
-        needLocksOn( CommandUtils.getLockingSetFor( flow ) );
-        setArguments( CommandUtils.getFlowState( flow ) );
+        needLocksOn( ChannelsUtils.getLockingSetFor( flow ) );
+        setArguments( ChannelsUtils.getFlowState( flow ) );
         set( "flow", flow.getId() );
     }
 

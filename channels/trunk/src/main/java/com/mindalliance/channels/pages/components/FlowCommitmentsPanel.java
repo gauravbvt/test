@@ -4,19 +4,12 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;
-import com.mindalliance.channels.util.SortableBeanProvider;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -144,109 +137,6 @@ public class FlowCommitmentsPanel extends FloatingCommandablePanel {
         return MIN_HEIGHT;
     }
 
-    private class CommitmentsTablePanel extends AbstractFilterableTablePanel {
-        /**
-         * Commitments model.
-         */
-        private IModel<List<Commitment>> commitmentsModel;
 
-        public CommitmentsTablePanel( String id, IModel<List<Commitment>> commitmentsModel ) {
-            super( id );
-            this.commitmentsModel = commitmentsModel;
-            init();
-        }
-
-        /**
-         * Find all employments in the plan that are not filtered out and are within selected name range.
-         *
-         * @return a list of employments.
-         */
-        @SuppressWarnings( "unchecked" )
-        public List<Commitment> getFilteredCommitments() {
-            return (List<Commitment>) CollectionUtils.select(
-                    commitmentsModel.getObject(),
-                    new Predicate() {
-                        public boolean evaluate( Object obj ) {
-                            return !isFilteredOut( obj );
-                        }
-                    }
-            );
-        }
-
-        @SuppressWarnings( "unchecked" )
-        private void init() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
-            // columns
-            columns.add( this.makeFilterableLinkColumn(
-                    "Actor",
-                    "committer.actor",
-                    "committer.actor.normalizedName",
-                    EMPTY,
-                    CommitmentsTablePanel.this ) );
-            columns.add( this.makeFilterableLinkColumn(
-                    "in role",
-                    "committer.role",
-                    "committer.role.name",
-                    EMPTY,
-                    CommitmentsTablePanel.this ) );
-            columns.add( this.makeFilterableLinkColumn(
-                    "for",
-                    "committer.jurisdiction",
-                    "committer.jurisdiction.name",
-                    EMPTY,
-                    CommitmentsTablePanel.this ) );
-            columns.add( makeFilterableLinkColumn(
-                    "at organization",
-                    "committer.organization",
-                    "committer.organization.name",
-                    EMPTY,
-                    CommitmentsTablePanel.this ) );
-            columns.add( makeLinkColumn(
-                    "commits to share",
-                    "sharing",
-                    "sharing.name",
-                    EMPTY ) );
-            columns.add( this.makeFilterableLinkColumn(
-                    "with actor",
-                    "beneficiary.actor",
-                    "beneficiary.actor.normalizedName",
-                    EMPTY,
-                    CommitmentsTablePanel.this ) );
-            columns.add( this.makeFilterableLinkColumn(
-                    "in role",
-                    "beneficiary.role",
-                    "beneficiary.role.name",
-                    EMPTY,
-                    CommitmentsTablePanel.this ) );
-            columns.add( this.makeFilterableLinkColumn(
-                    "for",
-                    "beneficiary.jurisdiction",
-                    "beneficiary.jurisdiction.name",
-                    EMPTY,
-                    CommitmentsTablePanel.this ) );
-            columns.add( makeFilterableLinkColumn(
-                    "at organization",
-                    "beneficiary.organization",
-                    "beneficiary.organization.name",
-                    EMPTY,
-                    CommitmentsTablePanel.this ) );
-            // provider and table
-            addOrReplace( new AjaxFallbackDefaultDataTable(
-                    "commitments",
-                    columns,
-                    new SortableBeanProvider<Commitment>(
-                            getFilteredCommitments(),
-                            "committer.actor.normalizedName" ),
-                    getPageSize() ) );
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected void resetTable( AjaxRequestTarget target ) {
-            init();
-            target.addComponent( this );
-        }
-    }
 
 }

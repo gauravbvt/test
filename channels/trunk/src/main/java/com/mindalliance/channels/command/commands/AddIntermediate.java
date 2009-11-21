@@ -6,10 +6,10 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.util.ChannelsUtils;
 
 /**
  * Insert an intermediate part in a flow.
@@ -25,7 +25,7 @@ public class AddIntermediate extends AbstractCommand {
     }
 
     public AddIntermediate( Flow flow ) {
-        needLocksOn( CommandUtils.getLockingSetFor( flow ) );
+        needLocksOn( ChannelsUtils.getLockingSetFor( flow ) );
         set( "flow", flow.getId() );
         set( "scenario", flow.getScenario().getId() );
     }
@@ -124,7 +124,7 @@ public class AddIntermediate extends AbstractCommand {
         toTarget.set( "otherScenario", scenario.getId() );
         toTarget.set( "other", flow.getTarget().getId() );
         toTarget.set( "name", flow.getName() );
-        toTarget.set( "attributes", CommandUtils.getFlowAttributes( flow ) );
+        toTarget.set( "attributes", ChannelsUtils.getFlowAttributes( flow ) );
         subCommands.addCommand( toTarget );
         // connect intermediate to new flow's source
         subCommands.addLink( addPart, "id", toTarget, "part" );

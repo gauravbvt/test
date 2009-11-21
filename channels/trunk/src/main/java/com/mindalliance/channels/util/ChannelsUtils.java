@@ -1,9 +1,10 @@
-package com.mindalliance.channels.command;
+package com.mindalliance.channels.util;
 
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Delay;
@@ -34,21 +35,21 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Command framework utilities.
+ * Utility functions.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: Mar 6, 2009
  * Time: 3:42:39 PM
  */
-public final class CommandUtils {
+public final class ChannelsUtils {
 
     /**
      * The logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger( CommandUtils.class );
+    private static final Logger LOG = LoggerFactory.getLogger( ChannelsUtils.class );
 
-    private CommandUtils() {
+    private ChannelsUtils() {
 
     }
 
@@ -452,7 +453,7 @@ public final class CommandUtils {
      * @param scenario     a scenario in context
      * @param queryService a query service
      * @return a node
-     * @throws CommandException if not found
+     * @throws com.mindalliance.channels.command.CommandException if not found
      */
     public static Node resolveNode(
             Long id,

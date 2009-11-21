@@ -6,11 +6,11 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.Iterator;
 
@@ -32,7 +32,7 @@ public class RemovePart extends AbstractCommand {
     }
 
     public RemovePart( Part part ) {
-        needLocksOn( CommandUtils.getLockingSetFor( part ) );
+        needLocksOn( ChannelsUtils.getLockingSetFor( part ) );
         set( "part", part.getId() );
         set( "scenario", part.getScenario().getId() );
     }
@@ -68,7 +68,7 @@ public class RemovePart extends AbstractCommand {
         QueryService queryService = commander.getQueryService();
         Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
         Part part = (Part) scenario.getNode( (Long) get( "part" ) );
-        set( "partState", CommandUtils.getPartState( part ) );
+        set( "partState", ChannelsUtils.getPartState( part ) );
         MultiCommand multi = (MultiCommand) get( "subCommands" );
         if ( multi == null ) {
             multi = makeSubCommands( part );
@@ -138,7 +138,7 @@ public class RemovePart extends AbstractCommand {
                 addCapability.set( "scenario", in.getSource().getScenario().getId() );
                 addCapability.set( "part", in.getSource().getId() );
                 addCapability.set( "name", in.getName() );
-                addCapability.set( "attributes", CommandUtils.getFlowAttributes( in ) );
+                addCapability.set( "attributes", ChannelsUtils.getFlowAttributes( in ) );
                 subCommands.addCommand( addCapability );
             }
         }
@@ -155,7 +155,7 @@ public class RemovePart extends AbstractCommand {
                 addNeed.set( "scenario", out.getTarget().getScenario().getId() );
                 addNeed.set( "part", out.getTarget().getId() );
                 addNeed.set( "name", out.getName() );
-                addNeed.set( "attributes", CommandUtils.getFlowAttributes( out ) );
+                addNeed.set( "attributes", ChannelsUtils.getFlowAttributes( out ) );
                 subCommands.addCommand( addNeed );
             }
         }

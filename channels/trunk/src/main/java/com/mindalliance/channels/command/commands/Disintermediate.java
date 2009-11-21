@@ -5,11 +5,11 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -36,7 +36,7 @@ public class Disintermediate extends AbstractCommand {
 
     public Disintermediate( Part part ) {
         // May overshoot if needs locks for unaffected flows.
-        needLocksOn( CommandUtils.getLockingSetFor( part ) );
+        needLocksOn( ChannelsUtils.getLockingSetFor( part ) );
         set( "part", part.getId() );
         set( "scenario", part.getScenario().getId() );
     }
@@ -117,9 +117,9 @@ public class Disintermediate extends AbstractCommand {
                     receive.getSource(),
                     send.getTarget(),
                     receive.getName() );
-            // Use description of receive and other attributes of send
-            Map<String, Object> attributes = CommandUtils.getFlowAttributes( send );
-            attributes.put( "description", send.getDescription() );
+            // Use eois of receive and other attributes of send
+            Map<String, Object> attributes = ChannelsUtils.getFlowAttributes( send );
+            attributes.put( "eois", ChannelsUtils.copyEois( send ) );
             directConnect.set( "attributes", attributes );
             subCommands.addCommand( directConnect );
             sendsToDisconnect.add( send );
@@ -131,7 +131,7 @@ public class Disintermediate extends AbstractCommand {
                 addNeed.set( "scenario", get( "scenario" ) );
                 addNeed.set( "part", get( "part" ) );
                 addNeed.set( "name", receive.getName() );
-                addNeed.set( "attributes", CommandUtils.getFlowAttributes( receive ) );
+                addNeed.set( "attributes", ChannelsUtils.getFlowAttributes( receive ) );
                 subCommands.addCommand( addNeed );
                 subCommands.addCommand( new DisconnectFlow( receive ) );
             }
@@ -142,7 +142,7 @@ public class Disintermediate extends AbstractCommand {
                 addCapability.set( "scenario", get( "scenario" ) );
                 addCapability.set( "part", get( "part" ) );
                 addCapability.set( "name", send.getName() );
-                addCapability.set( "attributes", CommandUtils.getFlowAttributes( send ) );
+                addCapability.set( "attributes", ChannelsUtils.getFlowAttributes( send ) );
                 subCommands.addCommand( addCapability );
                 subCommands.addCommand( new DisconnectFlow( send ) );
             }

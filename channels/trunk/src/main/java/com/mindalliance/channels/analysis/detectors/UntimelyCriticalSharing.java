@@ -70,11 +70,10 @@ public class UntimelyCriticalSharing extends AbstractIssueDetector {
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         Flow receive = (Flow) obj;
-                        String eois = receive.getDescription();
                         return receive.isNeed()
                                 && receive.isAskedFor() == commitment.isAskedFor()
                                 && receive.isCritical()
-                                && ( eois.isEmpty()
+                                && ( receive.getEois().isEmpty()
                                 || Matcher.hasCommonEOIs(
                                 receive,
                                 commitment,

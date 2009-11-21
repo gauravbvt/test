@@ -87,7 +87,7 @@ public class Assignment implements Serializable, GeoLocatable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append( employment.toString() );
-        sb.append( " doing task \"" );
+        sb.append( ", doing task \"" );
         sb.append( part.getTask() );
         sb.append( "\"" );
         return sb.toString();

@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Actor;
@@ -14,6 +13,7 @@ import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
+import com.mindalliance.channels.util.ChannelsUtils;
 import com.mindalliance.channels.util.Matcher;
 import com.mindalliance.channels.util.NameRange;
 import com.mindalliance.channels.util.Play;
@@ -573,7 +573,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             // link
             AjaxFallbackLink link = new AjaxFallbackLink( "entity-link" ) {
                 public void onClick( AjaxRequestTarget target ) {
-                    ModelEntity mo = (ModelEntity) CommandUtils.getProperty( jobWrapper, property, null );
+                    ModelEntity mo = (ModelEntity) ChannelsUtils.getProperty( jobWrapper, property, null );
                     if ( mo != null ) {
                         // setResponsePage(  new RedirectPage( ModelObjectLink.linkForEntity( mo ) ) );
                         update( target, new Change( Change.Type.Expanded, mo ) );

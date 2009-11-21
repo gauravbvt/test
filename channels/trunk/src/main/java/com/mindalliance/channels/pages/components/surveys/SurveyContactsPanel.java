@@ -272,7 +272,7 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
         private void initialize() {
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
-            columns.add( makeCheckBoxColumn(
+            columns.add( makeTernaryCheckBoxColumn(
                     "",
                     "status",
                     statuses

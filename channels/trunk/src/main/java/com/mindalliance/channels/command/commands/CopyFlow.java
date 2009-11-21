@@ -6,10 +6,10 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.util.ChannelsUtils;
 
 /**
  * Copy a flow.
@@ -55,8 +55,8 @@ public class CopyFlow extends AbstractCommand {
             throw new CommandException( "You need to refresh", e );
         }
         commander.setCopy( flow.getTarget() == part 
-                ? CommandUtils.getNeedState( flow, part )
-                : CommandUtils.getCapabilityState( flow, part ));
+                ? ChannelsUtils.getNeedState( flow, part )
+                : ChannelsUtils.getCapabilityState( flow, part ));
         return new Change( Change.Type.None, flow );
     }
 

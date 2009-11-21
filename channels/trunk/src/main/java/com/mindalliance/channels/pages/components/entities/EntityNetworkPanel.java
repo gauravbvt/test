@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
@@ -14,6 +13,7 @@ import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.pages.components.diagrams.EntityNetworkDiagramPanel;
+import com.mindalliance.channels.util.ChannelsUtils;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -368,7 +368,7 @@ public class EntityNetworkPanel<T extends ModelEntity> extends AbstractUpdatable
             for ( String property : identifiableFilters.keySet() ) {
                 if ( !ModelObject.areEqualOrNull(
                         (ModelObject) identifiableFilters.get( property ),
-                        (ModelObject) CommandUtils.getProperty( actorFlow, property, null ) ) ) {
+                        (ModelObject) ChannelsUtils.getProperty( actorFlow, property, null ) ) ) {
                     return true;
                 }
             }
@@ -389,7 +389,7 @@ public class EntityNetworkPanel<T extends ModelEntity> extends AbstractUpdatable
             for ( String property : identifiableFilters.keySet() ) {
                 if ( !ModelObject.areEqualOrNull(
                         (ModelObject) identifiableFilters.get( property ),
-                        (ModelObject) CommandUtils.getProperty( flow, property, null ) ) ) {
+                        (ModelObject) ChannelsUtils.getProperty( flow, property, null ) ) ) {
                     return true;
                 }
             }

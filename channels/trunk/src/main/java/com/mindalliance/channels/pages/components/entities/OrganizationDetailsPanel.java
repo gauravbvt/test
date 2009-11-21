@@ -212,6 +212,14 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                             OrgChartDomIdentifier );
                 }
             } );
+            tabs.add( new AbstractTab( new Model<String>( "Agreements" ) ) {
+                public Panel getPanel( String id ) {
+                    return new AgreementsPanel(
+                            id,
+                            new PropertyModel<Organization>( OrganizationDetailsPanel.this, "organization" ),
+                            getExpansions());
+                }
+            } );
         }
         return tabs;
     }

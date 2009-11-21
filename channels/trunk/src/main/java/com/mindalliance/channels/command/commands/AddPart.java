@@ -7,9 +7,9 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.Map;
 
@@ -60,7 +60,7 @@ public class AddPart extends AbstractCommand {
         if ( defaultPart != null ) scenario.removeNode( defaultPart );
         Map<String, Object> partState = (Map<String, Object>) get( "partState" );
         if ( partState != null ) {
-            CommandUtils.initPartFrom( part, partState, commander );
+            ChannelsUtils.initPartFrom( part, partState, commander );
         }
         return new Change( Change.Type.Added, part );
     }

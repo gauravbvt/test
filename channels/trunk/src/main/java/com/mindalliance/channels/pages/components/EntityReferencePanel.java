@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.model.Identifiable;
@@ -9,6 +8,7 @@ import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.util.ChannelsUtils;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.wicket.AttributeModifier;
@@ -206,7 +206,7 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
     }
 
     private ModelEntity getEntity() {
-        return (ModelEntity) CommandUtils.getProperty(
+        return (ModelEntity) ChannelsUtils.getProperty(
                 getReferencer(),
                 property,
                 null );

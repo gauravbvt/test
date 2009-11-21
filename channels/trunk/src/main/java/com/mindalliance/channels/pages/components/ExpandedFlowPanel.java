@@ -60,11 +60,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private TextField<String> nameField;
 
     /**
-     * The EOIs description field.
-     */
-    private TextArea<String> eoisDescriptionField;
-
-    /**
      * The askedFor buttons.
      */
     private RadioGroup<Boolean> askedForButtons;
@@ -172,7 +167,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             }
         };
         add( editEOIsLink );
-        eoisDescriptionField = new TextArea<String>(
+        TextArea<String> eoisDescriptionField = new TextArea<String>(
                 "eois",
                 new PropertyModel<String>( getFlow(), "description" ) );
         eoisDescriptionField.setEnabled( false );
@@ -723,15 +718,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      */
     public String getDescription() {
         return getFlow().getDescription();
-    }
-
-    /**
-     * Set flow name via command.
-     *
-     * @param desc a string
-     */
-    public void setDescription( String desc ) {
-        doCommand( new UpdateScenarioObject( getFlow(), "description", desc ) );
     }
 
     public boolean isAskedFor() {

@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Identifiable;
@@ -11,6 +10,7 @@ import com.mindalliance.channels.model.PlaceReference;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.EntityReferencePanel;
+import com.mindalliance.channels.util.ChannelsUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -213,7 +213,7 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
     }
 
     private PlaceReference getPlaceReference() {
-        return (PlaceReference) CommandUtils.getProperty(
+        return (PlaceReference) ChannelsUtils.getProperty(
                 getEntity(),
                 property,
                 new PlaceReference() );

@@ -5,10 +5,10 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -30,7 +30,7 @@ public class SetPartFromCopy extends AbstractCommand {
         addConflicting( part );
         set( "part", part.getId() );
         set( "scenario", part.getScenario().getId() );
-        set( "state", CommandUtils.getPartCopy( part ) );
+        set( "state", ChannelsUtils.getPartCopy( part ) );
     }
 
     /**
@@ -66,7 +66,7 @@ public class SetPartFromCopy extends AbstractCommand {
             multi = makeSubCommands( copy );
             set( "subCommands", multi );
         } // TODO - attachment TICKETS are also copied - problem
-        CommandUtils.initPartFrom( part, (Map<String, Object>) copy.get( "partState" ), commander );
+        ChannelsUtils.initPartFrom( part, (Map<String, Object>) copy.get( "partState" ), commander );
         multi.execute( commander );
         return new Change( Change.Type.Recomposed, scenario );
     }

@@ -7,11 +7,11 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.util.ChannelsUtils;
 
 /**
  * Satisfy a need by connecting with a capability.
@@ -34,8 +34,8 @@ public class SatisfyNeed extends AbstractCommand {
      * @param keepCapabilityAndNeed whether *not* to delete connected capability and need if both local
      */
     public SatisfyNeed( Flow need, Flow capability, boolean keepCapabilityAndNeed ) {
-        needLocksOn( CommandUtils.getLockingSetFor( need ) );
-        needLocksOn( CommandUtils.getLockingSetFor( capability ) );
+        needLocksOn( ChannelsUtils.getLockingSetFor( need ) );
+        needLocksOn( ChannelsUtils.getLockingSetFor( capability ) );
         set( "needScenario", need.getScenario().getId() );
         set( "need", need.getId() );
         set( "capabilityScenario", capability.getScenario().getId() );
@@ -81,7 +81,7 @@ public class SatisfyNeed extends AbstractCommand {
             }
             Long priorId = (Long) get( "satisfy" );
             newFlow = queryService.connect( fromNode, toNode, need.getName(), priorId );
-            newFlow.setEois( CommandUtils.copyEois( capability ) );
+            newFlow.setEois( ChannelsUtils.copyEois( capability ) );
             newFlow.setSignificanceToSource( capability.getSignificanceToSource() );
             newFlow.setSignificanceToTarget( need.getSignificanceToTarget() );
             newFlow.setChannels( need.isAskedFor() ? capability.getChannels() : need.getChannels() );

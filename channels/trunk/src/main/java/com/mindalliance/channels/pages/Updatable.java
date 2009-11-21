@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import com.mindalliance.channels.command.Change;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 
 /**
  * An updatable page or component.
@@ -29,4 +29,13 @@ public interface Updatable {
      * @param change       the nature of the change
      */
     void updateWith( AjaxRequestTarget target, Change change );
+
+    /**
+     * Take an action on an object.
+     * Does not percolate up the parent chain.
+     * @param target the ajax target
+     * @param object  an object
+     * @param action action taken on object
+     */
+    void update( AjaxRequestTarget target, Object object, String action );
 }

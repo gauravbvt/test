@@ -185,6 +185,13 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public void update( AjaxRequestTarget target, Object object, String action ) {
+        // Do nothing
+    }
+
+    /**
      * Send changed event and then the updateWith event.
      *
      * @param target an ajax request target

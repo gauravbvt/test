@@ -1,14 +1,15 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.FilterableModelObjectLink;
 import com.mindalliance.channels.pages.ModelObjectLink;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.entities.EntityLink;
+import com.mindalliance.channels.util.ChannelsUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -146,7 +147,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
                                       IModel<T> model ) {
-                String text = "" + CommandUtils.getProperty( model.getObject(), labelProperty, defaultText );
+                String text = "" + ChannelsUtils.getProperty( model.getObject(), labelProperty, defaultText );
                 String labelText = ( text.isEmpty() ) ? ( defaultText == null ? "" : defaultText ) : text;
                 cellItem.add( new Label( id, new Model<String>( labelText ) ) );
                 if ( style != null ) {
@@ -155,7 +156,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                         cellItem.add( new AttributeModifier( "class", true, new Model<String>( styleClass ) ) );
                 }
                 if ( titleProperty != null ) {
-                    String title = "" + CommandUtils.getProperty( model.getObject(), titleProperty, null );
+                    String title = "" + ChannelsUtils.getProperty( model.getObject(), titleProperty, null );
                     if ( !title.isEmpty() )
                         cellItem.add( new AttributeModifier( "title", true, new Model<String>( title ) ) );
                 }
@@ -235,9 +236,9 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             String labelProperty,
             String defaultText,
             Filterable filterable ) {
-        final ModelObject mo = (ModelObject) CommandUtils.getProperty( bean, moProperty, null );
+        final ModelObject mo = (ModelObject) ChannelsUtils.getProperty( bean, moProperty, null );
         if ( mo != null ) {
-            String labelText = (String) CommandUtils.getProperty(
+            String labelText = (String) ChannelsUtils.getProperty(
                     bean,
                     labelProperty,
                     defaultText );
@@ -275,7 +276,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
     private String findStyleClass( Object bean, String style ) {
         String styleClass;
         if ( style.startsWith( "@" ) ) {
-            styleClass = (String) CommandUtils.getProperty( bean, style.substring( 1 ), null );
+            styleClass = (String) ChannelsUtils.getProperty( bean, style.substring( 1 ), null );
         } else {
             styleClass = style;
         }
@@ -325,10 +326,10 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                                       String id,
                                       final IModel<T> model ) {
                 T bean = model.getObject();
-                String url = (String) CommandUtils.getProperty( bean, urlProperty, null );
+                String url = (String) ChannelsUtils.getProperty( bean, urlProperty, null );
                 Component cellContent;
                 if ( url != null ) {
-                    String labelText = (String) CommandUtils.getProperty( bean, labelProperty, defaultText );
+                    String labelText = (String) ChannelsUtils.getProperty( bean, labelProperty, defaultText );
                     labelText = ( labelText == null || labelText.isEmpty() )
                             ? ( defaultText == null ? "" : defaultText )
                             : labelText;
@@ -341,7 +342,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         };
     }
 
-    protected AbstractColumn<T> makeCheckBoxColumn(
+    protected AbstractColumn<T> makeTernaryCheckBoxColumn(
             String name,
             final String stateProperty,
             final String[] allowedStates
@@ -355,6 +356,27 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                         model,
                         stateProperty,
                         allowedStates );
+                cellItem.add( cellContent );
+            }
+        };
+    }
+
+    protected AbstractColumn<T> makeCheckBoxColumn(
+            String name,
+            final String stateProperty,
+            final boolean enabled,
+            final Updatable updatable
+    ) {
+        return new AbstractColumn<T>( new Model<String>( name ) ) {
+            public void populateItem( Item<ICellPopulator<T>> cellItem,
+                                      String id,
+                                      final IModel<T> model ) {
+                Component cellContent = new BinaryCheckBoxPanel<T>(
+                        id,
+                        model,
+                        stateProperty,
+                        enabled,
+                        updatable );
                 cellItem.add( cellContent );
             }
         };
@@ -378,7 +400,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                                       String id,
                                       final IModel<T> model ) {
                 T bean = model.getObject();
-                Identifiable identifiable = (Identifiable) CommandUtils.getProperty(
+                Identifiable identifiable = (Identifiable) ChannelsUtils.getProperty(
                         bean,
                         identifiableProperty,
                         null );
@@ -389,6 +411,42 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         };
     }
 
+    /**
+     * Make actionlink column.
+     *
+     * @param name      column name
+     * @param label     cell content
+     * @param action    action to call on row object
+     * @param updatable target of call
+     * @return a column
+     */
+    protected AbstractColumn<T> makeActionLinkColumn(
+            String name,
+            final String label,
+            final String action,
+            final Updatable updatable
+    ) {
+        return new AbstractColumn<T>( new Model<String>( name ), label ) {
+            public void populateItem( Item<ICellPopulator<T>> cellItem,
+                                      String id,
+                                      final IModel<T> model ) {
+                T bean = model.getObject();
+                ActionLinkPanel cellContent = new ActionLinkPanel( id, label, bean, action, updatable );
+                cellItem.add( cellContent );
+            }
+
+        };
+    }
+
+    /**
+     * Make geomap link column.
+     *
+     * @param name          column name
+     * @param titleProperty title property
+     * @param properties    geolocation properties
+     * @param hintModel     tooltip model
+     * @return a column
+     */
     protected IColumn<?> makeGeomapLinkColumn(
             String name,
             final String titleProperty,
@@ -402,7 +460,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 T bean = model.getObject();
                 ArrayList<GeoLocatable> geoLocs = new ArrayList<GeoLocatable>();
                 for ( String property : properties ) {
-                    GeoLocatable geoLoc = (GeoLocatable) CommandUtils.getProperty( bean, property, null );
+                    GeoLocatable geoLoc = (GeoLocatable) ChannelsUtils.getProperty( bean, property, null );
                     if ( geoLoc != null ) {
                         geoLocs.add( geoLoc );
                     } else {
@@ -413,7 +471,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 if ( geoLocs.isEmpty() ) {
                     cellContent = new Label( id, "" );
                 } else {
-                    String title = (String) CommandUtils.getProperty( bean, titleProperty, "" );
+                    String title = (String) ChannelsUtils.getProperty( bean, titleProperty, "" );
                     cellContent = new GeomapLinkPanel( id, new Model<String>( title ), geoLocs, hintModel );
                 }
                 cellItem.add( cellContent );
@@ -424,7 +482,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
     /**
      * Expand link panel.
      */
-    public class ExpandLinkPanel<T> extends Panel {
+    private class ExpandLinkPanel<T> extends Panel {
 
         public ExpandLinkPanel(
                 String id,
@@ -440,10 +498,72 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         }
     }
 
+    private class ActionLinkPanel extends Panel {
+
+        public ActionLinkPanel(
+                String id,
+                String label,
+                final T bean,
+                final String action,
+                final Updatable updatable ) {
+            super( id );
+            AjaxLink link = new AjaxLink<String>( "link", new Model<String>( label ) ) {
+                public void onClick( AjaxRequestTarget target ) {
+                    updatable.update( target, bean, action );
+                }
+            };
+            add( link );
+        }
+    }
+
+
+    private class BinaryCheckBoxPanel<T> extends Panel {
+        /**
+         * String property.
+         */
+        private String stateProperty;
+        /**
+         * Bean with property to be set.
+         */
+        private T bean;
+
+        public BinaryCheckBoxPanel(
+                String id,
+                IModel<T> model,
+                final String stateProperty,
+                boolean enabled,
+                final Updatable updatable ) {
+            super( id );
+            this.stateProperty = stateProperty;
+            bean = model.getObject();
+            CheckBox checkBox = new CheckBox( "checkBox", new PropertyModel<Boolean>( this, "checked" ) );
+            checkBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+                protected void onUpdate( AjaxRequestTarget target ) {
+                    updatable.update( target, bean, stateProperty );
+                }
+            } );
+            checkBox.setEnabled( enabled );
+            add( checkBox );
+        }
+
+        public boolean getChecked() {
+            return (Boolean) ChannelsUtils.getProperty( bean, stateProperty, false );
+        }
+
+        public void setChecked( boolean val ) {
+            try {
+                PropertyUtils.setProperty( bean, stateProperty, val );
+            } catch ( Exception e ) {
+                LOG.error( "Failed to set property " + stateProperty );
+                throw new RuntimeException( e );
+            }
+        }
+    }
+
     /**
      * Property-setting checkbox panel.
      */
-    public class TernaryCheckBoxPanel<T> extends Panel {
+    private class TernaryCheckBoxPanel<T> extends Panel {
         /**
          * String property.
          */
@@ -477,12 +597,12 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         }
 
         private boolean hasDisabledState() {
-            String state = (String) CommandUtils.getProperty( bean, stateProperty, "" );
+            String state = (String) ChannelsUtils.getProperty( bean, stateProperty, "" );
             return state.equals( allowedStates[2] );
         }
 
         public boolean getChecked() {
-            String state = (String) CommandUtils.getProperty( bean, stateProperty, "" );
+            String state = (String) ChannelsUtils.getProperty( bean, stateProperty, "" );
             return state.equals( allowedStates[1] ) || state.equals( allowedStates[2] );
         }
 

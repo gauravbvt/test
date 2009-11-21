@@ -48,6 +48,10 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
      * Whether each sharing commitments from this organization requires an agreement.
      */
     private boolean agreementsRequired;
+    /**
+     * Confirmed agreement to share information with other organizations.
+     */
+    private List<Agreement> agreements = new ArrayList<Agreement>();
 
     /**
      * Bogus organization used to signify that the organization is not known...
@@ -141,6 +145,25 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
 
     public void setAgreementsRequired( boolean agreementsRequired ) {
         this.agreementsRequired = agreementsRequired;
+    }
+
+    public List<Agreement> getAgreements() {
+        return agreements;
+    }
+
+    public void setAgreements( List<Agreement> agreements ) {
+        this.agreements = agreements;
+    }
+
+    /**
+     * Add an agreement if unique.
+     *
+     * @param agreement an agreement
+     */
+    public void addAgreement( Agreement agreement ) {
+        if ( !agreements.contains( agreement ) ) {
+            agreements.add( agreement );
+        }
     }
 
     @ManyToOne( cascade = CascadeType.PERSIST, fetch = FetchType.LAZY )

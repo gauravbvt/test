@@ -6,11 +6,11 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.Map;
 
@@ -28,7 +28,7 @@ public class BreakUpFlow extends AbstractCommand {
     }
 
     public BreakUpFlow( Flow flow ) {
-        needLocksOn( CommandUtils.getLockingSetFor( flow ) );
+        needLocksOn( ChannelsUtils.getLockingSetFor( flow ) );
         set( "flow", flow.getId() );
         set( "scenario", flow.getScenario().getId() );
     }
@@ -54,7 +54,7 @@ public class BreakUpFlow extends AbstractCommand {
             }
             // else this is a replay
             multi.execute( commander );
-            set( "flowState", CommandUtils.getFlowState( flow ) );
+            set( "flowState", ChannelsUtils.getFlowState( flow ) );
             flow.disconnect();
 //            breakup( flow, commander );
             ignoreLock( (Long) get( "flow" ) );
@@ -100,7 +100,7 @@ public class BreakUpFlow extends AbstractCommand {
                     addCapability.set( "scenario", source.getScenario().getId() );
                     addCapability.set( "part", source.getId() );
                     addCapability.set( "name", flow.getName() );
-                    addCapability.set( "attributes", CommandUtils.getFlowAttributes( flow ) );
+                    addCapability.set( "attributes", ChannelsUtils.getFlowAttributes( flow ) );
                     subCommands.addCommand( addCapability );
                 }
                 if ( !target.hasMultipleRequirements( getName() ) ) {
@@ -108,7 +108,7 @@ public class BreakUpFlow extends AbstractCommand {
                     addNeed.set( "scenario", target.getScenario().getId() );
                     addNeed.set( "part", target.getId() );
                     addNeed.set( "name", flow.getName() );
-                    addNeed.set( "attributes", CommandUtils.getFlowAttributes( flow ) );
+                    addNeed.set( "attributes", ChannelsUtils.getFlowAttributes( flow ) );
                     subCommands.addCommand( addNeed );
                 }
             }

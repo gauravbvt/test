@@ -109,4 +109,12 @@ public class Commitment implements Serializable {
                 }
         );
     }
+
+    /**
+     * Commitment crosses organization boundaries.
+     * @return a boolean
+     */
+    public boolean isBetweenOrganizations() {
+        return !committer.getOrganization().equals( beneficiary.getOrganization() );
+    }
 }

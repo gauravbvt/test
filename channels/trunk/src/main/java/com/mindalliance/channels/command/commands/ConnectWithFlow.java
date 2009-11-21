@@ -6,11 +6,11 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -84,7 +84,7 @@ public class ConnectWithFlow extends AbstractCommand {
                 Scenario.class,
                 (Long) get( "otherScenario" ) );
         Long nodeId = (Long) get( "other" );
-        Node other = CommandUtils.resolveNode( nodeId, otherScenario, queryService );
+        Node other = ChannelsUtils.resolveNode( nodeId, otherScenario, queryService );
         String name = (String) get( "name" );
         boolean isOutcome = (Boolean) get( "isOutcome" );
         Long priorId = (Long) get( "flow" );
@@ -95,7 +95,7 @@ public class ConnectWithFlow extends AbstractCommand {
         set( "flow", flow.getId() );
         Map<String, Object> attributes = (Map<String, Object>) get( "attributes" );
         if ( attributes != null ) {
-            CommandUtils.initialize( flow, attributes );
+            ChannelsUtils.initialize( flow, attributes );
         }
         return new Change( Change.Type.Added, flow );
     }

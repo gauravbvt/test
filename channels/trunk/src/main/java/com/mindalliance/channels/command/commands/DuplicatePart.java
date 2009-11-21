@@ -7,9 +7,9 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.Map;
 
@@ -48,10 +48,10 @@ public class DuplicatePart extends AbstractCommand {
             Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
             Part part = (Part) scenario.getNode( (Long) get( "part" ) );
             if ( part == null ) throw new NotFoundException();
-            Map<String, Object> partState = CommandUtils.getPartState( part );
+            Map<String, Object> partState = ChannelsUtils.getPartState( part );
             Long priorId = (Long) get( "duplicate" );
             duplicate = queryService.createPart( scenario, priorId );
-            CommandUtils.initPartFrom( duplicate, partState, commander );
+            ChannelsUtils.initPartFrom( duplicate, partState, commander );
             set( "duplicate", duplicate.getId() );
             return new Change( Change.Type.Added, duplicate );
         } catch ( NotFoundException e ) {

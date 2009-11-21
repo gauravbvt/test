@@ -5,6 +5,7 @@ import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Agreement;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Classification;
@@ -981,12 +982,12 @@ public interface QueryService extends Service {
     boolean likelyRelated( String text, String otherText );
 
     /**
-     * Find all sharing commitments addressing a given information need.
+     * Find all sharing flows addressing a given information need.
      *
      * @param need a flow
      * @return a list of flows
      */
-    List<Flow> findAllSharingCommitmentsAddressing( Flow need );
+    List<Flow> findAllSharingsAddressing( Flow need );
 
     /**
      * Find parts with anonymous tasks which resourceSpec is narrowed by that of a given part.
@@ -1191,6 +1192,14 @@ public interface QueryService extends Service {
     List<Commitment> findAllCommitmentsOf( Actor actor );
 
     /**
+     * Find all commitments of an organization.
+     *
+     * @param organization an organization
+     * @return a list of commitments
+     */
+    List<Commitment> findAllCommitmentsOf( Organization organization );
+
+    /**
      * Find all commitments to an actor.
      *
      * @param actor an actor
@@ -1205,4 +1214,23 @@ public interface QueryService extends Service {
      * @return a list of arrays of flows (pairs)
      */
     List<Flow[]> findUntappedSatisfactions( Part part );
+
+    /**
+     * Find all agreements implied by commitments from an organization.
+     *
+     * @param organization an organization
+     * @return a list of agreements
+     */
+    List<Agreement> findAllImpliedAgreementsOf( Organization organization );
+
+    /**
+     * Find all commitments covered by an agreement by an organization.
+     *
+     * @param agreement an agreement
+     * @param organization an organization
+     * @return a list of commitments
+     */
+    List<Commitment> findAllCommitmentsCoveredBy(
+            Agreement agreement,
+            Organization organization);
 }

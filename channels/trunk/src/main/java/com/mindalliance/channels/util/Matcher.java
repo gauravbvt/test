@@ -1,6 +1,7 @@
 package com.mindalliance.channels.util;
 
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
@@ -130,18 +131,18 @@ public class Matcher {
      * @return a boolean
      */
     public static boolean hasCommonEOIs( Flow flow, Flow otherFlow, final QueryService queryService ) {
-        List<String> eois = extractEOIs( flow.getDescription() );
-        final List<String> otherEois = extractEOIs( otherFlow.getDescription() );
+        List<ElementOfInformation> eois = flow.getEois();
+        final List<ElementOfInformation> otherEois = otherFlow.getEois();
         return CollectionUtils.exists(
                 eois,
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        final String eoi = (String) obj;
+                        final String eoi = ( (ElementOfInformation) obj ).getContent();
                         return CollectionUtils.exists(
                                 otherEois,
                                 new Predicate() {
                                     public boolean evaluate( Object o ) {
-                                        String otherEoi = (String) o;
+                                        String otherEoi = ( (ElementOfInformation) o ).getContent();
                                         return queryService.isSemanticMatch( eoi, otherEoi, Proximity.HIGH );
                                     }
                                 } );
@@ -164,5 +165,34 @@ public class Matcher {
         return eois;
     }
 
-
+    /**
+     * Whether none in a list eois is without a strong match with some in another list.
+     *
+     * @param eois         a list of elements of information
+     * @param superset     a list of elements of information
+     * @param queryService a query service
+     * @return a boolean
+     */
+    public static boolean subsetOf(
+            List<ElementOfInformation> eois,
+            final List<ElementOfInformation> superset,
+            final QueryService queryService ) {
+        return !CollectionUtils.exists(
+                eois,
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        final String eoi = ( (ElementOfInformation) obj ).getContent();
+                        return !CollectionUtils.exists(
+                                superset,
+                                new Predicate() {
+                                    public boolean evaluate( Object o ) {
+                                        final String otherEoi = ( (ElementOfInformation) o ).getContent();
+                                        return queryService.isSemanticMatch( eoi, otherEoi, Proximity.HIGH );
+                                    }
+                                }
+                        );
+                    }
+                }
+        );
+    }
 }

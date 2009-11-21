@@ -6,11 +6,11 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.CommandUtils;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.util.ChannelsUtils;
 
 /**
  * Redirect a flow to a new target or from a new source.
@@ -44,12 +44,12 @@ public class RedirectFlow extends AbstractCommand {
         Scenario scenario = commander.resolve(
                 Scenario.class,
                 (Long) get( "scenario" ) );
-        Flow flow = CommandUtils.resolveFlow( (Long) get( "flow" ), scenario );
+        Flow flow = ChannelsUtils.resolveFlow( (Long) get( "flow" ), scenario );
         Scenario nodeScenario = commander.resolve(
                 Scenario.class,
                 (Long) get( "nodeScenario" ) );
         Long nodeId = (Long) get( "node" );
-        Node other = CommandUtils.resolveNode( nodeId, nodeScenario, queryService );
+        Node other = ChannelsUtils.resolveNode( nodeId, nodeScenario, queryService );
         boolean nodeIsTarget = (Boolean) get( "isTarget" );
         MultiCommand multi = (MultiCommand) get( "subCommands" );
         if ( multi == null ) {
@@ -58,7 +58,7 @@ public class RedirectFlow extends AbstractCommand {
         }
         // else command replay
         multi.execute( commander );
-        Flow newFlow = CommandUtils.resolveFlow( (Long) get( "newFlow" ), scenario );
+        Flow newFlow = ChannelsUtils.resolveFlow( (Long) get( "newFlow" ), scenario );
         return new Change( Change.Type.Recomposed, newFlow );
     }
 
