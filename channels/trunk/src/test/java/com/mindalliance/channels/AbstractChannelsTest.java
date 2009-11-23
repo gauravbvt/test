@@ -168,6 +168,8 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new UnplayedPart() );
         detectors.add( new SharingWithoutCommitments() );
         detectors.add( new InsufficientClearance() );
+        detectors.add( new AgreementEncompassedByOther() );
+        detectors.add( new AgreementWithoutCommitment() );
         for ( IssueDetector detector : detectors ) {
             ( (AbstractIssueDetector) detector ).setQueryService( queryService );
         }

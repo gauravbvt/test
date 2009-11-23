@@ -291,6 +291,12 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.InsufficientClearance">
                     <property name="queryService" ref="queryService"/>
                 </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.AgreementWithoutCommitment">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.AgreementEncompassedByOther">
+                    <property name="queryService" ref="queryService"/>
+                </bean>
             </list>
         </property>
     </bean>
