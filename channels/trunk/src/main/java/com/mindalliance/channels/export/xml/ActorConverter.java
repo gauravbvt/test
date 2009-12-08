@@ -4,7 +4,7 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Plan;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -80,10 +80,10 @@ public class ActorConverter extends EntityConverter {
     protected void setSpecific( ModelEntity entity, String nodeName,
                                 HierarchicalStreamReader reader,
                                 UnmarshallingContext context ) {
-        Scenario scenario = (Scenario) context.get( "scenario" );
+        Plan plan = getPlan();
         Actor actor = (Actor) entity;
         if ( nodeName.equals( "channel" ) ) {
-            Channel channel = (Channel) context.convertAnother( scenario, Channel.class );
+            Channel channel = (Channel) context.convertAnother( plan, Channel.class );
             actor.addChannel( channel );
         } else if ( nodeName.equals( "user" ) ) {
             actor.setUserName( reader.getValue() );
@@ -91,7 +91,7 @@ public class ActorConverter extends EntityConverter {
             boolean isSystem = reader.getValue().equals( "true" );
             actor.setSystem( isSystem );
         } else if ( nodeName.equals( "clearance" ) ) {
-            Classification clearance = (Classification) context.convertAnother( scenario, Classification.class );
+            Classification clearance = (Classification) context.convertAnother( plan, Classification.class );
             actor.addClearance( clearance );
         } else {
             LOG.warn( "Unknown element " + nodeName );

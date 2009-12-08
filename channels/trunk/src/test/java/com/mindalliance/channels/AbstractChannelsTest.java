@@ -40,6 +40,7 @@ public class AbstractChannelsTest extends TestCase {
     protected Plan plan;
     protected DefaultCommander commander;
     protected DefaultLockManager lockManager;
+    protected DefaultQueryService queryService;
     protected WicketTester tester;
 
     @Override
@@ -57,7 +58,7 @@ public class AbstractChannelsTest extends TestCase {
 //        attachmentManager.setDirectory( new FileSystemResource( "work/uploads" ) );
         attachmentManager.setUploadPath( "uploads" );
 
-        DefaultQueryService queryService = new DefaultQueryService( planManager, attachmentManager );
+        queryService = new DefaultQueryService( planManager, attachmentManager );
 
         lockManager = new DefaultLockManager();
         lockManager.setQueryService( queryService );
@@ -179,5 +180,6 @@ public class AbstractChannelsTest extends TestCase {
     public void testNothing() {
         assertTrue( true );
     }
+
 
 }

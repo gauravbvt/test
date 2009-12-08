@@ -1,33 +1,63 @@
 <export>
-  <plan id="0" uri="mindalliance.com/channels/plans/acme" version="1.0" date="2009/10/27 15:12:06 EDT">
+  <plan id="0" uri="mindalliance.com/channels/plans/acme" version="1.0" date="2009/12/07 21:58:15 EST">
     <whenVersioned>2009/09/15 9:48:22 EDT</whenVersioned>
-    <lastId>12407</lastId>
+    <lastId>11890</lastId>
     <name>ACME Emergency Communications Plan</name>
     <client>ACME Manufacturing, Inc.</client>
     <description>Communications planning for responding and recovering from business interruptions due fire or power outage.</description>
+    <classification>
+      <system>US Gov</system>
+      <name>Secret</name>
+      <level>-4</level>
+    </classification>
+    <classification>
+      <system>US Gov</system>
+      <name>Top secret</name>
+      <level>-5</level>
+    </classification>
+    <classification>
+      <system>US Gov</system>
+      <name>Confidential</name>
+      <level>-2</level>
+    </classification>
+    <classification>
+      <system>NATO</system>
+      <name>Cosmic top secret</name>
+      <level>0</level>
+    </classification>
+    <classification>
+      <system>NATO</system>
+      <name>Focal top secret</name>
+      <level>0</level>
+    </classification>
+    <classification>
+      <system>NATO</system>
+      <name>NATO secret</name>
+      <level>0</level>
+    </classification>
+    <classification>
+      <system>NATO</system>
+      <name>NATO confidential</name>
+      <level>0</level>
+    </classification>
+    <classification>
+      <system>NATO</system>
+      <name>NATO restricted</name>
+      <level>0</level>
+    </classification>
     <detection-waivers>
       <detection>NoScenarioForEventPhase</detection>
     </detection-waivers>
-    <actor id="686" kind="Actual" name="R2D2">
-      <description></description>
-      <attachments>
-        <attachment type="Image">http://www.cutiegadget.com/pict/r2-d2_robot.jpg</attachment>
-      </attachments>
-      <system>true</system>
-    </actor>
-    <role id="685" kind="Actual" name="Switchboard and Intercom System">
-      <description></description>
-    </role>
     <role id="279" kind="Actual" name="Emergency Manager">
       <description>Organizes and leads response to fire; leads evacuation etc.</description>
-    </role>
-    <role id="278" kind="Actual" name="Assembly Area Leader">
-      <description></description>
     </role>
     <event id="5" kind="Type" name="Building on fire">
       <description></description>
       <scope id="323">Main building</scope>
     </event>
+    <role id="278" kind="Actual" name="Assembly Area Leader">
+      <description></description>
+    </role>
     <actor id="277" kind="Actual" name="Richard Carry">
       <description>Administration</description>
       <attachments>
@@ -35,42 +65,42 @@
       </attachments>
       <user>rcarry</user>
       <channel>
-        <medium>Phone</medium>
+        <medium id="-987">Phone</medium>
         <address>(973) 754-0722 x.223</address>
       </channel>
       <channel>
-        <medium>Cell</medium>
+        <medium id="-984">Cell</medium>
         <address>(973) 638-7318</address>
       </channel>
       <channel>
-        <medium>Email</medium>
+        <medium id="-982">Email</medium>
         <address>rcarry@acme.com</address>
       </channel>
       <channel>
-        <medium>HomePhone</medium>
+        <medium id="-986">Home phone</medium>
         <address>(516) 449-0974</address>
       </channel>
     </actor>
     <actor id="283" kind="Actual" name="John Garrison">
       <description>Reception</description>
       <channel>
-        <medium>Phone</medium>
+        <medium id="-987">Phone</medium>
         <address>(973) 754-0722</address>
       </channel>
       <channel>
-        <medium>Phone</medium>
+        <medium id="-987">Phone</medium>
         <address>(973) 754-0722 x.210</address>
       </channel>
       <channel>
-        <medium>Cell</medium>
+        <medium id="-984">Cell</medium>
         <address>(973) 887-0440</address>
       </channel>
       <channel>
-        <medium>Fax</medium>
+        <medium id="-985">Fax</medium>
         <address>(973) 756-2493</address>
       </channel>
       <channel>
-        <medium>Email</medium>
+        <medium id="-982">Email</medium>
         <address>jgarrison@acme.com</address>
       </channel>
     </actor>
@@ -96,32 +126,32 @@
         <precision>6</precision>
       </geoLocation>
     </place>
+    <role id="281" kind="Actual" name="Evacuation Team Leader">
+      <description>Someone in charge of leading evacuations.</description>
+      <tag id="11623" kind="Type">Leader</tag>
+    </role>
     <role id="10" kind="Actual" name="Fire Chief">
       <description></description>
       <attachments>
         <attachment type="Image">http://www.plumparty.com/partysupply/graphics/products/large/16596.jpg</attachment>
       </attachments>
     </role>
-    <role id="281" kind="Actual" name="Evacuation Team Leader">
-      <description>Someone in charge of leading evacuations.</description>
-      <tag id="11623" kind="Type">Leader</tag>
-    </role>
     <actor id="280" kind="Actual" name="Mary Delaney">
       <description>Admin./Impo</description>
       <channel>
-        <medium>Phone</medium>
+        <medium id="-987">Phone</medium>
         <address>(973) 754-0722 x.214</address>
       </channel>
       <channel>
-        <medium>Cell</medium>
+        <medium id="-984">Cell</medium>
         <address>(973) 280-2815</address>
       </channel>
       <channel>
-        <medium>HomePhone</medium>
+        <medium id="-986">Home phone</medium>
         <address>(516) 244-6984</address>
       </channel>
       <channel>
-        <medium>Email</medium>
+        <medium id="-982">Email</medium>
         <address>mdelaney@acme.com</address>
       </channel>
     </actor>
@@ -131,31 +161,64 @@
         <attachment type="Image">http://www.adamsonross.com/imgs/louise.jpg</attachment>
       </attachments>
       <channel>
-        <medium>Phone</medium>
+        <medium id="-987">Phone</medium>
         <address>(973) 754-0722 x.225</address>
       </channel>
       <channel>
-        <medium>Cell</medium>
+        <medium id="-984">Cell</medium>
         <address>(973) 610-6470</address>
       </channel>
       <channel>
-        <medium>Email</medium>
+        <medium id="-982">Email</medium>
         <address>lburns@acme.com</address>
       </channel>
       <channel>
-        <medium>HomePhone</medium>
+        <medium id="-986">Home phone</medium>
         <address>(973) 729-2942</address>
       </channel>
     </actor>
+    <role id="286" kind="Actual" name="Switchboard and Intercom Operator">
+      <description></description>
+    </role>
     <organization id="13" kind="Actual" name="Fire Department">
       <description></description>
       <attachments>
         <attachment type="Image">http://cityofashville.googlepages.com/firelogo.jpg/firelogo-full.jpg</attachment>
       </attachments>
     </organization>
-    <role id="286" kind="Actual" name="Switchboard and Intercom Operator">
-      <description></description>
-    </role>
+    <actor id="285" kind="Actual" name="Peter Sanchez">
+      <description>Sales and marketing</description>
+      <tag id="10990" kind="Type">Certified emergency technician</tag>
+      <attachments>
+        <attachment type="Image">uploads/petersanchez.jpeg</attachment>
+      </attachments>
+      <channel>
+        <medium id="-987">Phone</medium>
+        <address>(973) 754-0722 x.257</address>
+      </channel>
+      <channel>
+        <medium id="-984">Cell</medium>
+        <address>(973) 769-7854</address>
+      </channel>
+      <channel>
+        <medium id="-986">Home phone</medium>
+        <address>(973) 729-7352</address>
+      </channel>
+      <channel>
+        <medium id="-982">Email</medium>
+        <address>psanchez@acme.com</address>
+      </channel>
+      <clearance>
+        <system>NATO</system>
+        <name>Cosmic top secret</name>
+        <level>0</level>
+      </clearance>
+      <clearance>
+        <system>US Gov</system>
+        <name>Top secret</name>
+        <level>-5</level>
+      </clearance>
+    </actor>
     <organization id="14" kind="Actual" name="ACME">
       <description></description>
       <tag id="11681" kind="Type">Multinational corporation</tag>
@@ -166,11 +229,11 @@
       <agreementsRequired>true</agreementsRequired>
       <location id="323">Main building</location>
       <channel>
-        <medium>Phone</medium>
+        <medium id="-987">Phone</medium>
         <address>(973) 754-0722</address>
       </channel>
       <channel>
-        <medium>Fax</medium>
+        <medium id="-985">Fax</medium>
         <address>(973) 754-2493</address>
       </channel>
       <job>
@@ -289,29 +352,6 @@
         <title>Employee</title>
       </job>
     </organization>
-    <actor id="285" kind="Actual" name="Peter Sanchez">
-      <description>Sales and marketing</description>
-      <tag id="10990" kind="Type">Certified emergency technician</tag>
-      <attachments>
-        <attachment type="Image">uploads/petersanchez.jpeg</attachment>
-      </attachments>
-      <channel>
-        <medium>Phone</medium>
-        <address>(973) 754-0722 x.257</address>
-      </channel>
-      <channel>
-        <medium>Cell</medium>
-        <address>(973) 769-7854</address>
-      </channel>
-      <channel>
-        <medium>HomePhone</medium>
-        <address>(973) 729-7352</address>
-      </channel>
-      <channel>
-        <medium>Email</medium>
-        <address>psanchez@acme.com</address>
-      </channel>
-    </actor>
     <actor id="11392" kind="Type" name="Technician">
       <description></description>
       <tag id="11432" kind="Type">Trained</tag>
@@ -337,7 +377,7 @@
         <attachment type="Image">http://wpcontent.answers.com/wikipedia/en/2/2f/PSEG_Logo.jpg</attachment>
       </attachments>
       <channel>
-        <medium>Phone</medium>
+        <medium id="-987">Phone</medium>
         <address>(800) 440-7734</address>
       </channel>
     </organization>
@@ -501,13 +541,6 @@
         <precision>0</precision>
       </alternateGeoLocation>
     </place>
-    <place id="11778" kind="Type" name="Warehouse type">
-      <description>A building used as storage space.</description>
-      <tag id="11779" kind="Type">Building</tag>
-    </place>
-    <place id="11779" kind="Type" name="Building">
-      <description></description>
-    </place>
     <role id="60" kind="Actual" name="ACME Customer">
       <description></description>
     </role>
@@ -521,13 +554,20 @@
       <tag id="11682" kind="Type">Corporation</tag>
       <location id="57">Brock Insurance Office</location>
       <channel>
-        <medium>Phone</medium>
+        <medium id="-987">Phone</medium>
         <address>(301) 984-2124</address>
       </channel>
     </organization>
     <role id="70" kind="Actual" name="Occupant">
       <description></description>
     </role>
+    <actor id="337" kind="Actual" name="JoAnn Blythe">
+      <description></description>
+      <channel>
+        <medium id="-984">Cell</medium>
+        <address>(973) 867-0100</address>
+      </channel>
+    </actor>
     <place id="66" kind="Actual" name="Springfield building">
       <description></description>
       <streetAddress>100 Mountain Avenue</streetAddress>
@@ -566,40 +606,33 @@
         <precision>0</precision>
       </alternateGeoLocation>
     </place>
-    <actor id="337" kind="Actual" name="JoAnn Blythe">
-      <description></description>
-      <channel>
-        <medium>Cell</medium>
-        <address>(973) 867-0100</address>
-      </channel>
-    </actor>
     <actor id="336" kind="Actual" name="Jocelyne Bilodeau">
       <description>Digital/IT</description>
       <channel>
-        <medium>Phone</medium>
+        <medium id="-987">Phone</medium>
         <address>(973) 754-0722 x.241</address>
       </channel>
       <channel>
-        <medium>Cell</medium>
+        <medium id="-984">Cell</medium>
         <address>(908) 507-0278</address>
       </channel>
       <channel>
-        <medium>HomePhone</medium>
+        <medium id="-986">Home phone</medium>
         <address>(908) 788-0846</address>
       </channel>
       <channel>
-        <medium>Email</medium>
+        <medium id="-982">Email</medium>
         <address>jbilodeau@acme.com</address>
       </channel>
     </actor>
     <actor id="76" kind="Actual" name="Judy Palmer">
       <description></description>
       <channel>
-        <medium>Phone</medium>
+        <medium id="-987">Phone</medium>
         <address>(973) 528-7344</address>
       </channel>
       <channel>
-        <medium>Cell</medium>
+        <medium id="-984">Cell</medium>
         <address>(908) 447-7344</address>
       </channel>
     </actor>
@@ -669,19 +702,19 @@
     <actor id="334" kind="Actual" name="Arthur Green">
       <description>Systems: Mac</description>
       <channel>
-        <medium>Phone</medium>
+        <medium id="-987">Phone</medium>
         <address>(973) 754-0722 x.226</address>
       </channel>
       <channel>
-        <medium>HomePhone</medium>
+        <medium id="-986">Home phone</medium>
         <address>(973) 387-0755</address>
       </channel>
       <channel>
-        <medium>Email</medium>
+        <medium id="-982">Email</medium>
         <address>agreen@acme.com</address>
       </channel>
       <channel>
-        <medium>Cell</medium>
+        <medium id="-984">Cell</medium>
         <address>(973)478-7403</address>
       </channel>
     </actor>
@@ -707,6 +740,35 @@
     <role id="329" kind="Actual" name="Public Spokesperson">
       <description></description>
     </role>
+    <phase id="4972" kind="Actual" name="Recovering">
+      <description></description>
+      <timing>PostEvent</timing>
+    </phase>
+    <actor id="686" kind="Actual" name="R2D2">
+      <description></description>
+      <attachments>
+        <attachment type="Image">http://www.cutiegadget.com/pict/r2-d2_robot.jpg</attachment>
+      </attachments>
+      <system>true</system>
+    </actor>
+    <role id="685" kind="Actual" name="Switchboard and Intercom System">
+      <description></description>
+    </role>
+    <transmissionmedium id="11809" kind="Actual" name="Intercom">
+      <description></description>
+      <addressPattern></addressPattern>
+      <unicast>true</unicast>
+    </transmissionmedium>
+    <role id="11801" kind="Actual" name="Operations Manager">
+      <description></description>
+    </role>
+    <place id="11778" kind="Type" name="Warehouse type">
+      <description>A building used as storage space.</description>
+      <tag id="11779" kind="Type">Building</tag>
+    </place>
+    <place id="11779" kind="Type" name="Building">
+      <description></description>
+    </place>
     <event id="1191" kind="Type" name="Building unsafe">
       <description></description>
     </event>
@@ -717,10 +779,6 @@
       <description>Responding to an event as it unfolds.</description>
       <timing>Concurrent</timing>
     </phase>
-    <phase id="4972" kind="Actual" name="Recovering">
-      <description></description>
-      <timing>PostEvent</timing>
-    </phase>
     <incident id="82">Power is out</incident>
     <incident id="5">Building on fire</incident>
     <incident id="1191">Building unsafe</incident>
@@ -729,7 +787,7 @@
     <plan-phase id="4952">Preparing</plan-phase>
     <organization-involved id="14">ACME</organization-involved>
     <organization-involved id="77">Pinnacle</organization-involved>
-    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/10/27 15:12:07 EDT" id="3" name="Power outage">
+    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/12/07 21:58:15 EST" id="3" name="Power outage">
       <description>A power outage interrupts operations at main location.</description>
       <trigger-event id="82">Power is out</trigger-event>
       <phase id="1192">Responding</phase>
@@ -760,11 +818,11 @@
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -921,11 +979,11 @@
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -1083,11 +1141,11 @@
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -1298,21 +1356,31 @@
             <attachment type="Image">uploads/petersanchez.jpeg</attachment>
           </attachments>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722 x.257</address>
           </channel>
           <channel>
-            <medium>Cell</medium>
+            <medium id="-984">Cell</medium>
             <address>(973) 769-7854</address>
           </channel>
           <channel>
-            <medium>HomePhone</medium>
+            <medium id="-986">Home phone</medium>
             <address>(973) 729-7352</address>
           </channel>
           <channel>
-            <medium>Email</medium>
+            <medium id="-982">Email</medium>
             <address>psanchez@acme.com</address>
           </channel>
+          <clearance>
+            <system>NATO</system>
+            <name>Cosmic top secret</name>
+            <level>0</level>
+          </clearance>
+          <clearance>
+            <system>US Gov</system>
+            <name>Top secret</name>
+            <level>-5</level>
+          </clearance>
         </actor>
         <organization id="14" kind="Actual" name="ACME">
           <description></description>
@@ -1324,11 +1392,11 @@
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -1498,7 +1566,7 @@
             <attachment type="Image">http://wpcontent.answers.com/wikipedia/en/2/2f/PSEG_Logo.jpg</attachment>
           </attachments>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(800) 440-7734</address>
           </channel>
         </organization>
@@ -1520,11 +1588,11 @@
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -1682,11 +1750,11 @@
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -1816,15 +1884,15 @@
         <target>
           <part id="88"/>
         </target>
-        <description></description>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Critical</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="95" name="Find cause and duration of outage">
@@ -1834,15 +1902,15 @@
         <target>
           <part id="87"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Cell</medium>
+          <medium id="-984">Cell</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="96" name="Switch off computers">
@@ -1852,23 +1920,23 @@
         <target>
           <part id="92"/>
         </target>
-        <description></description>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>Cell</medium>
+          <medium id="-984">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="97" name="Go to Springfield">
@@ -1878,15 +1946,15 @@
         <target>
           <part id="90"/>
         </target>
-        <description></description>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>10 seconds</maxDelay>
       </flow>
       <flow id="99" name="Operations interrupted">
@@ -1896,11 +1964,16 @@
         <target>
           <connector id="2052"/>
         </target>
-        <description>Expected duration of interuption</description>
+        <eoi>
+          <content>Expected duration of interuption</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="101" name="Operations transfer underway">
@@ -1910,11 +1983,16 @@
         <target>
           <connector id="2051"/>
         </target>
-        <description>Restart time</description>
+        <eoi>
+          <content>Restart time</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="103" name="Turn on backup generator">
@@ -1924,11 +2002,11 @@
         <target>
           <connector id="2050"/>
         </target>
-        <description></description>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="104" name="Cause and duration of outage">
@@ -1938,15 +2016,15 @@
         <target>
           <part id="87"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address>(800) 440-7734</address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>true</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>2 seconds</maxDelay>
       </flow>
       <flow id="105" name="Send key staff to Springfield to oversee operation">
@@ -1956,15 +2034,15 @@
         <target>
           <part id="88"/>
         </target>
-        <description></description>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Critical</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="106" name="Ready plant to accept data">
@@ -1974,19 +2052,19 @@
         <target>
           <part id="89"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Cell</medium>
+          <medium id="-984">Cell</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>30 seconds</maxDelay>
       </flow>
     </scenario>
-    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/10/27 15:12:07 EDT" id="190" name="Business continuity">
+    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/12/07 21:58:15 EST" id="190" name="Business continuity">
       <description>Provide a framework on which to resume critical business processes when normal work location and the resources in it are not accessible. The department plans are closely coordinated and supported by local management support staff for such areas as technology and office administrative assistance in establishing a continuous working environment.</description>
       <trigger-event id="72">Business interrupted</trigger-event>
       <phase id="1192">Responding</phase>
@@ -2045,11 +2123,11 @@
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -2207,11 +2285,11 @@
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -2340,7 +2418,7 @@
           <tag id="11682" kind="Type">Corporation</tag>
           <location id="57">Brock Insurance Office</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(301) 984-2124</address>
           </channel>
         </organization>
@@ -2363,11 +2441,11 @@
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -2505,11 +2583,11 @@
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -2647,11 +2725,11 @@
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -2788,11 +2866,11 @@
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -2971,15 +3049,20 @@
         <detection-waivers>
           <detection>CommitmentWithoutRequiredAgreement</detection>
         </detection-waivers>
-        <description>Equipped with Battery powered lighting- Laptop with air card</description>
+        <eoi>
+          <content>Equipped with Battery powered lighting- Laptop with air card</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="203" name="Work project status and impact of disruption">
@@ -2989,15 +3072,15 @@
         <target>
           <part id="194"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Cell</medium>
+          <medium id="-984">Cell</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Critical</significanceToTarget>
         <askedFor>true</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="204" name="Contact info and requirements">
@@ -3010,15 +3093,20 @@
         <detection-waivers>
           <detection>CommitmentWithoutRequiredAgreement</detection>
         </detection-waivers>
-        <description>Outage duration Secretary Cell phone, need list and home numbers</description>
+        <eoi>
+          <content>Outage duration Secretary Cell phone, need list and home numbers</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <channel>
-          <medium>Cell</medium>
+          <medium id="-984">Cell</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>1 second</maxDelay>
       </flow>
       <flow id="205" name="Get coverage for interruption">
@@ -3028,19 +3116,19 @@
         <target>
           <part id="198"/>
         </target>
-        <description></description>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>Cell</medium>
+          <medium id="-984">Cell</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="206" name="Operations interrupted">
@@ -3050,19 +3138,19 @@
         <target>
           <part id="199"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Cell</medium>
+          <medium id="-984">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="221" name="Operations interrupted">
@@ -3084,23 +3172,23 @@
         <target>
           <part id="194"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Cell</medium>
+          <medium id="-984">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="228" name="Damage report">
@@ -3117,23 +3205,23 @@
         <target>
           <part id="194"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>Email</medium>
+          <medium id="-982">Email</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>Terminates</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="213" name="Customer feedback on job delay">
@@ -3146,15 +3234,15 @@
         <detection-waivers>
           <detection>FlowToSelf</detection>
         </detection-waivers>
-        <description></description>
         <channel>
-          <medium>Cell</medium>
+          <medium id="-984">Cell</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="214" name="Outage report">
@@ -3164,15 +3252,20 @@
         <target>
           <part id="200"/>
         </target>
-        <description>Power resumption status, jobs under way, when will job be completed. What will we do if the capability is not resumed by time X.</description>
+        <eoi>
+          <content>Power resumption status, jobs under way, when will job be completed. What will we do if the capability is not resumed by time X.</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>1 second</maxDelay>
       </flow>
       <flow id="217" name="Send adjuster">
@@ -3182,15 +3275,20 @@
         <target>
           <part id="195"/>
         </target>
-        <description>Business interruption</description>
+        <eoi>
+          <content>Business interruption</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address>(301) 984-2124</address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>1 second</maxDelay>
       </flow>
       <flow id="218" name="Activate continuity plan">
@@ -3200,23 +3298,23 @@
         <target>
           <part id="196"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>Cell</medium>
+          <medium id="-984">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="219" name="Operations interrupted">
@@ -3229,15 +3327,15 @@
         <detection-waivers>
           <detection>FlowToSelf</detection>
         </detection-waivers>
-        <description></description>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="220" name="Acceptablility of job delay">
@@ -3247,19 +3345,19 @@
         <target>
           <part id="197"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Cell</medium>
+          <medium id="-984">Cell</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>true</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
     </scenario>
-    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/10/27 15:12:07 EDT" id="140" name="Building evacuation">
+    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/12/07 21:58:15 EST" id="140" name="Building evacuation">
       <description>Evacuating the building to minimize risk to personnel.</description>
       <trigger-event id="1191">Building unsafe</trigger-event>
       <phase id="1192">Responding</phase>
@@ -3270,7 +3368,7 @@
         <description></description>
       </risk>
       <part id="143">
-        <task>Conducting warehouse evacuation</task>
+        <task>Conducting warehouse evacuation now</task>
         <role id="281" kind="Actual" name="Evacuation Team Leader">
           <description>Someone in charge of leading evacuations.</description>
           <tag id="11623" kind="Type">Leader</tag>
@@ -3289,11 +3387,11 @@
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -3495,11 +3593,11 @@
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -3640,11 +3738,11 @@
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -3801,11 +3899,11 @@
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -3944,11 +4042,11 @@
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -4112,11 +4210,11 @@
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -4266,15 +4364,15 @@
         <target>
           <part id="148"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Other</medium>
-          <address>Push to talk</address>
+          <medium id="11809">Intercom</medium>
+          <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Critical</significanceToTarget>
         <askedFor>true</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="154" name="Evacuate to assembly area">
@@ -4284,19 +4382,29 @@
         <target>
           <part id="146"/>
         </target>
-        <description>There is a fire. Everyone must evacuate the warehouse and proceed to the assembly area immediately.</description>
+        <eoi>
+          <content>There is a fire. Everyone must evacuate the warehouse and proceed to the assembly area immediately.</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
+        <eoi>
+          <content>other buildings evacuated</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>Other</medium>
-          <address>Walkie-talkie</address>
+          <medium id="11809">Intercom</medium>
+          <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>30 seconds</maxDelay>
       </flow>
       <flow id="155" name="Employee count and missing">
@@ -4309,27 +4417,28 @@
         <detection-waivers>
           <detection>FlowToSelf</detection>
         </detection-waivers>
-        <description>Number of employees in assembly area and any missing</description>
+        <eoi>
+          <content>Number of employees in assembly area and any missing</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>Other</medium>
-          <address>Intercom</address>
+          <medium id="11809">Intercom</medium>
+          <address></address>
         </channel>
         <channel>
-          <medium>Other</medium>
-          <address>Push to talk</address>
-        </channel>
-        <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>5 seconds</maxDelay>
       </flow>
       <flow id="157" name="Activate evacuation plan">
@@ -4339,15 +4448,25 @@
         <target>
           <part id="143"/>
         </target>
-        <description></description>
+        <eoi>
+          <content>date</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
+        <eoi>
+          <content>assembly area</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <channel>
-          <medium>TV</medium>
+          <medium id="-978">Television</medium>
           <address></address>
         </channel>
         <all>true</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="158" name="Building evacuation started">
@@ -4357,19 +4476,19 @@
         <target>
           <part id="149"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="159" name="Order evacuation">
@@ -4379,23 +4498,23 @@
         <target>
           <part id="150"/>
         </target>
-        <description></description>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>Cell</medium>
+          <medium id="-984">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="160" name="Setup assembly area">
@@ -4408,27 +4527,23 @@
         <detection-waivers>
           <detection>FlowToSelf</detection>
         </detection-waivers>
-        <description></description>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>Other</medium>
-          <address>Push to talk</address>
+          <medium id="11809">Intercom</medium>
+          <address></address>
         </channel>
         <channel>
-          <medium>Other</medium>
-          <address>Intercom</address>
-        </channel>
-        <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="156" name="Fire extinguished">
@@ -4438,19 +4553,24 @@
         <target>
           <part id="142"/>
         </target>
-        <description>All occupants should evacuate to assembly area</description>
+        <eoi>
+          <content>All occupants should evacuate to assembly area</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>Other</medium>
-          <address>Intercom</address>
+          <medium id="11809">Intercom</medium>
+          <address></address>
         </channel>
         <all>true</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>10 minutes</maxDelay>
       </flow>
       <flow id="161" name="Status of building evacuation">
@@ -4460,15 +4580,15 @@
         <target>
           <part id="149"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Critical</significanceToTarget>
         <askedFor>true</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>20 minutes</maxDelay>
       </flow>
       <flow id="10375" name="Activate evacuation plan">
@@ -4493,19 +4613,19 @@
         <detection-waivers>
           <detection>FlowToSelf</detection>
         </detection-waivers>
-        <description></description>
         <channel>
-          <medium>Cell</medium>
+          <medium id="-984">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>20 minutes</maxDelay>
       </flow>
       <flow id="151" name="Evacuate to assembly area">
@@ -4515,23 +4635,19 @@
         <target>
           <part id="145"/>
         </target>
-        <description></description>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>Other</medium>
-          <address>Conference bridge</address>
-        </channel>
-        <channel>
-          <medium>Other</medium>
-          <address>Intercom</address>
+          <medium id="11809">Intercom</medium>
+          <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="152" name="Evacuation report">
@@ -4541,27 +4657,27 @@
         <target>
           <part id="148"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>Cell</medium>
+          <medium id="-984">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>Email</medium>
+          <medium id="-982">Email</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>HomePhone</medium>
+          <medium id="-986">Home phone</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="10376" name="Activate evacuation plan">
@@ -4586,15 +4702,15 @@
         <detection-waivers>
           <detection>EmptyNeedOrCapability</detection>
         </detection-waivers>
-        <description></description>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>26 minutes</maxDelay>
       </flow>
       <flow id="166" name="Evacuate building">
@@ -4604,15 +4720,20 @@
         <target>
           <part id="142"/>
         </target>
-        <description>Fire location</description>
+        <eoi>
+          <content>Fire location</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <channel>
-          <medium>Other</medium>
-          <address>Intercom</address>
+          <medium id="11809">Intercom</medium>
+          <address></address>
         </channel>
         <all>true</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>5 seconds</maxDelay>
       </flow>
       <flow id="165" name="Evacuate building">
@@ -4622,15 +4743,20 @@
         <target>
           <part id="144"/>
         </target>
-        <description>Location of fire</description>
+        <eoi>
+          <content>Location of fire</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <channel>
-          <medium>Other</medium>
-          <address>Intercom</address>
+          <medium id="11809">Intercom</medium>
+          <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>5 seconds</maxDelay>
       </flow>
       <flow id="164" name="Evacuate building">
@@ -4640,19 +4766,24 @@
         <target>
           <part id="143"/>
         </target>
-        <description>safe exits</description>
+        <eoi>
+          <content>safe exits</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <channel>
-          <medium>Cell</medium>
+          <medium id="-984">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>Other</medium>
-          <address>Intercom</address>
+          <medium id="11809">Intercom</medium>
+          <address></address>
         </channel>
         <all>true</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>5 seconds</maxDelay>
       </flow>
       <flow id="1321" name="Status of building evacuation">
@@ -4662,11 +4793,11 @@
         <target>
           <part id="149"/>
         </target>
-        <description></description>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Critical</significanceToTarget>
         <askedFor>true</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>10 minutes</maxDelay>
       </flow>
       <flow id="1213" name="Activate evacuation plan">
@@ -4679,20 +4810,256 @@
         <detection-waivers>
           <detection>EmptyNeedOrCapability</detection>
         </detection-waivers>
-        <description>contingencies
-danger zones</description>
+        <eoi>
+          <content>contingencies</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
+        <eoi>
+          <content>danger zones</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>26 minutes</maxDelay>
       </flow>
     </scenario>
-    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/10/27 15:12:07 EDT" id="167" name="Fire in the building">
+    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/12/07 21:58:15 EST" id="11799" name="Shutting down operations">
+      <description>Shutting down all printing presses and other equipment due to fire</description>
+      <trigger-event id="5">Building on fire</trigger-event>
+      <phase id="1192">Responding</phase>
+      <risk>
+        <type>PropertyDamage</type>
+        <organization id="14" kind="Actual">ACME</organization>
+        <severity>Severe</severity>
+        <description></description>
+      </risk>
+      <part id="11800">
+        <task>Shutting down printing presses</task>
+        <role id="11801" kind="Actual" name="Operations Manager">
+          <description></description>
+        </role>
+        <organization id="14" kind="Actual" name="ACME">
+          <description></description>
+          <tag id="11681" kind="Type">Multinational corporation</tag>
+          <attachments>
+            <attachment type="Image">uploads/acme.png</attachment>
+          </attachments>
+          <actorsRequired>true</actorsRequired>
+          <agreementsRequired>true</agreementsRequired>
+          <location id="323">Main building</location>
+          <channel>
+            <medium id="-987">Phone</medium>
+            <address>(973) 754-0722</address>
+          </channel>
+          <channel>
+            <medium id="-985">Fax</medium>
+            <address>(973) 754-2493</address>
+          </channel>
+          <job>
+            <actor id="277">Richard Carry</actor>
+            <role id="278">Assembly Area Leader</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="277">Richard Carry</actor>
+            <role id="279">Emergency Manager</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="280">Mary Delaney</actor>
+            <role id="281">Evacuation Team Leader</role>
+            <jurisdiction id="282">1st shift/floor</jurisdiction>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="283">John Garrison</actor>
+            <role id="281">Evacuation Team Leader</role>
+            <jurisdiction id="324">2nd shift/floor</jurisdiction>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="285">Peter Sanchez</actor>
+            <role id="281">Evacuation Team Leader</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="280">Mary Delaney</actor>
+            <role id="286">Switchboard and Intercom Operator</role>
+            <jurisdiction id="282">1st shift/floor</jurisdiction>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="283">John Garrison</actor>
+            <role id="286">Switchboard and Intercom Operator</role>
+            <jurisdiction id="324">2nd shift/floor</jurisdiction>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="277">Richard Carry</actor>
+            <role id="326">Business Continuity Manager</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="277">Richard Carry</actor>
+            <role id="327">Customer Support Representative</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="283">John Garrison</actor>
+            <role id="328">Secretary</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="277">Richard Carry</actor>
+            <role id="330">Response Liaison Officer</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="277">Richard Carry</actor>
+            <role id="331">Customer Account Manager</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="285">Peter Sanchez</actor>
+            <role id="332">Manager</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="285">Peter Sanchez</actor>
+            <role id="281">Evacuation Team Leader</role>
+            <jurisdiction id="333">Warehouse</jurisdiction>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="334">Arthur Green</actor>
+            <role id="335">Business Continuity Officer</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="277">Richard Carry</actor>
+            <role id="335">Business Continuity Officer</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="280">Mary Delaney</actor>
+            <role id="335">Business Continuity Officer</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="285">Peter Sanchez</actor>
+            <role id="335">Business Continuity Officer</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="337">JoAnn Blythe</actor>
+            <role id="335">Business Continuity Officer</role>
+            <title>Employee</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="329">Public Spokesperson</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="287">Louise Burns</actor>
+            <role id="325">CEO</role>
+            <title>President</title>
+          </job>
+          <job>
+            <actor id="336">Jocelyne Bilodeau</actor>
+            <role id="335">Business Continuity Officer</role>
+            <title>Employee</title>
+          </job>
+        </organization>
+        <startsWithScenario>false</startsWithScenario>
+        <terminatesEvent>false</terminatesEvent>
+        <mitigation type="PropertyDamage">ACME</mitigation>
+      </part>
+      <flow id="11829" name="Shutdown completed">
+        <source>
+          <part id="11800"/>
+        </source>
+        <target>
+          <connector id="11854"/>
+        </target>
+        <all>false</all>
+        <significanceToSource>Terminates</significanceToSource>
+        <significanceToTarget>Useful</significanceToTarget>
+        <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
+        <maxDelay>immediately</maxDelay>
+      </flow>
+      <flow id="11804" name="Shut power off">
+        <source>
+          <connector id="186" scenario="Fire in the building">
+            <scenario-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
+9- Respond immediately to the fire event. &#xd;
+8- Ensure the safety and health of colleagues&#xd;
+7- Assess any damage or impact of a situation&#xd;
+4- Identify and apply the necessary emergency activities&#xd;
+0- Manage and communicate information about the incident to parties deemed necessary</scenario-description>
+            <flow name="Shut power off"/>
+            <part-id>173</part-id>
+            <part-role name="Emergency Manager"/>
+            <part-task name="Powering down building"></part-task>
+            <part-organization name="ACME"/>
+          </connector>
+        </source>
+        <target>
+          <part id="11800"/>
+        </target>
+        <eoi>
+          <content>expected downtime</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
+        <eoi>
+          <content>maximum time delay</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
+        <all>false</all>
+        <significanceToSource>Terminates</significanceToSource>
+        <significanceToTarget>Triggers</significanceToTarget>
+        <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
+        <maxDelay>immediately</maxDelay>
+      </flow>
+      <flow id="11803" name="Shut power off">
+        <source>
+          <connector id="11825"/>
+        </source>
+        <target>
+          <part id="11800"/>
+        </target>
+        <eoi>
+          <content>maximum time delay</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
+        <eoi>
+          <content>expected downtime</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
+        <all>false</all>
+        <significanceToSource>None</significanceToSource>
+        <significanceToTarget>Useful</significanceToTarget>
+        <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
+        <maxDelay>immediately</maxDelay>
+      </flow>
+    </scenario>
+    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/12/07 21:58:15 EST" id="167" name="Fire in the building">
       <description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
 9- Respond immediately to the fire event. &#xd;
 8- Ensure the safety and health of colleagues&#xd;
@@ -4755,11 +5122,11 @@ or move them  to another scenario</remediation>
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -4938,11 +5305,11 @@ or move them  to another scenario</remediation>
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -5102,11 +5469,11 @@ or move them  to another scenario</remediation>
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -5248,23 +5615,23 @@ or move them  to another scenario</remediation>
         <target>
           <part id="170"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Cell</medium>
+          <medium id="-984">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>HomePhone</medium>
+          <medium id="-986">Home phone</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>Terminates</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="177" name="Activate evacuation plan">
@@ -5274,11 +5641,11 @@ or move them  to another scenario</remediation>
         <target>
           <connector id="176"/>
         </target>
-        <description></description>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="1087" name="Operational status">
@@ -5288,12 +5655,21 @@ or move them  to another scenario</remediation>
         <target>
           <part id="173"/>
         </target>
-        <description>jobs in progress
-jobs completed</description>
+        <eoi>
+          <content>jobs in progress</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
+        <eoi>
+          <content>jobs completed</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="1086" name="Operational status">
@@ -5303,11 +5679,16 @@ jobs completed</description>
         <target>
           <connector id="1106"/>
         </target>
-        <description>jobs completed</description>
+        <eoi>
+          <content>jobs completed</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="178" name="Fire and evacuation report">
@@ -5317,15 +5698,20 @@ jobs completed</description>
         <target>
           <part id="171"/>
         </target>
-        <description>Provide complete information about the emergency including: the nature of the fire, location (site, building, and area within the building), number and location of any victims, their symptoms or injuries, the nature and spread of the hazard, and actions taken to stabilize the situation or protect life and property, any fire alarms zones that have been activated. Advise the fire department of the building entrance closest to the scene. If an explosion occurs, attempt to determine its cause. Hazardous materials. When the public fire department arrives, inform its Incident Commander of the nature of the emergency and action being taken. Provide building plans, master keys, and other information as requested.</description>
+        <eoi>
+          <content>Provide complete information about the emergency including: the nature of the fire, location (site, building, and area within the building), number and location of any victims, their symptoms or injuries, the nature and spread of the hazard, and actions taken to stabilize the situation or protect life and property, any fire alarms zones that have been activated. Advise the fire department of the building entrance closest to the scene. If an explosion occurs, attempt to determine its cause. Hazardous materials. When the public fire department arrives, inform its Incident Commander of the nature of the emergency and action being taken. Provide building plans, master keys, and other information as requested.</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>1 second</maxDelay>
       </flow>
       <flow id="1319" name="Fire and evacuation report">
@@ -5335,11 +5721,11 @@ jobs completed</description>
         <target>
           <connector id="1318"/>
         </target>
-        <description></description>
         <all>false</all>
         <significanceToSource>Terminates</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="180" name="Fire extinguished">
@@ -5349,11 +5735,11 @@ jobs completed</description>
         <target>
           <connector id="179"/>
         </target>
-        <description></description>
         <all>false</all>
         <significanceToSource>Terminates</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="181" name="Turn off power">
@@ -5363,15 +5749,15 @@ jobs completed</description>
         <target>
           <part id="173"/>
         </target>
-        <description></description>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="182" name="Status of fire">
@@ -5381,19 +5767,19 @@ jobs completed</description>
         <target>
           <part id="169"/>
         </target>
-        <description></description>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>Other</medium>
-          <address>Walkie-Talkie</address>
+          <medium id="11809">Intercom</medium>
+          <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>true</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="183" name="Respond to fire">
@@ -5403,15 +5789,20 @@ jobs completed</description>
         <target>
           <part id="174"/>
         </target>
-        <description>Fire at ACME Location 100 Stark Road.</description>
+        <eoi>
+          <content>Fire at ACME Location 100 Stark Road.</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address>911</address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>30 seconds</maxDelay>
       </flow>
       <flow id="185" name="Operations interrupted">
@@ -5421,11 +5812,11 @@ jobs completed</description>
         <target>
           <connector id="184"/>
         </target>
-        <description></description>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="187" name="Shut power off">
@@ -5435,11 +5826,42 @@ jobs completed</description>
         <target>
           <connector id="186"/>
         </target>
-        <description></description>
+        <eoi>
+          <content>expected downtime</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
+        <eoi>
+          <content>maximum time delay</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <all>false</all>
         <significanceToSource>Terminates</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
+        <maxDelay>immediately</maxDelay>
+      </flow>
+      <flow id="11830" name="Shutdown completed">
+        <source>
+          <connector id="11854" scenario="Shutting down operations">
+            <scenario-description>Shutting down all printing presses and other equipment due to fire</scenario-description>
+            <flow name="Shutdown completed"/>
+            <part-id>11800</part-id>
+            <part-role name="Operations Manager"/>
+            <part-task name="Shutting down printing presses"></part-task>
+            <part-organization name="ACME"/>
+          </connector>
+        </source>
+        <target>
+          <part id="173"/>
+        </target>
+        <all>false</all>
+        <significanceToSource>Terminates</significanceToSource>
+        <significanceToTarget>Useful</significanceToTarget>
+        <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="188" name="Go to location">
@@ -5449,15 +5871,15 @@ jobs completed</description>
         <target>
           <part id="171"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Radio</medium>
+          <medium id="-979">Radio</medium>
           <address>Emergency channel</address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="189" name="Go to location">
@@ -5467,15 +5889,15 @@ jobs completed</description>
         <target>
           <part id="169"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Other</medium>
-          <address>emergency band</address>
+          <medium id="11809">Intercom</medium>
+          <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="1064" name="Operational status">
@@ -5485,19 +5907,38 @@ jobs completed</description>
         <target>
           <part id="173"/>
         </target>
-        <description>job status</description>
+        <eoi>
+          <content>job status</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
+        <maxDelay>immediately</maxDelay>
+      </flow>
+      <flow id="11827" name="Shutdown completed">
+        <source>
+          <connector id="11853"/>
+        </source>
+        <target>
+          <part id="173"/>
+        </target>
+        <all>false</all>
+        <significanceToSource>None</significanceToSource>
+        <significanceToTarget>Useful</significanceToTarget>
+        <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
     </scenario>
-    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/10/27 15:12:07 EDT" id="107" name="Recovery after fire">
+    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/12/07 21:58:15 EST" id="107" name="Recovery after fire">
       <description>Managing the aftermath of a fire.</description>
       <trigger-event id="5">Building on fire</trigger-event>
       <phase id="4972">Recovering</phase>
@@ -5546,11 +5987,11 @@ jobs completed</description>
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -5687,11 +6128,11 @@ jobs completed</description>
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -5866,11 +6307,11 @@ jobs completed</description>
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -6009,11 +6450,11 @@ jobs completed</description>
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -6162,7 +6603,7 @@ jobs completed</description>
           <tag id="11682" kind="Type">Corporation</tag>
           <location id="57">Brock Insurance Office</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(301) 984-2124</address>
           </channel>
         </organization>
@@ -6184,11 +6625,11 @@ jobs completed</description>
           <agreementsRequired>true</agreementsRequired>
           <location id="323">Main building</location>
           <channel>
-            <medium>Phone</medium>
+            <medium id="-987">Phone</medium>
             <address>(973) 754-0722</address>
           </channel>
           <channel>
-            <medium>Fax</medium>
+            <medium id="-985">Fax</medium>
             <address>(973) 754-2493</address>
           </channel>
           <job>
@@ -6340,19 +6781,19 @@ jobs completed</description>
         <target>
           <part id="118"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Cell</medium>
+          <medium id="-984">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>true</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="122" name="Normal operation restart schedule">
@@ -6362,15 +6803,15 @@ jobs completed</description>
         <target>
           <part id="113"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Cell</medium>
+          <medium id="-984">Cell</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>true</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="225" name="Fire extinguished">
@@ -6395,19 +6836,19 @@ jobs completed</description>
         <detection-waivers>
           <detection>FlowToSelf</detection>
         </detection-waivers>
-        <description></description>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>Terminates</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="126" name="Damage report">
@@ -6417,15 +6858,15 @@ jobs completed</description>
         <target>
           <connector id="125"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Email</medium>
+          <medium id="-982">Email</medium>
           <address>lburns@acme.com</address>
         </channel>
         <all>false</all>
         <significanceToSource>Terminates</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="127" name="Inspection schedule">
@@ -6435,15 +6876,15 @@ jobs completed</description>
         <target>
           <part id="109"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>Triggers</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>true</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="128" name="Building safety">
@@ -6453,15 +6894,15 @@ jobs completed</description>
         <target>
           <part id="109"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>Triggers</significanceToSource>
         <significanceToTarget>Critical</significanceToTarget>
         <askedFor>true</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="129" name="&quot;Engage cleanup contractor&quot;">
@@ -6471,15 +6912,15 @@ jobs completed</description>
         <target>
           <part id="109"/>
         </target>
-        <description></description>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="132" name="Fire and building status">
@@ -6489,15 +6930,15 @@ jobs completed</description>
         <target>
           <part id="117"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address>(301) 984-2124</address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>1 second</maxDelay>
       </flow>
       <flow id="130" name="&quot;Initiate cleanup&quot;">
@@ -6507,19 +6948,19 @@ jobs completed</description>
         <target>
           <part id="114"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Cell</medium>
+          <medium id="-984">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>15 seconds</maxDelay>
       </flow>
       <flow id="131" name="Fire and building status">
@@ -6529,15 +6970,15 @@ jobs completed</description>
         <target>
           <part id="119"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Cell</medium>
+          <medium id="-984">Cell</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>15 seconds</maxDelay>
       </flow>
       <flow id="226" name="Fire extinguished">
@@ -6559,19 +7000,19 @@ jobs completed</description>
         <target>
           <part id="113"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>Terminates</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="135" name="Cost estimates">
@@ -6581,15 +7022,15 @@ jobs completed</description>
         <target>
           <part id="109"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>Triggers</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>true</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="136" name="Status of inspection">
@@ -6599,19 +7040,19 @@ jobs completed</description>
         <target>
           <part id="109"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>Triggers</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>true</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="137" name="Fire assessment">
@@ -6621,19 +7062,24 @@ jobs completed</description>
         <target>
           <part id="120"/>
         </target>
-        <description>and other details</description>
+        <eoi>
+          <content>and other details</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <channel>
-          <medium>Cell</medium>
+          <medium id="-984">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>true</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="222" name="Fire extinguished">
@@ -6655,19 +7101,19 @@ jobs completed</description>
         <target>
           <part id="118"/>
         </target>
-        <description></description>
         <channel>
-          <medium>Phone</medium>
+          <medium id="-987">Phone</medium>
           <address></address>
         </channel>
         <channel>
-          <medium>F2F</medium>
+          <medium id="-975">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>Terminates</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
     </scenario>

@@ -4,8 +4,8 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Channelable;
-import com.mindalliance.channels.model.Medium;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.TransmissionMedium;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.apache.wicket.AttributeModifier;
@@ -31,7 +31,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -204,11 +203,11 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                             channel, action ) );
         }
 
-        public Medium getMedium() {
+        public TransmissionMedium getMedium() {
             return channel.getMedium();
         }
 
-        public void setMedium( Medium medium ) {
+        public void setMedium( TransmissionMedium medium ) {
             Channelable channelable = getChannelable();
             if ( markedForCreation ) {
                 channel.setMedium( medium );
@@ -299,15 +298,15 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             return result;
         }
 
-        private Set<Medium> getCandidateMedia() {
-            Set<Medium> result = EnumSet.noneOf( Medium.class );
+        private Set<TransmissionMedium> getCandidateMedia() {
+            Set<TransmissionMedium> result = new HashSet<TransmissionMedium>();
             for ( Channel channel : getCandidateChannels() )
                 result.add( channel.getMedium() );
 
             return result;
         }
 
-        private List<String> getCandidateAddresses( Medium medium ) {
+        private List<String> getCandidateAddresses( TransmissionMedium medium ) {
             Set<String> addresses = new HashSet<String>();
             if ( medium != null )
                 for ( Channel channel : getCandidateChannels() ) {
@@ -326,23 +325,23 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             return result;
         }
 
-        private DropDownChoice<Medium> createChoices(
+        private DropDownChoice<TransmissionMedium> createChoices(
                 final Wrapper wrapper, final TextField<String> addressField ) {
-            final Set<Medium> candidateMedia = getCandidateMedia();
+            final Set<TransmissionMedium> candidateMedia = getCandidateMedia();
 
-            final DropDownChoice<Medium> result = new DropDownChoice<Medium>(
+            final DropDownChoice<TransmissionMedium> result = new DropDownChoice<TransmissionMedium>(
                     "medium",
-                    new PropertyModel<Medium>( wrapper, "medium" ),
+                    new PropertyModel<TransmissionMedium>( wrapper, "medium" ),
                     getMedia( wrapper ),
-                    new IChoiceRenderer<Medium>() {
-                        public Object getDisplayValue( Medium object ) {
+                    new IChoiceRenderer<TransmissionMedium>() {
+                        public Object getDisplayValue( TransmissionMedium object ) {
                             return object == null ? "Select a medium"
                                  : candidateMedia.contains( object ) ?
                                         MessageFormat.format( "{0} *", object.getLabel() )
                                  : object.getLabel();
                         }
 
-                        public String getIdValue( Medium object, int index ) {
+                        public String getIdValue( TransmissionMedium object, int index ) {
                             return Integer.toString( index );
                         }
                     } );
@@ -367,23 +366,24 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             return result;
         }
 
-        private List<Medium> getMedia( Wrapper wrapper ) {
-            List<Medium> media = Medium.media();
-            Collections.sort( media, new Comparator<Medium>() {
-                public int compare( Medium o1, Medium o2 ) {
+        private List<TransmissionMedium> getMedia( Wrapper wrapper ) {
+            List<TransmissionMedium> media = new ArrayList<TransmissionMedium>();
+            media.addAll( getQueryService().listActualEntities( TransmissionMedium.class ) );
+            Collections.sort( media, new Comparator<TransmissionMedium>() {
+                public int compare( TransmissionMedium o1, TransmissionMedium o2 ) {
                     return Collator.getInstance().compare( o1.getLabel(), o2.getLabel() );
                 }
             } );
 
             // Hack for invalid medium in actual data
-            Medium medium = wrapper.getMedium();
+            TransmissionMedium medium = wrapper.getMedium();
             if ( medium != null && !media.contains( medium ) )
                 media.add( 0, medium );
             return media;
         }
 
         private TextField<String> createAddressField( Wrapper wrapper ) {
-            Medium medium = wrapper.getMedium();
+            TransmissionMedium medium = wrapper.getMedium();
             final List<String> suggestions = getCandidateAddresses( medium );
 
             AutoCompleteTextField<String> result = new AutoCompleteTextField<String>(
@@ -413,7 +413,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             flagIfInvalid( result, wrapper );
             result.setVisible( medium != null &&
                                ( medium.isUnicast() && getChannelable().canBeUnicast()
-                                 || medium == Medium.Other || medium == Medium.OtherUnicast ) );
+                                 || medium == TransmissionMedium.UNKNOWN ) );
             result.setEnabled( canBeEdited() );
             return result;
         }

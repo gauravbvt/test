@@ -1,7 +1,8 @@
 package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.model.Medium;
+import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.model.TransmissionMedium;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -29,7 +30,8 @@ public class ChannelConverter extends AbstractChannelsConverter {
                          MarshallingContext context ) {
         Channel channel = (Channel) source;
         writer.startNode( "medium" );
-        writer.setValue( channel.getMedium().name() );
+        writer.addAttribute( "id", "" + channel.getMedium().getId() );
+        writer.setValue( channel.getMedium().getName() );
         writer.endNode();
         writer.startNode( "address" );
         writer.setValue( channel.getAddress() );
@@ -42,7 +44,18 @@ public class ChannelConverter extends AbstractChannelsConverter {
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "medium" ) ) {
-                Medium medium = Medium.valueOf( reader.getValue() );
+                String id = reader.getAttribute( "id" );
+                String name = reader.getValue();
+                TransmissionMedium medium;
+                if ( id != null )
+                    medium = getEntity(
+                            TransmissionMedium.class,
+                            name,
+                            Long.parseLong( id ),
+                            ModelEntity.Kind.Actual,
+                            context );
+                else  // TODO - remove after transition
+                    medium = getQueryService().findOrCreate( TransmissionMedium.class, name );
                 channel.setMedium( medium );
             } else if ( nodeName.equals( "address" ) ) {
                 channel.setAddress( reader.getValue() );

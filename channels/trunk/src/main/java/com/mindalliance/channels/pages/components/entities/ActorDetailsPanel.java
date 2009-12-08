@@ -140,10 +140,13 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         super( id, model, expansions );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
         this.moDetailsDiv = moDetailsDiv;
-        addUserChoice( moDetailsDiv );
-        addIsSystem( moDetailsDiv );
+        addUserChoice();
+        addIsSystem();
         rolesContainer = new WebMarkupContainer( "rolesContainer" );
         moDetailsDiv.add( rolesContainer );
         indexedOn = indexingChoices[0];
@@ -178,12 +181,12 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 new Model<Identifiable>( getEntity() ),
                 "clearances",
                 isLockedByUser( getActor() )
-                )
+        )
         );
         clearancesContainer.setVisible( getEntity().isActual() );
     }
 
-    private void addUserChoice( WebMarkupContainer moDetailsDiv ) {
+    private void addUserChoice() {
         WebMarkupContainer userContainer = new WebMarkupContainer( "user" );
         isParticipantCheckBox = new CheckBox(
                 "isParticipant",
@@ -221,7 +224,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         userContainer.add( userChoice );
     }
 
-    private void addIsSystem( WebMarkupContainer moDetailsDiv ) {
+    private void addIsSystem() {
         WebMarkupContainer systemContainer = new WebMarkupContainer( "system" );
         moDetailsDiv.add( systemContainer );
         systemCheckBox = new CheckBox( "system", new PropertyModel<Boolean>( this, "system" ) );

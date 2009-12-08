@@ -28,7 +28,6 @@ import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.InvalidEntityKindException;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Job;
-import com.mindalliance.channels.model.Medium;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
@@ -41,6 +40,7 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.nlp.Proximity;
@@ -554,7 +554,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     private static void addUniqueChannels( Set<Channel> result, List<Channel> candidates ) {
         for ( Channel channel : candidates ) {
-            Medium medium = channel.getMedium();
+            TransmissionMedium medium = channel.getMedium();
             if ( containsInvalidChannel( result, medium ) )
                 result.remove( new Channel( medium, "" ) );
             if ( medium.isBroadcast() || !containsValidChannel( result, medium ) )
@@ -1101,16 +1101,16 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return toSortedList( channels );
     }
 
-    private static boolean containsValidChannel( Set<Channel> channels, Medium medium ) {
+    private static boolean containsValidChannel( Set<Channel> channels, TransmissionMedium medium ) {
         for ( Channel channel : channels )
-            if ( channel.getMedium() == medium && channel.isValid() )
+            if ( channel.getMedium().equals( medium ) && channel.isValid() )
                 return true;
         return false;
     }
 
-    private static boolean containsInvalidChannel( Set<Channel> channels, Medium medium ) {
+    private static boolean containsInvalidChannel( Set<Channel> channels, TransmissionMedium medium ) {
         for ( Channel channel : channels )
-            if ( channel.getMedium() == medium && !channel.isValid() )
+            if ( channel.getMedium().equals( medium ) && !channel.isValid() )
                 return true;
         return false;
     }

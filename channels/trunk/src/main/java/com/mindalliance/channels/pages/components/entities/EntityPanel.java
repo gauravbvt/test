@@ -8,6 +8,7 @@ import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.pages.components.AbstractMultiAspectPanel;
 import com.mindalliance.channels.pages.components.entities.menus.EntityActionsMenuPanel;
 import com.mindalliance.channels.pages.components.entities.menus.EntityShowMenuPanel;
@@ -166,7 +167,12 @@ public class EntityPanel extends AbstractMultiAspectPanel {
                     "aspect",
                     new PropertyModel<ModelEntity>( this, "object" ),
                     getExpansions() );
-        }  else {
+        } else if ( getObject() instanceof TransmissionMedium ) {
+            return new MediumDetailsPanel(
+                    "aspect",
+                    new PropertyModel<ModelEntity>( this, "object" ),
+                    getExpansions() );
+        } else {
             return new EntityDetailsPanel(
                     "aspect",
                     new PropertyModel<ModelEntity>( this, "object" ),

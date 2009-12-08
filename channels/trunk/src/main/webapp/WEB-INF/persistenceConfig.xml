@@ -100,6 +100,81 @@
 -->
         <property name="dataDirectory" value="file:${user.home}/channels/data"/>
         <property name="snapshotThreshold" value="10"/>
+        <property name="builtInMedia">
+            <list value-type="java.util.ArrayList">
+                <bean class="com.mindalliance.channels.model.TransmissionMedium">
+                    <property name="name" value="Phone"/>
+                    <property name="addressPattern" value="(\d*\D*\d{3}\D*\d{3}\D*\d{4}(\s*\D+\s*\d+)?)|(\d{3})"/>
+                    <property name="unicast" value="true"/>
+                </bean>
+                <bean class="com.mindalliance.channels.model.TransmissionMedium">
+                    <property name="name" value="Home phone"/>
+                    <property name="addressPattern" value="\d*\D*\d{3}\D*\d{3}\D*\d{4}"/>
+                    <property name="unicast" value="true"/>
+                </bean>
+                <bean class="com.mindalliance.channels.model.TransmissionMedium">
+                    <property name="name" value="Fax"/>
+                    <property name="addressPattern" value="\d*\D*\d{3}\D*\d{3}\D*\d{4}"/>
+                    <property name="unicast" value="true"/>
+                </bean>
+                <bean class="com.mindalliance.channels.model.TransmissionMedium">
+                    <property name="name" value="Cell"/>
+                    <property name="addressPattern" value="\d*\D*\d{3}\D*\d{3}\D*\d{4}"/>
+                    <property name="unicast" value="true"/>
+                </bean>
+                <bean class="com.mindalliance.channels.model.TransmissionMedium">
+                    <property name="name" value="Conference call"/>
+                    <property name="addressPattern" value="(\d*\D*\d{3}\D*\d{3}\D*\d{4}(\s*\D+\s*\d+)?)|(\d{3})"/>
+                    <property name="unicast" value="false"/>
+                </bean>
+                <bean class="com.mindalliance.channels.model.TransmissionMedium">
+                    <property name="name" value="Email"/>
+                    <property name="addressPattern" value="[^@\s]+@[^@\s]+\.\w+"/>
+                    <property name="unicast" value="true"/>
+                </bean>
+                <bean class="com.mindalliance.channels.model.TransmissionMedium">
+                    <property name="name" value="Notification system"/>
+                    <property name="addressPattern" value=".+"/>
+                    <property name="unicast" value="false"/>
+                </bean>
+                <bean class="com.mindalliance.channels.model.TransmissionMedium">
+                     <property name="name" value="IM"/>
+                     <property name="addressPattern" value=".+"/>
+                     <property name="unicast" value="true"/>
+                 </bean>
+                <bean class="com.mindalliance.channels.model.TransmissionMedium">
+                     <property name="name" value="Radio"/>
+                     <property name="addressPattern" value=".+"/>
+                     <property name="unicast" value="false"/>
+                 </bean>
+                <bean class="com.mindalliance.channels.model.TransmissionMedium">
+                     <property name="name" value="Television"/>
+                     <property name="addressPattern" value=".+"/>
+                     <property name="unicast" value="false"/>
+                 </bean>
+                <bean class="com.mindalliance.channels.model.TransmissionMedium">
+                     <property name="name" value="Courier"/>
+                     <property name="addressPattern" value=".+"/>
+                     <property name="unicast" value="true"/>
+                 </bean>
+                <bean class="com.mindalliance.channels.model.TransmissionMedium">
+                     <property name="name" value="Mail"/>
+                     <property name="addressPattern" value=".+"/>
+                     <property name="unicast" value="true"/>
+                 </bean>
+                <bean class="com.mindalliance.channels.model.TransmissionMedium">
+                     <property name="name" value="Face to face"/>
+                     <property name="addressPattern" value=".*"/>
+                     <property name="unicast" value="true"/>
+                 </bean>
+                <bean class="com.mindalliance.channels.model.TransmissionMedium">
+                     <property name="name" value="Meeting"/>
+                     <property name="addressPattern" value=".+"/>
+                     <property name="unicast" value="false"/>
+                 </bean>
+
+            </list>
+        </property>
     </bean>
 
 </beans>

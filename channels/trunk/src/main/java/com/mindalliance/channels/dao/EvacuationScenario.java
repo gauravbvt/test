@@ -1,12 +1,12 @@
 package com.mindalliance.channels.dao;
 
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Medium;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.model.TransmissionMedium;
 
 /**
  * The building evacuation scenario.
@@ -35,7 +35,9 @@ public class EvacuationScenario extends Scenario {
         goAhead.setName( "go-ahead" );
         // goAhead.becomeCritical( );
         goAhead.becomeTriggeringToTarget();
-        goAhead.addChannel( new Channel( Medium.Phone, "800-555-4433" ) );
+        goAhead.addChannel( new Channel(
+                queryService.findOrCreate( TransmissionMedium.class, "Phone" ),
+                "800-555-4433" ) );
         Flow end = p.createOutcome( queryService );
         end.setName( "evacuation ended" );
         end.becomeTerminatingToSource();

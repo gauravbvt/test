@@ -7,9 +7,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 import java.io.Serializable;
+import java.text.Collator;
+import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
-import java.text.MessageFormat;
 
 /**
  * A communication channel.
@@ -25,12 +26,16 @@ public class Channel implements Serializable, Comparable<Channel> {
     /**
      * Bogus channels for reports.
      */
-    public static final Channel Unknown = new Channel( null, "(unknown channel)" );
+    public static final Channel Unknown = new Channel( TransmissionMedium.UNKNOWN, "(unknown channel)" );
+    /**
+     * Collator.
+     */
+    static private Collator collator = Collator.getInstance();
 
     /**
      * The medium of communication
      */
-    private Medium medium;
+    private TransmissionMedium medium;
 
     /**
      * The address
@@ -50,17 +55,17 @@ public class Channel implements Serializable, Comparable<Channel> {
         address = channel.getAddress();
     }
 
-    public Channel( Medium medium, String address ) {
+    public Channel( TransmissionMedium medium, String address ) {
         this.medium = medium;
         this.address = address == null ? "" : address;
     }
 
     @Enumerated( value = EnumType.STRING )
-    public Medium getMedium() {
+    public TransmissionMedium getMedium() {
         return medium;
     }
 
-    public void setMedium( Medium medium ) {
+    public void setMedium( TransmissionMedium medium ) {
         this.medium = medium;
     }
 
@@ -93,7 +98,7 @@ public class Channel implements Serializable, Comparable<Channel> {
         if ( obj instanceof Channel ) {
             Channel channel = (Channel) obj;
             return medium != null && channel.getMedium() != null
-                && address.equals( channel.getAddress() ) && medium == channel.getMedium();
+                    && address.equals( channel.getAddress() ) && medium.equals( channel.getMedium() );
         } else {
             return false;
         }
@@ -115,10 +120,17 @@ public class Channel implements Serializable, Comparable<Channel> {
     public String toString() {
         String label = medium == null ? "Unspecified medium" : medium.getLabel();
 
-        return address.isEmpty() ?  Medium.F2F.equals( medium ) ?
-                                               label : MessageFormat.format( "via {0}", label )
-             : Medium.Other.equals( medium ) ? MessageFormat.format( "via {0}", getAddress() )
-                                             : MessageFormat.format( "{0}: {1}", label, address );
+        return address.isEmpty()
+                ? MessageFormat.format( "via {0}", label )
+                : MessageFormat.format( "{0}: {1}", label, address );
+/*
+                ? Medium.F2F.equals( medium )
+                    ? label
+                    : MessageFormat.format( "via {0}", label )
+                : Medium.Other.equals( medium )
+                    ? MessageFormat.format( "via {0}", getAddress() )
+                    : MessageFormat.format( "{0}: {1}", label, address );
+*/
     }
 
     /**
@@ -181,13 +193,28 @@ public class Channel implements Serializable, Comparable<Channel> {
     }
 
     public int compareTo( Channel o ) {
-        if ( medium == o.getMedium() ) {
-            return address == o.getAddress() ? 0
-                 : address == null           ? o.getAddress().compareTo( address )
-                                             : address.compareTo( o.getAddress() );
+        if ( medium == null && o.getMedium() == null ) return 0;
+        if ( o.getMedium() == null ) return -1;
+        if ( medium == null ) return 1;
+        int comp = collator.compare( medium.getName(), o.getMedium().getName() );
+        if ( comp == 0 ) {
+            return collator.compare( address, o.getAddress() );
+        } else {
+            return comp;
+        }
+    }
 
-        } else
-            return medium != null ? medium.compareTo( o.getMedium() )
-                                  : o.getMedium().compareTo( medium );
+    /**
+     * Whether this channel references a given model object.
+     *
+     * @param mo a model object
+     * @return a boolean
+     */
+    public boolean references( ModelObject mo ) {
+        if ( mo instanceof TransmissionMedium ) {
+            return ModelObject.areIdentical( mo, medium );
+        } else {
+            return false;
+        }
     }
 }

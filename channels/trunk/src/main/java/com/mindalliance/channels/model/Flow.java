@@ -22,7 +22,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -166,7 +165,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      * @param medium  a communication medium
      * @param address an address on the medium
      */
-    public void addChannel( Medium medium, String address ) {
+    public void addChannel( TransmissionMedium medium, String address ) {
         addChannelIfUnique( new Channel( medium, address ) );
     }
 
@@ -824,11 +823,11 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      * @return a set of media
      */
     @Transient
-    public Set<Medium> getUnicasts() {
-        Set<Medium> result = EnumSet.noneOf( Medium.class );
+    public Set<TransmissionMedium> getUnicasts() {
+        Set<TransmissionMedium> result = new HashSet<TransmissionMedium>();
 
         for ( Channel c : getEffectiveChannels() ) {
-            Medium medium = c.getMedium();
+            TransmissionMedium medium = c.getMedium();
             if ( medium.isUnicast() )
                 result.add( medium );
         }
@@ -1012,6 +1011,20 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
                         }
                 );
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean references( final ModelObject mo ) {
+        return CollectionUtils.exists(
+                channels,
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ( (Channel) obj ).references( mo );
+                    }
+                } );
+    }
+
 
     /**
      * The significance of a flow.

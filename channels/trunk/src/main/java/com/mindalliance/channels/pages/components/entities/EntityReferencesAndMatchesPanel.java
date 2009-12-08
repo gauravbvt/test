@@ -10,6 +10,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.commons.collections.CollectionUtils;
@@ -156,6 +157,15 @@ public class EntityReferencesAndMatchesPanel extends AbstractUpdatablePanel {
         }
 
         /**
+          * {@inheritDoc}
+          */
+         protected List<TransmissionMedium> findIndexedMedia() {
+             return isShowReferences()
+                     ? getQueryService().findAllReferencing( getEntity(), TransmissionMedium.class )
+                     : listMatches( TransmissionMedium.class );
+         }
+
+        /**
          * {@inheritDoc}
          */
         protected List<Place> findIndexedPlaces() {
@@ -177,7 +187,9 @@ public class EntityReferencesAndMatchesPanel extends AbstractUpdatablePanel {
          * {@inheritDoc}
          */
         protected List<Flow> findIndexedFlows() {
-            return new ArrayList<Flow>();
+            return isShowReferences()
+                ? getQueryService().findAllReferencing( getEntity(), Flow.class )
+                : new ArrayList<Flow>();
         }
 
         /**

@@ -3,11 +3,11 @@ package com.mindalliance.channels.pages.reports;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.model.Medium;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.TransmissionMedium;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -41,7 +41,7 @@ public class VCardPanel extends Panel {
     }
 
     public VCardPanel(
-            String id, ResourceSpec spec, Set<Medium> unicasts, Collection<Channel> broadcasts,
+            String id, ResourceSpec spec, Set<TransmissionMedium> unicasts, Collection<Channel> broadcasts,
             String prefix ) {
 
         super( id );

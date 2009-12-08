@@ -20,6 +20,7 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.model.User;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -149,6 +150,10 @@ public class PlanManager implements InitializingBean {
      * Lowest id for mutable model objects.
      */
     public static final long IMMUTABLE_RANGE = -1000L;
+    /**
+     * Pre-defined and immutable transmission media.
+     */
+    private List<TransmissionMedium> builtInMedia = new ArrayList<TransmissionMedium>();
 
     /**
      * Required for AOP decorations.
@@ -196,6 +201,14 @@ public class PlanManager implements InitializingBean {
 
     public void setUploadsDirName( String uploadsDirName ) {
         this.uploadsDirName = uploadsDirName;
+    }
+
+    public List<TransmissionMedium> getBuiltInMedia() {
+        return builtInMedia;
+    }
+
+    public void setBuiltInMedia( List<TransmissionMedium> builtInMedia ) {
+        this.builtInMedia = builtInMedia;
     }
 
     /**
@@ -605,6 +618,7 @@ public class PlanManager implements InitializingBean {
         Place.createImmutables( queryService );
         Phase.createImmutables( queryService );
         Role.createImmutables( queryService );
+        TransmissionMedium.createImmutables( getBuiltInMedia(), queryService );
     }
 
     private void registerPlanDao( PlanDao dao ) {

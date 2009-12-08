@@ -6,16 +6,16 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Job;
-import com.mindalliance.channels.model.Medium;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.pages.reports.VCardPanel;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.protocol.http.servlet.AbortWithHttpStatusException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -62,7 +62,7 @@ public class VCardPage extends WebPage {
     private List<Channel> getChannels( ModelEntity object ) {
         List<Channel> result = new ArrayList<Channel>();
 
-        Set<Medium> media = flow.getUnicasts();
+        Set<TransmissionMedium> media = flow.getUnicasts();
         for ( Channel channel : queryService.findAllChannelsFor( ResourceSpec.with( object ) ) )
             if ( media.contains( channel.getMedium() ) )
                 result.add( channel );

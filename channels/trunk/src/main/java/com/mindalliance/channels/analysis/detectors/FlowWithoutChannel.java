@@ -6,14 +6,14 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.Medium;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.TransmissionMedium;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -50,7 +50,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
             } else if ( !flow.canBeUnicast() ) {
                 // Communicating with a non-unicastable using a unicast channel for which
                 // a matching actor doesn't have a channel defined with same medium.
-                Set<Medium> media = getUnicastMedia( flow );
+                Set<TransmissionMedium> media = getUnicastMedia( flow );
                 ResourceSpec partSpec = flow.getContactedPart().resourceSpec();
                 // If both any actor and any organization, don't bother with missing addresses
                 if ( !( partSpec.getActor() == null && partSpec.getOrganization() == null ) ) {
@@ -78,11 +78,11 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
     }
 
     private List<Issue> findIssues(
-            ModelObject modelObject, ResourceSpec actorSpec, Set<Medium> media ) {
+            ModelObject modelObject, ResourceSpec actorSpec, Set<TransmissionMedium> media ) {
 
         List<Issue> result = new ArrayList<Issue>();
         for ( Channel channel : getQueryService().findAllChannelsFor( actorSpec ) ) {
-            Medium channelMedium = channel.getMedium();
+            TransmissionMedium channelMedium = channel.getMedium();
             if ( media.contains( channelMedium ) && !channel.isValid() ) {
                 result.add( createIssue(
                         modelObject,
@@ -100,10 +100,10 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
         return result;
     }
 
-    private static Set<Medium> getUnicastMedia( Flow flow ) {
-        Set<Medium> media = EnumSet.noneOf( Medium.class );
+    private static Set<TransmissionMedium> getUnicastMedia( Flow flow ) {
+        Set<TransmissionMedium> media = new HashSet<TransmissionMedium>();
         for ( Channel channel : flow.getEffectiveChannels() ) {
-            Medium medium = channel.getMedium();
+            TransmissionMedium medium = channel.getMedium();
             if ( medium.isUnicast() )
                 media.add( medium );
         }

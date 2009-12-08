@@ -53,6 +53,10 @@ public abstract class ModelEntity extends ModelObject {
      */
     public static Phase ANY_PHASE_TYPE;
     /**
+     * Universal medium type.
+     */
+    public static TransmissionMedium ANY_MEDIUM_TYPE;
+    /**
      * All universal types.
      */
     public static List<ModelEntity> UNIVERSAL_TYPES;
@@ -96,6 +100,10 @@ public abstract class ModelEntity extends ModelObject {
         ANY_PHASE_TYPE.setId( 10000000L - 15 );
         ANY_PHASE_TYPE.setType();
         UNIVERSAL_TYPES.add( ANY_PHASE_TYPE );
+        ANY_MEDIUM_TYPE = new TransmissionMedium( "any medium" );
+        ANY_MEDIUM_TYPE.setId( 10000000L - 16 );
+        ANY_MEDIUM_TYPE.setType();
+        UNIVERSAL_TYPES.add( ANY_MEDIUM_TYPE );
     }
 
     public ModelEntity() {
@@ -203,7 +211,8 @@ public abstract class ModelEntity extends ModelObject {
                 || equals( ANY_ORGANIZATION_TYPE )
                 || equals( ANY_PLACE_TYPE )
                 || equals( ANY_ROLE_TYPE )
-                || equals( ANY_PHASE_TYPE );
+                || equals( ANY_PHASE_TYPE )
+                || equals( ANY_MEDIUM_TYPE );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -220,6 +229,8 @@ public abstract class ModelEntity extends ModelObject {
             return (T) ANY_ROLE_TYPE;
         } else if ( entityClass == Phase.class ) {
             return (T) ANY_PHASE_TYPE;
+        } else if ( entityClass == TransmissionMedium.class ) {
+            return (T) ANY_MEDIUM_TYPE;
         } else {
             throw new RuntimeException( "No known universal type for " + entityClass.getSimpleName() );
         }

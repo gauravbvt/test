@@ -28,6 +28,7 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.util.ChannelsUtils;
 import com.mindalliance.channels.util.Matcher;
@@ -195,6 +196,7 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
             stream.registerConverter( new JobConverter( this ) );
             stream.registerConverter( new PhaseConverter( this ) );
             stream.registerConverter( new ClassificationConverter( this ) );
+            stream.registerConverter( new TransmissionMediumConverter( this ) );
             stream.registerConverter( new ExportConverter( this ) );
         }
 
@@ -204,6 +206,7 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
             stream.alias( "journal", Journal.class );
             stream.alias( "plan", Plan.class );
             stream.alias( "classification", Classification.class );
+            stream.alias( "medium", TransmissionMedium.class );
             stream.alias( "planevent", Event.class );
             stream.alias( "actor", Actor.class );
             stream.aliasType( "flow", Flow.class );

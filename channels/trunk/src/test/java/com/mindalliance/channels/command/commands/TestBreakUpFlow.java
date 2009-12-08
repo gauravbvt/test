@@ -6,14 +6,14 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Medium;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.TransmissionMedium;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.io.IOException;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -32,7 +32,7 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
     @Override
     protected void setUp() throws IOException {
         super.setUp();
-        QueryService queryService = app.getQueryService();
+        final QueryService queryService = app.getQueryService();
         scenario = queryService.createScenario();
         source = scenario.getDefaultPart();
         source.setRole( queryService.findOrCreate( Role.class, "Manager" ) );
@@ -44,8 +44,12 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
         flow.setSignificanceToTarget( Flow.Significance.Triggers );
         flow.setChannels( new ArrayList<Channel>() {
             {
-                add( new Channel( Medium.Phone, "800-555-1212" ) );
-                add( new Channel( Medium.Email, "stuff@acme.com" ) );
+                add( new Channel(queryService.findOrCreate(
+                TransmissionMedium.class,
+                "Phone" ), "800-555-1212" ) );
+                add( new Channel( queryService.findOrCreate(
+                TransmissionMedium.class,
+                "Email" ), "stuff@acme.com" ) );
             }
         } );
         command = new BreakUpFlow( flow );

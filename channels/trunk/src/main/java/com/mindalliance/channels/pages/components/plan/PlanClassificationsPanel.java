@@ -12,6 +12,7 @@ import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
 import org.apache.commons.collections.CollectionUtils;
@@ -166,6 +167,13 @@ public class PlanClassificationsPanel extends AbstractCommandablePanel {
         protected List<Phase> findIndexedPhases() {
             return new ArrayList<Phase>();
         }
+
+        /**
+          * {@inheritDoc}
+          */
+         protected List<TransmissionMedium> findIndexedMedia() {
+             return new ArrayList<TransmissionMedium>();
+         }
 
         /**
          * {@inheritDoc}

@@ -26,6 +26,11 @@ public class Phase extends ModelEntity implements Comparable<ModelObject> {
      */
     private static String UnknownName = "(unknown)";
     
+    /**
+     * The timing of the phase relative to an event.
+     */
+    private Timing timing = Timing.Concurrent;
+
     public Phase() {
     }
 
@@ -42,11 +47,6 @@ public class Phase extends ModelEntity implements Comparable<ModelObject> {
         UNKNOWN = queryService.findOrCreate( Phase.class, UnknownName );
         UNKNOWN.makeImmutable();
     }
-    /**
-     * The timing of the phase relative to an event.
-     */
-    private Timing timing = Timing.Concurrent;
-
     public Timing getTiming() {
         return timing;
     }

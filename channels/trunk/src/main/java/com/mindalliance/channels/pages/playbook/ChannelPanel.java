@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.playbook;
 
 import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.model.Medium;
+import com.mindalliance.channels.model.TransmissionMedium;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -25,9 +25,9 @@ public class ChannelPanel extends Panel {
             @Override
             protected void populateItem( ListItem<Channel> item ) {
                 Channel channel = item.getModelObject();
-                Medium medium = channel.getMedium();
+                TransmissionMedium medium = channel.getMedium();
                 String address = channel.getAddress();
-                boolean isEmail = Medium.Email.equals( medium );
+                boolean isEmail = medium.getName().toLowerCase().contains( "email" );
 
                 item.add(
                     new Label( "type", medium.toString() ).setRenderBodyOnly( true ),
@@ -49,17 +49,9 @@ public class ChannelPanel extends Panel {
         return "wtai://wp/mc;" + buf.toString();
     }
 
-    private static boolean isPhone( Medium medium ) {
-        switch ( medium ) {
-        case Phone:
-        case HomePhone:
-        case PhoneConf:
-        case Cell:
-        case Fax:
-            return true;
-        default:
-            return false;
-        }
+    private static boolean isPhone( TransmissionMedium medium ) {
+        String name = medium.getName().toLowerCase();
+        return name.contains( "phone" ) || name.contains( "cell" ) || name.contains( "fax");
     }
 
 }

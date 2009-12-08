@@ -2,9 +2,9 @@ package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.model.Medium;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.TransmissionMedium;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 
@@ -30,7 +30,7 @@ public class ActorBannerPanel extends Panel {
 
     public ActorBannerPanel(
             String id, Scenario scenario, ResourceSpec spec, boolean showScenario,
-            Set<Medium> unicasts, Collection<Channel> broadcasts ) {
+            Set<TransmissionMedium> unicasts, Collection<Channel> broadcasts ) {
 
         super( id );
         setRenderBodyOnly( true );

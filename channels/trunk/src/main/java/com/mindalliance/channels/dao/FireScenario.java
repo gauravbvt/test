@@ -1,16 +1,16 @@
 package com.mindalliance.channels.dao;
 
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.Medium;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.model.UserIssue;
 
 /**
@@ -65,7 +65,10 @@ public class FireScenario extends Scenario {
         fire.becomeTriggeringToTarget();
         Flow f1 = queryService.connect( alarm, js1, "location" );
         f1.setAskedFor( true );
-        f1.addChannel( new Channel( Medium.Other, "wall panel" ) );
+        f1.addChannel( new Channel( queryService.findOrCreate(
+                TransmissionMedium.class,
+                "Cell" ),
+                "917-233-3333" ) );
         f1.setDescription( "The fire location reported by the system" );
         Flow f2 = queryService.connect( js1, chief, "fire location" );
         f2.setAskedFor( true );
@@ -74,7 +77,10 @@ public class FireScenario extends Scenario {
         Flow f3 = queryService.connect( chief, js1, "stairways safe" );
         f3.setMaxDelay( new Delay( 10, Delay.Unit.minutes ) );
         f3.becomeCritical();
-        f3.addChannel( new Channel( Medium.Radio, "band 3" ) );
+        f3.addChannel( new Channel( queryService.findOrCreate(
+                TransmissionMedium.class,
+                "Radio" ),
+                "band 3" ) );
         f3.setDescription( "Confirms that stairways are safe for evacuation" );
         Flow f4 = queryService.connect( js2, chief, "evacuation status" );
         f4.setAskedFor( true );

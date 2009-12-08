@@ -9,6 +9,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
 import org.apache.wicket.model.IModel;
 
@@ -30,7 +31,7 @@ public class PlanIndexPanel extends AbstractIndexPanel {
      * Indexing choices.
      */
     private static final String[] indexingChoices =
-            {ALL, ACTORS, EVENTS, FLOWS, PHASES, PLACES, ORGANIZATIONS, ROLES, TASKS};
+            {ALL, ACTORS, EVENTS, FLOWS, MEDIA, PHASES, PLACES, ORGANIZATIONS, ROLES, TASKS};
 
 
     public PlanIndexPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
@@ -70,6 +71,13 @@ public class PlanIndexPanel extends AbstractIndexPanel {
      */
     protected List<Phase> findIndexedPhases() {
         return getQueryService().listReferencedEntities( Phase.class );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected List<TransmissionMedium> findIndexedMedia() {
+        return getQueryService().listReferencedEntities( TransmissionMedium.class );
     }
 
     /**

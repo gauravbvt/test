@@ -273,4 +273,6 @@ public final class Channels extends WebApplication implements ApplicationListene
     public void setGeoService( GeoService geoService ) {
         this.geoService = geoService;
     }
+
+
 }

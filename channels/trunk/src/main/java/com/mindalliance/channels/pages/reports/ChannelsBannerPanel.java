@@ -2,8 +2,9 @@ package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.model.Medium;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.TransmissionMedium;
+import org.apache.commons.lang.WordUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -32,19 +33,23 @@ public class ChannelsBannerPanel extends Panel {
      */
     private ResourceSpec spec;
 
-    /** Restrict shown media to these. If null, show everything. */
-    private final Set<Medium> unicasts;
+    /**
+     * Restrict shown media to these. If null, show everything.
+     */
+    private final Set<TransmissionMedium> unicasts;
 
-    /** Broadcast channels to include. */
+    /**
+     * Broadcast channels to include.
+     */
     private final Collection<Channel> broadcasts;
 
     @SpringBean
     private QueryService queryService;
 
     public ChannelsBannerPanel(
-            String id, ResourceSpec spec, Set<Medium> unicasts, Collection<Channel> broadcasts ) {
+            String id, ResourceSpec spec, Set<TransmissionMedium> unicasts, Collection<Channel> broadcasts ) {
         super( id, new Model<ResourceSpec>( spec ) );
-        this.spec = spec ;
+        this.spec = spec;
         this.unicasts = unicasts;
         this.broadcasts = broadcasts;
         init();
@@ -55,28 +60,27 @@ public class ChannelsBannerPanel extends Panel {
             @Override
             protected void populateItem( ListItem<Channel> item ) {
                 Channel channel = item.getModelObject();
-                Medium medium = channel.getMedium();
-                String address = Medium.Other.equals( medium ) ? "" : channel.getAddress();
-
+                TransmissionMedium medium = channel.getMedium();
+                String address = medium.isUnknown() ? "" : channel.getAddress();
                 Label mediumLabel = new Label( "medium",
-                        medium == null    ? ""
-                      : Medium.Other.equals( medium ) ? channel.toString()
-                      : address.isEmpty() ? channel.toString()
-                                          : medium.toString() + ": " );
+                        medium.isUnknown()
+                                ? channel.toString()
+                                : address.isEmpty()
+                                ? channel.toString()
+                                : medium.toString() + ": " );
 
                 Label addressLabel = new Label( "address", address );
 
-                if ( medium != null ) {
-                    mediumLabel.add( new AttributeModifier(
-                            "class",
-                            true,
-                            new Model<String>( medium.isUnicast() ? "unicast" : "broadcast" ) ) );
-                    addressLabel.add(
-                            new AttributeModifier(
-                                    "class",
-                                    true,
-                                    new Model<String>( medium.name() ) ) );
-                }
+                mediumLabel.add( new AttributeModifier(
+                        "class",
+                        true,
+                        new Model<String>( medium.isUnicast() ? "unicast" : "broadcast" ) ) );
+                addressLabel.add(
+                        new AttributeModifier(
+                                "class",
+                                true,
+                                new Model<String>( WordUtils.capitalize(
+                                        medium.getName() ).replaceAll( "\\s", "" ) ) ) );
 
                 item.add( mediumLabel );
                 item.add( addressLabel );
