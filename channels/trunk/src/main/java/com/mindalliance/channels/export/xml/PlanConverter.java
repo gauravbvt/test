@@ -11,6 +11,7 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -102,7 +103,7 @@ public class PlanConverter extends AbstractChannelsConverter {
         while ( entities.hasNext() ) {
             ModelEntity entity = entities.next();
             if ( !entity.isImmutable() ) {
-                writer.startNode( entity.getClass().getSimpleName().toLowerCase() );
+                writer.startNode( entity.getTypeName().toLowerCase() );
                 context.convertAnother( entity );
                 writer.endNode();
             }
@@ -186,6 +187,8 @@ public class PlanConverter extends AbstractChannelsConverter {
                 context.convertAnother( plan, Classification.class );
             } else if ( nodeName.equals( "phase" ) ) {
                 context.convertAnother( plan, Phase.class );
+            }  else if ( nodeName.equals( "medium" ) ) {
+                context.convertAnother( plan, TransmissionMedium.class );
             } else if ( nodeName.equals( "incident" ) ) {
                 String eventId = reader.getAttribute( "id" );
                 Event event = findOrCreateType( Event.class, reader.getValue(), eventId );

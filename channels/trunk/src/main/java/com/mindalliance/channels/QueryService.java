@@ -125,7 +125,7 @@ public interface QueryService extends Service {
     <T extends ModelEntity> List<T> listEntitiesNarrowingOrEqualTo( final T entity );
 
     /**
-     * Iterate on ModelObject that are referenced entities.
+     * Iterate on referenced entities, going through referenced entities first and then referencing entities.
      *
      * @return an iterator on  entities
      */

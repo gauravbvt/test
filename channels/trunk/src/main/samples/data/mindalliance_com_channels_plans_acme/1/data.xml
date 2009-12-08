@@ -1,7 +1,7 @@
 <export>
-  <plan id="0" uri="mindalliance.com/channels/plans/acme" version="1.0" date="2009/12/07 21:58:15 EST">
+  <plan id="0" uri="mindalliance.com/channels/plans/acme" version="1.0" date="2009/12/08 16:05:41 EST">
     <whenVersioned>2009/09/15 9:48:22 EDT</whenVersioned>
-    <lastId>11890</lastId>
+    <lastId>11963</lastId>
     <name>ACME Emergency Communications Plan</name>
     <client>ACME Manufacturing, Inc.</client>
     <description>Communications planning for responding and recovering from business interruptions due fire or power outage.</description>
@@ -48,16 +48,22 @@
     <detection-waivers>
       <detection>NoScenarioForEventPhase</detection>
     </detection-waivers>
-    <role id="279" kind="Actual" name="Emergency Manager">
-      <description>Organizes and leads response to fire; leads evacuation etc.</description>
-    </role>
-    <event id="5" kind="Type" name="Building on fire">
+    <medium id="11809" kind="Actual" name="Intercom">
+      <description>An intercom system</description>
+      <tag id="11867" kind="Type">PA system</tag>
+      <addressPattern>.*</addressPattern>
+      <unicast>false</unicast>
+      <secureForClassification>
+        <system>NATO</system>
+        <name>NATO confidential</name>
+        <level>0</level>
+      </secureForClassification>
+    </medium>
+    <medium id="11867" kind="Type" name="PA system">
       <description></description>
-      <scope id="323">Main building</scope>
-    </event>
-    <role id="278" kind="Actual" name="Assembly Area Leader">
-      <description></description>
-    </role>
+      <addressPattern></addressPattern>
+      <unicast>true</unicast>
+    </medium>
     <actor id="277" kind="Actual" name="Richard Carry">
       <description>Administration</description>
       <attachments>
@@ -104,38 +110,6 @@
         <address>jgarrison@acme.com</address>
       </channel>
     </actor>
-    <place id="282" kind="Actual" name="1st shift/floor">
-      <description></description>
-      <within id="323">Main building</within>
-      <geoname></geoname>
-      <geoLocation>
-        <geonameId>5101427</geonameId>
-        <country>United States</country>
-        <state>New Jersey</state>
-        <county>Morris County</county>
-        <city>Morristown</city>
-        <countryCode>US</countryCode>
-        <stateCode>NJ</stateCode>
-        <countyCode>027</countyCode>
-        <cityCode>PPL</cityCode>
-        <population>18886</population>
-        <latitude>40.793691</latitude>
-        <longitude>-74.577753</longitude>
-        <streetAddress>100 Main Road</streetAddress>
-        <postalCode>07963</postalCode>
-        <precision>6</precision>
-      </geoLocation>
-    </place>
-    <role id="281" kind="Actual" name="Evacuation Team Leader">
-      <description>Someone in charge of leading evacuations.</description>
-      <tag id="11623" kind="Type">Leader</tag>
-    </role>
-    <role id="10" kind="Actual" name="Fire Chief">
-      <description></description>
-      <attachments>
-        <attachment type="Image">http://www.plumparty.com/partysupply/graphics/products/large/16596.jpg</attachment>
-      </attachments>
-    </role>
     <actor id="280" kind="Actual" name="Mary Delaney">
       <description>Admin./Impo</description>
       <channel>
@@ -177,15 +151,6 @@
         <address>(973) 729-2942</address>
       </channel>
     </actor>
-    <role id="286" kind="Actual" name="Switchboard and Intercom Operator">
-      <description></description>
-    </role>
-    <organization id="13" kind="Actual" name="Fire Department">
-      <description></description>
-      <attachments>
-        <attachment type="Image">http://cityofashville.googlepages.com/firelogo.jpg/firelogo-full.jpg</attachment>
-      </attachments>
-    </organization>
     <actor id="285" kind="Actual" name="Peter Sanchez">
       <description>Sales and marketing</description>
       <tag id="10990" kind="Type">Certified emergency technician</tag>
@@ -219,6 +184,414 @@
         <level>-5</level>
       </clearance>
     </actor>
+    <actor id="11392" kind="Type" name="Technician">
+      <description></description>
+      <tag id="11432" kind="Type">Trained</tag>
+    </actor>
+    <actor id="10990" kind="Type" name="Certified emergency technician">
+      <description></description>
+      <tag id="11392" kind="Type">Technician</tag>
+    </actor>
+    <actor id="11432" kind="Type" name="Trained">
+      <description></description>
+    </actor>
+    <actor id="337" kind="Actual" name="JoAnn Blythe">
+      <description></description>
+      <channel>
+        <medium id="-984">Cell</medium>
+        <address>(973) 867-0100</address>
+      </channel>
+    </actor>
+    <actor id="336" kind="Actual" name="Jocelyne Bilodeau">
+      <description>Digital/IT</description>
+      <channel>
+        <medium id="-987">Phone</medium>
+        <address>(973) 754-0722 x.241</address>
+      </channel>
+      <channel>
+        <medium id="-984">Cell</medium>
+        <address>(908) 507-0278</address>
+      </channel>
+      <channel>
+        <medium id="-986">Home phone</medium>
+        <address>(908) 788-0846</address>
+      </channel>
+      <channel>
+        <medium id="-982">Email</medium>
+        <address>jbilodeau@acme.com</address>
+      </channel>
+    </actor>
+    <actor id="76" kind="Actual" name="Judy Palmer">
+      <description></description>
+      <channel>
+        <medium id="-987">Phone</medium>
+        <address>(973) 528-7344</address>
+      </channel>
+      <channel>
+        <medium id="-984">Cell</medium>
+        <address>(908) 447-7344</address>
+      </channel>
+    </actor>
+    <actor id="334" kind="Actual" name="Arthur Green">
+      <description>Systems: Mac</description>
+      <channel>
+        <medium id="-987">Phone</medium>
+        <address>(973) 754-0722 x.226</address>
+      </channel>
+      <channel>
+        <medium id="-986">Home phone</medium>
+        <address>(973) 387-0755</address>
+      </channel>
+      <channel>
+        <medium id="-982">Email</medium>
+        <address>agreen@acme.com</address>
+      </channel>
+      <channel>
+        <medium id="-984">Cell</medium>
+        <address>(973)478-7403</address>
+      </channel>
+    </actor>
+    <actor id="686" kind="Actual" name="R2D2">
+      <description></description>
+      <attachments>
+        <attachment type="Image">http://www.cutiegadget.com/pict/r2-d2_robot.jpg</attachment>
+      </attachments>
+      <system>true</system>
+    </actor>
+    <role id="279" kind="Actual" name="Emergency Manager">
+      <description>Organizes and leads response to fire; leads evacuation etc.</description>
+    </role>
+    <role id="278" kind="Actual" name="Assembly Area Leader">
+      <description></description>
+    </role>
+    <role id="281" kind="Actual" name="Evacuation Team Leader">
+      <description>Someone in charge of leading evacuations.</description>
+      <tag id="11623" kind="Type">Leader</tag>
+    </role>
+    <role id="10" kind="Actual" name="Fire Chief">
+      <description></description>
+      <attachments>
+        <attachment type="Image">http://www.plumparty.com/partysupply/graphics/products/large/16596.jpg</attachment>
+      </attachments>
+    </role>
+    <role id="286" kind="Actual" name="Switchboard and Intercom Operator">
+      <description></description>
+    </role>
+    <role id="42" kind="Actual" name="Cleanup Contractor">
+      <description></description>
+    </role>
+    <role id="40" kind="Actual" name="Firefighter">
+      <description></description>
+      <attachments>
+        <attachment type="Image">http://www.things4myspace.com/myspace/backgrounds/firefighter/firefighter_18.jpg</attachment>
+      </attachments>
+    </role>
+    <role id="47" kind="Actual" name="Media Representative">
+      <description></description>
+    </role>
+    <role id="51" kind="Actual" name="Building Inspector">
+      <description></description>
+    </role>
+    <role id="48" kind="Actual" name="Contractor">
+      <description></description>
+    </role>
+    <role id="55" kind="Actual" name="Insurance Adjuster">
+      <description></description>
+    </role>
+    <role id="59" kind="Actual" name="Landlord">
+      <description></description>
+    </role>
+    <role id="60" kind="Actual" name="ACME Customer">
+      <description></description>
+    </role>
+    <role id="70" kind="Actual" name="Occupant">
+      <description></description>
+    </role>
+    <role id="78" kind="Actual" name="Fire Inspector">
+      <description></description>
+    </role>
+    <role id="326" kind="Actual" name="Business Continuity Manager">
+      <description></description>
+    </role>
+    <role id="327" kind="Actual" name="Customer Support Representative">
+      <description></description>
+    </role>
+    <role id="325" kind="Actual" name="CEO">
+      <description></description>
+    </role>
+    <role id="335" kind="Actual" name="Business Continuity Officer">
+      <description></description>
+    </role>
+    <role id="332" kind="Actual" name="Manager">
+      <description></description>
+    </role>
+    <role id="330" kind="Actual" name="Response Liaison Officer">
+      <description></description>
+    </role>
+    <role id="331" kind="Actual" name="Customer Account Manager">
+      <description></description>
+    </role>
+    <role id="328" kind="Actual" name="Secretary">
+      <description></description>
+    </role>
+    <role id="329" kind="Actual" name="Public Spokesperson">
+      <description></description>
+    </role>
+    <role id="685" kind="Actual" name="Switchboard and Intercom System">
+      <description></description>
+    </role>
+    <role id="11801" kind="Actual" name="Operations Manager">
+      <description></description>
+    </role>
+    <role id="11623" kind="Type" name="Leader">
+      <description>One who leads</description>
+    </role>
+    <place id="282" kind="Actual" name="1st shift/floor">
+      <description></description>
+      <within id="323">Main building</within>
+      <geoname></geoname>
+      <geoLocation>
+        <geonameId>5101427</geonameId>
+        <country>United States</country>
+        <state>New Jersey</state>
+        <county>Morris County</county>
+        <city>Morristown</city>
+        <countryCode>US</countryCode>
+        <stateCode>NJ</stateCode>
+        <countyCode>027</countyCode>
+        <cityCode>PPL</cityCode>
+        <population>18886</population>
+        <latitude>40.793691</latitude>
+        <longitude>-74.577753</longitude>
+        <streetAddress>100 Main Road</streetAddress>
+        <postalCode>07963</postalCode>
+        <precision>6</precision>
+      </geoLocation>
+    </place>
+    <place id="44" kind="Actual" name="Assembly area">
+      <description></description>
+      <geoname></geoname>
+    </place>
+    <place id="45" kind="Actual" name="ACME">
+      <description></description>
+      <geoname></geoname>
+    </place>
+    <place id="50" kind="Actual" name="ACME 100">
+      <description></description>
+      <streetAddress>200 South Street</streetAddress>
+      <geoname>Morristown, NJ</geoname>
+      <geoLocation>
+        <geonameId>5101427</geonameId>
+        <country>United States</country>
+        <state>New Jersey</state>
+        <county>Morris County</county>
+        <city>Morristown</city>
+        <countryCode>US</countryCode>
+        <stateCode>NJ</stateCode>
+        <countyCode>027</countyCode>
+        <cityCode>PPL</cityCode>
+        <population>18886</population>
+        <latitude>40.7967667</latitude>
+        <longitude>-74.4815438</longitude>
+        <precision>0</precision>
+      </geoLocation>
+    </place>
+    <place id="52" kind="Actual" name="Pinnacle Headquarters">
+      <description></description>
+      <streetAddress>1123 Route 9 South Suite 4</streetAddress>
+      <postalCode>07070</postalCode>
+      <geoname>Rutherford, NJ</geoname>
+      <geoLocation>
+        <geonameId>5103580</geonameId>
+        <country>United States</country>
+        <state>New Jersey</state>
+        <county>Bergen County</county>
+        <city>Rutherford</city>
+        <countryCode>US</countryCode>
+        <stateCode>NJ</stateCode>
+        <countyCode>003</countyCode>
+        <cityCode>PPL</cityCode>
+        <population>17952</population>
+        <latitude>40.857262</latitude>
+        <longitude>-74.102279</longitude>
+        <streetAddress>1123 Route 9 South Suite 4</streetAddress>
+        <postalCode>07070</postalCode>
+        <precision>8</precision>
+      </geoLocation>
+      <alternateGeoLocation>
+        <geonameId>5103580</geonameId>
+        <country>United States</country>
+        <state>New Jersey</state>
+        <county>Bergen County</county>
+        <city>Rutherford</city>
+        <countryCode>US</countryCode>
+        <stateCode>NJ</stateCode>
+        <countyCode>003</countyCode>
+        <cityCode>PPL</cityCode>
+        <population>17952</population>
+        <latitude>40.857262</latitude>
+        <longitude>-74.102279</longitude>
+        <streetAddress>1123 Route 9 South Suite 4</streetAddress>
+        <postalCode>07070</postalCode>
+        <precision>8</precision>
+      </alternateGeoLocation>
+      <alternateGeoLocation>
+        <geonameId>5097459</geonameId>
+        <country>United States</country>
+        <state>New Jersey</state>
+        <county>Bergen County</county>
+        <city>East Rutherford</city>
+        <countryCode>US</countryCode>
+        <stateCode>NJ</stateCode>
+        <countyCode>003</countyCode>
+        <cityCode>PPL</cityCode>
+        <population>8670</population>
+        <latitude>40.833989</latitude>
+        <longitude>-74.0970865</longitude>
+        <precision>0</precision>
+      </alternateGeoLocation>
+    </place>
+    <place id="57" kind="Actual" name="Brock Insurance Office">
+      <description></description>
+      <streetAddress>34 Omaha Place</streetAddress>
+      <postalCode>20814</postalCode>
+      <geoname>Bethesda, MD</geoname>
+      <geoLocation>
+        <geonameId>4348599</geonameId>
+        <country>United States</country>
+        <state>Maryland</state>
+        <county>Montgomery County</county>
+        <city>Bethesda</city>
+        <countryCode>US</countryCode>
+        <stateCode>MD</stateCode>
+        <countyCode>031</countyCode>
+        <cityCode>PPL</cityCode>
+        <population>52801</population>
+        <latitude>39.0003562</latitude>
+        <longitude>-77.0967357</longitude>
+        <streetAddress></streetAddress>
+        <postalCode>20814</postalCode>
+        <precision>5</precision>
+      </geoLocation>
+      <alternateGeoLocation>
+        <geonameId>4348599</geonameId>
+        <country>United States</country>
+        <state>Maryland</state>
+        <county>Montgomery County</county>
+        <city>Bethesda</city>
+        <countryCode>US</countryCode>
+        <stateCode>MD</stateCode>
+        <countyCode>031</countyCode>
+        <cityCode>PPL</cityCode>
+        <population>52801</population>
+        <latitude>38.9806658</latitude>
+        <longitude>-77.100256</longitude>
+        <precision>0</precision>
+      </alternateGeoLocation>
+      <alternateGeoLocation>
+        <geonameId>4363843</geonameId>
+        <country>United States</country>
+        <state>Maryland</state>
+        <county>Montgomery County</county>
+        <city>North Bethesda</city>
+        <countryCode>US</countryCode>
+        <stateCode>MD</stateCode>
+        <countyCode>031</countyCode>
+        <cityCode>PPL</cityCode>
+        <population>44379</population>
+        <latitude>39.0445535</latitude>
+        <longitude>-77.1188678</longitude>
+        <precision>0</precision>
+      </alternateGeoLocation>
+    </place>
+    <place id="68" kind="Actual" name="Warehouse building">
+      <description></description>
+      <tag id="11778" kind="Type">Warehouse type</tag>
+      <geoname></geoname>
+    </place>
+    <place id="66" kind="Actual" name="Springfield building">
+      <description></description>
+      <streetAddress>100 Mountain Avenue</streetAddress>
+      <postalCode>07081</postalCode>
+      <geoname>Springfield, NJ</geoname>
+      <geoLocation>
+        <geonameId>5104952</geonameId>
+        <country>United States</country>
+        <state>New Jersey</state>
+        <county>Union County</county>
+        <city>Springfield</city>
+        <countryCode>US</countryCode>
+        <stateCode>NJ</stateCode>
+        <countyCode>039</countyCode>
+        <cityCode>PPL</cityCode>
+        <population>14429</population>
+        <latitude>40.7085278</latitude>
+        <longitude>-74.3135568</longitude>
+        <streetAddress>100 Mountain Avenue</streetAddress>
+        <postalCode>07081</postalCode>
+        <precision>8</precision>
+      </geoLocation>
+      <alternateGeoLocation>
+        <geonameId>5104952</geonameId>
+        <country>United States</country>
+        <state>New Jersey</state>
+        <county>Union County</county>
+        <city>Springfield</city>
+        <countryCode>US</countryCode>
+        <stateCode>NJ</stateCode>
+        <countyCode>039</countyCode>
+        <cityCode>PPL</cityCode>
+        <population>14429</population>
+        <latitude>40.7231569</latitude>
+        <longitude>-74.3107042</longitude>
+        <precision>0</precision>
+      </alternateGeoLocation>
+    </place>
+    <place id="324" kind="Actual" name="2nd shift/floor">
+      <description></description>
+      <within id="323">Main building</within>
+      <geoname></geoname>
+      <geoLocation>
+        <geonameId>5101427</geonameId>
+        <country>United States</country>
+        <state>New Jersey</state>
+        <county>Morris County</county>
+        <city>Morristown</city>
+        <countryCode>US</countryCode>
+        <stateCode>NJ</stateCode>
+        <countyCode>027</countyCode>
+        <cityCode>PPL</cityCode>
+        <population>18886</population>
+        <latitude>40.793691</latitude>
+        <longitude>-74.577753</longitude>
+        <streetAddress>100 Main Road</streetAddress>
+        <postalCode>07963</postalCode>
+        <precision>6</precision>
+      </geoLocation>
+    </place>
+    <place id="323" kind="Actual" name="Main building">
+      <description></description>
+      <streetAddress>100 Main Road</streetAddress>
+      <postalCode>07963</postalCode>
+      <geoname>Morristown</geoname>
+    </place>
+    <place id="333" kind="Actual" name="Warehouse">
+      <description></description>
+      <geoname></geoname>
+    </place>
+    <place id="11778" kind="Type" name="Warehouse type">
+      <description>A building used as storage space.</description>
+      <tag id="11779" kind="Type">Building</tag>
+    </place>
+    <place id="11779" kind="Type" name="Building">
+      <description></description>
+    </place>
+    <organization id="13" kind="Actual" name="Fire Department">
+      <description></description>
+      <attachments>
+        <attachment type="Image">http://cityofashville.googlepages.com/firelogo.jpg/firelogo-full.jpg</attachment>
+      </attachments>
+    </organization>
     <organization id="14" kind="Actual" name="ACME">
       <description></description>
       <tag id="11681" kind="Type">Multinational corporation</tag>
@@ -352,14 +725,6 @@
         <title>Employee</title>
       </job>
     </organization>
-    <actor id="11392" kind="Type" name="Technician">
-      <description></description>
-      <tag id="11432" kind="Type">Trained</tag>
-    </actor>
-    <actor id="10990" kind="Type" name="Certified emergency technician">
-      <description></description>
-      <tag id="11392" kind="Type">Technician</tag>
-    </actor>
     <organization id="11682" kind="Type" name="Corporation">
       <description></description>
     </organization>
@@ -367,9 +732,6 @@
       <description></description>
       <tag id="11682" kind="Type">Corporation</tag>
     </organization>
-    <role id="42" kind="Actual" name="Cleanup Contractor">
-      <description></description>
-    </role>
     <organization id="43" kind="Actual" name="PSEG">
       <description></description>
       <tag id="11682" kind="Type">Corporation</tag>
@@ -381,174 +743,6 @@
         <address>(800) 440-7734</address>
       </channel>
     </organization>
-    <role id="40" kind="Actual" name="Firefighter">
-      <description></description>
-      <attachments>
-        <attachment type="Image">http://www.things4myspace.com/myspace/backgrounds/firefighter/firefighter_18.jpg</attachment>
-      </attachments>
-    </role>
-    <role id="47" kind="Actual" name="Media Representative">
-      <description></description>
-    </role>
-    <place id="44" kind="Actual" name="Assembly area">
-      <description></description>
-      <geoname></geoname>
-    </place>
-    <place id="45" kind="Actual" name="ACME">
-      <description></description>
-      <geoname></geoname>
-    </place>
-    <role id="51" kind="Actual" name="Building Inspector">
-      <description></description>
-    </role>
-    <place id="50" kind="Actual" name="ACME 100">
-      <description></description>
-      <streetAddress>200 South Street</streetAddress>
-      <geoname>Morristown, NJ</geoname>
-      <geoLocation>
-        <geonameId>5101427</geonameId>
-        <country>United States</country>
-        <state>New Jersey</state>
-        <county>Morris County</county>
-        <city>Morristown</city>
-        <countryCode>US</countryCode>
-        <stateCode>NJ</stateCode>
-        <countyCode>027</countyCode>
-        <cityCode>PPL</cityCode>
-        <population>18886</population>
-        <latitude>40.7967667</latitude>
-        <longitude>-74.4815438</longitude>
-        <precision>0</precision>
-      </geoLocation>
-    </place>
-    <role id="48" kind="Actual" name="Contractor">
-      <description></description>
-    </role>
-    <role id="55" kind="Actual" name="Insurance Adjuster">
-      <description></description>
-    </role>
-    <place id="52" kind="Actual" name="Pinnacle Headquarters">
-      <description></description>
-      <streetAddress>1123 Route 9 South Suite 4</streetAddress>
-      <postalCode>07070</postalCode>
-      <geoname>Rutherford, NJ</geoname>
-      <geoLocation>
-        <geonameId>5103580</geonameId>
-        <country>United States</country>
-        <state>New Jersey</state>
-        <county>Bergen County</county>
-        <city>Rutherford</city>
-        <countryCode>US</countryCode>
-        <stateCode>NJ</stateCode>
-        <countyCode>003</countyCode>
-        <cityCode>PPL</cityCode>
-        <population>17952</population>
-        <latitude>40.857262</latitude>
-        <longitude>-74.102279</longitude>
-        <streetAddress>1123 Route 9 South Suite 4</streetAddress>
-        <postalCode>07070</postalCode>
-        <precision>8</precision>
-      </geoLocation>
-      <alternateGeoLocation>
-        <geonameId>5103580</geonameId>
-        <country>United States</country>
-        <state>New Jersey</state>
-        <county>Bergen County</county>
-        <city>Rutherford</city>
-        <countryCode>US</countryCode>
-        <stateCode>NJ</stateCode>
-        <countyCode>003</countyCode>
-        <cityCode>PPL</cityCode>
-        <population>17952</population>
-        <latitude>40.857262</latitude>
-        <longitude>-74.102279</longitude>
-        <streetAddress>1123 Route 9 South Suite 4</streetAddress>
-        <postalCode>07070</postalCode>
-        <precision>8</precision>
-      </alternateGeoLocation>
-      <alternateGeoLocation>
-        <geonameId>5097459</geonameId>
-        <country>United States</country>
-        <state>New Jersey</state>
-        <county>Bergen County</county>
-        <city>East Rutherford</city>
-        <countryCode>US</countryCode>
-        <stateCode>NJ</stateCode>
-        <countyCode>003</countyCode>
-        <cityCode>PPL</cityCode>
-        <population>8670</population>
-        <latitude>40.833989</latitude>
-        <longitude>-74.0970865</longitude>
-        <precision>0</precision>
-      </alternateGeoLocation>
-    </place>
-    <role id="59" kind="Actual" name="Landlord">
-      <description></description>
-    </role>
-    <actor id="11432" kind="Type" name="Trained">
-      <description></description>
-    </actor>
-    <place id="57" kind="Actual" name="Brock Insurance Office">
-      <description></description>
-      <streetAddress>34 Omaha Place</streetAddress>
-      <postalCode>20814</postalCode>
-      <geoname>Bethesda, MD</geoname>
-      <geoLocation>
-        <geonameId>4348599</geonameId>
-        <country>United States</country>
-        <state>Maryland</state>
-        <county>Montgomery County</county>
-        <city>Bethesda</city>
-        <countryCode>US</countryCode>
-        <stateCode>MD</stateCode>
-        <countyCode>031</countyCode>
-        <cityCode>PPL</cityCode>
-        <population>52801</population>
-        <latitude>39.0003562</latitude>
-        <longitude>-77.0967357</longitude>
-        <streetAddress></streetAddress>
-        <postalCode>20814</postalCode>
-        <precision>5</precision>
-      </geoLocation>
-      <alternateGeoLocation>
-        <geonameId>4348599</geonameId>
-        <country>United States</country>
-        <state>Maryland</state>
-        <county>Montgomery County</county>
-        <city>Bethesda</city>
-        <countryCode>US</countryCode>
-        <stateCode>MD</stateCode>
-        <countyCode>031</countyCode>
-        <cityCode>PPL</cityCode>
-        <population>52801</population>
-        <latitude>38.9806658</latitude>
-        <longitude>-77.100256</longitude>
-        <precision>0</precision>
-      </alternateGeoLocation>
-      <alternateGeoLocation>
-        <geonameId>4363843</geonameId>
-        <country>United States</country>
-        <state>Maryland</state>
-        <county>Montgomery County</county>
-        <city>North Bethesda</city>
-        <countryCode>US</countryCode>
-        <stateCode>MD</stateCode>
-        <countyCode>031</countyCode>
-        <cityCode>PPL</cityCode>
-        <population>44379</population>
-        <latitude>39.0445535</latitude>
-        <longitude>-77.1188678</longitude>
-        <precision>0</precision>
-      </alternateGeoLocation>
-    </place>
-    <role id="60" kind="Actual" name="ACME Customer">
-      <description></description>
-    </role>
-    <place id="68" kind="Actual" name="Warehouse building">
-      <description></description>
-      <tag id="11778" kind="Type">Warehouse type</tag>
-      <geoname></geoname>
-    </place>
     <organization id="69" kind="Actual" name="P. K. Brock Insurance Agency">
       <description></description>
       <tag id="11682" kind="Type">Corporation</tag>
@@ -558,84 +752,6 @@
         <address>(301) 984-2124</address>
       </channel>
     </organization>
-    <role id="70" kind="Actual" name="Occupant">
-      <description></description>
-    </role>
-    <actor id="337" kind="Actual" name="JoAnn Blythe">
-      <description></description>
-      <channel>
-        <medium id="-984">Cell</medium>
-        <address>(973) 867-0100</address>
-      </channel>
-    </actor>
-    <place id="66" kind="Actual" name="Springfield building">
-      <description></description>
-      <streetAddress>100 Mountain Avenue</streetAddress>
-      <postalCode>07081</postalCode>
-      <geoname>Springfield, NJ</geoname>
-      <geoLocation>
-        <geonameId>5104952</geonameId>
-        <country>United States</country>
-        <state>New Jersey</state>
-        <county>Union County</county>
-        <city>Springfield</city>
-        <countryCode>US</countryCode>
-        <stateCode>NJ</stateCode>
-        <countyCode>039</countyCode>
-        <cityCode>PPL</cityCode>
-        <population>14429</population>
-        <latitude>40.7085278</latitude>
-        <longitude>-74.3135568</longitude>
-        <streetAddress>100 Mountain Avenue</streetAddress>
-        <postalCode>07081</postalCode>
-        <precision>8</precision>
-      </geoLocation>
-      <alternateGeoLocation>
-        <geonameId>5104952</geonameId>
-        <country>United States</country>
-        <state>New Jersey</state>
-        <county>Union County</county>
-        <city>Springfield</city>
-        <countryCode>US</countryCode>
-        <stateCode>NJ</stateCode>
-        <countyCode>039</countyCode>
-        <cityCode>PPL</cityCode>
-        <population>14429</population>
-        <latitude>40.7231569</latitude>
-        <longitude>-74.3107042</longitude>
-        <precision>0</precision>
-      </alternateGeoLocation>
-    </place>
-    <actor id="336" kind="Actual" name="Jocelyne Bilodeau">
-      <description>Digital/IT</description>
-      <channel>
-        <medium id="-987">Phone</medium>
-        <address>(973) 754-0722 x.241</address>
-      </channel>
-      <channel>
-        <medium id="-984">Cell</medium>
-        <address>(908) 507-0278</address>
-      </channel>
-      <channel>
-        <medium id="-986">Home phone</medium>
-        <address>(908) 788-0846</address>
-      </channel>
-      <channel>
-        <medium id="-982">Email</medium>
-        <address>jbilodeau@acme.com</address>
-      </channel>
-    </actor>
-    <actor id="76" kind="Actual" name="Judy Palmer">
-      <description></description>
-      <channel>
-        <medium id="-987">Phone</medium>
-        <address>(973) 528-7344</address>
-      </channel>
-      <channel>
-        <medium id="-984">Cell</medium>
-        <address>(908) 447-7344</address>
-      </channel>
-    </actor>
     <organization id="77" kind="Actual" name="Pinnacle">
       <description></description>
       <tag id="11681" kind="Type">Multinational corporation</tag>
@@ -649,132 +765,27 @@
         <title>Employee</title>
       </job>
     </organization>
-    <role id="78" kind="Actual" name="Fire Inspector">
+    <event id="5" kind="Type" name="Building on fire">
       <description></description>
-    </role>
+      <scope id="323">Main building</scope>
+    </event>
     <event id="72" kind="Type" name="Business interrupted">
       <description></description>
     </event>
-    <role id="326" kind="Actual" name="Business Continuity Manager">
-      <description></description>
-    </role>
-    <role id="327" kind="Actual" name="Customer Support Representative">
-      <description></description>
-    </role>
-    <place id="324" kind="Actual" name="2nd shift/floor">
-      <description></description>
-      <within id="323">Main building</within>
-      <geoname></geoname>
-      <geoLocation>
-        <geonameId>5101427</geonameId>
-        <country>United States</country>
-        <state>New Jersey</state>
-        <county>Morris County</county>
-        <city>Morristown</city>
-        <countryCode>US</countryCode>
-        <stateCode>NJ</stateCode>
-        <countyCode>027</countyCode>
-        <cityCode>PPL</cityCode>
-        <population>18886</population>
-        <latitude>40.793691</latitude>
-        <longitude>-74.577753</longitude>
-        <streetAddress>100 Main Road</streetAddress>
-        <postalCode>07963</postalCode>
-        <precision>6</precision>
-      </geoLocation>
-    </place>
-    <role id="325" kind="Actual" name="CEO">
-      <description></description>
-    </role>
     <event id="81" kind="Type" name="Building closed due to fire">
       <description></description>
     </event>
-    <place id="323" kind="Actual" name="Main building">
-      <description></description>
-      <streetAddress>100 Main Road</streetAddress>
-      <postalCode>07963</postalCode>
-      <geoname>Morristown</geoname>
-    </place>
     <event id="82" kind="Type" name="Power is out">
       <description></description>
       <scope id="323">Main building</scope>
     </event>
-    <actor id="334" kind="Actual" name="Arthur Green">
-      <description>Systems: Mac</description>
-      <channel>
-        <medium id="-987">Phone</medium>
-        <address>(973) 754-0722 x.226</address>
-      </channel>
-      <channel>
-        <medium id="-986">Home phone</medium>
-        <address>(973) 387-0755</address>
-      </channel>
-      <channel>
-        <medium id="-982">Email</medium>
-        <address>agreen@acme.com</address>
-      </channel>
-      <channel>
-        <medium id="-984">Cell</medium>
-        <address>(973)478-7403</address>
-      </channel>
-    </actor>
-    <role id="335" kind="Actual" name="Business Continuity Officer">
+    <event id="1191" kind="Type" name="Building unsafe">
       <description></description>
-    </role>
-    <role id="332" kind="Actual" name="Manager">
-      <description></description>
-    </role>
-    <place id="333" kind="Actual" name="Warehouse">
-      <description></description>
-      <geoname></geoname>
-    </place>
-    <role id="330" kind="Actual" name="Response Liaison Officer">
-      <description></description>
-    </role>
-    <role id="331" kind="Actual" name="Customer Account Manager">
-      <description></description>
-    </role>
-    <role id="328" kind="Actual" name="Secretary">
-      <description></description>
-    </role>
-    <role id="329" kind="Actual" name="Public Spokesperson">
-      <description></description>
-    </role>
+    </event>
     <phase id="4972" kind="Actual" name="Recovering">
       <description></description>
       <timing>PostEvent</timing>
     </phase>
-    <actor id="686" kind="Actual" name="R2D2">
-      <description></description>
-      <attachments>
-        <attachment type="Image">http://www.cutiegadget.com/pict/r2-d2_robot.jpg</attachment>
-      </attachments>
-      <system>true</system>
-    </actor>
-    <role id="685" kind="Actual" name="Switchboard and Intercom System">
-      <description></description>
-    </role>
-    <transmissionmedium id="11809" kind="Actual" name="Intercom">
-      <description></description>
-      <addressPattern></addressPattern>
-      <unicast>true</unicast>
-    </transmissionmedium>
-    <role id="11801" kind="Actual" name="Operations Manager">
-      <description></description>
-    </role>
-    <place id="11778" kind="Type" name="Warehouse type">
-      <description>A building used as storage space.</description>
-      <tag id="11779" kind="Type">Building</tag>
-    </place>
-    <place id="11779" kind="Type" name="Building">
-      <description></description>
-    </place>
-    <event id="1191" kind="Type" name="Building unsafe">
-      <description></description>
-    </event>
-    <role id="11623" kind="Type" name="Leader">
-      <description>One who leads</description>
-    </role>
     <phase id="1192" kind="Actual" name="Responding">
       <description>Responding to an event as it unfolds.</description>
       <timing>Concurrent</timing>
@@ -787,7 +798,7 @@
     <plan-phase id="4952">Preparing</plan-phase>
     <organization-involved id="14">ACME</organization-involved>
     <organization-involved id="77">Pinnacle</organization-involved>
-    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/12/07 21:58:15 EST" id="3" name="Power outage">
+    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/12/08 16:05:41 EST" id="3" name="Power outage">
       <description>A power outage interrupts operations at main location.</description>
       <trigger-event id="82">Power is out</trigger-event>
       <phase id="1192">Responding</phase>
@@ -2064,7 +2075,7 @@
         <maxDelay>30 seconds</maxDelay>
       </flow>
     </scenario>
-    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/12/07 21:58:15 EST" id="190" name="Business continuity">
+    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/12/08 16:05:41 EST" id="190" name="Business continuity">
       <description>Provide a framework on which to resume critical business processes when normal work location and the resources in it are not accessible. The department plans are closely coordinated and supported by local management support staff for such areas as technology and office administrative assistance in establishing a continuous working environment.</description>
       <trigger-event id="72">Business interrupted</trigger-event>
       <phase id="1192">Responding</phase>
@@ -3357,7 +3368,7 @@
         <maxDelay>immediately</maxDelay>
       </flow>
     </scenario>
-    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/12/07 21:58:15 EST" id="140" name="Building evacuation">
+    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/12/08 16:05:41 EST" id="140" name="Building evacuation">
       <description>Evacuating the building to minimize risk to personnel.</description>
       <trigger-event id="1191">Building unsafe</trigger-event>
       <phase id="1192">Responding</phase>
@@ -4832,7 +4843,7 @@
         <maxDelay>26 minutes</maxDelay>
       </flow>
     </scenario>
-    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/12/07 21:58:15 EST" id="11799" name="Shutting down operations">
+    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/12/08 16:05:41 EST" id="11799" name="Shutting down operations">
       <description>Shutting down all printing presses and other equipment due to fire</description>
       <trigger-event id="5">Building on fire</trigger-event>
       <phase id="1192">Responding</phase>
@@ -5059,7 +5070,7 @@
         <maxDelay>immediately</maxDelay>
       </flow>
     </scenario>
-    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/12/07 21:58:15 EST" id="167" name="Fire in the building">
+    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/12/08 16:05:41 EST" id="167" name="Fire in the building">
       <description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
 9- Respond immediately to the fire event. &#xd;
 8- Ensure the safety and health of colleagues&#xd;
@@ -5938,7 +5949,7 @@ or move them  to another scenario</remediation>
         <maxDelay>immediately</maxDelay>
       </flow>
     </scenario>
-    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/12/07 21:58:15 EST" id="107" name="Recovery after fire">
+    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2009/12/08 16:05:41 EST" id="107" name="Recovery after fire">
       <description>Managing the aftermath of a fire.</description>
       <trigger-event id="5">Building on fire</trigger-event>
       <phase id="4972">Recovering</phase>

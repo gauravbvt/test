@@ -204,4 +204,12 @@ public class TransmissionMedium extends ModelEntity {
     public String getTypeName() {
         return "Medium";
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean meetsTypeRequirementTests( ModelEntity entityType ) {
+        return unicast == ( (TransmissionMedium) entityType ).isUnicast();
+    }
 }

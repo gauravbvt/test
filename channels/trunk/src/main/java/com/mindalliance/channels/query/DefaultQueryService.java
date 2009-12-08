@@ -274,7 +274,15 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     @SuppressWarnings( {"unchecked"} )
     public Iterator<ModelEntity> iterateEntities() {
-        return listReferencedEntities( ModelEntity.class ).iterator();
+        List<Iterator> entityIterators = new ArrayList<Iterator>();
+        entityIterators.add( listReferencedEntities( TransmissionMedium.class ).iterator() );
+        entityIterators.add( listReferencedEntities( Actor.class ).iterator() );
+        entityIterators.add( listReferencedEntities( Role.class ).iterator() );
+        entityIterators.add( listReferencedEntities( Place.class ).iterator() );
+        entityIterators.add( listReferencedEntities( Organization.class ).iterator() );
+        entityIterators.add( listReferencedEntities( Event.class ).iterator() );
+        entityIterators.add( listReferencedEntities( Phase.class ).iterator() );
+        return (Iterator<ModelEntity>) IteratorUtils.chainedIterator( entityIterators );
     }
 
     /**

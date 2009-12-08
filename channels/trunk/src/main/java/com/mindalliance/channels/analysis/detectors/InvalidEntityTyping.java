@@ -32,14 +32,15 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
         for ( ModelEntity type : types ) {
             if ( !entity.isConsistentWith( type ) ) {
                 Issue issue = makeIssue( Issue.VALIDITY, entity );
-                issue.setDescription( "This " + entity.getTypeName()
+                issue.setDescription( "This " + entity.getTypeName().toLowerCase()
                         + " is tagged as a " + type.getName()
-                        + " but is not consistent its definition." );
+                        + " but is not consistent with its definition." );
                 issue.setRemediation( "Do not use  "
-                        + entity.getTypeName()
+                        + entity.getTypeName().toLowerCase()
+                        + " " + type.getName()
                         + " as a type of "
-                        + entity.getTypeName() + " " + entity.getName()
-                        + "\n or modify the definition of " + entity.getTypeName()
+                        + entity.getName()
+                        + "\n or modify the definition of " + type.getName()
                         + "\n or modify the definition of " + entity.getName() );
                 issue.setSeverity( Issue.Level.Minor );
                 issues.add( issue );
@@ -54,12 +55,13 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
                                  + otherType.getName()
                          );
                          issue.setRemediation( "Remove "
-                                 + type.getTypeName()
-                                 + " as a tag of " + entity.getTypeName()
+                                 + type.getTypeName().toLowerCase()
+                                 + " " + entity.getName()
+                                 + " as a tag of " + entity.getName()
                                  + "\n or remove " + otherType.getName()
-                                 + " as a tag of " + entity.getTypeName()
-                                 + "\n or change the definition of " + type.getTypeName()
-                                 + "\n or change the definition of " + otherType.getTypeName()
+                                 + " as a tag of " + entity.getName()
+                                 + "\n or change the definition of " + type.getName()
+                                 + "\n or change the definition of " + otherType.getName()
                          );
                          issue.setSeverity( Issue.Level.Minor );
                          issues.add( issue );

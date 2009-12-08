@@ -81,7 +81,7 @@ public class IssuesPanel extends AbstractCommandablePanel {
         if ( modelObject instanceof Scenario ) return "Scenario";
         else if ( modelObject instanceof Part ) return "Task";
         else if ( modelObject instanceof Flow ) return "Flow";
-        else return modelObject.getClass().getSimpleName();
+        else return modelObject.getTypeName();
     }
 
     private void createIssuePanels() {

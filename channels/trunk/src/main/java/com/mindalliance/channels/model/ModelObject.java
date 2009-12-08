@@ -394,7 +394,7 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
     public static List<Class> referencingClasses() {
         Class[] classes = {
                 Actor.class, Event.class, Organization.class, Phase.class, Place.class, Phase.class, Role.class,
-                Scenario.class, Part.class, Flow.class
+                Scenario.class, Part.class, Flow.class, TransmissionMedium.class
         };
         return Arrays.asList( classes );
     }

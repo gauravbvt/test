@@ -58,7 +58,7 @@ public class TransmissionMediumConverter extends EntityConverter {
         writer.setValue( medium.isUnicast() ? "true" : "false" );
         writer.endNode();
         for ( Classification classification : medium.getSecurity() ) {
-            writer.startNode( "secureFor" );
+            writer.startNode( "secureForClassification" );
             context.convertAnother( classification );
             writer.endNode();
         }
@@ -77,10 +77,10 @@ public class TransmissionMediumConverter extends EntityConverter {
             medium.setAddressPattern( reader.getValue() );
         } else if ( nodeName.equals( "unicast" ) ) {
             medium.setUnicast( reader.getValue().equals( "true" ) );
-        } else if ( nodeName.equals( "secureFor" ) ) {
+        } else if ( nodeName.equals( "secureForClassification" ) ) {
             Classification classification = (Classification) context.convertAnother(
                     plan,
-                    ClassificationConverter.class );
+                    Classification.class );
             medium.addSecurity( classification );
         } else {
             LOG.warn( "Unknown element " + nodeName );

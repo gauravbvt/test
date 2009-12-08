@@ -35,6 +35,14 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
      */
     private CheckBox unicastCheckBox;
     /**
+     * Container for address pattern field.
+     */
+    private WebMarkupContainer addressPatternContainer;
+    /**
+     * Container for security classifications panel.
+     */
+    private WebMarkupContainer securityContainer;
+    /**
      * Address pattern field.
      */
     private TextField<String> addressPatternField;
@@ -56,12 +64,14 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
 
     private void adjustFields() {
         unicastCheckBox.setEnabled( isLockedByUser( getMedium() ) );
+        addressPatternContainer.setVisible( getMedium().isActual() );
         addressPatternField.setEnabled( isLockedByUser( getMedium() ) );
+        securityContainer.setVisible( getMedium().isActual() );
     }
 
     private void addUnicast() {
         unicastCheckBox = new CheckBox( "unicast", new PropertyModel<Boolean>( this, "unicast" ) );
-        unicastCheckBox.add( new AjaxFormComponentUpdatingBehavior( "oncheck" ) {
+        unicastCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getMedium(), "unicast" ) );
             }
@@ -70,6 +80,8 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
     }
 
     private void addAddressPattern() {
+        addressPatternContainer = new WebMarkupContainer( "addressPatternContainer" );
+        moDetailsDiv.add( addressPatternContainer );
         addressPatternField = new TextField<String>(
                 "addressPattern",
                 new PropertyModel<String>( this, "addressPattern" ) );
@@ -78,11 +90,13 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
                 update( target, new Change( Change.Type.Updated, getMedium(), "addressPattern" ) );
             }
         } );
-        moDetailsDiv.add( addressPatternField );
+        addressPatternContainer.add( addressPatternField );
     }
 
     private void addSecurity() {
-        moDetailsDiv.add( new ClassificationsPanel(
+        securityContainer = new WebMarkupContainer( "securityContainer" );
+        moDetailsDiv.add( securityContainer );
+        securityContainer.add( new ClassificationsPanel(
                 "security",
                 new Model<Identifiable>( getMedium() ),
                 "security",
