@@ -4,15 +4,12 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Channelable;
-import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.TransmissionMedium;
-import org.apache.commons.collections.Predicate;
-import org.apache.commons.collections.iterators.FilterIterator;
+import com.mindalliance.channels.pages.ModelObjectLink;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -27,14 +24,10 @@ import org.apache.wicket.model.PropertyModel;
 
 import java.io.Serializable;
 import java.text.Collator;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 /**
  * An editable list of channels.
@@ -60,7 +53,25 @@ public class ChannelListPanel extends AbstractCommandablePanel {
      * No channel message.
      */
     private WebMarkupContainer noChannelList;
+    /**
+     * New medium marker.
+     */
+    private static TransmissionMedium NewMedium;
 
+    /**
+     * New medium type marker.
+     */
+    private static TransmissionMedium NewMediumType;
+
+    static {
+        NewMedium = new TransmissionMedium( "New medium" );
+        // fake id -- need only be different from newMediumType
+        NewMedium.setId( Long.MIN_VALUE );
+        NewMediumType = new TransmissionMedium( "New medium type" );
+        NewMediumType.setType();
+        // fake id
+        NewMediumType.setId( Long.MAX_VALUE );
+    }
 
     public ChannelListPanel( String id, IModel<Channelable> model ) {
         super( id, model, null );
@@ -77,15 +88,13 @@ public class ChannelListPanel extends AbstractCommandablePanel {
 
     private boolean canBeEdited() {
         Channelable channelable = getChannelable();
-        return isLockedByUser( channelable ) && channelable.canSetChannels() ;
+        return isLockedByUser( channelable ) && channelable.canSetChannels();
     }
 
     private void adjustFields() {
         boolean hasChannels = !getWrappedChannels().isEmpty();
         channelsList.setVisible( hasChannels );
         noChannelList.setVisible( !hasChannels );
-
-        Channelable channelable = getChannelable();
         channelsList.setEnabled( canBeEdited() );
     }
 
@@ -94,7 +103,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         target.addComponent( channelsList );
         update( target,
                 new Change( Change.Type.Updated, getChannelable(),
-                            "effectiveChannels" ) );                                      // NON-NLS
+                        "effectiveChannels" ) );                                      // NON-NLS
     }
 
     private Channelable getChannelable() {
@@ -134,32 +143,30 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         return wrappedChannels;
     }
 
-    /**
-     * Get channels used somewhere else by this channelable.
-     *
-     * @return a list of channel
-     */
-    public Set<Channel> getCandidateChannels() {
-        return new HashSet<Channel>(
-                getQueryService().findAllChannelsFor( new ResourceSpec( getChannelable() ) ) );
-    }
-
     //====================================================
     /**
      * A wrapper to keep track of the deletion state of channel.
      */
     private class Wrapper implements Serializable {
 
-        /** The underlying channel. */
+        /**
+         * The underlying channel.
+         */
         private Channel channel;
 
-        /** True if user marked item for keeps. */
+        /**
+         * True if user marked item for keeps.
+         */
         private boolean included = true;
 
-        /** True when the channel is to be added. */
+        /**
+         * True when the channel is to be added.
+         */
         private boolean markedForCreation;
 
-        /** If the wrapped channel shouldn't be edited. */
+        /**
+         * If the wrapped channel shouldn't be edited.
+         */
         private boolean readOnly;
 
         private Wrapper( Channel channel, boolean readOnly ) {
@@ -168,7 +175,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         }
 
         private Wrapper() {
-            this( new Channel(), false );
+            this( new Channel( TransmissionMedium.UNKNOWN ), false );
             markedForCreation = true;
             included = false;
         }
@@ -193,39 +200,39 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             this.included = included;
             if ( !markedForCreation )
                 doAction( getChannelable(), included ? UpdateObject.Action.Add
-                                                     : UpdateObject.Action.Remove );
+                        : UpdateObject.Action.Remove );
         }
 
         private void doAction( Channelable channelable, UpdateObject.Action action ) {
             doCommand(
                     UpdateObject.makeCommand(
-                            channelable, "effectiveChannels",                             // NON-NLS
-                            channel, action ) );
+                            channelable,
+                            "effectiveChannels",
+                            channel,
+                            action ) );
         }
 
         public TransmissionMedium getMedium() {
             return channel.getMedium();
         }
 
-        public void setMedium( TransmissionMedium medium ) {
+        public void setMedium( TransmissionMedium value ) {
             Channelable channelable = getChannelable();
-            if ( markedForCreation ) {
-                channel.setMedium( medium );
-                if ( medium != null )
-                    doAction( channelable, UpdateObject.Action.Add );
-            } else {
-                if ( medium == null )
-                    doAction( channelable, UpdateObject.Action.Remove );
-                else {
-                    int index = channelable.getEffectiveChannels().indexOf( channel );
-                    if ( index >= 0 )
-                        doCommand( UpdateObject.makeCommand(
-                                channelable,
-                                "effectiveChannels[" + index + "].medium",                // NON-NLS
-                                medium,
-                                UpdateObject.Action.Set ) );
-
+            if ( markedForCreation && value != null ) {
+                TransmissionMedium medium;
+                if ( value.equals( NewMedium ) ) {
+                    medium = getQueryService().safeFindOrCreate(
+                            TransmissionMedium.class,
+                            NewMedium.getName() );
+                } else if ( value.equals( NewMediumType ) ) {
+                    medium = getQueryService().safeFindOrCreateType(
+                            TransmissionMedium.class,
+                            NewMediumType.getName() );
+                } else {
+                    medium = value;
                 }
+                channel.setMedium( medium );
+                doAction( channelable, UpdateObject.Action.Add );
             }
         }
 
@@ -240,7 +247,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                 if ( index >= 0 )
                     doCommand( UpdateObject.makeCommand(
                             channelable,
-                            "effectiveChannels[" + index + "].address",                   // NON-NLS
+                            "effectiveChannels[" + index + "].address",
                             address == null ? "" : address.trim(),
                             UpdateObject.Action.Set ) );
             }
@@ -267,21 +274,31 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         @Override
         protected void populateItem( ListItem<Wrapper> item ) {
             Wrapper wrapper = item.getModelObject();
+            TransmissionMedium medium = wrapper.getMedium();
+            item.add( createCheckbox( wrapper ) );
+            int maxLabelSize = maxMediumLabelSize();
+            ModelObjectLink mediumLink = new ModelObjectLink(
+                    "mediumLink",
+                    new Model<TransmissionMedium>( medium ),
+                    new Model<String>( medium.getName() ) );
+            mediumLink.setVisible( !wrapper.isMarkedForCreation() );
+            item.add( mediumLink );
+            Label addressLabel = new Label( "addressString", new Model<String>( wrapper.getAddress() ) );
+            addressLabel.setVisible( getChannelable().isEntity() && wrapper.isReadOnly() );
+            item.add( addressLabel );
             TextField<String> addressField = createAddressField( wrapper );
-
+            item.add( addressField );
+            item.add( createChoices( wrapper ) );
+            item.add( createMover( wrapper ) );
             Label channelText = new Label( "channel-string",                              // NON-NLS
-                                           wrapper.getChannel().toString() );
+                    wrapper.getChannel().toString() );
             channelText.setVisible( wrapper.isReadOnly() );
             item.add( channelText );
-
-            item.add( createCheckbox( wrapper ) );
-            item.add( createChoices( wrapper, addressField ) );
-            item.add( addressField );
-            item.add( createMover( wrapper ) );
         }
 
         private AjaxFallbackLink<?> createMover( final Wrapper wrapper ) {
             AjaxFallbackLink<?> result = new AjaxFallbackLink( "move-to-top" ) {          // NON-NLS
+
                 @Override
                 public void onClick( AjaxRequestTarget target ) {
                     wrapper.moveToFirst();
@@ -292,81 +309,66 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             List<Channel> effectiveChannels = getChannelable().getEffectiveChannels();
             result.setVisible(
                     !effectiveChannels.isEmpty()
-                    && canBeEdited()
-                    && !wrapper.getChannel().equals( effectiveChannels.get( 0 ) )
-                    && !wrapper.isMarkedForCreation() );
+                            && canBeEdited()
+                            && !wrapper.getChannel().equals( effectiveChannels.get( 0 ) )
+                            && !wrapper.isMarkedForCreation() );
             return result;
         }
 
-        private Set<TransmissionMedium> getCandidateMedia() {
-            Set<TransmissionMedium> result = new HashSet<TransmissionMedium>();
-            for ( Channel channel : getCandidateChannels() )
-                result.add( channel.getMedium() );
-
-            return result;
-        }
-
-        private List<String> getCandidateAddresses( TransmissionMedium medium ) {
-            Set<String> addresses = new HashSet<String>();
-            if ( medium != null )
-                for ( Channel channel : getCandidateChannels() ) {
-                    if ( medium.equals( channel.getMedium() ) ) {
-                        String address = channel.getAddress();
-                        if ( address != null ) {
-                            String s = address.trim();
-                            if ( !s.isEmpty() )
-                                addresses.add( s );
-                        }
-                    }
+        private List<TransmissionMedium> getCandidateMedia() {
+            List<TransmissionMedium> candidates = new ArrayList<TransmissionMedium>();
+            candidates.addAll( getQueryService().listActualEntities( TransmissionMedium.class ) );
+            if ( !getChannelable().isEntity() ) {
+                candidates.addAll( getQueryService().listTypeEntities( TransmissionMedium.class ) );
+            }
+            Collections.sort( candidates, new Comparator<TransmissionMedium>() {
+                public int compare( TransmissionMedium o1, TransmissionMedium o2 ) {
+                    return Collator.getInstance().compare( o1.getLabel(), o2.getLabel() );
                 }
-
-            List<String> result = new ArrayList<String>( addresses );
-            Collections.sort( result );
-            return result;
+            } );
+            candidates.add( NewMedium );
+            if ( !getChannelable().isEntity() ) {
+                candidates.add( NewMediumType );
+            }
+            return candidates;
         }
 
         private DropDownChoice<TransmissionMedium> createChoices(
-                final Wrapper wrapper, final TextField<String> addressField ) {
-            final Set<TransmissionMedium> candidateMedia = getCandidateMedia();
-
-            final DropDownChoice<TransmissionMedium> result = new DropDownChoice<TransmissionMedium>(
+                final Wrapper wrapper ) {
+            final DropDownChoice<TransmissionMedium> mediumDropDownChoice = new DropDownChoice<TransmissionMedium>(
                     "medium",
                     new PropertyModel<TransmissionMedium>( wrapper, "medium" ),
-                    getMedia( wrapper ),
+                    getCandidateMedia(),
                     new IChoiceRenderer<TransmissionMedium>() {
-                        public Object getDisplayValue( TransmissionMedium object ) {
-                            return object == null ? "Select a medium"
-                                 : candidateMedia.contains( object ) ?
-                                        MessageFormat.format( "{0} *", object.getLabel() )
-                                 : object.getLabel();
+                        public Object getDisplayValue( TransmissionMedium medium ) {
+                            return medium.isUnknown() ? "Choose One" : medium.getLabel();
                         }
 
                         public String getIdValue( TransmissionMedium object, int index ) {
                             return Integer.toString( index );
                         }
                     } );
-
-            result.add(
+            mediumDropDownChoice.add(
                     new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                         @Override
                         protected void onUpdate( AjaxRequestTarget target ) {
-                            addressField.setEnabled( ChannelListPanel.this.isEnabled() );
-                            boolean addressAllowed = !( result.getModelObject().isUnicast()
-                                                        && !getChannelable().canBeUnicast() );
-                            if ( !addressAllowed )
-                                wrapper.getChannel().setAddress( "" );
-                            addressField.setVisible( addressAllowed );
-                            target.addComponent( addressField );
                             doUpdate( target );
                         }
                     } );
 
-            result.setVisible( !wrapper.isReadOnly() );
-            result.setEnabled( isEnabled() );
-            return result;
+            mediumDropDownChoice.setVisible( isEnabled() && wrapper.isMarkedForCreation() );
+            return mediumDropDownChoice;
         }
 
-        private List<TransmissionMedium> getMedia( Wrapper wrapper ) {
+        private int maxMediumLabelSize() {
+            int max = 0;
+            for ( TransmissionMedium medium : getCandidateMedia() ) {
+                max = Math.max( max, medium.getLabel().length() );
+            }
+            return max;
+        }
+
+        /*private List<TransmissionMedium> getMedia( Wrapper wrapper ) {
             List<TransmissionMedium> media = new ArrayList<TransmissionMedium>();
             media.addAll( getQueryService().listActualEntities( TransmissionMedium.class ) );
             Collections.sort( media, new Comparator<TransmissionMedium>() {
@@ -377,45 +379,27 @@ public class ChannelListPanel extends AbstractCommandablePanel {
 
             // Hack for invalid medium in actual data
             TransmissionMedium medium = wrapper.getMedium();
-            if ( medium != null && !media.contains( medium ) )
+            if ( medium != null && !media.coninttains( medium ) )
                 media.add( 0, medium );
             return media;
         }
-
+*/
         private TextField<String> createAddressField( Wrapper wrapper ) {
-            TransmissionMedium medium = wrapper.getMedium();
-            final List<String> suggestions = getCandidateAddresses( medium );
-
-            AutoCompleteTextField<String> result = new AutoCompleteTextField<String>(
-                    "address", new PropertyModel<String>( wrapper, "address" ) ) {        // NON-NLS
-
-                @Override @SuppressWarnings( { "unchecked" } )
-                protected Iterator<String> getChoices( String input ) {
-                    final String trimmedInput = input.trim();
-                    return (Iterator<String>) new FilterIterator(
-                            suggestions.iterator(),
-                            new Predicate() {
-                                public boolean evaluate( Object object ) {
-                                    return ( (String) object ).startsWith( trimmedInput );
-                                }
-                            } );
-                }
-            };
-
-            result.add(
+            TextField<String> addressField = new TextField<String>(
+                    "address", new PropertyModel<String>( wrapper, "address" ) );
+            addressField.add(
                     new AjaxFormComponentUpdatingBehavior( "onchange" ) {                 // NON-NLS
+
                         @Override
                         protected void onUpdate( AjaxRequestTarget target ) {
                             doUpdate( target );
                         }
                     } );
 
-            flagIfInvalid( result, wrapper );
-            result.setVisible( medium != null &&
-                               ( medium.isUnicast() && getChannelable().canBeUnicast()
-                                 || medium == TransmissionMedium.UNKNOWN ) );
-            result.setEnabled( canBeEdited() );
-            return result;
+            flagIfInvalid( addressField, wrapper );
+            addressField.setVisible( !wrapper.isMarkedForCreation() && getChannelable().isEntity() );
+            addressField.setEnabled( canBeEdited() );
+            return addressField;
         }
 
         private CheckBox createCheckbox( Wrapper wrapper ) {
@@ -423,7 +407,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                     "included", new PropertyModel<Boolean>( wrapper, "included" ) );      // NON-NLS
             addUpdatingBehavior( result );
             result.setEnabled( !wrapper.isReadOnly() && isEnabled() );
-            makeVisible(result, !wrapper.isMarkedForCreation() );
+            makeVisible( result, !wrapper.isMarkedForCreation() );
             return result;
         }
 
@@ -455,6 +439,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
 
         private void addUpdatingBehavior( CheckBox checkBox ) {
             checkBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {           // NON-NLS
+
                 @Override
                 protected void onUpdate( AjaxRequestTarget target ) {
                     doUpdate( target );

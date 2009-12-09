@@ -4,6 +4,7 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
@@ -63,27 +64,37 @@ public class PartConverter extends AbstractChannelsConverter {
         }
         if ( part.getRole() != null ) {
             writer.startNode( "role" );
-            context.convertAnother( part.getRole() );
+            writer.addAttribute( "id", Long.toString( part.getRole().getId() ) );
+            writer.addAttribute( "kind", part.getRole().isType() ? "Type" : "Actual" );
+            writer.setValue( part.getRole().getName() );
             writer.endNode();
         }
         if ( part.getActor() != null ) {
             writer.startNode( "actor" );
-            context.convertAnother( part.getActor() );
+            writer.addAttribute( "id", Long.toString( part.getActor().getId() ) );
+            writer.addAttribute( "kind", part.getActor().isType() ? "Type" : "Actual" );
+            writer.setValue( part.getActor().getName() );
             writer.endNode();
         }
         if ( part.getOrganization() != null ) {
             writer.startNode( "organization" );
-            context.convertAnother( part.getOrganization() );
+            writer.addAttribute( "id", Long.toString( part.getOrganization().getId() ) );
+            writer.addAttribute( "kind", part.getOrganization().isType() ? "Type" : "Actual" );
+            writer.setValue( part.getOrganization().getName() );
             writer.endNode();
         }
         if ( part.getLocation() != null ) {
             writer.startNode( "location" );
-            context.convertAnother( part.getLocation() );
+            writer.addAttribute( "id", Long.toString( part.getLocation().getId() ) );
+            writer.addAttribute( "kind", part.getLocation().isType() ? "Type" : "Actual" );
+            writer.setValue( part.getLocation().getName() );
             writer.endNode();
         }
         if ( part.getJurisdiction() != null ) {
             writer.startNode( "jurisdiction" );
-            context.convertAnother( part.getJurisdiction() );
+            writer.addAttribute( "id", Long.toString( part.getJurisdiction().getId() ) );
+            writer.addAttribute( "kind", part.getJurisdiction().isType() ? "Type" : "Actual" );
+            writer.setValue( part.getJurisdiction().getName() );
             writer.endNode();
         }
         if ( part.isSelfTerminating() ) {
@@ -146,22 +157,45 @@ public class PartConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "task" ) ) {
                 part.setTask( reader.getValue() );
             } else if ( nodeName.equals( "role" ) ) {
-                Role role = (Role) context.convertAnother( scenario, Role.class );
-                part.setRole( role );
+                String idString = reader.getAttribute( "id" );
+                ModelEntity.Kind kind = kind( reader.getAttribute( "kind" ) );
+                part.setRole( getEntity(
+                        Role.class,
+                        reader.getValue(),
+                        Long.parseLong( idString ),
+                        kind, context ) );
             } else if ( nodeName.equals( "actor" ) ) {
-                Actor actor = (Actor) context.convertAnother( scenario, Actor.class );
-                part.setActor( actor );
+                String idString = reader.getAttribute( "id" );
+                ModelEntity.Kind kind = kind( reader.getAttribute( "kind" ) );
+                part.setActor( getEntity(
+                        Actor.class,
+                        reader.getValue(),
+                        Long.parseLong( idString ),
+                        kind, context ) );
             } else if ( nodeName.equals( "organization" ) ) {
-                Organization organization = (Organization) context.convertAnother( scenario,
-                        Organization.class );
-                part.setOrganization( organization );
+                String idString = reader.getAttribute( "id" );
+                ModelEntity.Kind kind = kind( reader.getAttribute( "kind" ) );
+                part.setOrganization( getEntity(
+                        Organization.class,
+                        reader.getValue(),
+                        Long.parseLong( idString ),
+                        kind, context ) );
             } else if ( nodeName.equals( "location" ) ) {
-                Place location = (Place) context.convertAnother( scenario, Place.class );
-                part.setLocation( location );
+                String idString = reader.getAttribute( "id" );
+                ModelEntity.Kind kind = kind( reader.getAttribute( "kind" ) );
+                part.setLocation( getEntity(
+                        Place.class,
+                        reader.getValue(),
+                        Long.parseLong( idString ),
+                        kind, context ) );
             } else if ( nodeName.equals( "jurisdiction" ) ) {
-                Place jurisdiction =
-                        (Place) context.convertAnother( scenario, Place.class );
-                part.setJurisdiction( jurisdiction );
+                String idString = reader.getAttribute( "id" );
+                ModelEntity.Kind kind = kind( reader.getAttribute( "kind" ) );
+                part.setJurisdiction( getEntity( 
+                        Place.class,
+                        reader.getValue(),
+                        Long.parseLong( idString ),
+                        kind, context ) );
             } else if ( nodeName.equals( "completionTime" ) ) {
                 part.setCompletionTime( Delay.parse( reader.getValue() ) );
             } else if ( nodeName.equals( "repeatsEvery" ) ) {
@@ -171,7 +205,7 @@ public class PartConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "terminatesEvent" ) ) {
                 part.setTerminatesEventPhase( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "initiatedEvent" ) ) {
-                String eventId = reader.getAttribute( "id");
+                String eventId = reader.getAttribute( "id" );
                 String eventName = reader.getValue();
                 Event event = findOrCreateType( Event.class, eventName, eventId );
                 if ( event == null ) LOG.warn( "Plan has no event named " + eventName );
@@ -191,6 +225,12 @@ public class PartConverter extends AbstractChannelsConverter {
             reader.moveUp();
         }
         return part;
+    }
+
+    private ModelEntity.Kind kind( String attribute ) {
+        if ( attribute == null ) return ModelEntity.Kind.Actual;
+        if ( attribute.equals( "Type" ) ) return ModelEntity.Kind.Type;
+        return ModelEntity.Kind.Actual;
     }
 
 }

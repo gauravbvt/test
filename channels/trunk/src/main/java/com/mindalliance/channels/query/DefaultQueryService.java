@@ -200,6 +200,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             return (T) Place.UNKNOWN;
         else if ( clazz.isAssignableFrom( Role.class ) && Role.UNKNOWN.getId() == id )
             return (T) Role.UNKNOWN;
+        else if ( clazz.isAssignableFrom( TransmissionMedium.class ) && TransmissionMedium.UNKNOWN.getId() == id )
+            return (T) TransmissionMedium.UNKNOWN;
         else
             throw new NotFoundException();
     }

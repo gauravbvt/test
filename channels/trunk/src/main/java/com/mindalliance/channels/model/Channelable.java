@@ -66,4 +66,10 @@ public interface Channelable extends Identifiable {
      * @return a string indicating a problem or null if none
      */
     String validate( Channel channel );
+
+    /**
+     * Whether the channelable is an entity.
+     * @return a boolean
+     */
+    boolean isEntity();
 }

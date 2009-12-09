@@ -32,11 +32,11 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
         for ( ModelEntity type : types ) {
             if ( !entity.isConsistentWith( type ) ) {
                 Issue issue = makeIssue( Issue.VALIDITY, entity );
-                issue.setDescription( "This " + entity.getTypeName().toLowerCase()
+                issue.setDescription( "This " + entity.getTypeName()
                         + " is tagged as a " + type.getName()
                         + " but is not consistent with its definition." );
                 issue.setRemediation( "Do not use  "
-                        + entity.getTypeName().toLowerCase()
+                        + entity.getTypeName()
                         + " " + type.getName()
                         + " as a type of "
                         + entity.getName()
@@ -55,7 +55,7 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
                                  + otherType.getName()
                          );
                          issue.setRemediation( "Remove "
-                                 + type.getTypeName().toLowerCase()
+                                 + type.getTypeName()
                                  + " " + entity.getName()
                                  + " as a tag of " + entity.getName()
                                  + "\n or remove " + otherType.getName()

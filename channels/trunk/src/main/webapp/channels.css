@@ -553,6 +553,10 @@ div.header {
     background: transparent url( 'images/actor.png' ) no-repeat 5px 2px;
 }
 
+.medium .header {
+    background: transparent url( 'images/medium.png' ) no-repeat 5px 2px;
+}
+
 .system .header {
     background: transparent url( 'images/system.png' ) no-repeat 5px 2px;
 }

@@ -279,7 +279,8 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
                 || equals( Organization.UNKNOWN )
                 || equals( Place.UNKNOWN )
                 || equals( Role.UNKNOWN )
-                || equals( Phase.UNKNOWN );
+                || equals( Phase.UNKNOWN )
+                || equals( TransmissionMedium.UNKNOWN );
     }
 
     /**

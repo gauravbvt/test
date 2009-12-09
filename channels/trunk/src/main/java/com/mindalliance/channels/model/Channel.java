@@ -60,6 +60,10 @@ public class Channel implements Serializable, Comparable<Channel> {
         this.address = address == null ? "" : address;
     }
 
+    public Channel( TransmissionMedium medium ) {
+        this(medium, "" );
+    }
+
     @Enumerated( value = EnumType.STRING )
     public TransmissionMedium getMedium() {
         return medium;

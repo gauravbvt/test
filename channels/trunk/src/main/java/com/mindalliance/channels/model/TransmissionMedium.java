@@ -202,7 +202,7 @@ public class TransmissionMedium extends ModelEntity {
      */
     @Override
     public String getTypeName() {
-        return "Medium";
+        return "medium";
     }
 
     /**
@@ -211,5 +211,17 @@ public class TransmissionMedium extends ModelEntity {
     @Override
     protected boolean meetsTypeRequirementTests( ModelEntity entityType ) {
         return unicast == ( (TransmissionMedium) entityType ).isUnicast();
+    }
+
+    /**
+     * Make a new medium type.
+     *
+     * @param name a string
+     * @return a transmission medium
+     */
+    public static TransmissionMedium makeType( String name ) {
+        TransmissionMedium medium = new TransmissionMedium( name );
+        medium.setType();
+        return medium;
     }
 }
