@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
@@ -53,7 +54,10 @@ public class EntityShowMenuPanel extends MenuPanel {
                 new Model<String>( "Details" ),
                 detailsLink ) );
         ModelEntity entity = getEntity();
-        if ( !( entity instanceof Event || entity instanceof Place || entity instanceof Phase ) ) {
+        if ( !( entity instanceof Event
+                || entity instanceof Place
+                || entity instanceof Phase
+                || entity instanceof TransmissionMedium ) ) {
             Link networkLink = new AjaxFallbackLink( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {
                     changeAspectTo( target, "network" );

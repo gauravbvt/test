@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -81,7 +82,7 @@ public class IssuesPanel extends AbstractCommandablePanel {
         if ( modelObject instanceof Scenario ) return "Scenario";
         else if ( modelObject instanceof Part ) return "Task";
         else if ( modelObject instanceof Flow ) return "Flow";
-        else return modelObject.getTypeName();
+        else return StringUtils.capitalize( modelObject.getTypeName() );
     }
 
     private void createIssuePanels() {
