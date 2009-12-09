@@ -42,30 +42,38 @@ public class InvalidChannel extends AbstractIssueDetector {
     }
 
     /**
-     * Do the work of detecting issues about the model object.
-     *
-     * @param modelObject -- the model object being analyzed
-     * @return -- a list of issues
+     * {@inheritDoc}
      */
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Channelable channelable = (Channelable) modelObject;
         List<Channel> channels = channelable.getEffectiveChannels();
         for ( Channel channel : channels ) {
-            String problem = channelable.validate( channel );
+            // Check for valid medium and if valid for valid address.
+            String problem;
+            String remediation = "";
+            if ( channel.getMedium() == null || channel.getMedium().isUnknown() ) {
+                problem = "Channel is missing a transmission medium.";
+                remediation = "Provide a valid medium for the channel.";
+            } else if ( channel.getMedium().hasInvalidAddressPattern() ) {
+                problem = " Medium " + channel.getMedium().getName() + " has an invalid address pattern";
+                remediation= "Fix the address pattern"
+                        + "\nor remove the address pattern from the definition of " 
+                        + channel.getMedium().getName();
+            } else {
+                problem = channelable.validate( channel );
+                if ( problem != null ) {
+                    remediation = "Provide a correct address for " + channel.getMedium() + ".";
+                }
+            }
             if ( problem != null ) {
                 Issue issue = makeIssue( Issue.VALIDITY, modelObject );
                 issue.setDescription( channel.toString() + ": " + problem );
-                String remediation;
-                if ( channel.getMedium() == null ) {
-                    remediation = "Provide a valid medium for the channel.";
-                } else {
-                    remediation = "Provide a correct address for " + channel.getMedium() + ".";
-                }
                 issue.setRemediation( remediation );
                 issue.setSeverity( getSeverity( channelable ) );
                 issues.add( issue );
             }
+            // Check for duplicate channels.
             if ( CollectionUtils.cardinality( channel, channels ) > 1 ) {
                 Issue issue = makeIssue( Issue.VALIDITY, modelObject );
                 issue.setDescription( channel.toString() + " is repeated." );

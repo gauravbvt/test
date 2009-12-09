@@ -198,9 +198,17 @@ public class ChannelListPanel extends AbstractCommandablePanel {
 
         public void setIncluded( boolean included ) {
             this.included = included;
-            if ( !markedForCreation )
+            if ( !markedForCreation ) {
+                if ( included ) {
+                    doAction( getChannelable(), UpdateObject.Action.Add );
+                } else {
+                    TransmissionMedium medium = getMedium();
+                    doAction( getChannelable(), UpdateObject.Action.Remove );
+                    getCommander().cleanup( TransmissionMedium.class, medium.getName() );
+                }
                 doAction( getChannelable(), included ? UpdateObject.Action.Add
                         : UpdateObject.Action.Remove );
+            }
         }
 
         private void doAction( Channelable channelable, UpdateObject.Action action ) {

@@ -61,7 +61,7 @@ public class Channel implements Serializable, Comparable<Channel> {
     }
 
     public Channel( TransmissionMedium medium ) {
-        this(medium, "" );
+        this( medium, "" );
     }
 
     @Enumerated( value = EnumType.STRING )
@@ -165,6 +165,15 @@ public class Channel implements Serializable, Comparable<Channel> {
      */
     @Transient
     public boolean isValid() {
+        return medium != null && medium.isAddressValidIfSet( address );
+    }
+
+    /**
+     * Test is address is valid.
+     *
+     * @return a boolean
+     */
+    public boolean hasValidAddress() {
         return medium != null && medium.isAddressValid( address );
     }
 
@@ -220,5 +229,20 @@ public class Channel implements Serializable, Comparable<Channel> {
         } else {
             return false;
         }
+    }
+
+    public boolean isSecuredFor( List<Classification> classifications ) {
+        return medium != null
+                && ( medium.isDirect()
+                || Classification.hasHigherClassification( medium.getSecurity(), classifications ) );
+    }
+
+    /**
+     * Whether the channel's medium is direct.
+     *
+     * @return a boolean
+     */
+    public boolean isDirect() {
+        return medium != null && medium.isDirect();
     }
 }

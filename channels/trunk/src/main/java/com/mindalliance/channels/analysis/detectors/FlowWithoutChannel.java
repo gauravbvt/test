@@ -2,20 +2,14 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
-import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.TransmissionMedium;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Detects issue where a flow has no defined channel.
@@ -44,10 +38,10 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
             if ( flowChannels.isEmpty() ) {
                 issues.add( createIssue( modelObject,
                         getSeverity( flow ),
-                        "Flow requires a channel.",
-                        "Provide at least one channel." ) );
+                        "At least one channel is requried.",
+                        "Add a channel" ) );
 
-            } else if ( !flow.canBeUnicast() ) {
+            } /*else if ( !flow.canBeUnicast() ) {
                 // Communicating with a non-unicastable using a unicast channel for which
                 // a matching actor doesn't have a channel defined with same medium.
                 Set<TransmissionMedium> media = getUnicastMedia( flow );
@@ -64,7 +58,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
                             issues.addAll( findIssues( modelObject, actorSpec, media ) );
                         }
                 }
-            }
+            }*/
         }
         return issues;
     }
@@ -77,6 +71,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
         }
     }
 
+/*
     private List<Issue> findIssues(
             ModelObject modelObject, ResourceSpec actorSpec, Set<TransmissionMedium> media ) {
 
@@ -99,7 +94,9 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
         }
         return result;
     }
+*/
 
+/*
     private static Set<TransmissionMedium> getUnicastMedia( Flow flow ) {
         Set<TransmissionMedium> media = new HashSet<TransmissionMedium>();
         for ( Channel channel : flow.getEffectiveChannels() ) {
@@ -109,6 +106,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
         }
         return media;
     }
+*/
 
     private DetectedIssue createIssue(
             ModelObject modelObject, Issue.Level severity, String description,

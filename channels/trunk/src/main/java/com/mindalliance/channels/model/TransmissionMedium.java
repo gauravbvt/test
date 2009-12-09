@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -48,6 +47,11 @@ public class TransmissionMedium extends ModelEntity {
      * Whether the medium is unicast or broadcast.
      */
     private boolean unicast = true;
+    /**
+     * Whether the medium is de facto available to all, address-free and fully secured.
+     * Can only be made true for built-in media.
+     */
+    private boolean direct = false;
     /**
      * List of security classifications satisfied by this medium for the transmission of classified info.
      */
@@ -124,6 +128,14 @@ public class TransmissionMedium extends ModelEntity {
         this.unicast = unicast;
     }
 
+    public boolean isDirect() {
+        return direct;
+    }
+
+    public void setDirect( boolean direct ) {
+        this.direct = direct;
+    }
+
     /**
      * Whether the medium is for broadcast.
      *
@@ -162,19 +174,28 @@ public class TransmissionMedium extends ModelEntity {
 
 
     /**
-     * Check if an address is valid.
+     * Check if an address is valid if set.
+     *
+     * @param address the address
+     * @return true if valid
+     */
+    public boolean isAddressValidIfSet( String address ) {
+        return addressPattern.isEmpty()
+                || address.isEmpty()
+                || compiledPattern != null && compiledPattern.matcher( address ).matches();
+    }
+
+    /**
+     * Check if an address is valid if set.
      *
      * @param address the address
      * @return true if valid
      */
     public boolean isAddressValid( String address ) {
-        if ( addressPattern.isEmpty() ) return true;
-        if ( address.isEmpty() && isBroadcast() ) return true;
-        Pattern p = getCompiledPattern();
-        if ( p == null ) return false; // invalid address pattern - refuse all addresses
-        Matcher m = p.matcher( address );
-        return m.matches();
+        return addressPattern.isEmpty()
+                || compiledPattern != null && compiledPattern.matcher( address ).matches();
     }
+
 
     /**
      * {@inheritDoc}
@@ -214,14 +235,11 @@ public class TransmissionMedium extends ModelEntity {
     }
 
     /**
-     * Make a new medium type.
+     * The address pattern could not be compiled.
      *
-     * @param name a string
-     * @return a transmission medium
+     * @return a boolean
      */
-    public static TransmissionMedium makeType( String name ) {
-        TransmissionMedium medium = new TransmissionMedium( name );
-        medium.setType();
-        return medium;
+    public boolean hasInvalidAddressPattern() {
+        return !addressPattern.isEmpty() && compiledPattern == null;
     }
 }

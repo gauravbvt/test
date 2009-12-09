@@ -166,6 +166,7 @@
                      <property name="name" value="Face to face"/>
                      <property name="addressPattern" value=".*"/>
                      <property name="unicast" value="true"/>
+                     <property name="direct" value="true"/>
                  </bean>
                 <bean class="com.mindalliance.channels.model.TransmissionMedium">
                      <property name="name" value="Meeting"/>

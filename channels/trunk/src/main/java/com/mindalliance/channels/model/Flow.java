@@ -726,15 +726,12 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      * {@inheritDoc }
      */
     public String validate( Channel channel ) {
-        String problem = null;
-        if ( !canBeUnicast() && channel.isUnicast() ) {
-            if ( !channel.getAddress().isEmpty() ) {
-                problem = "Can't specify a unicast address when not communicating with an actor or organization.";
-            }
-        } else if ( !channel.isValid() ) {
-            problem = "Invalid address";
+        TransmissionMedium medium = channel.getMedium();
+        if ( medium == null || medium.isUnknown() ) {
+            return "The medium is undefined";
+        } else {
+            return null;
         }
-        return problem;
     }
 
     /**

@@ -97,8 +97,8 @@ public class Assignment implements Serializable, GeoLocatable {
      * {@inheritDoc}
      */
     public boolean equals( Object object ) {
-        if ( !(object instanceof Assignment )) return false;
-        Assignment other = (Assignment)object;
+        if ( !( object instanceof Assignment ) ) return false;
+        Assignment other = (Assignment) object;
         return employment.equals( other.getEmployment() )
                 && part.equals( other.getPart() );
     }
@@ -111,5 +111,14 @@ public class Assignment implements Serializable, GeoLocatable {
         hash = hash * 31 + employment.hashCode();
         hash = hash * 31 + part.hashCode();
         return hash;
+    }
+
+    /**
+     * Get the known, assigned entity.
+     *
+     * @return a channelable
+     */
+    public Channelable getChannelable() {
+        return getActor().isUnknown() ? getOrganization() : getActor();
     }
 }

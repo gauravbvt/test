@@ -297,6 +297,12 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.AgreementEncompassedByOther">
                     <property name="queryService" ref="queryService"/>
                 </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.CommittmentWithoutRequiredUnicastChannel">
+                     <property name="queryService" ref="queryService"/>
+                 </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.CommittmentOverUnsecuredChannel">
+                     <property name="queryService" ref="queryService"/>
+                 </bean>
             </list>
         </property>
     </bean>
