@@ -256,7 +256,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
             newOrg = null;
         else {
             if ( oldOrg == null || !isSame( name, oldName ) ) {
-                newOrg = getQueryService().safeFindOrCreate( Organization.class, name );
+                newOrg = doSafeFindOrCreate( Organization.class, name );
                 if ( newOrg.ancestors().contains( getOrganization() ) ) {
                     newOrg = oldOrg;
                     getCommander().cleanup( Organization.class, name );
@@ -291,7 +291,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
             newPlace = null;
         else {
             if ( oldPlace == null || !isSame( name, oldName ) )
-                newPlace = getQueryService().safeFindOrCreate( Place.class, name );
+                newPlace = doSafeFindOrCreate( Place.class, name );
         }
         doCommand( new UpdatePlanObject( org, "location", newPlace ) );
         getCommander().cleanup( Place.class, oldName );

@@ -4,7 +4,9 @@ import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.commands.CreateEntityIfNew;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
@@ -91,5 +93,32 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
         return getLockManager().getLockOwner( identifiable.getId() );
     }
 
+    /**
+     * Safely find or create a model entity via a command.
+     * @param clazz a model entity class
+     * @param name a name
+     * @return a model entity
+     */
+    @SuppressWarnings("unchecked")
+    protected <T extends ModelEntity> T doSafeFindOrCreate( Class<T> clazz, String name ) {
+        return (T)doCommand( new CreateEntityIfNew(
+                            clazz,
+                            name,
+                            ModelEntity.Kind.Actual ) ).getSubject();
+    }
+
+    /**
+     * Safely find or create a model entity type via a command.
+     * @param clazz a model entity class
+     * @param name a name
+     * @return a model entity
+     */
+    @SuppressWarnings("unchecked")
+    protected <T extends ModelEntity> T doSafeFindOrCreateType( Class<T> clazz, String name ) {
+        return (T) doCommand( new CreateEntityIfNew(
+                            clazz,
+                            name,
+                            ModelEntity.Kind.Type ) ).getSubject();
+    }
 
 }

@@ -539,8 +539,8 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         else {
             if ( oldWithin == null || !isSame( name, oldName ) )
                 newPlace = ( getPlace().isActual()
-                        ? getQueryService().safeFindOrCreate( Place.class, name )
-                        : getQueryService().safeFindOrCreateType( Place.class, name ) );
+                        ? doSafeFindOrCreate( Place.class, name )
+                        : doSafeFindOrCreateType( Place.class, name ) );
         }
         updatePlace( "within", newPlace );
         getCommander().cleanup( Place.class, oldName );

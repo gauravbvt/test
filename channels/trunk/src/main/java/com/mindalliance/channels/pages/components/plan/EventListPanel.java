@@ -208,7 +208,7 @@ public class EventListPanel extends AbstractCommandablePanel {
             this.confirmed = confirmed;
             Plan plan = planManager.getCurrentPlan();
             if ( confirmed ) {
-                Event confirmedEvent = getQueryService().safeFindOrCreateType( Event.class, getName() );
+                Event confirmedEvent = doSafeFindOrCreateType( Event.class, getName() );
                 doCommand( new UpdatePlanObject(
                         plan,
                         "incidents",
@@ -217,7 +217,7 @@ public class EventListPanel extends AbstractCommandablePanel {
                 ) );
 
             } else if ( !markedForCreation ) {
-                Event confirmedEvent = getQueryService().safeFindOrCreateType( Event.class, getName() );
+                Event confirmedEvent = doSafeFindOrCreateType( Event.class, getName() );
                 doCommand( new UpdatePlanObject(
                         plan,
                         "incidents",

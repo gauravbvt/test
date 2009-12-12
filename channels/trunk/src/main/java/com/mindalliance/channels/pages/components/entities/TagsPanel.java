@@ -248,7 +248,7 @@ public class TagsPanel extends AbstractCommandablePanel {
 
         public void setTagName( String name ) {
             assert isMarkedForCreation();
-            tag = getQueryService().safeFindOrCreateType( getEntity().getClass(), name );
+            tag = doSafeFindOrCreateType( getEntity().getClass(), name );
             if ( tag != null ) {
                 doCommand( new UpdatePlanObject(
                         getEntity(),

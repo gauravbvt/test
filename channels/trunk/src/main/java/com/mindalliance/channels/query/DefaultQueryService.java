@@ -291,6 +291,13 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name ) {
+        return findOrCreate( clazz, name, null );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name, Long id ) {
         T entity = null;
         if ( name != null && !name.trim().isEmpty() ) {
             String candidateName = name.trim();
@@ -298,7 +305,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             int i = 1;
             while ( !success ) {
                 try {
-                    entity = findOrCreate( clazz, candidateName );
+                    entity = findOrCreate( clazz, candidateName, id );
                     success = true;
                 } catch ( InvalidEntityKindException e ) {
                     LOG.warn( "Entity name conflict creating actual " + candidateName );
@@ -309,6 +316,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
         return entity;
     }
+
+
 
     /**
      * {@inheritDoc}
@@ -333,7 +342,23 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
+    public boolean entityExists( Class<ModelEntity> clazz, String name, ModelEntity.Kind kind ) {
+        ModelEntity entity = ModelEntity.getUniversalType( name, clazz );
+        if ( entity == null ) entity = getDao().find( clazz, name );
+        return entity != null && entity.getKind().equals( kind );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public <T extends ModelEntity> T safeFindOrCreateType( Class<T> clazz, String name ) {
+        return safeFindOrCreate( clazz, name, null );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public <T extends ModelEntity> T safeFindOrCreateType( Class<T> clazz, String name, Long id ) {
         T entityType = null;
         if ( name != null && !name.trim().isEmpty() ) {
             String candidateName = name.trim();
@@ -341,7 +366,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             int i = 0;
             while ( !success ) {
                 try {
-                    entityType = findOrCreateType( clazz, candidateName );
+                    entityType = findOrCreateType( clazz, candidateName, id );
                     success = true;
                 } catch ( InvalidEntityKindException e ) {
                     LOG.warn( "Entity name conflict creating type " + candidateName );
@@ -353,7 +378,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
         return entityType;
     }
-
     /**
      * {@inheritDoc}
      */

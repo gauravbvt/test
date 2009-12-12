@@ -229,11 +229,11 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             if ( markedForCreation && value != null ) {
                 TransmissionMedium medium;
                 if ( value.equals( NewMedium ) ) {
-                    medium = getQueryService().safeFindOrCreate(
+                    medium =  doSafeFindOrCreate(
                             TransmissionMedium.class,
                             NewMedium.getName() );
                 } else if ( value.equals( NewMediumType ) ) {
-                    medium = getQueryService().safeFindOrCreateType(
+                    medium =  doSafeFindOrCreateType(
                             TransmissionMedium.class,
                             NewMediumType.getName() );
                 } else {

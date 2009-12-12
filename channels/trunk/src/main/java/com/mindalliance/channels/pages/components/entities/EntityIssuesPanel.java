@@ -67,7 +67,7 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
     public List<Issue> getIssues() {
         Set<ModelObject> scope = new HashSet<ModelObject>();
         List<Issue> issues = new ArrayList<Issue>();
-        ModelEntity about = (ModelEntity)getAbout();
+        ModelObject about = getAbout();
         final String issueType = getIssueType();
         Analyst analyst = getAnalyst();
         if ( about != null ) {

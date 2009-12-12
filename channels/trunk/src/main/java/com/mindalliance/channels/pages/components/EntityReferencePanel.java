@@ -252,9 +252,9 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
         if ( name != null && !name.trim().isEmpty()
                 && ( oldEntity == null || !isSame( name, oldName ) ) ) {
             if ( isActual() ) {
-                newEntity = getQueryService().safeFindOrCreate( entityClass, name );
+                newEntity = doSafeFindOrCreate( entityClass, name );
             } else {
-                newEntity = getQueryService().safeFindOrCreateType( entityClass, name );
+                newEntity = doSafeFindOrCreateType( entityClass, name );
             }
         }
         if ( newEntity == null ) {

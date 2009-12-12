@@ -196,6 +196,19 @@ public interface QueryService extends Service {
     <T extends ModelEntity> T findOrCreateType( Class<T> clazz, String name, Long id );
 
     /**
+     * Find an actual entity type by given name. If none, create it for given domain,
+     * renaming it to avoid conflicts if needed.
+     * If id is not null, assign the entity the given id if created.
+     *
+     * @param clazz the kind of model object
+     * @param name  the name
+     * @param id    an id
+     * @param <T>   a subclass of model object
+     * @return the object or null if name is null or empty
+     */
+    <T extends ModelEntity> T safeFindOrCreateType( Class<T> clazz, String name, Long id );
+
+    /**
      * Find an actual entity by given name. If none, create it for given domain,
      * renaming it to avoid conflicts if needed.
      *
@@ -205,6 +218,19 @@ public interface QueryService extends Service {
      * @return the object or null if name is null or empty
      */
     <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name );
+
+    /**
+     * Find an actual entity by given name. If none, create it for given domain,
+     * renaming it to avoid conflicts if needed.
+     * If id is not null, assign the entity the given id if created.
+     *
+     * @param clazz the kind of model object
+     * @param name  the name
+     * @param id    an id
+     * @param <T>   a subclass of model object
+     * @return the object or null if name is null or empty
+     */
+    <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name, Long id );
 
     /**
      * Find an actual entity by given name. If none, create it.
@@ -226,6 +252,15 @@ public interface QueryService extends Service {
      * @return the entity or null if name is null or empty
      */
     <T extends ModelEntity> T findOrCreate( Class<T> clazz, String name, Long id );
+
+    /**
+     * Whether an entity already exists.
+     * @param clazz a class of entity
+     * @param name a string
+     * @param kind actual or type
+     * @return a boolean
+     */
+    boolean entityExists( Class<ModelEntity> clazz, String name, ModelEntity.Kind kind );
 
     /**
      * Create a connector in a scenario.
@@ -1233,4 +1268,5 @@ public interface QueryService extends Service {
     List<Commitment> findAllCommitmentsCoveredBy(
             Agreement agreement,
             Organization organization);
+
 }
