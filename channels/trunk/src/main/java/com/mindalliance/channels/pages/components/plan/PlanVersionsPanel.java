@@ -9,6 +9,7 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.pages.PlanPage;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -156,11 +157,11 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
     /**
      * {@inheritDoc}
      */
-    public void updateWith( AjaxRequestTarget target, Change change ) {
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isRecomposed() ) {
             PlanPage planPage = findParent( PlanPage.class );
             // skip directly to plan page since plan has changed
-            planPage.updateWith( target, change );
+            planPage.updateWith( target, change, updated );
         }
         // else no need to update UI
     }

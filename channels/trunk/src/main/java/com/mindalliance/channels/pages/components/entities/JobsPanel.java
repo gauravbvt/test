@@ -10,6 +10,7 @@ import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
@@ -305,12 +306,12 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
     /**
      * {@inheritDoc}
      */
-    public void updateWith( AjaxRequestTarget target, Change change ) {
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isUpdated() ) {
             if ( selectedJob != null )
                 setNameRange( target, rangePanel.getRangeFor( selectedJob.getActorLastName() ) );
         }
-        super.updateWith( target, change );
+        super.updateWith( target, change, updated );
     }
 
     /**

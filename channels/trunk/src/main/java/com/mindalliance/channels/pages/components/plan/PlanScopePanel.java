@@ -14,6 +14,7 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.pages.ModelObjectLink;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
@@ -369,12 +370,12 @@ public class PlanScopePanel extends AbstractCommandablePanel {
     /**
      * {@inheritDoc}
      */
-    public void updateWith( AjaxRequestTarget target, Change change ) {
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isSelected() && change.getSubject() instanceof Organization ) {
             addSelectedOrganization();
             target.addComponent( organizationContainer );
         } else {
-            super.updateWith( target, change );
+            super.updateWith( target, change, updated );
         }
     }
 

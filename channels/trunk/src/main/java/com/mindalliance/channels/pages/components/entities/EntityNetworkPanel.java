@@ -9,6 +9,7 @@ import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
@@ -448,19 +449,19 @@ public class EntityNetworkPanel<T extends ModelEntity> extends AbstractUpdatable
     /**
      * {@inheritDoc}
      */
-    public void updateWith( AjaxRequestTarget target, Change change ) {
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isSelected() ) {
             refresh( target );
             // Don't percolate update on selection unless a part or flow was selected.
             if ( change.getSubject() instanceof Part || change.getSubject() instanceof Flow ) {
-                super.updateWith( target, change );
+                super.updateWith( target, change, updated );
             } else {
                 if ( change.getScript() != null ) {
                     target.appendJavascript( change.getScript() );
                 }
             }
         } else {
-            super.updateWith( target, change );
+            super.updateWith( target, change, updated );
         }
     }
 

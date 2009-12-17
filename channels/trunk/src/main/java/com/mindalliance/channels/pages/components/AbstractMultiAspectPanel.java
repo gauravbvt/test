@@ -6,6 +6,7 @@ import com.mindalliance.channels.LockManager;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
@@ -17,6 +18,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -289,7 +291,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
     }
 
     private void showAspect( String aspect ) {
-        aspectPanel = makeAspectPanel( aspect );
+        aspectPanel = makeAspectPanel( aspect == null ? getDefaultAspect() : aspect );
         aspectPanel.setOutputMarkupId( true );
         moContainer.addOrReplace( aspectPanel );
     }
@@ -370,6 +372,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
      *
      * @param target an ajax request target
      */
+/*
     public void refresh( AjaxRequestTarget target ) {
         refreshMenus( target );
         adjustComponents();
@@ -377,6 +380,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
         setAspectShown( target, aspectShown );
         target.addComponent( aspectPanel );
     }
+*/
 
     /**
      * Refresh menus.
@@ -397,13 +401,27 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
      * {@inheritDoc}
      */
     @Override
-    public void updateWith( AjaxRequestTarget target, Change change ) {
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         target.addComponent( actionsMenu );
         adjustComponents();
         annotateHeaderTitle( getObject(), ( (Channels) getApplication() ).getAnalyst() );
         target.addComponent( banner );
-        super.updateWith( target, change );
+        super.updateWith( target, change, updated );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
+        refreshMenus( target );
+        adjustComponents();
+        target.addComponent( headerTitle );
+        target.addComponent( banner );
+        if ( change.isModified() ) {
+            showAspect( aspect );
+            target.addComponent( aspectPanel );
+        }
+    }
 
 }

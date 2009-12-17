@@ -15,6 +15,7 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -819,12 +820,12 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     /**
      * {@inheritDoc}
      */
-    public void updateWith( AjaxRequestTarget target, Change change ) {
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isUpdated() ) {
             adjustFields( getFlow() );
             target.addComponent( this );
         }
-        super.updateWith( target, change );
+        super.updateWith( target, change, updated );
     }
 
 }

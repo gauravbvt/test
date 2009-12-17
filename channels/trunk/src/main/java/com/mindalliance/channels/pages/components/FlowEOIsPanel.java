@@ -117,7 +117,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                 }
             }
         };
-        makeVisible( autoPopulateLink, !isReadOnly() && canBePopulated()  );
+        makeVisible( autoPopulateLink, !isReadOnly() && canBePopulated() );
         // Link classifications
         eoisContainer.add( autoPopulateLink );
         unlinkedClassificationsLink = new AjaxFallbackLink( "unlinkClassifications" ) {
@@ -449,6 +449,19 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
      */
     protected int getMinHeight() {
         return MIN_HEIGHT;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
+        if ( change.isModified() ) {
+            addHeaders();
+            addAboutFlow();
+            addEOIs();
+            target.addComponent( eoisContainer );
+        }
     }
 
     /**

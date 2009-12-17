@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.pages.Updatable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -120,9 +121,9 @@ public class IssuesPanel extends AbstractCommandablePanel {
      * {@inheritDoc}
      */
     @Override
-    public void updateWith( AjaxRequestTarget target, Change change ) {
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         target.addComponent( issuesContainer );
-        super.updateWith( target, change );
+        super.updateWith( target, change, updated );
     }
 
 }

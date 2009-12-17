@@ -9,6 +9,7 @@ import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.TransmissionMedium;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractMultiAspectPanel;
 import com.mindalliance.channels.pages.components.entities.menus.EntityActionsMenuPanel;
 import com.mindalliance.channels.pages.components.entities.menus.EntityShowMenuPanel;
@@ -20,6 +21,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -238,11 +240,11 @@ public class EntityPanel extends AbstractMultiAspectPanel {
     /**
      * {@inheritDoc}
      */
-    public void updateWith( AjaxRequestTarget target, Change change ) {
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isUpdated() && change.isForProperty( "geoLocation" ) ) {
             addShowMenu();
             target.addComponent( getShowMenu() );
         }
-        super.updateWith( target, change );
+        super.updateWith( target, change, updated );
     }
 }

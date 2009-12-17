@@ -11,6 +11,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.ExternalFlowsPanel;
 import com.mindalliance.channels.pages.components.ScenarioCausesPanel;
@@ -493,19 +494,19 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
      * {@inheritDoc}
      */
     @Override
-    public void updateWith( AjaxRequestTarget target, Change change ) {
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isSelected() ) {
             refresh( target );
             // Don't percolate update on selection unless a part was selected.
             if ( change.getSubject() instanceof Part ) {
-                super.updateWith( target, change );
+                super.updateWith( target, change, updated );
             } else {
                 if ( change.getScript() != null ) {
                     target.appendJavascript( change.getScript() );
                 }
             }
         } else {
-            super.updateWith( target, change );
+            super.updateWith( target, change, updated );
         }
     }
 

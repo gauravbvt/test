@@ -179,9 +179,12 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     /**
      * {@inheritDoc}
      */
-    public void updateWith( AjaxRequestTarget target, Change change ) {
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Updatable updatableParent = findParent( Updatable.class );
-        if ( updatableParent != null ) updatableParent.updateWith( target, change );
+        if ( updatableParent != null ) {
+            updated.add( this );
+            updatableParent.updateWith( target, change, updated );
+        }
     }
 
     /**
@@ -192,14 +195,38 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     }
 
     /**
-     * Send changed event and then the updateWith event.
-     *
+     * {@inheritDoc}
+     */
+     protected void update( AjaxRequestTarget target, Change change ) {
+        changed( change );
+        updateWith( target, change, new ArrayList<Updatable>() );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void refresh( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        refresh( target, change, updated, null );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void refresh( AjaxRequestTarget target, Change change, List<Updatable> updated, String aspect ) {
+        if ( !updated.contains( this ) && !change.isNone() ) {
+            refresh( target, change, aspect );
+            target.addComponent( this );
+        }
+    }
+
+    /**
+     * Refresh given change
      * @param target an ajax request target
      * @param change the nature of the change
+     * @param aspect aspect shown
      */
-    protected void update( AjaxRequestTarget target, Change change ) {
-        changed( change );
-        updateWith( target, change );
+    protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
+        // do nothing
     }
 
     /**

@@ -13,6 +13,7 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.TransmissionMedium;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
 import org.apache.commons.collections.CollectionUtils;
@@ -100,13 +101,13 @@ public class PlanClassificationsPanel extends AbstractCommandablePanel {
     /**
      * {@inheritDoc}
      */
-    public void updateWith( AjaxRequestTarget target, Change change ) {
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isSelected() && change.getSubject() instanceof Classification ) {
             addClassificationIndex();
             adjustFields();
             target.addComponent( indexContainer );
         } else {
-            super.updateWith( target, change );
+            super.updateWith( target, change, updated );
         }
     }
 

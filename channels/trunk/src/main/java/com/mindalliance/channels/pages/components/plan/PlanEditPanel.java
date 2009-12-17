@@ -5,6 +5,7 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractMultiAspectPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.menus.PlanEditActionsMenuPanel;
@@ -14,6 +15,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -229,11 +231,10 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
      * {@inheritDoc}
      */
     @Override
-    public void updateWith( AjaxRequestTarget target, Change change ) {
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.getSubject() instanceof Issue )
             setAspectShown( target, DETAILS );
-
-        super.updateWith( target, change );
+        super.updateWith( target, change, updated );
     }
-
+    
 }

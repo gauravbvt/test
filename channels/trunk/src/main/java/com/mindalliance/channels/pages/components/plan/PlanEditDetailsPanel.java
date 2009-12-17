@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
@@ -170,13 +171,13 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
         return phases;
     }
 
-    public void updateWith( AjaxRequestTarget target, Change change ) {
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isForProperty( "phases" ) ) {
             // Only unused phases can be removed, added ones at not yet referenced.
             addIssuesPanel();
             target.addComponent( issuesPanel );
         } else {
-            super.updateWith( target, change );
+            super.updateWith( target, change, updated );
         }
     }
 

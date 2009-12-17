@@ -52,6 +52,14 @@ public class PartAssignmentsPanel extends FloatingCommandablePanel {
      * Min height on resize.
      */
     private static final int MIN_HEIGHT = 300;
+    /**
+     * Part title label.
+     */
+    private Label partTitleLabel;
+    /**
+     * Assignment table panel.
+     */
+    private AssignmentsTablePanel assignmentsTablePanel;
 
     public PartAssignmentsPanel( String id, IModel<Part> partModel, Set<Long> expansions ) {
         super( id, partModel, expansions );
@@ -64,18 +72,20 @@ public class PartAssignmentsPanel extends FloatingCommandablePanel {
     }
 
     private void addAbout() {
-        Label partTitleLabel = new Label(
+        partTitleLabel = new Label(
                 "partTitle",
                 new Model<String>( getPart().getTitle() )
         );
-        add( partTitleLabel );
+        partTitleLabel.setOutputMarkupId( true );
+        addOrReplace( partTitleLabel );
     }
 
     private void addAssignmentsTable() {
-        AssignmentsTablePanel assignmentsTablePanel = new AssignmentsTablePanel(
+        assignmentsTablePanel = new AssignmentsTablePanel(
                 "assignments",
                 new PropertyModel<List<Assignment>>( this, "assignments" )
         );
+        assignmentsTablePanel.setOutputMarkupId( true );
         addOrReplace( assignmentsTablePanel );
     }
 
@@ -135,6 +145,19 @@ public class PartAssignmentsPanel extends FloatingCommandablePanel {
      */
     protected int getMinHeight() {
         return MIN_HEIGHT;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
+        if ( change.isModified() ) {
+            addAbout();
+            addAssignmentsTable();
+            target.addComponent( partTitleLabel );
+            target.addComponent( assignmentsTablePanel );
+        }
     }
 
     private class AssignmentsTablePanel extends AbstractFilterableTablePanel {
@@ -214,5 +237,5 @@ public class PartAssignmentsPanel extends FloatingCommandablePanel {
         }
     }
 
- }
+}
 

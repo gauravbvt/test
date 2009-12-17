@@ -10,6 +10,7 @@ import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
@@ -325,14 +326,14 @@ public class RiskListPanel extends AbstractCommandablePanel {
     /**
      * {@inheritDoc}
      */
-    public void updateWith( AjaxRequestTarget target, Change change ) {
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         risksContainer.addOrReplace( makeRisksTable() );
         initLabel();
         moreContainer.addOrReplace( makeMitigationsTable() );
         makeVisible( moreContainer, selectedRisk != null );
         target.addComponent( risksContainer );
         target.addComponent( moreContainer );
-        super.updateWith( target, change );
+        super.updateWith( target, change, updated );
     }
 
     public class RiskWrapper implements Identifiable {

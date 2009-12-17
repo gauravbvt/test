@@ -9,6 +9,7 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.pages.ModelObjectLink;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
@@ -282,10 +283,10 @@ public class ScenarioEditDetailsPanel extends AbstractCommandablePanel {
     /**
      * {@inheritDoc}
      */
-    public void updateWith( AjaxRequestTarget target, Change change ) {
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         makeVisible( target, issuesPanel, getAnalyst().hasIssues( getScenario(), false ) );
         target.addComponent( issuesPanel );
-        super.updateWith( target, change );
+        super.updateWith( target, change, updated );
     }
 
     public void refresh( AjaxRequestTarget target ) {

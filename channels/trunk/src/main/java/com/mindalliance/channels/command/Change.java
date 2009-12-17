@@ -17,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
  * Time: 8:09:56 AM
  */
 public class Change implements Serializable {
+
     /**
      * A kind of change.
      */
@@ -74,8 +75,8 @@ public class Change implements Serializable {
          */
         AspectClosed
 
-
     }
+
 
     /**
      * The logger.
@@ -368,6 +369,15 @@ public class Change implements Serializable {
     }
 
     /**
+     * Something in the plan may have been modified.
+     *
+     * @return a boolean
+     */
+    public boolean isModified() {
+        return isUnknown() || isExists() || isUpdated() || isRecomposed() || isUndoing();
+    }
+
+    /**
      * Whether change is to a given property.
      *
      * @param prop a string
@@ -377,5 +387,15 @@ public class Change implements Serializable {
         return property != null && prop != null && property.equals( prop );
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append( type.name() );
+        sb.append( " " );
+        sb.append( subject == null ? "" : subject.toString() );
+        sb.append( property == null ? "" : ( " (" + property + ")" ) );
+        return sb.toString();
+    }
 }

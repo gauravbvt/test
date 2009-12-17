@@ -46,6 +46,14 @@ public class FlowCommitmentsPanel extends FloatingCommandablePanel {
      * Min height on resize.
      */
     private static final int MIN_HEIGHT = 300;
+    /**
+     * About label.
+     */
+    private Label infoLabel;
+    /**
+     * Commitments table panel.
+     */
+    private CommitmentsTablePanel commitmentsTablePanel;
 
     public FlowCommitmentsPanel( String id, IModel<Flow> flowModel, Set<Long> expansions ) {
         super( id, flowModel, expansions );
@@ -58,24 +66,29 @@ public class FlowCommitmentsPanel extends FloatingCommandablePanel {
     }
 
     private void addAbout() {
-        Label infoLabel = new Label( "info", new Model<String>( getFlow().getName() ) );
-        add( infoLabel );
+        infoLabel = new Label( "info", new Model<String>( getFlow().getName() ) );
+        infoLabel.setOutputMarkupId( true );
+        addOrReplace( infoLabel );
         Label fromTask = new Label( "fromTask", new Model<String>( ( (Part) getFlow().getSource() ).getTask() ) );
-        add( fromTask );
+        fromTask.setOutputMarkupId( true );
+        addOrReplace( fromTask );
         Label toTask = new Label( "toTask", new Model<String>( ( (Part) getFlow().getTarget() ).getTask() ) );
-        add( toTask );
+        toTask.setOutputMarkupId( true );
+        addOrReplace( toTask );
         Label anyOrAllLabel = new Label(
                 "anyOrAll",
                 new Model<String>( getFlow().isAll() ? "all" : "any" ) );
-        add( anyOrAllLabel );
+        anyOrAllLabel.setOutputMarkupId( true );
+        addOrReplace( anyOrAllLabel );
     }
 
     private void addCommitmentsTable() {
-        CommitmentsTablePanel commitmentsTablePanel = new CommitmentsTablePanel(
+        commitmentsTablePanel = new CommitmentsTablePanel(
                 "commitments",
                 new PropertyModel<List<Commitment>>( this, "commitments" )
         );
-        add( commitmentsTablePanel );
+        commitmentsTablePanel.setOutputMarkupId( true );
+        addOrReplace( commitmentsTablePanel );
     }
 
     public List<Commitment> getCommitments() {
@@ -137,6 +150,18 @@ public class FlowCommitmentsPanel extends FloatingCommandablePanel {
         return MIN_HEIGHT;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
+        if ( change.isModified() ) {
+            addAbout();
+            addCommitmentsTable();
+            target.addComponent( infoLabel );
+            target.addComponent( commitmentsTablePanel );
+        }
+    }
 
 
 }

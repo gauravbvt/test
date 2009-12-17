@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import com.mindalliance.channels.pages.components.menus.PartActionsMenuPanel;
@@ -28,6 +29,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -110,8 +112,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
             String id,
             IModel<Scenario> scenarioModel,
             IModel<Part> partModel,
-            Set<Long> expansions,
-            IModel<String> aspectModel ) {
+            Set<Long> expansions ) {
         super( id, scenarioModel, expansions );
         this.scenarioModel = scenarioModel;
         this.partModel = partModel;
@@ -173,12 +174,6 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         partIssuesPanel = new IssuesPanel( "issues", partModel, getExpansions() );        // NON-NLS
         partIssuesPanel.setOutputMarkupId( true );
         add( partIssuesPanel );
-    }
-
-    private void adjustComponents() {
-        partDescription.setEnabled( isLockedByUser( getPart() ) );
-        boolean partHasIssues = getAnalyst().hasIssues( getPart(), false );
-        makeVisible( partIssuesPanel, partHasIssues );
     }
 
     private void addPartMenuBar() {
@@ -260,7 +255,6 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     }
 
 
-
     public Part getPart() {
         return partModel.getObject();
     }
@@ -296,56 +290,77 @@ public class ScenarioPanel extends AbstractCommandablePanel {
      * {@inheritDoc}
      */
     @Override
-    public void updateWith( AjaxRequestTarget target, Change change ) {
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( !change.isNone() ) {
             Identifiable identifiable = change.getSubject();
-            if ( identifiable == getPart() && change.isUpdated() ) {
-                target.addComponent( partTitle );
-                reqsFlowPanel.refresh( target );
-                outcomesFlowPanel.refresh( target );
+            if ( identifiable == getPart() ) {
+                if ( change.isUpdated() ) {
+                    target.addComponent( partTitle );
+                    reqsFlowPanel.refresh( target );
+                    outcomesFlowPanel.refresh( target );
+                }
             }
-
             if ( identifiable instanceof Issue || identifiable instanceof ScenarioObject ) {
                 if ( !change.isDisplay() ) {
                     target.addComponent( flowMapDiagramPanel );
                     makeVisible( target, partIssuesPanel,
                             getAnalyst().hasIssues( getPart(), false ) );
                     target.addComponent( partIssuesPanel );
-                    // target.addComponent( attachments );
                 }
             }
         }
-
-        addPartActionsMenu();
-        target.addComponent( partShowMenu );
-        target.addComponent( partActionsMenu );
-        super.updateWith( target, change );
+        refreshMenus( target );
+        super.updateWith( target, change, updated );
     }
 
     /**
-     * Refresh part panel and flow diagram.
-     *
-     * @param target ajax request target
+     * Refresh.
+     * @param target the ajax target
+     * @param change a change
      */
-    public void refresh( AjaxRequestTarget target ) {
-        // this.target = target;
-        adjustComponents();
-        refreshMenus( target );
-        partPanel.refresh( target );
-        reqsFlowPanel.refresh( target );
-        outcomesFlowPanel.refresh( target );
-        addFlowDiagram();
-        target.addComponent( flowMapDiagramPanel );
-        adjustComponents();
-        target.addComponent( partDescription );
-        target.addComponent( partIssuesPanel );
-        target.addComponent( partIssuesPanel );
+    public void doRefresh( AjaxRequestTarget target, Change change ) {
+        refresh( target, change, "" );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
+        Identifiable identifiable = change.getSubject();
+        if ( change.isModified()
+                || ( change.isDisplay()
+                && identifiable instanceof ScenarioObject )
+                || ( change.isSelected()
+                && ( identifiable instanceof Scenario || identifiable instanceof ScenarioObject ) ) ) {
+            if ( identifiable instanceof Issue
+                    && change.isExists()
+                    && ( (Issue) identifiable ).getAbout().getId() == getScenario().getId() ) {
+                expandScenarioEditPanel( target );
+            }
+            adjustComponents();
+            refreshMenus( target );
+            partPanel.refresh( target );
+            reqsFlowPanel.refresh( target );
+            outcomesFlowPanel.refresh( target );
+            target.addComponent( partDescription );
+            target.addComponent( partIssuesPanel );
+            if ( change.isModified() || change.isSelected() ) {
+                addFlowDiagram();
+                target.addComponent( flowMapDiagramPanel );
+            }
+        }
+    }
+
+    private void adjustComponents() {
+        partDescription.setEnabled( isLockedByUser( getPart() ) );
+        boolean partHasIssues = getAnalyst().hasIssues( getPart(), false );
+        makeVisible( partIssuesPanel, partHasIssues );
+    }
 
     /**
      * Refresh the flow map
-     * @param target  an ajax request target
+     *
+     * @param target an ajax request target
      */
     public void refreshFlowMapImage( AjaxRequestTarget target ) {
         flowMapDiagramPanel.refreshImage( target );
@@ -353,6 +368,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
 
     /**
      * Refresh all menus.
+     *
      * @param target an ajax request target
      */
     public void refreshMenus( AjaxRequestTarget target ) {

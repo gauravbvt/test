@@ -12,6 +12,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.pages.ModelObjectLink;
+import com.mindalliance.channels.pages.Updatable;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -686,7 +687,7 @@ public class PartPanel extends AbstractCommandablePanel {
     /**
      * {@inheritDoc}
      */
-    public void updateWith( AjaxRequestTarget target, Change change ) {
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.getType() == Change.Type.Updated ) {
             String property = change.getProperty();
             for ( EntityReferencePanel entityReferencePanel : entityFields ) {
@@ -699,7 +700,7 @@ public class PartPanel extends AbstractCommandablePanel {
             }
             target.addComponent( initiatedEventField );
         }
-        super.updateWith( target, change );
+        super.updateWith( target, change, updated );
     }
 
 }

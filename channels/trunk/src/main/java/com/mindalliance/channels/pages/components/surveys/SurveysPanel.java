@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
@@ -412,7 +413,7 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
         }
     }
 
-    public void updateWith( AjaxRequestTarget target, Change change ) {
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.getSubject() instanceof Survey ) {
             if ( change.isUpdated() ) {
                 addSurveysTable();
@@ -424,7 +425,16 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
                 target.addComponent( surveyContainer );
             }
         } else {
-            super.updateWith( target, change );
+            super.updateWith( target, change, updated );
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void refresh( AjaxRequestTarget target, Change change, String Aspect ) {
+        if ( change.getSubject() instanceof Survey ) {
+            addSurveysTable();
+            target.addComponent( surveysTable );
         }
     }
 
