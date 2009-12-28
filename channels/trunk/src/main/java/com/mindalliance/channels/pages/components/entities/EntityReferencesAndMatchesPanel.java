@@ -10,6 +10,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
@@ -199,6 +200,15 @@ public class EntityReferencesAndMatchesPanel extends AbstractUpdatablePanel {
             return isShowReferences()
                     ? getQueryService().findAllReferencing( getEntity(), Part.class )
                     : new ArrayList<Part>();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        protected List<Scenario> findIndexedScenarios() {
+            return isShowReferences()
+                    ? getQueryService().findAllReferencing( getEntity(), Scenario.class )
+                    : new ArrayList<Scenario>();
         }
 
         @SuppressWarnings( "unchecked" )

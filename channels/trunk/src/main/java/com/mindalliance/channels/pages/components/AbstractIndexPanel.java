@@ -11,6 +11,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.util.NameRange;
@@ -88,6 +89,10 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      * Indexing choice.
      */
     protected static final String PHASES = "Phases";
+    /**
+     * Indexing choice.
+     */
+    protected static final String SCENARIOS = "Scenarios";
     /**
      * Indexing choice.
      */
@@ -257,6 +262,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             names = indexNamesFor( findIndexedParts() );
         } else if ( indexedOn.equals( FLOWS ) ) {
             names = indexNamesFor( findIndexedFlows() );
+        } else if ( indexedOn.equals( SCENARIOS ) ) {
+            names = indexNamesFor( findIndexedScenarios() );
         } else {
             throw new IllegalStateException( "Can't index on " + indexedOn );
         }
@@ -284,6 +291,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         names.addAll( indexNamesFor( findIndexedRoles() ) );
         names.addAll( indexNamesFor( findIndexedFlows() ) );
         names.addAll( indexNamesFor( findIndexedParts() ) );
+        names.addAll( indexNamesFor( findIndexedScenarios() ) );
         return new ArrayList<String>( names );
     }
 
@@ -401,6 +409,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                 indices = indicesFor( findIndexedParts() );
             } else if ( indexedOn.equals( FLOWS ) ) {
                 indices = indicesFor( findIndexedFlows() );
+            } else if ( indexedOn.equals( SCENARIOS ) ) {
+                indices = indicesFor( findIndexedScenarios() );
             } else {
                 throw new IllegalStateException( "Can't index on " + indexedOn );
             }
@@ -420,6 +430,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         indexEntries.addAll( indicesFor( findIndexedMedia() ) );
         indexEntries.addAll( indicesFor( findIndexedParts() ) );
         indexEntries.addAll( indicesFor( findIndexedFlows() ) );
+        indexEntries.addAll( indicesFor( findIndexedScenarios() ) );
         return indexEntries;
     }
 
@@ -604,6 +615,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                     ? "Task"
                     : ( mo instanceof Flow )
                     ? "Flow"
+                    : ( mo instanceof Scenario )
+                    ? "Scenario"
                     : ( !mo.isEntity() )
                     ? mo.getClass().getSimpleName()
                     : ( mo instanceof Actor && ( (Actor) mo ).isActual() )
@@ -722,6 +735,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         if ( !findIndexedOrganizations().isEmpty() ) choices.add( ORGANIZATIONS );
         if ( !findIndexedRoles().isEmpty() ) choices.add( ROLES );
         if ( !findIndexedParts().isEmpty() ) choices.add( TASKS );
+        if ( !findIndexedScenarios().isEmpty() ) choices.add( SCENARIOS );
         return choices;
     }
 
@@ -787,6 +801,13 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      * @return a list of parts
      */
     abstract protected List<Part> findIndexedParts();
+
+    /**
+     * Find all scenarios to index.
+     *
+     * @return a list of scenarios
+     */
+    abstract protected List<Scenario> findIndexedScenarios();
 
 
 }

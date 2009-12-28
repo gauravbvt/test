@@ -12,6 +12,7 @@ import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -160,6 +161,13 @@ public class PlanClassificationsPanel extends AbstractCommandablePanel {
          */
         protected List<Organization> findIndexedOrganizations() {
             return new ArrayList<Organization>();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        protected List<Scenario> findIndexedScenarios() {
+            return new ArrayList<Scenario>();
         }
 
         /**

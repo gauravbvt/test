@@ -624,13 +624,6 @@ public final class PlanPage extends WebPage implements Updatable {
         form.addOrReplace( entityPanel );
     }
 
-/*
-    private void refreshEntityPanel( AjaxRequestTarget target ) {
-        addEntityPanel();
-        target.addComponent( entityPanel );
-    }
-*/
-
     private void addAssignmentsPanel() {
         Part partViewed = getPartViewed( "assignments" );
         if ( partViewed == null ) {
@@ -646,13 +639,6 @@ public final class PlanPage extends WebPage implements Updatable {
         }
         form.addOrReplace( assignmentsPanel );
     }
-
-/*
-    private void refreshAssignmentsPanel( AjaxRequestTarget target ) {
-        addAssignmentsPanel();
-        target.addComponent( assignmentsPanel );
-    }
-*/
 
     private void addCommitmentsPanel() {
         Flow flowViewed = getFlowViewed( "commitments" );
@@ -686,21 +672,6 @@ public final class PlanPage extends WebPage implements Updatable {
         form.addOrReplace( eoisPanel );
     }
 
-/*
-    private void refreshCommitmentsPanel( AjaxRequestTarget target ) {
-        addCommitmentsPanel();
-        target.addComponent( commitmentsPanel );
-    }
-*/
-
-/*
-    private void refreshEOIsPanel( AjaxRequestTarget target ) {
-        addEOIsPanel();
-        target.addComponent( eoisPanel );
-    }
-*/
-
-
     /**
      * Add scenario-related components.
      */
@@ -720,12 +691,7 @@ public final class PlanPage extends WebPage implements Updatable {
         form.addOrReplace( scenarioEditPanel );
     }
 
-/*
-    private void refreshScenarioEditPanel( AjaxRequestTarget target ) {
-        addScenarioEditPanel();
-        target.addComponent( scenarioEditPanel );
-    }
-*/
+
 
     // Return the (presumably) only aspect shown, if any.
 
@@ -754,13 +720,6 @@ public final class PlanPage extends WebPage implements Updatable {
         form.addOrReplace( planEditPanel );
     }
 
-/*
-    private void refreshPlanEditPanel( AjaxRequestTarget target ) {
-        addPlanEditPanel();
-        target.addComponent( planEditPanel );
-    }
-*/
-
     private void addSurveysPanel( Survey survey ) {
         boolean showSurveys = expansions.contains( surveyService.getId() );
         if ( showSurveys ) {
@@ -774,13 +733,6 @@ public final class PlanPage extends WebPage implements Updatable {
         }
         form.addOrReplace( surveysPanel );
     }
-
-/*
-    private void refreshSurveysPanel( AjaxRequestTarget target, Survey survey ) {
-        addSurveysPanel( survey );
-        target.addComponent( surveysPanel );
-    }
-*/
 
     /**
      * Return current plan.
@@ -1257,11 +1209,6 @@ public final class PlanPage extends WebPage implements Updatable {
         for ( Identifiable identifiable : toCollapse ) {
             collapse( identifiable );
         }
-/*
-        for ( Identifiable identifiable : toReexpand ) {
-            expand( identifiable );
-        }
-*/
     }
 
     private void collapsePartObjects() {
