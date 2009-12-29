@@ -319,4 +319,23 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     protected Plan getPlan() {
         return PlanManager.plan();
     }
+
+    /**
+     * Whether or not the idenfiable is collapsed.
+     * @param identifiable an identifiable
+     * @return a boolean
+     */
+    protected boolean isCollapsed( Identifiable identifiable ) {
+        return !isExpanded( identifiable );
+    }
+
+    /**
+     * Whether or not the idenfiable is expanded.
+     * @param identifiable an identifiable
+     * @return a boolean
+     */
+    protected boolean isExpanded( Identifiable identifiable ) {
+        return getExpansions().contains( identifiable.getId() );
+    }
+
 }

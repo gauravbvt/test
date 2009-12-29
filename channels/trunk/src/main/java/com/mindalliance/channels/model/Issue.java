@@ -32,7 +32,12 @@ public interface Issue extends Identifiable, Serializable {
          * @return a String
          */
         public String getLabel() {
-            return this.toString();
+            String label = toString();
+            if ( label.endsWith( ".")) {
+                return label;
+            } else {
+                return label + ".";
+            }
         }
 
         /**
@@ -41,7 +46,7 @@ public interface Issue extends Identifiable, Serializable {
          * @return an int
          */
         public int getOrdinal() {
-            return this.ordinal();
+            return ordinal();
         }
     }
 

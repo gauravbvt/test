@@ -508,7 +508,6 @@ public final class PlanPage extends WebPage implements Updatable {
                 // ignore
             }
         }
-        editables.add( getPart() );
         return editables;
     }
 
@@ -984,10 +983,12 @@ public final class PlanPage extends WebPage implements Updatable {
      * @param p a part
      */
     public void setPart( Part p ) {
-        if ( part != null ) getCommander().releaseAnyLockOn( part );
+        if ( part != null ) {
+            collapse( part );
+            collapsePartObjects();
+        }
         part = p;
         if ( part == null ) part = scenario.getDefaultPart();
-        getCommander().requestLockOn( part );
         if ( part.getScenario() != scenario ) setScenario( part.getScenario() );
     }
 
@@ -1291,7 +1292,6 @@ public final class PlanPage extends WebPage implements Updatable {
                 collapse( getPart() );
                 collapsePartObjects();
                 setPart( (Part) identifiable );
-                expand( getPart() );
             } else if ( change.isRemoved() ) {
                 collapse( getPart() );
                 collapsePartObjects();
@@ -1538,7 +1538,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void refreshScenarioPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject();
-        if ( identifiable instanceof Part && change.isSelected() ) {
+        if ( identifiable instanceof Part && ( change.isSelected() || change.isDisplay()) ) {
             scenarioPanel.doRefresh( target, change );
             target.addComponent( scenarioPanel );
         } else {

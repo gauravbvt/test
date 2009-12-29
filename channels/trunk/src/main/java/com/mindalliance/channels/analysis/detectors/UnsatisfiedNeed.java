@@ -79,7 +79,8 @@ public class UnsatisfiedNeed extends AbstractIssueDetector {
                 }
                 issue.setDescription( "There is apparently no sharing"
                         + " of these needed elements of information: "
-                        + sb.toString() );
+                        + sb.toString()
+                        + ".");
                 issue.setRemediation( "Add sharing flows\n "
                         + "or extend current sharing flows to include the missing elements of information." );
                 issues.add( issue );

@@ -21,29 +21,14 @@
         <div id="part">
             <div id="part-header">
                 <div class="section-title">
-                    <h2><span wicket:id="part-title">Node title</span></h2>
+                    <h2>Task</h2>
                     <span class="menubar">
                         <span class="menuitem" wicket:id="partShowMenu">[part show menu]</span>
                         <span class="menuitem" wicket:id="partActionsMenu">[part action menu]</span>
                     </span>
                 </div>
-                <div class="section-content">
-                    <table summary="Part description">
-                        <div wicket:id="specialty">(Specialty)</div>
-                        <tr>
-                            <th class="area" align="right" valign="top"><label
-                                    for="description">Description:</label>
-                            </th>
-                            <td><textarea id="description" name="description" wicket:id="description"
-                                          cols="40" rows="1">Description</textarea></td>
-                        </tr>
-
-                        <tr wicket:id="attachments">
-                            <th align="right" valign="top">Attachments:</th>
-                            <td>&nbsp;</td>
-                        </tr>
-                    </table>
-                    <span wicket:id="issues">[issues panel]</span>
+                <div wicket:id="part" class="section-content">
+                    [part]
                 </div>
             </div>
 

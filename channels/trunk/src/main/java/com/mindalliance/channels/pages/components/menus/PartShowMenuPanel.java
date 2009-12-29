@@ -10,6 +10,7 @@ import org.apache.wicket.model.Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Pages menu for a part.
@@ -21,8 +22,8 @@ import java.util.List;
  */
 public class PartShowMenuPanel extends MenuPanel {
 
-    public PartShowMenuPanel( String s, IModel<? extends Part> model ) {
-        super( s, "Show", model, null );
+    public PartShowMenuPanel( String s, IModel<? extends Part> model, Set<Long> expansions ) {
+        super( s, "Show", model, expansions );
     }
 
     /**
@@ -32,6 +33,22 @@ public class PartShowMenuPanel extends MenuPanel {
      */
     public List<Component> getMenuItems() {
         List<Component> menuItems = new ArrayList<Component>();
+        // Show/hide details
+        if ( isCollapsed( getPart() ) ) {
+            AjaxFallbackLink showLink = new AjaxFallbackLink( "link" ) {
+                public void onClick( AjaxRequestTarget target ) {
+                    update( target, new Change( Change.Type.Expanded, getPart() ) );
+                }
+            };
+            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Show details" ), showLink ) );
+        } else {
+            AjaxFallbackLink hideLink = new AjaxFallbackLink( "link" ) {
+                public void onClick( AjaxRequestTarget target ) {
+                    update( target, new Change( Change.Type.Collapsed, getPart() ) );
+                }
+            };
+            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Hide details" ), hideLink ) );
+        }
         // View part assignments
         AjaxFallbackLink assignmentsLink = new AjaxFallbackLink( "link" ) {
                 @Override

@@ -12,19 +12,15 @@ import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import com.mindalliance.channels.pages.components.menus.PartActionsMenuPanel;
 import com.mindalliance.channels.pages.components.menus.PartShowMenuPanel;
-import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -45,12 +41,6 @@ public class ScenarioPanel extends AbstractCommandablePanel {
      * Length a part title is abbreviated to
      */
     private static final int PART_TITLE_MAX_LENGTH = 30;
-
-    /**
-     * Part issues panel.
-     */
-    private IssuesPanel partIssuesPanel;
-
 
     /**
      * Flow diagram panel.
@@ -85,12 +75,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     /**
      * Part panel.
      */
-    private PartPanel partPanel;
-
-    /**
-     * Part description.
-     */
-    private TextArea<String> partDescription;
+    private Component partPanel;
 
     /**
      * Outcomes flow panel.
@@ -123,7 +108,8 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         setOutputMarkupId( true );
         addFlowSizing();
         addFlowDiagram();
-        addPartContent();
+        addPartMenuBar();
+        addPartPanel();
         reqsFlowPanel = new FlowListPanel(
                 "reqs",
                 partModel,
@@ -139,7 +125,23 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         adjustComponents();
     }
 
-    private void addPartContent() {
+    private void addPartPanel() {
+        if ( isExpanded( getPart() ) ) {
+            partPanel = new ExpandedPartPanel(
+                    "part",
+                    new PropertyModel<Part>( this, "part" ),
+                    getExpansions()  );
+        } else {
+            partPanel = new CollapsedPartPanel(
+                    "part",
+                    new PropertyModel<Part>( this, "part" ),
+                    getExpansions()  );
+        }
+        addOrReplace( partPanel );
+    }
+
+/*
+    private void addPartHeader() {
         partTitle = new Label( "part-title",                                              // NON-NLS
                 new AbstractReadOnlyModel<String>() {
                     @Override
@@ -154,41 +156,26 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         add( partTitle );
 
         addPartMenuBar();
-        partPanel = new PartPanel( "specialty", partModel );                              // NON-NLS
-        partPanel.setOutputMarkupId( true );
-        add( partPanel );
-
-        partDescription = new TextArea<String>( "description",                            // NON-NLS
-                new PropertyModel<String>( this, "partDescription" ) );
-        partDescription.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getPart(), "description" ) );
-            }
-        } );
-        partDescription.setOutputMarkupId( true );
-        add( partDescription );
-
-        AttachmentPanel attachments = new AttachmentPanel( "attachments", partModel );
-        add( attachments );
-
-        partIssuesPanel = new IssuesPanel( "issues", partModel, getExpansions() );        // NON-NLS
-        partIssuesPanel.setOutputMarkupId( true );
-        add( partIssuesPanel );
     }
+*/
 
     private void addPartMenuBar() {
         addPartActionsMenu();
-        partShowMenu = new PartShowMenuPanel( "partShowMenu", partModel );
+        partShowMenu = new PartShowMenuPanel( "partShowMenu", partModel, getExpansions() );
         partShowMenu.setOutputMarkupId( true );
         add( partShowMenu );
     }
 
     private void addPartActionsMenu() {
-        if ( isLockedByUser( getPart() ) ) {
+        if ( isCollapsed( getPart() )) {
+          partActionsMenu = new Label(
+                    "partActionsMenu", new Model<String>( "" ) );
+        } else if ( isLockedByUser( getPart() ) ) {
             partActionsMenu = new PartActionsMenuPanel(
                     "partActionsMenu",
                     partModel );
-        } else if ( getCommander().isTimedOut() || getLockOwner( getPart() ) == null ) {
+        } else if ( getCommander().isTimedOut()
+                ||  getLockOwner( getPart() ) == null ) {
             partActionsMenu = new Label(
                     "partActionsMenu", new Model<String>( "Timed out" ) );
 
@@ -200,7 +187,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
                     new AttributeModifier( "class", true, new Model<String>( "locked" ) ) );
         }
         partActionsMenu.setOutputMarkupId( true );
-        partActionsMenu.setVisible( getPlan().isDevelopment() );
+        partActionsMenu.setVisible( getPlan().isDevelopment() && isExpanded( getPart() ) );
         addOrReplace( partActionsMenu );
     }
 
@@ -303,10 +290,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
             if ( identifiable instanceof Issue || identifiable instanceof ScenarioObject ) {
                 if ( !change.isDisplay() ) {
                     target.addComponent( flowMapDiagramPanel );
-                    makeVisible( target, partIssuesPanel,
-                            getAnalyst().hasIssues( getPart(), false ) );
-                    target.addComponent( partIssuesPanel );
-                }
+                 }
             }
         }
         refreshMenus( target );
@@ -315,6 +299,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
 
     /**
      * Refresh.
+     *
      * @param target the ajax target
      * @param change a change
      */
@@ -339,11 +324,10 @@ public class ScenarioPanel extends AbstractCommandablePanel {
             }
             adjustComponents();
             refreshMenus( target );
-            partPanel.refresh( target );
+            addPartPanel();
+            target.addComponent( partPanel );
             reqsFlowPanel.refresh( target );
             outcomesFlowPanel.refresh( target );
-            target.addComponent( partDescription );
-            target.addComponent( partIssuesPanel );
             if ( change.isModified() || change.isSelected() ) {
                 addFlowDiagram();
                 target.addComponent( flowMapDiagramPanel );
@@ -352,9 +336,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     }
 
     private void adjustComponents() {
-        partDescription.setEnabled( isLockedByUser( getPart() ) );
-        boolean partHasIssues = getAnalyst().hasIssues( getPart(), false );
-        makeVisible( partIssuesPanel, partHasIssues );
+        // do nothing
     }
 
     /**

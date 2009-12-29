@@ -44,7 +44,7 @@ import java.util.Iterator;
 @SuppressWarnings( {"HardCodedStringLiteral", "OverlyLongMethod"} )
 public class TestPartPanel extends AbstractChannelsTest {
 
-    private PartPanel panel;
+    private ExpandedPartPanel panel;
     private Part part;
     private WicketTester tester;
     private Scenario scenario;
@@ -94,7 +94,7 @@ public class TestPartPanel extends AbstractChannelsTest {
                 part = (Part) n;
         }
 
-        panel = new PartPanel( "id", new Model<Part>( part ) );
+        panel = new ExpandedPartPanel( "id", new Model<Part>( part ) );
         tester.startComponent( panel );
     }
 

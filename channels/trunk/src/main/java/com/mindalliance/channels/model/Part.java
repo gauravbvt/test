@@ -625,7 +625,7 @@ public class Part extends Node implements GeoLocatable {
             label += getJurisdiction().getName();
         }
         if ( getOrganization() != null ) {
-            if ( !label.isEmpty() ) label += ( sep + "in " );
+            if ( !label.isEmpty() ) label += ( sep + "at " );
             label += getOrganization().getName();
         }
         if ( !label.isEmpty() ) label += sep;
@@ -634,6 +634,117 @@ public class Part extends Node implements GeoLocatable {
             label += " (every " + getRepeatsEvery().toString() + ")";
         }
         return label;
+    }
+
+    /**
+     * Get summary of the part.
+     *
+     * @return a string
+     */
+    @Transient
+    public String getSummary() {
+        StringBuilder sb = new StringBuilder();
+        sb.append( "Task \"" );
+        sb.append( getTask() );
+        sb.append( "\" is executed" );
+        if ( getLocation() != null ) {
+            sb.append( " at location \"" );
+            sb.append( getLocation().getName() );
+            sb.append( "\"" );
+        }
+        sb.append( " by " );
+        if ( getActor() != null ) {
+            sb.append( getActor().getName() );
+            if ( getActor().isType() ) {
+                Actor impliedActor = getKnownActualActor();
+                if ( impliedActor != null ) {
+                    sb.append( " " );
+                    sb.append( impliedActor.getName() );
+                }
+            }
+        }
+        if ( getRole() != null ) {
+            if ( !sb.toString().isEmpty() ) sb.append( ' ' );
+            if ( getActor() == null ) {
+                Actor impliedActor = getKnownActualActor();
+                if ( impliedActor != null ) {
+                    sb.append( impliedActor.getName() );
+                } else {
+                    sb.append( "any " );
+                }
+            }
+            if ( getKnownActualActor() != null ) {
+                if ( getActor() != null ) {
+                    sb.append( " as " );
+                } else {
+                    sb.append( " as the only " );
+                }
+            }
+            sb.append( getRole().getName() );
+        }
+        if ( getActor() == null && getRole() == null ) {
+            sb.append( "someone");
+        }
+        if ( getJurisdiction() != null ) {
+            if ( !sb.toString().isEmpty() ) sb.append( " for " );
+            sb.append( getJurisdiction().getName() );
+        }
+        if ( getOrganization() != null ) {
+            if ( !sb.toString().isEmpty() ) sb.append( " at " );
+            sb.append( getOrganization().getName() );
+        }
+        sb.append( "." );
+        if ( isRepeating()
+                || isSelfTerminating()
+                || initiatesEvent()
+                || isStartsWithScenario()
+                || isTerminatesEventPhase() ) {
+            sb.append( " The task" );
+            StringBuilder sb1 = new StringBuilder();
+            if ( isStartsWithScenario() ) {
+                sb1.append( " starts with the scenario" );
+            }
+            if ( isRepeating() ) {
+                if ( !sb1.toString().isEmpty() ) {
+                    if ( !initiatesEvent() && !isSelfTerminating() && !isTerminatesEventPhase() ) {
+                        sb1.append( " and" );
+                    } else {
+                        sb1.append( "," );
+                    }
+                }
+                sb1.append( " is repeated every " );
+                sb1.append( getRepeatsEvery().toString() );
+            }
+            if ( initiatesEvent() ) {
+                if ( !sb1.toString().isEmpty() ) {
+                    if ( !isSelfTerminating() && !isTerminatesEventPhase() ) {
+                        sb1.append( " and" );
+                    } else {
+                        sb1.append( "," );
+                    }
+                }
+                sb1.append( " initiates event \"" );
+                sb1.append( getInitiatedEvent().getName() );
+                sb1.append( "\"" );
+            }
+            if ( isTerminatesEventPhase() ) {
+                if ( !sb1.toString().isEmpty() ) {
+                    if ( !isSelfTerminating() ) {
+                        sb1.append( " and" );
+                    } else {
+                        sb1.append( "," );
+                    }
+                }
+                sb1.append( " can end this scenario" );
+            }
+            if ( isSelfTerminating() ) {
+                if ( !sb1.toString().isEmpty() ) sb1.append( " and" );
+                sb1.append( " terminates by itself" );
+            }
+            sb1.append( "." );
+            sb.append( sb1 );
+        }
+        return sb.toString();
     }
 
     /**
