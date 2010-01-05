@@ -24,6 +24,7 @@ import com.mindalliance.channels.pages.components.FlowCommitmentsPanel;
 import com.mindalliance.channels.pages.components.FlowEOIsPanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
+import com.mindalliance.channels.pages.components.MaximizedFlowPanel;
 import com.mindalliance.channels.pages.components.PartAssignmentsPanel;
 import com.mindalliance.channels.pages.components.ScenarioImportPanel;
 import com.mindalliance.channels.pages.components.ScenarioLink;
@@ -245,6 +246,14 @@ public final class PlanPage extends WebPage implements Updatable {
      * Modal dialog window.
      */
     private ModalWindow dialogWindow;
+    /**
+     * Maximized flow map panel.
+     */
+    private Component maximizedFlowPanel;
+    /**
+     * Whether the flow map is maximized.
+     */
+    private boolean flowMaximized = false;
 
     /**
      * Cumulated change to an expanded identifiable.
@@ -318,6 +327,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 redirectHere();
             }
         };
+        addMaximizedFlowPanel();
         addHeader();
         addRefresh();
         addGoBackAndForward();
@@ -340,6 +350,19 @@ public final class PlanPage extends WebPage implements Updatable {
         updateNavigation();
         LOG.debug( "Scenario page generated" );
         rememberState();
+    }
+
+    private void addMaximizedFlowPanel() {
+        if ( flowMaximized ) {
+            maximizedFlowPanel = new MaximizedFlowPanel(
+                    "maximized-flow",
+                    new PropertyModel<Part>( this, "part" ) );
+        } else {
+            maximizedFlowPanel = new Label( "maximized-flow" );
+        }
+        maximizedFlowPanel.setOutputMarkupId( true );
+        makeVisible( maximizedFlowPanel, flowMaximized );
+        form.addOrReplace( maximizedFlowPanel );
     }
 
     /**
@@ -694,8 +717,6 @@ public final class PlanPage extends WebPage implements Updatable {
         }
         form.addOrReplace( scenarioEditPanel );
     }
-
-
 
     // Return the (presumably) only aspect shown, if any.
 
@@ -1295,12 +1316,17 @@ public final class PlanPage extends WebPage implements Updatable {
                 collapseScenarioObjects();
                 setScenario( (Scenario) identifiable );
                 setPart( null );
+            } else if ( change.isMaximized() ) {
+                flowMaximized = true;
+            }  else if ( change.isMinimized() ) {
+                flowMaximized = false;
             }
         } else if ( identifiable instanceof Part ) {
             if ( change.isAdded() || change.isSelected() ) {
                 collapse( getPart() );
                 collapsePartObjects();
                 setPart( (Part) identifiable );
+                flowMaximized = false;
             } else if ( change.isRemoved() ) {
                 collapse( getPart() );
                 collapsePartObjects();
@@ -1345,10 +1371,9 @@ public final class PlanPage extends WebPage implements Updatable {
                     // more than one property changed
                     change.setProperty( "?" );
                 }
-            } else if (change.isCollapsed() && changes.get( change.getSubject() ) != null ) {
+            } else if ( change.isCollapsed() && changes.get( change.getSubject() ) != null ) {
                 refreshAll( target );
-            }
-            else {
+            } else {
                 refresh( target, change, updated );
             }
         }
@@ -1379,6 +1404,7 @@ public final class PlanPage extends WebPage implements Updatable {
      * {@inheritDoc}
      */
     public void refresh( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        updateMaximizedFlow( target );
         updateHeaders( target );
         refreshPlanMenus( target );
         updateNavigation( target );
@@ -1386,6 +1412,11 @@ public final class PlanPage extends WebPage implements Updatable {
         updateSelectors( target, change );
         refreshChildren( target, change, updated );
         getCommander().clearTimeOut();
+    }
+
+    private void updateMaximizedFlow( AjaxRequestTarget target ) {
+        addMaximizedFlowPanel();
+        target.addComponent( maximizedFlowPanel );
     }
 
     private void updateRefresh( AjaxRequestTarget target ) {
@@ -1436,7 +1467,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void refreshScenarioPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject();
-        if ( identifiable instanceof Part && ( change.isSelected() || change.isDisplay()) ) {
+        if ( identifiable instanceof Part && ( change.isSelected() || change.isDisplay() ) ) {
             scenarioPanel.doRefresh( target, change );
             target.addComponent( scenarioPanel );
         } else {

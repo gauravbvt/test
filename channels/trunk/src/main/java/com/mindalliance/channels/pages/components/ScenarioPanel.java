@@ -125,12 +125,12 @@ public class ScenarioPanel extends AbstractCommandablePanel {
             partPanel = new ExpandedPartPanel(
                     "part",
                     new PropertyModel<Part>( this, "part" ),
-                    getExpansions()  );
+                    getExpansions() );
         } else {
             partPanel = new CollapsedPartPanel(
                     "part",
                     new PropertyModel<Part>( this, "part" ),
-                    getExpansions()  );
+                    getExpansions() );
         }
         addOrReplace( partPanel );
     }
@@ -143,15 +143,15 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     }
 
     private void addPartActionsMenu() {
-        if ( isCollapsed( getPart() )) {
-          partActionsMenu = new Label(
+        if ( isCollapsed( getPart() ) ) {
+            partActionsMenu = new Label(
                     "partActionsMenu", new Model<String>( "" ) );
         } else if ( isLockedByUser( getPart() ) ) {
             partActionsMenu = new PartActionsMenuPanel(
                     "partActionsMenu",
                     partModel );
         } else if ( getCommander().isTimedOut()
-                ||  getLockOwner( getPart() ) == null ) {
+                || getLockOwner( getPart() ) == null ) {
             partActionsMenu = new Label(
                     "partActionsMenu", new Model<String>( "Timed out" ) );
 
@@ -205,6 +205,15 @@ public class ScenarioPanel extends AbstractCommandablePanel {
             }
         } );
         add( fullSize );
+        WebMarkupContainer fullscreen = new WebMarkupContainer( "maximized" );
+        fullscreen.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Maximized, getScenario() ) );
+            }
+        } );
+        add( fullscreen );
+
     }
 
     private void addFlowDiagram() {
@@ -263,9 +272,9 @@ public class ScenarioPanel extends AbstractCommandablePanel {
                 }
             }
             if ( identifiable instanceof Issue || identifiable instanceof ScenarioObject ) {
-                if ( !(change.isUpdated() && isExpanded( change.getSubject())) && !(change.isDisplay() ) ) {
+                if ( !( change.isUpdated() && isExpanded( change.getSubject() ) ) && !( change.isDisplay() ) ) {
                     target.addComponent( flowMapDiagramPanel );
-                 }
+                }
             }
         }
         refreshMenus( target );

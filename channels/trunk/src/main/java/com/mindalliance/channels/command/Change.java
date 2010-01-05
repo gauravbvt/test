@@ -51,29 +51,37 @@ public class Change implements Serializable {
          */
         Recomposed,
         /**
-         * Unknown change
+         * Unknown change.
          */
         Unknown,
         /**
-         * Selection
+         * Selection.
          */
         Selected,
         /**
-         * Copy taken
+         * Copy taken.
          */
         Copied,
         /**
-         * View requested
+         * View requested.
          */
         AspectViewed,
         /**
-         * View replacement requested
+         * View replacement requested.
          */
         AspectReplaced,
         /**
-         * View closed
+         * View closed.
          */
-        AspectClosed
+        AspectClosed,
+        /**
+         * Maximized.
+         */
+        Maximized,
+        /**
+         * Minimized.
+         */
+        Minimized
 
     }
 
@@ -375,6 +383,24 @@ public class Change implements Serializable {
      */
     public boolean isModified() {
         return isUnknown() || isExists() || isUpdated() || isRecomposed() || isUndoing();
+    }
+
+    /**
+     * Type is maximized.
+     *
+     * @return a boolean
+     */
+    public boolean isMaximized() {
+        return type == Type.Maximized;
+    }
+
+    /**
+     * Type is maximized.
+     *
+     * @return a boolean
+     */
+    public boolean isMinimized() {
+        return type == Type.Minimized;
     }
 
     /**
