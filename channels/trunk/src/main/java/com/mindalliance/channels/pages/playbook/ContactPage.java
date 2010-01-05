@@ -4,9 +4,10 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.pages.reports.VCardPanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -53,19 +54,15 @@ public class ContactPage extends WebPage {
              new Label( "description", flow.getDescription() ),
 
              new ListView<ResourceSpec>( "contact", contacts ) {
-                 @Override
-                 protected void populateItem( ListItem<ResourceSpec> item ) {
-                     ResourceSpec spec = item.getModelObject();
+                @Override
+                protected void populateItem( ListItem<ResourceSpec> item ) {
+                    ResourceSpec spec = item.getModelObject();
 
-                     item.add(
-                             new Label( "name", spec.toString() ),
-                             new ChannelPanel( "channel", queryService.findAllChannelsFor( spec ) )
-                                     .setRenderBodyOnly( true )
-                     );
-                 }
-             }
-
-            );
+                    item.add(
+                            new VCardPanel( "channel", spec, "../../" )
+                    );
+                }
+            } );
 
     }
 

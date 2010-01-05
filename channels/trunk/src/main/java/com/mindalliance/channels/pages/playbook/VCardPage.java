@@ -43,9 +43,6 @@ public class VCardPage extends WebPage {
     /** The flow context this card. */
     private Flow flow;
 
-    /** Actor specification matching the flow. */
-    private ResourceSpec actorSpec;
-
     public VCardPage( PageParameters parameters ) {
         super( parameters );
 
@@ -55,7 +52,7 @@ public class VCardPage extends WebPage {
         if ( actor == null || flow == null )
             throw new AbortWithHttpStatusException( HttpServletResponse.SC_NOT_FOUND, false );
 
-        actorSpec = getActorSpec( flow.getContactedPart() );
+        ResourceSpec actorSpec = getActorSpec( flow.getContactedPart() );
         init( actorSpec.getOrganization(), actorSpec.getJob() );
     }
 
@@ -88,9 +85,9 @@ public class VCardPage extends WebPage {
             new Label( "name", title ),
             new Label( "desc", flow.getDescription() ),
 
-            new VCardPanel( "person", job.resourceSpec( organization ), "../../" ),
+            new VCardPanel( "person", job.resourceSpec( organization ), PREFIX ),
             organization == null ? new WebMarkupContainer( "org" ).setVisible( false )
-                                 : new VCardPanel( "org", new ResourceSpec( organization ), "../../" )
+                                 : new VCardPanel( "org", new ResourceSpec( organization ), PREFIX )
         );
     }
 

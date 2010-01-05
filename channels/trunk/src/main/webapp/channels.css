@@ -179,7 +179,7 @@ div.section input[type='submit'] {
 }
 
 input, textarea, select, div.flow-details {
-    padding-left: 0.3em;
+    padding: 1px;
     margin: 0;
 }
 
@@ -356,8 +356,11 @@ th {
 }
 
 td, th {
-    padding: 0 5px 2px 0;
+    padding: 1px;
     vertical-align: baseline;
+}
+tbody th {
+    padding-right: 5px;
 }
 
 th.area {

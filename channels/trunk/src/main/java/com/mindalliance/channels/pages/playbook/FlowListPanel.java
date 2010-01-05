@@ -43,7 +43,8 @@ class FlowListPanel extends Panel {
                     SynonymFlowSet set = item.getModelObject();
                     item.add( new Label( "set-name", set.getLabel() ).setRenderBodyOnly( true ),
                               new AttachmentListPanel( "attachments", set.getAttachments() ),
-                              new Label( "direction", set.isIncoming() ? "<--" : "-->" )
+                              new WebMarkupContainer( "direction" )
+                                .add( new Label( "dir-text", set.isIncoming() ? "<--" : "-->" ) )
                                 .add( new AttributeModifier( "class", true,
                                         new Model<String>( set.isIncoming() ? "in" : "out" ) ) ),
                               createFlowCells( getFlowCells( set, actorSpecs, exception ) ) );
