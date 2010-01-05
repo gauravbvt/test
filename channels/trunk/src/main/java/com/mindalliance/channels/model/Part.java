@@ -8,6 +8,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
+import org.apache.commons.lang.WordUtils;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -112,7 +113,7 @@ public class Part extends Node implements GeoLocatable {
     @Override
     @Transient
     public String getTitle() {
-        return MessageFormat.format( "{0} {1}", getName(), getTask() );
+        return MessageFormat.format( "{0} {1}", getName(), WordUtils.uncapitalize( getTask() ) );
     }
 
     public String getTask() {

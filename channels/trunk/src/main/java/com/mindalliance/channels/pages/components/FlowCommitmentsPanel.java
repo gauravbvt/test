@@ -47,10 +47,6 @@ public class FlowCommitmentsPanel extends FloatingCommandablePanel {
      */
     private static final int MIN_HEIGHT = 300;
     /**
-     * About label.
-     */
-    private Label infoLabel;
-    /**
      * Commitments table panel.
      */
     private CommitmentsTablePanel commitmentsTablePanel;
@@ -66,20 +62,12 @@ public class FlowCommitmentsPanel extends FloatingCommandablePanel {
     }
 
     private void addAbout() {
-        infoLabel = new Label( "info", new Model<String>( getFlow().getName() ) );
-        infoLabel.setOutputMarkupId( true );
-        addOrReplace( infoLabel );
         Label fromTask = new Label( "fromTask", new Model<String>( ( (Part) getFlow().getSource() ).getTask() ) );
         fromTask.setOutputMarkupId( true );
         addOrReplace( fromTask );
         Label toTask = new Label( "toTask", new Model<String>( ( (Part) getFlow().getTarget() ).getTask() ) );
         toTask.setOutputMarkupId( true );
         addOrReplace( toTask );
-        Label anyOrAllLabel = new Label(
-                "anyOrAll",
-                new Model<String>( getFlow().isAll() ? "all" : "any" ) );
-        anyOrAllLabel.setOutputMarkupId( true );
-        addOrReplace( anyOrAllLabel );
     }
 
     private void addCommitmentsTable() {
@@ -158,7 +146,6 @@ public class FlowCommitmentsPanel extends FloatingCommandablePanel {
         if ( change.isModified() ) {
             addAbout();
             addCommitmentsTable();
-            target.addComponent( infoLabel );
             target.addComponent( commitmentsTablePanel );
         }
     }

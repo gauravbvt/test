@@ -9,8 +9,10 @@ import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RestartResponseException;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
@@ -112,6 +114,15 @@ public class PlanReportPage extends WebPage {
                 null,
                 planMapSettings )
         );
+        WebMarkupContainer mapLink = new WebMarkupContainer( "plan-map-link" );
+        mapLink.add( new AttributeModifier( "href", true, new Model<String>( getPlanMapLink() ) ) );
+        mapLink.add( new AttributeModifier( "target", true, new Model<String>( "_" ) ) );
+        add( mapLink );
+
+    }
+
+    private String getPlanMapLink() {
+        return "/plan.png";
     }
 
     private String getPlanDescription() {

@@ -38,11 +38,6 @@ import java.util.Set;
 public class ScenarioPanel extends AbstractCommandablePanel {
 
     /**
-     * Length a part title is abbreviated to
-     */
-    private static final int PART_TITLE_MAX_LENGTH = 30;
-
-    /**
      * Flow diagram panel.
      */
     private FlowMapDiagramPanel flowMapDiagramPanel;

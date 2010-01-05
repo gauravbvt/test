@@ -42,12 +42,13 @@ public class ScenarioReportPanel extends Panel {
         addScenarioPage( scenario, showingIssues );
 
         add( new ListView<Organization>( "organizations", scenario.getOrganizations() ) { // NON-NLS
+
             @Override
             protected void populateItem( ListItem<Organization> item ) {
                 Organization organization = item.getModelObject();
                 item.add( new AttributeModifier( "class", true, new Model<String>(        // NON-NLS
                         organization.getParent() == null ? "top organization"             // NON-NLS
-                                                         : "sub organization" ) ) );      // NON-NLS
+                                : "sub organization" ) ) );      // NON-NLS
                 item.add( new OrganizationReportPanel( "organization",                    // NON-NLS
                         organization, scenario, actor, true, showingIssues ) );
             }
@@ -58,42 +59,50 @@ public class ScenarioReportPanel extends Panel {
         List<Risk> riskList = s.getRisks();
         add( new Label( "name", s.getName() )
                 .add( new AttributeModifier( "name", true,
-                                             new Model<String>( String.valueOf( s.getId() ) ) ) ),
+                new Model<String>( String.valueOf( s.getId() ) ) ) ),
 
-             new Label( "description", getScenarioDesc( s ) ).setRenderBodyOnly( true ),  // NON-NLS
+                new Label( "description", getScenarioDesc( s ) ).setRenderBodyOnly( true ),  // NON-NLS
 
-             new Label( "event", s.getPhaseEventTitle() ).setVisible( s.getEvent() != null ),
+                new Label( "event", s.getPhaseEventTitle() ).setVisible( s.getEvent() != null ),
 
-             new WebMarkupContainer( "risk-lead" )
-                     .setRenderBodyOnly( true )
-                     .setVisible( !riskList.isEmpty() ),
+                new WebMarkupContainer( "risk-lead" )
+                        .setRenderBodyOnly( true )
+                        .setVisible( !riskList.isEmpty() ),
 
-             new WebMarkupContainer( "risk-section" )
-                .add( new ListView<Risk>( "risks", riskList ) {
-                        @Override
-                        protected void populateItem( ListItem<Risk> item ) {
-                            Risk risk = item.getModelObject();
-                            item.add( new Label( "risk", risk.getLabel() )
-                                            .setRenderBodyOnly( true ),
-                                      new Label( "risk-desc", risk.getDescription() )
-                                            .setRenderBodyOnly( true ) );
-                        }
-                    } ).setVisible( !riskList.isEmpty() ),
+                new WebMarkupContainer( "risk-section" )
+                        .add( new ListView<Risk>( "risks", riskList ) {
+                            @Override
+                            protected void populateItem( ListItem<Risk> item ) {
+                                Risk risk = item.getModelObject();
+                                item.add( new Label( "risk", risk.getLabel() )
+                                        .setRenderBodyOnly( true ),
+                                        new Label( "risk-desc", risk.getDescription() )
+                                                .setRenderBodyOnly( true ) );
+                            }
+                        } ).setVisible( !riskList.isEmpty() ),
 
-             new FlowMapDiagramPanel( "flowMap",                                          // NON-NLS
+                new FlowMapDiagramPanel( "flowMap",                                          // NON-NLS
                         new Model<Scenario>( s ),
                         null,
                         //size,
-                        new Settings( null, DiagramFactory.TOP_BOTTOM, null, true, false ) ),
+                        new Settings( null, DiagramFactory.LEFT_RIGHT, null, true, false ) ),
 
-            new IssuesReportPanel( "issues", new Model<ModelObject>( s ) )                // NON-NLS
-                    .setVisible( showIssues )
+                new IssuesReportPanel( "issues", new Model<ModelObject>( s ) )                // NON-NLS
+                        .setVisible( showIssues )
         );
+        WebMarkupContainer flowMapLink = new WebMarkupContainer( "flow-link" );
+        flowMapLink.add( new AttributeModifier( "href", true, new Model<String>( getFlowMapLink(s) ) ) );
+        flowMapLink.add( new AttributeModifier( "target", true, new Model<String>( "_" ) ) );
+        add( flowMapLink );
+    }
+
+    private String getFlowMapLink( Scenario scenario ) {
+        return "/scenario.png?scenario=" + scenario.getId() + "&node=" + "NONE";
     }
 
     private static String getScenarioDesc( Scenario s ) {
         String desc = s.getDescription();
         return desc.isEmpty() || !desc.endsWith( "." ) ?
-               desc + "." : desc;
-    }   
+                desc + "." : desc;
+    }
 }
