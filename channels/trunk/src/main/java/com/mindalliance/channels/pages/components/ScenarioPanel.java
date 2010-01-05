@@ -58,11 +58,6 @@ public class ScenarioPanel extends AbstractCommandablePanel {
     private IModel<Part> partModel;
 
     /**
-     * Part's title.
-     */
-    private Label partTitle;
-
-    /**
      * Part actions menu.
      */
     private Component partActionsMenu;
@@ -139,25 +134,6 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         }
         addOrReplace( partPanel );
     }
-
-/*
-    private void addPartHeader() {
-        partTitle = new Label( "part-title",                                              // NON-NLS
-                new AbstractReadOnlyModel<String>() {
-                    @Override
-                    public String getObject() {
-                        return StringUtils.abbreviate(
-                                getPart().getTitle(), PART_TITLE_MAX_LENGTH );
-                    }
-                } );
-        partTitle.setOutputMarkupId( true );
-        partTitle.add( new AttributeModifier( "title", true,                              // NON-NLS
-                new PropertyModel<String>( partModel, "title" ) ) );                      // NON-NLS
-        add( partTitle );
-
-        addPartMenuBar();
-    }
-*/
 
     private void addPartMenuBar() {
         addPartActionsMenu();
@@ -282,13 +258,12 @@ public class ScenarioPanel extends AbstractCommandablePanel {
             Identifiable identifiable = change.getSubject();
             if ( identifiable == getPart() ) {
                 if ( change.isUpdated() ) {
-                    target.addComponent( partTitle );
                     reqsFlowPanel.refresh( target );
                     outcomesFlowPanel.refresh( target );
                 }
             }
             if ( identifiable instanceof Issue || identifiable instanceof ScenarioObject ) {
-                if ( !change.isDisplay() ) {
+                if ( !(change.isUpdated() && isExpanded( change.getSubject())) && !(change.isDisplay() ) ) {
                     target.addComponent( flowMapDiagramPanel );
                  }
             }

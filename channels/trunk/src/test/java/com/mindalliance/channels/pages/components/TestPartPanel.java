@@ -36,6 +36,7 @@ import static org.easymock.EasyMock.replay;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 /**
@@ -94,7 +95,7 @@ public class TestPartPanel extends AbstractChannelsTest {
                 part = (Part) n;
         }
 
-        panel = new ExpandedPartPanel( "id", new Model<Part>( part ) );
+        panel = new ExpandedPartPanel( "id", new Model<Part>( part ), new HashSet<Long>() );
         tester.startComponent( panel );
     }
 

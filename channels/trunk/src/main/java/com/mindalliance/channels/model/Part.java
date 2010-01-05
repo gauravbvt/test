@@ -644,15 +644,6 @@ public class Part extends Node implements GeoLocatable {
     @Transient
     public String getSummary() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "Task \"" );
-        sb.append( getTask() );
-        sb.append( "\" is executed" );
-        if ( getLocation() != null ) {
-            sb.append( " at location \"" );
-            sb.append( getLocation().getName() );
-            sb.append( "\"" );
-        }
-        sb.append( " by " );
         if ( getActor() != null ) {
             sb.append( getActor().getName() );
             if ( getActor().isType() ) {
@@ -670,7 +661,7 @@ public class Part extends Node implements GeoLocatable {
                 if ( impliedActor != null ) {
                     sb.append( impliedActor.getName() );
                 } else {
-                    sb.append( "any " );
+                    sb.append( "Any " );
                 }
             }
             if ( getKnownActualActor() != null ) {
@@ -683,7 +674,7 @@ public class Part extends Node implements GeoLocatable {
             sb.append( getRole().getName() );
         }
         if ( getActor() == null && getRole() == null ) {
-            sb.append( "someone");
+            sb.append( "Someone");
         }
         if ( getJurisdiction() != null ) {
             if ( !sb.toString().isEmpty() ) sb.append( " for " );
@@ -692,6 +683,14 @@ public class Part extends Node implements GeoLocatable {
         if ( getOrganization() != null ) {
             if ( !sb.toString().isEmpty() ) sb.append( " at " );
             sb.append( getOrganization().getName() );
+        }
+        sb.append( " is assigned task \"" );
+        sb.append( getTask() );
+        sb.append( "\"");
+        if ( getLocation() != null ) {
+            sb.append( " at location \"" );
+            sb.append( getLocation().getName() );
+            sb.append( "\"" );
         }
         sb.append( "." );
         if ( isRepeating()

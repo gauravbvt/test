@@ -246,6 +246,11 @@ public final class PlanPage extends WebPage implements Updatable {
      */
     private ModalWindow dialogWindow;
 
+    /**
+     * Cumulated change to an expanded identifiable.
+     */
+    private Map<Identifiable, Change> changes = new HashMap<Identifiable, Change>();
+
     @SpringBean
     /**
      * Query service.
@@ -1097,6 +1102,10 @@ public final class PlanPage extends WebPage implements Updatable {
         expansions.add( identifiable.getId() );
     }
 
+    private boolean isExpanded( Identifiable identifiable ) {
+        return expansions.contains( identifiable.getId() );
+    }
+
     private void collapse( Identifiable identifiable ) {
         getCommander().releaseAnyLockOn( identifiable );
         expansions.remove( identifiable.getId() );
@@ -1322,120 +1331,24 @@ public final class PlanPage extends WebPage implements Updatable {
     /**
      * {@inheritDoc}
      */
-    /*
-    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        refreshMenus( target );
-        updateNavigation( target );
-        if ( change.isNone() ) return;
-        Identifiable identifiable = change.getSubject();
-        if ( change.isUndoing()
-                || change.isUnknown()
-                || ( identifiable instanceof ModelObject
-                && change.isUpdated()
-                && change.isForProperty( "waivedIssueDetections" ) ) ) {
-            refreshAll( target );
-        }
-        if ( change.isUpdated() ) {
-            refreshAll( target );
-        } else {
-            if ( identifiable instanceof SurveyService ) {
-                if ( change.isDisplay() ) {
-                    refreshSurveysPanel( target, null );
-                }
-            }
-            if ( identifiable instanceof Survey ) {
-                if ( change.isExpanded() ) {
-                    refreshSurveysPanel( target, (Survey) identifiable );
-                }
-            }
-            if ( identifiable instanceof Plan ) {
-                if ( change.isDisplay() ) {
-                    refreshPlanEditPanel( target );
-                } else if ( change.isSelected() || change.isRecomposed() ) {
-                    redirectToPlan();
-                } else if ( change.isExists() && change.isForProperty( "phases" ) ) {
-                    refreshScenarioEditPanel( target );
-                }
-            }
-            if ( identifiable instanceof Scenario ) {
-                if ( change.isDisplay() ) {
-                    refreshScenarioEditPanel( target );
-                }
-                if ( change.isAdded() || change.isSelected() ) {
-                    refreshAll( target );
-                } else if ( change.isRemoved() ) {
-                    refreshAll( target );
-                } else if ( change.isRecomposed() ) {
-                    annotateScenarioName( getApp().getAnalyst() );
-                    target.addComponent( scenarioNameLabel );
-                    scenarioPanel.refresh( target );
-                }
-            }
-            if ( identifiable instanceof Part ) {
-                if ( change.isExists() ) {
-                    scenarioPanel.refresh( target );
-                } else if ( change.isSelected() ) {
-                    // In case selecting the part switched scenarios
-                    refreshScenarioEditPanel( target );
-                    target.addComponent( scenarioDropDownChoice );
-                    scenarioPanel.refresh( target );
-                    target.addComponent( scenarioPanel );
-                } else if ( change.isAspect( "assignments" ) ) {
-                    refreshAssignmentsPanel( target );
-                }
-            }
-            if ( identifiable instanceof Flow ) {
-                if ( change.isAspect( "commitments" ) ) {
-                    refreshCommitmentsPanel( target );
-                } else if ( change.isCollapsed() || change.isAspect( "eois" ) ) {
-                    refreshEOIsPanel( target );
-                } else if ( !change.isDisplay() ) {
-                    refreshAll( target );
-                }
-            }
-            if ( identifiable instanceof ExternalFlow && !change.isDisplay() ) {
-                target.addComponent( planEditPanel );
-            }
-            if ( identifiable instanceof ScenarioObject
-                    || identifiable instanceof Issue
-                    && ( (Issue) identifiable ).getAbout().getId() == scenario.getId() ) {
-                annotateScenarioName( getApp().getAnalyst() );
-                target.addComponent( scenarioNameLabel );
-            }
-            if ( identifiable instanceof Issue
-                    && change.isExists()
-                    && ( (Issue) identifiable ).getAbout().getId() == scenario.getId() ) {
-                annotateScenarioName( getApp().getAnalyst() );
-                target.addComponent( scenarioNameLabel );
-                scenarioPanel.expandScenarioEditPanel( target );
-                refreshPlanEditPanel( target );
-                target.addComponent( planEditPanel );
-            }
-            if ( identifiable instanceof ModelObject
-                    && ( (ModelObject) identifiable ).isEntity() ) {
-                if ( change.isDisplay() ) {
-                    refreshEntityPanel( target );
-                } else {
-                    refreshAll( target );
-                }
-
-            }
-        }
-        if ( change.getScript() != null ) {
-            target.appendJavascript( change.getScript() );
-        }
-    }
-*/
-    /**
-     * {@inheritDoc}
-     */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( !change.isNone() ) {
             if ( change.getSubject() instanceof Plan && change.isSelected() || change.isRecomposed() ) {
                 redirectToPlan();
             } else if ( change.isUndoing() || change.isUnknown() ) {
                 refresh( target, change, new ArrayList<Updatable>() );
-            } else {
+            } else if ( change.isUpdated() && isExpanded( change.getSubject() ) ) {
+                Change accumulatedChange = changes.get( change.getSubject() );
+                if ( accumulatedChange == null ) {
+                    changes.put( change.getSubject(), change );
+                } else {
+                    // more than one property changed
+                    change.setProperty( "?" );
+                }
+            } else if (change.isCollapsed() && changes.get( change.getSubject() ) != null ) {
+                refreshAll( target );
+            }
+            else {
                 refresh( target, change, updated );
             }
         }
@@ -1466,7 +1379,7 @@ public final class PlanPage extends WebPage implements Updatable {
      * {@inheritDoc}
      */
     public void refresh( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        updateHeaders( target, change );
+        updateHeaders( target );
         refreshPlanMenus( target );
         updateNavigation( target );
         updateRefresh( target );
@@ -1480,7 +1393,7 @@ public final class PlanPage extends WebPage implements Updatable {
         target.addComponent( refreshNeededContainer );
     }
 
-    private void updateHeaders( AjaxRequestTarget target, Change change ) {
+    private void updateHeaders( AjaxRequestTarget target ) {
         annotateScenarioName();
         target.addComponent( scenarioNameLabel );
         target.addComponent( scenarioDescriptionLabel );
@@ -1509,21 +1422,6 @@ public final class PlanPage extends WebPage implements Updatable {
         target.addComponent( selectScenarioContainer );
         target.addComponent( switchPlanContainer );
     }
-
-/*
-    private void refreshMenus( AjaxRequestTarget target ) {
-        addPlanActionsMenu();
-        target.addComponent( planActionsMenu );
-        target.addComponent( planShowMenu );
-        scenarioPanel.refreshMenus( target );
-        if ( planEditPanel instanceof PlanEditPanel )
-            ( (PlanEditPanel) planEditPanel ).refreshMenus( target );
-        if ( entityPanel instanceof EntityPanel )
-            ( (EntityPanel) entityPanel ).refreshMenus( target );
-        if ( scenarioEditPanel instanceof ScenarioEditPanel )
-            ( (ScenarioEditPanel) scenarioEditPanel ).refreshMenus( target );
-    }
-*/
 
     private void refreshChildren( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         refreshPlanEditPanel( target, change, updated );
@@ -1642,34 +1540,6 @@ public final class PlanPage extends WebPage implements Updatable {
                     getAspectShown( surveyService ) );
         }
     }
-
-/*    private void refreshAll( AjaxRequestTarget target ) {
-    // Re-acquire lock
-    // setPart( getPart() );
-    updateVisibility();
-    updateNavigation( target );
-    target.addComponent( planActionsMenu );
-    target.addComponent( planShowMenu );
-    target.addComponent( scenarioNameLabel );
-    target.addComponent( scenarioDescriptionLabel );
-    target.addComponent( selectScenarioContainer );
-    annotateScenarioName( getApp().getAnalyst() );
-    target.addComponent( scenarioNameLabel );
-    refreshScenarioEditPanel( target );
-    scenarioPanel.refresh( target );
-    target.addComponent( scenarioPanel );
-    refreshEntityPanel( target );
-    refreshAssignmentsPanel( target );
-    refreshCommitmentsPanel( target );
-    refreshEOIsPanel( target );
-    refreshPlanEditPanel( target );
-    target.addComponent( planEditPanel );
-    form.addOrReplace( createPartsMapLink() );
-    target.addComponent( partsMapLink );
-    updateRefreshNotice();
-    target.addComponent( refreshNeededContainer );
-    getCommander().clearTimeOut();
-}*/
 
 
     private void updateNavigation() {
