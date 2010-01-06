@@ -71,11 +71,18 @@ public class PlanReportPage extends WebPage {
         String reportDate = DateFormat.getDateTimeInstance( DateFormat.LONG, DateFormat.LONG )
                                 .format( new Date() );
         List<Scenario> scenarios = selector.getScenarios();
-        double[] size = { 478L, 400L };
-        Settings planMapSettings = new Settings( "#plan-map", DiagramFactory.TOP_BOTTOM,
-                                                 size, false, false );
 
-        add( selector,                            
+        double[] size = { 478L, 400L };
+        PlanMapDiagramPanel diagramPanel = new PlanMapDiagramPanel( "planMap",            // NON-NLS
+            new Model<ArrayList<Scenario>>( (ArrayList<Scenario>) scenarios ),
+            false, // group scenarios by phase
+            false, // group scenarios by event
+            null,  // selected phase or event
+            selector.isAllScenarios() ? null : selector.getScenario(),
+            null,
+            new Settings( "#plan-map", DiagramFactory.TOP_BOTTOM, size, false, false ) );
+
+        add( selector,
              new Label( "title",                                                          // NON-NLS
                         MessageFormat.format( "Report: {0}", plan.getName() ) ),
              new Label( "plan-name", plan.getName() ),                                    // NON-NLS
@@ -105,19 +112,13 @@ public class PlanReportPage extends WebPage {
                     }
                 },
 
-             new PlanMapDiagramPanel( "planMap",                                          // NON-NLS
-                new Model<ArrayList<Scenario>>( (ArrayList<Scenario>) scenarios ),
-                false, // group scenarios by phase
-                false, // group scenarios by event
-                null, // selected phase or event
-                selector.isAllScenarios() ? null : selector.getScenario(),
-                null,
-                planMapSettings )
+             diagramPanel,
+
+             new WebMarkupContainer( "plan-map-link" )
+                .add( new AttributeModifier( "href", true, new Model<String>( getPlanMapLink() ) ) )
+                .add( new AttributeModifier( "target", true, new Model<String>( "_" ) ) )
         );
-        WebMarkupContainer mapLink = new WebMarkupContainer( "plan-map-link" );
-        mapLink.add( new AttributeModifier( "href", true, new Model<String>( getPlanMapLink() ) ) );
-        mapLink.add( new AttributeModifier( "target", true, new Model<String>( "_" ) ) );
-        add( mapLink );
+
 
     }
 
