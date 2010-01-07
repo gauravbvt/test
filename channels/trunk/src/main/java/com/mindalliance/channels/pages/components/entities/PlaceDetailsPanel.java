@@ -215,7 +215,8 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 item.add( new GeoLocationPanel( "geoLocation", item.getModelObject() ) );
             }
         };
-        geoLocationsContainer.add( geoLocationsList );
+        geoLocationsList.setOutputMarkupId( true );
+        geoLocationsContainer.addOrReplace( geoLocationsList );
     }
 
     private void addStreetAddressField() {
@@ -282,6 +283,8 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         geonameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
+                addGeoLocationList();
+                target.addComponent( geoLocationsContainer );
                 addIssues( geonameField, getPlace(), "geoname" );
                 target.addComponent( geonameField );
                 addIssues( postalCodeField, getPlace(), "postalCode" );
