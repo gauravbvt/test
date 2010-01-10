@@ -35,7 +35,7 @@ public class AddPart extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "add part";
+        return "add task";
     }
 
     /**

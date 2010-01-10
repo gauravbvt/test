@@ -41,7 +41,7 @@ public class RemovePart extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "cut part";
+        return "cut task";
     }
 
     /**
@@ -98,7 +98,7 @@ public class RemovePart extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
-        MultiCommand multi = new MultiCommand( "add part" );
+        MultiCommand multi = new MultiCommand( "add task" );
         multi.setUndoes( getName() );
         // Reconstitute part
         Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );

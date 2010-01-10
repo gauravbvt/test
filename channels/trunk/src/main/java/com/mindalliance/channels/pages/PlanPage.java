@@ -1323,9 +1323,8 @@ public final class PlanPage extends WebPage implements Updatable {
             }
         } else if ( identifiable instanceof Part ) {
             if ( change.isAdded() || change.isSelected() ) {
-                collapse( getPart() );
-                collapsePartObjects();
                 setPart( (Part) identifiable );
+                expand( (Part) identifiable );
                 flowMaximized = false;
             } else if ( change.isRemoved() ) {
                 collapse( getPart() );
@@ -1359,9 +1358,12 @@ public final class PlanPage extends WebPage implements Updatable {
      */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( !change.isNone() ) {
-            if ( change.getSubject() instanceof Plan && change.isSelected() || change.isRecomposed() ) {
+            if ( change.getSubject() instanceof Plan && change.isSelected() ) {
                 redirectToPlan();
-            } else if ( change.isUndoing() || change.isUnknown() ) {
+            } else if ( change.isUndoing()
+                    || change.isUnknown()
+                    || change.isRecomposed()
+                    || change.isAdded() && change.getSubject() instanceof Part) {
                 refresh( target, change, new ArrayList<Updatable>() );
             } else if ( change.isUpdated() && isExpanded( change.getSubject() ) ) {
                 Change accumulatedChange = changes.get( change.getSubject() );

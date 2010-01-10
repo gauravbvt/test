@@ -1,6 +1,8 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.commands.AddPart;
 import com.mindalliance.channels.command.commands.UpdateScenarioObject;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;
@@ -18,6 +20,7 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -135,6 +138,15 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         partShowMenu = new PartShowMenuPanel( "partShowMenu", partModel, getExpansions() );
         partShowMenu.setOutputMarkupId( true );
         add( partShowMenu );
+        AjaxFallbackLink addPartLink = new AjaxFallbackLink( "addPart" ) {
+             public void onClick( AjaxRequestTarget target ) {
+                 Command command = new AddPart( getScenario() );
+                 Change change = doCommand( command );
+                 update( target, change );
+             }
+         };
+         addPartLink.setVisible( getPlan().isDevelopment() );
+         add( addPartLink );        
     }
 
     private void addPartActionsMenu() {

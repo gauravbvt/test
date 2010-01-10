@@ -35,7 +35,7 @@ public class DuplicatePart extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "duplicate part";
+        return "duplicate task";
     }
 
     /**

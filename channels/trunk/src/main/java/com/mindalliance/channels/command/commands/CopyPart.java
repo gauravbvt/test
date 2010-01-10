@@ -38,7 +38,7 @@ public class CopyPart extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "copy part";
+        return "copy task";
     }
 
     /**

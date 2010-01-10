@@ -32,7 +32,7 @@ public class PastePart extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "paste part";
+        return "paste task";
     }
 
     /**

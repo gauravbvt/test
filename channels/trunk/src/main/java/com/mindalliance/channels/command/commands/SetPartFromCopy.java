@@ -37,7 +37,7 @@ public class SetPartFromCopy extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "set part from copy";
+        return "set task from copy";
     }
 
     /**
