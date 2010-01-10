@@ -67,7 +67,7 @@ public class PastePart extends AbstractCommand {
 
     @SuppressWarnings( "unchecked" )
     private MultiCommand makeSubCommands( Map<String, Object> copy ) {
-        MultiCommand subCommands = new MultiCommand( "paste part - extra" );
+        MultiCommand subCommands = new MultiCommand( "paste task - extra" );
         subCommands.setMemorable( false );
         Command addPart = new AddPart();
         addPart.set( "scenario", get( "scenario" ) );

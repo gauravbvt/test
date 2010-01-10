@@ -123,7 +123,7 @@ public class RemovePart extends AbstractCommand {
      * @return a multi command
      */
     private MultiCommand makeSubCommands( Part part ) {
-        MultiCommand subCommands = new MultiCommand( "cut part - extra" );
+        MultiCommand subCommands = new MultiCommand( "cut task - extra" );
         subCommands.addCommand( new CopyPart( part ) );
         Iterator<Flow> ins = part.requirements();
         while ( ins.hasNext() ) {

@@ -46,7 +46,7 @@ public class CyclicTriggering extends AbstractIssueDetector {
                 if ( cycle.size() > 1 ) {
                     Issue issue = makeIssue( Issue.ROBUSTNESS, scenario );
                     StringBuilder sb = new StringBuilder();
-                    sb.append("These parts trigger each other in a loop: ");
+                    sb.append("These tasks trigger each other in a loop: ");
                     int count = 0;
                     for (Part part : cycle) {
                         count++;

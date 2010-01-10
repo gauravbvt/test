@@ -67,7 +67,7 @@ public class ScenarioWithSameRisk extends AbstractIssueDetector {
                             + "."
                     );
                     issue.setRemediation( "Consider merging the two scenarios\n"
-                            + "or moving the parts that mitigate the common risk from one scenario to the other." );
+                            + "or moving the tasks that mitigate the common risk from one scenario to the other." );
                     issue.setSeverity( Issue.Level.Minor );
                     issues.add( issue );
                 }

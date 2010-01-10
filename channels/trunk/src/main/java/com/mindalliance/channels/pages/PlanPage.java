@@ -434,7 +434,7 @@ public final class PlanPage extends WebPage implements Updatable {
         GeomapLinkPanel panel = new GeomapLinkPanel( "geomapLink",
                 new Model<String>( "Tasks with known locations in scenario " + scenario.getName() ),
                 geoLocatables,
-                new Model<String>( "Show parts in map" ) );
+                new Model<String>( "Show tasks in map" ) );
 
         panel.setOutputMarkupId( true );
         partsMapLink = panel;
@@ -1318,14 +1318,14 @@ public final class PlanPage extends WebPage implements Updatable {
                 setPart( null );
             } else if ( change.isMaximized() ) {
                 flowMaximized = true;
-            }  else if ( change.isMinimized() ) {
+            } else if ( change.isMinimized() ) {
                 flowMaximized = false;
             }
         } else if ( identifiable instanceof Part ) {
             if ( change.isAdded() || change.isSelected() ) {
                 setPart( (Part) identifiable );
-                expand( (Part) identifiable );
                 flowMaximized = false;
+                if ( change.isAdded() ) expand( identifiable );
             } else if ( change.isRemoved() ) {
                 collapse( getPart() );
                 collapsePartObjects();
@@ -1363,7 +1363,7 @@ public final class PlanPage extends WebPage implements Updatable {
             } else if ( change.isUndoing()
                     || change.isUnknown()
                     || change.isRecomposed()
-                    || change.isAdded() && change.getSubject() instanceof Part) {
+                    || change.isAdded() && change.getSubject() instanceof Part ) {
                 refresh( target, change, new ArrayList<Updatable>() );
             } else if ( change.isUpdated() && isExpanded( change.getSubject() ) ) {
                 Change accumulatedChange = changes.get( change.getSubject() );

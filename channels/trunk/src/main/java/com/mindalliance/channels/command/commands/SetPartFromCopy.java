@@ -73,7 +73,7 @@ public class SetPartFromCopy extends AbstractCommand {
 
     @SuppressWarnings( "unchecked" )
     private MultiCommand makeSubCommands( Map<String, Object> copy ) {
-        MultiCommand subCommands = new MultiCommand( "set part from copy - extra" );
+        MultiCommand subCommands = new MultiCommand( "set task from copy - extra" );
         subCommands.setMemorable( false );
         List<Map<String, Object>> needStates = (List<Map<String, Object>>) copy.get( "needs" );
         for ( Map<String, Object> needState : needStates ) {
