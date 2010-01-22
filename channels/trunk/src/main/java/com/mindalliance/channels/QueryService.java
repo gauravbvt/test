@@ -29,6 +29,7 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.ScenarioObject;
 import com.mindalliance.channels.nlp.Proximity;
 import com.mindalliance.channels.util.Play;
 
@@ -255,9 +256,10 @@ public interface QueryService extends Service {
 
     /**
      * Whether an entity already exists.
+     *
      * @param clazz a class of entity
-     * @param name a string
-     * @param kind actual or type
+     * @param name  a string
+     * @param kind  actual or type
      * @return a boolean
      */
     boolean entityExists( Class<ModelEntity> clazz, String name, ModelEntity.Kind kind );
@@ -1261,12 +1263,29 @@ public interface QueryService extends Service {
     /**
      * Find all commitments covered by an agreement by an organization.
      *
-     * @param agreement an agreement
+     * @param agreement    an agreement
      * @param organization an organization
      * @return a list of commitments
      */
     List<Commitment> findAllCommitmentsCoveredBy(
             Agreement agreement,
-            Organization organization);
+            Organization organization );
 
+    /**
+     * Find essential flows from a part.
+     *
+     * @param part        a part
+     * @param assumeFails boolean whether downstream alternate flows assumed to fail
+     * @return a list of flows
+     */
+    List<Flow> findEssentialFlowsFrom( Part part, boolean assumeFails );
+
+    /**
+     * If a part or sharing flow fail, what risk mitigating parts would also fail?
+     *
+     * @param scenarioObject a part of sharing flow
+     * @param assumeFails    whether all alternate sharing flows are assumed to fail (no redundancy)
+     * @return a list of risk-mitigating parts that would fail
+     */
+    List<Part> findFailureImpacts( ScenarioObject scenarioObject, boolean assumeFails );
 }

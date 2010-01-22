@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.png;
 
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.graph.Diagram;
+import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.pages.PlanPage;
@@ -51,7 +52,7 @@ public class FlowMapPage extends PngWebPage {
     /**
      * {@inheritDoc}
      */
-    protected Diagram makeDiagram( double[] diagramSize, String orientation ) {
+    protected Diagram makeDiagram( double[] diagramSize, String orientation ) throws DiagramException {
         return getDiagramFactory().newFlowMapDiagram( scenario, node, diagramSize, orientation );
     }
 

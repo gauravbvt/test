@@ -390,4 +390,12 @@ public abstract class AbstractCommand implements Command {
     public boolean forcesSnapshot() {
         return false;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getLabel( Commander commander ) throws CommandException {
+        // Default
+        return getTitle();
+    }
 }

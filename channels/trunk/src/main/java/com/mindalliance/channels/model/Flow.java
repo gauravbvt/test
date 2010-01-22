@@ -1022,6 +1022,79 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
                 } );
     }
 
+    @Transient
+    /**
+     * {@inheritDoc}
+     */
+    public List<Flow> getEssentialFlows( boolean assumeFails ) {
+        if ( isEssential( assumeFails ) ) {
+            List<Flow> essentialFlows = getTarget().getEssentialFlows( assumeFails );
+            essentialFlows.add( this );
+            return essentialFlows;
+        } else {
+            return new ArrayList<Flow>();
+        }
+    }
+
+    @Transient
+    /**
+     * A flow is important (i.e. could be essential) if it is a sharing flow, and is either critical
+     * to the target part or triggers it.
+     * @return a boolean
+     */
+    public boolean isImportant() {
+        return isSharing() && ( isCritical() || isTriggeringToTarget() );
+    }
+
+    /**
+     * Whether the target part is target of another flow with same information and same or more elements.
+     *
+     * @return a boolean
+     */
+    public boolean hasAlternate() {
+        return getAlternates().isEmpty();
+    }
+
+    /**
+     * Get alternate flows.
+     *
+     * @return a list of flows
+     */
+    @SuppressWarnings( "unchecked" )
+    @Transient
+    public List<Flow> getAlternates() {
+        if ( isSharing() ) {
+            Part target = (Part) getTarget();
+            return (List<Flow>) CollectionUtils.select(
+                    target.getRequirements().values(),
+                    new Predicate() {
+                        public boolean evaluate( Object object ) {
+                            Flow alternate = (Flow) object;
+                            return !alternate.equals( Flow.this )
+                                    && alternate.isSharing()
+                                    && Matcher.same( getName(), alternate.getName() )
+                                    && Matcher.subsetOf(
+                                    getEois(),
+                                    alternate.getEois(),
+                                    getScenario().getQueryService()
+                            );
+                        }
+                    } );
+        } else {
+            return new ArrayList<Flow>();
+        }
+    }
+
+    /**
+     * Whether the flow could be essential to risk mitigation.
+     *
+     * @param assumeFails whether alternate flows are assumed
+     * @return a boolean
+     */
+    public boolean isEssential( boolean assumeFails ) {
+        return isImportant() && ( assumeFails || !hasAlternate() );
+    }
+
 
     /**
      * The significance of a flow.

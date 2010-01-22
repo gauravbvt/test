@@ -16,6 +16,7 @@ import com.mindalliance.channels.pages.playbook.PlaybookPage;
 import com.mindalliance.channels.pages.playbook.TaskPlaybook;
 import com.mindalliance.channels.pages.playbook.VCardPage;
 import com.mindalliance.channels.pages.png.EntityNetworkPage;
+import com.mindalliance.channels.pages.png.EssentialFlowMapPage;
 import com.mindalliance.channels.pages.png.FlowMapPage;
 import com.mindalliance.channels.pages.png.HierarchyPage;
 import com.mindalliance.channels.pages.png.PlanMapPage;
@@ -128,6 +129,7 @@ public final class Channels extends WebApplication implements ApplicationListene
         mount( new QueryStringUrlCodingStrategy( "network.png", EntityNetworkPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "hierarchy.png", HierarchyPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "geomap.html", GeoMapPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "essential.png", EssentialFlowMapPage.class ) );
 
         getApplicationSettings().setInternalErrorPage( ErrorPage.class );
         getApplicationSettings().setPageExpiredErrorPage( ExpiredPage.class );

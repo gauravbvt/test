@@ -20,6 +20,7 @@ import org.apache.wicket.model.IModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Actions menu for a part..
@@ -31,8 +32,8 @@ import java.util.List;
  */
 public class PartActionsMenuPanel extends ActionMenuPanel {
 
-    public PartActionsMenuPanel( String s, IModel<? extends Part> model ) {
-        super( s, model, null );
+    public PartActionsMenuPanel( String s, IModel<? extends Part> model, Set<Long> expansions ) {
+        super( s, model, expansions );
     }
 
     /**
@@ -45,11 +46,13 @@ public class PartActionsMenuPanel extends ActionMenuPanel {
                 update( target, change );
             }
         } );
-        commandWrappers.add( new CommandWrapper( new SetPartFromCopy( getPart() ) ) {
-            public void onExecuted( AjaxRequestTarget target, Change change ) {
-                update( target, change );
-            }
-        } );
+        if ( isExpanded( getPart() ) && getCommander().isPartCopied() ) {
+            commandWrappers.add( new CommandWrapper( new SetPartFromCopy( getPart() ) ) {
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
+        }
         commandWrappers.add( new CommandWrapper( new RemovePart( getPart() ), CONFIRM ) {
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 Part part = getPart();
@@ -66,16 +69,20 @@ public class PartActionsMenuPanel extends ActionMenuPanel {
                     getCommander().cleanup( Place.class, part.getLocation().getName() );
             }
         } );
-        commandWrappers.add( new CommandWrapper( new PasteAttachment( getPart() ) ) {
-            public void onExecuted( AjaxRequestTarget target, Change change ) {
-                update( target, change );
-            }
-        } );
-        commandWrappers.add( new CommandWrapper( new PasteFlow( getPart() ) ) {
-            public void onExecuted( AjaxRequestTarget target, Change change ) {
-                update( target, change );
-            }
-        } );
+        if ( isExpanded( getPart() ) && getCommander().isAttachmentCopied() ) {
+            commandWrappers.add( new CommandWrapper( new PasteAttachment( getPart() ) ) {
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
+        }
+        if ( isExpanded( getPart() ) && getCommander().isFlowCopied() ) {
+            commandWrappers.add( new CommandWrapper( new PasteFlow( getPart() ) ) {
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
+        }
         commandWrappers.add( new CommandWrapper( new AddUserIssue( getPart() ) ) {
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 update( target, change );

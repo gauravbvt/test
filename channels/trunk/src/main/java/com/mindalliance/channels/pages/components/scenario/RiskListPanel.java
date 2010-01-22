@@ -24,6 +24,7 @@ import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFal
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -103,9 +104,11 @@ public class RiskListPanel extends AbstractCommandablePanel {
         return new ListView<RiskWrapper>( "risk", riskWrappers ) {
             /** {@inheritDoc} */
             protected void populateItem( ListItem<RiskWrapper> item ) {
+                item.setOutputMarkupId( true );
                 addSeverityCell( item );
                 addTypeCell( item );
                 addOrganizationCell( item );
+                addEndsWithScenario( item );
                 addDeleteImage( item );
                 addShowMoreCell( item );
             }
@@ -174,7 +177,6 @@ public class RiskListPanel extends AbstractCommandablePanel {
     }
 
     private void addOrganizationCell( final ListItem<RiskWrapper> item ) {
-        item.setOutputMarkupId( true );
         final RiskWrapper wrapper = item.getModelObject();
         final List<String> choices = getQueryService().findAllEntityNames( Organization.class );
         EntityReferencePanel<Organization> orgRefField = new EntityReferencePanel<Organization>(
@@ -186,6 +188,23 @@ public class RiskListPanel extends AbstractCommandablePanel {
                 Organization.UNKNOWN );
         orgRefField.enable( getPlan().isDevelopment() );
         item.add( orgRefField );
+    }
+
+    private void addEndsWithScenario( ListItem<RiskWrapper> item ) {
+        final RiskWrapper wrapper = item.getModelObject();
+        CheckBox endsWithScenarioCheckBox = new CheckBox(
+                "endsWithScenario",
+                new PropertyModel<Boolean>(wrapper, "endsWithScenario"));
+        endsWithScenarioCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+                    @Override
+                    protected void onUpdate( AjaxRequestTarget target ) {
+                        if ( !wrapper.isUndergoingCreation() ) {
+                            update( target, new Change( Change.Type.Updated, getScenario(), "risks" ) );
+                        }
+                    }
+                });
+        endsWithScenarioCheckBox.setEnabled( getPlan().isDevelopment() );
+        item.add( endsWithScenarioCheckBox );
     }
 
     private void addDeleteImage( ListItem<RiskWrapper> item ) {
@@ -473,6 +492,28 @@ public class RiskListPanel extends AbstractCommandablePanel {
                 }
             }
             getCommander().cleanup( Organization.class, oldName );
+        }
+
+        public boolean isEndsWithScenario() {
+            return risk.isEndsWithScenario();
+        }
+
+        public void setEndsWithScenario( boolean val ) {
+            boolean oldVal = risk.isEndsWithScenario();
+            if ( markedForCreation ) {
+                risk.setEndsWithScenario( val );
+                addIfComplete();
+            } else {
+                int index = getScenario().getRisks().indexOf( risk );
+                if ( index >= 0 ) {
+                    doCommand( new UpdatePlanObject(
+                            getScenario(),
+                            "risks[" + index + "].endsWithScenario",
+                            val,
+                            UpdateObject.Action.Set
+                    ) );
+                }
+            }
         }
 
 

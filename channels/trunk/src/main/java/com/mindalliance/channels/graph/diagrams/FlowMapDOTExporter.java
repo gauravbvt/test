@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Scenario DOT exporter.
+ * Flow map DOT exporter.
  * Exports a Graph in DOT format.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -224,12 +224,6 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         }
     }
 
-    private String makeLabel( String s ) {
-        return sanitize( AbstractMetaProvider.separate(
-                s,
-                AbstractMetaProvider.LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" ) );
-    }
-
     private List<DOTAttribute> getTimingEdgeAttributes() {
         List<DOTAttribute> list = DOTAttribute.emptyList();
         list.add( new DOTAttribute( "color", "gray" ) );
@@ -242,15 +236,6 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         return list;
     }
 
-    /**
-     * Make label safe.
-     *
-     * @param label a string
-     * @return a sanitized string
-     */
-    public String sanitize( String label ) {
-        return label.replaceAll( "\"", "\\\\\"" );
-    }
 
     private Scenario getScenario() {
         return (Scenario) getMetaProvider().getContext();

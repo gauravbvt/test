@@ -4,6 +4,7 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.graph.Diagram;
+import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Scenario;
 import org.apache.wicket.PageParameters;
@@ -85,7 +86,7 @@ public class PlanMapPage extends PngWebPage {
     /**
      * {@inheritDoc}
      */
-    protected Diagram makeDiagram( double[] size, String orientation ) {
+    protected Diagram makeDiagram( double[] size, String orientation ) throws DiagramException {
         return getDiagramFactory().newPlanMapDiagram(
                 allScenarios,
                 groupByPhase,

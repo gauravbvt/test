@@ -76,10 +76,10 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
             graph.addVertex( flow.getTarget() );
             graph.addEdge( flow.getSource(), flow.getTarget(), flow );
             // add flows between capability connectors and external parts
-            if (flow.hasConnector() && flow.isCapability()) {
+            if ( flow.hasConnector() && flow.isCapability() ) {
                 Connector connector = (Connector) flow.getTarget();
                 Iterator<ExternalFlow> externalFlows = connector.externalFlows();
-                while( externalFlows.hasNext() ) {
+                while ( externalFlows.hasNext() ) {
                     ExternalFlow externalFlow = externalFlows.next();
                     graph.addVertex( externalFlow.getPart() );
                     graph.addEdge( externalFlow.getSource(), externalFlow.getTarget(), externalFlow );

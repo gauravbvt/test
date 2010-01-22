@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.menus;
 
+import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Identifiable;
 import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
@@ -22,11 +23,9 @@ abstract public class ActionMenuPanel extends MenuPanel {
     }
 
     /**
-     * Get population of menu items.
-     *
-     * @return a list of menu items
+     * {@inheritDoc}
      */
-    public List<Component> getMenuItems() {
+    public List<Component> getMenuItems() throws CommandException {
         List<Component> menuItems = new ArrayList<Component>();
             // Undo and redo
             menuItems.add( this.getUndoMenuItem( "menuItem" ) );

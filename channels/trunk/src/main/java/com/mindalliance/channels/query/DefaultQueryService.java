@@ -40,6 +40,7 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.ScenarioObject;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
@@ -318,7 +319,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
 
-
     /**
      * {@inheritDoc}
      */
@@ -378,6 +378,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
         return entityType;
     }
+
     /**
      * {@inheritDoc}
      */
@@ -2849,6 +2850,118 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             }
         }
         return new ArrayList<Commitment>( commitments );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<Flow> findEssentialFlowsFrom( Part part, boolean assumeFails ) {
+        // Find all downstream important flows, avoiding circularities
+        final List<Flow> importantFlows = findImportantFlowsFrom( part, new HashSet<Part>() );
+        // Iteratively trim "end flows" to non-useful parts
+        final List<Flow> essentialFlows = keepEssentialFlows( importantFlows );
+        // if not assume fails, retain only the flows without alternates.
+        if ( assumeFails ) {
+            return essentialFlows;
+        } else {
+            return (List<Flow>) CollectionUtils.select(
+                    essentialFlows,
+                    new Predicate() {
+                        public boolean evaluate( Object object ) {
+                            Flow flow = (Flow) object;
+                            List<Flow> alternates = flow.getAlternates();
+                            return alternates.isEmpty()
+                                    || CollectionUtils.isSubCollection( alternates, essentialFlows );
+                        }
+                    }
+            );
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Part> findFailureImpacts( ScenarioObject scenarioObject, boolean assumeFails ) {
+        if ( scenarioObject instanceof Flow ) {
+            if ( ( (Flow) scenarioObject ).isEssential( assumeFails ) ) {
+                return findPartFailureImpacts( (Part) ( (Flow) scenarioObject ).getTarget(), assumeFails );
+            } else {
+                return new ArrayList<Part>();
+            }
+        } else {
+            return findPartFailureImpacts( (Part) scenarioObject, assumeFails );
+        }
+    }
+
+    private List<Part> findPartFailureImpacts( Part part, boolean assumeFails ) {
+        Set<Part> impactedParts = new HashSet<Part>();
+        for ( Flow flow : findEssentialFlowsFrom( part, assumeFails ) ) {
+            Part candidate = (Part) flow.getTarget();
+            if ( candidate.isUseful() ) {
+                impactedParts.add( candidate );
+            }
+        }
+        if ( part.isUseful() ) impactedParts.add( part );
+        return new ArrayList<Part>( impactedParts );
+    }
+
+
+    @SuppressWarnings( "unchecked" )
+    private List<Flow> keepEssentialFlows( final List<Flow> importantFlows ) {
+        List<Flow> nonEssentialFlows = (List<Flow>) CollectionUtils.select(
+                importantFlows,
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        Flow flow = (Flow) object;
+                        Part target = (Part) flow.getTarget();
+                        return !target.isUseful()
+                                && CollectionUtils.intersection(
+                                importantFlows,
+                                IteratorUtils.toList( target.outcomes() ) ).isEmpty();
+                    }
+                }
+        );
+        if ( nonEssentialFlows.isEmpty() ) {
+            return importantFlows;
+        } else {
+            List<Flow> remainingFlows = (List<Flow>) CollectionUtils.subtract(
+                    importantFlows,
+                    nonEssentialFlows );
+            return keepEssentialFlows( remainingFlows );
+        }
+    }
+
+
+    @SuppressWarnings( "unchecked" )
+    // Find all important flows downstream of part, without circularities.
+    private List<Flow> findImportantFlowsFrom( Part part, final Set<Part> visited ) {
+        List<Flow> flows = (List<Flow>) CollectionUtils.select(
+                IteratorUtils.toList( part.outcomes() ),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        Flow flow = (Flow) object;
+                        return flow.isImportant() && !visited.contains( (Part) flow.getTarget() );
+                    }
+                }
+        );
+        if ( !flows.isEmpty() ) {
+            List<Part> parts = (List<Part>) CollectionUtils.collect(
+                    flows,
+                    new Transformer() {
+                        public Object transform( Object input ) {
+                            return ( (Flow) input ).getTarget();
+                        }
+                    }
+            );
+            Set<Part> newVisited = new HashSet<Part>();
+            newVisited.addAll( visited );
+            newVisited.add( part );
+            for ( Part nextPart : parts ) {
+                flows.addAll( findImportantFlowsFrom( nextPart, newVisited ) );
+            }
+        }
+        return flows;
     }
 
 }

@@ -623,6 +623,10 @@ div.header {
     background: transparent url( 'images/eois.png' ) no-repeat 5px 2px;
 }
 
+.failure .header {
+    background: transparent url( 'images/failure.png' ) no-repeat 5px 2px;
+}
+
 #footer {
     border: 1px outset #6fafaf;
 }

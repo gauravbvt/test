@@ -60,6 +60,19 @@ public class PartShowMenuPanel extends MenuPanel {
                     "menuItem",
                     new Model<String>( "Assignments" ),
                     assignmentsLink ) );
+        // View failure impacts
+        if ( getPart().isImportant() ) {
+        AjaxFallbackLink failureImpactsLink = new AjaxFallbackLink( "link" ) {
+                @Override
+                public void onClick( AjaxRequestTarget target ) {
+                    update( target, new Change( Change.Type.AspectViewed, getPart(), "failure" ) );
+                }
+            };
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Failure impacts" ),
+                    failureImpactsLink ) );
+        }
         // View part entities
         menuItems.addAll( getModelObjectMenuItems( "menuItem", getModelObjectWrappers() ) );
         return menuItems;

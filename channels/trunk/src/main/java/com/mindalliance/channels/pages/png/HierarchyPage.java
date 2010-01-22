@@ -5,6 +5,7 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.analysis.graph.HierarchyRelationship;
 import com.mindalliance.channels.graph.Diagram;
+import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.ModelObject;
 import org.apache.wicket.PageParameters;
@@ -40,7 +41,7 @@ public class HierarchyPage extends PngWebPage {
         }
     }
 
-    protected Diagram makeDiagram( double[] size, String orientation ) {
+    protected Diagram makeDiagram( double[] size, String orientation ) throws DiagramException {
         DiagramFactory<Hierarchical, HierarchyRelationship> factory = getDiagramFactory();
         return factory.newHierarchyDiagram( hierarchical, size, orientation );
     }

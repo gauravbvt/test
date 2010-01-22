@@ -38,7 +38,7 @@ public class CopyFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "copy flow";
+        return "copy";
     }
 
     /**
@@ -54,9 +54,9 @@ public class CopyFlow extends AbstractCommand {
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh", e );
         }
-        commander.setCopy( flow.getTarget() == part 
+        commander.setCopy( flow.getTarget() == part
                 ? ChannelsUtils.getNeedState( flow, part )
-                : ChannelsUtils.getCapabilityState( flow, part ));
+                : ChannelsUtils.getCapabilityState( flow, part ) );
         return new Change( Change.Type.None, flow );
     }
 
@@ -72,5 +72,21 @@ public class CopyFlow extends AbstractCommand {
      */
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getLabel( Commander commander ) throws CommandException {
+        Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+        Flow flow;
+        try {
+            flow = scenario.findFlow( (Long) get( "flow" ) );
+        } catch ( NotFoundException e ) {
+            throw new CommandException( "You need to refresh" );
+        }
+        if ( flow.isCapability() ) return "Copy capability";
+        else if ( flow.isNeed() ) return "Copy need";
+        else return "Copy flow";
     }
 }

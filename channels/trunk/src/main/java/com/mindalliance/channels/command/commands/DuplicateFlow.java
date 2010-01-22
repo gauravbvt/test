@@ -33,7 +33,7 @@ public class DuplicateFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "duplicate flow";
+        return "duplicate";
     }
 
     /**
@@ -79,7 +79,20 @@ public class DuplicateFlow extends AbstractCommand {
         }
     }
 
-
-
+    /**
+     * {@inheritDoc}
+     */
+    public String getLabel( Commander commander ) throws CommandException {
+        Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+        Flow flow;
+        try {
+            flow = scenario.findFlow( (Long) get( "flow" ) );
+        } catch ( NotFoundException e ) {
+            throw new CommandException( "You need to refresh" );
+        }
+        if ( flow.isCapability() ) return "Duplicate capability";
+        else if ( flow.isNeed() ) return "Duplicate need";
+        else return "Duplicate flow";
+    }
 
 }

@@ -145,7 +145,7 @@ public class PlanShowMenuPanel extends MenuPanel {
 //                        PopupSettings.MENU_BAR ) );
         menuItems.add( new LinkMenuItem(
                 "menuItem",
-                new Model<String>( "Plan report" ),
+                new Model<String>( "IS procedures report" ),
                 reportLink ) );
 
         BookmarkablePageLink playbooksLink = new BookmarkablePageLink<PlanReportPage>( "link", TaskPlaybook.class );

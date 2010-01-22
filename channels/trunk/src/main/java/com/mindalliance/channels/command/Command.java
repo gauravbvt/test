@@ -191,4 +191,14 @@ public interface Command extends Serializable {
      * @return a boolean
      */
     boolean forcesSnapshot();
+
+    /**
+     * Get label for command.
+     * May depend on the state of the command.
+     *
+     * @param commander a commander
+     * @return a string
+     * @throws CommandException if the label can not be constructed
+     */
+    String getLabel( Commander commander ) throws CommandException;
 }

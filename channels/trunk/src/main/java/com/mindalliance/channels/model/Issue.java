@@ -33,7 +33,7 @@ public interface Issue extends Identifiable, Serializable {
          */
         public String getLabel() {
             String label = toString();
-            if ( label.endsWith( ".")) {
+            if ( label.endsWith( "." ) ) {
                 return label;
             } else {
                 return label + ".";
@@ -47,6 +47,15 @@ public interface Issue extends Identifiable, Serializable {
          */
         public int getOrdinal() {
             return ordinal();
+        }
+
+        /**
+         * Get name.
+         *
+         * @return a string
+         */
+        public String getName() {
+            return toString();
         }
     }
 
@@ -194,5 +203,5 @@ public interface Issue extends Identifiable, Serializable {
      */
     String getDetectorLabel();
 
-    
+
 }

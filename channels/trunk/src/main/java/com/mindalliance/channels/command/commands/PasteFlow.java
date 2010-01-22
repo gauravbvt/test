@@ -37,14 +37,14 @@ public class PasteFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "paste flow";
+        return "paste";
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean canDo( Commander commander ) {
-        return super.canDo( commander) && commander.isFlowCopied();
+        return super.canDo( commander ) && commander.isFlowCopied();
     }
 
     /**
@@ -64,8 +64,8 @@ public class PasteFlow extends AbstractCommand {
                 copy = commander.getCopy();
                 set( "copy", copy );
             }
-            
-           Long priorId = (Long) get( "flow" );
+
+            Long priorId = (Long) get( "flow" );
             boolean isOutcome = (Boolean) copy.get( "isOutcome" );
             Flow flow;
             if ( isOutcome ) {
@@ -116,5 +116,22 @@ public class PasteFlow extends AbstractCommand {
             throw new CommandException( "Can't undo", e );
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
+    public String getLabel( Commander commander ) throws CommandException {
+        Map<String, Object> copy = commander.getCopy();
+        if ( copy == null ) {
+            return super.getLabel( commander );
+        } else {
+            boolean isOutcome = (Boolean) copy.get( "isOutcome" );
+            return isOutcome
+                    ? "Paste capability"
+                    : "Paste need";
+        }
+    }
+
 
 }

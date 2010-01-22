@@ -13,9 +13,10 @@
         <table>
             <thead>
                 <tr>
-                    <td>Severity</td>
-                    <td>Type</td>
-                    <td width="100%">Organization</td>
+                    <td title="How severe the risk is">Severity</td>
+                    <td title="The type of risk">Type</td>
+                    <td width="100%"  title="The organization at risk">Organization</td>
+                    <td title="Whether the risk ends with the scenario">Ends</td>
                     <td/>
                     <td/>
                 </tr>
@@ -33,6 +34,9 @@
                 </td>
                 <td>
                     <span wicket:id="organization">[entity reference panel]</span>
+                </td>
+                <td>
+                    <input wicket:id="endsWithScenario" type ="checkbox"/>
                 </td>
                 <td><a wicket:id="more-link" href="#" title="Show more">More...</a></td>
                 <td>

@@ -720,6 +720,21 @@ public class Scenario extends ModelObject {
         return externalFlows;
     }
 
+    /**
+     * At least one risk ends with scenario.
+     * @return a boolean
+     */
+    public boolean hasTerminatingRisks() {
+        return CollectionUtils.exists(
+                getRisks(),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return ((Risk)object).isEndsWithScenario();
+                    }
+                }
+        );
+    }
+
     //=================================================
     /**
      * An iterator that walks through all flow in the scenario.

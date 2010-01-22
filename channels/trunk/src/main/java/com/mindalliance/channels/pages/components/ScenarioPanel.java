@@ -85,6 +85,10 @@ public class ScenarioPanel extends AbstractCommandablePanel {
      * None if any is 0.
      */
     private double[] flowDiagramDim = new double[2];
+    /**
+     * Diagram container dom identifier.
+     */
+    private static final String DOM_IDENTIFIER = "#graph";
 
     public ScenarioPanel(
             String id,
@@ -156,7 +160,8 @@ public class ScenarioPanel extends AbstractCommandablePanel {
         } else if ( isLockedByUser( getPart() ) ) {
             partActionsMenu = new PartActionsMenuPanel(
                     "partActionsMenu",
-                    partModel );
+                    partModel,
+                    getExpansions() );
         } else if ( getCommander().isTimedOut()
                 || getLockOwner( getPart() ) == null ) {
             partActionsMenu = new Label(
@@ -180,7 +185,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
             @Override
             protected void onComponentTag( ComponentTag tag ) {
                 super.onComponentTag( tag );
-                String domIdentifier = "#graph";
+                String domIdentifier = DOM_IDENTIFIER;
                 String script = "wicketAjaxGet('"
                         + getCallbackUrl( true )
                         + "&width='+$('" + domIdentifier + "').width()+'"
@@ -225,7 +230,7 @@ public class ScenarioPanel extends AbstractCommandablePanel {
 
     private void addFlowDiagram() {
         double[] dim = flowDiagramDim[0] <= 0.0 || flowDiagramDim[1] <= 0.0 ? null : flowDiagramDim;
-        Settings settings = new Settings( "#graph", null, dim, true, true );
+        Settings settings = new Settings( DOM_IDENTIFIER, null, dim, true, true );
 
         flowMapDiagramPanel =
                 new FlowMapDiagramPanel( "flow-map", scenarioModel, partModel, settings );

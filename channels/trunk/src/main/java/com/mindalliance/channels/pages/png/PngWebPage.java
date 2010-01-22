@@ -108,9 +108,9 @@ public abstract class PngWebPage extends WebPage {
         if ( parameters.containsKey( "orientation" ) ) {
             orientation = parameters.getString( "orientation" );
         }
-        Diagram diagram = makeDiagram( size, orientation );
-        configureDiagram( diagram );
         try {
+            Diagram diagram = makeDiagram( size, orientation );
+            configureDiagram( diagram );
             final Response resp = getWebRequestCycle().getResponse();
             if ( resp instanceof WebResponse )
                 setHeaders( (WebResponse) resp );
@@ -128,8 +128,9 @@ public abstract class PngWebPage extends WebPage {
      * @param size        width and height as double array. Can be null.
      * @param orientation string
      * @return a diagram
+     * @throws com.mindalliance.channels.graph.DiagramException if diagram can be generated
      */
-    abstract protected Diagram makeDiagram( double[] size, String orientation );
+    abstract protected Diagram makeDiagram( double[] size, String orientation ) throws DiagramException;
 
 
 }

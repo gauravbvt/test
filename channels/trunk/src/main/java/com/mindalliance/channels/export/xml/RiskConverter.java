@@ -54,6 +54,9 @@ public class RiskConverter extends AbstractChannelsConverter {
         writer.startNode( "severity" );
         writer.setValue( risk.getSeverity().toString() );
         writer.endNode();
+        writer.startNode( "endsWithScenario" );
+        writer.setValue( "" + risk.isEndsWithScenario() );
+        writer.endNode();
         writer.startNode( "description" );
         writer.setValue( risk.getDescription() );
         writer.endNode();
@@ -73,17 +76,19 @@ public class RiskConverter extends AbstractChannelsConverter {
                 Risk.Type type = Risk.Type.valueOf( reader.getValue() );
                 risk.setType( type );
             } else if ( nodeName.equals( "organization" ) ) {
-                Long id = Long.parseLong(reader.getAttribute( "id"));
+                Long id = Long.parseLong( reader.getAttribute( "id" ) );
                 String kind = reader.getAttribute( "kind" );
                 Organization org = getEntity(
                         Organization.class,
                         reader.getValue(),
                         id,
                         ModelEntity.Kind.valueOf( kind ),
-                        context); 
+                        context );
                 risk.setOrganization( org );
             } else if ( nodeName.equals( "severity" ) ) {
                 risk.setSeverity( Issue.Level.valueOf( reader.getValue() ) );
+            } else if ( nodeName.equals( "endsWithScenario" ) ) {
+                risk.setEndsWithScenario( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "description" ) ) {
                 risk.setDescription( reader.getValue() );
             }

@@ -6,6 +6,7 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
 import com.mindalliance.channels.graph.diagrams.EntityNetworkDiagram;
+import com.mindalliance.channels.graph.diagrams.EssentialFlowMapDiagram;
 import com.mindalliance.channels.graph.diagrams.FlowMapDiagram;
 import com.mindalliance.channels.graph.diagrams.HierarchyDiagram;
 import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
@@ -13,6 +14,7 @@ import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.ScenarioObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -132,6 +134,15 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
             String orientation ) {
         LOG.debug("Making hierarchy diagram on " + hierarchical.getName() );
         return new HierarchyDiagram( hierarchical, diagramSize, orientation );
+    }
+
+    public Diagram newEssentialFlowMapDiagram(
+            ScenarioObject scenarioObject,
+            boolean assumeFails,
+            double[] diagramSize,
+            String orientation ) {
+        LOG.debug("Making critical flow map diagram" );
+        return new EssentialFlowMapDiagram( scenarioObject, assumeFails, diagramSize, orientation );
     }
 
 

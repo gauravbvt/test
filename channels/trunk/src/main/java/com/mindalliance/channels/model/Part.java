@@ -20,8 +20,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A part in a scenario.
@@ -102,6 +106,10 @@ public class Part extends Node implements GeoLocatable {
      * Scenario risks mitigated.
      */
     private List<Risk> mitigations = new ArrayList<Risk>();
+    /**
+     * Whether the assignees execute the task as a team vs individually.
+     */
+    private boolean asTeam;
 
     public Part() {
         adjustName();
@@ -350,6 +358,14 @@ public class Part extends Node implements GeoLocatable {
     public void setInitiatedEvent( Event initiatedEvent ) {
         assert initiatedEvent == null || initiatedEvent.isType();
         this.initiatedEvent = initiatedEvent;
+    }
+
+    public boolean isAsTeam() {
+        return asTeam;
+    }
+
+    public void setAsTeam( boolean asTeam ) {
+        this.asTeam = asTeam;
     }
 
     @OneToMany
@@ -675,7 +691,7 @@ public class Part extends Node implements GeoLocatable {
             sb.append( getRole().getName() );
         }
         if ( getActor() == null && getRole() == null ) {
-            sb.append( "Someone");
+            sb.append( "Someone" );
         }
         if ( getJurisdiction() != null ) {
             if ( !sb.toString().isEmpty() ) sb.append( " for " );
@@ -687,7 +703,7 @@ public class Part extends Node implements GeoLocatable {
         }
         sb.append( " is assigned task \"" );
         sb.append( getTask() );
-        sb.append( "\"");
+        sb.append( "\"" );
         if ( getLocation() != null ) {
             sb.append( " at location \"" );
             sb.append( getLocation().getName() );
@@ -743,6 +759,9 @@ public class Part extends Node implements GeoLocatable {
             }
             sb1.append( "." );
             sb.append( sb1 );
+        }
+        if ( isAsTeam() ) {
+            sb.append( " Assignees work as a team." );
         }
         return sb.toString();
     }
@@ -849,5 +868,77 @@ public class Part extends Node implements GeoLocatable {
                     }
                 }
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    public List<Flow> getEssentialFlows( boolean assumeFails ) {
+        return getScenario().getQueryService().findEssentialFlowsFrom( this, assumeFails );
+    }
+
+    /**
+     * A part is useful if it mitigates risks
+     * or it terminates its scenario and at least one of the risks terminates with it.
+     *
+     * @return a boolean
+     */
+    @Transient
+    public boolean isUseful() {
+        return !mitigations.isEmpty()
+                || ( isTerminatesEventPhase() && getScenario().hasTerminatingRisks() );
+    }
+
+    /**
+     * Get the maximum severity of risks mitigated. Null if none.
+     *
+     * @return a severity level
+     */
+    @Transient
+    public Issue.Level getMaxMitigatedRiskSeverity() {
+        Issue.Level maxSeverity = null;
+        List<Risk> risks = new ArrayList<Risk>( getMitigations() );
+        if ( !risks.isEmpty() ) {
+            Collections.sort( risks, new Comparator<Risk>() {
+                public int compare( Risk r1, Risk r2 ) {
+                    return r1.getSeverity().compareTo( r2.getSeverity() ) * -1;
+                }
+            } );
+            maxSeverity = risks.get( 0 ).getSeverity();
+        }
+        return maxSeverity;
+    }
+
+    /**
+     * Whether the failure of this part could possibly matter.
+     *
+     * @return a boolean
+     */
+    @Transient
+    public boolean isImportant() {
+        return isUseful() ||
+                CollectionUtils.exists(
+                        IteratorUtils.toList( outcomes() ),
+                        new Predicate() {
+                            public boolean evaluate( Object object ) {
+                                return ( (Flow) object ).isImportant();
+                            }
+                        }
+                );
+    }
+
+    /**
+     * Get all risks mitigated and terminated.
+     * @return a list of risks
+     */
+    @Transient
+    public List<Risk> getRisksAddressed() {
+        Set<Risk> risks = new HashSet<Risk>();
+        risks.addAll( getMitigations() );
+        if ( isTerminatesEventPhase() && getScenario().hasTerminatingRisks() ) {
+            risks.addAll( getScenario().getRisks() );
+        }
+        return new ArrayList<Risk>(risks);
     }
 }

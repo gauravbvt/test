@@ -124,6 +124,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      */
     private CheckBox repeatingCheckBox;
     /**
+     * Whether executed as team by assignees.
+     */
+    private CheckBox asTeamCheckBox;
+    /**
      * Whether starts with scenario.
      */
     private CheckBox startWithScenarioCheckBox;
@@ -147,6 +151,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         addTaskField();
         addEntityFields();
         addEventInitiation();
+        addAsTeam();
         addTimingFields();
         addMitigations();
         addIssuesPanel();
@@ -222,6 +227,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         selfTerminatingCheckBox.setEnabled( isLockedByUser( getPart() ) );
         repeatingCheckBox.setEnabled( isLockedByUser( getPart() ) );
         startWithScenarioCheckBox.setEnabled( isLockedByUser( getPart() ) );
+        asTeamCheckBox.setEnabled( isLockedByUser( getPart() ) );
         terminatesScenarioCheckBox.setEnabled( isLockedByUser( getPart() ) );
         initiatedEventField.setEnabled( isLockedByUser( getPart() ) );
         partDescription.setEnabled( isLockedByUser( getPart() ) );
@@ -391,6 +397,18 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         terminatesScenarioCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getPart(), "terminatesEventPhase" ) );
+            }
+        } );
+    }
+
+    private void addAsTeam() {
+        asTeamCheckBox = new CheckBox(
+                "asTeam",
+                new PropertyModel<Boolean>( this, "asTeam" ) );
+        add( asTeamCheckBox );
+        asTeamCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getPart(), "asTeam" ) );
             }
         } );
     }
@@ -646,6 +664,24 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      */
     public void setStartsWithScenario( boolean val ) {
         doCommand( new UpdateScenarioObject( getPart(), "startsWithScenario", val ) );
+    }
+
+    /**
+     * Do assignees execute as team?
+     *
+     * @return a boolean
+     */
+    public boolean isAsTeam() {
+        return getPart().isAsTeam();
+    }
+
+    /**
+     * Sets whether assignees execute as team.
+     *
+     * @param val a boolean
+     */
+    public void setAsTeam( boolean val ) {
+        doCommand( new UpdateScenarioObject( getPart(), "asTeam", val ) );
     }
 
     /**

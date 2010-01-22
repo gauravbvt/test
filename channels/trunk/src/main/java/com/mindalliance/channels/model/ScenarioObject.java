@@ -1,5 +1,7 @@
 package com.mindalliance.channels.model;
 
+import java.util.List;
+
 /**
  * A model object in the scope of a scenario.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,4 +17,14 @@ public interface ScenarioObject extends Identifiable {
      * @return a scenario
      */
     Scenario getScenario();
+
+    /**
+     * Get the essential downstream sharing flows.
+     *
+     * @param assumeFails assume alternate downstream flows fail
+     * @return a list of flows.
+     */
+    List<Flow> getEssentialFlows( boolean assumeFails );
+
+    String getTitle();
 }

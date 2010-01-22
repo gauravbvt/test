@@ -1,12 +1,12 @@
 package com.mindalliance.channels.graph;
 
-import java.util.Set;
-import java.util.List;
-import java.io.Writer;
-import java.io.PrintWriter;
-
-import org.jgrapht.Graph;
 import org.jgrapht.DirectedGraph;
+import org.jgrapht.Graph;
+
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Abstract DOT exporter.
@@ -219,5 +219,23 @@ public abstract class AbstractDOTExporter<V,E> implements StyledDOTExporter<V,E>
     protected String getIndent() {
         return INDENT;
     }
+
+    /**
+     * Make label safe.
+     *
+     * @param label a string
+     * @return a sanitized string
+     */
+    public String sanitize( String label ) {
+        return label.replaceAll( "\"", "\\\\\"" );
+    }
+
+    protected String makeLabel( String s ) {
+        return sanitize( AbstractMetaProvider.separate(
+                s,
+                AbstractMetaProvider.LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" ) );
+    }
+
+    
 
 }

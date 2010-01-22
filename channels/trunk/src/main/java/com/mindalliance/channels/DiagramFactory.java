@@ -8,6 +8,7 @@ import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.ScenarioObject;
 import org.springframework.core.io.Resource;
 
 import java.util.List;
@@ -54,7 +55,7 @@ public interface DiagramFactory<Vertex, Edge> extends Service {
 
 
     /**
-     * Instantiate a flow map diagram.
+     * Instantiates a flow map diagram.
      *
      * @param scenario a scenario
      * @param node     a selected node
@@ -69,7 +70,7 @@ public interface DiagramFactory<Vertex, Edge> extends Service {
             String orientation );
 
     /**
-     * Instantiate a plan map diagram.
+     * Instantiates a plan map diagram.
      * @param groupByPhase whetner to group scenario by phases
      * @param groupByEvent whether to group scenarios by events addressed
      * @param group phase or event grouping scenarios
@@ -91,7 +92,7 @@ public interface DiagramFactory<Vertex, Edge> extends Service {
             String orientation );
 
     /**
-     * Instantiate an entity network diagram.
+     * Instantiates an entity network diagram.
      * @param entity the entity at the center of the diagram
      * @param selectedEntityRel an edge selected
      * @param diagramSize width and height as array of doubles
@@ -105,13 +106,27 @@ public interface DiagramFactory<Vertex, Edge> extends Service {
             String orientation );
 
     /**
-     * Instantiate a hierarchy diagram.
+     * Instantiates a hierarchy diagram.
      * @param hierarchical a hierarchical object
      * @param diagramSize width and height as array of doubles
      * @param orientation a string
      * @return a hierarchy diagram
       */
     Diagram newHierarchyDiagram( Hierarchical hierarchical, double[] diagramSize, String orientation );
+
+    /**
+     * Instantiates an essential flow map diagram.
+     * @param scenarioObject a scenario object
+     * @param assumeFails whether alternate flows are assumed to fail
+     * @param diagramSize width and height as array of doubles
+     * @param orientation a string
+     * @return  a critical flow map diagram
+     */
+    Diagram newEssentialFlowMapDiagram(
+            ScenarioObject scenarioObject,
+            boolean assumeFails,
+            double[] diagramSize,
+            String orientation );
 
     /**
      * Gets the preset graph renderer.

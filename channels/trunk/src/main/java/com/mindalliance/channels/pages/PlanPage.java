@@ -20,6 +20,7 @@ import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.ScenarioObject;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
+import com.mindalliance.channels.pages.components.FailureImpactsPanel;
 import com.mindalliance.channels.pages.components.FlowCommitmentsPanel;
 import com.mindalliance.channels.pages.components.FlowEOIsPanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
@@ -223,6 +224,10 @@ public final class PlanPage extends WebPage implements Updatable {
      */
     private Component surveysPanel;
     /**
+     * Failure impacts panel.
+     */
+    private Component failureImpactsPanel;
+    /**
      * The aspect for entity panel.
      */
     // private String entityAspect = EntityPanel.DETAILS;
@@ -342,6 +347,7 @@ public final class PlanPage extends WebPage implements Updatable {
         addAssignmentsPanel();
         addCommitmentsPanel();
         addEOIsPanel();
+        addFailureImpactsPanel();
         addScenarioEditPanel();
         addPlanEditPanel();
         addSurveysPanel( null );
@@ -652,7 +658,7 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void addAssignmentsPanel() {
-        Part partViewed = getPartViewed( "assignments" );
+        Part partViewed = getModelObjectViewed( Part.class, "assignments" );
         if ( partViewed == null ) {
             assignmentsPanel = new Label( "assignments", "" );
             assignmentsPanel.setOutputMarkupId( true );
@@ -660,7 +666,7 @@ public final class PlanPage extends WebPage implements Updatable {
         } else {
             assignmentsPanel = new PartAssignmentsPanel(
                     "assignments",
-                    new Model<Part>( getPartViewed( "assignments" ) ),
+                    new Model<Part>( partViewed ),
                     getReadOnlyExpansions()
             );
         }
@@ -668,7 +674,7 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void addCommitmentsPanel() {
-        Flow flowViewed = getFlowViewed( "commitments" );
+        Flow flowViewed = getModelObjectViewed( Flow.class, "commitments" );
         if ( flowViewed == null ) {
             commitmentsPanel = new Label( "commitments", "" );
             commitmentsPanel.setOutputMarkupId( true );
@@ -676,7 +682,7 @@ public final class PlanPage extends WebPage implements Updatable {
         } else {
             commitmentsPanel = new FlowCommitmentsPanel(
                     "commitments",
-                    new Model<Flow>( getFlowViewed( "commitments" ) ),
+                    new Model<Flow>( flowViewed ),
                     getReadOnlyExpansions()
             );
         }
@@ -684,7 +690,7 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void addEOIsPanel() {
-        Flow flowViewed = getFlowViewed( "eois" );
+        Flow flowViewed = getModelObjectViewed( Flow.class, "eois" );
         if ( flowViewed == null ) {
             eoisPanel = new Label( "eois", "" );
             eoisPanel.setOutputMarkupId( true );
@@ -692,11 +698,28 @@ public final class PlanPage extends WebPage implements Updatable {
         } else {
             eoisPanel = new FlowEOIsPanel(
                     "eois",
-                    new Model<Flow>( getFlowViewed( "eois" ) ),
+                    new Model<Flow>( flowViewed ),
                     getReadOnlyExpansions()
             );
         }
         form.addOrReplace( eoisPanel );
+    }
+
+    private void addFailureImpactsPanel() {
+        ScenarioObject scenarioObject = (ScenarioObject) getModelObjectViewed( ModelObject.class, "failure" );
+        if ( scenarioObject == null
+                || !( scenarioObject instanceof Part || scenarioObject instanceof Flow && ( (Flow) scenarioObject ).isSharing() ) ) {
+            failureImpactsPanel = new Label( "impacts", "" );
+            failureImpactsPanel.setOutputMarkupId( true );
+            makeVisible( failureImpactsPanel, false );
+        } else {
+            failureImpactsPanel = new FailureImpactsPanel(
+                    "impacts",
+                    new Model<ScenarioObject>( scenarioObject ),
+                    getReadOnlyExpansions()
+            );
+        }
+        form.addOrReplace( failureImpactsPanel );
     }
 
     /**
@@ -1160,43 +1183,19 @@ public final class PlanPage extends WebPage implements Updatable {
         }
     }
 
-    /**
-     * Get part which given aspect is viewed
-     *
-     * @param aspect a string
-     * @return a part or null
-     */
-    private Part getPartViewed( final String aspect ) {
-        Part partViewed = null;
-        Long partId = findIdForAspectViewed( Part.class, aspect );
-        if ( partId != null ) {
+    private <T extends ModelObject> T getModelObjectViewed( Class<T> clazz, String aspect ) {
+        T viewed = null;
+        Long id = findIdForAspectViewed( clazz, aspect );
+        if ( id != null ) {
             try {
-                partViewed = getQueryService().find( Part.class, partId );
+                viewed = getQueryService().find( clazz, id );
             } catch ( NotFoundException e ) {
-                LOG.warn( "Part not found at " + partId );
+                LOG.warn( "Viewed object not found at " + id );
             }
         }
-        return partViewed;
+        return viewed;
     }
 
-    /**
-     * Get flow which given aspect is viewed
-     *
-     * @param aspect a string
-     * @return a flow or null
-     */
-    private Flow getFlowViewed( final String aspect ) {
-        Flow flowViewed = null;
-        Long flowId = findIdForAspectViewed( Flow.class, aspect );
-        if ( flowId != null ) {
-            try {
-                flowViewed = getQueryService().find( Flow.class, flowId );
-            } catch ( NotFoundException e ) {
-                LOG.warn( "Flow not found at " + flowId );
-            }
-        }
-        return flowViewed;
-    }
 
     // Assumes that only instance of clazz can view the given aspect at a time.
     private Long findIdForAspectViewed( final Class<? extends ModelObject> clazz, final String aspect ) {
@@ -1281,7 +1280,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 expand( identifiable );
             else if ( change.isAspectViewed() ) {
                 if ( change.getSubject() instanceof Flow ) {
-                    Flow otherFlowViewed = getFlowViewed( change.getProperty() );
+                    Flow otherFlowViewed = getModelObjectViewed( Flow.class, change.getProperty() );
                     if ( otherFlowViewed != null )
                         closeAspect( otherFlowViewed, change.getProperty() );
                 }
@@ -1465,6 +1464,7 @@ public final class PlanPage extends WebPage implements Updatable {
         refreshEOIsPanel( target, change, updated );
         refreshSurveysPanel( target, change, updated );
         refreshScenarioPanel( target, change, updated );
+        refreshFailureImpactsPanel( target, change, updated );
     }
 
     private void refreshScenarioPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
@@ -1524,7 +1524,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void refreshAssignmentsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject();
-        if ( change.isUnknown() || identifiable instanceof Part && change.isAspect() ) {
+        if ( change.isUnknown() || identifiable instanceof Part && change.isAspect( "assignments" ) ) {
             addAssignmentsPanel();
             target.addComponent( assignmentsPanel );
         } else if ( assignmentsPanel instanceof PartAssignmentsPanel ) {
@@ -1537,7 +1537,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void refreshCommitmentsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject();
-        if ( change.isUnknown() || identifiable instanceof Flow && change.isAspect() ) {
+        if ( change.isUnknown() || identifiable instanceof Flow && change.isAspect( "commitments" ) ) {
             addCommitmentsPanel();
             target.addComponent( commitmentsPanel );
         } else if ( commitmentsPanel instanceof FlowCommitmentsPanel ) {
@@ -1556,6 +1556,19 @@ public final class PlanPage extends WebPage implements Updatable {
             target.addComponent( eoisPanel );
         } else if ( eoisPanel instanceof FlowEOIsPanel ) {
             ( (FlowEOIsPanel) eoisPanel ).refresh( target, change, updated );
+        }
+    }
+
+    private void refreshFailureImpactsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        Identifiable identifiable = change.getSubject();
+        if ( change.isUnknown() || identifiable instanceof ScenarioObject && change.isAspect( "failure" ) ) {
+            addFailureImpactsPanel();
+            target.addComponent( failureImpactsPanel );
+        } else if ( failureImpactsPanel instanceof FailureImpactsPanel ) {
+            ( (FailureImpactsPanel) failureImpactsPanel ).refresh(
+                    target,
+                    change,
+                    updated );
         }
     }
 

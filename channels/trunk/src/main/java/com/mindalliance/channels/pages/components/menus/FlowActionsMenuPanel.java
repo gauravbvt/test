@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.menus;
 
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.commands.AddIntermediate;
 import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.BreakUpFlow;
@@ -58,11 +59,9 @@ public class FlowActionsMenuPanel extends MenuPanel {
     }
 
     /**
-     * Get population of menu items.
-     *
-     * @return a list of menu items
+     * {@inheritDoc}
      */
-    public List<Component> getMenuItems() {
+    public List<Component> getMenuItems() throws CommandException {
         List<Component> menuItems = new ArrayList<Component>();
         // Show/hide details
         if ( isCollapsed ) {
@@ -105,6 +104,19 @@ public class FlowActionsMenuPanel extends MenuPanel {
                     "menuItem",
                     new Model<String>( "Show commitments" ),
                     commitmentsLink ) );
+        }
+        // View flow failure impacts
+        if ( getFlow().isImportant() ) {
+            AjaxFallbackLink failureImpactsLink = new AjaxFallbackLink( "link" ) {
+                @Override
+                public void onClick( AjaxRequestTarget target ) {
+                    update( target, new Change( Change.Type.AspectViewed, getFlow(), "failure" ) );
+                }
+            };
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Show failure impacts" ),
+                    failureImpactsLink ) );
         }
         // Undo and redo
         menuItems.add( this.getUndoMenuItem( "menuItem" ) );
@@ -160,13 +172,13 @@ public class FlowActionsMenuPanel extends MenuPanel {
                     update( target, change );
                 }
             } );
-        if ( !isCollapsed )
+        if ( !isCollapsed && flow.isSharing() )
             commandWrappers.add( new CommandWrapper( new AddIntermediate( flow ) ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
                 }
             } );
-        if ( !isCollapsed )
+        if ( !isCollapsed && flow.isSharing() )
             commandWrappers.add( new CommandWrapper( new BreakUpFlow( flow ), CONFIRM ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );

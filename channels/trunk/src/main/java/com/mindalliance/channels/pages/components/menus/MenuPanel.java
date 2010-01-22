@@ -74,8 +74,9 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      * Get menu items.
      *
      * @return a list of components
+     * @throws CommandException if fails to get menu items
      */
-    public abstract List<Component> getMenuItems();
+    public abstract List<Component> getMenuItems() throws CommandException;
 
     /**
      * Make menu items linking to model object pages.
@@ -171,10 +172,11 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      * @param id              id of the menu item
      * @param commandWrappers a list of wrapped commands
      * @return a list of menu item components
+     * @throws CommandException if can't build command label
      */
     protected List<Component> getCommandMenuItems(
             String id,
-            List<CommandWrapper> commandWrappers ) {
+            List<CommandWrapper> commandWrappers ) throws CommandException {
         List<Component> menuItems = new ArrayList<Component>();
         for ( final CommandWrapper commandWrapper : commandWrappers ) {
             final Command command = commandWrapper.getCommand();
@@ -194,10 +196,10 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
                     }
                 };
                 menuItems.add( new LinkMenuItem( id,
-                        new PropertyModel<String>( command, "title" ),
+                        new Model<String>( command.getLabel( getCommander() ) ),
                         link ) );
             } else {
-                Label label = new Label( id, new PropertyModel<String>( command, "title" ) );
+                Label label = new Label( id, new Model<String>( command.getLabel( getCommander() ) ) );
                 label.add( new AttributeModifier(
                         "class",
                         true,

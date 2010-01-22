@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.menus;
 
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.commands.AddPart;
 import com.mindalliance.channels.command.commands.AddScenario;
 import com.mindalliance.channels.command.commands.AddUserIssue;
@@ -41,12 +42,12 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
         super( s, model, expansions );
     }
 
+    @Override
+    @SuppressWarnings( "unchecked" )
     /**
      * {@inheritDoc}
      */
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<Component> getMenuItems() {
+    public List<Component> getMenuItems() throws CommandException {
         List<Component> menuItems = super.getMenuItems();
         // Import
         if ( getPlan().isDevelopment() ) {

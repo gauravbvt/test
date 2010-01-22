@@ -5,6 +5,7 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.graph.Diagram;
+import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.model.ModelEntity;
 import org.apache.wicket.PageParameters;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class EntityNetworkPage extends PngWebPage {
         }
     }
 
-    protected Diagram makeDiagram( double[] size, String orientation ) {
+    protected Diagram makeDiagram( double[] size, String orientation ) throws DiagramException {
         DiagramFactory<ModelEntity, EntityRelationship> factory = getDiagramFactory();
         return factory.newEntityNetworkDiagram( entity, selectedEntityRel, size, orientation );
     }

@@ -38,6 +38,10 @@ public class Risk implements Serializable, Mappable {
      * Severity of risk.
      */
     private Issue.Level severity;
+    /**
+     * Whether a risk ends with the scenario that causes it.
+     */
+    private boolean endsWithScenario;
 
     public Risk() {
     }
@@ -74,6 +78,14 @@ public class Risk implements Serializable, Mappable {
         this.severity = severity;
     }
 
+    public boolean isEndsWithScenario() {
+        return endsWithScenario;
+    }
+
+    public void setEndsWithScenario( boolean endsWithScenario ) {
+        this.endsWithScenario = endsWithScenario;
+    }
+
     /**
      * Get label.
      *
@@ -90,9 +102,9 @@ public class Risk implements Serializable, Mappable {
     @Override
     public String toString() {
         return ( severity != null ? severity.toString().toLowerCase() : "" ) + " "
-               + ( type != null ? type.getCategory().toLowerCase() : "" )
-               + " risk to " + ( organization != null ? organization.getName() : "all" )
-               + ( type != null ? " of " + type.getLabel() : "" ).toLowerCase();
+                + ( type != null ? type.getCategory().toLowerCase() : "" )
+                + " risk to " + ( organization != null ? organization.getName() : "all" )
+                + ( type != null ? " of " + type.getLabel() : "" ).toLowerCase();
     }
 
     /**
@@ -139,6 +151,33 @@ public class Risk implements Serializable, Mappable {
      */
     public boolean references( ModelObject mo ) {
         return ModelObject.areIdentical( organization, mo );
+    }
+
+    /**
+     * Return a full title label for the risk.
+     *
+     * @return a string
+     */
+    @Transient
+    public String getFullTitle( ) {
+        String label = "";
+        label += severity.getLabel();
+        label += " risk of ";
+        label += type.getLabel().toLowerCase();
+        label += " to ";
+        label += organization.getName();
+        return label;
+    }
+
+    /**
+     * Return a title label for the risk.
+     *
+     * @param sep the separator string
+     * @return a string
+     */
+    @Transient
+    public String getTitle( String sep ) {
+        return type.getLabel() + sep + organization.getName();
     }
 
     /**

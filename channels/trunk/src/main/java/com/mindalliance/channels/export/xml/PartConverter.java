@@ -128,6 +128,9 @@ public class PartConverter extends AbstractChannelsConverter {
             writer.setValue( risk.getOrganization().getName() );
             writer.endNode();
         }
+        writer.startNode( "asTeam" );
+        writer.setValue( "" + part.isAsTeam() );
+        writer.endNode();
         // Part user issues
         exportUserIssues( part, writer, context );
     }
@@ -217,6 +220,8 @@ public class PartConverter extends AbstractChannelsConverter {
                 String orgName = reader.getValue();
                 Risk risk = scenario.getRisk( type, orgName );
                 part.getMitigations().add( risk );
+            }  else if ( nodeName.equals( "asTeam" ) ) {
+                part.setAsTeam( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "issue" ) ) {
                 context.convertAnother( scenario, UserIssue.class );
             } else {

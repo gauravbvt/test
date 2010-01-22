@@ -35,7 +35,7 @@ public class DisconnectFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "remove flow";
+        return "remove";
     }
 
     /**
@@ -72,6 +72,22 @@ public class DisconnectFlow extends AbstractCommand {
         // The previous id of the flow being re-connected
         connectWithFlow.set( "flow", get( "flow" ) );
         return connectWithFlow;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getLabel( Commander commander ) throws CommandException {
+        Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+        Flow flow;
+        try {
+            flow = scenario.findFlow( (Long) get( "flow" ) );
+        } catch ( NotFoundException e ) {
+            throw new CommandException( "You need to refresh" );
+        }
+        if ( flow.isCapability() ) return "Remove capability";
+        else if ( flow.isNeed() ) return "Remove need";
+        else return "Remove flow";
     }
 
 }

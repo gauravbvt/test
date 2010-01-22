@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.menus;
 
 import com.mindalliance.channels.SurveyService;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.commands.PasteAttachment;
 import com.mindalliance.channels.command.commands.RemoveIssue;
 import com.mindalliance.channels.model.Issue;
@@ -54,11 +55,9 @@ public class IssueActionsMenuPanel extends MenuPanel {
     }
 
     /**
-     * Get population of menu items.
-     *
-     * @return a list of menu items
+     * {@inheritDoc}
      */
-    public List<Component> getMenuItems() {
+    public List<Component> getMenuItems() throws CommandException {
         List<Component> menuItems = new ArrayList<Component>();
         // Undo and redo
             menuItems.add( this.getUndoMenuItem( "menuItem" ) );
