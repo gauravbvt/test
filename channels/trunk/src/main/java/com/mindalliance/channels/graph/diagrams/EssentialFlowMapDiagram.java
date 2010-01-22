@@ -6,6 +6,7 @@ import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ScenarioObject;
@@ -54,7 +55,7 @@ public class EssentialFlowMapDiagram extends AbstractDiagram<Node, Flow> {
             graphRenderer.highlightEdge( (Flow)scenarioObject );
         }
         FlowMapMetaProvider metaProvider = new FlowMapMetaProvider(
-                scenarioObject.getScenario(),
+                (ModelObject)scenarioObject,
                 outputFormat,
                 diagramFactory.getImageDirectory(),
                 getAnalyst() );

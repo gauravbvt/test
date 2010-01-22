@@ -9,6 +9,7 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.ScenarioObject;
 import org.jgrapht.Graph;
 
 import java.io.IOException;
@@ -52,7 +53,8 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
         for ( Node node : g.vertexSet() ) {
             if ( node.isPart() ) {
                 Part part = (Part) node;
-                if ( part.getScenario().isTerminatedBy( part ) ) {
+                if ( part.getScenario().isTerminatedBy( part ) &&
+                        !isOnlyTheSourceOfFailedFlow( part, g ) ) {
                     terminators.add( part );
                 }
             }
@@ -66,10 +68,10 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
         AbstractMetaProvider<Node, Flow> metaProvider = (AbstractMetaProvider<Node, Flow>) getMetaProvider();
         Map<Scenario, Set<Node>> scenarioNodes = new HashMap<Scenario, Set<Node>>();
         for ( Node node : g.vertexSet() ) {
-            Set<Node> nodesInScenario = scenarioNodes.get( getScenario() );
+            Set<Node> nodesInScenario = scenarioNodes.get( node.getScenario() );
             if ( nodesInScenario == null ) {
                 nodesInScenario = new HashSet<Node>();
-                scenarioNodes.put( getScenario(), nodesInScenario );
+                scenarioNodes.put( node.getScenario(), nodesInScenario );
             }
             nodesInScenario.add( node );
         }
@@ -110,12 +112,12 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
             Scenario scenario ) {
         for ( Node node : g.vertexSet() ) {
             Part part = (Part) node;
-            if ( part.getScenario().equals( scenario ) )
-                for ( Risk risk : part.getMitigations() ) {
-                    if ( risk.isEndsWithScenario() ) {
+            if ( !isOnlyTheSourceOfFailedFlow( part, g ) ) {
+                if ( part.getScenario().equals( scenario ) )
+                    for ( Risk risk : part.getMitigations() ) {
                         exportRisk( getRiskVertexId( part, risk ), risk, out, metaProvider );
                     }
-                }
+            }
         }
         if ( getTerminatedScenarios().contains( scenario ) ) {
             for ( Risk risk : scenario.getRisks() ) {
@@ -168,7 +170,7 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
     }
 
     private String getRiskVertexId( Part part, Risk risk ) {
-        return "risk" +  + part.getMitigations().indexOf( risk ) + "_" + part.getId();
+        return "risk" + +part.getMitigations().indexOf( risk ) + "_" + part.getId();
     }
 
     private String getRiskVertexId( Scenario scenario, Risk risk ) {
@@ -220,8 +222,10 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
     private void exportRiskEdges( PrintWriter out, Graph<Node, Flow> g ) {
         for ( Node node : g.vertexSet() ) {
             Part part = (Part) node;
-            for ( Risk risk : part.getMitigations() ) {
-                exportRiskEdge( part, risk, out, g );
+            if ( !isOnlyTheSourceOfFailedFlow( part, g ) ) {
+                for ( Risk risk : part.getMitigations() ) {
+                    exportRiskEdge( part, risk, out, g );
+                }
             }
         }
         for ( Scenario scenario : getTerminatedScenarios() ) {
@@ -259,8 +263,8 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
     }
 
     private void exportTerminations( PrintWriter out, Graph<Node, Flow> g ) {
-        Scenario scenario = getScenario();
         for ( Part terminator : terminators ) {
+            Scenario scenario = terminator.getScenario();
             List<DOTAttribute> attributes = getNonFlowEdgeAttributes();
             attributes.add( new DOTAttribute( "label", makeLabel( scenario.terminationCause( terminator ) ) ) );
             String terminatorId = getVertexID( terminator );
@@ -293,8 +297,19 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
         return list;
     }
 
+    private ScenarioObject getFailure() {
+        return (ScenarioObject) getMetaProvider().getContext();
+    }
+
     private Scenario getScenario() {
-        return (Scenario) getMetaProvider().getContext();
+        return getFailure().getScenario();
+    }
+
+    private boolean isOnlyTheSourceOfFailedFlow( Part part, Graph<Node, Flow> g ) {
+        ScenarioObject failure = getFailure();
+        return failure instanceof Flow
+                && ( (Flow) failure ).getSource().equals( part )
+                && g.edgesOf( part ).size() == 1;
     }
 
 }

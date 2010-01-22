@@ -40,7 +40,7 @@ public class PartShowMenuPanel extends MenuPanel {
                     update( target, new Change( Change.Type.Expanded, getPart() ) );
                 }
             };
-            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Show details" ), showLink ) );
+            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Details" ), showLink ) );
         } else {
             AjaxFallbackLink hideLink = new AjaxFallbackLink( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {
@@ -51,28 +51,26 @@ public class PartShowMenuPanel extends MenuPanel {
         }
         // View part assignments
         AjaxFallbackLink assignmentsLink = new AjaxFallbackLink( "link" ) {
-                @Override
-                public void onClick( AjaxRequestTarget target ) {
-                    update( target, new Change( Change.Type.AspectViewed, getPart(), "assignments" ) );
-                }
-            };
-            menuItems.add( new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( "Assignments" ),
-                    assignmentsLink ) );
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.AspectViewed, getPart(), "assignments" ) );
+            }
+        };
+        menuItems.add( new LinkMenuItem(
+                "menuItem",
+                new Model<String>( "Assignments" ),
+                assignmentsLink ) );
         // View failure impacts
-        if ( getPart().isImportant() ) {
         AjaxFallbackLink failureImpactsLink = new AjaxFallbackLink( "link" ) {
-                @Override
-                public void onClick( AjaxRequestTarget target ) {
-                    update( target, new Change( Change.Type.AspectViewed, getPart(), "failure" ) );
-                }
-            };
-            menuItems.add( new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( "Failure impacts" ),
-                    failureImpactsLink ) );
-        }
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.AspectViewed, getPart(), "failure" ) );
+            }
+        };
+        menuItems.add( new LinkMenuItem(
+                "menuItem",
+                new Model<String>( "Failure impacts" ),
+                failureImpactsLink ) );
         // View part entities
         menuItems.addAll( getModelObjectMenuItems( "menuItem", getModelObjectWrappers() ) );
         return menuItems;

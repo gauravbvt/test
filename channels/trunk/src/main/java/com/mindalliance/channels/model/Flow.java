@@ -1028,9 +1028,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      */
     public List<Flow> getEssentialFlows( boolean assumeFails ) {
         if ( isEssential( assumeFails ) ) {
-            List<Flow> essentialFlows = getTarget().getEssentialFlows( assumeFails );
-            essentialFlows.add( this );
-            return essentialFlows;
+            return new ArrayList<Flow>( getTarget().getEssentialFlows( assumeFails ) );
         } else {
             return new ArrayList<Flow>();
         }
@@ -1043,7 +1041,8 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      * @return a boolean
      */
     public boolean isImportant() {
-        return isSharing() && ( isCritical() || isTriggeringToTarget() );
+        return isSharing()
+                && ( isCritical() || isTriggeringToTarget() );
     }
 
     /**
@@ -1052,7 +1051,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      * @return a boolean
      */
     public boolean hasAlternate() {
-        return getAlternates().isEmpty();
+        return !getAlternates().isEmpty();
     }
 
     /**
@@ -1092,7 +1091,31 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
      * @return a boolean
      */
     public boolean isEssential( boolean assumeFails ) {
-        return isImportant() && ( assumeFails || !hasAlternate() );
+        return isImportant()
+                && ( assumeFails || !hasAlternate() )
+                && !isSharingWithSelf();
+    }
+
+    /**
+     * Whether this is a sharing flow where source actor is target actor.
+     *
+     * @return a boolean
+     */
+    @Transient
+    public boolean isSharingWithSelf() {
+        boolean sharingWithSelf = false;
+        if ( isSharing() ) {
+            Part sourcePart = (Part) getSource();
+            Part targetPart = (Part) getTarget();
+            Actor onlySource = sourcePart.getKnownActualActor();
+            if ( onlySource != null ) {
+                Actor onlyTarget = targetPart.getKnownActualActor();
+                if ( onlyTarget != null ) {
+                    sharingWithSelf = onlySource.equals( onlyTarget );
+                }
+            }
+        }
+        return sharingWithSelf;
     }
 
 

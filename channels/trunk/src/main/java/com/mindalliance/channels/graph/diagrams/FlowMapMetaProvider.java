@@ -10,9 +10,9 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.springframework.core.io.Resource;
@@ -64,14 +64,14 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
     /**
      * Scenario in context.
      */
-    private Scenario scenario;
+    private ModelObject context;
 
-    public FlowMapMetaProvider( Scenario scenario,
+    public FlowMapMetaProvider( ModelObject modelObject,
                                 String outputFormat,
                                 Resource imageDirectory,
                                 Analyst analyst ) {
         super( outputFormat, imageDirectory, analyst );
-        this.scenario = scenario;
+        this.context = modelObject;
     }
 
     /**
@@ -80,7 +80,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
      * @return an object that knows of the vertices and edges
      */
     public Object getContext() {
-        return scenario;
+        return context;
     }
 
     /**
@@ -286,7 +286,11 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
-            list.add( new DOTAttribute( "fontname", EDGE_FONT ) );
+            if ( highlighted ) {
+                list.add( new DOTAttribute( "fontname", EDGE_FONT_BOLD ) );
+            } else {
+                list.add( new DOTAttribute( "fontname", EDGE_FONT ) );
+            }
             list.add( new DOTAttribute( "fontsize", EDGE_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );
             list.add( new DOTAttribute( "len", "1.5" ) );

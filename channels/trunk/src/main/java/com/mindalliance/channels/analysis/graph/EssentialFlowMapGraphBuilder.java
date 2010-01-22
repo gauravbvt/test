@@ -4,6 +4,7 @@ import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.InternalFlow;
 import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ScenarioObject;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
@@ -36,21 +37,21 @@ public class EssentialFlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
 
     public DirectedGraph<Node, Flow> buildDirectedGraph() {
         DirectedGraph<Node, Flow> digraph = new DirectedMultigraph<Node, Flow>(
-                 new EdgeFactory<Node, Flow>() {
-                     /**
-                      * Separate id generator for diagram-based flows.
-                      */
-                     private long IdCounter = 1L;
+                new EdgeFactory<Node, Flow>() {
+                    /**
+                     * Separate id generator for diagram-based flows.
+                     */
+                    private long IdCounter = 1L;
 
-                     public Flow createEdge( Node sourceVertex, Node targetVertex ) {
-                         InternalFlow flow = new InternalFlow( sourceVertex, targetVertex, "" );
-                         flow.setId( IdCounter++ );
-                         return flow;
-                     }
+                    public Flow createEdge( Node sourceVertex, Node targetVertex ) {
+                        InternalFlow flow = new InternalFlow( sourceVertex, targetVertex, "" );
+                        flow.setId( IdCounter++ );
+                        return flow;
+                    }
 
-                 } );
-         populateScenarioGraph( digraph, scenarioObject, assumeFails );
-         return digraph;
+                } );
+        populateScenarioGraph( digraph, scenarioObject, assumeFails );
+        return digraph;
     }
 
     private void populateScenarioGraph(
@@ -58,10 +59,17 @@ public class EssentialFlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
             ScenarioObject scenarioObject,
             boolean assumeFails ) {
         List<Flow> essentialFlows = scenarioObject.getEssentialFlows( assumeFails );
-        for (Flow flow : essentialFlows ) {
-            graph.addVertex( flow.getSource() );
-            graph.addVertex( flow.getTarget() );
-            graph.addEdge( flow.getSource(), flow.getTarget(), flow );
+        if ( scenarioObject instanceof Flow ) {
+            essentialFlows.add( (Flow) scenarioObject );
+        } else {
+            graph.addVertex( ( Part )scenarioObject );
+        }
+        for ( Flow flow : essentialFlows ) {
+            Node source = flow.getSource();
+            Node target = flow.getTarget();
+            graph.addVertex( source );
+            graph.addVertex( target );
+            graph.addEdge( source, target, flow );
         }
     }
 }

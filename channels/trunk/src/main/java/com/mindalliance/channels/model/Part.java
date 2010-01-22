@@ -891,6 +891,30 @@ public class Part extends Node implements GeoLocatable {
     }
 
     /**
+     * Get all explicit sharing outcomes and sharing outcomes from connected capabilities.
+     *
+     * @return a list of flows
+     */
+    @Transient
+    public List<Flow> getAllSharingOutcomes() {
+        List<Flow> sharingOutcomes = new ArrayList<Flow>();
+        Iterator<Flow> outcomes = outcomes();
+        while ( outcomes.hasNext() ) {
+            Flow flow = outcomes.next();
+            if ( flow.isSharing() ) {
+                sharingOutcomes.add( flow );
+            } else if ( flow.isCapability() ) {
+                Connector connector = (Connector) flow.getTarget();
+                Iterator<ExternalFlow> externals = connector.externalFlows();
+                while ( externals.hasNext() ) {
+                    sharingOutcomes.add( externals.next() );
+                }
+            }
+        }
+        return sharingOutcomes;
+    }
+
+    /**
      * Get the maximum severity of risks mitigated. Null if none.
      *
      * @return a severity level
@@ -930,6 +954,7 @@ public class Part extends Node implements GeoLocatable {
 
     /**
      * Get all risks mitigated and terminated.
+     *
      * @return a list of risks
      */
     @Transient
@@ -939,6 +964,6 @@ public class Part extends Node implements GeoLocatable {
         if ( isTerminatesEventPhase() && getScenario().hasTerminatingRisks() ) {
             risks.addAll( getScenario().getRisks() );
         }
-        return new ArrayList<Risk>(risks);
+        return new ArrayList<Risk>( risks );
     }
 }

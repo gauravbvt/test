@@ -327,9 +327,12 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
         @SuppressWarnings( "unchecked" )
         private void initTable() {
             List<PartFailure> failures = new ArrayList<PartFailure>();
-            List<Part> impacts = getQueryService().findFailureImpacts(
+            List<Part> impacts = new ArrayList<Part>( getQueryService().findFailureImpacts(
                     scenarioObject,
-                    assumeFails );
+                    assumeFails ) );
+            if ( scenarioObject instanceof Part && ( (Part) scenarioObject ).isUseful() ) {
+                impacts.add( (Part) scenarioObject );
+            }
             for ( Part part : impacts ) {
                 for ( Risk risk : part.getRisksAddressed() ) {
                     failures.add( new PartFailure( part, risk ) );

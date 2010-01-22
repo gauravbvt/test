@@ -106,7 +106,7 @@ public class FlowActionsMenuPanel extends MenuPanel {
                     commitmentsLink ) );
         }
         // View flow failure impacts
-        if ( getFlow().isImportant() ) {
+        if ( getFlow().isSharing() ) {
             AjaxFallbackLink failureImpactsLink = new AjaxFallbackLink( "link" ) {
                 @Override
                 public void onClick( AjaxRequestTarget target ) {

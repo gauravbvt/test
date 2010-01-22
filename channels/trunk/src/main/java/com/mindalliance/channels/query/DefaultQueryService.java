@@ -2884,8 +2884,14 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public List<Part> findFailureImpacts( ScenarioObject scenarioObject, boolean assumeFails ) {
         if ( scenarioObject instanceof Flow ) {
-            if ( ( (Flow) scenarioObject ).isEssential( assumeFails ) ) {
-                return findPartFailureImpacts( (Part) ( (Flow) scenarioObject ).getTarget(), assumeFails );
+            Flow flow = (Flow) scenarioObject;
+            if ( ( (Flow) scenarioObject ).isEssential( assumeFails )  ) {
+                Part target = (Part) flow.getTarget();
+                List<Part> impacted = findPartFailureImpacts( target, assumeFails );
+                if ( target.isUseful() && !impacted.contains( target ) ) {
+                    impacted.add( target );
+                }
+                return impacted;
             } else {
                 return new ArrayList<Part>();
             }
@@ -2902,7 +2908,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 impactedParts.add( candidate );
             }
         }
-        if ( part.isUseful() ) impactedParts.add( part );
         return new ArrayList<Part>( impactedParts );
     }
 
@@ -2937,7 +2942,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     // Find all important flows downstream of part, without circularities.
     private List<Flow> findImportantFlowsFrom( Part part, final Set<Part> visited ) {
         List<Flow> flows = (List<Flow>) CollectionUtils.select(
-                IteratorUtils.toList( part.outcomes() ),
+                part.getAllSharingOutcomes(),
                 new Predicate() {
                     public boolean evaluate( Object object ) {
                         Flow flow = (Flow) object;
