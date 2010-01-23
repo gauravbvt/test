@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.mindalliance</groupId>
@@ -8,12 +10,38 @@
 	<version>1.0-SNAPSHOT</version>
 
     <name>MindPeer</name>
-    <description>Expertise marketplace</description>
-    <url>http://mindpeer.mindalliance.org/</url>
+    <description>
+         MindPeer is a new kind of web-based content marketplace.
+         MindPeer enables the best thinkers in the world to monetize their expertise by selling
+         subscriptions to their commentary on news and other content on the web.
+         Our focus is on the types of experts that investors at hedge funds and other buy-side firms
+         would pay to read and on delivering that expertise in a format they can easily incorporate
+         into their workflow. MindPeer delivers commentary through  a unique web-based delivery
+         platform that places contextually relevant expert commentary into a panel to the right of
+         an Internet Explorer or Mozilla Firefox web browser. This enabling platform
+         -- the browser add-on is a free download -- lets readers access expert commentary in a
+         useful format. When they are reading a news article they can  easily see commentary from
+         experts they have already subscribed to, and see what other relevant commentary is available.
+    </description>
+    <url>https://channels.mind-alliance.org/mindpeer/project/index.html</url>
     <organization>
         <name>Mind-Alliance Systems</name>
         <url>http://www.mind-alliance.com</url>
     </organization>
+
+    <scm>
+        <developerConnection>scm:svn:https://wush.net/svn/mindalliance/mindpeer/trunk</developerConnection>
+        <tag>HEAD</tag>
+        <url>https://wush.net/trac/mindalliance/browser/mindpeer/trunk</url>
+    </scm>
+    <issueManagement>
+        <system>trac</system>
+        <url>https://wush.net/trac/mindalliance/newticket</url>
+    </issueManagement>
+    <ciManagement>
+        <system>Hudson</system>
+        <url>/hudson/job/mindpeer/</url>
+    </ciManagement>
 
     <developers>
         <developer>
@@ -300,19 +328,6 @@
                             <port>8080</port>
                             <confidentialPort>8443</confidentialPort>
                             <maxIdleTime>60000</maxIdleTime>
-                            <!--<Call name="addConnector">-->
-                                <!--<Arg>-->
-                                  <!--<New class="org.mortbay.jetty.security.SslSocketConnector">-->
-                                    <!--<Set name="Port">8443</Set>-->
-                                    <!--<Set name="maxIdleTime">30000</Set>-->
-                                    <!--<Set name="keystore"><SystemProperty name="jetty.home" default="." />/etc/keystore</Set>-->
-                                    <!--<Set name="password">OBF:1vny1zlo1x8e1vnw1vn61x8g1zlu1vn4</Set>-->
-                                    <!--<Set name="keyPassword">OBF:1u2u1wml1z7s1z7a1wnl1u2g</Set>-->
-                                    <!--<Set name="truststore"><SystemProperty name="jetty.home" default="." />/etc/keystore</Set>-->
-                                    <!--<Set name="trustPassword">OBF:1vny1zlo1x8e1vnw1vn61x8g1zlu1vn4</Set>-->
-                                  <!--</New>-->
-                                <!--</Arg>-->
-                              <!--</Call>-->
                         </connector>
                         <connector implementation="org.mortbay.jetty.security.SslSocketConnector">
                             <port>8443</port>
@@ -381,6 +396,14 @@
             <plugin>
               <groupId>org.codehaus.mojo</groupId>
               <artifactId>emma-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-changelog-plugin</artifactId>
+              <configuration>
+                  <connectionType>developerConnection</connectionType>
+              </configuration>
             </plugin>
 
         </plugins>
