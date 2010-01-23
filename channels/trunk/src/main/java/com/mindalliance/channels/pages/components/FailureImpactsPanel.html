@@ -12,14 +12,16 @@
             <h1><span wicket:id="title">Impacts of failing task "Doing something"</span></h1>
         </div>
         <div class="aspect">
-            <div class="zoom">
+            <div class="diagram">
+                <div class="zoom">
                 <span id="flow-full" wicket:id="full"><img src="images/full.png" title="Full size"
                                                            alt="Full size"/></span>
                 <span id="flow-fit" wicket:id="fit"><img src="images/fit.png" title="Reduce to fit"
                                                          alt="Reduce to fit"/></span>
-            </div>
-            <div class="picture">
-                <span wicket:id="essentialFlowMap">[Essential flow map]</span>
+                </div>
+                <div class="picture">
+                    <span wicket:id="essentialFlowMap">[Essential flow map]</span>
+                </div>
             </div>
             <input wicket:id="assumeFails" type="checkbox">&nbsp;Assume alternate flows all fail (no redundancy)
             <span wicket:id="failures">[task failures panel]</span>
