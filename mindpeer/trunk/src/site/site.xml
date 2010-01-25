@@ -1,0 +1,16 @@
+<project xmlns="http://maven.apache.org/DECORATION/1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
+
+    <bannerLeft>
+      <name>MindPeer</name>
+      <href>https://channels.mind-alliance.org/mindpeer/project/index.html</href>
+    </bannerLeft>
+
+    <publishDate position="left" format="yyyy-MM-dd HH:mm z "/>
+    <version position="left"/>
+
+    <body>
+        <menu ref="reports" />
+    </body>
+</project>
