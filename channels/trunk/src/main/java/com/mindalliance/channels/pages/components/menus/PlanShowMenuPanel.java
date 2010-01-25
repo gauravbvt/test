@@ -133,7 +133,7 @@ public class PlanShowMenuPanel extends MenuPanel {
                         };
                 menuItems.add( new LinkMenuItem(
                         "menuItem",
-                        new Model<String>( "All surveys" ),
+                        new Model<String>( "Surveys" ),
                         surveyLink ) );
             }
         }
@@ -145,7 +145,7 @@ public class PlanShowMenuPanel extends MenuPanel {
 //                        PopupSettings.MENU_BAR ) );
         menuItems.add( new LinkMenuItem(
                 "menuItem",
-                new Model<String>( "IS procedures report" ),
+                new Model<String>( "Info sharing procedures" ),
                 reportLink ) );
 
         BookmarkablePageLink playbooksLink = new BookmarkablePageLink<PlanReportPage>( "link", TaskPlaybook.class );

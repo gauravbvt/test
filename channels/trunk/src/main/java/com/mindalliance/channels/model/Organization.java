@@ -36,6 +36,10 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
      */
     private Place location;
     /**
+     * The organization's mission.
+     */
+    private String mission = "";
+    /**
      * Jobs.
      */
     private List<Job> jobs = new ArrayList<Job>();
@@ -184,6 +188,14 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
     public void setLocation( Place location ) {
         assert location == null || isType() || location.isActual();
         this.location = location;
+    }
+
+    public String getMission() {
+        return mission;
+    }
+
+    public void setMission( String mission ) {
+        this.mission = mission;
     }
 
     /**

@@ -79,6 +79,10 @@ public class OrganizationConverter extends EntityConverter {
             writer.setValue( location.getName() );
             writer.endNode();
         }
+        // mission
+        writer.startNode( "mission" );
+        writer.setValue( org.getMission() );
+        writer.endNode();
         // channels
         for ( Channel channel : org.getChannels() ) {
             writer.startNode( "channel" );
@@ -112,6 +116,8 @@ public class OrganizationConverter extends EntityConverter {
             org.setActorsRequired( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals( "agreementsRequired" ) ) {
             org.setAgreementsRequired( reader.getValue().equals( "true" ) );
+        } else if ( nodeName.equals( "mission" ) ) {
+            org.setMission( reader.getValue() );
         } else if ( nodeName.equals( "parent" ) ) {
             String id = reader.getAttribute( "id");
             org.setParent( findOrCreate( Organization.class, reader.getValue(), id ) );

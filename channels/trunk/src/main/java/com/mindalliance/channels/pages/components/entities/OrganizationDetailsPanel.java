@@ -21,6 +21,7 @@ import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -56,6 +57,10 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
      */
     private TextField locationField;
     /**
+     * Mission field.
+     */
+    private TextArea missionField;
+    /**
      * Whether actors are required for each role in the organization.
      */
     CheckBox actorsRequiredCheckBox;
@@ -76,6 +81,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
      */
     @Override
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
+        addMissionField( moDetailsDiv );
         addParentField( moDetailsDiv );
         addLocationField( moDetailsDiv );
         addContactInfoPanel( moDetailsDiv );
@@ -83,6 +89,18 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         addTabPanel( moDetailsDiv );
         adjustFields();
     }
+
+    private void addMissionField( WebMarkupContainer moDetailsDiv ) {
+        missionField = new TextArea<String>( "mission",
+                new PropertyModel<String>( this, "mission" ) );
+        missionField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getEntity(), "mission" ) );
+            }
+        } );
+        moDetailsDiv.add( missionField );
+    }
+
 
     private void addParentField( WebMarkupContainer moDetailsDiv ) {
         WebMarkupContainer parentContainer = new WebMarkupContainer( "parentContainer" );
@@ -188,6 +206,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
     }
 
     private void adjustFields() {
+        missionField.setEnabled( isLockedByUser( getOrganization() ) );
         parentField.setEnabled( isLockedByUser( getOrganization() ) );
         locationField.setEnabled( isLockedByUser( getOrganization() ) );
         actorsRequiredCheckBox.setEnabled( isLockedByUser( getOrganization() ) );
@@ -362,6 +381,31 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                         val,
                         UpdateObject.Action.Set ) );
     }
+
+    /**
+     * Get the model object's mission
+     *
+     * @return a string
+     */
+    public String getMission() {
+        return getOrganization().getMission();
+    }
+
+    /**
+     * Set the organization's mission.
+     *
+     * @param val a string
+     */
+    public void setMission( String val ) {
+        if ( val != null )
+            doCommand(
+                    new UpdatePlanObject(
+                            getEntity(),
+                            "mission",
+                            val,
+                            UpdateObject.Action.Set ) );
+    }
+
 
     /**
      * {@inheritDoc}
