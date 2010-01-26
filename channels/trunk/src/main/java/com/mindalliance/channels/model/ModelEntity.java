@@ -20,6 +20,7 @@ import java.util.Set;
  * Time: 1:05:30 PM
  */
 public abstract class ModelEntity extends ModelObject {
+
     /**
      * Actual or Type.
      */
@@ -111,6 +112,35 @@ public abstract class ModelEntity extends ModelObject {
 
     public ModelEntity( String name ) {
         super( name );
+    }
+
+    /**
+     * Whether instances of a given entity class can be either actuals or types.
+     * Roles and events are always types.
+     *
+     * @param entityClass an entity class
+     * @return a boolean
+     */
+    public static boolean canBeActualOrType( Class<? extends ModelEntity> entityClass ) {
+        return !(
+                Event.class.isAssignableFrom( entityClass )
+                        || Role.class.isAssignableFrom( entityClass )
+        );
+    }
+
+    /**
+     * Return the default kind when creating a model entity of a given class.
+     *
+     * @param entityClass an entity class
+     * @return a kind
+     */
+    public static Kind defaultKindFor( Class<? extends ModelEntity> entityClass ) {
+        if ( Event.class.isAssignableFrom( entityClass )
+                || Role.class.isAssignableFrom( entityClass ) ) {
+            return Kind.Type;
+        } else {
+            return Kind.Actual;
+        }
     }
 
     /**

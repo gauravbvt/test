@@ -65,7 +65,7 @@ public class PartConverter extends AbstractChannelsConverter {
         if ( part.getRole() != null ) {
             writer.startNode( "role" );
             writer.addAttribute( "id", Long.toString( part.getRole().getId() ) );
-            writer.addAttribute( "kind", part.getRole().isType() ? "Type" : "Actual" );
+            writer.addAttribute( "kind",  "Type" );
             writer.setValue( part.getRole().getName() );
             writer.endNode();
         }
@@ -161,12 +161,12 @@ public class PartConverter extends AbstractChannelsConverter {
                 part.setTask( reader.getValue() );
             } else if ( nodeName.equals( "role" ) ) {
                 String idString = reader.getAttribute( "id" );
-                ModelEntity.Kind kind = kind( reader.getAttribute( "kind" ) );
                 part.setRole( getEntity(
                         Role.class,
                         reader.getValue(),
                         Long.parseLong( idString ),
-                        kind, context ) );
+                        ModelEntity.Kind.Type,
+                        context ) );
             } else if ( nodeName.equals( "actor" ) ) {
                 String idString = reader.getAttribute( "id" );
                 ModelEntity.Kind kind = kind( reader.getAttribute( "kind" ) );

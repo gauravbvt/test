@@ -86,7 +86,7 @@ public class JobConverter extends AbstractChannelsConverter {
                         Role.class,
                         reader.getValue(),
                         Long.parseLong( id ),
-                        false,
+                        true,
                         importingPlan,
                         idMap );
                 job.setRole( role );

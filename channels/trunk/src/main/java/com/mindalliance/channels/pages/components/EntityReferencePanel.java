@@ -62,7 +62,7 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
     /**
      * Kind of entity selected.
      */
-    private ModelEntity.Kind entityKind = ModelEntity.Kind.Actual;
+    private ModelEntity.Kind entityKind;
     /**
      * Entity class.
      */
@@ -95,6 +95,7 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
             T defaultEntity,
             ModelEntity.Kind referenceKind ) {
         super( id, iModel );
+        entityKind = ModelEntity.defaultKindFor ( entityClass );
         this.choices = choices;
         this.property = property;
         this.entityClass = entityClass;
@@ -137,7 +138,10 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
             }
         } );
         actualOrTypeChoice.setOutputMarkupId( true );
-        actualOrTypeChoice.setVisible( referenceKind == null );
+        actualOrTypeChoice.setVisible(
+                referenceKind == null
+                && ModelEntity.canBeActualOrType( entityClass )
+        );
         add( actualOrTypeChoice );
     }
 

@@ -330,6 +330,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public <T extends ModelEntity> T findOrCreate( Class<T> clazz, String name, Long id ) {
+        // If entity can only be a type, find or create a type.
+        if ( !ModelEntity.canBeActualOrType( clazz ) ) {
+            if ( ModelEntity.defaultKindFor( clazz ).equals( ModelEntity.Kind.Type ) ) {
+                return findOrCreateType( clazz, name, id );
+            }
+        }
         if ( ModelEntity.getUniversalType( name, clazz ) != null )
             throw new InvalidEntityKindException( clazz.getSimpleName() + " " + name + " is a type" );
         T actualEntity = getDao().findOrCreate( clazz, name, id );
@@ -2885,7 +2891,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<Part> findFailureImpacts( ScenarioObject scenarioObject, boolean assumeFails ) {
         if ( scenarioObject instanceof Flow ) {
             Flow flow = (Flow) scenarioObject;
-            if ( ( (Flow) scenarioObject ).isEssential( assumeFails )  ) {
+            if ( ( (Flow) scenarioObject ).isEssential( assumeFails ) ) {
                 Part target = (Part) flow.getTarget();
                 List<Part> impacted = findPartFailureImpacts( target, assumeFails );
                 if ( target.isUseful() && !impacted.contains( target ) ) {

@@ -244,8 +244,8 @@ public interface QueryService extends Service {
     <T extends ModelEntity> T findOrCreate( Class<T> clazz, String name );
 
     /**
-     * Find an actual entity by given name. If none, create it and give it provided id.
-     *
+     * Find an entity by given name. If none, create it and give it provided id.
+     * If entity can only be a type, find or create a type, else find or create an actual.
      * @param clazz the kind of model object
      * @param name  the name
      * @param id    a long

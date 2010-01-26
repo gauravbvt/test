@@ -445,7 +445,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             String oldName = getRoleName();
             if ( name != null && !isSame( name, oldName ) ) {
                 if ( markedForCreation ) {
-                    job.setRole( getQueryService().findOrCreate( Role.class, name ) );
+                    job.setRole( getQueryService().findOrCreateType( Role.class, name ) );
                 } else {
                     int index = getOrganization().getJobs().indexOf( job );
                     if ( index >= 0 ) {
