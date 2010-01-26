@@ -803,8 +803,7 @@ public final class PlanPage extends WebPage implements Updatable {
     private ModelEntity findExpandedEntity() {
         for ( long id : expansions ) {
             try {
-                ModelObject mo = queryService.find( ModelObject.class, id );
-                if ( mo.isEntity() ) return (ModelEntity) mo;
+                return queryService.find( ModelEntity.class, id );
             }
             catch ( NotFoundException ignored ) {
                 // ignore

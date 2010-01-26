@@ -101,7 +101,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
     private void addImage() {
         image = new WebMarkupContainer( "image" );
         image.setOutputMarkupId( true );
-        moDetailsDiv.add( image );
+        moDetailsDiv.addOrReplace( image );
     }
 
     private void addNameField() {
@@ -283,6 +283,11 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
         if ( change.isUpdated() && change.getProperty().equals( "tags" ) ) {
             addTagsPanel();
             target.addComponent( tagsPanel );
+        }
+        if ( change.isUpdated() && change.getProperty().equals( "attachments" ) ) {
+            addImage();
+            adjustFields();
+            target.addComponent( image );
         }
         super.updateWith( target, change, updated );
     }

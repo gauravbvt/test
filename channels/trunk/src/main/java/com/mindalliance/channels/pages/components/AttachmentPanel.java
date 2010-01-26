@@ -262,7 +262,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 refresh( target );
                 update( target,
                         new Change(
-                                Change.Type.Removed,
+                                Change.Type.Updated,
                                 getAttachee(),
                                 "attachments"
                         ) );

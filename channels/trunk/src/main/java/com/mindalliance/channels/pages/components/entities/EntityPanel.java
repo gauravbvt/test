@@ -241,6 +241,15 @@ public class EntityPanel extends AbstractMultiAspectPanel {
     /**
      * {@inheritDoc}
      */
+    @Override
+    protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
+        getCommander().requestLockOn( change.getSubject() );
+        super.refresh( target, change, aspect );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isUpdated() && change.isForProperty( "geoLocation" ) ) {
             addShowMenu();
