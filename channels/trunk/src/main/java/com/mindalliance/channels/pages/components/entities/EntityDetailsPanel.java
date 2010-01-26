@@ -5,6 +5,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
@@ -62,6 +63,10 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
      * Description field.
      */
     private TextArea<String> descriptionField;
+    /**
+     * Tags panel.
+     */
+    private TagsPanel tagsPanel;
     /**
      * Entity issues panel.
      */
@@ -136,14 +141,16 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
                 new PropertyModel<ModelEntity>( this, "entity" ),
                 getExpansions() );
         issuesPanel.setOutputMarkupId( true );
-        moDetailsDiv.add( issuesPanel );
+        issuesPanel.setOutputMarkupId( true );
+        moDetailsDiv.addOrReplace( issuesPanel );
     }
 
     private void addTagsPanel() {
-        TagsPanel tagsPanel = new TagsPanel(
+        tagsPanel = new TagsPanel(
                 "tags",
                 new PropertyModel<ModelEntity>( this, "entity" ) );
-        moDetailsDiv.add( tagsPanel );
+        tagsPanel.setOutputMarkupId( true );
+        moDetailsDiv.addOrReplace( tagsPanel );
     }
 
     private void addEntityReferencesAndMatchesPanel() {
@@ -153,7 +160,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
                 new Model<String>(
                         entity.isActual()
                                 ? "References to"
-                                : "Index of type") );
+                                : "Index of type" ) );
         moDetailsDiv.add( indexTitleLabel );
         Label referencedLabel = new Label(
                 "indexedName",
@@ -161,9 +168,9 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
                         "\"" + entity.getName() + "\"" ) );
         moDetailsDiv.add( referencedLabel );
         EntityReferencesAndMatchesPanel refsPanel = new EntityReferencesAndMatchesPanel(
-                    "referencesOrMatches",
-                    new PropertyModel<ModelEntity>( this, "entity" ),
-                    getExpansions() );
+                "referencesOrMatches",
+                new PropertyModel<ModelEntity>( this, "entity" ),
+                getExpansions() );
         moDetailsDiv.add( refsPanel );
     }
 
@@ -269,4 +276,14 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
         return model.getObject();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        if ( change.isUpdated() && change.getProperty().equals( "tags" ) ) {
+            addTagsPanel();
+            target.addComponent( tagsPanel );
+        }
+        super.updateWith( target, change, updated );
+    }
 }

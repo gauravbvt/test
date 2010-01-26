@@ -1494,7 +1494,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void refreshScenarioEditPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isUnknown()
-                || change.isDisplay() && change.getSubject() instanceof Scenario
+                || (change.isDisplay() || change.isAdded()) && change.getSubject() instanceof Scenario
                 || change.isSelected() && change.getSubject() instanceof Part ) {
             addScenarioEditPanel();
             target.addComponent( scenarioEditPanel );

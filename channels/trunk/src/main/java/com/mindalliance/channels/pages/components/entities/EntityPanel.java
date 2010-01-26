@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.entities;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Phase;
@@ -244,6 +245,9 @@ public class EntityPanel extends AbstractMultiAspectPanel {
         if ( change.isUpdated() && change.isForProperty( "geoLocation" ) ) {
             addShowMenu();
             target.addComponent( getShowMenu() );
+        }
+        if ( change.isExists() && change.getSubject() instanceof Issue ) {
+            setAspectShown(target, DETAILS);
         }
         super.updateWith( target, change, updated );
     }

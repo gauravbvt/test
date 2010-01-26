@@ -8,7 +8,7 @@
 <body>
 <wicket:panel>
     <table>
-        <tr>
+        <tr wicket:id="newSystemContainer">
             <th align="right"><label>New classification system:</label></th>
             <td><input width="40" wicket:id="newSystem" type="text"/></td>
         </tr>
@@ -31,7 +31,8 @@
                                         <span wicket:id="new">New classification:</span>
                                     </td>
                                     <td>
-                                        <input wicket:id="name" type="text" size="25" title="Enter name"/>
+                                        <span wicket:id="name">Confidential</span>
+                                        <input wicket:id="newName" type="text" size="25" title="Enter name"/>
                                     </td>
                                     <td>
                                         <a wicket:id="move-to-top" href="#">

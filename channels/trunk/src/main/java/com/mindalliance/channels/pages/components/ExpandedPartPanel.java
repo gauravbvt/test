@@ -207,7 +207,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     private void addIssuesPanel() {
         partIssuesPanel = new IssuesPanel( "issues", model, getExpansions() );        // NON-NLS
         partIssuesPanel.setOutputMarkupId( true );
-        add( partIssuesPanel );
+        addOrReplace( partIssuesPanel );
     }
 
     private void addAttachments() {

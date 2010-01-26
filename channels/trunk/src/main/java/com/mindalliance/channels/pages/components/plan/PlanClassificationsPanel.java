@@ -107,6 +107,12 @@ public class PlanClassificationsPanel extends AbstractCommandablePanel {
             addClassificationIndex();
             adjustFields();
             target.addComponent( indexContainer );
+        } else if ( change.isUpdated() && change.getProperty().equals( "classifications") ) {
+            if ( !getPlan().getClassifications().contains( selectedClassification)) {
+                selectedClassification = null;
+                addClassificationIndex();
+                target.addComponent( indexContainer );
+            }
         } else {
             super.updateWith( target, change, updated );
         }

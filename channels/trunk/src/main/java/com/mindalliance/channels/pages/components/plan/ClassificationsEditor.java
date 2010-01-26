@@ -12,6 +12,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -63,6 +64,9 @@ public class ClassificationsEditor extends AbstractCommandablePanel {
     }
 
     private void addNewSystem() {
+        WebMarkupContainer newSystemContainer = new WebMarkupContainer("newSystemContainer");
+        add( newSystemContainer );
+        newSystemContainer.setVisible( getPlan().isDevelopment() );
         newSystemField = new TextField<String>(
                 "newSystem",
                 new PropertyModel<String>( this, "systemName" ) );
@@ -71,12 +75,12 @@ public class ClassificationsEditor extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addSystemChoice();
                 addClassificationList();
-                target.addComponent( systemChoice );
                 target.addComponent( newSystemField );
+                target.addComponent( systemChoice );
                 target.addComponent( classificationsContainer );
             }
         } );
-        add( newSystemField );
+        newSystemContainer.add( newSystemField );
     }
 
     private void addSystemChoice() {
@@ -89,6 +93,7 @@ public class ClassificationsEditor extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addClassificationList();
                 target.addComponent( classificationsContainer );
+                target.addComponent( systemChoice );
             }
         } );
         systemChoice.setOutputMarkupId( true );
@@ -115,10 +120,13 @@ public class ClassificationsEditor extends AbstractCommandablePanel {
     private void addNameCell( ListItem<ClassificationWrapper> item ) {
         ClassificationWrapper wrapper = item.getModelObject();
         WebMarkupContainer newClassificationLabel = new WebMarkupContainer( "new" );
-        newClassificationLabel.setVisible( wrapper.isMarkedForCreation() );
+        newClassificationLabel.setVisible( getPlan().isDevelopment() && wrapper.isMarkedForCreation() );
         item.add( newClassificationLabel );
+        Label nameLabel = new Label( "name", new PropertyModel<String>( wrapper, "name"));
+        nameLabel.setVisible( !wrapper.isMarkedForCreation() );
+        item.add( nameLabel );
         TextField<String> nameField = new TextField<String>(
-                "name",
+                "newName",
                 new PropertyModel<String>( wrapper, "name" )
         );
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
@@ -127,6 +135,7 @@ public class ClassificationsEditor extends AbstractCommandablePanel {
                 target.addComponent( classificationsContainer );
             }
         } );
+        nameField.setVisible( wrapper.isMarkedForCreation() );
         item.add( nameField );
     }
 
@@ -150,9 +159,15 @@ public class ClassificationsEditor extends AbstractCommandablePanel {
                 wrapper.delete();
                 addClassificationList();
                 target.addComponent( classificationsContainer );
+                addSystemChoice();
+                target.addComponent( systemChoice );
+                update( target, new Change( Change.Type.Updated, getPlan(), "classifications") );
             }
         };
-        deleteLink.setVisible( !wrapper.isMarkedForCreation() && !wrapper.isReferenced() );
+        deleteLink.setVisible(
+                getPlan().isDevelopment()
+                        && !wrapper.isMarkedForCreation()
+                        && !wrapper.isReferenced() );
         item.add( deleteLink );
     }
 
@@ -178,6 +193,10 @@ public class ClassificationsEditor extends AbstractCommandablePanel {
 
     public String getSelectedSystem() {
         return selectedSystem;
+    }
+
+    public void setSelectedSystem( String val ) {
+        selectedSystem = val;
     }
 
     public List<ClassificationWrapper> getWrappers() {

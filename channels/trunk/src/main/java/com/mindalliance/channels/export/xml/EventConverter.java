@@ -55,6 +55,7 @@ public class EventConverter extends EntityConverter {
         if ( scope != null && !scope.getName().trim().isEmpty() ) {
             writer.startNode( "scope" );
             writer.addAttribute( "id", Long.toString( scope.getId() ) );
+            writer.addAttribute( "kind", scope.getKind().name() );
             writer.setValue( scope.getName() );
             writer.endNode();
         }
@@ -75,7 +76,14 @@ public class EventConverter extends EntityConverter {
         Event event = (Event) entity;
         if ( nodeName.equals( "scope" ) ) {
             String id = reader.getAttribute( "id");
-            event.setScope( findOrCreate( Place.class, reader.getValue(), id ) );
+            String kindName = reader.getAttribute( "kind" );
+            boolean isType = kindName != null && kindName.equals( ModelEntity.Kind.Type.name() );
+            String name = reader.getValue();
+            if ( isType ) {
+                event.setScope( findOrCreateType( Place.class, name, id ) );
+            } else {
+                event.setScope( findOrCreate( Place.class, name, id ) );
+            }
         } else if ( nodeName.equals( "self-terminating" ) ) {
             event.setSelfTerminating( reader.getValue().equals( "true" ) );
         } else {

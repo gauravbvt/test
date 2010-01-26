@@ -85,19 +85,6 @@
         <property name="defaultPlanDefinitions" value="/WEB-INF/plans.properties"/>
         <property name="surveysFileName" value="surveys"/>
         <property name="uploadsDirName" value="uploads"/>
-<!--
-        <property name="plans">
-            <list value-type="java.util.ArrayList">
-                <bean class="com.mindalliance.channels.model.Plan">
-                   <property name="uri" value="mindalliance.com/channels/plans/acme"/>
-                    <property name="name" value="ACME Emergency Communications Plan"/>
-                    <property name="client" value="ACME Manufacturing, Inc."/>
-                    <property name="description"
-                              value="Communications planning for responding and recovering from business interruptions due fire or power outage."/>
-                </bean>
-            </list>
-        </property>
--->
         <property name="dataDirectory" value="file:${user.home}/channels/data"/>
         <property name="snapshotThreshold" value="10"/>
         <property name="builtInMedia">

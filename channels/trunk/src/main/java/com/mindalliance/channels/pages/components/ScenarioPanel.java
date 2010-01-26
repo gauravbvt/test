@@ -288,6 +288,10 @@ public class ScenarioPanel extends AbstractCommandablePanel {
                     target.addComponent( flowMapDiagramPanel );
                 }
             }
+            if ( change.isExists() && change.getSubject() instanceof Issue ) {
+                addPartPanel();
+                target.addComponent( partPanel );
+            }
         }
         refreshMenus( target );
         super.updateWith( target, change, updated );
