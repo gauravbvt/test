@@ -248,14 +248,16 @@ public class TagsPanel extends AbstractCommandablePanel {
 
         public void setTagName( String name ) {
             assert isMarkedForCreation();
-            tag = doSafeFindOrCreateType( getEntity().getClass(), name );
-            if ( tag != null ) {
-                doCommand( new UpdatePlanObject(
-                        getEntity(),
-                        "tags",
-                        tag,
-                        UpdateObject.Action.Add
-                ) );
+            if ( name != null && !name.isEmpty() ) {
+                tag = doSafeFindOrCreateType( getEntity().getClass(), name );
+                if ( tag != null ) {
+                    doCommand( new UpdatePlanObject(
+                            getEntity(),
+                            "tags",
+                            tag,
+                            UpdateObject.Action.Add
+                    ) );
+                }
             }
         }
 
