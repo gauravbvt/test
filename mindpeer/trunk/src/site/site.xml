@@ -4,13 +4,22 @@
 
     <bannerLeft>
       <name>MindPeer</name>
-      <href>https://channels.mind-alliance.org/mindpeer/project/index.html</href>
+      <href>https://channels.mind-alliance.org/mindpeer/project</href>
     </bannerLeft>
 
     <publishDate position="left" format="yyyy-MM-dd HH:mm z "/>
     <version position="left"/>
 
     <body>
+        <links>
+          <item name="MindPeer" href=".." />
+        </links>
+
+        <menu name="Design">
+            <item name="Overview" href="index.html"/>
+            <item name="Useful links" href="links.html"/>
+        </menu>
+
         <menu ref="reports" />
     </body>
 </project>

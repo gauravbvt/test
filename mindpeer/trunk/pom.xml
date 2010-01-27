@@ -23,7 +23,7 @@
          useful format. When they are reading a news article they can  easily see commentary from
          experts they have already subscribed to, and see what other relevant commentary is available.
     </description>
-    <url>https://channels.mind-alliance.org/mindpeer/project/index.html</url>
+    <url>https://channels.mind-alliance.org/mindpeer/</url>
     <organization>
         <name>Mind-Alliance Systems</name>
         <url>http://www.mind-alliance.com</url>
@@ -406,8 +406,43 @@
               <!--</configuration>-->
             <!--</plugin>-->
 
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-changes-plugin</artifactId>-->
+                <!--<reportSets>-->
+                  <!--<reportSet>-->
+                    <!--<reports>-->
+                      <!--<report>trac-report</report>-->
+                    <!--</reports>-->
+                  <!--</reportSet>-->
+                <!--</reportSets>-->
+                <!--<configuration>-->
+                    <!--<query>https://wush.net/trac/mindalliance/query?status=new&amp;status=assigned&amp;status=reopened&amp;group=type&amp;component=mindpeer&amp;order=priority</query>-->
+                    <!--<tracUser>tomcat6</tracUser>-->
+                    <!--<tracPassword>...</tracPassword>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+
         </plugins>
     </reporting>
+
+    <profiles>
+        <profile>
+            <id>http-80</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>tomcat-maven-plugin</artifactId>
+                        <configuration>
+                            <server>tomcat</server>
+                            <url>http://localhost:80/manager</url>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <properties>
 		<wicket.version>1.4.1</wicket.version>
