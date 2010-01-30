@@ -37,9 +37,9 @@ public class UselessActor extends AbstractIssueDetector {
                 issue.setDescription( actor.getName()
                         + " is not assigned any task "
                         + "nor is it the beneficiary of any sharing commitment" );
-                issue.setRemediation( "Explicitly assign actor " + actor.getName() + " to a task"
-                        + "\nor define a task that matches the actor's profile"
-                        + "\nor modify the actor's profile so that it matches one or more task specifications"
+                issue.setRemediation( "Explicitly assign individual " + actor.getName() + " to a task"
+                        + "\nor define a task that matches the individual's profile"
+                        + "\nor modify the individual's profile so that it matches one or more task specifications"
                 );
                 issue.setSeverity( Issue.Level.Minor );
                 issues.add( issue );
@@ -67,7 +67,7 @@ public class UselessActor extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Actor not involved";
+        return "Individual not involved";
     }
 
     /**

@@ -42,7 +42,7 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
     /**
      * Indexing choice.
      */
-    private static final String ACTORS = "Actors";
+    private static final String ACTORS = "Individuals";
     /**
      * Indexing choice.
      */
@@ -337,7 +337,7 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
             columns.add( makeFilterableLinkColumn(
-                    "Actor",
+                    "Individual",
                     "actor",
                     "actor.normalizedName",
                     EMPTY,

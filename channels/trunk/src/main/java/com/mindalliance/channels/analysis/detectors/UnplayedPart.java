@@ -33,9 +33,9 @@ public class UnplayedPart extends AbstractIssueDetector {
             if ( assignments.isEmpty() ) {
                 Issue issue = makeIssue( Issue.COMPLETENESS, part );
                 issue.setDescription( "The task is assigned to no one." );
-                issue.setRemediation( "Explicitly assign an actor to the task"
-                        + "\nor profile an actor to match the task specifications"
-                        + "\nor modify the task specifications so that it matches at least one actor."
+                issue.setRemediation( "Explicitly assign an individual to the task"
+                        + "\nor profile an individual to match the task specifications"
+                        + "\nor modify the task specifications so that it matches at least one individual."
                 );
                 issue.setSeverity( Issue.Level.Minor );
                 issues.add( issue );

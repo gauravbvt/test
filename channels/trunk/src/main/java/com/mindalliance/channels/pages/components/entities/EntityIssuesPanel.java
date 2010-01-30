@@ -155,8 +155,8 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
         ModelEntity entity = getEntity();
         if ( entity instanceof Actor ) {
             return entity.isActual()
-                    ? "roles played by this actor"
-                    : "roles played by this type of actor";
+                    ? "roles played by this individual"
+                    : "roles played by this type of individual";
         } else if ( entity instanceof Role ) {
             return entity.isActual()
                     ? "actors playing this role"

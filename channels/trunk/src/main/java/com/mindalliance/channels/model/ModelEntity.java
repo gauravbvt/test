@@ -77,7 +77,7 @@ public abstract class ModelEntity extends ModelObject {
 
     static {
         UNIVERSAL_TYPES = new ArrayList<ModelEntity>();
-        ANY_ACTOR_TYPE = new Actor( "any actor" );
+        ANY_ACTOR_TYPE = new Actor( "any individual" );
         ANY_ACTOR_TYPE.setId( 10000000L - 10 );
         ANY_ACTOR_TYPE.setType();
         UNIVERSAL_TYPES.add( ANY_ACTOR_TYPE );

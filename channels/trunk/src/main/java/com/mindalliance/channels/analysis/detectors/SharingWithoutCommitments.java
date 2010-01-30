@@ -34,10 +34,10 @@ public class SharingWithoutCommitments extends AbstractIssueDetector {
             issue.setDescription( "No commitment is implied by this sharing flow" );
             StringBuilder sb = new StringBuilder();
             sb.append( "Modify the specifications for source and target tasks so that they have assignments" );
-            sb.append( "\nor profile actors to match source and target task specifications" );
+            sb.append( "\nor profile individuals to match source and target task specifications" );
             if ( flow.isClassificationsLinked() ) {
                 sb.append( "\nor declassify elements of information" );
-                sb.append( "\nor make sure otherwise commitable actors have the required clearances" );
+                sb.append( "\nor make sure otherwise commitable individuals have the required clearances" );
             }
             issue.setRemediation( sb.toString() );
             issue.setSeverity( Issue.Level.Minor );

@@ -36,7 +36,7 @@ public class UserIsManyActors extends AbstractIssueDetector {
                     User user = getQueryService().getPlanManager().getParticipant( actor.getUserName() );
                     DetectedIssue issue = makeIssue( Issue.VALIDITY, actor );
                     issue.setDescription(
-                            "Actor "
+                            "Individual "
                                     + actor.getName()
                                     + " also personifies user "
                                     + user.getNormalizedFullName()
@@ -72,7 +72,7 @@ public class UserIsManyActors extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Another actor is same user";
+        return "Another individual is same user";
     }
 
     /**

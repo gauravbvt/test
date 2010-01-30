@@ -38,7 +38,7 @@ public class ActorNotInOneOrganization extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Actor in no organization or in too many";
+        return "Indiviual in no organization or in too many";
     }
 
     /**
@@ -55,7 +55,7 @@ public class ActorNotInOneOrganization extends AbstractIssueDetector {
                 issue.setSeverity( Issue.Level.Minor );
                 issue.setDescription( actor + " does not belong to any organization." );
                 issue.setRemediation( "Specify an organization in a task played by the actor\n "
-                        + "or register the actor as an employee of an organization." );
+                        + "or register the individual as an employee of an organization." );
                 issues.add( issue );
             } else {
                 for ( Organization org : employers ) {

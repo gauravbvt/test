@@ -78,7 +78,7 @@ public class FlowToSelf extends AbstractIssueDetector {
                             + " is both the only potential source and target.");
                     issue.setRemediation(" If this is not intentional, change the source\n"
                             + "or change the target of this flow\n"
-                            + "or identify more actors that could be either source or target");
+                            + "or identify more individuals that could be either source or target");
                     issue.setSeverity( Issue.Level.Minor );
                     issues.add(issue);
 

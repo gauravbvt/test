@@ -32,7 +32,7 @@ public class FlowWithUndefinedSource extends AbstractIssueDetector {
         if ( source.isPart() && ( (Part) source ).isEmpty() ) {
             DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, "source" );
             issue.setDescription( "The source task is not defined." );
-            issue.setRemediation( "Name the actor\nor name the role\nor name the organization of the source task." );
+            issue.setRemediation( "Name the individual\nor name the role\nor name the organization of the source task." );
             issue.setSeverity( Issue.Level.Major );
             issues.add( issue );
         }
