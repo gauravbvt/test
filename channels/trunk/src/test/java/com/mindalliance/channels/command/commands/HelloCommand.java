@@ -5,7 +5,7 @@ import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -42,8 +42,8 @@ public class HelloCommand extends AbstractCommand {
 
     static public AbstractCommand makeCommand( String greeting, Commander commander ) {
         AbstractCommand command = new HelloCommand( greeting );
-        Scenario scenario = commander.getQueryService().getDefaultScenario();
-        command.addConflicting( scenario );
+        Segment segment = commander.getQueryService().getDefaultSegment();
+        command.addConflicting( segment );
         return command;
     }
 

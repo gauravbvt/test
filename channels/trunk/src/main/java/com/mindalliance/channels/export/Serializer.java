@@ -5,8 +5,8 @@ import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.Importer;
 import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Segment;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Import/Export scenarios using serialization.
+ * Import/Export segments using serialization.
  */
 public class Serializer extends AbstractService implements Importer, Exporter {
 
@@ -32,9 +32,9 @@ public class Serializer extends AbstractService implements Importer, Exporter {
     /**
      * {@inheritDoc}
      */
-    public Scenario importScenario( InputStream stream ) throws IOException {
+    public Segment importSegment( InputStream stream ) throws IOException {
         try {
-            return (Scenario) new ObjectInputStream( stream ).readObject();
+            return (Segment) new ObjectInputStream( stream ).readObject();
 
         } catch ( ClassNotFoundException e ) {
             LoggerFactory.getLogger( getClass() ).error( IMPORT_FAILED, e );
@@ -45,9 +45,9 @@ public class Serializer extends AbstractService implements Importer, Exporter {
     /**
       * {@inheritDoc}
       */
-    public Scenario restoreScenario( String xml ) {
+    public Segment restoreSegment( String xml ) {
         try {
-            return importScenario( new ByteArrayInputStream( xml.getBytes()) );
+            return importSegment( new ByteArrayInputStream( xml.getBytes()) );
         } catch ( IOException e ) {
             throw new RuntimeException( e );
         }
@@ -56,9 +56,9 @@ public class Serializer extends AbstractService implements Importer, Exporter {
     /**
      * {@inheritDoc}
      */
-    public void export( Scenario scenario, OutputStream stream ) throws IOException {
+    public void export( Segment segment, OutputStream stream ) throws IOException {
         final ObjectOutputStream oos = new ObjectOutputStream( stream );
-        oos.writeObject( scenario );
+        oos.writeObject( segment );
         oos.flush();
     }
 
@@ -106,7 +106,7 @@ public class Serializer extends AbstractService implements Importer, Exporter {
         return null;  //Todo
     }
 
-    public Map<String, Object> loadScenario( InputStream inputStream ) throws IOException {
+    public Map<String, Object> loadSegment( InputStream inputStream ) throws IOException {
         // TODO
         return null;
     }

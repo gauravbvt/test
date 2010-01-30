@@ -7,7 +7,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.ChannelsUtils;
 
 /**
@@ -24,7 +24,7 @@ public class DuplicateFlow extends AbstractCommand {
 
     public DuplicateFlow( Flow flow, boolean isOutcome ) {
         needLockOn( isOutcome ? flow.getSource() : flow.getTarget() );
-        set( "scenario", flow.getScenario().getId() );
+        set( "segment", flow.getSegment().getId() );
         set( "flow", flow.getId() );
         set( "outcome", isOutcome );
     }
@@ -42,8 +42,8 @@ public class DuplicateFlow extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         Flow duplicate;
         try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Flow flow = scenario.findFlow( (Long) get( "flow" ) );
+            Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+            Flow flow = segment.findFlow( (Long) get( "flow" ) );
             if ( flow == null ) throw new NotFoundException();
             boolean isOutcome = (Boolean) get( "outcome" );
             duplicate = ChannelsUtils.duplicate( flow, isOutcome, (Long) get( "duplicate" ) );
@@ -66,12 +66,12 @@ public class DuplicateFlow extends AbstractCommand {
      */
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+            Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
             Long flowId = (Long) get( "duplicate" );
             if ( flowId == null ) {
                 throw new CommandException( "Can't undo." );
             } else {
-                Flow flow = scenario.findFlow( flowId );
+                Flow flow = segment.findFlow( flowId );
                 return new DisconnectFlow( flow );
             }
         } catch ( NotFoundException e ) {
@@ -83,10 +83,10 @@ public class DuplicateFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getLabel( Commander commander ) throws CommandException {
-        Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+        Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
         Flow flow;
         try {
-            flow = scenario.findFlow( (Long) get( "flow" ) );
+            flow = segment.findFlow( (Long) get( "flow" ) );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh" );
         }

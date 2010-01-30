@@ -7,7 +7,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
@@ -118,13 +118,13 @@ public class ActorPlaybook extends PlaybookPage {
     private static List<EventParts> classifyParts( QueryService service, Actor actor ) {
         Map<Event, EventParts> rawEvents = new HashMap<Event, EventParts>();
         ResourceSpec spec = ResourceSpec.with( actor );
-        for ( Scenario scenario : service.list( Scenario.class ) )
-            for ( Part part : service.findAllParts( scenario, spec ) )
-                if ( part.isStartsWithScenario() ) {
-                    Event event = scenario.getEvent();
+        for ( Segment segment : service.list( Segment.class ) )
+            for ( Part part : service.findAllParts( segment, spec ) )
+                if ( part.setIsStartsWithSegment() ) {
+                    Event event = segment.getEvent();
                     EventParts parts = rawEvents.get( event );
                     if ( parts == null ) {
-                        parts = new EventParts( scenario, event );
+                        parts = new EventParts( segment, event );
                         rawEvents.put( event, parts );
                     }
                     parts.add( part );
@@ -201,8 +201,8 @@ public class ActorPlaybook extends PlaybookPage {
      */
     private static final class EventParts implements Comparable<EventParts> {
 
-        /** The scenario of the event. */
-        private Scenario scenario;
+        /** The segment of the event. */
+        private Segment segment;
 
         /** The initiating event. */
         private final Event event;
@@ -210,8 +210,8 @@ public class ActorPlaybook extends PlaybookPage {
         /** The associated parts. */
         private final Set<Part> parts = new HashSet<Part>();
 
-        private EventParts( Scenario scenario, Event event ) {
-            this.scenario = scenario;
+        private EventParts( Segment segment, Event event ) {
+            this.segment = segment;
             this.event = event;
         }
 
@@ -258,7 +258,7 @@ public class ActorPlaybook extends PlaybookPage {
         }
 
         private String getEventName() {
-            return scenario.getPhaseEventTitle();
+            return segment.getPhaseEventTitle();
         }
     }
 }

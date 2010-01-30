@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en" xmlns:wicket="http://wicket.apache.org/">
 <head>
-    <title wicket:id="sc-title">Title</title>
+    <title wicket:id="sg-title">Title</title>
     <script type="text/javascript" src="jquery-1.3.2.js"></script>
     <script type="text/javascript" src="jquery-ui-1.7.2.custom.min.js"></script>
     <link rel="stylesheet" href="channels.css" type="text/css">
@@ -42,7 +42,7 @@
     <div class="maximized" wicket:id="maximized-flow">[fullflow panel]</div>
     <div wicket:id="entity">[entity panel]</div>
     <div wicket:id="plan">[plan edit panel]</div>
-    <div wicket:id="sc-editor">[scenario edit panel]</div>
+    <div wicket:id="sg-editor">[segment edit panel]</div>
     <div wicket:id="assignments">[assignments panel]</div>
     <div wicket:id="commitments">[commitments panel]</div>
     <div wicket:id="eois">[flow eois panel]</div>
@@ -61,34 +61,34 @@
             <span id="spinner" class="spinner"><img src="images/ajax-loader.gif"></span>
         </span>
 
-        <p class="caption" wicket:id="sc-desc">A description.</p>
+        <p class="caption" wicket:id="sg-desc">A description.</p>
     </div>
     <div id="history">
         <img wicket:id="goBack" class="navigation" src="images/go_back.png" title="Go back" alt="Go back">
         <img wicket:id="goForward" class="navigation" src="images/go_forward.png" title="Go forward" alt="Go forward">
     </div>
     <div id="controls">
-        <ul id="sc-sel">
+        <ul id="sg-sel">
             <li wicket:id="switch-plan"><label>Switch to plan:
                 <select wicket:id="plan-sel" name="plan">
                     <option>Some plan</option>
                 </select></label>
             </li>
-            <li wicket:id="select-scenario"><label>Select scenario:
-                <select wicket:id="sc-sel" name="scenario">
-                    <option>Some scenario</option>
+            <li wicket:id="select-segment"><label>Select plan segment:
+                <select wicket:id="sg-sel" name="segment">
+                    <option>Some segment</option>
                 </select></label>
             </li>
         </ul>
     </div>
-    <span wicket:id="scenario-import">[scenario import dialog]</span>
-    <span wicket:id="scenario">[scenario panel] </span>
+    <span wicket:id="segment-import">[segment import dialog]</span>
+    <span wicket:id="segment">[segment panel] </span>
     <span wicket:id="surveys">[surveys panel] </span>
 
     <div id="footer">
         <hr>
         <p id="logout">Logged in as <span wicket:id="user">User</span> &mdash; <a href="logout">Logout</a><br>
-            &copy; Copyright 2009 Mind-Alliance Inc. All Rights Reserved.</p>
+            &copy; Copyright 2010 Mind-Alliance Inc. All Rights Reserved.</p>
     </div>
 </form>
 </body>

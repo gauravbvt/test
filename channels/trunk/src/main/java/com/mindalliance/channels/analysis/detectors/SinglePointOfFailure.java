@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Detects single points of failure in a scenario.
+ * Detects single points of failure in a plan segment.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf

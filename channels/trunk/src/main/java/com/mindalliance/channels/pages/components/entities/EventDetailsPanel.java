@@ -9,7 +9,7 @@ import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.EntityReferencePanel;
@@ -167,12 +167,12 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
         List<EventReference> eventReferences = new ArrayList<EventReference>();
         Event event = getEvent();
         QueryService queryService = getQueryService();
-        for ( Scenario scenario : queryService.findScenariosRespondingTo( event ) ) {
-            eventReferences.add( new EventReference( scenario ) );
-            for ( Part part : queryService.findPartsTerminatingEventPhaseIn( scenario ) ) {
+        for ( Segment segment : queryService.findSegmentsRespondingTo( event ) ) {
+            eventReferences.add( new EventReference( segment ) );
+            for ( Part part : queryService.findPartsTerminatingEventPhaseIn( segment ) ) {
                 eventReferences.add( new EventReference( part, EventRelation.Terminates ) );
             }
-            for ( Part part : queryService.findPartsStartingWithEventIn( scenario ) ) {
+            for ( Part part : queryService.findPartsStartingWithEventIn( segment ) ) {
                 eventReferences.add( new EventReference( part, EventRelation.StartsWith ) );
             }
         }
@@ -189,7 +189,7 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
     }
 
     private boolean isFilteredOut( EventReference eventReference ) {
-        Scenario sc = eventReference.getScenario();
+        Segment sc = eventReference.getSegment();
         return !filters.isEmpty() && ( sc == null || !filters.contains( sc ) );
     }
 
@@ -241,9 +241,9 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
             columns.add( makeFilterableLinkColumn(
-                    "Scenario",
-                    "scenario",
-                    "scenario.name",
+                    "Plan segment",
+                    "segment",
+                    "segment.name",
                     EMPTY,
                     EventDetailsPanel.this ) );
             columns.add( makeLinkColumn(
@@ -262,21 +262,21 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
                     columns,
                     new SortableBeanProvider<EventReference>(
                             eventReferencesModel.getObject(),
-                            "scenario.name" ),
+                            "segment.name" ),
                     getPageSize() ) );
 
         }
     }
 
     /**
-     * A scenario that responds to the event or a part that either terminates or initiates it.
+     * A segment that responds to the event or a part that either terminates or initiates it.
      */
     public class EventReference implements Serializable {
 
         /**
-         * Scenario responding to event.
+         * Segment responding to event.
          */
-        private Scenario scenario;
+        private Segment segment;
         /**
          * Part either initating or terminating event.
          */
@@ -286,8 +286,8 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
          */
         private EventRelation relation;
 
-        public EventReference( Scenario scenario ) {
-            this.scenario = scenario;
+        public EventReference( Segment segment ) {
+            this.segment = segment;
             relation = EventRelation.RespondsTo;
         }
 
@@ -296,8 +296,8 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
             this.relation = relation;
         }
 
-        public Scenario getScenario() {
-            return scenario;
+        public Segment getSegment() {
+            return segment;
         }
 
         public Part getPart() {

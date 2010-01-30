@@ -25,23 +25,23 @@ public class StartedOrTerminatedPartWithoutTask extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( part.hasDefaultTask() ) {
-            if ( part.isStartsWithScenario() || part.isTriggered() ) {
+            if ( part.setIsStartsWithSegment() || part.isTriggered() ) {
                 DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
-                issue.setDescription( "The task is started during the scenario but is not specified." );
+                issue.setDescription( "The task is started during the plan segment but is not specified." );
                 issue.setRemediation( "Specify the task." );
                 issue.setSeverity( Issue.Level.Minor );
                 issues.add( issue );
             }
             if ( part.isTerminatesEventPhase() ) {
                 DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
-                issue.setDescription( "The task can terminate the scenario but the task is not specified." );
+                issue.setDescription( "The task can terminate the plan segment but the task is not specified." );
                 issue.setRemediation( "Specify the task." );
                 issue.setSeverity( Issue.Level.Minor );
                 issues.add( issue );
             }
             if ( part.isTerminated() ) {
                 DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
-                issue.setDescription( "The task is terminated during scenario but is not specified." );
+                issue.setDescription( "The task is terminated during plan segment but is not specified." );
                 issue.setRemediation( "Specify the task." );
                 issue.setSeverity( Issue.Level.Minor );
                 issues.add( issue );

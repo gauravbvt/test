@@ -70,11 +70,11 @@ public class ConnectedFlowList extends Panel {
         protected void populateItem( Item<ExternalFlow> item ) {
             final ExternalFlow flow = item.getModelObject();
             final Node target = input ? flow.getSource() : flow.getTarget();
-            final ScenarioLink link = new ScenarioLink( "part",                           // NON-NLS
+            final SegmentLink link = new SegmentLink( "part",                           // NON-NLS
                     new Model<Node>( target ), flow );
             link.add( new Label( "part-label", target.getName() ) );                      // NON-NLS
             item.add( link );
-            item.add( new Label( "scenario", target.getScenario().getName() ) );          // NON-NLS
+            item.add( new Label( "segment", target.getSegment().getName() ) );          // NON-NLS
 
             String c = Channel.toString( flow.getChannels() );
             final boolean needsChannel = input && flow.isAskedFor()

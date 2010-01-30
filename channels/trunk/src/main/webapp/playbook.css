@@ -133,11 +133,11 @@ ul {
     margin: 0 auto;
 }
 
-div.scenario div.flow-map, table.tasks {
+div.segment div.flow-map, table.tasks {
     width: 100%;
 }
 
-#header, div.scenario div.flow-map {
+#header, div.segment div.flow-map {
     position: relative;
 }
 
@@ -224,7 +224,7 @@ table.tasks ul.flows {
     padding-left: 9px;
 }
 
-div.scenario div.flow-map img {
+div.segment div.flow-map img {
     display: block;
     border: none;
     max-width: 100%;
@@ -276,7 +276,7 @@ ul.channels {
     border-spacing: 0;
 }
 
-div.scenario, div#plan { position: relative; }
+div.segment, div#plan { position: relative; }
 .plan-map-link, .flow-map-link {
     position: absolute;
     right: 0;
@@ -404,7 +404,7 @@ ul.flows li.send-notification.terminate, ul.flows li.receive-answer.terminate {
     @page {
         margin: 0;
     }
-    div.scenario, div.actor {
+    div.segment, div.actor {
         page-break-before: always;
     }
 

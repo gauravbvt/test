@@ -21,7 +21,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import org.apache.commons.beanutils.NestedNullException;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
@@ -125,12 +125,12 @@ public final class ChannelsUtils {
         // state.put( "id", flow.getId() );
         state.put( "name", flow.getName() );
         state.put( "isOutcome", isOutcome );
-        state.put( "scenario", part.getScenario().getId() );
+        state.put( "segment", part.getSegment().getId() );
         state.put( "part", part.getId() );
-        state.put( "otherScenario", other.getScenario().getId() );
+        state.put( "otherSegment", other.getSegment().getId() );
         if ( other.isConnector() ) {
             // Remember the connector's inner flow if external (its id is persistent, if mapped)
-            if ( part.getScenario() != other.getScenario() ) {
+            if ( part.getSegment() != other.getSegment() ) {
                 state.put( "other", ( (Connector) other ).getInnerFlow().getId() );
             }
         } else {
@@ -157,7 +157,7 @@ public final class ChannelsUtils {
         state.put( "selfTerminating", part.isSelfTerminating() );
         state.put( "repeating", part.isRepeating() );
         state.put( "terminatesEventPhase", part.isTerminatesEventPhase() );
-        state.put( "startsWithScenario", part.isStartsWithScenario() );
+        state.put( "startsWithSegment", part.setIsStartsWithSegment() );
         state.put( "mitigations", new ArrayList<Risk>( part.getMitigations() ) );
         if ( part.getInitiatedEvent() != null ) state.put( "actor", part.getInitiatedEvent().getName() );
         if ( part.getActor() != null ) state.put( "actor", part.getActor().getName() );
@@ -183,7 +183,7 @@ public final class ChannelsUtils {
         part.setRepeating( (Boolean) state.get( "repeating" ) );
         part.setSelfTerminating( (Boolean) state.get( "selfTerminating" ) );
         part.setTerminatesEventPhase( (Boolean) state.get( "terminatesEventPhase" ) );
-        part.setStartsWithScenario( (Boolean) state.get( "startsWithScenario" ) );
+        part.setIsStartsWithSegment( (Boolean) state.get( "startsWithSegment" ) );
         part.setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
         part.setCompletionTime( (Delay) state.get( "completionTime" ) );
         part.setAttachments( new ArrayList<Attachment>( (ArrayList<Attachment>) state.get( "attachments" ) ) );
@@ -348,7 +348,7 @@ public final class ChannelsUtils {
      */
     public static Map<String, Object> getPartCopy( Part part ) {
         Map<String, Object> copy = new HashMap<String, Object>();
-        copy.put( "scenario", part.getScenario().getId() );
+        copy.put( "segment", part.getSegment().getId() );
         copy.put( "partState", getPartState( part ) );
         Iterator<Flow> needs = part.requirements();
         List<Map<String, Object>> needStates = new ArrayList<Map<String, Object>>();
@@ -411,19 +411,19 @@ public final class ChannelsUtils {
         Flow duplicate;
         if ( isOutcome ) {
             Node source = flow.getSource();
-            Scenario scenario = flow.getSource().getScenario();
-            QueryService queryService = scenario.getQueryService();
+            Segment segment = flow.getSource().getSegment();
+            QueryService queryService = segment.getQueryService();
             duplicate = queryService.connect(
                     source,
-                    queryService.createConnector( scenario ),
+                    queryService.createConnector( segment ),
                     flow.getName(),
                     priorId );
         } else {
             Node target = flow.getTarget();
-            Scenario scenario = target.getScenario();
-            QueryService queryService = scenario.getQueryService();
+            Segment segment = target.getSegment();
+            QueryService queryService = segment.getQueryService();
             duplicate = queryService.connect(
-                    queryService.createConnector( scenario ),
+                    queryService.createConnector( segment ),
                     target,
                     flow.getName(),
                     priorId );
@@ -450,14 +450,14 @@ public final class ChannelsUtils {
      * Resolve a node from an id.
      *
      * @param id           a long
-     * @param scenario     a scenario in context
+     * @param segment     a segment in context
      * @param queryService a query service
      * @return a node
      * @throws com.mindalliance.channels.command.CommandException if not found
      */
     public static Node resolveNode(
             Long id,
-            Scenario scenario,
+            Segment segment,
             QueryService queryService ) throws CommandException {
         Node node;
         // null id represents a local connector
@@ -476,27 +476,27 @@ public final class ChannelsUtils {
                         ? internalFlow.getSource()
                         : internalFlow.getTarget();
             } else {
-                node = scenario.getNode( id );
+                node = segment.getNode( id );
             }
 
         } else {
-            node = queryService.createConnector( scenario );
+            node = queryService.createConnector( segment );
         }
         return node;
     }
 
     /**
-     * Find flow in scenario given id.
+     * Find flow in segment given id.
      *
      * @param id       a long
-     * @param scenario a scenario
+     * @param segment a segment
      * @return a flow
      * @throws CommandException if not found
      */
-    public static Flow resolveFlow( Long id, Scenario scenario ) throws CommandException {
+    public static Flow resolveFlow( Long id, Segment segment ) throws CommandException {
         try {
-            if ( id != null && scenario != null ) {
-                return scenario.findFlow( id );
+            if ( id != null && segment != null ) {
+                return segment.findFlow( id );
             } else {
                 throw new NotFoundException();
             }

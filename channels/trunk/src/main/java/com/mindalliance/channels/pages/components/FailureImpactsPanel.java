@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Risk;
-import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.pages.components.diagrams.EssentialFlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import com.mindalliance.channels.util.SortableBeanProvider;
@@ -84,7 +84,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
      */
     private static final String DOM_IDENTIFIER = ".aspect .picture";
 
-    public FailureImpactsPanel( String id, IModel<ScenarioObject> model, Set<Long> expansions ) {
+    public FailureImpactsPanel( String id, IModel<SegmentObject> model, Set<Long> expansions ) {
         super( id, model, expansions );
         init();
     }
@@ -162,7 +162,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
 
         essentialFlowsDiagramPanel = new EssentialFlowMapDiagramPanel(
                 "essentialFlowMap",
-                new Model<ScenarioObject>( getScenarioObject() ),
+                new Model<SegmentObject>( getSegmentObject() ),
                 assumeFails,
                 settings );
         essentialFlowsDiagramPanel.setOutputMarkupId( true );
@@ -172,7 +172,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
     private void addFailedTasks() {
         failuresTablePanel = new FailureImpactsTablePanel(
                 "failures",
-                new Model<ScenarioObject>( getScenarioObject() ),
+                new Model<SegmentObject>( getSegmentObject() ),
                 assumeFails,
                 getExpansions()
         );
@@ -181,7 +181,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
     }
 
     private String getTitle() {
-        ScenarioObject so = getScenarioObject();
+        SegmentObject so = getSegmentObject();
         StringBuffer sb = new StringBuffer();
         sb.append( "Impacts of failing" );
         sb.append( isTask() ? " task " : " to share information " );
@@ -245,16 +245,16 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
      * {@inheritDoc}
      */
     protected void close( AjaxRequestTarget target ) {
-        Change change = new Change( Change.Type.AspectClosed, getScenarioObject(), "failure" );
+        Change change = new Change( Change.Type.AspectClosed, getSegmentObject(), "failure" );
         update( target, change );
     }
 
-    private ScenarioObject getScenarioObject() {
-        return (ScenarioObject) getModel().getObject();
+    private SegmentObject getSegmentObject() {
+        return (SegmentObject) getModel().getObject();
     }
 
     private boolean isTask() {
-        return getScenarioObject() instanceof Part;
+        return getSegmentObject() instanceof Part;
     }
 
     /**
@@ -295,7 +295,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
             if ( part.getMitigations().contains( risk ) ) {
                 return "Risk is not mitigated";
             } else {
-                return "Risk remains because \"" + part.getScenario().getPhaseEventTitle() + "\" is not ended";
+                return "Risk remains because \"" + part.getSegment().getPhaseEventTitle() + "\" is not ended";
             }
         }
     }
@@ -305,9 +305,9 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
      */
     public class FailureImpactsTablePanel extends AbstractTablePanel<PartFailure> {
         /**
-         * Scenario object presumed failing.
+         * Segment object presumed failing.
          */
-        private ScenarioObject scenarioObject;
+        private SegmentObject segmentObject;
         /**
          * Whether alternate flows are also assumed to fail.
          */
@@ -315,11 +315,11 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
 
         public FailureImpactsTablePanel(
                 String id,
-                IModel<ScenarioObject> iModel,
+                IModel<SegmentObject> iModel,
                 boolean assumeFails,
                 Set<Long> expansions ) {
             super( id, iModel, expansions );
-            scenarioObject = iModel.getObject();
+            segmentObject = iModel.getObject();
             this.assumeFails = assumeFails;
             initTable();
         }
@@ -328,10 +328,10 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
         private void initTable() {
             List<PartFailure> failures = new ArrayList<PartFailure>();
             List<Part> impacts = new ArrayList<Part>( getQueryService().findFailureImpacts(
-                    scenarioObject,
+                    segmentObject,
                     assumeFails ) );
-            if ( scenarioObject instanceof Part && ( (Part) scenarioObject ).isUseful() ) {
-                impacts.add( (Part) scenarioObject );
+            if ( segmentObject instanceof Part && ( (Part) segmentObject ).isUseful() ) {
+                impacts.add( (Part) segmentObject );
             }
             for ( Part part : impacts ) {
                 for ( Risk risk : part.getRisksAddressed() ) {
@@ -340,7 +340,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
             }
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             columns.add( makeLinkColumn( "Consequential task impacted", "part", "part.task", EMPTY ) );
-            columns.add( makeLinkColumn( "Scenario", "part.scenario", "part.scenario.name", EMPTY ) );
+            columns.add( makeLinkColumn( "Plan segment", "part.segment", "part.segment.name", EMPTY ) );
             columns.add( makeColumn( "Impact", "impact", "impact", EMPTY ) );
             columns.add( makeColumn( "Risk", "risk.type.label", "risk.type.label", EMPTY ) );
             columns.add( makeColumn( "Severity", "risk.severity", "risk.severity.name", EMPTY ) );

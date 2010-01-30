@@ -10,7 +10,7 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Risk;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RestartResponseException;
@@ -123,7 +123,7 @@ public class TaskPlaybook extends PlaybookPage {
         List<Flow> otherOutputFlows = new ArrayList<Flow>();
         Set<ResourceSpec> actorSpecs = new HashSet<ResourceSpec>();
 
-        for ( Flow flow : getFlows( part, part.getScenario() ) )
+        for ( Flow flow : getFlows( part, part.getSegment() ) )
             if ( part.equals( flow.getTarget() ) ) {
                 if ( !flow.isTriggeringToTarget() ) {
                     Set<ResourceSpec> specs = expandSpecs( service, flow.getSource() );
@@ -183,10 +183,10 @@ public class TaskPlaybook extends PlaybookPage {
         return tasks;
     }
 
-    private static List<Flow> getFlows( Part part, Scenario scenario ) {
+    private static List<Flow> getFlows( Part part, Segment segment ) {
         List<Flow> result = new ArrayList<Flow>();
 
-        for ( Iterator<Flow> iterator = scenario.flows(); iterator.hasNext() ; ) {
+        for ( Iterator<Flow> iterator = segment.flows(); iterator.hasNext() ; ) {
             Flow flow = iterator.next();
             addTargets( result, part, flow );
             addSources( result, part, flow );

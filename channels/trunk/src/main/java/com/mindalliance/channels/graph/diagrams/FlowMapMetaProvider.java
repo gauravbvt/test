@@ -23,13 +23,13 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Provider of providers for scenarios.
+ * Provider of providers for segments.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: Nov 25, 2008
  * Time: 2:31:11 PM
- * A provider of graph attribute providers needed for rendering a scenario
+ * A provider of graph attribute providers needed for rendering a segment
  */
 public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
 
@@ -62,7 +62,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
      */
     private static final String LABEL_ANGLE = "45";
     /**
-     * Scenario in context.
+     * Segment in context.
      */
     private ModelObject context;
 
@@ -95,7 +95,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
              * @return a URL string
              */
             public String getGraphURL( Node node ) {
-                Object[] args = {node.getScenario().getId()};
+                Object[] args = {node.getSegment().getId()};
                 return MessageFormat.format( GRAPH_URL_FORMAT, args );
             }
 
@@ -107,7 +107,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
              */
             public String getVertexURL( Node node ) {
                 if ( node.isPart() ) {
-                    Object[] args = {node.getScenario().getId(), node.getId()};
+                    Object[] args = {node.getSegment().getId(), node.getId()};
                     return MessageFormat.format( VERTEX_URL_FORMAT, args );
                 } else {
                     return null;
@@ -180,15 +180,15 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
     }
 
     public DOTAttributeProvider<Node, Flow> getDOTAttributeProvider() {
-        return new ScenarioDOTAttributeProvider();
+        return new SegmentDOTAttributeProvider();
     }
 
     /**
-     * A DOTAttributeProvider for scenarios.
+     * A DOTAttributeProvider for segments.
      */
-    private class ScenarioDOTAttributeProvider implements DOTAttributeProvider<Node, Flow> {
+    private class SegmentDOTAttributeProvider implements DOTAttributeProvider<Node, Flow> {
 
-        public ScenarioDOTAttributeProvider() {
+        public SegmentDOTAttributeProvider() {
         }
 
         public List<DOTAttribute> getGraphAttributes() {
@@ -227,7 +227,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
                     list.add( new DOTAttribute( "shape", "box" ) );
                 } else if ( vertex.isConnector() ) {
                     list.add( new DOTAttribute( "shape", "point" ) );
-                    // scenarioNode
+                    // segmentNode
                 } else {
                     list.add( new DOTAttribute( "shape", "egg" ) );
                 }

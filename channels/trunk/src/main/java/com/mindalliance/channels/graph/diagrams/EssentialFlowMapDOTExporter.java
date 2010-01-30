@@ -8,8 +8,8 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Risk;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.SegmentObject;
 import org.jgrapht.Graph;
 
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
         for ( Node node : g.vertexSet() ) {
             if ( node.isPart() ) {
                 Part part = (Part) node;
-                if ( part.getScenario().isTerminatedBy( part ) &&
+                if ( part.getSegment().isTerminatedBy( part ) &&
                         !isOnlyTheSourceOfFailedFlow( part, g ) ) {
                     terminators.add( part );
                 }
@@ -66,41 +66,41 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
      */
     protected void exportVertices( PrintWriter out, Graph<Node, Flow> g ) {
         AbstractMetaProvider<Node, Flow> metaProvider = (AbstractMetaProvider<Node, Flow>) getMetaProvider();
-        Map<Scenario, Set<Node>> scenarioNodes = new HashMap<Scenario, Set<Node>>();
+        Map<Segment, Set<Node>> segmentNodes = new HashMap<Segment, Set<Node>>();
         for ( Node node : g.vertexSet() ) {
-            Set<Node> nodesInScenario = scenarioNodes.get( node.getScenario() );
-            if ( nodesInScenario == null ) {
-                nodesInScenario = new HashSet<Node>();
-                scenarioNodes.put( node.getScenario(), nodesInScenario );
+            Set<Node> nodesInSegment = segmentNodes.get( node.getSegment() );
+            if ( nodesInSegment == null ) {
+                nodesInSegment = new HashSet<Node>();
+                segmentNodes.put( node.getSegment(), nodesInSegment );
             }
-            nodesInScenario.add( node );
+            nodesInSegment.add( node );
         }
-        for ( Scenario scenario : scenarioNodes.keySet() ) {
-            if ( !scenario.equals( getScenario() ) ) {
+        for ( Segment segment : segmentNodes.keySet() ) {
+            if ( !segment.equals( getSegment() ) ) {
                 out.println( "subgraph cluster_"
-                        + scenario.getName().replaceAll( "[^a-zA-Z0-9_]", "_" )
+                        + segment.getName().replaceAll( "[^a-zA-Z0-9_]", "_" )
                         + " {" );
                 List<DOTAttribute> attributes = new DOTAttribute( "label",
-                        "Scenario: " + scenario.getName() ).asList();
+                        "Segment: " + segment.getName() ).asList();
                 if ( metaProvider.getDOTAttributeProvider() != null ) {
                     attributes.addAll(
                             metaProvider.getDOTAttributeProvider().getSubgraphAttributes( false ) );
                 }
                 if ( metaProvider.getURLProvider() != null ) {
                     String url = metaProvider.getURLProvider().
-                            getGraphURL( scenarioNodes.get( scenario ).iterator().next() );
+                            getGraphURL( segmentNodes.get( segment ).iterator().next() );
                     if ( url != null ) attributes.add( new DOTAttribute( "URL", url ) );
                 }
                 out.print( asGraphAttributes( attributes ) );
                 out.println();
-                printoutVertices( out, scenarioNodes.get( scenario ) );
-                exportStop( out, metaProvider, scenario );
-                exportRisks( out, metaProvider, g, scenario );
+                printoutVertices( out, segmentNodes.get( segment ) );
+                exportStop( out, metaProvider, segment );
+                exportRisks( out, metaProvider, g, segment );
                 out.println( "}" );
             } else {
-                printoutVertices( out, scenarioNodes.get( scenario ) );
-                exportStop( out, metaProvider, scenario );
-                exportRisks( out, metaProvider, g, scenario );
+                printoutVertices( out, segmentNodes.get( segment ) );
+                exportStop( out, metaProvider, segment );
+                exportRisks( out, metaProvider, g, segment );
             }
         }
     }
@@ -109,20 +109,20 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
             PrintWriter out,
             AbstractMetaProvider<Node, Flow> metaProvider,
             Graph<Node, Flow> g,
-            Scenario scenario ) {
+            Segment segment ) {
         for ( Node node : g.vertexSet() ) {
             Part part = (Part) node;
             if ( !isOnlyTheSourceOfFailedFlow( part, g ) ) {
-                if ( part.getScenario().equals( scenario ) )
+                if ( part.getSegment().equals( segment ) )
                     for ( Risk risk : part.getMitigations() ) {
                         exportRisk( getRiskVertexId( part, risk ), risk, out, metaProvider );
                     }
             }
         }
-        if ( getTerminatedScenarios().contains( scenario ) ) {
-            for ( Risk risk : scenario.getRisks() ) {
-                if ( risk.isEndsWithScenario() ) {
-                    exportRisk( getRiskVertexId( scenario, risk ), risk, out, metaProvider );
+        if ( getTerminatedSegments().contains( segment ) ) {
+            for ( Risk risk : segment.getRisks() ) {
+                if ( risk.isEndsWithSegment() ) {
+                    exportRisk( getRiskVertexId( segment, risk ), risk, out, metaProvider );
                 }
             }
         }
@@ -173,22 +173,22 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
         return "risk" + +part.getMitigations().indexOf( risk ) + "_" + part.getId();
     }
 
-    private String getRiskVertexId( Scenario scenario, Risk risk ) {
-        return "risk" + scenario.getRisks().indexOf( risk ) + "_" + scenario.getId();
+    private String getRiskVertexId( Segment segment, Risk risk ) {
+        return "risk" + segment.getRisks().indexOf( risk ) + "_" + segment.getId();
     }
 
 
     private void exportStop(
             PrintWriter out,
             AbstractMetaProvider<Node, Flow> metaProvider,
-            Scenario scenario ) {
-        if ( getTerminatedScenarios().contains( scenario ) ) {
+            Segment segment ) {
+        if ( getTerminatedSegments().contains( segment ) ) {
             List<DOTAttribute> attributes = DOTAttribute.emptyList();
             attributes.add( new DOTAttribute( "fontcolor", AbstractMetaProvider.FONTCOLOR ) );
             attributes.add( new DOTAttribute( "fontsize", FlowMapMetaProvider.NODE_FONT_SIZE ) );
             attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
             attributes.add( new DOTAttribute( "labelloc", "b" ) );
-            String label = sanitize( scenario.getPhaseEventTitle() + " ends" );
+            String label = sanitize( segment.getPhaseEventTitle() + " ends" );
             attributes.add( new DOTAttribute( "label", label ) );
             attributes.add( new DOTAttribute( "shape", "none" ) );
             attributes.add( new DOTAttribute( "tooltip", label ) );
@@ -200,15 +200,15 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
             }
             attributes.add( new DOTAttribute( "image", dirName + "/" + "stop.png" ) );
             out.print( getIndent() );
-            out.print( getScenarioStopId( scenario ) );
+            out.print( getSegmentStopId( segment ) );
             out.print( "[" );
             out.print( asElementAttributes( attributes ) );
             out.println( "];" );
         }
     }
 
-    private String getScenarioStopId( Scenario scenario ) {
-        return STOP + scenario.getId();
+    private String getSegmentStopId( Segment segment ) {
+        return STOP + segment.getId();
     }
 
 
@@ -228,10 +228,10 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
                 }
             }
         }
-        for ( Scenario scenario : getTerminatedScenarios() ) {
-            for ( Risk risk : scenario.getRisks() ) {
-                if ( risk.isEndsWithScenario() ) {
-                    exportRiskEdge( scenario, risk, out, g );
+        for ( Segment segment : getTerminatedSegments() ) {
+            for ( Risk risk : segment.getRisks() ) {
+                if ( risk.isEndsWithSegment() ) {
+                    exportRiskEdge( segment, risk, out, g );
                 }
             }
         }
@@ -250,11 +250,11 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
         out.println( "];" );
     }
 
-    private void exportRiskEdge( Scenario scenario, Risk risk, PrintWriter out, Graph<Node, Flow> g ) {
+    private void exportRiskEdge( Segment segment, Risk risk, PrintWriter out, Graph<Node, Flow> g ) {
         List<DOTAttribute> attributes = getNonFlowEdgeAttributes();
         attributes.add( new DOTAttribute( "label", "terminates" ) );
-        String riskId = getRiskVertexId( scenario, risk );
-        out.print( getIndent() + getScenarioStopId( scenario ) + getArrow( g ) + riskId );
+        String riskId = getRiskVertexId( segment, risk );
+        out.print( getIndent() + getSegmentStopId( segment ) + getArrow( g ) + riskId );
         out.print( "[" );
         if ( !attributes.isEmpty() ) {
             out.print( asElementAttributes( attributes ) );
@@ -264,11 +264,11 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
 
     private void exportTerminations( PrintWriter out, Graph<Node, Flow> g ) {
         for ( Part terminator : terminators ) {
-            Scenario scenario = terminator.getScenario();
+            Segment segment = terminator.getSegment();
             List<DOTAttribute> attributes = getNonFlowEdgeAttributes();
-            attributes.add( new DOTAttribute( "label", makeLabel( scenario.terminationCause( terminator ) ) ) );
+            attributes.add( new DOTAttribute( "label", makeLabel( segment.terminationCause( terminator ) ) ) );
             String terminatorId = getVertexID( terminator );
-            out.print( getIndent() + terminatorId + getArrow( g ) + getScenarioStopId( scenario ) );
+            out.print( getIndent() + terminatorId + getArrow( g ) + getSegmentStopId( segment ) );
             out.print( "[" );
             if ( !attributes.isEmpty() ) {
                 out.print( asElementAttributes( attributes ) );
@@ -277,12 +277,12 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
         }
     }
 
-    private Set<Scenario> getTerminatedScenarios() {
-        Set<Scenario> scenarios = new HashSet<Scenario>();
+    private Set<Segment> getTerminatedSegments() {
+        Set<Segment> segments = new HashSet<Segment>();
         for ( Part part : terminators ) {
-            scenarios.add( part.getScenario() );
+            segments.add( part.getSegment() );
         }
-        return scenarios;
+        return segments;
     }
 
     private List<DOTAttribute> getNonFlowEdgeAttributes() {
@@ -297,16 +297,16 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
         return list;
     }
 
-    private ScenarioObject getFailure() {
-        return (ScenarioObject) getMetaProvider().getContext();
+    private SegmentObject getFailure() {
+        return (SegmentObject) getMetaProvider().getContext();
     }
 
-    private Scenario getScenario() {
-        return getFailure().getScenario();
+    private Segment getSegment() {
+        return getFailure().getSegment();
     }
 
     private boolean isOnlyTheSourceOfFailedFlow( Part part, Graph<Node, Flow> g ) {
-        ScenarioObject failure = getFailure();
+        SegmentObject failure = getFailure();
         return failure instanceof Flow
                 && ( (Flow) failure ).getSource().equals( part )
                 && g.edgesOf( part ).size() == 1;

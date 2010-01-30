@@ -1,14 +1,14 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
+import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.URLProvider;
 import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -41,25 +41,25 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
     private PlanManager planManager;
     
     /**
-     * List of scenarios to be mapped.
+     * List of segments to be mapped.
      */
-    private List<Scenario> scenarios;
+    private List<Segment> segments;
     /**
      * Selected phase or event.
      */
     private ModelObject selectedGroup;
     /**
-     * Selected scenario.
+     * Selected segment.
      */
-    private Scenario selectedScenario;
+    private Segment selectedSegment;
 
     /**
-     * Selected scenario releationship.
+     * Selected segment releationship.
      */
-    private ScenarioRelationship selectedScRel;
+    private SegmentRelationship selectedSgRel;
 
     /** URL provider for imagemap links. */
-    private URLProvider<Scenario, ScenarioRelationship> uRLProvider;
+    private URLProvider<Segment, SegmentRelationship> uRLProvider;
     /**
      * Whether to group by phase.
      */
@@ -71,35 +71,35 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
 
     public PlanMapDiagramPanel(
             String id,
-            IModel<ArrayList<Scenario>> model,
+            IModel<ArrayList<Segment>> model,
             boolean groupByPhase,
             boolean groupByEvent,
             ModelObject selectedGroup,
-            Scenario selectedScenario,
-            ScenarioRelationship selectedScRel,
+            Segment selectedSegment,
+            SegmentRelationship selectedSgRel,
             Settings settings ) {
 
-        this( id, model, groupByPhase, groupByEvent, selectedGroup, selectedScenario, selectedScRel, null, settings );
+        this( id, model, groupByPhase, groupByEvent, selectedGroup, selectedSegment, selectedSgRel, null, settings );
     }
 
     public PlanMapDiagramPanel(
             String id,
-            IModel<ArrayList<Scenario>> model,
+            IModel<ArrayList<Segment>> model,
             boolean groupByPhase,
             boolean groupByEvent,
             ModelObject selectedGroup,
-            Scenario selectedScenario,
-            ScenarioRelationship selectedScRel,
-            URLProvider<Scenario, ScenarioRelationship> uRLProvider,
+            Segment selectedSegment,
+            SegmentRelationship selectedSgRel,
+            URLProvider<Segment, SegmentRelationship> uRLProvider,
             Settings settings ) {
 
         super( id, settings );
         this.groupByPhase = groupByPhase;
         this.groupByEvent = groupByEvent;
-        scenarios = model.getObject();
+        segments = model.getObject();
         this.selectedGroup = selectedGroup;
-        this.selectedScenario = selectedScenario;
-        this.selectedScRel = selectedScRel;
+        this.selectedSegment = selectedSegment;
+        this.selectedSgRel = selectedSgRel;
         this.uRLProvider = uRLProvider;
         init();
     }
@@ -111,12 +111,12 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
     @Override
     protected Diagram makeDiagram() {
 
-        PlanMapDiagram diagram = new PlanMapDiagram( scenarios,
+        PlanMapDiagram diagram = new PlanMapDiagram( segments,
                                                      groupByPhase,
                                                      groupByEvent,
                                                      selectedGroup,
-                                                     selectedScenario,
-                                                     selectedScRel,
+                selectedSegment,
+                selectedSgRel,
                                                      getDiagramSize(),
                                                      getOrientation() );
         diagram.setURLProvider( getURLProvider() );
@@ -127,11 +127,11 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
      * Overridable imagemap link provider.
      * @return a link provider, or null for the default one.
      */
-    public URLProvider<Scenario, ScenarioRelationship> getURLProvider() {
+    public URLProvider<Segment, SegmentRelationship> getURLProvider() {
         return uRLProvider;
     }
 
-    public void setURLProvider( URLProvider<Scenario, ScenarioRelationship> uRLProvider ) {
+    public void setURLProvider( URLProvider<Segment, SegmentRelationship> uRLProvider ) {
         this.uRLProvider = uRLProvider;
     }
 
@@ -158,10 +158,10 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
                         : "NONE");
         sb.append("&group=");
         sb.append( selectedGroup == null ? "NONE" : selectedGroup.getId() );
-        sb.append("&scenario=");
-        sb.append( selectedScenario == null ? "NONE" : selectedScenario.getId() );
+        sb.append("&segment=");
+        sb.append( selectedSegment == null ? "NONE" : selectedSegment.getId() );
         sb.append( "&connection=" );
-        sb.append( selectedScRel == null ? "NONE" : selectedScRel.getId() );
+        sb.append( selectedSgRel == null ? "NONE" : selectedSgRel.getId() );
         double[] diagramSize = getDiagramSize();
         if ( diagramSize != null ) {
             sb.append( "&size=" );
@@ -219,8 +219,8 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
             AjaxRequestTarget target ) {
         try {
             String js = scroll( domIdentifier, scrollTop, scrollLeft );
-            Scenario scenario = getQueryService().find( Scenario.class, Long.valueOf( vertexId ) );
-            Change change = new Change( Change.Type.Selected, scenario );
+            Segment segment = getQueryService().find( Segment.class, Long.valueOf( vertexId ) );
+            Change change = new Change( Change.Type.Selected, segment );
             change.setScript( js );
             update( target, change );
         } catch ( NotFoundException e ) {
@@ -239,7 +239,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
             int scrollTop,
             int scrollLeft,
             AjaxRequestTarget target ) {
-        ScenarioRelationship scRel = new ScenarioRelationship();
+        SegmentRelationship scRel = new SegmentRelationship();
         scRel.setId( Long.valueOf( edgeId ), getQueryService() );
         String js = scroll( domIdentifier, scrollTop, scrollLeft );
         Change change = new Change( Change.Type.Selected, scRel );

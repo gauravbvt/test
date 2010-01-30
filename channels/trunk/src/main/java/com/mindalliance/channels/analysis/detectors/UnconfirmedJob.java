@@ -51,7 +51,7 @@ public class UnconfirmedJob extends AbstractIssueDetector {
         Organization org = (Organization) modelObject;
         for ( Job job : getQueryService().findUnconfirmedJobs( org ) ) {
             Issue issue = makeIssue( Issue.COMPLETENESS, org );
-            issue.setDescription( "Job " + job + " is implied from scenarios and not confirmed." );
+            issue.setDescription( "Job " + job + " is implied from the plan and not confirmed." );
             issue.setRemediation( "Edit organization " + org + " and confirm the job (under \"details\")." );
             issue.setSeverity( Issue.Level.Minor );
             issues.add( issue );

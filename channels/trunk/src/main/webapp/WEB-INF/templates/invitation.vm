@@ -3,8 +3,8 @@ Dear ${user.FullName},
 I need your help to resolve an issue in the information sharing plan "${survey.PlanText}".
 
 The issue is about ${about}
-#if( $scenario )
-in scenario "${scenario}".
+#if( $segment )
+in segment "${segment}".
 #end
 
 -----------------------------------------------------

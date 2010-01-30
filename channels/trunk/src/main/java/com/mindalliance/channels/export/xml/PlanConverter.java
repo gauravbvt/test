@@ -10,7 +10,7 @@ import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
@@ -129,10 +129,10 @@ public class PlanConverter extends AbstractChannelsConverter {
             writer.setValue( organization.getName() );
             writer.endNode();
         }
-        // All scenarios
-        for ( Scenario scenario : plan.getScenarios() ) {
-            writer.startNode( "scenario" );
-            context.convertAnother( scenario, new ScenarioConverter( getContext() ) );
+        // All segment
+        for ( Segment segment : plan.getSegments() ) {
+            writer.startNode( "segment" );
+            context.convertAnother( segment, new SegmentConverter( getContext() ) );
             writer.endNode();
         }
         // Export plan issues
@@ -207,9 +207,9 @@ public class PlanConverter extends AbstractChannelsConverter {
                 // Producers
             } else if ( nodeName.equals( "producer" ) ) {
                 plan.addProducer( reader.getValue() );
-                // Scenarios
-            } else if ( nodeName.equals( "scenario" ) ) {
-                context.convertAnother( plan, Scenario.class );
+                // Segments
+            } else if ( nodeName.equals( "segment" ) ) {
+                context.convertAnother( plan, Segment.class );
             } else if ( nodeName.equals( "detection-waivers" ) ) {
                 importDetectionWaivers( plan, reader );
             } else if ( nodeName.equals( "attachments" ) ) {

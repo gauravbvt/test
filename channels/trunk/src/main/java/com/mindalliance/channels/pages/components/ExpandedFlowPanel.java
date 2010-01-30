@@ -6,15 +6,15 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.RedirectFlow;
 import com.mindalliance.channels.command.commands.SatisfyNeed;
-import com.mindalliance.channels.command.commands.UpdateScenarioObject;
+import com.mindalliance.channels.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.wicket.AttributeModifier;
@@ -140,7 +140,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         addAllField();
 
         Node node = getOther();
-        if ( node.isConnector() && node.getScenario().equals( getNode().getScenario() ) ) {
+        if ( node.isConnector() && node.getSegment().equals( getNode().getSegment() ) ) {
             add( new ConnectedFlowList( "others", (Connector) node ) );                   // NON-NLS
         } else {
             add( new Label( "others", "" ) );                                             // NON-NLS
@@ -247,7 +247,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 if ( getQueryService().likelyRelated( s, name ) )
                     choices.add( name );
             }
-            // all name-matching in-scenario flows of the right polarity
+            // all name-matching in-segment flows of the right polarity
             for ( Flow flow : findRelevantInternalFlows() ) {
                 String name = flow.getName();
                 if ( queryService.likelyRelated( s, name ) )
@@ -468,11 +468,11 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                     public Object getDisplayValue( Node object ) {
                         Node node = getOther();
                         boolean tbd =
-                                object.equals( node ) && node.isConnector() && node.getScenario().equals(
-                                        getNode().getScenario() );
+                                object.equals( node ) && node.isConnector() && node.getSegment().equals(
+                                        getNode().getSegment() );
                         return tbd
                                 ? "* to be determined *"
-                                : object.isConnector() && object.getScenario().equals( getFlow().getScenario() )
+                                : object.isConnector() && object.getSegment().equals( getFlow().getSegment() )
                                     ? ( (Connector) object ).getInnerFlow().getLocalPart().toString()
                                     : object.toString();
                     }
@@ -492,7 +492,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         } );
 
         // TODO fix flow expansion of target when other has changed (fixed?)
-        ScenarioLink details = new ScenarioLink( "other-details",
+        SegmentLink details = new SegmentLink( "other-details",
                 new PropertyModel<Node>( this, "other" ),
                 getFlow() );
         details.add(
@@ -555,11 +555,11 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     public List<? extends Node> getOtherNodes() {
         Node node = getNode();
         Node other = getOther();
-        Scenario scenario = node.getScenario();
+        Segment segment = node.getSegment();
         Set<Node> result = new TreeSet<Node>();
 
-        // Add other parts of this scenario
-        Iterator<Node> nodes = scenario.nodes();
+        // Add other parts of this segment
+        Iterator<Node> nodes = segment.nodes();
         while ( nodes.hasNext() ) {
             Node n = nodes.next();
             if ( !node.equals( n ) ) {
@@ -578,15 +578,15 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                         }
                     }
                 } else {
-                    // a part in scenario with same flow to/from part
+                    // a part in segment with same flow to/from part
                     if ( hasPartFlowWithSameName( n ) ) result.add( n );
                 }
             }
         }
-        // Add inputs/outputs of other scenarios
+        // Add inputs/outputs of other segments
         QueryService queryService = getQueryService();
-        for ( Scenario s : queryService.list( Scenario.class ) ) {
-            if ( !scenario.equals( s ) ) {
+        for ( Segment s : queryService.list( Segment.class ) ) {
+            if ( !segment.equals( s ) ) {
                 Iterator<Connector> c = isOutcome() ? s.inputs() : s.outputs();
                 while ( c.hasNext() ) {
                     Connector connector = c.next();
@@ -613,14 +613,14 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         return hasSameName;
     }
 
-    private boolean isEmptyOrEquivalent( ScenarioObject connectorFlow ) {
+    private boolean isEmptyOrEquivalent( SegmentObject connectorFlow ) {
         return getFlow().getName().isEmpty()
                 || Matcher.matches( getFlow().getName(), connectorFlow.getName() );
     }
 
     private List<Flow> findRelevantInternalFlows() {
         List<Flow> result = new ArrayList<Flow>();
-        Iterator<Part> parts = getFlow().getScenario().parts();
+        Iterator<Part> parts = getFlow().getSegment().parts();
         while ( parts.hasNext() ) {
             Iterator<Flow> flows = isOutcome()
                     ? parts.next().requirements()
@@ -636,7 +636,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private List<Connector> findAllRelevantConnectors() {
         List<Connector> result = new ArrayList<Connector>();
         QueryService queryService = getQueryService();
-        for ( Scenario s : queryService.list( Scenario.class ) ) {
+        for ( Segment s : queryService.list( Segment.class ) ) {
             Iterator<Connector> connectorIterator = isOutcome()
                     ? s.inputs()
                     : s.outputs();
@@ -709,7 +709,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @param name a string
      */
     public void setName( String name ) {
-        doCommand( new UpdateScenarioObject( getFlow(), "name", name ) );
+        doCommand( new UpdateSegmentObject( getFlow(), "name", name ) );
     }
 
     /**
@@ -731,7 +731,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @param val a boolean
      */
     public void setAskedFor( boolean val ) {
-        doCommand( new UpdateScenarioObject( getFlow(), "askedFor", val ) );
+        doCommand( new UpdateSegmentObject( getFlow(), "askedFor", val ) );
     }
 
     public boolean isAll() {
@@ -744,7 +744,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @param value a boolean
      */
     public void setAll( boolean value ) {
-        doCommand( new UpdateScenarioObject( getFlow(), "all", value ) );
+        doCommand( new UpdateSegmentObject( getFlow(), "all", value ) );
     }
 
     public Flow.Significance getSignificanceToTarget() {
@@ -757,7 +757,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @param val a flow significance
      */
     public void setSignificanceToTarget( Flow.Significance val ) {
-        doCommand( new UpdateScenarioObject( getFlow(), "significanceToTarget", val ) );
+        doCommand( new UpdateSegmentObject( getFlow(), "significanceToTarget", val ) );
     }
 
     public Flow.Significance getSignificanceToSource() {
@@ -770,7 +770,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @param val a flow significance
      */
     public void setSignificanceToSource( Flow.Significance val ) {
-        doCommand( new UpdateScenarioObject( getFlow(), "significanceToSource", val ) );
+        doCommand( new UpdateSegmentObject( getFlow(), "significanceToSource", val ) );
     }
 
     /**

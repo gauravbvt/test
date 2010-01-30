@@ -27,7 +27,7 @@ import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.util.ChannelsUtils;
@@ -55,7 +55,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * XML scenario importer.
+ * XML plan importer.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -182,7 +182,7 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
             stream.registerConverter( new EventConverter( this ) );
             stream.registerConverter( new JournalConverter( this ) );
             stream.registerConverter( new CommandConverter( this ) );
-            stream.registerConverter( new ScenarioConverter( this ) );
+            stream.registerConverter( new SegmentConverter( this ) );
             stream.registerConverter( new RiskConverter( this ) );
             stream.registerConverter( new PartConverter( this ) );
             stream.registerConverter( new FlowConverter( this ) );
@@ -218,7 +218,7 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
             stream.alias( "role", Role.class );
             stream.alias( "resource", ResourceSpec.class );
             stream.alias( "issue", UserIssue.class );
-            stream.alias( "scenario", Scenario.class );
+            stream.alias( "segment", Segment.class );
             stream.alias( "risk", Risk.class );
             stream.alias( "channel", Channel.class );
             stream.alias( "job", Job.class );
@@ -228,19 +228,19 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
         /**
          * {@inheritDoc}
          */
-        public Map<String, Object> loadScenario( InputStream inputStream ) throws IOException {
+        public Map<String, Object> loadSegment( InputStream inputStream ) throws IOException {
             ObjectInputStream in = xstream.createObjectInputStream( inputStream );
             try {
                 return (Map<String, Object>) in.readObject();
             } catch ( ClassNotFoundException e ) {
-                throw new IOException( "Failed to import scenario", e );
+                throw new IOException( "Failed to import segment", e );
             }
         }
 
         /**
          * {@inheritDoc}
          */
-        public Scenario restoreScenario( String xml ) {
+        public Segment restoreSegment( String xml ) {
 
             DataHolder dataHolder = xstream.newDataHolder();
             // MUST set to importingPlan
@@ -253,7 +253,7 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
                     (Map<Connector, List<ConnectionSpecification>>) results.get( "proxyConnectors" ),
                     false );
 
-            return (Scenario) results.get( "scenario" );
+            return (Segment) results.get( "segment" );
         }
 
         /**
@@ -305,26 +305,26 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
         /**
          * {@inheritDoc}
          */
-        public void export( Scenario scenario, OutputStream stream ) throws IOException {
+        public void export( Segment segment, OutputStream stream ) throws IOException {
             ObjectOutputStream out = xstream.createObjectOutputStream( stream, "export" );
-            out.writeObject( scenario );
+            out.writeObject( segment );
             out.close();
         }
 
         /**
          * {@inheritDoc}
          */
-        public Scenario importScenario( InputStream stream ) throws IOException {
+        public Segment importSegment( InputStream stream ) throws IOException {
             ObjectInputStream in = xstream.createObjectInputStream( stream );
             try {
                 Map<String, Object> results = (Map<String, Object>) in.readObject();
                 reconnectExternalFlows(
                         (Map<Connector, List<ConnectionSpecification>>) results.get( "proxyConnectors" ),
                         false );
-                return (Scenario) results.get( "scenario" );
+                return (Segment) results.get( "segment" );
 
             } catch ( ClassNotFoundException e ) {
-                throw new IOException( "Failed to import scenario", e );
+                throw new IOException( "Failed to import segment", e );
             }
         }
 
@@ -413,13 +413,13 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
         @SuppressWarnings( "unchecked" )
         private List<Connector> findMatchingConnectors( final ConnectionSpecification conSpec ) {
             List<Connector> connectors = new ArrayList<Connector>();
-            List<Scenario> scenarios = ConverterUtils.findMatchingScenarios(
+            List<Segment> segments = ConverterUtils.findMatchingSegments(
 
-                    conSpec.getScenarioSpecification(),
+                    conSpec.getSegmentSpecification(),
                     getQueryService() );
-            for ( Scenario scenario : scenarios ) {
+            for ( Segment segment : segments ) {
                 Iterator<Connector> iterator =
-                        (Iterator<Connector>) new FilterIterator( scenario.nodes(), new Predicate() {
+                        (Iterator<Connector>) new FilterIterator( segment.nodes(), new Predicate() {
                             public boolean evaluate( Object obj ) {
                                 Node node = (Node) obj;
                                 return node.isConnector() &&

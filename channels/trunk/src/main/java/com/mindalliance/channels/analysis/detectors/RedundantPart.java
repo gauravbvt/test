@@ -75,7 +75,7 @@ public class RedundantPart extends AbstractIssueDetector {
 
     private List<Part> findEquivalentTo( Part part ) {
         List<Part> equivalentParts = new ArrayList<Part>();
-        Iterator<Part> parts = part.getScenario().parts();
+        Iterator<Part> parts = part.getSegment().parts();
         while ( parts.hasNext() ) {
             Part otherPart = parts.next();
             if ( otherPart != part && isEquivalent( part, otherPart ) ) {

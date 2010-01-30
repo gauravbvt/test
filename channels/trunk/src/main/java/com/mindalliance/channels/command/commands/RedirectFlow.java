@@ -9,7 +9,7 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.ChannelsUtils;
 
 /**
@@ -28,9 +28,9 @@ public class RedirectFlow extends AbstractCommand {
     public RedirectFlow( Flow flow, Node node, boolean nodeIsTarget ) {
         needLockOn( flow );
         if ( node.isPart() ) needLockOn( node );
-        set( "scenario", flow.getScenario().getId() );
+        set( "segment", flow.getSegment().getId() );
         set( "flow", flow.getId() );
-        set( "nodeScenario", node.getScenario().getId() );
+        set( "nodeSegment", node.getSegment().getId() );
         set( "node", node.getId() );
         set( "isTarget", nodeIsTarget );
     }
@@ -41,15 +41,15 @@ public class RedirectFlow extends AbstractCommand {
 
     public Change execute( Commander commander ) throws CommandException {
         QueryService queryService = commander.getQueryService();
-        Scenario scenario = commander.resolve(
-                Scenario.class,
-                (Long) get( "scenario" ) );
-        Flow flow = ChannelsUtils.resolveFlow( (Long) get( "flow" ), scenario );
-        Scenario nodeScenario = commander.resolve(
-                Scenario.class,
-                (Long) get( "nodeScenario" ) );
+        Segment segment = commander.resolve(
+                Segment.class,
+                (Long) get( "segment" ) );
+        Flow flow = ChannelsUtils.resolveFlow( (Long) get( "flow" ), segment );
+        Segment nodeSegment = commander.resolve(
+                Segment.class,
+                (Long) get( "nodeSegment" ) );
         Long nodeId = (Long) get( "node" );
-        Node other = ChannelsUtils.resolveNode( nodeId, nodeScenario, queryService );
+        Node other = ChannelsUtils.resolveNode( nodeId, nodeSegment, queryService );
         boolean nodeIsTarget = (Boolean) get( "isTarget" );
         MultiCommand multi = (MultiCommand) get( "subCommands" );
         if ( multi == null ) {
@@ -58,7 +58,7 @@ public class RedirectFlow extends AbstractCommand {
         }
         // else command replay
         multi.execute( commander );
-        Flow newFlow = ChannelsUtils.resolveFlow( (Long) get( "newFlow" ), scenario );
+        Flow newFlow = ChannelsUtils.resolveFlow( (Long) get( "newFlow" ), segment );
         return new Change( Change.Type.Recomposed, newFlow );
     }
 

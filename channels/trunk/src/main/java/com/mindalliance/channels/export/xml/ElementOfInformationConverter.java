@@ -65,7 +65,7 @@ public class ElementOfInformationConverter extends AbstractChannelsConverter {
                 eoi.setSpecialHandling( reader.getValue() );
             } else if ( nodeName.equals( "classification" ) ) {
                 Classification classification = (Classification) context.convertAnother(
-                        context.get( "scenario" ),
+                        context.get( "segment" ),
                         Classification.class );
                 eoi.addClassification( classification );
             }

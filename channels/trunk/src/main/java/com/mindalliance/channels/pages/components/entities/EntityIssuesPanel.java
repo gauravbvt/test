@@ -48,9 +48,9 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
      */
     private boolean includeContained = false;
     /**
-     * Whether to show relevant issues from scenarios.
+     * Whether to show relevant issues from segments.
      */
-    private boolean includeFromScenarios = false;
+    private boolean includeFromSegments = false;
 
     public EntityIssuesPanel( String id, IModel<ModelEntity> model ) {
         super( id, model, MAX_ROWS );
@@ -74,8 +74,8 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
             scope.add( about );
         } else {
             scope.add( getEntity() );
-            if ( includeFromScenarios ) {
-                scope.addAll( findRelatedScenarioObjects( getEntity() ) );
+            if ( includeFromSegments ) {
+                scope.addAll( findRelatedSegmentObjects( getEntity() ) );
             }
             if ( includeContained ) {
                 if ( getEntity() instanceof Phase ) {
@@ -86,8 +86,8 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
                 } else {
                     for ( ModelEntity containedEntity : findContainedEntities() ) {
                         scope.add( containedEntity );
-                        if ( includeFromScenarios ) {
-                            scope.addAll( findRelatedScenarioObjects( containedEntity ) );
+                        if ( includeFromSegments ) {
+                            scope.addAll( findRelatedSegmentObjects( containedEntity ) );
                         }
                     }
                 }
@@ -136,19 +136,19 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
             }
         } );
         add( includeWaivedCheckBox );
-        // Include from scenario
-        WebMarkupContainer inScenarioContainer = new WebMarkupContainer( "inScenarioContainer" );
-        add( inScenarioContainer );
-        CheckBox includeFromScenario = new CheckBox(
-                "includeFromScenarios",
-                new PropertyModel<Boolean>( this, "includeFromScenarios" ) );
-        includeFromScenario.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+        // Include from segment
+        WebMarkupContainer inSegmentContainer = new WebMarkupContainer( "inSegmentContainer" );
+        add( inSegmentContainer );
+        CheckBox includeFromSegments = new CheckBox(
+                "includeFromSegments",
+                new PropertyModel<Boolean>( this, "includeFromSegments" ) );
+        includeFromSegments.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 updateIssuesTable( target );
             }
         } );
-        inScenarioContainer.add( includeFromScenario );
-        makeVisible( inScenarioContainer, !( getEntity() instanceof Phase ) );
+        inSegmentContainer.add( includeFromSegments );
+        makeVisible( inSegmentContainer, !( getEntity() instanceof Phase ) );
     }
 
     private String getContainmentLabel() {
@@ -202,8 +202,8 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
         }
     }
 
-    private List<ModelObject> findRelatedScenarioObjects( ModelEntity entity ) {
-        return getQueryService().findAllScenarioObjectsInvolving( entity );
+    private List<ModelObject> findRelatedSegmentObjects( ModelEntity entity ) {
+        return getQueryService().findAllSegmentObjectsInvolving( entity );
     }
 
 
@@ -223,11 +223,11 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
         this.includeContained = includeContained;
     }
 
-    public boolean isIncludeFromScenarios() {
-        return includeFromScenarios;
+    public boolean isIncludeFromSegments() {
+        return includeFromSegments;
     }
 
-    public void setIncludeFromScenarios( boolean includeFromScenarios ) {
-        this.includeFromScenarios = includeFromScenarios;
+    public void setIncludeFromSegments( boolean includeFromSegments ) {
+        this.includeFromSegments = includeFromSegments;
     }
 }

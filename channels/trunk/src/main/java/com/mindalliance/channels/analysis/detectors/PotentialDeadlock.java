@@ -7,7 +7,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Detects a potential deadlock in the scenario.
+ * Detects a potential deadlock in segment.
  * A deadlock is a cycle of requirements and outcomes where
  * at least one requirement is critical
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -57,10 +57,10 @@ public class PotentialDeadlock extends AbstractIssueDetector {
      */
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
-        Scenario scenario = (Scenario) modelObject;
-        // TODO -- Patch: sometimes a scenario has no query service set.
-        scenario.setQueryService( getQueryService() );
-        GraphBuilder<Node,Flow> graphBuilder = new FlowMapGraphBuilder( scenario );
+        Segment segment = (Segment) modelObject;
+        // TODO -- Patch: sometimes a segment has no query service set.
+        segment.setQueryService( getQueryService() );
+        GraphBuilder<Node,Flow> graphBuilder = new FlowMapGraphBuilder( segment );
         DirectedGraph<Node, Flow> digraph = graphBuilder.buildDirectedGraph( );
         StrongConnectivityInspector<Node, Flow> sci =
                 new StrongConnectivityInspector<Node, Flow>( digraph );
@@ -91,7 +91,7 @@ public class PotentialDeadlock extends AbstractIssueDetector {
                     }
                     // This is a "critical" cycle
                     if ( allCritical ) {
-                        Issue issue = makeIssue( Issue.ROBUSTNESS, scenario );
+                        Issue issue = makeIssue( Issue.ROBUSTNESS, segment );
                         issue.setDescription( "Potential deadlock if any of "
                                 + getRequirementDescriptions( criticalRequirementsInCycle )
                                 + " fails." );
@@ -155,7 +155,7 @@ public class PotentialDeadlock extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     public boolean appliesTo( ModelObject modelObject ) {
-        return modelObject instanceof Scenario;
+        return modelObject instanceof Segment;
     }
 
     /**

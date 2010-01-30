@@ -66,8 +66,7 @@ public class AbstractChannelsTest extends TestCase {
         commander.setLockManager( lockManager );
         commander.setQueryService( queryService );
 
-        // Set default scenario
-        // app.getScenarioDao().addScenario(new FireScenario());
+        // Set default segment
         // Set flow diagram
         GraphvizRenderer<Node, Flow> graphRenderer = new GraphvizRenderer<Node, Flow>();
         graphRenderer.setDotPath( "/usr/bin" );
@@ -78,7 +77,7 @@ public class AbstractChannelsTest extends TestCase {
         diagramFactory.setImageDirectory( new FileSystemResource( "src/webapp/WEB-INF/images" ) );
         diagramFactory.setQueryService( queryService );
 
-        // Set scenario analyst
+        // Set analyst
         // Initialize analyst
         DefaultAnalyst analyst = new DefaultAnalyst();
         DefaultDetective detective = new DefaultDetective();
@@ -104,7 +103,7 @@ public class AbstractChannelsTest extends TestCase {
         planManager.reset();
         commander.afterPropertiesSet();
 
-        queryService.createScenario();
+        queryService.createSegment();
     }
 
     protected void initTester() {
@@ -114,8 +113,8 @@ public class AbstractChannelsTest extends TestCase {
 
     private List<IssueDetector> createDetectors( DefaultQueryService queryService ) {
         List<IssueDetector> detectors = new ArrayList<IssueDetector>();
-        detectors.add( new NoScenarioRepondsToIncident() );
-        detectors.add( new ScenarioWithoutManagedRisk() );
+        detectors.add( new NoSegmentRepondsToIncident() );
+        detectors.add( new SegmentWithoutManagedRisk() );
         detectors.add( new FromUser() );
         detectors.add( new FlowWithoutChannel() );
         detectors.add( new InvalidChannel() );
@@ -133,18 +132,18 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new NoRedundancy() );
         detectors.add( new FlowToSelf() );
         detectors.add( new PartWithRoleWithNoKnownActor() );
-        detectors.add( new ScenarioNeverEnds() );
+        detectors.add( new SegmentNeverEnds() );
         detectors.add( new TriggeredButNeverStartedDefinedTask() );
         detectors.add( new NeverTriggeredSpecifiedTask() );
         detectors.add( new AutoStartPartAlsoTriggered() );
-        detectors.add( new ScenarioEventNeverCaused() );
-        detectors.add( new ScenarioNeverStarts() );
+        detectors.add( new SegmentEventNeverCaused() );
+        detectors.add( new SegmentNeverStarts() );
         detectors.add( new CyclicTriggering() );
         detectors.add( new PotentialDeadlock() );
         detectors.add( new FlowViolatesPolicy() );
         detectors.add( new UnconfirmedJob() );
         detectors.add( new ActorNotInOneOrganization() );
-        detectors.add( new ScenarioWithSameRisk() );
+        detectors.add( new SegmentWithSameRisk() );
         detectors.add( new UselessPart() );
         detectors.add( new GeonameButNoLocation() );
         detectors.add( new UnverifiedPostalCode() );
@@ -162,7 +161,7 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new UntimelyCriticalSharing() );
         detectors.add( new SinglePointOfFailure() );
         detectors.add( new UserIsManyActors() );
-        detectors.add( new NoScenarioForEventPhase() );
+        detectors.add( new NoSegmentForEventPhase() );
         detectors.add( new InvalidEntityTyping() );
         detectors.add( new FlowDeclassifies() );
         detectors.add( new UselessActor() );

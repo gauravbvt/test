@@ -6,7 +6,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.ChannelsUtils;
 
 /**
@@ -24,7 +24,7 @@ public class CopyPart extends AbstractCommand {
 
     public CopyPart( Part part ) {
         set( "part", part.getId() );
-        set( "scenario", part.getScenario().getId() );
+        set( "segment", part.getSegment().getId() );
     }
 
     /**
@@ -45,8 +45,8 @@ public class CopyPart extends AbstractCommand {
      * {@inheritDoc}
      */
     public Change execute( Commander commander ) throws CommandException {
-        Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-        Part part = (Part) scenario.getNode( (Long) get( "part" ) );
+        Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+        Part part = (Part) segment.getNode( (Long) get( "part" ) );
         commander.setCopy( ChannelsUtils.getPartCopy( part ) );
         return new Change( Change.Type.None );
     }

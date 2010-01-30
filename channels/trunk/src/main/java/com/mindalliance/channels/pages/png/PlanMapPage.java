@@ -2,11 +2,11 @@ package com.mindalliance.channels.pages.png;
 
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
+import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import org.apache.wicket.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,25 +31,25 @@ public class PlanMapPage extends PngWebPage {
      */
     private ModelEntity group;
     /**
-     * Group scenarios by phase.
+     * Group segments by phase.
      */
     private boolean groupByPhase;
     /**
-     * Group scenarios by event.
+     * Group segments by event.
      */
     private boolean groupByEvent;
     /**
-     * The selected scenario.
+     * The selected segments.
      */
-    private Scenario scenario;
+    private Segment segment;
     /**
-     * The selected scenario relationship.
+     * The selected segment relationship.
      */
-    private ScenarioRelationship scRel;
+    private SegmentRelationship sgRel;
     /**
-     * All scenarios in plan.
+     * All segments in plan.
      */
-    private List<Scenario> allScenarios;
+    private List<Segment> allSegments;
 
     public PlanMapPage( PageParameters parameters ) {
         super( parameters );
@@ -67,20 +67,20 @@ public class PlanMapPage extends PngWebPage {
                 LOG.warn( "Phase or event group not found at :" + groupId, e );
             }
         }
-        if ( parameters.containsKey( "scenario" ) && !parameters.getString( "scenario" ).equals( "NONE" ) ) {
-            Long scenarioId = Long.valueOf( parameters.getString( "scenario" ) );
+        if ( parameters.containsKey( "segment" ) && !parameters.getString( "segment" ).equals( "NONE" ) ) {
+            Long segmentId = Long.valueOf( parameters.getString( "segment" ) );
             try {
-                scenario = queryService.find( Scenario.class, scenarioId );
+                segment = queryService.find( Segment.class, segmentId );
             } catch ( NotFoundException e ) {
-                LOG.warn( "Scenario not found at :" + scenarioId, e );
+                LOG.warn( "Segment not found at :" + segmentId, e );
             }
         }
         if ( parameters.containsKey( "connection" ) && !parameters.getString( "connection" ).equals( "NONE" ) ) {
             Long scRelId = Long.valueOf( parameters.getString( "connection" ) );
-            scRel = new ScenarioRelationship();
-            scRel.setId( scRelId, getQueryService() );
+            sgRel = new SegmentRelationship();
+            sgRel.setId( scRelId, getQueryService() );
         }
-        allScenarios = queryService.list( Scenario.class );
+        allSegments = queryService.list( Segment.class );
     }
 
     /**
@@ -88,12 +88,12 @@ public class PlanMapPage extends PngWebPage {
      */
     protected Diagram makeDiagram( double[] size, String orientation ) throws DiagramException {
         return getDiagramFactory().newPlanMapDiagram(
-                allScenarios,
+                allSegments,
                 groupByPhase,
                 groupByEvent,
                 group,
-                scenario,
-                scRel,
+                segment,
+                sgRel,
                 size,
                 orientation );
     }

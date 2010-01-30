@@ -6,7 +6,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.Updatable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -74,13 +74,13 @@ public class IssuesPanel extends AbstractCommandablePanel {
     }
 
     /**
-     * Return the kind of issue  -- scenario vs flow vs part (aka "task").
+     * Return the kind of issue  -- segment vs flow vs part (aka "task").
      *
      * @return a string
      */
     public String getKind() {
         ModelObject modelObject = model.getObject();
-        if ( modelObject instanceof Scenario ) return "Scenario";
+        if ( modelObject instanceof Segment ) return "Plan segment";
         else if ( modelObject instanceof Part ) return "Task";
         else if ( modelObject instanceof Flow ) return "Flow";
         else return StringUtils.capitalize( modelObject.getTypeName() );

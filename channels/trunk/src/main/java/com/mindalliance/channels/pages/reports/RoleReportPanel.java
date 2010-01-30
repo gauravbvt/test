@@ -3,10 +3,10 @@ package com.mindalliance.channels.pages.reports;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Segment;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -30,19 +30,19 @@ public class RoleReportPanel extends Panel {
     private QueryService queryService;
 
     public RoleReportPanel(
-            String id, final Role role, final Scenario scenario, final Organization organization,
+            String id, final Role role, final Segment segment, final Organization organization,
             final boolean showingIssues ) {
 
         super( id );
         setRenderBodyOnly( true );
         
-        add( new Label( "sc-name", scenario.getName() ),                                  // NON-NLS
+        add( new Label( "sg-name", segment.getName() ),                                  // NON-NLS
              new Label( "org", organization.toString() ),                                 // NON-NLS
              new Label( "name", role.getName() ),                                         // NON-NLS
              new Label( "description", role.getDescription() )
                      .setVisible( !role.getDescription().isEmpty() ),
 
-             new ListView<Part>( "parts", scenario.findParts( organization, role ) ) {    // NON-NLS
+             new ListView<Part>( "parts", segment.findParts( organization, role ) ) {    // NON-NLS
                     @Override
                     protected void populateItem( ListItem<Part> item ) {
                         item.add( new PartReportPanel( "part",                            // NON-NLS
@@ -50,7 +50,7 @@ public class RoleReportPanel extends Panel {
                     }
                 },
 
-             new ListView<Actor>( "actors", getActors( role, scenario, organization ) ) { // NON-NLS
+             new ListView<Actor>( "actors", getActors( role, segment, organization ) ) { // NON-NLS
                     @Override
                     protected void populateItem( ListItem<Actor> item ) {
                         Actor actor = item.getModelObject();
@@ -61,13 +61,13 @@ public class RoleReportPanel extends Panel {
                             spec.setRole( role );
                         if ( !actor.equals( Actor.UNKNOWN ) )
                             spec.setActor( actor );
-                        item.add( new ActorBannerPanel( "actor", scenario, spec, false ) );
+                        item.add( new ActorBannerPanel( "actor", segment, spec, false ) );
                     }
                 } );
     }
 
-    private List<Actor> getActors( Role role, Scenario scenario, Organization organization ) {
-        List<Actor> actors = queryService.findActors( organization, role, scenario );
+    private List<Actor> getActors( Role role, Segment segment, Organization organization ) {
+        List<Actor> actors = queryService.findActors( organization, role, segment );
         if ( actors.isEmpty() )
             actors.add( Actor.UNKNOWN );
         return actors;

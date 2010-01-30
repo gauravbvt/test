@@ -8,13 +8,13 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.Map;
 
 /**
- * Command to add a new part to a scenario.
+ * Command to add a new part to a plan segment.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -26,9 +26,9 @@ public class AddPart extends AbstractCommand {
     public AddPart() {
     }
 
-    public AddPart( Scenario scenario ) {
+    public AddPart( Segment segment ) {
         super();
-        set( "scenario", scenario.getId() );
+        set( "segment", segment.getId() );
     }
 
     /**
@@ -44,20 +44,20 @@ public class AddPart extends AbstractCommand {
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
         QueryService queryService = commander.getQueryService();
-        Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+        Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
         // Identify any undefined part likely created to be the lone default part.
         Long defaultPartId = (Long) get( "defaultPart" );
         Part defaultPart = null;
         if ( defaultPartId != null ) {
             // A default part was added before removing the one being restored by adding it.
-            if ( scenario.countParts() == 1 && scenario.getDefaultPart().isUndefined() ) {
-                defaultPart = scenario.getDefaultPart();
+            if ( segment.countParts() == 1 && segment.getDefaultPart().isUndefined() ) {
+                defaultPart = segment.getDefaultPart();
             }
         }
         Long priorId = (Long) get( "part" );
-        Part part = queryService.createPart( scenario, priorId );
+        Part part = queryService.createPart( segment, priorId );
         set( "part", part.getId() );
-        if ( defaultPart != null ) scenario.removeNode( defaultPart );
+        if ( defaultPart != null ) segment.removeNode( defaultPart );
         Map<String, Object> partState = (Map<String, Object>) get( "partState" );
         if ( partState != null ) {
             ChannelsUtils.initPartFrom( part, partState, commander );
@@ -77,8 +77,8 @@ public class AddPart extends AbstractCommand {
      */
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Part part = (Part) scenario.getNode( (Long) get( "part" ) );
+            Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+            Part part = (Part) segment.getNode( (Long) get( "part" ) );
             if ( part == null ) throw new NotFoundException();
             return new RemovePart( part );
         } catch ( NotFoundException e ) {

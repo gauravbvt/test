@@ -6,7 +6,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,13 +22,13 @@ import java.util.List;
  */
 public class TestDefaultAnalyst extends AbstractChannelsTest {
 
-    Iterator<Scenario> scenarios;
+    Iterator<Segment> segments;
     Analyst analyst;
 
     @Override
     protected void setUp() throws IOException {
         super.setUp();
-        scenarios = app.getQueryService().list( Scenario.class ).iterator();
+        segments = app.getQueryService().list( Segment.class ).iterator();
         analyst = app.getAnalyst();
     }
 
@@ -36,11 +36,11 @@ public class TestDefaultAnalyst extends AbstractChannelsTest {
      * Apply all applicable detectors to all nodes and flows and gather issues.
      */
     public void testFindAllIssues() {
-        while ( scenarios.hasNext() ) {
-            Scenario scenario = scenarios.next();
+        while ( segments.hasNext() ) {
+            Segment segment = segments.next();
             List<Issue> allIssues = new ArrayList<Issue>();
-            collectIssues( scenario, allIssues );
-            Iterator<Node> nodes = scenario.nodes();
+            collectIssues( segment, allIssues );
+            Iterator<Node> nodes = segment.nodes();
             while ( nodes.hasNext() ) {
                 Node node = nodes.next();
                 collectIssues( node, allIssues );
@@ -73,10 +73,10 @@ public class TestDefaultAnalyst extends AbstractChannelsTest {
      * Get issue summaries on all model objects.
      */
     public void testGetIssueSummaries() {
-        while ( scenarios.hasNext() ) {
-            Scenario scenario = scenarios.next();
-            processSummary( scenario );
-            Iterator<Node> nodes = scenario.nodes();
+        while ( segments.hasNext() ) {
+            Segment segment = segments.next();
+            processSummary( segment );
+            Iterator<Node> nodes = segment.nodes();
             while ( nodes.hasNext() ) {
                 Node node = nodes.next();
                 processSummary( node );

@@ -6,7 +6,7 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -63,16 +63,16 @@ public class DummyExporter implements ImportExportFactory, Importer, Exporter {
     }
 
     /**
-     * Export a scenario on the given stream.
-     * @param scenario the scenario
+     * Export a segment on the given stream.
+     * @param segment the segment
      * @param stream the stream
      * @throws IOException on errors
      */
-    public void export( Scenario scenario, OutputStream stream ) throws IOException {
+    public void export( Segment segment, OutputStream stream ) throws IOException {
     }
 
     /**
-     * The mime type of files from which scenarios are imported.
+     * The mime type of files from which segments are imported.
      *
      * @return -- a mime type
      */
@@ -110,25 +110,25 @@ public class DummyExporter implements ImportExportFactory, Importer, Exporter {
     }
 
     /**
-     * Import a scenario from a stream.
+     * Import a segment from a stream.
      *
      * @param stream an input stream
-     * @return a map with scenario and proxy connectors
+     * @return a map with segment and proxy connectors
      * @throws IOException on errors
      */
-    public Scenario importScenario( InputStream stream ) throws IOException {
-        return new Scenario();
+    public Segment importSegment( InputStream stream ) throws IOException {
+        return new Segment();
     }
 
     /**
-     * Load scenario, do not reconnect external flows.
+     * Load segment, do not reconnect external flows.
      *
      *
      * @param inputStream an input stream
      * @return mapped results
      * @throws IOException on errors
      */
-    public Map<String, Object> loadScenario( InputStream inputStream ) throws IOException {
+    public Map<String, Object> loadSegment( InputStream inputStream ) throws IOException {
         return new HashMap<String,Object>();
     }
 
@@ -144,12 +144,12 @@ public class DummyExporter implements ImportExportFactory, Importer, Exporter {
     }
 
     /**
-     * Reload a scenario from xml.
+     * Reload a segment from xml.
      *
      * @param xml an xml string
-     * @return a map with scenario and proxy connectors
+     * @return a map with segment and proxy connectors
      */
-    public Scenario restoreScenario( String xml ) {
-        return new Scenario();
+    public Segment restoreSegment( String xml ) {
+        return new Segment();
     }
 }

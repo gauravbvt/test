@@ -7,7 +7,7 @@ import javax.persistence.Transient;
 import java.util.List;
 
 /**
- * A flow from one Part in this scenario to/from a connector in another scenario.
+ * A flow from one Part in this segment to/from a connector in another segment.
  * Direction of flow matches other connector's only flow.
  */
 @Entity
@@ -37,7 +37,7 @@ public class ExternalFlow extends Flow {
         } else
             throw new IllegalArgumentException();
 
-        if ( getPart().getScenario().equals( getConnector().getScenario() ) ) {
+        if ( getPart().getSegment().equals( getConnector().getSegment() ) ) {
             throw new IllegalArgumentException();
         }
     }
@@ -463,8 +463,8 @@ public class ExternalFlow extends Flow {
      * {@inheritDoc}
      */
     @Transient
-    public Scenario getScenario() {
-        return part.getScenario();
+    public Segment getSegment() {
+        return part.getSegment();
     }
 
     /**

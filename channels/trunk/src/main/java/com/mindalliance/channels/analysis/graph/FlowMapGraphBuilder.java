@@ -7,7 +7,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.InternalFlow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.Graph;
@@ -25,10 +25,13 @@ import java.util.Iterator;
  */
 public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
 
-    private Scenario scenario;
+    /**
+     * A segment.
+     */
+    private Segment segment;
 
-    public FlowMapGraphBuilder( Scenario scenario ) {
-        this.scenario = scenario;
+    public FlowMapGraphBuilder( Segment segment ) {
+        this.segment = segment;
     }
 
     public DirectedGraph<Node, Flow> buildDirectedGraph() {
@@ -46,30 +49,30 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
                     }
 
                 } );
-        populateScenarioGraph( digraph, scenario );
+        populateSegmentGraph( digraph, segment );
         return digraph;
     }
 
     /**
      * {@inheritDoc}
      */
-    private void populateScenarioGraph( Graph<Node, Flow> graph, Scenario scenario ) {
+    private void populateSegmentGraph( Graph<Node, Flow> graph, Segment segment ) {
         // add nodes as vertices
-        Iterator<Node> nodes = scenario.nodes();
+        Iterator<Node> nodes = segment.nodes();
         while ( nodes.hasNext() ) {
             final Node node = nodes.next();
             if ( !node.outcomes().hasNext() && !node.requirements().hasNext() )
                 // added if not part of a flow
                 graph.addVertex( node );
         }
-        for ( Part initiator : scenario.getQueryService().findInitiators( scenario ) ) {
+        for ( Part initiator : segment.getQueryService().findInitiators( segment ) ) {
             graph.addVertex( initiator );
         }
-        for ( Part terminator : scenario.getQueryService().findExternalTerminators( scenario ) ) {
+        for ( Part terminator : segment.getQueryService().findExternalTerminators( segment ) ) {
             graph.addVertex( terminator );
         }
         // add flows as edges
-        Iterator<Flow> flows = scenario.flows();
+        Iterator<Flow> flows = segment.flows();
         while ( flows.hasNext() ) {
             Flow flow = flows.next();
             graph.addVertex( flow.getSource() );

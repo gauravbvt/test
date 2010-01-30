@@ -9,7 +9,7 @@ import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.util.FileUserDetailsService;
 import org.apache.commons.collections.CollectionUtils;
@@ -353,7 +353,7 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
     protected Map<String, Object> getSurveyContext( Survey survey, Issue issue ) {
         Map<String, Object> context = new HashMap<String, Object>();
         context.put( "about", getAboutText( issue ) );
-        context.put( "scenario", getScenarioText( issue ) );
+        context.put( "segment", getSegmentText( issue ) );
         context.put( "plan", survey.getPlanText() );
         context.put( "deadline", survey.getDeadlineText() );
         context.put( "issue", getIssueDescriptionText( issue ) );
@@ -491,10 +491,10 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
         return type + " \"" + about.getLabel() + "\"";
     }
 
-    public String getScenarioText( Issue issue ) {
+    public String getSegmentText( Issue issue ) {
         ModelObject mo = issue.getAbout();
-        if ( mo instanceof ScenarioObject ) {
-            return ( (ScenarioObject) mo ).getScenario().getName();
+        if ( mo instanceof SegmentObject ) {
+            return ( (SegmentObject) mo ).getSegment().getName();
         } else {
             return null;
         }
@@ -579,7 +579,7 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
         context.put( "survey", survey );
         context.put( "surveyUrl", survey.getSurveyData().getPublishLink() );
         context.put( "issue", getIssueDescriptionText( issue ) );
-        context.put( "scenario", getScenarioText( issue ) );
+        context.put( "segment", getSegmentText( issue ) );
         context.put( "about", getAboutPlainText( issue ) );
         return context;
     }

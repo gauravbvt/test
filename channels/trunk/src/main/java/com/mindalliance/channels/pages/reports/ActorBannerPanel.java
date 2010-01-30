@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.reports;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -23,13 +23,13 @@ import java.util.Set;
 public class ActorBannerPanel extends Panel {
 
     public ActorBannerPanel(
-            String id, Scenario scenario, ResourceSpec spec, boolean showScenario ) {
+            String id, Segment segment, ResourceSpec spec, boolean showSegment ) {
 
-        this( id, scenario, spec, showScenario, null, null );
+        this( id, segment, spec, showSegment, null, null );
     }
 
     public ActorBannerPanel(
-            String id, Scenario scenario, ResourceSpec spec, boolean showScenario,
+            String id, Segment segment, ResourceSpec spec, boolean showSegment,
             Set<TransmissionMedium> unicasts, Collection<Channel> broadcasts ) {
 
         super( id );
@@ -38,15 +38,15 @@ public class ActorBannerPanel extends Panel {
         if ( spec.getActor() == null )
             spec.setActor( Actor.UNKNOWN );
 
-        boolean canShowScenario = showScenario && scenario != null;
-        String scenarioName = canShowScenario ?
-                                MessageFormat.format( " (from {0})", scenario.getName() )
+        boolean canShowSegment = showSegment && segment != null;
+        String segmentName = canShowSegment ?
+                                MessageFormat.format( " (from {0})", segment.getName() )
                               : "";
         add(
                 new Label( "name", spec.getActorName() ),
-                new Label( "scenario", scenarioName )
+                new Label( "segment", segmentName )
                         .setRenderBodyOnly( true )
-                        .setVisible( canShowScenario ),
+                        .setVisible( canShowSegment ),
                 new ChannelsBannerPanel( "channels", spec, unicasts, broadcasts ) );
     }
 }

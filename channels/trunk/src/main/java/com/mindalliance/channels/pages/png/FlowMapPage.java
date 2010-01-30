@@ -4,7 +4,7 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.PlanPage;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.pages.RedirectPage;
@@ -25,26 +25,26 @@ public class FlowMapPage extends PngWebPage {
      */
     private Node node;
     /**
-     * The scenario to diagram.
+     * The segment to diagram.
      */
-    private Scenario scenario;
+    private Segment segment;
 
     public FlowMapPage( PageParameters parameters ) {
         super( parameters );
 
         QueryService queryService = getQueryService();
-        scenario = PlanPage.findScenario( queryService, parameters );
+        segment = PlanPage.findSegment( queryService, parameters );
 
-        if ( scenario == null )
-            redirectTo( queryService.getDefaultScenario() );
+        if ( segment == null )
+            redirectTo( queryService.getDefaultSegment() );
 
         else {
             if ( parameters.containsKey( "node" ) && parameters.getString( "node" ).equals( "NONE" ) ) {
                 node = null;
             } else {
-                node = PlanPage.findPart( scenario, parameters );
+                node = PlanPage.findPart( segment, parameters );
                 if ( node == null )
-                    redirectTo( scenario );
+                    redirectTo( segment );
             }
         }
     }
@@ -53,21 +53,21 @@ public class FlowMapPage extends PngWebPage {
      * {@inheritDoc}
      */
     protected Diagram makeDiagram( double[] diagramSize, String orientation ) throws DiagramException {
-        return getDiagramFactory().newFlowMapDiagram( scenario, node, diagramSize, orientation );
+        return getDiagramFactory().newFlowMapDiagram( segment, node, diagramSize, orientation );
     }
 
 
-    private void redirectTo( Scenario s ) {
+    private void redirectTo( Segment s ) {
         redirectTo( s.getDefaultPart() );
     }
 
     private void redirectTo( Node n ) {
-        final long sid = n.getScenario().getId();
+        final long sid = n.getSegment().getId();
         final long nid = n.getId();
         setResponsePage(
                 new RedirectPage(
                         MessageFormat.format(
-                                "?scenario={0,number,0}&node={1,number,0}",
+                                "?segment={0,number,0}&node={1,number,0}",
                                 sid,
                                 nid ) ) );   // NON-NLS
     }

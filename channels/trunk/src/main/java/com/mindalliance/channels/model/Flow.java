@@ -32,7 +32,7 @@ import java.util.Set;
  */
 @Entity
 @Inheritance( strategy = InheritanceType.SINGLE_TABLE )
-public abstract class Flow extends ModelObject implements Channelable, ScenarioObject {
+public abstract class Flow extends ModelObject implements Channelable, SegmentObject {
 
     /**
      * A list of alternate communication channels for the flow.
@@ -674,14 +674,14 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
         Flow flow;
         if ( isOutcome ) {
             Node source = getSource();
-            Scenario scenario = getSource().getScenario();
-            QueryService queryService = scenario.getQueryService();
-            flow = queryService.connect( source, queryService.createConnector( scenario ), getName() );
+            Segment segment = getSource().getSegment();
+            QueryService queryService = segment.getQueryService();
+            flow = queryService.connect( source, queryService.createConnector( segment ), getName() );
         } else {
             Node target = getTarget();
-            Scenario scenario = target.getScenario();
-            QueryService queryService = scenario.getQueryService();
-            flow = queryService.connect( queryService.createConnector( scenario ), target, getName() );
+            Segment segment = target.getSegment();
+            QueryService queryService = segment.getQueryService();
+            flow = queryService.connect( queryService.createConnector( segment ), target, getName() );
         }
         flow.initFrom( this );
         return flow;
@@ -756,18 +756,18 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
     }
 
     /**
-     * Get scenario-local part
+     * Get segment-local part
      *
      * @return a part or null
      */
     @Transient
     public Part getLocalPart() {
         Node source = getSource();
-        if ( source.isPart() && source.getScenario() == getScenario() ) {
+        if ( source.isPart() && source.getSegment() == getSegment() ) {
             return (Part) source;
         } else {
             Node target = getTarget();
-            if ( target.isPart() && target.getScenario() == getScenario() ) {
+            if ( target.isPart() && target.getSegment() == getSegment() ) {
                 return (Part) target;
             } else {
                 // Should never happen?
@@ -1075,7 +1075,7 @@ public abstract class Flow extends ModelObject implements Channelable, ScenarioO
                                     && Matcher.subsetOf(
                                     getEois(),
                                     alternate.getEois(),
-                                    getScenario().getQueryService()
+                                    getSegment().getQueryService()
                             );
                         }
                     } );

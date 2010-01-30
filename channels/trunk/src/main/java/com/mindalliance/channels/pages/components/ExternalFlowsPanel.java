@@ -40,13 +40,13 @@ public class ExternalFlowsPanel extends AbstractTablePanel<ExternalFlow> {
         List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
         columns.add( makeLinkColumn( "Task", "externalPart", "externalPart.title", EMPTY ) );
         columns.add( new PropertyColumn<String>(
-                new Model<String>( " in scenario" ),
-                "externalPart.scenario.name", "externalPart.scenario.name" ) );
+                new Model<String>( " in plan segment" ),
+                "externalPart.segment.name", "externalPart.segment.name" ) );
         columns.add( makeColumn( "produces info", "name", "@kind", "?", "description" ) );
         columns.add( makeLinkColumn( "consumed by task", "part", "part.title", EMPTY ) );
         columns.add( new PropertyColumn<String>(
-                new Model<String>( "in scenario" ),
-                "scenario.name", "scenario.name" ) );
+                new Model<String>( "in plan segment" ),
+                "segment.name", "segment.name" ) );
         columns.add( makeGeomapLinkColumn(
                 "",
                 "name",
@@ -56,7 +56,7 @@ public class ExternalFlowsPanel extends AbstractTablePanel<ExternalFlow> {
         add( new AjaxFallbackDefaultDataTable(
                 "flows",
                 columns,
-                new SortableBeanProvider<ExternalFlow>( externalFlows, "scenario.name" ),
+                new SortableBeanProvider<ExternalFlow>( externalFlows, "segment.name" ),
                 getPageSize() ) );
 
     }

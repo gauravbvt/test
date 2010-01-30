@@ -64,7 +64,7 @@ public final class Channels extends WebApplication implements ApplicationListene
     private DiagramFactory diagramFactory;
 
     /**
-     * Scenario importer.
+     * Segment importer.
      */
     private ImportExportFactory importExportFactory;
 
@@ -123,8 +123,8 @@ public final class Channels extends WebApplication implements ApplicationListene
         mount( new IndexedParamUrlCodingStrategy( "uploads", UploadPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "login.html", LoginPage.class ) );
 
-        mount( new QueryStringUrlCodingStrategy( "scenario.xml", ExportPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "scenario.png", FlowMapPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "segment.xml", ExportPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "segment.png", FlowMapPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "plan.png", PlanMapPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "network.png", EntityNetworkPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "hierarchy.png", HierarchyPage.class ) );

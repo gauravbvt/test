@@ -9,7 +9,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -169,16 +169,16 @@ public class IssueScanner implements Scanner {
                     scanIssues( mo );
                 }
                 if ( !active ) return;
-                for ( Scenario scenario : queryService.list( Scenario.class ) ) {
+                for ( Segment segment : queryService.list( Segment.class ) ) {
                     if ( !active ) return;
-                    Iterator<Part> parts = scenario.parts();
+                    Iterator<Part> parts = segment.parts();
                     while ( parts.hasNext() ) {
                         if ( !active ) return;
                         Part part = parts.next();
                         scanIssues( part );
                     }
                     if ( !active ) return;
-                    Iterator<Flow> flows = scenario.flows();
+                    Iterator<Flow> flows = segment.flows();
                     while ( flows.hasNext() ) {
                         Flow flow = flows.next();
                         scanIssues( flow );

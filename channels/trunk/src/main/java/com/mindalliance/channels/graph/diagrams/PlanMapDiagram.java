@@ -3,12 +3,12 @@ package com.mindalliance.channels.graph.diagrams;
 import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.analysis.graph.PlanMapGraphBuilder;
-import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
+import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.graph.URLProvider;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import org.jgrapht.DirectedGraph;
 import org.springframework.core.io.Resource;
 
@@ -23,88 +23,88 @@ import java.util.List;
  * Date: Apr 1, 2009
  * Time: 1:58:47 PM
  */
-public class PlanMapDiagram extends AbstractDiagram<Scenario,ScenarioRelationship> {
+public class PlanMapDiagram extends AbstractDiagram<Segment, SegmentRelationship> {
 
     /**
-     * The scenarios mapped.
+     * The segments mapped.
      */
-    private List<Scenario> scenarios;
+    private List<Segment> segments;
     /**
-     * Phase or event grouping scenarios.
+     * Phase or event grouping segments.
      */
     private ModelObject selectedGroup;
     /**
-     * Whether to group scenarios by phases.
+     * Whether to group segments by phases.
      */
     private boolean groupByPhase;
     /**
-     * Whether to group scenarios by events.
+     * Whether to group segments by events.
      */
     private boolean groupByEvent;
     /**
-     * Selected vertex-scenario.
+     * Selected vertex-segment.
      */
-    private Scenario selectedScenario;
+    private Segment selectedSegment;
 
     /**
-     * Selected edge-scenario relationship.
+     * Selected edge-segment relationship.
      */
-    private ScenarioRelationship selectedScRel;
+    private SegmentRelationship selectedSgRel;
 
     /** Provider of imagemap links. */
-    private URLProvider<Scenario, ScenarioRelationship> uRLProvider;
+    private URLProvider<Segment, SegmentRelationship> uRLProvider;
 
     public PlanMapDiagram(
-            List<Scenario> scenarios,
+            List<Segment> segments,
             boolean groupByPhase,
             boolean groupByEvent,
             ModelObject selectedGroup,
-            Scenario scenario,
-            ScenarioRelationship scRel,
+            Segment segment,
+            SegmentRelationship scRel,
             double[] diagramSize,
             String orientation ) {
 
         super( diagramSize, orientation );
-        this.scenarios = scenarios;
+        this.segments = segments;
         this.selectedGroup = selectedGroup;
         this.groupByPhase = groupByPhase;
         this.groupByEvent = groupByEvent;
-        selectedScenario = scenario;
-        selectedScRel = scRel;
+        selectedSegment = segment;
+        selectedSgRel = scRel;
     }
 
     /** {@inheritDoc} */
     public void render( String outputFormat, OutputStream outputStream ) {
-        DiagramFactory<Scenario, ScenarioRelationship> factory = getDiagramFactory();
-        GraphRenderer<Scenario, ScenarioRelationship> renderer = factory.getGraphRenderer();
+        DiagramFactory<Segment, SegmentRelationship> factory = getDiagramFactory();
+        GraphRenderer<Segment, SegmentRelationship> renderer = factory.getGraphRenderer();
 
-        renderer.highlight( selectedScenario, selectedScRel );
+        renderer.highlight( selectedSegment, selectedSgRel );
         renderer.render(
                 createGraph( factory.getQueryService() ),
                 createExporter( outputFormat, factory.getImageDirectory() ), outputFormat,
                 outputStream );
     }
 
-    private DirectedGraph<Scenario, ScenarioRelationship> createGraph( QueryService queryService ) {
-        return new PlanMapGraphBuilder( scenarios, queryService ).buildDirectedGraph();
+    private DirectedGraph<Segment, SegmentRelationship> createGraph( QueryService queryService ) {
+        return new PlanMapGraphBuilder( segments, queryService ).buildDirectedGraph();
     }
 
     /**
      * Provide an overridable provider for imagemaps links.
      * @return the URL provider, or null to use the default one.
      */
-    public URLProvider<Scenario,ScenarioRelationship> getURLProvider() {
+    public URLProvider<Segment, SegmentRelationship> getURLProvider() {
         return uRLProvider;
     }
 
-    public void setURLProvider( URLProvider<Scenario, ScenarioRelationship> uRLProvider ) {
+    public void setURLProvider( URLProvider<Segment, SegmentRelationship> uRLProvider ) {
         this.uRLProvider = uRLProvider;
     }
 
     private PlanMapDOTExporter createExporter( String outputFormat, Resource imageDirectory ) {
 
         PlanMapMetaProvider metaProvider =
-            new PlanMapMetaProvider( scenarios, outputFormat, imageDirectory, getAnalyst() );
+            new PlanMapMetaProvider( segments, outputFormat, imageDirectory, getAnalyst() );
         metaProvider.setGroupByPhase( groupByPhase );
         metaProvider.setGroupByEvent( groupByEvent );
         metaProvider.setSelectedGroup( selectedGroup );

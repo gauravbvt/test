@@ -78,8 +78,8 @@ public class PlaysTablePanel extends AbstractTablePanel<Play> {
         final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
         // columns
         columns.add( new PropertyColumn<String>(
-                new Model<String>( "Scenario" ),
-                "part.scenario.name", "part.scenario.name" ) );                  // NON-NLS
+                new Model<String>( "Plan segment" ),
+                "part.segment.name", "part.segment.name" ) );                  // NON-NLS
         columns.add( makeLinkColumn( "Role", "part.role", "part.role.name", EMPTY ) );
         columns.add( makeLinkColumn( "Task", "part", "part.task", EMPTY ) );
         columns.add( makeColumn( "Info", "flow.name", "@kind", "?", "flow.description" ) );
@@ -96,7 +96,7 @@ public class PlaysTablePanel extends AbstractTablePanel<Play> {
         add( new AjaxFallbackDefaultDataTable(
                 "plays",
                 columns,
-                new SortableBeanProvider<Play>( plays, "part.scenario.name" ),
+                new SortableBeanProvider<Play>( plays, "part.segment.name" ),
                 getPageSize() ) );
     }
 

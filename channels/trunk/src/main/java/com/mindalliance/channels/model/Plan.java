@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * A plan: events scenarios that respond to events and entities participating in the responses.
+ * A plan: events segments that respond to events and entities participating in the responses.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -54,9 +54,9 @@ public class Plan extends ModelObject {
     }
 
     /**
-     * The scenarios, for convenience...
+     * The segments, for convenience...
      */
-    private Set<Scenario> scenarios = new HashSet<Scenario>();
+    private Set<Segment> segments = new HashSet<Segment>();
 
     /**
      * Unplanned-for events.
@@ -156,8 +156,8 @@ public class Plan extends ModelObject {
     }
 
     @Transient
-    public Set<Scenario> getScenarios() {
-        return scenarios;
+    public Set<Segment> getSegments() {
+        return segments;
     }
 
     @Transient
@@ -283,7 +283,7 @@ public class Plan extends ModelObject {
     }
 
     /**
-     * Get a scenario's default event.
+     * Get a segment's default event.
      *
      * @return a plan event
      */
@@ -295,7 +295,7 @@ public class Plan extends ModelObject {
     }
 
     /**
-     * Get a scenario's default phase, adding it if needed.
+     * Get a segment's default phase, adding it if needed.
      *
      * @param queryService a query service
      * @return a phase
@@ -317,41 +317,41 @@ public class Plan extends ModelObject {
     }
 
     /**
-     * Add a scenario to list.
+     * Add a segment to list.
      *
-     * @param scenario a scenario
+     * @param segment a segment
      */
-    public void addScenario( Scenario scenario ) {
-        scenarios.add( scenario );
+    public void addSegment( Segment segment ) {
+        segments.add( segment );
     }
 
     /**
-     * Remove deleted scenario from list.
+     * Remove deleted segment from list.
      *
-     * @param scenario a scenario
+     * @param segment a segment
      */
-    public void removeScenario( Scenario scenario ) {
-        scenarios.remove( scenario );
+    public void removeSegment( Segment segment ) {
+        segments.remove( segment );
     }
 
     /**
-     * Get the number of scenarios in this plan.
+     * Get the number of segment in this plan.
      *
-     * @return the number of scenarios
+     * @return the number of segment
      */
     @Transient
-    public int getScenarioCount() {
-        return scenarios.size();
+    public int getSegmentCount() {
+        return segments.size();
     }
 
     /**
-     * Return one of the scenarios.
+     * Return one of the segments.
      *
-     * @return a scenario
+     * @return a segment
      */
     @Transient
-    public Scenario getDefaultScenario() {
-        return getScenarios().iterator().next();
+    public Segment getDefaultSegment() {
+        return getSegments().iterator().next();
     }
 
     /**
@@ -432,7 +432,7 @@ public class Plan extends ModelObject {
     public boolean references( final ModelObject mo ) {
         return
                 CollectionUtils.exists(
-                        scenarios,
+                        segments,
                         new Predicate() {
                             public boolean evaluate( Object obj ) {
                                 return ModelObject.areIdentical( (ModelObject) obj, mo );

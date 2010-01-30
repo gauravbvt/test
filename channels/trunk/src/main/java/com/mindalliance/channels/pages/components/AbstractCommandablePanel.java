@@ -9,7 +9,7 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.model.IModel;
 
@@ -72,7 +72,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      */
     protected boolean isLockedByUserIfNeeded( Identifiable identifiable ) {
         return getPlan().isDevelopment() &&
-                ( identifiable instanceof Scenario
+                ( identifiable instanceof Segment
                         || identifiable instanceof Plan
                         || isImmutable( identifiable )
                         || isLockedByUser( identifiable ) );

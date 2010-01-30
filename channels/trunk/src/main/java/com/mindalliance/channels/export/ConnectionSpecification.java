@@ -15,9 +15,9 @@ import java.io.Serializable;
 public class ConnectionSpecification implements Serializable {
 
     /**
-     * Scenario of an external (portal) connector, or connected external part (connected to proxy connector).
+     * Segment of an external (portal) connector, or connected external part (connected to proxy connector).
      */
-    private ScenarioSpecification scenarioSpecification;
+    private SegmentSpecification segmentSpecification;
     /**
      * Specification of part connecting to external connector, or of connected external part.
      */
@@ -38,12 +38,12 @@ public class ConnectionSpecification implements Serializable {
     public ConnectionSpecification() {
     }
 
-    public ScenarioSpecification getScenarioSpecification() {
-        return scenarioSpecification;
+    public SegmentSpecification getSegmentSpecification() {
+        return segmentSpecification;
     }
 
-    public void setScenarioSpecification( ScenarioSpecification scenarioSpecification ) {
-        this.scenarioSpecification = scenarioSpecification;
+    public void setSegmentSpecification( SegmentSpecification segmentSpecification ) {
+        this.segmentSpecification = segmentSpecification;
     }
 
     public PartSpecification getPartSpecification() {

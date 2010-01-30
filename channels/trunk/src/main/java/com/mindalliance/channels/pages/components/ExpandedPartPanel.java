@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.UpdateScenarioObject;
+import com.mindalliance.channels.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.Event;
@@ -128,13 +128,13 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      */
     private CheckBox asTeamCheckBox;
     /**
-     * Whether starts with scenario.
+     * Whether starts with segment.
      */
-    private CheckBox startWithScenarioCheckBox;
+    private CheckBox startWithSegmentCheckBox;
     /**
-     * Whether terminates event scenario responds to.
+     * Whether terminates event segment responds to.
      */
-    private CheckBox terminatesScenarioCheckBox;
+    private CheckBox terminatesSegmentCheckBox;
     /**
      * Mitigations by part.
      */
@@ -226,9 +226,9 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 && isLockedByUser( getPart() ) );
         selfTerminatingCheckBox.setEnabled( isLockedByUser( getPart() ) );
         repeatingCheckBox.setEnabled( isLockedByUser( getPart() ) );
-        startWithScenarioCheckBox.setEnabled( isLockedByUser( getPart() ) );
+        startWithSegmentCheckBox.setEnabled( isLockedByUser( getPart() ) );
         asTeamCheckBox.setEnabled( isLockedByUser( getPart() ) );
-        terminatesScenarioCheckBox.setEnabled( isLockedByUser( getPart() ) );
+        terminatesSegmentCheckBox.setEnabled( isLockedByUser( getPart() ) );
         initiatedEventField.setEnabled( isLockedByUser( getPart() ) );
         partDescription.setEnabled( isLockedByUser( getPart() ) );
         boolean partHasIssues = getAnalyst().hasIssues( getPart(), false );
@@ -375,26 +375,26 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getPart(), "onclick" ) );
             }
         } );
-        startWithScenarioCheckBox = new CheckBox(
-                "startsWithScenario",
-                new PropertyModel<Boolean>( this, "startsWithScenario" ) );
-        add( startWithScenarioCheckBox );
-        startWithScenarioCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+        startWithSegmentCheckBox = new CheckBox(
+                "startsWithSegment",
+                new PropertyModel<Boolean>( this, "startsWithSegment" ) );
+        add( startWithSegmentCheckBox );
+        startWithSegmentCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getPart(), "startsWithScenario" ) );
+                update( target, new Change( Change.Type.Updated, getPart(), "startsWithSegment" ) );
             }
         } );
         add( new ModelObjectLink( "event-link",
-                new PropertyModel<Event>( this, "part.scenario.event" ),
-                new PropertyModel<String>( this, "part.scenario.event.name" ) ) );
+                new PropertyModel<Event>( this, "part.segment.event" ),
+                new PropertyModel<String>( this, "part.segment.event.name" ) ) );
         add( new ModelObjectLink( "phase-link",
-                new PropertyModel<Event>( this, "part.scenario.phase" ),
-                new PropertyModel<String>( this, "part.scenario.phase.name" ) ) );
-        terminatesScenarioCheckBox = new CheckBox(
+                new PropertyModel<Event>( this, "part.segment.phase" ),
+                new PropertyModel<String>( this, "part.segment.phase.name" ) ) );
+        terminatesSegmentCheckBox = new CheckBox(
                 "terminatesEventPhase",
                 new PropertyModel<Boolean>( this, "terminatesEventPhase" ) );
-        add( terminatesScenarioCheckBox );
-        terminatesScenarioCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+        add( terminatesSegmentCheckBox );
+        terminatesSegmentCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getPart(), "terminatesEventPhase" ) );
             }
@@ -414,7 +414,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     }
 
     private void addMitigations() {
-        if ( getPart().getScenario().getRisks().isEmpty() ) {
+        if ( getPart().getSegment().getRisks().isEmpty() ) {
             mitigationsPanel = new Label( "mitigations", new Model<String>( "(No managed risks)" ) );
         } else {
             mitigationsPanel = new MitigationsPanel(
@@ -497,7 +497,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             if ( oldActor == null || !isSame( name, oldName ) )
                 newActor = getQueryService().findOrCreate( Actor.class, name );
         }
-        doCommand( new UpdateScenarioObject( getPart(), "actor", newActor ) );
+        doCommand( new UpdateSegmentObject( getPart(), "actor", newActor ) );
         getCommander().cleanup( Actor.class, oldName );
     }
 
@@ -516,7 +516,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             if ( oldPlace == null || !isSame( name, oldName ) )
                 newPlace = getQueryService().findOrCreate( Place.class, name );
         }
-        doCommand( new UpdateScenarioObject( getPart(), "jurisdiction", newPlace ) );
+        doCommand( new UpdateSegmentObject( getPart(), "jurisdiction", newPlace ) );
         getCommander().cleanup( Place.class, oldName );
     }
 
@@ -535,7 +535,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             if ( oldPlace == null || !isSame( name, oldName ) )
                 newPlace = getQueryService().findOrCreate( Place.class, name );
         }
-        doCommand( new UpdateScenarioObject( getPart(), "location", newPlace ) );
+        doCommand( new UpdateSegmentObject( getPart(), "location", newPlace ) );
         getCommander().cleanup( Place.class, oldName );
     }
 
@@ -554,7 +554,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             if ( oldOrg == null || !isSame( name, oldName ) )
                 newOrg = getQueryService().findOrCreate( Organization.class, name );
         }
-        doCommand( new UpdateScenarioObject( getPart(), "organization", newOrg ) );
+        doCommand( new UpdateSegmentObject( getPart(), "organization", newOrg ) );
         getCommander().cleanup( Organization.class, oldName );
     }
 
@@ -573,7 +573,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             if ( oldRole == null || !isSame( name, oldName ) )
                 newRole = getQueryService().findOrCreate( Role.class, name );
         }
-        doCommand( new UpdateScenarioObject( getPart(), "role", newRole ) );
+        doCommand( new UpdateSegmentObject( getPart(), "role", newRole ) );
         getCommander().cleanup( Role.class, oldName );
     }
 
@@ -583,7 +583,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param task the task
      */
     public void setTask( String task ) {
-        doCommand( new UpdateScenarioObject( getPart(), "task", task ) );
+        doCommand( new UpdateSegmentObject( getPart(), "task", task ) );
     }
 
     public Delay getRepeatsEvery() {
@@ -596,7 +596,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param delay a delay
      */
     public void setRepeatsEvery( Delay delay ) {
-        doCommand( new UpdateScenarioObject( getPart(), "repeatsEvery", delay ) );
+        doCommand( new UpdateSegmentObject( getPart(), "repeatsEvery", delay ) );
     }
 
     public Delay getCompletionTime() {
@@ -609,7 +609,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param delay a delay
      */
     public void setCompletionTime( Delay delay ) {
-        doCommand( new UpdateScenarioObject( getPart(), "completionTime", delay ) );
+        doCommand( new UpdateSegmentObject( getPart(), "completionTime", delay ) );
     }
 
     /**
@@ -627,7 +627,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param val a boolean
      */
     public void setSelfTerminating( boolean val ) {
-        doCommand( new UpdateScenarioObject( getPart(), "selfTerminating", val ) );
+        doCommand( new UpdateSegmentObject( getPart(), "selfTerminating", val ) );
     }
 
     /**
@@ -645,25 +645,25 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param val a boolean
      */
     public void setRepeating( boolean val ) {
-        doCommand( new UpdateScenarioObject( getPart(), "repeating", val ) );
+        doCommand( new UpdateSegmentObject( getPart(), "repeating", val ) );
     }
 
     /**
-     * Does part start with scenario?
+     * Does part start with segment?
      *
      * @return a boolean
      */
-    public boolean isStartsWithScenario() {
-        return getPart().isStartsWithScenario();
+    public boolean isStartsWithSegment() {
+        return getPart().setIsStartsWithSegment();
     }
 
     /**
-     * Sets whether starts with scenario.
+     * Sets whether starts with segment.
      *
      * @param val a boolean
      */
-    public void setStartsWithScenario( boolean val ) {
-        doCommand( new UpdateScenarioObject( getPart(), "startsWithScenario", val ) );
+    public void setStartsWithSegment( boolean val ) {
+        doCommand( new UpdateSegmentObject( getPart(), "startsWithSegment", val ) );
     }
 
     /**
@@ -681,7 +681,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param val a boolean
      */
     public void setAsTeam( boolean val ) {
-        doCommand( new UpdateScenarioObject( getPart(), "asTeam", val ) );
+        doCommand( new UpdateSegmentObject( getPart(), "asTeam", val ) );
     }
 
     /**
@@ -699,7 +699,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param val a boolean
      */
     public void setTerminatesEventPhase( boolean val ) {
-        doCommand( new UpdateScenarioObject( getPart(), "terminatesEventPhase", val ) );
+        doCommand( new UpdateSegmentObject( getPart(), "terminatesEventPhase", val ) );
     }
 
     /**
@@ -722,7 +722,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     }
 
     /**
-     * Sets whether terminates the scenario's event.
+     * Sets whether terminates the segment's event.
      *
      * @param name a plan event name
      */
@@ -736,7 +736,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             if ( oldEvent == null || !isSame( name, oldName ) )
                 newEvent = getQueryService().findOrCreateType( Event.class, name );
         }
-        doCommand( new UpdateScenarioObject( getPart(), "initiatedEvent", newEvent ) );
+        doCommand( new UpdateSegmentObject( getPart(), "initiatedEvent", newEvent ) );
         getCommander().cleanup( Event.class, oldName );
     }
 

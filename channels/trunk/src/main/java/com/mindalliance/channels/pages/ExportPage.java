@@ -5,7 +5,7 @@ import com.mindalliance.channels.Exporter;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.export.ImportExportFactory;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebPage;
@@ -16,35 +16,35 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
- * Scenario export stream page.
+ * Segment export stream page.
  */
 public class ExportPage extends WebPage {
 
     /** The log. */
     private static final Logger LOG = LoggerFactory.getLogger( ExportPage.class );
 
-    /** The scenario to export. */
-    private Scenario scenario;
+    /** The segment to export. */
+    private Segment segment;
 
     public ExportPage( PageParameters parameters ) {
         super( parameters );
 
         final QueryService queryService = getQueryService();
-        if ( parameters.containsKey( PlanPage.SCENARIO_PARM ) )
+        if ( parameters.containsKey( PlanPage.SEGMENT_PARM ) )
             try {
-                scenario = queryService.find( Scenario.class,
-                        parameters.getLong( PlanPage.SCENARIO_PARM ) );
+                segment = queryService.find( Segment.class,
+                        parameters.getLong( PlanPage.SEGMENT_PARM ) );
 
             } catch ( StringValueConversionException ignored ) {
-                LOG.warn( "Bad scenario specified. Exporting default scenario.", ignored );
-                scenario = queryService.getDefaultScenario();
+                LOG.warn( "Bad segment specified. Exporting default segment.", ignored );
+                segment = queryService.getDefaultSegment();
             } catch ( NotFoundException ignored ) {
-                LOG.warn( "Unknown scenario specified. Exporting default scenario.", ignored );
-                scenario = queryService.getDefaultScenario();
+                LOG.warn( "Unknown segment specified. Exporting default segment.", ignored );
+                segment = queryService.getDefaultSegment();
             }
         else {
-            LOG.warn( "No scenario specified. Exporting default scenario." );
-            scenario = queryService.getDefaultScenario();
+            LOG.warn( "No segment specified. Exporting default segment." );
+            segment = queryService.getDefaultSegment();
         }
     }
 
@@ -66,13 +66,13 @@ public class ExportPage extends WebPage {
     }
 
     /**
-     * Generate and return the bytes for the scenario.
+     * Generate and return the bytes for the segment.
      * @param markupStream the markup stream (ignored)
      */
     @Override
     protected void onRender( MarkupStream markupStream ) {
         try {
-            getExporter().export( scenario, getResponse().getOutputStream() );
+            getExporter().export( segment, getResponse().getOutputStream() );
         } catch ( IOException e ) {
             LOG.error( "Export error", e );
         }

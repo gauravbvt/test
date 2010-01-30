@@ -2,7 +2,7 @@ package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 
 import java.io.IOException;
 
@@ -16,35 +16,35 @@ import java.io.IOException;
 public class TestUpdatePlanObject extends AbstractChannelsTest {
 
     private UpdatePlanObject command;
-    private Scenario scenario;
+    private Segment segment;
 
     @Override
     protected void setUp() throws IOException {
         super.setUp();
-        scenario = app.getQueryService().getDefaultScenario();
-        command = new UpdatePlanObject( scenario, "description", "ipso lorem etc." );
+        segment = app.getQueryService().getDefaultSegment();
+        command = new UpdatePlanObject( segment, "description", "ipso lorem etc." );
         commander.reset();
     }
 
     public void testCommand() throws Exception {
         assertTrue( commander.canDo( command ) );
-        String description = scenario.getDescription();
+        String description = segment.getDescription();
         Change change = commander.doCommand( command );
         assertTrue( change.isUpdated() );
         assertTrue( change.getChangedPropertyValue().equals( "ipso lorem etc." ) );
-        String newDescription = scenario.getDescription();
+        String newDescription = segment.getDescription();
         assertFalse( description.equals( newDescription ) );
         assertTrue( commander.canUndo() );
         change = commander.undo();
         assertTrue( change.isUpdated() );
         assertTrue( change.getChangedPropertyValue().equals( description ) );
-        newDescription = scenario.getDescription();
+        newDescription = segment.getDescription();
         assertTrue( description.equals( newDescription ) );
         assertTrue( commander.canRedo() );
         change = commander.redo();
         assertTrue( change.isUpdated() );
         assertTrue( change.getChangedPropertyValue().equals( "ipso lorem etc." ) );
-        newDescription = scenario.getDescription();
+        newDescription = segment.getDescription();
         assertFalse( description.equals( newDescription ) );
     }
 

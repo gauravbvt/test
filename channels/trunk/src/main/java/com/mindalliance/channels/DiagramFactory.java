@@ -1,14 +1,14 @@
 package com.mindalliance.channels;
 
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
-import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
+import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.SegmentObject;
 import org.springframework.core.io.Resource;
 
 import java.util.List;
@@ -57,37 +57,37 @@ public interface DiagramFactory<Vertex, Edge> extends Service {
     /**
      * Instantiates a flow map diagram.
      *
-     * @param scenario a scenario
+     * @param segment a segment
      * @param node     a selected node
      * @param diagramSize width and height as array of doubles
      * @param orientation a string
      * @return a flow map diagram
      */
     Diagram newFlowMapDiagram(
-            Scenario scenario,
+            Segment segment,
             Node node,
             double[] diagramSize,
             String orientation );
 
     /**
      * Instantiates a plan map diagram.
-     * @param groupByPhase whetner to group scenario by phases
-     * @param groupByEvent whether to group scenarios by events addressed
-     * @param group phase or event grouping scenarios
-     * @param scenarios list of scenarios
-     * @param scRel selected scenario relationship
-     * @param scenario selected scenario
+     * @param groupByPhase whetner to group segment by phases
+     * @param groupByEvent whether to group segments by events addressed
+     * @param group phase or event grouping segments
+     * @param segments list of segments
+     * @param sgRel selected segment relationship
+     * @param segment selected segment
      * @param diagramSize width and height as array of doubles
      * @param orientation a string
      * @return a plan map diagram
      */
     Diagram newPlanMapDiagram(
-            List<Scenario> scenarios,
+            List<Segment> segments,
             boolean groupByPhase,
             boolean groupByEvent,
             ModelEntity group,
-            Scenario scenario,
-            ScenarioRelationship scRel,
+            Segment segment,
+            SegmentRelationship sgRel,
             double[] diagramSize,
             String orientation );
 
@@ -116,14 +116,14 @@ public interface DiagramFactory<Vertex, Edge> extends Service {
 
     /**
      * Instantiates an essential flow map diagram.
-     * @param scenarioObject a scenario object
+     * @param segmentObject a segment object
      * @param assumeFails whether alternate flows are assumed to fail
      * @param diagramSize width and height as array of doubles
      * @param orientation a string
      * @return  a critical flow map diagram
      */
     Diagram newEssentialFlowMapDiagram(
-            ScenarioObject scenarioObject,
+            SegmentObject segmentObject,
             boolean assumeFails,
             double[] diagramSize,
             String orientation );

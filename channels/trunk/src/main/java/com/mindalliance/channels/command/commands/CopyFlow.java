@@ -8,7 +8,7 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.ChannelsUtils;
 
 /**
@@ -24,7 +24,7 @@ public class CopyFlow extends AbstractCommand {
     public CopyFlow( Flow flow, Part part ) {
         set( "part", part.getId() );
         set( "flow", flow.getId() );
-        set( "scenario", flow.getScenario().getId() );
+        set( "segment", flow.getSegment().getId() );
     }
 
     /**
@@ -45,12 +45,12 @@ public class CopyFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     public Change execute( Commander commander ) throws CommandException {
-        Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+        Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
         Flow flow;
         Part part;
         try {
-            part = (Part) scenario.getNode( (Long) get( "part" ) );
-            flow = scenario.findFlow( (Long) get( "flow" ) );
+            part = (Part) segment.getNode( (Long) get( "part" ) );
+            flow = segment.findFlow( (Long) get( "flow" ) );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh", e );
         }
@@ -78,10 +78,10 @@ public class CopyFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getLabel( Commander commander ) throws CommandException {
-        Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+        Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
         Flow flow;
         try {
-            flow = scenario.findFlow( (Long) get( "flow" ) );
+            flow = segment.findFlow( (Long) get( "flow" ) );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh" );
         }

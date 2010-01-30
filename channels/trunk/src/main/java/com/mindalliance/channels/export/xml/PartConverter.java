@@ -10,7 +10,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.UserIssue;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -54,7 +54,6 @@ public class PartConverter extends AbstractChannelsConverter {
                          MarshallingContext context ) {
         Part part = (Part) object;
         writer.addAttribute( "id", String.valueOf( part.getId() ) );
-//        writer.addAttribute( "scenario", String.valueOf( part.getScenario().getId() ) );
         exportDetectionWaivers( part, writer );
         exportAttachments( part, writer );
         if ( part.getTask() != null ) {
@@ -107,8 +106,8 @@ public class PartConverter extends AbstractChannelsConverter {
             writer.setValue( part.getRepeatsEvery().toString() );
             writer.endNode();
         }
-        writer.startNode( "startsWithScenario" );
-        writer.setValue( "" + part.isStartsWithScenario() );
+        writer.startNode( "startsWithSegment" );
+        writer.setValue( "" + part.setIsStartsWithSegment() );
         writer.endNode();
         // todo - rename "terminatesEventPhase"
         writer.startNode( "terminatesEvent" );
@@ -140,13 +139,13 @@ public class PartConverter extends AbstractChannelsConverter {
      */
     @SuppressWarnings( "unchecked" )
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
-        Scenario scenario = (Scenario) context.get( "scenario" );
+        Segment segment = (Segment) context.get( "segment" );
         Map<Long, Long> idMap = getIdMap( context );
         boolean importingPlan = isImportingPlan( context );
         Long id = Long.parseLong( reader.getAttribute( "id" ) );
         Part part = importingPlan
-                ? getQueryService().createPart( scenario, id )
-                : getQueryService().createPart( scenario );
+                ? getQueryService().createPart( segment, id )
+                : getQueryService().createPart( segment );
         idMap.put( id, part.getId() );
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
@@ -203,8 +202,8 @@ public class PartConverter extends AbstractChannelsConverter {
                 part.setCompletionTime( Delay.parse( reader.getValue() ) );
             } else if ( nodeName.equals( "repeatsEvery" ) ) {
                 part.setRepeatsEvery( Delay.parse( reader.getValue() ) );
-            } else if ( nodeName.equals( "startsWithScenario" ) ) {
-                part.setStartsWithScenario( reader.getValue().equals( "true" ) );
+            } else if ( nodeName.equals( "startsWithSegment" ) ) {
+                part.setIsStartsWithSegment( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "terminatesEvent" ) ) {
                 part.setTerminatesEventPhase( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "initiatedEvent" ) ) {
@@ -214,16 +213,16 @@ public class PartConverter extends AbstractChannelsConverter {
                 if ( event == null ) LOG.warn( "Plan has no event named " + eventName );
                 part.setInitiatedEvent( event );
             } else if ( nodeName.equals( "flow" ) ) {
-                context.convertAnother( scenario, Flow.class );
+                context.convertAnother( segment, Flow.class );
             } else if ( nodeName.equals( "mitigation" ) ) {
                 Risk.Type type = Risk.Type.valueOf( reader.getAttribute( "type" ) );
                 String orgName = reader.getValue();
-                Risk risk = scenario.getRisk( type, orgName );
+                Risk risk = segment.getRisk( type, orgName );
                 part.getMitigations().add( risk );
             }  else if ( nodeName.equals( "asTeam" ) ) {
                 part.setAsTeam( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "issue" ) ) {
-                context.convertAnother( scenario, UserIssue.class );
+                context.convertAnother( segment, UserIssue.class );
             } else {
                 LOG.warn( "Unknown element " + nodeName );
             }

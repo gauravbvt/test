@@ -5,10 +5,10 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 
-import java.util.Iterator;
 import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -19,19 +19,19 @@ import java.io.IOException;
  */
 public class TestAddAndRemoveNeedAndCapability extends AbstractChannelsTest {
 
-    private Scenario scenario;
+    private Segment segment;
     private QueryService queryService;
     private Part part;
 
     protected void setUp() throws IOException {
         super.setUp();
         queryService = app.getQueryService();
-        scenario = queryService.createScenario();
-        part = scenario.getDefaultPart();
+        segment = queryService.createSegment();
+        part = segment.getDefaultPart();
     }
 
     protected void tearDown() {
-        queryService.remove( scenario );
+        queryService.remove( segment );
     }
 
     public void testAddRemoveNeed() throws Exception {

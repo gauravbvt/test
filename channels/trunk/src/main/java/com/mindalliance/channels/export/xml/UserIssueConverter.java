@@ -75,7 +75,7 @@ public class UserIssueConverter extends AbstractChannelsConverter {
         try {
             Long issueId = Long.parseLong( reader.getAttribute( "id" ) );
             Long aboutId = Long.parseLong( reader.getAttribute( "about" ) );
-            // When importing a scenario (vs reloading a plan), ids may be re-assigned
+            // When importing a segment (vs reloading a plan), ids may be re-assigned
             Long id = idMap.get( aboutId );
             aboutId = ( id == null ) ? aboutId : id;
             if ( aboutId != null ) {

@@ -6,7 +6,7 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -341,8 +341,8 @@ public class PlanDao extends Memory {
         if ( plan.getPhases().isEmpty() ) {
             plan.addDefaultPhase( queryService );
         }
-        // Make sure there is at least one scenario per plan
-        if ( !list( Scenario.class ).iterator().hasNext() )
-            plan.addScenario( queryService.createScenario() );
+        // Make sure there is at least one segment per plan
+        if ( !list( Segment.class ).iterator().hasNext() )
+            plan.addSegment( queryService.createSegment() );
     }
 }

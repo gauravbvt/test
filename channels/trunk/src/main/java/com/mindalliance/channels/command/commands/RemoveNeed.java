@@ -7,7 +7,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.ChannelsUtils;
 
 /**
@@ -40,8 +40,8 @@ public class RemoveNeed extends AbstractCommand {
      */
     public Change execute( Commander commander ) throws CommandException {
         try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Flow flow = scenario.findFlow( (Long) get( "flow" ) );
+            Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+            Flow flow = segment.findFlow( (Long) get( "flow" ) );
             flow.disconnect();
             commander.releaseAnyLockOn( flow );
             return new Change( Change.Type.Removed, flow );

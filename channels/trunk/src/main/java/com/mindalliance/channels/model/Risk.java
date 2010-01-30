@@ -13,7 +13,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * A risk to be mitigated in a scenario.
+ * A risk to be mitigated in a segment.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -39,9 +39,9 @@ public class Risk implements Serializable, Mappable {
      */
     private Issue.Level severity;
     /**
-     * Whether a risk ends with the scenario that causes it.
+     * Whether a risk ends with the segment that causes it.
      */
-    private boolean endsWithScenario;
+    private boolean endsWithSegment;
 
     public Risk() {
     }
@@ -78,12 +78,12 @@ public class Risk implements Serializable, Mappable {
         this.severity = severity;
     }
 
-    public boolean isEndsWithScenario() {
-        return endsWithScenario;
+    public boolean isEndsWithSegment() {
+        return endsWithSegment;
     }
 
-    public void setEndsWithScenario( boolean endsWithScenario ) {
-        this.endsWithScenario = endsWithScenario;
+    public void setEndsWithSegment( boolean endsWithSegment ) {
+        this.endsWithSegment = endsWithSegment;
     }
 
     /**
@@ -194,7 +194,7 @@ public class Risk implements Serializable, Mappable {
         LostRevenue( "Financial", "Lost revenue" ),
         AssetDevaluation( "Financial", "Asset devaluation" ),
         ReducedLiquidity( "Financial", "Reduced liquidity" ),
-        ReducedCredit( "Financial", "ReducedCredit" ),
+        ReducedCredit( "Financial", "Reduced credit" ),
         IncreasedLiability( "Financial", "Increased liability" ),
         FinesPenalties( "Financial", "Fines or penalties" ),
         // OtherFinancial( "Financial", "Other" ),

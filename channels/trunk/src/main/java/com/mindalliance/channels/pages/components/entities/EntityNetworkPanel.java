@@ -527,9 +527,9 @@ public class EntityNetworkPanel<T extends ModelEntity> extends AbstractUpdatable
         private void init() {
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             columns.add( makeFilterableLinkColumn(
-                    "In scenario",
-                    "scenario",
-                    "scenario.name",
+                    "In plan segment",
+                    "segment",
+                    "segment.name",
                     EMPTY,
                     filterable ) );
             columns.add( makeFilterableLinkColumn(
@@ -578,7 +578,7 @@ public class EntityNetworkPanel<T extends ModelEntity> extends AbstractUpdatable
             add( new AjaxFallbackDefaultDataTable(
                     "flows",
                     columns,
-                    new SortableBeanProvider<Flow>( flows, "scenario.name" ),
+                    new SortableBeanProvider<Flow>( flows, "segment.name" ),
                     getPageSize() ) );
 
         }
@@ -611,9 +611,9 @@ public class EntityNetworkPanel<T extends ModelEntity> extends AbstractUpdatable
         private void init() {
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             columns.add( makeFilterableLinkColumn(
-                    "In scenario",
-                    "flow.scenario",
-                    "flow.scenario.name",
+                    "In plan segment",
+                    "flow.segment",
+                    "flow.segment.name",
                     EMPTY,
                     filterable ) );
             columns.add( makeFilterableLinkColumn(
@@ -662,7 +662,7 @@ public class EntityNetworkPanel<T extends ModelEntity> extends AbstractUpdatable
             add( new AjaxFallbackDefaultDataTable(
                     "flows",
                     columns,
-                    new SortableBeanProvider<ActorFlow>( actorFlows, "flow.scenario.name" ),
+                    new SortableBeanProvider<ActorFlow>( actorFlows, "flow.segment.name" ),
                     getPageSize() ) );
 
         }

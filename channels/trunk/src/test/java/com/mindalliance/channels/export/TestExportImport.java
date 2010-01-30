@@ -1,16 +1,16 @@
 package com.mindalliance.channels.export;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.Importer;
 import com.mindalliance.channels.Exporter;
+import com.mindalliance.channels.Importer;
+import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.model.Segment;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.StringReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public class TestExportImport extends AbstractChannelsTest {
 
-    private List<String> scenarioNames;
+    private List<String> segmentNames;
     private QueryService queryService;
 
 
@@ -34,19 +34,19 @@ public class TestExportImport extends AbstractChannelsTest {
     protected void setUp() throws IOException {
         super.setUp();
         queryService = app.getQueryService();
-        scenarioNames = new ArrayList<String>();
-        for ( Scenario scenario : app.getQueryService().list( Scenario.class ) ) {
-            scenarioNames.add( scenario.getName() );
+        segmentNames = new ArrayList<String>();
+        for ( Segment segment : app.getQueryService().list( Segment.class ) ) {
+            segmentNames.add( segment.getName() );
         }
     }
 
-    public void testExportImportScenario() throws Exception {
+    public void testExportImportSegment() throws Exception {
         Map<String,String> exported0 = new HashMap<String,String>();
         Map<String,String> exported1 = new HashMap<String,String>();
         Map<String,String> exported2 = new HashMap<String,String>();
-        // allow removal of all named scenarios by creating an empty one
-        queryService.createScenario();
-        // Export all named scenarios
+        // allow removal of all named segments by creating an empty one
+        queryService.createSegment();
+        // Export all named segments
 
         exportAll(exported0);
         removeAll();
@@ -55,12 +55,12 @@ public class TestExportImport extends AbstractChannelsTest {
         exportAll(exported1);
         // Import in reverse order
         removeAll();
-        Collections.reverse( scenarioNames );
+        Collections.reverse( segmentNames );
         importAll(exported0);
         // re-export
         exportAll(exported2);
         // Make sure all xml serializations are similar
-        for (String name : scenarioNames) {
+        for (String name : segmentNames ) {
             // export vs export-import-export
             compare(exported0.get(name), exported1.get(name));
             // export vs export-reverse import-export
@@ -81,12 +81,12 @@ public class TestExportImport extends AbstractChannelsTest {
     }
 
     private void exportAll(Map<String,String> exported) throws Exception {
-        for ( String name : scenarioNames ) {
-            Scenario scenario = queryService.findScenario( name );
+        for ( String name : segmentNames ) {
+            Segment segment = queryService.findSegment( name );
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             ImportExportFactory exportFactory = app.getImportExportFactory();
             Exporter exporter = exportFactory.createExporter( queryService, plan );
-            exporter.export( scenario, out );
+            exporter.export( segment, out );
             String xml = out.toString();
             // System.out.println( xml );
             exported.put(name,xml);
@@ -95,18 +95,18 @@ public class TestExportImport extends AbstractChannelsTest {
     }
 
     private void removeAll() throws Exception {
-        for ( String name : scenarioNames ) {
-            queryService.remove( queryService.findScenario( name ) );
+        for ( String name : segmentNames ) {
+            queryService.remove( queryService.findSegment( name ) );
         }
     }
 
     private void importAll(Map<String,String> exported) throws Exception {
-        for ( String name : scenarioNames ) {
+        for ( String name : segmentNames ) {
             String xml = exported.get( name );
             ByteArrayInputStream in = new ByteArrayInputStream( xml.getBytes() );
             Importer importer = app.getImportExportFactory().createImporter( queryService, plan );
-            Scenario scenario = importer.importScenario( in );
-            assertTrue(name.equals(scenario.getName()));
+            Segment segment = importer.importSegment( in );
+            assertTrue(name.equals(segment.getName()));
         }
     }
 }

@@ -3,9 +3,9 @@ package com.mindalliance.channels.export.xml;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.export.PartSpecification;
-import com.mindalliance.channels.export.ScenarioSpecification;
+import com.mindalliance.channels.export.SegmentSpecification;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.Matcher;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.apache.commons.collections.Predicate;
@@ -48,31 +48,31 @@ public class ConverterUtils {
         }
     }
 
-    public static List<Scenario> findMatchingScenarios( ScenarioSpecification scSpec, QueryService queryService ) {
-         return findMatchingScenarios(scSpec.getName(), scSpec.getDescription(), queryService);
+    public static List<Segment> findMatchingSegments( SegmentSpecification scSpec, QueryService queryService ) {
+         return findMatchingSegments(scSpec.getName(), scSpec.getDescription(), queryService);
     }
 
-    // TODO do semantic match on scenario name and description
-    public static List<Scenario> findMatchingScenarios( String scenarioName,
-                                                        String scenarioDescription,
+    // TODO do semantic match on segment name and description
+    public static List<Segment> findMatchingSegments( String segmentName,
+                                                        String segmentDescription,
                                                         QueryService queryService) {
-        List<Scenario> scenarios = new ArrayList<Scenario>();
+        List<Segment> segments = new ArrayList<Segment>();
         try {
-            scenarios.add( queryService.findScenario( scenarioName ) );
+            segments.add( queryService.findSegment( segmentName ) );
         } catch ( NotFoundException e ) {
             LoggerFactory.getLogger( ConverterUtils.class ).info(
-                    "No scenario found matching name ["
-                            + scenarioName
+                    "No segment found matching name ["
+                            + segmentName
                             + "] and description ["
-                            + scenarioDescription
+                            + segmentDescription
                             + "]" );
         }
-        return scenarios;
+        return segments;
     }
 
-    public static List<Part> findMatchingParts( Scenario scenario, PartSpecification partSpec) {
+    public static List<Part> findMatchingParts( Segment segment, PartSpecification partSpec) {
         return findMatchingParts(
-                scenario,
+                segment,
                 partSpec.getRoleName(),
                 partSpec.getOrganizationName(),
                 partSpec.getTask(),
@@ -81,14 +81,14 @@ public class ConverterUtils {
 }
 
     @SuppressWarnings( "unchecked" )
-    public static List<Part> findMatchingParts( Scenario scenario,
+    public static List<Part> findMatchingParts( Segment segment,
                                                 final String roleName,
                                                 final String organizationName,
                                                 final String task,
                                                 final String taskDescription ) {
         List<Part> externalParts = new ArrayList<Part>();
         Iterator<Part> iterator =
-                (Iterator<Part>) new FilterIterator( scenario.parts(), new Predicate() {
+                (Iterator<Part>) new FilterIterator( segment.parts(), new Predicate() {
                     public boolean evaluate( Object obj ) {
                         Part part = (Part) obj;
                         return partMatches( part, roleName, organizationName, task, taskDescription );

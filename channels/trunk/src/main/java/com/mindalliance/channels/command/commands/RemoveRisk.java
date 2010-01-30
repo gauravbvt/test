@@ -8,10 +8,10 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Risk;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 
 /**
- * Remove a risk from a scenario.
+ * Remove a risk from a segment.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -23,9 +23,9 @@ public class RemoveRisk extends AbstractCommand {
     public RemoveRisk() {
     }
 
-    public RemoveRisk( Scenario scenario, Risk risk ) {
-        needLockOn( scenario );
-        set( "scenario", scenario.getId() );
+    public RemoveRisk( Segment segment, Risk risk ) {
+        needLockOn( segment );
+        set( "segment", segment.getId() );
         set( "organization", risk.getOrganization().getName() );
         set( "type", risk.getType().name() );
     }
@@ -48,17 +48,17 @@ public class RemoveRisk extends AbstractCommand {
      * {@inheritDoc}
      */
     public Change execute( Commander commander ) throws CommandException {
-        Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+        Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
         Risk.Type type = Risk.Type.valueOf( (String) get( "type" ) );
-        Risk risk = scenario.getRisk( type, (String) get( "organization" ) );
+        Risk risk = segment.getRisk( type, (String) get( "organization" ) );
         MultiCommand multi = (MultiCommand) get( "subCommands" );
         if ( multi == null ) {
-            multi = makeSubCommands( scenario, risk );
+            multi = makeSubCommands( segment, risk );
             set( "subCommands", multi );
         }
         // else this is a replay
         multi.execute( commander );
-        return new Change( Change.Type.Recomposed, scenario );
+        return new Change( Change.Type.Recomposed, segment );
     }
 
     /**
@@ -74,16 +74,16 @@ public class RemoveRisk extends AbstractCommand {
         return multi;
     }
 
-    private MultiCommand makeSubCommands( Scenario scenario, Risk risk ) {
+    private MultiCommand makeSubCommands( Segment segment, Risk risk ) {
         MultiCommand subCommands = new MultiCommand( "delete risk - internal" );
         subCommands.addCommand( new UpdatePlanObject(
-                scenario,
+                segment,
                 "risks",
                 risk,
                 UpdateObject.Action.Remove )
         );
-        for ( Part part : scenario.getMitigators( risk ) ) {
-            subCommands.addCommand( new UpdateScenarioObject(
+        for ( Part part : segment.getMitigators( risk ) ) {
+            subCommands.addCommand( new UpdateSegmentObject(
                     part,
                     "mitigations",
                     risk,

@@ -1,10 +1,10 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.attachments.BitBucket;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.SimpleIdGenerator;
-import com.mindalliance.channels.query.DefaultQueryService;
-import com.mindalliance.channels.attachments.BitBucket;
 import com.mindalliance.channels.export.DummyExporter;
+import com.mindalliance.channels.query.DefaultQueryService;
 import junit.framework.TestCase;
 
 import java.util.HashMap;
@@ -22,7 +22,7 @@ public class TestNode extends TestCase {
     private Flow f3;
     private Part p1;
     private Part p2;
-    private Scenario scenario;
+    private Segment segment;
     private DefaultQueryService queryService;
 
     public TestNode() {
@@ -38,10 +38,10 @@ public class TestNode extends TestCase {
         queryService = new DefaultQueryService( planManager, new BitBucket() );
         queryService.afterPropertiesSet();
 
-        scenario = queryService.createScenario();
-        p1 = queryService.createPart( scenario );
+        segment = queryService.createSegment();
+        p1 = queryService.createPart( segment );
             p1.setActor( queryService.findOrCreate( Actor.class, "p1" ) );
-        p2 = queryService.createPart( scenario );
+        p2 = queryService.createPart( segment );
             p2.setActor( queryService.findOrCreate( Actor.class, "p2" ) );
 
         f1 = p1.createOutcome( queryService );
@@ -106,10 +106,10 @@ public class TestNode extends TestCase {
     }
 
     public void testIsness() {
-        Part part = queryService.createPart( scenario );
+        Part part = queryService.createPart( segment );
         assertTrue( part.isPart() );
         assertFalse( part.isConnector() );
-        Connector c = queryService.createConnector( scenario );
+        Connector c = queryService.createConnector( segment );
         assertFalse( c.isPart() );
         assertTrue( c.isConnector() );
     }

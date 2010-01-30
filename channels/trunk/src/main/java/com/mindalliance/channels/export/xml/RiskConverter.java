@@ -54,8 +54,8 @@ public class RiskConverter extends AbstractChannelsConverter {
         writer.startNode( "severity" );
         writer.setValue( risk.getSeverity().toString() );
         writer.endNode();
-        writer.startNode( "endsWithScenario" );
-        writer.setValue( "" + risk.isEndsWithScenario() );
+        writer.startNode( "endsWithSegment" );
+        writer.setValue( "" + risk.isEndsWithSegment() );
         writer.endNode();
         writer.startNode( "description" );
         writer.setValue( risk.getDescription() );
@@ -87,8 +87,8 @@ public class RiskConverter extends AbstractChannelsConverter {
                 risk.setOrganization( org );
             } else if ( nodeName.equals( "severity" ) ) {
                 risk.setSeverity( Issue.Level.valueOf( reader.getValue() ) );
-            } else if ( nodeName.equals( "endsWithScenario" ) ) {
-                risk.setEndsWithScenario( reader.getValue().equals( "true" ) );
+            } else if ( nodeName.equals( "endsWithSegment" ) ) {
+                risk.setEndsWithSegment( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "description" ) ) {
                 risk.setDescription( reader.getValue() );
             }

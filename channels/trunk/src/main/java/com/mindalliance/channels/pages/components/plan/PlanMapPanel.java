@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.plan;
 
 
-import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
+import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ExternalFlow;
@@ -10,11 +10,11 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.ExternalFlowsPanel;
-import com.mindalliance.channels.pages.components.ScenarioCausesPanel;
+import com.mindalliance.channels.pages.components.SegmentCausesPanel;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import org.apache.commons.collections.CollectionUtils;
@@ -51,7 +51,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
      */
     private static final int PAGE_SIZE = 10;
     /**
-     * Whether to group scenarios by phase.
+     * Whether to group segments by phase.
      */
     private boolean groupByPhase;
     /**
@@ -63,13 +63,13 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
      */
     private ModelObject selectedGroup;
     /**
-     * Selected scenario in plan.
+     * Selected segment in plan.
      */
-    private Scenario selectedScenario;
+    private Segment selectedSegment;
     /**
-     * Selected scenario relationship in plan.
+     * Selected segment relationship in plan.
      */
-    private ScenarioRelationship selectedScRel;
+    private SegmentRelationship selectedSgRel;
     /**
      * Plan map diagram panel.
      */
@@ -184,12 +184,12 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
                 : new Settings( ".plan .picture", null, diagramSize, true, true );
         planMapDiagramPanel = new PlanMapDiagramPanel(
                 "plan-map",
-                new PropertyModel<ArrayList<Scenario>>( this, "allScenarios" ),
+                new PropertyModel<ArrayList<Segment>>( this, "allSegments" ),
                 groupByPhase,
                 groupByEvent,
                 selectedGroup,
-                selectedScenario,
-                selectedScRel,
+                selectedSegment,
+                selectedSgRel,
                 settings );
         planMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( planMapDiagramPanel );
@@ -221,23 +221,23 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     }
 
     private void addCausesPanel() {
-        ScenarioCausesPanel scenarioCausesPanel = new ScenarioCausesPanel(
+        SegmentCausesPanel segmentCausesPanel = new SegmentCausesPanel(
                 "causes",
-                getScenarioRelationships(),
+                getSegmentRelationships(),
                 PAGE_SIZE,
                 getExpansions()
         );
-        scenarioCausesPanel.setOutputMarkupId( true );
-        addOrReplace( scenarioCausesPanel );
+        segmentCausesPanel.setOutputMarkupId( true );
+        addOrReplace( segmentCausesPanel );
     }
 
     /**
-     * Get scenarios to map.
+     * Get segment to map.
      *
-     * @return an array list of scenarios
+     * @return an array list of segment
      */
-    public List<Scenario> getAllScenarios() {
-        return getQueryService().list( Scenario.class );
+    public List<Segment> getAllSegments() {
+        return getQueryService().list( Segment.class );
     }
 
     /**
@@ -248,32 +248,32 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     public String getFlowsTitle() {
         if ( selectedGroup != null ) {
             if ( groupByPhase ) {
-                return "Flows connecting scenarios in phase \""
+                return "Flows connecting plan segments in phase \""
                         + selectedGroup.getName()
                         + "\"";
             } else {
-                return "Flows connecting scenarios about event \""
+                return "Flows connecting plan segments about event \""
                         + selectedGroup.getName()
                         + "\"";
             }
-        } else if ( selectedScenario != null ) {
+        } else if ( selectedSegment != null ) {
             return "Flows connecting \""
-                    + selectedScenario.getName()
-                    + "\" to other scenarios";
-        } else if ( selectedScRel != null ) {
-            Scenario fromScenario = selectedScRel.getFromScenario( getQueryService() );
-            Scenario toScenario = selectedScRel.getToScenario( getQueryService() );
-            if ( fromScenario == null || toScenario == null ) {
+                    + selectedSegment.getName()
+                    + "\" to other plan segments";
+        } else if ( selectedSgRel != null ) {
+            Segment fromSegment = selectedSgRel.getFromSegment( getQueryService() );
+            Segment toSegment = selectedSgRel.getToSegment( getQueryService() );
+            if ( fromSegment == null || toSegment == null ) {
                 return "*** You need to refresh ***";
             } else {
                 return "Flows connecting \""
-                        + fromScenario.getName()
+                        + fromSegment.getName()
                         + "\" to \""
-                        + toScenario.getName()
+                        + toSegment.getName()
                         + "\"";
             }
         } else {
-            return "All inter-scenario flows";
+            return "All inter-segment flows";
         }
     }
 
@@ -285,28 +285,28 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     public String getCausesTitle() {
         if ( selectedGroup != null ) {
             if ( groupByPhase ) {
-                return "Causations for scenarios in phase \""
+                return "Causations for plan segments in phase \""
                         + selectedGroup.getName()
                         + "\"";
             } else {
-                return "Causations for scenarios about event \""
+                return "Causations for plan segments about event \""
                         + selectedGroup.getName()
                         + "\"";
             }
-        } else if ( selectedScenario != null ) {
-            return "Causations for scenario \""
-                    + selectedScenario.getName()
+        } else if ( selectedSegment != null ) {
+            return "Causations for plan segment \""
+                    + selectedSegment.getName()
                     + "\"";
-        } else if ( selectedScRel != null ) {
-            Scenario fromScenario = selectedScRel.getFromScenario( getQueryService() );
-            Scenario toScenario = selectedScRel.getToScenario( getQueryService() );
-            if ( fromScenario == null || toScenario == null ) {
+        } else if ( selectedSgRel != null ) {
+            Segment fromSegment = selectedSgRel.getFromSegment( getQueryService() );
+            Segment toSegment = selectedSgRel.getToSegment( getQueryService() );
+            if ( fromSegment == null || toSegment == null ) {
                 return "*** You need to refresh ***";
             } else {
                 return "How \""
-                        + fromScenario.getName()
+                        + fromSegment.getName()
                         + "\" impacts \""
-                        + toScenario.getName()
+                        + toSegment.getName()
                         + "\"";
             }
         } else {
@@ -320,43 +320,43 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
      * @return a list of external flows
      */
     public List<ExternalFlow> getExternalFlows() {
-        if ( selectedScRel != null ) {
-            return selectedScRel.getExternalFlows();
+        if ( selectedSgRel != null ) {
+            return selectedSgRel.getExternalFlows();
         } else if ( selectedGroup != null ) {
             List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
-            List<Scenario> scenariosInGroup = getScenariosInGroup();
-            List<Scenario> allScenarios = getAllScenarios();
-            for ( Scenario scenario : allScenarios ) {
-                for ( Scenario other : allScenarios ) {
-                    if ( !scenario.equals( other )
+            List<Segment> segmentsInGroup = getSegmentsInGroup();
+            List<Segment> allSegments = getAllSegments();
+            for ( Segment segment : allSegments ) {
+                for ( Segment other : allSegments ) {
+                    if ( !segment.equals( other )
                             &&
-                            ( scenariosInGroup.contains( scenario )
-                                    || scenariosInGroup.contains( other ) ) ) {
-                        ScenarioRelationship scRel = getQueryService().findScenarioRelationship( scenario, other );
+                            ( segmentsInGroup.contains( segment )
+                                    || segmentsInGroup.contains( other ) ) ) {
+                        SegmentRelationship scRel = getQueryService().findSegmentRelationship( segment, other );
                         if ( scRel != null ) externalFlows.addAll( scRel.getExternalFlows() );
                     }
                 }
             }
             return externalFlows;
-        } else if ( selectedScenario != null ) {
+        } else if ( selectedSegment != null ) {
             List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
-            List<Scenario> allScenarios = getAllScenarios();
-            for ( Scenario other : allScenarios ) {
-                if ( !selectedScenario.equals( other ) ) {
-                    ScenarioRelationship scRel = getQueryService().findScenarioRelationship( selectedScenario, other );
+            List<Segment> allSegments = getAllSegments();
+            for ( Segment other : allSegments ) {
+                if ( !selectedSegment.equals( other ) ) {
+                    SegmentRelationship scRel = getQueryService().findSegmentRelationship( selectedSegment, other );
                     if ( scRel != null ) externalFlows.addAll( scRel.getExternalFlows() );
-                    scRel = getQueryService().findScenarioRelationship( other, selectedScenario );
+                    scRel = getQueryService().findSegmentRelationship( other, selectedSegment );
                     if ( scRel != null ) externalFlows.addAll( scRel.getExternalFlows() );
                 }
             }
             return externalFlows;
         } else {
             List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
-            List<Scenario> allScenarios = getAllScenarios();
-            for ( Scenario scenario : allScenarios ) {
-                for ( Scenario other : allScenarios ) {
-                    if ( !scenario.equals( other ) ) {
-                        ScenarioRelationship scRel = getQueryService().findScenarioRelationship( scenario, other );
+            List<Segment> allSegments = getAllSegments();
+            for ( Segment segment : allSegments ) {
+                for ( Segment other : allSegments ) {
+                    if ( !segment.equals( other ) ) {
+                        SegmentRelationship scRel = getQueryService().findSegmentRelationship( segment, other );
                         if ( scRel != null ) externalFlows.addAll( scRel.getExternalFlows() );
                     }
                 }
@@ -366,17 +366,17 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     }
 
     @SuppressWarnings( "unchecked" )
-    private List<Scenario> getScenariosInGroup() {
-        return (List<Scenario>) CollectionUtils.select(
-                getAllScenarios(),
+    private List<Segment> getSegmentsInGroup() {
+        return (List<Segment>) CollectionUtils.select(
+                getAllSegments(),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         if ( selectedGroup != null ) {
-                            Scenario scenario = (Scenario) obj;
+                            Segment segment = (Segment) obj;
                             if ( groupByPhase ) {
-                                return scenario.getPhase().equals( selectedGroup );
+                                return segment.getPhase().equals( selectedGroup );
                             } else {
-                                return scenario.getEvent().equals( selectedGroup );
+                                return segment.getEvent().equals( selectedGroup );
                             }
                         } else {
                             return true;
@@ -387,46 +387,46 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     }
 
     /**
-     * Get scenario relationships.
+     * Get segment relationships.
      *
-     * @return a list of scenario relationships
+     * @return a list of segment relationships
      */
-    public List<ScenarioRelationship> getScenarioRelationships() {
-        List<ScenarioRelationship> scRels = new ArrayList<ScenarioRelationship>();
-        if ( selectedScRel != null ) {
-            scRels.add( selectedScRel );
+    public List<SegmentRelationship> getSegmentRelationships() {
+        List<SegmentRelationship> scRels = new ArrayList<SegmentRelationship>();
+        if ( selectedSgRel != null ) {
+            scRels.add( selectedSgRel );
         } else if ( selectedGroup != null ) {
-            List<Scenario> scenariosInGroup = getScenariosInGroup();
-            List<Scenario> allScenarios = getAllScenarios();
-            for ( Scenario scenario : allScenarios ) {
-                for ( Scenario other : allScenarios ) {
-                    if ( !scenario.equals( other )
+            List<Segment> segmentsInGroup = getSegmentsInGroup();
+            List<Segment> allSegments = getAllSegments();
+            for ( Segment segment : allSegments ) {
+                for ( Segment other : allSegments ) {
+                    if ( !segment.equals( other )
                             &&
-                            ( scenariosInGroup.contains( scenario )
-                                    || scenariosInGroup.contains( other ) ) ) {
-                        ScenarioRelationship scRel =
-                                getQueryService().findScenarioRelationship( scenario, other );
+                            ( segmentsInGroup.contains( segment )
+                                    || segmentsInGroup.contains( other ) ) ) {
+                        SegmentRelationship scRel =
+                                getQueryService().findSegmentRelationship( segment, other );
                         if ( scRel != null ) scRels.add( scRel );
                     }
                 }
             }
-        } else if ( selectedScenario != null ) {
-            List<Scenario> allScenarios = getAllScenarios();
-            for ( Scenario other : allScenarios ) {
-                if ( !selectedScenario.equals( other ) ) {
-                    ScenarioRelationship scRel = getQueryService().
-                            findScenarioRelationship( selectedScenario, other );
+        } else if ( selectedSegment != null ) {
+            List<Segment> allSegments = getAllSegments();
+            for ( Segment other : allSegments ) {
+                if ( !selectedSegment.equals( other ) ) {
+                    SegmentRelationship scRel = getQueryService().
+                            findSegmentRelationship( selectedSegment, other );
                     if ( scRel != null ) scRels.add( scRel );
-                    scRel = getQueryService().findScenarioRelationship( other, selectedScenario );
+                    scRel = getQueryService().findSegmentRelationship( other, selectedSegment );
                     if ( scRel != null ) scRels.add( scRel );
                 }
             }
         } else {
-            List<Scenario> allScenarios = getAllScenarios();
-            for ( Scenario scenario : allScenarios ) {
-                for ( Scenario other : allScenarios ) {
-                    if ( !scenario.equals( other ) ) {
-                        ScenarioRelationship scRel = getQueryService().findScenarioRelationship( scenario, other );
+            List<Segment> allSegments = getAllSegments();
+            for ( Segment segment : allSegments ) {
+                for ( Segment other : allSegments ) {
+                    if ( !segment.equals( other ) ) {
+                        SegmentRelationship scRel = getQueryService().findSegmentRelationship( segment, other );
                         if ( scRel != null ) scRels.add( scRel );
                     }
                 }
@@ -436,13 +436,13 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     }
 
     /**
-     * Get to-scenario from selected scenario relationship.
+     * Get to-segment from selected segment relationship.
      *
-     * @return a scenario
+     * @return a segment
      */
-    public Scenario getToScenario() {
-        if ( selectedScRel != null ) {
-            return selectedScRel.getToScenario( getQueryService() );
+    public Segment getToSegment() {
+        if ( selectedSgRel != null ) {
+            return selectedSgRel.getToSegment( getQueryService() );
         } else {
             return null;
         }
@@ -466,22 +466,22 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
             Identifiable changed = change.getSubject();
             if ( changed instanceof Plan ) {
                 selectedGroup = null;
-                selectedScenario = null;
-                selectedScRel = null;
+                selectedSegment = null;
+                selectedSgRel = null;
             } else if ( changed instanceof Phase || changed instanceof Event ) {
                 selectedGroup = (ModelObject) changed;
-                selectedScenario = null;
-                selectedScRel = null;
-            } else if ( changed instanceof Scenario ) {
+                selectedSegment = null;
+                selectedSgRel = null;
+            } else if ( changed instanceof Segment ) {
                 selectedGroup = null;
-                selectedScenario = (Scenario) changed;
-                selectedScRel = null;
-            } else if ( changed instanceof ScenarioRelationship ) {
+                selectedSegment = (Segment) changed;
+                selectedSgRel = null;
+            } else if ( changed instanceof SegmentRelationship ) {
                 selectedGroup = null;
-                selectedScenario = null;
-                selectedScRel = (ScenarioRelationship) changed;
+                selectedSegment = null;
+                selectedSgRel = (SegmentRelationship) changed;
             }
-            // Don't percolate chane on selection of app, scenario or scenario relationship.
+            // Don't percolate chane on selection of app, segment or segment relationship.
             else {
                 super.changed( change );
             }

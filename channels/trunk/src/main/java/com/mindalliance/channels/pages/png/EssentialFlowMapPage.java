@@ -4,8 +4,8 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.pages.PlanPage;
 import org.apache.wicket.PageParameters;
 import org.slf4j.Logger;
@@ -37,25 +37,28 @@ public class EssentialFlowMapPage extends PngWebPage {
     /**
      * The hypothetical failure.
      */
-    private ScenarioObject scenarioObject;
+    private SegmentObject segmentObject;
+    /**
+     * WHether alternate flows assumed to fail.
+     */
     private boolean assumeFails;
 
     public EssentialFlowMapPage( PageParameters parameters ) {
         super( parameters );
         QueryService queryService = getQueryService();
-        Scenario scenario = PlanPage.findScenario( queryService, parameters );
-        if ( scenario != null && parameters.containsKey( FAILURE ) ) {
+        Segment segment = PlanPage.findSegment( queryService, parameters );
+        if ( segment != null && parameters.containsKey( FAILURE ) ) {
             try {
                 long id = parameters.getLong( FAILURE );
                 try {
-                    scenarioObject = scenario.findFlow( id );
+                    segmentObject = segment.findFlow( id );
                 } catch ( NotFoundException e ) {
                     // ignore
                 }
-                if ( scenarioObject == null )
-                    scenarioObject = scenario.getNode( id );
+                if ( segmentObject == null )
+                    segmentObject = segment.getNode( id );
             } catch ( Exception ignored ) {
-                LOG.warn( "Invalid failed scenario object specified in parameters." );
+                LOG.warn( "Invalid failed segment object specified in parameters." );
             }
         }
         assumeFails = parameters.getAsBoolean( ASSUME_FAILS, false );
@@ -65,11 +68,11 @@ public class EssentialFlowMapPage extends PngWebPage {
      * {@inheritDoc}
      */
     protected Diagram makeDiagram( double[] size, String orientation ) throws DiagramException {
-        if ( scenarioObject == null )
-            throw new DiagramException( "Can't find failed scenario object" );
+        if ( segmentObject == null )
+            throw new DiagramException( "Can't find failed segment object" );
         else
             return getDiagramFactory().newEssentialFlowMapDiagram(
-                    scenarioObject,
+                    segmentObject,
                     assumeFails,
                     size,
                     orientation );

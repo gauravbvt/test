@@ -8,7 +8,7 @@ import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -22,7 +22,7 @@ import java.util.Iterator;
  */
 public class TestSatisfyNeed extends AbstractChannelsTest {
 
-    private Scenario scenario;
+    private Segment segment;
     private QueryService queryService;
     Part source;
     Part target;
@@ -34,23 +34,23 @@ public class TestSatisfyNeed extends AbstractChannelsTest {
     protected void setUp() throws IOException {
         super.setUp();
         queryService = app.getQueryService();
-        scenario = queryService.createScenario();
-        source = scenario.getDefaultPart();
+        segment = queryService.createSegment();
+        source = segment.getDefaultPart();
         source.setRole( queryService.findOrCreate( Role.class, "source" ) );
         source.setTask( "doing source things" );
-        target = queryService.createPart( scenario );
+        target = queryService.createPart( segment );
         target.setTask( "doing target things" );
         target.setRole( queryService.findOrCreate( Role.class, "target" ) );
         flow = queryService.connect( source, target, "info" );
-        otherTarget = queryService.createPart( scenario );
+        otherTarget = queryService.createPart( segment );
         otherTarget.setTask( "doing other things" );
         otherTarget.setRole( queryService.findOrCreate( Role.class, "other target" ) );
-        connector = queryService.createConnector( scenario );
+        connector = queryService.createConnector( segment );
         queryService.connect( connector, otherTarget, "info" );
     }
 
     protected void tearDown() {
-        queryService.remove( scenario );
+        queryService.remove( segment );
     }
 
     public void testSatisfyNeed() throws CommandException {

@@ -70,7 +70,7 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
      */
     private String graphOrientation = "LR";
     /**
-     * Scenario analyst in context
+     * Segment analyst in context
      */
     private Analyst analyst;
 

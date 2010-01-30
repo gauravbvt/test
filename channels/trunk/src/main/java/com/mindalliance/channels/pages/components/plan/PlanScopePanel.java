@@ -12,7 +12,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
@@ -555,8 +555,8 @@ public class PlanScopePanel extends AbstractCommandablePanel {
         /**
           * {@inheritDoc}
           */
-         protected List<Scenario> findIndexedScenarios() {
-             return new ArrayList<Scenario>();
+         protected List<Segment> findIndexedSegments() {
+             return new ArrayList<Segment>();
          }
 
     }
@@ -626,8 +626,8 @@ public class PlanScopePanel extends AbstractCommandablePanel {
         /**
           * {@inheritDoc}
           */
-         protected List<Scenario> findIndexedScenarios() {
-             return new ArrayList<Scenario>();
+         protected List<Segment> findIndexedSegments() {
+             return new ArrayList<Segment>();
          }
 
         /**

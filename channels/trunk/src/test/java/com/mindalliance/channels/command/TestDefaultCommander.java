@@ -2,7 +2,7 @@ package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.command.commands.HelloCommand;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 
 import java.io.IOException;
 
@@ -40,10 +40,10 @@ public class TestDefaultCommander extends AbstractChannelsTest {
 
     public void testCommandLocking() throws Exception {
         AbstractCommand command = HelloCommand.makeCommand( "hello", commander );
-        Scenario scenario = app.getQueryService().getDefaultScenario();
-        Lock lock = lockManager.grabLockOn( scenario.getId() );
+        Segment segment = app.getQueryService().getDefaultSegment();
+        Lock lock = lockManager.grabLockOn( segment.getId() );
         lock.setUserName( "bob" );
-        command.needLockOn( scenario );
+        command.needLockOn( segment );
         assertFalse( commander.canDo( command ) );
         try {
             commander.doCommand( command );
@@ -52,7 +52,7 @@ public class TestDefaultCommander extends AbstractChannelsTest {
             lockManager.releaseAllLocks( "bob" );
             assertTrue( commander.canDo( command ) );
             commander.doCommand( command );
-            lockManager.grabLockOn( scenario.getId() );
+            lockManager.grabLockOn( segment.getId() );
             try {
                 commander.doCommand( command );
             }

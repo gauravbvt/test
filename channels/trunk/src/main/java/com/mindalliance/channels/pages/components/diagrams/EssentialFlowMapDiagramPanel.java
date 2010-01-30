@@ -4,8 +4,8 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.pages.png.EssentialFlowMapPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
@@ -27,9 +27,9 @@ public class EssentialFlowMapDiagramPanel extends AbstractDiagramPanel {
      */
     private static final Logger LOG = LoggerFactory.getLogger( EssentialFlowMapDiagramPanel.class );
     /**
-     * Scenario object model.
+     * Segment object model.
      */
-    private IModel<ScenarioObject> scenarioObjectModel;
+    private IModel<SegmentObject> segmentObjectModel;
     /**
      * Assume alternate flows to downstream slows all fail?
      */
@@ -37,11 +37,11 @@ public class EssentialFlowMapDiagramPanel extends AbstractDiagramPanel {
 
     public EssentialFlowMapDiagramPanel(
             String id,
-            IModel<ScenarioObject> model,
+            IModel<SegmentObject> model,
             boolean assumeFails,
             Settings settings ) {
         super( id, settings );
-        scenarioObjectModel = model;
+        segmentObjectModel = model;
         this.assumeFails = assumeFails;
         init();
     }
@@ -52,24 +52,24 @@ public class EssentialFlowMapDiagramPanel extends AbstractDiagramPanel {
 
     protected Diagram makeDiagram() {
         return getDiagramFactory().newEssentialFlowMapDiagram(
-                getScenarioObject(),
+                getSegmentObject(),
                 assumeFails,
                 getDiagramSize(),
                 getOrientation() );
     }
 
-    private ScenarioObject getScenarioObject() {
-        return scenarioObjectModel.getObject();
+    private SegmentObject getSegmentObject() {
+        return segmentObjectModel.getObject();
     }
 
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "/essential.png?scenario=" );
-        sb.append( getScenarioObject().getScenario().getId() );
+        sb.append( "/essential.png?segment=" );
+        sb.append( getSegmentObject().getSegment().getId() );
         sb.append( '&' );
         sb.append( EssentialFlowMapPage.FAILURE );
         sb.append( '=' );
-        sb.append( getScenarioObject().getId() );
+        sb.append( getSegmentObject().getId() );
         sb.append( '&' );
         sb.append( EssentialFlowMapPage.ASSUME_FAILS );
         sb.append( '=' );
@@ -100,8 +100,8 @@ public class EssentialFlowMapDiagramPanel extends AbstractDiagramPanel {
             int scrollLeft,
             AjaxRequestTarget target ) {
         try {
-            Scenario scenario = getQueryService().find( Scenario.class, Long.valueOf( graphId ) );
-            this.update( target, new Change( Change.Type.Selected, scenario ) );
+            Segment segment = getQueryService().find( Segment.class, Long.valueOf( graphId ) );
+            this.update( target, new Change( Change.Type.Selected, segment ) );
         } catch ( NotFoundException e ) {
             LOG.warn( "Selection not found", e );
         }
@@ -109,8 +109,8 @@ public class EssentialFlowMapDiagramPanel extends AbstractDiagramPanel {
 
     protected void onSelectVertex( String graphId, String vertexId, String domIdentifier, int scrollTop, int scrollLeft, AjaxRequestTarget target ) {
         try {
-            Scenario scenario = getQueryService().find( Scenario.class, Long.valueOf( graphId ) );
-            Part part = (Part) scenario.getNode( Long.valueOf( vertexId ) );
+            Segment segment = getQueryService().find( Segment.class, Long.valueOf( graphId ) );
+            Part part = (Part) segment.getNode( Long.valueOf( vertexId ) );
             if ( part != null ) {
                 String js = scroll( domIdentifier, scrollTop, scrollLeft );
                 Change change = new Change( Change.Type.Selected, part );

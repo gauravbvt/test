@@ -8,7 +8,7 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
@@ -38,7 +38,7 @@ public class Disintermediate extends AbstractCommand {
         // May overshoot if needs locks for unaffected flows.
         needLocksOn( ChannelsUtils.getLockingSetFor( part ) );
         set( "part", part.getId() );
-        set( "scenario", part.getScenario().getId() );
+        set( "segment", part.getSegment().getId() );
     }
 
     /**
@@ -57,8 +57,8 @@ public class Disintermediate extends AbstractCommand {
 
     private boolean isIntermediate( Commander commander ) {
         try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Part part = (Part) scenario.getNode( (Long) get( "part" ) );
+            Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+            Part part = (Part) segment.getNode( (Long) get( "part" ) );
             return !findIntermediations( part ).isEmpty();
         } catch ( CommandException e ) {
             return false;
@@ -69,8 +69,8 @@ public class Disintermediate extends AbstractCommand {
      * {@inheritDoc}
      */
     public Change execute( Commander commander ) throws CommandException {
-        Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-        Part part = (Part) scenario.getNode( (Long) get( "part" ) );
+        Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+        Part part = (Part) segment.getNode( (Long) get( "part" ) );
         MultiCommand multi = (MultiCommand) get( "subCommands" );
         if ( multi == null ) {
             multi = makeSubCommands( part );
@@ -79,7 +79,7 @@ public class Disintermediate extends AbstractCommand {
         // else this is a replay
         multi.execute( commander );
         ignoreLock( part.getId() );
-        return new Change( Change.Type.Recomposed, scenario );
+        return new Change( Change.Type.Recomposed, segment );
     }
 
     /**
@@ -128,7 +128,7 @@ public class Disintermediate extends AbstractCommand {
         for ( Flow receive : receivesToDisconnect ) {
             if ( !hasNeed( part, receive.getName() ) ) {
                 AddNeed addNeed = new AddNeed();
-                addNeed.set( "scenario", get( "scenario" ) );
+                addNeed.set( "segment", get( "segment" ) );
                 addNeed.set( "part", get( "part" ) );
                 addNeed.set( "name", receive.getName() );
                 addNeed.set( "attributes", ChannelsUtils.getFlowAttributes( receive ) );
@@ -139,7 +139,7 @@ public class Disintermediate extends AbstractCommand {
         for ( Flow send : sendsToDisconnect ) {
             if ( !hasCapability( part, send.getName() ) ) {
                 AddCapability addCapability = new AddCapability();
-                addCapability.set( "scenario", get( "scenario" ) );
+                addCapability.set( "segment", get( "segment" ) );
                 addCapability.set( "part", get( "part" ) );
                 addCapability.set( "name", send.getName() );
                 addCapability.set( "attributes", ChannelsUtils.getFlowAttributes( send ) );

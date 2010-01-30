@@ -77,7 +77,7 @@ final class SynonymFlowSet implements Comparable<SynonymFlowSet>, Serializable {
     private Set<Event> getCauses() {
         Set<Event> eventCauses = new HashSet<Event>();
         for ( Flow flow : flows )
-            eventCauses.add( getSourcePart( flow ).getScenario().getEvent() );
+            eventCauses.add( getSourcePart( flow ).getSegment().getEvent() );
 
         return eventCauses;
     }

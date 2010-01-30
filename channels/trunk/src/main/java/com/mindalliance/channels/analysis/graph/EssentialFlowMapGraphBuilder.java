@@ -5,7 +5,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.InternalFlow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.model.SegmentObject;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;
@@ -22,16 +22,16 @@ import java.util.List;
  */
 public class EssentialFlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
     /**
-     * Scenario object presumed to fail.
+     * Plan segment object presumed to fail.
      */
-    private ScenarioObject scenarioObject;
+    private SegmentObject segmentObject;
     /**
      * Whether all alternates to downstream sharing flows are presumed to also fail.
      */
     boolean assumeFails;
 
-    public EssentialFlowMapGraphBuilder( ScenarioObject scenarioObject, boolean assumeFails ) {
-        this.scenarioObject = scenarioObject;
+    public EssentialFlowMapGraphBuilder( SegmentObject segmentObject, boolean assumeFails ) {
+        this.segmentObject = segmentObject;
         this.assumeFails = assumeFails;
     }
 
@@ -50,19 +50,19 @@ public class EssentialFlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
                     }
 
                 } );
-        populateScenarioGraph( digraph, scenarioObject, assumeFails );
+        populateSegmentGraph( digraph, segmentObject, assumeFails );
         return digraph;
     }
 
-    private void populateScenarioGraph(
+    private void populateSegmentGraph(
             DirectedGraph<Node, Flow> graph,
-            ScenarioObject scenarioObject,
+            SegmentObject segmentObject,
             boolean assumeFails ) {
-        List<Flow> essentialFlows = scenarioObject.getEssentialFlows( assumeFails );
-        if ( scenarioObject instanceof Flow ) {
-            essentialFlows.add( (Flow) scenarioObject );
+        List<Flow> essentialFlows = segmentObject.getEssentialFlows( assumeFails );
+        if ( segmentObject instanceof Flow ) {
+            essentialFlows.add( (Flow) segmentObject );
         } else {
-            graph.addVertex( ( Part )scenarioObject );
+            graph.addVertex( ( Part )segmentObject );
         }
         for ( Flow flow : essentialFlows ) {
             Node source = flow.getSource();

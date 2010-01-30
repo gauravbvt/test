@@ -9,7 +9,7 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.Map;
@@ -29,7 +29,7 @@ public class AddNeed extends AbstractCommand {
     public AddNeed( Part part ) {
         addConflicting( part );
         set( "part", part.getId() );
-        set( "scenario", part.getScenario().getId() );
+        set( "segment", part.getSegment().getId() );
     }
 
     /**
@@ -46,12 +46,12 @@ public class AddNeed extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         QueryService queryService = commander.getQueryService();
         try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Part part = (Part) scenario.getNode( (Long) get( "part" ) );
+            Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+            Part part = (Part) segment.getNode( (Long) get( "part" ) );
             if ( part == null ) throw new NotFoundException();
             Long priorId = (Long) get( "flow" );
             Flow flow = queryService.connect(
-                    queryService.createConnector( scenario ),
+                    queryService.createConnector( segment ),
                     part,
                     (String) get( "name" ),
                     priorId );
@@ -78,8 +78,8 @@ public class AddNeed extends AbstractCommand {
      */
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Flow flow = scenario.findFlow( (Long) get( "flow" ) );
+            Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+            Flow flow = segment.findFlow( (Long) get( "flow" ) );
             return new RemoveNeed( flow );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh", e );

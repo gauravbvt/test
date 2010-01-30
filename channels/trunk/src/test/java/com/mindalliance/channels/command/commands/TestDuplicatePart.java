@@ -5,10 +5,10 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 
-import java.util.Iterator;
 import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -19,22 +19,22 @@ import java.io.IOException;
  */
 public class TestDuplicatePart extends AbstractChannelsTest {
 
-    private Scenario scenario;
+    private Segment segment;
     private QueryService queryService;
 
     protected void setUp() throws IOException {
         super.setUp();
         queryService = app.getQueryService();
-        scenario = queryService.createScenario();
+        segment = queryService.createSegment();
     }
 
     protected void tearDown() {
-        queryService.remove( scenario );
+        queryService.remove( segment );
     }
 
     public void testDuplicatePart() throws Exception {
         int count = countParts();
-        Part part = scenario.getDefaultPart();
+        Part part = segment.getDefaultPart();
         Command duplicatePart = new DuplicatePart( part );
         assertTrue( commander.canDo( duplicatePart ) );
         Change change = commander.doCommand( duplicatePart );
@@ -52,7 +52,7 @@ public class TestDuplicatePart extends AbstractChannelsTest {
 
     private int countParts() {
         int count = 0;
-        Iterator<Part> parts = scenario.parts();
+        Iterator<Part> parts = segment.parts();
         while ( parts.hasNext() ) {
             parts.next();
             count++;

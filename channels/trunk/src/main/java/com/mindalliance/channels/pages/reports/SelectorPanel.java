@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.reports;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -29,19 +29,19 @@ import java.util.List;
  */
 public class SelectorPanel extends Panel implements IHeaderContributor {
 
-    private static final String SCENARIO_PARM = "0";
+    private static final String SEGMENT_PARM = "0";
     private static final String ACTOR_PARM = "1";
     private static final String ISSUES_PARM = "issues";
     private static final String ALL = "all";
 
-    /** Default value for "All scenarios" selection. */
-    private static final Scenario ALL_SCENARIOS = new Scenario();
+    /** Default value for "All segments" selection. */
+    private static final Segment ALL_SEGMENTS = new Segment();
 
     /** Localized sorter-upper. */
     private static final Collator SORTER = Collator.getInstance();
 
-    /** The selected scenario (or AllScenarios) */
-    private Scenario scenario = ALL_SCENARIOS;
+    /** The selected segment (or AllSegments) */
+    private Segment segment = ALL_SEGMENTS;
 
     /** The selected actor (or Actor.UNKNOWN) */
     private Actor actor = Actor.UNKNOWN;
@@ -68,15 +68,15 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
                 super.onSubmit();
             }
         }
-            .add( new DropDownChoice<Scenario>( "scenario", getScenarioChoices( queryService ),
-                    new IChoiceRenderer<Scenario>() {
-                        public Object getDisplayValue( Scenario object ) {
-                            return ALL_SCENARIOS.equals( object ) ? "All"
+            .add( new DropDownChoice<Segment>( "segment", getSegmentChoices( queryService ),
+                    new IChoiceRenderer<Segment>() {
+                        public Object getDisplayValue( Segment object ) {
+                            return ALL_SEGMENTS.equals( object ) ? "All"
                                                                   : object.getName();
                         }
 
-                        public String getIdValue( Scenario object, int index ) {
-                            return ALL_SCENARIOS.equals( object ) ? ALL
+                        public String getIdValue( Segment object, int index ) {
+                            return ALL_SEGMENTS.equals( object ) ? ALL
                                                                  : Long.toString( object.getId() );
                         }
                     } ).add( newOnChange( "onchange" ) ),
@@ -112,21 +112,21 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
     }
 
     /**
-     * Return all the scenarios selected by this component.
+     * Return all the segment selected by this component.
      *
-     * @return a sorted list of scenarios
+     * @return a sorted list of segment
      */
-    public List<Scenario> getScenarios() {
-        List<Scenario> result;
+    public List<Segment> getSegments() {
+        List<Segment> result;
 
-        if ( isAllScenarios() ) {
-            result = new ArrayList<Scenario>(
-                    isAllActors() ? queryService.list( Scenario.class )
-                            : queryService.findScenarios( actor ) );
+        if ( isAllSegments() ) {
+            result = new ArrayList<Segment>(
+                    isAllActors() ? queryService.list( Segment.class )
+                            : queryService.findSegments( actor ) );
             Collections.sort( result );
         } else {
-            result = new ArrayList<Scenario>();
-            result.add( scenario );
+            result = new ArrayList<Segment>();
+            result.add( segment );
         }
         return result;
     }
@@ -141,8 +141,8 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
 
         if ( isAllActors() ) {
             result = new ArrayList<Actor>(
-                    isAllScenarios() ? queryService.list( Actor.class )
-                            : queryService.findActors( scenario ) );
+                    isAllSegments() ? queryService.list( Actor.class )
+                            : queryService.findActors( segment ) );
             Collections.sort( result );
         } else {
             result = new ArrayList<Actor>();
@@ -152,18 +152,18 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
     }
 
     /**
-     * Set scenario and actor fields given parameters.
+     * Set segment and actor fields given parameters.
      *
      * @param queryService for parameter resolution
      * @param parameters the parameters
      */
     public final void setParameters( QueryService queryService, PageParameters parameters ) {
         setValid( true );
-        String scenarioId = parameters.getString( SCENARIO_PARM, ALL );
-        if ( !ALL.equals( scenarioId ) ) {
+        String segmentId = parameters.getString( SEGMENT_PARM, ALL );
+        if ( !ALL.equals( segmentId ) ) {
             try {
-                long id = Long.parseLong( scenarioId );
-                setScenario( queryService.find( Scenario.class, id ) );
+                long id = Long.parseLong( segmentId );
+                setSegment( queryService.find( Segment.class, id ) );
             } catch ( NumberFormatException ignored ) {
                 setValid( false );
             } catch ( NotFoundException ignored ) {
@@ -195,11 +195,11 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
         PageParameters result = new PageParameters();
 
         if ( isAllActors() ) {
-            if ( !isAllScenarios() )
-                result.put( SCENARIO_PARM, Long.toString( scenario.getId() ) );
+            if ( !isAllSegments() )
+                result.put( SEGMENT_PARM, Long.toString( segment.getId() ) );
 
         } else {
-            result.put( SCENARIO_PARM, isAllScenarios() ? ALL : Long.toString( scenario.getId() ) );
+            result.put( SEGMENT_PARM, isAllSegments() ? ALL : Long.toString( segment.getId() ) );
             result.put( ACTOR_PARM, Long.toString( actor.getId() ) );
         }
 
@@ -209,19 +209,19 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
         return result;
     }
 
-    private List<Scenario> getScenarioChoices( QueryService service ) {
-        List<Scenario> result = new ArrayList<Scenario>(
-                isAllActors() ? service.list( Scenario.class )
-                              : service.findScenarios( actor ) );
+    private List<Segment> getSegmentChoices( QueryService service ) {
+        List<Segment> result = new ArrayList<Segment>(
+                isAllActors() ? service.list( Segment.class )
+                              : service.findSegments( actor ) );
         Collections.sort( result );
-        result.add( 0, ALL_SCENARIOS );
+        result.add( 0, ALL_SEGMENTS );
         return result;
     }
 
     private List<Actor> getActorsChoices( QueryService service ) {
         List<Actor> result = new ArrayList<Actor>(
-                isAllScenarios() ? service.list( Actor.class )
-                                 : service.findActors( scenario ) );
+                isAllSegments() ? service.list( Actor.class )
+                                 : service.findActors( segment ) );
         Collections.sort(
                 result,
                 new Comparator<Actor>() {
@@ -241,12 +241,12 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
         this.actor = actor;
     }
 
-    public Scenario getScenario() {
-        return scenario;
+    public Segment getSegment() {
+        return segment;
     }
 
-    public void setScenario( Scenario scenario ) {
-        this.scenario = scenario;
+    public void setSegment( Segment segment ) {
+        this.segment = segment;
     }
 
     public boolean isValid() {
@@ -261,8 +261,8 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
         return actor.equals( Actor.UNKNOWN );
     }
 
-    public boolean isAllScenarios() {
-        return ALL_SCENARIOS.equals( scenario );
+    public boolean isAllSegments() {
+        return ALL_SEGMENTS.equals( segment );
     }
 
     public boolean isShowingIssues() {

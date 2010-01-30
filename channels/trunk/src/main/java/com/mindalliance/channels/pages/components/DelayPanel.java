@@ -1,22 +1,22 @@
 package com.mindalliance.channels.pages.components;
 
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.commons.beanutils.PropertyUtils;
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.ScenarioObject;
-import com.mindalliance.channels.command.commands.UpdateScenarioObject;
-import com.mindalliance.channels.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.model.SegmentObject;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.PropertyModel;
 
-import java.util.List;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 /**
  * Panel for editing a Delay.
@@ -137,8 +137,8 @@ public class DelayPanel extends AbstractCommandablePanel {
     }
 
     private void setProperty( String prop, Object val ) {
-        if ( model.getObject() instanceof ScenarioObject ) {
-            doCommand( new UpdateScenarioObject( model.getObject(), property + "." + prop, val ) );
+        if ( model.getObject() instanceof SegmentObject ) {
+            doCommand( new UpdateSegmentObject( model.getObject(), property + "." + prop, val ) );
         } else {
             doCommand( new UpdatePlanObject( model.getObject(), property + "." + prop, val ) );
         }

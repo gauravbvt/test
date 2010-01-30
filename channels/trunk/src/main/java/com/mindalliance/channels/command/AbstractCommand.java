@@ -364,7 +364,7 @@ public abstract class AbstractCommand implements Command {
     /**
      * {@inheritDoc}
      */
-    public boolean isScenarioSpecific() {
+    public boolean isSegmentSpecific() {
         return true;
     }
 

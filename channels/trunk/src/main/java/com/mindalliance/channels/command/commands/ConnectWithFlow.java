@@ -9,7 +9,7 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.HashMap;
@@ -54,9 +54,9 @@ public class ConnectWithFlow extends AbstractCommand {
         }
         Map<String, Object> args = new HashMap<String, Object>();
         args.put( "isOutcome", isOutcome );
-        args.put( "scenario", part.getScenario().getId() );
+        args.put( "segment", part.getSegment().getId() );
         args.put( "part", part.getId() );
-        args.put( "otherScenario", other.getScenario().getId() );
+        args.put( "otherSegment", other.getSegment().getId() );
         args.put( "other", other.getId() );
         args.put( "name", name );
         args.put( "attributes", state );
@@ -76,15 +76,15 @@ public class ConnectWithFlow extends AbstractCommand {
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
         QueryService queryService = commander.getQueryService();
-        Scenario scenario = commander.resolve(
-                Scenario.class,
-                (Long) get( "scenario" ) );
-        Part part = (Part) scenario.getNode( (Long) get( "part" ) );
-        Scenario otherScenario = commander.resolve(
-                Scenario.class,
-                (Long) get( "otherScenario" ) );
+        Segment segment = commander.resolve(
+                Segment.class,
+                (Long) get( "segment" ) );
+        Part part = (Part) segment.getNode( (Long) get( "part" ) );
+        Segment otherSegment = commander.resolve(
+                Segment.class,
+                (Long) get( "otherSegment" ) );
         Long nodeId = (Long) get( "other" );
-        Node other = ChannelsUtils.resolveNode( nodeId, otherScenario, queryService );
+        Node other = ChannelsUtils.resolveNode( nodeId, otherSegment, queryService );
         String name = (String) get( "name" );
         boolean isOutcome = (Boolean) get( "isOutcome" );
         Long priorId = (Long) get( "flow" );
@@ -111,11 +111,11 @@ public class ConnectWithFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
-        Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+        Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
         Long flowId = (Long) get( "flow" );
         if ( flowId == null ) throw new CommandException( "Can't undo." );
         DisconnectFlow disconnectFlow = new DisconnectFlow();
-        disconnectFlow.set( "scenario", scenario.getId() );
+        disconnectFlow.set( "segment", segment.getId() );
         disconnectFlow.set( "flow", flowId );
         return disconnectFlow;
     }

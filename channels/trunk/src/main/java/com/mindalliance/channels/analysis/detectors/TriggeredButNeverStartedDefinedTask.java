@@ -28,7 +28,7 @@ public class TriggeredButNeverStartedDefinedTask extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( !part.hasDefaultTask() ) {
-            if ( !part.isStartsWithScenario() ) {
+            if ( !part.setIsStartsWithSegment() ) {
                 if ( part.isTriggered() ) {
                     boolean started = getQueryService().findIfPartStarted( part );
                     if ( !started ) {
@@ -41,14 +41,14 @@ public class TriggeredButNeverStartedDefinedTask extends AbstractIssueDetector {
                     }
                 }
             } else {
-                boolean started = getQueryService().findIfScenarioStarted( part.getScenario() );
+                boolean started = getQueryService().findIfSegmentStarted( part.getSegment() );
                 if ( !started ) {
                     Issue issue = makeIssue( Issue.COMPLETENESS, part );
-                    issue.setDescription( "This task starts with the scenario but no task"
-                            + " is ever started that causes the scenario to happen.");
-                    issue.setRemediation( "Make sure the scenario is caused by a task"
-                            + " that can start (from another scenario)\n"
-                            + "or make the scenario an incident (i.e. happens independently of the plan." );
+                    issue.setDescription( "This task starts with the plan segment but no task"
+                            + " is ever started that causes the plan segment to happen.");
+                    issue.setRemediation( "Make sure the plan segment is caused by a task"
+                            + " that can start (from another plan segment)\n"
+                            + "or make the plan segment an incident (i.e. happens independently of the plan." );
                     issue.setSeverity( getQueryService().getPartPriority( part ) );
                     issues.add( issue );
                 }

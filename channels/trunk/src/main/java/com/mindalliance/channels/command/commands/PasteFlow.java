@@ -9,7 +9,7 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.Map;
@@ -29,7 +29,7 @@ public class PasteFlow extends AbstractCommand {
 
     public PasteFlow( Part part ) {
         needLockOn( part );
-        set( "scenario", part.getScenario().getId() );
+        set( "segment", part.getSegment().getId() );
         set( "part", part.getId() );
     }
 
@@ -54,8 +54,8 @@ public class PasteFlow extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         QueryService queryService = commander.getQueryService();
         try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Part part = (Part) scenario.getNode( (Long) get( "part" ) );
+            Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+            Part part = (Part) segment.getNode( (Long) get( "part" ) );
             if ( part == null ) throw new NotFoundException();
             Map<String, Object> copy;
             copy = (Map<String, Object>) get( "copy" );
@@ -71,12 +71,12 @@ public class PasteFlow extends AbstractCommand {
             if ( isOutcome ) {
                 flow = queryService.connect(
                         part,
-                        queryService.createConnector( scenario ),
+                        queryService.createConnector( segment ),
                         (String) copy.get( "name" ),
                         priorId );
             } else {
                 flow = queryService.connect(
-                        queryService.createConnector( scenario ),
+                        queryService.createConnector( segment ),
                         part,
                         (String) copy.get( "name" ),
                         priorId );
@@ -104,12 +104,12 @@ public class PasteFlow extends AbstractCommand {
      */
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+            Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
             Long flowId = (Long) get( "flow" );
             if ( flowId == null ) {
                 throw new CommandException( "Can't undo." );
             } else {
-                Flow flow = scenario.findFlow( flowId );
+                Flow flow = segment.findFlow( flowId );
                 return new DisconnectFlow( flow );
             }
         } catch ( NotFoundException e ) {

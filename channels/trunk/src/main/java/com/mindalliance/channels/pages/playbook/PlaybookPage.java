@@ -203,6 +203,6 @@ public abstract class PlaybookPage extends WebPage {
     }
 
     String getEventPhaseName() {
-        return part.getScenario().getPhaseEventTitle();
+        return part.getSegment().getPhaseEventTitle();
     }
 }

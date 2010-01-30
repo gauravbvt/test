@@ -104,7 +104,7 @@ public class PartReportPanel extends Panel {
                 .add( new Label( "repeats-every", repetition ) )
                     .setVisible( part.isRepeating() ),
 
-             new WebMarkupContainer( "starts" ).setVisible( part.isStartsWithScenario() ),
+             new WebMarkupContainer( "starts" ).setVisible( part.setIsStartsWithSegment() ),
 
              new WebMarkupContainer( "terminates" ).setVisible( part.isTerminatesEventPhase() ),
 

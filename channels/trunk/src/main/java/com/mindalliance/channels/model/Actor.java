@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Someone or something playing a part in a scenario.
+ * Someone or something playing a part in a segment.
  */
 @Entity
 public class Actor extends AbstractUnicastChannelable implements Classifiable {

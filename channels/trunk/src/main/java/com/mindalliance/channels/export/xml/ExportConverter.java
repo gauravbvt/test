@@ -1,6 +1,6 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -8,7 +8,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 
 /**
- * Dummy converter for restoring removed scenarios.
+ * Dummy converter for restoring removed segments.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -36,8 +36,8 @@ public class ExportConverter extends AbstractChannelsConverter {
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
-            if ( nodeName.equals( "scenario" ) ) {
-                results = context.convertAnother( getContext().getPlan(), Scenario.class );
+            if ( nodeName.equals( "segment" ) ) {
+                results = context.convertAnother( getContext().getPlan(), Segment.class );
             }
         }
         return results;

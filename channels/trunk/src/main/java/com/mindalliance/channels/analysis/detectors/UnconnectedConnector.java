@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Detects whether the scenario has unsatisifed needs or unused capabilities.
+ * Detects whether the plan segment has unsatisifed needs or unused capabilities.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf

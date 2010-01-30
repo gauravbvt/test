@@ -7,7 +7,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.UserIssue;
 
 import java.io.IOException;
@@ -21,7 +21,7 @@ import java.io.IOException;
  */
 public class TestAddRemoveIssue extends AbstractChannelsTest {
 
-    private Scenario scenario;
+    private Segment segment;
     private QueryService queryService;
     private Analyst analyst;
 
@@ -30,32 +30,32 @@ public class TestAddRemoveIssue extends AbstractChannelsTest {
         super.setUp();
         queryService = app.getQueryService();
         analyst = app.getAnalyst();
-        scenario = queryService.createScenario();
+        segment = queryService.createSegment();
     }
 
     @Override
     protected void tearDown() throws Exception {
-        queryService.remove( scenario );
+        queryService.remove( segment );
         super.tearDown();
     }
 
     public void testAddRemoveIssue() throws Exception {
-        int count = countIssues( scenario );
-        Command addIssue = new AddUserIssue( scenario );
+        int count = countIssues( segment );
+        Command addIssue = new AddUserIssue( segment );
         assertTrue( commander.canDo( addIssue ) );
         Change change = commander.doCommand( addIssue );
         assertTrue( change.isAdded() );
         UserIssue issue = (UserIssue) change.getSubject();
-        assertTrue( countIssues( scenario ) == count + 1 );
+        assertTrue( countIssues( segment ) == count + 1 );
         issue.setDescription( "fubar" );
         assertTrue( commander.canUndo() );
         assertTrue( commander.undo().isRemoved() );
-        assertTrue( countIssues( scenario ) == count );
+        assertTrue( countIssues( segment ) == count );
         assertTrue( commander.canRedo() );
         assertTrue( commander.redo().isAdded() );
-        assertTrue( countIssues( scenario ) == count + 1 );
+        assertTrue( countIssues( segment ) == count + 1 );
         boolean found = false;
-        for ( Issue i : analyst.listIssues( scenario, false ) ) {
+        for ( Issue i : analyst.listIssues( segment, false ) ) {
             found = found || i.getDescription().equals( "fubar" );
         }
         assertTrue( found );

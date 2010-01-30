@@ -4,7 +4,7 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
@@ -24,18 +24,18 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
      */
     private static final Logger LOG = LoggerFactory.getLogger( FlowMapDiagramPanel.class );
     /**
-     * Scenario to be diagrammed
+     * Segment to be diagrammed
      */
-    private IModel<Scenario> scenarioModel;
+    private IModel<Segment> segmentModel;
     /**
      * Selected node. Null if none selected.
      */
     private IModel<Part> partModel;
 
-    public FlowMapDiagramPanel( String id, IModel<Scenario> scenarioModel, IModel<Part> partModel,
+    public FlowMapDiagramPanel( String id, IModel<Segment> segmentModel, IModel<Part> partModel,
                                 Settings settings ) {
         super( id, settings );
-        this.scenarioModel = scenarioModel;
+        this.segmentModel = segmentModel;
         this.partModel = partModel;
         init();
     }
@@ -54,7 +54,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
     @Override
     protected Diagram makeDiagram( ) {
         return getDiagramFactory().newFlowMapDiagram(
-                getScenario(),
+                getSegment(),
                 getPart(),
                 getDiagramSize(),
                 getOrientation() );
@@ -66,8 +66,8 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
     @Override
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "/scenario.png?scenario=" );
-        sb.append( getScenario().getId() );
+        sb.append( "/segment.png?segment=" );
+        sb.append( getSegment().getId() );
         sb.append( "&node=" );
         if ( getPart() != null ) {
             sb.append( getPart().getId() );
@@ -108,8 +108,8 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             int scrollLeft,
             AjaxRequestTarget target ) {
         try {
-            Scenario scenario = getQueryService().find( Scenario.class, Long.valueOf( graphId ) );
-            this.update( target, new Change( Change.Type.Selected, scenario ) );
+            Segment segment = getQueryService().find( Segment.class, Long.valueOf( graphId ) );
+            this.update( target, new Change( Change.Type.Selected, segment ) );
         } catch ( NotFoundException e ) {
             LOG.warn( "Selection not found", e );
         }
@@ -127,8 +127,8 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             int scrollLeft,
             AjaxRequestTarget target ) {
         try {
-            Scenario scenario = getQueryService().find( Scenario.class, Long.valueOf( graphId ) );
-            Part part = (Part) scenario.getNode( Long.valueOf( vertexId ) );
+            Segment segment = getQueryService().find( Segment.class, Long.valueOf( graphId ) );
+            Part part = (Part) segment.getNode( Long.valueOf( vertexId ) );
             if ( part != null ) {
                 String js = scroll( domIdentifier, scrollTop, scrollLeft );
                 Change change = new Change( Change.Type.Selected, part );
@@ -157,8 +157,8 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
         // do nothing - never called
     }
 
-    private Scenario getScenario() {
-        return scenarioModel.getObject();
+    private Segment getSegment() {
+        return segmentModel.getObject();
     }
 
     private Part getPart() {

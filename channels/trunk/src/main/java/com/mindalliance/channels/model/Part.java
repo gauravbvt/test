@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * A part in a scenario.
+ * A part in a segment.
  */
 @Entity
 public class Part extends Node implements GeoLocatable {
@@ -91,11 +91,11 @@ public class Part extends Node implements GeoLocatable {
      */
     private Delay repeatsEvery = new Delay();
     /**
-     * Whether this part is started by the onset of the scenario.
+     * Whether this part is started by the onset of the segment.
      */
-    private boolean startsWithScenario;
+    private boolean startsWithSegment;
     /**
-     * Whether the part can terminate the event phase the scenario is about.
+     * Whether the part can terminate the event phase the segment is about.
      */
     private boolean terminatesEventPhase;
     /**
@@ -103,7 +103,7 @@ public class Part extends Node implements GeoLocatable {
      */
     private Event initiatedEvent;
     /**
-     * Scenario risks mitigated.
+     * Segment risks mitigated.
      */
     private List<Risk> mitigations = new ArrayList<Risk>();
     /**
@@ -335,12 +335,12 @@ public class Part extends Node implements GeoLocatable {
         }
     }
 
-    public boolean isStartsWithScenario() {
-        return startsWithScenario;
+    public boolean setIsStartsWithSegment() {
+        return startsWithSegment;
     }
 
-    public void setStartsWithScenario( boolean startsWithScenario ) {
-        this.startsWithScenario = startsWithScenario;
+    public void setIsStartsWithSegment( boolean startsWithSegment ) {
+        this.startsWithSegment = startsWithSegment;
     }
 
     public boolean isTerminatesEventPhase() {
@@ -559,7 +559,7 @@ public class Part extends Node implements GeoLocatable {
     }
 
     public Actor getKnownActualActor() {
-        List<Actor> knownActors = getScenario().getQueryService().findAllActualActors( resourceSpec() );
+        List<Actor> knownActors = getSegment().getQueryService().findAllActualActors( resourceSpec() );
         if ( knownActors.size() == 1 ) {
             return knownActors.get( 0 );
         } else {
@@ -713,12 +713,12 @@ public class Part extends Node implements GeoLocatable {
         if ( isRepeating()
                 || isSelfTerminating()
                 || initiatesEvent()
-                || isStartsWithScenario()
+                || setIsStartsWithSegment()
                 || isTerminatesEventPhase() ) {
             sb.append( " The task" );
             StringBuilder sb1 = new StringBuilder();
-            if ( isStartsWithScenario() ) {
-                sb1.append( " starts with the scenario" );
+            if ( setIsStartsWithSegment() ) {
+                sb1.append( " starts with the plan segment" );
             }
             if ( isRepeating() ) {
                 if ( !sb1.toString().isEmpty() ) {
@@ -751,7 +751,7 @@ public class Part extends Node implements GeoLocatable {
                         sb1.append( "," );
                     }
                 }
-                sb1.append( " can end this scenario" );
+                sb1.append( " can end this plan segment" );
             }
             if ( isSelfTerminating() ) {
                 if ( !sb1.toString().isEmpty() ) sb1.append( " and" );
@@ -875,19 +875,19 @@ public class Part extends Node implements GeoLocatable {
      */
     @Transient
     public List<Flow> getEssentialFlows( boolean assumeFails ) {
-        return getScenario().getQueryService().findEssentialFlowsFrom( this, assumeFails );
+        return getSegment().getQueryService().findEssentialFlowsFrom( this, assumeFails );
     }
 
     /**
      * A part is useful if it mitigates risks
-     * or it terminates its scenario and at least one of the risks terminates with it.
+     * or it terminates its segment and at least one of the risks terminates with it.
      *
      * @return a boolean
      */
     @Transient
     public boolean isUseful() {
         return !mitigations.isEmpty()
-                || ( isTerminatesEventPhase() && getScenario().hasTerminatingRisks() );
+                || ( isTerminatesEventPhase() && getSegment().hasTerminatingRisks() );
     }
 
     /**
@@ -961,8 +961,8 @@ public class Part extends Node implements GeoLocatable {
     public List<Risk> getRisksAddressed() {
         Set<Risk> risks = new HashSet<Risk>();
         risks.addAll( getMitigations() );
-        if ( isTerminatesEventPhase() && getScenario().hasTerminatingRisks() ) {
-            risks.addAll( getScenario().getRisks() );
+        if ( isTerminatesEventPhase() && getSegment().hasTerminatingRisks() ) {
+            risks.addAll( getSegment().getRisks() );
         }
         return new ArrayList<Risk>( risks );
     }

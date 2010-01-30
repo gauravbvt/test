@@ -6,7 +6,7 @@ import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -34,9 +34,9 @@ public class OrganizationReportPanel extends Panel {
     private Organization organization;
 
     /**
-     * The scenario in context.
+     * The segment in context.
      */
-    private Scenario scenario;
+    private Segment segment;
 
     @SpringBean
     private QueryService queryService;
@@ -45,14 +45,14 @@ public class OrganizationReportPanel extends Panel {
     private Actor actor;
 
     public OrganizationReportPanel(
-            String id, Organization organization, Scenario scenario, Actor actor,
+            String id, Organization organization, Segment segment, Actor actor,
             boolean showActors, final boolean showingIssues ) {
 
         super( id );
         setRenderBodyOnly( true );
         this.actor = actor;
         this.organization = organization;
-        this.scenario = scenario;
+        this.segment = segment;
 
         if ( showActors )
             add( new ListView<ResourceSpec>( "sections", getSpecs() ) {
@@ -60,17 +60,17 @@ public class OrganizationReportPanel extends Panel {
                 protected void populateItem( ListItem<ResourceSpec> item ) {
                     ResourceSpec resourceSpec = item.getModelObject();
                     item.add( new ActorReportPanel( "section",
-                                                    OrganizationReportPanel.this.scenario,
+                                                    OrganizationReportPanel.this.segment,
                                                     resourceSpec, showingIssues )
                                 .setRenderBodyOnly( true ) );
                 }
             } );
         else
-            add( new ListView<Role>( "sections", scenario.findRoles( organization ) ) {
+            add( new ListView<Role>( "sections", segment.findRoles( organization ) ) {
                 @Override
                 protected void populateItem( ListItem<Role> item ) {
                     item.add( new RoleReportPanel( "section", item.getModelObject(),
-                                       OrganizationReportPanel.this.scenario,
+                                       OrganizationReportPanel.this.segment,
                                        OrganizationReportPanel.this.organization, showingIssues )
                                 .setRenderBodyOnly( true ) );
                 }
@@ -80,7 +80,7 @@ public class OrganizationReportPanel extends Panel {
     private List<ResourceSpec> getSpecs() {
         Set<ResourceSpec> specs = new HashSet<ResourceSpec>();
 
-        for ( Part p : queryService.findAllParts( scenario, ResourceSpec.with( organization ) ) ) {
+        for ( Part p : queryService.findAllParts( segment, ResourceSpec.with( organization ) ) ) {
             ResourceSpec spec = p.resourceSpec();
             if ( spec.isOrganization() )
                 spec.setActor( Actor.UNKNOWN );

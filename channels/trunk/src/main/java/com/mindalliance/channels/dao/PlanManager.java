@@ -19,7 +19,7 @@ import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.model.User;
 import org.apache.commons.collections.CollectionUtils;
@@ -114,7 +114,7 @@ public class PlanManager implements InitializingBean {
     private IdGenerator idGenerator;
 
     /**
-     * Where to import initial scenarios from. Don't if null...
+     * Where to import initial segments from. Don't if null...
      */
     private Resource importDirectory;
     /**
@@ -630,56 +630,6 @@ public class PlanManager implements InitializingBean {
         planIndex.put( key, dao );
     }
 
-/*
-    private void importScenarios( Importer importer ) {
-        Map<String, Long> idMap = new HashMap<String, Long>();
-        Map<Connector, List<ConnectionSpecification>> proxyConnectors =
-                new HashMap<Connector, List<ConnectionSpecification>>();
-
-        for ( File file : getImportFiles() ) {
-            try {
-                Map<String, Object> results = importer.loadScenario( new FileInputStream( file ) );
-
-                // Cumulate results
-                idMap.putAll( (Map<String, Long>) results.get( "idMap" ) );
-                proxyConnectors.putAll(
-                        (Map<Connector, List<ConnectionSpecification>>) results.get(
-                                "proxyConnectors" ) );
-
-                Scenario scenario = (Scenario) results.get( "scenario" );
-                logger.info( MessageFormat.format(
-                        "Imported scenario {0} from {1}", scenario.getName(), file.getPath() ) );
-
-            } catch ( IOException e ) {
-                logger.warn( MessageFormat.format( "Failed to import {0}", file.getPath() ), e );
-            }
-        }
-
-        // Reconnect external links
-        importer.reconnectExternalFlows( proxyConnectors, false );
-    }
-*/
-
-/*    private File[] getImportFiles() {
-        if ( importDirectory != null ) {
-            try {
-                File directory = importDirectory.getFile();
-                if ( directory.exists() && directory.isDirectory() )
-                    return directory.listFiles(
-                            new FilenameFilter() {
-                                *//** {@inheritDoc} *//*
-                                public boolean accept( File dir, String name ) {
-                                    return name.endsWith( ".xml" );
-                                }
-                            } );
-            } catch ( IOException e ) {
-                logger.warn( "Unable to read import directory. Skipping import", e );
-            }
-        }
-
-        return new File[0];
-    }*/
-
     /**
      * Find the plans, if any, with a given uri.
      *
@@ -738,23 +688,23 @@ public class PlanManager implements InitializingBean {
     }
 
     /**
-     * Import scenario from browsed file.
+     * Import segment from browsed file.
      *
      * @param upload       a file upload from file borwser dialog
      * @param queryService a query service
-     * @return a scenario, or null if not successful
+     * @return a segment, or null if not successful
      */
-    public Scenario importScenario( FileUpload upload, QueryService queryService ) {
-        Scenario imported = null;
+    public Segment importSegment( FileUpload upload, QueryService queryService ) {
+        Segment imported = null;
         if ( upload != null ) {
-            // Import and switch to scenario
-            LOG.info( "Importing scenario" );
+            // Import and switch to segment
+            LOG.info( "Importing segment" );
             Importer importer = getImportExportFactory().createImporter( queryService, getCurrentPlan() );
             try {
                 InputStream inputStream = upload.getInputStream();
-                imported = importer.importScenario(
+                imported = importer.importSegment(
                         inputStream );
-                LOG.info( "Imported scenario " + imported.getName() );
+                LOG.info( "Imported segment " + imported.getName() );
                 this.getDao( getCurrentPlan() )
                         .save( getImportExportFactory()
                                 .createExporter( queryService, getCurrentPlan() ) );

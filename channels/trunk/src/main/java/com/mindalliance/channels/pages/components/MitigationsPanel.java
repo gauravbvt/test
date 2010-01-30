@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateObject;
-import com.mindalliance.channels.command.commands.UpdateScenarioObject;
+import com.mindalliance.channels.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Risk;
@@ -144,7 +144,7 @@ public class MitigationsPanel extends AbstractCommandablePanel {
             assert risk != null;
             if ( confirmed ) {
                 if ( !getPart().getMitigations().contains( risk ) ) {
-                    doCommand( new UpdateScenarioObject(
+                    doCommand( new UpdateSegmentObject(
                             getPart(),
                             "mitigations",
                             risk,
@@ -153,7 +153,7 @@ public class MitigationsPanel extends AbstractCommandablePanel {
                 }
             } else {
                 if ( getPart().getMitigations().contains( risk ) ) {
-                    doCommand( new UpdateScenarioObject(
+                    doCommand( new UpdateSegmentObject(
                             getPart(),
                             "mitigations",
                             risk,
@@ -221,7 +221,7 @@ public class MitigationsPanel extends AbstractCommandablePanel {
         private List<Risk> getCandidateMitigations() {
             List<Risk> candidates = new ArrayList<Risk>();
             List<Risk> mitigations = getPart().getMitigations();
-            for ( Risk risk : getPart().getScenario().getRisks() ) {
+            for ( Risk risk : getPart().getSegment().getRisks() ) {
                 if ( !mitigations.contains( risk ) ) candidates.add( risk );
             }
             return candidates;

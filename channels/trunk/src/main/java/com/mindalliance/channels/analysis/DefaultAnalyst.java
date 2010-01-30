@@ -11,7 +11,7 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.Play;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -268,15 +268,15 @@ public class DefaultAnalyst extends AbstractService implements Analyst, Lifecycl
         if ( modelObject instanceof Plan ) {
             return passes( (Plan) modelObject, test );
         } else
-            return modelObject instanceof Scenario ? passes( (Scenario) modelObject, test )
+            return modelObject instanceof Segment ? passes( (Segment) modelObject, test )
                     : hasNoTestedIssue( modelObject, test );
     }
 
     private boolean passes( Plan plan, String test ) {
         if ( !hasNoTestedIssue( plan, test ) )
             return false;
-        for ( Scenario scenario : plan.getScenarios() ) {
-            if ( !passes( scenario, test ) )
+        for ( Segment segment : plan.getSegments() ) {
+            if ( !passes( segment, test ) )
                 return false;
         }
         for ( ModelEntity entity : queryService.list( ModelEntity.class ) ) {
@@ -286,15 +286,15 @@ public class DefaultAnalyst extends AbstractService implements Analyst, Lifecycl
         return true;
     }
 
-    private boolean passes( Scenario scenario, String test ) {
-        if ( !hasNoTestedIssue( scenario, test ) )
+    private boolean passes( Segment segment, String test ) {
+        if ( !hasNoTestedIssue( segment, test ) )
             return false;
-        Iterator<Part> parts = scenario.parts();
+        Iterator<Part> parts = segment.parts();
         while ( parts.hasNext() ) {
             if ( !hasNoTestedIssue( parts.next(), test ) )
                 return false;
         }
-        Iterator<Flow> flows = scenario.flows();
+        Iterator<Flow> flows = segment.flows();
         while ( flows.hasNext() ) {
             if ( !hasNoTestedIssue( flows.next(), test ) )
                 return false;
@@ -317,8 +317,8 @@ public class DefaultAnalyst extends AbstractService implements Analyst, Lifecycl
     public Integer countTestFailures( ModelObject modelObject, String test ) {
         if ( modelObject instanceof Plan ) {
             return countFailures( (Plan) modelObject, test );
-        } else if ( modelObject instanceof Scenario ) {
-            return countFailures( (Scenario) modelObject, test );
+        } else if ( modelObject instanceof Segment ) {
+            return countFailures( (Segment) modelObject, test );
         } else {
             return countTestIssues( modelObject, test );
         }
@@ -326,8 +326,8 @@ public class DefaultAnalyst extends AbstractService implements Analyst, Lifecycl
 
     private int countFailures( Plan plan, String test ) {
         int count = countTestIssues( plan, test );
-        for ( Scenario scenario : plan.getScenarios() ) {
-            count += countFailures( scenario, test );
+        for ( Segment segment : plan.getSegments() ) {
+            count += countFailures( segment, test );
         }
         for ( ModelEntity entity : queryService.list( ModelEntity.class ) ) {
             count += countTestIssues( entity, test );
@@ -335,12 +335,12 @@ public class DefaultAnalyst extends AbstractService implements Analyst, Lifecycl
         return count;
     }
 
-    private int countFailures( Scenario scenario, String test ) {
-        int count = countTestIssues( scenario, test );
-        Iterator<Part> parts = scenario.parts();
+    private int countFailures( Segment segment, String test ) {
+        int count = countTestIssues( segment, test );
+        Iterator<Part> parts = segment.parts();
         while ( parts.hasNext() )
             count += countTestIssues( parts.next(), test );
-        Iterator<Flow> flows = scenario.flows();
+        Iterator<Flow> flows = segment.flows();
         while ( flows.hasNext() )
             count += countTestIssues( flows.next(), test );
         return count;

@@ -8,7 +8,7 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.model.SegmentObject;
 
 import java.util.List;
 
@@ -84,8 +84,8 @@ public abstract class UpdateObject extends AbstractCommand {
             String property,
             Object value,
             Action action ) {
-        if ( identifiable instanceof ScenarioObject ) {
-            return new UpdateScenarioObject( identifiable, property, value, action );
+        if ( identifiable instanceof SegmentObject ) {
+            return new UpdateSegmentObject( identifiable, property, value, action );
         } else {
             return new UpdatePlanObject( identifiable, property, value, action );
         }

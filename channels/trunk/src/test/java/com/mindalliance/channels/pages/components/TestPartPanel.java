@@ -17,9 +17,9 @@ import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.PlanPage;
-import com.mindalliance.channels.pages.TestScenarioPage;
+import com.mindalliance.channels.pages.TestSegmentPage;
 import com.mindalliance.channels.query.DefaultQueryService;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.model.Model;
@@ -48,7 +48,7 @@ public class TestPartPanel extends AbstractChannelsTest {
     private ExpandedPartPanel panel;
     private Part part;
     private WicketTester tester;
-    private Scenario scenario;
+    private Segment segment;
     private Channels channelsApp;
 
     public TestPartPanel() {
@@ -67,7 +67,7 @@ public class TestPartPanel extends AbstractChannelsTest {
         DiagramFactory dm = createMock( DiagramFactory.class );
         Diagram fd = createMock( Diagram.class );
         expect( fd.makeImageMap() ).andReturn( "" ).anyTimes();
-        expect( dm.newFlowMapDiagram( (Scenario) anyObject(), (Node) EasyMock.isNull(), (double[]) EasyMock.isNull(), (String) EasyMock.isNull() ) )
+        expect( dm.newFlowMapDiagram( (Segment) anyObject(), (Node) EasyMock.isNull(), (double[]) EasyMock.isNull(), (String) EasyMock.isNull() ) )
                 .andReturn( fd ).anyTimes();
         replay( dm );
         replay( fd );
@@ -85,9 +85,9 @@ public class TestPartPanel extends AbstractChannelsTest {
         tester = new WicketTester( channelsApp );
         tester.setParametersForNextRequest( new HashMap<String, String[]>() );
 
-        // Find first part in scenario
-        scenario = channelsApp.getQueryService().getDefaultScenario();
-        Iterator<Node> nodes = scenario.nodes();
+        // Find first part in segment
+        segment = channelsApp.getQueryService().getDefaultSegment();
+        Iterator<Node> nodes = segment.nodes();
         part = null;
         while ( part == null && nodes.hasNext() ) {
             Node n = nodes.next();
@@ -270,13 +270,13 @@ public class TestPartPanel extends AbstractChannelsTest {
      * @throws java.io.IOException if fails
      */
     public void testForm() throws IOException {
-        PlanPage page = new PlanPage( scenario, part );
+        PlanPage page = new PlanPage( segment, part );
         tester.startPage( page );
         tester.assertRenderedPage( PlanPage.class );
         tester.assertNoErrorMessage();
 
         FormTester ft = tester.newFormTester( "big-form" );
-        TestScenarioPage.setFiles( ft, channelsApp );
+        TestSegmentPage.setFiles( ft, channelsApp );
         ft.setValue( "description", "some description" );
         ft.setValue( "specialty:task", "multitasking" );
         ft.setValue( "specialty:actor", "Bob" );
@@ -298,6 +298,6 @@ public class TestPartPanel extends AbstractChannelsTest {
         assertEquals( "World", part.getJurisdiction().getName() );
         assertNotNull( part.getLocation() );
         assertEquals( "Somewhere", part.getLocation().getName() );
-        TestScenarioPage.checkFiles( channelsApp );
+        TestSegmentPage.checkFiles( channelsApp );
     }
 }

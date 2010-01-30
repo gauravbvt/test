@@ -7,7 +7,7 @@ import javax.persistence.Transient;
 import java.util.List;
 
 /**
- * A flow between nodes within one scenario.
+ * A flow between nodes within one segment.
  */
 @Entity
 public class InternalFlow extends Flow {
@@ -77,13 +77,13 @@ public class InternalFlow extends Flow {
         Node s = source;
         s.removeOutcome( this );
         if ( s.isConnector() )
-            s.getScenario().removeNode( s );
+            s.getSegment().removeNode( s );
         source = null;
 
         Node t = target;
         t.removeRequirement( this );
         if ( t.isConnector() ) {
-            t.getScenario().removeNode( t );
+            t.getSegment().removeNode( t );
         }
         target = null;
     }
@@ -250,7 +250,7 @@ public class InternalFlow extends Flow {
      * {@inheritDoc}
      */
     @Transient
-    public Scenario getScenario() {
-        return source.getScenario();
+    public Segment getSegment() {
+        return source.getSegment();
     }
 }

@@ -4,8 +4,8 @@ import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
@@ -177,11 +177,11 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
         ModelObject mo = filters.get( "modelObject" );
         if ( mo != null && !mo.equals( attRel.getModelObject() ) )
             return true;
-        Scenario sc = (Scenario) filters.get( "scenario" );
+        Segment segment = (Segment) filters.get( "segment" );
         ModelObject attachee = attRel.getModelObject();
-        return sc != null
-                && ( !( attachee instanceof ScenarioObject )
-                || !( (ScenarioObject) attachee ).getScenario().equals( sc ) );
+        return segment != null
+                && ( !( attachee instanceof SegmentObject )
+                || !( (SegmentObject) attachee ).getSegment().equals( segment ) );
     }
 
     /**
@@ -222,13 +222,13 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
         }
 
         /**
-         * Get model object's scenario if applicable.
+         * Get model object's segment if applicable.
          *
          * @return a sceanrio or null
          */
-        public Scenario getScenario() {
-            if ( modelObject instanceof ScenarioObject ) {
-                return ( (ScenarioObject) modelObject ).getScenario();
+        public Segment getSegment() {
+            if ( modelObject instanceof SegmentObject ) {
+                return ( (SegmentObject) modelObject ).getSegment();
             } else {
                 return null;
             }
@@ -283,9 +283,9 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
                     EMPTY,
                     PlanBibliographyPanel.this ) );
             columns.add( makeFilterableLinkColumn(
-                    "Scenario",
-                    "scenario",
-                    "scenario.name",
+                    "Plan segment",
+                    "segment",
+                    "segment.name",
                     EMPTY,
                     PlanBibliographyPanel.this ) );
             // provider and table

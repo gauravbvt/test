@@ -25,7 +25,7 @@ import java.util.Map;
  * A node in the flow graph
  */
 @Entity
-public abstract class Node extends ModelObject implements ScenarioObject {
+public abstract class Node extends ModelObject implements SegmentObject {
 
     /**
      * Initial capacity of outcome and requirement flows.
@@ -48,9 +48,9 @@ public abstract class Node extends ModelObject implements ScenarioObject {
     private Map<Long, Flow> outcomes;
 
     /**
-     * The unique scenario containing this node.
+     * The unique segment containing this node.
      */
-    private Scenario scenario;
+    private Segment segment;
 
     protected Node() {
         setOutcomes( new HashMap<Long, Flow>() );
@@ -144,7 +144,7 @@ public abstract class Node extends ModelObject implements ScenarioObject {
     public Flow createOutcome( QueryService queryService ) {
         return queryService.connect(
                 this,
-                queryService.createConnector( getScenario() ),
+                queryService.createConnector( getSegment() ),
                 DEFAULT_FLOW_NAME );
     }
 
@@ -220,7 +220,7 @@ public abstract class Node extends ModelObject implements ScenarioObject {
      * @return a flow from a new connector to this node
      */
     public Flow createRequirement( QueryService queryService ) {
-        return queryService.connect( queryService.createConnector( getScenario() ), this, DEFAULT_FLOW_NAME );
+        return queryService.connect( queryService.createConnector( getSegment() ), this, DEFAULT_FLOW_NAME );
     }
 
     /**
@@ -265,8 +265,8 @@ public abstract class Node extends ModelObject implements ScenarioObject {
     }
 
     @ManyToOne
-    public Scenario getScenario() {
-        return scenario;
+    public Segment getSegment() {
+        return segment;
     }
 
     /**
@@ -277,8 +277,8 @@ public abstract class Node extends ModelObject implements ScenarioObject {
         return new ArrayList<Flow>();
     }
 
-    public void setScenario( Scenario scenario ) {
-        this.scenario = scenario;
+    public void setSegment( Segment segment ) {
+        this.segment = segment;
     }
 
     /**

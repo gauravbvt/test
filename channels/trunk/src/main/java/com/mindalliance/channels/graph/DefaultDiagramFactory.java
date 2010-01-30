@@ -4,7 +4,7 @@ import com.mindalliance.channels.AbstractService;
 import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
-import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
+import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.graph.diagrams.EntityNetworkDiagram;
 import com.mindalliance.channels.graph.diagrams.EssentialFlowMapDiagram;
 import com.mindalliance.channels.graph.diagrams.FlowMapDiagram;
@@ -13,8 +13,8 @@ import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
 import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.SegmentObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -84,12 +84,12 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
      * {@inheritDoc}
      */
     public Diagram newFlowMapDiagram(
-            Scenario scenario,
+            Segment segment,
             Node node,
             double[] diagramSize,
             String orientation ) {
-        LOG.debug("Making flow map on " + scenario + "/" + node);
-        return new FlowMapDiagram( scenario, node, diagramSize, orientation );
+        LOG.debug("Making flow map on " + segment + "/" + node);
+        return new FlowMapDiagram( segment, node, diagramSize, orientation );
     }
 
 
@@ -106,23 +106,23 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
       * {@inheritDoc}
       */
     @SuppressWarnings( "unchecked" )
-    // TODO - why can't I say:  List<Scenario> scenarios ?   -- ? extends...
+    // TODO - why can't I say:  List<Segment> segments ?   -- ? extends...
     public Diagram newPlanMapDiagram(
-            List scenarios,
+            List segments,
             boolean groupByPhase,
             boolean groupByEvent,
             ModelEntity group,
-            Scenario scenario,
-            ScenarioRelationship scRel,
+            Segment segment,
+            SegmentRelationship scRel,
             double[] diagramSize,
             String orientation ) {
         LOG.debug( "Making plan diagram" );
         return new PlanMapDiagram(
-                scenarios,
+                segments,
                 groupByPhase,
                 groupByEvent,
                 group,
-                scenario,
+                segment,
                 scRel,
                 diagramSize,
                 orientation );
@@ -137,12 +137,12 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
     }
 
     public Diagram newEssentialFlowMapDiagram(
-            ScenarioObject scenarioObject,
+            SegmentObject segmentObject,
             boolean assumeFails,
             double[] diagramSize,
             String orientation ) {
         LOG.debug("Making critical flow map diagram" );
-        return new EssentialFlowMapDiagram( scenarioObject, assumeFails, diagramSize, orientation );
+        return new EssentialFlowMapDiagram( segmentObject, assumeFails, diagramSize, orientation );
     }
 
 

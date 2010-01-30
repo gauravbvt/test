@@ -9,7 +9,7 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class LinkFlowClassifications extends AbstractCommand {
 
     public LinkFlowClassifications( Flow flow ) {
         needLockOn( flow );
-        set( "scenario", flow.getScenario().getId() );
+        set( "segment", flow.getSegment().getId() );
         set( "flow", flow.getId() );
     }
 
@@ -44,8 +44,8 @@ public class LinkFlowClassifications extends AbstractCommand {
      */
     public Change execute( Commander commander ) throws CommandException {
         try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Flow flow = scenario.findFlow( (Long) get( "flow" ) );
+            Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+            Flow flow = segment.findFlow( (Long) get( "flow" ) );
             if ( flow == null ) throw new NotFoundException();
             boolean sameClassifications = flow.areAllEOIClassificationsSame();
             MultiCommand multi = (MultiCommand) get( "subCommands" );

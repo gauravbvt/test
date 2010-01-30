@@ -6,7 +6,7 @@ import com.mindalliance.channels.model.InternalFlow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,31 +14,31 @@ import java.util.List;
 
 /**
  * Protocol for manipulating objects.
- * Implementations should ensure that there is at least one scenario available.
+ * Implementations should ensure that there is at least one segment available.
  */
 public interface Dao extends Service {
 
     /**
-     * The initial number of scenario slots.
-     * This should be close to the observed average scenarios.
+     * The initial number of segment slots.
+     * This should be close to the observed average segments.
      */
     int INITIAL_CAPACITY = 10;
 
     /**
      * Create a part with given id if not null.
      *
-     * @param scenario the scenario that will contain this part
+     * @param segment the segment that will contain this part
      * @param id a Long
      * @return a new default part.
      */
-    Part createPart( Scenario scenario, Long id );
+    Part createPart( Segment segment, Long id );
 
     /**
-     * @param scenario the scenario that will contain this connector
+     * @param segment the segment that will contain this connector
      * @param id a Long
      * @return a new connector.
      */
-    Connector createConnector( Scenario scenario, Long id );
+    Connector createConnector( Segment segment, Long id );
 
     /**
      * Create a new internal flow, giving it provided id if not null.
@@ -106,7 +106,7 @@ public interface Dao extends Service {
 
     /**
      * Remove a persistent model object.
-     * Last scenario will not be deleted.
+     * Last segment will not be deleted.
      *
      * @param object the object
      */

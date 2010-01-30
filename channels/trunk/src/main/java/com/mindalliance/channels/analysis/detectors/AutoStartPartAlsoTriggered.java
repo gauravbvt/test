@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A part that starts with a scenario is also triggered by a flow.
+ * A part that starts with a plan segment is also triggered by a flow.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -27,12 +27,12 @@ public class AutoStartPartAlsoTriggered extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
-        if ( part.isStartsWithScenario() && part.isTriggered() ) {
+        if ( part.setIsStartsWithSegment() && part.isTriggered() ) {
             Issue issue = makeIssue( Issue.COMPLETENESS, part );
             issue.setDescription( "This task is unnecessarily triggered"
-                    + " since it starts with the scenario." );
+                    + " since it starts with the plan segment." );
             issue.setRemediation( "Have no flow trigger this task\n"
-                    + "or have the task not start with the scenario." );
+                    + "or have the task not start with the plan segment." );
             issue.setSeverity( Issue.Level.Minor );
             issues.add( issue );
         }

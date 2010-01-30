@@ -2,12 +2,12 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.command.commands.UpdateScenarioObject;
+import com.mindalliance.channels.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.util.ChannelsUtils;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -269,8 +269,8 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
             }
         }
         Identifiable referencer = getReferencer();
-        if ( referencer instanceof ScenarioObject ) {
-            doCommand( new UpdateScenarioObject( getReferencer(), property, newEntity ) );
+        if ( referencer instanceof SegmentObject ) {
+            doCommand( new UpdateSegmentObject( getReferencer(), property, newEntity ) );
         } else if ( referencer instanceof ModelObject ) {
             doCommand( new UpdatePlanObject( getReferencer(), property, newEntity ) );
         } else {

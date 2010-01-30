@@ -9,7 +9,7 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class SatisfyAllNeeds extends AbstractCommand {
 
     public SatisfyAllNeeds( Part part ) {
         needLockOn( part );
-        set( "scenario", part.getScenario().getId() );
+        set( "segment", part.getSegment().getId() );
         set( "part", part.getId() );
     }
 
@@ -44,8 +44,8 @@ public class SatisfyAllNeeds extends AbstractCommand {
      */
     public boolean canDo( Commander commander ) {
         try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Part part = (Part) scenario.getNode( (Long) get( "part" ) );
+            Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+            Part part = (Part) segment.getNode( (Long) get( "part" ) );
             if ( part == null ) {
                 return false;
             } else {
@@ -62,8 +62,8 @@ public class SatisfyAllNeeds extends AbstractCommand {
      */
     public Change execute( Commander commander ) throws CommandException {
         try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Part part = (Part) scenario.getNode( (Long) get( "part" ) );
+            Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+            Part part = (Part) segment.getNode( (Long) get( "part" ) );
             if ( part == null ) throw new NotFoundException();
             MultiCommand multi = (MultiCommand) get( "subCommands" );
             if ( multi == null ) {
@@ -77,29 +77,11 @@ public class SatisfyAllNeeds extends AbstractCommand {
             }
             // else command replay
             multi.execute( commander );
-            return new Change( Change.Type.Recomposed, part.getScenario() );
+            return new Change( Change.Type.Recomposed, part.getSegment() );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
         }
     }
-
-/*    private MultiCommand makeSubCommands( Part part, QueryService queryService ) {
-        MultiCommand subCommands = new MultiCommand( "satisfy needs - extra" );
-        subCommands.setMemorable( false );
-        List<Flow> unsatisfiedNeeds = queryService.findUnconnectedNeeds( part );
-        for ( Flow need : unsatisfiedNeeds ) {
-            List<Connector> connectors = queryService.findAllSatificers( need );
-            for ( Connector connector : connectors ) {
-                Node source = connector.getScenario() != part.getScenario()
-                        ? connector
-                        : connector.getInnerFlow().getSource();
-                Command connectWithFlow = new ConnectWithFlow( source, part, need.getName() );
-                connectWithFlow.set( "attributes", CommandUtils.getFlowAttributes( need ) );
-                subCommands.addCommand( connectWithFlow );
-            }
-        }
-        return subCommands;
-    }*/
 
     /**
      * {@inheritDoc}

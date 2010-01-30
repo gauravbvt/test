@@ -1,11 +1,11 @@
 package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.graph.GraphBuilder;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.InternalFlow;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Segment;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;
@@ -22,12 +22,12 @@ import java.util.Iterator;
  */
 public class TriggerGraphBuilder implements GraphBuilder<Part, Flow> {
     /**
-     * A scenario to be analyzed for part trigger cycles.
+     * A plan segment to be analyzed for part trigger cycles.
      */
-    private Scenario scenario;
+    private Segment segment;
 
-    public TriggerGraphBuilder( Scenario scenario ) {
-        this.scenario = scenario;
+    public TriggerGraphBuilder( Segment segment ) {
+        this.segment = segment;
     }
 
 
@@ -45,13 +45,13 @@ public class TriggerGraphBuilder implements GraphBuilder<Part, Flow> {
                     }
 
                 } );
-        populateScenarioGraph( digraph, scenario );
+        populateSegmentGraph( digraph, segment );
         return digraph;
     }
 
-    private void populateScenarioGraph( DirectedGraph<Part, Flow> digraph, Scenario scenario ) {
+    private void populateSegmentGraph( DirectedGraph<Part, Flow> digraph, Segment segment ) {
         // Add triggering flows as edges, with triggering -- flow --> triggered
-        Iterator<Flow> flows = scenario.flows();
+        Iterator<Flow> flows = segment.flows();
         while ( flows.hasNext() ) {
             Flow flow = flows.next();
             if (flow.isTriggeringToTarget()) {

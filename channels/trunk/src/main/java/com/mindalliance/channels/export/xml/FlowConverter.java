@@ -3,7 +3,7 @@ package com.mindalliance.channels.export.xml;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.export.ConnectionSpecification;
 import com.mindalliance.channels.export.PartSpecification;
-import com.mindalliance.channels.export.ScenarioSpecification;
+import com.mindalliance.channels.export.SegmentSpecification;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Delay;
@@ -13,7 +13,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.InternalFlow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.UserIssue;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -61,11 +61,11 @@ public class FlowConverter extends AbstractChannelsConverter {
     public void marshal( Object object, HierarchicalStreamWriter writer,
                          MarshallingContext context ) {
         Flow flow = (Flow) object;
-        Scenario currentScenario = (Scenario) context.get( "scenario" );
+        Segment currentSegment = (Segment) context.get( "segment" );
         if ( flow.isInternal() ) {
-            writeFlowNodes( (InternalFlow) flow, writer, currentScenario );
+            writeFlowNodes( (InternalFlow) flow, writer, currentSegment );
         } else {
-            writeFlowNodes( (ExternalFlow) flow, writer, currentScenario );
+            writeFlowNodes( (ExternalFlow) flow, writer, currentSegment );
         }
         exportDetectionWaivers( flow, writer );
         exportAttachments( flow, writer );
@@ -112,33 +112,33 @@ public class FlowConverter extends AbstractChannelsConverter {
 
     private void writeFlowNodes( InternalFlow flow,
                                  HierarchicalStreamWriter writer,
-                                 Scenario currentScenario ) {
+                                 Segment currentSegment ) {
         writer.startNode( "source" );
-        writeNode( flow.getSource(), writer, currentScenario );
+        writeNode( flow.getSource(), writer, currentSegment );
         writer.endNode();
         writer.startNode( "target" );
-        writeNode( flow.getTarget(), writer, currentScenario );
+        writeNode( flow.getTarget(), writer, currentSegment );
         writer.endNode();
     }
 
     private void writeFlowNodes( ExternalFlow flow,
                                  HierarchicalStreamWriter writer,
-                                 Scenario currentScenario ) {
+                                 Segment currentSegment ) {
         writer.startNode( "source" );
-        writeNode( ( flow.isPartTargeted() ? flow.getConnector() : flow.getPart() ), writer, currentScenario );
+        writeNode( ( flow.isPartTargeted() ? flow.getConnector() : flow.getPart() ), writer, currentSegment );
         writer.endNode();
         writer.startNode( "target" );
-        writeNode( flow.isPartTargeted() ? flow.getPart() : flow.getConnector(), writer, currentScenario );
+        writeNode( flow.isPartTargeted() ? flow.getPart() : flow.getConnector(), writer, currentSegment );
         writer.endNode();
     }
 
     private void writeNode( Node node,
                             HierarchicalStreamWriter writer,
-                            Scenario currentScenario ) {
+                            Segment currentSegment ) {
         if ( node.isPart() ) {
             writePart( (Part) node, writer );
         } else {
-            writeConnector( (Connector) node, writer, currentScenario );
+            writeConnector( (Connector) node, writer, currentSegment );
         }
     }
 
@@ -150,14 +150,14 @@ public class FlowConverter extends AbstractChannelsConverter {
 
     private void writeConnector( Connector connector,
                                  HierarchicalStreamWriter writer,
-                                 Scenario currentScenario ) {
+                                 Segment currentSegment ) {
         writer.startNode( "connector" );
         writer.addAttribute( "id", "" + connector.getId() );
-        // Connector is in other scenario -- an external flow
-        if ( connector.getScenario() != currentScenario ) {
-            writer.addAttribute( "scenario", connector.getScenario().getName() );
-            writer.startNode( "scenario-description" );
-            writer.setValue( connector.getScenario().getDescription() );
+        // Connector is in other segment -- an external flow
+        if ( connector.getSegment() != currentSegment ) {
+            writer.addAttribute( "segment", connector.getSegment().getName() );
+            writer.startNode( "segment-description" );
+            writer.setValue( connector.getSegment().getDescription() );
             writer.endNode();
             Flow innerFlow = connector.getInnerFlow();
             writer.startNode( "flow" );
@@ -180,16 +180,16 @@ public class FlowConverter extends AbstractChannelsConverter {
         idMap = getIdMap( context );
         proxyConnectors = getProxyConnectors( context );
         boolean importingPlan = this.isImportingPlan( context );
-        Scenario scenario = (Scenario) context.get( "scenario" );
+        Segment segment = (Segment) context.get( "segment" );
         String flowName = reader.getAttribute( "name" );
         Long flowId = Long.parseLong( reader.getAttribute( "id" ) );
         reader.moveDown();
         assert reader.getNodeName().equals( "source" );
-        Node source = resolveNode( reader, scenario, true, flowId, importingPlan );
+        Node source = resolveNode( reader, segment, true, flowId, importingPlan );
         reader.moveUp();
         reader.moveDown();
         assert reader.getNodeName().equals( "target" );
-        Node target = resolveNode( reader, scenario, false, flowId, importingPlan );
+        Node target = resolveNode( reader, segment, false, flowId, importingPlan );
         reader.moveUp();
         boolean preserveFlowId = importingPlan && !( isProxy( target ) || isProxy( source ) );
         Flow flow = makeFlow( source, target, flowName, flowId, preserveFlowId );
@@ -206,11 +206,11 @@ public class FlowConverter extends AbstractChannelsConverter {
                 importAttachments( flow, reader );
             } else if ( nodeName.equals( "eoi" ) ) {
                 ElementOfInformation eoi = (ElementOfInformation) context.convertAnother(
-                        scenario,
+                        segment,
                         ElementOfInformation.class );
                 flow.addEoi( eoi );
             } else if ( nodeName.equals( "channel" ) ) {
-                Channel channel = (Channel) context.convertAnother( scenario, Channel.class );
+                Channel channel = (Channel) context.convertAnother( segment, Channel.class );
                 flow.addChannel( channel );
             } else if ( nodeName.equals( "maxDelay" ) ) {
                 String maxDelay = reader.getValue();
@@ -231,7 +231,7 @@ public class FlowConverter extends AbstractChannelsConverter {
                 boolean classificationsLinked = reader.getValue().equals( "true" );
                 flow.setClassificationsLinked( classificationsLinked );
             } else if ( nodeName.equals( "issue" ) ) {
-                context.convertAnother( scenario, UserIssue.class );
+                context.convertAnother( segment, UserIssue.class );
             } else {
                 throw new ConversionException( "Unknown element " + nodeName );
             }
@@ -263,7 +263,7 @@ public class FlowConverter extends AbstractChannelsConverter {
 
 
     private Node resolveNode( HierarchicalStreamReader reader,
-                              Scenario scenario,
+                              Segment segment,
                               boolean isSource,
                               Long flowId,
                               boolean importingPlan ) {
@@ -271,40 +271,40 @@ public class FlowConverter extends AbstractChannelsConverter {
         reader.moveDown();
         String nodeName = reader.getNodeName();
         if ( reader.getNodeName().equals( "part" ) ) {
-            node = resolvePart( reader, scenario );
+            node = resolvePart( reader, segment );
         } else {
             assert nodeName.equals( "connector" );
-            node = resolveConnector( reader, scenario, isSource, flowId, importingPlan );
+            node = resolveConnector( reader, segment, isSource, flowId, importingPlan );
         }
         reader.moveUp();
         return node;
     }
 
     private Part resolvePart( HierarchicalStreamReader reader,
-                              Scenario scenario ) {
+                              Segment segment ) {
         Long id = Long.parseLong( reader.getAttribute( "id" ) );
-        // When importing a scenario (vs reloading a plan), ids are re-assigned
-        return (Part) scenario.getNode( idMap.get( id ) );
+        // When importing a segment (vs reloading a plan), ids are re-assigned
+        return (Part) segment.getNode( idMap.get( id ) );
     }
 
     private Connector resolveConnector( HierarchicalStreamReader reader,
-                                        Scenario scenario,
+                                        Segment segment,
                                         boolean isSource,
                                         Long flowId,
                                         boolean importingPlan ) {
         Connector connector;
-        String externalScenarioName = reader.getAttribute( "scenario" );
-        if ( importingPlan && externalScenarioName == null ) {
+        String externalSegmentName = reader.getAttribute( "segment" );
+        if ( importingPlan && externalSegmentName == null ) {
             // reuse prior id
             Long id = Long.parseLong( reader.getAttribute( "id" ) );
-            connector = getQueryService().createConnector( scenario, id );
+            connector = getQueryService().createConnector( segment, id );
         } else {
             // use new id
-            connector = getQueryService().createConnector( scenario );
+            connector = getQueryService().createConnector( segment );
         }
-        if ( externalScenarioName != null ) {
-            // Connector is in other scenario
-            registerAsProxy( connector, reader, isSource, externalScenarioName, flowId );
+        if ( externalSegmentName != null ) {
+            // Connector is in other segment
+            registerAsProxy( connector, reader, isSource, externalSegmentName, flowId );
         }
         return connector;
     }
@@ -312,9 +312,9 @@ public class FlowConverter extends AbstractChannelsConverter {
     private void registerAsProxy( Connector connector,
                                   HierarchicalStreamReader reader,
                                   boolean isSource,
-                                  String externalScenarioName,
+                                  String externalSegmentName,
                                   Long flowId ) {
-        String externalScenarioDescription = "";
+        String externalSegmentDescription = "";
         String flowName = null;
         String roleName = null;
         String organizationName = null;
@@ -324,8 +324,8 @@ public class FlowConverter extends AbstractChannelsConverter {
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
-            if ( nodeName.equals( "scenario-description" ) ) {
-                externalScenarioDescription = reader.getValue();
+            if ( nodeName.equals( "segment-description" ) ) {
+                externalSegmentDescription = reader.getValue();
             } else if ( nodeName.equals( "part-id" ) ) {
                 partId = reader.getValue();
             } else {
@@ -344,9 +344,9 @@ public class FlowConverter extends AbstractChannelsConverter {
             reader.moveUp();
         }
         ConnectionSpecification conSpec = new ConnectionSpecification();
-        conSpec.setScenarioSpecification( new ScenarioSpecification(
-                externalScenarioName,
-                externalScenarioDescription
+        conSpec.setSegmentSpecification( new SegmentSpecification(
+                externalSegmentName,
+                externalSegmentDescription
         ) );
         conSpec.setFlowName( flowName );
         conSpec.setSource( isSource );

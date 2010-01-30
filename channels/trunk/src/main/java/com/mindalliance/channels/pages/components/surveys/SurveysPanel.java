@@ -5,8 +5,8 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
@@ -362,8 +362,8 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
     private boolean isFilteredOut( SurveyWrapper wrapper ) {
         ModelObject about = filters.get( "about" );
         if ( about != null && !about.equals( wrapper.getAbout() ) ) return true;
-        Scenario scenario = (Scenario) filters.get( "scenario" );
-        return scenario != null && !scenario.equals( wrapper.getScenario() );
+        Segment segment = (Segment) filters.get( "segment" );
+        return segment != null && !segment.equals( wrapper.getSegment() );
     }
 
     private boolean matchesStatus( Survey survey ) {
@@ -479,10 +479,10 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
             }
         }
 
-        public Scenario getScenario() {
+        public Segment getSegment() {
             ModelObject about = getAbout();
-            if ( about instanceof ScenarioObject ) {
-                return ( (ScenarioObject) about ).getScenario();
+            if ( about instanceof SegmentObject ) {
+                return ( (SegmentObject) about ).getSegment();
             } else {
                 return null;
             }
@@ -533,9 +533,9 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
                     EMPTY,
                     SurveysPanel.this ) );
             columns.add( makeFilterableLinkColumn(
-                    "in scenario",
-                    "scenario",
-                    "scenario.name",
+                    "in plan segment",
+                    "segment",
+                    "segment.name",
                     EMPTY,
                     SurveysPanel.this ) );
             columns.add( makeColumn(

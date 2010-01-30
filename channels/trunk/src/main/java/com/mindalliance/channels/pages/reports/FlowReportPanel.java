@@ -9,7 +9,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -94,7 +94,7 @@ public class FlowReportPanel extends Panel {
                     protected void populateItem( ListItem<LocalizedActor> item ) {
                         LocalizedActor localizedActor = item.getModel().getObject();
                         item.add( new ActorBannerPanel( "actor",
-                                localizedActor.getOtherScenario( part.getScenario() ),
+                                localizedActor.getOtherSegment( part.getSegment() ),
                                 localizedActor.getActorSpec(),
                                 true,
                                 localizedActor.getUnicasts(),
@@ -153,7 +153,7 @@ public class FlowReportPanel extends Panel {
     }
 
     /**
-     * An actor from a part in a scenario.
+     * An actor from a part in a segment.
      */
     public static final class LocalizedActor implements Serializable, Comparable<LocalizedActor> {
 
@@ -229,9 +229,9 @@ public class FlowReportPanel extends Panel {
             return spec;
         }
 
-        private Scenario getOtherScenario( Scenario scenario ) {
-            Scenario s = part.getScenario();
-            return scenario.equals( s ) ? null : s;
+        private Segment getOtherSegment( Segment segment ) {
+            Segment s = part.getSegment();
+            return segment.equals( s ) ? null : s;
         }
     }
 }

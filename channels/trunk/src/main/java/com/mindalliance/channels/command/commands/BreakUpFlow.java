@@ -9,7 +9,7 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.Map;
@@ -30,7 +30,7 @@ public class BreakUpFlow extends AbstractCommand {
     public BreakUpFlow( Flow flow ) {
         needLocksOn( ChannelsUtils.getLockingSetFor( flow ) );
         set( "flow", flow.getId() );
-        set( "scenario", flow.getScenario().getId() );
+        set( "segment", flow.getSegment().getId() );
     }
 
     /**
@@ -45,8 +45,8 @@ public class BreakUpFlow extends AbstractCommand {
      */
     public Change execute( Commander commander ) throws CommandException {
         try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Flow flow = scenario.findFlow( (Long) get( "flow" ) );
+            Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+            Flow flow = segment.findFlow( (Long) get( "flow" ) );
             MultiCommand multi = (MultiCommand) get( "subCommands" );
             if ( multi == null ) {
                 multi = makeSubCommands( flow );
@@ -58,7 +58,7 @@ public class BreakUpFlow extends AbstractCommand {
             flow.disconnect();
 //            breakup( flow, commander );
             ignoreLock( (Long) get( "flow" ) );
-            return new Change( Change.Type.Recomposed, scenario );
+            return new Change( Change.Type.Recomposed, segment );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
         }
@@ -97,7 +97,7 @@ public class BreakUpFlow extends AbstractCommand {
             if ( !source.isConnector() && !target.isConnector() ) {
                 if ( !source.hasMultipleOutcomes( getName() ) ) {
                     Command addCapability = new AddCapability();
-                    addCapability.set( "scenario", source.getScenario().getId() );
+                    addCapability.set( "segment", source.getSegment().getId() );
                     addCapability.set( "part", source.getId() );
                     addCapability.set( "name", flow.getName() );
                     addCapability.set( "attributes", ChannelsUtils.getFlowAttributes( flow ) );
@@ -105,7 +105,7 @@ public class BreakUpFlow extends AbstractCommand {
                 }
                 if ( !target.hasMultipleRequirements( getName() ) ) {
                     Command addNeed = new AddNeed();
-                    addNeed.set( "scenario", target.getScenario().getId() );
+                    addNeed.set( "segment", target.getSegment().getId() );
                     addNeed.set( "part", target.getId() );
                     addNeed.set( "name", flow.getName() );
                     addNeed.set( "attributes", ChannelsUtils.getFlowAttributes( flow ) );

@@ -7,7 +7,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.StrongConnectivityInspector;
 
@@ -33,8 +33,8 @@ public class CyclicTriggering extends AbstractIssueDetector {
       */
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
-        Scenario scenario = (Scenario) modelObject;
-        GraphBuilder<Part, Flow> graphBuilder = new TriggerGraphBuilder( scenario );
+        Segment segment = (Segment) modelObject;
+        GraphBuilder<Part, Flow> graphBuilder = new TriggerGraphBuilder( segment );
         DirectedGraph<Part, Flow> digraph = graphBuilder.buildDirectedGraph( );
         StrongConnectivityInspector<Part, Flow> sci =
                 new StrongConnectivityInspector<Part, Flow>( digraph );
@@ -44,7 +44,7 @@ public class CyclicTriggering extends AbstractIssueDetector {
             // collect all critical requirements of nodes in the cycle.
             for ( Set<Part> cycle : cycles ) {
                 if ( cycle.size() > 1 ) {
-                    Issue issue = makeIssue( Issue.ROBUSTNESS, scenario );
+                    Issue issue = makeIssue( Issue.ROBUSTNESS, segment );
                     StringBuilder sb = new StringBuilder();
                     sb.append("These tasks trigger each other in a loop: ");
                     int count = 0;
@@ -72,7 +72,7 @@ public class CyclicTriggering extends AbstractIssueDetector {
       * {@inheritDoc}
       */
     public boolean appliesTo( ModelObject modelObject ) {
-        return modelObject instanceof Scenario;
+        return modelObject instanceof Segment;
     }
 
     /**

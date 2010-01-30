@@ -10,7 +10,7 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.ChannelsUtils;
 
 /**
@@ -36,9 +36,9 @@ public class SatisfyNeed extends AbstractCommand {
     public SatisfyNeed( Flow need, Flow capability, boolean keepCapabilityAndNeed ) {
         needLocksOn( ChannelsUtils.getLockingSetFor( need ) );
         needLocksOn( ChannelsUtils.getLockingSetFor( capability ) );
-        set( "needScenario", need.getScenario().getId() );
+        set( "needSegment", need.getSegment().getId() );
         set( "need", need.getId() );
-        set( "capabilityScenario", capability.getScenario().getId() );
+        set( "capabilitySegment", capability.getSegment().getId() );
         set( "capability", capability.getId() );
         set( "keep", keepCapabilityAndNeed );
     }
@@ -61,21 +61,21 @@ public class SatisfyNeed extends AbstractCommand {
         Flow newFlow;
         QueryService queryService = commander.getQueryService();
         try {
-            Scenario needScenario = commander.resolve( Scenario.class, (Long) get( "needScenario" ) );
-            Flow need = needScenario.findFlow( (Long) get( "need" ) );
-            Scenario capabilityScenario = commander.resolve(
-                    Scenario.class,
-                    (Long) get( "capabilityScenario" ) );
-            Flow capability = capabilityScenario.findFlow( (Long) get( "capability" ) );
+            Segment needSegment = commander.resolve( Segment.class, (Long) get( "needSegment" ) );
+            Flow need = needSegment.findFlow( (Long) get( "need" ) );
+            Segment capabilitySegment = commander.resolve(
+                    Segment.class,
+                    (Long) get( "capabilitySegment" ) );
+            Flow capability = capabilitySegment.findFlow( (Long) get( "capability" ) );
             boolean keepCapabilityAndNeed = (Boolean) get( "keep" );
             Node fromNode;
             Node toNode;
-            if ( needScenario == capabilityScenario ) {
+            if ( needSegment == capabilitySegment ) {
                 // Internal - from capability's part to need's part
                 fromNode = capability.getSource();
                 toNode = need.getTarget();
             } else {
-                // Create flow in need's scenario
+                // Create flow in need's segment
                 fromNode = capability.getTarget();
                 toNode = need.getTarget();
             }
@@ -87,11 +87,11 @@ public class SatisfyNeed extends AbstractCommand {
             newFlow.setChannels( need.isAskedFor() ? capability.getChannels() : need.getChannels() );
             newFlow.setMaxDelay( need.getMaxDelay() );
             set( "satisfy", newFlow.getId() );
-            set( "context", newFlow.getScenario().getId() );
+            set( "context", newFlow.getSegment().getId() );
             MultiCommand multi = (MultiCommand) get( "subCommands" );
             if ( multi == null ) {
                 multi = new MultiCommand( "satisfy need - extra" );
-                if ( needScenario == capabilityScenario && !keepCapabilityAndNeed ) {
+                if ( needSegment == capabilitySegment && !keepCapabilityAndNeed ) {
                     multi.addCommand( new RemoveCapability( capability ) );
                     multi.addCommand( new RemoveNeed( need ) );
                 }
@@ -123,8 +123,8 @@ public class SatisfyNeed extends AbstractCommand {
             subCommands.setMemorable( false );
             multi.addCommand( subCommands.getUndoCommand( commander ) );
             // Disconnect need satisfying flow
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "context" ) );
-            Flow newFlow = scenario.findFlow( (Long) get( "satisfy" ) );
+            Segment segment = commander.resolve( Segment.class, (Long) get( "context" ) );
+            Flow newFlow = segment.findFlow( (Long) get( "satisfy" ) );
             multi.addCommand( new DisconnectFlow( newFlow ) );
             return multi;
         } catch ( NotFoundException e ) {

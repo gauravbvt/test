@@ -2,7 +2,7 @@ package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.graph.GraphBuilder;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;
@@ -17,50 +17,50 @@ import java.util.List;
  * Date: Apr 2, 2009
  * Time: 10:16:21 AM
  */
-public class PlanMapGraphBuilder implements GraphBuilder<Scenario, ScenarioRelationship> {
+public class PlanMapGraphBuilder implements GraphBuilder<Segment, SegmentRelationship> {
     /**
-     * All scenarios.
+     * All plan segments.
      */
-    private List<Scenario> scenarios;
+    private List<Segment> segments;
     /**
      * Query service.
      */
     private QueryService queryService;
 
-    public PlanMapGraphBuilder( List<Scenario> scenarios, QueryService queryService ) {
-        this.scenarios = scenarios;
+    public PlanMapGraphBuilder( List<Segment> segments, QueryService queryService ) {
+        this.segments = segments;
         this.queryService = queryService;
     }
 
     /**
      * {@inheritDoc}
      */
-    public DirectedGraph<Scenario, ScenarioRelationship> buildDirectedGraph() {
-        DirectedGraph<Scenario, ScenarioRelationship> digraph =
-                new DirectedMultigraph<Scenario, ScenarioRelationship>(
-                        new EdgeFactory<Scenario, ScenarioRelationship>() {
+    public DirectedGraph<Segment, SegmentRelationship> buildDirectedGraph() {
+        DirectedGraph<Segment, SegmentRelationship> digraph =
+                new DirectedMultigraph<Segment, SegmentRelationship>(
+                        new EdgeFactory<Segment, SegmentRelationship>() {
 
-                            public ScenarioRelationship createEdge( Scenario scenario, Scenario otherScenario ) {
-                                return new ScenarioRelationship( scenario, otherScenario );
+                            public SegmentRelationship createEdge( Segment segment, Segment otherSegment ) {
+                                return new SegmentRelationship( segment, otherSegment );
                             }
 
                         } );
-        populateGraph( digraph, scenarios );
+        populateGraph( digraph, segments );
         return digraph;
     }
 
     private void populateGraph(
-            DirectedGraph<Scenario, ScenarioRelationship> digraph,
-            List<Scenario> scenarios ) {
-        for ( Scenario scenario : scenarios ) {
-            digraph.addVertex( scenario );
+            DirectedGraph<Segment, SegmentRelationship> digraph,
+            List<Segment> segments ) {
+        for ( Segment segment : segments ) {
+            digraph.addVertex( segment );
         }
-        for ( Scenario scenario : scenarios ) {
-            for ( Scenario other : scenarios ) {
-                if ( scenario != other ) {
-                    ScenarioRelationship scRel = queryService.findScenarioRelationship( scenario, other );
+        for ( Segment segment : segments ) {
+            for ( Segment other : segments ) {
+                if ( segment != other ) {
+                    SegmentRelationship scRel = queryService.findSegmentRelationship( segment, other );
                     if ( scRel != null ) {
-                        digraph.addEdge( scenario, other, scRel );
+                        digraph.addEdge( segment, other, scRel );
                     }
                 }
             }

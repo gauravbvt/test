@@ -1,25 +1,25 @@
 package com.mindalliance.channels;
 
 import com.mindalliance.channels.dao.Journal;
-import com.mindalliance.channels.model.Scenario;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Segment;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Scenario export mechanism.
+ * Segment export mechanism.
  * @see Importer
  */
 public interface Exporter extends Service {
 
     /**
-     * Export a scenario on the given stream.
-     * @param scenario the scenario
+     * Export a segment on the given stream.
+     * @param segment the segment
      * @param stream the stream
      * @throws IOException on errors
      */
-    void export( Scenario scenario, OutputStream stream ) throws IOException;
+    void export( Segment segment, OutputStream stream ) throws IOException;
 
     /**
      * Export all data on the given stream.
@@ -38,7 +38,7 @@ public interface Exporter extends Service {
     void export( Journal journal, OutputStream stream ) throws IOException;
 
     /**
-     * The mime type of files to which scenarios are exported.
+     * The mime type of files to which segments are exported.
      * @return -- a mime type
      */
     String getMimeType();

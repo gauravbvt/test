@@ -20,7 +20,7 @@ import java.util.List;
 public class DefaultDetective implements Detective {
 
     /**
-     * Issue detectors registered with the scenario analyst.
+     * Issue detectors registered with the detective.
      */
 
     private List<IssueDetector> issueDetectors = new ArrayList<IssueDetector>();

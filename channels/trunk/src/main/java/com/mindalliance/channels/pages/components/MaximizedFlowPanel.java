@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import org.apache.wicket.RequestCycle;
@@ -91,7 +91,7 @@ public class MaximizedFlowPanel extends AbstractUpdatablePanel {
         minimize.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Minimized, getScenario() ) );
+                update( target, new Change( Change.Type.Minimized, getSegment() ) );
             }
         } );
         add( minimize );
@@ -104,7 +104,7 @@ public class MaximizedFlowPanel extends AbstractUpdatablePanel {
         flowMapDiagramPanel =
                 new FlowMapDiagramPanel(
                         "flow-map",
-                        new PropertyModel<Scenario>( this, "scenario"), 
+                        new PropertyModel<Segment>( this, "segment"),
                         partModel,
                         settings );
         flowMapDiagramPanel.setOutputMarkupId( true );
@@ -120,11 +120,11 @@ public class MaximizedFlowPanel extends AbstractUpdatablePanel {
     }
 
     /**
-     * The scenario displayed.
-     * @return a scenario
+     * The segment displayed.
+     * @return a segment
      */
-    public Scenario getScenario() {
-        return getPart().getScenario();
+    public Segment getSegment() {
+        return getPart().getSegment();
     }
 
 

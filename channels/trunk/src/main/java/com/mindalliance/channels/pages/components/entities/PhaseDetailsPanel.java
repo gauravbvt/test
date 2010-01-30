@@ -4,7 +4,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Phase;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -38,7 +38,7 @@ public class PhaseDetailsPanel extends EntityDetailsPanel {
     private WebMarkupContainer moDetailsDiv;
 
     /**
-     * Maximum number of rows in phase scenario table.
+     * Maximum number of rows in phase segment table.
      */
     private static final int MAX_ROWS = 20;
 
@@ -54,7 +54,7 @@ public class PhaseDetailsPanel extends EntityDetailsPanel {
     protected void addSpecifics( final WebMarkupContainer moDetailsDiv ) {
         this.moDetailsDiv = moDetailsDiv;
         addTimingChoice();
-        addScenariosTable();
+        addSegmentsTable();
     }
 
 
@@ -77,21 +77,21 @@ public class PhaseDetailsPanel extends EntityDetailsPanel {
         moDetailsDiv.add( timingChoices );
     }
 
-    private void addScenariosTable() {
-        PhaseScenarioTable phaseScenarioTable = new PhaseScenarioTable(
-                "phaseScenarioTable",
-                new PropertyModel<List<Scenario>>( this, "scenarios"),
+    private void addSegmentsTable() {
+        PhaseSegmentTable phaseSegmentTable = new PhaseSegmentTable(
+                "phaseSegmentTable",
+                new PropertyModel<List<Segment>>( this, "segments"),
                 MAX_ROWS
         );
-        moDetailsDiv.add( phaseScenarioTable );
+        moDetailsDiv.add( phaseSegmentTable );
     }
 
     /**
-     * Get all scenarios in phase.
-     * @return a list of scenarios
+     * Get all segments in phase.
+     * @return a list of segments
      */
-    public List<Scenario> getScenarios() {
-        return getQueryService().findAllScenariosForPhase( getPhase() );
+    public List<Segment> getSegments() {
+        return getQueryService().findAllSegmentsForPhase( getPhase() );
     }
 
     /**
@@ -115,17 +115,17 @@ public class PhaseDetailsPanel extends EntityDetailsPanel {
     }
 
     /**
-     * Table with scenarios in phase.
+     * Table with segments in phase.
      */
-    public class PhaseScenarioTable extends AbstractTablePanel<Scenario> {
+    public class PhaseSegmentTable extends AbstractTablePanel<Segment> {
         /**
-         * Phase scenarios model.
+         * Phase segments model.
          */
-        private IModel<List<Scenario>> scenariosModel;
+        private IModel<List<Segment>> segmentsModel;
 
-        public PhaseScenarioTable( String id, PropertyModel<List<Scenario>> scenariosModel, int pageSize ) {
+        public PhaseSegmentTable( String id, PropertyModel<List<Segment>> segmentsModel, int pageSize ) {
             super( id, null, pageSize, null );
-            this.scenariosModel= scenariosModel;
+            this.segmentsModel = segmentsModel;
             initialize();
         }
 
@@ -134,7 +134,7 @@ public class PhaseDetailsPanel extends EntityDetailsPanel {
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
             columns.add( makeLinkColumn(
-                    "Scenario",
+                    "Plan segment",
                     "",
                     "name",
                     EMPTY ) );
@@ -145,10 +145,10 @@ public class PhaseDetailsPanel extends EntityDetailsPanel {
                     EMPTY ) );
             // provider and table
             add( new AjaxFallbackDefaultDataTable(
-                    "phaseScenarios",
+                    "phaseSegments",
                     columns,
-                    new SortableBeanProvider<Scenario>(
-                            scenariosModel.getObject(),
+                    new SortableBeanProvider<Segment>(
+                            segmentsModel.getObject(),
                             "name" ),
                     getPageSize() ) );
         }

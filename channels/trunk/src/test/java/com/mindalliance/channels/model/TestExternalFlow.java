@@ -14,8 +14,8 @@ import junit.framework.TestCase;
 public class TestExternalFlow extends TestCase {
 
     private DefaultQueryService queryService;
-    private Scenario s1;
-    private Scenario s2;
+    private Segment s1;
+    private Segment s2;
 
     private Part s1p1;
     private Part s1p2;
@@ -33,13 +33,13 @@ public class TestExternalFlow extends TestCase {
         queryService = new DefaultQueryService( planManager, new BitBucket() );
         queryService.afterPropertiesSet();
 
-        s1 = queryService.createScenario();
+        s1 = queryService.createSegment();
         s1p1 = s1.getDefaultPart();
         s1p1.setActor( new Actor( "p1" ) );
         s1p2 = queryService.createPart( s1 );
         s1p2.setActor( new Actor( "p2" ) );
 
-        s2 = queryService.createScenario();
+        s2 = queryService.createSegment();
 
         // S2 "included" in S1
         Part s2Part = s2.getDefaultPart();

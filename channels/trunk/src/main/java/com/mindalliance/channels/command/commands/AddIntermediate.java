@@ -8,7 +8,7 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.ChannelsUtils;
 
 /**
@@ -27,7 +27,7 @@ public class AddIntermediate extends AbstractCommand {
     public AddIntermediate( Flow flow ) {
         needLocksOn( ChannelsUtils.getLockingSetFor( flow ) );
         set( "flow", flow.getId() );
-        set( "scenario", flow.getScenario().getId() );
+        set( "segment", flow.getSegment().getId() );
     }
 
     /**
@@ -46,8 +46,8 @@ public class AddIntermediate extends AbstractCommand {
 
     private boolean canIntermediate( Commander commander ) {
         try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Flow flow = scenario.findFlow( (Long) get( "flow" ) );
+            Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+            Flow flow = segment.findFlow( (Long) get( "flow" ) );
             return flow.isInternal()
                     && !flow.getName().isEmpty()
                     && flow.getSource().isPart()
@@ -65,17 +65,17 @@ public class AddIntermediate extends AbstractCommand {
      */
     public Change execute( Commander commander ) throws CommandException {
         try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Flow flow = scenario.findFlow( (Long) get( "flow" ) );
+            Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+            Flow flow = segment.findFlow( (Long) get( "flow" ) );
             MultiCommand multi = (MultiCommand) get( "subCommands" );
             if ( multi == null ) {
-                multi = makeSubCommands( scenario, flow );
+                multi = makeSubCommands( segment, flow );
                 set( "subCommands", multi );
             }
             // else this is a replay
             multi.execute( commander );
             ignoreLock( flow.getId() );
-            return new Change( Change.Type.Recomposed, scenario );
+            return new Change( Change.Type.Recomposed, segment );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
         }
@@ -101,18 +101,18 @@ public class AddIntermediate extends AbstractCommand {
     }
 
     // Create a capability and/or need if not repetitive
-    private MultiCommand makeSubCommands( Scenario scenario, Flow flow ) {
+    private MultiCommand makeSubCommands( Segment segment, Flow flow ) {
         MultiCommand subCommands = new MultiCommand( "breakup flow - extra" );
         subCommands.setMemorable( false );
         // make intermediate part
-        Command addPart = new AddPart( scenario );
+        Command addPart = new AddPart( segment );
         subCommands.addCommand( addPart );
         // connect to intermediate
         Command toIntermediate = new ConnectWithFlow();
         toIntermediate.set( "isOutcome", true );
         toIntermediate.set( "part", flow.getSource().getId() );
-        toIntermediate.set( "scenario", scenario.getId() );
-        toIntermediate.set( "otherScenario", scenario.getId() );
+        toIntermediate.set( "segment", segment.getId() );
+        toIntermediate.set( "otherSegment", segment.getId() );
         toIntermediate.set( "name", flow.getName() );
         subCommands.addCommand( toIntermediate );
         // The intermediate is the target of the new flow
@@ -120,8 +120,8 @@ public class AddIntermediate extends AbstractCommand {
         // connect intermediate to new flow's target
         Command toTarget = new ConnectWithFlow();
         toTarget.set( "isOutcome", true );
-        toTarget.set( "scenario", scenario.getId() );
-        toTarget.set( "otherScenario", scenario.getId() );
+        toTarget.set( "segment", segment.getId() );
+        toTarget.set( "otherSegment", segment.getId() );
         toTarget.set( "other", flow.getTarget().getId() );
         toTarget.set( "name", flow.getName() );
         toTarget.set( "attributes", ChannelsUtils.getFlowAttributes( flow ) );

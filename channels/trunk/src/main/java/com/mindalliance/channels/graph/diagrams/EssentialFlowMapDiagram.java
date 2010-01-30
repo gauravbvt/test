@@ -9,7 +9,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.model.SegmentObject;
 import org.jgrapht.Graph;
 
 import java.io.OutputStream;
@@ -24,16 +24,16 @@ import java.io.OutputStream;
  */
 public class EssentialFlowMapDiagram extends AbstractDiagram<Node, Flow> {
 
-    private ScenarioObject scenarioObject;
+    private SegmentObject segmentObject;
     private boolean assumeFails;
 
     public EssentialFlowMapDiagram(
-            ScenarioObject scenarioObject,
+            SegmentObject segmentObject,
             boolean assumeFails,
             double[] diagramSize,
             String orientation ) {
         super( diagramSize, orientation );
-        this.scenarioObject = scenarioObject;
+        this.segmentObject = segmentObject;
         this.assumeFails = assumeFails;
     }
 
@@ -45,17 +45,17 @@ public class EssentialFlowMapDiagram extends AbstractDiagram<Node, Flow> {
         DiagramFactory<Node, Flow> diagramFactory = getDiagramFactory();
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
-        GraphBuilder essentialFlowMapGraphBuilder = new EssentialFlowMapGraphBuilder( scenarioObject, assumeFails );
+        GraphBuilder essentialFlowMapGraphBuilder = new EssentialFlowMapGraphBuilder( segmentObject, assumeFails );
         Graph<Node, Flow> graph = essentialFlowMapGraphBuilder.buildDirectedGraph();
         GraphRenderer<Node, Flow> graphRenderer = diagramFactory.getGraphRenderer();
         graphRenderer.resetHighlight();
-        if ( scenarioObject instanceof Part ) {
-            graphRenderer.highlightVertex( (Part)scenarioObject );
+        if ( segmentObject instanceof Part ) {
+            graphRenderer.highlightVertex( (Part) segmentObject );
         } else {
-            graphRenderer.highlightEdge( (Flow)scenarioObject );
+            graphRenderer.highlightEdge( (Flow) segmentObject );
         }
         FlowMapMetaProvider metaProvider = new FlowMapMetaProvider(
-                (ModelObject)scenarioObject,
+                (ModelObject) segmentObject,
                 outputFormat,
                 diagramFactory.getImageDirectory(),
                 getAnalyst() );

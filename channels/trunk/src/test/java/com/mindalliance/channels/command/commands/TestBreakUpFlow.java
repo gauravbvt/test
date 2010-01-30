@@ -8,7 +8,7 @@ import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
 
 import java.io.IOException;
@@ -24,7 +24,7 @@ import java.util.Iterator;
  */
 public class TestBreakUpFlow extends AbstractChannelsTest {
 
-    private Scenario scenario;
+    private Segment segment;
     private Part source;
     private Part target;
     private BreakUpFlow command;
@@ -33,10 +33,10 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
     protected void setUp() throws IOException {
         super.setUp();
         final QueryService queryService = app.getQueryService();
-        scenario = queryService.createScenario();
-        source = scenario.getDefaultPart();
+        segment = queryService.createSegment();
+        source = segment.getDefaultPart();
         source.setRole( queryService.findOrCreate( Role.class, "Manager" ) );
-        target = scenario.createPart( queryService, queryService.findOrCreate( Role.class, "Employee" ), "nodding" );
+        target = segment.createPart( queryService, queryService.findOrCreate( Role.class, "Employee" ), "nodding" );
         Flow flow = queryService.connect( source, target, "bizspeak" );
         flow.setDescription( "Leveraging core values" );
         flow.setMaxDelay( new Delay( 5, Delay.Unit.minutes ) );
@@ -56,7 +56,7 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
     }
 
     protected void tearDown() {
-        app.getQueryService().remove( scenario );
+        app.getQueryService().remove( segment );
     }
 
     public void testInternalBreakUp() throws Exception {
@@ -65,7 +65,7 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
         assertTrue( commander.canDo( command ) );
         Change change = commander.doCommand( command );
         assertTrue( change.isRecomposed() );
-        assertTrue( change.getSubject() instanceof Scenario );
+        assertTrue( change.getSubject() instanceof Segment );
         assertNull( findFlow() );
         assertTrue( countFlows() == 2 );
         assertTrue( commander.canUndo() );
@@ -97,7 +97,7 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
 
     private int countFlows() {
         int count = 0;
-        Iterator<Flow> flows = scenario.flows();
+        Iterator<Flow> flows = segment.flows();
         while ( flows.hasNext() ) {
             flows.next();
             count++;

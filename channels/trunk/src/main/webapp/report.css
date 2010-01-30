@@ -3,7 +3,7 @@
     @page {
         margin: 0;
     }
-    div.scenario, .scenario div.section, #directory {
+    div.segment, .segment div.section, #directory {
         page-break-before: always;
     }
 
@@ -31,7 +31,7 @@
         font-size: 100%;
     }
 
-    div.scenario, .scenario div.section, #directory {
+    div.segment, .segment div.section, #directory {
         border-top: 2px solid black;
         margin-top: 1em;
         padding-top: 3em;
@@ -51,7 +51,7 @@
 }
 
 
-div.flow-map:after, .scenario div.section:after, #directory:after {
+div.flow-map:after, .segment div.section:after, #directory:after {
     content: "Confidential. (c) Mind-Alliance Systems, LLC 2009.";
     font-size: 0.625em;
     font-style: italic;
@@ -113,8 +113,8 @@ div.organization > h3, div.organization > p.description {
     content: "Organization: ";
 }
 
-.section div.header div.section-head ul li.scenario:before {
-    content: "Scenario: ";
+.section div.header div.section-head ul li.segment:before {
+    content: "Plan segment: ";
 }
 
 

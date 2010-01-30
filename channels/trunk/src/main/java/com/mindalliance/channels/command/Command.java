@@ -157,11 +157,11 @@ public interface Command extends Serializable {
     String getUndoes( Commander commander );
 
     /**
-     * Whether the command modifies the contents of a scenario.
+     * Whether the command modifies the contents of a plan segment.
      *
      * @return a boolean
      */
-    boolean isScenarioSpecific();
+    boolean isSegmentSpecific();
 
     /**
      * Can execute irrespective of locking.

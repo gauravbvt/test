@@ -85,20 +85,20 @@ public class History {
     }
 
     /**
-     * Remove all done scenario-specific mementos by user who executed command.
+     * Remove all done segment-specific mementos by user who executed command.
      * In essence disabling an undo for the user until a do is performed.
      *
      * @param userName a user name
-     * @param all include scenario-specific
+     * @param all include segment-specific
      */
     @SuppressWarnings( "unchecked" )
-    private void clearDoneInScenario( final String userName, final boolean all ) {
+    private void clearDoneInSegment( final String userName, final boolean all ) {
         List<Memento> kept = new ArrayList<Memento>();
         kept.addAll( CollectionUtils.select( done, new Predicate() {
             public boolean evaluate( Object obj ) {
                 Memento memento = (Memento) obj;
                 return !memento.getUserName().equals( userName )
-                        || ( !all && !memento.getCommand().isScenarioSpecific() );
+                        || ( !all && !memento.getCommand().isSegmentSpecific() );
             }
         } ) );
         done = kept;
@@ -206,14 +206,14 @@ public class History {
     }
 
     /**
-     * Removes all scenario-specific done and undone mementoes of a user.
+     * Removes all segment-specific done and undone mementoes of a user.
      *
      * @param userName a user's name
-     * @param all include scenario-specific commands
+     * @param all include segment-specific commands
      */
     public void resetForUser( String userName, boolean all ) {
         clearUndone( userName );
-        clearDoneInScenario( userName, all );
+        clearDoneInSegment( userName, all );
     }
 
     /**

@@ -1,7 +1,7 @@
 package com.mindalliance.channels;
 
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
-import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
+import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Actor;
@@ -28,8 +28,8 @@ import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.nlp.Proximity;
 import com.mindalliance.channels.util.Play;
 
@@ -63,13 +63,13 @@ public interface QueryService extends Service {
     AttachmentManager getAttachmentManager();
 
     /**
-     * Find a scenario given its name.
+     * Find a plan segment given its name.
      *
      * @param name the name
-     * @return the aptly named scenario
+     * @return the named segment
      * @throws NotFoundException when not found
      */
-    Scenario findScenario( String name ) throws NotFoundException;
+    Segment findSegment( String name ) throws NotFoundException;
 
     /**
      * Find a model object given its id.
@@ -156,16 +156,16 @@ public interface QueryService extends Service {
 
     /**
      * Remove a persistent model object.
-     * Last scenario will not be deleted.
+     * Last plan segment will not be deleted.
      *
      * @param object the object
      */
     void remove( ModelObject object );
 
     /**
-     * @return a default scenario
+     * @return a default plan segment
      */
-    Scenario getDefaultScenario();
+    Segment getDefaultSegment();
 
     /**
      * Find an entity type by name. If none, create it for given domain,
@@ -265,56 +265,56 @@ public interface QueryService extends Service {
     boolean entityExists( Class<ModelEntity> clazz, String name, ModelEntity.Kind kind );
 
     /**
-     * Create a connector in a scenario.
+     * Create a connector in a plan segment.
      *
-     * @param scenario the scenario
+     * @param segment the plan segment
      * @return the new connector
      */
-    Connector createConnector( Scenario scenario );
+    Connector createConnector( Segment segment );
 
     /**
-     * Create a connector in a scenario, with prior id.
+     * Create a connector in a plan segment, with prior id.
      *
-     * @param scenario the scenario
+     * @param segment the plan segment
      * @param id       a Long
      * @return the new connector
      */
-    Connector createConnector( Scenario scenario, Long id );
+    Connector createConnector( Segment segment, Long id );
 
     /**
-     * Create a new part in a scenario with a new id.
+     * Create a new part in a plan segment with a new id.
      *
-     * @param scenario the scenario
+     * @param segment the plan segment
      * @return a new default part.
      */
-    Part createPart( Scenario scenario );
+    Part createPart( Segment segment );
 
     /**
-     * Create a new part in a scenario with given id.
+     * Create a new part in a plan segment with given id.
      *
-     * @param scenario the scenario
+     * @param segment the plan segment
      * @param id       a Long
      * @return a new default part.
      */
-    Part createPart( Scenario scenario, Long id );
+    Part createPart( Segment segment, Long id );
 
 
     /**
-     * Create a flow between two nodes in this scenario, or between a node in this scenario and a
-     * connector in another scenario.
+     * Create a flow between two nodes in this plan segment, or between a node in this plan segment and a
+     * connector in another plan segment.
      *
      * @param source the source node.
      * @param target the target node.
      * @param name   the name of the flow, possibly empty
      * @return a new flow.
      * @throws IllegalArgumentException when nodes are already connected or nodes are not both
-     *                                  in this scenario, or one of the node isn't a connector in a different scenario.
+     *         in this plan segment, or one of the node isn't a connector in a different plan segment.
      */
     Flow connect( Node source, Node target, String name );
 
     /**
-     * Create a flow between two nodes in this scenario, or between a node in this scenario and a
-     * connector in another scenario. Use provided id.
+     * Create a flow between two nodes in this plan segment, or between a node in this plan segment and a
+     * connector in another plan segment. Use provided id.
      *
      * @param source the source node.
      * @param target the target node.
@@ -322,33 +322,33 @@ public interface QueryService extends Service {
      * @param id     a long
      * @return a new flow.
      * @throws IllegalArgumentException when nodes are already connected or nodes are not both
-     *                                  in this scenario, or one of the node isn't a connector in a different scenario.
+     *         in this plan segment, or one of the node isn't a connector in a different plan segment.
      */
     Flow connect( Node source, Node target, String name, Long id );
 
     /**
-     * Create a new scenario with new id.
+     * Create a new plan segment with new id.
      *
-     * @return the new scenario.
+     * @return the new plan segment.
      */
-    Scenario createScenario();
+    Segment createSegment();
 
     /**
-     * Create a new scenario with old id.
+     * Create a new plan segment with old id.
      *
      * @param id a long
-     * @return the new scenario.
+     * @return the new plan segment.
      */
-    Scenario createScenario( Long id );
+    Segment createSegment( Long id );
 
     /**
-     * Create a new scenario with given id and given id for default part.
+     * Create a new plan segment with given id and given id for default part.
      *
      * @param id            a long
      * @param defaultPartId a long
-     * @return the new scenario.
+     * @return the new plan segment.
      */
-    Scenario createScenario( Long id, Long defaultPartId );
+    Segment createSegment( Long id, Long defaultPartId );
 
     /**
      * Get all non-empty resource specs, user-entered or not.
@@ -374,7 +374,7 @@ public interface QueryService extends Service {
     List<ResourceSpec> findAllResourcesBroadeningOrEqualTo( ResourceSpec resourceSpec );
 
     /**
-     * Find all flows in all scenarios where the part applies as specified (as source or target).
+     * Find all flows in all plan segments where the part applies as specified (as source or target).
      *
      * @param resourceSpec a resource spec
      * @param asSource     a boolean
@@ -425,7 +425,7 @@ public interface QueryService extends Service {
     List<Channel> findAllChannelsFor( ResourceSpec spec );
 
     /**
-     * Find all flows across all scenarios that contact a matching part.
+     * Find all flows across all plan segments that contact a matching part.
      *
      * @param resourceSpec a resource specification
      * @return a list of flows
@@ -503,7 +503,7 @@ public interface QueryService extends Service {
     List<Actor> findActors( Organization organization, Role role );
 
     /**
-     * Find all roles in given organization and across all scenarios.
+     * Find all roles in given organization and across all plan segment.
      *
      * @param organization the organization, possibly Organization.UNKNOWN
      * @return a sorted list of roles
@@ -527,14 +527,14 @@ public interface QueryService extends Service {
     List<Actor> findRelevantActors( Part part, Flow flow );
 
     /**
-     * Find actors in given organization and role in a given scenario.
+     * Find actors in given organization and role in a given plan segment.
      *
      * @param organization the organization, possibly Organization.UNKNOWN
      * @param role         the role, possibly Role.UNKNOWN
-     * @param scenario     the scenario
+     * @param segment     the plan segment
      * @return a sorted list of actors
      */
-    List<Actor> findActors( Organization organization, Role role, Scenario scenario );
+    List<Actor> findActors( Organization organization, Role role, Segment segment );
 
     /**
      * Whether the model object is referenced in another model object.
@@ -585,14 +585,14 @@ public interface QueryService extends Service {
     List<ResourceSpec> findAllResponsibilitiesOf( Actor actor );
 
     /**
-     * Find any relationship between a scenario and another.
-     * A relationship is one or more external flow in the from-scenario referencing a connector in the to-scenario.
+     * Find any relationship between a plan segment and another.
+     * A relationship is one or more external flow in the from-segment referencing a connector in the to-segment.
      *
-     * @param fromScenario a scenario
-     * @param toScenario   a scenario
-     * @return a scenario relationship or null if no link exists
+     * @param fromSegment a plan segment
+     * @param toSegment   a plan segment
+     * @return a segment relationship or null if no link exists
      */
-    ScenarioRelationship findScenarioRelationship( Scenario fromScenario, Scenario toScenario );
+    SegmentRelationship findSegmentRelationship( Segment fromSegment, Segment toSegment );
 
     /**
      * Find any relationship between an entity and an other.
@@ -637,12 +637,12 @@ public interface QueryService extends Service {
     boolean findIfPartStarted( Part part );
 
     /**
-     * Whether the scenario can ever start.
+     * Whether the plan segment can ever start.
      *
-     * @param scenario a scenario
+     * @param segment a plan segment
      * @return a boolean
      */
-    boolean findIfScenarioStarted( Scenario scenario );
+    boolean findIfSegmentStarted( Segment segment );
 
     /**
      * Find all parts in the plan.
@@ -654,11 +654,11 @@ public interface QueryService extends Service {
     /**
      * Find all parts that has the specified resource.
      *
-     * @param scenario     a scenario
+     * @param segment     a plan segment
      * @param resourceSpec a resource spec
      * @return a list of parts
      */
-    List<Part> findAllParts( Scenario scenario, ResourceSpec resourceSpec );
+    List<Part> findAllParts( Segment segment, ResourceSpec resourceSpec );
 
     /**
      * Find all parts located at a given place.
@@ -693,39 +693,39 @@ public interface QueryService extends Service {
     List<Connector> findAllSatificers( Flow need );
 
     /**
-     * Find all parts in a plan that can start the given scenario
+     * Find all parts in a plan that can start the given plan segment
      * because of the event they cause or the event phases they terminate.
      *
-     * @param scenario a scenario
+     * @param segment a plan segment
      * @return a list of parts
      */
-    List<Part> findInitiators( Scenario scenario );
+    List<Part> findInitiators( Segment segment );
 
     /**
-     * Find all parts in a plan that can terminate the given scenario
+     * Find all parts in a plan that can terminate the given plan segment
      * because of the event they cause or the event phases they terminate.
      *
-     * @param scenario a scenario
+     * @param segment a plan segment
      * @return a list of parts
      */
-    List<Part> findTerminators( Scenario scenario );
+    List<Part> findTerminators( Segment segment );
 
     /**
-     * Find all external parts in a plan that can terminate the given scenario
+     * Find all external parts in a plan that can terminate the given plan segment
      * because of the event they cause or the event phases they terminate.
      *
-     * @param scenario a scenario
+     * @param segment a plan segment
      * @return a list of parts
      */
-    List<Part> findExternalTerminators( Scenario scenario );
+    List<Part> findExternalTerminators( Segment segment );
 
     /**
-     * Whether a task in another scenario intiates a given scenario.
+     * Whether a task in another plan segment intiates a given plan segment.
      *
-     * @param scenario a scenario
+     * @param segment a plan segment
      * @return a boolean
      */
-    boolean isInitiated( Scenario scenario );
+    boolean isInitiated( Segment segment );
 
     /**
      * Get title for actor.
@@ -745,27 +745,27 @@ public interface QueryService extends Service {
     /**
      * Find all parts that mitigate a risk or terminate the event cause.
      *
-     * @param scenario a scenario
+     * @param segment a plan segment
      * @param risk     a risk
      * @return a list of parts
      */
-    List<Part> findMitigations( Scenario scenario, Risk risk );
+    List<Part> findMitigations( Segment segment, Risk risk );
 
     /**
-     * Find scenarios in which an actor is involved.
+     * Find plan segment in which an actor is involved.
      *
      * @param actor an actor
-     * @return a list of scenario
+     * @return a list of plan segments
      */
-    List<Scenario> findScenarios( Actor actor );
+    List<Segment> findSegments( Actor actor );
 
     /**
-     * Find all actors participating in a scenario.
+     * Find all actors participating in a plan segment.
      *
-     * @param scenario the scenario
+     * @param segment the plan segment
      * @return a sorted list of actors.
      */
-    List<Actor> findActors( Scenario scenario );
+    List<Actor> findActors( Segment segment );
 
     /**
      * Find all actor last names.
@@ -865,23 +865,23 @@ public interface QueryService extends Service {
      * @param entity a model entity
      * @return a list of model objects (parts and flows)
      */
-    List<ModelObject> findAllScenarioObjectsInvolving( ModelEntity entity );
+    List<ModelObject> findAllSegmentObjectsInvolving( ModelEntity entity );
 
     /**
-     * Find all scenarios that respond to a given event.
+     * Find all plan segments that respond to a given event.
      *
      * @param event an event
-     * @return a list of scenarios
+     * @return a list of plan segments
      */
-    List<Scenario> findScenariosRespondingTo( Event event );
+    List<Segment> findSegmentsRespondingTo( Event event );
 
     /**
-     * Find all parts that terminate a scenario's event.
+     * Find all parts that terminate a plan segment's event.
      *
-     * @param scenario a scenario
+     * @param segment a plan segment
      * @return a list of parts
      */
-    List<Part> findPartsTerminatingEventPhaseIn( Scenario scenario );
+    List<Part> findPartsTerminatingEventPhaseIn( Segment segment );
 
     /**
      * Find all parts initiating a given event.
@@ -892,12 +892,12 @@ public interface QueryService extends Service {
     List<Part> findPartsInitiatingEvent( Event event );
 
     /**
-     * Find all parts that start with a scenario's event.
+     * Find all parts that start with a plan segment's event.
      *
-     * @param scenario a scenario
+     * @param segment a plan segment
      * @return a list of parts
      */
-    List<Part> findPartsStartingWithEventIn( Scenario scenario );
+    List<Part> findPartsStartingWithEventIn( Segment segment );
 
     /**
      * Find all attachments.
@@ -1106,12 +1106,12 @@ public interface QueryService extends Service {
     List<String> findAllPlanUsernames();
 
     /**
-     * Find all scenarios for a given phase.
+     * Find all plan segments for a given phase.
      *
      * @param phase a phase
-     * @return a list of scenarios
+     * @return a list of plan segments
      */
-    List<Scenario> findAllScenariosForPhase( Phase phase );
+    List<Segment> findAllSegmentsForPhase( Phase phase );
 
     /**
      * Find all parts that cause an event.
@@ -1283,9 +1283,9 @@ public interface QueryService extends Service {
     /**
      * If a part or sharing flow fail, what risk mitigating parts would also fail?
      *
-     * @param scenarioObject a part of sharing flow
+     * @param segmentObject a part of sharing flow
      * @param assumeFails    whether all alternate sharing flows are assumed to fail (no redundancy)
      * @return a list of risk-mitigating parts that would fail
      */
-    List<Part> findFailureImpacts( ScenarioObject scenarioObject, boolean assumeFails );
+    List<Part> findFailureImpacts( SegmentObject segmentObject, boolean assumeFails );
 }

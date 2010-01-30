@@ -80,7 +80,7 @@ public class NoRedundancy extends AbstractIssueDetector {
             final String name = criticalRequirement.getName();
             // Get all differently sourced requirements for same info
             // by the part or other "matching" parts
-            Iterator<Flow> alternates = new FilterIterator( part.getScenario().flows(),
+            Iterator<Flow> alternates = new FilterIterator( part.getSegment().flows(),
                     new Predicate() {
                         public boolean evaluate( Object obj ) {
                             Flow otherFlow = (Flow) obj;

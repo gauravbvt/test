@@ -8,7 +8,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.Map;
@@ -27,7 +27,7 @@ public class DuplicatePart extends AbstractCommand {
     }
 
     public DuplicatePart( Part part ) {
-        set( "scenario", part.getScenario().getId() );
+        set( "segment", part.getSegment().getId() );
         set( "part", part.getId() );
     }
 
@@ -45,12 +45,12 @@ public class DuplicatePart extends AbstractCommand {
         QueryService queryService = commander.getQueryService();
         Part duplicate;
         try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
-            Part part = (Part) scenario.getNode( (Long) get( "part" ) );
+            Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+            Part part = (Part) segment.getNode( (Long) get( "part" ) );
             if ( part == null ) throw new NotFoundException();
             Map<String, Object> partState = ChannelsUtils.getPartState( part );
             Long priorId = (Long) get( "duplicate" );
-            duplicate = queryService.createPart( scenario, priorId );
+            duplicate = queryService.createPart( segment, priorId );
             ChannelsUtils.initPartFrom( duplicate, partState, commander );
             set( "duplicate", duplicate.getId() );
             return new Change( Change.Type.Added, duplicate );
@@ -71,12 +71,12 @@ public class DuplicatePart extends AbstractCommand {
      */
     @Override
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
-        Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+        Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
         Long partId = (Long) get( "duplicate" );
         if ( partId == null ) {
             throw new CommandException( "Can't undo." );
         } else {
-            Part part = (Part) scenario.getNode( partId );
+            Part part = (Part) segment.getNode( partId );
             return new RemovePart( part );
         }
     }

@@ -6,7 +6,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.MultiCommand;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 
 import java.util.List;
 import java.util.Map;
@@ -24,8 +24,8 @@ public class PastePart extends AbstractCommand {
     public PastePart() {
     }
 
-    public PastePart( Scenario scenario ) {
-        set( "scenario", scenario.getId() );
+    public PastePart( Segment segment ) {
+        set( "segment", segment.getId() );
     }
 
     /**
@@ -47,7 +47,7 @@ public class PastePart extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
-        Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+        Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
         Map<String, Object> copy;
         copy = (Map<String, Object>) get( "copy" );
         if ( copy == null ) {
@@ -62,7 +62,7 @@ public class PastePart extends AbstractCommand {
         }
         // else this is a replay
         multi.execute( commander );
-        return new Change( Change.Type.Recomposed, scenario );
+        return new Change( Change.Type.Recomposed, segment );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -70,14 +70,14 @@ public class PastePart extends AbstractCommand {
         MultiCommand subCommands = new MultiCommand( "paste task - extra" );
         subCommands.setMemorable( false );
         Command addPart = new AddPart();
-        addPart.set( "scenario", get( "scenario" ) );
+        addPart.set( "segment", get( "segment" ) );
         addPart.set( "part", get( "part" ) );
         addPart.set( "partState", copy.get( "partState" ) );
         subCommands.addCommand( addPart );
         List<Map<String, Object>> needStates = (List<Map<String, Object>>) copy.get( "needs" );
         for ( Map<String, Object> needState : needStates ) {
             Command addNeed = new AddNeed();
-            addNeed.set( "scenario", get( "scenario" ) );
+            addNeed.set( "segment", get( "segment" ) );
             addNeed.set("name", needState.get("name"));
             addNeed.set( "attributes", needState.get( "attributes" ) );
             subCommands.addCommand( addNeed );
@@ -87,7 +87,7 @@ public class PastePart extends AbstractCommand {
                 (List<Map<String, Object>>) copy.get( "capabilities" );
         for ( Map<String, Object> capabilityState : capabilityStates ) {
             Command addCapability = new AddCapability();
-            addCapability.set( "scenario", get( "scenario" ) );
+            addCapability.set( "segment", get( "segment" ) );
             addCapability.set("name", capabilityState.get("name"));
             addCapability.set( "attributes", capabilityState.get( "attributes" ) );
             subCommands.addCommand( addCapability );

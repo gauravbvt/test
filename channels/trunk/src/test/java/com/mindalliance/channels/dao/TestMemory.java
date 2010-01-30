@@ -2,10 +2,10 @@ package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.DuplicateKeyException;
 import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.export.DummyExporter;
 import com.mindalliance.channels.attachments.BitBucket;
+import com.mindalliance.channels.export.DummyExporter;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.query.DefaultQueryService;
 import junit.framework.TestCase;
@@ -34,53 +34,53 @@ public class TestMemory extends TestCase {
     }
 
     public void testInitial() {
-        assertEquals( 2, getScenarioCount() );
-        assertTrue( memory.list( Scenario.class ).iterator().hasNext() );
+        assertEquals( 2, getSegmentCount() );
+        assertTrue( memory.list( Segment.class ).iterator().hasNext() );
         try {
-            queryService.findScenario( "bla" );
+            queryService.findSegment( "bla" );
             fail();
         } catch ( NotFoundException ignored ) {
             try {
-                queryService.find( Scenario.class, -1L );
+                queryService.find( Segment.class, -1L );
                 fail();
             } catch ( NotFoundException ignore ) {
             }
         }
     }
 
-    private long getScenarioCount() {
-        return (long) memory.list( Scenario.class ).size();
+    private long getSegmentCount() {
+        return (long) memory.list( Segment.class ).size();
     }
 
     public void testAddDelete() throws DuplicateKeyException, NotFoundException {
-        long size = getScenarioCount();
+        long size = getSegmentCount();
 
-        Scenario s = queryService.createScenario();
+        Segment s = queryService.createSegment();
         s.setName( "Bogus" );
 
-        assertEquals( size + 1, getScenarioCount() );
+        assertEquals( size + 1, getSegmentCount() );
 
-        assertSame( s, queryService.findScenario( s.getName() ) );
-        assertSame( s, queryService.find( Scenario.class, s.getId() ) );
+        assertSame( s, queryService.findSegment( s.getName() ) );
+        assertSame( s, queryService.find( Segment.class, s.getId() ) );
 
         memory.remove( s );
         try {
-            queryService.findScenario( s.getName() );
+            queryService.findSegment( s.getName() );
             fail();
         } catch ( NotFoundException ignored ) {}
         try {
-            memory.find( Scenario.class, s.getId() );
+            memory.find( Segment.class, s.getId() );
             fail();
         } catch ( NotFoundException ignored ) {}
 
         for ( long i = size; i > 0 ; i-- )
-            memory.remove( queryService.getDefaultScenario() );
-        assertEquals( 1, getScenarioCount() );
+            memory.remove( queryService.getDefaultSegment() );
+        assertEquals( 1, getSegmentCount() );
         // last one not deleted
     }
 
     public void testAddTwice() throws DuplicateKeyException {
-        Scenario a = new Scenario();
+        Segment a = new Segment();
         a.setName( "Bogus" );
         memory.add( a );
         try {
@@ -92,14 +92,14 @@ public class TestMemory extends TestCase {
     }
 
     public void testDefault() {
-        assertNotNull( queryService.getDefaultScenario() );
+        assertNotNull( queryService.getDefaultSegment() );
     }
 
-    public void testCreateScenario() throws NotFoundException {
-        assertEquals( 2, getScenarioCount() );
-        Scenario s = queryService.createScenario();
-        assertEquals( 3, getScenarioCount() );
-        assertSame( s, memory.find( Scenario.class, s.getId() ) );
+    public void testCreateSegment() throws NotFoundException {
+        assertEquals( 2, getSegmentCount() );
+        Segment s = queryService.createSegment();
+        assertEquals( 3, getSegmentCount() );
+        assertSame( s, memory.find( Segment.class, s.getId() ) );
     }
 
 }

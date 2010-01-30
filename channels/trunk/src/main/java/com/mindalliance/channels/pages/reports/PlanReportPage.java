@@ -6,7 +6,7 @@ import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import org.apache.wicket.AttributeModifier;
@@ -38,7 +38,7 @@ import java.util.List;
  */
 public class PlanReportPage extends WebPage {
 
-    /** The parameter that specifies all scenarios. */
+    /** The parameter that specifies all segments. */
     private static final String ALL = "all";
 
     /**
@@ -70,15 +70,15 @@ public class PlanReportPage extends WebPage {
 
         String reportDate = DateFormat.getDateTimeInstance( DateFormat.LONG, DateFormat.LONG )
                                 .format( new Date() );
-        List<Scenario> scenarios = selector.getScenarios();
+        List<Segment> segments = selector.getSegments();
 
         double[] size = { 478L, 400L };
         PlanMapDiagramPanel diagramPanel = new PlanMapDiagramPanel( "planMap",            // NON-NLS
-            new Model<ArrayList<Scenario>>( (ArrayList<Scenario>) scenarios ),
-            false, // group scenarios by phase
-            false, // group scenarios by event
+            new Model<ArrayList<Segment>>( (ArrayList<Segment>) segments ),
+            false, // group segments by phase
+            false, // group segments by event
             null,  // selected phase or event
-            selector.isAllScenarios() ? null : selector.getScenario(),
+            selector.isAllSegments() ? null : selector.getSegment(),
             null,
             new Settings( "#plan-map", DiagramFactory.TOP_BOTTOM, size, false, false ) );
 
@@ -93,19 +93,19 @@ public class PlanReportPage extends WebPage {
 
              new Label( "date", reportDate ),                                             // NON-NLS
 
-             new ListView<Scenario>( "sc-list", scenarios ) {                             // NON-NLS
+             new ListView<Segment>( "sg-list", segments ) {                             // NON-NLS
                     @Override
-                    protected void populateItem( ListItem<Scenario> item ) {
-                        Scenario scenario = item.getModelObject();
+                    protected void populateItem( ListItem<Segment> item ) {
+                        Segment segment = item.getModelObject();
                         item.add( new ExternalLink( "sc-link",
-                                        "#" + scenario.getId(), scenario.getName() ) );
+                                        "#" + segment.getId(), segment.getName() ) );
                     }
                 },
 
-             new ListView<Scenario>( "scenarios", scenarios ) {                           // NON-NLS
+             new ListView<Segment>( "segments", segments ) {                           // NON-NLS
                     @Override
-                    protected void populateItem( ListItem<Scenario> item ) {
-                        item.add( new ScenarioReportPanel( "scenario",                    // NON-NLS
+                    protected void populateItem( ListItem<Segment> item ) {
+                        item.add( new SegmentReportPanel( "segment",                    // NON-NLS
                                         item.getModel(),
                                         selector.isAllActors() ? null : selector.getActor(),
                                         selector.isShowingIssues() ) );

@@ -12,12 +12,12 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * A connector to unspecified node(s) outside of the scenario.
+ * A connector to unspecified node(s) outside of the segment.
  */
 @Entity
 public class Connector extends Node {
 
-    /** The connections from external scenarios. */
+    /** The connections from external segments. */
     private Set<ExternalFlow> externalFlows;
 
     public Connector() {
@@ -39,7 +39,7 @@ public class Connector extends Node {
             return MessageFormat.format( isInput ? "{0} to {1} (in {2})" : "{0} from {1} (in {2})",
                                          inner.getName(),
                                          part.getName(),
-                                         part.getScenario() );
+                                         part.getSegment() );
         } else
             return "(Not connected)";
     }

@@ -3,7 +3,7 @@ package com.mindalliance.channels.graph;
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,22 +22,22 @@ import java.util.List;
  */
 public class TestDefaultDiagramFactory extends AbstractChannelsTest {
 
-    private List<Scenario> scenarios;
+    private List<Segment> segments;
 
     @Override
     protected void setUp() throws IOException {
         super.setUp();
-        scenarios = app.getQueryService().list( Scenario.class );
+        segments = app.getQueryService().list( Segment.class );
 
     }
 
     public void testGetSVG() {
-        for ( Scenario scenario : scenarios ) {
-            Node selectedNode = findSelected( scenario );
+        for ( Segment segment : segments ) {
+            Node selectedNode = findSelected( segment );
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 DiagramFactory diagramFactory = app.getDiagramFactory();
-                Diagram flowDiagram = diagramFactory.newFlowMapDiagram( scenario, selectedNode, null, null );
+                Diagram flowDiagram = diagramFactory.newFlowMapDiagram( segment, selectedNode, null, null );
                 flowDiagram.render( DiagramFactory.SVG, new BufferedOutputStream( baos ) );
                 String svg = baos.toString();
                 assertFalse( svg.isEmpty() );
@@ -50,16 +50,16 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
     }
 
     public void testGetPNG() {
-        for ( Scenario scenario : scenarios ) {
-            Node selectedNode = findSelected( scenario );
+        for ( Segment segment : segments ) {
+            Node selectedNode = findSelected( segment );
             try {
-                FileOutputStream fileOut = new FileOutputStream( "target/" + scenario.getName() + ".png" );
+                FileOutputStream fileOut = new FileOutputStream( "target/" + segment.getName() + ".png" );
                 DiagramFactory diagramFactory = app.getDiagramFactory();
-                Diagram flowDiagram = diagramFactory.newFlowMapDiagram( scenario, selectedNode, null, null );
+                Diagram flowDiagram = diagramFactory.newFlowMapDiagram( segment, selectedNode, null, null );
                 flowDiagram.render( DiagramFactory.PNG, fileOut );
                 fileOut.flush();
                 fileOut.close();
-                assertTrue( new File( "target/" + scenario.getName() + ".png" ).length() > 0 );
+                assertTrue( new File( "target/" + segment.getName() + ".png" ).length() > 0 );
             } catch ( IOException e ) {
                 fail( e.toString() );
             }
@@ -70,10 +70,10 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
     }
 
     public void testGetImageMap() {
-        for ( Scenario scenario : scenarios ) {
+        for ( Segment segment : segments ) {
             try {
                 DiagramFactory diagramFactory = app.getDiagramFactory();
-                Diagram flowDiagram = diagramFactory.newFlowMapDiagram( scenario, scenario.getDefaultPart(), null, null );
+                Diagram flowDiagram = diagramFactory.newFlowMapDiagram( segment, segment.getDefaultPart(), null, null );
                 String map = flowDiagram.makeImageMap();
                 System.out.print( map );
                 assertFalse( map.isEmpty() );
@@ -84,9 +84,9 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
         }
     }
 
-    private Node findSelected( Scenario scenario ) {
+    private Node findSelected( Segment segment ) {
         Node selectedNode = null;
-        Iterator<Node> nodes = scenario.nodes();
+        Iterator<Node> nodes = segment.nodes();
         if ( nodes.hasNext() ) {
             selectedNode = nodes.next();
             while ( !selectedNode.isPart() || nodes.hasNext() ) {

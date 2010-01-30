@@ -1,7 +1,7 @@
 <export>
-  <plan id="0" uri="mindalliance.com/channels/plans/acme" version="1.0" date="2010/01/26 9:49:19 EST">
+  <plan id="0" uri="mindalliance.com/channels/plans/acme" version="1.0" date="2010/01/28 9:43:55 EST">
     <whenVersioned>2009/09/15 9:48:22 EDT</whenVersioned>
-    <lastId>16049</lastId>
+    <lastId>16192</lastId>
     <name>ACME Emergency Communications Plan</name>
     <client>ACME Manufacturing, Inc.</client>
     <description>Communications planning for responding and recovering from business interruptions due fire or power outage.</description>
@@ -46,7 +46,7 @@
       <level>0</level>
     </classification>
     <detection-waivers>
-      <detection>NoScenarioForEventPhase</detection>
+      <detection>NoSegmentForEventPhase</detection>
     </detection-waivers>
     <medium id="11809" kind="Actual" name="Intercom">
       <description>An intercom system</description>
@@ -809,7 +809,7 @@
     <plan-phase id="4952">Preparing</plan-phase>
     <organization-involved id="14">ACME</organization-involved>
     <organization-involved id="77">Pinnacle</organization-involved>
-    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/01/26 9:49:19 EST" id="3" name="Power outage">
+    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/01/28 9:43:56 EST" id="3" name="Power outage">
       <description>A power outage interrupts operations at main location.</description>
       <trigger-event id="82">Power is out</trigger-event>
       <phase id="1192">Responding</phase>
@@ -817,14 +817,14 @@
         <type>DelayedDelivery</type>
         <organization id="14" kind="Actual">ACME</organization>
         <severity>Major</severity>
-        <endsWithScenario>true</endsWithScenario>
+        <endsWithSegment>true</endsWithSegment>
         <description>A power outage put at risk time-sensitive delivery contracts.</description>
       </risk>
       <risk>
         <type>PropertyDamage</type>
         <organization id="14" kind="Actual">ACME</organization>
         <severity>Minor</severity>
-        <endsWithScenario>true</endsWithScenario>
+        <endsWithSegment>true</endsWithSegment>
         <description></description>
       </risk>
       <part id="87">
@@ -832,7 +832,7 @@
         <role id="328" kind="Type">Secretary</role>
         <organization id="14" kind="Actual">ACME</organization>
         <location id="50" kind="Actual">ACME 100</location>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <asTeam>false</asTeam>
       </part>
@@ -841,7 +841,7 @@
         <role id="326" kind="Type">Business Continuity Manager</role>
         <organization id="14" kind="Actual">ACME</organization>
         <location id="50" kind="Actual">ACME 100</location>
-        <startsWithScenario>true</startsWithScenario>
+        <startsWithSegment>true</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="DelayedDelivery">ACME</mitigation>
         <asTeam>false</asTeam>
@@ -852,7 +852,7 @@
         <organization id="14" kind="Actual">ACME</organization>
         <location id="66" kind="Actual">Springfield building</location>
         <jurisdiction id="66" kind="Actual">Springfield building</jurisdiction>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="DelayedDelivery">ACME</mitigation>
         <asTeam>false</asTeam>
@@ -863,7 +863,7 @@
         <actor id="285" kind="Actual">Peter Sanchez</actor>
         <organization id="14" kind="Actual">ACME</organization>
         <location id="66" kind="Actual">Springfield building</location>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="DelayedDelivery">ACME</mitigation>
         <asTeam>false</asTeam>
@@ -871,7 +871,7 @@
       <part id="91">
         <task>Responding to outage</task>
         <organization id="43" kind="Actual">PSEG</organization>
-        <startsWithScenario>true</startsWithScenario>
+        <startsWithSegment>true</startsWithSegment>
         <terminatesEvent>true</terminatesEvent>
         <asTeam>false</asTeam>
       </part>
@@ -880,7 +880,7 @@
         <role id="335" kind="Type">Business Continuity Officer</role>
         <organization id="14" kind="Actual">ACME</organization>
         <location id="50" kind="Actual">ACME 100</location>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="PropertyDamage">ACME</mitigation>
         <asTeam>false</asTeam>
@@ -889,7 +889,7 @@
         <task>Transfer operations</task>
         <role id="325" kind="Type">CEO</role>
         <organization id="14" kind="Actual">ACME</organization>
-        <startsWithScenario>true</startsWithScenario>
+        <startsWithSegment>true</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <initiatedEvent id="72">Business interrupted</initiatedEvent>
         <asTeam>false</asTeam>
@@ -1080,8 +1080,8 @@
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>30 seconds</maxDelay>
       </flow>
-    </scenario>
-    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/01/26 9:49:19 EST" id="190" name="Business continuity">
+    </segment>
+    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/01/28 9:43:56 EST" id="190" name="Business continuity">
       <description>Provide a framework on which to resume critical business processes when normal work location and the resources in it are not accessible. The department plans are closely coordinated and supported by local management support staff for such areas as technology and office administrative assistance in establishing a continuous working environment.</description>
       <trigger-event id="72">Business interrupted</trigger-event>
       <phase id="1192">Responding</phase>
@@ -1089,28 +1089,28 @@
         <type>DelayedDelivery</type>
         <organization id="14" kind="Actual">ACME</organization>
         <severity>Major</severity>
-        <endsWithScenario>false</endsWithScenario>
+        <endsWithSegment>false</endsWithSegment>
         <description>Delivery of services may be delayed.</description>
       </risk>
       <risk>
         <type>ReputationDamage</type>
         <organization id="14" kind="Actual">ACME</organization>
         <severity>Major</severity>
-        <endsWithScenario>false</endsWithScenario>
+        <endsWithSegment>false</endsWithSegment>
         <description></description>
       </risk>
       <risk>
         <type>LostRevenue</type>
         <organization id="14" kind="Actual">ACME</organization>
         <severity>Major</severity>
-        <endsWithScenario>false</endsWithScenario>
+        <endsWithSegment>false</endsWithSegment>
         <description></description>
       </risk>
       <part id="192">
         <task>Assist in shifts</task>
         <role id="48" kind="Type">Contractor</role>
         <organization id="77" kind="Actual">Pinnacle</organization>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="DelayedDelivery">ACME</mitigation>
         <asTeam>false</asTeam>
@@ -1120,7 +1120,7 @@
         <role id="326" kind="Type">Business Continuity Manager</role>
         <organization id="14" kind="Actual">ACME</organization>
         <location id="50" kind="Actual">ACME 100</location>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="DelayedDelivery">ACME</mitigation>
         <asTeam>false</asTeam>
@@ -1129,14 +1129,14 @@
         <task>Ensuring business continuity</task>
         <role id="325" kind="Type">CEO</role>
         <organization id="14" kind="Actual">ACME</organization>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>true</terminatesEvent>
         <asTeam>false</asTeam>
       </part>
       <part id="195">
         <task>Evaluate business losses</task>
         <organization id="69" kind="Actual">P. K. Brock Insurance Agency</organization>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="LostRevenue">ACME</mitigation>
         <asTeam>false</asTeam>
@@ -1145,7 +1145,7 @@
         <task>Executing continuity procedures</task>
         <role id="335" kind="Type">Business Continuity Officer</role>
         <organization id="14" kind="Actual">ACME</organization>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="DelayedDelivery">ACME</mitigation>
         <asTeam>false</asTeam>
@@ -1154,7 +1154,7 @@
         <task>Managing impacts to customers</task>
         <role id="331" kind="Type">Customer Account Manager</role>
         <organization id="14" kind="Actual">ACME</organization>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="ReputationDamage">ACME</mitigation>
         <asTeam>false</asTeam>
@@ -1163,7 +1163,7 @@
         <task>Managing interruption insurance</task>
         <role id="326" kind="Type">Business Continuity Manager</role>
         <organization id="14" kind="Actual">ACME</organization>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <asTeam>false</asTeam>
       </part>
@@ -1172,21 +1172,21 @@
         <role id="326" kind="Type">Business Continuity Manager</role>
         <organization id="14" kind="Actual">ACME</organization>
         <location id="50" kind="Actual">ACME 100</location>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <asTeam>false</asTeam>
       </part>
       <part id="200">
         <task>Managing job completion delay</task>
         <role id="60" kind="Type">ACME Customer</role>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <asTeam>false</asTeam>
       </part>
       <part id="201">
         <task>Providing ACME with alternate facilities</task>
         <organization id="77" kind="Actual">Pinnacle</organization>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="DelayedDelivery">ACME</mitigation>
         <asTeam>false</asTeam>
@@ -1307,13 +1307,13 @@
       </flow>
       <flow id="221" name="Operations interrupted">
         <source>
-          <connector id="184" scenario="Fire in the building">
-            <scenario-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
+          <connector id="184" segment="Fire in the building">
+            <segment-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
 9- Respond immediately to the fire event. &#xd;
 8- Ensure the safety and health of colleagues&#xd;
 7- Assess any damage or impact of a situation&#xd;
 4- Identify and apply the necessary emergency activities&#xd;
-0- Manage and communicate information about the incident to parties deemed necessary</scenario-description>
+0- Manage and communicate information about the incident to parties deemed necessary</segment-description>
             <flow name="Operations interrupted"/>
             <part-id>172</part-id>
             <part-role name="Emergency Manager"/>
@@ -1345,8 +1345,8 @@
       </flow>
       <flow id="228" name="Damage report">
         <source>
-          <connector id="125" scenario="Recovery after fire">
-            <scenario-description>Managing the aftermath of a fire.</scenario-description>
+          <connector id="125" segment="Recovery after fire">
+            <segment-description>Managing the aftermath of a fire.</segment-description>
             <flow name="Damage report"/>
             <part-id>110</part-id>
             <part-role name="Emergency Manager"/>
@@ -1508,8 +1508,8 @@
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
-    </scenario>
-    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/01/26 9:49:19 EST" id="140" name="Building evacuation">
+    </segment>
+    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/01/28 9:43:56 EST" id="140" name="Building evacuation">
       <description>Evacuating the building to minimize risk to personnel.</description>
       <trigger-event id="1191">Building unsafe</trigger-event>
       <phase id="1192">Responding</phase>
@@ -1517,7 +1517,7 @@
         <type>BodilyHarm</type>
         <organization id="14" kind="Actual">ACME</organization>
         <severity>Major</severity>
-        <endsWithScenario>true</endsWithScenario>
+        <endsWithSegment>true</endsWithSegment>
         <description></description>
       </risk>
       <part id="143">
@@ -1527,7 +1527,7 @@
         <organization id="14" kind="Actual">ACME</organization>
         <location id="68" kind="Actual">Warehouse building</location>
         <jurisdiction id="333" kind="Actual">Warehouse</jurisdiction>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <asTeam>false</asTeam>
       </part>
@@ -1535,7 +1535,7 @@
         <task>evacuating building</task>
         <role id="70" kind="Type">Occupant</role>
         <location id="50" kind="Actual">ACME 100</location>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="BodilyHarm">ACME</mitigation>
         <asTeam>false</asTeam>
@@ -1544,7 +1544,7 @@
         <task>Evacuating floor</task>
         <role id="70" kind="Type">Occupant</role>
         <location id="45" kind="Actual">ACME</location>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="BodilyHarm">ACME</mitigation>
         <asTeam>false</asTeam>
@@ -1553,7 +1553,7 @@
         <task>Evacuating warehouse</task>
         <role id="70" kind="Type">Occupant</role>
         <location id="68" kind="Actual">Warehouse building</location>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="BodilyHarm">ACME</mitigation>
         <asTeam>false</asTeam>
@@ -1563,7 +1563,7 @@
         <role id="278" kind="Type">Assembly Area Leader</role>
         <organization id="14" kind="Actual">ACME</organization>
         <location id="44" kind="Actual">Assembly area</location>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <asTeam>false</asTeam>
       </part>
@@ -1572,7 +1572,7 @@
         <role id="279" kind="Type">Emergency Manager</role>
         <organization id="14" kind="Actual">ACME</organization>
         <location id="50" kind="Actual">ACME 100</location>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>true</terminatesEvent>
         <asTeam>false</asTeam>
       </part>
@@ -1580,7 +1580,7 @@
         <task>Overseeing building evacuation</task>
         <role id="325" kind="Type">CEO</role>
         <organization id="14" kind="Actual">ACME</organization>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="BodilyHarm">ACME</mitigation>
         <asTeam>false</asTeam>
@@ -1590,7 +1590,7 @@
         <role id="281" kind="Type">Evacuation Team Leader</role>
         <organization id="14" kind="Actual">ACME</organization>
         <location id="50" kind="Actual">ACME 100</location>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <asTeam>true</asTeam>
       </part>
@@ -1600,7 +1600,7 @@
         <actor id="686" kind="Actual">R2D2</actor>
         <organization id="14" kind="Actual">ACME</organization>
         <location id="50" kind="Actual">ACME 100</location>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="BodilyHarm">ACME</mitigation>
         <asTeam>false</asTeam>
@@ -1846,13 +1846,13 @@
       </flow>
       <flow id="10375" name="Activate evacuation plan">
         <source>
-          <connector id="176" scenario="Fire in the building">
-            <scenario-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
+          <connector id="176" segment="Fire in the building">
+            <segment-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
 9- Respond immediately to the fire event. &#xd;
 8- Ensure the safety and health of colleagues&#xd;
 7- Assess any damage or impact of a situation&#xd;
 4- Identify and apply the necessary emergency activities&#xd;
-0- Manage and communicate information about the incident to parties deemed necessary</scenario-description>
+0- Manage and communicate information about the incident to parties deemed necessary</segment-description>
             <flow name="Activate evacuation plan"/>
             <part-id>170</part-id>
             <part-role name="Emergency Manager"/>
@@ -1935,13 +1935,13 @@
       </flow>
       <flow id="10376" name="Activate evacuation plan">
         <source>
-          <connector id="176" scenario="Fire in the building">
-            <scenario-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
+          <connector id="176" segment="Fire in the building">
+            <segment-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
 9- Respond immediately to the fire event. &#xd;
 8- Ensure the safety and health of colleagues&#xd;
 7- Assess any damage or impact of a situation&#xd;
 4- Identify and apply the necessary emergency activities&#xd;
-0- Manage and communicate information about the incident to parties deemed necessary</scenario-description>
+0- Manage and communicate information about the incident to parties deemed necessary</segment-description>
             <flow name="Activate evacuation plan"/>
             <part-id>170</part-id>
             <part-role name="Emergency Manager"/>
@@ -2084,17 +2084,27 @@
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>26 minutes</maxDelay>
       </flow>
-    </scenario>
-    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/01/26 9:49:19 EST" id="13904" name="Shutting down operations">
+    </segment>
+    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/01/28 9:43:56 EST" id="13904" name="Shutting down operations">
       <description>Shutting down operations because of fire</description>
       <trigger-event id="5">Building on fire</trigger-event>
       <phase id="1192">Responding</phase>
+      <risk>
+        <type>PropertyDamage</type>
+        <organization id="14" kind="Actual">ACME</organization>
+        <severity>Major</severity>
+        <endsWithSegment>true</endsWithSegment>
+        <description></description>
+      </risk>
       <part id="13905">
         <task>Shutting down printing presses</task>
         <role id="11801" kind="Type">Operations Manager</role>
         <organization id="14" kind="Actual">ACME</organization>
-        <startsWithScenario>false</startsWithScenario>
+        <location id="50" kind="Actual">ACME 100</location>
+        <completionTime>1 hour</completionTime>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
+        <mitigation type="PropertyDamage">ACME</mitigation>
         <asTeam>false</asTeam>
       </part>
       <flow id="13909" name="Shutdown completed">
@@ -2104,6 +2114,11 @@
         <target>
           <connector id="13932"/>
         </target>
+        <eoi>
+          <content>time of completion</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
@@ -2113,13 +2128,13 @@
       </flow>
       <flow id="13911" name="Shut power off">
         <source>
-          <connector id="186" scenario="Fire in the building">
-            <scenario-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
+          <connector id="186" segment="Fire in the building">
+            <segment-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
 9- Respond immediately to the fire event. &#xd;
 8- Ensure the safety and health of colleagues&#xd;
 7- Assess any damage or impact of a situation&#xd;
 4- Identify and apply the necessary emergency activities&#xd;
-0- Manage and communicate information about the incident to parties deemed necessary</scenario-description>
+0- Manage and communicate information about the incident to parties deemed necessary</segment-description>
             <flow name="Shut power off"/>
             <part-id>173</part-id>
             <part-role name="Emergency Manager"/>
@@ -2130,6 +2145,9 @@
         <target>
           <part id="13905"/>
         </target>
+        <attachments>
+          <attachment type="Policy">http://www.acme.com/shutdown_procs.pdf</attachment>
+        </attachments>
         <eoi>
           <content>expected downtime</content>
           <sourceCodes></sourceCodes>
@@ -2187,8 +2205,8 @@
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>1 minute</maxDelay>
       </flow>
-    </scenario>
-    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/01/26 9:49:19 EST" id="167" name="Fire in the building">
+    </segment>
+    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/01/28 9:43:56 EST" id="167" name="Fire in the building">
       <description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
 9- Respond immediately to the fire event. &#xd;
 8- Ensure the safety and health of colleagues&#xd;
@@ -2203,28 +2221,28 @@
         <severity>Minor</severity>
         <remediation>Keep current flows between firemen and fire chief
 or remove any such flows
-or move them  to another scenario</remediation>
+or move them  to another plan segment</remediation>
         <reportedBy>jf</reportedBy>
       </issue>
       <risk>
         <type>BodilyHarm</type>
         <organization id="14" kind="Actual">ACME</organization>
         <severity>Major</severity>
-        <endsWithScenario>false</endsWithScenario>
+        <endsWithSegment>false</endsWithSegment>
         <description></description>
       </risk>
       <risk>
         <type>PropertyDamage</type>
         <organization id="14" kind="Actual">ACME</organization>
         <severity>Severe</severity>
-        <endsWithScenario>false</endsWithScenario>
+        <endsWithSegment>false</endsWithSegment>
         <description></description>
       </risk>
       <part id="169">
         <task>Coordinating fire response</task>
         <role id="10" kind="Type">Fire Chief</role>
         <organization id="13" kind="Actual">Fire Department</organization>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <initiatedEvent id="81">Building closed due to fire</initiatedEvent>
         <asTeam>false</asTeam>
@@ -2233,7 +2251,7 @@ or move them  to another scenario</remediation>
         <task>Facilitating fire response</task>
         <role id="279" kind="Type">Emergency Manager</role>
         <organization id="14" kind="Actual">ACME</organization>
-        <startsWithScenario>true</startsWithScenario>
+        <startsWithSegment>true</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <initiatedEvent id="1191">Building unsafe</initiatedEvent>
         <mitigation type="BodilyHarm">ACME</mitigation>
@@ -2245,7 +2263,7 @@ or move them  to another scenario</remediation>
         <role id="40" kind="Type">Firefighter</role>
         <organization id="13" kind="Actual">Fire Department</organization>
         <location id="50" kind="Actual">ACME 100</location>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>true</terminatesEvent>
         <mitigation type="BodilyHarm">ACME</mitigation>
         <mitigation type="PropertyDamage">ACME</mitigation>
@@ -2256,7 +2274,7 @@ or move them  to another scenario</remediation>
         <role id="279" kind="Type">Emergency Manager</role>
         <organization id="14" kind="Actual">ACME</organization>
         <location id="50" kind="Actual">ACME 100</location>
-        <startsWithScenario>true</startsWithScenario>
+        <startsWithSegment>true</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <initiatedEvent id="72">Business interrupted</initiatedEvent>
         <mitigation type="BodilyHarm">ACME</mitigation>
@@ -2267,7 +2285,7 @@ or move them  to another scenario</remediation>
         <task>Powering down building</task>
         <role id="279" kind="Type">Emergency Manager</role>
         <organization id="14" kind="Actual">ACME</organization>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="PropertyDamage">ACME</mitigation>
         <mitigation type="BodilyHarm">ACME</mitigation>
@@ -2276,7 +2294,7 @@ or move them  to another scenario</remediation>
       <part id="174">
         <task>Responding to fire</task>
         <organization id="13" kind="Actual">Fire Department</organization>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <asTeam>false</asTeam>
       </part>
@@ -2517,8 +2535,8 @@ or move them  to another scenario</remediation>
       </flow>
       <flow id="13910" name="Shutdown completed">
         <source>
-          <connector id="13932" scenario="Shutting down operations">
-            <scenario-description>Shutting down operations because of fire</scenario-description>
+          <connector id="13932" segment="Shutting down operations">
+            <segment-description>Shutting down operations because of fire</segment-description>
             <flow name="Shutdown completed"/>
             <part-id>13905</part-id>
             <part-role name="Operations Manager"/>
@@ -2529,6 +2547,11 @@ or move them  to another scenario</remediation>
         <target>
           <part id="173"/>
         </target>
+        <eoi>
+          <content>time of completion</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
@@ -2609,8 +2632,8 @@ or move them  to another scenario</remediation>
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
-    </scenario>
-    <scenario plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/01/26 9:49:19 EST" id="107" name="Recovery after fire">
+    </segment>
+    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/01/28 9:43:56 EST" id="107" name="Recovery after fire">
       <description>Managing the aftermath of a fire.</description>
       <trigger-event id="5">Building on fire</trigger-event>
       <phase id="4972">Recovering</phase>
@@ -2618,42 +2641,42 @@ or move them  to another scenario</remediation>
         <type>BodilyHarm</type>
         <organization id="14" kind="Actual">ACME</organization>
         <severity>Minor</severity>
-        <endsWithScenario>false</endsWithScenario>
+        <endsWithSegment>false</endsWithSegment>
         <description></description>
       </risk>
       <risk>
         <type>FinesPenalties</type>
         <organization id="14" kind="Actual">ACME</organization>
         <severity>Major</severity>
-        <endsWithScenario>false</endsWithScenario>
+        <endsWithSegment>false</endsWithSegment>
         <description></description>
       </risk>
       <risk>
         <type>ReputationDamage</type>
         <organization id="14" kind="Actual">ACME</organization>
         <severity>Major</severity>
-        <endsWithScenario>false</endsWithScenario>
+        <endsWithSegment>false</endsWithSegment>
         <description></description>
       </risk>
       <risk>
         <type>AssetDevaluation</type>
         <organization id="14" kind="Actual">ACME</organization>
         <severity>Major</severity>
-        <endsWithScenario>false</endsWithScenario>
+        <endsWithSegment>false</endsWithSegment>
         <description></description>
       </risk>
       <risk>
         <type>PropertyDamage</type>
         <organization id="14" kind="Actual">ACME</organization>
         <severity>Major</severity>
-        <endsWithScenario>false</endsWithScenario>
+        <endsWithSegment>false</endsWithSegment>
         <description></description>
       </risk>
       <part id="109">
         <task>Assessing ability to restart operations</task>
         <role id="330" kind="Type">Response Liaison Officer</role>
         <organization id="14" kind="Actual">ACME</organization>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>true</terminatesEvent>
         <asTeam>false</asTeam>
       </part>
@@ -2662,7 +2685,7 @@ or move them  to another scenario</remediation>
         <role id="279" kind="Type">Emergency Manager</role>
         <organization id="14" kind="Actual">ACME</organization>
         <location id="50" kind="Actual">ACME 100</location>
-        <startsWithScenario>true</startsWithScenario>
+        <startsWithSegment>true</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="PropertyDamage">ACME</mitigation>
         <asTeam>false</asTeam>
@@ -2670,14 +2693,14 @@ or move them  to another scenario</remediation>
       <part id="111">
         <task>Assessing cost of damages</task>
         <role id="55" kind="Type">Insurance Adjuster</role>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <asTeam>false</asTeam>
       </part>
       <part id="112">
         <task>Assessing structural damage</task>
         <role id="51" kind="Type">Building Inspector</role>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="BodilyHarm">ACME</mitigation>
         <asTeam>false</asTeam>
@@ -2686,7 +2709,7 @@ or move them  to another scenario</remediation>
         <task>Coordinating recovery</task>
         <role id="325" kind="Type">CEO</role>
         <organization id="14" kind="Actual">ACME</organization>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="FinesPenalties">ACME</mitigation>
         <mitigation type="PropertyDamage">ACME</mitigation>
@@ -2696,7 +2719,7 @@ or move them  to another scenario</remediation>
         <task>Engaging clean up contractor</task>
         <role id="326" kind="Type">Business Continuity Manager</role>
         <organization id="14" kind="Actual">ACME</organization>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="PropertyDamage">ACME</mitigation>
         <asTeam>false</asTeam>
@@ -2704,14 +2727,14 @@ or move them  to another scenario</remediation>
       <part id="115">
         <task>Estimating costs</task>
         <role id="42" kind="Type">Cleanup Contractor</role>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <asTeam>false</asTeam>
       </part>
       <part id="116">
         <task>Investigating cause of fire</task>
         <role id="78" kind="Type">Fire Inspector</role>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <asTeam>false</asTeam>
       </part>
@@ -2721,7 +2744,7 @@ or move them  to another scenario</remediation>
         </detection-waivers>
         <task>Managing account</task>
         <organization id="69" kind="Actual">P. K. Brock Insurance Agency</organization>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <asTeam>false</asTeam>
       </part>
@@ -2729,7 +2752,7 @@ or move them  to another scenario</remediation>
         <task>Managing media</task>
         <role id="329" kind="Type">Public Spokesperson</role>
         <organization id="14" kind="Actual">ACME</organization>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <mitigation type="ReputationDamage">ACME</mitigation>
         <asTeam>false</asTeam>
@@ -2740,7 +2763,7 @@ or move them  to another scenario</remediation>
         </detection-waivers>
         <task>Managing property</task>
         <role id="59" kind="Type">Landlord</role>
-        <startsWithScenario>false</startsWithScenario>
+        <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <asTeam>false</asTeam>
       </part>
@@ -2750,7 +2773,7 @@ or move them  to another scenario</remediation>
         </detection-waivers>
         <task>Reporting on fire</task>
         <role id="47" kind="Type">Media Representative</role>
-        <startsWithScenario>true</startsWithScenario>
+        <startsWithSegment>true</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <asTeam>false</asTeam>
       </part>
@@ -2796,13 +2819,13 @@ or move them  to another scenario</remediation>
       </flow>
       <flow id="225" name="Fire extinguished">
         <source>
-          <connector id="179" scenario="Fire in the building">
-            <scenario-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
+          <connector id="179" segment="Fire in the building">
+            <segment-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
 9- Respond immediately to the fire event. &#xd;
 8- Ensure the safety and health of colleagues&#xd;
 7- Assess any damage or impact of a situation&#xd;
 4- Identify and apply the necessary emergency activities&#xd;
-0- Manage and communicate information about the incident to parties deemed necessary</scenario-description>
+0- Manage and communicate information about the incident to parties deemed necessary</segment-description>
             <flow name="Fire extinguished"/>
             <part-id>170</part-id>
             <part-role name="Emergency Manager"/>
@@ -2963,13 +2986,13 @@ or move them  to another scenario</remediation>
       </flow>
       <flow id="226" name="Fire extinguished">
         <source>
-          <connector id="179" scenario="Fire in the building">
-            <scenario-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
+          <connector id="179" segment="Fire in the building">
+            <segment-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
 9- Respond immediately to the fire event. &#xd;
 8- Ensure the safety and health of colleagues&#xd;
 7- Assess any damage or impact of a situation&#xd;
 4- Identify and apply the necessary emergency activities&#xd;
-0- Manage and communicate information about the incident to parties deemed necessary</scenario-description>
+0- Manage and communicate information about the incident to parties deemed necessary</segment-description>
             <flow name="Fire extinguished"/>
             <part-id>170</part-id>
             <part-role name="Emergency Manager"/>
@@ -3064,13 +3087,13 @@ or move them  to another scenario</remediation>
       </flow>
       <flow id="222" name="Fire extinguished">
         <source>
-          <connector id="179" scenario="Fire in the building">
-            <scenario-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
+          <connector id="179" segment="Fire in the building">
+            <segment-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
 9- Respond immediately to the fire event. &#xd;
 8- Ensure the safety and health of colleagues&#xd;
 7- Assess any damage or impact of a situation&#xd;
 4- Identify and apply the necessary emergency activities&#xd;
-0- Manage and communicate information about the incident to parties deemed necessary</scenario-description>
+0- Manage and communicate information about the incident to parties deemed necessary</segment-description>
             <flow name="Fire extinguished"/>
             <part-id>170</part-id>
             <part-role name="Emergency Manager"/>
@@ -3096,6 +3119,6 @@ or move them  to another scenario</remediation>
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
-    </scenario>
+    </segment>
   </plan>
 </export>

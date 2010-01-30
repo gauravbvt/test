@@ -1,11 +1,11 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
+import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.MetaProvider;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import org.apache.commons.lang.StringUtils;
 import org.jgrapht.Graph;
 
@@ -26,29 +26,29 @@ import java.util.Set;
  * Date: Apr 1, 2009
  * Time: 8:03:37 PM
  */
-public class PlanMapDOTExporter extends AbstractDOTExporter<Scenario, ScenarioRelationship> {
+public class PlanMapDOTExporter extends AbstractDOTExporter<Segment, SegmentRelationship> {
 
-    public PlanMapDOTExporter( MetaProvider<Scenario, ScenarioRelationship> metaProvider ) {
+    public PlanMapDOTExporter( MetaProvider<Segment, SegmentRelationship> metaProvider ) {
         super( metaProvider );
     }
 
     /**
      * {@inheritDoc}
      */
-    protected void exportVertices( PrintWriter out, Graph<Scenario, ScenarioRelationship> g ) {
+    protected void exportVertices( PrintWriter out, Graph<Segment, SegmentRelationship> g ) {
         PlanMapMetaProvider metaProvider = (PlanMapMetaProvider) getMetaProvider();
         if ( metaProvider.isGroupByPhase() || metaProvider.isGroupByEvent() ) {
-            Map<ModelObject, Set<Scenario>> groupedScenarios = new HashMap<ModelObject, Set<Scenario>>();
-            for ( Scenario scenario : g.vertexSet() ) {
-                ModelObject group = getGroup( scenario );
-                Set<Scenario> scenariosInGroup = groupedScenarios.get( group );
-                if ( scenariosInGroup == null ) {
-                    scenariosInGroup = new HashSet<Scenario>();
-                    groupedScenarios.put( group, scenariosInGroup );
+            Map<ModelObject, Set<Segment>> groupedSegments = new HashMap<ModelObject, Set<Segment>>();
+            for ( Segment segment : g.vertexSet() ) {
+                ModelObject group = getGroup( segment );
+                Set<Segment> segmentsInGroup = groupedSegments.get( group );
+                if ( segmentsInGroup == null ) {
+                    segmentsInGroup = new HashSet<Segment>();
+                    groupedSegments.put( group, segmentsInGroup );
                 }
-                scenariosInGroup.add( scenario );
+                segmentsInGroup.add( segment );
             }
-            List<ModelObject> groups = new ArrayList<ModelObject>( groupedScenarios.keySet() );
+            List<ModelObject> groups = new ArrayList<ModelObject>( groupedSegments.keySet() );
             Collections.sort( groups );
             for ( ModelObject group : groups ) {
                 out.println( "subgraph cluster_"
@@ -65,12 +65,12 @@ public class PlanMapDOTExporter extends AbstractDOTExporter<Scenario, ScenarioRe
                 }
                 if ( metaProvider.getURLProvider() != null ) {
                     String url = metaProvider.getURLProvider().
-                            getGraphURL( groupedScenarios.get( group ).iterator().next() );
+                            getGraphURL( groupedSegments.get( group ).iterator().next() );
                     if ( url != null ) attributes.add( new DOTAttribute( "URL", url ) );
                 }
                 out.print( asGraphAttributes( attributes ) );
                 out.println();
-                printoutVertices( out, groupedScenarios.get( group ) );
+                printoutVertices( out, groupedSegments.get( group ) );
                 out.println( "}" );
             }
         } else {
@@ -78,12 +78,12 @@ public class PlanMapDOTExporter extends AbstractDOTExporter<Scenario, ScenarioRe
         }
     }
 
-    private ModelObject getGroup( Scenario scenario ) {
+    private ModelObject getGroup( Segment segment ) {
         PlanMapMetaProvider metaProvider = (PlanMapMetaProvider) getMetaProvider();
         if ( metaProvider.isGroupByPhase() ) {
-            return scenario.getPhase();
+            return segment.getPhase();
         } else if ( metaProvider.isGroupByEvent() ) {
-            return scenario.getEvent();
+            return segment.getEvent();
         } else {
             return null;
         }

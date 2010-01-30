@@ -7,7 +7,7 @@ import com.mindalliance.channels.graph.MetaProvider;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import org.jgrapht.Graph;
 
 import java.io.IOException;
@@ -46,7 +46,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
      */
     Set<Part> terminators = new HashSet<Part>();
     /**
-     * Parts that start with the scenario.
+     * Parts that start with the segment.
      */
     Set<Part> autoStarters = new HashSet<Part>();
 
@@ -59,17 +59,17 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
      */
     protected void beforeExport( Graph<Node, Flow> g ) {
         super.beforeExport( g );
-        Scenario scenario = getScenario();
+        Segment segment = getSegment();
         for ( Node node : g.vertexSet() ) {
             if ( node.isPart() ) {
                 Part part = (Part) node;
-                assert scenario.getEvent() != null;
-                if ( scenario.isInitiatedBy( part ) ) {
+                assert segment.getEvent() != null;
+                if ( segment.isInitiatedBy( part ) ) {
                     initiators.add( part );
-                } else if ( scenario.isTerminatedBy( part ) ) {
+                } else if ( segment.isTerminatedBy( part ) ) {
                     terminators.add( part );
                 }
-                if ( part.getScenario().equals( scenario ) && part.isStartsWithScenario() ) {
+                if ( part.getSegment().equals( segment ) && part.setIsStartsWithSegment() ) {
                     autoStarters.add( part );
                 }
             }
@@ -82,38 +82,38 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     protected void exportVertices( PrintWriter out, Graph<Node, Flow> g ) {
         AbstractMetaProvider<Node, Flow> metaProvider = (AbstractMetaProvider<Node, Flow>) getMetaProvider();
         if ( !( initiators.isEmpty() && autoStarters.isEmpty() ) ) exportStart( out, metaProvider );
-        Map<Scenario, Set<Node>> scenarioNodes = new HashMap<Scenario, Set<Node>>();
+        Map<Segment, Set<Node>> segmentNodes = new HashMap<Segment, Set<Node>>();
         for ( Node node : g.vertexSet() ) {
-            Scenario scenario = node.getScenario();
-            Set<Node> nodesInScenario = scenarioNodes.get( scenario );
-            if ( nodesInScenario == null ) {
-                nodesInScenario = new HashSet<Node>();
-                scenarioNodes.put( scenario, nodesInScenario );
+            Segment segment = node.getSegment();
+            Set<Node> nodesInSegment = segmentNodes.get( segment );
+            if ( nodesInSegment == null ) {
+                nodesInSegment = new HashSet<Node>();
+                segmentNodes.put( segment, nodesInSegment );
             }
-            nodesInScenario.add( node );
+            nodesInSegment.add( node );
         }
-        for ( Scenario scenario : scenarioNodes.keySet() ) {
-            if ( !scenario.equals( getScenario() ) ) {
+        for ( Segment segment : segmentNodes.keySet() ) {
+            if ( !segment.equals( getSegment() ) ) {
                 out.println( "subgraph cluster_"
-                        + scenario.getName().replaceAll( "[^a-zA-Z0-9_]", "_" )
+                        + segment.getName().replaceAll( "[^a-zA-Z0-9_]", "_" )
                         + " {" );
                 List<DOTAttribute> attributes = new DOTAttribute( "label",
-                        "Scenario: " + scenario.getName() ).asList();
+                        "Segment: " + segment.getName() ).asList();
                 if ( metaProvider.getDOTAttributeProvider() != null ) {
                     attributes.addAll(
                             metaProvider.getDOTAttributeProvider().getSubgraphAttributes( false ) );
                 }
                 if ( metaProvider.getURLProvider() != null ) {
                     String url = metaProvider.getURLProvider().
-                            getGraphURL( scenarioNodes.get( scenario ).iterator().next() );
+                            getGraphURL( segmentNodes.get( segment ).iterator().next() );
                     if ( url != null ) attributes.add( new DOTAttribute( "URL", url ) );
                 }
                 out.print( asGraphAttributes( attributes ) );
                 out.println();
-                printoutVertices( out, scenarioNodes.get( scenario ) );
+                printoutVertices( out, segmentNodes.get( segment ) );
                 out.println( "}" );
             } else {
-                printoutVertices( out, scenarioNodes.get( scenario ) );
+                printoutVertices( out, segmentNodes.get( segment ) );
             }
         }
         if ( !terminators.isEmpty() ) exportStop( out, metaProvider );
@@ -125,7 +125,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         attributes.add( new DOTAttribute( "fontsize", FlowMapMetaProvider.NODE_FONT_SIZE ) );
         attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
-        String label = "Scenario starts";
+        String label = "Segment starts";
         attributes.add( new DOTAttribute( "label", label ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
         attributes.add( new DOTAttribute( "tooltip", label ) );
@@ -149,7 +149,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         attributes.add( new DOTAttribute( "fontsize", FlowMapMetaProvider.NODE_FONT_SIZE ) );
         attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
-        String label = "Scenario ends";
+        String label = "Segment ends";
         attributes.add( new DOTAttribute( "label", label ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
         attributes.add( new DOTAttribute( "tooltip", label ) );
@@ -175,13 +175,13 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     }
 
     private void exportInitiations( PrintWriter out, Graph<Node, Flow> g ) {
-        Scenario scenario = getScenario();
+        Segment segment = getSegment();
         for ( Part initiator : initiators ) {
             List<DOTAttribute> attributes = getTimingEdgeAttributes();
-            attributes.add( new DOTAttribute( "label", makeLabel( scenario.initiationCause( initiator ) ) ) );
+            attributes.add( new DOTAttribute( "label", makeLabel( segment.initiationCause( initiator ) ) ) );
             /*attributes.add( new DOTAttribute(
                     "tooltip",
-                    sanitize( scenario.initiationCause( initiator ) ) ) );*/
+                    sanitize( segment.initiationCause( initiator ) ) ) );*/
             String initiatorId = getVertexID( initiator );
             out.print( getIndent() + initiatorId + getArrow( g ) + START );
             out.print( "[" );
@@ -207,13 +207,13 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     }
 
     private void exportTerminations( PrintWriter out, Graph<Node, Flow> g ) {
-        Scenario scenario = getScenario();
+        Segment segment = getSegment();
         for ( Part terminator : terminators ) {
             List<DOTAttribute> attributes = getTimingEdgeAttributes();
-            attributes.add( new DOTAttribute( "label", makeLabel( scenario.terminationCause( terminator ) ) ) );
+            attributes.add( new DOTAttribute( "label", makeLabel( segment.terminationCause( terminator ) ) ) );
             /*attributes.add( new DOTAttribute(
                     "tooltip",
-                    sanitize( scenario.terminationCause( terminator ) ) ) );*/
+                    sanitize( segment.terminationCause( terminator ) ) ) );*/
             String terminatorId = getVertexID( terminator );
             out.print( getIndent() + terminatorId + getArrow( g ) + STOP );
             out.print( "[" );
@@ -237,8 +237,8 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     }
 
 
-    private Scenario getScenario() {
-        return (Scenario) getMetaProvider().getContext();
+    private Segment getSegment() {
+        return (Segment) getMetaProvider().getContext();
     }
 
 }

@@ -20,7 +20,7 @@ import java.util.List;
 public class EntityRelationship<T extends ModelEntity> extends Relationship {
 
     /**
-     * External flows in fromScenario referencing node in toScenario
+     * External flows in fromSegment referencing node in toSegment
      */
     private List<Flow> flows = new ArrayList<Flow>();
 

@@ -3,12 +3,12 @@ package com.mindalliance.channels.pages.components.menus;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.commands.AddPart;
-import com.mindalliance.channels.command.commands.AddScenario;
+import com.mindalliance.channels.command.commands.AddSegment;
 import com.mindalliance.channels.command.commands.AddUserIssue;
-import com.mindalliance.channels.command.commands.DisconnectAndRemoveScenario;
+import com.mindalliance.channels.command.commands.DisconnectAndRemoveSegment;
 import com.mindalliance.channels.command.commands.PasteAttachment;
 import com.mindalliance.channels.command.commands.PastePart;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.pages.ExportPage;
 import com.mindalliance.channels.pages.PlanPage;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Scenario menu.
+ * Segment menu.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -37,7 +37,7 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
 
     public PlanActionsMenuPanel(
             String s,
-            IModel<? extends Scenario> model,
+            IModel<? extends Segment> model,
             Set<Long> expansions ) {
         super( s, model, expansions );
     }
@@ -51,20 +51,20 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
         List<Component> menuItems = super.getMenuItems();
         // Import
         if ( getPlan().isDevelopment() ) {
-            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Import scenario" ),
+            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Import plan segment" ),
                     new AjaxFallbackLink( "link" ) {
                         @Override
                         public void onClick( AjaxRequestTarget target ) {
-                            ( (PlanPage) getPage() ).importScenario( target );
+                            ( (PlanPage) getPage() ).importSegment( target );
                         }
                     } ) );
         }
         // Export
-        menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Export scenario" ),
+        menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Export plan segment" ),
                 new BookmarkablePageLink(
                         "link",
                         ExportPage.class,
-                        PlanPage.getParameters( (Scenario) getModel().getObject(), null ) ) ) );
+                        PlanPage.getParameters( (Segment) getModel().getObject(), null ) ) ) );
         // Logout
         ConfirmedAjaxFallbackLink logoutLink = new ConfirmedAjaxFallbackLink( "link", "Log out?" ) {
             public void onClick( AjaxRequestTarget target ) {
@@ -85,38 +85,38 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
     @Override
     protected List<CommandWrapper> getCommandWrappers() {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
-            final Scenario scenario = getScenario();
-            commandWrappers.add( new CommandWrapper( new PastePart( getScenario() ) ) {
+            final Segment segment = getSegment();
+            commandWrappers.add( new CommandWrapper( new PastePart( getSegment() ) ) {
                 @Override
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
                 }
             } );
-            commandWrappers.add( new CommandWrapper( new PasteAttachment( getScenario() ) ) {
+            commandWrappers.add( new CommandWrapper( new PasteAttachment( getSegment() ) ) {
                 @Override
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
                 }
             } );
-            commandWrappers.add( new CommandWrapper( new AddPart( scenario ) ) {
+            commandWrappers.add( new CommandWrapper( new AddPart( segment ) ) {
                 @Override
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
                 }
             } );
-            commandWrappers.add( new CommandWrapper( new AddUserIssue( scenario ) ) {
+            commandWrappers.add( new CommandWrapper( new AddUserIssue( segment ) ) {
                 @Override
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
                 }
             } );
-            commandWrappers.add( new CommandWrapper( new AddScenario() ) {
+            commandWrappers.add( new CommandWrapper( new AddSegment() ) {
                 @Override
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
                 }
             } );
-            commandWrappers.add( new CommandWrapper( new DisconnectAndRemoveScenario( scenario ), CONFIRM ) {
+            commandWrappers.add( new CommandWrapper( new DisconnectAndRemoveSegment( segment ), CONFIRM ) {
                 @Override
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
@@ -126,8 +126,8 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
     }
 
 
-    private Scenario getScenario() {
-        return (Scenario) getModel().getObject();
+    private Segment getSegment() {
+        return (Segment) getModel().getObject();
     }
 
 }

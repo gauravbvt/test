@@ -11,7 +11,7 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
@@ -116,8 +116,8 @@ public abstract class Memory implements Dao {
             }
             object.setId( getIdGenerator().assignId( id, getPlanManager().getCurrentPlan() ) );
             indexMap.put( object.getId(), object );
-            if ( object instanceof Scenario ) {
-                getPlan().addScenario( (Scenario) object );
+            if ( object instanceof Segment ) {
+                getPlan().addSegment( (Segment) object );
             }
         }
     }
@@ -131,20 +131,20 @@ public abstract class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    public Part createPart( Scenario scenario, Long id ) {
+    public Part createPart( Segment segment, Long id ) {
         Part part = new Part();
         part.setId( getIdGenerator().assignId( id, getPlanManager().getCurrentPlan() ) );
-        part.setScenario( scenario );
+        part.setSegment( segment );
         return part;
     }
 
     /**
      * {@inheritDoc}
      */
-    public Connector createConnector( Scenario scenario, Long id ) {
+    public Connector createConnector( Segment segment, Long id ) {
         Connector connector = new Connector();
         connector.setId( getIdGenerator().assignId( id, getPlanManager().getCurrentPlan() ) );
-        connector.setScenario( scenario );
+        connector.setSegment( segment );
         return connector;
     }
 
@@ -178,27 +178,27 @@ public abstract class Memory implements Dao {
      * {@inheritDoc}
      */
     public void remove( ModelObject object ) {
-        if ( object instanceof Scenario )
-            removeScenario( (Scenario) object );
+        if ( object instanceof Segment )
+            removeSegment( (Segment) object );
         else
             indexMap.remove( object.getId() );
     }
 
-    private void removeScenario( Scenario scenario ) {
-        indexMap.remove( scenario.getId() );
-        scenario.disconnect();
+    private void removeSegment( Segment segment ) {
+        indexMap.remove( segment.getId() );
+        segment.disconnect();
     }
 
 
     private ModelObject find( long id ) throws NotFoundException {
         ModelObject result = indexMap.get( id );
         if ( result == null ) {
-            Iterator<Scenario> iterator = list( Scenario.class ).iterator();
+            Iterator<Segment> iterator = list( Segment.class ).iterator();
             while ( result == null && iterator.hasNext() ) {
-                Scenario scenario = iterator.next();
-                result = scenario.getNode( id );
+                Segment segment = iterator.next();
+                result = segment.getNode( id );
                 if ( result == null ) {
-                    Iterator<Flow> flows = scenario.flows();
+                    Iterator<Flow> flows = segment.flows();
                     while ( result == null && flows.hasNext() ) {
                         Flow flow = flows.next();
                         if ( flow.getId() == id ) result = flow;

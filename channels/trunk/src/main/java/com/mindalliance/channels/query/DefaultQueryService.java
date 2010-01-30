@@ -10,7 +10,7 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.SemanticMatcher;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
-import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
+import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Actor;
@@ -39,8 +39,8 @@ import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Scenario;
-import com.mindalliance.channels.model.ScenarioObject;
+import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
@@ -172,7 +172,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     /**
-     * Make sure plans are valid initialized with some proper scenarios.
+     * Make sure plans are valid initialized with some proper http://bit.ly/24Reg.
      */
     public void afterPropertiesSet() {
         planManager.validate( this );
@@ -438,54 +438,54 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public Scenario createScenario() {
-        return createScenario( null );
+    public Segment createSegment() {
+        return createSegment( null );
     }
 
     /**
      * {@inheritDoc}
      */
-    public Scenario createScenario( Long id ) {
-        return createScenario( id, null );
+    public Segment createSegment( Long id ) {
+        return createSegment( id, null );
     }
 
     /**
      * {@inheritDoc}
      */
-    public Scenario createScenario( Long id, Long defaultPartId ) {
-        Scenario newScenario = new Scenario();
+    public Segment createSegment( Long id, Long defaultPartId ) {
+        Segment newSegment = new Segment();
         if ( id == null )
-            getDao().add( newScenario );
+            getDao().add( newSegment );
         else
-            getDao().add( newScenario, id );
-        newScenario.setName( Scenario.DEFAULT_NAME );
-        newScenario.setDescription( Scenario.DEFAULT_DESCRIPTION );
-        // Make sure a scenario responds to an event.
-        newScenario.setEvent( planManager.getCurrentPlan().getDefaultEvent() );
-        newScenario.setPhase( planManager.getCurrentPlan().getDefaultPhase( this ) );
-        newScenario.setQueryService( this );
-        createPart( newScenario, defaultPartId );
-        return newScenario;
+            getDao().add( newSegment, id );
+        newSegment.setName( Segment.DEFAULT_NAME );
+        newSegment.setDescription( Segment.DEFAULT_DESCRIPTION );
+        // Make sure a plan segment responds to an event.
+        newSegment.setEvent( planManager.getCurrentPlan().getDefaultEvent() );
+        newSegment.setPhase( planManager.getCurrentPlan().getDefaultPhase( this ) );
+        newSegment.setQueryService( this );
+        createPart( newSegment, defaultPartId );
+        return newSegment;
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean isInitiated( Scenario scenario ) {
-        return !findInitiators( scenario ).isEmpty();
+    public boolean isInitiated( Segment segment ) {
+        return !findInitiators( segment ).isEmpty();
     }
 
     /**
      * {@inheritDoc}
      */
-    public List<Part> findInitiators( Scenario scenario ) {
+    public List<Part> findInitiators( Segment segment ) {
         List<Part> initiators = new ArrayList<Part>();
-        for ( Scenario sc : list( Scenario.class ) ) {
-            if ( sc != scenario ) {
+        for ( Segment sc : list( Segment.class ) ) {
+            if ( sc != segment ) {
                 Iterator<Part> parts = sc.parts();
                 while ( parts.hasNext() ) {
                     Part part = parts.next();
-                    if ( scenario.isInitiatedBy( part ) ) initiators.add( part );
+                    if ( segment.isInitiatedBy( part ) ) initiators.add( part );
                 }
             }
         }
@@ -495,14 +495,14 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<Part> findExternalTerminators( Scenario scenario ) {
+    public List<Part> findExternalTerminators( Segment segment ) {
         List<Part> terminators = new ArrayList<Part>();
-        for ( Scenario sc : list( Scenario.class ) ) {
-            if ( !sc.equals( scenario ) ) {
+        for ( Segment sc : list( Segment.class ) ) {
+            if ( !sc.equals( segment ) ) {
                 Iterator<Part> parts = sc.parts();
                 while ( parts.hasNext() ) {
                     Part part = parts.next();
-                    if ( scenario.isTerminatedBy( part ) )
+                    if ( segment.isTerminatedBy( part ) )
                         terminators.add( part );
                 }
             }
@@ -513,13 +513,13 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<Part> findTerminators( Scenario scenario ) {
+    public List<Part> findTerminators( Segment segment ) {
         List<Part> terminators = new ArrayList<Part>();
-        for ( Scenario sc : list( Scenario.class ) ) {
+        for ( Segment sc : list( Segment.class ) ) {
             Iterator<Part> parts = sc.parts();
             while ( parts.hasNext() ) {
                 Part part = parts.next();
-                if ( scenario.isTerminatedBy( part ) )
+                if ( segment.isTerminatedBy( part ) )
                     terminators.add( part );
             }
         }
@@ -530,32 +530,32 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public Connector createConnector( Scenario scenario ) {
-        return createConnector( scenario, null );
+    public Connector createConnector( Segment segment ) {
+        return createConnector( segment, null );
     }
 
     /**
      * {@inheritDoc}
      */
-    public Connector createConnector( Scenario scenario, Long id ) {
-        Connector result = getDao().createConnector( scenario, id );
-        scenario.addNode( result );
+    public Connector createConnector( Segment segment, Long id ) {
+        Connector result = getDao().createConnector( segment, id );
+        segment.addNode( result );
         return result;
     }
 
     /**
      * {@inheritDoc}
      */
-    public Part createPart( Scenario scenario ) {
-        return createPart( scenario, null );
+    public Part createPart( Segment segment ) {
+        return createPart( segment, null );
     }
 
     /**
      * {@inheritDoc}
      */
-    public Part createPart( Scenario scenario, Long id ) {
-        Part result = getDao().createPart( scenario, id );
-        scenario.addNode( result );
+    public Part createPart( Segment segment, Long id ) {
+        Part result = getDao().createPart( segment, id );
+        segment.addNode( result );
         return result;
     }
 
@@ -608,9 +608,9 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public Flow replicate( Flow flow, boolean isOutcome ) {
         Flow result = isOutcome ? connect( flow.getSource(),
-                createConnector( flow.getSource().getScenario() ),
+                createConnector( flow.getSource().getSegment() ),
                 flow.getName() )
-                : connect( createConnector( flow.getTarget().getScenario() ),
+                : connect( createConnector( flow.getTarget().getSegment() ),
                 flow.getTarget(),
                 flow.getName() );
         result.initFrom( flow );
@@ -622,19 +622,19 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public Scenario getDefaultScenario() {
-        return toSortedList( list( Scenario.class ) ).get( 0 );
+    public Segment getDefaultSegment() {
+        return toSortedList( list( Segment.class ) ).get( 0 );
     }
 
     private static boolean isInternal( Node source, Node target ) {
-        Scenario scenario = source.getScenario();
-        return scenario != null && scenario.equals( target.getScenario() );
+        Segment segment = source.getSegment();
+        return segment != null && segment.equals( target.getSegment() );
     }
 
     private static boolean isExternal( Node source, Node target ) {
-        Scenario scenario = source.getScenario();
-        return scenario != null
-                && !scenario.equals( target.getScenario() )
+        Segment segment = source.getSegment();
+        return segment != null
+                && !segment.equals( target.getSegment() )
                 && ( target.isConnector() || source.isConnector() );
     }
 
@@ -708,10 +708,10 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         for ( Event incident : planManager.getCurrentPlan().getIncidents() ) {
             if ( incident.equals( event ) ) count++;
         }
-        // look in scenarios
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            if ( scenario.getEvent().equals( event ) ) count++;
-            Iterator<Part> parts = scenario.parts();
+        // look in plan segments
+        for ( Segment segment : list( Segment.class ) ) {
+            if ( segment.getEvent().equals( event ) ) count++;
+            Iterator<Part> parts = segment.parts();
             while ( parts.hasNext() ) {
                 Part part = parts.next();
                 if ( part.initiatesEvent() && part.getInitiatedEvent().equals( event ) ) count++;
@@ -723,8 +723,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public Scenario findScenario( String name ) throws NotFoundException {
-        for ( Scenario s : getDao().list( Scenario.class ) ) {
+    public Segment findSegment( String name ) throws NotFoundException {
+        for ( Segment s : getDao().list( Segment.class ) ) {
             if ( name.equals( s.getName() ) )
                 return s;
         }
@@ -748,9 +748,9 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             result.add( ResourceSpec.with( organization ) );
             result.addAll( organization.jobResourceSpecs() );
         }
-        // Specs from scenario parts
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Part> parts = scenario.parts();
+        // Specs from plan segment parts
+        for ( Segment segment : list( Segment.class ) ) {
+            Iterator<Part> parts = segment.parts();
             while ( parts.hasNext() ) {
                 Part part = parts.next();
                 ResourceSpec partResourceSpec = part.resourceSpec();
@@ -818,8 +818,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public List<Play> findAllPlays( ResourceSpec resourceSpec, boolean specific ) {
         Set<Play> plays = new HashSet<Play>();
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Flow> flows = scenario.flows();
+        for ( Segment segment : list( Segment.class ) ) {
+            Iterator<Flow> flows = segment.flows();
             while ( flows.hasNext() ) {
                 Flow flow = flows.next();
                 if ( Play.hasPlay( flow ) ) {
@@ -887,60 +887,60 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * /**
      * {@inheritDoc}
      */
-    public ScenarioRelationship findScenarioRelationship(
-            Scenario fromScenario,
-            Scenario toScenario ) {
+    public SegmentRelationship findSegmentRelationship(
+            Segment fromSegment,
+            Segment toSegment ) {
         List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
         List<Part> initiators = new ArrayList<Part>();
         List<Part> terminators = new ArrayList<Part>();
-        Iterator<Flow> flows = fromScenario.flows();
+        Iterator<Flow> flows = fromSegment.flows();
         while ( flows.hasNext() ) {
             Flow flow = flows.next();
             if ( flow.isExternal() ) {
                 ExternalFlow externalFlow = (ExternalFlow) flow;
-                if ( externalFlow.getConnector().getScenario() == toScenario
+                if ( externalFlow.getConnector().getSegment() == toSegment
                         && !externalFlow.isPartTargeted() ) {
                     externalFlows.add( externalFlow );
                 }
             }
         }
-        flows = toScenario.flows();
+        flows = toSegment.flows();
         while ( flows.hasNext() ) {
             Flow flow = flows.next();
             if ( flow.isExternal() ) {
                 ExternalFlow externalFlow = (ExternalFlow) flow;
-                if ( externalFlow.getConnector().getScenario() == fromScenario
+                if ( externalFlow.getConnector().getSegment() == fromSegment
                         && externalFlow.isPartTargeted() ) {
                     externalFlows.add( externalFlow );
                 }
             }
         }
-        for ( Part part : findInitiators( toScenario ) ) {
-            if ( part.getScenario().equals( fromScenario ) ) initiators.add( part );
+        for ( Part part : findInitiators( toSegment ) ) {
+            if ( part.getSegment().equals( fromSegment ) ) initiators.add( part );
         }
-        for ( Part part : findExternalTerminators( toScenario ) ) {
-            if ( part.getScenario().equals( fromScenario ) ) terminators.add( part );
+        for ( Part part : findExternalTerminators( toSegment ) ) {
+            if ( part.getSegment().equals( fromSegment ) ) terminators.add( part );
         }
         if ( externalFlows.isEmpty() && initiators.isEmpty() && terminators.isEmpty() ) {
             return null;
         } else {
-            ScenarioRelationship scenarioRelationship = new ScenarioRelationship(
-                    fromScenario,
-                    toScenario );
-            scenarioRelationship.setExternalFlows( externalFlows );
-            scenarioRelationship.setInitiators( initiators );
-            scenarioRelationship.setTerminators( terminators );
-            return scenarioRelationship;
+            SegmentRelationship segmentRelationship = new SegmentRelationship(
+                    fromSegment,
+                    toSegment );
+            segmentRelationship.setExternalFlows( externalFlows );
+            segmentRelationship.setInitiators( initiators );
+            segmentRelationship.setTerminators( terminators );
+            return segmentRelationship;
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public EntityRelationship findEntityRelationship( ModelEntity fromEntity, ModelEntity toEntity ) {
+    public <T extends ModelEntity> EntityRelationship<T> findEntityRelationship( T fromEntity, T toEntity ) {
         List<Flow> entityFlows = new ArrayList<Flow>();
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Flow> flows = scenario.flows();
+        for ( Segment segment : list( Segment.class ) ) {
+            Iterator<Flow> flows = segment.flows();
             while ( flows.hasNext() ) {
                 Flow flow = flows.next();
                 if ( flow.getSource().isPart() && flow.getTarget().isPart() ) {
@@ -956,7 +956,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         if ( entityFlows.isEmpty() ) {
             return null;
         } else {
-            EntityRelationship entityRel = new EntityRelationship( fromEntity, toEntity );
+            EntityRelationship<T> entityRel = new EntityRelationship<T>( fromEntity, toEntity );
             entityRel.setFlows( entityFlows );
             return entityRel;
         }
@@ -982,8 +982,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public List<Flow> findAllRelatedFlows( ResourceSpec resourceSpec, boolean asSource ) {
         List<Flow> relatedFlows = new ArrayList<Flow>();
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Flow> flows = scenario.flows();
+        for ( Segment segment : list( Segment.class ) ) {
+            Iterator<Flow> flows = segment.flows();
             while ( flows.hasNext() ) {
                 Flow flow = flows.next();
                 Node node = asSource ? flow.getSource() : flow.getTarget();
@@ -1021,9 +1021,9 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<Actor>( actors );
     }
 
-    private void visitParts( Set<Part> visited, ResourceSpec spec, Scenario scenario ) {
+    private void visitParts( Set<Part> visited, ResourceSpec spec, Segment segment ) {
         // Add exact matches
-        for ( Scenario s : getScenarios( scenario ) )
+        for ( Segment s : getSegments( segment ) )
             for ( Iterator<Part> partIterator = s.parts(); partIterator.hasNext(); ) {
                 Part part = partIterator.next();
                 if ( spec.matches( part.resourceSpec(), true ) )
@@ -1043,13 +1043,13 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     s.setRole( job.getRole() );
                     s.setJurisdiction( job.getJurisdiction() );
                     s.setOrganization( job.getOrganization() );
-                    visitParts( visited, s, scenario );
+                    visitParts( visited, s, segment );
                 }
             } else {
                 // Add regular role parts
                 ResourceSpec s = new ResourceSpec( spec );
                 s.setActor( null );
-                visitParts( visited, s, scenario );
+                visitParts( visited, s, segment );
             }
         }
 
@@ -1057,19 +1057,19 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
             if ( role == null && actor == null && jurisdiction == null ) {
                 for ( Role r : findRolesIn( organization ) )
-                    for ( Actor a : findActors( organization, r, scenario ) ) {
+                    for ( Actor a : findActors( organization, r, segment ) ) {
                         ResourceSpec s = new ResourceSpec( spec );
                         if ( Actor.UNKNOWN.equals( a ) )
                             s.setRole( r );
                         else
                             s.setActor( a );
-                        visitParts( visited, s, scenario );
+                        visitParts( visited, s, segment );
                     }
             }
 
             ResourceSpec s = new ResourceSpec( spec );
             s.setOrganization( organization.getParent() );
-            visitParts( visited, s, scenario );
+            visitParts( visited, s, segment );
 
         }
 
@@ -1078,19 +1078,19 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             // TODO process geo inclusions
             ResourceSpec s = new ResourceSpec( spec );
             s.setJurisdiction( null );
-            visitParts( visited, s, scenario );
+            visitParts( visited, s, segment );
         }
     }
 
-    private List<Scenario> getScenarios( Scenario scenario ) {
-        List<Scenario> scenarios;
-        if ( scenario == null )
-            scenarios = list( Scenario.class );
+    private List<Segment> getSegments( Segment segment ) {
+        List<Segment> segments;
+        if ( segment == null )
+            segments = list( Segment.class );
         else {
-            scenarios = new ArrayList<Scenario>();
-            scenarios.add( scenario );
+            segments = new ArrayList<Segment>();
+            segments.add( segment );
         }
-        return scenarios;
+        return segments;
     }
 
     /**
@@ -1102,8 +1102,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<Channel> findAllChannelsFor( ResourceSpec spec ) {
         Set<Channel> channels = new HashSet<Channel>();
 
-        for ( Scenario scenario : list( Scenario.class ) )
-            for ( Iterator<Flow> flows = scenario.flows(); flows.hasNext(); ) {
+        for ( Segment segment : list( Segment.class ) )
+            for ( Iterator<Flow> flows = segment.flows(); flows.hasNext(); ) {
                 Flow flow = flows.next();
                 Part p = flow.getContactedPart();
                 if ( p != null && spec.equals( p.resourceSpec() ) )
@@ -1161,10 +1161,10 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public List<Flow> findAllFlowsContacting( ResourceSpec resourceSpec ) {
         List<Flow> flows = new ArrayList<Flow>();
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Flow> scenarioFlows = scenario.flows();
-            while ( scenarioFlows.hasNext() ) {
-                Flow flow = scenarioFlows.next();
+        for ( Segment segment : list( Segment.class ) ) {
+            Iterator<Flow> segmentFlows = segment.flows();
+            while ( segmentFlows.hasNext() ) {
+                Flow flow = segmentFlows.next();
                 Part contactedPart = flow.getContactedPart();
                 if ( contactedPart != null
                         && resourceSpec.narrowsOrEquals( contactedPart.resourceSpec() ) )
@@ -1180,8 +1180,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<Job> findUnconfirmedJobs( Organization organization ) {
         Set<Job> unconfirmedJobs = new HashSet<Job>();
         List<Job> confirmedJobs = organization.getJobs();
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Part> parts = scenario.parts();
+        for ( Segment segment : list( Segment.class ) ) {
+            Iterator<Part> parts = segment.parts();
             while ( parts.hasNext() ) {
                 Part part = parts.next();
                 if ( organization.equals( part.getOrganizationOrUnknown() ) ) {
@@ -1221,8 +1221,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public List<String> findAllTasks() {
         Set<String> tasks = new HashSet<String>();
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Part> parts = scenario.parts();
+        for ( Segment segment : list( Segment.class ) ) {
+            Iterator<Part> parts = segment.parts();
             while ( parts.hasNext() ) {
                 tasks.add( parts.next().getTask() );
             }
@@ -1284,25 +1284,25 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<ModelObject> findAllScenarioObjectsInvolving( ModelEntity entity ) {
+    public List<ModelObject> findAllSegmentObjectsInvolving( ModelEntity entity ) {
         if ( entity instanceof Event ) {
             return this.findAllModelObjectsDirectlyRelatedToEvent( (Event) entity );
         } else {
-            Set<ModelObject> scenarioObjects = new HashSet<ModelObject>();
-            for ( Scenario scenario : list( Scenario.class ) ) {
-                Iterator<Part> parts = scenario.parts();
+            Set<ModelObject> segmentObjects = new HashSet<ModelObject>();
+            for ( Segment segment : list( Segment.class ) ) {
+                Iterator<Part> parts = segment.parts();
                 while ( parts.hasNext() ) {
                     Part part = parts.next();
                     if ( part.resourceSpec().hasEntity( entity ) ) {
-                        scenarioObjects.add( part );
+                        segmentObjects.add( part );
                         Iterator<Flow> outcomes = part.outcomes();
-                        while ( outcomes.hasNext() ) scenarioObjects.add( outcomes.next() );
+                        while ( outcomes.hasNext() ) segmentObjects.add( outcomes.next() );
                         Iterator<Flow> requirements = part.requirements();
-                        while ( requirements.hasNext() ) scenarioObjects.add( requirements.next() );
+                        while ( requirements.hasNext() ) segmentObjects.add( requirements.next() );
                     }
                 }
             }
-            return new ArrayList<ModelObject>( scenarioObjects );
+            return new ArrayList<ModelObject>( segmentObjects );
         }
     }
 
@@ -1391,11 +1391,11 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<Actor> findActors( Organization organization, Role role, Scenario scenario ) {
+    public List<Actor> findActors( Organization organization, Role role, Segment segment ) {
         Set<Actor> actors = new HashSet<Actor>();
         boolean noActorRoleFound = false;
 
-        Iterator<Part> parts = scenario.parts();
+        Iterator<Part> parts = segment.parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
             boolean sameOrg = Organization.UNKNOWN.equals( organization ) ?
@@ -1526,8 +1526,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     private boolean doFindIfPartStarted( Part part, Set<ModelObject> visited ) {
         if ( visited.contains( part ) ) return false;
         visited.add( part );
-        if ( part.isStartsWithScenario() ) {
-            return doFindIfScenarioStarted( part.getScenario(), visited );
+        if ( part.setIsStartsWithSegment() ) {
+            return doFindIfSegmentStarted( part.getSegment(), visited );
         } else {
             boolean started = false;
             Iterator<Flow> reqs = part.requirements();
@@ -1556,8 +1556,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public boolean findIfScenarioStarted( Scenario scenario ) {
-        return doFindIfScenarioStarted( scenario, new HashSet<ModelObject>() );
+    public boolean findIfSegmentStarted( Segment segment ) {
+        return doFindIfSegmentStarted( segment, new HashSet<ModelObject>() );
 
     }
 
@@ -1566,8 +1566,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public List<Part> findAllParts() {
         List<Part> list = new ArrayList<Part>();
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Part> parts = scenario.parts();
+        for ( Segment segment : list( Segment.class ) ) {
+            Iterator<Part> parts = segment.parts();
             while ( parts.hasNext() ) {
                 list.add( parts.next() );
             }
@@ -1578,9 +1578,9 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<Part> findAllParts( Scenario scenario, ResourceSpec resourceSpec ) {
+    public List<Part> findAllParts( Segment segment, ResourceSpec resourceSpec ) {
         Set<Part> list = new HashSet<Part>();
-        visitParts( list, resourceSpec, scenario );
+        visitParts( list, resourceSpec, segment );
         return toSortedList( list );
     }
 
@@ -1654,8 +1654,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public List<Connector> findAllSatificers( Flow need ) {
         List<Connector> satisficers = new ArrayList<Connector>();
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Part> parts = scenario.parts();
+        for ( Segment segment : list( Segment.class ) ) {
+            Iterator<Part> parts = segment.parts();
             while ( parts.hasNext() ) {
                 Part part = parts.next();
                 if ( part != need.getTarget() ) {
@@ -1682,12 +1682,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                         this );
     }
 
-    private boolean doFindIfScenarioStarted( Scenario scenario, Set<ModelObject> visited ) {
-        if ( planManager.getCurrentPlan().isIncident( scenario.getEvent() ) ) return true;
-        if ( visited.contains( scenario ) ) return false;
-        visited.add( scenario );
+    private boolean doFindIfSegmentStarted( Segment segment, Set<ModelObject> visited ) {
+        if ( planManager.getCurrentPlan().isIncident( segment.getEvent() ) ) return true;
+        if ( visited.contains( segment ) ) return false;
+        visited.add( segment );
         boolean started = false;
-        Iterator<Part> initiators = findInitiators( scenario ).iterator();
+        Iterator<Part> initiators = findInitiators( segment ).iterator();
         while ( !started && initiators.hasNext() ) {
             started = doFindIfPartStarted( initiators.next(), visited );
         }
@@ -1719,9 +1719,9 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<Part> findMitigations( Scenario scenario, Risk risk ) {
+    public List<Part> findMitigations( Segment segment, Risk risk ) {
         List<Part> mitigators = new ArrayList<Part>();
-        Iterator<Part> parts = scenario.parts();
+        Iterator<Part> parts = segment.parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
             if ( part.isTerminatesEventPhase() || part.getMitigations().contains( risk ) ) {
@@ -1734,11 +1734,11 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<Scenario> findScenarios( Actor actor ) {
-        List<Scenario> result = new ArrayList<Scenario>();
+    public List<Segment> findSegments( Actor actor ) {
+        List<Segment> result = new ArrayList<Segment>();
 
         ResourceSpec spec = ResourceSpec.with( actor );
-        for ( Scenario s : list( Scenario.class ) ) {
+        for ( Segment s : list( Segment.class ) ) {
             List<Part> parts = findAllParts( s, spec );
             if ( !parts.isEmpty() )
                 result.add( s );
@@ -1750,9 +1750,9 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<Actor> findActors( Scenario scenario ) {
+    public List<Actor> findActors( Segment segment ) {
         Set<Actor> actors = new HashSet<Actor>();
-        for ( Iterator<Part> pi = scenario.parts(); pi.hasNext(); ) {
+        for ( Iterator<Part> pi = segment.parts(); pi.hasNext(); ) {
             Part p = pi.next();
             actors.addAll( findAllActualActors( p.resourceSpec() ) );
         }
@@ -1856,8 +1856,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public List<Flow> findAllFlows() {
         List<Flow> allFlows = new ArrayList<Flow>();
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Flow> flows = scenario.flows();
+        for ( Segment segment : list( Segment.class ) ) {
+            Iterator<Flow> flows = segment.flows();
             while ( flows.hasNext() ) {
                 allFlows.add( flows.next() );
             }
@@ -1886,12 +1886,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         for ( ModelObject mo : list( ModelObject.class ) ) {
             allIssues.addAll( analyst.listIssues( mo, true ) );
         }
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Part> parts = scenario.parts();
+        for ( Segment segment : list( Segment.class ) ) {
+            Iterator<Part> parts = segment.parts();
             while ( parts.hasNext() ) {
                 allIssues.addAll( analyst.listIssues( parts.next(), true ) );
             }
-            Iterator<Flow> flows = scenario.flows();
+            Iterator<Flow> flows = segment.flows();
             while ( flows.hasNext() ) {
                 allIssues.addAll( analyst.listIssues( flows.next(), true ) );
             }
@@ -1908,12 +1908,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         for ( ModelObject mo : list( ModelObject.class ) ) {
             allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( mo, true ) );
         }
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Part> parts = scenario.parts();
+        for ( Segment segment : list( Segment.class ) ) {
+            Iterator<Part> parts = segment.parts();
             while ( parts.hasNext() ) {
                 allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( parts.next(), true ) );
             }
-            Iterator<Flow> flows = scenario.flows();
+            Iterator<Flow> flows = segment.flows();
             while ( flows.hasNext() ) {
                 allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( flows.next(), true ) );
             }
@@ -1945,12 +1945,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    public List<Scenario> findScenariosRespondingTo( final Event event ) {
-        return (List<Scenario>) CollectionUtils.select(
-                list( Scenario.class ),
+    public List<Segment> findSegmentsRespondingTo( final Event event ) {
+        return (List<Segment>) CollectionUtils.select(
+                list( Segment.class ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        Event repondedEvent = ( (Scenario) obj ).getEvent();
+                        Event repondedEvent = ( (Segment) obj ).getEvent();
                         return repondedEvent != null && repondedEvent.equals( event );
                     }
                 }
@@ -1960,9 +1960,9 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<Part> findPartsTerminatingEventPhaseIn( Scenario scenario ) {
+    public List<Part> findPartsTerminatingEventPhaseIn( Segment segment ) {
         List<Part> terminatingParts = new ArrayList<Part>();
-        Iterator<Part> parts = scenario.parts();
+        Iterator<Part> parts = segment.parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
             if ( part.isTerminatesEventPhase() )
@@ -1974,12 +1974,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<Part> findPartsStartingWithEventIn( Scenario scenario ) {
+    public List<Part> findPartsStartingWithEventIn( Segment segment ) {
         List<Part> startedParts = new ArrayList<Part>();
-        Iterator<Part> parts = scenario.parts();
+        Iterator<Part> parts = segment.parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
-            if ( part.isStartsWithScenario() )
+            if ( part.setIsStartsWithSegment() )
                 startedParts.add( part );
         }
         return startedParts;
@@ -1990,8 +1990,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public List<Part> findPartsInitiatingEvent( Event event ) {
         List<Part> initiatingParts = new ArrayList<Part>();
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Part> parts = scenario.parts();
+        for ( Segment segment : list( Segment.class ) ) {
+            Iterator<Part> parts = segment.parts();
             while ( parts.hasNext() ) {
                 Part part = parts.next();
                 Event initiatedEvent = part.getInitiatedEvent();
@@ -2030,12 +2030,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<ModelObject> findAllModelObjects() {
         List<ModelObject> allModelObjects = new ArrayList<ModelObject>();
         allModelObjects.addAll( list( ModelObject.class ) );
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Part> parts = scenario.parts();
+        for ( Segment segment : list( Segment.class ) ) {
+            Iterator<Part> parts = segment.parts();
             while ( parts.hasNext() ) {
                 allModelObjects.add( parts.next() );
             }
-            Iterator<Flow> flows = scenario.flows();
+            Iterator<Flow> flows = segment.flows();
             while ( flows.hasNext() ) {
                 allModelObjects.add( flows.next() );
             }
@@ -2108,8 +2108,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             if ( !p.equals( place ) && p.narrowsOrEquals( place ) )
                 inPlace.add( p );
         }
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Part> parts = scenario.parts();
+        for ( Segment segment : list( Segment.class ) ) {
+            Iterator<Part> parts = segment.parts();
             while ( parts.hasNext() ) {
                 Part part = parts.next();
                 if ( part.getLocation() != null && part.getLocation().narrowsOrEquals( place ) )
@@ -2125,11 +2125,11 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @SuppressWarnings( "unchecked" )
     public List<? extends ModelObject> findAllModelObjectsIn( Phase phase ) {
         List<ModelObject> inPhase = new ArrayList<ModelObject>();
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            if ( scenario.getPhase().equals( phase ) ) {
-                inPhase.add( scenario );
-                inPhase.addAll( IteratorUtils.toList( scenario.parts() ) );
-                inPhase.addAll( IteratorUtils.toList( scenario.flows() ) );
+        for ( Segment segment : list( Segment.class ) ) {
+            if ( segment.getPhase().equals( phase ) ) {
+                inPhase.add( segment );
+                inPhase.addAll( IteratorUtils.toList( segment.parts() ) );
+                inPhase.addAll( IteratorUtils.toList( segment.flows() ) );
             }
         }
         return inPhase;
@@ -2140,17 +2140,17 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public List<ModelObject> findAllModelObjectsDirectlyRelatedToEvent( Event event ) {
         Set<ModelObject> mos = new HashSet<ModelObject>();
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            if ( scenario.getEvent().equals( event ) ) {
-                mos.add( scenario );
+        for ( Segment segment : list( Segment.class ) ) {
+            if ( segment.getEvent().equals( event ) ) {
+                mos.add( segment );
             }
-            Iterator<Part> parts = scenario.parts();
+            Iterator<Part> parts = segment.parts();
             while ( parts.hasNext() ) {
                 Part part = parts.next();
                 if ( part.initiatesEvent() && part.getInitiatedEvent().equals( event ) ) {
                     mos.add( part );
                 }
-                if ( scenario.getEvent().equals( event ) && part.isTerminatesEventPhase() ) {
+                if ( segment.getEvent().equals( event ) && part.isTerminatesEventPhase() ) {
                     mos.add( part );
                 }
             }
@@ -2193,8 +2193,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             }
         }
         if ( clazz.isAssignableFrom( Part.class ) ) {
-            for ( Scenario scenario : list( Scenario.class ) ) {
-                Iterator<Part> parts = scenario.parts();
+            for ( Segment segment : list( Segment.class ) ) {
+                Iterator<Part> parts = segment.parts();
                 while ( parts.hasNext() ) {
                     Part part = parts.next();
                     if ( part.getLocation() != null && part.getLocation().equals( place ) )
@@ -2306,7 +2306,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         // Find all synonymous commitments to the part
         Part needyPart = (Part) need.getTarget();
         commitments.addAll( findMatchingCommitmentsTo( needyPart, need.getName() ) );
-        // Find all synonymous commitments to applicable anonymous parts within the scenario
+        // Find all synonymous commitments to applicable anonymous parts within the plan segment
         for ( Part part : findAnonymousPartsMatching( needyPart ) ) {
             commitments.addAll( findMatchingCommitmentsTo( part, need.getName() ) );
         }
@@ -2318,7 +2318,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public List<Part> findAnonymousPartsMatching( Part part ) {
         List<Part> anonymousParts = new ArrayList<Part>();
-        Iterator<Part> parts = part.getScenario().parts();
+        Iterator<Part> parts = part.getSegment().parts();
         while ( parts.hasNext() ) {
             Part p = parts.next();
             if ( !part.equals( p )
@@ -2503,12 +2503,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    public List<Scenario> findAllScenariosForPhase( final Phase phase ) {
-        return (List<Scenario>) CollectionUtils.select(
-                list( Scenario.class ),
+    public List<Segment> findAllSegmentsForPhase( final Phase phase ) {
+        return (List<Segment>) CollectionUtils.select(
+                list( Segment.class ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        return ( (Scenario) obj ).getPhase().equals( phase );
+                        return ( (Segment) obj ).getPhase().equals( phase );
                     }
                 }
         );
@@ -2519,8 +2519,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public List<Part> findCausesOf( Event event ) {
         List<Part> causes = new ArrayList<Part>();
-        for ( Scenario scenario : list( Scenario.class ) ) {
-            Iterator<Part> parts = scenario.parts();
+        for ( Segment segment : list( Segment.class ) ) {
+            Iterator<Part> parts = segment.parts();
             while ( parts.hasNext() ) {
                 Part part = parts.next();
                 Event causedEvent = part.getInitiatedEvent();
@@ -2888,10 +2888,10 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<Part> findFailureImpacts( ScenarioObject scenarioObject, boolean assumeFails ) {
-        if ( scenarioObject instanceof Flow ) {
-            Flow flow = (Flow) scenarioObject;
-            if ( ( (Flow) scenarioObject ).isEssential( assumeFails ) ) {
+    public List<Part> findFailureImpacts( SegmentObject segmentObject, boolean assumeFails ) {
+        if ( segmentObject instanceof Flow ) {
+            Flow flow = (Flow) segmentObject;
+            if ( ( (Flow) segmentObject ).isEssential( assumeFails ) ) {
                 Part target = (Part) flow.getTarget();
                 List<Part> impacted = findPartFailureImpacts( target, assumeFails );
                 if ( target.isUseful() && !impacted.contains( target ) ) {
@@ -2902,7 +2902,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 return new ArrayList<Part>();
             }
         } else {
-            return findPartFailureImpacts( (Part) scenarioObject, assumeFails );
+            return findPartFailureImpacts( (Part) segmentObject, assumeFails );
         }
     }
 

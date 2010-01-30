@@ -4,7 +4,7 @@ import com.mindalliance.channels.SurveyService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.pages.AdminPage;
 import com.mindalliance.channels.pages.playbook.TaskPlaybook;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Pages menu for  a scenario
+ * Pages menu for  a segment
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -44,7 +44,7 @@ public class PlanShowMenuPanel extends MenuPanel {
     @SpringBean
     private SurveyService surveyService;
 
-    public PlanShowMenuPanel( String s, IModel<? extends Scenario> model, Set<Long> expansions ) {
+    public PlanShowMenuPanel( String s, IModel<? extends Segment> model, Set<Long> expansions ) {
         super( s, "Show", model, expansions );
     }
 
@@ -82,17 +82,17 @@ public class PlanShowMenuPanel extends MenuPanel {
         }
 
         Link editLink;
-        if ( getExpansions().contains( getScenario().getId() ) ) {
+        if ( getExpansions().contains( getSegment().getId() ) ) {
             editLink =
                     new AjaxFallbackLink( "link" ) {
                         @Override
                         public void onClick( AjaxRequestTarget target ) {
-                            update( target, new Change( Change.Type.Collapsed, getScenario() ) );
+                            update( target, new Change( Change.Type.Collapsed, getSegment() ) );
                         }
                     };
             menuItems.add( new LinkMenuItem(
                     "menuItem",
-                    new Model<String>( "Hide about scenario" ),
+                    new Model<String>( "Hide about plan segment" ),
                     editLink ) );
 
         } else {
@@ -100,12 +100,12 @@ public class PlanShowMenuPanel extends MenuPanel {
                     new AjaxFallbackLink( "link" ) {
                         @Override
                         public void onClick( AjaxRequestTarget target ) {
-                            update( target, new Change( Change.Type.Expanded, getScenario() ) );
+                            update( target, new Change( Change.Type.Expanded, getSegment() ) );
                         }
                     };
             menuItems.add( new LinkMenuItem(
                     "menuItem",
-                    new Model<String>( "About scenario" ),
+                    new Model<String>( "About plan segment" ),
                     editLink ) );
         }
         if ( getPlan().isDevelopment() ) {
@@ -165,8 +165,8 @@ public class PlanShowMenuPanel extends MenuPanel {
         return menuItems;
     }
 
-    private Scenario getScenario() {
-        return (Scenario) getModel().getObject();
+    private Segment getSegment() {
+        return (Segment) getModel().getObject();
     }
 
 }

@@ -7,7 +7,7 @@ import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import org.jgrapht.Graph;
 
 import java.io.OutputStream;
@@ -23,21 +23,21 @@ import java.io.OutputStream;
 public class FlowMapDiagram extends AbstractDiagram<Node,Flow> {
 
     /**
-     * The scenario being diagrammed.
+     * The segment being diagrammed.
      */
-    private Scenario scenario;
+    private Segment segment;
     /**
      * A selected node.
      */
     private Node selectedNode;
 
     public FlowMapDiagram(
-            Scenario scenario,
+            Segment segment,
             Node selectedNode,
             double[] diagramSize,
             String orientation ) {
         super( diagramSize, orientation );
-        this.scenario = scenario;
+        this.segment = segment;
         this.selectedNode = selectedNode;
     }
 
@@ -50,7 +50,7 @@ public class FlowMapDiagram extends AbstractDiagram<Node,Flow> {
         DiagramFactory<Node, Flow> diagramFactory = getDiagramFactory();
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
-        GraphBuilder flowMapGraphBuilder = new FlowMapGraphBuilder( scenario );
+        GraphBuilder flowMapGraphBuilder = new FlowMapGraphBuilder( segment );
         Graph<Node, Flow> graph = flowMapGraphBuilder.buildDirectedGraph();
         GraphRenderer<Node, Flow> graphRenderer = diagramFactory.getGraphRenderer();
         graphRenderer.resetHighlight();
@@ -58,7 +58,7 @@ public class FlowMapDiagram extends AbstractDiagram<Node,Flow> {
             graphRenderer.highlightVertex( selectedNode );
         }
         FlowMapMetaProvider metaProvider = new FlowMapMetaProvider(
-                scenario,
+                segment,
                 outputFormat,
                 diagramFactory.getImageDirectory(),
                 getAnalyst() );

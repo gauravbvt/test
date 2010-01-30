@@ -7,7 +7,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.Map;
@@ -27,7 +27,7 @@ public class DisconnectFlow extends AbstractCommand {
 
     public DisconnectFlow( Flow flow ) {
         needLocksOn( ChannelsUtils.getLockingSetFor( flow ) );
-        set( "scenario", flow.getScenario().getId() );
+        set( "segment", flow.getSegment().getId() );
         set( "flow", flow.getId() );
     }
 
@@ -43,9 +43,9 @@ public class DisconnectFlow extends AbstractCommand {
      */
     public Change execute( Commander commander ) throws CommandException {
         try {
-            Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+            Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
             assert get( "flow" ) != null;
-            Flow flow = scenario.findFlow( (Long) get( "flow" ) );
+            Flow flow = segment.findFlow( (Long) get( "flow" ) );
             set( "flowState", ChannelsUtils.getFlowState( flow ) );
             flow.disconnect();
             commander.releaseAnyLockOn( flow );
@@ -78,10 +78,10 @@ public class DisconnectFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getLabel( Commander commander ) throws CommandException {
-        Scenario scenario = commander.resolve( Scenario.class, (Long) get( "scenario" ) );
+        Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
         Flow flow;
         try {
-            flow = scenario.findFlow( (Long) get( "flow" ) );
+            flow = segment.findFlow( (Long) get( "flow" ) );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh" );
         }

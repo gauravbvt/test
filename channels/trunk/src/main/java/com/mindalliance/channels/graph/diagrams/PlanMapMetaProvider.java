@@ -1,13 +1,13 @@
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.analysis.graph.ScenarioRelationship;
+import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
 import com.mindalliance.channels.graph.URLProvider;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 import org.apache.commons.lang.StringUtils;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
@@ -24,23 +24,23 @@ import java.util.List;
  * Date: Apr 1, 2009
  * Time: 8:02:40 PM
  */
-public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, ScenarioRelationship> {
+public class PlanMapMetaProvider extends AbstractMetaProvider<Segment, SegmentRelationship> {
     /**
      * Color for subgraph contour
      */
-    private static final String SCENARIO_COLOR = "azure2";
+    private static final String SEGMENT_COLOR = "azure2";
     /**
      * Color for subgraph contour
      */
-    private static final String SELECTED_SCENARIO_COLOR = "azure4";
+    private static final String SELECTED_SEGMENT_COLOR = "azure4";
     /**
      * Font for subgraph labels.
      */
-    private static final String SCENARIO_FONT = "Arial-Bold";
+    private static final String SEGMENT_FONT = "Arial-Bold";
     /**
      * Font size for subgraph labels.
      */
-    private static final String SCENARIO_FONT_SIZE = "10";
+    private static final String SEGMENT_FONT_SIZE = "10";
 
     /**
      * Color for subgraph contour
@@ -70,26 +70,26 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
     /**
      * The thing that generates URLs in an image map.
      */
-    private URLProvider<Scenario, ScenarioRelationship> uRLProvider;
+    private URLProvider<Segment, SegmentRelationship> uRLProvider;
 
     /**
-     * Scenarios in plan.
+     * Segments in plan.
      */
-    private List<Scenario> scenarios;
+    private List<Segment> segments;
     private ModelObject selectedGroup;
 
     public PlanMapMetaProvider(
-            List<Scenario> scenarios,
+            List<Segment> segments,
             String outputFormat,
             Resource imageDirectory,
             Analyst analyst ) {
 
         super( outputFormat, imageDirectory, analyst );
-        this.scenarios = scenarios;
+        this.segments = segments;
     }
 
     public Object getContext() {
-        return scenarios;
+        return segments;
     }
 
     public boolean isGroupByPhase() {
@@ -108,40 +108,40 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
         this.groupByEvent = groupByEvent;
     }
 
-    public void setURLProvider( URLProvider<Scenario, ScenarioRelationship> uRLProvider ) {
+    public void setURLProvider( URLProvider<Segment, SegmentRelationship> uRLProvider ) {
         this.uRLProvider = uRLProvider;
     }
 
     /**
      * {@inheritDoc}
      */
-    public URLProvider<Scenario, ScenarioRelationship> getURLProvider() {
+    public URLProvider<Segment, SegmentRelationship> getURLProvider() {
         if ( uRLProvider == null )
             uRLProvider = new DefaultURLProvider();
 
         return uRLProvider;
     }
 
-    public DOTAttributeProvider<Scenario, ScenarioRelationship> getDOTAttributeProvider() {
+    public DOTAttributeProvider<Segment, SegmentRelationship> getDOTAttributeProvider() {
         return new PlanDOTAttributeProvider();
     }
 
-    public EdgeNameProvider<ScenarioRelationship> getEdgeLabelProvider() {
-        return new EdgeNameProvider<ScenarioRelationship>() {
-            public String getEdgeName( ScenarioRelationship scenarioRel ) {
+    public EdgeNameProvider<SegmentRelationship> getEdgeLabelProvider() {
+        return new EdgeNameProvider<SegmentRelationship>() {
+            public String getEdgeName( SegmentRelationship segmentRel ) {
                 String name = "";
-                if ( scenarioRel.hasExternalFlows() ) {
-                    int count = scenarioRel.getExternalFlows().size();
+                if ( segmentRel.hasExternalFlows() ) {
+                    int count = segmentRel.getExternalFlows().size();
                     name = name + count + ( count > 1 ? " flows" : " flow" );
                 }
-                if ( scenarioRel.hasInitiators() ) {
+                if ( segmentRel.hasInitiators() ) {
                     name += name.isEmpty() ? " " : " and ";
-                    int count = scenarioRel.getInitiators().size();
+                    int count = segmentRel.getInitiators().size();
                     name = name + count + ( count > 1 ? " triggers" : " trigger" );
                 }
-                if ( scenarioRel.hasTerminators() ) {
+                if ( segmentRel.hasTerminators() ) {
                     name += name.isEmpty() ? " " : " and ";
-                    int count = scenarioRel.getTerminators().size();
+                    int count = segmentRel.getTerminators().size();
                     name = name + count + ( count > 1 ? " terminations" : " termination" );
                 }
                 return name;
@@ -149,11 +149,11 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
         };
     }
 
-    public VertexNameProvider<Scenario> getVertexLabelProvider() {
-        return new VertexNameProvider<Scenario>() {
-            public String getVertexName( Scenario scenario ) {
+    public VertexNameProvider<Segment> getVertexLabelProvider() {
+        return new VertexNameProvider<Segment>() {
+            public String getVertexName( Segment segment ) {
                 String label = AbstractMetaProvider.separate(
-                        scenarioLabel( scenario ),
+                        segmentLabel( segment ),
                         LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" );
 
                 return sanitize( label );
@@ -161,25 +161,25 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
         };
     }
 
-    private String scenarioLabel( Scenario scenario ) {
+    private String segmentLabel( Segment segment ) {
         StringBuilder sb = new StringBuilder();
-        sb.append( scenario.getName() );
+        sb.append( segment.getName() );
         sb.append( "|(" );
         if ( groupByPhase ) {
-            sb.append( scenario.getEvent().getName() );
+            sb.append( segment.getEvent().getName() );
         } else if ( groupByEvent ) {
-            sb.append( scenario.getPhase().getName() );
+            sb.append( segment.getPhase().getName() );
         } else {
-            sb.append( scenario.getPhaseEventTitle() );
+            sb.append( segment.getPhaseEventTitle() );
         }
         sb.append( ')' );
         return sb.toString();
     }
 
-    public VertexNameProvider<Scenario> getVertexIDProvider() {
-        return new VertexNameProvider<Scenario>() {
-            public String getVertexName( Scenario scenario ) {
-                return String.valueOf( scenario.getId() );
+    public VertexNameProvider<Segment> getVertexIDProvider() {
+        return new VertexNameProvider<Segment>() {
+            public String getVertexName( Segment segment ) {
+                return String.valueOf( segment.getId() );
             }
         };
     }
@@ -200,7 +200,7 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
      * Date: Apr 1, 2009
      * Time: 8:37:04 PM
      */
-    private class PlanDOTAttributeProvider implements DOTAttributeProvider<Scenario, ScenarioRelationship> {
+    private class PlanDOTAttributeProvider implements DOTAttributeProvider<Segment, SegmentRelationship> {
 
 
         public List<DOTAttribute> getGraphAttributes() {
@@ -227,18 +227,18 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
             return list;
         }
 
-        public List<DOTAttribute> getVertexAttributes( Scenario vertex, boolean highlighted ) {
+        public List<DOTAttribute> getVertexAttributes( Segment vertex, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "shape", "box" ) );
-            list.add( new DOTAttribute( "color", SCENARIO_COLOR ) );
+            list.add( new DOTAttribute( "color", SEGMENT_COLOR ) );
             list.add( new DOTAttribute( "style", "filled" ) );
             if ( highlighted ) {
-                list.add( new DOTAttribute( "color", SELECTED_SCENARIO_COLOR ) );
+                list.add( new DOTAttribute( "color", SELECTED_SEGMENT_COLOR ) );
             } else {
-                list.add( new DOTAttribute( "color", SCENARIO_COLOR ) );
+                list.add( new DOTAttribute( "color", SEGMENT_COLOR ) );
             }
-            list.add( new DOTAttribute( "fontsize", SCENARIO_FONT_SIZE ) );
-            list.add( new DOTAttribute( "fontname", SCENARIO_FONT ) );
+            list.add( new DOTAttribute( "fontsize", SEGMENT_FONT_SIZE ) );
+            list.add( new DOTAttribute( "fontname", SEGMENT_FONT ) );
             list.add( new DOTAttribute(
                     "tooltip",
                     sanitize( StringUtils.abbreviate( vertex.getDescription(), 50 ) ) ) );
@@ -250,7 +250,7 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
             return list;
         }
 
-        public List<DOTAttribute> getEdgeAttributes( ScenarioRelationship edge, boolean highlighted ) {
+        public List<DOTAttribute> getEdgeAttributes( SegmentRelationship edge, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowhead", "vee" ) );
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
@@ -272,9 +272,9 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
         }
     }
 
-    public class DefaultURLProvider implements URLProvider<Scenario, ScenarioRelationship> {
+    public class DefaultURLProvider implements URLProvider<Segment, SegmentRelationship> {
 
-        public String getGraphURL( Scenario vertex ) {
+        public String getGraphURL( Segment vertex ) {
             if ( isGroupByPhase() ) {
                 Object[] args = {vertex.getPhase().getId()};
                 return MessageFormat.format( GRAPH_URL_FORMAT, args );
@@ -286,11 +286,11 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Scenario, Scenario
             }
         }
 
-        public String getVertexURL( Scenario vertex ) {
+        public String getVertexURL( Segment vertex ) {
             return MessageFormat.format( VERTEX_URL_FORMAT, 0, vertex.getId() );
         }
 
-        public String getEdgeURL( ScenarioRelationship edge ) {
+        public String getEdgeURL( SegmentRelationship edge ) {
             return MessageFormat.format( EDGE_URL_FORMAT, 0, edge.getId() );
         }
     }

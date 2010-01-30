@@ -3,7 +3,7 @@ package com.mindalliance.channels;
 import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.export.ConnectionSpecification;
 import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,29 +12,29 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Scenario import mechanism.
+ * Segment import mechanism.
  */
 public interface Importer extends Service {
 
     /**
-     * Import a scenario from a stream.
+     * Import a segment from a stream.
      *
      * @param stream an input stream
-     * @return a map with scenario and proxy connectors
+     * @return a map with segment and proxy connectors
      * @throws IOException on errors
      */
-    Scenario importScenario( InputStream stream ) throws IOException;
+    Segment importSegment( InputStream stream ) throws IOException;
 
     /**
-     * Reload a scenario from xml.
+     * Reload a segment from xml.
      *
      * @param xml an xml string
-     * @return a map with scenario and proxy connectors
+     * @return a map with segment and proxy connectors
      */
-    Scenario restoreScenario( String xml );
+    Segment restoreSegment( String xml );
 
     /**
-     * The mime type of files from which scenarios are imported.
+     * The mime type of files from which segments are imported.
      *
      * @return -- a mime type
      */
@@ -65,13 +65,13 @@ public interface Importer extends Service {
     Journal importJournal( FileInputStream stream ) throws IOException;
 
     /**
-     * Load scenario, do not reconnect external flows.
+     * Load segment, do not reconnect external flows.
      *
      * @param inputStream an input stream
      * @return mapped results
      * @throws IOException on errors
      */
-    Map<String, Object> loadScenario( InputStream inputStream ) throws IOException;
+    Map<String, Object> loadSegment( InputStream inputStream ) throws IOException;
 
     /**
      * Reconnect external flows given proxy connectors and idMap

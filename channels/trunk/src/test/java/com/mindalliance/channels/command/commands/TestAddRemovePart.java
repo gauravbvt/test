@@ -5,10 +5,10 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Scenario;
+import com.mindalliance.channels.model.Segment;
 
-import java.util.Iterator;
 import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -20,22 +20,22 @@ import java.io.IOException;
 public class TestAddRemovePart extends AbstractChannelsTest {
 
     private Part part;
-    private Scenario scenario;
+    private Segment segment;
     private QueryService queryService;
 
     @Override
     protected void setUp() throws IOException {
         super.setUp();
         queryService = app.getQueryService();
-        scenario = queryService.createScenario();
-        part = scenario.getDefaultPart();
-        Part other = queryService.createPart( scenario );
+        segment = queryService.createSegment();
+        part = segment.getDefaultPart();
+        Part other = queryService.createPart( segment );
         queryService.connect( part, other, "foo" );
-        queryService.connect( queryService.createConnector( scenario ), part, "bar" );
+        queryService.connect( queryService.createConnector( segment ), part, "bar" );
     }
 
     protected void tearDown() {
-        queryService.remove( scenario );
+        queryService.remove( segment );
     }
 
     public void testRemoveAddPart() throws Exception {
@@ -46,7 +46,7 @@ public class TestAddRemovePart extends AbstractChannelsTest {
         assertTrue( commander.canDo( removePart ) );
         Change change = commander.doCommand( removePart );
         assertTrue( change.isRecomposed() );
-        assertTrue( change.getSubject() instanceof Scenario );
+        assertTrue( change.getSubject() instanceof Segment );
         assertTrue( countParts() == 1 );
         assertTrue( countFlows() == 1 );
 
@@ -74,7 +74,7 @@ public class TestAddRemovePart extends AbstractChannelsTest {
 
     private int countParts() {
         int count = 0;
-        Iterator<Part> parts = scenario.parts();
+        Iterator<Part> parts = segment.parts();
         while ( parts.hasNext() ) {
             parts.next();
             count++;
@@ -84,7 +84,7 @@ public class TestAddRemovePart extends AbstractChannelsTest {
 
     private int countFlows() {
         int count = 0;
-        Iterator<Flow> flows = scenario.flows();
+        Iterator<Flow> flows = segment.flows();
         while ( flows.hasNext() ) {
             flows.next();
             count++;

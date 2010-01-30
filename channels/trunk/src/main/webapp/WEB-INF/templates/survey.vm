@@ -15,8 +15,8 @@
             <title>
                 <![CDATA[
                 We need your help to resolve an issue with ${about}
-                #if (${scenario})
-                    in scenario &quot;<strong>${scenario}</strong>&quot;
+                #if (${segment})
+                    in segment &quot;<strong>${segment}</strong>&quot;
                 #end
                 of plan &quot;<strong>${plan}</strong>&quot;.
                 ]]>
