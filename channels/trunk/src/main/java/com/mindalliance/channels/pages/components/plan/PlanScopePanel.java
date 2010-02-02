@@ -166,7 +166,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
         };
         addInvolvedField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                involveLink.setEnabled( newInvolvedName != null && !newInvolvedName.isEmpty() );
+                // involveLink.setEnabled( newInvolvedName != null && !newInvolvedName.isEmpty() );
                 target.addComponent( involveLink );
             }
         } );
@@ -175,7 +175,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
             public void onClick( AjaxRequestTarget target ) {
                 involveNewOrganization();
                 newInvolvedName = null;
-                involveLink.setEnabled( false );
+                // involveLink.setEnabled( false );
                 target.addComponent( involveLink );
                 addSelectedOrganization();
                 target.addComponent( organizationContainer );

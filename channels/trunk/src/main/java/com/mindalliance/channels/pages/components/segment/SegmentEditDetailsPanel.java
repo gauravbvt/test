@@ -16,7 +16,6 @@ import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponentLabel;
@@ -69,14 +68,6 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
 
     private void init() {
         setOutputMarkupId( true );
-        AjaxFallbackLink<?> closeLink = new AjaxFallbackLink( "close" ) {
-            @Override
-            public void onClick( AjaxRequestTarget target ) {
-                Change change = new Change( Change.Type.Collapsed, getSegment() );
-                update( target, change );
-            }
-        };
-        add( closeLink );
         addIdentityFields();
         addPhaseLink();
         addPhaseChoice();

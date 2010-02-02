@@ -60,13 +60,15 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
         );
         moveBar.add( new AttributeModifier( "onMouseDown", true, new Model<String>( moveScript ) ) );
         add( moveBar );
-        // close
+        // close -- blur any entry field to make sure any change is taken
+        String closeScript = "this.focus();";
         AjaxFallbackLink<?> closeLink = new AjaxFallbackLink( "close" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 close( target );
             }
         };
+        closeLink.add( new AttributeModifier( "onMouseOver", true, new Model<String>( closeScript ) ) );
         moveBar.add( closeLink );
         // resize
         WebMarkupContainer resizer = new WebMarkupContainer( "resizer" );
