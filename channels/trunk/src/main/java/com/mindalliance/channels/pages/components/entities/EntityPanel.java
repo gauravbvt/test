@@ -63,7 +63,7 @@ public class EntityPanel extends AbstractMultiAspectPanel {
         StringBuilder sb = new StringBuilder();
         sb.append( StringUtils.abbreviate( entity.getName(), getMaxTitleNameLength() ) );
         sb.append( " - " );
-        sb.append( entity.getTypeName() );
+        sb.append( entity.getKindLabel() );
         if ( entity.isType() ) {
             sb.append( " type" );
         }

@@ -54,7 +54,7 @@ import java.util.List;
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
             columns.add( this.makeFilterableLinkColumn(
-                    "Actor",
+                    "Individual",
                     "committer.actor",
                     "committer.actor.normalizedName",
                     EMPTY,

@@ -60,7 +60,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
     /**
      * Indexing choice.
      */
-    protected static final String ACTORS = "Actors";
+    protected static final String ACTORS = "Individuals";
     /**
      * Indexing choice.
      */

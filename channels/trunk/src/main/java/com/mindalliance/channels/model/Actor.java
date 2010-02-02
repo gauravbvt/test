@@ -62,6 +62,14 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
         UNKNOWN.makeImmutable();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    public String getKindLabel() {
+        return "individual";
+    }
+
     @Override
     public boolean isActual() {
         return !equals( UNKNOWN ) && super.isActual();

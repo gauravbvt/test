@@ -41,7 +41,7 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
     /**
      * Indexing choice.
      */
-    private static final String ACTORS = "Actors";
+    private static final String ACTORS = "Individuals";
     /**
      * Indexing choice.
      */
@@ -313,7 +313,7 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
             columns.add( makeFilterableLinkColumn(
-                    "Actor",
+                    "Individual",
                     "actor",
                     "actor.normalizedName",
                     EMPTY,

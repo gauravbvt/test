@@ -594,7 +594,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             columns.add( makeColumn( "Mitigation", "kind", EMPTY ) );
             columns.add( makeLinkColumn( "Task", "part", "part.task", EMPTY ) );
-            columns.add( makeLinkColumn( "Actor", "part.actor", "part.actor.name", EMPTY ) );
+            columns.add( makeLinkColumn( "Individual", "part.actor", "part.actor.name", EMPTY ) );
             columns.add( makeLinkColumn( "Role", "part.role", "part.role.name", EMPTY ) );
             columns.add( makeLinkColumn( "Organization", "part.organization", "part.organization.name", EMPTY ) );
             add( new AjaxFallbackDefaultDataTable(

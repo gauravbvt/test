@@ -516,4 +516,13 @@ public abstract class ModelEntity extends ModelObject {
         );
     }
 
+    /**
+     * Get a label for the kind of entity.
+     * @return a string
+     */
+    public String getKindLabel() {
+        return getTypeName();
+    }
+
+
 }
