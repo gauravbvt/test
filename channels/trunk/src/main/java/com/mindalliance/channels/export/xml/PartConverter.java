@@ -231,10 +231,4 @@ public class PartConverter extends AbstractChannelsConverter {
         return part;
     }
 
-    private ModelEntity.Kind kind( String attribute ) {
-        if ( attribute == null ) return ModelEntity.Kind.Actual;
-        if ( attribute.equals( "Type" ) ) return ModelEntity.Kind.Type;
-        return ModelEntity.Kind.Actual;
-    }
-
 }

@@ -70,6 +70,7 @@ public class Channel implements Serializable, Comparable<Channel> {
     }
 
     public void setMedium( TransmissionMedium medium ) {
+        assert medium.isType();
         this.medium = medium;
     }
 
@@ -188,6 +189,15 @@ public class Channel implements Serializable, Comparable<Channel> {
 
     @Transient
     /**
+     * Is the medium multicast?
+     * @return a boolean
+     */
+    public boolean isMulticast() {
+        return getMedium() != null && getMedium().isMulticast();
+    }
+
+    @Transient
+    /**
      * Is the medium broadcast?
      * @return a boolean
      */
@@ -201,8 +211,7 @@ public class Channel implements Serializable, Comparable<Channel> {
      * @return a boolean
      */
     public boolean requiresAddress() {
-        String pattern = medium.getAddressPattern();
-        return !( pattern.isEmpty() || pattern.equals( ".*" ) );
+        return medium.requiresAddress();
     }
 
     public int compareTo( Channel o ) {

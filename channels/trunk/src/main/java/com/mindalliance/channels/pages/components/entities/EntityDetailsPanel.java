@@ -283,6 +283,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
         if ( change.isUpdated() && change.getProperty().equals( "tags" ) ) {
             addTagsPanel();
             target.addComponent( tagsPanel );
+            tagsChanged( target );
         }
         if ( change.isUpdated() && change.getProperty().equals( "attachments" ) ) {
             addImage();
@@ -290,5 +291,14 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
             target.addComponent( image );
         }
         super.updateWith( target, change, updated );
+    }
+
+    /**
+     * React to change in tags.
+     *
+     * @param target an ajax request target
+     */
+    protected void tagsChanged( AjaxRequestTarget target ) {
+        // do nothing
     }
 }

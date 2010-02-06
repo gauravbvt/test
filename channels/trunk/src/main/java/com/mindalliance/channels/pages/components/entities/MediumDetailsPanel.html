@@ -9,9 +9,19 @@
 <wicket:extend>
     <tr>
         <th align="right">
-            <label for="unicast">Is unicast:</label>
+            Mode of transmission:
         </th>
-        <td><input id="unicast" wicket:id="unicast" type="checkbox"/></td>
+        <td>
+            <span wicket:id="castLabel">Broadcast</span>
+            <span wicket:id="castChoiceContainer">
+                <select wicket:id="cast">
+                    <option>Unicast</option>
+                    <option>Multicast</option>
+                    <option>Broadcast</option>
+                </select>
+                <a wicket:id="resetChoice" href="#">(reset)</a>
+            </span>
+        </td>
     </tr>
     <tr wicket:id="addressPatternContainer">
         <th align="right">
@@ -19,7 +29,15 @@
         </th>
         <td><input id="addressPattern" wicket:id="addressPattern"/></td>
     </tr>
-     <tr wicket:id="securityContainer">
+    <tr>
+        <th align="right">
+            Delegates transmissions to:
+        </th>
+        <td>
+            <span wicket:id="delegatedToMedia">[delegation media panel]</span>
+        </td>
+    </tr>
+    <tr wicket:id="securityContainer">
         <th align="right">
             <label for="security">Secure for:</label>
         </th>

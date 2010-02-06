@@ -1,11 +1,17 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.QueryService;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.Transient;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -44,9 +50,20 @@ public class TransmissionMedium extends ModelEntity {
      */
     private Pattern compiledPattern;
     /**
-     * Whether the medium is unicast or broadcast.
+     * Kind of transmission targeting.
      */
-    private boolean unicast = true;
+    private Cast cast;
+    /**
+     * Place within which actual medium is operational.
+     * Global reach if null.
+     */
+    private Place reach;
+    /**
+     * Media this medium delegates transmissions to.
+     * E.g. Phone tele-conference delegates to phone,
+     * A Notification System delegates to phone, email, IM...
+     */
+    private List<TransmissionMedium> delegatedToMedia = new ArrayList<TransmissionMedium>();
     /**
      * Whether the medium is de facto available to all, address-free and fully secured.
      * Can only be made true for built-in media.
@@ -58,21 +75,12 @@ public class TransmissionMedium extends ModelEntity {
     private List<Classification> security = new ArrayList<Classification>();
 
     public TransmissionMedium() {
+        setType();
     }
 
     public TransmissionMedium( String name ) {
         super( name );
-    }
-
-    public TransmissionMedium( String name, String addressPattern ) {
-        this( name, addressPattern, true );
-    }
-
-    public TransmissionMedium( String name, String addressPattern, boolean unicast ) {
-        this( name );
-        this.unicast = unicast;
-        this.addressPattern = addressPattern;
-        compilePattern( addressPattern );
+        setType();
     }
 
     private void compilePattern( String addressPattern ) {
@@ -86,9 +94,27 @@ public class TransmissionMedium extends ModelEntity {
     }
 
     public static void createImmutables( List<TransmissionMedium> builtInMedia, QueryService queryService ) {
-        UNKNOWN = queryService.findOrCreate( TransmissionMedium.class, UnknownName );
+        UNKNOWN = queryService.findOrCreateType( TransmissionMedium.class, UnknownName );
         UNKNOWN.makeImmutable();
         addBuiltIn( builtInMedia, queryService );
+    }
+
+    /**
+     * Get the unambiguous cast for the entity.
+     * If ambiguous, return null.
+     *
+     * @return a cast
+     */
+    public Cast getCast() {
+        return cast;
+    }
+
+    public void setCast( Cast cast ) {
+        this.cast = cast;
+    }
+
+    public void setCast( String val ) {
+        setCast( Cast.valueOf( val ) );
     }
 
     public static TransmissionMedium getUNKNOWN() {
@@ -107,8 +133,63 @@ public class TransmissionMedium extends ModelEntity {
         UnknownName = unknownName;
     }
 
+    /**
+     * Get address pattern, empty string if none.
+     * If actual, get the longest address pattern of any type.
+     *
+     * @return a string
+     */
     public String getAddressPattern() {
         return addressPattern;
+    }
+
+    /**
+     * Return the effective compiled pattern. Can be null.
+     * It is self if pattern is not empty, esle the pattern is inherited.
+     * Traverse tags "upward" breadth-first. When conflict at some level, use longest pattern.
+     *
+     * @return a  compiled pattern
+     */
+    @SuppressWarnings( "unchecked" )
+    public Pattern getEffectiveCompiledAddressPattern() {
+        if ( compiledPattern != null || getTags().isEmpty() ) {
+            return compiledPattern;
+        } else {
+            Set<ModelEntity> visited = new HashSet<ModelEntity>();
+            visited.add( this );
+            List<ModelEntity> unvisited = (List<ModelEntity>) CollectionUtils.subtract( getTags(), visited );
+            return findEffectiveCompiledAddressPattern( unvisited, visited );
+        }
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private Pattern findEffectiveCompiledAddressPattern( List<ModelEntity> media, Set<ModelEntity> visited ) {
+        if ( media.isEmpty() ) {
+            return null;
+        }
+        visited.addAll( media );
+        List<Pattern> patterns = new ArrayList<Pattern>();
+        for ( ModelEntity medium : media ) {
+            Pattern pattern = ( (TransmissionMedium) medium ).getCompiledPattern();
+            if ( pattern != null ) patterns.add( pattern );
+        }
+        Collections.sort( patterns, new Comparator<Pattern>() {
+            public int compare( Pattern p1, Pattern p2 ) {
+                if ( p1.pattern().length() > p2.pattern().length() ) return -1;
+                if ( p2.pattern().length() > p1.pattern().length() ) return 1;
+                return 0;
+            }
+        } );
+        if ( !patterns.isEmpty() ) {
+            return patterns.get( 0 );
+        } else {
+            Set<ModelEntity> inheritedMedia = new HashSet<ModelEntity>();
+            for ( ModelEntity medium : media ) {
+                inheritedMedia.addAll( medium.getTags() );
+            }
+            List<ModelEntity> unvisited = (List<ModelEntity>) CollectionUtils.subtract( inheritedMedia, visited );
+            return findEffectiveCompiledAddressPattern( unvisited, visited );
+        }
     }
 
     public void setAddressPattern( String addressPattern ) {
@@ -120,12 +201,49 @@ public class TransmissionMedium extends ModelEntity {
         return compiledPattern;
     }
 
-    public boolean isUnicast() {
-        return unicast;
+    public Place getReach() {
+        return reach;
     }
 
-    public void setUnicast( boolean unicast ) {
-        this.unicast = unicast;
+    public void setReach( Place reach ) {
+        this.reach = reach;
+    }
+
+    public List<TransmissionMedium> getDelegatedToMedia() {
+        return delegatedToMedia;
+    }
+
+    public void setDelegatedToMedia( List<TransmissionMedium> delegatedToMedia ) {
+        this.delegatedToMedia = delegatedToMedia;
+    }
+
+    public boolean isUnicast() {
+        return getCast() == Cast.Unicast;
+    }
+
+    public boolean isMulticast() {
+        return getCast() == Cast.Multicast;
+    }
+
+    /**
+     * Make type unicast.
+     */
+    public void setUnicast() {
+        setCast( Cast.Unicast );
+    }
+
+    /**
+     * Make type multicast.
+     */
+    public void setMulticast() {
+        setCast( Cast.Multicast );
+    }
+
+    /**
+     * Make type broadcast.
+     */
+    public void setBroadcast() {
+        setCast( Cast.Broadcast );
     }
 
     public boolean isDirect() {
@@ -142,7 +260,7 @@ public class TransmissionMedium extends ModelEntity {
      * @return a boolean
      */
     public boolean isBroadcast() {
-        return !unicast;
+        return cast == Cast.Broadcast;
     }
 
     public List<Classification> getSecurity() {
@@ -180,9 +298,7 @@ public class TransmissionMedium extends ModelEntity {
      * @return true if valid
      */
     public boolean isAddressValidIfSet( String address ) {
-        return addressPattern.isEmpty()
-                || address.isEmpty()
-                || compiledPattern != null && compiledPattern.matcher( address ).matches();
+        return address.isEmpty() || isAddressValid( address );
     }
 
     /**
@@ -192,8 +308,9 @@ public class TransmissionMedium extends ModelEntity {
      * @return true if valid
      */
     public boolean isAddressValid( String address ) {
-        return addressPattern.isEmpty()
-                || compiledPattern != null && compiledPattern.matcher( address ).matches();
+        Pattern pattern = getEffectiveCompiledAddressPattern();
+        return pattern != null
+                && pattern.matcher( address ).matches();
     }
 
 
@@ -231,7 +348,7 @@ public class TransmissionMedium extends ModelEntity {
      */
     @Override
     protected boolean meetsTypeRequirementTests( ModelEntity entityType ) {
-        return unicast == ( (TransmissionMedium) entityType ).isUnicast();
+        return getCast() == ( (TransmissionMedium) entityType ).getCast();
     }
 
     /**
@@ -241,5 +358,140 @@ public class TransmissionMedium extends ModelEntity {
      */
     public boolean hasInvalidAddressPattern() {
         return !addressPattern.isEmpty() && compiledPattern == null;
+    }
+
+    /**
+     * Whether this medium requires an address.
+     *
+     * @return a boolean
+     */
+    public boolean requiresAddress() {
+        return !getAddressPatterns().isEmpty();
+    }
+
+    private List<String> getAddressPatterns() {
+        Set<String> patterns = new HashSet<String>();
+        for ( ModelEntity tag : getAllTags() ) {
+            String pattern = ( (TransmissionMedium) tag ).getAddressPattern();
+            // drop empty or universal pattern
+            if ( !pattern.isEmpty() && !pattern.equals( ".*" ) ) {
+                patterns.add( pattern );
+            }
+        }
+        return new ArrayList<String>( patterns );
+    }
+
+    /**
+     * Add medium to the list of delegated-to media.
+     *
+     * @param delegatedToMedium a medium
+     */
+    public void addDelegatedToMedium( TransmissionMedium delegatedToMedium ) {
+        if ( !delegatedToMedia.contains( delegatedToMedium ) )
+            delegatedToMedia.add( delegatedToMedium );
+    }
+
+    /**
+     * Get the cast that applies.
+     *
+     * @return a cast (uni*, multi*, broad*) or null
+     */
+    public Cast getEffectiveCast() {
+        if ( cast != null ) {
+            return cast;
+        } else {
+            return getInheritedCast();
+        }
+    }
+
+    /**
+     * Get inherited cats, if any.
+     *
+     * @return a cast or null
+     */
+    public Cast getInheritedCast() {
+        if ( cast != null ) {
+            return null;
+        } else {
+            List<Cast> casts = new ArrayList<Cast>();
+            for ( ModelEntity ancestor : getAllTags() ) {
+                Cast c = ( (TransmissionMedium) ancestor ).getCast();
+                if ( c != null && !casts.contains( c ) ) casts.add( c );
+            }
+            if ( casts.isEmpty() ) {
+                return null;
+            } else {
+                Collections.sort( casts );
+                return casts.get( 0 );
+            }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean references( ModelObject mo ) {
+        return super.references( mo )
+                || mo instanceof TransmissionMedium
+                && delegatedToMedia.contains( (TransmissionMedium) mo );
+    }
+
+    /**
+     * Whether this medium could delegate to another medium based on their effective casts.
+     *
+     * @param other a medium
+     * @return a boolean
+     */
+    public boolean canDelegateTo( TransmissionMedium other ) {
+        Cast effectiveCast = getEffectiveCast();
+        Cast otherEffectiveCast = other.getEffectiveCast();
+        return effectiveCast != null
+                && otherEffectiveCast != null
+                && effectiveCast.canDelegateTo( otherEffectiveCast );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transient
+    @Override
+    public boolean isUndefined() {
+        return super.isUndefined()
+                && cast == null
+                && delegatedToMedia.isEmpty()
+                && security.isEmpty();
+    }
+
+    public enum Cast {
+
+        /**
+         * Broadcast medium.
+         * One to many unknown individuals.
+         */
+        Broadcast,
+        /**
+         * Multicast medium.
+         * Transmission to many known individuals.
+         */
+        Multicast,
+        /**
+         * Unicast medium.
+         * Transmission to a known individual.
+         */
+        Unicast;
+
+        /**
+         * Whether a medium of this cast can delegate to a medium of another cast.
+         * Broadcast can delegate to all,
+         * Multicast to multicast or unicast,
+         * Unicast only to unicast
+         *
+         * @param other a cast
+         * @return a boolean
+         */
+        public boolean canDelegateTo( Cast other ) {
+            return compareTo( other ) >= 0;
+        }
+
     }
 }

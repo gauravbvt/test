@@ -8,12 +8,15 @@ import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.pages.components.ClassificationsPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
+import java.util.Arrays;
 import java.util.Set;
 
 /**
@@ -30,22 +33,28 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
      * Container to add components to.
      */
     private WebMarkupContainer moDetailsDiv;
+
+    private WebMarkupContainer castChoiceContainer;
     /**
-     * Unicast checkbox.
+     * Choice between unicast, multicast or broadcast.
      */
-    private CheckBox unicastCheckBox;
+    private DropDownChoice<TransmissionMedium.Cast> castChoice;
+    /**
+     * Reset to null cast choice link.
+     */
+    private AjaxFallbackLink castResetLink;
     /**
      * Container for address pattern field.
      */
     private WebMarkupContainer addressPatternContainer;
     /**
-     * Container for security classifications panel.
-     */
-    private WebMarkupContainer securityContainer;
-    /**
      * Address pattern field.
      */
     private TextField<String> addressPatternField;
+    /**
+     * Delegated-to media panel.
+     */
+    private DelegatedToMediaPanel delegatedToMediaPanel;
 
     public MediumDetailsPanel( String id, PropertyModel<ModelEntity> entityModel, Set<Long> expansions ) {
         super( id, entityModel, expansions );
@@ -57,26 +66,73 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
         this.moDetailsDiv = moDetailsDiv;
         addAddressPattern();
-        addUnicast();
+        addCastLabel();
+        addCastChoiceAndReset();
+        addDelegatedToMedia();
         addSecurity();
         adjustFields();
     }
 
     private void adjustFields() {
-        unicastCheckBox.setEnabled( isLockedByUser( getMedium() ) );
+        castChoice.setEnabled( isLockedByUser( getMedium() ) );
+        castResetLink.setVisible( isLockedByUser( getMedium() ) );
         addressPatternContainer.setVisible( getMedium().isActual() );
         addressPatternField.setEnabled( isLockedByUser( getMedium() ) );
-        securityContainer.setVisible( getMedium().isActual() );
     }
 
-    private void addUnicast() {
-        unicastCheckBox = new CheckBox( "unicast", new PropertyModel<Boolean>( this, "unicast" ) );
-        unicastCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+    private void addCastLabel() {
+        TransmissionMedium.Cast effectiveCast = getMedium().getEffectiveCast();
+        Label castLabel = new Label(
+                "castLabel",
+                effectiveCast == null ? "" : effectiveCast.name() );
+        makeVisible( castLabel, getMedium().getInheritedCast() != null );
+        moDetailsDiv.add( castLabel );
+    }
+
+    private void addCastChoiceAndReset() {
+        castChoiceContainer = new WebMarkupContainer( "castChoiceContainer" );
+        castChoiceContainer.setOutputMarkupId( true );
+        makeVisible( castChoiceContainer, getMedium().getInheritedCast() == null );
+        moDetailsDiv.addOrReplace( castChoiceContainer );
+        addCastChoice();
+        addCastReset();
+    }
+
+    private void addCastChoice() {
+        castChoice = new DropDownChoice<TransmissionMedium.Cast>(
+                "cast",
+                new PropertyModel<TransmissionMedium.Cast>( this, "cast" ),
+                Arrays.asList( TransmissionMedium.Cast.values() )
+        );
+        castChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getMedium(), "unicast" ) );
+                addCastReset();
+                addDelegatedToMedia();
+                target.addComponent( castResetLink );
+                target.addComponent( delegatedToMediaPanel );
+                update( target, new Change( Change.Type.Updated, getMedium(), "cast" ) );
             }
         } );
-        moDetailsDiv.add( unicastCheckBox );
+        castChoice.setOutputMarkupId( true );
+        castChoiceContainer.addOrReplace( castChoice );
+    }
+
+    private void addCastReset() {
+        castResetLink = new AjaxFallbackLink( "resetChoice" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                setCast( null );
+                addCastChoice();
+                addDelegatedToMedia();
+                addCastReset();
+                target.addComponent( castChoice );
+                target.addComponent( castResetLink );
+                target.addComponent( delegatedToMediaPanel );
+                update( target, new Change( Change.Type.Updated, getMedium(), "cast" ) );
+            }
+        };
+        castResetLink.setOutputMarkupId( true );
+        makeVisible( castResetLink, getMedium().getCast() != null );
+        castChoiceContainer.addOrReplace( castResetLink );
     }
 
     private void addAddressPattern() {
@@ -93,8 +149,17 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
         addressPatternContainer.add( addressPatternField );
     }
 
+    private void addDelegatedToMedia() {
+        delegatedToMediaPanel = new DelegatedToMediaPanel(
+                "delegatedToMedia",
+                new Model<TransmissionMedium>( getMedium() )
+        );
+        delegatedToMediaPanel.setOutputMarkupId( true );
+        moDetailsDiv.addOrReplace( delegatedToMediaPanel );
+    }
+
     private void addSecurity() {
-        securityContainer = new WebMarkupContainer( "securityContainer" );
+        WebMarkupContainer securityContainer = new WebMarkupContainer( "securityContainer" );
         moDetailsDiv.add( securityContainer );
         securityContainer.add( new ClassificationsPanel(
                 "security",
@@ -109,24 +174,24 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
     }
 
     /**
-     * Set whether medium is unicast.
+     * Set whether medium cast.
      *
      * @param value a boolean
      */
-    public void setUnicast( boolean value ) {
+    public void setCast( TransmissionMedium.Cast value ) {
         TransmissionMedium medium = getMedium();
-        if ( medium.isUnicast() != value ) {
-            doCommand( new UpdatePlanObject( medium, "unicast", value ) );
+        if ( medium.getCast() != value ) {
+            doCommand( new UpdatePlanObject( medium, "cast", value ) );
         }
     }
 
     /**
-     * Whether medium is unicast.
+     * Get medium's cast.
      *
-     * @return a boolean
+     * @return a casting type (unicast etc.)
      */
-    public boolean isUnicast() {
-        return getMedium().isUnicast();
+    public TransmissionMedium.Cast getCast() {
+        return getMedium().getCast();
     }
 
     /**
@@ -148,5 +213,16 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
         if ( !medium.getAddressPattern().equals( value ) ) {
             doCommand( new UpdatePlanObject( getMedium(), "addressPattern", value ) );
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void tagsChanged( AjaxRequestTarget target ) {
+        super.tagsChanged( target );
+        addCastChoice();
+        addDelegatedToMedia();
+        target.addComponent( castChoice );
+        target.addComponent( delegatedToMediaPanel );
     }
 }

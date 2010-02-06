@@ -2,6 +2,7 @@ package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -12,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Transmission mdeium converter.
+ * Transmission medium converter.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -51,16 +52,34 @@ public class TransmissionMediumConverter extends EntityConverter {
                                    HierarchicalStreamWriter writer,
                                    MarshallingContext context ) {
         TransmissionMedium medium = (TransmissionMedium) entity;
-        writer.startNode( "addressPattern" );
-        writer.setValue( medium.getAddressPattern() );
-        writer.endNode();
-        writer.startNode( "unicast" );
-        writer.setValue( medium.isUnicast() ? "true" : "false" );
-        writer.endNode();
-        for ( Classification classification : medium.getSecurity() ) {
-            writer.startNode( "secureForClassification" );
-            context.convertAnother( classification );
+        if ( medium.isType() ) {
+            writer.startNode( "addressPattern" );
+            writer.setValue( medium.getAddressPattern() );
             writer.endNode();
+        }
+        if ( medium.isActual() ) {
+            for ( Classification classification : medium.getSecurity() ) {
+                writer.startNode( "secureForClassification" );
+                context.convertAnother( classification );
+                writer.endNode();
+            }
+        }
+        if ( medium.isActual() && medium.getReach() != null ) {
+            Place reach = medium.getReach();
+            writer.startNode( "reach" );
+            writer.addAttribute( "id", Long.toString( reach.getId() ) );
+            writer.addAttribute( "kind", reach.isType() ? "Type" : "Actual" );
+            writer.setValue( reach.getName() );
+            writer.endNode();
+        }
+        if ( medium.isType() ) {
+            for ( TransmissionMedium delegatedTo : medium.getDelegatedToMedia() ) {
+                writer.startNode( "delegatesTo" );
+                writer.addAttribute( "id", Long.toString( delegatedTo.getId() ) );
+                writer.addAttribute( "kind", "Type" );
+                writer.setValue( delegatedTo.getName() );
+                writer.endNode();
+            }
         }
     }
 
@@ -75,13 +94,32 @@ public class TransmissionMediumConverter extends EntityConverter {
         TransmissionMedium medium = (TransmissionMedium) entity;
         if ( nodeName.equals( "addressPattern" ) ) {
             medium.setAddressPattern( reader.getValue() );
-        } else if ( nodeName.equals( "unicast" ) ) {
-            medium.setUnicast( reader.getValue().equals( "true" ) );
+        } else if ( nodeName.equals( "cast" ) ) {
+            medium.setCast( TransmissionMedium.Cast.valueOf( reader.getValue() ) );
         } else if ( nodeName.equals( "secureForClassification" ) ) {
             Classification classification = (Classification) context.convertAnother(
                     plan,
                     Classification.class );
             medium.addSecurity( classification );
+        } else if ( nodeName.equals( "reach" ) ) {
+            String idString = reader.getAttribute( "id" );
+            ModelEntity.Kind kind = kind( reader.getAttribute( "kind" ) );
+            medium.setReach( getEntity(
+                    Place.class,
+                    reader.getValue(),
+                    Long.parseLong( idString ),
+                    kind,
+                    context ) );
+
+        } else if ( nodeName.equals( "delegatesTo" ) ) {
+            String idString = reader.getAttribute( "id" );
+            ModelEntity.Kind kind = kind( reader.getAttribute( "kind" ) );
+            TransmissionMedium delegatedTo = getEntity(
+                    TransmissionMedium.class,
+                    reader.getValue(),
+                    Long.parseLong( idString ),
+                    kind, context );
+            medium.addDelegatedToMedium( delegatedTo );
         } else {
             LOG.warn( "Unknown element " + nodeName );
         }

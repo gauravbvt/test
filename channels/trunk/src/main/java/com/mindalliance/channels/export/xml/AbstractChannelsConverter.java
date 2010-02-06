@@ -337,5 +337,16 @@ public abstract class AbstractChannelsConverter implements Converter {
         return getQueryService().getCurrentPlan();
     }
 
+    /**
+     * Get entity kind given the kind's name.
+     *
+     * @param name a string
+     * @return an entity kind
+     */
+    protected ModelEntity.Kind kind( String name ) {
+        if ( name == null ) return ModelEntity.Kind.Actual;
+        if ( name.equals( "Type" ) ) return ModelEntity.Kind.Type;
+        return ModelEntity.Kind.Actual;
+    }
 
 }

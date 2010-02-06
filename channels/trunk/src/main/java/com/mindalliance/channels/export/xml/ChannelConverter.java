@@ -30,8 +30,10 @@ public class ChannelConverter extends AbstractChannelsConverter {
                          MarshallingContext context ) {
         Channel channel = (Channel) source;
         writer.startNode( "medium" );
-        writer.addAttribute( "id", "" + channel.getMedium().getId() );
-        writer.setValue( channel.getMedium().getName() );
+        TransmissionMedium medium = channel.getMedium();
+        writer.addAttribute( "id", "" + medium.getId() );
+        writer.addAttribute( "kind", medium.isType() ? "Type" : "Actual" );
+        writer.setValue( medium.getName() );
         writer.endNode();
         writer.startNode( "address" );
         writer.setValue( channel.getAddress() );
@@ -45,17 +47,15 @@ public class ChannelConverter extends AbstractChannelsConverter {
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "medium" ) ) {
                 String id = reader.getAttribute( "id" );
+                ModelEntity.Kind kind = kind( reader.getAttribute( "kind" ) );
                 String name = reader.getValue();
                 TransmissionMedium medium;
-                if ( id != null )
-                    medium = getEntity(
-                            TransmissionMedium.class,
-                            name,
-                            Long.parseLong( id ),
-                            ModelEntity.Kind.Actual,
-                            context );
-                else  // TODO - remove after transition
-                    medium = getQueryService().findOrCreate( TransmissionMedium.class, name );
+                medium = getEntity(
+                        TransmissionMedium.class,
+                        name,
+                        id == null ? null : Long.parseLong( id ),
+                        kind,
+                        context );
                 channel.setMedium( medium );
             } else if ( nodeName.equals( "address" ) ) {
                 channel.setAddress( reader.getValue() );

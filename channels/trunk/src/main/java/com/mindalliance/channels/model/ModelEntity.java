@@ -189,6 +189,10 @@ public abstract class ModelEntity extends ModelObject {
         kind = Kind.Actual;
     }
 
+    public void setKind( Kind kind ) {
+        this.kind = kind;
+    }
+    
     public List<ModelEntity> getTags() {
         return tags;
     }

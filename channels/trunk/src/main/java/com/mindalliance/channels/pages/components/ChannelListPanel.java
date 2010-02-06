@@ -56,7 +56,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
     /**
      * New medium marker.
      */
-    private static TransmissionMedium NewMedium;
+    // private static TransmissionMedium NewMedium;
 
     /**
      * New medium type marker.
@@ -64,10 +64,10 @@ public class ChannelListPanel extends AbstractCommandablePanel {
     private static TransmissionMedium NewMediumType;
 
     static {
-        NewMedium = new TransmissionMedium( "New medium" );
+        /*NewMedium = new TransmissionMedium( "New medium" );
         // fake id -- need only be different from newMediumType
-        NewMedium.setId( Long.MIN_VALUE );
-        NewMediumType = new TransmissionMedium( "New medium type" );
+        NewMedium.setId( Long.MIN_VALUE );*/
+        NewMediumType = new TransmissionMedium( "New medium" );
         NewMediumType.setType();
         // fake id
         NewMediumType.setId( Long.MAX_VALUE );
@@ -228,11 +228,14 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             Channelable channelable = getChannelable();
             if ( markedForCreation && value != null ) {
                 TransmissionMedium medium;
+/*
                 if ( value.equals( NewMedium ) ) {
                     medium =  doSafeFindOrCreate(
                             TransmissionMedium.class,
                             NewMedium.getName() );
-                } else if ( value.equals( NewMediumType ) ) {
+                } else
+*/
+                if ( value.equals( NewMediumType ) ) {
                     medium =  doSafeFindOrCreateType(
                             TransmissionMedium.class,
                             NewMediumType.getName() );
@@ -284,7 +287,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             Wrapper wrapper = item.getModelObject();
             TransmissionMedium medium = wrapper.getMedium();
             item.add( createCheckbox( wrapper ) );
-            int maxLabelSize = maxMediumLabelSize();
+            // int maxLabelSize = maxMediumLabelSize();
             ModelObjectLink mediumLink = new ModelObjectLink(
                     "mediumLink",
                     new Model<TransmissionMedium>( medium ),
@@ -334,10 +337,8 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                     return Collator.getInstance().compare( o1.getLabel(), o2.getLabel() );
                 }
             } );
-            candidates.add( NewMedium );
-            if ( !getChannelable().isEntity() ) {
-                candidates.add( NewMediumType );
-            }
+            // candidates.add( NewMedium );
+            candidates.add( NewMediumType );
             return candidates;
         }
 
@@ -368,6 +369,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             return mediumDropDownChoice;
         }
 
+/*
         private int maxMediumLabelSize() {
             int max = 0;
             for ( TransmissionMedium medium : getCandidateMedia() ) {
@@ -375,23 +377,8 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             }
             return max;
         }
-
-        /*private List<TransmissionMedium> getMedia( Wrapper wrapper ) {
-            List<TransmissionMedium> media = new ArrayList<TransmissionMedium>();
-            media.addAll( getQueryService().listActualEntities( TransmissionMedium.class ) );
-            Collections.sort( media, new Comparator<TransmissionMedium>() {
-                public int compare( TransmissionMedium o1, TransmissionMedium o2 ) {
-                    return Collator.getInstance().compare( o1.getLabel(), o2.getLabel() );
-                }
-            } );
-
-            // Hack for invalid medium in actual data
-            TransmissionMedium medium = wrapper.getMedium();
-            if ( medium != null && !media.coninttains( medium ) )
-                media.add( 0, medium );
-            return media;
-        }
 */
+
         private TextField<String> createAddressField( Wrapper wrapper ) {
             TextField<String> addressField = new TextField<String>(
                     "address", new PropertyModel<String>( wrapper, "address" ) );
