@@ -3,6 +3,7 @@ package com.mindalliance.channels.model;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -165,13 +166,29 @@ public class Classification implements Identifiable, Comparable {
     }
 
     /**
+     * Whether at least one in a list of classifications is stronger than a classification.
+     *
+     * @param classifications a list of classifications
+     * @param classification  a classification
+     * @return a boolean
+     */
+    public static boolean hasHigherOrEqualClassification(
+            final List<Classification> classifications,
+            final Classification classification ) {
+        List<Classification> others = new ArrayList<Classification>();
+        others.add( classification );
+        return hasHigherOrEqualClassification( classifications, others );
+    }
+
+
+    /**
      * Whether at least one in a list of classifications is stronger than another in another list.
      *
      * @param classifications a list of classifications
      * @param others          a list of classifications
      * @return a boolean
      */
-    public static boolean hasHigherClassification(
+    public static boolean hasHigherOrEqualClassification(
             final List<Classification> classifications,
             final List<Classification> others ) {
         if ( classifications.isEmpty() && others.isEmpty() ) return false;

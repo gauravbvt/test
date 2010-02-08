@@ -52,19 +52,15 @@ public class TransmissionMediumConverter extends EntityConverter {
                                    HierarchicalStreamWriter writer,
                                    MarshallingContext context ) {
         TransmissionMedium medium = (TransmissionMedium) entity;
-        if ( medium.isType() ) {
-            writer.startNode( "addressPattern" );
-            writer.setValue( medium.getAddressPattern() );
+        writer.startNode( "addressPattern" );
+        writer.setValue( medium.getAddressPattern() );
+        writer.endNode();
+        for ( Classification classification : medium.getSecurity() ) {
+            writer.startNode( "secureForClassification" );
+            context.convertAnother( classification );
             writer.endNode();
         }
-        if ( medium.isActual() ) {
-            for ( Classification classification : medium.getSecurity() ) {
-                writer.startNode( "secureForClassification" );
-                context.convertAnother( classification );
-                writer.endNode();
-            }
-        }
-        if ( medium.isActual() && medium.getReach() != null ) {
+        if ( medium.getReach() != null ) {
             Place reach = medium.getReach();
             writer.startNode( "reach" );
             writer.addAttribute( "id", Long.toString( reach.getId() ) );
@@ -72,14 +68,12 @@ public class TransmissionMediumConverter extends EntityConverter {
             writer.setValue( reach.getName() );
             writer.endNode();
         }
-        if ( medium.isType() ) {
-            for ( TransmissionMedium delegatedTo : medium.getDelegatedToMedia() ) {
-                writer.startNode( "delegatesTo" );
-                writer.addAttribute( "id", Long.toString( delegatedTo.getId() ) );
-                writer.addAttribute( "kind", "Type" );
-                writer.setValue( delegatedTo.getName() );
-                writer.endNode();
-            }
+        for ( TransmissionMedium delegatedTo : medium.getDelegatedToMedia() ) {
+            writer.startNode( "delegatesTo" );
+            writer.addAttribute( "id", Long.toString( delegatedTo.getId() ) );
+            writer.addAttribute( "kind", "Type" );
+            writer.setValue( delegatedTo.getName() );
+            writer.endNode();
         }
     }
 

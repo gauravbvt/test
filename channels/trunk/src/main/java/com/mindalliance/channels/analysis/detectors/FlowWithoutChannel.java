@@ -6,7 +6,6 @@ import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Part;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,8 +63,8 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
     }
 
     private Issue.Level getSeverity( Flow flow ) {
-        if ( flow.getTarget().isPart() ) {
-            return getQueryService().getPartPriority( (Part) flow.getTarget() );
+        if ( flow.isSharing() ) {
+            return getFailureSeverity( flow );
         } else {
             return Issue.Level.Minor;
         }

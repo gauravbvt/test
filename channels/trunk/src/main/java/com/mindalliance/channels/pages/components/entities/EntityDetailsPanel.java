@@ -141,7 +141,6 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
                 new PropertyModel<ModelEntity>( this, "entity" ),
                 getExpansions() );
         issuesPanel.setOutputMarkupId( true );
-        issuesPanel.setOutputMarkupId( true );
         moDetailsDiv.addOrReplace( issuesPanel );
     }
 
@@ -289,6 +288,11 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
             addImage();
             adjustFields();
             target.addComponent( image );
+        }
+        if ( change.isUpdated() ) {
+            addIssuesPanel();
+            adjustFields();
+            target.addComponent( issuesPanel );
         }
         super.updateWith( target, change, updated );
     }

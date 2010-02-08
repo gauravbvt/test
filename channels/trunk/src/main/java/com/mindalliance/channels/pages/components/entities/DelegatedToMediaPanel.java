@@ -142,6 +142,8 @@ public class DelegatedToMediaPanel extends AbstractCommandablePanel {
                     && !candidate.equals( getModeledMedium() )
                     && !getModeledMedium().getAllTags().contains( candidate )
                     && !candidate.isUniversal()
+                    && !candidate.isUnknown()
+                    && !getModeledMedium().getInheritedDelegates().contains( candidate )
                     && getModeledMedium().canDelegateTo( candidate ) ) {
                 candidates.add( candidate );
             }
@@ -165,13 +167,13 @@ public class DelegatedToMediaPanel extends AbstractCommandablePanel {
                 target.addComponent( mediaContainer );
             }
         };
-        makeVisible( deleteLink, !wrapper.isMarkedForCreation() && isLockedByUser( getModeledMedium() ) );
+        makeVisible( deleteLink, wrapper.canBeDeleted() );
         item.add( deleteLink );
     }
 
     private List<MediumWrapper> getWrappedMedia() {
         List<MediumWrapper> wrappers = new ArrayList<MediumWrapper>();
-        for ( TransmissionMedium delegatedTo : getModeledMedium().getDelegatedToMedia() ) {
+        for ( TransmissionMedium delegatedTo : getModeledMedium().getEffectiveDelegatedToMedia() ) {
             wrappers.add( new MediumWrapper( delegatedTo ) );
         }
         wrappers.add( new MediumWrapper() );
@@ -243,6 +245,12 @@ public class DelegatedToMediaPanel extends AbstractCommandablePanel {
 
         public String getName() {
             return medium == null ? "" : medium.getName();
+        }
+
+        public boolean canBeDeleted() {
+            return !isMarkedForCreation()
+                    && isLockedByUser( getModeledMedium() )
+                    && !getModeledMedium().getInheritedDelegates().contains( medium );
         }
     }
 }

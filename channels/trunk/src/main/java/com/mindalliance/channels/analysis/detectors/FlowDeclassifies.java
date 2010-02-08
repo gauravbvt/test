@@ -45,7 +45,7 @@ public class FlowDeclassifies extends AbstractIssueDetector {
         for ( ElementOfInformation eoi : flow.getEois() ) {
             for ( ElementOfInformation classifiedEOI : classifiedEOIs ) {
                 if ( eoi.equals( classifiedEOI )
-                        && Classification.hasHigherClassification(
+                        && Classification.hasHigherOrEqualClassification(
                         classifiedEOI.getClassifications(),
                         eoi.getClassifications() ) ) {
                     Issue issue = makeIssue( Issue.COMPLETENESS, flow );

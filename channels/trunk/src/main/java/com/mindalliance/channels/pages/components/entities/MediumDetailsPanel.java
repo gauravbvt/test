@@ -44,10 +44,6 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
      */
     private AjaxFallbackLink castResetLink;
     /**
-     * Container for address pattern field.
-     */
-    private WebMarkupContainer addressPatternContainer;
-    /**
      * Address pattern field.
      */
     private TextField<String> addressPatternField;
@@ -76,7 +72,6 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
     private void adjustFields() {
         castChoice.setEnabled( isLockedByUser( getMedium() ) );
         castResetLink.setVisible( isLockedByUser( getMedium() ) );
-        addressPatternContainer.setVisible( getMedium().isActual() );
         addressPatternField.setEnabled( isLockedByUser( getMedium() ) );
     }
 
@@ -136,7 +131,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
     }
 
     private void addAddressPattern() {
-        addressPatternContainer = new WebMarkupContainer( "addressPatternContainer" );
+        WebMarkupContainer addressPatternContainer = new WebMarkupContainer( "addressPatternContainer" );
         moDetailsDiv.add( addressPatternContainer );
         addressPatternField = new TextField<String>(
                 "addressPattern",
@@ -200,7 +195,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
      * @return a string
      */
     public String getAddressPattern() {
-        return getMedium().getAddressPattern();
+        return getMedium().getEffectiveAddressPattern();
     }
 
     /**

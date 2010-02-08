@@ -272,7 +272,7 @@ public class TagsPanel extends AbstractCommandablePanel {
         }
 
         public boolean isRemovable() {
-            return !isMarkedForCreation() && !isInherited() && !isUniversal() && !isImmutable();
+            return !isMarkedForCreation() && !isInherited() && !isUniversal();
         }
     }
 }

@@ -144,6 +144,16 @@ public class TransmissionMedium extends ModelEntity {
     }
 
     /**
+     * Get address pattern in effect, given tags.
+     *
+     * @return a string
+     */
+    public String getEffectiveAddressPattern() {
+        Pattern pattern = getEffectiveCompiledAddressPattern();
+        return pattern == null ? "" : pattern.pattern();
+    }
+
+    /**
      * Return the effective compiled pattern. Can be null.
      * It is self if pattern is not empty, esle the pattern is inherited.
      * Traverse tags "upward" breadth-first. When conflict at some level, use longest pattern.
@@ -218,11 +228,11 @@ public class TransmissionMedium extends ModelEntity {
     }
 
     public boolean isUnicast() {
-        return getCast() == Cast.Unicast;
+        return getEffectiveCast() == Cast.Unicast;
     }
 
     public boolean isMulticast() {
-        return getCast() == Cast.Multicast;
+        return getEffectiveCast() == Cast.Multicast;
     }
 
     /**
@@ -260,7 +270,7 @@ public class TransmissionMedium extends ModelEntity {
      * @return a boolean
      */
     public boolean isBroadcast() {
-        return cast == Cast.Broadcast;
+        return getEffectiveCast() == Cast.Broadcast;
     }
 
     public List<Classification> getSecurity() {
@@ -348,7 +358,7 @@ public class TransmissionMedium extends ModelEntity {
      */
     @Override
     protected boolean meetsTypeRequirementTests( ModelEntity entityType ) {
-        return getCast() == ( (TransmissionMedium) entityType ).getCast();
+        return getEffectiveCast() == ( (TransmissionMedium) entityType ).getEffectiveCast();
     }
 
     /**
@@ -392,7 +402,7 @@ public class TransmissionMedium extends ModelEntity {
     }
 
     /**
-     * Get the cast that applies.
+     * Get the cast that applies. Defaults to unicast.
      *
      * @return a cast (uni*, multi*, broad*) or null
      */
@@ -400,7 +410,8 @@ public class TransmissionMedium extends ModelEntity {
         if ( cast != null ) {
             return cast;
         } else {
-            return getInheritedCast();
+            Cast inherited = getInheritedCast();
+            return inherited != null ? inherited : Cast.Unicast;
         }
     }
 
@@ -426,6 +437,48 @@ public class TransmissionMedium extends ModelEntity {
             }
         }
     }
+
+    /**
+     * Return aggregated local and inherited security classifications.
+     *
+     * @return a list of secrecy classifications
+     */
+    public List<Classification> getEffectiveSecurity() {
+        List<Classification> effective = new ArrayList<Classification>( security );
+        for ( ModelEntity ancestor : getAllTags() ) {
+            List<Classification> classifications = ( (TransmissionMedium) ancestor ).getSecurity();
+            for ( Classification classification : classifications ) {
+                if ( !Classification.hasHigherOrEqualClassification( effective, classification ) ) {
+                    effective.add( classification );
+                }
+            }
+        }
+        return new ArrayList<Classification>( effective );
+    }
+
+    /**
+     * Aggregate local and inherited delegated-to mediua, without redundancies.
+     *
+     * @return a list of transmission media
+     */
+    public List<TransmissionMedium> getEffectiveDelegates() {
+        List<TransmissionMedium> effectiveMedia = new ArrayList<TransmissionMedium>( delegatedToMedia );
+        for ( ModelEntity ancestor : getAllTags() ) {
+            for ( TransmissionMedium delegate : ( (TransmissionMedium) ancestor ).getDelegatedToMedia() ) {
+                boolean redundant = false;
+                for ( TransmissionMedium effectiveMedium : effectiveMedia ) {
+                    if ( effectiveMedium.narrowsOrEquals( delegate ) ) {
+                        redundant = true;
+                    } else if ( delegate.narrowsOrEquals( effectiveMedium ) ) {
+                        effectiveMedia.remove( effectiveMedium );
+                    }
+                }
+                if ( !redundant ) effectiveMedia.add( delegate );
+            }
+        }
+        return effectiveMedia;
+    }
+
 
     /**
      * {@inheritDoc}
@@ -462,6 +515,30 @@ public class TransmissionMedium extends ModelEntity {
                 && security.isEmpty();
     }
 
+    /**
+     * Get all inherited delegated-to media.
+     *
+     * @return a list of transmission media
+     */
+    public List<TransmissionMedium> getInheritedDelegates() {
+        Set<TransmissionMedium> inherited = new HashSet<TransmissionMedium>();
+        for ( ModelEntity tag : getAllTags() ) {
+            inherited.addAll( ( (TransmissionMedium) tag ).getDelegatedToMedia() );
+        }
+        return new ArrayList<TransmissionMedium>( inherited );
+    }
+
+    /**
+     * Get list of all local and inherited delegated-to media.
+     *
+     * @return a list of media
+     */
+    public List<TransmissionMedium> getEffectiveDelegatedToMedia() {
+        Set<TransmissionMedium> effective = new HashSet<TransmissionMedium>( getDelegatedToMedia() );
+        effective.addAll( this.getInheritedDelegates() );
+        return new ArrayList<TransmissionMedium>( effective );
+    }
+
     public enum Cast {
 
         /**
@@ -486,11 +563,11 @@ public class TransmissionMedium extends ModelEntity {
          * Multicast to multicast or unicast,
          * Unicast only to unicast
          *
-         * @param other a cast
+         * @param delegate a cast
          * @return a boolean
          */
-        public boolean canDelegateTo( Cast other ) {
-            return compareTo( other ) >= 0;
+        public boolean canDelegateTo( Cast delegate ) {
+            return delegate.compareTo( this ) >= 0;
         }
 
     }

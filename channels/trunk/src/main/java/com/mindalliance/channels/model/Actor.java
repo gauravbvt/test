@@ -220,7 +220,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         ElementOfInformation eoi = (ElementOfInformation) obj;
-                        return Classification.hasHigherClassification(
+                        return Classification.hasHigherOrEqualClassification(
                                 eoi.getClassifications(),
                                 getClearances()
                         );

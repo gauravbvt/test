@@ -252,7 +252,9 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return (List<T>) CollectionUtils.select( list( clazz ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        return isReferenced( (ModelEntity) obj );
+                        ModelEntity entity = (ModelEntity)obj;
+                        return entity.isImmutable() && !entity.isUnknown()
+                                || isReferenced( entity );
                     }
                 } );
     }

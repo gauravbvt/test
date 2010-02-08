@@ -109,7 +109,7 @@ public interface QueryService extends Service {
 
 
     /**
-     * Get all referenced objects (not orphaned) of the given class.
+     * Get all referenced objects (known immutable or not orphaned) of the given class.
      *
      * @param clazz the given subclass of model object.
      * @param <T>   a subclass of model entity.

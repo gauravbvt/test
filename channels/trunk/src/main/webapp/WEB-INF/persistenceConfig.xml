@@ -78,14 +78,10 @@
     </aop:config>
 
     <!-- Transmission media -->
-    <bean id="internet" class="com.mindalliance.channels.model.TransmissionMedium">
-         <property name="name" value="Internet"/>
-         <property name="kind" value="Type"/>
-     </bean>
     <bean id="phone" class="com.mindalliance.channels.model.TransmissionMedium">
          <property name="name" value="Phone"/>
          <property name="kind" value="Type"/>
-         <property name="addressPattern" value="(\d*\D*\d{3}\D*\d{3}\D*\d{4}(\s*\D+\s*\d+)?)|(\d{3})"/>
+         <property name="addressPattern" value="\d*\D*\d{3}\D*\d{3}\D*\d{4}"/>
          <property name="cast" value="Unicast"/>
      </bean>
      <bean id="landline" class="com.mindalliance.channels.model.TransmissionMedium">
@@ -96,7 +92,7 @@
                  <ref bean="phone"/>
              </list>
          </property>
-         <property name="addressPattern" value="\d*\D*\d{3}\D*\d{3}\D*\d{4}"/>
+         <property name="addressPattern" value="(\d*\D*\d{3}\D*\d{3}\D*\d{4}(\s*\D+\s*\d+)?)|(\d{3})"/>
          <property name="cast" value="Unicast"/>
      </bean>
      <bean id="fax" class="com.mindalliance.channels.model.TransmissionMedium">
@@ -107,7 +103,6 @@
                  <ref bean="phone"/>
              </list>
          </property>
-         <property name="addressPattern" value="\d*\D*\d{3}\D*\d{3}\D*\d{4}"/>
          <property name="cast" value="Unicast"/>
      </bean>
      <bean id="cell" class="com.mindalliance.channels.model.TransmissionMedium">
@@ -118,7 +113,6 @@
                  <ref bean="phone"/>
              </list>
          </property>
-         <property name="addressPattern" value="\d*\D*\d{3}\D*\d{3}\D*\d{4}"/>
          <property name="cast" value="Unicast"/>
      </bean>
     <bean id="pager" class="com.mindalliance.channels.model.TransmissionMedium">
@@ -129,22 +123,21 @@
                 <ref bean="phone"/>
             </list>
         </property>
-        <property name="addressPattern" value="\d*\D*\d{3}\D*\d{3}\D*\d{4}"/>
         <property name="cast" value="Unicast"/>
     </bean>
      <bean id="conferenceCall" class="com.mindalliance.channels.model.TransmissionMedium">
          <property name="name" value="Conference call"/>
-         <property name="addressPattern" value="(\d*\D*\d{3}\D*\d{3}\D*\d{4}(\s*\D+\s*\d+)?)|(\d{3})"/>
+         <property name="addressPattern" value="\d*\D*\d{3}\D*\d{3}\D*\d{4}"/>
          <property name="cast" value="Multicast"/>
+         <property name="delegatedToMedia">
+             <list value-type="java.util.ArrayList">
+                 <ref bean="phone"/>
+             </list>
+         </property>
      </bean>
      <bean id="email" class="com.mindalliance.channels.model.TransmissionMedium">
          <property name="name" value="Email"/>
          <property name="kind" value="Type"/>
-         <property name="tags">
-             <list value-type="java.util.ArrayList">
-                 <ref bean="internet"/>
-             </list>
-         </property>
          <property name="addressPattern" value="[^@\s]+@[^@\s]+\.\w+"/>
          <property name="cast" value="Unicast"/>
      </bean>
@@ -164,11 +157,6 @@
      <bean id="im" class="com.mindalliance.channels.model.TransmissionMedium">
           <property name="name" value="IM"/>
           <property name="kind" value="Type"/>
-         <property name="tags">
-             <list value-type="java.util.ArrayList">
-                 <ref bean="internet"/>
-             </list>
-         </property>
           <property name="addressPattern" value=".+"/>
          <property name="cast" value="Unicast"/>
       </bean>

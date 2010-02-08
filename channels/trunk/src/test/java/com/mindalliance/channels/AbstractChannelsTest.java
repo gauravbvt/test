@@ -170,8 +170,12 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new InsufficientClearance() );
         detectors.add( new AgreementEncompassedByOther() );
         detectors.add( new AgreementWithoutCommitment() );
+        detectors.add( new MediumWithoutMode() );
         detectors.add( new CommittmentWithoutRequiredUnicastChannel() );
         detectors.add( new CommittmentOverUnsecuredChannel() );
+        detectors.add( new FlowOverUndersecuredMedium() );
+        detectors.add( new BroadcastOnlyChannels() );
+        detectors.add( new IncorrectMediumDelegation() );
         for ( IssueDetector detector : detectors ) {
             ( (AbstractIssueDetector) detector ).setQueryService( queryService );
         }
