@@ -120,7 +120,7 @@ public class ActorPlaybook extends PlaybookPage {
         ResourceSpec spec = ResourceSpec.with( actor );
         for ( Segment segment : service.list( Segment.class ) )
             for ( Part part : service.findAllParts( segment, spec ) )
-                if ( part.setIsStartsWithSegment() ) {
+                if ( part.isStartsWithSegment() ) {
                     Event event = segment.getEvent();
                     EventParts parts = rawEvents.get( event );
                     if ( parts == null ) {

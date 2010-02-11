@@ -94,7 +94,7 @@ public class UnsatisfiedNeed extends AbstractIssueDetector {
                 } else {
                     issue.setSeverity( Issue.Level.Minor );
                 }
-                issue.setDescription( "The neded information is not shared." );
+                issue.setDescription( "The needed information is not shared." );
                 issue.setRemediation( "Add a sharing flow of the same name." );
                 issues.add( issue );
             }

@@ -241,8 +241,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 new PropertyModel<Part>( this, "part" ),
                 getAllActorNames(),
                 ACTOR_PROPERTY,
-                Actor.class,
-                null );
+                Actor.class);
         addOrReplace( field );
         entityFields.add( field );
     }
@@ -253,8 +252,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 new PropertyModel<Part>( this, "part" ),
                 getAllRoleNames(),
                 ROLE_PROPERTY,
-                Role.class,
-                null );
+                Role.class );
         addOrReplace( field );
         entityFields.add( field );
     }
@@ -265,8 +263,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 new PropertyModel<Part>( this, "part" ),
                 getAllOrganizationNames(),
                 ORG_PROPERTY,
-                Organization.class,
-                null );
+                Organization.class );
         addOrReplace( field );
         entityFields.add( field );
     }
@@ -277,8 +274,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 new PropertyModel<Part>( this, "part" ),
                 getAllPlaceNames(),
                 JURISDICTION_PROPERTY,
-                Place.class,
-                null );
+                Place.class);
         addOrReplace( field );
         entityFields.add( field );
     }
@@ -289,8 +285,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 new PropertyModel<Part>( this, "part" ),
                 getAllPlaceNames(),
                 LOCATION_PROPERTY,
-                Place.class,
-                null );
+                Place.class );
         addOrReplace( field );
         entityFields.add( field );
     }
@@ -654,7 +649,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @return a boolean
      */
     public boolean isStartsWithSegment() {
-        return getPart().setIsStartsWithSegment();
+        return getPart().isStartsWithSegment();
     }
 
     /**

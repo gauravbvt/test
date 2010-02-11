@@ -174,7 +174,7 @@ public class InternalFlow extends Flow {
     @Override
     public boolean canSetAll() {
         return isNotification() && getSource().isPart() && getTarget().isPart()
-               && ( (Part) getTarget() ).hasNonActorResource();
+               && ( (Part) getTarget() ).hasNonActualActorResource();
     }
 
     /**

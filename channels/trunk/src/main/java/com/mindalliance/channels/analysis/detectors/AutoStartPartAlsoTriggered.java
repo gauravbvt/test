@@ -27,7 +27,7 @@ public class AutoStartPartAlsoTriggered extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
-        if ( part.setIsStartsWithSegment() && part.isTriggered() ) {
+        if ( part.isStartsWithSegment() && part.isTriggered() ) {
             Issue issue = makeIssue( Issue.COMPLETENESS, part );
             issue.setDescription( "This task is unnecessarily triggered"
                     + " since it starts with the plan segment." );

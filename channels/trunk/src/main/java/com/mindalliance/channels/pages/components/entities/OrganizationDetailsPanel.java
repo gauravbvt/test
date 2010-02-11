@@ -11,6 +11,7 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
+import com.mindalliance.channels.pages.components.EntityReferencePanel;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -49,9 +50,13 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
      */
     private static final String OrgChartDomIdentifier = ".entity .orgchart";
     /**
-     * Parent name field.
+     * Actual parent name field.
      */
-    private TextField parentField;
+    private TextField actualParentField;
+    /**
+     * Actual or type parent name field.
+     */
+    private EntityReferencePanel parentReferenceField;
     /**
      * Location name field.
      */
@@ -103,16 +108,14 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
 
 
     private void addParentField( WebMarkupContainer moDetailsDiv ) {
-        WebMarkupContainer parentContainer = new WebMarkupContainer( "parentContainer" );
-        parentContainer.setVisible( getOrganization().isActual() );
-        moDetailsDiv.add( parentContainer );
         Organization organization = getOrganization();
-        parentContainer.add( new ModelObjectLink(
+        moDetailsDiv.add( new ModelObjectLink(
                 "org-link",
                 new PropertyModel<Organization>( organization, "parent" ),
                 new Model<String>( "Parent" ) ) );
         final List<String> parentChoices = findCandidateParents();
-        parentField = new AutoCompleteTextField<String>( "parent",
+        // If organization is actual, parent must be actual
+        actualParentField = new AutoCompleteTextField<String>( "actualParent",
                 new PropertyModel<String>( this, "parentOrganization" ) ) {
             @Override
             protected Iterator<String> getChoices( String s ) {
@@ -123,13 +126,23 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                 return candidates.iterator();
             }
         };
-        parentField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        actualParentField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                target.addComponent( parentField );
+                target.addComponent( actualParentField );
                 update( target, new Change( Change.Type.Updated, getModel().getObject(), "parent" ) );
             }
         } );
-        parentContainer.add( parentField );
+        actualParentField.setVisible( getOrganization().isActual() );
+        moDetailsDiv.add( actualParentField );
+        // If organization is type, parent can be either actual or type.
+        EntityReferencePanel<Organization> parentField = new EntityReferencePanel<Organization>(
+                "parent",
+                new Model<Organization>( getOrganization() ),
+                parentChoices,
+                "parent",
+                Organization.class);
+        moDetailsDiv.add( parentField );
+        parentField.setVisible( getOrganization().isType() );
     }
 
     private void addLocationField( WebMarkupContainer moDetailsDiv ) {
@@ -207,7 +220,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
 
     private void adjustFields() {
         missionField.setEnabled( isLockedByUser( getOrganization() ) );
-        parentField.setEnabled( isLockedByUser( getOrganization() ) );
+        actualParentField.setEnabled( isLockedByUser( getOrganization() ) );
         locationField.setEnabled( isLockedByUser( getOrganization() ) );
         actorsRequiredCheckBox.setEnabled( isLockedByUser( getOrganization() ) );
     }

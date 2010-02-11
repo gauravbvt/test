@@ -81,9 +81,8 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
             IModel<? extends Identifiable> iModel,
             List<String> choices,
             String property,
-            Class<T> entityClass,
-            T defaultEntity ) {
-        this( id, iModel, choices, property, entityClass, defaultEntity, null );
+            Class<T> entityClass ) {
+        this( id, iModel, choices, property, entityClass, null, null );
     }
 
     public EntityReferencePanel(
@@ -261,12 +260,8 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
                 newEntity = doSafeFindOrCreateType( entityClass, name );
             }
         }
-        if ( newEntity == null ) {
-            if ( getEntityKind().equals( ModelEntity.Kind.Type ) ) {
-                newEntity = ModelEntity.getUniversalTypeFor( entityClass );
-            } else {
-                newEntity = defaultEntity;
-            }
+        if ( newEntity == null && defaultEntity != null ) {
+           newEntity = defaultEntity;
         }
         Identifiable referencer = getReferencer();
         if ( referencer instanceof SegmentObject ) {

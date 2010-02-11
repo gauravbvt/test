@@ -34,8 +34,8 @@ public class EmptyNeedOrCapability extends AbstractIssueDetector {
             String needOrCapability = flow.getTarget().isConnector() ? "capability" : "need";
             issue.setDescription( "Information "
                     + needOrCapability
-                    + " has no description (no specified element of information" );
-            issue.setRemediation( "Add a description with elements of information." );
+                    + " has no element of information." );
+            issue.setRemediation( "Add elements of information" );
             issues.add( issue );
         }
         return issues;

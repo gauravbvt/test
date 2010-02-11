@@ -184,8 +184,7 @@ public class RiskListPanel extends AbstractCommandablePanel {
                 new Model<RiskWrapper>( wrapper ),
                 choices,
                 "organization",
-                Organization.class,
-                Organization.UNKNOWN );
+                Organization.class);
         orgRefField.enable( getPlan().isDevelopment() );
         item.add( orgRefField );
     }

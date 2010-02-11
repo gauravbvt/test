@@ -335,11 +335,11 @@ public class Part extends Node implements GeoLocatable {
         }
     }
 
-    public boolean setIsStartsWithSegment() {
+    public boolean isStartsWithSegment() {
         return startsWithSegment;
     }
 
-    public void setIsStartsWithSegment( boolean startsWithSegment ) {
+    public void setStartsWithSegment( boolean startsWithSegment ) {
         this.startsWithSegment = startsWithSegment;
     }
 
@@ -529,8 +529,8 @@ public class Part extends Node implements GeoLocatable {
      *
      * @return a boolean
      */
-    public boolean hasNonActorResource() {
-        return hasResource() && actor == null;
+    public boolean hasNonActualActorResource() {
+        return hasResource() && ( actor == null || actor.isType() );
     }
 
     /**
@@ -713,11 +713,11 @@ public class Part extends Node implements GeoLocatable {
         if ( isRepeating()
                 || isSelfTerminating()
                 || initiatesEvent()
-                || setIsStartsWithSegment()
+                || isStartsWithSegment()
                 || isTerminatesEventPhase() ) {
             sb.append( " The task" );
             StringBuilder sb1 = new StringBuilder();
-            if ( setIsStartsWithSegment() ) {
+            if ( isStartsWithSegment() ) {
                 sb1.append( " starts with the plan segment" );
             }
             if ( isRepeating() ) {

@@ -176,7 +176,9 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
     }
 
     public void setParent( Organization parent ) {
-        assert parent == null || isType() || parent.isActual();
+        assert parent == null
+                || ( isActual() && parent.isActual() )
+                || isType();
         this.parent = parent;
     }
 

@@ -11,12 +11,15 @@
         <th class="area" align="right" valign="top"><label>Mission:</label></th>
         <td><textarea cols="40" rows="2" wicket:id="mission"></textarea></td>
     </tr>
-    <tr wicket:id="parentContainer">
+    <tr>
         <th align="right">
             <label for="parent"><a wicket:id="org-link" href=""
                                    title="Parent organization's details">Parent</a>:</label>
         </th>
-        <td><input id="parent" width="40" wicket:id="parent" type="text"/></td>
+        <td>
+            <input id="parent" width="40" wicket:id="actualParent" type="text"/>
+            <span wicket:id="parent">[entity reference panel]</span>
+        </td>
     </tr>
     <tr wicket:id="locationContainer">
         <th align="right"><label for="location"><a wicket:id="loc-link" href=""

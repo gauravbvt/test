@@ -110,8 +110,7 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
                 new Model<Event>(getEvent()),
                 choices,
                 "scope",
-                Place.class,
-                null
+                Place.class
         );
         moDetailsDiv.add( scopePanel );
     }

@@ -107,7 +107,7 @@ public class PartConverter extends AbstractChannelsConverter {
             writer.endNode();
         }
         writer.startNode( "startsWithSegment" );
-        writer.setValue( "" + part.setIsStartsWithSegment() );
+        writer.setValue( "" + part.isStartsWithSegment() );
         writer.endNode();
         // todo - rename "terminatesEventPhase"
         writer.startNode( "terminatesEvent" );
@@ -203,7 +203,7 @@ public class PartConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "repeatsEvery" ) ) {
                 part.setRepeatsEvery( Delay.parse( reader.getValue() ) );
             } else if ( nodeName.equals( "startsWithSegment" ) ) {
-                part.setIsStartsWithSegment( reader.getValue().equals( "true" ) );
+                part.setStartsWithSegment( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "terminatesEvent" ) ) {
                 part.setTerminatesEventPhase( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "initiatedEvent" ) ) {

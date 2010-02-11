@@ -157,7 +157,7 @@ public final class ChannelsUtils {
         state.put( "selfTerminating", part.isSelfTerminating() );
         state.put( "repeating", part.isRepeating() );
         state.put( "terminatesEventPhase", part.isTerminatesEventPhase() );
-        state.put( "startsWithSegment", part.setIsStartsWithSegment() );
+        state.put( "startsWithSegment", part.isStartsWithSegment() );
         state.put( "mitigations", new ArrayList<Risk>( part.getMitigations() ) );
         if ( part.getInitiatedEvent() != null ) state.put( "actor", part.getInitiatedEvent().getName() );
         if ( part.getActor() != null ) state.put( "actor", part.getActor().getName() );
@@ -176,6 +176,7 @@ public final class ChannelsUtils {
      * @param commander a commander
      */
     @SuppressWarnings( "unchecked" )
+    // TODO - BUG - does not deal with entity types
     public static void initPartFrom( Part part, Map<String, Object> state, Commander commander ) {
         QueryService queryService = commander.getQueryService();
         part.setDescription( (String) state.get( "description" ) );
@@ -183,7 +184,7 @@ public final class ChannelsUtils {
         part.setRepeating( (Boolean) state.get( "repeating" ) );
         part.setSelfTerminating( (Boolean) state.get( "selfTerminating" ) );
         part.setTerminatesEventPhase( (Boolean) state.get( "terminatesEventPhase" ) );
-        part.setIsStartsWithSegment( (Boolean) state.get( "startsWithSegment" ) );
+        part.setStartsWithSegment( (Boolean) state.get( "startsWithSegment" ) );
         part.setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
         part.setCompletionTime( (Delay) state.get( "completionTime" ) );
         part.setAttachments( new ArrayList<Attachment>( (ArrayList<Attachment>) state.get( "attachments" ) ) );

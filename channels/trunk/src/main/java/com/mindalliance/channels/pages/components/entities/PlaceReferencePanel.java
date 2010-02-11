@@ -139,8 +139,7 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
                 getModel(),
                 getPlaceChoices(),
                 property + ".place",
-                Place.class,
-                null
+                Place.class
         );
         entityReferencePanel.setOutputMarkupId( true );
         add( entityReferencePanel );

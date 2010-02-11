@@ -382,7 +382,7 @@ public class ExternalFlow extends Flow {
         // The role-based part in the connector flow is targeted by a notification
         return isNotification()
                 && !isPartTargeted()
-                && ( (Part) getTarget() ).hasNonActorResource();
+                && ( (Part) getTarget() ).hasNonActualActorResource();
     }
 
     /**

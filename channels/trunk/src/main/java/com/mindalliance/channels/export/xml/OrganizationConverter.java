@@ -69,6 +69,7 @@ public class OrganizationConverter extends EntityConverter {
         if ( parent != null && !parent.getName().trim().isEmpty() ) {
             writer.startNode( "parent" );
             writer.addAttribute( "id", Long.toString( parent.getId() ) );
+            writer.addAttribute( "kind", parent.getKind().name() );
             writer.setValue( parent.getName() );
             writer.endNode();
         }
@@ -119,8 +120,22 @@ public class OrganizationConverter extends EntityConverter {
         } else if ( nodeName.equals( "mission" ) ) {
             org.setMission( reader.getValue() );
         } else if ( nodeName.equals( "parent" ) ) {
-            String id = reader.getAttribute( "id");
-            org.setParent( findOrCreate( Organization.class, reader.getValue(), id ) );
+            Long id = Long.parseLong( reader.getAttribute( "id") );
+            String kindName = reader.getAttribute( "kind" );
+            ModelEntity.Kind kind;
+            if (kindName == null) {
+                kind = ModelEntity.Kind.Actual;
+            } else {
+                kind = ModelEntity.Kind.valueOf( kindName );
+            }
+            Organization parent = this.getEntity(
+                    Organization.class,
+                    reader.getValue(),
+                    id,
+                    kind,
+                    context
+            );
+            org.setParent( parent );
         } else if ( nodeName.equals( "location" ) ) {
             String id = reader.getAttribute( "id");
             org.setLocation( findOrCreate( Place.class, reader.getValue(), id ) );

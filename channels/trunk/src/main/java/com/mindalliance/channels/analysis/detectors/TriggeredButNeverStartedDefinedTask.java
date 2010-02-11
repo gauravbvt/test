@@ -28,7 +28,7 @@ public class TriggeredButNeverStartedDefinedTask extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( !part.hasDefaultTask() ) {
-            if ( !part.setIsStartsWithSegment() ) {
+            if ( !part.isStartsWithSegment() ) {
                 if ( part.isTriggered() ) {
                     boolean started = getQueryService().findIfPartStarted( part );
                     if ( !started ) {

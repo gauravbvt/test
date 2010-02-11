@@ -243,7 +243,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
     private void addClassifications( ListItem<EOIWrapper> item ) {
         WebMarkupContainer classificationsContainer = new WebMarkupContainer( "classificationsContainer" );
         classificationsContainer.setOutputMarkupId( true );
-        classificationsContainer.setVisible( !getFlow().isNeed() );
+        classificationsContainer.setVisible( !getFlow().isNeed() && !getPlan().classificationSystems().isEmpty() );
         item.addOrReplace( classificationsContainer );
         EOIWrapper wrapper = item.getModelObject();
         int index = item.getIndex();

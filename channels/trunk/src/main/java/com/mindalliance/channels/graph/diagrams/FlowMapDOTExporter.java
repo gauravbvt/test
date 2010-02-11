@@ -69,7 +69,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
                 } else if ( segment.isTerminatedBy( part ) ) {
                     terminators.add( part );
                 }
-                if ( part.getSegment().equals( segment ) && part.setIsStartsWithSegment() ) {
+                if ( part.getSegment().equals( segment ) && part.isStartsWithSegment() ) {
                     autoStarters.add( part );
                 }
             }

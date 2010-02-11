@@ -1528,7 +1528,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     private boolean doFindIfPartStarted( Part part, Set<ModelObject> visited ) {
         if ( visited.contains( part ) ) return false;
         visited.add( part );
-        if ( part.setIsStartsWithSegment() ) {
+        if ( part.isStartsWithSegment() ) {
             return doFindIfSegmentStarted( part.getSegment(), visited );
         } else {
             boolean started = false;
@@ -1981,7 +1981,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         Iterator<Part> parts = segment.parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
-            if ( part.setIsStartsWithSegment() )
+            if ( part.isStartsWithSegment() )
                 startedParts.add( part );
         }
         return startedParts;

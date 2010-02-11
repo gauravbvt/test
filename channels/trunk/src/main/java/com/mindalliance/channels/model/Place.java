@@ -138,8 +138,8 @@ public class Place extends ModelEntity implements GeoLocatable {
     }
 
     @Override
-    public List<ModelEntity> getTags() {
-        Set<ModelEntity> allTags = new HashSet<ModelEntity>( super.getTags() );
+    public List<ModelEntity> getAllTags() {
+        Set<ModelEntity> allTags = new HashSet<ModelEntity>( super.getAllTags() );
         if ( isRegion() ) {
             if ( geoLocation.isCity() ) allTags.add( City );
             else if ( geoLocation.isCounty() ) allTags.add( County );

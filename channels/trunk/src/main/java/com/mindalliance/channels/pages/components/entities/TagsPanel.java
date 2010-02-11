@@ -251,7 +251,7 @@ public class TagsPanel extends AbstractCommandablePanel {
             if ( name != null && !name.isEmpty() ) {
                 tag = doSafeFindOrCreateType( getEntity().getClass(), name );
                 if ( tag != null ) {
-                    doCommand( new UpdatePlanObject(
+                            doCommand( new UpdatePlanObject(
                             getEntity(),
                             "tags",
                             tag,

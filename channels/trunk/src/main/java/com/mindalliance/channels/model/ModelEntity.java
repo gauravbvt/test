@@ -197,15 +197,6 @@ public abstract class ModelEntity extends ModelObject {
         return tags;
     }
 
-    /**
-     * Get tags that were explicitly added.
-     *
-     * @return a list of model entities.
-     */
-    public List<ModelEntity> getRawTags() {
-        return tags;
-    }
-
     public void setTags( List<ModelEntity> tags ) {
         this.tags = tags;
     }

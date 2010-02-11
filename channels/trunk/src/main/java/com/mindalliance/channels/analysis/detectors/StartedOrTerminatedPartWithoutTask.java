@@ -25,7 +25,7 @@ public class StartedOrTerminatedPartWithoutTask extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( part.hasDefaultTask() ) {
-            if ( part.setIsStartsWithSegment() || part.isTriggered() ) {
+            if ( part.isStartsWithSegment() || part.isTriggered() ) {
                 DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
                 issue.setDescription( "The task is started during the plan segment but is not specified." );
                 issue.setRemediation( "Specify the task." );

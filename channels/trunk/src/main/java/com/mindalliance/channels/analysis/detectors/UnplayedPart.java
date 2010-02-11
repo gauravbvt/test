@@ -28,7 +28,7 @@ public class UnplayedPart extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         Part part = (Part) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        if ( part.hasNonActorResource() ) {
+        if ( part.hasNonActualActorResource() ) {
             List<Assignment> assignments = getQueryService().findAllAssignments( part, false );
             if ( assignments.isEmpty() ) {
                 Issue issue = makeIssue( Issue.COMPLETENESS, part );
