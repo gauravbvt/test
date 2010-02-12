@@ -9,12 +9,12 @@ import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.pages.AdminPage;
 import com.mindalliance.channels.pages.playbook.TaskPlaybook;
 import com.mindalliance.channels.pages.reports.PlanReportPage;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -138,18 +138,22 @@ public class PlanShowMenuPanel extends MenuPanel {
             }
         }
         BookmarkablePageLink reportLink = new BookmarkablePageLink( "link", PlanReportPage.class );
-        reportLink.add( new AttributeModifier( "target", true, new Model<String>( "report" ) ) );
-//        reportLink.setPopupSettings( new PopupSettings(
-//                PopupSettings.RESIZABLE |
-//                        PopupSettings.SCROLLBARS |
-//                        PopupSettings.MENU_BAR ) );
+     //   reportLink.add( new AttributeModifier( "target", true, new Model<String>( "report" ) ) );
+        reportLink.setPopupSettings( new PopupSettings(
+               PopupSettings.RESIZABLE |
+                        PopupSettings.SCROLLBARS |
+                        PopupSettings.MENU_BAR ) );
         menuItems.add( new LinkMenuItem(
                 "menuItem",
                 new Model<String>( "Info sharing procedures" ),
                 reportLink ) );
 
         BookmarkablePageLink playbooksLink = new BookmarkablePageLink<PlanReportPage>( "link", TaskPlaybook.class );
-        playbooksLink.add( new AttributeModifier( "target", true, new Model<String>( "playbooks" ) ) );
+  //      playbooksLink.add( new AttributeModifier( "target", true, new Model<String>( "playbooks" ) ) );
+        playbooksLink.setPopupSettings( new PopupSettings(
+               PopupSettings.RESIZABLE |
+                        PopupSettings.SCROLLBARS |
+                        PopupSettings.MENU_BAR ) );
         menuItems.add( new LinkMenuItem(
                 "menuItem",
                 new Model<String>( "Playbooks" ),

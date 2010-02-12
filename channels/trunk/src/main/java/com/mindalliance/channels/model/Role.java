@@ -63,7 +63,7 @@ public class Role extends ModelEntity {
         for ( Job job : queryService.findAllConfirmedJobs( ResourceSpec.with( this ) ) ) {
             job.setRole( null );
         }
-        for ( Part part : queryService.findAllParts( null, ResourceSpec.with( this ) ) ) {
+        for ( Part part : queryService.findAllParts( null, ResourceSpec.with( this ), true ) ) {
             part.setRole( null );
         }
     }

@@ -107,7 +107,7 @@ public class VCardPanel extends Panel {
             if ( spec.isOrganization() ) {
                 Organization org = spec.getOrganization();
                 Place place = org.getLocation();
-                return place.getFullAddress();
+                return place == null ? "No known address" : place.getFullAddress();
 
             } else
                 title = "";

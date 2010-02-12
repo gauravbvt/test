@@ -513,36 +513,6 @@ public class Segment extends ModelObject {
         return mitigators;
     }
 
-
-    /**
-     * Find all organizations involved in segment.
-     *
-     * @return a list of organizations. May contain Organization.UNKNOWN if some parts
-     *         don't specify an organization.
-     */
-    @Transient
-    public List<Organization> getOrganizations() {
-        Set<Organization> organizations = new HashSet<Organization>();
-        Iterator<Part> parts = parts();
-        boolean hasUnknown = false;
-        while ( parts.hasNext() ) {
-            Part part = parts.next();
-            Organization organization = part.getOrganization();
-            if ( organization != null )
-                organizations.add( part.getOrganization() );
-            else
-                hasUnknown = true;
-
-        }
-        List<Organization> results = new ArrayList<Organization>();
-        results.addAll( organizations );
-        Collections.sort( results );
-
-        if ( hasUnknown )
-            results.add( Organization.UNKNOWN );
-        return results;
-    }
-
     /**
      * Get the list of all parts in the segment.
      *

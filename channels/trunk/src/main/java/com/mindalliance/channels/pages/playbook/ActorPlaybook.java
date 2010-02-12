@@ -47,44 +47,45 @@ public class ActorPlaybook extends PlaybookPage {
         String name = actor.getName();
 
         add(
-            new Label( "title", "Playbook: " + name ),
-            new Label( "header", name ).setRenderBodyOnly( true ),
-            new Label( "ess", name.endsWith( "s" ) ? "" : "s" ).setRenderBodyOnly( true ),
+                new Label( "title", "Playbook: " + name ),
+                new Label( "header", name ).setRenderBodyOnly( true ),
+                new Label( "ess", name.endsWith( "s" ) ? "" : "s" ).setRenderBodyOnly( true ),
 
-            new BookmarkablePageLink<TaskPlaybook>( "top", TaskPlaybook.class ),
+                new BookmarkablePageLink<TaskPlaybook>( "top", TaskPlaybook.class ),
 
-            new ListView<EventParts>( "events", classifyParts( service, actor ) ) {
-                @Override
-                protected void populateItem( ListItem<EventParts> item ) {
-                    EventParts eventPart = item.getModelObject();
-                    item.add(
-                        new Label( "event-name", eventPart.getEventName() )
-                                .setRenderBodyOnly( true ),
+                new ListView<EventParts>( "events", classifyParts( service, actor ) ) {
+                    @Override
+                    protected void populateItem( ListItem<EventParts> item ) {
+                        EventParts eventPart = item.getModelObject();
+                        item.add(
+                                new Label( "event-name", eventPart.getEventName() )
+                                        .setRenderBodyOnly( true ),
 
-                        newPartList( actor, eventPart.getParts() ) );
-                }
-            },
+                                newPartList( actor, eventPart.getParts() ) );
+                    }
+                },
 
-            new ListView<FlowSet>( "sources",
-                                   sortFlows( findInitialFlows( service, actor ) ) ) {
-                @Override
-                protected void populateItem( ListItem<FlowSet> item ) {
-                    FlowSet flowSet = item.getModelObject();
-                    item.add(
-                        new Label( "spec", flowSet.getSourceString() ).setRenderBodyOnly( true ),
-                        newFlowList( actor, flowSet.getSynonymSets() ),
-                        createPicture( "pic", flowSet.getActor(), "../", DEFAULT_PIC ) );
-                }
-            } );
+                new ListView<FlowSet>( "sources",
+                        sortFlows( findInitialFlows( service, actor ) ) ) {
+                    @Override
+                    protected void populateItem( ListItem<FlowSet> item ) {
+                        FlowSet flowSet = item.getModelObject();
+                        item.add(
+                                new Label( "spec", flowSet.getSourceString() ).setRenderBodyOnly( true ),
+                                newFlowList( actor, flowSet.getSynonymSets() ),
+                                createPicture( "pic", flowSet.getActor(), "../", DEFAULT_PIC ) );
+                    }
+                } );
     }
 
     /**
      * Create a "pic" image component.
-     * @param id the wicket id
-     * @param object the model object associated with an icon
-     * @param prefix url fixup to relative links to upload directory.
+     *
+     * @param id             the wicket id
+     * @param object         the model object associated with an icon
+     * @param prefix         url fixup to relative links to upload directory.
      * @param defaultPicture the picture to show if none is attached to the object. Hide picture if
-     * null
+     *                       null
      * @return a wicket component
      */
     public static Component createPicture(
@@ -111,25 +112,28 @@ public class ActorPlaybook extends PlaybookPage {
         }
         return new WebMarkupContainer( id )
                 .add( new AttributeModifier( "src", new Model<String>( url ) ),
-                      new AttributeModifier( "alt", new Model<String>( name ) ) )
+                        new AttributeModifier( "alt", new Model<String>( name ) ) )
                 .setVisible( url != null );
     }
 
     private static List<EventParts> classifyParts( QueryService service, Actor actor ) {
         Map<Event, EventParts> rawEvents = new HashMap<Event, EventParts>();
-        ResourceSpec spec = ResourceSpec.with( actor );
-        for ( Segment segment : service.list( Segment.class ) )
-            for ( Part part : service.findAllParts( segment, spec ) )
-                if ( part.isStartsWithSegment() ) {
-                    Event event = segment.getEvent();
-                    EventParts parts = rawEvents.get( event );
-                    if ( parts == null ) {
-                        parts = new EventParts( segment, event );
-                        rawEvents.put( event, parts );
+        // ResourceSpec spec = ResourceSpec.with( actor );
+        for ( Segment segment : service.list( Segment.class ) ) {
+            for ( Part part : service.findAllAssignedParts( segment, actor ) ) {
+                if ( part.getSegment().equals( segment ) ) {
+                    if ( part.isStartsWithSegment() ) {
+                        Event event = segment.getEvent();
+                        EventParts parts = rawEvents.get( event );
+                        if ( parts == null ) {
+                            parts = new EventParts( segment, event );
+                            rawEvents.put( event, parts );
+                        }
+                        parts.add( part );
                     }
-                    parts.add( part );
                 }
-
+            }
+        }
         List<EventParts> events = new ArrayList<EventParts>( rawEvents.values() );
         Collections.sort( events );
         return events;
@@ -145,7 +149,7 @@ public class ActorPlaybook extends PlaybookPage {
                         .setParameter( ACTOR_PARM, actor.getId() )
                         .setParameter( PART_PARM, part.getId() )
                         .add( new Label( "task-name", part.getTask() )
-                                    .setRenderBodyOnly( true ) ) );
+                        .setRenderBodyOnly( true ) ) );
             }
         };
     }
@@ -158,25 +162,25 @@ public class ActorPlaybook extends PlaybookPage {
                 SynonymFlowSet set = item.getModelObject();
 
                 Component flowName = new Label( "flow-name", set.getLabel() )
-                                            .setRenderBodyOnly( true );
+                        .setRenderBodyOnly( true );
 
                 if ( set.isMultipart() )
                     item.add( new WebMarkupContainer( "flow" )
-                                .add( flowName )
-                                .setRenderBodyOnly( true ) );
+                            .add( flowName )
+                            .setRenderBodyOnly( true ) );
 
                 else
                     item.add( new BookmarkablePageLink<ActorPlaybook>( "flow", TaskPlaybook.class )
-                                .setParameter( ACTOR_PARM, actor.getId() )
-                                .setParameter( PART_PARM, set.getTargetId() )
-                                .add( flowName ) );
+                            .setParameter( ACTOR_PARM, actor.getId() )
+                            .setParameter( PART_PARM, set.getTargetId() )
+                            .add( flowName ) );
 
                 List<Part> partList = set.getParts();
                 item.add( new WebMarkupContainer( "parts-list" )
-                                .add( newPartList( actor, partList ) )
-                                .setVisible( partList.size() > 1 ),
+                        .add( newPartList( actor, partList ) )
+                        .setVisible( partList.size() > 1 ),
 
-                          new Label( "cause", set.getCauseString() ).setRenderBodyOnly( true ) );
+                        new Label( "cause", set.getCauseString() ).setRenderBodyOnly( true ) );
             }
         };
     }
@@ -185,13 +189,13 @@ public class ActorPlaybook extends PlaybookPage {
         ResourceSpec spec = ResourceSpec.with( actor );
 
         Set<Flow> flows = new HashSet<Flow>();
-        for ( Part part : service.findAllParts( null, spec ) )
+        for ( Part part : service.findAllAssignedParts( actor ) )  {
             for ( Iterator<Flow> iterator = part.flows(); iterator.hasNext(); ) {
                 Flow flow = iterator.next();
                 if ( part.equals( flow.getTarget() ) && flow.isTriggeringToTarget() )
                     flows.add( flow );
             }
-
+        }
         return flows;
     }
 
@@ -201,13 +205,19 @@ public class ActorPlaybook extends PlaybookPage {
      */
     private static final class EventParts implements Comparable<EventParts> {
 
-        /** The segment of the event. */
+        /**
+         * The segment of the event.
+         */
         private Segment segment;
 
-        /** The initiating event. */
+        /**
+         * The initiating event.
+         */
         private final Event event;
 
-        /** The associated parts. */
+        /**
+         * The associated parts.
+         */
         private final Set<Part> parts = new HashSet<Part>();
 
         private EventParts( Segment segment, Event event ) {
@@ -229,9 +239,10 @@ public class ActorPlaybook extends PlaybookPage {
          * Compares this object with the specified object for order.  Returns a
          * negative integer, zero, or a positive integer as this object is less
          * than, equal to, or greater than the specified object.
-         * @param   o the object to be compared.
+         *
+         * @param o the object to be compared.
          * @return a negative integer, zero, or a positive integer as this object
-         * is less than, equal to, or greater than the specified object.
+         *         is less than, equal to, or greater than the specified object.
          */
         public int compareTo( EventParts o ) {
             return event.compareTo( o.getEvent() );

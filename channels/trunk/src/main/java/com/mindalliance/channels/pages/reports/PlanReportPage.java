@@ -80,7 +80,7 @@ public class PlanReportPage extends WebPage {
             null,  // selected phase or event
             selector.isAllSegments() ? null : selector.getSegment(),
             null,
-            new Settings( "#plan-map", DiagramFactory.TOP_BOTTOM, size, false, false ) );
+            new Settings( "#plan-map", DiagramFactory.LEFT_RIGHT, size, false, false ) );
 
         add( selector,
              new Label( "title",                                                          // NON-NLS

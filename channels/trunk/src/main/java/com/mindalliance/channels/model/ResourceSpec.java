@@ -317,7 +317,20 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
                     && sameOrganization
                     && Place.samePlace( jurisdiction, other.getJurisdiction() );
         } else
-            return narrowsOrEquals( other );
+            return compatibleWith( other );
+    }
+
+    /**
+     * Whether this resource spec and another could be describing the same resource.
+     *
+     * @param other a resource spec
+     * @return a boolean
+     */
+    public boolean compatibleWith( ResourceSpec other ) {
+        return ModelEntity.compatible( getActor(), other.getActor() )
+                && ModelEntity.compatible( getRole(), other.getRole() )
+                && ModelEntity.compatible( getJurisdiction(), other.getJurisdiction() )
+                && ModelEntity.compatible( getOrganization(), other.getOrganization() );
     }
 
     /**

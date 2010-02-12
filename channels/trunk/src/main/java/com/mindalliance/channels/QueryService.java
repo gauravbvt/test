@@ -246,6 +246,7 @@ public interface QueryService extends Service {
     /**
      * Find an entity by given name. If none, create it and give it provided id.
      * If entity can only be a type, find or create a type, else find or create an actual.
+     *
      * @param clazz the kind of model object
      * @param name  the name
      * @param id    a long
@@ -276,7 +277,7 @@ public interface QueryService extends Service {
      * Create a connector in a plan segment, with prior id.
      *
      * @param segment the plan segment
-     * @param id       a Long
+     * @param id      a Long
      * @return the new connector
      */
     Connector createConnector( Segment segment, Long id );
@@ -293,7 +294,7 @@ public interface QueryService extends Service {
      * Create a new part in a plan segment with given id.
      *
      * @param segment the plan segment
-     * @param id       a Long
+     * @param id      a Long
      * @return a new default part.
      */
     Part createPart( Segment segment, Long id );
@@ -308,7 +309,7 @@ public interface QueryService extends Service {
      * @param name   the name of the flow, possibly empty
      * @return a new flow.
      * @throws IllegalArgumentException when nodes are already connected or nodes are not both
-     *         in this plan segment, or one of the node isn't a connector in a different plan segment.
+     *                                  in this plan segment, or one of the node isn't a connector in a different plan segment.
      */
     Flow connect( Node source, Node target, String name );
 
@@ -322,7 +323,7 @@ public interface QueryService extends Service {
      * @param id     a long
      * @return a new flow.
      * @throws IllegalArgumentException when nodes are already connected or nodes are not both
-     *         in this plan segment, or one of the node isn't a connector in a different plan segment.
+     *                                  in this plan segment, or one of the node isn't a connector in a different plan segment.
      */
     Flow connect( Node source, Node target, String name, Long id );
 
@@ -531,11 +532,19 @@ public interface QueryService extends Service {
      *
      * @param organization the organization, possibly Organization.UNKNOWN
      * @param role         the role, possibly Role.UNKNOWN
-     * @param segment     the plan segment
+     * @param segment      the plan segment
      * @return a sorted list of actors
      */
     List<Actor> findActors( Organization organization, Role role, Segment segment );
 
+/**
+     * Find all jobs of an actor in an organization or all organizations
+     * @param organization an organization or null (for all)
+     * @param actor an actor
+     * @return  a list of jobs
+     */
+    List<Job> findAllJobs( Organization organization, Actor actor );
+    
     /**
      * Whether the model object is referenced in another model object.
      *
@@ -654,11 +663,11 @@ public interface QueryService extends Service {
     /**
      * Find all parts that has the specified resource.
      *
-     * @param segment     a plan segment
+     * @param segment      a plan segment
      * @param resourceSpec a resource spec
      * @return a list of parts
      */
-    List<Part> findAllParts( Segment segment, ResourceSpec resourceSpec );
+    List<Part> findAllParts( Segment segment, ResourceSpec resourceSpec, boolean exactMatch );
 
     /**
      * Find all parts located at a given place.
@@ -746,7 +755,7 @@ public interface QueryService extends Service {
      * Find all parts that mitigate a risk or terminate the event cause.
      *
      * @param segment a plan segment
-     * @param risk     a risk
+     * @param risk    a risk
      * @return a list of parts
      */
     List<Part> findMitigations( Segment segment, Risk risk );
@@ -1284,8 +1293,42 @@ public interface QueryService extends Service {
      * If a part or sharing flow fail, what risk mitigating parts would also fail?
      *
      * @param segmentObject a part of sharing flow
-     * @param assumeFails    whether all alternate sharing flows are assumed to fail (no redundancy)
+     * @param assumeFails   whether all alternate sharing flows are assumed to fail (no redundancy)
      * @return a list of risk-mitigating parts that would fail
      */
     List<Part> findFailureImpacts( SegmentObject segmentObject, boolean assumeFails );
+
+    /**
+     * Find all actual organizations involved in a segment.
+     *
+     * @param segment a plan segment
+     * @return a list of actual organizations
+     */
+    List<Organization> findAllInvolvedOrganizations( Segment segment );
+
+    /**
+     * Find all actual entities matching an entity type.
+     *
+     * @param entityClass a class of enities
+     * @param entityType  an entity type
+     * @return a list of actual entities
+     */
+    <T extends ModelEntity> List<T> findAllActualEntitiesMatching(
+            Class<T> entityClass,
+            final T entityType );
+
+    /**
+     * Find all parts assigned to an actor.
+     * @param actor an actor
+     * @return a list of parts
+     */
+    List<Part> findAllAssignedParts( Actor actor );
+
+    /**
+     * Find all parts assigned to an actor in a segment.
+     * @param segment a plan segment
+     * @param actor an actor
+     * @return a list of parts
+     */
+    List<Part> findAllAssignedParts( Segment segment, Actor actor );
 }

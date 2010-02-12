@@ -20,7 +20,6 @@ import java.util.Set;
  * Time: 1:05:30 PM
  */
 public abstract class ModelEntity extends ModelObject {
-
     /**
      * Actual or Type.
      */
@@ -115,6 +114,19 @@ public abstract class ModelEntity extends ModelObject {
     }
 
     /**
+     * Whether two entities (either can be null) are compatible.
+     *
+     * @param entity an entity
+     * @param other  an entity
+     * @return a boolean
+     */
+    public static boolean compatible( ModelEntity entity, ModelEntity other ) {
+        if ( entity == null || other == null || entity.isUnknown() || other.isUnknown() ) return true;
+        if ( entity.narrowsOrEquals( other ) ) return true;
+        return false;
+    }
+
+    /**
      * Whether instances of a given entity class can be either actuals or types.
      * Roles and events are always types.
      *
@@ -192,7 +204,7 @@ public abstract class ModelEntity extends ModelObject {
     public void setKind( Kind kind ) {
         this.kind = kind;
     }
-    
+
     public List<ModelEntity> getTags() {
         return tags;
     }
@@ -352,6 +364,7 @@ public abstract class ModelEntity extends ModelObject {
      */
     public boolean narrowsOrEquals( ModelEntity other ) {
         if ( other == null ) return false;
+        if ( isUnknown() || other.isUnknown() ) return false;
         // Can't compare apples with oranges
         if ( !getClass().isAssignableFrom( other.getClass() ) ) return false;
         // same entity
@@ -363,13 +376,13 @@ public abstract class ModelEntity extends ModelObject {
         // entity explicitly is classified as other entity type
         if ( hasTag( other ) ) return true;
         // entity (actual or type) must at least have all the tags of the other entity type
-        if ( !CollectionUtils.isSubCollection(
+        boolean isSubCollection = CollectionUtils.isSubCollection(
                 other.getTyping(),
-                getAllTags() ) ) return false;
-        // meets specific and inherited requirement tests of entity type 
-        return meetsTypeRequirementTests( other )
-                &&
-                CollectionUtils.selectRejected(
+                getAllTags() );
+        if (!isSubCollection) return false;
+        // meets specific and inherited requirement tests of entity type
+        if (!meetsTypeRequirementTests( other ) ) return false;
+        boolean meetsInheritedTests = CollectionUtils.selectRejected(
                         other.getAllTags(),
                         new Predicate() {
                             public boolean evaluate( Object obj ) {
@@ -377,6 +390,7 @@ public abstract class ModelEntity extends ModelObject {
                             }
                         }
                 ).isEmpty();
+        return meetsInheritedTests;
     }
 
     /**
@@ -513,6 +527,7 @@ public abstract class ModelEntity extends ModelObject {
 
     /**
      * Get a label for the kind of entity.
+     *
      * @return a string
      */
     public String getKindLabel() {

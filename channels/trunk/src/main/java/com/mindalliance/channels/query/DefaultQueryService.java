@@ -252,7 +252,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return (List<T>) CollectionUtils.select( list( clazz ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        ModelEntity entity = (ModelEntity)obj;
+                        ModelEntity entity = (ModelEntity) obj;
                         return entity.isImmutable() && !entity.isUnknown()
                                 || isReferenced( entity );
                     }
@@ -1023,12 +1023,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<Actor>( actors );
     }
 
-    private void visitParts( Set<Part> visited, ResourceSpec spec, Segment segment ) {
-        // Add exact matches
+    private void visitParts( Set<Part> visited, ResourceSpec spec, Segment segment, boolean exactMatch ) {
+        // Add matches
         for ( Segment s : getSegments( segment ) )
             for ( Iterator<Part> partIterator = s.parts(); partIterator.hasNext(); ) {
                 Part part = partIterator.next();
-                if ( spec.matches( part.resourceSpec(), true ) )
+                if ( spec.matches( part.resourceSpec(), exactMatch ) )  // was exactMatch == true
                     visited.add( part );
             }
 
@@ -1045,13 +1045,13 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     s.setRole( job.getRole() );
                     s.setJurisdiction( job.getJurisdiction() );
                     s.setOrganization( job.getOrganization() );
-                    visitParts( visited, s, segment );
+                    visitParts( visited, s, segment, exactMatch );
                 }
             } else {
                 // Add regular role parts
                 ResourceSpec s = new ResourceSpec( spec );
                 s.setActor( null );
-                visitParts( visited, s, segment );
+                visitParts( visited, s, segment, exactMatch );
             }
         }
 
@@ -1065,13 +1065,13 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                             s.setRole( r );
                         else
                             s.setActor( a );
-                        visitParts( visited, s, segment );
+                        visitParts( visited, s, segment, exactMatch );
                     }
             }
 
             ResourceSpec s = new ResourceSpec( spec );
             s.setOrganization( organization.getParent() );
-            visitParts( visited, s, segment );
+            visitParts( visited, s, segment, exactMatch );
 
         }
 
@@ -1080,7 +1080,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             // TODO process geo inclusions
             ResourceSpec s = new ResourceSpec( spec );
             s.setJurisdiction( null );
-            visitParts( visited, s, segment );
+            visitParts( visited, s, segment, exactMatch );
         }
     }
 
@@ -1418,7 +1418,10 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 : toSortedList( actors );
     }
 
-    private List<Job> findAllJobs( Organization organization, Actor actor ) {
+    /**
+     * {@inheritDoc}
+     */
+    public List<Job> findAllJobs( Organization organization, Actor actor ) {
         List<Job> jobs = new ArrayList<Job>();
         List<Organization> orgs;
         if ( organization == null )
@@ -1450,9 +1453,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         if ( organization == null )
             orgs = listActualEntities( Organization.class );
         else {
-            assert organization.isActual();
             orgs = new ArrayList<Organization>();
-            orgs.add( organization );
+            if ( organization.isActual() ) {
+                orgs.add( organization );
+            } else {
+                orgs.addAll( findAllActualEntitiesMatching( Organization.class, organization ) );
+            }
         }
 
         for ( Organization org : orgs ) {
@@ -1580,9 +1586,9 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<Part> findAllParts( Segment segment, ResourceSpec resourceSpec ) {
+    public List<Part> findAllParts( Segment segment, ResourceSpec resourceSpec, boolean exactMatch ) {
         Set<Part> list = new HashSet<Part>();
-        visitParts( list, resourceSpec, segment );
+        visitParts( list, resourceSpec, segment, exactMatch );
         return toSortedList( list );
     }
 
@@ -1741,7 +1747,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
         ResourceSpec spec = ResourceSpec.with( actor );
         for ( Segment s : list( Segment.class ) ) {
-            List<Part> parts = findAllParts( s, spec );
+            List<Part> parts = findAllParts( s, spec, false );
             if ( !parts.isEmpty() )
                 result.add( s );
         }
@@ -2976,6 +2982,80 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
         return flows;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Organization> findAllInvolvedOrganizations( Segment segment ) {
+        Set<Organization> organizations = new HashSet<Organization>();
+        Iterator<Part> parts = segment.parts();
+        boolean hasUnknown = false;
+        while ( parts.hasNext() ) {
+            Part part = parts.next();
+            Organization organization = part.getOrganization();
+            if ( organization != null ) {
+                if ( organization.isActual() ) {
+                    organizations.add( organization );
+                } else {
+                    organizations.addAll( findAllActualEntitiesMatching( Organization.class, organization ) );
+                }
+            } else {
+                hasUnknown = true;
+            }
+
+        }
+        List<Organization> results = new ArrayList<Organization>( organizations );
+        Collections.sort( results );
+        if ( hasUnknown )
+            results.add( Organization.UNKNOWN );
+        return results;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    /**
+     * {@inheritDoc}
+     */
+    public <T extends ModelEntity> List<T> findAllActualEntitiesMatching(
+            Class<T> entityClass,
+            final T entityType ) {
+        assert entityType.isType();
+        return (List<T>) CollectionUtils.select(
+                findAllModelObjects( entityClass ),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        T entity = (T) object;
+                        return entity.isActual() && entity.narrowsOrEquals( entityType );
+                    }
+                }
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Part> findAllAssignedParts( Actor actor ) {
+        List<Assignment> assignments = findAllAssignments( actor );
+        Set<Part> parts = new HashSet<Part>();
+        for ( Assignment assignment : assignments ) {
+            parts.add( assignment.getPart() );
+        }
+        return new ArrayList<Part>( parts );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<Part> findAllAssignedParts( final Segment segment, Actor actor ) {
+        return (List<Part>) CollectionUtils.select(
+                findAllAssignedParts( actor ),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return ( (Part) object ).getSegment().equals( segment );
+                    }
+                } );
+    }
+
 
 }
 

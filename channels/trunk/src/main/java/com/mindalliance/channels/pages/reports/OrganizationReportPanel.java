@@ -7,12 +7,15 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -41,7 +44,9 @@ public class OrganizationReportPanel extends Panel {
     @SpringBean
     private QueryService queryService;
 
-    /** The actor to single out or null to show all actors. */
+    /**
+     * The actor to single out or null to show all actors.
+     */
     private Actor actor;
 
     public OrganizationReportPanel(
@@ -55,49 +60,61 @@ public class OrganizationReportPanel extends Panel {
         this.segment = segment;
 
         if ( showActors )
-            add( new ListView<ResourceSpec>( "sections", getSpecs() ) {
+            add( new ListView<ResourceSpec>(
+                    "sections",
+                    getSpecs() ) {
                 @Override
                 protected void populateItem( ListItem<ResourceSpec> item ) {
                     ResourceSpec resourceSpec = item.getModelObject();
                     item.add( new ActorReportPanel( "section",
-                                                    OrganizationReportPanel.this.segment,
-                                                    resourceSpec, showingIssues )
-                                .setRenderBodyOnly( true ) );
+                            OrganizationReportPanel.this.segment,
+                            resourceSpec, showingIssues )
+                            .setRenderBodyOnly( true ) );
                 }
             } );
         else
-            add( new ListView<Role>( "sections", segment.findRoles( organization ) ) {
+            add( new ListView<Role>(
+                    "sections",
+                    segment.findRoles( organization ) ) {
                 @Override
                 protected void populateItem( ListItem<Role> item ) {
                     item.add( new RoleReportPanel( "section", item.getModelObject(),
-                                       OrganizationReportPanel.this.segment,
-                                       OrganizationReportPanel.this.organization, showingIssues )
-                                .setRenderBodyOnly( true ) );
+                            OrganizationReportPanel.this.segment,
+                            OrganizationReportPanel.this.organization, showingIssues )
+                            .setRenderBodyOnly( true ) );
                 }
             } );
     }
 
+    @SuppressWarnings( "unchecked" )
     private List<ResourceSpec> getSpecs() {
         Set<ResourceSpec> specs = new HashSet<ResourceSpec>();
 
-        for ( Part p : queryService.findAllParts( segment, ResourceSpec.with( organization ) ) ) {
-            ResourceSpec spec = p.resourceSpec();
+        for ( Part p : queryService.findAllParts( segment, ResourceSpec.with( organization ), false ) ) {
+            final ResourceSpec spec = p.resourceSpec();
             if ( spec.isOrganization() )
                 spec.setActor( Actor.UNKNOWN );
-
-            List<Actor> a = queryService.findAllActualActors( spec );
+            // Find all actors directly employed by  the organization and playing the part 
+            List<Actor> actorList = (List<Actor>)CollectionUtils.select(
+                    queryService.findAllActualActors( spec ),
+                    new Predicate() {
+                        public boolean evaluate( Object object ) {
+                            return !queryService.findAllJobs(  organization, (Actor)object ).isEmpty();
+                        }
+                    }
+                    );
             if ( actor == null ) {
-                if ( a.isEmpty() )
+                if ( actorList.isEmpty() )
                     specs.add( spec );
                 else
-                    for ( Actor a1 : a ) {
+                    for ( Actor a1 : actorList ) {
                         ResourceSpec rs = new ResourceSpec( spec );
                         rs.setActor( a1 );
                         rs.setOrganization( organization );
                         specs.add( rs );
                     }
 
-            } else if ( a.contains( actor ) ) {
+            } else if ( actorList.contains( actor ) ) {
                 ResourceSpec rs = new ResourceSpec( spec );
                 rs.setActor( actor );
                 rs.setOrganization( organization );
@@ -105,12 +122,34 @@ public class OrganizationReportPanel extends Panel {
             }
         }
 
-        List<ResourceSpec> result = new ArrayList<ResourceSpec>( specs );
+        List<ResourceSpec> result = new ArrayList<ResourceSpec>( removeNarrowed( specs ) );
         Collections.sort( result, new Comparator<ResourceSpec>() {
             public int compare( ResourceSpec o1, ResourceSpec o2 ) {
                 return o1.toString().compareTo( o2.toString() );
             }
         } );
         return result;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private Collection<ResourceSpec> removeNarrowed( final Collection<ResourceSpec> specs ) {
+        return CollectionUtils.select(
+                specs,
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        final ResourceSpec spec = (ResourceSpec) object;
+                        return !CollectionUtils.exists(
+                                specs,
+                                new Predicate() {
+                                    public boolean evaluate( Object object ) {
+                                        ResourceSpec otherSpec = (ResourceSpec) object;
+                                        return spec != otherSpec
+                                                && otherSpec.compatibleWith( spec );
+                                    }
+                                }
+                        );
+                    }
+                }
+        );
     }
 }

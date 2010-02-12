@@ -328,10 +328,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
 
         private List<TransmissionMedium> getCandidateMedia() {
             List<TransmissionMedium> candidates = new ArrayList<TransmissionMedium>();
-            candidates.addAll( getQueryService().listActualEntities( TransmissionMedium.class ) );
-            if ( !getChannelable().isEntity() ) {
-                candidates.addAll( getQueryService().listTypeEntities( TransmissionMedium.class ) );
-            }
+            candidates.addAll( getQueryService().listTypeEntities( TransmissionMedium.class ) );
             Collections.sort( candidates, new Comparator<TransmissionMedium>() {
                 public int compare( TransmissionMedium o1, TransmissionMedium o2 ) {
                     return Collator.getInstance().compare( o1.getLabel(), o2.getLabel() );

@@ -11,6 +11,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.util.List;
+
 /**
  * Describe the parts played by an actor in an organization in a segment.
  */
@@ -26,7 +28,9 @@ public class ActorReportPanel extends Panel {
         setRenderBodyOnly( true );
         add( new VCardPanel( "vcard", spec, "../" ),
 
-             new ListView<Part>( "parts", queryService.findAllParts( segment, spec ) ) {
+             new ListView<Part>(
+                     "parts",
+                     getParts( segment, spec ) ) {
                     @Override
                     protected void populateItem( ListItem<Part> item ) {
                         item.add( new PartReportPanel( "part",                            // NON-NLS
@@ -36,5 +40,13 @@ public class ActorReportPanel extends Panel {
                                                "task even" : "task odd" ) ) );
                     }
                 } );
+    }
+
+    private List<Part> getParts( Segment segment, ResourceSpec spec ) {
+        if (spec.getActor() != null ) {
+            return queryService.findAllAssignedParts( segment, spec.getActor() );
+        } else {
+            return queryService.findAllParts( segment, spec, false );
+        }
     }
 }

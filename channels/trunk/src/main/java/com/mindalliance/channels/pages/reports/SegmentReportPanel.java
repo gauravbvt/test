@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.DiagramFactory;
+import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
@@ -16,6 +17,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.List;
 
@@ -34,6 +36,9 @@ public class SegmentReportPanel extends Panel {
      */
     private Segment segment;
 
+    @SpringBean
+    private QueryService queryService;
+
     public SegmentReportPanel(
             String id, IModel<Segment> model, final Actor actor, final boolean showingIssues ) {
         super( id, model );
@@ -42,7 +47,9 @@ public class SegmentReportPanel extends Panel {
 
         addSegmentPage( segment, showingIssues );
 
-        add( new ListView<Organization>( "organizations", segment.getOrganizations() ) { // NON-NLS
+        add( new ListView<Organization>( 
+                "organizations",
+                queryService.findAllInvolvedOrganizations( segment ) ) { // NON-NLS
 
             @Override
             protected void populateItem( ListItem<Organization> item ) {

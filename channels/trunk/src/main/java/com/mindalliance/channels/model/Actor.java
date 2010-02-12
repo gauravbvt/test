@@ -151,7 +151,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
         for ( Job job : queryService.findAllConfirmedJobs( ResourceSpec.with( this ) ) ) {
             job.setActor( null );
         }
-        for ( Part part : queryService.findAllParts( null, ResourceSpec.with( this ) ) ) {
+        for ( Part part : queryService.findAllParts( null, ResourceSpec.with( this ), true ) ) {
             part.setActor( null );
         }
     }

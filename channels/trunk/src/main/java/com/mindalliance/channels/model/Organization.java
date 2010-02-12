@@ -117,12 +117,29 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
                 || ModelEntity.isEquivalentToOrDefinedUsing( getLocation(), entity );
     }
 
+    public boolean narrowsOrEquals( ModelEntity other ) {
+        boolean noe = super.narrowsOrEquals( other );
+        return noe;
+    }
+
     /**
      * {@inheritDoc}
      */
     protected boolean overrideNarrows( ModelEntity other ) {
-        // Any actual organization narrows any of its ancestors
-        return isActual() && isWithin( (Organization) other );
+        if ( isActual() ) {
+            if ( other.isActual() ) {
+                // Any actual organization narrows any of its ancestors
+                return isWithin( (Organization) other );
+            } else {
+                if ( getParent() != null ) {
+                    return getParent().narrowsOrEquals( other );
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -410,5 +427,7 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
                         }
                 );
     }
+
+
 }
 

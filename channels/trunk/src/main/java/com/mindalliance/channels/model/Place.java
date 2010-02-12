@@ -472,7 +472,7 @@ public class Place extends ModelEntity implements GeoLocatable {
         for ( Job job : queryService.findAllConfirmedJobs( ResourceSpec.with( this ) ) ) {
             job.setJurisdiction( null );
         }
-        for ( Part part : queryService.findAllParts( null, ResourceSpec.with( this ) ) ) {
+        for ( Part part : queryService.findAllParts( null, ResourceSpec.with( this ), true ) ) {
             part.setJurisdiction( null );
         }
         for ( Part part : queryService.findAllPartsWithExactLocation( this ) ) {
