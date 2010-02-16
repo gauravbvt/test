@@ -38,9 +38,6 @@ public abstract class PlaybookPage extends WebPage {
     /** The name of the part id parameter. */
     public static final String PART_PARM = "1";
 
-    /** The current plan. */
-    @SpringBean
-    private Plan plan;
 
     /** The logged-in user. */
     @SpringBean
@@ -98,7 +95,7 @@ public abstract class PlaybookPage extends WebPage {
     }
 
     final Plan getPlan() {
-        return plan;
+        return getQueryService().getCurrentPlan();
     }
 
     final QueryService getQueryService() {
