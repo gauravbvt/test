@@ -107,7 +107,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         while ( iter.hasNext() ) {
             ElementOfInformation eoi = iter.next();
             sb.append( eoi.toString() );
-            if ( iter.hasNext() ) sb.append( '\n' );
+            if ( iter.hasNext() ) sb.append( "\n" );
         }
         return sb.toString();
     }

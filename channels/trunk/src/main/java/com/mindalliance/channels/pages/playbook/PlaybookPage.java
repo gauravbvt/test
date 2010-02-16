@@ -195,8 +195,11 @@ public abstract class PlaybookPage extends WebPage {
             if ( actors.isEmpty() )
                 result.add( spec );
             else
-                for ( Actor a : actors )
-                    result.add( ResourceSpec.with( a ) );
+                for ( Actor a : actors ) {
+                    ResourceSpec actedSpec = new ResourceSpec( spec );
+                    actedSpec.setActor( a );
+                    result.add( actedSpec );
+                }
         }
 
         return result;

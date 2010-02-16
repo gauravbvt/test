@@ -1,7 +1,7 @@
 <export>
-  <plan id="1" uri="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/02/11 23:43:37 EST">
+  <plan id="1" uri="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/02/16 11:10:41 EST">
     <whenVersioned>2010/02/09 11:46:28 EST</whenVersioned>
-    <lastId>746</lastId>
+    <lastId>542</lastId>
     <name>Rail Security</name>
     <client>EastWest Institute Workshop</client>
     <description>Information sharing for an IED attack on a public transit system.</description>
@@ -113,8 +113,12 @@
         <address></address>
       </channel>
     </actor>
+    <actor id="522" kind="Type" name="Certified Train Operator">
+      <description></description>
+    </actor>
     <actor id="291" kind="Actual" name="Joseph Neumann">
       <description></description>
+      <tag id="522" kind="Type">Certified Train Operator</tag>
       <attachments>
         <attachment type="Image">uploads/joseph_neumann.jpeg</attachment>
       </attachments>
@@ -133,6 +137,7 @@
     </actor>
     <actor id="293" kind="Actual" name="Lucille Healy">
       <description></description>
+      <tag id="522" kind="Type">Certified Train Operator</tag>
       <attachments>
         <attachment type="Image">uploads/lucille_healy.jpeg</attachment>
       </attachments>
@@ -469,10 +474,6 @@
       <description>A bus terminal</description>
       <tag id="110" kind="Type">Transit system node</tag>
     </place>
-    <place id="201" kind="Type" name="Rail station at risk">
-      <description></description>
-      <mustContain eventOrPlace="event" kind="Type" id="2">Attack suspected</mustContain>
-    </place>
     <organization id="282" kind="Actual" name="Metropolis Transit Authority">
       <description></description>
       <tag id="9" kind="Type">Public Transit Agency</tag>
@@ -669,7 +670,7 @@
     <organization-involved id="282">Metropolis Transit Authority</organization-involved>
     <organization-involved id="284">Metropolis Transit Operations</organization-involved>
     <organization-involved id="330">Smallville Transit Authority</organization-involved>
-    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/02/11 23:43:37 EST" id="4" name="IED threat warning">
+    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/02/16 11:10:41 EST" id="4" name="IED threat warning">
       <description>The IED attack warning is disseminated within the rail transit system.</description>
       <trigger-event id="8">Bomb threat</trigger-event>
       <phase id="3">Responding</phase>
@@ -1356,13 +1357,13 @@
         <maxDelay>immediately</maxDelay>
       </flow>
     </segment>
-    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/02/11 23:43:37 EST" id="107" name="Local response plan activated">
+    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/02/16 11:10:41 EST" id="107" name="Local response plan activated">
       <description>Train station or bus terminal executes its threat response plan</description>
       <trigger-event id="8">Bomb threat</trigger-event>
       <phase id="3">Responding</phase>
       <risk>
         <type>BodilyHarm</type>
-        <organization id="9" kind="Type">Public Transit Agency</organization>
+        <organization id="16" kind="Type">Transit Operations</organization>
         <severity>Major</severity>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
@@ -1374,7 +1375,7 @@
         <jurisdiction id="110" kind="Type">Transit system node</jurisdiction>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="BodilyHarm">Public Transit Agency</mitigation>
+        <mitigation type="BodilyHarm">Transit Operations</mitigation>
         <asTeam>false</asTeam>
       </part>
       <part id="132">
@@ -1383,7 +1384,7 @@
         <organization id="9" kind="Type">Public Transit Agency</organization>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="BodilyHarm">Public Transit Agency</mitigation>
+        <mitigation type="BodilyHarm">Transit Operations</mitigation>
         <asTeam>false</asTeam>
       </part>
       <part id="138">
@@ -1401,7 +1402,7 @@
         <organization id="9" kind="Type">Public Transit Agency</organization>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="BodilyHarm">Public Transit Agency</mitigation>
+        <mitigation type="BodilyHarm">Transit Operations</mitigation>
         <asTeam>false</asTeam>
       </part>
       <flow id="137" name="Inspect baggages">
@@ -1609,7 +1610,7 @@
         <maxDelay>1 minute</maxDelay>
       </flow>
     </segment>
-    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/02/11 23:43:37 EST" id="150" name="IED attack suspected">
+    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/02/16 11:10:41 EST" id="150" name="IED attack suspected">
       <description>A suspicious activity is reported</description>
       <trigger-event id="2">Attack suspected</trigger-event>
       <phase id="3">Responding</phase>
@@ -1624,7 +1625,7 @@
         <task>Assisting law enforcement</task>
         <role id="161" kind="Type">Train Conductor</role>
         <organization id="9" kind="Type">Public Transit Agency</organization>
-        <location id="201" kind="Type">Rail station at risk</location>
+        <location id="36" kind="Type">Rail station</location>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <asTeam>false</asTeam>
@@ -1633,7 +1634,7 @@
         <task>Coordinating threat response</task>
         <role id="504" kind="Type">Station Manager</role>
         <organization id="16" kind="Type">Transit Operations</organization>
-        <location id="201" kind="Type">Rail station at risk</location>
+        <location id="36" kind="Type">Rail station</location>
         <jurisdiction id="36" kind="Type">Rail station</jurisdiction>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
@@ -1657,9 +1658,10 @@
       </part>
       <part id="235">
         <task>Driving train to safe location</task>
-        <role id="504" kind="Type">Station Manager</role>
+        <role id="74" kind="Type">Manager</role>
+        <actor id="522" kind="Type">Certified Train Operator</actor>
         <organization id="9" kind="Type">Public Transit Agency</organization>
-        <location id="201" kind="Type">Rail station at risk</location>
+        <location id="36" kind="Type">Rail station</location>
         <jurisdiction id="36" kind="Type">Rail station</jurisdiction>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
@@ -1670,7 +1672,7 @@
         <task>Evacuating train and station</task>
         <role id="19" kind="Type">Employee</role>
         <organization id="9" kind="Type">Public Transit Agency</organization>
-        <location id="201" kind="Type">Rail station at risk</location>
+        <location id="36" kind="Type">Rail station</location>
         <jurisdiction id="36" kind="Type">Rail station</jurisdiction>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
@@ -1873,7 +1875,7 @@
           <address></address>
         </channel>
         <all>false</all>
-        <significanceToSource>Terminates</significanceToSource>
+        <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
         <classificationsLinked>true</classificationsLinked>
@@ -2070,6 +2072,24 @@
         <askedFor>false</askedFor>
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>1 minute</maxDelay>
+      </flow>
+      <flow id="527" name="Train parked out of station">
+        <source>
+          <part id="235"/>
+        </source>
+        <target>
+          <part id="151"/>
+        </target>
+        <channel>
+          <medium id="-984" kind="Type">Cell</medium>
+          <address></address>
+        </channel>
+        <all>false</all>
+        <significanceToSource>Terminates</significanceToSource>
+        <significanceToTarget>Terminates</significanceToTarget>
+        <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
+        <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="258" name="Evacuation complete">
         <source>

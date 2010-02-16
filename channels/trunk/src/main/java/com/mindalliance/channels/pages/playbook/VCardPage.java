@@ -4,6 +4,7 @@ import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
+import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Job;
 import com.mindalliance.channels.model.ModelEntity;
@@ -17,6 +18,8 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.protocol.http.servlet.AbortWithHttpStatusException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -30,17 +33,25 @@ import java.util.Set;
  */
 public class VCardPage extends WebPage {
 
-    /** URL adjustment for image attachments. */
+    /**
+     * URL adjustment for image attachments.
+     */
     private static final String PREFIX = "../../";
 
-    /** The query service. */
+    /**
+     * The query service.
+     */
     @SpringBean
     private QueryService queryService;
 
-    /** The target actor for this card. */
+    /**
+     * The target actor for this card.
+     */
     private Actor actor;
 
-    /** The flow context this card. */
+    /**
+     * The flow context this card.
+     */
     private Flow flow;
 
     public VCardPage( PageParameters parameters ) {
@@ -81,14 +92,25 @@ public class VCardPage extends WebPage {
     private void init( Organization organization, Job job ) {
         String title = flow.getName();
         add(
-            new Label( "pagetitle", title ),
-            new Label( "name", title ),
-            new Label( "desc", flow.getDescription() ),
-
-            new VCardPanel( "person", job.resourceSpec( organization ), PREFIX ),
-            organization == null ? new WebMarkupContainer( "org" ).setVisible( false )
-                                 : new VCardPanel( "org", new ResourceSpec( organization ), PREFIX )
+                new Label( "pagetitle", title ),
+                new Label( "name", title ),
+                new VCardPanel( "person", job.resourceSpec( organization ), PREFIX ),
+                organization == null ? new WebMarkupContainer( "org" ).setVisible( false )
+                        : new VCardPanel( "org", new ResourceSpec( organization ), PREFIX )
         );
+        addEOIList();
+    }
+
+    private void addEOIList() {
+        ListView<ElementOfInformation> eoiList = new ListView<ElementOfInformation>(
+                "eois",
+                flow.getEois()
+        ) {
+            protected void populateItem( ListItem<ElementOfInformation> item ) {
+                item.add( new Label( "name", item.getModelObject().getContent() ) );
+            }
+        };
+        add( eoiList );
     }
 
     private <T extends ModelObject> T getParm( String parm, Class<T> parmClass ) {

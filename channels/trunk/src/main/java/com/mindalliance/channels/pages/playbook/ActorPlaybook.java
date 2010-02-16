@@ -43,7 +43,7 @@ public class ActorPlaybook extends PlaybookPage {
         init( getQueryService(), getActor() );
     }
 
-    private void init( QueryService service, final Actor actor ) {
+    private void init( final QueryService service, final Actor actor ) {
         String name = actor.getName();
 
         add(
@@ -71,7 +71,7 @@ public class ActorPlaybook extends PlaybookPage {
                     protected void populateItem( ListItem<FlowSet> item ) {
                         FlowSet flowSet = item.getModelObject();
                         item.add(
-                                new Label( "spec", flowSet.getSourceString() ).setRenderBodyOnly( true ),
+                                new Label( "spec", flowSet.getSourceString( ) ).setRenderBodyOnly( true ),
                                 newFlowList( actor, flowSet.getSynonymSets() ),
                                 createPicture( "pic", flowSet.getActor(), "../", DEFAULT_PIC ) );
                     }
