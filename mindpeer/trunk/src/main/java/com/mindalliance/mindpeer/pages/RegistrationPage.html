@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<head>
+    <title>MindPeer Registration</title>
+    <style type="text/css">
+        #errors  { color: darkred; }
+        .invalid { background-color: pink; }
+    </style>
+</head>
+<body>
+    <h1>MindPeer Registration</h1>
+
+    <p>Fill in the following form... yada, yada...</p>
+
+    <div id="errors" wicket:id="feedback"/>
+
+    <form wicket:id="form">
+        <table>
+            <tr><th align="right">Username:</th><td><input type="text" wicket:id="username"/></td></tr>
+            <tr><th align="right">Password:</th><td><input type="password" wicket:id="password"/></td></tr>
+            <tr><th align="right">Verify:</th><td><input type="password" wicket:id="verify"/></td></tr>
+            <tr><th align="right">Email:</th><td><input type="text" wicket:id="email"/></td></tr>
+            <tr><td colspan="2"><input type="submit" value="Submit"/></td></tr>
+        </table>
+    </form>
+</body>
+</html>

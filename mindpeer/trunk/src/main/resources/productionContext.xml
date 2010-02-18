@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+	    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xmlns:sec="http://www.springframework.org/schema/security"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+
+    xsi:schemaLocation="
+	    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+
+	default-autowire="byName">
+
+    <!-- Production settings -->
+    <context:property-placeholder system-properties-mode="FALLBACK" location="file://${user.home}/mindpeer.properties"/>
+
+    <bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="mindpeerDB" />
+	</bean>
+
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="smtp.gmail.com" />
+        <property name="port" value="465" />
+        <property name="protocol" value="smtps" />
+        <property name="username" value="${gmail.user}"/>
+        <property name="password" value="${gmail.password}"/>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtps.auth">true</prop>
+                <prop key="mail.smtps.starttls.enable">true</prop>
+                <prop key="mail.smtps.debug">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="wicketApplication" class="com.mindalliance.mindpeer.WicketApplication"/>
+
+</beans>

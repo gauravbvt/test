@@ -4,29 +4,25 @@
 package com.mindalliance.mindpeer;
 
 import com.mindalliance.mindpeer.dao.UserDao;
-import com.mindalliance.mindpeer.model.IUser;
-import com.mindalliance.mindpeer.model.Profile;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import com.mindalliance.mindpeer.model.User;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
+import static org.mockito.Matchers.any;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import org.mockito.MockitoAnnotations;
+import org.mockito.internal.verification.Times;
 
 /**
  * ...
  */
-@RunWith( SpringJUnit4ClassRunner.class )
-@ContextConfiguration
 public class TestDataInitializer {
 
     private DataInitializer di;
 
-    @Autowired
+    @Mock
     private UserDao userDao;
 
     /**
@@ -37,21 +33,32 @@ public class TestDataInitializer {
 
     @Before
     public void init() {
+        MockitoAnnotations.initMocks( this );
+
+        SecuredAspects.bypass( true );
+
         di = new DataInitializer();
         di.setUserDao( userDao );
     }
 
     @Test
-    @Transactional
-    @Rollback
-    public void testInit() {
-        di.dataInit();
-        assertEquals( 2L, (long) userDao.countAll() );
+    public void testInit() throws Exception {
+        Mockito.when( userDao.countAll() ).thenReturn( 0 );
 
-        IUser denis = userDao.findByName( "denis" );
-        assertNotNull( denis );
-        Profile profile = denis.getProfile();
-        assertNotNull( profile );
-        assertEquals( denis, profile.getUser() );
+        di.afterPropertiesSet();
+
+        verify( userDao ).countAll();
+        verify( userDao, new Times( 2 ) ).save( (User) any() );
+        verifyNoMoreInteractions( userDao );
+    }
+
+    @Test
+    public void testSkipInit() throws Exception {
+        Mockito.when( userDao.countAll() ).thenReturn( 1 );
+
+        di.afterPropertiesSet();
+
+        verify( userDao ).countAll();
+        verifyNoMoreInteractions( userDao );
     }
 }

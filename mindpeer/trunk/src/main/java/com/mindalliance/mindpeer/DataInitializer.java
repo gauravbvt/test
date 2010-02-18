@@ -5,13 +5,13 @@ package com.mindalliance.mindpeer;
 
 import com.mindalliance.mindpeer.dao.UserDao;
 import com.mindalliance.mindpeer.model.User;
-import org.springframework.security.annotation.Secured;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Initializer for an empty database.
  */
-public class DataInitializer {
+public class DataInitializer implements InitializingBean {
 
     private UserDao userDao;
 
@@ -30,27 +30,25 @@ public class DataInitializer {
     }
 
     /**
-     * Add some default users.
+     * Called after all properties have been initialized.
+     * @throws Exception on errors
      */
     @Transactional
-    @Secured( "RUN_AS_SYSTEM" )
-    public void dataInit() {
-
+    public void afterPropertiesSet() throws Exception {
         if ( userDao.countAll() == 0 ) {
             User admin = new User();
-            admin.setUsername( "denis" );
-            admin.setPassword( "cfbd5ca29de6baeaa5e340da5c618e932500b748" );
-            admin.setEmail( "denis@mind-alliance.com" );
-            admin.setConfirmation( null );
+            admin.setUsername( "admin" );
+            admin.setPassword( "52357ffc0a5ed1f7fb909060187249b3c278a7da" );
+            admin.setEmail( "support@mind-alliance.com" );
+            admin.setConfirmed( true );
             userDao.save( admin );
 
             User guest = new User();
             guest.setUsername( "guest" );
             guest.setPassword( "da39a3ee5e6b4b0d3255bfef95601890afd80709" );
             guest.setEmail( "guest@example.com" );
-            guest.setConfirmation( null );
+            guest.setConfirmed( true );
             userDao.save( guest );
-
         }
     }
 }

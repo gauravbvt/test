@@ -3,11 +3,10 @@
 
 package com.mindalliance.mindpeer.model;
 
-import org.springframework.security.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * Interface version of User, for lack of AspectJ compile-time support for security aspects.
- * @todo Figure out how to compile correctly with AspectJ
  */
 public interface IUser extends UserDetails {
 

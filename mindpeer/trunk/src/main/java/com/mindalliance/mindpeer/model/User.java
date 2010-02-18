@@ -3,16 +3,18 @@
 
 package com.mindalliance.mindpeer.model;
 
-import org.springframework.security.GrantedAuthority;
-import org.springframework.security.GrantedAuthorityImpl;
-import org.springframework.security.annotation.Secured;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+// TODO Secure correctly for new account creation
 
 /**
  * A MindPeer user and its relevant information.
@@ -21,10 +23,10 @@ import java.util.List;
 public class User extends ModelObject implements IUser {
 
     /** Minimum confirmation number. */
-    private static final long TICKET_MIN = 1000L;
+    public static final long TICKET_MIN = 1000L;
 
     /** Range of confirmation number (maximum = MIN + RANGE). */
-    private static final double TICKET_RANGE = 1000000.0;
+    public static final double TICKET_RANGE = 1000000.0;
 
     /** State of a user account. */
     public enum State {
@@ -38,7 +40,7 @@ public class User extends ModelObject implements IUser {
         Terminated
     }
 
-    /** The user name (not the fullname). Unique for active users. */
+    /** The user name (not the fullname). Unique for all users. */
     @Column( unique = true, nullable = false )
     private String username;
 
@@ -49,12 +51,16 @@ public class User extends ModelObject implements IUser {
     /** The SHA-encoded password. */
     private String password;
 
-    /** The validated email address. */
+    /** The validated email address. Unique for all users.*/
+    @Column( unique = true, nullable = false )
     private String email;
 
     /** Confimation number for activation. Null after account has been activated. */
     @Column( nullable = true )
     private Long confirmation;
+
+    /** True after the user has visited the confirmation link. */
+    private boolean confirmed;
 
     @OneToOne( cascade = CascadeType.ALL, optional = true )
     private Profile profile;
@@ -74,8 +80,8 @@ public class User extends ModelObject implements IUser {
      */
     public State getState() {
         return enabled ?
-                    confirmation == null ? State.Registered
-                                         : State.Unconfirmed
+                    confirmed ? State.Registered
+                              : State.Unconfirmed
                   : State.Terminated;
     }
 
@@ -93,7 +99,6 @@ public class User extends ModelObject implements IUser {
      * @param enabled the new enabled state. Setting to false will mark the user as 'terminated'.
      *
      */
-    @Secured( { "ROLE_ADMIN", "ROLE_RUN_AS_SYSTEM" } )
     public void setEnabled( boolean enabled ) {
         this.enabled = enabled;
     }
@@ -111,7 +116,6 @@ public class User extends ModelObject implements IUser {
      * Sets the username of this user.
      * @param username the new username value.
      */
-    @Secured( "ROLE_ADMIN" )
     public void setUsername( String username ) {
         this.username = username;
     }
@@ -121,13 +125,13 @@ public class User extends ModelObject implements IUser {
      *
      * @return the authorities, sorted by natural key (never <code>null</code>)
      */
-    public GrantedAuthority[] getAuthorities() {
+    public Collection<GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> result = new ArrayList<GrantedAuthority>( 2 );
         result.add( new GrantedAuthorityImpl( "ROLE_USER" ) );
         if ( isAdmin() )
             result.add( new GrantedAuthorityImpl( "ROLE_ADMIN" ) );
 
-        return result.toArray( new GrantedAuthority[ result.size() ] );
+        return result;
     }
 
     /**
@@ -180,7 +184,6 @@ public class User extends ModelObject implements IUser {
      * Sets SHA1 checksum of the user's password.
      * @param password the new value.
      */
-    @Secured( { "ROLE_ADMIN", "USER" } )
     public void setPassword( String password ) {
         this.password = password;
     }
@@ -189,7 +192,6 @@ public class User extends ModelObject implements IUser {
      * Return the user's email.
      * @return the value of email
      */
-    @Secured( { "ROLE_USER" } )
     public String getEmail() {
         return email;
     }
@@ -198,7 +200,6 @@ public class User extends ModelObject implements IUser {
      * Sets the email of this user.
      * @param email the new email value.
      */
-    @Secured( { "ROLE_ADMIN", "USER" } )
     public void setEmail( String email ) {
         this.email = email;
     }
@@ -217,9 +218,18 @@ public class User extends ModelObject implements IUser {
      * unconfirmed (and disabled) until the link is followed.
      * @param confirmation the new confirmation number value.
      */
-    @Secured( { "ROLE_ADMIN", "ROLE_RUN_AS_SYSTEM" } )
     public void setConfirmation( Long confirmation ) {
         this.confirmation = confirmation;
+    }
+
+    /**
+     * Test if this user is locked and waiting for a specific confirmation number.
+     *
+     * @param received the given confirmation
+     * @return true if numbers match
+     */
+    public boolean isConfirmableWith( Long received ) {
+        return confirmation != null && confirmation.equals( received );
     }
 
     /**
@@ -234,8 +244,33 @@ public class User extends ModelObject implements IUser {
      * Sets the profile of this User.
      * @param profile the new profile value.
      */
-    @Secured( "ROLE_RUN_AS_SYSTEM" )
     public void setProfile( Profile profile ) {
         this.profile = profile;
+    }
+
+    /**
+     * Return true if the user visited the confirmation link at least once.
+     * @return the value of confirmed
+     */
+    public boolean isConfirmed() {
+        return confirmed;
+    }
+
+    /**
+     * Mark the user as confirmed (or requiring confirmation.
+     * @param confirmed the new confirmed status.
+     *
+     */
+    public void setConfirmed( boolean confirmed ) {
+        this.confirmed = confirmed;
+    }
+
+    /**
+     * Returns a string representation of the object.
+     * @return a string representation of the object.
+     */
+    @Override
+    public String toString() {
+        return "User[" + getId() + ":" + username + "]";
     }
 }

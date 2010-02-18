@@ -6,11 +6,11 @@ package com.mindalliance.mindpeer.dao.jpa;
 import com.mindalliance.mindpeer.dao.UserDao;
 import com.mindalliance.mindpeer.model.User;
 import org.springframework.orm.jpa.JpaCallback;
-import org.springframework.security.Authentication;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.userdetails.UserDetails;
-import org.springframework.security.userdetails.UserDetailsService;
-import org.springframework.security.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -34,10 +34,32 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao, UserD
      * @return the user or null if not found
      */
     public User findByName( final String name ) {
+        if ( name == null )
+            return null;
+
         return (User) getJpaTemplate().execute( new JpaCallback() {
             public Object doInJpa( EntityManager em ) {
                 Query query = em.createQuery(
-                        "select e from User e where username = '" + name + '\'' );
+                        "select e from User e where username = '" + name.toLowerCase() + '\'' );
+                List<?> resultList = query.getResultList();
+                return resultList.isEmpty() ? null : resultList.get( 0 );
+            }
+        } );
+    }
+
+    /**
+     * Find a user given its email address.
+     * @param email the email of the user
+     * @return the user or null if not found
+     */
+    public User findByEmail( final String email ) {
+        if ( email == null )
+            return null;
+
+        return (User) getJpaTemplate().execute( new JpaCallback() {
+            public Object doInJpa( EntityManager em ) {
+                Query query = em.createQuery(
+                        "select e from User e where email = '" + email + '\'' );
                 List<?> resultList = query.getResultList();
                 return resultList.isEmpty() ? null : resultList.get( 0 );
             }
@@ -51,7 +73,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao, UserD
      * username that is of a different case than what was actually requested..
      *
      * @param username the username presented to the
-     * {@link org.springframework.security.providers.dao.DaoAuthenticationProvider}
+     * {@link org.springframework.security.authentication.dao.DaoAuthenticationProvider}
      *
      * @return a fully populated user record (never <code>null</code>)
      */

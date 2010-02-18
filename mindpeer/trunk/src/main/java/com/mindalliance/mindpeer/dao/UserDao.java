@@ -18,6 +18,13 @@ public interface UserDao  extends Dao<User> {
     User findByName( String name );
 
     /**
+     * Find a user given its email address.
+     * @param email the email of the user
+     * @return the user or null if not found
+     */
+    User findByEmail( String email );
+
+    /**
      * Find current user.
      * @return null if not authenticated
      */

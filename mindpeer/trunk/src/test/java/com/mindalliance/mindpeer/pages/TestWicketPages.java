@@ -1,53 +1,84 @@
 package com.mindalliance.mindpeer.pages;
 
-import com.mindalliance.mindpeer.WicketApplication;
-import com.mindalliance.mindpeer.dao.UserDao;
-import com.mindalliance.mindpeer.model.User;
-import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-import org.apache.wicket.spring.test.ApplicationContextMock;
-import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Before;
+import com.mindalliance.mindpeer.IntegrationTest;
+import org.apache.wicket.PageParameters;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
- * Test dynamic web pages.
+ * Test dynamic web pages loading.
+ * This only checks that wicket:id defined in templates are processed in java, and vice-versa.
  */
-public class TestWicketPages {
 
-    protected WicketTester tester;
+public class TestWicketPages extends IntegrationTest {
 
-    @Before
-    public void setup() {
-        final ApplicationContextMock acm = new ApplicationContextMock();
-        UserDao userDao = Mockito.mock( UserDao.class );
-        User user = Mockito.mock( User.class );
-        acm.putBean( "userDao", userDao );
-        acm.putBean( "user", user );
+    /**
+     * Create a new TestWicketPages instance.
+     */
+    public TestWicketPages() {
+    }
 
-        tester = new WicketTester( new WicketApplication() {
-            /* (non-Javadoc)
-                * @see com.mindalliance.mindpeer.WicketApplication#getGuiceInjector()
-                */
-            @Override
-            protected SpringComponentInjector getSpringInjector() {
-                return new SpringComponentInjector( this, acm );
+    /**
+     * ...
+     */
+    @Test
+    public void testStartPage() {
+        runInRequest( "", new Runnable() {
+            public void run() {
+                tester.startPage( PublicHomePage.class );
+            }
+        } );
+
+
+
+    }
+
+    /**
+     * ...
+     */
+    @Test
+    public void testUserPage() {
+        runInRequest( "home.html", guest, "", new Runnable() {
+            public void run() {
+                tester.startPage( UserHomePage.class );
             }
         } );
     }
 
+    /**
+     * ...
+     */
     @Test
-    public void testStartPage() {
-        tester.startPage( PublicHomePage.class );
+    public void testUserPage2() {
+        runInRequest( "home.html", guest, "", new Runnable() {
+            public void run() {
+                tester.startPage( UserHomePage.class, new PageParameters( "username=guest" ) );
+            }
+        } );
     }
 
+    /**
+     * ...
+     */
     @Test
-    public void testUserPage() {
-        tester.startPage( UserHomePage.class );
+    public void testLoginPage() {
+        runInRequest( "home.html", new Runnable() {
+            public void run() {
+                tester.startPage( LoginPage.class );
+            }
+        } );
     }
 
+    /**
+     * ...
+     */
     @Test
-    public void testRegisterPage() {
-        tester.startPage( RegisterPage.class );
+    public void testConfirmationSent() {
+        runInRequest( "home.html", new Runnable() {
+            public void run() {
+                PageParameters pageParameters = new PageParameters();
+                pageParameters.add( "email", "bla@somewhere.com" );
+                tester.startPage( ConfirmationSent.class, pageParameters );
+            }
+        } );
     }
 }

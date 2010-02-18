@@ -7,11 +7,14 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.NotReadablePropertyException;
-import org.springframework.security.ConfigAttribute;
-import org.springframework.security.ConfigAttributeDefinition;
-import org.springframework.security.SecurityConfig;
-import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
-import static org.springframework.security.vote.AccessDecisionVoter.*;
+import static org.springframework.security.access.AccessDecisionVoter.*;
+import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.access.SecurityConfig;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * ...
@@ -36,6 +39,11 @@ public class TestUserVoter {
         userVoter = new UserVoter();
         user1 = new User();
         user1.setId( 1L );
+    }
+
+    @Test
+    public void testSupportClass() {
+        assertTrue( userVoter.supports( Object.class ) );
     }
 
     /**
@@ -97,8 +105,11 @@ public class TestUserVoter {
      * @param attributeTokens of type String...
      * @return ConfigAttributeDefinition
      */
-    private static ConfigAttributeDefinition perms( String... attributeTokens ) {
-        return new ConfigAttributeDefinition( attributeTokens );
+    private static Collection<ConfigAttribute> perms( String... attributeTokens ) {
+        List<ConfigAttribute> result = new ArrayList<ConfigAttribute>();
+        for ( String s : attributeTokens )
+            result.add( new SecurityConfig( s ) );
+        return result;
     }
 
     public User getUser() {

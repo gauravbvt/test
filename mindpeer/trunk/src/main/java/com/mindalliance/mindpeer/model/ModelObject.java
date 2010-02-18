@@ -44,14 +44,21 @@ public abstract class ModelObject implements IClusterable {
     }
 
     /**
-     * {@inheritDoc}
+     * Equality test.
+     * @param obj an object to compare against
+     * @return true if a model object with the same id.
      */
     @Override
     public boolean equals( Object obj ) {
-        return this == obj
-            || obj != null
-               && getClass() == obj.getClass()
-               && id.equals( ( (ModelObject) obj ).getId() );
+        if ( this == obj )
+            return true;
+
+        if ( obj instanceof ModelObject ) {
+            Long thatId = ( (ModelObject) obj ).getId();
+            return id == null ? thatId == null : id.equals( thatId );
+        }
+
+        return false;
     }
 
     /**

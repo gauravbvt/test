@@ -5,6 +5,7 @@ package com.mindalliance.mindpeer.dao.jpa;
 
 import com.mindalliance.mindpeer.dao.Dao;
 import com.mindalliance.mindpeer.model.ModelObject;
+import org.slf4j.LoggerFactory;
 import org.springframework.orm.jpa.JpaCallback;
 import org.springframework.orm.jpa.support.JpaDaoSupport;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,19 +32,22 @@ public abstract class AbstractDaoImpl<T extends ModelObject> extends JpaDaoSuppo
     /** {@inheritDoc} */
     @Transactional
     public void delete( T object ) {
+        LoggerFactory.getLogger( getClass() ).debug( "Deleting {}", object );
         getJpaTemplate().remove( object );
     }
 
     /** {@inheritDoc} */
     @Transactional
     public T load( Serializable id ) {
-        return getJpaTemplate().find( domainClass, id );
+        return id == null ? null : getJpaTemplate().find( domainClass, id );
     }
 
     /** {@inheritDoc} */
     @Transactional
     public T save( T object ) {
-        return getJpaTemplate().merge( object );
+        T result = getJpaTemplate().merge( object );
+        LoggerFactory.getLogger( getClass() ).debug( "Saved {}", result );
+        return result;
     }
 
     /** {@inheritDoc} */

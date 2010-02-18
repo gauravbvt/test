@@ -3,11 +3,13 @@
 
 package com.mindalliance.mindpeer;
 
+import org.aspectj.lang.JoinPoint;
 import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.security.Authentication;
-import org.springframework.security.ConfigAttribute;
-import org.springframework.security.ConfigAttributeDefinition;
-import org.springframework.security.vote.AccessDecisionVoter;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.core.Authentication;
+
+import java.util.Collection;
 
 /**
  * User-based security voter.
@@ -64,8 +66,7 @@ public class UserVoter implements AccessDecisionVoter {
      *
      * @return always true
      */
-    @SuppressWarnings( { "RawUseOfParameterizedType" } )
-    public boolean supports( Class clazz ) {
+    public boolean supports( Class<?> clazz ) {
         return true;
     }
 
@@ -76,7 +77,7 @@ public class UserVoter implements AccessDecisionVoter {
      * or the <code>AccessDecisionVoter</code> can abstain (<code>ACCESS_ABSTAIN</code>) from
      * voting. Under no circumstances should implementing classes return any other value. If a
      * weighting of results is desired, this should be handled in a custom
-     * {@link org.springframework.security.AccessDecisionManager} instead.
+     * AccessDecisionManager instead.
      * </p>
      * <p>Unless an <code>AccessDecisionVoter</code> is specifically intended to vote on an access
      * control
@@ -92,24 +93,29 @@ public class UserVoter implements AccessDecisionVoter {
      *
      * @param authentication the caller invoking the method
      * @param object the secured object
-     * @param config the configuration attributes associated with the method being invoked
+     * @param configAttributes the configuration attributes associated with the method being invoked
      *
      * @return either {@link #ACCESS_GRANTED}, {@link #ACCESS_ABSTAIN} or {@link #ACCESS_DENIED}
      */
     public int vote(
-            Authentication authentication, Object object, ConfigAttributeDefinition config ) {
+            Authentication authentication, Object object,
+            Collection<ConfigAttribute> configAttributes ) {
+
         Object user = authentication.getPrincipal();
 
-        for ( Object ca : config.getConfigAttributes() ) {
-            String attribute = ( (ConfigAttribute) ca ).getAttribute();
+        for ( ConfigAttribute ca : configAttributes ) {
+            String attribute = ca.getAttribute();
+            Object target = object instanceof JoinPoint ? ( (JoinPoint) object ).getTarget()
+                                                        : object;
+
             if ( attribute.equals( PREFIX ) ) {
                 // Check if object is the principal
-                return user.equals( object ) ? ACCESS_GRANTED : ACCESS_DENIED;
+                return user.equals( target ) ? ACCESS_GRANTED : ACCESS_DENIED;
 
             } else if ( attribute.startsWith( LONG_PREFIX ) && !attribute.equals( LONG_PREFIX ) ) {
                 // Check if object property is the principal
                 String property = attribute.substring( LONG_PREFIX.length() );
-                Object value = new BeanWrapperImpl( object ).getPropertyValue( property );
+                Object value = new BeanWrapperImpl( target ).getPropertyValue( property );
                 return user.equals( value ) ? ACCESS_GRANTED : ACCESS_DENIED;
             }
         }
