@@ -5,6 +5,7 @@ import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public class SharingWithoutCommitments extends AbstractIssueDetector {
                 sb.append( "\nor make sure otherwise commitable individuals have the required clearances" );
             }
             issue.setRemediation( sb.toString() );
-            issue.setSeverity( Issue.Level.Minor );
+            issue.setSeverity( Severity.Minor );
             issues.add( issue );
         }
         return issues;

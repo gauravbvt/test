@@ -5,6 +5,7 @@ import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,21 +30,21 @@ public class StartedOrTerminatedPartWithoutTask extends AbstractIssueDetector {
                 DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
                 issue.setDescription( "The task is started during the plan segment but is not specified." );
                 issue.setRemediation( "Specify the task." );
-                issue.setSeverity( Issue.Level.Minor );
+                issue.setSeverity( Severity.Minor );
                 issues.add( issue );
             }
             if ( part.isTerminatesEventPhase() ) {
                 DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
                 issue.setDescription( "The task can terminate the plan segment but the task is not specified." );
                 issue.setRemediation( "Specify the task." );
-                issue.setSeverity( Issue.Level.Minor );
+                issue.setSeverity( Severity.Minor );
                 issues.add( issue );
             }
             if ( part.isTerminated() ) {
                 DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
                 issue.setDescription( "The task is terminated during plan segment but is not specified." );
                 issue.setRemediation( "Specify the task." );
-                issue.setSeverity( Issue.Level.Minor );
+                issue.setSeverity( Severity.Minor );
                 issues.add( issue );
             }
         }

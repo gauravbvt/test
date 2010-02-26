@@ -30,6 +30,7 @@ import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.model.Severity;
 import com.mindalliance.channels.nlp.Proximity;
 import com.mindalliance.channels.util.Play;
 
@@ -1049,7 +1050,7 @@ public interface QueryService extends Service {
      * @param part a part
      * @return an issue level
      */
-    Issue.Level getPartPriority( Part part );
+    Severity getPartPriority( Part part );
 
     /**
      * Find all actors personifying user with given username.

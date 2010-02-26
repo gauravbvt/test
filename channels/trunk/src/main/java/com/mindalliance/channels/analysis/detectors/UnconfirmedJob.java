@@ -5,6 +5,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Job;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,7 @@ public class UnconfirmedJob extends AbstractIssueDetector {
             Issue issue = makeIssue( Issue.COMPLETENESS, org );
             issue.setDescription( "Job " + job + " is implied from the plan and not confirmed." );
             issue.setRemediation( "Edit organization " + org + " and confirm the job (under \"details\")." );
-            issue.setSeverity( Issue.Level.Minor );
+            issue.setSeverity( Severity.Minor );
             issues.add( issue );
         }
         return issues;

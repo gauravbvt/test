@@ -8,6 +8,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.Severity;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.StrongConnectivityInspector;
 
@@ -60,7 +61,7 @@ public class CyclicTriggering extends AbstractIssueDetector {
                     }
                     issue.setDescription(sb.toString());
                     issue.setRemediation("Break the loop by having one of these tasks not trigger the other.");
-                    issue.setSeverity( Issue.Level.Major);
+                    issue.setSeverity( Severity.Major);
                     issues.add(issue);
                 }
             }

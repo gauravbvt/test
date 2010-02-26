@@ -4,6 +4,7 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Severity;
 import com.mindalliance.channels.model.TransmissionMedium;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class IncorrectMediumDelegation extends AbstractIssueDetector {
                         + "\" to \"" + delegate.getName() + "\""
                         + "\nor raise the security of \"" + delegate.getName() + "\""
                         + "\nor lower the security of \"" + medium.getName() + "\"" );
-                issue.setSeverity( Issue.Level.Major );
+                issue.setSeverity( Severity.Major );
                 issues.add( issue );
             }
         }
@@ -49,7 +50,7 @@ public class IncorrectMediumDelegation extends AbstractIssueDetector {
                         + "\" to \"" + delegate.getName() + "\""
                         + "\nor change the transmission mode of \"" + delegate.getName() + "\""
                         + "\nor change the transmission mode of \"" + medium.getName() + "\"" );
-                issue.setSeverity( Issue.Level.Major );
+                issue.setSeverity( Severity.Major );
                 issues.add( issue );
             }
 
@@ -60,7 +61,7 @@ public class IncorrectMediumDelegation extends AbstractIssueDetector {
                         + " which is redundant." );
                 issue.setRemediation( "Do not delegate \"" + medium.getName()
                         + "\" to \"" + delegate.getName() + "\"" );
-                issue.setSeverity( Issue.Level.Minor );
+                issue.setSeverity( Severity.Minor );
                 issues.add( issue );
             }
             issues.addAll( subsumedDelegate( medium, delegate ) );
@@ -98,7 +99,7 @@ public class IncorrectMediumDelegation extends AbstractIssueDetector {
                         + " given other delegated-to medium \"" + otherDelegate.getName() + "\"." );
                 issue.setRemediation( "Do not delegate to \"" + delegate.getName() + "\""
                         + "\nor do not delegate to \"" + otherDelegate.getName() + "\"" );
-                issue.setSeverity( Issue.Level.Minor );
+                issue.setSeverity( Severity.Minor );
                 issues.add( issue );
             }
         }

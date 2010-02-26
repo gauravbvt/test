@@ -4,6 +4,7 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,7 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
                         + entity.getName()
                         + "\n or modify the definition of " + type.getName()
                         + "\n or modify the definition of " + entity.getName() );
-                issue.setSeverity( Issue.Level.Minor );
+                issue.setSeverity( Severity.Minor );
                 issues.add( issue );
             }
             // Two types used are mutually inconsistent.
@@ -63,7 +64,7 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
                                  + "\n or change the definition of " + type.getName()
                                  + "\n or change the definition of " + otherType.getName()
                          );
-                         issue.setSeverity( Issue.Level.Minor );
+                         issue.setSeverity( Severity.Minor );
                          issues.add( issue );
                     }
                 }

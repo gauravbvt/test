@@ -37,7 +37,7 @@ public class Risk implements Serializable, Mappable {
     /**
      * Severity of risk.
      */
-    private Issue.Level severity;
+    private Severity severity;
     /**
      * Whether a risk ends with the segment that causes it.
      */
@@ -70,11 +70,11 @@ public class Risk implements Serializable, Mappable {
         this.organization = organization;
     }
 
-    public Issue.Level getSeverity() {
+    public Severity getSeverity() {
         return severity;
     }
 
-    public void setSeverity( Issue.Level severity ) {
+    public void setSeverity( Severity severity ) {
         this.severity = severity;
     }
 

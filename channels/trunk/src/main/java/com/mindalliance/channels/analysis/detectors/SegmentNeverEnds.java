@@ -6,6 +6,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,7 @@ public class SegmentNeverEnds extends AbstractIssueDetector {
             issue.setRemediation( "Have the event end on its own if the plan segment is for a concurrent phase\n"
                     +"or have the event be an incident if the plan segment is for a pre-event phase\n "
                     + "or have at least one task in the plan segment terminate it." );
-            issue.setSeverity( Issue.Level.Major );
+            issue.setSeverity( Severity.Major );
             issues.add( issue );
         }
         return issues;

@@ -46,7 +46,7 @@ public class UserIssue extends ModelObject implements Issue {
     /**
      * The issue's severity
      */
-    private Issue.Level severity = Issue.Level.Minor;
+    private Severity severity = Severity.Minor;
 
     public UserIssue() {
     }
@@ -124,11 +124,11 @@ public class UserIssue extends ModelObject implements Issue {
         return false;
     }
 
-    public Level getSeverity() {
+    public Severity getSeverity() {
         return severity;
     }
 
-    public void setSeverity( Level severity ) {
+    public void setSeverity( Severity severity ) {
         this.severity = severity;
     }
 

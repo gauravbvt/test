@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class InsufficientClearance extends AbstractIssueDetector {
                     if ( flow.isCritical() ) {
                         issue.setSeverity( getQueryService().getPartPriority( (Part) flow.getTarget() ) );
                     } else {
-                        issue.setSeverity( Issue.Level.Minor );
+                        issue.setSeverity( Severity.Minor );
                     }
                     issues.add( issue );
                 } else if ( actor.isUnknown() ) {
@@ -59,7 +60,7 @@ public class InsufficientClearance extends AbstractIssueDetector {
                     if ( flow.isCritical() ) {
                         issue.setSeverity( getQueryService().getPartPriority( (Part) flow.getTarget() ) );
                     } else {
-                        issue.setSeverity( Issue.Level.Minor );
+                        issue.setSeverity( Severity.Minor );
                     }
                     issues.add( issue );
                 }

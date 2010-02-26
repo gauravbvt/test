@@ -6,6 +6,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Severity;
 import com.mindalliance.channels.util.Matcher;
 
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class RedundantPart extends AbstractIssueDetector {
                     "This task is restated "
                             + ( ( count == 1 ) ? "once." : count + " times." ) );
             issue.setRemediation( "Remove redundant task\nor make the repeated tasks different." );
-            issue.setSeverity( Issue.Level.Minor );
+            issue.setSeverity( Severity.Minor );
             issues.add( issue );
         }
         return issues;

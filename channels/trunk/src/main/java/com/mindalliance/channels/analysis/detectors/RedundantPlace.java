@@ -4,6 +4,7 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Severity;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -29,7 +30,7 @@ public class RedundantPlace extends AbstractIssueDetector {
         List<Place> equivalentPlaces = findPlacesEquivalentTo( place );
         if ( !equivalentPlaces.isEmpty() ) {
             Issue issue = makeIssue( Issue.VALIDITY, place );
-            issue.setSeverity( Issue.Level.Minor );
+            issue.setSeverity( Severity.Minor );
             StringBuilder sb = new StringBuilder();
             Iterator<Place> iter = equivalentPlaces.iterator();
             while ( iter.hasNext() ) {

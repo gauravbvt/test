@@ -3,6 +3,7 @@ package com.mindalliance.channels.analysis.detectors;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Severity;
 import com.mindalliance.channels.model.TransmissionMedium;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class MediumWithoutMode extends AbstractIssueDetector {
                     + "\" is undetermined (unicast is assumed).");
             issue.setRemediation( "Set the transmission mode to either Unicast, Multicast or Broadcast"
             + "\nor tag \"" + medium.getName() + "\" with another medium for which the transmission mode is known");
-            issue.setSeverity( Issue.Level.Major);
+            issue.setSeverity( Severity.Major);
             issues.add(issue);
         }
         return issues;

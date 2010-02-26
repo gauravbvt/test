@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class FlowWithUndefinedTarget extends AbstractIssueDetector {
             DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, "target" );
             issue.setDescription( "The target task is not defined." );
             issue.setRemediation( "Name the individual\nor name the role\nor name the organization of the target task." );
-            issue.setSeverity( Issue.Level.Major );
+            issue.setSeverity( Severity.Major );
             issues.add( issue );
         }
         return issues;

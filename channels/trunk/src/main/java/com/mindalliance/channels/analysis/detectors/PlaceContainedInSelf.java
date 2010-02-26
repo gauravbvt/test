@@ -4,6 +4,7 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class PlaceContainedInSelf extends AbstractIssueDetector {
         Place loopy = place.getLoopyContainingPlace();
         if ( loopy != null ) {
             Issue issue = makeIssue( Issue.VALIDITY, place );
-            issue.setSeverity( Issue.Level.Major );
+            issue.setSeverity( Severity.Major );
             issue.setDescription( place.getName()
                     + " is within "
                     + loopy.getName()

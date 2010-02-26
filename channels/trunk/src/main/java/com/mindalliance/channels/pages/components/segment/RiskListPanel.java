@@ -5,11 +5,11 @@ import com.mindalliance.channels.command.commands.RemoveRisk;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.Severity;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
@@ -117,17 +117,17 @@ public class RiskListPanel extends AbstractCommandablePanel {
 
     private void addSeverityCell( final ListItem<RiskWrapper> item ) {
         final RiskWrapper wrapper = item.getModelObject();
-        final List<Issue.Level> candidateLevels = getCandidateLevels();
-        DropDownChoice<Issue.Level> severityChoices = new DropDownChoice<Issue.Level>(
+        final List<Severity> candidateLevels = getCandidateLevels();
+        DropDownChoice<Severity> severityChoices = new DropDownChoice<Severity>(
                 "severity",
-                new PropertyModel<Issue.Level>( wrapper, "severity" ),
+                new PropertyModel<Severity>( wrapper, "severity" ),
                 candidateLevels,
-                new IChoiceRenderer<Issue.Level>() {
-                    public Object getDisplayValue( Issue.Level level ) {
+                new IChoiceRenderer<Severity>() {
+                    public Object getDisplayValue( Severity level ) {
                         return level == null ? "Select a severity" : level.getLabel();
                     }
 
-                    public String getIdValue( Issue.Level level, int index ) {
+                    public String getIdValue( Severity level, int index ) {
                         return Integer.toString( index );
                     }
                 } );
@@ -269,8 +269,8 @@ public class RiskListPanel extends AbstractCommandablePanel {
         }
     }
 
-    private List<Issue.Level> getCandidateLevels() {
-        return Arrays.asList( Issue.Level.values() );
+    private List<Severity> getCandidateLevels() {
+        return Arrays.asList( Severity.values() );
     }
 
     private List<Risk.Type> getCandidateTypes() {
@@ -419,11 +419,11 @@ public class RiskListPanel extends AbstractCommandablePanel {
             }
         }
 
-        public Issue.Level getSeverity() {
+        public Severity getSeverity() {
             return risk.getSeverity();
         }
 
-        public void setSeverity( Issue.Level value ) {
+        public void setSeverity( Severity value ) {
             if ( markedForCreation ) {
                 risk.setSeverity( value );
                 addIfComplete();

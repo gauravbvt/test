@@ -4,6 +4,7 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,7 @@ public class PartWithActorOrRoleButNoOrganization extends AbstractIssueDetector 
                     + (part.hasActualActor() ? "an individual" : "")
                     + " but does not specify an organization." );
             issue.setRemediation( "Specify the organization for this task." );
-            issue.setSeverity( Issue.Level.Major );
+            issue.setSeverity( Severity.Major );
             issues.add( issue );
         }
         return issues;

@@ -6,6 +6,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Severity;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -42,7 +43,7 @@ public class InconsistentImpactOnTargetPart extends AbstractIssueDetector {
                         + similar.getRequirementTitle()
                         + "' is not." );
                 issue.setRemediation( "Make both or neither critical." );
-                issue.setSeverity( Issue.Level.Minor );
+                issue.setSeverity( Severity.Minor );
                 issues.add( issue );
             } else if ( similar.isTriggeringToTarget() != commitment.isTriggeringToTarget() ) {
                 DetectedIssue issue = makeIssue( Issue.VALIDITY, commitment );
@@ -54,7 +55,7 @@ public class InconsistentImpactOnTargetPart extends AbstractIssueDetector {
                         + similar.getRequirementTitle()
                         + "' does not." );
                 issue.setRemediation( "Have both trigger the task that consumes the information\nor have neither do it." );
-                issue.setSeverity( Issue.Level.Minor );
+                issue.setSeverity( Severity.Minor );
                 issues.add( issue );
             } else if ( similar.isTerminatingToTarget() != commitment.isTerminatingToTarget() ) {
                 DetectedIssue issue = makeIssue( Issue.VALIDITY, commitment );
@@ -66,7 +67,7 @@ public class InconsistentImpactOnTargetPart extends AbstractIssueDetector {
                         + similar.getRequirementTitle()
                         + "' does not." );
                 issue.setRemediation( "Have both terminate the task that consumes the information\nor have neither." );
-                issue.setSeverity( Issue.Level.Minor );
+                issue.setSeverity( Severity.Minor );
                 issues.add( issue );
             }
         }

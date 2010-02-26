@@ -920,8 +920,8 @@ public class Part extends Node implements GeoLocatable {
      * @return a severity level
      */
     @Transient
-    public Issue.Level getMaxMitigatedRiskSeverity() {
-        Issue.Level maxSeverity = null;
+    public Severity getMaxMitigatedRiskSeverity() {
+        Severity maxSeverity = null;
         List<Risk> risks = new ArrayList<Risk>( getMitigations() );
         if ( !risks.isEmpty() ) {
             Collections.sort( risks, new Comparator<Risk>() {

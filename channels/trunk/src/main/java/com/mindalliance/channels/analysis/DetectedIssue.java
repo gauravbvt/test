@@ -2,6 +2,7 @@ package com.mindalliance.channels.analysis;
 
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Severity;
 import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Transient;
@@ -50,7 +51,7 @@ public class DetectedIssue extends AnalysisObject implements Issue {
     /**
      * The issue's severity.
      */
-    private Issue.Level severity = Issue.Level.Minor;
+    private Severity severity = Severity.Minor;
 
     /**
      * Constructor.
@@ -218,11 +219,11 @@ public class DetectedIssue extends AnalysisObject implements Issue {
     /**
      * {@inheritDoc}
      */
-    public Level getSeverity() {
+    public Severity getSeverity() {
         return severity;
     }
 
-    public void setSeverity( Level severity ) {
+    public void setSeverity( Severity severity ) {
         this.severity = severity;
     }
 

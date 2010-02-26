@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Severity;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -48,7 +49,7 @@ public class AgreementWithoutCommitment extends AbstractIssueDetector {
                         + "\"" + agreement.getSummary( organization ) + "\"" );
                 issue.setRemediation( "Unconfirm the agreement"
                         + "\nor add flows that imply a commitment covered by the agreement" );
-                issue.setSeverity( Issue.Level.Minor );
+                issue.setSeverity( Severity.Minor );
                 issues.add( issue );
             }
         }

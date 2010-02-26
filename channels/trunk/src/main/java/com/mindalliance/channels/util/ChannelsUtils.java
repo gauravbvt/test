@@ -14,6 +14,7 @@ import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.InternalFlow;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Organization;
@@ -29,6 +30,8 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -159,12 +162,29 @@ public final class ChannelsUtils {
         state.put( "terminatesEventPhase", part.isTerminatesEventPhase() );
         state.put( "startsWithSegment", part.isStartsWithSegment() );
         state.put( "mitigations", new ArrayList<Risk>( part.getMitigations() ) );
-        if ( part.getInitiatedEvent() != null ) state.put( "actor", part.getInitiatedEvent().getName() );
-        if ( part.getActor() != null ) state.put( "actor", part.getActor().getName() );
-        if ( part.getRole() != null ) state.put( "role", part.getRole().getName() );
-        if ( part.getOrganization() != null ) state.put( "organization", part.getOrganization().getName() );
-        if ( part.getJurisdiction() != null ) state.put( "jurisdiction", part.getJurisdiction().getName() );
-        if ( part.getLocation() != null ) state.put( "location", part.getLocation().getName() );
+        if ( part.getInitiatedEvent() != null )
+            state.put(
+                    "initiatedEvent",
+                    part.getInitiatedEvent().getName() );
+        if ( part.getActor() != null )
+            state.put(
+                    "actor",
+                    Arrays.asList( part.getActor().getName(), part.getActor().isType() ) );
+        if ( part.getRole() != null )
+            state.put( "role",
+                    Arrays.asList( part.getRole().getName(), part.getRole().isType() ) );
+        if ( part.getOrganization() != null )
+            state.put(
+                    "organization",
+                    Arrays.asList( part.getOrganization().getName(), part.getOrganization().isType() ) );
+        if ( part.getJurisdiction() != null )
+            state.put(
+                    "jurisdiction",
+                    Arrays.asList( part.getJurisdiction().getName(), part.getJurisdiction().isType() ) );
+        if ( part.getLocation() != null )
+            state.put(
+                    "location",
+                    Arrays.asList( part.getLocation().getName(), part.getLocation().isType() ) );
         return state;
     }
 
@@ -176,7 +196,6 @@ public final class ChannelsUtils {
      * @param commander a commander
      */
     @SuppressWarnings( "unchecked" )
-    // TODO - BUG - does not deal with entity types
     public static void initPartFrom( Part part, Map<String, Object> state, Commander commander ) {
         QueryService queryService = commander.getQueryService();
         part.setDescription( (String) state.get( "description" ) );
@@ -190,41 +209,66 @@ public final class ChannelsUtils {
         part.setAttachments( new ArrayList<Attachment>( (ArrayList<Attachment>) state.get( "attachments" ) ) );
         part.setMitigations( new ArrayList<Risk>( (ArrayList<Risk>) state.get( "mitigations" ) ) );
         if ( state.get( "initiatedEvent" ) != null )
-            part.setInitiatedEvent( queryService.findOrCreate(
+            part.setInitiatedEvent( queryService.findOrCreateType(
                     Event.class,
                     (String) state.get( "initiatedEvent" ) ) );
         else
             part.setInitiatedEvent( null );
         if ( state.get( "actor" ) != null )
-            part.setActor( queryService.findOrCreate(
+            part.setActor( retrieveEntity(
                     Actor.class,
-                    (String) state.get( "actor" ) ) );
+                    state,
+                    "actor",
+                    queryService) ) ;
         else
             part.setActor( null );
         if ( state.get( "role" ) != null )
-            part.setRole( queryService.findOrCreate(
+            part.setRole( retrieveEntity(
                     Role.class,
-                    (String) state.get( "role" ) ) );
+                    state,
+                    "role",
+                    queryService ) );
         else
             part.setRole( null );
         if ( state.get( "organization" ) != null )
-            part.setOrganization( queryService.findOrCreate(
+            part.setOrganization( retrieveEntity(
                     Organization.class,
-                    (String) state.get( "organization" ) ) );
+                    state,
+                    "organization",
+                    queryService ) );
         else
             part.setOrganization( null );
         if ( state.get( "jurisdiction" ) != null )
-            part.setJurisdiction( queryService.findOrCreate(
+            part.setJurisdiction( retrieveEntity(
                     Place.class,
-                    (String) state.get( "jurisdiction" ) ) );
+                    state,
+                    "jurisdiction",
+                    queryService ) );
         else
             part.setJurisdiction( null );
         if ( state.get( "location" ) != null )
-            part.setLocation( queryService.findOrCreate(
+            part.setLocation( retrieveEntity(
                     Place.class,
-                    (String) state.get( "location" ) ) );
+                    state,
+                    "location",
+                    queryService ) );
         else
             part.setLocation( null );
+    }
+
+    private static <T extends ModelEntity> T retrieveEntity(
+            Class<T> entityClass,
+            Map<String, Object> state,
+            String key,
+            QueryService queryService ) {
+        Object[] vals = ((Collection)state.get( key )).toArray();
+        String name = (String)vals[0];
+        boolean type = (Boolean)vals[1];
+        if ( type ) {
+            return queryService.findOrCreateType( entityClass, name );
+        } else {
+            return queryService.findOrCreate( entityClass, name );
+        }
     }
 
     /**
@@ -451,10 +495,11 @@ public final class ChannelsUtils {
      * Resolve a node from an id.
      *
      * @param id           a long
-     * @param segment     a segment in context
+     * @param segment      a segment in context
      * @param queryService a query service
      * @return a node
-     * @throws com.mindalliance.channels.command.CommandException if not found
+     * @throws com.mindalliance.channels.command.CommandException
+     *          if not found
      */
     public static Node resolveNode(
             Long id,
@@ -489,7 +534,7 @@ public final class ChannelsUtils {
     /**
      * Find flow in segment given id.
      *
-     * @param id       a long
+     * @param id      a long
      * @param segment a segment
      * @return a flow
      * @throws CommandException if not found
@@ -505,6 +550,5 @@ public final class ChannelsUtils {
             throw new CommandException( "Can't find flow", e );
         }
     }
-
 
 }

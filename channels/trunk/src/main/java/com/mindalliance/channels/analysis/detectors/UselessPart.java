@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -68,7 +69,7 @@ public class UselessPart extends AbstractIssueDetector {
                         + "nor does it trigger or send information to a useful task." );
                 issue.setRemediation( "Have the task mitigate a risk\nor make sure at least one task that it"
                         + " directly or indirectly impacts does address a risk." );
-                issue.setSeverity( Issue.Level.Minor );
+                issue.setSeverity( Severity.Minor );
                 issues.add( issue );
             }
         }

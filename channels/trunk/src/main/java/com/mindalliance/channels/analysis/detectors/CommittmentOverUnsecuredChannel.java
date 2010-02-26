@@ -9,6 +9,7 @@ import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Severity;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -66,7 +67,7 @@ public class CommittmentOverUnsecuredChannel extends AbstractIssueDetector {
                                     + flow.getName()
                                     + "\""
                             );
-                            issue.setSeverity( Issue.Level.Major );
+                            issue.setSeverity( Severity.Major );
                             issues.add( issue );
                         }
                     }

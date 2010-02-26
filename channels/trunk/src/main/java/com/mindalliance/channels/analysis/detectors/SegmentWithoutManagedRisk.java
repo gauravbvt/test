@@ -5,6 +5,7 @@ import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class SegmentWithoutManagedRisk extends AbstractIssueDetector {
         Segment segment = (Segment) modelObject;
         if ( segment.getRisks().isEmpty() ) {
             DetectedIssue issue = makeIssue( Issue.VALIDITY, segment );
-            issue.setSeverity( Issue.Level.Major );
+            issue.setSeverity( Severity.Major );
             issue.setDescription( "The plan segment does not address any risk." );
             issue.setRemediation( "Identify one or more risks this plan segment is meant to eliminate or mitigate" );
             issues.add( issue );

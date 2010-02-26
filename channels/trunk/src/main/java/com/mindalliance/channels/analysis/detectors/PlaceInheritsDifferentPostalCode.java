@@ -4,6 +4,7 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class PlaceInheritsDifferentPostalCode extends AbstractIssueDetector {
                     && !withinPostalCode.isEmpty()
                     && !postalCode.equals( withinPostalCode ) ) {
                 Issue issue = makeIssue( Issue.VALIDITY, place );
-                issue.setSeverity( Issue.Level.Minor );
+                issue.setSeverity( Severity.Minor );
                 issue.setDescription( place.getName()
                         + " is within a place with a different postal code." );
                 issue.setRemediation( "Change the postal code\nor remove it." );

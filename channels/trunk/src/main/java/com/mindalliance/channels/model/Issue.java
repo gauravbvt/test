@@ -12,53 +12,6 @@ import java.io.Serializable;
  */
 public interface Issue extends Identifiable, Serializable {
 
-    public enum Level {
-        /**
-         * A minor issue
-         */
-        Minor,
-        /**
-         * A major issue
-         */
-        Major,
-        /**
-         * A severe issue
-         */
-        Severe;
-
-        /**
-         * A string representing the severity level.
-         *
-         * @return a String
-         */
-        public String getLabel() {
-            String label = toString();
-            if ( label.endsWith( "." ) ) {
-                return label;
-            } else {
-                return label + ".";
-            }
-        }
-
-        /**
-         * A sortable value.
-         *
-         * @return an int
-         */
-        public int getOrdinal() {
-            return ordinal();
-        }
-
-        /**
-         * Get name.
-         *
-         * @return a string
-         */
-        public String getName() {
-            return toString();
-        }
-    }
-
     /**
      * Type of issue having to do with validity.
      */
@@ -152,14 +105,14 @@ public interface Issue extends Identifiable, Serializable {
      *
      * @return a Level (Low, Medium or High)
      */
-    Level getSeverity();
+    Severity getSeverity();
 
     /**
      * Set the issue's severity.
      *
      * @param severity the severity level
      */
-    void setSeverity( Level severity );
+    void setSeverity( Severity severity );
 
     /**
      * Whether an issue is waived.

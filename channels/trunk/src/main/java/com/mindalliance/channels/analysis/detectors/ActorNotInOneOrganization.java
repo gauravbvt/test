@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Severity;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -52,7 +53,7 @@ public class ActorNotInOneOrganization extends AbstractIssueDetector {
         if ( employers.size() != 1 ) {
             if ( employers.size() == 0 ) {
                 DetectedIssue issue = makeIssue( Issue.VALIDITY, actor );
-                issue.setSeverity( Issue.Level.Minor );
+                issue.setSeverity( Severity.Minor );
                 issue.setDescription( actor + " does not belong to any organization." );
                 issue.setRemediation( "Specify an organization in a task played by the actor\n "
                         + "or register the individual as an employee of an organization." );
@@ -70,7 +71,7 @@ public class ActorNotInOneOrganization extends AbstractIssueDetector {
                             } );
                     for ( Organization ancestor : ancestors ) {
                         DetectedIssue issue = makeIssue( Issue.VALIDITY, actor );
-                        issue.setSeverity( Issue.Level.Minor );
+                        issue.setSeverity( Severity.Minor );
                         issue.setDescription( actor
                                 + " belongs to " + org.getName()
                                 + " and to " + ancestor.getName()

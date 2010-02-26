@@ -5,11 +5,11 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.Severity;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.model.UserIssue;
 
@@ -56,7 +56,7 @@ public class FireSegment extends Segment {
         issue.setDescription( "Hearing-challenged tenants may not hear the alarm." );
         issue.setRemediation( "Add flashing light signal." );
         issue.setReportedBy( "jdoe" );
-        issue.setSeverity( Issue.Level.Major );
+        issue.setSeverity( Severity.Major );
         queryService.add( issue );
         Part fd = queryService.createPart( segment );
         fd.setOrganization( queryService.findOrCreate( Organization.class, "Fire Department" ) );

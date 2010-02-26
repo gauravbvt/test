@@ -1,9 +1,9 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Risk;
+import com.mindalliance.channels.model.Severity;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -86,7 +86,7 @@ public class RiskConverter extends AbstractChannelsConverter {
                         context );
                 risk.setOrganization( org );
             } else if ( nodeName.equals( "severity" ) ) {
-                risk.setSeverity( Issue.Level.valueOf( reader.getValue() ) );
+                risk.setSeverity( Severity.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "endsWithSegment" ) ) {
                 risk.setEndsWithSegment( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "description" ) ) {

@@ -41,6 +41,7 @@ import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.model.Severity;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
@@ -2356,7 +2357,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public Issue.Level getPartPriority( Part part ) {
+    public Severity getPartPriority( Part part ) {
         return getPartPriority( part, new ArrayList<Part>() );
     }
 
@@ -2383,9 +2384,9 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return planManager.getCurrentPlan();
     }
 
-    private Issue.Level getPartPriority( Part part, List<Part> visited ) {
+    private Severity getPartPriority( Part part, List<Part> visited ) {
         visited.add( part );
-        Issue.Level max = Issue.Level.Minor;
+        Severity max = Severity.Minor;
         for ( Risk risk : part.getMitigations() ) {
             if ( risk.getSeverity().getOrdinal() > max.getOrdinal() )
                 max = risk.getSeverity();
@@ -2394,7 +2395,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             if ( flow.getTarget().isPart() ) {
                 Part target = (Part) flow.getTarget();
                 if ( !visited.contains( target ) ) {
-                    Issue.Level priority = getPartPriority( target, visited );
+                    Severity priority = getPartPriority( target, visited );
                     if ( priority.getOrdinal() > max.getOrdinal() )
                         max = priority;
                 }

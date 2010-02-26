@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.Severity;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -55,7 +56,7 @@ public class NoSegmentForEventPhase extends AbstractIssueDetector {
                             + phase.getName()
                             + " of event "
                             + event.getName() );
-                    issue.setSeverity( Issue.Level.Major );
+                    issue.setSeverity( Severity.Major );
                     issues.add( issue );
                 }
             }

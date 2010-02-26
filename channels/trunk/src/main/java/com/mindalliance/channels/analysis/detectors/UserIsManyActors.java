@@ -5,6 +5,7 @@ import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Severity;
 import com.mindalliance.channels.model.User;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class UserIsManyActors extends AbstractIssueDetector {
                                     + actor.getName()
                                     + "\nor by " + sameUserActor.getName()
                                     + ".");
-                    issue.setSeverity( Issue.Level.Major );
+                    issue.setSeverity( Severity.Major );
                     issues.add( issue );
                 }
             }

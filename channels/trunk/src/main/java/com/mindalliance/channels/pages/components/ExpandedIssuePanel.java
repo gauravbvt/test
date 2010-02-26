@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Severity;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.pages.components.menus.IssueActionsMenuPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -39,7 +40,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
     /**
      * Severity level choice.
      */
-    private DropDownChoice<Issue.Level> severityChoice;
+    private DropDownChoice<Severity> severityChoice;
     /**
      * Remediation text area.
      */
@@ -82,10 +83,10 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
         } );
         add( typeChoice );
         // Severity
-        severityChoice = new DropDownChoice<Issue.Level>(
+        severityChoice = new DropDownChoice<Severity>(
                 "severity",
-                new PropertyModel<Issue.Level>( this, "severity" ),
-                Arrays.asList( Issue.Level.values() ) );
+                new PropertyModel<Severity>( this, "severity" ),
+                Arrays.asList( Severity.values() ) );
         severityChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 // do nothing
@@ -178,7 +179,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
      * Get the issue's severity.
      * @return an issue level
      */
-    public Issue.Level getSeverity() {
+    public Severity getSeverity() {
         return getIssue().getSeverity();
     }
 
@@ -187,7 +188,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
      *
      * @param severity an issue severity level
      */
-    public void setSeverity( Issue.Level severity ) {
+    public void setSeverity( Severity severity ) {
         doCommand( new UpdatePlanObject( getIssue(), "severity", severity ) );
     }
 

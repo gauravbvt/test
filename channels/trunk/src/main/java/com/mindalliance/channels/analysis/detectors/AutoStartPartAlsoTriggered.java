@@ -4,6 +4,7 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class AutoStartPartAlsoTriggered extends AbstractIssueDetector {
                     + " since it starts with the plan segment." );
             issue.setRemediation( "Have no flow trigger this task\n"
                     + "or have the task not start with the plan segment." );
-            issue.setSeverity( Issue.Level.Minor );
+            issue.setSeverity( Severity.Minor );
             issues.add( issue );
         }
         return issues;

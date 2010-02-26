@@ -5,6 +5,7 @@ import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class UnplayedPart extends AbstractIssueDetector {
                         + "\nor profile an individual to match the task specifications"
                         + "\nor modify the task specifications so that it matches at least one individual."
                 );
-                issue.setSeverity( Issue.Level.Minor );
+                issue.setSeverity( Severity.Minor );
                 issues.add( issue );
             }
         }

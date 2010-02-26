@@ -6,6 +6,7 @@ import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Severity;
 import com.mindalliance.channels.model.TransmissionMedium;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class FlowOverUndersecuredMedium extends AbstractIssueDetector {
                             + "\nor change the security profile of medium \"" + channel.getMedium().getName() + "\""
                             + "\nor change the secrecy classification of the problematic elements of information"
                             + "\nor remove the classified elements(s) of information that exceed the channel's security" );
-                    issue.setSeverity( Issue.Level.Major );
+                    issue.setSeverity( Severity.Major );
                     issues.add( issue );
                 }
                 // under-secured delegated medium
@@ -72,7 +73,7 @@ public class FlowOverUndersecuredMedium extends AbstractIssueDetector {
                                 + "\nor change the security profile of delegated medium \"" + delegate.getName() + "\""
                                 + "\nor change the secrecy classification of the problematic elements of information"
                                 + "\nor remove the classified elements(s) of information that exceed the delegated medium's security" );
-                        issue.setSeverity( Issue.Level.Major );
+                        issue.setSeverity( Severity.Major );
                         issues.add( issue );
                     }
                 }

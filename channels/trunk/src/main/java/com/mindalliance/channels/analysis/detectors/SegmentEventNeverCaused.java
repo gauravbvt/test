@@ -6,6 +6,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class SegmentEventNeverCaused extends AbstractIssueDetector {
             issue.setDescription( "The plan segment is about an event that may never be caused." );
             issue.setRemediation( "Make the event in question an incident\n"
                     +"or make sure at least one task in another plan segment causes it." );
-            issue.setSeverity( Issue.Level.Major );
+            issue.setSeverity( Severity.Major );
             issues.add( issue );
         }
         return issues;

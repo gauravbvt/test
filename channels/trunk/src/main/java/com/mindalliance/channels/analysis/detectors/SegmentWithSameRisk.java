@@ -6,6 +6,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -68,7 +69,7 @@ public class SegmentWithSameRisk extends AbstractIssueDetector {
                     );
                     issue.setRemediation( "Consider merging the two plan segments\n"
                             + "or moving the tasks that mitigate the common risk from one plan segment to the other." );
-                    issue.setSeverity( Issue.Level.Minor );
+                    issue.setSeverity( Severity.Minor );
                     issues.add( issue );
                 }
             }

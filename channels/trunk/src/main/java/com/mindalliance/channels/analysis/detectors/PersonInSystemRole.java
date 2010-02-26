@@ -6,6 +6,7 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class PersonInSystemRole extends AbstractIssueDetector {
                 DetectedIssue issue = makeIssue( Issue.VALIDITY, person );
                 issue.setDescription( "Person assigned a role meant for systems." );
                 issue.setRemediation( "Make the individual a system\nor do not assign the role." );
-                issue.setSeverity( Issue.Level.Minor );
+                issue.setSeverity( Severity.Minor );
                 issues.add( issue );
             }
         }
