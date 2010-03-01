@@ -38,9 +38,9 @@ public class InconsistentImpactOnTargetPart extends AbstractIssueDetector {
             if ( similar.isCritical() != commitment.isCritical() ) {
                 DetectedIssue issue = makeIssue( Issue.VALIDITY, commitment );
                 issue.setDescription( "'"
-                        + commitment.getRequirementTitle()
+                        + commitment.getReceiveTitle()
                         + "' is critical but '"
-                        + similar.getRequirementTitle()
+                        + similar.getReceiveTitle()
                         + "' is not." );
                 issue.setRemediation( "Make both or neither critical." );
                 issue.setSeverity( Severity.Minor );
@@ -48,11 +48,11 @@ public class InconsistentImpactOnTargetPart extends AbstractIssueDetector {
             } else if ( similar.isTriggeringToTarget() != commitment.isTriggeringToTarget() ) {
                 DetectedIssue issue = makeIssue( Issue.VALIDITY, commitment );
                 issue.setDescription( "'"
-                        + commitment.getRequirementTitle()
+                        + commitment.getReceiveTitle()
                         + "' triggers '"
                         + commitment.getTarget().getTitle()
                         + "' but '"
-                        + similar.getRequirementTitle()
+                        + similar.getReceiveTitle()
                         + "' does not." );
                 issue.setRemediation( "Have both trigger the task that consumes the information\nor have neither do it." );
                 issue.setSeverity( Severity.Minor );
@@ -60,11 +60,11 @@ public class InconsistentImpactOnTargetPart extends AbstractIssueDetector {
             } else if ( similar.isTerminatingToTarget() != commitment.isTerminatingToTarget() ) {
                 DetectedIssue issue = makeIssue( Issue.VALIDITY, commitment );
                 issue.setDescription( "'"
-                        + commitment.getRequirementTitle()
+                        + commitment.getReceiveTitle()
                         + "' terminates '"
                         + commitment.getTarget().getTitle()
                         + "' but '"
-                        + similar.getRequirementTitle()
+                        + similar.getReceiveTitle()
                         + "' does not." );
                 issue.setRemediation( "Have both terminate the task that consumes the information\nor have neither." );
                 issue.setSeverity( Severity.Minor );
@@ -78,7 +78,7 @@ public class InconsistentImpactOnTargetPart extends AbstractIssueDetector {
     private List<Flow> getSimilarFlows( final Flow commitment ) {
         Part target = (Part) commitment.getTarget();
         return (List<Flow>) CollectionUtils.select(
-                IteratorUtils.toList( target.requirementsNamed( commitment.getName() ) ),
+                IteratorUtils.toList( target.receivesNamed( commitment.getName() ) ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         return !obj.equals( commitment )

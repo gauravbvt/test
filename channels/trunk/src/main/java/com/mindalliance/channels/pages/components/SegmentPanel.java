@@ -72,14 +72,14 @@ public class SegmentPanel extends AbstractCommandablePanel {
     private Component partPanel;
 
     /**
-     * Outcomes flow panel.
+     * Sends flow panel.
      */
-    private FlowListPanel outcomesFlowPanel;
+    private FlowListPanel sendsFlowPanel;
 
     /**
-     * Requirements flow panel.
+     * Receives flow panel.
      */
-    private FlowListPanel reqsFlowPanel;
+    private FlowListPanel receivesFlowPanel;
     /**
      * Width, height dimension contraints on the flow diagram.
      * In inches.
@@ -108,18 +108,18 @@ public class SegmentPanel extends AbstractCommandablePanel {
         addFlowDiagram();
         addPartMenuBar();
         addPartPanel();
-        reqsFlowPanel = new FlowListPanel(
-                "reqs",
+        receivesFlowPanel = new FlowListPanel(
+                "receives",
                 partModel,
                 false,
                 getExpansions() );
-        add( reqsFlowPanel );
-        outcomesFlowPanel = new FlowListPanel(
-                "outcomes",
+        add( receivesFlowPanel );
+        sendsFlowPanel = new FlowListPanel(
+                "sends",
                 partModel,
                 true,
                 getExpansions() );
-        add( outcomesFlowPanel );
+        add( sendsFlowPanel );
         adjustComponents();
     }
 
@@ -280,8 +280,8 @@ public class SegmentPanel extends AbstractCommandablePanel {
             Identifiable identifiable = change.getSubject();
             if ( identifiable == getPart() ) {
                 if ( change.isUpdated() ) {
-                    reqsFlowPanel.refresh( target );
-                    outcomesFlowPanel.refresh( target );
+                    receivesFlowPanel.refresh( target );
+                    sendsFlowPanel.refresh( target );
                 }
             }
             if ( identifiable instanceof Issue || identifiable instanceof SegmentObject ) {
@@ -327,8 +327,8 @@ public class SegmentPanel extends AbstractCommandablePanel {
             refreshMenus( target );
             addPartPanel();
             target.addComponent( partPanel );
-            reqsFlowPanel.refresh( target );
-            outcomesFlowPanel.refresh( target );
+            receivesFlowPanel.refresh( target );
+            sendsFlowPanel.refresh( target );
             if ( change.isModified() || change.isSelected() ) {
                 addFlowDiagram();
                 target.addComponent( flowMapDiagramPanel );
@@ -358,7 +358,7 @@ public class SegmentPanel extends AbstractCommandablePanel {
         addPartActionsMenu();
         target.addComponent( partShowMenu );
         target.addComponent( partActionsMenu );
-        reqsFlowPanel.refreshMenus( target );
-        outcomesFlowPanel.refreshMenus( target );
+        receivesFlowPanel.refreshMenus( target );
+        sendsFlowPanel.refreshMenus( target );
     }
 }

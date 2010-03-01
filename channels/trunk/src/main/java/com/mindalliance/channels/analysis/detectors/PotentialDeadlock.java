@@ -23,8 +23,8 @@ import java.util.Set;
 
 /**
  * Detects a potential deadlock in segment.
- * A deadlock is a cycle of requirements and outcomes where
- * at least one requirement is critical
+ * A deadlock is a cycle of receives and sends where
+ * at least one receive is critical
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -67,34 +67,34 @@ public class PotentialDeadlock extends AbstractIssueDetector {
                 new StrongConnectivityInspector<Node, Flow>( digraph );
         List<Set<Node>> cycles = sci.stronglyConnectedSets();
         if ( !cycles.isEmpty() ) {
-            // For each cycle where all nodes have at least one critical requirement,
-            // collect all critical requirements of nodes in the cycle.
+            // For each cycle where all nodes have at least one critical receive,
+            // collect all critical receives of nodes in the cycle.
             for ( Set<Node> cycle : cycles ) {
                 if ( cycle.size() > 1 ) {
-                    // All nodes in the cycle have at least one ciritical requirement?
+                    // All nodes in the cycle have at least one ciritical receive?
                     boolean allCritical = true;
-                    // Critical requirements of nodes on the cycle
-                    Set<Flow> criticalRequirementsInCycle = new HashSet<Flow>();
-                    // Verify if all nodes in cycle has critical requirements
+                    // Critical receives of nodes on the cycle
+                    Set<Flow> criticalReceiveInCycle = new HashSet<Flow>();
+                    // Verify if all nodes in cycle has critical receives
                     // uniquely sourced from another node in the cycle, and collect them
                     Iterator<Node> nodes = cycle.iterator();
                     while ( allCritical && nodes.hasNext() ) {
                         Node node = nodes.next();
-                        Set<Flow> requirements = digraph.incomingEdgesOf( node );
-                        // Select requirements that are critical and uniquely sourced
+                        Set<Flow> receives = digraph.incomingEdgesOf( node );
+                        // Select receives that are critical and uniquely sourced
                         // from a node in the cycle
-                        Set<Flow> criticalAndUnique = findCriticalAndUnique( requirements, cycle );
+                        Set<Flow> criticalAndUnique = findCriticalAndUnique( receives, cycle );
                         if ( criticalAndUnique.isEmpty() ) {
                             allCritical = false;
                         } else {
-                            criticalRequirementsInCycle.addAll( criticalAndUnique );
+                            criticalReceiveInCycle.addAll( criticalAndUnique );
                         }
                     }
                     // This is a "critical" cycle
                     if ( allCritical ) {
                         Issue issue = makeIssue( Issue.ROBUSTNESS, segment );
                         issue.setDescription( "Potential deadlock if any of "
-                                + getRequirementDescriptions( criticalRequirementsInCycle )
+                                + getReceiveDescriptions( criticalReceiveInCycle )
                                 + " fails." );
                         issue.setRemediation( "Provide redundancy for at least one of these critical flows." );
                         issue.setSeverity( Severity.Major );
@@ -107,19 +107,19 @@ public class PotentialDeadlock extends AbstractIssueDetector {
     }
 
     @SuppressWarnings( "unchecked" )
-    // Select requirements that are critical and uniquely sourced
+    // Select receives that are critical and uniquely sourced
     // from a node in the cycle
-    private Set<Flow> findCriticalAndUnique( final Set<Flow> requirements, final Set<Node> cycle ) {
+    private Set<Flow> findCriticalAndUnique( final Set<Flow> receives, final Set<Node> cycle ) {
         Set<Flow> result = new HashSet<Flow>();
         Iterator<Flow> criticalandUniqueFlows =
-                new FilterIterator( requirements.iterator(), new Predicate() {
+                new FilterIterator( receives.iterator(), new Predicate() {
                     public boolean evaluate( Object obj ) {
                         boolean critical = false;
                         boolean unique = true;
                         Flow flow = (Flow) obj;
                         if ( flow.isCritical() && cycle.contains( flow.getSource() ) ) {
                             critical = true;
-                            for ( Flow otherFlow : requirements ) {
+                            for ( Flow otherFlow : receives ) {
                                 if ( otherFlow != flow
                                         && Matcher.same( otherFlow.getName(), flow.getName() ) )
                                     unique = false;
@@ -135,17 +135,17 @@ public class PotentialDeadlock extends AbstractIssueDetector {
     }
 
     /**
-     * Construct a string describing the list of requirements.
+     * Construct a string describing the list of receives.
      *
-     * @param requirements -- list of flows
+     * @param receives -- list of flows
      * @return a string description
      */
-    private String getRequirementDescriptions( Set<Flow> requirements ) {
+    private String getReceiveDescriptions( Set<Flow> receives ) {
         StringBuilder sb = new StringBuilder();
-        Iterator<Flow> iterator = requirements.iterator();
+        Iterator<Flow> iterator = receives.iterator();
         while ( iterator.hasNext() ) {
             sb.append( '"' );
-            sb.append( iterator.next().getRequirementTitle() );
+            sb.append( iterator.next().getReceiveTitle() );
             sb.append( '"' );
             if ( iterator.hasNext() ) sb.append( " or " );
         }

@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * A list of flows from a node, either requirements or outcomes.
+ * A list of flows from a node, either receives or sends.
  */
 public class FlowListPanel extends AbstractCommandablePanel {
 
@@ -36,9 +36,9 @@ public class FlowListPanel extends AbstractCommandablePanel {
     private IModel<Part> model;
 
     /**
-     * True if outcomes are listed; false if requirements are listed.
+     * True if sends are listed; false if receives are listed.
      */
-    private boolean outcomes;
+    private boolean sends;
     /**
      * Flows list container.
      */
@@ -50,22 +50,22 @@ public class FlowListPanel extends AbstractCommandablePanel {
     private Set<Long> expansions;
 
 
-    public FlowListPanel( String id, IModel<Part> model, boolean outcomes, Set<Long> expansions ) {
+    public FlowListPanel( String id, IModel<Part> model, boolean sends, Set<Long> expansions ) {
         super( id );
         this.model = model;
-        this.outcomes = outcomes;
+        this.sends = sends;
         this.expansions = expansions;
         init();
     }
 
     private void init() {
-        setOutcomes( outcomes );
+        setSends( sends );
         setDefaultModel( new CompoundPropertyModel( this ) );
         add( new Label( "title" ) );                                                      // NON-NLS
         AjaxFallbackLink newLink = new AjaxFallbackLink( "new" ) {
             public void onClick( AjaxRequestTarget target ) {
                 Part n = (Part) getNode();
-                Command command = isOutcomes()
+                Command command = isSends()
                         ? new AddCapability( n )
                         : new AddNeed( n );
                 Change change = doCommand( command );
@@ -74,7 +74,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
         };
         newLink.setVisible( getPlan().isDevelopment() );
         add( newLink );
-        newLink.add( new Label( "addFlow", outcomes ? "Add capability" : "Add need" ) );
+        newLink.add( new Label( "addFlow", sends ? "Add capability" : "Add need" ) );
         addFlowsDiv();
     }
 
@@ -82,23 +82,23 @@ public class FlowListPanel extends AbstractCommandablePanel {
         flowsDiv = new WebMarkupContainer( "flows-div" );
         flowsDiv.setOutputMarkupId( true );
         add( flowsDiv );
-        flowsDiv.add( createFlowPanels( outcomes ) );
+        flowsDiv.add( createFlowPanels( sends ) );
     }
 
-    private ListView<Flow> createFlowPanels( final boolean outcomes ) {
+    private ListView<Flow> createFlowPanels( final boolean areSends ) {
         // final Set<Long> expansions = ( (ChannelsPage) getPage() ).findExpansions();
         return new ListView<Flow>( "flows", new PropertyModel<List<Flow>>( this, "flows" ) ) {
             protected void populateItem( ListItem<Flow> item ) {
                 Flow flow = item.getModelObject();
                 long flowId = flow.getId();
                 if ( expansions.contains( flowId ) ) {
-                    ExpandedFlowPanel flowPanel = outcomes ?
+                    ExpandedFlowPanel flowPanel = areSends ?
                             new ExpandedOutPanel( "flow", new Model<Flow>( flow ), expansions )
                             : new ExpandedReqPanel( "flow", new Model<Flow>( flow ), expansions );
                     item.add( flowPanel );
                 } else {
                     CollapsedFlowPanel flowPanel =
-                            new CollapsedFlowPanel( "flow", new Model<Flow>( flow ), outcomes );
+                            new CollapsedFlowPanel( "flow", new Model<Flow>( flow ), areSends );
                     item.add( flowPanel );
                 }
             }
@@ -112,7 +112,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
      */
     public List<Flow> getFlows() {
         List<Flow> flows = new ArrayList<Flow>();
-        Iterator<Flow> iterator = outcomes ? getNode().outcomes() : getNode().requirements();
+        Iterator<Flow> iterator = sends ? getNode().sends() : getNode().receives();
         while ( iterator.hasNext() ) flows.add( iterator.next() );
         return flows;
     }
@@ -121,19 +121,19 @@ public class FlowListPanel extends AbstractCommandablePanel {
      * @return the title of this panel.
      */
     public String getTitle() {
-        return isOutcomes() ? "Send" : "Receive";
+        return isSends() ? "Send" : "Receive";
     }
 
     public final Node getNode() {
         return model.getObject();
     }
 
-    public final boolean isOutcomes() {
-        return outcomes;
+    public final boolean isSends() {
+        return sends;
     }
 
-    public final void setOutcomes( boolean outcomes ) {
-        this.outcomes = outcomes;
+    public final void setSends( boolean sends ) {
+        this.sends = sends;
     }
 
     /**

@@ -152,7 +152,7 @@ public class Disintermediate extends AbstractCommand {
 
     private boolean hasNeed( Part part, final String name ) {
         return CollectionUtils.exists(
-                IteratorUtils.toList( part.requirements() ),
+                IteratorUtils.toList( part.receives() ),
                 new Predicate() {
                     public boolean evaluate( Object object ) {
                         Flow flow = (Flow) object;
@@ -165,7 +165,7 @@ public class Disintermediate extends AbstractCommand {
 
     private boolean hasCapability( Part part, final String name ) {
         return CollectionUtils.exists(
-                IteratorUtils.toList( part.outcomes() ),
+                IteratorUtils.toList( part.sends() ),
                 new Predicate() {
                     public boolean evaluate( Object object ) {
                         Flow flow = (Flow) object;
@@ -179,11 +179,11 @@ public class Disintermediate extends AbstractCommand {
     // Find pairs of synonymous internal receives and send on a part.
     private List<Flow[]> findIntermediations( Part part ) {
         List<Flow[]> interms = new ArrayList<Flow[]>();
-        Iterator<Flow> receives = part.requirements();
+        Iterator<Flow> receives = part.receives();
         while ( receives.hasNext() ) {
             Flow receive = receives.next();
             if ( receive.isInternal() && receive.getSource().isPart() ) {
-                Iterator<Flow> sends = part.outcomes();
+                Iterator<Flow> sends = part.sends();
                 while ( sends.hasNext() ) {
                     Flow send = sends.next();
                     if ( send.isInternal()

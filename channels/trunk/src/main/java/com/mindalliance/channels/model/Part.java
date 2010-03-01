@@ -409,14 +409,14 @@ public class Part extends Node implements GeoLocatable {
     }
 
     /**
-     * Iterate over all outcomes of the part of a given name.
+     * Iterate over all sends of the part of a given name.
      *
      * @param name a flow name
      * @return a boolean
      */
     @SuppressWarnings( "unchecked" )
-    public Iterator<Flow> outcomesNamed( final String name ) {
-        return new FilterIterator( outcomes(), new Predicate() {
+    public Iterator<Flow> sendsNamed( final String name ) {
+        return new FilterIterator( sends(), new Predicate() {
             public boolean evaluate( Object object ) {
                 Flow flow = (Flow) object;
                 return Matcher.same( flow.getName(), name );
@@ -425,14 +425,14 @@ public class Part extends Node implements GeoLocatable {
     }
 
     /**
-     * Iterate over all requirements of the part of a given name.
+     * Iterate over all receives of the part of a given name.
      *
      * @param name a flow name
      * @return a boolean
      */
     @SuppressWarnings( "unchecked" )
-    public Iterator<Flow> requirementsNamed( final String name ) {
-        return new FilterIterator( requirements(), new Predicate() {
+    public Iterator<Flow> receivesNamed( final String name ) {
+        return new FilterIterator( receives(), new Predicate() {
             public boolean evaluate( Object object ) {
                 Flow flow = (Flow) object;
                 return Matcher.same( flow.getName(), name );
@@ -456,17 +456,17 @@ public class Part extends Node implements GeoLocatable {
      */
     @Transient
     public boolean isTriggered() {
-        Iterator<Flow> reqs = requirements();
+        Iterator<Flow> receives = receives();
         boolean triggered = false;
-        while ( !triggered && reqs.hasNext() ) {
-            Flow req = reqs.next();
-            triggered = req.isTriggeringToTarget() && req.getSource().isPart();
+        while ( !triggered && receives.hasNext() ) {
+            Flow receive = receives.next();
+            triggered = receive.isTriggeringToTarget() && receive.getSource().isPart();
         }
         if ( !triggered ) {
-            Iterator<Flow> outs = outcomes();
-            while ( !triggered && outs.hasNext() ) {
-                Flow req = outs.next();
-                triggered = req.isTriggeringToSource();
+            Iterator<Flow> sends = sends();
+            while ( !triggered && sends.hasNext() ) {
+                Flow send = sends.next();
+                triggered = send.isTriggeringToSource();
             }
         }
         return triggered;
@@ -479,17 +479,17 @@ public class Part extends Node implements GeoLocatable {
      */
     @Transient
     public boolean isTerminated() {
-        Iterator<Flow> reqs = requirements();
+        Iterator<Flow> receives = receives();
         boolean terminated = false;
-        while ( !terminated && reqs.hasNext() ) {
-            Flow req = reqs.next();
-            terminated = req.isTerminatingToTarget();
+        while ( !terminated && receives.hasNext() ) {
+            Flow receive = receives.next();
+            terminated = receive.isTerminatingToTarget();
         }
         if ( !terminated ) {
-            Iterator<Flow> outs = outcomes();
-            while ( !terminated && outs.hasNext() ) {
-                Flow req = outs.next();
-                terminated = req.isTerminatingToSource();
+            Iterator<Flow> sends = sends();
+            while ( !terminated && sends.hasNext() ) {
+                Flow send = sends.next();
+                terminated = send.isTerminatingToSource();
             }
         }
         return terminated;
@@ -861,7 +861,7 @@ public class Part extends Node implements GeoLocatable {
     @SuppressWarnings( "unchecked" )
     public List<Flow> getNeeds() {
         return (List<Flow>) CollectionUtils.select(
-                IteratorUtils.toList( requirements() ),
+                IteratorUtils.toList( receives() ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         return ( (Flow) obj ).isNeed();
@@ -891,27 +891,27 @@ public class Part extends Node implements GeoLocatable {
     }
 
     /**
-     * Get all explicit sharing outcomes and sharing outcomes from connected capabilities.
+     * Get all explicit sharing sends from connected capabilities.
      *
      * @return a list of flows
      */
     @Transient
-    public List<Flow> getAllSharingOutcomes() {
-        List<Flow> sharingOutcomes = new ArrayList<Flow>();
-        Iterator<Flow> outcomes = outcomes();
-        while ( outcomes.hasNext() ) {
-            Flow flow = outcomes.next();
+    public List<Flow> getAllSharingSends() {
+        List<Flow> sharingSends = new ArrayList<Flow>();
+        Iterator<Flow> sends = sends();
+        while ( sends.hasNext() ) {
+            Flow flow = sends.next();
             if ( flow.isSharing() ) {
-                sharingOutcomes.add( flow );
+                sharingSends.add( flow );
             } else if ( flow.isCapability() ) {
                 Connector connector = (Connector) flow.getTarget();
                 Iterator<ExternalFlow> externals = connector.externalFlows();
                 while ( externals.hasNext() ) {
-                    sharingOutcomes.add( externals.next() );
+                    sharingSends.add( externals.next() );
                 }
             }
         }
-        return sharingOutcomes;
+        return sharingSends;
     }
 
     /**
@@ -943,7 +943,7 @@ public class Part extends Node implements GeoLocatable {
     public boolean isImportant() {
         return isUseful() ||
                 CollectionUtils.exists(
-                        IteratorUtils.toList( outcomes() ),
+                        IteratorUtils.toList( sends() ),
                         new Predicate() {
                             public boolean evaluate( Object object ) {
                                 return ( (Flow) object ).isImportant();

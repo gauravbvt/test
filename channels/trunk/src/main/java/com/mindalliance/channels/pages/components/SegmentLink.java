@@ -82,13 +82,13 @@ public class SegmentLink extends ExternalLink {
         String exs = expandString( expansions );
         Node n = node;
         if ( n.isConnector() ) {
-            Iterator<Flow> outs = n.outcomes();
+            Iterator<Flow> outs = n.sends();
             Flow f;
             if ( outs.hasNext() ) {
                 f = outs.next();
                 n = f.getTarget();
             } else {
-                f = n.requirements().next();
+                f = n.receives().next();
                 n = f.getSource();
             }
             exs = expandString( f.getId() );

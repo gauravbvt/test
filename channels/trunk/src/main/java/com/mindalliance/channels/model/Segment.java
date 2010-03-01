@@ -220,11 +220,11 @@ public class Segment extends ModelObject {
     public void removeNode( Node node ) {
         if ( getNodeIndex().containsKey( node.getId() )
                 && ( node.isConnector() || hasMoreThanOnePart() ) ) {
-            Iterator<Flow> ins = node.requirements();
+            Iterator<Flow> ins = node.receives();
             while ( ins.hasNext() ) {
                 ins.next().disconnect();
             }
-            Iterator<Flow> outs = node.outcomes();
+            Iterator<Flow> outs = node.sends();
             while ( outs.hasNext() ) {
                 outs.next().disconnect();
             }
@@ -279,14 +279,14 @@ public class Segment extends ModelObject {
     /**
      * Iterates over inputs of this segment.
      *
-     * @return an iterator on connectors having outcomes
+     * @return an iterator on connectors having sends
      */
     @SuppressWarnings( {"unchecked"} )
     public Iterator<Connector> inputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
                 Node n = (Node) object;
-                return n.isConnector() && n.outcomes().hasNext();
+                return n.isConnector() && n.sends().hasNext();
             }
         } );
     }
@@ -309,14 +309,14 @@ public class Segment extends ModelObject {
     /**
      * Iterates over outputs of this segment.
      *
-     * @return an iterator on connectors having requirements
+     * @return an iterator on connectors having receives
      */
     @SuppressWarnings( {"unchecked"} )
     public Iterator<Connector> outputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
                 Node n = (Node) object;
-                return n.isConnector() && n.requirements().hasNext();
+                return n.isConnector() && n.receives().hasNext();
             }
         } );
     }
@@ -664,14 +664,14 @@ public class Segment extends ModelObject {
             while ( iter.hasNext() ) externalFlows.add( iter.next() );
         }
         for ( Part part : listParts() ) {
-            Iterator<Flow> outcomes = part.outcomes();
-            while ( outcomes.hasNext() ) {
-                Flow flow = outcomes.next();
+            Iterator<Flow> sends = part.sends();
+            while ( sends.hasNext() ) {
+                Flow flow = sends.next();
                 if ( flow.isExternal() ) externalFlows.add( (ExternalFlow) flow );
             }
-            Iterator<Flow> requirements = part.requirements();
-            while ( requirements.hasNext() ) {
-                Flow flow = requirements.next();
+            Iterator<Flow> receives = part.receives();
+            while ( receives.hasNext() ) {
+                Flow flow = receives.next();
                 if ( flow.isExternal() ) externalFlows.add( (ExternalFlow) flow );
             }
         }
@@ -696,7 +696,7 @@ public class Segment extends ModelObject {
     //=================================================
     /**
      * An iterator that walks through all flow in the segment.
-     * This is done by iterating on all outcome flows of all nodes,
+     * This is done by iterating on all send flows of all nodes,
      * in node-order.
      */
     private final class FlowIterator implements Iterator<Flow> {
@@ -707,12 +707,12 @@ public class Segment extends ModelObject {
         private final Iterator<Node> nodeIterator;
 
         /**
-         * Iterator on the outcomes of the current node.
+         * Iterator on the sends of the current node.
          */
-        private Iterator<Flow> outcomeIterator;
+        private Iterator<Flow> sendIterator;
 
         /**
-         * Iterator on the external requirements of the current node.
+         * Iterator on the external receives of the current node.
          */
         private Iterator<Flow> reqIterator;
 
@@ -721,16 +721,16 @@ public class Segment extends ModelObject {
             if ( nodeIterator.hasNext() )
                 setIterators( nodeIterator.next() );
             else {
-                outcomeIterator = Collections.<Flow>emptyList().iterator();
+                sendIterator = Collections.<Flow>emptyList().iterator();
                 reqIterator = Collections.<Flow>emptyList().iterator();
             }
         }
 
         @SuppressWarnings( {"unchecked"} )
         private void setIterators( Node node ) {
-            outcomeIterator = node.outcomes();
+            sendIterator = node.sends();
             reqIterator = (Iterator<Flow>) new FilterIterator(
-                    node.requirements(),
+                    node.receives(),
                     new Predicate() {
                         public boolean evaluate( Object object ) {
                             return !( (Flow) object ).isInternal();
@@ -739,18 +739,18 @@ public class Segment extends ModelObject {
         }
 
         public boolean hasNext() {
-            while ( !outcomeIterator.hasNext() && !reqIterator.hasNext()
+            while ( !sendIterator.hasNext() && !reqIterator.hasNext()
                     && nodeIterator.hasNext() )
                 setIterators( nodeIterator.next() );
 
-            return outcomeIterator.hasNext() || reqIterator.hasNext();
+            return sendIterator.hasNext() || reqIterator.hasNext();
         }
 
         public Flow next() {
             if ( !hasNext() )
                 throw new NoSuchElementException();
-            return outcomeIterator.hasNext() ?
-                    outcomeIterator.next() : reqIterator.next();
+            return sendIterator.hasNext() ?
+                    sendIterator.next() : reqIterator.next();
         }
 
         public void remove() {

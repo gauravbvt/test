@@ -45,7 +45,7 @@ public class ExternalFlow extends Flow {
     /**
      * Return the source of this flow. Depends on the connector.
      *
-     * @return the source of the first requirement of the connector, or the part if none
+     * @return the source of the first receive of the connector, or the part if none
      * @see Flow#getSource()
      */
     @Override
@@ -59,7 +59,7 @@ public class ExternalFlow extends Flow {
     /**
      * Return the target of this flow. Depends on the connector.
      *
-     * @return the target of the first outcome of the connector, or the part if none
+     * @return the target of the first send of the connector, or the part if none
      * @see Flow#getTarget()
      */
     @Override
@@ -92,8 +92,8 @@ public class ExternalFlow extends Flow {
     @Override
     public void disconnect() {
         Part p = part;
-        p.removeOutcome( this );
-        p.removeRequirement( this );
+        p.removeSend( this );
+        p.removeReceive( this );
         part = null;
 
         Connector c = connector;
@@ -281,8 +281,8 @@ public class ExternalFlow extends Flow {
      * {@inheritDoc}
      */
     @Override
-    public boolean isConnectedTo( boolean outcome, Node node ) {
-        return super.isConnectedTo( outcome, node ) || node.equals( getConnector() );
+    public boolean isConnectedTo( boolean isSend, Node node ) {
+        return super.isConnectedTo( isSend, node ) || node.equals( getConnector() );
     }
 
     /**

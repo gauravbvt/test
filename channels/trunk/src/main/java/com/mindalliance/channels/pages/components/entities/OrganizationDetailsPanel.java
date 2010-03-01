@@ -90,7 +90,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         addParentField( moDetailsDiv );
         addLocationField( moDetailsDiv );
         addContactInfoPanel( moDetailsDiv );
-        addRequirementFields( moDetailsDiv );
+        addReceiveFields( moDetailsDiv );
         addTabPanel( moDetailsDiv );
         adjustFields();
     }
@@ -185,10 +185,10 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                 new Model<Channelable>( organization ) ) );
     }
 
-    private void addRequirementFields( WebMarkupContainer moDetailsDiv ) {
-        WebMarkupContainer requirementsContainers = new WebMarkupContainer( "requirementsContainers" );
-        requirementsContainers.setVisible( getOrganization().isActual() );
-        moDetailsDiv.add( requirementsContainers );
+    private void addReceiveFields( WebMarkupContainer moDetailsDiv ) {
+        WebMarkupContainer receivesContainers = new WebMarkupContainer( "constraintsContainers" );
+        receivesContainers.setVisible( getOrganization().isActual() );
+        moDetailsDiv.add( receivesContainers );
         actorsRequiredCheckBox = new CheckBox(
                 "actorsRequired",
                 new PropertyModel<Boolean>( this, "actorsRequired" ) );
@@ -198,7 +198,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
             }
         } );
         actorsRequiredCheckBox.setEnabled( isLockedByUser( getOrganization() ) );
-        requirementsContainers.add( actorsRequiredCheckBox );
+        receivesContainers.add( actorsRequiredCheckBox );
         agreementsRequiredCheckBox = new CheckBox(
                 "agreementsRequired",
                 new PropertyModel<Boolean>( this, "agreementsRequired" ) );
@@ -208,7 +208,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
             }
         } );
         agreementsRequiredCheckBox.setEnabled( isLockedByUser( getOrganization() ) );
-        requirementsContainers.add( agreementsRequiredCheckBox );
+        receivesContainers.add( agreementsRequiredCheckBox );
     }
 
     private void addTabPanel( WebMarkupContainer moDetailsDiv ) {
@@ -359,7 +359,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
     }
 
     /**
-     * Update actors requirement.
+     * Update actors constraint.
      *
      * @param val a boolean
      */
@@ -382,7 +382,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
     }
 
     /**
-     * Update actors requirement.
+     * Update actors constraint.
      *
      * @param val a boolean
      */

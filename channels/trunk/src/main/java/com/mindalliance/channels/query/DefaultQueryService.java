@@ -577,16 +577,16 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
         if ( isInternal( source, target ) ) {
             result = getDao().createInternalFlow( source, target, name, id );
-            source.addOutcome( result );
-            target.addRequirement( result );
+            source.addSend( result );
+            target.addReceive( result );
 
         } else if ( isExternal( source, target ) ) {
             result = getDao().createExternalFlow( source, target, name, id );
             if ( source.isConnector() ) {
-                target.addRequirement( result );
+                target.addReceive( result );
                 ( (Connector) source ).addExternalFlow( (ExternalFlow) result );
             } else {
-                source.addOutcome( result );
+                source.addSend( result );
                 ( (Connector) target ).addExternalFlow( (ExternalFlow) result );
             }
 
@@ -609,8 +609,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public Flow replicate( Flow flow, boolean isOutcome ) {
-        Flow result = isOutcome ? connect( flow.getSource(),
+    public Flow replicate( Flow flow, boolean isSend ) {
+        Flow result = isSend ? connect( flow.getSource(),
                 createConnector( flow.getSource().getSegment() ),
                 flow.getName() )
                 : connect( createConnector( flow.getTarget().getSegment() ),
@@ -1298,10 +1298,10 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     Part part = parts.next();
                     if ( part.resourceSpec().hasEntity( entity ) ) {
                         segmentObjects.add( part );
-                        Iterator<Flow> outcomes = part.outcomes();
-                        while ( outcomes.hasNext() ) segmentObjects.add( outcomes.next() );
-                        Iterator<Flow> requirements = part.requirements();
-                        while ( requirements.hasNext() ) segmentObjects.add( requirements.next() );
+                        Iterator<Flow> sends = part.sends();
+                        while ( sends.hasNext() ) segmentObjects.add( sends.next() );
+                        Iterator<Flow> receives = part.receives();
+                        while ( receives.hasNext() ) segmentObjects.add( receives.next() );
                     }
                 }
             }
@@ -1539,21 +1539,21 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             return doFindIfSegmentStarted( part.getSegment(), visited );
         } else {
             boolean started = false;
-            Iterator<Flow> reqs = part.requirements();
-            while ( !started && reqs.hasNext() ) {
-                Flow req = reqs.next();
-                if ( req.isTriggeringToTarget() ) {
-                    Node source = req.getSource();
+            Iterator<Flow> receives = part.receives();
+            while ( !started && receives.hasNext() ) {
+                Flow receive = receives.next();
+                if ( receive.isTriggeringToTarget() ) {
+                    Node source = receive.getSource();
                     started = source.isPart() && doFindIfPartStarted( (Part) source, visited );
                 }
             }
             if ( !started ) {
-                Iterator<Flow> outs = part.outcomes();
-                while ( !started && outs.hasNext() ) {
-                    Flow req = outs.next();
+                Iterator<Flow> sends = part.sends();
+                while ( !started && sends.hasNext() ) {
+                    Flow send = sends.next();
                     // A task-triggering request from target of response.
-                    if ( req.isTriggeringToSource() ) {
-                        Node target = req.getTarget();
+                    if ( send.isTriggeringToSource() ) {
+                        Node target = send.getTarget();
                         started = target.isPart() && doFindIfPartStarted( (Part) target, visited );
                     }
                 }
@@ -1612,12 +1612,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public List<Flow> findUnconnectedNeeds( Part part ) {
         List<Flow> unconnectedNeeds = new ArrayList<Flow>();
-        Iterator<Flow> receives = part.requirements();
+        Iterator<Flow> receives = part.receives();
         while ( receives.hasNext() ) {
             Flow receive = receives.next();
             if ( receive.getSource().isConnector() ) {
                 if ( !( (Connector) receive.getSource() ).externalFlows().hasNext() ) {
-                    Iterator<Flow> others = part.requirements();
+                    Iterator<Flow> others = part.receives();
                     boolean connected = false;
                     while ( !connected && others.hasNext() ) {
                         Flow other = others.next();
@@ -1637,13 +1637,13 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public List<Flow> findUnusedCapabilities( Part part ) {
         List<Flow> unusedCapabilities = new ArrayList<Flow>();
-        Iterator<Flow> sends = part.outcomes();
+        Iterator<Flow> sends = part.sends();
         while ( sends.hasNext() ) {
             Flow send = sends.next();
             if ( send.getTarget().isConnector() ) {
                 if ( !( (Connector) send.getTarget() ).externalFlows().hasNext() ) {
                     // A capability
-                    Iterator<Flow> others = part.outcomes();
+                    Iterator<Flow> others = part.sends();
                     boolean used = false;
                     while ( !used && others.hasNext() ) {
                         Flow other = others.next();
@@ -1668,12 +1668,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             while ( parts.hasNext() ) {
                 Part part = parts.next();
                 if ( part != need.getTarget() ) {
-                    Iterator<Flow> outcomes = part.outcomes();
-                    while ( outcomes.hasNext() ) {
-                        Flow outcome = outcomes.next();
-                        if ( outcome.getTarget().isConnector()
-                                && satisfiesNeed( outcome, need ) ) {
-                            satisficers.add( (Connector) outcome.getTarget() );
+                    Iterator<Flow> sends = part.sends();
+                    while ( sends.hasNext() ) {
+                        Flow send = sends.next();
+                        if ( send.getTarget().isConnector()
+                                && satisfiesNeed( send, need ) ) {
+                            satisficers.add( (Connector) send.getTarget() );
                         }
                     }
                 }
@@ -1682,11 +1682,11 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return satisficers;
     }
 
-    private boolean satisfiesNeed( Flow outcome, Flow need ) {
-        return Matcher.same( outcome.getName(), need.getName() )
+    private boolean satisfiesNeed( Flow send, Flow need ) {
+        return Matcher.same( send.getName(), need.getName() )
                 &&
                 Matcher.hasCommonEOIs(
-                        outcome,
+                        send,
                         need,
                         this );
     }
@@ -2341,7 +2341,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     private List<Flow> findMatchingCommitmentsTo( Part part, String flowName ) {
         List<Flow> commitments = new ArrayList<Flow>();
-        Iterator<Flow> incoming = part.requirements();
+        Iterator<Flow> incoming = part.receives();
         while ( incoming.hasNext() ) {
             Flow in = incoming.next();
             if ( in.getSource().isPart() && Matcher.matches( in.getName(), flowName ) ) {
@@ -2391,7 +2391,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             if ( risk.getSeverity().getOrdinal() > max.getOrdinal() )
                 max = risk.getSeverity();
         }
-        for ( Flow flow : part.requiredOutcomes() ) {
+        for ( Flow flow : part.requiredSends() ) {
             if ( flow.getTarget().isPart() ) {
                 Part target = (Part) flow.getTarget();
                 if ( !visited.contains( target ) ) {
@@ -2938,7 +2938,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                         return !target.isUseful()
                                 && CollectionUtils.intersection(
                                 importantFlows,
-                                IteratorUtils.toList( target.outcomes() ) ).isEmpty();
+                                IteratorUtils.toList( target.sends() ) ).isEmpty();
                     }
                 }
         );
@@ -2957,7 +2957,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     // Find all important flows downstream of part, without circularities.
     private List<Flow> findImportantFlowsFrom( Part part, final Set<Part> visited ) {
         List<Flow> flows = (List<Flow>) CollectionUtils.select(
-                part.getAllSharingOutcomes(),
+                part.getAllSharingSends(),
                 new Predicate() {
                     public boolean evaluate( Object object ) {
                         Flow flow = (Flow) object;

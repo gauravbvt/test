@@ -27,24 +27,24 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
      */
     private Component flowActionMenu;
     /**
-     * Whether outcome (send) flow view.
+     * Whether send flow view.
      */
-    private boolean outcome;
+    private boolean send;
     private boolean collapsed;
 
-    public AbstractFlowPanel( String id, IModel<Flow> flowModel, boolean outcome, boolean collapsed) {
-        this( id, flowModel, outcome, collapsed, null);
+    public AbstractFlowPanel( String id, IModel<Flow> flowModel, boolean isSend, boolean collapsed) {
+        this( id, flowModel, isSend, collapsed, null);
         
     }
     public AbstractFlowPanel(
             String id,
             IModel<Flow> flowModel,
-            boolean outcome,
+            boolean send,
             boolean collapsed,
             Set<Long> expansions ) {
         super( id, flowModel, expansions );
         this.flowModel = flowModel;
-        this.outcome = outcome;
+        this.send = send;
         this.collapsed = collapsed;
     }
 
@@ -67,12 +67,12 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
         return flowActionMenu;
     }
 
-    public boolean isOutcome() {
-        return outcome;
+    public boolean isSend() {
+        return send;
     }
 
-    public final void setOutcome( boolean outcome ) {
-         this.outcome = outcome;
+    public final void setSend( boolean send ) {
+         this.send = send;
      }
 
     public boolean isCollapsed() {
@@ -86,7 +86,7 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
         flowActionMenu = new FlowActionsMenuPanel(
                     "flowActionsMenu",
                     new PropertyModel<Flow>( this, "flow" ),
-                    isOutcome(),
+                    isSend(),
                     isCollapsed() );
         flowActionMenu.setOutputMarkupId( true );
         addOrReplace( flowActionMenu );

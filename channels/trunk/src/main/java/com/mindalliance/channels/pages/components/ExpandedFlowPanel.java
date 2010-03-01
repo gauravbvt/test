@@ -122,9 +122,9 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     protected ExpandedFlowPanel(
             String id,
             IModel<Flow> model,
-            boolean outcome,
+            boolean send,
             Set<Long> expansions ) {
-        super( id, model, outcome, false, expansions );
+        super( id, model, send, false, expansions );
         init();
     }
 
@@ -186,8 +186,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
         nameField.setEnabled( lockedByUser && f.canSetNameAndElements() );
         askedForButtons.setEnabled( lockedByUser && f.canSetAskedFor() );
-        allField.setVisible( isOutcome() && f.canGetAll() );
-        allField.setEnabled( lockedByUser && isOutcome() && f.canSetAll() );
+        allField.setVisible( isSend() && f.canGetAll() );
+        allField.setEnabled( lockedByUser && isSend() && f.canSetAll() );
         significanceToTargetLabel.setVisible( f.canGetSignificanceToTarget() );
         significanceToTargetChoice.setEnabled(
                 lockedByUser && f.canSetSignificanceToTarget() );
@@ -196,7 +196,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         delayPanel.enable( lockedByUser && f.canSetMaxDelay() );
         significanceToSourceRow.setVisible( f.canGetSignificanceToSource() );
         triggersSourceContainer.setVisible(
-                ( !isOutcome() || f.isAskedFor() ) && f.canGetTriggersSource() );
+                ( !isSend() || f.isAskedFor() ) && f.canGetTriggersSource() );
         triggersSourceCheckBox.setEnabled( lockedByUser && f.canSetTriggersSource() );
         terminatesSourceContainer.setVisible( f.canGetTerminatesSource() );
         terminatesSourceCheckBox.setEnabled( lockedByUser && f.canSetTerminatesSource() );
@@ -235,13 +235,13 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         Set<String> choices = new HashSet<String>();
         if ( s.length() > 1 ) {
             Node node = getNode();
-            Iterator<Flow> nodeFlows = node.outcomes();
+            Iterator<Flow> nodeFlows = node.sends();
             while ( nodeFlows.hasNext() ) {
                 String name = nodeFlows.next().getName();
                 if ( queryService.likelyRelated( s, name ) )
                     choices.add( name );
             }
-            nodeFlows = node.requirements();
+            nodeFlows = node.receives();
             while ( nodeFlows.hasNext() ) {
                 String name = nodeFlows.next().getName();
                 if ( getQueryService().likelyRelated( s, name ) )
@@ -286,7 +286,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         significanceToTargetLabel = new WebMarkupContainer( "target-significance-label" );
         add( significanceToTargetLabel );
         significanceToTargetLabel.add(
-                new Label( "target-label", isOutcome() ? "the recipient's task" : "this task" ) );
+                new Label( "target-label", isSend() ? "the recipient's task" : "this task" ) );
         significanceToTargetChoice = new DropDownChoice<Flow.Significance>(
                 "significance-to-target",
                 new PropertyModel<Flow.Significance>( this, "significanceToTarget" ),
@@ -319,7 +319,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         significanceToSourceRow = new WebMarkupContainer( "significance-to-source" );
         add( significanceToSourceRow );
         significanceToSourceRow.add(
-                new Label( "source-task", isOutcome() ? "This task" : "Sender's task" ) );
+                new Label( "source-task", isSend() ? "This task" : "Sender's task" ) );
         triggersSourceContainer = new WebMarkupContainer( "triggers-source-container" );
         significanceToSourceRow.add( triggersSourceContainer );
         triggersSourceCheckBox = new CheckBox(
@@ -381,8 +381,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 new AbstractReadOnlyModel<String>() {
                     @Override
                     public String getObject() {
-                        return isOutcome() ? getFlow().getOutcomeTitle()
-                                : getFlow().getRequirementTitle();
+                        return isSend() ? getFlow().getSendTitle()
+                                : getFlow().getReceiveTitle();
                     }
                 } );
         titleLabel.setOutputMarkupId( true );
@@ -497,7 +497,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 getFlow() );
         details.add(
                 new Label( "type",
-                        new Model<String>( isOutcome() ? "To" : "From" ) ) );
+                        new Model<String>( isSend() ? "To" : "From" ) ) );
         FormComponentLabel otherLabel =
                 new FormComponentLabel( "other-label", otherChoice );
         otherLabel.add( details );
@@ -511,7 +511,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @return the node on this side of the flow
      */
     public final Node getNode() {
-        return isOutcome() ? getFlow().getSource() : getFlow().getTarget();
+        return isSend() ? getFlow().getSource() : getFlow().getTarget();
     }
 
     /**
@@ -569,7 +569,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                     Connector connector = (Connector) n;
                     Flow connectorFlow = connector.getInnerFlow();
                     if ( isEmptyOrEquivalent( connectorFlow ) ) {
-                        if ( isOutcome() ) {
+                        if ( isSend() ) {
                             if ( connector.isSource() && !connectorFlow.getTarget().equals( node ) )
                                 result.add( connector );
                         } else {
@@ -587,13 +587,13 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         QueryService queryService = getQueryService();
         for ( Segment s : queryService.list( Segment.class ) ) {
             if ( !segment.equals( s ) ) {
-                Iterator<Connector> c = isOutcome() ? s.inputs() : s.outputs();
+                Iterator<Connector> c = isSend() ? s.inputs() : s.outputs();
                 while ( c.hasNext() ) {
                     Connector connector = c.next();
                     Flow connectorFlow = connector.getInnerFlow();
                     if ( isEmptyOrEquivalent( connectorFlow ) ) {
                         if ( other.equals( connector ) || !node.isConnectedTo(
-                                isOutcome(), connector, getFlow().getName() ) )
+                                isSend(), connector, getFlow().getName() ) )
                             result.add( connector );
                     }
                 }
@@ -604,7 +604,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     private boolean hasPartFlowWithSameName( Node n ) {
         String name = getFlow().getName();
-        Iterator<Flow> flows = isOutcome() ? n.requirements() : n.outcomes();
+        Iterator<Flow> flows = isSend() ? n.receives() : n.sends();
         boolean hasSameName = false;
         while ( !hasSameName && flows.hasNext() ) {
             Flow otherFlow = flows.next();
@@ -622,9 +622,9 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         List<Flow> result = new ArrayList<Flow>();
         Iterator<Part> parts = getFlow().getSegment().parts();
         while ( parts.hasNext() ) {
-            Iterator<Flow> flows = isOutcome()
-                    ? parts.next().requirements()
-                    : parts.next().outcomes();
+            Iterator<Flow> flows = isSend()
+                    ? parts.next().receives()
+                    : parts.next().sends();
             while ( flows.hasNext() ) {
                 Flow otherFlow = flows.next();
                 if ( !otherFlow.equals( getFlow() ) ) result.add( otherFlow );
@@ -637,7 +637,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         List<Connector> result = new ArrayList<Connector>();
         QueryService queryService = getQueryService();
         for ( Segment s : queryService.list( Segment.class ) ) {
-            Iterator<Connector> connectorIterator = isOutcome()
+            Iterator<Connector> connectorIterator = isSend()
                     ? s.inputs()
                     : s.outputs();
             while ( connectorIterator.hasNext() )
@@ -647,15 +647,15 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     /**
-     * Get the node at the other side of this flow: the source if requirement, the target if
-     * outcome.
+     * Get the node at the other side of this flow: the source if receive, the target if
+     * send.
      *
      * @return the other side of this flow.
      */
     public final Node getOther() {
         Flow f = getFlow();
         return f.isInternal() ?
-                isOutcome() ? f.getTarget() : f.getSource() :
+                isSend() ? f.getTarget() : f.getSource() :
                 ( (ExternalFlow) f ).getConnector();
     }
 
@@ -669,11 +669,11 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         Change change;
         if ( other.isConnector() && getFlow().hasConnector() ) {
             Connector connector = (Connector) other;
-            Flow need = isOutcome() ? connector.getInnerFlow() : getFlow();
-            Flow capability = isOutcome() ? getFlow() : connector.getInnerFlow();
+            Flow need = isSend() ? connector.getInnerFlow() : getFlow();
+            Flow capability = isSend() ? getFlow() : connector.getInnerFlow();
             change = doCommand( new SatisfyNeed( need, capability ) );
         } else {
-            change = doCommand( new RedirectFlow( getFlow(), other, isOutcome() ) );
+            change = doCommand( new RedirectFlow( getFlow(), other, isSend() ) );
         }
         Flow newFlow = (Flow) change.getSubject();
         // requestLockOn( newFlow );

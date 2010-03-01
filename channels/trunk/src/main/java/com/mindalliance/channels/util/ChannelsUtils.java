@@ -115,19 +115,19 @@ public final class ChannelsUtils {
      */
     public static Map<String, Object> getFlowState( final Flow flow, final Part part ) {
         final Node other;
-        final boolean isOutcome;
+        final boolean isSend;
         if ( flow.isInternal() ) {
-            isOutcome = flow.getSource() == part;
-            other = isOutcome ? flow.getTarget() : flow.getSource();
+            isSend = flow.getSource() == part;
+            other = isSend ? flow.getTarget() : flow.getSource();
         } else {
             ExternalFlow externalFlow = (ExternalFlow) flow;
-            isOutcome = !externalFlow.isPartTargeted();
+            isSend = !externalFlow.isPartTargeted();
             other = externalFlow.getConnector();
         }
         Map<String, Object> state = new HashMap<String, Object>();
         // state.put( "id", flow.getId() );
         state.put( "name", flow.getName() );
-        state.put( "isOutcome", isOutcome );
+        state.put( "isSend", isSend );
         state.put( "segment", part.getSegment().getId() );
         state.put( "part", part.getId() );
         state.put( "otherSegment", other.getSegment().getId() );
@@ -315,17 +315,17 @@ public final class ChannelsUtils {
     public static List<Identifiable> getLockingSetFor( Part part ) {
         List<Identifiable> lockingSet = new ArrayList<Identifiable>();
         lockingSet.add( part );
-        Iterator<Flow> outcomes = part.outcomes();
-        while ( outcomes.hasNext() ) {
-            Flow outcome = outcomes.next();
-            lockingSet.add( outcome );
-            lockingSet.addAll( getLockingSetFor( outcome ) );
+        Iterator<Flow> sends = part.sends();
+        while ( sends.hasNext() ) {
+            Flow send = sends.next();
+            lockingSet.add( send );
+            lockingSet.addAll( getLockingSetFor( send ) );
         }
-        Iterator<Flow> requirements = part.requirements();
-        while ( requirements.hasNext() ) {
-            Flow requirement = requirements.next();
-            lockingSet.add( requirement );
-            lockingSet.addAll( getLockingSetFor( requirement ) );
+        Iterator<Flow> receives = part.receives();
+        while ( receives.hasNext() ) {
+            Flow receive = receives.next();
+            lockingSet.add( receive );
+            lockingSet.addAll( getLockingSetFor( receive ) );
         }
         return lockingSet;
     }
@@ -395,13 +395,13 @@ public final class ChannelsUtils {
         Map<String, Object> copy = new HashMap<String, Object>();
         copy.put( "segment", part.getSegment().getId() );
         copy.put( "partState", getPartState( part ) );
-        Iterator<Flow> needs = part.requirements();
+        Iterator<Flow> needs = part.receives();
         List<Map<String, Object>> needStates = new ArrayList<Map<String, Object>>();
         while ( needs.hasNext() ) {
             needStates.add( getNeedState( needs.next(), part ) );
         }
         copy.put( "needs", needStates );
-        Iterator<Flow> capabilities = part.outcomes();
+        Iterator<Flow> capabilities = part.sends();
         List<Map<String, Object>> capabilityStates = new ArrayList<Map<String, Object>>();
         while ( capabilities.hasNext() ) {
             capabilityStates.add( getCapabilityState( capabilities.next(), part ) );
@@ -448,13 +448,13 @@ public final class ChannelsUtils {
      * Make a duplicate of the flow
      *
      * @param flow      a flow to duplicate
-     * @param isOutcome whether to replicate as outcome or requirement
+     * @param isSend whether to replicate as send or receive
      * @param priorId   Long or null
      * @return a created flow
      */
-    public static Flow duplicate( Flow flow, boolean isOutcome, Long priorId ) {
+    public static Flow duplicate( Flow flow, boolean isSend, Long priorId ) {
         Flow duplicate;
-        if ( isOutcome ) {
+        if ( isSend ) {
             Node source = flow.getSource();
             Segment segment = flow.getSource().getSegment();
             QueryService queryService = segment.getQueryService();

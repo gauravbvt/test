@@ -44,8 +44,8 @@ public class TestExternalFlow extends TestCase {
         // S2 "included" in S1
         Part s2Part = s2.getDefaultPart();
         s2Part.setActor( new Actor( "p3" ) );
-        s2Part.createOutcome( queryService );
-        s2Part.createRequirement( queryService );
+        s2Part.createSend( queryService );
+        s2Part.createReceive( queryService );
 
         queryService.connect( s1p1, s2.inputs().next(), "" );
         queryService.connect( s2.outputs().next(), s1p2, "" );
@@ -55,7 +55,7 @@ public class TestExternalFlow extends TestCase {
         // test degenerate cases
         try {
             Part p = s2.getDefaultPart();
-            new ExternalFlow( p, p.outcomes().next().getTarget(), "" );
+            new ExternalFlow( p, p.sends().next().getTarget(), "" );
             fail();
         } catch ( IllegalArgumentException ignored ) {}
 
@@ -66,12 +66,12 @@ public class TestExternalFlow extends TestCase {
     }
 
     public void testInitial() {
-        Flow f1 = s1p1.outcomes().next();
+        Flow f1 = s1p1.sends().next();
         assertFalse( f1.isInternal() );
         assertEquals( "p1 notify p3 of something", f1.toString() );
         assertTrue( s2.inputs().next().externalFlows().hasNext() );
 
-        Flow f2 = s1p2.requirements().next();
+        Flow f2 = s1p2.receives().next();
         assertFalse( f2.isInternal() );
         assertEquals( "p3 notify p2 of something", f2.toString() );
         assertTrue( s2.outputs().next().externalFlows().hasNext() );
@@ -82,21 +82,21 @@ public class TestExternalFlow extends TestCase {
      */
     public void testRemove1() {
         // output
-        Flow f = s1p1.outcomes().next();
+        Flow f = s1p1.sends().next();
         f.disconnect();
 
         assertNull( f.getSource() );
         assertNull( f.getTarget() );
-        assertFalse( s1p1.outcomes().hasNext() );
+        assertFalse( s1p1.sends().hasNext() );
         assertFalse( s2.inputs().next().externalFlows().hasNext() );
 
         // input
-        Flow f2 = s1p2.requirements().next();
+        Flow f2 = s1p2.receives().next();
         f2.disconnect();
 
         assertNull( f2.getSource() );
         assertNull( f2.getTarget() );
-        assertFalse( s1p2.requirements().hasNext() );
+        assertFalse( s1p2.receives().hasNext() );
         assertFalse( s2.outputs().next().externalFlows().hasNext() );
     }
 
@@ -105,23 +105,23 @@ public class TestExternalFlow extends TestCase {
      */
     public void testRemove2() {
         Part p3 = s2.getDefaultPart();
-        Flow f1 = p3.outcomes().next();
+        Flow f1 = p3.sends().next();
         Connector c1 = (Connector) f1.getTarget();
 
         f1.disconnect();
 
-        assertFalse( c1.requirements().hasNext() );
+        assertFalse( c1.receives().hasNext() );
         assertFalse( c1.externalFlows().hasNext() );
-        assertFalse( s1p2.requirements().hasNext() );
+        assertFalse( s1p2.receives().hasNext() );
 
-        Flow f2 = p3.requirements().next();
+        Flow f2 = p3.receives().next();
         Connector c2 = (Connector) f2.getSource();
 
         f2.disconnect();
 
-        assertFalse( c2.outcomes().hasNext() );
+        assertFalse( c2.sends().hasNext() );
         assertFalse( c2.externalFlows().hasNext() );
-        assertFalse( s1p1.outcomes().hasNext() );
+        assertFalse( s1p1.sends().hasNext() );
 
     }
 }

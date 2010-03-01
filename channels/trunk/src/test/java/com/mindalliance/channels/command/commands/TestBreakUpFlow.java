@@ -87,9 +87,9 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
 
     private Flow findFlow() {
         Flow result = null;
-        Iterator<Flow> outcomes = source.outcomes();
-        while ( result == null && outcomes.hasNext() ) {
-            Flow f = outcomes.next();
+        Iterator<Flow> sends = source.sends();
+        while ( result == null && sends.hasNext() ) {
+            Flow f = sends.next();
             if ( f.getTarget() == target ) result = f;
         }
         return result;

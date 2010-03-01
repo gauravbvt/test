@@ -127,7 +127,7 @@ public class PartReportPanel extends Panel {
         List<Flow> middle = new ArrayList<Flow>();
         List<Flow> tails = new ArrayList<Flow>();
 
-        Iterator<?> i = new IteratorChain( part.requirements(), part.outcomes() );
+        Iterator<?> i = new IteratorChain( part.receives(), part.sends() );
         while ( i.hasNext() ) {
             Flow flow = (Flow) i.next();
             switch ( part.equals( flow.getSource() ) ?

@@ -126,8 +126,8 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         geoLocationsContainer.setOutputMarkupId( true );
         moDetailsDiv.add( geoLocationsContainer );
         addGeoLocationList();
-        addWithinRequirement();
-        addContainsRequirement();
+        addWithinConstraint();
+        addContainsConstraint();
         addPlacesWithin();
         adjustFields();
     }
@@ -300,8 +300,8 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         geonameContainer.add( geonameField );
     }
 
-    private void addWithinRequirement() {
-        WebMarkupContainer containedInContainer = new WebMarkupContainer( "containedInRequirement" );
+    private void addWithinConstraint() {
+        WebMarkupContainer containedInContainer = new WebMarkupContainer( "containedInConstraint" );
         containedInContainer.setVisible( getPlace().isType() );
         moDetailsDiv.add( containedInContainer );
         PlaceReferencePanel mustBeContainedInPanel = new PlaceReferencePanel(
@@ -312,8 +312,8 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         containedInContainer.add( mustBeContainedInPanel );
     }
 
-    private void addContainsRequirement() {
-        WebMarkupContainer containsContainer = new WebMarkupContainer( "containsRequirement" );
+    private void addContainsConstraint() {
+        WebMarkupContainer containsContainer = new WebMarkupContainer( "containsConstraint" );
         containsContainer.setVisible( getPlace().isType() );
         moDetailsDiv.add( containsContainer );
         PlaceReferencePanel mustContainsPanel = new PlaceReferencePanel(

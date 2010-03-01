@@ -54,25 +54,25 @@ public class TestSatisfyNeed extends AbstractChannelsTest {
     }
 
     public void testSatisfyNeed() throws CommandException {
-        assertTrue( countFlows( source.outcomes() ) == 1 );
-        assertTrue( countFlows( target.requirements() ) == 1 );
-        assertTrue( countFlows( otherTarget.requirements() ) == 1 );
+        assertTrue( countFlows( source.sends() ) == 1 );
+        assertTrue( countFlows( target.receives() ) == 1 );
+        assertTrue( countFlows( otherTarget.receives() ) == 1 );
         Command satisfyNeed = new SatisfyNeed( flow, connector.getInnerFlow() );
         assertTrue( commander.canDo( satisfyNeed ) );
         assertTrue( commander.doCommand( satisfyNeed ).isAdded() );
-        assertTrue( countFlows( source.outcomes() ) == 1 );
-        assertTrue( countFlows( target.requirements() ) == 0 );
-        assertTrue( countFlows( otherTarget.requirements() ) == 2 );
+        assertTrue( countFlows( source.sends() ) == 1 );
+        assertTrue( countFlows( target.receives() ) == 0 );
+        assertTrue( countFlows( otherTarget.receives() ) == 2 );
         assertTrue( commander.canUndo() );
         assertTrue( commander.undo().isUnknown() );
-        assertTrue( countFlows( source.outcomes() ) == 1 );
-        assertTrue( countFlows( target.requirements() ) == 1 );
-        assertTrue( countFlows( otherTarget.requirements() ) == 1 );
+        assertTrue( countFlows( source.sends() ) == 1 );
+        assertTrue( countFlows( target.receives() ) == 1 );
+        assertTrue( countFlows( otherTarget.receives() ) == 1 );
         assertTrue( commander.canRedo() );
         assertTrue( commander.redo().isUnknown() );
-        assertTrue( countFlows( source.outcomes() ) == 1 );
-        assertTrue( countFlows( target.requirements() ) == 0 );
-        assertTrue( countFlows( otherTarget.requirements() ) == 2 );
+        assertTrue( countFlows( source.sends() ) == 1 );
+        assertTrue( countFlows( target.receives() ) == 0 );
+        assertTrue( countFlows( otherTarget.receives() ) == 2 );
         assertTrue( commander.canUndo() );
     }
 

@@ -125,15 +125,15 @@ public class RemovePart extends AbstractCommand {
     private MultiCommand makeSubCommands( Part part ) {
         MultiCommand subCommands = new MultiCommand( "cut task - extra" );
         subCommands.addCommand( new CopyPart( part ) );
-        Iterator<Flow> ins = part.requirements();
+        Iterator<Flow> ins = part.receives();
         while ( ins.hasNext() ) {
             Flow in = ins.next();
             subCommands.addCommand( new DisconnectFlow( in ) );
             // If the node to be removed is a part,
-            // preserve the outcome of the source the flow represents
+            // preserve the send of the source the flow represents
             if ( in.isInternal()
                     && in.getSource().isPart()
-                    && !in.getSource().hasMultipleOutcomes( in.getName() ) ) {
+                    && !in.getSource().hasMultipleSends( in.getName() ) ) {
                 Command addCapability = new AddCapability();
                 addCapability.set( "segment", in.getSource().getSegment().getId() );
                 addCapability.set( "part", in.getSource().getId() );
@@ -142,15 +142,15 @@ public class RemovePart extends AbstractCommand {
                 subCommands.addCommand( addCapability );
             }
         }
-        Iterator<Flow> outs = part.outcomes();
+        Iterator<Flow> outs = part.sends();
         while ( outs.hasNext() ) {
             Flow out = outs.next();
             subCommands.addCommand( new DisconnectFlow( out ) );
             // If the node to be removed is a part,
-            // preserve the outcome of the source the flow represents
+            // preserve the send of the source the flow represents
             if ( out.isInternal()
                     && out.getTarget().isPart()
-                    && !out.getSource().hasMultipleRequirements( out.getName() ) ) {
+                    && !out.getSource().hasMultipleReceives( out.getName() ) ) {
                 Command addNeed = new AddNeed();
                 addNeed.set( "segment", out.getTarget().getSegment().getId() );
                 addNeed.set( "part", out.getTarget().getId() );

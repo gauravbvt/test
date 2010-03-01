@@ -18,8 +18,8 @@ import java.text.MessageFormat;
  */
 public class CollapsedFlowPanel extends AbstractFlowPanel {
 
-    public CollapsedFlowPanel( String id, IModel<Flow> flowModel, boolean outcome ) {
-        super( id, flowModel, outcome, true );
+    public CollapsedFlowPanel( String id, IModel<Flow> flowModel, boolean isSend ) {
+        super( id, flowModel, isSend, true );
         init();
     }
 
@@ -31,7 +31,7 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
     private void addLabel() {
         Label label = new Label( "title",                                                 // NON-NLS
                 new PropertyModel( getFlow(),
-                        isOutcome() ? "outcomeTitle" : "requirementTitle" ) );                // NON-NLS
+                        isSend() ? "sendTitle" : "receiveTitle" ) );                // NON-NLS
 
         final String c = Channel.toString( getFlow().getEffectiveChannels() );
         Label channel = new Label( "channels", new AbstractReadOnlyModel() {              // NON-NLS

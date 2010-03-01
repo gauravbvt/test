@@ -35,7 +35,7 @@ public class FlowDeclassifies extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Part source = (Part) flow.getSource();
         List<ElementOfInformation> classifiedEOIs = new ArrayList<ElementOfInformation>();
-        Iterator<Flow> receives = source.requirements();
+        Iterator<Flow> receives = source.receives();
         while ( receives.hasNext() ) {
             Flow receive = receives.next();
             if ( receive.isClassified() )

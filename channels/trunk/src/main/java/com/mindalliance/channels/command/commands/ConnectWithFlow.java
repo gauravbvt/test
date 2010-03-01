@@ -42,18 +42,18 @@ public class ConnectWithFlow extends AbstractCommand {
         needLockOn( target );
         final Part part;
         final Node other;
-        final boolean isOutcome;
+        final boolean isSend;
         if ( source.isPart() ) {
-            isOutcome = true;
+            isSend = true;
             part = (Part) source;
             other = target;
         } else {
-            isOutcome = false;
+            isSend = false;
             part = (Part) target;
             other = source;
         }
         Map<String, Object> args = new HashMap<String, Object>();
-        args.put( "isOutcome", isOutcome );
+        args.put( "isSend", isSend );
         args.put( "segment", part.getSegment().getId() );
         args.put( "part", part.getId() );
         args.put( "otherSegment", other.getSegment().getId() );
@@ -86,9 +86,9 @@ public class ConnectWithFlow extends AbstractCommand {
         Long nodeId = (Long) get( "other" );
         Node other = ChannelsUtils.resolveNode( nodeId, otherSegment, queryService );
         String name = (String) get( "name" );
-        boolean isOutcome = (Boolean) get( "isOutcome" );
+        boolean isSend = (Boolean) get( "isSend" );
         Long priorId = (Long) get( "flow" );
-        Flow flow = isOutcome
+        Flow flow = isSend
                 ? queryService.connect( part, other, name, priorId )
                 : queryService.connect( other, part, name, priorId );
         assert priorId == null || priorId == flow.getId();

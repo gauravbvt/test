@@ -70,7 +70,7 @@ public class FlowReportPanel extends Panel {
         final List<LocalizedActor> actors = findActors( flow, broadcasts, unicasts, queryService );
 
         add( new Label( "information",
-                        isSource ? flow.getOutcomeTitle() : flow.getRequirementTitle() )
+                        isSource ? flow.getSendTitle() : flow.getReceiveTitle() )
                 .add( new AttributeModifier( "class", true,
                         new Model<String>( flow.isRequired() ? "required-information"
                                                              : "information" ) ) ),

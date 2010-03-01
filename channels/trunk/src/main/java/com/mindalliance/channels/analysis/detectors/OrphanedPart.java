@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Detects that a part has no requirements and no outcome.
+ * Detects that a part has no receives and no sends.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -49,7 +49,7 @@ public class OrphanedPart extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
-        if ( !part.requirements().hasNext() && !part.outcomes().hasNext() ) {
+        if ( !part.receives().hasNext() && !part.sends().hasNext() ) {
             DetectedIssue issue = makeIssue( DetectedIssue.COMPLETENESS, part );
             issue.setDescription( "Does not produce or need information." );
             issue.setRemediation( "Add sent information\nor add received information." );

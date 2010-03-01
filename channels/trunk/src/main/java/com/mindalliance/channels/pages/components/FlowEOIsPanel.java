@@ -360,11 +360,11 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                 IteratorUtils.toList(
                         IteratorUtils.chainedIterator(
                                 IteratorUtils.chainedIterator(
-                                        flow.getSource().outcomes(),
-                                        flow.getSource().requirements() ),
+                                        flow.getSource().sends(),
+                                        flow.getSource().receives() ),
                                 IteratorUtils.chainedIterator(
-                                        flow.getTarget().outcomes(),
-                                        flow.getTarget().requirements() ) ) ),
+                                        flow.getTarget().sends(),
+                                        flow.getTarget().receives() ) ) ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         return Matcher.same( ( (Flow) obj ).getName(), flow.getName() );

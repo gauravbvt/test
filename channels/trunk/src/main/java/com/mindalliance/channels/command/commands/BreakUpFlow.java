@@ -95,7 +95,7 @@ public class BreakUpFlow extends AbstractCommand {
             Node source = flow.getSource();
             Node target = flow.getTarget();
             if ( !source.isConnector() && !target.isConnector() ) {
-                if ( !source.hasMultipleOutcomes( getName() ) ) {
+                if ( !source.hasMultipleSends( getName() ) ) {
                     Command addCapability = new AddCapability();
                     addCapability.set( "segment", source.getSegment().getId() );
                     addCapability.set( "part", source.getId() );
@@ -103,7 +103,7 @@ public class BreakUpFlow extends AbstractCommand {
                     addCapability.set( "attributes", ChannelsUtils.getFlowAttributes( flow ) );
                     subCommands.addCommand( addCapability );
                 }
-                if ( !target.hasMultipleRequirements( getName() ) ) {
+                if ( !target.hasMultipleReceives( getName() ) ) {
                     Command addNeed = new AddNeed();
                     addNeed.set( "segment", target.getSegment().getId() );
                     addNeed.set( "part", target.getId() );

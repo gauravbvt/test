@@ -44,15 +44,15 @@ public class TestDefaultAnalyst extends AbstractChannelsTest {
             while ( nodes.hasNext() ) {
                 Node node = nodes.next();
                 collectIssues( node, allIssues );
-                Iterator<Flow> requirements = node.requirements();
-                while ( requirements.hasNext() ) {
-                    Flow requirement = requirements.next();
-                    collectIssues( requirement, allIssues );
+                Iterator<Flow> receives = node.receives();
+                while ( receives.hasNext() ) {
+                    Flow receive = receives.next();
+                    collectIssues( receive, allIssues );
                 }
-                Iterator<Flow> outcomes = node.outcomes();
-                while ( outcomes.hasNext() ) {
-                    Flow outcome = outcomes.next();
-                    collectIssues( outcome, allIssues );
+                Iterator<Flow> sends = node.sends();
+                while ( sends.hasNext() ) {
+                    Flow send = sends.next();
+                    collectIssues( send, allIssues );
                 }
             }
             assertFalse( allIssues.isEmpty() );
@@ -80,13 +80,13 @@ public class TestDefaultAnalyst extends AbstractChannelsTest {
             while ( nodes.hasNext() ) {
                 Node node = nodes.next();
                 processSummary( node );
-                Iterator<Flow> requirements = node.requirements();
-                while ( requirements.hasNext() ) {
-                    processSummary( requirements.next() );
+                Iterator<Flow> receives = node.receives();
+                while ( receives.hasNext() ) {
+                    processSummary( receives.next() );
                 }
-                Iterator<Flow> outcomes = node.outcomes();
-                while ( outcomes.hasNext() ) {
-                    processSummary( outcomes.next() );
+                Iterator<Flow> sends = node.sends();
+                while ( sends.hasNext() ) {
+                    processSummary( sends.next() );
                 }
             }
             assertTrue( true );

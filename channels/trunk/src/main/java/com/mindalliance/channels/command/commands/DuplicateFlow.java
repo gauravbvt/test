@@ -22,11 +22,11 @@ public class DuplicateFlow extends AbstractCommand {
     public DuplicateFlow() {
     }
 
-    public DuplicateFlow( Flow flow, boolean isOutcome ) {
-        needLockOn( isOutcome ? flow.getSource() : flow.getTarget() );
+    public DuplicateFlow( Flow flow, boolean isSend ) {
+        needLockOn( isSend ? flow.getSource() : flow.getTarget() );
         set( "segment", flow.getSegment().getId() );
         set( "flow", flow.getId() );
-        set( "outcome", isOutcome );
+        set( "send", isSend );
     }
 
     /**
@@ -45,8 +45,8 @@ public class DuplicateFlow extends AbstractCommand {
             Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
             Flow flow = segment.findFlow( (Long) get( "flow" ) );
             if ( flow == null ) throw new NotFoundException();
-            boolean isOutcome = (Boolean) get( "outcome" );
-            duplicate = ChannelsUtils.duplicate( flow, isOutcome, (Long) get( "duplicate" ) );
+            boolean isSend = (Boolean) get( "send" );
+            duplicate = ChannelsUtils.duplicate( flow, isSend, (Long) get( "duplicate" ) );
             set( "duplicate", duplicate.getId() );
             return new Change( Change.Type.Added, duplicate );
         } catch ( NotFoundException e ) {

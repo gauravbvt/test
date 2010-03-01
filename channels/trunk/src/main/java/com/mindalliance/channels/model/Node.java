@@ -5,7 +5,6 @@ import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.iterators.IteratorChain;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
@@ -24,11 +23,10 @@ import java.util.Map;
 /**
  * A node in the flow graph
  */
-@Entity
 public abstract class Node extends ModelObject implements SegmentObject {
 
     /**
-     * Initial capacity of outcome and requirement flows.
+     * Initial capacity of send and receive flows.
      */
     private static final int INITIAL_CAPACITY = 5;
 
@@ -38,14 +36,14 @@ public abstract class Node extends ModelObject implements SegmentObject {
     private static final String DEFAULT_FLOW_NAME = "";
 
     /**
-     * All requirements, indexed by id.
+     * All receives, indexed by id.
      */
-    private Map<Long, Flow> requirements;
+    private Map<Long, Flow> receives;
 
     /**
-     * All outcomes, indexed by id.
+     * All sends, indexed by id.
      */
-    private Map<Long, Flow> outcomes;
+    private Map<Long, Flow> sends;
 
     /**
      * The unique segment containing this node.
@@ -53,8 +51,8 @@ public abstract class Node extends ModelObject implements SegmentObject {
     private Segment segment;
 
     protected Node() {
-        setOutcomes( new HashMap<Long, Flow>() );
-        setRequirements( new HashMap<Long, Flow>() );
+        setSends( new HashMap<Long, Flow>() );
+        setReceives( new HashMap<Long, Flow>() );
     }
 
     /**
@@ -72,9 +70,9 @@ public abstract class Node extends ModelObject implements SegmentObject {
      * @return a flow or null
      */
     public Flow getFlow( long id ) {
-        Flow result = requirements.get( id );
+        Flow result = receives.get( id );
         if ( result == null )
-            result = outcomes.get( id );
+            result = sends.get( id );
 
         return result;
     }
@@ -82,28 +80,28 @@ public abstract class Node extends ModelObject implements SegmentObject {
     @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     @JoinTable( name = "Node_Outs" )
     @MapKey( name = "id" )
-    protected Map<Long, Flow> getOutcomes() {
-        return outcomes;
+    protected Map<Long, Flow> getSends() {
+        return sends;
     }
 
     /**
-     * Set outcomes, rebuilding the index.
+     * Set sends, rebuilding the index.
      * Package-visible for tests.
      *
-     * @param outcomes the new outcomes
+     * @param sends the new sends
      */
-    void setOutcomes( Map<Long, Flow> outcomes ) {
-        this.outcomes = outcomes;
+    void setSends( Map<Long, Flow> sends ) {
+        this.sends = sends;
     }
 
     /**
-     * Iterates over outcomes, alphabetically by print string.
+     * Iterates over sends, alphabetically by print string.
      *
      * @return a flow iterator
      */
-    public Iterator<Flow> outcomes() {
+    public Iterator<Flow> sends() {
         List<Flow> flows = new ArrayList<Flow>();
-        flows.addAll( getOutcomes().values() );
+        flows.addAll( getSends().values() );
         Collections.sort( flows, new Comparator<Flow>() {
             /**
              * {@inheritDoc}
@@ -136,12 +134,12 @@ public abstract class Node extends ModelObject implements SegmentObject {
     }
 
     /**
-     * Create a new outcome for this node.
+     * Create a new send for this node.
      *
      * @param queryService the underlying store
      * @return an internal flow to a new connector
      */
-    public Flow createOutcome( QueryService queryService ) {
+    public Flow createSend( QueryService queryService ) {
         return queryService.connect(
                 this,
                 queryService.createConnector( getSegment() ),
@@ -149,51 +147,48 @@ public abstract class Node extends ModelObject implements SegmentObject {
     }
 
     /**
-     * Add an outcome to this node.
+     * Add a send to this node.
      *
-     * @param outcome the outcome
+     * @param send the send
      */
-    public void addOutcome( Flow outcome ) {
-        outcomes.put( outcome.getId(), outcome );
-        outcome.setSource( this );
+    public void addSend( Flow send ) {
+        sends.put( send.getId(), send );
+        send.setSource( this );
     }
 
     /**
-     * Remove an outcome from this node.
+     * Remove an send from this node.
      * Removes the source node if a connector.
      *
-     * @param outcome the outcome
+     * @param send the send
      */
-    void removeOutcome( Flow outcome ) {
-        outcomes.remove( outcome.getId() );
-        outcome.setSource( null );
+    void removeSend( Flow send ) {
+        sends.remove( send.getId() );
+        send.setSource( null );
     }
 
-    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
-    @JoinTable( name = "Node_Reqs" )
-    @MapKey( name = "id" )
-    protected Map<Long, Flow> getRequirements() {
-        return requirements;
+    protected Map<Long, Flow> getReceives() {
+        return receives;
     }
 
     /**
-     * Set requirements, rebuilding the index.
+     * Set receives, rebuilding the index.
      * Package-visible for tests.
      *
-     * @param requirements the new requirements
+     * @param receives the new receives
      */
-    void setRequirements( Map<Long, Flow> requirements ) {
-        this.requirements = requirements;
+    void setReceives( Map<Long, Flow> receives ) {
+        this.receives = receives;
     }
 
     /**
-     * Iterates over requirements, alphabetically by print string.
+     * Iterates over receives, alphabetically by print string.
      *
      * @return a flow iterator
      */
-    public Iterator<Flow> requirements() {
+    public Iterator<Flow> receives() {
         List<Flow> flows = new ArrayList<Flow>();
-        flows.addAll( getRequirements().values() );
+        flows.addAll( getReceives().values() );
         Collections.sort( flows, new Comparator<Flow>() {
             /**
              * {@inheritDoc}
@@ -214,44 +209,44 @@ public abstract class Node extends ModelObject implements SegmentObject {
     }
 
     /**
-     * Create and add a new requirement.
+     * Create and add a new receive.
      *
      * @param queryService the underyling store
      * @return a flow from a new connector to this node
      */
-    public Flow createRequirement( QueryService queryService ) {
+    public Flow createReceive( QueryService queryService ) {
         return queryService.connect( queryService.createConnector( getSegment() ), this, DEFAULT_FLOW_NAME );
     }
 
     /**
-     * Add a requirement to this node.
+     * Add a receive to this node.
      *
-     * @param requirement the requirement
+     * @param receive the receive
      */
-    public void addRequirement( Flow requirement ) {
-        requirements.put( requirement.getId(), requirement );
-        requirement.setTarget( this );
+    public void addReceive( Flow receive ) {
+        receives.put( receive.getId(), receive );
+        receive.setTarget( this );
     }
 
     /**
-     * Remove a requirement from this node.
+     * Remove a receive from this node.
      * Removes the target node if a connector.
      *
-     * @param requirement the requirement
+     * @param receive the receive
      */
-    void removeRequirement( Flow requirement ) {
-        requirements.remove( requirement.getId() );
-        requirement.setTarget( null );
+    void removeReceive( Flow receive ) {
+        receives.remove( receive.getId() );
+        receive.setTarget( null );
     }
 
     /**
-     * Get all flows attached to this part, requirements and outcomes.
+     * Get all flows attached to this part, receives and sends.
      *
      * @return a flow iterator
      */
     @SuppressWarnings( {"unchecked"} )
     public Iterator<Flow> flows() {
-        return (Iterator<Flow>) new IteratorChain( requirements(), outcomes() );
+        return (Iterator<Flow>) new IteratorChain( receives(), sends() );
     }
 
     @Transient
@@ -292,30 +287,30 @@ public abstract class Node extends ModelObject implements SegmentObject {
     /**
      * Test if this node is connected to another node by a flow of a given name.
      *
-     * @param outcome test if node is an outcome, otherwise a requirement
+     * @param send test if node is a send, otherwise a receive
      * @param node    the other node
      * @param name    the name of the flow
      * @return true if connected.
      */
-    public boolean isConnectedTo( boolean outcome, Node node, String name ) {
+    public boolean isConnectedTo( boolean send, Node node, String name ) {
         boolean result = false;
-        Map<Long, Flow> flows = outcome ? outcomes : requirements;
+        Map<Long, Flow> flows = send ? sends : receives;
         for ( Iterator<Flow> it = flows.values().iterator(); !result && it.hasNext(); ) {
             Flow f = it.next();
-            result = name.equals( f.getName() ) && f.isConnectedTo( outcome, node );
+            result = name.equals( f.getName() ) && f.isConnectedTo( send, node );
         }
 
         return result;
     }
 
     /**
-     * Find all outcome flows that are required.
+     * Find all send flows that are required.
      *
      * @return a list of flows
      */
-    public List<Flow> requiredOutcomes() {
+    public List<Flow> requiredSends() {
         List<Flow> requiredFlows = new ArrayList<Flow>();
-        for ( Flow out : outcomes.values() ) {
+        for ( Flow out : sends.values() ) {
             if ( out.isRequired() ) {
                 requiredFlows.add( out );
             }
@@ -324,29 +319,29 @@ public abstract class Node extends ModelObject implements SegmentObject {
     }
 
     /**
-     * Whether this node has more than one outcome of a given name
+     * Whether this node has more than one send of a given name
      *
      * @param name the name of a flow
      * @return a boolean
      */
-    public boolean hasMultipleOutcomes( String name ) {
+    public boolean hasMultipleSends( String name ) {
         int count = 0;
-        for ( Flow outcome : outcomes.values() ) {
-            if ( Matcher.same( outcome.getName(), name ) ) count++;
+        for ( Flow send : sends.values() ) {
+            if ( Matcher.same( send.getName(), name ) ) count++;
         }
         return count > 1;
     }
 
     /**
-     * Whether this node has more than one requirement of a given name
+     * Whether this node has more than one receive of a given name
      *
      * @param name the name of a flow
      * @return a boolean
      */
-    public boolean hasMultipleRequirements( String name ) {
+    public boolean hasMultipleReceives( String name ) {
         int count = 0;
-        for ( Flow req : requirements.values() ) {
-            if ( Matcher.same( req.getName(), name ) ) count++;
+        for ( Flow receive : receives.values() ) {
+            if ( Matcher.same( receive.getName(), name ) ) count++;
         }
         return count > 1;
     }
@@ -356,7 +351,7 @@ public abstract class Node extends ModelObject implements SegmentObject {
      */
     @Transient
     public boolean isUndefined() {
-        return super.isUndefined() && requirements.isEmpty() && outcomes.isEmpty();
+        return super.isUndefined() && receives.isEmpty() && sends.isEmpty();
     }
 
 

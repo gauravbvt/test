@@ -41,8 +41,8 @@ public class CyclicTriggering extends AbstractIssueDetector {
                 new StrongConnectivityInspector<Part, Flow>( digraph );
         List<Set<Part>> cycles = sci.stronglyConnectedSets();
         if ( !cycles.isEmpty() ) {
-            // For each cycle where all nodes have at least one critical requirement,
-            // collect all critical requirements of nodes in the cycle.
+            // For each cycle where all nodes have at least one critical receive,
+            // collect all critical receives of nodes in the cycle.
             for ( Set<Part> cycle : cycles ) {
                 if ( cycle.size() > 1 ) {
                     Issue issue = makeIssue( Issue.ROBUSTNESS, segment );

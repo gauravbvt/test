@@ -446,10 +446,10 @@ public interface QueryService extends Service {
      * Make a replicate of the flow
      *
      * @param flow      the flow to replicate
-     * @param isOutcome whether to replicate as outcome or requirement
+     * @param isSend whether to replicate as send or receive
      * @return a created flow
      */
-    Flow replicate( Flow flow, boolean isOutcome );
+    Flow replicate( Flow flow, boolean isSend );
 
     /**
      * Commit changes to persistent store.

@@ -62,7 +62,7 @@ public class UselessPart extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
-        if ( part.requirements().hasNext() || part.outcomes().hasNext() ) {
+        if ( part.receives().hasNext() || part.sends().hasNext() ) {
             if ( !isUseful( part, new HashSet<Part>() ) ) {
                 DetectedIssue issue = makeIssue( DetectedIssue.COMPLETENESS, part );
                 issue.setDescription( "Not useful: it neither ends or mitigates a risk, "
@@ -79,10 +79,10 @@ public class UselessPart extends AbstractIssueDetector {
     // A part is useful if it terminates an event, mitigates a risk or sends info to a useful part.
     private boolean isUseful( Part part, Set<Part> visited ) {
         if ( part.isTerminatesEventPhase() || !part.getMitigations().isEmpty() ) return true;
-        Iterator<Flow> outcomes = part.outcomes();
+        Iterator<Flow> sends = part.sends();
         boolean useful = false;
-        while ( !useful && outcomes.hasNext() ) {
-            Flow send = outcomes.next();
+        while ( !useful && sends.hasNext() ) {
+            Flow send = sends.next();
             Node node = send.getTarget();
             if ( node.isPart() ) {
                 Part target = (Part) node;

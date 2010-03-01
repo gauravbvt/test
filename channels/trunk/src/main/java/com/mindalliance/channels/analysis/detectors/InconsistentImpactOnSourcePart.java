@@ -39,11 +39,11 @@ public class InconsistentImpactOnSourcePart extends AbstractIssueDetector {
             if ( similar.isTriggeringToSource() != commitment.isTriggeringToSource() ) {
                 DetectedIssue issue = makeIssue( Issue.VALIDITY, commitment );
                 issue.setDescription( "'"
-                        + commitment.getRequirementTitle()
+                        + commitment.getReceiveTitle()
                         + "' triggers '"
                         + commitment.getSource().getTitle()
                         + "' but '"
-                        + similar.getRequirementTitle()
+                        + similar.getReceiveTitle()
                         + "' does not." );
                 issue.setRemediation( "Have both or neither trigger the task that produces the information." );
                 issue.setSeverity( Severity.Minor );
@@ -51,11 +51,11 @@ public class InconsistentImpactOnSourcePart extends AbstractIssueDetector {
             } else if ( similar.isTerminatingToSource() != commitment.isTerminatingToSource() ) {
                 DetectedIssue issue = makeIssue( Issue.VALIDITY, commitment );
                 issue.setDescription( "'"
-                        + commitment.getRequirementTitle()
+                        + commitment.getReceiveTitle()
                         + "' terminates '"
                         + commitment.getSource().getTitle()
                         + "' but '"
-                        + similar.getRequirementTitle()
+                        + similar.getReceiveTitle()
                         + "' does not." );
                 issue.setRemediation( "Have both terminate the task that produces the information\nor have neither do it." );
                 issue.setSeverity( Severity.Minor );
@@ -69,7 +69,7 @@ public class InconsistentImpactOnSourcePart extends AbstractIssueDetector {
     private List<Flow> getSimilarFlows( final Flow commitment ) {
         Part source = (Part) commitment.getSource();
         return (List<Flow>) CollectionUtils.select(
-                IteratorUtils.toList( source.outcomesNamed( commitment.getName() ) ),
+                IteratorUtils.toList( source.sendsNamed( commitment.getName() ) ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         return !obj.equals( commitment )

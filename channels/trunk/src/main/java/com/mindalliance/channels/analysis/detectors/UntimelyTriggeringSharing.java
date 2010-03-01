@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * A triggering sharing commitment does not meet timing requirements
+ * A triggering sharing commitment does not meet timing constraints
  * set by a matching triggering notification need.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -57,7 +57,7 @@ public class UntimelyTriggeringSharing extends AbstractIssueDetector {
                     );
                     issue.setRemediation(
                             "Ease the timeliness constraint for \""
-                                    + triggeredNeed.getRequirementTitle()
+                                    + triggeredNeed.getReceiveTitle()
                                     + "\",\nor obtain more timely sharing commitments for "
                                     + "\"" + triggeredNeed.getName() + "\""
                     );
@@ -79,7 +79,7 @@ public class UntimelyTriggeringSharing extends AbstractIssueDetector {
         visited.add( commitment );
         Delay cumulativeDelay = new Delay( commitment.getMaxDelay() );
         List<Flow> priorCommitments = (List<Flow>) CollectionUtils.select(
-                IteratorUtils.toList( ( (Part) commitment.getSource() ).requirementsNamed( commitment.getName() ) ),
+                IteratorUtils.toList( ( (Part) commitment.getSource() ).receivesNamed( commitment.getName() ) ),
                 PredicateUtils.invokerPredicate( "isSharingCommitment" )
         );
         List<Delay> alternateDelays = (List<Delay>) CollectionUtils.collect(
@@ -101,7 +101,7 @@ public class UntimelyTriggeringSharing extends AbstractIssueDetector {
     @SuppressWarnings( "unchecked" )
     private List<Flow> getMatchingTriggeredNeeds( Part target, final Flow commitment ) {
         return (List<Flow>) CollectionUtils.select(
-                IteratorUtils.toList( target.requirementsNamed( commitment.getName() ) ),
+                IteratorUtils.toList( target.receivesNamed( commitment.getName() ) ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         Flow receive = (Flow) obj;

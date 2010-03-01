@@ -66,9 +66,9 @@ public class PasteFlow extends AbstractCommand {
             }
 
             Long priorId = (Long) get( "flow" );
-            boolean isOutcome = (Boolean) copy.get( "isOutcome" );
+            boolean isSend = (Boolean) copy.get( "isSend" );
             Flow flow;
-            if ( isOutcome ) {
+            if ( isSend ) {
                 flow = queryService.connect(
                         part,
                         queryService.createConnector( segment ),
@@ -126,8 +126,8 @@ public class PasteFlow extends AbstractCommand {
         if ( copy == null ) {
             return super.getLabel( commander );
         } else {
-            boolean isOutcome = (Boolean) copy.get( "isOutcome" );
-            return isOutcome
+            boolean isSend = (Boolean) copy.get( "isSend" );
+            return isSend
                     ? "Paste capability"
                     : "Paste need";
         }

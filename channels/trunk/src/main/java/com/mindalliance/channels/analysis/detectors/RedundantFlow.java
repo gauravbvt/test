@@ -61,7 +61,7 @@ public class RedundantFlow extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         Node source = flow.getSource();
-        Iterator<Flow> flows = source.outcomes();
+        Iterator<Flow> flows = source.sends();
         boolean redundant = false;
         while ( !redundant && flows.hasNext() ) {
             Flow otherFlow = flows.next();

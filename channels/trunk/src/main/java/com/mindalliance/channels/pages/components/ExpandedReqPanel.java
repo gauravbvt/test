@@ -1,17 +1,17 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Channelable;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.PropertyModel;
+import com.mindalliance.channels.model.Flow;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.PropertyModel;
 
 import java.util.Set;
 
 /**
- * Details of an expanded requirement.
+ * Details of an expanded receive.
  */
 public class ExpandedReqPanel extends ExpandedFlowPanel {
 

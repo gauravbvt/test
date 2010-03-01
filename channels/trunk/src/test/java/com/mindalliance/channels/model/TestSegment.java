@@ -128,17 +128,17 @@ public class TestSegment extends TestCase {
         assertSame( p4, f.getTarget() );
         assertSame( f, p3.getFlow( f.getId() ) );
         assertSame( f, p4.getFlow( f.getId() ) );
-        assertSame( f, p3.outcomes().next() );
-        assertSame( f, p4.requirements().next() );
+        assertSame( f, p3.sends().next() );
+        assertSame( f, p4.receives().next() );
 
         // we now allow flows of same name between same nodes
-        Iterator<Flow> iterator = p3.outcomesNamed( "" );
+        Iterator<Flow> iterator = p3.sendsNamed( "" );
         assertTrue( iterator.hasNext() );
         assertSame( f, iterator.next() );
         assertFalse( iterator.hasNext() );
         Flow f2 = queryService.connect( p3, p4, "" );
 
-        iterator = p4.requirementsNamed( "" );
+        iterator = p4.receivesNamed( "" );
         assertTrue( iterator.hasNext() );
         assertSame( f, iterator.next() );
         assertTrue( iterator.hasNext() );
@@ -207,9 +207,9 @@ public class TestSegment extends TestCase {
         assertSame( dp, nodes2.next() );
         assertFalse( nodes2.hasNext() );
 
-        Flow out = dp.createOutcome( queryService );
+        Flow out = dp.createSend( queryService );
         Connector c1 = (Connector) out.getTarget();
-        Flow in  = dp.createRequirement( queryService );
+        Flow in  = dp.createReceive( queryService );
         Connector c2 = (Connector) in.getSource();
         segment.removeNode( dp );
 

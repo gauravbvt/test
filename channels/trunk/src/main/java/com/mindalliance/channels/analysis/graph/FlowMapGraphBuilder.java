@@ -61,7 +61,7 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
         Iterator<Node> nodes = segment.nodes();
         while ( nodes.hasNext() ) {
             final Node node = nodes.next();
-            if ( !node.outcomes().hasNext() && !node.requirements().hasNext() )
+            if ( !node.sends().hasNext() && !node.receives().hasNext() )
                 // added if not part of a flow
                 graph.addVertex( node );
         }

@@ -50,7 +50,7 @@ public class Connector extends Node {
      */
     @Transient
     public boolean isSource() {
-        return !getOutcomes().isEmpty();
+        return !getSends().isEmpty();
     }
 
     /**
@@ -59,7 +59,7 @@ public class Connector extends Node {
      */
     @Transient
     public boolean isTarget() {
-        return !getRequirements().isEmpty();
+        return !getReceives().isEmpty();
     }
 
     /**
@@ -68,13 +68,13 @@ public class Connector extends Node {
      */
     @Transient
     public Flow getInnerFlow() {
-        return isSource() ? getOutcomes().values().iterator().next()
-                          : getRequirements().values().iterator().next();
+        return isSource() ? getSends().values().iterator().next()
+                          : getReceives().values().iterator().next();
     }
 
     /** @return true if connector has an inner flow. */
     public boolean hasInnerFlow() {
-        return !getOutcomes().isEmpty() || !getRequirements().isEmpty();
+        return !getSends().isEmpty() || !getReceives().isEmpty();
     }
 
     /**

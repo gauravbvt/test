@@ -75,13 +75,13 @@ public class InternalFlow extends Flow {
     @Override
     public void disconnect() {
         Node s = source;
-        s.removeOutcome( this );
+        s.removeSend( this );
         if ( s.isConnector() )
             s.getSegment().removeNode( s );
         source = null;
 
         Node t = target;
-        t.removeRequirement( this );
+        t.removeReceive( this );
         if ( t.isConnector() ) {
             t.getSegment().removeNode( t );
         }

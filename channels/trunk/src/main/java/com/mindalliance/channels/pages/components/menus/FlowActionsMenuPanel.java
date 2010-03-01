@@ -31,9 +31,9 @@ import java.util.List;
  */
 public class FlowActionsMenuPanel extends MenuPanel {
     /**
-     * Whether flow viewed as outcome.
+     * Whether flow viewed as send.
      */
-    private boolean isOutcome;
+    private boolean isSend;
     /**
      * Whether flow panel is collapsed.
      */
@@ -42,10 +42,10 @@ public class FlowActionsMenuPanel extends MenuPanel {
     public FlowActionsMenuPanel(
             String s,
             IModel<? extends Flow> model,
-            boolean isOutcome,
+            boolean isSend,
             boolean isCollapsed ) {
         super( s, "Menu", model, null );
-        this.isOutcome = isOutcome;
+        this.isSend = isSend;
         this.isCollapsed = isCollapsed;
         doInit();
     }
@@ -147,9 +147,9 @@ public class FlowActionsMenuPanel extends MenuPanel {
                 update( target, change );
             }
         } );
-        if ( ( isOutcome && getFlow().getTarget().isPart() )
-                || ( !isOutcome && getFlow().getSource().isPart() ) ) {
-            commandWrappers.add( new CommandWrapper( new DuplicateFlow( flow, isOutcome ) ) {
+        if ( ( isSend && getFlow().getTarget().isPart() )
+                || ( !isSend && getFlow().getSource().isPart() ) ) {
+            commandWrappers.add( new CommandWrapper( new DuplicateFlow( flow, isSend ) ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
                 }
@@ -188,7 +188,7 @@ public class FlowActionsMenuPanel extends MenuPanel {
     }
 
     private Part getPart() {
-        if ( isOutcome ) {
+        if ( isSend ) {
             return (Part) getFlow().getSource();
         } else {
             return (Part) getFlow().getTarget();

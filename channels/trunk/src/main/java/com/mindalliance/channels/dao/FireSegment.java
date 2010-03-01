@@ -90,6 +90,6 @@ public class FireSegment extends Segment {
         Flow fireAddress = queryService.connect( alarm, fd, "address" );
         fireAddress.becomeTriggeringToTarget();
         queryService.connect( fd, chief, "" );
-        chief.createOutcome( queryService ).setName( "\"all-clear\"" );
+        chief.createSend( queryService ).setName( "\"all-clear\"" );
     }
 }

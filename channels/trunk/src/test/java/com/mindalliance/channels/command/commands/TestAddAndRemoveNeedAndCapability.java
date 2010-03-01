@@ -64,7 +64,7 @@ public class TestAddAndRemoveNeedAndCapability extends AbstractChannelsTest {
 
     private int countNeeds( Part part ) {
         int count = 0;
-        Iterator<Flow> needs = part.requirements();
+        Iterator<Flow> needs = part.receives();
         while ( needs.hasNext() ) {
             needs.next();
             count++;
@@ -74,9 +74,9 @@ public class TestAddAndRemoveNeedAndCapability extends AbstractChannelsTest {
 
     private int countCapabilities( Part part ) {
         int count = 0;
-        Iterator<Flow> outcomes = part.outcomes();
-        while ( outcomes.hasNext() ) {
-            outcomes.next();
+        Iterator<Flow> sends = part.sends();
+        while ( sends.hasNext() ) {
+            sends.next();
             count++;
         }
         return count;

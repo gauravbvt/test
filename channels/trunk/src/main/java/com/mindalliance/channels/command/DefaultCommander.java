@@ -121,7 +121,7 @@ public class DefaultCommander extends AbstractService implements Commander, Init
      */
     public boolean isFlowCopied() {
         Map<String, Object> userCopy = getCopy();
-        return userCopy != null && userCopy.get( "isOutcome" ) != null;
+        return userCopy != null && userCopy.get( "isSend" ) != null;
     }
 
     public boolean isAttachmentCopied() {

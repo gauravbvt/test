@@ -109,7 +109,7 @@ public class AddIntermediate extends AbstractCommand {
         subCommands.addCommand( addPart );
         // connect to intermediate
         Command toIntermediate = new ConnectWithFlow();
-        toIntermediate.set( "isOutcome", true );
+        toIntermediate.set( "isSend", true );
         toIntermediate.set( "part", flow.getSource().getId() );
         toIntermediate.set( "segment", segment.getId() );
         toIntermediate.set( "otherSegment", segment.getId() );
@@ -119,7 +119,7 @@ public class AddIntermediate extends AbstractCommand {
         subCommands.addLink( addPart, "id", toIntermediate, "other" );
         // connect intermediate to new flow's target
         Command toTarget = new ConnectWithFlow();
-        toTarget.set( "isOutcome", true );
+        toTarget.set( "isSend", true );
         toTarget.set( "segment", segment.getId() );
         toTarget.set( "otherSegment", segment.getId() );
         toTarget.set( "other", flow.getTarget().getId() );

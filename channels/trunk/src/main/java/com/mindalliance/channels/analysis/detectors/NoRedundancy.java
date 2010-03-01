@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Detects whether a critical requirement from an actor (singleton source) has no alternate source.
+ * Detects whether a critical receive from an actor (singleton source) has no alternate source.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -62,29 +62,29 @@ public class NoRedundancy extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         final Part part = (Part) modelObject;
-        // Find all critical sourced requirements of a part
-        Iterator<Flow> criticalRequirements = new FilterIterator( part.requirements(),
+        // Find all critical sourced receives of a part
+        Iterator<Flow> criticalReceives = new FilterIterator( part.receives(),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        Flow requirement = (Flow) obj;
-                        return requirement.isCritical()
-                                && !requirement.getName().isEmpty()
-                                && requirement.getSource().isPart()
-                                && ( (Part) requirement.getSource() ).getActor() != null;
+                        Flow receive = (Flow) obj;
+                        return receive.isCritical()
+                                && !receive.getName().isEmpty()
+                                && receive.getSource().isPart()
+                                && ( (Part) receive.getSource() ).getActor() != null;
                     }
                 } );
-        // Find critical requirements without alternate sources
-        while ( criticalRequirements.hasNext() ) {
-            final Flow criticalRequirement = criticalRequirements.next();
-            final Actor sourceActor = ( (Part) criticalRequirement.getSource() ).getActor();
-            final String name = criticalRequirement.getName();
-            // Get all differently sourced requirements for same info
+        // Find critical receives without alternate sources
+        while ( criticalReceives.hasNext() ) {
+            final Flow criticalReceive = criticalReceives.next();
+            final Actor sourceActor = ( (Part) criticalReceive.getSource() ).getActor();
+            final String name = criticalReceive.getName();
+            // Get all differently sourced receives for same info
             // by the part or other "matching" parts
             Iterator<Flow> alternates = new FilterIterator( part.getSegment().flows(),
                     new Predicate() {
                         public boolean evaluate( Object obj ) {
                             Flow otherFlow = (Flow) obj;
-                            return otherFlow != criticalRequirement
+                            return otherFlow != criticalReceive
                                     && Matcher.same( otherFlow.getName(), name )
                                     && otherFlow.getTarget().isPart()
                                     && partsMatch( (Part) otherFlow.getTarget(), part )

@@ -51,7 +51,7 @@ public class UntimelyCriticalSharing extends AbstractIssueDetector {
                     );
                     issue.setRemediation(
                             "Ease the timeliness constraint for \""
-                                    + criticalNeed.getRequirementTitle()
+                                    + criticalNeed.getReceiveTitle()
                                     + "\"\nor obtain a more timely sharing commitment for "
                                     + "\"" + criticalNeed.getName() + "\""
                     );
@@ -66,7 +66,7 @@ public class UntimelyCriticalSharing extends AbstractIssueDetector {
     @SuppressWarnings( "unchecked" )
     private List<Flow> getMatchingCriticalNeeds( Part target, final Flow commitment ) {
         return (List<Flow>) CollectionUtils.select(
-                IteratorUtils.toList( target.requirementsNamed( commitment.getName() ) ),
+                IteratorUtils.toList( target.receivesNamed( commitment.getName() ) ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         Flow receive = (Flow) obj;

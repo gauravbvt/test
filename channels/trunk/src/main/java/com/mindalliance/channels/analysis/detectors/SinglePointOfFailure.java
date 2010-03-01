@@ -55,7 +55,7 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
     /**
      * Detects one or more actors who play parts where they are bottlenecks.
      * A bottleneck is an "articulation vertex" (a point connecting otherwise
-     * disjoint subgraphs) with a large enough out degree (count of outcomes).
+     * disjoint subgraphs) with a large enough out degree (count of sends).
      *
      * @param modelObject -- the ModelObject being analyzed
      * @return a list of Issues

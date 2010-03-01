@@ -31,14 +31,14 @@ public class EvacuationSegment extends Segment {
         Part p = segment.getDefaultPart();
         p.setActor( queryService.findOrCreate( Actor.class, "Sam Adams" ) );
         p.setTask( "supervising evacuation" );
-        Flow goAhead = p.createRequirement( queryService );
+        Flow goAhead = p.createReceive( queryService );
         goAhead.setName( "go-ahead" );
         // goAhead.becomeCritical( );
         goAhead.becomeTriggeringToTarget();
         goAhead.addChannel( new Channel(
                 queryService.findOrCreate( TransmissionMedium.class, "Phone" ),
                 "800-555-4433" ) );
-        Flow end = p.createOutcome( queryService );
+        Flow end = p.createSend( queryService );
         end.setName( "evacuation ended" );
         end.becomeTerminatingToSource();
     }

@@ -44,23 +44,23 @@ public class TestNode extends TestCase {
         p2 = queryService.createPart( segment );
             p2.setActor( queryService.findOrCreate( Actor.class, "p2" ) );
 
-        f1 = p1.createOutcome( queryService );
+        f1 = p1.createSend( queryService );
                 f1.setName( "A" );
-        f2 = p2.createRequirement( queryService );
+        f2 = p2.createReceive( queryService );
                 f2.setName( "B" );
         f3 = queryService.connect( p1, p2, "message" );
     }
 
-    public void testSetOutcomes() {
-        p1.setOutcomes( new HashMap<Long,Flow>() );
-        assertFalse( p1.outcomes().hasNext() );
+    public void testSetSends() {
+        p1.setSends( new HashMap<Long,Flow>() );
+        assertFalse( p1.sends().hasNext() );
         assertNull( f1.getSource() );
         assertNull( f3.getSource() );
 
         Map<Long,Flow> flows = new HashMap<Long,Flow>();
         flows.put( f1.getId(), f1 );
         flows.put( f2.getId(), f2 );
-        p1.setOutcomes( flows );
+        p1.setSends( flows );
         assertSame( f1, p1.getFlow( f1.getId() ) );
         assertSame( p1, f1.getSource() );
         assertSame( p1, f2.getSource() );
@@ -68,16 +68,16 @@ public class TestNode extends TestCase {
         assertNull( p1.getFlow( f3.getId() ) );
     }
 
-    public void testSetRequirements() {
-        p2.setRequirements( new HashMap<Long,Flow>() );
-        assertFalse( p2.requirements().hasNext() );
+    public void testSetReceives() {
+        p2.setReceives( new HashMap<Long,Flow>() );
+        assertFalse( p2.receives().hasNext() );
         assertNull( f2.getTarget() );
         assertNull( f3.getTarget() );
 
         Map<Long, Flow> flows = new HashMap<Long,Flow>();
         flows.put( f1.getId(), f1 );
         flows.put( f2.getId(), f2 );
-        p2.setRequirements( flows );
+        p2.setReceives( flows );
         assertSame( f1, p2.getFlow( f1.getId() ) );
         assertSame( p2, f1.getTarget() );
         assertSame( p2, f2.getTarget() );
@@ -85,24 +85,24 @@ public class TestNode extends TestCase {
         assertNull( p2.getFlow( f3.getId() ) );
     }
 
-    public void testOutcomes() {
-        Iterator<Flow> iterator1 = p1.outcomes();
+    public void testSends() {
+        Iterator<Flow> iterator1 = p1.sends();
         assertTrue( iterator1.hasNext() );
         iterator1.next();
         iterator1.next();
         assertFalse( iterator1.hasNext() );
 
-        assertFalse( p2.outcomes().hasNext() );
+        assertFalse( p2.sends().hasNext() );
     }
 
-    public void testRequirements() {
-        Iterator<Flow> iterator1 = p2.requirements();
+    public void testReceives() {
+        Iterator<Flow> iterator1 = p2.receives();
         assertTrue( iterator1.hasNext() );
         iterator1.next();
         iterator1.next();
         assertFalse( iterator1.hasNext() );
 
-        assertFalse( p1.requirements().hasNext() );
+        assertFalse( p1.receives().hasNext() );
     }
 
     public void testIsness() {

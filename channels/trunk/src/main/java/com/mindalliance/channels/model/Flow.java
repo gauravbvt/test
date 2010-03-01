@@ -311,12 +311,12 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     /**
-     * Provide a description of the flow, when viewed as a requirement.
+     * Provide a description of the flow, when viewed as a receive.
      *
      * @return the description
      */
     @Transient
-    public String getRequirementTitle() {
+    public String getReceiveTitle() {
         String message = getName();
         if ( message == null || message.trim().isEmpty() )
             message = /*!isAskedFor() && isTriggeringToTarget() ? "do something" :*/ "something";
@@ -356,12 +356,12 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     /**
-     * Provide a description of the flow, when viewed as an outcome.
+     * Provide a description of the flow, when viewed as a send.
      *
      * @return the description
      */
     @Transient
-    public String getOutcomeTitle() {
+    public String getSendTitle() {
         String message = getName();
         if ( message == null || message.trim().isEmpty() )
             message = "something";
@@ -456,13 +456,13 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     /**
      * Test if a node is at either end of this flow.
      *
-     * @param outcome true for checking target, false for source
+     * @param isSend true for checking target, false for source
      * @param node    the node
      * @return true if node is included in this flow
      */
-    public boolean isConnectedTo( boolean outcome, Node node ) {
-        return outcome && getTarget().equals( node )
-                || !outcome && getSource().equals( node );
+    public boolean isConnectedTo( boolean isSend, Node node ) {
+        return isSend && getTarget().equals( node )
+                || !isSend && getSource().equals( node );
     }
 
     /**
@@ -666,13 +666,13 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     /**
      * Make a replicate of the flow
      *
-     * @param isOutcome whether to replicate as outcome or requirement
+     * @param isSend whether to replicate as send or receive
      * @return a created flow
      */
     //TODO remove
-    public Flow replicate( boolean isOutcome ) {
+    public Flow replicate( boolean isSend ) {
         Flow flow;
-        if ( isOutcome ) {
+        if ( isSend ) {
             Node source = getSource();
             Segment segment = getSource().getSegment();
             QueryService queryService = segment.getQueryService();
@@ -978,7 +978,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     public boolean isSatisfied() {
         assert isNeed();
         return CollectionUtils.exists(
-                IteratorUtils.toList( getTarget().requirements() ),
+                IteratorUtils.toList( getTarget().receives() ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         Flow flow = (Flow) obj;
@@ -999,7 +999,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return ( (Connector) getTarget() ).externalFlows().hasNext()
                 ||
                 CollectionUtils.exists(
-                        IteratorUtils.toList( getSource().outcomes() ),
+                        IteratorUtils.toList( getSource().sends() ),
                         new Predicate() {
                             public boolean evaluate( Object obj ) {
                                 Flow flow = (Flow) obj;
@@ -1065,7 +1065,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         if ( isSharing() ) {
             Part target = (Part) getTarget();
             return (List<Flow>) CollectionUtils.select(
-                    target.getRequirements().values(),
+                    target.getReceives().values(),
                     new Predicate() {
                         public boolean evaluate( Object object ) {
                             Flow alternate = (Flow) object;
