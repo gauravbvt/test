@@ -1,15 +1,10 @@
 package com.mindalliance.channels.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 import java.util.List;
 
 /**
  * A flow between nodes within one segment.
  */
-@Entity
 public class InternalFlow extends Flow {
 
     /**
@@ -32,13 +27,11 @@ public class InternalFlow extends Flow {
     }
 
     @Override
-    @ManyToOne( cascade = CascadeType.ALL )
     public Node getSource() {
         return source;
     }
 
     @Override
-    @ManyToOne( cascade = CascadeType.ALL )
     public Node getTarget() {
         return target;
     }
@@ -54,7 +47,6 @@ public class InternalFlow extends Flow {
     }
 
     @Override
-    @Transient
     public List<Channel> getEffectiveChannels() {
         return getChannels();
     }
@@ -89,7 +81,6 @@ public class InternalFlow extends Flow {
     }
 
     @Override
-    @Transient
     public boolean isInternal() {
         return true;
     }
@@ -249,7 +240,6 @@ public class InternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public Segment getSegment() {
         return source.getSegment();
     }

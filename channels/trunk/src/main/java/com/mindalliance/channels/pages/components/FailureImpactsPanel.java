@@ -294,8 +294,8 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
         public String getImpact() {
             if ( part.getGoals().contains( goal ) ) {
                 return goal.isPositive()
-                        ? "Gain is not made"
-                        : "Risk is not mitigated";
+                        ? "Opportunity lost"
+                        : "Risk not mitigated";
             } else {
                 if ( !goal.isPositive() && goal.isEndsWithSegment() )
                     return "Risk remains because \"" + part.getSegment().getPhaseEventTitle() + "\" is not ended";
@@ -344,12 +344,12 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
                 }
             }
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
-            columns.add( makeLinkColumn( "Consequential task impacted", "part", "part.task", EMPTY ) );
+            columns.add( makeLinkColumn( "Necessary task", "part", "part.task", EMPTY ) );
             columns.add( makeLinkColumn( "Plan segment", "part.segment", "part.segment.name", EMPTY ) );
+            columns.add( makeColumn( "Risk/opportunity", "goal.categoryLabel", "goal.categoryLabel", EMPTY ) );
             columns.add( makeColumn( "Impact", "impact", "impact", EMPTY ) );
-            columns.add( makeColumn( "Goal", "goal.category.label", "goal.category.label", EMPTY ) );
-            columns.add( makeColumn( "Magnitude", "goal.level", "goal.levelLabel", EMPTY ) );
-            columns.add( makeLinkColumn( "Organization at risk", "goal.organization", "goal.organization.name", EMPTY ) );
+            columns.add( makeColumn( "Severity", "goal.level", "goal.levelLabel", EMPTY ) );
+            columns.add( makeLinkColumn( "Organization", "goal.organization", "goal.organization.name", EMPTY ) );
             add( new AjaxFallbackDefaultDataTable(
                     "failures",
                     columns,

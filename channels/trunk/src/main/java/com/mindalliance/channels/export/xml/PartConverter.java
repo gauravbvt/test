@@ -123,7 +123,7 @@ public class PartConverter extends AbstractChannelsConverter {
         // Part goals --
         for ( Goal goal : part.getGoals() ) {
             writer.startNode( "goal" );
-            writer.addAttribute( "positive", ""+goal.isPositive() );
+            writer.addAttribute( "intent", goal.isPositive() ? "gain" : "mitigate" );
             writer.addAttribute( "category", goal.getCategory().name() );
             writer.setValue( goal.getOrganization().getName() );
             writer.endNode();
@@ -216,7 +216,7 @@ public class PartConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "flow" ) ) {
                 context.convertAnother( segment, Flow.class );
             } else if ( nodeName.equals( "goal" ) ) {
-                boolean positive = reader.getAttribute( "positive").equals( "true" );
+                boolean positive = reader.getAttribute("intent").equals( "gain" );
                 Goal.Category category = Goal.Category.valueOf( reader.getAttribute( "category" ) );
                 String orgName = reader.getValue();
                 Goal goal = segment.getGoal( category, positive, orgName );

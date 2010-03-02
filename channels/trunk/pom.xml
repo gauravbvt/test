@@ -64,7 +64,7 @@
         <url>https://wush.net/trac/mindalliance/browser/channels/trunk</url>
     </scm>
 
-    <repositories>
+  <repositories>
         <repository>
             <id>org.wicketstuff</id>
             <name>Wicket Stuff Repository</name>
@@ -274,12 +274,6 @@
             </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>persistence-api</artifactId>
-            <version>1.0</version>
-        </dependency>
-
         <!--  WICKET DEPENDENCIES -->
         <dependency>
             <groupId>org.apache.wicket</groupId>
@@ -486,34 +480,9 @@
                 </configuration>
             </plugin>
             <!-- Plugin shading for Doxia integration with Maven 2.0 -->
-             <!-- <plugin>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>1.2</version>
-                <executions>
-                  <execution>
-                    <phase>package</phase>
-                    <goals>
-                      <goal>shade</goal>
-                    </goals>
-                    <configuration>
-                      <finalName>${project.build.finalName}</finalName>
-                      <createDependencyReducedPom>false</createDependencyReducedPom>
-                      <keepDependenciesWithProvidedScope>true</keepDependenciesWithProvidedScope>
-                      <transformers>
-                        <transformer implementation="org.apache.maven.plugins.shade.resource.ComponentsXmlResourceTransformer" />
-                      </transformers>
-                      <artifactSet>
-                        <includes>
-                          <include>org.apache.maven.doxia:doxia-sink-api</include>
-                          <include>org.apache.maven.doxia:doxia-logging-api</include>
-                        </includes>
-                      </artifactSet>
-                    </configuration>
-                  </execution>
-                </executions>
-              </plugin>-->
+
               <!-- Doxia -->
-            <!--<plugin>
+            <plugin>
               <groupId>org.apache.maven.doxia</groupId>
               <artifactId>doxia-maven-plugin</artifactId>
               <version>${doxiaVersion}</version>
@@ -545,7 +514,7 @@
                   </book>
                 </books>
               </configuration>
-            </plugin>-->
+            </plugin>
         </plugins>
     </build>
 
@@ -625,6 +594,6 @@
     <properties>
         <wicket.version>1.4.1</wicket.version>
         <jetty.version>6.1.4</jetty.version>
-        <doxiaVersion>1.0</doxiaVersion>
+        <doxiaVersion>1.1</doxiaVersion>
     </properties>
 </project>

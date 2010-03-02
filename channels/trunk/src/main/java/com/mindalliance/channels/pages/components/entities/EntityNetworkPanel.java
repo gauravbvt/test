@@ -617,7 +617,7 @@ public class EntityNetworkPanel<T extends ModelEntity> extends AbstractUpdatable
                     EMPTY,
                     filterable ) );
             columns.add( makeFilterableLinkColumn(
-                    "Individual",
+                    "Agent",
                     "sourceActor",
                     "sourceActor.name",
                     EMPTY,
@@ -638,7 +638,7 @@ public class EntityNetworkPanel<T extends ModelEntity> extends AbstractUpdatable
                     "flow.name",
                     "?" ) );
             columns.add( makeFilterableLinkColumn(
-                    "To individual",
+                    "To agent",
                     "targetActor",
                     "targetActor.name",
                     EMPTY,

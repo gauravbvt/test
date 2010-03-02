@@ -63,15 +63,15 @@ public class GoalListPanel extends AbstractCommandablePanel {
     /**
      * Risk.
      */
-    private final static String RISK = "Mitigate risk";
+    private final static String RISK = "Mitigate risk of";
     /**
      * Gain.
      */
-    private final static String GAIN = "Make gain";
+    private final static String GAIN = "Achieve";
     /**
      * Risk or gain.
      */
-    private static String[] KINDS = {RISK, GAIN};
+    private static String[] INTENTS = {RISK, GAIN};
     /**
      * Risks container.
      */
@@ -130,7 +130,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
 
     private void addKindCell( final ListItem<GoalWrapper> item ) {
         final GoalWrapper wrapper = item.getModelObject();
-        final List<String> candidateKinds = Arrays.asList( KINDS );
+        final List<String> candidateKinds = Arrays.asList( INTENTS );
         DropDownChoice<String> kindDropDownChoice = new DropDownChoice<String>(
                "kind",
                 new PropertyModel<String>( wrapper, "kind" ),
@@ -143,6 +143,8 @@ public class GoalListPanel extends AbstractCommandablePanel {
                         if ( !wrapper.isUndergoingCreation() ) {
                             update( target, new Change( Change.Type.Updated, getSegment(), "goals" ) );
                         }
+                        addCategoryCell( item );
+                        target.addComponent( item );
                     }
                 } );
         kindDropDownChoice.setEnabled( getPlan().isDevelopment() );
@@ -158,7 +160,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
                 candidateLevels,
                 new IChoiceRenderer<Level>() {
                     public Object getDisplayValue( Level level ) {
-                        return level == null ? "Select a level" : wrapper.getLevelLabel();
+                        return level == null ? "Select a level" : wrapper.getLevelLabel( level );
                     }
 
                     public String getIdValue( Level level, int index ) {
@@ -180,7 +182,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
 
     private void addCategoryCell( final ListItem<GoalWrapper> item ) {
         final GoalWrapper wrapper = item.getModelObject();
-        final List<Goal.Category> candidateTypes = getCandidateCategories();
+        final List<Goal.Category> candidateTypes = getCandidateCategories( wrapper );
         DropDownChoice<Goal.Category> categoryChoices = new DropDownChoice<Goal.Category>(
                 "category",
                 new PropertyModel<Goal.Category>( wrapper, "category" ),
@@ -189,7 +191,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
                     public Object getDisplayValue( Goal.Category category ) {
                         return category == null
                                 ? "Select a category"
-                                : category.toString();
+                                : wrapper.categoryLabel( category );
                     }
 
                     public String getIdValue( Goal.Category type, int index ) {
@@ -207,7 +209,8 @@ public class GoalListPanel extends AbstractCommandablePanel {
                     }
                 } );
         categoryChoices.setEnabled( getPlan().isDevelopment() );
-        item.add( categoryChoices );
+        categoryChoices.setOutputMarkupId( true );
+        item.addOrReplace( categoryChoices );
     }
 
     private void addOrganizationCell( final ListItem<GoalWrapper> item ) {
@@ -305,11 +308,11 @@ public class GoalListPanel extends AbstractCommandablePanel {
         return Arrays.asList( Level.values() );
     }
 
-    private List<Goal.Category> getCandidateCategories() {
+    private List<Goal.Category> getCandidateCategories( final GoalWrapper wrapper ) {
         List<Goal.Category> categories = Arrays.asList(Goal.Category.values() );
         Collections.sort( categories, new Comparator<Goal.Category>() {
             public int compare( Goal.Category r1, Goal.Category r2 ) {
-                return collator.compare( r1.toString(), r2.toString() );
+                return collator.compare( wrapper.categoryLabel( r1 ), wrapper.categoryLabel( r2 ) );
             }
         } );
         return categories;
@@ -615,8 +618,12 @@ public class GoalListPanel extends AbstractCommandablePanel {
             return isMarkedForCreation() && !isComplete();
         }
 
-        public String getLevelLabel() {
-            return goal.getLevelLabel();
+        public String getLevelLabel( Level level ) {
+            return goal.isPositive() ? level.name() : level.negative();
+        }
+
+        public String categoryLabel( Goal.Category category ) {
+            return category.getLabel( goal.isPositive() ) ;
         }
     }
 
@@ -653,7 +660,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             columns.add( makeColumn( "Purpose", "kind", EMPTY ) );
             columns.add( makeLinkColumn( "Task", "part", "part.task", EMPTY ) );
-            columns.add( makeLinkColumn( "Individual", "part.actor", "part.actor.name", EMPTY ) );
+            columns.add( makeLinkColumn( "Agent", "part.actor", "part.actor.name", EMPTY ) );
             columns.add( makeLinkColumn( "Role", "part.role", "part.role.name", EMPTY ) );
             columns.add( makeLinkColumn( "Organization", "part.organization", "part.organization.name", EMPTY ) );
             add( new AjaxFallbackDefaultDataTable(

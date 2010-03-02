@@ -5,15 +5,12 @@ import com.mindalliance.channels.attachments.Attachment;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
-import javax.persistence.Entity;
-import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Someone or something playing a part in a segment.
  */
-@Entity
 public class Actor extends AbstractUnicastChannelable implements Classifiable {
 
     /**
@@ -65,9 +62,8 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public String getKindLabel() {
-        return "individual";
+        return "agent";
     }
 
     @Override
@@ -118,7 +114,6 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
      * {@inheritDoc}
      */
     @Override
-    @Transient
     public boolean isEntity() {
         return true;
     }
@@ -128,7 +123,6 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
      *
      * @return a string
      */
-    @Transient
     public String getNormalizedName() {
         String name = getName().trim();
         if ( this == UNKNOWN || name.indexOf( ',' ) >= 0 ) return name;
@@ -156,7 +150,6 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
         }
     }
 
-    @Transient
     public String getLastName() {
         String name = getName().trim();
         if ( this == UNKNOWN || name.indexOf( ',' ) >= 0 ) return name;
@@ -174,7 +167,6 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
      *
      * @return a boolean
      */
-    @Transient
     public boolean isPerson() {
         return !isSystem();
     }
@@ -182,7 +174,6 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public List<Attachment.Type> getAttachmentTypes() {
         List<Attachment.Type> types = new ArrayList<Attachment.Type>();
         if ( !hasImage() )
@@ -194,7 +185,6 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public boolean isIconized() {
         return true;
     }
@@ -202,7 +192,6 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public List<Classification> getClassifications() {
         return getClearances();
     }

@@ -15,7 +15,7 @@ public class VCard {
     /** the formatted name string associated with the vCard object. */
     private String formattedName;
 
-    /** an image or photograph of the individual associated with the vCard. */
+    /** an image or photograph of the agent associated with the vCard. */
     private String photo;
 
     /**
@@ -33,7 +33,7 @@ public class VCard {
     private String geo;
 
     /**
-     * Specifies the job title, functional position or function of the individual associated with
+     * Specifies the job title, functional position or function of the agent associated with
      * the vCard object within an organization (V. P. Research and Development). */
     private String title;
 
@@ -43,7 +43,7 @@ public class VCard {
     private String role;
 
     /**
-     * An image or graphic of the logo of the organization that is associated with the individual
+     * An image or graphic of the logo of the organization that is associated with the agent
      * to which the vCard belongs. */
     private String logo;
 

@@ -45,13 +45,13 @@ public class TaskGoalsPanel extends AbstractCommandablePanel {
     private void init() {
         List<GoalWrapper> wrappers = getWrappedGoals();
         ListView<GoalWrapper> mitigationList = new ListView<GoalWrapper>(
-                "mitigation",
+                "goals",
                 wrappers
         ) {
             protected void populateItem( ListItem<GoalWrapper> item ) {
                 item.setOutputMarkupId( true );
                 item.add( new GoalPanel(
-                        "achievedGoals",
+                        "goal",
                         item ) );
                 addConfirmedCell( item );
             }
@@ -70,7 +70,7 @@ public class TaskGoalsPanel extends AbstractCommandablePanel {
         confirmedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target,
-                        new Change( Change.Type.Updated, getPart(), "mitigations"
+                        new Change( Change.Type.Updated, getPart(), "goals"
                         ) );
             }
         } );

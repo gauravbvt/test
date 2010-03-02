@@ -251,7 +251,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 "geomapLink",
                 new Model<String>( "Where " + getActor().getName() + " is employed" ),
                 geoLocatables,
-                new Model<String>( "Map where individual is employed" ) );
+                new Model<String>( "Map where agent is employed" ) );
         rolesContainer.addOrReplace( rolesMapLink );
     }
 

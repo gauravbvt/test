@@ -4,8 +4,6 @@ import com.mindalliance.channels.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
-import javax.persistence.Entity;
-import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +21,6 @@ import java.util.Set;
  * Date: Apr 30, 2009
  * Time: 3:43:39 PM
  */
-@Entity
 public class Plan extends ModelObject {
 
     /**
@@ -74,13 +71,11 @@ public class Plan extends ModelObject {
     /**
      * Whether dev, prod or retired.
      */
-    @Transient
     private Status status;
     /**
      * Version number.
      * Implied from folder where persisted
      */
-    @Transient
     private int version;
     /**
      * User names of planners who voted to put this plan into production.
@@ -113,12 +108,10 @@ public class Plan extends ModelObject {
         return version;
     }
 
-    @Transient
     public void setVersion( int version ) {
         this.version = version;
     }
 
-    @Transient
     public boolean isDevelopment() {
         return status == Status.DEVELOPMENT;
     }
@@ -127,7 +120,6 @@ public class Plan extends ModelObject {
         status = Status.DEVELOPMENT;
     }
 
-    @Transient
     public boolean isProduction() {
         return status == Status.PRODUCTION;
     }
@@ -136,7 +128,6 @@ public class Plan extends ModelObject {
         status = Status.PRODUCTION;
     }
 
-    @Transient
     public boolean isRetired() {
         return status == Status.RETIRED;
     }
@@ -150,17 +141,14 @@ public class Plan extends ModelObject {
      *
      * @return a string
      */
-    @Transient
     public String getVersionedName() {
         return getName() + " v." + getVersion() + "(" + getStatusString() + ")";
     }
 
-    @Transient
     public Set<Segment> getSegments() {
         return segments;
     }
 
-    @Transient
     public List<Event> getIncidents() {
         return incidents;
     }
@@ -193,7 +181,6 @@ public class Plan extends ModelObject {
         this.uri = uri;
     }
 
-    @Transient
     public String getVersionUri() {
         return uri + ":" + version;
     }
@@ -287,7 +274,6 @@ public class Plan extends ModelObject {
      *
      * @return a plan event
      */
-    @Transient
     public Event getDefaultEvent() {
         assert incidents != null && !incidents.isEmpty();
         Iterator<Event> eventIterator = incidents.iterator();
@@ -339,7 +325,6 @@ public class Plan extends ModelObject {
      *
      * @return the number of segment
      */
-    @Transient
     public int getSegmentCount() {
         return segments.size();
     }
@@ -349,7 +334,6 @@ public class Plan extends ModelObject {
      *
      * @return a segment
      */
-    @Transient
     public Segment getDefaultSegment() {
         return getSegments().iterator().next();
     }
@@ -357,7 +341,6 @@ public class Plan extends ModelObject {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public boolean isLockable() {
         return false;
     }

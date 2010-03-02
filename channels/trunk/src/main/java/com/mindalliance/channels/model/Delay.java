@@ -1,9 +1,5 @@
 package com.mindalliance.channels.model;
 
-import javax.persistence.Embeddable;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +12,6 @@ import java.util.List;
  * Date: Jan 29, 2009
  * Time: 1:59:28 PM
  */
-@Embeddable
 public class Delay implements Comparable, Serializable {
 
     /**
@@ -83,7 +78,6 @@ public class Delay implements Comparable, Serializable {
         this.amount = Math.max( 0, amount );
     }
 
-    @Enumerated( EnumType.STRING )
     public Unit getUnit() {
         return unit;
     }
@@ -97,7 +91,6 @@ public class Delay implements Comparable, Serializable {
      *
      * @return list of strings
      */
-    @Transient
     public List<Unit> getUnits() {
         return Arrays.asList( Unit.values() );
     }
@@ -107,7 +100,6 @@ public class Delay implements Comparable, Serializable {
      *
      * @return an int
      */
-    @Transient
     public int getSeconds() {
         int factor;
         switch ( unit ) {
@@ -140,7 +132,6 @@ public class Delay implements Comparable, Serializable {
      *
      * @return a string
      */
-    @Transient
     public String getAmountString() {
         return "" + amount;
     }

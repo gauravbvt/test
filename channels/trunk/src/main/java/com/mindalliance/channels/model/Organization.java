@@ -7,12 +7,6 @@ import com.mindalliance.channels.geo.GeoLocation;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,7 +17,6 @@ import java.util.Set;
 /**
  * A company, agency, social club, etc.
  */
-@Entity
 public class Organization extends AbstractUnicastChannelable implements GeoLocatable, Hierarchical {
 
     /**
@@ -92,7 +85,6 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
     /**
      * {@inheritDoc}
      */
-    @Transient
     @Override
     public boolean isEntity() {
         return true;
@@ -187,7 +179,6 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
         }
     }
 
-    @ManyToOne( cascade = CascadeType.PERSIST, fetch = FetchType.LAZY )
     public Organization getParent() {
         return parent;
     }
@@ -199,7 +190,6 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
         this.parent = parent;
     }
 
-    @ManyToOne( cascade = CascadeType.PERSIST, fetch = FetchType.LAZY )
     public Place getLocation() {
         return location;
     }
@@ -290,7 +280,6 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
                 : MessageFormat.format( "{0} - {1}", parent.toString(), getName() );
     }
 
-    @OneToMany
     @SuppressWarnings( "unchecked" )
     public List<Job> getJobs() {
         // Filter out incomplete jobs (actor
@@ -342,7 +331,6 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
      * {@inheritDoc}
      */
     @Override
-    @Transient
     public boolean isUndefined() {
         return super.isUndefined() && parent == null && location == null && jobs.isEmpty();
     }
@@ -350,7 +338,6 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
     /**
      * {@inheritDoc}
      */
-    @Transient
     public GeoLocation geoLocate() {
         return location != null ? location.geoLocate() : null;
     }
@@ -374,7 +361,6 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
     /**
      * {@inheritDoc}
      */
-    @Transient
     public String getGeoMarkerLabel() {
         return location != null ? location.getGeoMarkerLabel() : "";
     }
@@ -382,7 +368,6 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
     /**
      * {@inheritDoc}
      */
-    @Transient
     public List<Hierarchical> getSuperiors() {
         List<Hierarchical> superiors = new ArrayList<Hierarchical>();
         if ( parent != null ) superiors.add( parent );
@@ -392,7 +377,6 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
     /**
      * {@inheritDoc}
      */
-    @Transient
     public List<Attachment.Type> getAttachmentTypes() {
         List<Attachment.Type> types = new ArrayList<Attachment.Type>();
         if ( !hasImage() )
@@ -405,7 +389,6 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
     /**
      * {@inheritDoc}
      */
-    @Transient
     public boolean isIconized() {
         return true;
     }

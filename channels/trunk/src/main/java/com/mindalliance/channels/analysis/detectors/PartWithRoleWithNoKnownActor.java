@@ -61,8 +61,8 @@ public class PartWithRoleWithNoKnownActor extends AbstractIssueDetector {
             List<Actor> actorsInRole = getQueryService().findAllActualActors( part.resourceSpec() );
             if ( part.getOrganization().isActorsRequired() && actorsInRole.isEmpty() ) {
                 Issue issue = makeIssue( Issue.COMPLETENESS, part );
-                issue.setDescription( "There is no known individual playing this role." );
-                issue.setRemediation( " Identify an individual playing this role." );
+                issue.setDescription( "There is no known agent playing this role." );
+                issue.setRemediation( " Identify an agent playing this role." );
                 issue.setSeverity( Level.Medium );
                 issues.add( issue );
             }

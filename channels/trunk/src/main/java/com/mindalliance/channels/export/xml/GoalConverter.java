@@ -50,8 +50,8 @@ public class GoalConverter extends AbstractChannelsConverter {
             writer.setValue( organization.getName() );
             writer.endNode();
         }
-        writer.startNode( "positive" );
-        writer.setValue( goal.isPositive() + "" );
+        writer.startNode( "intent" );
+        writer.setValue( goal.isPositive() ? "gain" : "mitigate" );
         writer.endNode();
         writer.startNode( "level" );
         writer.setValue( goal.getLevel().toString() );
@@ -89,8 +89,8 @@ public class GoalConverter extends AbstractChannelsConverter {
                 goal.setOrganization( org );
             } else if ( nodeName.equals( "level" ) ) {
                 goal.setLevel( Level.valueOf( reader.getValue() ) );
-            } else if ( nodeName.equals( "positive" ) ) {
-                goal.setPositive( reader.getValue().equals( "true" ) );
+            } else if ( nodeName.equals( "intent" ) ) {
+                goal.setPositive( reader.getValue().equals( "gain" ) );
             } else if ( nodeName.equals( "endsWithSegment" ) ) {
                 goal.setEndsWithSegment( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "description" ) ) {

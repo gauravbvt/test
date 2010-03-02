@@ -11,9 +11,6 @@ import org.acegisecurity.userdetails.UserDetails;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Transient;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +20,6 @@ import java.util.Map;
 /**
  * A user of the system.
  */
-@Entity
 public class User implements UserDetails {
 
     /**
@@ -108,7 +104,6 @@ public class User implements UserDetails {
         this.fullName = fullName;
     }
 
-    @Id
     public String getUsername() {
         return username;
     }
@@ -132,7 +127,6 @@ public class User implements UserDetails {
      *
      * @return a string
      */
-    @Transient
     public String getDefaultPlanUri() {
         if ( plans.isEmpty() ) {
             return null;
@@ -153,7 +147,6 @@ public class User implements UserDetails {
         return result;
     }
 
-    @Transient
     public boolean isAnonymous() {
         return anonymous;
     }
@@ -163,7 +156,6 @@ public class User implements UserDetails {
      *
      * @return the authorities (never <code>null</code>)
      */
-    @Transient
     public GrantedAuthority[] getAuthorities() {
         List<GrantedAuthority> result = new ArrayList<GrantedAuthority>();
         if ( isAdmin() )
@@ -182,7 +174,6 @@ public class User implements UserDetails {
      * @return <code>true</code> if the user's account is valid (ie non-expired), <code>false</code> if no longer valid
      *         (ie expired)
      */
-    @Transient
     public boolean isAccountNonExpired() {
         return true;
     }
@@ -192,7 +183,6 @@ public class User implements UserDetails {
      *
      * @return <code>true</code> if the user is not locked, <code>false</code> otherwise
      */
-    @Transient
     public boolean isAccountNonLocked() {
         return true;
     }
@@ -204,7 +194,6 @@ public class User implements UserDetails {
      * @return <code>true</code> if the user's credentials are valid (ie non-expired), <code>false</code> if no longer
      *         valid (ie expired)
      */
-    @Transient
     public boolean isCredentialsNonExpired() {
         return true;
     }
@@ -214,7 +203,6 @@ public class User implements UserDetails {
      *
      * @return <code>true</code> if the user is enabled, <code>false</code> otherwise
      */
-    @Transient
     public boolean isEnabled() {
         return true;
     }
@@ -285,7 +273,6 @@ public class User implements UserDetails {
      *
      * @return a boolean
      */
-    @Transient
     public boolean isPlanner() {
         return canPlan( getPlan() );
     }
@@ -316,7 +303,6 @@ public class User implements UserDetails {
      *
      * @return a boolean
      */
-    @Transient
     public boolean isParticipant() {
         return canRead( getPlan() );
     }
@@ -449,7 +435,6 @@ public class User implements UserDetails {
      *
      * @return a string
      */
-    @Transient
     public String getNormalizedFullName() {
         String normalized;
         String name = getFullName().trim();

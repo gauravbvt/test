@@ -89,7 +89,7 @@ Table caption
 
   <Italic> font. <<Bold>> font. <<<Monospaced>>> font.
 
-  {Anchor}. Link to {{anchor}}. Link to {{http://www.pixware.fr}}.
+  {anchor}. Link to {{anchor}}. Link to {{http://www.pixware.fr}}.
   Link to {{{anchor}showing alternate text}}.
   Link to {{{http://www.pixware.fr}Pixware home page}}.
 
@@ -100,6 +100,6 @@ Table caption
 
   Escaped special characters: \~, \=, \-, \+, \*, \[, \], \<, \>, \{, \}, \\.
 
-  Copyright symbol: \251, \xA9, \u00a9.
+  Copyright symbol: \251 , \xA9 , \u00a9 .
 
 ~~Commented out.

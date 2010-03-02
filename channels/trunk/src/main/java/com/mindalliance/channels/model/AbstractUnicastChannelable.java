@@ -1,9 +1,5 @@
 package com.mindalliance.channels.model;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +11,6 @@ import java.util.List;
  * Date: Mar 17, 2009
  * Time: 11:25:24 AM
  */
-@Entity
 public abstract class AbstractUnicastChannelable extends ModelEntity implements Channelable {
 
     /**
@@ -30,7 +25,6 @@ public abstract class AbstractUnicastChannelable extends ModelEntity implements 
         super( name );
     }
 
-    @OneToMany @JoinTable( name = "AUC_CHANNELS" )
     public List<Channel> getChannels() {
         return channels;
     }
@@ -38,7 +32,6 @@ public abstract class AbstractUnicastChannelable extends ModelEntity implements 
     /**
      * {@inheritDoc}
      */
-    @Transient
     public List<Channel> getEffectiveChannels() {
         return channels;
     }
@@ -64,7 +57,6 @@ public abstract class AbstractUnicastChannelable extends ModelEntity implements 
     /**
      * {@inheritDoc}
      */
-    @Transient
     public String getChannelsString() {
         return Channel.toString( getEffectiveChannels() );
     }
@@ -102,7 +94,6 @@ public abstract class AbstractUnicastChannelable extends ModelEntity implements 
     /**
      * {@inheritDoc}
      */
-    @Transient
     public boolean isUndefined() {
         return super.isUndefined() && channels.isEmpty();
     }

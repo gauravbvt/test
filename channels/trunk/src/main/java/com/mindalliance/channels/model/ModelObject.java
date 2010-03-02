@@ -5,13 +5,6 @@ import com.mindalliance.channels.attachments.Attachment;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.PredicateUtils;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Lob;
-import javax.persistence.Transient;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,8 +14,6 @@ import java.util.List;
 /**
  * An object with name, id and description, comparable by its toString() values.
  */
-@Entity
-@Inheritance( strategy = InheritanceType.JOINED )
 public abstract class ModelObject implements Comparable<ModelObject>, Identifiable {
 
     /**
@@ -86,8 +77,6 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
         return getClass().getSimpleName().toLowerCase();
     }
 
-    @Id
-    @GeneratedValue
     public long getId() {
         return id;
     }
@@ -100,7 +89,6 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
      * Whether the model object is immutable.
      * @return a boolean
      */
-    @Transient
     public boolean isImmutable() {
         // Default
         return false;
@@ -122,7 +110,6 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
         this.name = name == null ? "" : name;
     }
 
-    @Lob
     public String getDescription() {
         return description;
     }
@@ -188,14 +175,12 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
         return name;
     }
 
-    @Transient
     public Date getLastModified() {
         // TODO implement last modified with aspect
         return new Date();
     }
 
     // TODO objectify strings if and when persistence is to work...
-    @Transient
     public List<String> getWaivedIssueDetections() {
         return waivedIssueDetections;
     }
@@ -204,7 +189,6 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
         this.waivedIssueDetections = waivedIssueDetections;
     }
 
-    @Transient
     public List<Attachment> getAttachments() {
         return attachments;
     }
@@ -241,7 +225,6 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
      *
      * @return a string
      */
-    @Transient
     public String getLabel() {
         return getName();
     }
@@ -251,7 +234,6 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
      *
      * @return a boolean
      */
-    @Transient
     public boolean isEntity() {
         return false;
     }
@@ -261,7 +243,6 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
      *
      * @return a boolean
      */
-    @Transient
     public boolean isUndefined() {
         return description.isEmpty();
     }
@@ -272,7 +253,6 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
      *
      * @return aboolean
      */
-    @Transient
     public boolean isUnknown() {
         return equals( Actor.UNKNOWN )
                 || equals( Event.UNKNOWN )
@@ -308,7 +288,6 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
      *
      * @return a string
      */
-    @Transient
     public String getModelObjectType() {
         return getClass().getSimpleName();
     }
@@ -318,7 +297,6 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
      *
      * @return a list of attachment types
      */
-    @Transient
     public List<Attachment.Type> getAttachmentTypes() {
         List<Attachment.Type> types = new ArrayList<Attachment.Type>();
         types.add( Attachment.Type.Reference );
@@ -343,7 +321,6 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
      *
      * @return a string
      */
-    @Transient
     public String getImageUrl() {
         Attachment attachment = (Attachment) CollectionUtils.find(
                 getAttachments(),
@@ -360,7 +337,6 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
      *
      * @return a boolean
      */
-    @Transient
     public boolean isIconized() {
         return false;
     }
@@ -370,7 +346,6 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
      *
      * @return a boolean
      */
-    @Transient
     public boolean isLockable() {
         return true;
     }

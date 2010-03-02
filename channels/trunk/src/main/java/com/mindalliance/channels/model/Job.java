@@ -5,10 +5,6 @@ import com.mindalliance.channels.command.MappedObject;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +17,6 @@ import java.util.List;
  * Date: Mar 18, 2009
  * Time: 3:17:00 PM
  */
-@Entity
 public class Job implements Serializable, Mappable, GeoLocatable {
 
     /**
@@ -59,13 +54,11 @@ public class Job implements Serializable, Mappable, GeoLocatable {
         title = "";
     }
 
-    @Transient
     public String getActorName() {
         if ( actor == null ) return "";
         else return actor.getName();
     }
 
-    @Transient
     public String getActorLastName() {
         if ( actor == null ) return "";
         else return actor.getLastName();
@@ -75,7 +68,6 @@ public class Job implements Serializable, Mappable, GeoLocatable {
         this.actor = actor;
     }
 
-    @Transient
     public String getRoleName() {
         if ( role == null ) return "";
         else return role.getName();
@@ -85,7 +77,6 @@ public class Job implements Serializable, Mappable, GeoLocatable {
         this.role = role;
     }
 
-    @Transient
     public String getJurisdictionName() {
         if ( jurisdiction == null ) return "";
         else return jurisdiction.getName();
@@ -186,8 +177,6 @@ public class Job implements Serializable, Mappable, GeoLocatable {
                 jurisdiction );
     }
 
-    @Id
-    @GeneratedValue
     public long getId() {
         return id;
     }
@@ -201,7 +190,6 @@ public class Job implements Serializable, Mappable, GeoLocatable {
      *
      * @return a boolean
      */
-    @Transient
     public boolean isDefined() {
         return actor != null && role != null;
     }
@@ -222,7 +210,6 @@ public class Job implements Serializable, Mappable, GeoLocatable {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public GeoLocation geoLocate() {
         return jurisdiction != null ? jurisdiction.geoLocate() : null;
     }
@@ -237,7 +224,6 @@ public class Job implements Serializable, Mappable, GeoLocatable {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public String getGeoMarkerLabel() {
         return jurisdiction != null ? jurisdiction.getGeoMarkerLabel() : "";
     }

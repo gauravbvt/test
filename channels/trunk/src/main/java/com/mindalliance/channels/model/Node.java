@@ -4,13 +4,6 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.iterators.IteratorChain;
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapKey;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,7 +53,6 @@ public abstract class Node extends ModelObject implements SegmentObject {
      *
      * @return a generated short description
      */
-    @Transient
     public abstract String getTitle();
 
     /**
@@ -77,9 +69,6 @@ public abstract class Node extends ModelObject implements SegmentObject {
         return result;
     }
 
-    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
-    @JoinTable( name = "Node_Outs" )
-    @MapKey( name = "id" )
     protected Map<Long, Flow> getSends() {
         return sends;
     }
@@ -249,17 +238,14 @@ public abstract class Node extends ModelObject implements SegmentObject {
         return (Iterator<Flow>) new IteratorChain( receives(), sends() );
     }
 
-    @Transient
     public boolean isPart() {
         return false;
     }
 
-    @Transient
     public boolean isConnector() {
         return false;
     }
 
-    @ManyToOne
     public Segment getSegment() {
         return segment;
     }
@@ -267,7 +253,6 @@ public abstract class Node extends ModelObject implements SegmentObject {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public List<Flow> getEssentialFlows( boolean ssumeFails ) {
         return new ArrayList<Flow>();
     }
@@ -349,7 +334,6 @@ public abstract class Node extends ModelObject implements SegmentObject {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public boolean isUndefined() {
         return super.isUndefined() && receives.isEmpty() && sends.isEmpty();
     }

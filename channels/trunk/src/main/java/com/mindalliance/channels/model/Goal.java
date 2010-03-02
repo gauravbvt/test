@@ -30,7 +30,7 @@ public class Goal implements Serializable, Mappable {
     /**
      * Level of gain or risk.
      */
-    private Level level;
+    private Level level = Level.Low;
     /**
      * Description.
      */
@@ -129,9 +129,9 @@ public class Goal implements Serializable, Mappable {
     @Override
     public String toString() {
 
-        return ( level != null ? getLevelLabel().toLowerCase() : "" ) + " "
+        return ( level != null ? getLevelLabel() : "" ) + " "
                 + ( category != null ? category.getGroup().toLowerCase() : "" )
-                + goalLabel()
+                + intentLabel()
                 + ( getOrganization() != null ? getOrganization().getName() : "all" )
                 + ( category != null ? " of " + category.getName( positive ) : "" ).toLowerCase();
     }
@@ -140,7 +140,11 @@ public class Goal implements Serializable, Mappable {
         return isPositive() ? getLevel().name() : getLevel().negative();
     }
 
-    private String goalLabel() {
+    public String getCategoryLabel() {
+        return getCategory().getLabel( isPositive() );
+    }
+
+    private String intentLabel() {
         return isPositive() ? " gain by " : " risk to ";
     }
 
@@ -151,7 +155,12 @@ public class Goal implements Serializable, Mappable {
     public boolean equals( Object obj ) {
         if ( obj instanceof Goal ) {
             Goal other = (Goal) obj;
-            return organization != null && organization == other.getOrganization();
+            return
+                    category != null && category == other.getCategory()
+                            && positive == other.isPositive()
+                            && level != null && level == other.getLevel()
+                            && organization != null && organization.equals( other.getOrganization() )
+                            && description != null && description.equals( other.getDescription() );
 
         } else {
             return false;
@@ -163,7 +172,11 @@ public class Goal implements Serializable, Mappable {
      */
     public int hashCode() {
         int hash = 1;
+        if ( category != null ) hash = hash * 31 + category.hashCode();
+        if ( positive ) hash = hash * 31;
+        if ( level != null ) hash = hash * 31 + level.hashCode();
         if ( organization != null ) hash = hash * 31 + organization.hashCode();
+        if ( description != null ) hash = hash * 31 + description.hashCode();
         return hash;
     }
 
@@ -172,6 +185,9 @@ public class Goal implements Serializable, Mappable {
      */
     public MappedObject map() {
         MappedObject mappedObject = new MappedObject( this.getClass() );
+        mappedObject.set( "category", category );
+        mappedObject.set( "positive", positive );
+        mappedObject.set( "level", level );
         mappedObject.set( "organization", organization );
         mappedObject.set( "description", description );
         return mappedObject;
@@ -195,7 +211,7 @@ public class Goal implements Serializable, Mappable {
     public String getFullTitle() {
         String label = "";
         label += getLevelLabel();
-        label += goalLabel();
+        label += intentLabel();
         label += category.getLabel( positive ).toLowerCase();
         label += positive ? " for " : " to ";
         label += organization.getName();
@@ -208,9 +224,10 @@ public class Goal implements Serializable, Mappable {
      * @param sep the separator string
      * @return a string
      */
-    public String getTitle( String sep ) {
-        String label = isRisk() ? "Mitigates " : "Gains ";
-        label += category.getLabel( positive ) + sep + organization.getName();
+    public String getFailureLabel( String sep ) {
+        String label = category.getName( positive );
+        label +=  isRisk() ? " not mitigated by " : " not achieved by ";
+        label += sep + organization.getName();
         return label;
     }
 
@@ -220,7 +237,7 @@ public class Goal implements Serializable, Mappable {
      * @return a string
      */
     public String getFullLabel() {
-        String label = isRisk() ? "Mitigates " : "Gains ";
+        String label = isRisk() ? "Mitigates risk of " : "Achieves ";
         label += getFullTitle();
         return label;
     }
@@ -231,10 +248,10 @@ public class Goal implements Serializable, Mappable {
      */
     public enum Category {
         // Material
-        PropertyState( "Material", "Property damage", "Property improvement" ),
-        PropertyOnwership( "Material", "Property loss", "Property acquisition" ),
-        BodilyStatus( "Material", "Injury, disablement or death", "Better health" ),
-        EnvironmentalStatus( "Material", "Environmental degradation", "Environmental improvement" ),
+        Property( "Material", "Property damage", "Property improvement" ),
+        Onwership( "Material", "Property loss", "Property acquisition" ),
+        Health( "Material", "Injury, disablement or death", "Better health" ),
+        Environment( "Material", "Environmental degradation", "Environmental improvement" ),
         //Financial
         Cost( "Financial", "Cost increase", "Cost decrease" ),
         Revenue( "Financial", "Lost revenue", "Increased revenue" ),
@@ -242,7 +259,7 @@ public class Goal implements Serializable, Mappable {
         Liquidity( "Financial", "Reduced liquidity", "Increased liquidity" ),
         Credit( "Financial", "Reduced credit", "Increased credit" ),
         Liability( "Financial", "Increased liability", "Recover damages" ),
-        Penalties( "Financial", "Fines or penalties", "Reward" ),
+        Award( "Financial", "Fines or penalties", "Reward" ),
         // Operational
         Delivery( "Operational", "Delayed delivery", "Faster delivery" ),
         Quality( "Operational", "Impaired quality", "Better quality" ),
@@ -304,9 +321,12 @@ public class Goal implements Serializable, Mappable {
             return group + " - " + getName( positive );
         }
 
-        // todo- remove
+        /**
+         * {@inheritDoc}
+         */
+        @Override
         public String toString() {
-            throw new RuntimeException( "Don't call" );
+            return name();
         }
 
         /**

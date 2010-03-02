@@ -5,8 +5,6 @@ import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
 
-import javax.persistence.Entity;
-import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +16,6 @@ import java.util.List;
  * Date: Apr 30, 2009
  * Time: 3:49:53 PM
  */
-@Entity
 public class Event extends ModelEntity implements GeoLocatable {
     /**
      * Where the event is considered to occur.
@@ -102,7 +99,6 @@ public class Event extends ModelEntity implements GeoLocatable {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public GeoLocation geoLocate() {
         return scope != null ? scope.geoLocate() : null;
     }
@@ -110,7 +106,6 @@ public class Event extends ModelEntity implements GeoLocatable {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public String getGeoMarkerLabel() {
         return scope != null
                 ? getName() + " in " + scope.getGeoMarkerLabel()
@@ -120,7 +115,6 @@ public class Event extends ModelEntity implements GeoLocatable {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public List<Attachment.Type> getAttachmentTypes() {
         List<Attachment.Type> types = new ArrayList<Attachment.Type>();
         if ( !hasImage() )

@@ -1,11 +1,5 @@
 package com.mindalliance.channels.model;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Transient;
 import java.io.Serializable;
 import java.text.Collator;
 import java.text.MessageFormat;
@@ -20,7 +14,6 @@ import java.util.List;
  * Date: Jan 30, 2009
  * Time: 2:06:19 PM
  */
-@Entity
 public class Channel implements Serializable, Comparable<Channel> {
 
     /**
@@ -64,7 +57,6 @@ public class Channel implements Serializable, Comparable<Channel> {
         this( medium, "" );
     }
 
-    @Enumerated( value = EnumType.STRING )
     public TransmissionMedium getMedium() {
         return medium;
     }
@@ -82,8 +74,6 @@ public class Channel implements Serializable, Comparable<Channel> {
         this.address = address == null ? "" : address;
     }
 
-    @Id
-    @GeneratedValue
     public long getId() {
         return id;
     }
@@ -164,7 +154,6 @@ public class Channel implements Serializable, Comparable<Channel> {
      *
      * @return a boolean
      */
-    @Transient
     public boolean isValid() {
         return medium != null && medium.isAddressValidIfSet( address );
     }
@@ -178,7 +167,6 @@ public class Channel implements Serializable, Comparable<Channel> {
         return medium != null && medium.isAddressValid( address );
     }
 
-    @Transient
     /**
      * Is the medium unicast?
      * @return a boolean
@@ -187,7 +175,6 @@ public class Channel implements Serializable, Comparable<Channel> {
         return getMedium() != null && getMedium().isUnicast();
     }
 
-    @Transient
     /**
      * Is the medium multicast?
      * @return a boolean
@@ -196,7 +183,6 @@ public class Channel implements Serializable, Comparable<Channel> {
         return getMedium() != null && getMedium().isMulticast();
     }
 
-    @Transient
     /**
      * Is the medium broadcast?
      * @return a boolean

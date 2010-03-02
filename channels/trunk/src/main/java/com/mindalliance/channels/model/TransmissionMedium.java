@@ -5,7 +5,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -506,7 +505,6 @@ public class TransmissionMedium extends ModelEntity {
     /**
      * {@inheritDoc}
      */
-    @Transient
     @Override
     public boolean isUndefined() {
         return super.isUndefined()
@@ -543,17 +541,17 @@ public class TransmissionMedium extends ModelEntity {
 
         /**
          * Broadcast medium.
-         * One to many unknown individuals.
+         * One to many unknown agents.
          */
         Broadcast,
         /**
          * Multicast medium.
-         * Transmission to many known individuals.
+         * Transmission to many known agents.
          */
         Multicast,
         /**
          * Unicast medium.
-         * Transmission to a known individual.
+         * Transmission to a known agent.
          */
         Unicast;
 

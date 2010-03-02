@@ -3,15 +3,12 @@ package com.mindalliance.channels.model;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
 
-import javax.persistence.Entity;
-import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A generic role.
  */
-@Entity
 public class Role extends ModelEntity {
 
     /**
@@ -49,7 +46,6 @@ public class Role extends ModelEntity {
      * Whether the role is to be played by a system actor.
      * @return a boolean
      */
-    @Transient
     public boolean isSystem() {
         return getName().toLowerCase().contains( "system" );
     }
@@ -71,7 +67,6 @@ public class Role extends ModelEntity {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public List<Attachment.Type> getAttachmentTypes() {
         List<Attachment.Type> types = new ArrayList<Attachment.Type>();
         if ( !hasImage() )
@@ -84,7 +79,6 @@ public class Role extends ModelEntity {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public boolean isIconized() {
         return true;
     }

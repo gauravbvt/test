@@ -13,11 +13,11 @@
         <table>
             <thead>
                 <tr>
-                    <td title="Risk mitigation or opportunity capture?">Kind</td>
+                    <td title="Mitigate a risk or capture an opportunity?">Objective</td>
+                    <td title="The category of risk or gain">Category</td>
                     <td title="The severity of the risk or magnitude of the gain">Magnitude</td>
-                    <td title="The category of risk or opportunity">Category</td>
                     <td width="100%"  title="The organization with the goal">Organization</td>
-                    <td title="Whether the goal ends with the plan segment">Ends</td>
+                    <td title="Whether the goal outlasts the plan segment or not">Ends</td>
                     <td/>
                     <td/>
                 </tr>
@@ -25,18 +25,18 @@
             <tr wicket:id="goal">
                 <td>
                     <select wicket:id="kind">
-                        <option>Mitigate risk</option>
-                        <option>Make gain</option>
-                    </select>
-                </td>
-                <td>
-                    <select wicket:id="level">
-                        <option>severe</option>
+                        <option>Mitigate risk of</option>
+                        <option>Achieve</option>
                     </select>
                 </td>
                 <td>
                     <select wicket:id="category">
                         <option>Bodily harm</option>
+                    </select>
+                </td>
+                <td>
+                    <select wicket:id="level">
+                        <option>severe</option>
                     </select>
                 </td>
                 <td>

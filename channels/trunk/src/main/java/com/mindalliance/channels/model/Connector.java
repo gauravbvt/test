@@ -1,10 +1,5 @@
 package com.mindalliance.channels.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.HashSet;
@@ -14,7 +9,6 @@ import java.util.Set;
 /**
  * A connector to unspecified node(s) outside of the segment.
  */
-@Entity
 public class Connector extends Node {
 
     /** The connections from external segments. */
@@ -24,13 +18,11 @@ public class Connector extends Node {
         setExternalFlows( new HashSet<ExternalFlow>() );
     }
 
-    @Override @Transient
     public boolean isConnector() {
         return true;
     }
 
     /** {@inheritDoc} */
-    @Override @Transient
     public String getTitle() {
         boolean isInput = isSource();
         if ( hasInnerFlow() ) {
@@ -48,7 +40,6 @@ public class Connector extends Node {
      * Is the connector a source (true) or target (false)?
      * @return -- whether a source
      */
-    @Transient
     public boolean isSource() {
         return !getSends().isEmpty();
     }
@@ -57,7 +48,6 @@ public class Connector extends Node {
      * Is the connector a target (true) or source (false)?
      * @return -- whether a target
      */
-    @Transient
     public boolean isTarget() {
         return !getReceives().isEmpty();
     }
@@ -66,7 +56,6 @@ public class Connector extends Node {
      * Gets the inner flow between part and connector
      * @return the connector's inner flow or null if none
      */
-    @Transient
     public Flow getInnerFlow() {
         return isSource() ? getSends().values().iterator().next()
                           : getReceives().values().iterator().next();
@@ -81,12 +70,10 @@ public class Connector extends Node {
      * Are there external flows to or from this connector?
      * @return -- boolean
      */
-    @Transient
     public boolean isConnected() {
         return !getExternalFlows().isEmpty();
     }
 
-    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     private Set<ExternalFlow> getExternalFlows() {
         return externalFlows;
     }

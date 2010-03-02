@@ -138,7 +138,7 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
         attributes.add( new DOTAttribute( "fontsize", FlowMapMetaProvider.NODE_FONT_SIZE ) );
         attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
-        String label = sanitize( goal.getTitle( "|" ).replaceAll( "\\|", "\\\\n" ) );
+        String label = sanitize( goal.getFailureLabel( "|" ).replaceAll( "\\|", "\\\\n" ) );
         attributes.add( new DOTAttribute( "label", label ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
         attributes.add( new DOTAttribute( "tooltip", goal.getFullTitle() ) );
@@ -157,6 +157,7 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
     }
 
     private String getGoalIcon( Goal goal ) {
+        if ( goal.isRisk() )  {
         switch ( goal.getLevel() ) {
             case Low:
                 return "risk_minor.png";
@@ -166,6 +167,18 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
                 return "risk_severe.png";
             default:
                 throw new RuntimeException( "Unknown risk level" );
+        }
+        } else {
+            switch ( goal.getLevel() ) {
+            case Low:
+                return "gain_low.png";
+            case Medium:
+                return "gain_medium.png";
+            case High:
+                return "gain_high.png";
+            default:
+                throw new RuntimeException( "Unknown gain level" );
+        }
         }
     }
 

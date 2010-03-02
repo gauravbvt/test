@@ -1,16 +1,11 @@
 package com.mindalliance.channels.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 import java.util.List;
 
 /**
  * A flow from one Part in this segment to/from a connector in another segment.
  * Direction of flow matches other connector's only flow.
  */
-@Entity
 public class ExternalFlow extends Flow {
 
     /**
@@ -49,7 +44,6 @@ public class ExternalFlow extends Flow {
      * @see Flow#getSource()
      */
     @Override
-    @Transient
     public Node getSource() {
         return connector == null ? null
                 : connector.isSource() ? part
@@ -63,7 +57,6 @@ public class ExternalFlow extends Flow {
      * @see Flow#getTarget()
      */
     @Override
-    @Transient
     public Node getTarget() {
         return connector == null ? null
                 : connector.isTarget() ? part
@@ -105,12 +98,10 @@ public class ExternalFlow extends Flow {
      * {@inheritDoc}
      */
     @Override
-    @Transient
     public boolean isInternal() {
         return false;
     }
 
-    @ManyToOne( cascade = CascadeType.ALL )
     public Part getPart() {
         return part;
     }
@@ -119,7 +110,6 @@ public class ExternalFlow extends Flow {
         this.part = part;
     }
 
-    @ManyToOne( cascade = CascadeType.ALL )
     public Connector getConnector() {
         return connector;
     }
@@ -128,7 +118,6 @@ public class ExternalFlow extends Flow {
         this.connector = connector;
     }
 
-    @Transient
     private Flow getConnectorFlow() {
         Connector conn = getConnector();
         return conn == null || !conn.hasInnerFlow() ? null : conn.getInnerFlow();
@@ -138,7 +127,6 @@ public class ExternalFlow extends Flow {
      * @return the name of the flow
      */
     @Override
-    @Transient
     public String getName() {
         Flow connectorFlow = getConnectorFlow();
         return connectorFlow == null ? super.getName() : connectorFlow.getName();
@@ -149,7 +137,6 @@ public class ExternalFlow extends Flow {
      *
      * @return a boolean
      */
-    @Transient
     public boolean isPartTargeted() {
         return connector.isTarget();
     }
@@ -160,7 +147,6 @@ public class ExternalFlow extends Flow {
      *
      * @return a string description of the communication
      */
-    @Transient
     public String getKind() {
         if ( !isPartTargeted() ) {
             return isAskedFor() ? "answer" : "notify";
@@ -175,13 +161,11 @@ public class ExternalFlow extends Flow {
      *
      * @return a part
      */
-    @Transient
     public Part getExternalPart() {
         return (Part) ( isPartTargeted() ? getSource() : getTarget() );
     }
 
     @Override
-    @Transient
     public boolean isAskedFor() {
         Flow flow = getConnectorFlow();
         return flow == null ? super.isAskedFor() : flow.isAskedFor();
@@ -215,7 +199,6 @@ public class ExternalFlow extends Flow {
      * {@inheritDoc
      */
     @Override
-    @Transient
     public String getDescription() {
         Flow flow = getConnectorFlow();
         return flow == null ? super.getDescription() : flow.getDescription();
@@ -252,7 +235,6 @@ public class ExternalFlow extends Flow {
     }
 
     @Override
-    @Transient
     public List<Channel> getEffectiveChannels() {
         return channelsAreInConnectorFlow() ?
                 getConnectorFlow().getChannels() : super.getChannels();
@@ -269,7 +251,6 @@ public class ExternalFlow extends Flow {
             super.setChannels( channels );
     }
 
-    @Transient
     private boolean channelsAreInConnectorFlow() {
         Connector c = getConnector();
         return c != null &&
@@ -289,7 +270,6 @@ public class ExternalFlow extends Flow {
      * {@inheritDoc}
      */
     @Override
-    @Transient
     public Significance getSignificanceToSource() {
         Flow flow = getConnectorFlow();
         return flow == null
@@ -303,7 +283,6 @@ public class ExternalFlow extends Flow {
      * {@inheritDoc}
      */
     @Override
-    @Transient
     public Significance getSignificanceToTarget() {
         Flow flow = getConnectorFlow();
         return flow == null
@@ -318,7 +297,6 @@ public class ExternalFlow extends Flow {
      * {@inheritDoc}
      */
     @Override
-    @Transient
     public boolean isCritical() {
         return getSignificanceToTarget() == Flow.Significance.Critical;
     }
@@ -327,7 +305,6 @@ public class ExternalFlow extends Flow {
      * {@inheritDoc}
      */
     @Override
-    @Transient
     public boolean isRequired() {
         Flow flow = getConnectorFlow();
         return flow != null && ( isPartTargeted() ? super.isRequired() : flow.isRequired() );
@@ -462,7 +439,6 @@ public class ExternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public Segment getSegment() {
         return part.getSegment();
     }
@@ -470,7 +446,6 @@ public class ExternalFlow extends Flow {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public boolean isUndefined() {
         return super.isUndefined() && part.isUndefined();
     }

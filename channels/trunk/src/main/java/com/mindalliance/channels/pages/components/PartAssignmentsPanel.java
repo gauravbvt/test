@@ -195,7 +195,7 @@ public class PartAssignmentsPanel extends FloatingCommandablePanel {
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
             columns.add( this.makeFilterableLinkColumn(
-                    "Individual",
+                    "Agent",
                     "employment.actor",
                     "employment.actor.normalizedName",
                     EMPTY,

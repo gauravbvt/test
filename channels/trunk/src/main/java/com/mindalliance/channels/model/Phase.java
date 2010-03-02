@@ -2,8 +2,6 @@ package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.QueryService;
 
-import javax.persistence.Entity;
-import javax.persistence.Transient;
 import java.text.Collator;
 
 /**
@@ -15,7 +13,6 @@ import java.text.Collator;
  * Date: Sep 18, 2009
  * Time: 10:29:06 AM
  */
-@Entity
 public class Phase extends ModelEntity implements Comparable<ModelObject> {
     /**
      * Unknown phase.
@@ -99,7 +96,6 @@ public class Phase extends ModelEntity implements Comparable<ModelObject> {
      *
      * @return a string
      */
-    @Transient
     public String getPreposition() {
         switch ( timing ) {
             case PreEvent:
@@ -118,7 +114,6 @@ public class Phase extends ModelEntity implements Comparable<ModelObject> {
      *
      * @return a boolean
      */
-    @Transient
     public boolean isConcurrent() {
         return timing == Timing.Concurrent;
     }
@@ -128,7 +123,6 @@ public class Phase extends ModelEntity implements Comparable<ModelObject> {
      *
      * @return a boolean
      */
-    @Transient
     public boolean isPostEvent() {
         return timing == Timing.PostEvent;
     }
@@ -138,7 +132,6 @@ public class Phase extends ModelEntity implements Comparable<ModelObject> {
      *
      * @return a boolean
      */
-    @Transient
     public boolean isPreEvent() {
         return timing == Timing.PreEvent;
     }

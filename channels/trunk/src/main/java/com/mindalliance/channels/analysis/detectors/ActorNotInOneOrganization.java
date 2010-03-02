@@ -56,7 +56,7 @@ public class ActorNotInOneOrganization extends AbstractIssueDetector {
                 issue.setSeverity( Level.Low );
                 issue.setDescription( actor + " does not belong to any organization." );
                 issue.setRemediation( "Specify an organization in a task played by the actor\n "
-                        + "or register the individual as an employee of an organization." );
+                        + "or register the agent as an employee of an organization." );
                 issues.add( issue );
             } else {
                 for ( Organization org : employers ) {

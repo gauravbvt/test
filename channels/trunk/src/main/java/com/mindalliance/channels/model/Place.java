@@ -8,8 +8,6 @@ import com.mindalliance.channels.geo.GeoLocation;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
-import javax.persistence.Entity;
-import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -19,7 +17,6 @@ import java.util.Set;
 /**
  * A location or jurisdiction.
  */
-@Entity
 public class Place extends ModelEntity implements GeoLocatable {
     /**
      * Name of pre-fab administrative area place type.
@@ -152,7 +149,6 @@ public class Place extends ModelEntity implements GeoLocatable {
     /**
      * {@inheritDoc}
      */
-    @Transient
     @Override
     public void setName( String name ) {
         // If geoname was empty or same as name, reset it to null
@@ -357,7 +353,6 @@ public class Place extends ModelEntity implements GeoLocatable {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public String getGeoMarkerLabel() {
         StringBuilder sb = new StringBuilder();
         sb.append( toString() );
@@ -374,7 +369,6 @@ public class Place extends ModelEntity implements GeoLocatable {
      *
      * @return a string
      */
-    @Transient
     public String getFullAddress() {
         StringBuilder sb = new StringBuilder();
         String address = getActualStreetAddress();
@@ -399,7 +393,6 @@ public class Place extends ModelEntity implements GeoLocatable {
      *
      * @return a string
      */
-    @Transient
     public String getActualStreetAddress() {
         String street = getStreetAddress();
         if ( street == null || street.isEmpty() ) {
@@ -416,7 +409,6 @@ public class Place extends ModelEntity implements GeoLocatable {
      *
      * @return a string
      */
-    @Transient
     public String getActualPostalCode() {
         String code = getPostalCode();
         if ( code == null || code.isEmpty() ) {
@@ -434,7 +426,6 @@ public class Place extends ModelEntity implements GeoLocatable {
      * @return true when validate() has been called.
      * @see #validate
      */
-    @Transient
     public boolean isValidated() {
         return !( geoname == null || geoLocations == null );
     }
@@ -459,7 +450,6 @@ public class Place extends ModelEntity implements GeoLocatable {
             service.refineWithAddress( geoLocation, streetAddress, postalCode );
     }
 
-    @Transient
     public List<GeoLocation> getGeoLocations( QueryService queryService ) {
         return geoLocations;
     }
@@ -486,7 +476,6 @@ public class Place extends ModelEntity implements GeoLocatable {
         }
     }
 
-    @Transient
     public GeoLocation getGeoLocation() {
         return geoLocation;
     }
@@ -543,7 +532,6 @@ public class Place extends ModelEntity implements GeoLocatable {
      *
      * @return a place or null
      */
-    @Transient
     public Place getLoopyContainingPlace() {
         return getLoopyContainingPlace( this );
     }
@@ -565,7 +553,6 @@ public class Place extends ModelEntity implements GeoLocatable {
      *
      * @return a double
      */
-    @Transient
     public double getLatitude() {
         GeoLocation geoLoc = geoLocate();
         return geoLoc != null ? geoLoc.getLatitude() : 0.0;
@@ -576,7 +563,6 @@ public class Place extends ModelEntity implements GeoLocatable {
      *
      * @return a double
      */
-    @Transient
     public double getLongitude() {
         GeoLocation geoLoc = geoLocate();
         return geoLoc != null ? geoLoc.getLongitude() : 0.0;
@@ -628,7 +614,6 @@ public class Place extends ModelEntity implements GeoLocatable {
      *
      * @return a boolean
      */
-    @Transient
     public boolean isRegion() {
         String actualAddress = getActualStreetAddress();
         return ( actualAddress == null || actualAddress.isEmpty() ) && geoLocate() != null;
@@ -637,7 +622,6 @@ public class Place extends ModelEntity implements GeoLocatable {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public List<Attachment.Type> getAttachmentTypes() {
         List<Attachment.Type> types = new ArrayList<Attachment.Type>();
         if ( !hasImage() )

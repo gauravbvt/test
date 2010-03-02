@@ -3,7 +3,6 @@ package com.mindalliance.channels.model;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
-import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -76,7 +75,7 @@ public abstract class ModelEntity extends ModelObject {
 
     static {
         UNIVERSAL_TYPES = new ArrayList<ModelEntity>();
-        ANY_ACTOR_TYPE = new Actor( "any individual" );
+        ANY_ACTOR_TYPE = new Actor( "any agent" );
         ANY_ACTOR_TYPE.setId( 10000000L - 10 );
         ANY_ACTOR_TYPE.setType();
         UNIVERSAL_TYPES.add( ANY_ACTOR_TYPE );
@@ -176,7 +175,6 @@ public abstract class ModelEntity extends ModelObject {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public boolean isUndefined() {
         return super.isUndefined() && tags.isEmpty();
     }

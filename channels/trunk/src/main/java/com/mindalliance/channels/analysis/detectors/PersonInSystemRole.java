@@ -31,7 +31,7 @@ public class PersonInSystemRole extends AbstractIssueDetector {
             if ( role.isSystem() ) {
                 DetectedIssue issue = makeIssue( Issue.VALIDITY, person );
                 issue.setDescription( "Person assigned a role meant for systems." );
-                issue.setRemediation( "Make the individual a system\nor do not assign the role." );
+                issue.setRemediation( "Make the agent a system\nor do not assign the role." );
                 issue.setSeverity( Level.Low );
                 issues.add( issue );
             }

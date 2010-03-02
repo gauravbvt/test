@@ -1733,7 +1733,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         Iterator<Part> parts = segment.parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
-            if ( part.isTerminatesEventPhase() || part.getGoals().contains( goal ) ) {
+            if ( ( goal.isRisk() && part.isTerminatesEventPhase() ) || part.getGoals().contains( goal ) ) {
                 achievers.add( part );
             }
         }

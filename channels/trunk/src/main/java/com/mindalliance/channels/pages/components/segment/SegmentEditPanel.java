@@ -27,7 +27,7 @@ public class SegmentEditPanel extends AbstractMultiAspectPanel {
     /**
      * Incidents aspect.
      */
-    public static final String RISKS = "risks";
+    public static final String GOALS = "goals";
 
     public SegmentEditPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( id, model, expansions );
@@ -77,8 +77,8 @@ public class SegmentEditPanel extends AbstractMultiAspectPanel {
     protected Component makeAspectPanel( String aspect ) {
         if ( aspect.equals( DETAILS ) ) {
             return getSegmentDetailsPanel();
-        } else if ( aspect.equals( RISKS ) ) {
-            return getSegmentRisksPanel();
+        } else if ( aspect.equals( GOALS ) ) {
+            return getSegmentGoalsPanel();
         } else {
             // Should never happen
             throw new RuntimeException( "Unknown aspect " + aspect );
@@ -89,7 +89,7 @@ public class SegmentEditPanel extends AbstractMultiAspectPanel {
         return new SegmentEditDetailsPanel( "aspect", getModel(), getExpansions() );
     }
 
-    private Component getSegmentRisksPanel() {
+    private Component getSegmentGoalsPanel() {
         return new GoalListPanel(
                 "aspect", 
                 new PropertyModel<Segment>(this, "segment"),

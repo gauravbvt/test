@@ -1,23 +1,11 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,8 +18,6 @@ import java.util.Set;
 /**
  * An arrow between two nodes in the information flow graph.
  */
-@Entity
-@Inheritance( strategy = InheritanceType.SINGLE_TABLE )
 public abstract class Flow extends ModelObject implements Channelable, SegmentObject {
 
     /**
@@ -80,13 +66,11 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     @Override
-    @Transient
     public String getDescription() {
         return descriptionFromEOIs();
     }
 
     // todo - remove when cut-over is completed
-    @Transient
     private void setEOIsFrom( String val ) {
         List<String> contents = Matcher.extractEOIs( val );
         for ( String content : contents ) {
@@ -121,7 +105,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a boolean
      */
-    @Transient
     public boolean isNotification() {
         return !isAskedFor();
     }
@@ -135,7 +118,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         this.askedFor = askedFor;
     }
 
-    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     public List<Channel> getChannels() {
         return channels;
     }
@@ -149,7 +131,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @param channels the channels
      */
-    @Transient
     public abstract void setEffectiveChannels( List<Channel> channels );
 
     /**
@@ -183,12 +164,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     /**
      * {@inheritDoc}
      */
-    @Transient
     public String getChannelsString() {
         return Channel.toString( getEffectiveChannels() );
     }
 
-    @Embedded
     public Delay getMaxDelay() {
         return maxDelay;
     }
@@ -230,7 +209,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a boolean
      */
-    @Transient
     public boolean isClassified() {
         return CollectionUtils.exists(
                 eois,
@@ -257,7 +235,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
     }
 
-    @Enumerated( EnumType.ORDINAL )
     public Significance getSignificanceToSource() {
         return significanceToSource;
     }
@@ -266,7 +243,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         significanceToSource = significance;
     }
 
-    @Enumerated( EnumType.ORDINAL )
     public Significance getSignificanceToTarget() {
         return significanceToTarget;
     }
@@ -296,7 +272,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return the description
      */
-    @Transient
     public String getTitle() {
         String message = getName();
         if ( message == null || message.trim().isEmpty() )
@@ -315,7 +290,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return the description
      */
-    @Transient
     public String getReceiveTitle() {
         String message = getName();
         if ( message == null || message.trim().isEmpty() )
@@ -341,14 +315,12 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
     }
 
-    @Transient
     private static String getOrganizationString( Part part ) {
         Organization organization = part.getOrganization();
         return organization == null || part.getRole() == null && part.getActor() == null ? ""
                 : MessageFormat.format( " in {0}", organization.getLabel() );
     }
 
-    @Transient
     private static String getJurisdictionString( Part part ) {
         Place place = part.getJurisdiction();
         return place == null ? ""
@@ -360,7 +332,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return the description
      */
-    @Transient
     public String getSendTitle() {
         String message = getName();
         if ( message == null || message.trim().isEmpty() )
@@ -399,13 +370,11 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     /**
      * @return Get the source of this flow.
      */
-    @Transient
     public abstract Node getSource();
 
     /**
      * @return the target of this flow.
      */
-    @Transient
     public abstract Node getTarget();
 
     /**
@@ -434,10 +403,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     /**
      * @return true for internal flows; false for external flows.
      */
-    @Transient
     public abstract boolean isInternal();
 
-    @Column( name = "isAll" )
     public boolean isAll() {
         return all;
     }
@@ -472,7 +439,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return getEffectiveChannels();
     }
 
-    @Transient
     public boolean isCritical() {
         return getSignificanceToTarget() == Significance.Critical;
     }
@@ -489,7 +455,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a boolean
      */
-    @Transient
     public boolean isTriggeringToSource() {
         return getSignificanceToSource() == Significance.Triggers;
     }
@@ -497,7 +462,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     /**
      * Change significance to triggers source
      */
-    @Transient
     public void becomeTriggeringToSource() {
         setSignificanceToSource( Significance.Triggers );
     }
@@ -507,7 +471,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a boolean
      */
-    @Transient
     public boolean isTriggeringToTarget() {
         return getSignificanceToTarget() == Significance.Triggers;
     }
@@ -524,7 +487,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a boolean
      */
-    @Transient
     public boolean isTerminatingToSource() {
         return getSignificanceToSource() == Significance.Terminates;
     }
@@ -541,7 +503,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a boolean
      */
-    @Transient
     public boolean isTerminatingToTarget() {
         return getSignificanceToTarget() == Significance.Terminates;
     }
@@ -558,7 +519,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a boolean
      */
-    @Transient
     public boolean isRequired() {
         return isCritical() || isTriggeringToTarget() || isTerminatingToTarget();
     }
@@ -663,29 +623,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     public abstract boolean canGetTerminatesSource();
 
-    /**
-     * Make a replicate of the flow
-     *
-     * @param isSend whether to replicate as send or receive
-     * @return a created flow
-     */
-    //TODO remove
-    public Flow replicate( boolean isSend ) {
-        Flow flow;
-        if ( isSend ) {
-            Node source = getSource();
-            Segment segment = getSource().getSegment();
-            QueryService queryService = segment.getQueryService();
-            flow = queryService.connect( source, queryService.createConnector( segment ), getName() );
-        } else {
-            Node target = getTarget();
-            Segment segment = target.getSegment();
-            QueryService queryService = segment.getQueryService();
-            flow = queryService.connect( queryService.createConnector( segment ), target, getName() );
-        }
-        flow.initFrom( this );
-        return flow;
-    }
 
     /**
      * Whether the flow has a connector as source or target
@@ -699,7 +636,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return copied list of channels
      */
-    @Transient
     public List<Channel> getChannelsCopy() {
         List<Channel> channelsCopy = new ArrayList<Channel>();
         for ( Channel channel : getChannels() ) {
@@ -739,7 +675,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a part or null if contacting a connector
      */
-    @Transient
     public Part getContactedPart() {
         Node node = isAskedFor() ? getSource() : getTarget();
         return node.isPart() ? (Part) node : null;
@@ -750,7 +685,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a part or a connector
      */
-    @Transient
     public Node getContactedNode() {
         return isAskedFor() ? getSource() : getTarget();
     }
@@ -760,7 +694,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a part or null
      */
-    @Transient
     public Part getLocalPart() {
         Node source = getSource();
         if ( source.isPart() && source.getSegment() == getSegment() ) {
@@ -780,7 +713,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     /**
      * {@inheritDoc}
      */
-    @Transient
     public boolean isUndefined() {
         return super.isUndefined()
                 && channels.isEmpty()
@@ -795,7 +727,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a string description of the communication
      */
-    @Transient
     public String getKind() {
         return isAskedFor() ? "answer" : "notify";
     }
@@ -805,7 +736,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a collection of channels
      */
-    @Transient
     public Collection<Channel> getBroadcasts() {
         Set<Channel> broadcasts = new HashSet<Channel>();
         for ( Channel c : getEffectiveChannels() )
@@ -819,7 +749,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a set of media
      */
-    @Transient
     public Set<TransmissionMedium> getUnicasts() {
         Set<TransmissionMedium> result = new HashSet<TransmissionMedium>();
 
@@ -836,7 +765,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a boolean
      */
-    @Transient
     public boolean isSharing() {
         return getSource().isPart() && getTarget().isPart();
     }
@@ -846,7 +774,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a boolean
      */
-    @Transient
     public boolean isNeed() {
         return getSource().isConnector();
     }
@@ -856,7 +783,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a boolean
      */
-    @Transient
     public boolean isCapability() {
         return getTarget().isConnector();
     }
@@ -864,7 +790,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     /**
      * {@inheritDoc}
      */
-    @Transient
     public List<Attachment.Type> getAttachmentTypes() {
         List<Attachment.Type> types = super.getAttachmentTypes();
         if ( !hasImage() )
@@ -886,7 +811,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a list of classifications
      */
-    @Transient
     public List<Classification> getClassifications() {
         Set<Classification> classifications = new HashSet<Classification>();
         for ( ElementOfInformation eoi : eois ) {
@@ -900,7 +824,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a list of elements of information
      */
-    @Transient
     @SuppressWarnings( "unchecked" )
     public List<ElementOfInformation> getEOISWithSameClassifications() {
         List<Classification> allClassifications = getAllEOIClassifications();
@@ -949,7 +872,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a list of classifications
      */
-    @Transient
     @SuppressWarnings( "unchecked" )
     public List<Classification> getAllEOIClassifications() {
         Set<Classification> allClassifications = new HashSet<Classification>();
@@ -964,7 +886,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a boolean
      */
-    @Transient
     public boolean isExternal() {
         return !isInternal();
     }
@@ -974,7 +895,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a boolean
      */
-    @Transient
     public boolean isSatisfied() {
         assert isNeed();
         return CollectionUtils.exists(
@@ -993,7 +913,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a boolean
      */
-    @Transient
     public boolean isSatisfying() {
         assert isCapability();
         return ( (Connector) getTarget() ).externalFlows().hasNext()
@@ -1022,7 +941,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                 } );
     }
 
-    @Transient
     /**
      * {@inheritDoc}
      */
@@ -1034,7 +952,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
     }
 
-    @Transient
     /**
      * A flow is important (i.e. could be essential) if it is a sharing flow, and is either critical
      * to the target part or triggers it.
@@ -1060,7 +977,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return a list of flows
      */
     @SuppressWarnings( "unchecked" )
-    @Transient
     public List<Flow> getAlternates() {
         if ( isSharing() ) {
             Part target = (Part) getTarget();
@@ -1101,7 +1017,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a boolean
      */
-    @Transient
     public boolean isSharingWithSelf() {
         boolean sharingWithSelf = false;
         if ( isSharing() ) {
@@ -1161,7 +1076,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
          *
          * @return a list of Significances
          */
-        @Transient
         public List<Significance> getChoices() {
             return Arrays.asList( values() );
         }
