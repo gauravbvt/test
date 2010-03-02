@@ -5,10 +5,10 @@ import com.mindalliance.channels.analysis.graph.TriggerGraphBuilder;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.Severity;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.StrongConnectivityInspector;
 
@@ -61,7 +61,7 @@ public class CyclicTriggering extends AbstractIssueDetector {
                     }
                     issue.setDescription(sb.toString());
                     issue.setRemediation("Break the loop by having one of these tasks not trigger the other.");
-                    issue.setSeverity( Severity.Major);
+                    issue.setSeverity( Level.Low);
                     issues.add(issue);
                 }
             }

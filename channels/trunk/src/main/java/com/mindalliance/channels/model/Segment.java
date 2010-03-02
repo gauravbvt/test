@@ -11,11 +11,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.MapKey;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +27,6 @@ import java.util.Set;
  * A segment of the plan.
  * Provides an iterator on its nodes.
  */
-@Entity
 public class Segment extends ModelObject {
 
     /**
@@ -69,9 +63,9 @@ public class Segment extends ModelObject {
      */
     private Phase phase;
     /**
-     * Risks to be mitigated in this segment.
+     * Goals (risk mitigations, gains to be made) for the segment.
      */
-    private List<Risk> risks = new ArrayList<Risk>();
+    private List<Goal> goals = new ArrayList<Goal>();
 
     /**
      * The query service in charge of this segment.
@@ -87,8 +81,6 @@ public class Segment extends ModelObject {
         setNodeIndex( new HashMap<Long, Node>( INITIAL_CAPACITY ) );
     }
 
-    @OneToMany( cascade = {CascadeType.REMOVE}, mappedBy = "segment" )
-    @MapKey( name = "id" )
     Map<Long, Node> getNodeIndex() {
         return nodeIndex;
     }
@@ -106,36 +98,54 @@ public class Segment extends ModelObject {
         this.event = event;
     }
 
-    @OneToMany
-    public List<Risk> getRisks() {
-        return risks;
+    /**
+     * Get goals that are risk mitigations.
+     *
+     * @return a list of goals
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<Goal> getRisks() {
+        return (List<Goal>) CollectionUtils.select(
+                getGoals(),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        Goal goal = (Goal) object;
+                        return goal.isRisk();
+                    }
+                }
+        );
     }
 
-    public void setRisks( List<Risk> risks ) {
-        this.risks = risks;
+    public List<Goal> getGoals() {
+        return goals;
+    }
+
+    public void setGoals( List<Goal> goals ) {
+        this.goals = goals;
     }
 
     /**
-     * Add a risk.
+     * Add a goal.
      *
-     * @param risk a risk
+     * @param goal a goal
      */
-    public void addRisk( Risk risk ) {
-        risks.add( risk );
+    public void addGoal( Goal goal ) {
+        goals.add( goal );
     }
 
     /**
-     * Remove a risk.
+     * Remove a goal.
      *
-     * @param risk a risk
+     * @param goal a goal
      */
-    public void removeRisk( Risk risk ) {
-        List<Part> mitigators = getMitigators( risk );
-        for ( Part part : mitigators ) {
-            part.getMitigations().remove( risk );
+    public void removeGoal( Goal goal ) {
+        List<Part> achievers = getAchievers( goal );
+        for ( Part part : achievers ) {
+            part.getGoals().remove( goal );
         }
-        risks.remove( risk );
+        goals.remove( goal );
     }
+
 
     /**
      * Iterate over the nodes in this segment.
@@ -164,7 +174,6 @@ public class Segment extends ModelObject {
     /**
      * @return the number of nodes in this segment
      */
-    @Transient
     public int getNodeCount() {
         return getNodeIndex().size();
     }
@@ -335,7 +344,6 @@ public class Segment extends ModelObject {
      *
      * @return the first part in this segment
      */
-    @Transient
     public Part getDefaultPart() {
         return parts().next();
     }
@@ -445,7 +453,6 @@ public class Segment extends ModelObject {
         else return flow;
     }
 
-    @Transient
     public QueryService getQueryService() {
         if ( queryService == null ) {
             queryService = Channels.instance().getQueryService();
@@ -481,36 +488,39 @@ public class Segment extends ModelObject {
     }
 
     /**
-     * Get risk given type and name of organization.
+     * Get goal given category, positiveness and name of organization.
      *
-     * @param type             a risk type
-     * @param organizationName a string
-     * @return a risk or null if none matching
+     * @param category a goal category
+     * @param positive whether the goal is positive
+     * @param orgName  a string
+     * @return a goal or null if none matching
      */
-    public Risk getRisk( final Risk.Type type, final String organizationName ) {
-        return (Risk) CollectionUtils.find( risks, new Predicate() {
+    public Goal getGoal( final Goal.Category category, final boolean positive, final String orgName ) {
+        return (Goal) CollectionUtils.find( goals, new Predicate() {
             public boolean evaluate( Object obj ) {
-                Risk risk = (Risk) obj;
-                return risk.getType() == type
-                        && risk.getOrganization().getName().equals( organizationName );
+                Goal goal = (Goal) obj;
+                return goal.getCategory() == category
+                        && goal.isPositive() == positive
+                        && goal.getOrganization().getName().equals( orgName );
             }
         } );
     }
 
+
     /**
      * Find all parts that mitigate a given risk.
      *
-     * @param risk a risk
+     * @param goal a goal
      * @return a list of parts
      */
-    public List<Part> getMitigators( Risk risk ) {
-        List<Part> mitigators = new ArrayList<Part>();
+    public List<Part> getAchievers( Goal goal ) {
+        List<Part> achievers = new ArrayList<Part>();
         Iterator<Part> parts = parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
-            if ( part.getMitigations().contains( risk ) ) mitigators.add( part );
+            if ( part.getGoals().contains( goal ) ) achievers.add( part );
         }
-        return mitigators;
+        return achievers;
     }
 
     /**
@@ -680,18 +690,21 @@ public class Segment extends ModelObject {
 
     /**
      * At least one risk ends with segment.
+     *
      * @return a boolean
      */
     public boolean hasTerminatingRisks() {
         return CollectionUtils.exists(
-                getRisks(),
+                getGoals(),
                 new Predicate() {
                     public boolean evaluate( Object object ) {
-                        return ((Risk)object).isEndsWithSegment();
+                        Goal goal = (Goal) object;
+                        return goal.isRisk() && goal.isEndsWithSegment();
                     }
                 }
         );
     }
+
 
     //=================================================
     /**
@@ -758,7 +771,6 @@ public class Segment extends ModelObject {
         }
     }
 
-    @Transient
     public boolean isBeingDeleted() {
         return beingDeleted;
     }
@@ -770,7 +782,6 @@ public class Segment extends ModelObject {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public boolean isLockable() {
         return false;
     }
@@ -791,10 +802,10 @@ public class Segment extends ModelObject {
                 || ModelObject.areIdentical( event, mo )
                 ||
                 CollectionUtils.exists(
-                        risks,
+                        goals,
                         new Predicate() {
                             public boolean evaluate( Object obj ) {
-                                return ( (Risk) obj ).references( mo );
+                                return ( (Goal) obj ).references( mo );
                             }
                         } );
     }

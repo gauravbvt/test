@@ -5,9 +5,9 @@ import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Channelable;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Severity;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
@@ -79,7 +79,7 @@ public class InvalidChannel extends AbstractIssueDetector {
                 Issue issue = makeIssue( Issue.VALIDITY, modelObject );
                 issue.setDescription( channel.toString() + " is repeated." );
                 issue.setRemediation( "Remove this channel." );
-                issue.setSeverity( Severity.Minor );
+                issue.setSeverity( Level.Low );
                 issues.add( issue );
             }
         }
@@ -87,16 +87,16 @@ public class InvalidChannel extends AbstractIssueDetector {
 
     }
 
-    private Severity getSeverity( Channelable channelable ) {
+    private Level getSeverity( Channelable channelable ) {
         if ( channelable instanceof Flow ) {
             Flow flow = (Flow) channelable;
             if ( flow.getTarget().isPart() ) {
                 return getQueryService().getPartPriority( (Part) flow.getTarget() );
             } else {
-                return Severity.Minor;
+                return Level.Low;
             }
         } else {
-            return Severity.Minor;
+            return Level.Low;
         }
     }
 

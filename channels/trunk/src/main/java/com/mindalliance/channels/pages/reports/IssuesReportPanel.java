@@ -48,7 +48,7 @@ public class IssuesReportPanel extends Panel {
                 item.add( new Label( "reported-by", issue.getReportedBy() ) );
                 item.add( new Label( "description", issue.getDescription() ) );
                 item.add( new Label( "suggestion", issue.getRemediation() ) );
-                String styleClass = issue.getSeverity().toString().toLowerCase();
+                String styleClass = issue.getSeverity().negative().toLowerCase();
                 item.add( new AttributeModifier( "class", true,
                                                      new Model<String>( styleClass ) ) );
             }

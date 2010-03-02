@@ -12,6 +12,7 @@ import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.InternalFlow;
 import com.mindalliance.channels.model.ModelEntity;
@@ -20,7 +21,6 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import org.apache.commons.beanutils.NestedNullException;
@@ -161,7 +161,7 @@ public final class ChannelsUtils {
         state.put( "repeating", part.isRepeating() );
         state.put( "terminatesEventPhase", part.isTerminatesEventPhase() );
         state.put( "startsWithSegment", part.isStartsWithSegment() );
-        state.put( "mitigations", new ArrayList<Risk>( part.getMitigations() ) );
+        state.put( "goals", new ArrayList<Goal>( part.getGoals() ) );
         if ( part.getInitiatedEvent() != null )
             state.put(
                     "initiatedEvent",
@@ -207,7 +207,7 @@ public final class ChannelsUtils {
         part.setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
         part.setCompletionTime( (Delay) state.get( "completionTime" ) );
         part.setAttachments( new ArrayList<Attachment>( (ArrayList<Attachment>) state.get( "attachments" ) ) );
-        part.setMitigations( new ArrayList<Risk>( (ArrayList<Risk>) state.get( "mitigations" ) ) );
+        part.setGoals( new ArrayList<Goal>( (ArrayList<Goal>) state.get( "goals" ) ) );
         if ( state.get( "initiatedEvent" ) != null )
             part.setInitiatedEvent( queryService.findOrCreateType(
                     Event.class,

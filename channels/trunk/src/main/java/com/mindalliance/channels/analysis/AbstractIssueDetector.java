@@ -5,10 +5,10 @@ import com.mindalliance.channels.GeoService;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.Severity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -178,7 +178,7 @@ public abstract class AbstractIssueDetector implements IssueDetector {
      * @param flow a sharing flow
      * @return an issue level
      */
-    protected Severity getFailureSeverity( Flow flow ) {
+    protected Level getFailureSeverity( Flow flow ) {
         assert flow.isSharing();
         return getQueryService().getPartPriority( (Part) flow.getTarget() );
     }
@@ -188,7 +188,7 @@ public abstract class AbstractIssueDetector implements IssueDetector {
      * @param part a part
      * @return an issue level
      */
-    protected Severity getFailureSeverity( Part part ) {
+    protected Level getFailureSeverity( Part part ) {
         return getQueryService().getPartPriority( part );
     }
 

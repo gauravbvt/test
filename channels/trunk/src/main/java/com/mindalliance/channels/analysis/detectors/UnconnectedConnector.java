@@ -4,9 +4,9 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +55,7 @@ public class UnconnectedConnector extends AbstractIssueDetector {
             DetectedIssue issue = makeIssue( DetectedIssue.COMPLETENESS, part );
             issue.setDescription( "'" + capability.getName() + "' is produced but never sent." );
             issue.setRemediation( "Add a commitment to share " + capability.getName() + " produced by the task." );
-            issue.setSeverity( Severity.Minor );
+            issue.setSeverity( Level.Low );
             issues.add( issue );
         }
         for ( Flow need : getQueryService().findUnconnectedNeeds( part ) ) {
@@ -66,7 +66,7 @@ public class UnconnectedConnector extends AbstractIssueDetector {
                             + need.getName()
                             + "' is needed but never received." );
             issue.setRemediation( "Add a commitment to share " + need.getName() + " needed by the task." );
-            issue.setSeverity( need.isRequired() ? Severity.Major : Severity.Minor );
+            issue.setSeverity( need.isRequired() ? Level.Medium : Level.Low );
             issues.add( issue );
         }
         return issues;

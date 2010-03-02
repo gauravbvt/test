@@ -3,9 +3,9 @@ package com.mindalliance.channels.pages.reports;
 import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
@@ -64,7 +64,7 @@ public class SegmentReportPanel extends Panel {
     }
 
     private void addSegmentPage( Segment s, boolean showIssues ) {
-        List<Risk> riskList = s.getRisks();
+        List<Goal> goalList = s.getGoals();
         add( new Label( "name", s.getName() )
                 .add( new AttributeModifier( "name", true,
                 new Model<String>( String.valueOf( s.getId() ) ) ) ),
@@ -73,21 +73,21 @@ public class SegmentReportPanel extends Panel {
 
                 new Label( "event", s.getPhaseEventTitle() ).setVisible( s.getEvent() != null ),
 
-                new WebMarkupContainer( "risk-lead" )
+                new WebMarkupContainer( "goal-lead" )
                         .setRenderBodyOnly( true )
-                        .setVisible( !riskList.isEmpty() ),
+                        .setVisible( !goalList.isEmpty() ),
 
-                new WebMarkupContainer( "risk-section" )
-                        .add( new ListView<Risk>( "risks", riskList ) {
+                new WebMarkupContainer( "goal-section" )
+                        .add( new ListView<Goal>( "goals", goalList ) {
                             @Override
-                            protected void populateItem( ListItem<Risk> item ) {
-                                Risk risk = item.getModelObject();
-                                item.add( new Label( "risk", risk.getLabel() )
+                            protected void populateItem( ListItem<Goal> item ) {
+                                Goal goal = item.getModelObject();
+                                item.add( new Label( "goal", goal.getLabel() )
                                         .setRenderBodyOnly( true ),
-                                        new Label( "risk-desc", risk.getDescription() )
+                                        new Label( "goal-desc", goal.getDescription() )
                                                 .setRenderBodyOnly( true ) );
                             }
-                        } ).setVisible( !riskList.isEmpty() ),
+                        } ).setVisible( !goalList.isEmpty() ),
 
                 new FlowMapDiagramPanel( "flowMap",                                          // NON-NLS
                         new Model<Segment>( s ),

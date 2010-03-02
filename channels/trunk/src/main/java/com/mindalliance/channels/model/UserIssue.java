@@ -2,10 +2,6 @@ package com.mindalliance.channels.model;
 
 import org.apache.commons.lang.StringUtils;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 import java.text.MessageFormat;
 
 /**
@@ -16,7 +12,6 @@ import java.text.MessageFormat;
  * Date: Jan 23, 2009
  * Time: 11:57:45 AM
  */
-@Entity
 public class UserIssue extends ModelObject implements Issue {
 
     /**
@@ -46,7 +41,7 @@ public class UserIssue extends ModelObject implements Issue {
     /**
      * The issue's severity
      */
-    private Severity severity = Severity.Minor;
+    private Level severity = Level.Low;
 
     public UserIssue() {
     }
@@ -69,7 +64,6 @@ public class UserIssue extends ModelObject implements Issue {
         return "user issue";
     }
 
-    @ManyToOne( fetch = FetchType.LAZY )
     public ModelObject getAbout() {
         return about;
     }
@@ -103,7 +97,6 @@ public class UserIssue extends ModelObject implements Issue {
     }
 
     @Override
-    @Transient
     public String getName() {
         return getLabel( MAX_LENGTH );
     }
@@ -119,23 +112,21 @@ public class UserIssue extends ModelObject implements Issue {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public boolean isDetected() {
         return false;
     }
 
-    public Severity getSeverity() {
+    public Level getSeverity() {
         return severity;
     }
 
-    public void setSeverity( Severity severity ) {
+    public void setSeverity( Level severity ) {
         this.severity = severity;
     }
 
     /**
      * {@inheritDoc}
      */
-    @Transient
     public boolean isWaived() {
         return false;
     }
@@ -151,7 +142,6 @@ public class UserIssue extends ModelObject implements Issue {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public String getKind() {
         return "user";
     }
@@ -166,7 +156,6 @@ public class UserIssue extends ModelObject implements Issue {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public String getWaivedString() {
         return Boolean.toString( isWaived() );
     }
@@ -174,7 +163,6 @@ public class UserIssue extends ModelObject implements Issue {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public String getDetectorLabel() {
         return "User defined";
     }
@@ -182,7 +170,6 @@ public class UserIssue extends ModelObject implements Issue {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public boolean isUndefined() {
         return super.isUndefined()
                 && remediation.isEmpty();

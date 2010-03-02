@@ -2,9 +2,9 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,14 +32,14 @@ public class UnverifiedPostalCode extends AbstractIssueDetector {
         if ( postalCode != null && !postalCode.isEmpty() ) {
             if ( place.geoLocate() == null ) {
                 Issue issue = makeIssue( Issue.VALIDITY, place, getTestedProperty() );
-                issue.setSeverity( Severity.Minor );
+                issue.setSeverity( Level.Low );
                 issue.setDescription( "Can't verify the postal code without a geolocation." );
                 issue.setRemediation( "Set a valid geoname and choose a geolocation." );
                 issues.add( issue );
             } else {
                 if ( !getGeoService().verifyPostalCode( place.getPostalCode(), place.geoLocate() ) ) {
                     Issue issue = makeIssue( Issue.VALIDITY, place, getTestedProperty() );
-                    issue.setSeverity( Severity.Minor );
+                    issue.setSeverity( Level.Low );
                     issue.setDescription( "Can't verify the postal code for the geolocation." );
                     issue.setRemediation( "Change the postal code\nor change the geolocation." );
                     issues.add( issue );

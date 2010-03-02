@@ -1,11 +1,10 @@
 package com.mindalliance.channels.analysis;
 
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Severity;
 import org.apache.commons.lang.StringUtils;
 
-import javax.persistence.Transient;
 import java.util.List;
 
 /**
@@ -51,7 +50,7 @@ public class DetectedIssue extends AnalysisObject implements Issue {
     /**
      * The issue's severity.
      */
-    private Severity severity = Severity.Minor;
+    private Level severity = Level.Low;
 
     /**
      * Constructor.
@@ -219,11 +218,11 @@ public class DetectedIssue extends AnalysisObject implements Issue {
     /**
      * {@inheritDoc}
      */
-    public Severity getSeverity() {
+    public Level getSeverity() {
         return severity;
     }
 
-    public void setSeverity( Severity severity ) {
+    public void setSeverity( Level severity ) {
         this.severity = severity;
     }
 
@@ -236,7 +235,6 @@ public class DetectedIssue extends AnalysisObject implements Issue {
      *
      * @return a boolean
      */
-    @Transient
     public boolean isWaived() {
         return getAbout().isWaived( getKind() );
     }

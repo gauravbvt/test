@@ -3,9 +3,9 @@ package com.mindalliance.channels.analysis.detectors;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +63,7 @@ public class PartWithRoleWithNoKnownActor extends AbstractIssueDetector {
                 Issue issue = makeIssue( Issue.COMPLETENESS, part );
                 issue.setDescription( "There is no known individual playing this role." );
                 issue.setRemediation( " Identify an individual playing this role." );
-                issue.setSeverity( Severity.Major );
+                issue.setSeverity( Level.Medium );
                 issues.add( issue );
             }
         }

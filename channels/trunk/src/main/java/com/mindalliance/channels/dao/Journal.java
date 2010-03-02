@@ -2,10 +2,10 @@ package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.command.Command;
 
-import java.util.List;
-import java.util.Collections;
-import java.util.ArrayList;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * List of commands to be persisted and replayed.

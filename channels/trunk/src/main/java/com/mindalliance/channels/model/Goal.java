@@ -11,24 +11,24 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * A positive or negative outcome to an organization.
+ * A goal of an organization (risk mitigation of opportunity capture).
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: Feb 26, 2010
  * Time: 1:12:38 PM
  */
-public class Outcome implements Serializable, Mappable {
+public class Goal implements Serializable, Mappable {
     /**
-     * Category of outcome.
+     * Category of goal.
      */
     private Category category;
     /**
-     * WHether positive outcome (gain) or negative outcome (risk).
+     * Whether positive (capture gain) or negative (mitigate risk).
      */
     boolean positive = false;
     /**
-     * Level of outcome.
+     * Level of gain or risk.
      */
     private Level level;
     /**
@@ -44,7 +44,7 @@ public class Outcome implements Serializable, Mappable {
      */
     private boolean endsWithSegment;
 
-    public Outcome( ) {
+    public Goal() {
 
     }
 
@@ -97,6 +97,24 @@ public class Outcome implements Serializable, Mappable {
     }
 
     /**
+     * Whether the goal is risk mitigation.
+     *
+     * @return a boolean
+     */
+    public boolean isRisk() {
+        return !isPositive();
+    }
+
+    /**
+     * Whether the goal is a opportunity capture.
+     *
+     * @return a boolean
+     */
+    public boolean isGain() {
+        return isPositive();
+    }
+
+    /**
      * Get label.
      *
      * @return a string
@@ -111,18 +129,18 @@ public class Outcome implements Serializable, Mappable {
     @Override
     public String toString() {
 
-        return ( level != null ? levelLabel().toLowerCase() : "" ) + " "
+        return ( level != null ? getLevelLabel().toLowerCase() : "" ) + " "
                 + ( category != null ? category.getGroup().toLowerCase() : "" )
-                + outcomeLabel()
+                + goalLabel()
                 + ( getOrganization() != null ? getOrganization().getName() : "all" )
                 + ( category != null ? " of " + category.getName( positive ) : "" ).toLowerCase();
     }
 
-    private String levelLabel() {
+    public String getLevelLabel() {
         return isPositive() ? getLevel().name() : getLevel().negative();
     }
 
-    private String outcomeLabel() {
+    private String goalLabel() {
         return isPositive() ? " gain by " : " risk to ";
     }
 
@@ -131,8 +149,8 @@ public class Outcome implements Serializable, Mappable {
      * {inheritDoc}
      */
     public boolean equals( Object obj ) {
-        if ( obj instanceof Outcome ) {
-            Outcome other = (Outcome) obj;
+        if ( obj instanceof Goal ) {
+            Goal other = (Goal) obj;
             return organization != null && organization == other.getOrganization();
 
         } else {
@@ -176,8 +194,8 @@ public class Outcome implements Serializable, Mappable {
      */
     public String getFullTitle() {
         String label = "";
-        label += levelLabel();
-        label += outcomeLabel();
+        label += getLevelLabel();
+        label += goalLabel();
         label += category.getLabel( positive ).toLowerCase();
         label += positive ? " for " : " to ";
         label += organization.getName();
@@ -191,8 +209,22 @@ public class Outcome implements Serializable, Mappable {
      * @return a string
      */
     public String getTitle( String sep ) {
-        return category.getLabel( positive ) + sep + organization.getName();
+        String label = isRisk() ? "Mitigates " : "Gains ";
+        label += category.getLabel( positive ) + sep + organization.getName();
+        return label;
     }
+
+    /**
+     * Get full label for goal.
+     *
+     * @return a string
+     */
+    public String getFullLabel() {
+        String label = isRisk() ? "Mitigates " : "Gains ";
+        label += getFullTitle();
+        return label;
+    }
+
 
     /**
      * Type of risk.
@@ -227,15 +259,15 @@ public class Outcome implements Serializable, Mappable {
         private static Collator collator = Collator.getInstance();
 
         /**
-         * Outcome group.
+         * Goal group.
          */
         private String group;
         /**
-         * Negative outcome.
+         * Negative goal.
          */
         private String loss;
         /**
-         * Positive outcome.
+         * Positive goal.
          */
         private String gain;
 
@@ -298,10 +330,10 @@ public class Outcome implements Serializable, Mappable {
         }
 
         /**
-         * Get all outcome types belonging to a given category.
+         * Get all goal types belonging to a given category.
          *
          * @param category a category
-         * @param positive whether the outcome is positive of not
+         * @param positive whether the goal is positive of not
          * @return a list of types
          */
         @SuppressWarnings( "unchecked" )

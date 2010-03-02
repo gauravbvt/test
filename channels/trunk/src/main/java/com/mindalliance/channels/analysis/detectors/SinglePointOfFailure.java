@@ -7,9 +7,9 @@ import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.Severity;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.BlockCutpointGraph;
 import org.jgrapht.graph.AsUndirectedGraph;
@@ -69,7 +69,7 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
             DetectedIssue issue = makeIssue( DetectedIssue.ROBUSTNESS, plan );
             issue.setDescription( actor.getName() + " appears to be a single point of failure." );
             issue.setRemediation( "Delegate responsibilities of this individual\nor share them with other individuals." );
-            issue.setSeverity( Severity.Major );
+            issue.setSeverity( Level.Medium );
             issues.add( issue );
         }
         return issues;

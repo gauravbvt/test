@@ -1,27 +1,26 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A segment is about an event that is never caused.
+ * A plan segment without goal.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: Apr 11, 2009
- * Time: 2:41:55 PM
+ * Date: May 12, 2009
+ * Time: 4:13:13 PM
  */
-public class SegmentEventNeverCaused extends AbstractIssueDetector {
+public class SegmentWithoutGoal extends AbstractIssueDetector {
 
-    public SegmentEventNeverCaused() {
+    public SegmentWithoutGoal() {
     }
 
     /**
@@ -30,15 +29,12 @@ public class SegmentEventNeverCaused extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Segment segment = (Segment) modelObject;
-        Event event = segment.getEvent();
-        Plan plan = getPlan();
-        if ( !plan.isIncident( event )
-                && getQueryService().findCausesOf( event ).isEmpty() ) {
-            Issue issue = makeIssue( Issue.COMPLETENESS, segment );
-            issue.setDescription( "The plan segment is about an event that may never be caused." );
-            issue.setRemediation( "Make the event in question an incident\n"
-                    +"or make sure at least one task in another plan segment causes it." );
+        if ( segment.getGoals().isEmpty() ) {
+            DetectedIssue issue = makeIssue( Issue.VALIDITY, segment );
             issue.setSeverity( Level.Medium );
+            issue.setDescription( "The plan segment does not have any goal." );
+            issue.setRemediation( "Identify one or more risks this plan segment is meant to eliminate "
+                    + "or mitigate, or gains it is meant to make." );
             issues.add( issue );
         }
         return issues;
@@ -62,6 +58,6 @@ public class SegmentEventNeverCaused extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Event may never be caused";
+        return "No stated goal for plan segment";
     }
 }

@@ -4,9 +4,9 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +66,7 @@ public class FlowToSelf extends AbstractIssueDetector {
                 Issue issue = makeIssue(Issue.VALIDITY, flow);
                 issue.setDescription(source.getActor() + " is both the source and target.");
                 issue.setRemediation(" Change either the source\n or change target of this flow.");
-                issue.setSeverity( Severity.Major );
+                issue.setSeverity( Level.High );
                 issues.add(issue);
             } else {
                 List<Actor> possibleSourceActors = getQueryService().findAllActualActors( source.resourceSpec() );
@@ -80,7 +80,7 @@ public class FlowToSelf extends AbstractIssueDetector {
                     issue.setRemediation(" If this is not intentional, change the source\n"
                             + "or change the target of this flow\n"
                             + "or identify more individuals that could be either source or target");
-                    issue.setSeverity( Severity.Minor );
+                    issue.setSeverity( Level.Low );
                     issues.add(issue);
 
                 }

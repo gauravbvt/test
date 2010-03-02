@@ -1,8 +1,8 @@
 package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Severity;
 import com.mindalliance.channels.model.UserIssue;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -53,7 +53,7 @@ public class UserIssueConverter extends AbstractChannelsConverter {
         writer.setValue( issue.getType() );
         writer.endNode();
         writer.startNode( "severity" );
-        writer.setValue( issue.getSeverity().toString() );
+        writer.setValue( issue.getSeverity().name() );
         writer.endNode();
         writer.startNode( "remediation" );
         writer.setValue( issue.getRemediation() );
@@ -89,7 +89,7 @@ public class UserIssueConverter extends AbstractChannelsConverter {
                     } else if ( nodeName.equals( "type" ) ) {
                         issue.setType( reader.getValue() );
                     } else if ( nodeName.equals( "severity" ) ) {
-                        issue.setSeverity( Severity.valueOf( reader.getValue() ) );
+                        issue.setSeverity( Level.valueOf( reader.getValue() ) );
                     } else if ( nodeName.equals( "remediation" ) ) {
                         issue.setRemediation( reader.getValue() );
                     } else if ( nodeName.equals( "reportedBy" ) ) {

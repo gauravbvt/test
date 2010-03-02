@@ -3,9 +3,9 @@ package com.mindalliance.channels.analysis.detectors;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ public class PartWithInvalidTiming extends AbstractIssueDetector {
                    DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject );
                     issue.setDescription( "The task repeats before it usually completes." );
                     issue.setRemediation( "Make the task complete sooner\nor wait longer before it repeats." );
-                    issue.setSeverity( Severity.Minor );
+                    issue.setSeverity( Level.Low );
                     issues.add( issue );
                 }
             }
@@ -62,7 +62,7 @@ public class PartWithInvalidTiming extends AbstractIssueDetector {
                 DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject );
                  issue.setDescription( "The task repeats but may not complete beforehand." );
                  issue.setRemediation( "Make the task non-repeating\nor set a completion time for the task." );
-                 issue.setSeverity( Severity.Minor );
+                 issue.setSeverity( Level.Low );
                  issues.add( issue );
             }
         }

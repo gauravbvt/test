@@ -5,9 +5,9 @@ import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Severity;
 import com.mindalliance.channels.nlp.Proximity;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -71,7 +71,7 @@ public class UnsatisfiedNeed extends AbstractIssueDetector {
                 if ( need.isCritical() ) {
                     issue.setSeverity( getQueryService().getPartPriority( (Part) need.getTarget() ) );
                 } else {
-                    issue.setSeverity( Severity.Minor );
+                    issue.setSeverity( Level.Low );
                 }
                 StringBuffer sb = new StringBuffer();
                 for ( ElementOfInformation eoi : unsatisfiedEOIs ) {
@@ -93,7 +93,7 @@ public class UnsatisfiedNeed extends AbstractIssueDetector {
                 if ( need.isCritical() ) {
                     issue.setSeverity( getQueryService().getPartPriority( (Part) need.getTarget() ) );
                 } else {
-                    issue.setSeverity( Severity.Minor );
+                    issue.setSeverity( Level.Low );
                 }
                 issue.setDescription( "The needed information is not shared." );
                 issue.setRemediation( "Add a sharing flow of the same name." );

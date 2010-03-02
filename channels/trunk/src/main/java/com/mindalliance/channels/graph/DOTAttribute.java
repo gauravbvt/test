@@ -1,7 +1,7 @@
 package com.mindalliance.channels.graph;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

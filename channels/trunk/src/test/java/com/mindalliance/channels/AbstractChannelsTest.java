@@ -114,7 +114,7 @@ public class AbstractChannelsTest extends TestCase {
     private List<IssueDetector> createDetectors( DefaultQueryService queryService ) {
         List<IssueDetector> detectors = new ArrayList<IssueDetector>();
         detectors.add( new NoSegmentRepondsToIncident() );
-        detectors.add( new SegmentWithoutManagedRisk() );
+        detectors.add( new SegmentWithoutGoal() );
         detectors.add( new FromUser() );
         detectors.add( new FlowWithoutChannel() );
         detectors.add( new InvalidChannel() );
@@ -143,7 +143,7 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new FlowViolatesPolicy() );
         detectors.add( new UnconfirmedJob() );
         detectors.add( new ActorNotInOneOrganization() );
-        detectors.add( new SegmentWithSameRisk() );
+        detectors.add( new SegmentWithSameGoal() );
         detectors.add( new UselessPart() );
         detectors.add( new GeonameButNoLocation() );
         detectors.add( new UnverifiedPostalCode() );

@@ -4,8 +4,8 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public class UnnamedFlow extends AbstractIssueDetector {
             issue.setDescription( "The name of the information is missing." );
             issue.setRemediation( "Name the information." );
             issues = new ArrayList<Issue>();
-            issue.setSeverity( Severity.Severe );
+            issue.setSeverity( Level.High );
             issues.add( issue );
         }
         return issues;

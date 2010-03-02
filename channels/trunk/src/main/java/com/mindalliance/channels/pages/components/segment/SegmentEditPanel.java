@@ -90,7 +90,7 @@ public class SegmentEditPanel extends AbstractMultiAspectPanel {
     }
 
     private Component getSegmentRisksPanel() {
-        return new RiskListPanel(
+        return new GoalListPanel(
                 "aspect", 
                 new PropertyModel<Segment>(this, "segment"),
                 getExpansions() );

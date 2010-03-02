@@ -6,9 +6,9 @@ import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.model.Agreement;
 import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Severity;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -52,7 +52,7 @@ public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
                     issue.setRemediation( "Confirm an agreement covering this sharing commitment,\n"
                             + "or remove the requirement for agreements for "
                             + org.getName() );
-                    issue.setSeverity( Severity.Major );
+                    issue.setSeverity( Level.Low );
                     issues.add( issue );
                 }
             }

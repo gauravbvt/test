@@ -4,13 +4,13 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.UserIssue;
@@ -111,9 +111,9 @@ public class SegmentConverter extends AbstractChannelsConverter {
         // Segment user issues
         exportUserIssues( segment, writer, context );
         // Risks in scope
-        for ( Risk risk : segment.getRisks() ) {
-            writer.startNode( "risk" );
-            context.convertAnother( risk );
+        for ( Goal goal : segment.getGoals() ) {
+            writer.startNode( "goal" );
+            context.convertAnother( goal );
             writer.endNode();
         }
         // Parts
@@ -199,9 +199,9 @@ public class SegmentConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "flow" ) ) {
                 context.convertAnother( segment, Flow.class );
                 // Risks
-            } else if ( nodeName.equals( "risk" ) ) {
-                Risk risk = (Risk) context.convertAnother( segment, Risk.class );
-                segment.addRisk( risk );
+            } else if ( nodeName.equals( "goal" ) ) {
+                Goal goal = (Goal) context.convertAnother( segment, Goal.class );
+                segment.addGoal( goal );
                 // Issues
             } else if ( nodeName.equals( "issue" ) ) {
                 context.convertAnother( segment, UserIssue.class );

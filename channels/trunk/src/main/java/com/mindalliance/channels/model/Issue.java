@@ -105,14 +105,14 @@ public interface Issue extends Identifiable, Serializable {
      *
      * @return a Level (Low, Medium or High)
      */
-    Severity getSeverity();
+    Level getSeverity();
 
     /**
      * Set the issue's severity.
      *
      * @param severity the severity level
      */
-    void setSeverity( Severity severity );
+    void setSeverity( Level severity );
 
     /**
      * Whether an issue is waived.

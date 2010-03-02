@@ -14,9 +14,11 @@ import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Job;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
@@ -26,11 +28,9 @@ import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
-import com.mindalliance.channels.model.Severity;
 import com.mindalliance.channels.nlp.Proximity;
 import com.mindalliance.channels.util.Play;
 
@@ -756,10 +756,10 @@ public interface QueryService extends Service {
      * Find all parts that mitigate a risk or terminate the event cause.
      *
      * @param segment a plan segment
-     * @param risk    a risk
+     * @param goal    a goal
      * @return a list of parts
      */
-    List<Part> findMitigations( Segment segment, Risk risk );
+    List<Part> findAchievers( Segment segment, Goal goal );
 
     /**
      * Find plan segment in which an actor is involved.
@@ -1050,7 +1050,7 @@ public interface QueryService extends Service {
      * @param part a part
      * @return an issue level
      */
-    Severity getPartPriority( Part part );
+    Level getPartPriority( Part part );
 
     /**
      * Find all actors personifying user with given username.

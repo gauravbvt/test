@@ -4,10 +4,10 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -69,7 +69,7 @@ public class UselessPart extends AbstractIssueDetector {
                         + "nor does it trigger or send information to a useful task." );
                 issue.setRemediation( "Have the task mitigate a risk\nor make sure at least one task that it"
                         + " directly or indirectly impacts does address a risk." );
-                issue.setSeverity( Severity.Minor );
+                issue.setSeverity( Level.Low );
                 issues.add( issue );
             }
         }
@@ -78,7 +78,7 @@ public class UselessPart extends AbstractIssueDetector {
 
     // A part is useful if it terminates an event, mitigates a risk or sends info to a useful part.
     private boolean isUseful( Part part, Set<Part> visited ) {
-        if ( part.isTerminatesEventPhase() || !part.getMitigations().isEmpty() ) return true;
+        if ( part.isTerminatesEventPhase() || !part.getGoals().isEmpty() ) return true;
         Iterator<Flow> sends = part.sends();
         boolean useful = false;
         while ( !useful && sends.hasNext() ) {

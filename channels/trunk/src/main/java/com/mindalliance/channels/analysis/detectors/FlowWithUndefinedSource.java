@@ -4,10 +4,10 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class FlowWithUndefinedSource extends AbstractIssueDetector {
             DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, "source" );
             issue.setDescription( "The source task is not defined." );
             issue.setRemediation( "Name the individual\nor name the role\nor name the organization of the source task." );
-            issue.setSeverity( Severity.Major );
+            issue.setSeverity( Level.Medium );
             issues.add( issue );
         }
         return issues;

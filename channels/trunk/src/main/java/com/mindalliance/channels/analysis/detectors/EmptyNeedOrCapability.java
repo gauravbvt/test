@@ -4,8 +4,8 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class EmptyNeedOrCapability extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         if ( !flow.getName().trim().isEmpty() && flow.getEois().isEmpty() ) {
             DetectedIssue issue = makeIssue( Issue.VALIDITY, flow );
-            issue.setSeverity( Severity.Minor );
+            issue.setSeverity( Level.Low );
             String needOrCapability = flow.getTarget().isConnector() ? "capability" : "need";
             issue.setDescription( "Information "
                     + needOrCapability

@@ -4,9 +4,9 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Severity;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -43,7 +43,7 @@ public class InconsistentImpactOnTargetPart extends AbstractIssueDetector {
                         + similar.getReceiveTitle()
                         + "' is not." );
                 issue.setRemediation( "Make both or neither critical." );
-                issue.setSeverity( Severity.Minor );
+                issue.setSeverity( Level.Low );
                 issues.add( issue );
             } else if ( similar.isTriggeringToTarget() != commitment.isTriggeringToTarget() ) {
                 DetectedIssue issue = makeIssue( Issue.VALIDITY, commitment );
@@ -55,7 +55,7 @@ public class InconsistentImpactOnTargetPart extends AbstractIssueDetector {
                         + similar.getReceiveTitle()
                         + "' does not." );
                 issue.setRemediation( "Have both trigger the task that consumes the information\nor have neither do it." );
-                issue.setSeverity( Severity.Minor );
+                issue.setSeverity( Level.Low );
                 issues.add( issue );
             } else if ( similar.isTerminatingToTarget() != commitment.isTerminatingToTarget() ) {
                 DetectedIssue issue = makeIssue( Issue.VALIDITY, commitment );
@@ -67,7 +67,7 @@ public class InconsistentImpactOnTargetPart extends AbstractIssueDetector {
                         + similar.getReceiveTitle()
                         + "' does not." );
                 issue.setRemediation( "Have both terminate the task that consumes the information\nor have neither." );
-                issue.setSeverity( Severity.Minor );
+                issue.setSeverity( Level.Low );
                 issues.add( issue );
             }
         }

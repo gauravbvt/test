@@ -4,9 +4,9 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class FlowViolatesPolicy extends AbstractIssueDetector {
                 if ( flow.getTarget().isPart() ) {
                     issue.setSeverity( getQueryService().getPartPriority( (Part) flow.getTarget() ) );
                 } else {
-                    issue.setSeverity( Severity.Minor );
+                    issue.setSeverity( Level.Low );
                 }
                 issues.add( issue );
             }

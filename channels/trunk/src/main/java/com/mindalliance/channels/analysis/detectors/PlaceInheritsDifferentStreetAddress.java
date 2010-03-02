@@ -2,9 +2,9 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class PlaceInheritsDifferentStreetAddress extends AbstractIssueDetector {
                     && withinAddress != null && !withinAddress.isEmpty()
                     && !streetAddress.equals( withinAddress ) ) {
                 Issue issue = makeIssue( Issue.VALIDITY, place );
-                issue.setSeverity( Severity.Minor );
+                issue.setSeverity( Level.Low );
                 issue.setDescription( place.getName()
                         + " is within a place with a different address." );
                 issue.setRemediation( "Change the address\nor remove it." );

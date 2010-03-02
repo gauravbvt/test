@@ -2,8 +2,8 @@ package com.mindalliance.channels.graph;
 
 import org.jgrapht.Graph;
 
-import java.util.Set;
 import java.io.Writer;
+import java.util.Set;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

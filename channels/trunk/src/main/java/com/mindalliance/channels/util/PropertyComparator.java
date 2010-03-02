@@ -1,11 +1,11 @@
 package com.mindalliance.channels.util;
 
-import java.util.Comparator;
-import java.lang.reflect.InvocationTargetException;
-
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.beanutils.NestedNullException;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Comparator;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

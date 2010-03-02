@@ -3,11 +3,11 @@ package com.mindalliance.channels.analysis.detectors;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,7 @@ public class SegmentNeverStarts extends AbstractIssueDetector {
                     + " because it is not in response to an incident and no other plan segment causes it to start." );
             issue.setRemediation( "Make this plan segment in response to an incident\n"
                     + "or make sure that a task in another plan segment causes this plan segment to start." );
-            issue.setSeverity( Severity.Major );
+            issue.setSeverity( Level.Medium );
             issues.add( issue );
         }
         return issues;

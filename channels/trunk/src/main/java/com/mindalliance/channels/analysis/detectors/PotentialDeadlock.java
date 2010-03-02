@@ -5,10 +5,10 @@ import com.mindalliance.channels.analysis.graph.FlowMapGraphBuilder;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.Severity;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
@@ -97,7 +97,7 @@ public class PotentialDeadlock extends AbstractIssueDetector {
                                 + getReceiveDescriptions( criticalReceiveInCycle )
                                 + " fails." );
                         issue.setRemediation( "Provide redundancy for at least one of these critical flows." );
-                        issue.setSeverity( Severity.Major );
+                        issue.setSeverity( Level.Medium );
                         issues.add( issue );
                     }
                 }

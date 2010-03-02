@@ -5,9 +5,9 @@ import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.MetaProvider;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
 import org.jgrapht.Graph;
@@ -95,17 +95,17 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
                 out.println();
                 printoutVertices( out, segmentNodes.get( segment ) );
                 exportStop( out, metaProvider, segment );
-                exportRisks( out, metaProvider, g, segment );
+                exportGoals( out, metaProvider, g, segment );
                 out.println( "}" );
             } else {
                 printoutVertices( out, segmentNodes.get( segment ) );
                 exportStop( out, metaProvider, segment );
-                exportRisks( out, metaProvider, g, segment );
+                exportGoals( out, metaProvider, g, segment );
             }
         }
     }
 
-    private void exportRisks(
+    private void exportGoals(
             PrintWriter out,
             AbstractMetaProvider<Node, Flow> metaProvider,
             Graph<Node, Flow> g,
@@ -114,23 +114,23 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
             Part part = (Part) node;
             if ( !isOnlyTheSourceOfFailedFlow( part, g ) ) {
                 if ( part.getSegment().equals( segment ) )
-                    for ( Risk risk : part.getMitigations() ) {
-                        exportRisk( getRiskVertexId( part, risk ), risk, out, metaProvider );
+                    for ( Goal goal : part.getGoals() ) {
+                        exportGoal( getGoalVertexId( part, goal ), goal, out, metaProvider );
                     }
             }
         }
         if ( getTerminatedSegments().contains( segment ) ) {
-            for ( Risk risk : segment.getRisks() ) {
-                if ( risk.isEndsWithSegment() ) {
-                    exportRisk( getRiskVertexId( segment, risk ), risk, out, metaProvider );
+            for ( Goal goal : segment.getGoals() ) {
+                if ( goal.isEndsWithSegment() ) {
+                    exportGoal( getGoalVertexId( segment, goal ), goal, out, metaProvider );
                 }
             }
         }
     }
 
-    private void exportRisk(
+    private void exportGoal(
             String riskVertexId,
-            Risk risk,
+            Goal goal,
             PrintWriter out,
             AbstractMetaProvider<Node, Flow> metaProvider ) {
         List<DOTAttribute> attributes = DOTAttribute.emptyList();
@@ -138,17 +138,17 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
         attributes.add( new DOTAttribute( "fontsize", FlowMapMetaProvider.NODE_FONT_SIZE ) );
         attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
-        String label = sanitize( risk.getTitle( "|" ).replaceAll( "\\|", "\\\\n" ) );
+        String label = sanitize( goal.getTitle( "|" ).replaceAll( "\\|", "\\\\n" ) );
         attributes.add( new DOTAttribute( "label", label ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
-        attributes.add( new DOTAttribute( "tooltip", risk.getFullTitle() ) );
+        attributes.add( new DOTAttribute( "tooltip", goal.getFullTitle() ) );
         String dirName;
         try {
             dirName = metaProvider.getImageDirectory().getFile().getAbsolutePath();
         } catch ( IOException e ) {
             throw new RuntimeException( "Unable to get image directory location", e );
         }
-        attributes.add( new DOTAttribute( "image", dirName + "/" + getRiskIcon( risk ) ) );
+        attributes.add( new DOTAttribute( "image", dirName + "/" + getGoalIcon( goal ) ) );
         out.print( getIndent() );
         out.print( riskVertexId );
         out.print( "[" );
@@ -156,25 +156,25 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
         out.println( "];" );
     }
 
-    private String getRiskIcon( Risk risk ) {
-        switch ( risk.getSeverity() ) {
-            case Minor:
+    private String getGoalIcon( Goal goal ) {
+        switch ( goal.getLevel() ) {
+            case Low:
                 return "risk_minor.png";
-            case Major:
+            case Medium:
                 return "risk_major.png";
-            case Severe:
+            case High:
                 return "risk_severe.png";
             default:
                 throw new RuntimeException( "Unknown risk level" );
         }
     }
 
-    private String getRiskVertexId( Part part, Risk risk ) {
-        return "risk" + +part.getMitigations().indexOf( risk ) + "_" + part.getId();
+    private String getGoalVertexId( Part part, Goal goal ) {
+        return "goal" + +part.getGoals().indexOf( goal ) + "_" + part.getId();
     }
 
-    private String getRiskVertexId( Segment segment, Risk risk ) {
-        return "risk" + segment.getRisks().indexOf( risk ) + "_" + segment.getId();
+    private String getGoalVertexId( Segment segment, Goal goal ) {
+        return "goal" + segment.getGoals().indexOf( goal ) + "_" + segment.getId();
     }
 
 
@@ -216,33 +216,33 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
         super.exportEdges( out, g );
         if ( !terminators.isEmpty() )
             exportTerminations( out, g );
-        exportRiskEdges( out, g );
+        exportGoalEdges( out, g );
     }
 
-    private void exportRiskEdges( PrintWriter out, Graph<Node, Flow> g ) {
+    private void exportGoalEdges( PrintWriter out, Graph<Node, Flow> g ) {
         for ( Node node : g.vertexSet() ) {
             Part part = (Part) node;
             if ( !isOnlyTheSourceOfFailedFlow( part, g ) ) {
-                for ( Risk risk : part.getMitigations() ) {
-                    exportRiskEdge( part, risk, out, g );
+                for ( Goal goal : part.getGoals() ) {
+                    exportGoalEdge( part, goal, out, g );
                 }
             }
         }
         for ( Segment segment : getTerminatedSegments() ) {
-            for ( Risk risk : segment.getRisks() ) {
-                if ( risk.isEndsWithSegment() ) {
-                    exportRiskEdge( segment, risk, out, g );
+            for ( Goal goal : segment.getGoals() ) {
+                if ( goal.isEndsWithSegment() ) {
+                    exportGoalEdge( segment, goal, out, g );
                 }
             }
         }
     }
 
-    private void exportRiskEdge( Part part, Risk risk, PrintWriter out, Graph<Node, Flow> g ) {
+    private void exportGoalEdge( Part part, Goal goal, PrintWriter out, Graph<Node, Flow> g ) {
         List<DOTAttribute> attributes = getNonFlowEdgeAttributes();
-        attributes.add( new DOTAttribute( "label", "mitigates" ) );
-        String riskId = getRiskVertexId( part, risk );
+        attributes.add( new DOTAttribute( "label", "achieves" ) );
+        String goalId = getGoalVertexId( part, goal );
         String partId = getMetaProvider().getVertexIDProvider().getVertexName( part );
-        out.print( getIndent() + partId + getArrow( g ) + riskId );
+        out.print( getIndent() + partId + getArrow( g ) + goalId );
         out.print( "[" );
         if ( !attributes.isEmpty() ) {
             out.print( asElementAttributes( attributes ) );
@@ -250,11 +250,11 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
         out.println( "];" );
     }
 
-    private void exportRiskEdge( Segment segment, Risk risk, PrintWriter out, Graph<Node, Flow> g ) {
+    private void exportGoalEdge( Segment segment, Goal goal, PrintWriter out, Graph<Node, Flow> g ) {
         List<DOTAttribute> attributes = getNonFlowEdgeAttributes();
         attributes.add( new DOTAttribute( "label", "terminates" ) );
-        String riskId = getRiskVertexId( segment, risk );
-        out.print( getIndent() + getSegmentStopId( segment ) + getArrow( g ) + riskId );
+        String goalId = getGoalVertexId( segment, goal );
+        out.print( getIndent() + getSegmentStopId( segment ) + getArrow( g ) + goalId );
         out.print( "[" );
         if ( !attributes.isEmpty() ) {
             out.print( asElementAttributes( attributes ) );

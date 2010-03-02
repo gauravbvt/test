@@ -3,8 +3,8 @@ package com.mindalliance.channels.graph.diagrams;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.markup.ComponentTag;
 
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Modifies the URLs diagram's imagemap to become Ajax callbacks.

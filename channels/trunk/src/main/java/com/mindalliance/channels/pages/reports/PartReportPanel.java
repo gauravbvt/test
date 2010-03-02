@@ -2,10 +2,10 @@ package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Risk;
 import org.apache.commons.collections.iterators.IteratorChain;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -47,7 +47,7 @@ public class PartReportPanel extends Panel {
     }
 
     private void init( boolean showRole, final boolean showingIssues ) {
-        List<Risk> riskList = part.getMitigations();
+        List<Goal> goalList = part.getGoals();
 
         add( new Label( "task", uppercasedName( part.getTask() ) ),                       // NON-NLS
 
@@ -60,15 +60,15 @@ public class PartReportPanel extends Panel {
 
              new Label( "location", getLocation( part.getLocation() ) ),
 
-             new WebMarkupContainer( "mitigates" )
-                     .add( new ListView<Risk>( "risks", riskList ) {
+             new WebMarkupContainer( "achieves" )
+                     .add( new ListView<Goal>( "goals", goalList ) {
                          @Override
-                         protected void populateItem( ListItem<Risk> item ) {
-                             Risk risk = item.getModelObject();
-                             item.add( new Label( "risk", risk.getLabel() ),
-                                       new Label( "risk-desc", risk.getDescription() ) );
+                         protected void populateItem( ListItem<Goal> item ) {
+                             Goal goal = item.getModelObject();
+                             item.add( new Label( "goal", goal.getFullLabel() ),
+                                       new Label( "risk-desc", goal.getDescription() ) );
                          }
-                     } ).setVisible( !riskList.isEmpty() ),
+                     } ).setVisible( !goalList.isEmpty() ),
 
              new IssuesReportPanel( "issues", new Model<ModelObject>( part ) )            // NON-NLS
                      .setVisible( showingIssues ),

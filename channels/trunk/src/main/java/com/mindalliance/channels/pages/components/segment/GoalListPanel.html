@@ -7,29 +7,36 @@
         lang="en">
 <body>
 <wicket:panel>
-    <h3> Risks managed by this plan segment </h3>
+    <h3> Goals for this plan segment </h3>
 
-    <div class="risks" wicket:id=risksDiv>
+    <div class="goals" wicket:id=goalsDiv>
         <table>
             <thead>
                 <tr>
-                    <td title="How severe the risk is">Severity</td>
-                    <td title="The type of risk">Type</td>
-                    <td width="100%"  title="The organization at risk">Organization</td>
-                    <td title="Whether the risk ends with the plan segment">Ends</td>
+                    <td title="Risk mitigation or opportunity capture?">Kind</td>
+                    <td title="The severity of the risk or magnitude of the gain">Magnitude</td>
+                    <td title="The category of risk or opportunity">Category</td>
+                    <td width="100%"  title="The organization with the goal">Organization</td>
+                    <td title="Whether the goal ends with the plan segment">Ends</td>
                     <td/>
                     <td/>
                 </tr>
             </thead>
-            <tr wicket:id="risk">
+            <tr wicket:id="goal">
                 <td>
-                    <select wicket:id="severity">
-                        <option>severity</option>
+                    <select wicket:id="kind">
+                        <option>Mitigate risk</option>
+                        <option>Make gain</option>
                     </select>
                 </td>
                 <td>
-                    <select wicket:id="type">
-                        <option>type</option>
+                    <select wicket:id="level">
+                        <option>severe</option>
+                    </select>
+                </td>
+                <td>
+                    <select wicket:id="category">
+                        <option>Bodily harm</option>
                     </select>
                 </td>
                 <td>
@@ -41,18 +48,18 @@
                 <td><a wicket:id="more-link" href="#" title="Show more">More...</a></td>
                 <td>
                     <a wicket:id="delete" href="#">
-                        <img style="border:0" src="images/delete.png" title="Delete" alt="Delete risk"/>
+                        <img style="border:0" src="images/delete.png" title="Delete" alt="Delete goal"/>
                     </a>
                 </td>
             </tr>
         </table>
     </div>
     <div wicket:id="moreDiv">
-        <h3> About the <span wicket:id="riskLabel">[risk label]</span></h3>
+        <h3> About the <span wicket:id="goalLabel">[goal label]</span></h3>
         <h4>Description</h4>
         <textarea wicket:id="description" rows="2" cols="40">description</textarea>
-        <h4> Mitigations </h4>
-        <table wicket:id="mitigations">[mitigations table]</table>
+        <h4> Tasks with goal </h4>
+        <table wicket:id="tasks">[tasks table]</table>
     </div>
 </wicket:panel>
 </body>

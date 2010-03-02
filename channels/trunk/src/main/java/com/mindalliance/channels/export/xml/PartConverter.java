@@ -4,11 +4,11 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.UserIssue;
@@ -120,11 +120,12 @@ public class PartConverter extends AbstractChannelsConverter {
             writer.setValue( initiatedEvent.getName() );
             writer.endNode();
         }
-        // Part mitigations
-        for ( Risk risk : part.getMitigations() ) {
-            writer.startNode( "mitigation" );
-            writer.addAttribute( "type", risk.getType().name() );
-            writer.setValue( risk.getOrganization().getName() );
+        // Part goals --
+        for ( Goal goal : part.getGoals() ) {
+            writer.startNode( "goal" );
+            writer.addAttribute( "positive", ""+goal.isPositive() );
+            writer.addAttribute( "category", goal.getCategory().name() );
+            writer.setValue( goal.getOrganization().getName() );
             writer.endNode();
         }
         writer.startNode( "asTeam" );
@@ -214,11 +215,12 @@ public class PartConverter extends AbstractChannelsConverter {
                 part.setInitiatedEvent( event );
             } else if ( nodeName.equals( "flow" ) ) {
                 context.convertAnother( segment, Flow.class );
-            } else if ( nodeName.equals( "mitigation" ) ) {
-                Risk.Type type = Risk.Type.valueOf( reader.getAttribute( "type" ) );
+            } else if ( nodeName.equals( "goal" ) ) {
+                boolean positive = reader.getAttribute( "positive").equals( "true" );
+                Goal.Category category = Goal.Category.valueOf( reader.getAttribute( "category" ) );
                 String orgName = reader.getValue();
-                Risk risk = segment.getRisk( type, orgName );
-                part.getMitigations().add( risk );
+                Goal goal = segment.getGoal( category, positive, orgName );
+                part.getGoals().add( goal );
             }  else if ( nodeName.equals( "asTeam" ) ) {
                 part.setAsTeam( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "issue" ) ) {

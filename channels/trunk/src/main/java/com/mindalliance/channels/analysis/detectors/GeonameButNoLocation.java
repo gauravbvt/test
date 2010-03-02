@@ -4,9 +4,9 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class GeonameButNoLocation extends AbstractIssueDetector {
         List<GeoLocation> geoLocations = place.getGeoLocations( getQueryService() );
         if ( geoname != null && !geoname.isEmpty() && ( geoLocations == null || geoLocations.isEmpty() ) ) {
             DetectedIssue issue = makeIssue( Issue.VALIDITY, place, getTestedProperty() );
-            issue.setSeverity( Severity.Major );
+            issue.setSeverity( Level.Medium );
             issue.setDescription( "No geolocation could be found that might correspond to the place's geoname." );
             issue.setRemediation( "Change the geoname\nor remove it." );
             issues.add( issue );

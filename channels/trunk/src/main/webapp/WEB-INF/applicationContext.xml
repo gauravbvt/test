@@ -129,7 +129,7 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.NoSegmentRepondsToIncident">
                     <property name="queryService" ref="queryService"/>
                 </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.SegmentWithoutManagedRisk">
+                <bean class="com.mindalliance.channels.analysis.detectors.SegmentWithoutGoal">
                     <property name="queryService" ref="queryService"/>
                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.StartedOrTerminatedPartWithoutTask">
@@ -218,7 +218,7 @@
                 <bean class="com.mindalliance.channels.analysis.detectors.ActorNotInOneOrganization">
                     <property name="queryService" ref="queryService"/>
                 </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.SegmentWithSameRisk">
+                <bean class="com.mindalliance.channels.analysis.detectors.SegmentWithSameGoal">
                     <property name="queryService" ref="queryService"/>
                 </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.UselessPart">

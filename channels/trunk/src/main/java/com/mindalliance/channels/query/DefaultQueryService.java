@@ -24,10 +24,12 @@ import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.InvalidEntityKindException;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Job;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
@@ -37,11 +39,9 @@ import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
-import com.mindalliance.channels.model.Severity;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
@@ -1728,16 +1728,16 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<Part> findMitigations( Segment segment, Risk risk ) {
-        List<Part> mitigators = new ArrayList<Part>();
+    public List<Part> findAchievers( Segment segment, Goal goal ) {
+        List<Part> achievers = new ArrayList<Part>();
         Iterator<Part> parts = segment.parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
-            if ( part.isTerminatesEventPhase() || part.getMitigations().contains( risk ) ) {
-                mitigators.add( part );
+            if ( part.isTerminatesEventPhase() || part.getGoals().contains( goal ) ) {
+                achievers.add( part );
             }
         }
-        return mitigators;
+        return achievers;
     }
 
     /**
@@ -2357,7 +2357,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public Severity getPartPriority( Part part ) {
+    public Level getPartPriority( Part part ) {
         return getPartPriority( part, new ArrayList<Part>() );
     }
 
@@ -2384,18 +2384,18 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return planManager.getCurrentPlan();
     }
 
-    private Severity getPartPriority( Part part, List<Part> visited ) {
+    private Level getPartPriority( Part part, List<Part> visited ) {
         visited.add( part );
-        Severity max = Severity.Minor;
-        for ( Risk risk : part.getMitigations() ) {
-            if ( risk.getSeverity().getOrdinal() > max.getOrdinal() )
-                max = risk.getSeverity();
+        Level max = Level.Low;
+        for ( Goal risk : part.getMitigations() ) {
+            if ( risk.getLevel().getOrdinal() > max.getOrdinal() )
+                max = risk.getLevel();
         }
         for ( Flow flow : part.requiredSends() ) {
             if ( flow.getTarget().isPart() ) {
                 Part target = (Part) flow.getTarget();
                 if ( !visited.contains( target ) ) {
-                    Severity priority = getPartPriority( target, visited );
+                    Level priority = getPartPriority( target, visited );
                     if ( priority.getOrdinal() > max.getOrdinal() )
                         max = priority;
                 }

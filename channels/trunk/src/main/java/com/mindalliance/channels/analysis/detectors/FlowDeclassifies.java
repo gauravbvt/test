@@ -5,9 +5,9 @@ import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -58,7 +58,7 @@ public class FlowDeclassifies extends AbstractIssueDetector {
                             + " greater as when it is received"
                             + "\nor lower the classification of the received element" +
                             "\nor do not send the classified element" );
-                    issue.setSeverity( Severity.Major );
+                    issue.setSeverity( Level.Low );
                     issues.add( issue );
                 }
             }

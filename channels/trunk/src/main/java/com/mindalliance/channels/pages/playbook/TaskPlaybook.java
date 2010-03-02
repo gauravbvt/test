@@ -6,10 +6,10 @@ import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.Segment;
 import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
@@ -104,16 +104,16 @@ public class TaskPlaybook extends PlaybookPage {
     private static Component createDescription( Part part ) {
         String partDescription = part.getDescription();
         boolean hasDescription = !partDescription.isEmpty();
-        boolean hasMitigations = !part.getMitigations().isEmpty();
+        boolean hasGoals = !part.getGoals().isEmpty();
 
         return new WebMarkupContainer( "all" ).add(
                 new Label( "desc", partDescription ).setVisible( hasDescription ),
                 createRepeat( part.getRepeatsEvery() ).setVisible( part.isRepeating() ),
                 createCompletion( part.getCompletionTime() ).setVisible( part.isSelfTerminating() ),
-                createRisks( part.getMitigations() ).setVisible( hasMitigations )
+                createGoals( part.getGoals() ).setVisible( hasGoals )
 
         ).setVisible( hasDescription || part.isRepeating()
-                                     || part.isSelfTerminating() || hasMitigations );
+                                     || part.isSelfTerminating() || hasGoals );
     }
 
     private void sortFlows( Part part, ResourceSpec actorSpec, QueryService service ) {
@@ -221,26 +221,26 @@ public class TaskPlaybook extends PlaybookPage {
         }
     }
 
-    private static Component createRisks( List<Risk> risks ) {
-        final int size = risks.size();
-        return new WebMarkupContainer( "risk-note" )
-            .add( new ListView<Risk>( "risks", risks ) {
+    private static Component createGoals( List<Goal> goals ) {
+        final int size = goals.size();
+        return new WebMarkupContainer( "goal-note" )
+            .add( new ListView<Goal>( "goals", goals ) {
                     @Override
-                    protected void populateItem( ListItem<Risk> item ) {
-                        Risk risk = item.getModelObject();
+                    protected void populateItem( ListItem<Goal> item ) {
+                        Goal goal = item.getModelObject();
                         int index = item.getIndex();
-                        String riskString = new StringBuilder( risk.getLabel() )
+                        String goalString = new StringBuilder( goal.getFullLabel() )
                                 .append( index == size - 1 ? "."
                                        : index >= 0 && index == size - 2 ? " and "
                                        : ", " )
                                 .toString();
 
-                        item.add( new Label( "risk", riskString ).setRenderBodyOnly( true ) )
+                        item.add( new Label( "goal", goalString ).setRenderBodyOnly( true ) )
                             .setRenderBodyOnly( true );
                     }
                 } )
             .setRenderBodyOnly( true )
-            .setVisible( !risks.isEmpty() );
+            .setVisible( !goals.isEmpty() );
     }
 
     private static Component createCompletion( Delay time ) {

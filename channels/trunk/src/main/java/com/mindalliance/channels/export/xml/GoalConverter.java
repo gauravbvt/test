@@ -1,25 +1,24 @@
 package com.mindalliance.channels.export.xml;
 
+import com.mindalliance.channels.model.Goal;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Risk;
-import com.mindalliance.channels.model.Severity;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 /**
- * Risk converter.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: May 5, 2009
- * Time: 11:21:40 AM
+ * Date: Mar 1, 2010
+ * Time: 11:27:15 AM
  */
-public class RiskConverter extends AbstractChannelsConverter {
+public class GoalConverter extends AbstractChannelsConverter {
 
-    public RiskConverter( XmlStreamer.Context context ) {
+    public GoalConverter( XmlStreamer.Context context ) {
         super( context );
     }
 
@@ -27,7 +26,7 @@ public class RiskConverter extends AbstractChannelsConverter {
      * {@inheritDoc}
      */
     public boolean canConvert( Class aClass ) {
-        return Risk.class.isAssignableFrom( aClass );
+        return Goal.class.isAssignableFrom( aClass );
     }
 
     /**
@@ -37,28 +36,31 @@ public class RiskConverter extends AbstractChannelsConverter {
             Object object,
             HierarchicalStreamWriter writer,
             MarshallingContext context ) {
-        Risk risk = (Risk) object;
-        if ( risk.getType() != null ) {
-            writer.startNode( "type" );
-            writer.setValue( risk.getType().name() );
+        Goal goal = (Goal) object;
+        if ( goal.getCategory() != null ) {
+            writer.startNode( "category" );
+            writer.setValue( goal.getCategory().name() );
             writer.endNode();
         }
-        if ( risk.getOrganization() != null ) {
-            Organization organization = risk.getOrganization();
+        if ( goal.getOrganization() != null ) {
+            Organization organization = goal.getOrganization();
             writer.startNode( "organization" );
             writer.addAttribute( "id", Long.toString( organization.getId() ) );
             writer.addAttribute( "kind", organization.getKind().name() );
             writer.setValue( organization.getName() );
             writer.endNode();
         }
-        writer.startNode( "severity" );
-        writer.setValue( risk.getSeverity().toString() );
+        writer.startNode( "positive" );
+        writer.setValue( goal.isPositive() + "" );
+        writer.endNode();
+        writer.startNode( "level" );
+        writer.setValue( goal.getLevel().toString() );
         writer.endNode();
         writer.startNode( "endsWithSegment" );
-        writer.setValue( "" + risk.isEndsWithSegment() );
+        writer.setValue( "" + goal.isEndsWithSegment() );
         writer.endNode();
         writer.startNode( "description" );
-        writer.setValue( risk.getDescription() );
+        writer.setValue( goal.getDescription() );
         writer.endNode();
     }
 
@@ -68,13 +70,13 @@ public class RiskConverter extends AbstractChannelsConverter {
     public Object unmarshal(
             HierarchicalStreamReader reader,
             UnmarshallingContext context ) {
-        Risk risk = new Risk();
+        Goal goal = new Goal();
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
-            if ( nodeName.equals( "type" ) ) {
-                Risk.Type type = Risk.Type.valueOf( reader.getValue() );
-                risk.setType( type );
+            if ( nodeName.equals( "category" ) ) {
+                Goal.Category category = Goal.Category.valueOf( reader.getValue() );
+                goal.setCategory( category );
             } else if ( nodeName.equals( "organization" ) ) {
                 Long id = Long.parseLong( reader.getAttribute( "id" ) );
                 String kind = reader.getAttribute( "kind" );
@@ -84,16 +86,18 @@ public class RiskConverter extends AbstractChannelsConverter {
                         id,
                         ModelEntity.Kind.valueOf( kind ),
                         context );
-                risk.setOrganization( org );
-            } else if ( nodeName.equals( "severity" ) ) {
-                risk.setSeverity( Severity.valueOf( reader.getValue() ) );
+                goal.setOrganization( org );
+            } else if ( nodeName.equals( "level" ) ) {
+                goal.setLevel( Level.valueOf( reader.getValue() ) );
+            } else if ( nodeName.equals( "positive" ) ) {
+                goal.setPositive( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "endsWithSegment" ) ) {
-                risk.setEndsWithSegment( reader.getValue().equals( "true" ) );
+                goal.setEndsWithSegment( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "description" ) ) {
-                risk.setDescription( reader.getValue() );
+                goal.setDescription( reader.getValue() );
             }
             reader.moveUp();
         }
-        return risk;
+        return goal;
     }
 }

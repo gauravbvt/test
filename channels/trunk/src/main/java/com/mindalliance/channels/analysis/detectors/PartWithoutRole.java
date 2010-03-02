@@ -3,9 +3,9 @@ package com.mindalliance.channels.analysis.detectors;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class PartWithoutRole extends AbstractIssueDetector {
             DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
             issue.setDescription( "The role for the task is missing." );
             issue.setRemediation( "Name a role for the task." );
-            issue.setSeverity( Severity.Minor );
+            issue.setSeverity( Level.Low );
             issues.add( issue );
         }
         return issues;

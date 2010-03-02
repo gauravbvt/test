@@ -5,8 +5,8 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class UselessActor extends AbstractIssueDetector {
                         + "\nor define a task that matches the individual's profile"
                         + "\nor modify the individual's profile so that it matches one or more task specifications"
                 );
-                issue.setSeverity( Severity.Minor );
+                issue.setSeverity( Level.Low );
                 issues.add( issue );
             }
         }

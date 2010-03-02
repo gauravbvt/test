@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Risk;
 import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.pages.components.diagrams.EssentialFlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
@@ -266,13 +266,13 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
          */
         private Part part;
         /**
-         * A risk mitigated by the part.
+         * A goal normally achieved by the part.
          */
-        private Risk risk;
+        private Goal goal;
 
-        public PartFailure( Part part, Risk risk ) {
+        public PartFailure( Part part, Goal goal ) {
             this.part = part;
-            this.risk = risk;
+            this.goal = goal;
         }
 
         public Part getPart() {
@@ -283,19 +283,24 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
             this.part = part;
         }
 
-        public Risk getRisk() {
-            return risk;
+        public Goal getGoal() {
+            return goal;
         }
 
-        public void setRisk( Risk risk ) {
-            this.risk = risk;
+        public void setGoal( Goal goal ) {
+            this.goal = goal;
         }
 
         public String getImpact() {
-            if ( part.getMitigations().contains( risk ) ) {
-                return "Risk is not mitigated";
+            if ( part.getGoals().contains( goal ) ) {
+                return goal.isPositive()
+                        ? "Gain is not made"
+                        : "Risk is not mitigated";
             } else {
-                return "Risk remains because \"" + part.getSegment().getPhaseEventTitle() + "\" is not ended";
+                if ( !goal.isPositive() && goal.isEndsWithSegment() )
+                    return "Risk remains because \"" + part.getSegment().getPhaseEventTitle() + "\" is not ended";
+                else
+                    return "";
             }
         }
     }
@@ -334,17 +339,17 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
                 impacts.add( (Part) segmentObject );
             }
             for ( Part part : impacts ) {
-                for ( Risk risk : part.getRisksAddressed() ) {
-                    failures.add( new PartFailure( part, risk ) );
+                for ( Goal goal : part.getGoalsAchieved() ) {
+                    failures.add( new PartFailure( part, goal ) );
                 }
             }
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             columns.add( makeLinkColumn( "Consequential task impacted", "part", "part.task", EMPTY ) );
             columns.add( makeLinkColumn( "Plan segment", "part.segment", "part.segment.name", EMPTY ) );
             columns.add( makeColumn( "Impact", "impact", "impact", EMPTY ) );
-            columns.add( makeColumn( "Risk", "risk.type.label", "risk.type.label", EMPTY ) );
-            columns.add( makeColumn( "Severity", "risk.severity", "risk.severity.name", EMPTY ) );
-            columns.add( makeLinkColumn( "Organization at risk", "risk.organization", "risk.organization.name", EMPTY ) );
+            columns.add( makeColumn( "Goal", "goal.category.label", "goal.category.label", EMPTY ) );
+            columns.add( makeColumn( "Magnitude", "goal.level", "goal.levelLabel", EMPTY ) );
+            columns.add( makeLinkColumn( "Organization at risk", "goal.organization", "goal.organization.name", EMPTY ) );
             add( new AjaxFallbackDefaultDataTable(
                     "failures",
                     columns,

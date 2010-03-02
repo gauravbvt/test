@@ -136,9 +136,9 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      */
     private CheckBox terminatesSegmentCheckBox;
     /**
-     * Mitigations by part.
+     * Goals achieved by part.
      */
-    private Component mitigationsPanel;
+    private Component taskGoalsPanel;
 
 
     //====================================
@@ -153,7 +153,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         addEventInitiation();
         addAsTeam();
         addTimingFields();
-        addMitigations();
+        addGoals();
         addIssuesPanel();
         addAttachments();
         adjustFields();
@@ -408,17 +408,17 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         } );
     }
 
-    private void addMitigations() {
-        if ( getPart().getSegment().getRisks().isEmpty() ) {
-            mitigationsPanel = new Label( "mitigations", new Model<String>( "(No managed risks)" ) );
+    private void addGoals() {
+        if ( getPart().getSegment().getGoals().isEmpty() ) {
+            taskGoalsPanel = new Label( "goals", new Model<String>( "(No goals)" ) );
         } else {
-            mitigationsPanel = new MitigationsPanel(
-                    "mitigations",
+            taskGoalsPanel = new TaskGoalsPanel(
+                    "goals",
                     new PropertyModel<Part>( this, "part" ),
                     getExpansions() );
         }
-        mitigationsPanel.setOutputMarkupId( true );
-        addOrReplace( mitigationsPanel );
+        taskGoalsPanel.setOutputMarkupId( true );
+        addOrReplace( taskGoalsPanel );
     }
 
     //====================================
@@ -753,7 +753,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     public void refresh( AjaxRequestTarget target ) {
         addEntityFields();
         adjustFields();
-        addMitigations();
+        addGoals();
         // todo - remove
         target.addComponent( partDescription );
         // todo - remove
@@ -772,9 +772,9 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                     entityReferencePanel.updateIssues();
                     target.addComponent( entityReferencePanel );
                 }
-                if ( property.equals( "mitigations" ) ) {
-                    addMitigations();
-                    target.addComponent( mitigationsPanel );
+                if ( property.equals( "goals" ) ) {
+                    addGoals();
+                    target.addComponent( taskGoalsPanel );
                 }
                 target.addComponent( initiatedEventField );
             }

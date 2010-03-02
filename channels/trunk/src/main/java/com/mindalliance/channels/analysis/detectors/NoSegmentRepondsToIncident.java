@@ -4,10 +4,10 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.Severity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -44,7 +44,7 @@ public class NoSegmentRepondsToIncident extends AbstractIssueDetector {
                 issue.setDescription( "No plan segment responds to incident \"" + incident.getName() + "\"." );
                 issue.setRemediation( "Define a plan segment that responds to it\n"
                         + "remove the event's incident status." );
-                issue.setSeverity( ( Severity.Major ) );
+                issue.setSeverity( ( Level.Medium ) );
                 issues.add( issue );
             }
         }

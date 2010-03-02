@@ -10,14 +10,6 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.apache.commons.lang.WordUtils;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,7 +22,6 @@ import java.util.Set;
 /**
  * A part in a segment.
  */
-@Entity
 public class Part extends Node implements GeoLocatable {
 
     /**
@@ -103,9 +94,9 @@ public class Part extends Node implements GeoLocatable {
      */
     private Event initiatedEvent;
     /**
-     * Segment risks mitigated.
+     * Segment goals achieved - risks mitigated or gains made.
      */
-    private List<Risk> mitigations = new ArrayList<Risk>();
+    private List<Goal> goals = new ArrayList<Goal>();
     /**
      * Whether the assignees execute the task as a team vs individually.
      */
@@ -119,7 +110,6 @@ public class Part extends Node implements GeoLocatable {
      * {@inheritDoc}
      */
     @Override
-    @Transient
     public String getTitle() {
         return MessageFormat.format( "{0} {1}", getName(), WordUtils.uncapitalize( getTask() ) );
     }
@@ -144,7 +134,6 @@ public class Part extends Node implements GeoLocatable {
             setName( DEFAULT_ACTOR );
     }
 
-    @ManyToOne
     public Actor getActor() {
         return actor;
     }
@@ -161,7 +150,6 @@ public class Part extends Node implements GeoLocatable {
             adjustName();
     }
 
-    @ManyToOne( fetch = FetchType.LAZY )
     public Place getJurisdiction() {
         return jurisdiction;
     }
@@ -170,7 +158,6 @@ public class Part extends Node implements GeoLocatable {
         this.jurisdiction = jurisdiction;
     }
 
-    @ManyToOne( fetch = FetchType.LAZY )
     public Place getLocation() {
         return location;
     }
@@ -179,7 +166,6 @@ public class Part extends Node implements GeoLocatable {
         this.location = location;
     }
 
-    @ManyToOne( fetch = FetchType.LAZY )
     public Organization getOrganization() {
         return organization;
     }
@@ -196,7 +182,6 @@ public class Part extends Node implements GeoLocatable {
             adjustName();
     }
 
-    @ManyToOne( fetch = FetchType.LAZY )
     public Role getRole() {
         return role;
     }
@@ -221,10 +206,6 @@ public class Part extends Node implements GeoLocatable {
         this.completionTime = completionTime;
     }
 
-    @AttributeOverrides( {
-        @AttributeOverride( name = "unit", column = @Column( name = "r_unit" ) ),
-        @AttributeOverride( name = "amount", column = @Column( name = "r_amount" ) )
-            } )
     public Delay getRepeatsEvery() {
         return repeatsEvery;
     }
@@ -234,12 +215,10 @@ public class Part extends Node implements GeoLocatable {
     }
 
     @Override
-    @Transient
     public boolean isPart() {
         return true;
     }
 
-    @Transient
     public boolean isEmpty() {
         return actor == null && role == null && organization == null && location == null;
     }
@@ -254,7 +233,6 @@ public class Part extends Node implements GeoLocatable {
     /**
      * @return true if role contains "system"
      */
-    @Transient
     public boolean isSystem() {
         Actor a = getActor();
         if ( a != null && a.isSystem() ) return true;
@@ -266,7 +244,6 @@ public class Part extends Node implements GeoLocatable {
     /**
      * @return true if part is only specified by a role.
      */
-    @Transient
     public boolean isOnlyRole() {
         return role != null && actor == null;
     }
@@ -368,13 +345,29 @@ public class Part extends Node implements GeoLocatable {
         this.asTeam = asTeam;
     }
 
-    @OneToMany
-    public List<Risk> getMitigations() {
-        return mitigations;
+    /**
+     * Get all goals that are risk mitigations.
+     *
+     * @return a list of goals
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<Goal> getMitigations() {
+        return (List<Goal>) CollectionUtils.select(
+                getGoals(),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return ( (Goal) object ).isRisk();
+                    }
+                }
+        );
     }
 
-    public void setMitigations( List<Risk> mitigations ) {
-        this.mitigations = mitigations;
+    public List<Goal> getGoals() {
+        return goals;
+    }
+
+    public void setGoals( List<Goal> goals ) {
+        this.goals = goals;
     }
 
     /**
@@ -443,7 +436,6 @@ public class Part extends Node implements GeoLocatable {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public boolean isUndefined() {
         return super.isUndefined()
                 && isEmpty();
@@ -454,7 +446,6 @@ public class Part extends Node implements GeoLocatable {
      *
      * @return a boolean
      */
-    @Transient
     public boolean isTriggered() {
         Iterator<Flow> receives = receives();
         boolean triggered = false;
@@ -477,7 +468,6 @@ public class Part extends Node implements GeoLocatable {
      *
      * @return a boolean
      */
-    @Transient
     public boolean isTerminated() {
         Iterator<Flow> receives = receives();
         boolean terminated = false;
@@ -498,7 +488,6 @@ public class Part extends Node implements GeoLocatable {
     /**
      * @return shorthand for role for jurisdiction
      */
-    @Transient
     public String getRoleString() {
         StringBuilder b = new StringBuilder( 64 );
 
@@ -549,7 +538,6 @@ public class Part extends Node implements GeoLocatable {
      *
      * @return an actor or null
      */
-    @Transient
     public Actor getKnownActor() {
         if ( actor != null ) {
             return actor;
@@ -572,7 +560,6 @@ public class Part extends Node implements GeoLocatable {
      *
      * @return an organization or null
      */
-    @Transient
     public Organization getOrganizationOrUnknown() {
         return organization == null ? Organization.UNKNOWN : organization;
     }
@@ -582,7 +569,6 @@ public class Part extends Node implements GeoLocatable {
      *
      * @return a role or null
      */
-    @Transient
     public Role getRoleOrUnknown() {
         return role == null ? Role.UNKNOWN : role;
     }
@@ -592,7 +578,6 @@ public class Part extends Node implements GeoLocatable {
      *
      * @return an actor or null
      */
-    @Transient
     public Actor getActorOrUnknown() {
         return actor == null ? Actor.UNKNOWN : actor;
     }
@@ -602,7 +587,6 @@ public class Part extends Node implements GeoLocatable {
      *
      * @return a place or null
      */
-    @Transient
     public Place getJurisdictionOrUnknown() {
         return jurisdiction == null ? Place.UNKNOWN : jurisdiction;
     }
@@ -613,7 +597,6 @@ public class Part extends Node implements GeoLocatable {
      * @param sep separator string
      * @return a string
      */
-    @Transient
     public String getFullTitle( String sep ) {
         String label = "";
         if ( getActor() != null ) {
@@ -658,7 +641,6 @@ public class Part extends Node implements GeoLocatable {
      *
      * @return a string
      */
-    @Transient
     public String getSummary() {
         StringBuilder sb = new StringBuilder();
         if ( getActor() != null ) {
@@ -769,7 +751,6 @@ public class Part extends Node implements GeoLocatable {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public GeoLocation geoLocate() {
         return location != null ? location.geoLocate() : null;
     }
@@ -786,7 +767,6 @@ public class Part extends Node implements GeoLocatable {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public String getGeoMarkerLabel() {
         StringBuilder sb = new StringBuilder();
         sb.append( getFullTitle( " " ) );
@@ -800,7 +780,6 @@ public class Part extends Node implements GeoLocatable {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public String getModelObjectType() {
         return "Task";
     }
@@ -826,10 +805,10 @@ public class Part extends Node implements GeoLocatable {
                 || ModelObject.areIdentical( initiatedEvent, mo )
                 ||
                 CollectionUtils.exists(
-                        mitigations,
+                        goals,
                         new Predicate() {
                             public boolean evaluate( Object obj ) {
-                                return ( (Risk) obj ).references( mo );
+                                return ( (Goal) obj ).references( mo );
                             }
                         } );
     }
@@ -857,7 +836,6 @@ public class Part extends Node implements GeoLocatable {
      *
      * @return a list of flows
      */
-    @Transient
     @SuppressWarnings( "unchecked" )
     public List<Flow> getNeeds() {
         return (List<Flow>) CollectionUtils.select(
@@ -873,7 +851,6 @@ public class Part extends Node implements GeoLocatable {
     /**
      * {@inheritDoc}
      */
-    @Transient
     public List<Flow> getEssentialFlows( boolean assumeFails ) {
         return getSegment().getQueryService().findEssentialFlowsFrom( this, assumeFails );
     }
@@ -884,9 +861,8 @@ public class Part extends Node implements GeoLocatable {
      *
      * @return a boolean
      */
-    @Transient
     public boolean isUseful() {
-        return !mitigations.isEmpty()
+        return !goals.isEmpty()
                 || ( isTerminatesEventPhase() && getSegment().hasTerminatingRisks() );
     }
 
@@ -895,7 +871,6 @@ public class Part extends Node implements GeoLocatable {
      *
      * @return a list of flows
      */
-    @Transient
     public List<Flow> getAllSharingSends() {
         List<Flow> sharingSends = new ArrayList<Flow>();
         Iterator<Flow> sends = sends();
@@ -919,17 +894,16 @@ public class Part extends Node implements GeoLocatable {
      *
      * @return a severity level
      */
-    @Transient
-    public Severity getMaxMitigatedRiskSeverity() {
-        Severity maxSeverity = null;
-        List<Risk> risks = new ArrayList<Risk>( getMitigations() );
-        if ( !risks.isEmpty() ) {
-            Collections.sort( risks, new Comparator<Risk>() {
-                public int compare( Risk r1, Risk r2 ) {
-                    return r1.getSeverity().compareTo( r2.getSeverity() ) * -1;
+    public Level getMaxMitigatedRiskSeverity() {
+        Level maxSeverity = null;
+        List<Goal> goals = new ArrayList<Goal>( getMitigations() );
+        if ( !goals.isEmpty() ) {
+            Collections.sort( goals, new Comparator<Goal>() {
+                public int compare( Goal r1, Goal r2 ) {
+                    return r1.getLevel().compareTo( r2.getLevel() ) * -1;
                 }
             } );
-            maxSeverity = risks.get( 0 ).getSeverity();
+            maxSeverity = goals.get( 0 ).getLevel();
         }
         return maxSeverity;
     }
@@ -939,7 +913,6 @@ public class Part extends Node implements GeoLocatable {
      *
      * @return a boolean
      */
-    @Transient
     public boolean isImportant() {
         return isUseful() ||
                 CollectionUtils.exists(
@@ -953,17 +926,16 @@ public class Part extends Node implements GeoLocatable {
     }
 
     /**
-     * Get all risks mitigated and terminated.
+     * Get all goals achieved.
      *
      * @return a list of risks
      */
-    @Transient
-    public List<Risk> getRisksAddressed() {
-        Set<Risk> risks = new HashSet<Risk>();
-        risks.addAll( getMitigations() );
+    public List<Goal> getGoalsAchieved() {
+        Set<Goal> goals = new HashSet<Goal>();
+        goals.addAll( getGoals() );
         if ( isTerminatesEventPhase() && getSegment().hasTerminatingRisks() ) {
-            risks.addAll( getSegment().getRisks() );
+            goals.addAll( getSegment().getRisks() );
         }
-        return new ArrayList<Risk>( risks );
+        return new ArrayList<Goal>( goals );
     }
 }

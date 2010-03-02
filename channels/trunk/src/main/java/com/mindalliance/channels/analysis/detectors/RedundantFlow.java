@@ -4,9 +4,9 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Severity;
 import com.mindalliance.channels.util.Matcher;
 
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ public class RedundantFlow extends AbstractIssueDetector {
             DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, flow );
             issue.setDescription( "This flow is redundant." );
             issue.setRemediation( "Change the name of information transmitted\nor break up the flow." );
-            issue.setSeverity( Severity.Minor );
+            issue.setSeverity( Level.Low );
             issues.add( issue );
         }
         return issues;
