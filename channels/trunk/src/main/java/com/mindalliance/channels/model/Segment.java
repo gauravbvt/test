@@ -110,7 +110,7 @@ public class Segment extends ModelObject {
                 new Predicate() {
                     public boolean evaluate( Object object ) {
                         Goal goal = (Goal) object;
-                        return goal.isRisk();
+                        return goal.isRiskMitigation();
                     }
                 }
         );
@@ -699,7 +699,7 @@ public class Segment extends ModelObject {
                 new Predicate() {
                     public boolean evaluate( Object object ) {
                         Goal goal = (Goal) object;
-                        return goal.isRisk() && goal.isEndsWithSegment();
+                        return goal.isRiskMitigation() && goal.isEndsWithSegment();
                     }
                 }
         );

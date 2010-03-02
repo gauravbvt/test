@@ -1,7 +1,7 @@
 <export>
-  <plan id="1" uri="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/02/16 11:10:41 EST">
+  <plan id="1" uri="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/02/26 12:08:43 EST">
     <whenVersioned>2010/02/09 11:46:28 EST</whenVersioned>
-    <lastId>542</lastId>
+    <lastId>705</lastId>
     <name>Rail Security</name>
     <client>EastWest Institute Workshop</client>
     <description>Information sharing for an IED attack on a public transit system.</description>
@@ -670,17 +670,18 @@
     <organization-involved id="282">Metropolis Transit Authority</organization-involved>
     <organization-involved id="284">Metropolis Transit Operations</organization-involved>
     <organization-involved id="330">Smallville Transit Authority</organization-involved>
-    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/02/16 11:10:41 EST" id="4" name="IED threat warning">
+    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/02/26 12:08:43 EST" id="4" name="IED threat warning">
       <description>The IED attack warning is disseminated within the rail transit system.</description>
       <trigger-event id="8">Bomb threat</trigger-event>
       <phase id="3">Responding</phase>
-      <risk>
-        <type>BodilyHarm</type>
+      <goal>
+        <category>Health</category>
+        <intent>mitigate</intent>
         <organization id="9" kind="Type">Public Transit Agency</organization>
-        <severity>Severe</severity>
+        <level>High</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
-      </risk>
+      </goal>
       <part id="72">
         <task>Activating threat response plans</task>
         <role id="74" kind="Type">Manager</role>
@@ -705,7 +706,7 @@
         <organization id="82" kind="Type">Regional Public Transit Authority</organization>
         <startsWithSegment>true</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="BodilyHarm">Public Transit Agency</mitigation>
+        <goal intent="mitigate" category="Health">Public Transit Agency</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="158">
@@ -722,7 +723,7 @@
         <organization id="9" kind="Type">Public Transit Agency</organization>
         <startsWithSegment>true</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="BodilyHarm">Public Transit Agency</mitigation>
+        <goal intent="mitigate" category="Health">Public Transit Agency</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="55">
@@ -739,7 +740,7 @@
         <organization id="63" kind="Type">Broadcast Media Corporation</organization>
         <startsWithSegment>true</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="BodilyHarm">Public Transit Agency</mitigation>
+        <goal intent="mitigate" category="Health">Public Transit Agency</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="59">
@@ -788,7 +789,7 @@
         <startsWithSegment>true</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <initiatedEvent id="2">Attack suspected</initiatedEvent>
-        <mitigation type="BodilyHarm">Public Transit Agency</mitigation>
+        <goal intent="mitigate" category="Health">Public Transit Agency</goal>
         <asTeam>false</asTeam>
       </part>
       <flow id="79" name="Activate local threat response plan">
@@ -1357,17 +1358,18 @@
         <maxDelay>immediately</maxDelay>
       </flow>
     </segment>
-    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/02/16 11:10:41 EST" id="107" name="Local response plan activated">
+    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/02/26 12:08:43 EST" id="107" name="Local response plan activated">
       <description>Train station or bus terminal executes its threat response plan</description>
       <trigger-event id="8">Bomb threat</trigger-event>
       <phase id="3">Responding</phase>
-      <risk>
-        <type>BodilyHarm</type>
+      <goal>
+        <category>Health</category>
+        <intent>mitigate</intent>
         <organization id="16" kind="Type">Transit Operations</organization>
-        <severity>Major</severity>
+        <level>Medium</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
-      </risk>
+      </goal>
       <part id="108">
         <task>Activating threat response plan</task>
         <role id="505" kind="Type">Node Manager</role>
@@ -1375,7 +1377,7 @@
         <jurisdiction id="110" kind="Type">Transit system node</jurisdiction>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="BodilyHarm">Transit Operations</mitigation>
+        <goal intent="mitigate" category="Health">Transit Operations</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="132">
@@ -1384,7 +1386,7 @@
         <organization id="9" kind="Type">Public Transit Agency</organization>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="BodilyHarm">Transit Operations</mitigation>
+        <goal intent="mitigate" category="Health">Transit Operations</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="138">
@@ -1402,7 +1404,7 @@
         <organization id="9" kind="Type">Public Transit Agency</organization>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="BodilyHarm">Transit Operations</mitigation>
+        <goal intent="mitigate" category="Health">Transit Operations</goal>
         <asTeam>false</asTeam>
       </part>
       <flow id="137" name="Inspect baggages">
@@ -1610,17 +1612,18 @@
         <maxDelay>1 minute</maxDelay>
       </flow>
     </segment>
-    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/02/16 11:10:41 EST" id="150" name="IED attack suspected">
+    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/02/26 12:08:43 EST" id="150" name="IED attack suspected">
       <description>A suspicious activity is reported</description>
       <trigger-event id="2">Attack suspected</trigger-event>
       <phase id="3">Responding</phase>
-      <risk>
-        <type>BodilyHarm</type>
+      <goal>
+        <category>Health</category>
+        <intent>mitigate</intent>
         <organization id="9" kind="Type">Public Transit Agency</organization>
-        <severity>Major</severity>
+        <level>Medium</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
-      </risk>
+      </goal>
       <part id="214">
         <task>Assisting law enforcement</task>
         <role id="161" kind="Type">Train Conductor</role>
@@ -1665,7 +1668,7 @@
         <jurisdiction id="36" kind="Type">Rail station</jurisdiction>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="BodilyHarm">Public Transit Agency</mitigation>
+        <goal intent="mitigate" category="Health">Public Transit Agency</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="222">
@@ -1676,7 +1679,7 @@
         <jurisdiction id="36" kind="Type">Rail station</jurisdiction>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="BodilyHarm">Public Transit Agency</mitigation>
+        <goal intent="mitigate" category="Health">Public Transit Agency</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="202">
@@ -1702,7 +1705,7 @@
         <organization id="9" kind="Type">Public Transit Agency</organization>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="BodilyHarm">Public Transit Agency</mitigation>
+        <goal intent="mitigate" category="Health">Public Transit Agency</goal>
         <asTeam>false</asTeam>
       </part>
       <flow id="217" name="Detailed suspicious activity report">

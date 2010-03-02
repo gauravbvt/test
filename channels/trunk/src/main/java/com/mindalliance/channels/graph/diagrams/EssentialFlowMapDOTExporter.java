@@ -157,7 +157,7 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
     }
 
     private String getGoalIcon( Goal goal ) {
-        if ( goal.isRisk() )  {
+        if ( goal.isRiskMitigation() )  {
         switch ( goal.getLevel() ) {
             case Low:
                 return "risk_minor.png";

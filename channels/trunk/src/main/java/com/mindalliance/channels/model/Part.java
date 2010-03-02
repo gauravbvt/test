@@ -356,7 +356,7 @@ public class Part extends Node implements GeoLocatable {
                 getGoals(),
                 new Predicate() {
                     public boolean evaluate( Object object ) {
-                        return ( (Goal) object ).isRisk();
+                        return ( (Goal) object ).isRiskMitigation();
                     }
                 }
         );

@@ -1,7 +1,7 @@
 <export>
-  <plan id="0" uri="mindalliance.com/channels/plans/acme" version="1.0" date="2010/01/28 9:43:55 EST">
+  <plan id="0" uri="mindalliance.com/channels/plans/acme" version="1.0" date="2010/02/26 12:08:43 EST">
     <whenVersioned>2009/09/15 9:48:22 EDT</whenVersioned>
-    <lastId>16192</lastId>
+    <lastId>17779</lastId>
     <name>ACME Emergency Communications Plan</name>
     <client>ACME Manufacturing, Inc.</client>
     <description>Communications planning for responding and recovering from business interruptions due fire or power outage.</description>
@@ -48,21 +48,10 @@
     <detection-waivers>
       <detection>NoSegmentForEventPhase</detection>
     </detection-waivers>
-    <medium id="11809" kind="Actual" name="Intercom">
+    <medium id="11809" kind="Type" name="Intercom">
       <description>An intercom system</description>
-      <tag id="11867" kind="Type">PA system</tag>
-      <addressPattern>.*</addressPattern>
-      <unicast>false</unicast>
-      <secureForClassification>
-        <system>NATO</system>
-        <name>NATO confidential</name>
-        <level>0</level>
-      </secureForClassification>
-    </medium>
-    <medium id="11867" kind="Type" name="PA system">
-      <description></description>
-      <addressPattern></addressPattern>
-      <unicast>true</unicast>
+      <tag id="-972" kind="Type">PA System</tag>
+      <addressPattern>.+</addressPattern>
     </medium>
     <actor id="277" kind="Actual" name="Richard Carry">
       <description>Administration</description>
@@ -71,61 +60,61 @@
       </attachments>
       <user>rcarry</user>
       <channel>
-        <medium id="-987">Phone</medium>
+        <medium id="-987" kind="Type">Phone</medium>
         <address>(973) 754-0722 x.223</address>
       </channel>
       <channel>
-        <medium id="-984">Cell</medium>
+        <medium id="-984" kind="Type">Cell</medium>
         <address>(973) 638-7318</address>
       </channel>
       <channel>
-        <medium id="-982">Email</medium>
+        <medium id="-981" kind="Type">Email</medium>
         <address>rcarry@acme.com</address>
       </channel>
       <channel>
-        <medium id="-986">Home phone</medium>
+        <medium id="-986" kind="Type">Landline</medium>
         <address>(516) 449-0974</address>
       </channel>
     </actor>
     <actor id="283" kind="Actual" name="John Garrison">
       <description>Reception</description>
       <channel>
-        <medium id="-987">Phone</medium>
+        <medium id="-987" kind="Type">Phone</medium>
         <address>(973) 754-0722</address>
       </channel>
       <channel>
-        <medium id="-987">Phone</medium>
+        <medium id="-987" kind="Type">Phone</medium>
         <address>(973) 754-0722 x.210</address>
       </channel>
       <channel>
-        <medium id="-984">Cell</medium>
+        <medium id="-984" kind="Type">Cell</medium>
         <address>(973) 887-0440</address>
       </channel>
       <channel>
-        <medium id="-985">Fax</medium>
+        <medium id="-985" kind="Type">Fax</medium>
         <address>(973) 756-2493</address>
       </channel>
       <channel>
-        <medium id="-982">Email</medium>
+        <medium id="-981" kind="Type">Email</medium>
         <address>jgarrison@acme.com</address>
       </channel>
     </actor>
     <actor id="280" kind="Actual" name="Mary Delaney">
       <description>Admin./Impo</description>
       <channel>
-        <medium id="-987">Phone</medium>
+        <medium id="-987" kind="Type">Phone</medium>
         <address>(973) 754-0722 x.214</address>
       </channel>
       <channel>
-        <medium id="-984">Cell</medium>
+        <medium id="-984" kind="Type">Cell</medium>
         <address>(973) 280-2815</address>
       </channel>
       <channel>
-        <medium id="-986">Home phone</medium>
+        <medium id="-986" kind="Type">Landline</medium>
         <address>(516) 244-6984</address>
       </channel>
       <channel>
-        <medium id="-982">Email</medium>
+        <medium id="-981" kind="Type">Email</medium>
         <address>mdelaney@acme.com</address>
       </channel>
     </actor>
@@ -135,19 +124,19 @@
         <attachment type="Image">http://www.adamsonross.com/imgs/louise.jpg</attachment>
       </attachments>
       <channel>
-        <medium id="-987">Phone</medium>
+        <medium id="-987" kind="Type">Phone</medium>
         <address>(973) 754-0722 x.225</address>
       </channel>
       <channel>
-        <medium id="-984">Cell</medium>
+        <medium id="-984" kind="Type">Cell</medium>
         <address>(973) 610-6470</address>
       </channel>
       <channel>
-        <medium id="-982">Email</medium>
+        <medium id="-981" kind="Type">Email</medium>
         <address>lburns@acme.com</address>
       </channel>
       <channel>
-        <medium id="-986">Home phone</medium>
+        <medium id="-986" kind="Type">Landline</medium>
         <address>(973) 729-2942</address>
       </channel>
     </actor>
@@ -158,19 +147,19 @@
         <attachment type="Image">uploads/petersanchez.jpeg</attachment>
       </attachments>
       <channel>
-        <medium id="-987">Phone</medium>
+        <medium id="-987" kind="Type">Phone</medium>
         <address>(973) 754-0722 x.257</address>
       </channel>
       <channel>
-        <medium id="-984">Cell</medium>
+        <medium id="-984" kind="Type">Cell</medium>
         <address>(973) 769-7854</address>
       </channel>
       <channel>
-        <medium id="-986">Home phone</medium>
+        <medium id="-986" kind="Type">Landline</medium>
         <address>(973) 729-7352</address>
       </channel>
       <channel>
-        <medium id="-982">Email</medium>
+        <medium id="-981" kind="Type">Email</medium>
         <address>psanchez@acme.com</address>
       </channel>
       <clearance>
@@ -198,56 +187,56 @@
     <actor id="337" kind="Actual" name="JoAnn Blythe">
       <description></description>
       <channel>
-        <medium id="-984">Cell</medium>
+        <medium id="-984" kind="Type">Cell</medium>
         <address>(973) 867-0100</address>
       </channel>
     </actor>
     <actor id="336" kind="Actual" name="Jocelyne Bilodeau">
       <description>Digital/IT</description>
       <channel>
-        <medium id="-987">Phone</medium>
+        <medium id="-987" kind="Type">Phone</medium>
         <address>(973) 754-0722 x.241</address>
       </channel>
       <channel>
-        <medium id="-984">Cell</medium>
+        <medium id="-984" kind="Type">Cell</medium>
         <address>(908) 507-0278</address>
       </channel>
       <channel>
-        <medium id="-986">Home phone</medium>
+        <medium id="-986" kind="Type">Landline</medium>
         <address>(908) 788-0846</address>
       </channel>
       <channel>
-        <medium id="-982">Email</medium>
+        <medium id="-981" kind="Type">Email</medium>
         <address>jbilodeau@acme.com</address>
       </channel>
     </actor>
     <actor id="76" kind="Actual" name="Judy Palmer">
       <description></description>
       <channel>
-        <medium id="-987">Phone</medium>
+        <medium id="-987" kind="Type">Phone</medium>
         <address>(973) 528-7344</address>
       </channel>
       <channel>
-        <medium id="-984">Cell</medium>
+        <medium id="-984" kind="Type">Cell</medium>
         <address>(908) 447-7344</address>
       </channel>
     </actor>
     <actor id="334" kind="Actual" name="Arthur Green">
       <description>Systems: Mac</description>
       <channel>
-        <medium id="-987">Phone</medium>
+        <medium id="-987" kind="Type">Phone</medium>
         <address>(973) 754-0722 x.226</address>
       </channel>
       <channel>
-        <medium id="-986">Home phone</medium>
+        <medium id="-986" kind="Type">Landline</medium>
         <address>(973) 387-0755</address>
       </channel>
       <channel>
-        <medium id="-982">Email</medium>
+        <medium id="-981" kind="Type">Email</medium>
         <address>agreen@acme.com</address>
       </channel>
       <channel>
-        <medium id="-984">Cell</medium>
+        <medium id="-984" kind="Type">Cell</medium>
         <address>(973)478-7403</address>
       </channel>
     </actor>
@@ -264,15 +253,15 @@
     <role id="278" kind="Type" name="Assembly Area Leader">
       <description></description>
     </role>
+    <role id="281" kind="Type" name="Evacuation Team Leader">
+      <description>Someone in charge of leading evacuations.</description>
+      <tag id="11623" kind="Type">Leader</tag>
+    </role>
     <role id="10" kind="Type" name="Fire Chief">
       <description></description>
       <attachments>
         <attachment type="Image">http://www.plumparty.com/partysupply/graphics/products/large/16596.jpg</attachment>
       </attachments>
-    </role>
-    <role id="281" kind="Type" name="Evacuation Team Leader">
-      <description>Someone in charge of leading evacuations.</description>
-      <tag id="11623" kind="Type">Leader</tag>
     </role>
     <role id="286" kind="Type" name="Switchboard and Intercom Operator">
       <description></description>
@@ -608,11 +597,11 @@
       <location id="323">Main building</location>
       <mission>To provide versatile, just-in-time and agile manufacturing services to wile customers in hot pursuit of fast-moving opportunities.</mission>
       <channel>
-        <medium id="-987">Phone</medium>
+        <medium id="-987" kind="Type">Phone</medium>
         <address>(973) 754-0722</address>
       </channel>
       <channel>
-        <medium id="-985">Fax</medium>
+        <medium id="-985" kind="Type">Fax</medium>
         <address>(973) 754-2493</address>
       </channel>
       <job>
@@ -748,7 +737,7 @@
       </attachments>
       <mission></mission>
       <channel>
-        <medium id="-987">Phone</medium>
+        <medium id="-987" kind="Type">Phone</medium>
         <address>(800) 440-7734</address>
       </channel>
     </organization>
@@ -758,7 +747,7 @@
       <location id="57">Brock Insurance Office</location>
       <mission></mission>
       <channel>
-        <medium id="-987">Phone</medium>
+        <medium id="-987" kind="Type">Phone</medium>
         <address>(301) 984-2124</address>
       </channel>
     </organization>
@@ -809,24 +798,26 @@
     <plan-phase id="4952">Preparing</plan-phase>
     <organization-involved id="14">ACME</organization-involved>
     <organization-involved id="77">Pinnacle</organization-involved>
-    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/01/28 9:43:56 EST" id="3" name="Power outage">
+    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/02/26 12:08:43 EST" id="3" name="Power outage">
       <description>A power outage interrupts operations at main location.</description>
       <trigger-event id="82">Power is out</trigger-event>
       <phase id="1192">Responding</phase>
-      <risk>
-        <type>DelayedDelivery</type>
+      <goal>
+        <category>Delivery</category>
+        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
-        <severity>Major</severity>
+        <level>Medium</level>
         <endsWithSegment>true</endsWithSegment>
         <description>A power outage put at risk time-sensitive delivery contracts.</description>
-      </risk>
-      <risk>
-        <type>PropertyDamage</type>
+      </goal>
+      <goal>
+        <category>Property</category>
+        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
-        <severity>Minor</severity>
+        <level>Low</level>
         <endsWithSegment>true</endsWithSegment>
         <description></description>
-      </risk>
+      </goal>
       <part id="87">
         <task>Finding out about outage</task>
         <role id="328" kind="Type">Secretary</role>
@@ -843,7 +834,7 @@
         <location id="50" kind="Actual">ACME 100</location>
         <startsWithSegment>true</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="DelayedDelivery">ACME</mitigation>
+        <goal intent="mitigate" category="Delivery">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="89">
@@ -854,7 +845,7 @@
         <jurisdiction id="66" kind="Actual">Springfield building</jurisdiction>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="DelayedDelivery">ACME</mitigation>
+        <goal intent="mitigate" category="Delivery">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="90">
@@ -865,7 +856,7 @@
         <location id="66" kind="Actual">Springfield building</location>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="DelayedDelivery">ACME</mitigation>
+        <goal intent="mitigate" category="Delivery">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="91">
@@ -882,7 +873,7 @@
         <location id="50" kind="Actual">ACME 100</location>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="PropertyDamage">ACME</mitigation>
+        <goal intent="mitigate" category="Property">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="93">
@@ -902,7 +893,7 @@
           <part id="88"/>
         </target>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -920,7 +911,7 @@
           <part id="87"/>
         </target>
         <channel>
-          <medium id="-984">Cell</medium>
+          <medium id="-984" kind="Type">Cell</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -938,15 +929,15 @@
           <part id="92"/>
         </target>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-984">Cell</medium>
+          <medium id="-984" kind="Type">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -964,7 +955,7 @@
           <part id="90"/>
         </target>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1034,7 +1025,7 @@
           <part id="87"/>
         </target>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1052,7 +1043,7 @@
           <part id="88"/>
         </target>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1070,7 +1061,7 @@
           <part id="89"/>
         </target>
         <channel>
-          <medium id="-984">Cell</medium>
+          <medium id="-984" kind="Type">Cell</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1081,38 +1072,41 @@
         <maxDelay>30 seconds</maxDelay>
       </flow>
     </segment>
-    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/01/28 9:43:56 EST" id="190" name="Business continuity">
+    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/02/26 12:08:43 EST" id="190" name="Business continuity">
       <description>Provide a framework on which to resume critical business processes when normal work location and the resources in it are not accessible. The department plans are closely coordinated and supported by local management support staff for such areas as technology and office administrative assistance in establishing a continuous working environment.</description>
       <trigger-event id="72">Business interrupted</trigger-event>
       <phase id="1192">Responding</phase>
-      <risk>
-        <type>DelayedDelivery</type>
+      <goal>
+        <category>Delivery</category>
+        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
-        <severity>Major</severity>
+        <level>Medium</level>
         <endsWithSegment>false</endsWithSegment>
         <description>Delivery of services may be delayed.</description>
-      </risk>
-      <risk>
-        <type>ReputationDamage</type>
+      </goal>
+      <goal>
+        <category>Reputation</category>
+        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
-        <severity>Major</severity>
+        <level>Medium</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
-      </risk>
-      <risk>
-        <type>LostRevenue</type>
+      </goal>
+      <goal>
+        <category>Revenue</category>
+        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
-        <severity>Major</severity>
+        <level>Medium</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
-      </risk>
+      </goal>
       <part id="192">
         <task>Assist in shifts</task>
         <role id="48" kind="Type">Contractor</role>
         <organization id="77" kind="Actual">Pinnacle</organization>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="DelayedDelivery">ACME</mitigation>
+        <goal intent="mitigate" category="Delivery">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="193">
@@ -1122,7 +1116,7 @@
         <location id="50" kind="Actual">ACME 100</location>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="DelayedDelivery">ACME</mitigation>
+        <goal intent="mitigate" category="Delivery">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="194">
@@ -1138,7 +1132,7 @@
         <organization id="69" kind="Actual">P. K. Brock Insurance Agency</organization>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="LostRevenue">ACME</mitigation>
+        <goal intent="mitigate" category="Revenue">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="196">
@@ -1147,7 +1141,7 @@
         <organization id="14" kind="Actual">ACME</organization>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="DelayedDelivery">ACME</mitigation>
+        <goal intent="mitigate" category="Delivery">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="197">
@@ -1156,7 +1150,7 @@
         <organization id="14" kind="Actual">ACME</organization>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="ReputationDamage">ACME</mitigation>
+        <goal intent="mitigate" category="Reputation">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="198">
@@ -1188,7 +1182,7 @@
         <organization id="77" kind="Actual">Pinnacle</organization>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="DelayedDelivery">ACME</mitigation>
+        <goal intent="mitigate" category="Delivery">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <flow id="202" name="Need team room">
@@ -1207,7 +1201,7 @@
           <specialHandlingCodes></specialHandlingCodes>
         </eoi>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1225,7 +1219,7 @@
           <part id="194"/>
         </target>
         <channel>
-          <medium id="-984">Cell</medium>
+          <medium id="-984" kind="Type">Cell</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1251,7 +1245,7 @@
           <specialHandlingCodes></specialHandlingCodes>
         </eoi>
         <channel>
-          <medium id="-984">Cell</medium>
+          <medium id="-984" kind="Type">Cell</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1269,11 +1263,11 @@
           <part id="198"/>
         </target>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-984">Cell</medium>
+          <medium id="-984" kind="Type">Cell</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1291,11 +1285,11 @@
           <part id="199"/>
         </target>
         <channel>
-          <medium id="-984">Cell</medium>
+          <medium id="-984" kind="Type">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1325,15 +1319,15 @@
           <part id="194"/>
         </target>
         <channel>
-          <medium id="-984">Cell</medium>
+          <medium id="-984" kind="Type">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1358,15 +1352,15 @@
           <part id="194"/>
         </target>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-982">Email</medium>
+          <medium id="-981" kind="Type">Email</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1387,7 +1381,7 @@
           <detection>FlowToSelf</detection>
         </detection-waivers>
         <channel>
-          <medium id="-984">Cell</medium>
+          <medium id="-984" kind="Type">Cell</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1410,7 +1404,7 @@
           <specialHandlingCodes></specialHandlingCodes>
         </eoi>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1433,7 +1427,7 @@
           <specialHandlingCodes></specialHandlingCodes>
         </eoi>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1451,15 +1445,15 @@
           <part id="196"/>
         </target>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-984">Cell</medium>
+          <medium id="-984" kind="Type">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1480,7 +1474,7 @@
           <detection>FlowToSelf</detection>
         </detection-waivers>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1498,7 +1492,7 @@
           <part id="197"/>
         </target>
         <channel>
-          <medium id="-984">Cell</medium>
+          <medium id="-984" kind="Type">Cell</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1509,17 +1503,18 @@
         <maxDelay>immediately</maxDelay>
       </flow>
     </segment>
-    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/01/28 9:43:56 EST" id="140" name="Building evacuation">
+    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/02/26 12:08:43 EST" id="140" name="Building evacuation">
       <description>Evacuating the building to minimize risk to personnel.</description>
       <trigger-event id="1191">Building unsafe</trigger-event>
       <phase id="1192">Responding</phase>
-      <risk>
-        <type>BodilyHarm</type>
+      <goal>
+        <category>Health</category>
+        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
-        <severity>Major</severity>
+        <level>Medium</level>
         <endsWithSegment>true</endsWithSegment>
         <description></description>
-      </risk>
+      </goal>
       <part id="143">
         <task>Conducting warehouse evacuation</task>
         <role id="281" kind="Type">Evacuation Team Leader</role>
@@ -1537,7 +1532,7 @@
         <location id="50" kind="Actual">ACME 100</location>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="BodilyHarm">ACME</mitigation>
+        <goal intent="mitigate" category="Health">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="145">
@@ -1546,7 +1541,7 @@
         <location id="45" kind="Actual">ACME</location>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="BodilyHarm">ACME</mitigation>
+        <goal intent="mitigate" category="Health">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="146">
@@ -1555,7 +1550,7 @@
         <location id="68" kind="Actual">Warehouse building</location>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="BodilyHarm">ACME</mitigation>
+        <goal intent="mitigate" category="Health">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="147">
@@ -1582,7 +1577,7 @@
         <organization id="14" kind="Actual">ACME</organization>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="BodilyHarm">ACME</mitigation>
+        <goal intent="mitigate" category="Health">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="142">
@@ -1602,7 +1597,7 @@
         <location id="50" kind="Actual">ACME 100</location>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="BodilyHarm">ACME</mitigation>
+        <goal intent="mitigate" category="Health">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <flow id="153" name="Warehouse evacuation status">
@@ -1613,7 +1608,7 @@
           <part id="148"/>
         </target>
         <channel>
-          <medium id="11809">Intercom</medium>
+          <medium id="11809" kind="Type">Intercom</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1646,11 +1641,11 @@
           <specialHandlingCodes></specialHandlingCodes>
         </eoi>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="11809">Intercom</medium>
+          <medium id="11809" kind="Type">Intercom</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1676,15 +1671,15 @@
           <specialHandlingCodes></specialHandlingCodes>
         </eoi>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="11809">Intercom</medium>
+          <medium id="11809" kind="Type">Intercom</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1712,7 +1707,11 @@
           <specialHandlingCodes></specialHandlingCodes>
         </eoi>
         <channel>
-          <medium id="-978">Television</medium>
+          <medium id="-977" kind="Type">Television</medium>
+          <address></address>
+        </channel>
+        <channel>
+          <medium id="-980" kind="Type">Notification system</medium>
           <address></address>
         </channel>
         <all>true</all>
@@ -1730,11 +1729,11 @@
           <part id="149"/>
         </target>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1752,15 +1751,15 @@
           <part id="150"/>
         </target>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-984">Cell</medium>
+          <medium id="-984" kind="Type">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1781,15 +1780,15 @@
           <detection>FlowToSelf</detection>
         </detection-waivers>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="11809">Intercom</medium>
+          <medium id="11809" kind="Type">Intercom</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1812,11 +1811,11 @@
           <specialHandlingCodes></specialHandlingCodes>
         </eoi>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="11809">Intercom</medium>
+          <medium id="11809" kind="Type">Intercom</medium>
           <address></address>
         </channel>
         <all>true</all>
@@ -1834,7 +1833,7 @@
           <part id="149"/>
         </target>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1867,11 +1866,11 @@
           <detection>FlowToSelf</detection>
         </detection-waivers>
         <channel>
-          <medium id="-984">Cell</medium>
+          <medium id="-984" kind="Type">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1889,11 +1888,11 @@
           <part id="145"/>
         </target>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="11809">Intercom</medium>
+          <medium id="11809" kind="Type">Intercom</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1911,19 +1910,19 @@
           <part id="148"/>
         </target>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-984">Cell</medium>
+          <medium id="-984" kind="Type">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-982">Email</medium>
+          <medium id="-981" kind="Type">Email</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-986">Home phone</medium>
+          <medium id="-986" kind="Type">Landline</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1956,7 +1955,7 @@
           <detection>EmptyNeedOrCapability</detection>
         </detection-waivers>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1979,7 +1978,7 @@
           <specialHandlingCodes></specialHandlingCodes>
         </eoi>
         <channel>
-          <medium id="11809">Intercom</medium>
+          <medium id="11809" kind="Type">Intercom</medium>
           <address></address>
         </channel>
         <all>true</all>
@@ -2002,7 +2001,7 @@
           <specialHandlingCodes></specialHandlingCodes>
         </eoi>
         <channel>
-          <medium id="11809">Intercom</medium>
+          <medium id="11809" kind="Type">Intercom</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -2025,11 +2024,11 @@
           <specialHandlingCodes></specialHandlingCodes>
         </eoi>
         <channel>
-          <medium id="-984">Cell</medium>
+          <medium id="-984" kind="Type">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="11809">Intercom</medium>
+          <medium id="11809" kind="Type">Intercom</medium>
           <address></address>
         </channel>
         <all>true</all>
@@ -2074,7 +2073,7 @@
           <specialHandlingCodes></specialHandlingCodes>
         </eoi>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -2085,26 +2084,26 @@
         <maxDelay>26 minutes</maxDelay>
       </flow>
     </segment>
-    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/01/28 9:43:56 EST" id="13904" name="Shutting down operations">
+    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/02/26 12:08:43 EST" id="13904" name="Shutting down operations">
       <description>Shutting down operations because of fire</description>
       <trigger-event id="5">Building on fire</trigger-event>
       <phase id="1192">Responding</phase>
-      <risk>
-        <type>PropertyDamage</type>
+      <goal>
+        <category>Property</category>
+        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
-        <severity>Major</severity>
+        <level>Medium</level>
         <endsWithSegment>true</endsWithSegment>
         <description></description>
-      </risk>
+      </goal>
       <part id="13905">
         <task>Shutting down printing presses</task>
         <role id="11801" kind="Type">Operations Manager</role>
         <organization id="14" kind="Actual">ACME</organization>
         <location id="50" kind="Actual">ACME 100</location>
-        <completionTime>1 hour</completionTime>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="PropertyDamage">ACME</mitigation>
+        <goal intent="mitigate" category="Property">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <flow id="13909" name="Shutdown completed">
@@ -2159,11 +2158,11 @@
           <specialHandlingCodes></specialHandlingCodes>
         </eoi>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="11809">Intercom</medium>
+          <medium id="11809" kind="Type">Intercom</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -2191,11 +2190,11 @@
           <specialHandlingCodes></specialHandlingCodes>
         </eoi>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="11809">Intercom</medium>
+          <medium id="11809" kind="Type">Intercom</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -2206,7 +2205,7 @@
         <maxDelay>1 minute</maxDelay>
       </flow>
     </segment>
-    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/01/28 9:43:56 EST" id="167" name="Fire in the building">
+    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/02/26 12:08:43 EST" id="167" name="Fire in the building">
       <description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
 9- Respond immediately to the fire event. &#xd;
 8- Ensure the safety and health of colleagues&#xd;
@@ -2218,26 +2217,28 @@
       <issue id="4944" about="167">
         <description>Capturing sharing commitments between firemen and fire chief seems out of scope.</description>
         <type>Validity</type>
-        <severity>Minor</severity>
+        <severity>Low</severity>
         <remediation>Keep current flows between firemen and fire chief
 or remove any such flows
 or move them  to another plan segment</remediation>
         <reportedBy>jf</reportedBy>
       </issue>
-      <risk>
-        <type>BodilyHarm</type>
+      <goal>
+        <category>Health</category>
+        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
-        <severity>Major</severity>
+        <level>Medium</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
-      </risk>
-      <risk>
-        <type>PropertyDamage</type>
+      </goal>
+      <goal>
+        <category>Property</category>
+        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
-        <severity>Severe</severity>
+        <level>High</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
-      </risk>
+      </goal>
       <part id="169">
         <task>Coordinating fire response</task>
         <role id="10" kind="Type">Fire Chief</role>
@@ -2254,8 +2255,8 @@ or move them  to another plan segment</remediation>
         <startsWithSegment>true</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <initiatedEvent id="1191">Building unsafe</initiatedEvent>
-        <mitigation type="BodilyHarm">ACME</mitigation>
-        <mitigation type="PropertyDamage">ACME</mitigation>
+        <goal intent="mitigate" category="Health">ACME</goal>
+        <goal intent="mitigate" category="Property">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="171">
@@ -2265,8 +2266,8 @@ or move them  to another plan segment</remediation>
         <location id="50" kind="Actual">ACME 100</location>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>true</terminatesEvent>
-        <mitigation type="BodilyHarm">ACME</mitigation>
-        <mitigation type="PropertyDamage">ACME</mitigation>
+        <goal intent="mitigate" category="Health">ACME</goal>
+        <goal intent="mitigate" category="Property">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="172">
@@ -2277,8 +2278,8 @@ or move them  to another plan segment</remediation>
         <startsWithSegment>true</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <initiatedEvent id="72">Business interrupted</initiatedEvent>
-        <mitigation type="BodilyHarm">ACME</mitigation>
-        <mitigation type="PropertyDamage">ACME</mitigation>
+        <goal intent="mitigate" category="Health">ACME</goal>
+        <goal intent="mitigate" category="Property">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="173">
@@ -2287,8 +2288,8 @@ or move them  to another plan segment</remediation>
         <organization id="14" kind="Actual">ACME</organization>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="PropertyDamage">ACME</mitigation>
-        <mitigation type="BodilyHarm">ACME</mitigation>
+        <goal intent="mitigate" category="Property">ACME</goal>
+        <goal intent="mitigate" category="Health">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="174">
@@ -2306,15 +2307,15 @@ or move them  to another plan segment</remediation>
           <part id="170"/>
         </target>
         <channel>
-          <medium id="-984">Cell</medium>
+          <medium id="-984" kind="Type">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-986">Home phone</medium>
+          <medium id="-986" kind="Type">Landline</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -2394,7 +2395,7 @@ or move them  to another plan segment</remediation>
           <specialHandlingCodes></specialHandlingCodes>
         </eoi>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -2440,7 +2441,7 @@ or move them  to another plan segment</remediation>
           <part id="173"/>
         </target>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -2458,11 +2459,11 @@ or move them  to another plan segment</remediation>
           <part id="169"/>
         </target>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="11809">Intercom</medium>
+          <medium id="11809" kind="Type">Intercom</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -2485,7 +2486,7 @@ or move them  to another plan segment</remediation>
           <specialHandlingCodes></specialHandlingCodes>
         </eoi>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -2567,7 +2568,7 @@ or move them  to another plan segment</remediation>
           <part id="171"/>
         </target>
         <channel>
-          <medium id="-979">Radio</medium>
+          <medium id="-978" kind="Type">Radio</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -2585,12 +2586,35 @@ or move them  to another plan segment</remediation>
           <part id="169"/>
         </target>
         <channel>
-          <medium id="11809">Intercom</medium>
+          <medium id="11809" kind="Type">Intercom</medium>
           <address></address>
         </channel>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
+        <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
+        <maxDelay>immediately</maxDelay>
+      </flow>
+      <flow id="1064" name="Operational status">
+        <source>
+          <connector id="1084"/>
+        </source>
+        <target>
+          <part id="173"/>
+        </target>
+        <eoi>
+          <content>job status</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
+        <channel>
+          <medium id="-974" kind="Type">Face to face</medium>
+          <address></address>
+        </channel>
+        <all>false</all>
+        <significanceToSource>None</significanceToSource>
+        <significanceToTarget>Useful</significanceToTarget>
         <askedFor>false</askedFor>
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
@@ -2609,69 +2633,51 @@ or move them  to another plan segment</remediation>
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
-      <flow id="1064" name="Operational status">
-        <source>
-          <connector id="1084"/>
-        </source>
-        <target>
-          <part id="173"/>
-        </target>
-        <eoi>
-          <content>job status</content>
-          <sourceCodes></sourceCodes>
-          <specialHandlingCodes></specialHandlingCodes>
-        </eoi>
-        <channel>
-          <medium id="-975">Face to face</medium>
-          <address></address>
-        </channel>
-        <all>false</all>
-        <significanceToSource>None</significanceToSource>
-        <significanceToTarget>Useful</significanceToTarget>
-        <askedFor>false</askedFor>
-        <classificationsLinked>true</classificationsLinked>
-        <maxDelay>immediately</maxDelay>
-      </flow>
     </segment>
-    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/01/28 9:43:56 EST" id="107" name="Recovery after fire">
+    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/02/26 12:08:43 EST" id="107" name="Recovery after fire">
       <description>Managing the aftermath of a fire.</description>
       <trigger-event id="5">Building on fire</trigger-event>
       <phase id="4972">Recovering</phase>
-      <risk>
-        <type>BodilyHarm</type>
+      <goal>
+        <category>Health</category>
+        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
-        <severity>Minor</severity>
+        <level>Low</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
-      </risk>
-      <risk>
-        <type>FinesPenalties</type>
+      </goal>
+      <goal>
+        <category>Award</category>
+        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
-        <severity>Major</severity>
+        <level>Medium</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
-      </risk>
-      <risk>
-        <type>ReputationDamage</type>
+      </goal>
+      <goal>
+        <category>Reputation</category>
+        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
-        <severity>Major</severity>
+        <level>Medium</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
-      </risk>
-      <risk>
-        <type>AssetDevaluation</type>
+      </goal>
+      <goal>
+        <category>Assets</category>
+        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
-        <severity>Major</severity>
+        <level>Medium</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
-      </risk>
-      <risk>
-        <type>PropertyDamage</type>
+      </goal>
+      <goal>
+        <category>Property</category>
+        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
-        <severity>Major</severity>
+        <level>Medium</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
-      </risk>
+      </goal>
       <part id="109">
         <task>Assessing ability to restart operations</task>
         <role id="330" kind="Type">Response Liaison Officer</role>
@@ -2687,7 +2693,7 @@ or move them  to another plan segment</remediation>
         <location id="50" kind="Actual">ACME 100</location>
         <startsWithSegment>true</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="PropertyDamage">ACME</mitigation>
+        <goal intent="mitigate" category="Property">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="111">
@@ -2702,7 +2708,7 @@ or move them  to another plan segment</remediation>
         <role id="51" kind="Type">Building Inspector</role>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="BodilyHarm">ACME</mitigation>
+        <goal intent="mitigate" category="Health">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="113">
@@ -2711,8 +2717,8 @@ or move them  to another plan segment</remediation>
         <organization id="14" kind="Actual">ACME</organization>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="FinesPenalties">ACME</mitigation>
-        <mitigation type="PropertyDamage">ACME</mitigation>
+        <goal intent="mitigate" category="Award">ACME</goal>
+        <goal intent="mitigate" category="Property">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="114">
@@ -2721,7 +2727,7 @@ or move them  to another plan segment</remediation>
         <organization id="14" kind="Actual">ACME</organization>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="PropertyDamage">ACME</mitigation>
+        <goal intent="mitigate" category="Property">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="115">
@@ -2754,7 +2760,7 @@ or move them  to another plan segment</remediation>
         <organization id="14" kind="Actual">ACME</organization>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
-        <mitigation type="ReputationDamage">ACME</mitigation>
+        <goal intent="mitigate" category="Reputation">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="119">
@@ -2785,11 +2791,11 @@ or move them  to another plan segment</remediation>
           <part id="118"/>
         </target>
         <channel>
-          <medium id="-984">Cell</medium>
+          <medium id="-984" kind="Type">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -2807,7 +2813,7 @@ or move them  to another plan segment</remediation>
           <part id="113"/>
         </target>
         <channel>
-          <medium id="-984">Cell</medium>
+          <medium id="-984" kind="Type">Cell</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -2840,11 +2846,11 @@ or move them  to another plan segment</remediation>
           <detection>FlowToSelf</detection>
         </detection-waivers>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -2862,7 +2868,7 @@ or move them  to another plan segment</remediation>
           <connector id="125"/>
         </target>
         <channel>
-          <medium id="-982">Email</medium>
+          <medium id="-981" kind="Type">Email</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -2880,7 +2886,7 @@ or move them  to another plan segment</remediation>
           <part id="109"/>
         </target>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -2898,7 +2904,7 @@ or move them  to another plan segment</remediation>
           <part id="109"/>
         </target>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -2916,7 +2922,7 @@ or move them  to another plan segment</remediation>
           <part id="109"/>
         </target>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -2934,7 +2940,7 @@ or move them  to another plan segment</remediation>
           <part id="117"/>
         </target>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -2952,11 +2958,11 @@ or move them  to another plan segment</remediation>
           <part id="114"/>
         </target>
         <channel>
-          <medium id="-984">Cell</medium>
+          <medium id="-984" kind="Type">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -2974,7 +2980,7 @@ or move them  to another plan segment</remediation>
           <part id="119"/>
         </target>
         <channel>
-          <medium id="-984">Cell</medium>
+          <medium id="-984" kind="Type">Cell</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -3004,11 +3010,11 @@ or move them  to another plan segment</remediation>
           <part id="113"/>
         </target>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -3026,7 +3032,7 @@ or move them  to another plan segment</remediation>
           <part id="109"/>
         </target>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -3044,11 +3050,11 @@ or move them  to another plan segment</remediation>
           <part id="109"/>
         </target>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -3071,11 +3077,11 @@ or move them  to another plan segment</remediation>
           <specialHandlingCodes></specialHandlingCodes>
         </eoi>
         <channel>
-          <medium id="-984">Cell</medium>
+          <medium id="-984" kind="Type">Cell</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -3105,11 +3111,11 @@ or move them  to another plan segment</remediation>
           <part id="118"/>
         </target>
         <channel>
-          <medium id="-987">Phone</medium>
+          <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
         <channel>
-          <medium id="-975">Face to face</medium>
+          <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
         </channel>
         <all>false</all>

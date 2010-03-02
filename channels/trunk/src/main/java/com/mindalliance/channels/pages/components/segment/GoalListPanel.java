@@ -455,7 +455,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
         }
 
         public String getKind() {
-            return goal.isPositive()
+            return goal.isGain()
                     ? GAIN
                     : RISK;
         }

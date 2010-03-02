@@ -101,7 +101,7 @@ public class Goal implements Serializable, Mappable {
      *
      * @return a boolean
      */
-    public boolean isRisk() {
+    public boolean isRiskMitigation() {
         return !isPositive();
     }
 
@@ -226,7 +226,7 @@ public class Goal implements Serializable, Mappable {
      */
     public String getFailureLabel( String sep ) {
         String label = category.getName( positive );
-        label +=  isRisk() ? " not mitigated by " : " not achieved by ";
+        label +=  isRiskMitigation() ? " not mitigated by " : " not achieved by ";
         label += sep + organization.getName();
         return label;
     }
@@ -237,7 +237,7 @@ public class Goal implements Serializable, Mappable {
      * @return a string
      */
     public String getFullLabel() {
-        String label = isRisk() ? "Mitigates risk of " : "Achieves ";
+        String label = isRiskMitigation() ? "Mitigates risk of " : "Achieves ";
         label += getFullTitle();
         return label;
     }
