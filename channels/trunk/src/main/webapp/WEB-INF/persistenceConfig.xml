@@ -81,7 +81,7 @@
     <bean id="phone" class="com.mindalliance.channels.model.TransmissionMedium">
          <property name="name" value="Phone"/>
          <property name="kind" value="Type"/>
-         <property name="addressPattern" value="\d*\D*\d{3}\D*\d{3}\D*\d{4}"/>
+         <property name="addressPattern" value="(\d*\D*\d{3}\D*\d{3}\D*\d{4}(\s*\D+\s*\d+)?)|(\d{3})"/>
          <property name="cast" value="Unicast"/>
      </bean>
      <bean id="landline" class="com.mindalliance.channels.model.TransmissionMedium">
@@ -92,7 +92,6 @@
                  <ref bean="phone"/>
              </list>
          </property>
-         <property name="addressPattern" value="(\d*\D*\d{3}\D*\d{3}\D*\d{4}(\s*\D+\s*\d+)?)|(\d{3})"/>
          <property name="cast" value="Unicast"/>
      </bean>
      <bean id="fax" class="com.mindalliance.channels.model.TransmissionMedium">

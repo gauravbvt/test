@@ -348,7 +348,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
             columns.add( makeLinkColumn( "Plan segment", "part.segment", "part.segment.name", EMPTY ) );
             columns.add( makeColumn( "Risk/opportunity", "goal.categoryLabel", "goal.categoryLabel", EMPTY ) );
             columns.add( makeColumn( "Impact", "impact", "impact", EMPTY ) );
-            columns.add( makeColumn( "Severity", "goal.level", "goal.levelLabel", EMPTY ) );
+            columns.add( makeColumn( "Severity", "goal.severityLabel", null, EMPTY, null, "goal.level" ) );
             columns.add( makeLinkColumn( "Organization", "goal.organization", "goal.organization.name", EMPTY ) );
             add( new AjaxFallbackDefaultDataTable(
                     "failures",

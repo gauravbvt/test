@@ -90,7 +90,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
                 Arrays.asList( Level.values() ),
                 new ChoiceRenderer<Level>(){
                     public Object getDisplayValue( Level level ) {
-                        return level.negative();
+                        return level.getNegativeLabel();
                     }
 
                     public String getIdValue( Level object, int index ) {

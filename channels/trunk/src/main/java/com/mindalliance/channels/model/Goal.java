@@ -137,8 +137,13 @@ public class Goal implements Serializable, Mappable {
     }
 
     public String getLevelLabel() {
-        return isPositive() ? getLevel().name() : getLevel().negative();
+        return isPositive() ? getLevel().name() : getLevel().getNegativeLabel();
     }
+
+    public String getSeverityLabel() {
+        return getLevel().getNegativeLabel();
+    }
+
 
     public String getCategoryLabel() {
         return getCategory().getLabel( isPositive() );

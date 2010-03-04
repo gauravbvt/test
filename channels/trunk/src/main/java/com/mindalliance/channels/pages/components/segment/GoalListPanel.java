@@ -619,7 +619,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
         }
 
         public String getLevelLabel( Level level ) {
-            return goal.isPositive() ? level.name() : level.negative();
+            return goal.isPositive() ? level.name() : level.getNegativeLabel();
         }
 
         public String categoryLabel( Goal.Category category ) {

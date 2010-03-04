@@ -106,7 +106,7 @@ public class UserIssue extends ModelObject implements Issue {
      */
     public String getLabel( int maxLength ) {
         return StringUtils.abbreviate( MessageFormat.format( "({0}) {1}",
-                severity, getDescription() ), maxLength );
+                severity.getNegativeLabel(), getDescription() ), maxLength );
     }
 
     /**

@@ -44,6 +44,7 @@ public class IssuesTablePanel extends AbstractTablePanel {
         init();
     }
 
+    @SuppressWarnings("unchecked")
     private void init() {
         final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
         // columns
@@ -56,7 +57,7 @@ public class IssuesTablePanel extends AbstractTablePanel {
         columns.add( new PropertyColumn<String>(
                 new Model<String>( "Waived?" ), "waivedString", "waivedString" ) );
         columns.add( new PropertyColumn<String>(
-                new Model<String>( "Severity" ), "severity.ordinal", "severity.label" ) );
+                new Model<String>( "Severity" ), "severity.ordinal", "severity.negativeLabel" ) );
         columns.add( makeColumn( "Remediation", "remediation", "remediation", EMPTY ) );
         columns.add( makeColumn( "Reported by", "reportedBy", "reportedBy", EMPTY ) );
         // provider and table

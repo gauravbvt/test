@@ -178,7 +178,7 @@ public class DetectedIssue extends AnalysisObject implements Issue {
 
     public String getLabel() {
         return "("
-                + ( isWaived() ? "Waived" : severity )
+                + ( isWaived() ? "Waived" : severity.getNegativeLabel() )
                 + ") "
                 + getDescription();
     }

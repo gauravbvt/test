@@ -28,12 +28,7 @@ public enum Level {
      * @return a String
      */
     public String getLabel() {
-        String label = toString();
-        if ( label.endsWith( "." ) ) {
-            return label;
-        } else {
-            return label + ".";
-        }
+        return name();
     }
 
     /**
@@ -54,7 +49,7 @@ public enum Level {
         return toString();
     }
 
-    public String negative() {
+    public String getNegativeLabel() {
         switch ( this ) {
             case Low:
                 return "Minor";

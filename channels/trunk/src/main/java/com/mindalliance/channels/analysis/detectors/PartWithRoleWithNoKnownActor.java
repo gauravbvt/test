@@ -34,7 +34,7 @@ public class PartWithRoleWithNoKnownActor extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "No actor in task role";
+        return "No agent in task role";
     }
 
     /**
