@@ -273,7 +273,7 @@ public class Goal implements Serializable, Mappable {
         // Strategic
         Opportunity( "Strategic", "Opportunity loss", "Opportunity gain" ),
         Reputation( "Strategic", "Damage to reputation", "Improved reputation" ),
-        Competitiveness( "Strategic", "Loss of competitiveness", "Greater of competitiveness" ),
+        Competitiveness( "Strategic", "Loss of competitiveness", "Greater competitiveness" ),
         ProductLife( "Strategic", "Product obsolescence", "Longer product life" );
 
 
