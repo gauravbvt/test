@@ -1,6 +1,8 @@
 package com.mindalliance.channels.graph;
 
 import org.jgrapht.Graph;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -25,6 +27,11 @@ import java.util.TimerTask;
  * @param <V> A Class for vertices
  */
 public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( GraphvizRenderer.class );
 
     private static int MAXBYTES = 1024;
 
@@ -174,8 +181,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
             p.destroy();
             throw new DiagramException( "Diagram generation failed", e );
         } catch ( DiagramException e ) {
-            // TODO -- replace with logging
-            System.err.println( e );
+            LOG.error( "Diagram generation failed", e );
             throw e;
         } finally {
             // Stop the timer
