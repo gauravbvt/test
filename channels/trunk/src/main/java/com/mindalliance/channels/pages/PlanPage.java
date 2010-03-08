@@ -849,7 +849,7 @@ public final class PlanPage extends WebPage implements Updatable {
     /**
      * Find part specified in parameters.
      *
-     * @param segment   the plan segment
+     * @param segment    the plan segment
      * @param parameters the page parameters
      * @return a part, or null if not found
      */
@@ -913,7 +913,7 @@ public final class PlanPage extends WebPage implements Updatable {
     /**
      * Return initialized parameters for given segment and part.
      *
-     * @param segment the segment
+     * @param segment  the segment
      * @param p        the part, maybe null (in which case, would link to first part in segment)
      * @param expanded components id that should be expanded
      * @return page parameters to use in links, etc.
@@ -935,7 +935,7 @@ public final class PlanPage extends WebPage implements Updatable {
      * Return initialized parameters for given segment and part.
      *
      * @param segment the segment
-     * @param p        the part, maybe null (in which case, would link to first part in segment)
+     * @param p       the part, maybe null (in which case, would link to first part in segment)
      * @return page parameters to use in links, etc.
      */
     public static PageParameters getParameters( Segment segment, Part p ) {
@@ -947,8 +947,8 @@ public final class PlanPage extends WebPage implements Updatable {
      * Return initialized parameters for given segment and part.
      *
      * @param segment the segment
-     * @param p        the part, maybe null (in which case, would link to first part in segment)
-     * @param id       the id to expand
+     * @param p       the part, maybe null (in which case, would link to first part in segment)
+     * @param id      the id to expand
      * @return page parameters to use in links, etc.
      */
     public static PageParameters getParameters( Segment segment, Part p, long id ) {
@@ -1781,7 +1781,7 @@ public final class PlanPage extends WebPage implements Updatable {
         /**
          * Expansions
          */
-        private Set<Long> expansions;
+        private Set<Long> expanded;
         /**
          * Aspects viewed.
          */
@@ -1790,7 +1790,7 @@ public final class PlanPage extends WebPage implements Updatable {
         private PageState() {
             segmentId = getSegment().getId();
             partId = getPart().getId();
-            this.expansions = new HashSet<Long>( getReadOnlyExpansions() );
+            this.expanded = new HashSet<Long>( getReadOnlyExpansions() );
             this.aspects = new HashMap<Long, List<String>>( getReadOnlyAspects() );
         }
 
@@ -1811,11 +1811,11 @@ public final class PlanPage extends WebPage implements Updatable {
         }
 
         public Set<Long> getExpansions() {
-            return expansions;
+            return expanded;
         }
 
         public void setExpansions( Set<Long> expansions ) {
-            this.expansions = expansions;
+            this.expanded = new HashSet<Long>( expansions );
         }
 
         public Map<Long, List<String>> getAspects() {
@@ -1831,7 +1831,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 PageState other = (PageState) obj;
                 return segmentId == other.getSegmentId()
                         && partId == other.getPartId()
-                        && CollectionUtils.isEqualCollection( expansions, other.getExpansions() )
+                        && CollectionUtils.isEqualCollection( expanded, other.getExpansions() )
                         && hasSameAspects( other );
             } else {
                 return false;

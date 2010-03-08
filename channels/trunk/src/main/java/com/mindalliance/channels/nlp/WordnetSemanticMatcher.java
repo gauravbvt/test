@@ -118,7 +118,7 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
     public WordnetSemanticMatcher() {
     }
 
-    private void initialize() throws Exception {
+    private synchronized void initialize() throws Exception {
         if ( !initialized ) {
             LOG.debug( "Initializing semantic proximity matcher" );
             initializeJWNL();
@@ -449,7 +449,8 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
         return sum;
     }
 
-    private double computePOSWordSimilarity( POSWord posWord, POSWord otherPosWord ) throws JWNLException {
+    // Note: wordnet librairies seems to be thread-unsafe.
+    private synchronized double computePOSWordSimilarity( POSWord posWord, POSWord otherPosWord ) throws JWNLException {
         if ( posWord.isQualified() && otherPosWord.isQualified() ) {
             // If qualifiers are antonyms, negate similarity.
             if ( antonyms(

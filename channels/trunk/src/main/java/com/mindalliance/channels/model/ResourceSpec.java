@@ -407,6 +407,22 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
                 && organization != null && organization.isActual();
     }
 
+   /**
+     * Whether this resource spec references the entity ot an entity that broadens it.
+     * @param entity   an entity
+     * @return a boolean
+     */
+    public boolean hasEntityOrBroader( ModelEntity entity ) {
+        return broadensOrEqualsEntity( entity );
+    }
+
+    private boolean broadensOrEqualsEntity( ModelEntity entity ) {
+        return ModelEntity.broadensOrEquals( actor, entity )
+                || ModelEntity.broadensOrEquals( role, entity )
+                || ModelEntity.broadensOrEquals( organization, entity )
+                || ModelEntity.broadensOrEquals( jurisdiction, entity );
+    }
+
     /**
      * Whether the source spec contains an entity in its definition.
      *

@@ -19,6 +19,7 @@ import java.util.Set;
  * Time: 1:05:30 PM
  */
 public abstract class ModelEntity extends ModelObject {
+
     /**
      * Actual or Type.
      */
@@ -326,6 +327,17 @@ public abstract class ModelEntity extends ModelObject {
             return entity.equals( other ) || ( other.isType() && entity.hasTag( other ) );
     }
 
+    /**
+     * Whether an entity boradens or is equal to another.
+     *
+     * @param entity an entity
+     * @param other  another entity
+     * @return a boolean
+     */
+    public static boolean broadensOrEquals( ModelEntity entity, ModelEntity other ) {
+        return entity != null && other.narrowsOrEquals( entity );
+    }
+
 
     /**
      * Whether two entity values are equivalent, or the first one is defined in terms of the other.
@@ -377,17 +389,17 @@ public abstract class ModelEntity extends ModelObject {
         boolean isSubCollection = CollectionUtils.isSubCollection(
                 other.getTyping(),
                 getAllTags() );
-        if (!isSubCollection) return false;
+        if ( !isSubCollection ) return false;
         // meets specific and inherited requirement tests of entity type
-        if (!meetsTypeRequirementTests( other ) ) return false;
+        if ( !meetsTypeRequirementTests( other ) ) return false;
         boolean meetsInheritedTests = CollectionUtils.selectRejected(
-                        other.getAllTags(),
-                        new Predicate() {
-                            public boolean evaluate( Object obj ) {
-                                return meetsTypeRequirementTests( (ModelEntity) obj );
-                            }
-                        }
-                ).isEmpty();
+                other.getAllTags(),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return meetsTypeRequirementTests( (ModelEntity) obj );
+                    }
+                }
+        ).isEmpty();
         return meetsInheritedTests;
     }
 

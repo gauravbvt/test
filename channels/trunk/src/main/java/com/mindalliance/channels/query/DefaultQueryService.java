@@ -975,7 +975,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             else
                 return allPlayers.contains( (Actor) entity );
         } else {
-            return partSpec.hasEntity( entity );
+            return partSpec.hasEntityOrBroader( entity );
         }
     }
 

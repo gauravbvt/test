@@ -168,9 +168,9 @@ public class AgreementsPanel extends AbstractCommandablePanel {
                 addCommitments();
                 target.addComponent( commitmentsContainer );
                 if ( ( (AgreementWrapper) object ).isConfirmed() ) {
-                    update( target, new Change( Change.Type.Added, getOrganization(), "agreements" ) );
+                    update( target, new Change( Change.Type.Updated, getOrganization(), "agreements" ) );
                 } else {
-                    update( target, new Change( Change.Type.Removed, getOrganization(), "agreements" ) );
+                    update( target, new Change( Change.Type.Updated, getOrganization(), "agreements" ) );
                 }
             }
         }

@@ -7,6 +7,8 @@ import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.model.ModelEntity;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.jgrapht.Graph;
 
 import java.io.OutputStream;
@@ -36,7 +38,7 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelEntity, EntityRel
     }
 
     public void render( String outputFormat, OutputStream outputStream ) {
-        List<? extends ModelEntity> entities = getEntities();
+        List<? extends ModelEntity> entities = getEntitiesOfSameKind();
         DiagramFactory<ModelEntity, EntityRelationship> diagramFactory = getDiagramFactory();
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
@@ -69,8 +71,15 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelEntity, EntityRel
         );
     }
 
-    private List<? extends ModelEntity> getEntities() {
-        return getDiagramFactory().getQueryService().listEntitiesWithUnknown( entity.getClass() );
+    @SuppressWarnings( "unchecked" )
+    private List<? extends ModelEntity> getEntitiesOfSameKind() {
+        return (List<? extends ModelEntity>) CollectionUtils.select(
+                getDiagramFactory().getQueryService().listEntitiesWithUnknown( entity.getClass() ),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return entity.getKind().equals( ((ModelEntity)object).getKind() );
+                    }
+                } );
     }
 
 }
