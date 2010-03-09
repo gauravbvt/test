@@ -43,7 +43,7 @@ public class DetachDocument extends AbstractCommand {
         ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "attachee" ) );
         Attachment attachment = getAttachment();
         mo.getAttachments().remove( attachment );
-        return new Change( Change.Type.Removed, mo, "attachments" );
+        return new Change( Change.Type.Updated, mo, "attachments" );
     }
 
 

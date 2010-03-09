@@ -638,6 +638,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         }
     }
 
+/*
     private boolean hasPartFlowWithSameName( Node n ) {
         String name = getFlow().getName();
         Iterator<Flow> flows = isSend() ? n.receives() : n.sends();
@@ -648,6 +649,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         }
         return hasSameName;
     }
+*/
 
     private boolean isEmptyOrEquivalent( SegmentObject connectorFlow ) {
         return getFlow().getName().isEmpty()

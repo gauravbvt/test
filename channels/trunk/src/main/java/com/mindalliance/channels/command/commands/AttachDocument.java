@@ -50,7 +50,7 @@ public class AttachDocument extends AbstractCommand {
         ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "attachee" ) );
         Attachment attachment = getAttachment();
         mo.addAttachment( attachment );
-        return new Change( Change.Type.Added, mo, "attachments" );
+        return new Change( Change.Type.Updated, mo, "attachments" );
     }
 
     /**
