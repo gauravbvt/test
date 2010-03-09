@@ -113,4 +113,5 @@ public class Connector extends Node {
         for ( ExternalFlow flow : flows )
             flow.disconnect();
     }
+
 }

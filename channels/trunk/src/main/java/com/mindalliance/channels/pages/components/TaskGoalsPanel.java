@@ -216,7 +216,7 @@ public class TaskGoalsPanel extends AbstractCommandablePanel {
             Goal goal = getWrapper().getGoal();
             Label goalLabel = new Label(
                     "goalLabel",
-                    new Model<String>( goal != null ? goal.toString() : "" ) );
+                    new Model<String>( goal != null ? goal.getLabel() : "" ) );
             add( goalLabel );
             goalLabel.setVisible( !getWrapper().isMarkedForCreation() );
         }

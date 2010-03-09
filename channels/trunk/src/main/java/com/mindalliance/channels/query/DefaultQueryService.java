@@ -1685,10 +1685,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     private boolean satisfiesNeed( Flow send, Flow need ) {
         return Matcher.same( send.getName(), need.getName() )
                 &&
-                Matcher.hasCommonEOIs(
-                        send,
-                        need,
-                        this );
+                ( need.getEois().isEmpty()
+                        ||
+                        Matcher.hasCommonEOIs(
+                                send,
+                                need,
+                                this ) );
     }
 
     private boolean doFindIfSegmentStarted( Segment segment, Set<ModelObject> visited ) {

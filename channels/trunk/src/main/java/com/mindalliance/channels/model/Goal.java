@@ -129,7 +129,8 @@ public class Goal implements Serializable, Mappable {
     @Override
     public String toString() {
 
-        return ( level != null ? getLevelLabel() : "" ) + " "
+        return ( isGain() ? "Make " : "Mitigate " )
+                + ( level != null ? getLevelLabel().toLowerCase() : "" ) + " "
                 + ( category != null ? category.getGroup().toLowerCase() : "" )
                 + intentLabel()
                 + ( getOrganization() != null ? getOrganization().getName() : "all" )

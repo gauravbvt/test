@@ -17,6 +17,9 @@ import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.util.Matcher;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
@@ -44,7 +47,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Details of an expanded flow.
@@ -162,7 +164,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     private void addEOIs() {
-        AjaxFallbackLink editEOIsLink = new AjaxFallbackLink("editEOIs"){
+        AjaxFallbackLink editEOIsLink = new AjaxFallbackLink( "editEOIs" ) {
             public void onClick( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.AspectViewed, getFlow(), "eois" ) );
             }
@@ -387,7 +389,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 } );
         titleLabel.setOutputMarkupId( true );
         add( titleLabel );
-        addFlowActionMenu( );
+        addFlowActionMenu();
     }
 
     private void addAllField() {
@@ -460,6 +462,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * Add the target/source dropdown. Fill with getOtherNodes(); select with getOther().
      */
     protected final void addOtherField() {
+        final Flow oldFlow = getFlow();
         otherChoice = new DropDownChoice<Node>(
                 "other",                                                                  // NON-NLS
                 new PropertyModel<Node>( this, "other" ),                                 // NON-NLS
@@ -473,8 +476,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                         return tbd
                                 ? "* to be determined *"
                                 : object.isConnector() && object.getSegment().equals( getFlow().getSegment() )
-                                    ? ( (Connector) object ).getInnerFlow().getLocalPart().toString()
-                                    : object.toString();
+                                ? ( (Connector) object ).getInnerFlow().getLocalPart().toString()
+                                : object.toString();
                     }
 
                     public String getIdValue( Node object, int index ) {
@@ -488,6 +491,10 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields( getFlow() );
                 update( target, new Change( Change.Type.Updated, getFlow(), "other" ) );
+                if ( !getFlow().equals( oldFlow ) ) {
+                    update( target, new Change( Change.Type.Collapsed, oldFlow ) );
+                    update( target, new Change( Change.Type.Expanded, getFlow() ) );
+                }
             }
         } );
 
@@ -504,7 +511,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         add( otherLabel );
         add( otherChoice );
     }
-
 
 
     /**
@@ -556,7 +562,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         Node node = getNode();
         Node other = getOther();
         Segment segment = node.getSegment();
-        Set<Node> result = new TreeSet<Node>();
+        Set<Node> result = new HashSet<Node>();
 
         // Add other parts of this segment
         Iterator<Node> nodes = segment.nodes();
@@ -570,17 +576,24 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                     Flow connectorFlow = connector.getInnerFlow();
                     if ( isEmptyOrEquivalent( connectorFlow ) ) {
                         if ( isSend() ) {
-                            if ( connector.isSource() && !connectorFlow.getTarget().equals( node ) )
+                            if ( connector.isSource()
+                                    && !connectorFlow.getTarget().equals( node )
+                                    && !isRedundant( connector ) )
                                 result.add( connector );
                         } else {
-                            if ( connector.isTarget() && !connectorFlow.getSource().equals( node ) )
+                            if ( connector.isTarget()
+                                    && !connectorFlow.getSource().equals( node )
+                                    && !isRedundant( connector ) )
                                 result.add( connector );
                         }
                     }
-                } else {
-                    // a part in segment with same flow to/from part
-                    if ( hasPartFlowWithSameName( n ) ) result.add( n );
                 }
+                /**
+                 else {
+                 // a part in segment with same flow to/from part
+                 if ( hasPartFlowWithSameName( n ) ) result.add( n );
+                 }
+                 **/
             }
         }
         // Add inputs/outputs of other segments
@@ -592,14 +605,37 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                     Connector connector = c.next();
                     Flow connectorFlow = connector.getInnerFlow();
                     if ( isEmptyOrEquivalent( connectorFlow ) ) {
-                        if ( other.equals( connector ) || !node.isConnectedTo(
-                                isSend(), connector, getFlow().getName() ) )
+                        if ( other.equals( connector )
+                                || ( !node.isConnectedTo( isSend(), connector, getFlow().getName() )
+                                && !isRedundant( connector )
+                        )
+                                )
                             result.add( connector );
                     }
                 }
             }
         }
         return new ArrayList<Node>( result );
+    }
+
+    private boolean isRedundant( Connector connector ) {
+        if ( connector.getSegment().equals( getNode().getSegment() ) ) {
+            Part connectingPart = connector.getInnerFlow().getLocalPart();
+            return getNode().isConnectedTo( isSend(), connectingPart, getFlow().getName() );
+        } else {
+            Flow flow = getFlow();
+            Connector externalizedConnector = (Connector) ( isSend() ? flow.getTarget() : connector );
+            final Connector internalizedConnector = (Connector) ( !isSend() ? flow.getSource() : connector );
+            return CollectionUtils.exists(
+                    IteratorUtils.toList( externalizedConnector.externalFlows() ),
+                    new Predicate() {
+                        public boolean evaluate( Object object ) {
+                            ExternalFlow externalFlow = (ExternalFlow) object;
+                            return externalFlow.getPart().equals( internalizedConnector.getInnerFlow().getContactedPart() );
+                        }
+                    }
+            );
+        }
     }
 
     private boolean hasPartFlowWithSameName( Node n ) {
@@ -615,7 +651,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     private boolean isEmptyOrEquivalent( SegmentObject connectorFlow ) {
         return getFlow().getName().isEmpty()
-                || Matcher.matches( getFlow().getName(), connectorFlow.getName() );
+                || Matcher.same( getFlow().getName(), connectorFlow.getName() );
     }
 
     private List<Flow> findRelevantInternalFlows() {

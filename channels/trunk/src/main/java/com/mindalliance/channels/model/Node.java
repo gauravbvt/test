@@ -269,12 +269,31 @@ public abstract class Node extends ModelObject implements SegmentObject {
         return getTitle();
     }
 
-    /**
+   /**
+     * Test if this node is connected to another node by a flow.
+     *
+     * @param send test if node is a send, otherwise a receive
+     * @param node the other node
+     * @return true if connected.
+     */
+    public boolean isConnectedTo( boolean send, Node node ) {
+        boolean result = false;
+        Map<Long, Flow> flows = send ? sends : receives;
+        for ( Iterator<Flow> it = flows.values().iterator(); !result && it.hasNext(); ) {
+            Flow f = it.next();
+            result = f.isConnectedTo( send, node );
+        }
+
+        return result;
+    }
+
+
+   /**
      * Test if this node is connected to another node by a flow of a given name.
      *
      * @param send test if node is a send, otherwise a receive
-     * @param node    the other node
-     * @param name    the name of the flow
+     * @param node the other node
+     * @param name the name of the flow
      * @return true if connected.
      */
     public boolean isConnectedTo( boolean send, Node node, String name ) {
